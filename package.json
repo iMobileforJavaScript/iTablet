@@ -1,0 +1,51 @@
+{
+  "name": "iTablet",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start-rn": "node node_modules/react-native/local-cli/cli.js start",
+    "start": "react-native run-ios",
+    "start:android": "react-native run-android",
+    "start:reset": "react-native run-ios --no-packager & npm run start-rn -- --reset-cache",
+    "start:android:reset": "react-native run-android --no-packager && npm run start-rn -- --reset-cache",
+    "installRelease:android": "cd android && ./gradlew installRelease",
+    "installDebug:android": "cd android && ./gradlew installDebug",
+    "assembleRelease": "cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "immutable": "^3.8.2",
+    "react": "16.2.0",
+    "react-native": "0.52.3",
+    "react-native-actionsheet": "^2.4.2",
+    "react-native-contacts": "^2.1.3",
+    "react-native-root-toast": "^3.0.1",
+    "react-native-search-box": "^0.0.16",
+    "react-native-swiper": "^1.5.13",
+    "react-native-table-component": "^1.1.8",
+    "react-native-view-shot": "^2.4.0",
+    "react-navigation": "^1.5.11",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-actions": "^2.3.0",
+    "redux-persist": "^5.9.1",
+    "redux-promise-middleware": "^5.1.1",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.5",
+    "babel-jest": "23.0.1",
+    "babel-plugin-module-resolver": "^3.1.1",
+    "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "babel-preset-react-native": "4.0.0",
+    "eslint": "^4.19.1",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.0.3",
+    "eslint-plugin-react": "^7.10.0",
+    "jest": "23.1.0",
+    "react-test-renderer": "16.2.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  }
+}

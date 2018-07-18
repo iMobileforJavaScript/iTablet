@@ -1,0 +1,294 @@
+import * as React from 'react'
+import { StyleSheet } from 'react-native'
+import { constUtil, Toast, scaleSize } from '../../../../utils'
+import {
+  DatasetType,
+  GeoStyle,
+  Size2D,
+  BufferAnalystGeometry,
+  BufferAnalystParameter,
+  BufferEndType,
+  DatasetVectorInfo,
+  CursorType,
+} from 'imobile_for_javascript'
+import { PopBtnSectionList, MTBtn } from '../../../../components'
+import { facilityAnalyst, tranportationAnalyst } from '../../util'
+import PropTypes from 'prop-types'
+import Setting from '../Setting'
+import NavigationService from '../../../NavigationService'
+
+const ROUTE = 'route'
+const TSP = 'tsp'
+const FACILITY = 'facility'
+const TRACKING = 'tracking'
+
+export default class NetworkAnalystToolBar extends React.Component {
+
+  static propTypes = {
+    popType: PropTypes.string,
+    mapControl: PropTypes.any,
+    mapView: PropTypes.any,
+    workspace: PropTypes.any,
+    map: PropTypes.any,
+    analyst: PropTypes.func,
+    subPopShow: PropTypes.bool,
+    editLayer: PropTypes.object,
+    selection: PropTypes.object,
+    showSetting: PropTypes.func,
+    chooseLayer: PropTypes.func,
+    setLoading: PropTypes.func,
+  }
+
+  static Type = {
+    ROUTE: 'route',
+    TSP: 'tsp',
+    FACILITY: 'facility',
+    TRACKING: 'tracking',
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: this.getData(),
+      currentOperation: this.getData(props.popType || ROUTE),
+      currentData: this.getData(props.popType || ROUTE),
+      subPopShow: true,
+      popType: props.popType || ROUTE,
+    }
+    this.cbData = {}
+  }
+
+  changeTap = async (cbData, type) => {
+    this.props.setLoading && this.props.setLoading(true)
+    switch (type) {
+      case ROUTE:
+        this._transportationLoad()
+        break
+      case TSP:
+        break
+      case FACILITY:
+        break
+      case TRACKING:
+        break
+    }
+    cbData.callback && await cbData.callback(true)
+    this.setState({
+      popType: type,
+    })
+    this.props.setLoading && this.props.setLoading(false)
+  }
+
+  toDoAction = () => {
+    Toast.show('正在码ing')
+  }
+
+  /** 设置 **/
+  _setting = type => {
+    (async function () {
+      // testing
+      // let datasource = await this.props.workspace.getDatasource('FacilityNet')
+      // // let datasource = await datasources.get('FacilityNet')
+      // let dataset = await datasource.getDataset('WaterNet')
+      // // let dataset = await datasets.get('WaterNet')
+      // let datasetv = await dataset.toDatasetVector()
+      //
+      // let name = await datasetv.getName()
+      //
+      // await facilityAnalyst.loadModel(this.props.mapControl, datasetv)
+      // this.toDoAction()
+      // this.props.showSetting && this.props.showSetting(Setting.Type.NETWORK_TRACKING)
+      // this.props.chooseLayer && this.props.chooseLayer(DatasetType.LINE, true)
+      // NavigationService.navigate('ChooseEditLayer',{ workspace: this.props.workspace, map: this.props.map, type: DatasetType.LINE, mapControl: this.props.mapControl, isEdit: true })
+    }).bind(this)()
+  }
+
+  /** 加载网络分析数据 **/
+  _transportationLoad = () => {
+    this.props.setLoading && this.props.setLoading(true)
+    try {
+      (async function () {
+        // this.toDoAction()
+        // testing
+
+        let datasource = await this.props.workspace.getDatasource(0)
+        let dataset = await datasource.getDataset('RoadNet')
+        let datasetv = await dataset.toDatasetVector()
+
+        let result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
+        this.props.setLoading && this.props.setLoading(false)
+        if (result) {
+          Toast.show('加载数据成功')
+        } else {
+          Toast.show('加载数据成功')
+        }
+      }).bind(this)()
+    } catch (e) {
+      this.props.setLoading && this.props.setLoading(false)
+    }
+  }
+
+  /** 设置起点 **/
+  _setStart = type => {
+    (async function () {
+      await tranportationAnalyst.analyst()
+    }).bind(this)()
+  }
+
+  /** 设置终点 **/
+  _setEnd = type => {
+    this.toDoAction()
+  }
+
+  /** 添加站点 **/
+  _setMiddle = type => {
+    this.toDoAction()
+  }
+
+  /** 上游追踪 **/
+  _traceUp = async () => {
+    // this.toDoAction()
+    await facilityAnalyst.traceUp()
+  }
+
+  /** 下游追踪 **/
+  _traceDown = async () => {
+    // this.toDoAction()
+    await facilityAnalyst.traceDown()
+  }
+
+  /** 连通性分析 **/
+  _connectedAnalyst = async () => {
+    // this.toDoAction()
+    await facilityAnalyst.connectedAnalyst()
+  }
+
+  clear = async () => {
+    // this.toDoAction()
+    await facilityAnalyst.clear()
+    // let trackLayer = await this.props.map.getTrackingLayer()
+    // await trackLayer.clear()
+    // await this.props.map.refresh()
+  }
+
+  getData = type => {
+    let data = [
+      {
+        key: '路径分析',
+        type: ROUTE,
+        action: cbData => {
+          this.changeTap(cbData, ROUTE)
+        },
+        operations: [
+          { key: '设置起点', action: this._setStart, image: require('../../../../assets/public/save.png') },
+          { key: '设置终点', action: this._setEnd, image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: this.addNode, image: require('../../../../assets/public/save.png') },
+          { key: '分析模式', action: () => this._setting(ROUTE), image: require('../../../../assets/public/save.png') },
+        ],
+      },
+      {
+        key: '连通性分析',
+        type: FACILITY,
+        action: cbData => {
+          this.changeTap(cbData, FACILITY)
+        },
+        operations: [
+          { key: '设置起点', action: this._setStart, image: require('../../../../assets/public/save.png') },
+          { key: '设置终点', action: this._setEnd, image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: this.addNode, image: require('../../../../assets/public/save.png') },
+        ],
+      },
+      {
+        key: '商旅分析',
+        type: TSP,
+        action: cbData => {
+          this.changeTap(cbData, TSP)
+        },
+        operations: [
+          { key: '设置起点', action: this._setStart, image: require('../../../../assets/public/save.png') },
+          { key: '添加站点', action: this._setMiddle, image: require('../../../../assets/public/save.png') },
+          { key: '添加终点', action: this._setEnd, image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: this.deleteNode, image: require('../../../../assets/public/save.png') },
+        ],
+      },
+      {
+        key: '追踪分析',
+        type: TRACKING,
+        action: cbData => {
+          this.changeTap(cbData, TRACKING)
+        },
+        operations: [
+          {
+            key: '上游追踪', action: () => {
+              this._traceUp()
+            }, image: require('../../../../assets/public/save.png'),
+          },
+          {
+            key: '下游追踪', action: () => {
+              this._traceDown()
+            }, image: require('../../../../assets/public/save.png'),
+          },
+          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(), image: require('../../../../assets/public/save.png') },
+        ],
+      },
+    ]
+    if (type) {
+      switch (type) {
+        case ROUTE:
+          data = data[0]
+          break
+        case FACILITY:
+          data = data[1]
+          break
+        case TSP:
+          data = data[2]
+          break
+        case TRACKING:
+          data = data[3]
+          break
+      }
+    }
+    return data
+  }
+
+  renderSubRight = () => {
+    return (
+      <MTBtn
+        BtnText={'分析'}
+        BtnImageSrc={require('../../../../assets/map/icon_edit.png')}
+        style={{ marginRight: scaleSize(10) }}
+        BtnClick={this._connectedAnalyst}
+      />
+    )
+  }
+
+  render() {
+    return (
+      <PopBtnSectionList
+        ref={ref => this.popBSL = ref}
+        popType={this.state.popType}
+        style={styles.pop}
+        subPopShow={this.state.subPopShow}
+        currentData={this.state.currentData}
+        subBtnType={PopBtnSectionList.SubBtnType.IMAGE_BTN}
+        subRight={this.renderSubRight()}
+        data={this.state.data}/>
+    )
+  }
+}
+
+NetworkAnalystToolBar.Type = {
+  ROUTE: ROUTE,
+  TSP: TSP,
+  FACILITY: FACILITY,
+  TRACKING: TRACKING,
+}
+
+const styles = StyleSheet.create({
+  pop: {
+    position: 'absolute',
+    left: 0,
+    bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
+    backgroundColor: constUtil.USUAL_GREEN,
+  },
+})

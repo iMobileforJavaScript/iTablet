@@ -1,0 +1,80 @@
+import * as React from 'react'
+import { FlatList } from 'react-native'
+import { Container, ListSeparator } from '../../components'
+import { Toast } from '../../utils'
+import NavigationService from '../NavigationService'
+import { MapListItem } from './components'
+
+export default class MapChange extends React.Component {
+
+  props: {
+    navigation: Object,
+  }
+
+  constructor(props) {
+    super(props)
+    const { state } = this.props.navigation
+    this.workspace = state.params.workspace
+    this.map = state.params.map;
+    (async function () {
+      let maps = await this.workspace.getMaps()
+      let count = await maps.getCount()
+      let mapNameArr = []
+      for (let i = 0; i < count; i++) {
+        let name = await maps.get(i)
+        let map = this.map
+        mapNameArr.push({ key: name, num: i, map: map })
+      }
+      this.setState({
+        dataList: mapNameArr,
+      }, () => {
+        this.container.setLoading(false)
+      })
+    }).bind(this)()
+  }
+
+  state = {
+    dataList: '',
+  }
+
+  _map_change = ({key, num, map}) => {
+    (async function () {
+      await map.close()
+      await map.open(key)
+      await map.refresh()
+      Toast.show('地图切换成功')
+      setTimeout(() => {
+        // this.props.navigation.goBack()
+        NavigationService.goBack()
+      }, 2000)
+    }).bind(this)()
+  }
+
+  _renderItem = ({ item }) => {
+    return (
+      <MapListItem data={item} onPress={() => {this._map_change(item)}} />
+    )
+  }
+
+  _renderItemSeparatorComponent = () => {
+    return <ListSeparator />
+  }
+
+  render() {
+    return (
+      <Container
+        ref={ref => this.container = ref}
+        initWithLoading
+        headerProps={{
+          title: '地图切换',
+          navigation: this.props.navigation,
+        }}>
+        <FlatList
+          data={this.state.dataList}
+          renderItem={this._renderItem}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
+        />
+      </Container>
+    )
+  }
+}
