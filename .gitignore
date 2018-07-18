@@ -3,8 +3,14 @@ node_modules/*
 __tests__/*
 .idea/*
 .gradle/*
-android/*
-ios/*
+android/.gradle/*
+android/.idea/*
+android/.settings/*
+android/build/*
+android/keystores/*
+
+android/app/build/*
+ios/build/*
 
 package-lock.json
 yarn-error.log
