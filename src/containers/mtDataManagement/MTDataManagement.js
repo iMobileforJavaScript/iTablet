@@ -1,10 +1,11 @@
 import * as React from 'react'
-import { View, SectionList, Text } from 'react-native'
+import { SectionList } from 'react-native'
 import { Container, ListSeparator } from '../../components'
 import { DataManagerTab, DataSetListSection, DataSetListItem } from './components'
 import NavigationService from '../NavigationService'
+import { Action } from 'imobile_for_javascript'
 
-import styles from './styles'
+// import styles from './styles'
 
 export default class MTDataManagement extends React.Component {
   props: {
@@ -15,6 +16,7 @@ export default class MTDataManagement extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.workspace = params.workspace
+    this.mapControl = params.mapControl
     this.map = params.map
     this.cb = params.cb
     this.state = {
@@ -28,41 +30,46 @@ export default class MTDataManagement extends React.Component {
   }
 
   getDatasets = async () => {
-    let list = []
-    let dataSources = await this.workspace.getDatasources()
-    let count = await dataSources.getCount()
-    for (let i = 0; i < count; i++) {
-      let dataSetList = []
-      let dataSource = await dataSources.get(i)
-      let name = await dataSource.getAlias()
-      let dataSets = await dataSource.getDatasets()
-      let dataSetCount = await dataSets.getCount()
-      for (let j = 0; j < dataSetCount; j++) {
-        let dataset = await dataSets.get(j)
-        let dsName = await dataset.getName()
-        let dsType = await dataset.getType()
+    try {
+      let list = []
+      let dataSources = await this.workspace.getDatasources()
+      let count = await dataSources.getCount()
+      for (let i = 0; i < count; i++) {
+        let dataSetList = []
+        let dataSource = await dataSources.get(i)
+        let name = await dataSource.getAlias()
+        let dataSets = await dataSource.getDatasets()
+        let dataSetCount = await dataSets.getCount()
+        for (let j = 0; j < dataSetCount; j++) {
+          let dataset = await dataSets.get(j)
+          let dsName = await dataset.getName()
+          let dsType = await dataset.getType()
 
-        dataSetList.push({
-          name: dsName,
-          type: dsType,
-          dataset: dataset,
-          section: i,
-          key: i + '-' + dsName,
+          dataSetList.push({
+            name: dsName,
+            type: dsType,
+            dataset: dataset,
+            section: i,
+            key: i + '-' + dsName,
+          })
+        }
+
+        list.push({
+          key: name,
+          isShow: true,
+          data: dataSetList,
+          index: i,
         })
       }
-
-      list.push({
-        key: name,
-        isShow: true,
-        data: dataSetList,
-        index: i,
+      await this.mapControl.setAction(Action.PAN)
+      this.setState({
+        dataSourceList: list,
+      }, () => {
+        this.container.setLoading(false)
       })
+    } catch (e) {
+
     }
-    this.setState({
-      dataSourceList: list,
-    }, () => {
-      this.container.setLoading(false)
-    })
   }
 
   showSection = (section, isShow?: boolean) => {

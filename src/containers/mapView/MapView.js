@@ -178,13 +178,13 @@ export default class MapView extends React.Component {
 
   //一级pop按钮 数据采集 点击函数
   _data_collection = () => {
-    NavigationService.navigate('DataCollection', { workspace: this.workspace, map: this.map })
+    NavigationService.navigate('DataCollection', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
   }
 
 
   //一级pop按钮 数据管理 点击函数
   _data_manager = () => {
-    NavigationService.navigate('DataManagement', { workspace: this.workspace, map: this.map })
+    NavigationService.navigate('DataManagement', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
   }
 
   //二级pop按钮 量算 点击函数

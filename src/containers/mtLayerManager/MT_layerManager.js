@@ -10,6 +10,7 @@ import { Container, InputDialog } from '../../components'
 import { Toast } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
+import { Action } from 'imobile_for_javascript'
 
 import { LayerManager_item, LayerManager_tab, SaveDialog, ModifiedDialog } from './components'
 
@@ -48,11 +49,13 @@ export default class MT_layerManager extends React.Component {
       // let workspace = this.workspace.getCaption()
       for (let i = 0; i < layerCount; i++) {
         let layer = await this.map.getLayer(i)
+        if (!layer) continue
         let name = await layer.getName()
         let caption = await layer.getCaption()
         let map = this.map
         layerNameArr.push({ key: name, caption: caption, obj: layer, map:map })
       }
+      await this.mapControl.setAction(Action.PAN)
       this.setState({
         datasourceList: layerNameArr,
         // mapName: mapName,
