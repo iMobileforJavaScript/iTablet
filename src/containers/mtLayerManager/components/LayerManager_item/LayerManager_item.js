@@ -15,14 +15,16 @@ import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
 export default class LayerManager_item extends React.Component {
-  
+
   props: {
     layer: Object,
     map: Object,
     mapControl: Object,
     name: string,
+    showRenameDialog: () => {},
+    showRemoveDialog: () => {},
   }
-  
+
   constructor(props){
     super(props)
     this.layer = this.props.layer
@@ -118,7 +120,11 @@ export default class LayerManager_item extends React.Component {
   }
 
   _openTheme = () => {
-    NavigationService.navigate('ThemeEntry')
+    NavigationService.navigate('ThemeEntry', {
+      layer: this.props.layer,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+    })
   }
 
   _openStyle = () => {
@@ -126,11 +132,11 @@ export default class LayerManager_item extends React.Component {
   }
 
   _rename = () => {
-    this.action()
+    this.props.showRenameDialog && this.props.showRenameDialog(true, this.props.layer)
   }
 
   _remove = () => {
-    this.action()
+    this.props.showRemoveDialog && this.props.showRemoveDialog(true, this.props.layer)
   }
 
   _pop_row=()=>{

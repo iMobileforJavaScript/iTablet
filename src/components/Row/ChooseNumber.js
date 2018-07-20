@@ -50,6 +50,7 @@ export default class ChooseNumber extends PureComponent {
       this.setState({
         value: this.props.minValue !== '' && value < this.props.minValue ? this.props.minValue : value,
         miusAble: this.props.minValue === '' || value > this.props.minValue,
+        plusAble: this.props.maxValue === '' || value < this.props.maxValue,
       }, () => {
         this.props.getValue && this.props.getValue(this.state.value)
       })
@@ -66,6 +67,7 @@ export default class ChooseNumber extends PureComponent {
       this.setState({
         value: this.props.maxValue !== '' && value > this.props.maxValue ? this.props.maxValue : value,
         plusAble: this.props.maxValue === '' || value < this.props.maxValue,
+        miusAble: this.props.minValue === '' || value > this.props.minValue,
       }, () => {
         this.props.getValue && this.props.getValue(this.state.value)
       })

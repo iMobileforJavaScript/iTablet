@@ -24,7 +24,7 @@ import AddDataset from './addDataset'
 import AddLayerGroup from './addLayerGroup'
 import MapChange from './mapChange'
 import { LayerAttribute, LayerAttributeEdit, LayerAttributeAdd } from './layerAttribute'
-import { ThemeEntry, ThemeEdit } from './theme'
+import { ThemeEntry, ThemeEdit, ChoosePage } from './theme'
 
 import Map from './map'
 import MapView from './mapView'
@@ -177,6 +177,12 @@ export default StackNavigator({
   },
   ThemeEdit: {
     screen: ThemeEdit,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ChoosePage: {
+    screen: ChoosePage,
     navigationOptions: {
       header: null,
     },

@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native'
 import { scaleSize, dataUtil } from '../../../../../utils'
 import { color } from '../../../../../styles'
 import { Table, TableWrapper, Row, Rows, Col, Cell } from 'react-native-table-component'
@@ -23,6 +23,8 @@ export default class ThemeTable extends React.Component {
     add: () => {},
     edit: () => {},
     selectRow: () => {},
+    updageValue: () => {},
+    setItemVisible: () => {},
 
     selectable: boolean,
 
@@ -60,38 +62,40 @@ export default class ThemeTable extends React.Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data)) {
+      let {dataList, colHeight} = this.dealData(nextProps.data)
+      this.setState({
+        colHeight: colHeight,
+        tableData: dataList,
+      })
+    }
+  }
+  
+  /**
+   * 数据中如果有key = 'data'，则不显示在列表中。作为整行的数据
+   * @param data
+   * @param height
+   * @returns {{dataList: Array, colHeight: Array}}
+   */
   dealData = (data, height = COL_HEIGHT) => {
     let dataList = [], colHeight = []
 
-    // if (data instanceof Object) {
-    //   dataList = []
-    //   Object.keys(data).forEach((item, index) => {
-    //     dataList.push([
-    //       key,
-    //       {
-    //         index: index,
-    //         key: key,
-    //         data: data[key],
-    //         type: dataUtil.getType(data[key].value),
-    //       },
-    //     ])
-    //     colHeight.push(height)
-    //   })
-    //   return {dataList, colHeight}
-    // }
-    
-    data.forEach(item => {
+    data.forEach((item, rowIndex) => {
       let arr = []
       Object.keys(item).forEach((key, index) => {
+        if (key === 'data') return
         arr.push({
           key: key,
+          rowIndex: rowIndex,
           index: index,
           value: item[key],
+          rowData: item,
         })
       })
       dataList.push(arr)
     })
-    
+
 
     for (let i = 0; i < dataList.length; i++) {
       colHeight[i] = height
@@ -116,7 +120,6 @@ export default class ThemeTable extends React.Component {
   }
 
   setData = data => {
-    // this.originData = changeOrigin ? { ...data } : {}
     let {titleList, dataList, colHeight} = this.dealData(this.props.tableTitle, data)
     this.setState({
       titleData: titleList,
@@ -133,11 +136,10 @@ export default class ThemeTable extends React.Component {
   }
 
   modified = (item, value, index) => {
-    // item.data.value = value
     let newTableData = this.state.tableData
-    newTableData[index][item.index].value = value
+    newTableData[item.rowIndex][index].value = value
     let modified = this.state.modifiedData
-    modified[item.key] = item
+    modified[item.rowIndex] = newTableData[item.rowIndex]
     this.setState({
       tableData: newTableData,
       modifiedData: modified,
@@ -151,6 +153,10 @@ export default class ThemeTable extends React.Component {
       })
       this.props.selectRow && this.props.selectRow(data)
     }
+  }
+
+  changeStyle = () => {
+    // TODO 修改风格
   }
 
   renderInput = (item, index) => {
@@ -167,6 +173,31 @@ export default class ThemeTable extends React.Component {
           this.modified(item, text, index)
         }}
       />
+    )
+  }
+
+  renderVisibleIcon = (item, index) => {
+    let image = item.value
+      ? require('../../../../../assets/map/icon_visible_selected.png')
+      : require('../../../../../assets/map/icon_visible.png')
+    return (
+      <TouchableOpacity onPress={() => this.modified(item, !item.value, index)} style={styles.imageView}>
+        <Image resizeMode={'contain'} style={styles.image} source={image}/>
+      </TouchableOpacity>
+    )
+  }
+
+  renderStyleView = (item, index) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.chooseColorContainer}
+        accessible={true}
+        accessibilityLabel={item.key}
+        onPress={() => this.changeStyle()}
+      >
+        <View style={[styles.subChooseColorContainer, {backgroundColor: item.value}]}/>
+      </TouchableOpacity>
     )
   }
 
@@ -188,24 +219,27 @@ export default class ThemeTable extends React.Component {
               {
                 this.state.tableData.map((rowData, index) => {
                   return (
-                    <TableWrapper key={index} style={styles.row}>
-                      {
-                        rowData.map((cellData, cellIndex) => {
-                          return (
-                            <Cell
-                              flex={this.props.flexArr[cellIndex]}
-                              key={cellIndex}
-                              data={
-                                cellIndex.value
-                                // cellIndex === 0 || cellIndex === 1
-                                //   ? cellData
-                                //   : this.renderInput(cellData, index)
-                              }
-                              textStyle={styles.text}/>
-                          )
-                        })
-                      }
-                    </TableWrapper>
+                    <TouchableOpacity activeOpacity={0.8} key={index} onPress={() => this.selectRow(index, rowData)}>
+                      <TableWrapper key={index} style={[styles.row, this.state.currentSelect === index && styles.selectRow]}>
+                        {
+                          rowData.map((cellData, cellIndex) => {
+                            let cell
+                            if (cellIndex === 1) {
+                              cell = this.renderStyleView(cellData, cellIndex)
+                            } else if (cellIndex === 2 || cellIndex === 3) {
+                              cell = this.renderInput(cellData, cellIndex)
+                            }
+                            return (
+                              <Cell
+                                flex={this.props.flexArr[cellIndex]}
+                                key={cellIndex}
+                                data={cellIndex === 0 ? this.renderVisibleIcon(cellData, cellIndex) : cell}
+                                textStyle={styles.text}/>
+                            )
+                          })
+                        }
+                      </TableWrapper>
+                    </TouchableOpacity>
                   )
                 })
               }

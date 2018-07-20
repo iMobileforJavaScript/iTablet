@@ -21,7 +21,7 @@ export default class MapLoad extends Component {
     return (
       <Container
         headerProps={{
-          title: '地图加载',
+          title: '打开数据',
           navigation: this.props.navigation,
           headerRight: [
 

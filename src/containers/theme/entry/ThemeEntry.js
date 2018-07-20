@@ -26,8 +26,25 @@ export default class ThemeEntry extends React.Component {
     data: [{title: UNIQUE}, {title: RANGE}, {title: UNIFIED}],
   }
 
+  constructor(props) {
+    super(props)
+    let { params } = props.navigation.state
+    this.layer = params && params.layer
+    this.map = params && params.map
+    this.mapControl = params && params.mapControl
+
+    this.state = {
+      data: [{title: UNIQUE}, {title: RANGE}, {title: UNIFIED}],
+    }
+  }
+
   rowAction = ({title}) => {
-    NavigationService.navigate('ThemeEdit', { title })
+    NavigationService.navigate('ThemeEdit', {
+      title,
+      layer: this.layer,
+      map: this.map,
+      mapControl: this.mapControl,
+    })
   }
 
   _renderItem = ({ item }) => {

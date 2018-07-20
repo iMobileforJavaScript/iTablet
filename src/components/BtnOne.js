@@ -10,7 +10,7 @@ import { scaleSize } from '../utils'
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     flexDirection: 'column',
     backgroundColor: 'transparent',
   },
@@ -33,6 +33,7 @@ const styles = StyleSheet.create({
 export default class BtnOne extends React.Component {
 
   props: {
+    style: any,
     BtnClick: () => {},
     BtnImageSrc: any,
     BtnText: string,
@@ -54,7 +55,7 @@ export default class BtnOne extends React.Component {
     let imgStyle = this.props.size ==='small'
       ? styles.imageSm : styles.imageLg
     return (
-      <TouchableOpacity accessible={true} accessibilityLabel={this.props.BtnText} style={styles.container} onPress={this.action}>
+      <TouchableOpacity accessible={true} accessibilityLabel={this.props.BtnText} style={[styles.container, this.props.style]} onPress={this.action}>
         {this.props.BtnImageSrc && <Image resizeMode={'contain'} style={[imgStyle, this.props.imageStyle]} source={this.props.BtnImageSrc} />}
         {this.props.BtnText && <Text style={[styles.text, this.props.titleStyle]}>{this.props.BtnText}</Text>}
       </TouchableOpacity>

@@ -41,7 +41,7 @@ export default StyleSheet.create({
     width: scaleSize(40),
   },
   text_container:{
-    height:40,
+    // height:40,
     width:150,
   },
   rowTwo: {

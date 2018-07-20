@@ -47,7 +47,7 @@ export default class Btnbar_home extends React.Component {
     const trackClick = this.props.track ? this.props.track : this._click_defalt
     return (
       <View style={styles.container}>
-        {this._addElement(mapLoadClick, require('../../../../assets/home/icon-map-load.png'), '开始')}
+        {this._addElement(mapLoadClick, require('../../../../assets/home/icon-map-load.png'), '地图加载')}
         <ListSeparator key={1} mode={ListSeparator.mode.VERTICAL} />
         {this._addElement(myMapClick, require('../../../../assets/home/icon-my-map.png'), '我的地图')}
         <ListSeparator key={2} mode={ListSeparator.mode.VERTICAL} />

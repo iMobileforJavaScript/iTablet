@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { FlatList } from 'react-native'
-import { Container } from '../../components'
+import { Container, InputDialog } from '../../components'
 import { Toast } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
@@ -49,8 +49,9 @@ export default class MT_layerManager extends React.Component {
       for (let i = 0; i < layerCount; i++) {
         let layer = await this.map.getLayer(i)
         let name = await layer.getName()
+        let caption = await layer.getCaption()
         let map = this.map
-        layerNameArr.push({ key: name, obj: layer, map:map })
+        layerNameArr.push({ key: name, caption: caption, obj: layer, map:map })
       }
       this.setState({
         datasourceList: layerNameArr,
@@ -68,6 +69,20 @@ export default class MT_layerManager extends React.Component {
 
   showModifiedDialog = (isShow = true) => {
     this.modifiedDialog.setDialogVisible(isShow)
+  }
+
+  showRenameDialog = (isShow = true, layer = null) => {
+    this.renameDialog.setDialogVisible(isShow)
+    if (layer) {
+      this.renameLayer = layer
+    }
+  }
+  
+  showRemoveDialog = (isShow = true, layer = null) => {
+    this.deleteDialog.setDialogVisible(isShow)
+    if (layer) {
+      this.removeLayer = layer
+    }
   }
 
   /*LayerManager_tab点击方法*/
@@ -153,12 +168,56 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  //删除图层
+  _removeLayer = () => {
+    (async function () {
+      try {
+        if (!this.map || !this.removeLayer) return
+        let name = await this.removeLayer.getName()
+        let result = await this.map.removeLayer(name)
+        if (result) {
+          Toast.show('删除成功')
+          this.removeLayer = null
+          await this.getData()
+        } else {
+          Toast.show('删除失败')
+        }
+        this.deleteDialog && this.deleteDialog.setDialogVisible(false)
+      } catch (e) {
+        Toast.show('删除失败')
+      }
+    }).bind(this)()
+  }
+
+  //图层重命名
+  _renameLayer = name => {
+    (async function () {
+      try {
+        if (!this.map || !this.renameLayer) return
+        await this.renameLayer.setCaption(name)
+        Toast.show('修改成功')
+        this.renameLayer = null
+        await this.getData()
+        this.renameDialog && this.renameDialog.setDialogVisible(false)
+      } catch (e) {
+        Toast.show('修改失败')
+      }
+    }).bind(this)()
+  }
+
   _renderItem = ({ item }) => {
-    let key = item.key
+    let caption = item.caption
     let layer = item.obj
     let map = item.map
     return (
-      <LayerManager_item layer={layer} name={key} map={map} mapControl={this.mapControl}/>
+      <LayerManager_item
+        layer={layer}
+        name={caption}
+        map={map}
+        mapControl={this.mapControl}
+        showRemoveDialog={this.showRemoveDialog}
+        showRenameDialog={this.showRenameDialog}
+      />
     )
   }
 
@@ -191,9 +250,20 @@ export default class MT_layerManager extends React.Component {
         />
         <ModifiedDialog
           ref={ref => this.modifiedDialog = ref}
-          workspace={this.workspace}
+          info={'当前地图已修改，是否保存？'}
           confirmAction={this.saveAndGoToMapChange}
           cancelAction={this.goToMapChange}
+        />
+        <ModifiedDialog
+          ref={ref => this.deleteDialog = ref}
+          info={'是否要删除该图层？'}
+          confirmAction={this._removeLayer}
+        />
+        <InputDialog
+          ref={ref => this.renameDialog = ref}
+          title={'图层重命名'}
+          label={'图层名称'}
+          confirmAction={this._renameLayer}
         />
       </Container>
     )

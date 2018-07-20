@@ -42,4 +42,24 @@ export default StyleSheet.create({
   textInput: {
     textAlign: 'center',
   },
+  imageView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    height: scaleSize(40),
+    width: scaleSize(70),
+  },
+  chooseColorContainer: {
+    flex: 2,
+    minHeight: scaleSize(60),
+    borderWidth: scaleSize(1),
+    borderColor: color.title,
+    padding: scaleSize(2),
+    margin: scaleSize(10),
+  },
+  subChooseColorContainer: {
+    flex: 1,
+  },
 })

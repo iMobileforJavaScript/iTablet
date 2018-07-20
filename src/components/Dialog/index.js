@@ -1,3 +1,7 @@
 import Dialog from './Dialog'
+import InputDialog from './InputDialog'
 
-export default Dialog
+export {
+  Dialog,
+  InputDialog,
+}

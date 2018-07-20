@@ -74,6 +74,33 @@ function getType(data) {
   return DataType[type]
 }
 
+function colorRgba (str,n) {
+  let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
+  let sColor = str.toLowerCase()
+  if (sColor && reg.test(sColor)) {
+    if (sColor.length === 4) {
+      let sColorNew = "#"
+      for (let i = 1; i < 4; i += 1) {  //例如：#eee,#fff等
+        sColorNew += sColor.slice(i, i + 1).concat(sColor.slice(i, i + 1))
+      }
+      sColor = sColorNew
+    }
+    let sColorChange = {}
+    for (let i = 1; i < 7; i += 2) {
+      let key = i === 1 ? 'r' : i === 3 ? 'g' : 'b'
+      sColorChange[key] = parseInt("0x" + sColor.slice(i, i + 2))
+    }
+    sColorChange['a'] = n
+    return sColorChange
+  } else {
+    return sColor
+  }
+}
+
+function colorHex(obj) {
+   return "#" + ((1 << 24) + (obj.r << 16) + (obj.g << 8) + obj.b).toString(16).slice(1)
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -81,4 +108,6 @@ export default {
   checkMobile,
   CheckTel,
   getType,
+  colorRgba,
+  colorHex,
 }

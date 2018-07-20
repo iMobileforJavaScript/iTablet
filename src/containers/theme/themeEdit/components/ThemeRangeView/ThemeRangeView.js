@@ -5,9 +5,9 @@
 */
 
 import * as React from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
+import { ScrollView, View, Text } from 'react-native'
 import { RangeMode } from 'imobile_for_javascript'
-import { Button, Row } from '../../../../../components'
+import { Button, Row, BtnOne } from '../../../../../components'
 import { Toast } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
 import ThemeTable from '../ThemeTable'
@@ -16,7 +16,7 @@ import styles from './styles'
 
 const CHOOSE = '请选择'
 
-export default class ThemeRange extends React.Component {
+export default class ThemeRangeView extends React.Component {
 
   props: {
     title: string,
@@ -28,7 +28,17 @@ export default class ThemeRange extends React.Component {
       title: props.title,
       themeRangeList: [
         {visible: true, color: 'red', value: 1, caption: '标题1'},
-        {visible: true, color: 'green', value: 2, caption: '标题2'},
+        {visible: false, color: 'green', value: 2, caption: '标题2'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
+        {visible: true, color: 'blue', value: 3, caption: '标题3'},
         {visible: true, color: 'blue', value: 3, caption: '标题3'},
       ],
       data: {
@@ -37,7 +47,7 @@ export default class ThemeRange extends React.Component {
         rangeCount: 1,
         precision: 1,
         fontSize: 10,
-        fontColor: 'blue',
+        colorMethod: '#0000FF',
       },
     }
   }
@@ -93,15 +103,44 @@ export default class ThemeRange extends React.Component {
     // NavigationService.goBack()
   }
 
-  cancel = () => {
-    NavigationService.goBack()
+  reset = () => {
+    // TODO reset
+  }
+
+  add = () => {
+    // TODO add
+  }
+
+  delete = () => {
+    // TODO delete
+  }
+
+  renderOperationBtns = () => {
+    return (
+      <View style={styles.operationBtns}>
+        <BtnOne
+          style={styles.operationBtn}
+          size={BtnOne.SIZE.SMALL}
+          BtnText='添加'
+          BtnImageSrc={require('../../../../../assets/public/icon-add.png')}
+          BtnClick={this.add}
+        />
+        <BtnOne
+          style={styles.operationBtn}
+          size={BtnOne.SIZE.SMALL}
+          BtnText='删除'
+          BtnImageSrc={require('../../../../../assets/public/icon-delete.png')}
+          BtnClick={this.delete}
+        />
+      </View>
+    )
   }
 
   renderContent = () => {
     return (
       <View style={styles.content}>
         <Row
-          style={styles.rowMarginTop}
+          style={styles.row}
           key={'表达式'}
           value={this.state.data.expression || CHOOSE}
           type={Row.Type.TEXT_BTN}
@@ -110,16 +149,7 @@ export default class ThemeRange extends React.Component {
         />
 
         <Row
-          style={styles.rowMarginTop}
-          key={'字体'}
-          value={this.state.data.fontName}
-          type={Row.Type.TEXT_BTN}
-          title={'字体'}
-          getValue={value => this.getValue({fontName: value === CHOOSE ? '' : value})}
-        />
-
-        <Row
-          style={styles.rowMarginTop}
+          style={styles.row}
           key={'分段方法'}
           value={this.state.data.align}
           type={Row.Type.RADIO_GROUP}
@@ -138,7 +168,7 @@ export default class ThemeRange extends React.Component {
         />
 
         <Row
-          style={styles.rowMarginTop}
+          style={styles.row}
           key={'段数'}
           defaultValue={10}
           value={this.state.data.rangeCount}
@@ -150,8 +180,9 @@ export default class ThemeRange extends React.Component {
         />
 
         <Row
-          style={styles.rowMarginTop}
+          style={styles.row}
           key={'分段舍入精度'}
+          defaultValue={1}
           value={this.state.data.precision}
           type={Row.Type.CHOOSE_NUMBER}
           minValue={0.00000001}
@@ -160,14 +191,24 @@ export default class ThemeRange extends React.Component {
           title={'分段舍入精度'}
           getValue={value => this.getValue({precision: value})}
         />
-        {/*<ThemeTable*/}
-        {/*ref={ref => this.table = ref}*/}
-        {/*data={this.state.themeRangeList}*/}
-        {/*// tableData={this.state.tableData}*/}
-        {/*// tableTitle={this.state.tableTitle}*/}
-        {/*// colHeight={this.state.colHeight}*/}
-        {/*tableHead={['可见', '风格', '段值', '标题']}*/}
-        {/*/>*/}
+  
+        <Row
+          style={styles.row}
+          key={'颜色方案'}
+          value={this.state.data.colorMethod}
+          type={Row.Type.CHOOSE_COLOR}
+          title={'颜色方案'}
+          getValue={value => this.getValue({colorMethod: value})}
+        />
+
+        {this.renderOperationBtns()}
+
+        <ThemeTable
+          ref={ref => this.table = ref}
+          data={this.state.themeRangeList}
+          tableHead={['可见', '风格', '段值', '标题']}
+          flexArr={[1, 2, 1, 2]}
+        />
       </View>
     )
   }
@@ -176,17 +217,17 @@ export default class ThemeRange extends React.Component {
     return (
       <View style={styles.btns}>
         <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'取消'} onPress={this.cancel}/>
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
       </View>
     )
   }
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         {this.renderContent()}
         {this.renderBtns()}
-      </View>
+      </ScrollView>
     )
   }
 }

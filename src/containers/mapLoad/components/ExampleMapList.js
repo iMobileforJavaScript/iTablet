@@ -19,6 +19,7 @@ export default class ExampleMapList extends React.Component {
         // path = '/SampleData/Changchun/Changchun.smwu'
         // path = '/SampleData/FacilityAnalyst/FacilityAnalyst.smwu'
         path = '/SampleData/beijing_new/beijing.smwu'
+        // path = '/SampleData/world/world.smwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('MapView', { path:  path})
@@ -54,6 +55,7 @@ export default class ExampleMapList extends React.Component {
         } else {
           Toast.show("本地实例文件不存在")
         }
+        // Toast.show('待完善')
         break
       default:
         Toast.show('待完善')

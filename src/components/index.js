@@ -13,7 +13,7 @@ import Container from './Container'
 import EmptyView from './EmptyView'
 import Loading from './Container/Loading'
 import Button from './Button'
-import Dialog from './Dialog'
+import { Dialog, InputDialog } from './Dialog'
 import {
   Row,
   Radio,
@@ -57,6 +57,7 @@ export {
   EmptyView,
   Loading,
   Dialog,
+  InputDialog,
   Button,
   Row,
   Radio,

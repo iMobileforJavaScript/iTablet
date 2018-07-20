@@ -1,9 +1,11 @@
-import ThemeLabel from './ThemeLabel'
-import ThemeRange from './ThemeRange'
+import ThemeLabelView from './ThemeLabelView'
+import ThemeRangeView from './ThemeRangeView'
+import ThemeUniqueView from './ThemeUniqueView'
 import ThemeTable from './ThemeTable'
 
 export {
-  ThemeLabel,
-  ThemeRange,
+  ThemeLabelView,
+  ThemeRangeView,
+  ThemeUniqueView,
   ThemeTable,
 }

@@ -6,10 +6,11 @@
 
 import * as React from 'react'
 import { TouchableOpacity, View, Text } from 'react-native'
-import { TextAlignment } from 'imobile_for_javascript'
+import { TextAlignment, ThemeLabel, ThemeLabelItem, TextStyle } from 'imobile_for_javascript'
 import { BtnTwo, Button, Row, ListSeparator } from '../../../../../components'
-import { constUtil, Toast } from '../../../../../utils'
+import { dataUtil, Toast } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
+import ChoosePage from '../../../choosePage'
 
 import styles from './styles'
 
@@ -21,10 +22,13 @@ import styles from './styles'
 
 const CHOOSE = '请选择'
 
-export default class ThemeLabel extends React.Component {
+export default class ThemeLabelView extends React.Component {
 
   props: {
     title: string,
+    map: Object,
+    mapControl: Object,
+    layer: Object,
   }
 
   constructor(props) {
@@ -36,7 +40,7 @@ export default class ThemeLabel extends React.Component {
         fontName: '微软雅黑',
         align: TextAlignment.MIDDLECENTER,
         fontSize: 10,
-        fontColor: 'blue',
+        fontColor: '#0000FF',
       },
     }
   }
@@ -46,11 +50,21 @@ export default class ThemeLabel extends React.Component {
   }
 
   getExpression = value => {
-    let data = this.state.data
-    Object.assign(data, {expression: value})
-    this.setState({
-      data: data,
+    NavigationService.navigate('ChoosePage', {
+      type: ChoosePage.Type.EXPRESSION,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+      layer: this.props.layer,
+      cb: value => {
+        this.getValue({expression: value})
+      },
     })
+  }
+
+  getFont = value => {
+    NavigationService.navigate('ChoosePage', {type: ChoosePage.Type.FONT, cb: value => {
+      this.getValue({fontName: value})
+    }})
   }
 
   getValue = obj => {
@@ -88,12 +102,64 @@ export default class ThemeLabel extends React.Component {
   }
 
   confirm = () => {
-    Toast.show(JSON.stringify(this.state.data))
-    // NavigationService.goBack()
+    Toast.show('待做')
+    // Toast.show(JSON.stringify(this.state.data))
+    ;(async function () {
+      try {
+        // let dataset = await this.state.layer.getDataset()
+        // let datasetVector = await dataset.toDatasetVector()
+        //
+        // let themeLabel = await new ThemeLabel().createObj()
+        // await themeLabel.setLabelExpression(this.state.data.expression)
+        // await themeLabel.setRangeExpression(this.state.data.expression)
+        //
+        // let themeLabelItem = await new ThemeLabelItem().createObj()
+        // await themeLabelItem.setVisible(true)
+        // let style = await new TextStyle().createObj()
+        // await style.setForeColor(dataUtil.colorRgba(this.state.data.fontColor))
+        //
+        
+        // let themeLabel = new ThemeLabel().makeThemeLabel({
+        //   datasetVector: datasetVector,
+        //   rangeExpression: this.state.data.expression,
+        //   rangeMode: this.state.data.expression,
+        //   rangeParameter: this.state.data.expression,
+        //   colorGradientType: this.state.data.expression,
+        // })
+  
+        // ThemeLabel themeLabelMap = new ThemeLabel();
+        // themeLabelMap.setLabelExpression("Country");
+        // themeLabelMap.setRangeExpression("Pop_1994");
+        //
+        // ThemeLabelItem themeLabelItem1 = new ThemeLabelItem();
+        // themeLabelItem1.setVisible(true);
+        // TextStyle textStyle1 = new TextStyle();
+        // textStyle1.setForeColor(new Color(255, 10, 10));
+        // textStyle1.setFontName("111");
+        // themeLabelItem1.setStyle(textStyle1);
+        //
+        // themeLabelMap.addToHead(themeLabelItem1);
+        //
+        // Dataset dataset = mWorkspace.getDatasources().get(0).getDatasets().get("Countries");
+        // if (dataset != null) {
+        //   mUnifiedLayer = mMapControl.getMap().getLayers().add(dataset,themeLabelMap, true);
+        // }
+        //
+        // mMapControl.getMap().refresh();
+        
+        
+      } catch (e) {
+      }
+    }).bind(this)()
+    
+    
+    
+    
   }
 
-  cancel = () => {
-    NavigationService.goBack()
+  reset = () => {
+    Toast.show('待做')
+    // NavigationService.goBack()
   }
 
   renderContent = () => {
@@ -105,7 +171,8 @@ export default class ThemeLabel extends React.Component {
           value={this.state.data.expression || CHOOSE}
           type={Row.Type.TEXT_BTN}
           title={'表达式'}
-          getValue={value => this.getValue({expression: value === CHOOSE ? '' : value })}
+          getValue={this.getExpression}
+          // getValue={value => this.getValue({expression: value === CHOOSE ? '' : value })}
         />
 
         <Row
@@ -114,7 +181,8 @@ export default class ThemeLabel extends React.Component {
           value={this.state.data.fontName}
           type={Row.Type.TEXT_BTN}
           title={'字体'}
-          getValue={value => this.getValue({fontName: value === CHOOSE ? '' : value})}
+          getValue={this.getFont}
+          // getValue={value => this.getValue({fontName: value === CHOOSE ? '' : value})}
         />
 
         <Row
@@ -168,7 +236,7 @@ export default class ThemeLabel extends React.Component {
     return (
       <View style={styles.btns}>
         <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'取消'} onPress={this.cancel}/>
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
       </View>
     )
   }

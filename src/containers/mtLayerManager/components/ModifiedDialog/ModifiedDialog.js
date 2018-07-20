@@ -13,7 +13,7 @@ export default class ModifiedDialog extends PureComponent {
   props: {
     confirmAction: () => {},
     cancelAction: () => {},
-    workspace: boolean,
+    info: string,
   }
 
   constructor(props) {
@@ -35,25 +35,6 @@ export default class ModifiedDialog extends PureComponent {
     this.props.cancelAction && this.props.cancelAction()
   }
 
-  renderBtns = (title, placeholder, value) => {
-    return (
-      <View style={styles.item}>
-        {
-          title ? <Text style={styles.title}>{title}</Text>
-            : <View/>
-        }
-        <TextInput
-          accessible={true}
-          accessibilityLabel={placeholder}
-          underlineColorAndroid={'transparent'}
-          defaultValue={value}
-          // editable={!!value}
-          placeholder={placeholder}
-          style={styles.textInputStyle} />
-      </View>
-    )
-  }
-
   render() {
     return (
       <Dialog
@@ -65,7 +46,7 @@ export default class ModifiedDialog extends PureComponent {
         cancelBtnTitle={'否'}
       >
         <View style={styles.container}>
-          <Text style={styles.title}>当前地图已修改，是否保存？</Text>
+          <Text style={styles.title}>{this.props.info}</Text>
         </View>
       </Dialog>
     )

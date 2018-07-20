@@ -52,21 +52,25 @@ export default class MapView extends React.Component {
         this.DSParams = { server: 'http://t0.tianditu.com/vec_w/wmts', engineType: 23, driver: 'WMTS', alias: 'baseMap' }
         this.labelDSParams = { server: 'http://t0.tianditu.com/cva_w/wmts', engineType: 23, driver: 'WMTS', alias: 'label' }
         this.layerIndex = 0
+        this.mapName = '天地图'
         break
       case 'Baidu':
         this.DSParams = { server: 'http://www.baidu.com', engineType: 227 }
         this.labelDSParams = false
         this.layerIndex = 0
+        this.mapName = '百度地图'
         break
       case 'Google':
         this.DSParams = { server: 'http://www.google.cn/maps', engineType: 223 }
         this.labelDSParams = false
         this.layerIndex = 'roadmap'
+        this.mapName = 'GOOGLE地图'
         break
       case 'OSM':
         this.DSParams = { server: 'http://openstreetmap.org', engineType: 228 }
         this.labelDSParams = false
         this.layerIndex = 0
+        this.mapName = 'OSM'
         break
       case 'ONLINE':
         this.DSParams = { server: params.path || 'http://openstreetmap.org', engineType: 228 }
@@ -435,23 +439,27 @@ export default class MapView extends React.Component {
   _addLocalMap = () => {
     let workspaceModule = new Workspace()
     ;(async function () {
-      this.workspace = await workspaceModule.createObj()
-      this.mapControl = await this.mapView.getMapControl()
-      this.map = await this.mapControl.getMap()
+      try {
+        this.workspace = await workspaceModule.createObj()
+        this.mapControl = await this.mapView.getMapControl()
+        this.map = await this.mapControl.getMap()
 
-      let filePath = await Utility.appendingHomeDirectory(this.path)
+        let filePath = await Utility.appendingHomeDirectory(this.path)
 
-      let openWk = await this.workspace.open(filePath)
-      await this.map.setWorkspace(this.workspace)
-      this.mapName = await this.workspace.getMapName(0)
+        let openWk = await this.workspace.open(filePath)
+        await this.map.setWorkspace(this.workspace)
+        this.mapName = await this.workspace.getMapName(0)
 
-      await this.map.open(this.mapName)
-      // await this.map.setScale(0.00005)
-      await this.map.refresh()
-      await this._addGeometrySelectedListener()
+        await this.map.open(this.mapName)
+        // await this.map.setScale(0.00005)
+        await this.map.refresh()
+        await this._addGeometrySelectedListener()
 
-      this.container.setLoading(false)
-      this.saveLatest()
+        this.container.setLoading(false)
+        this.saveLatest()
+      } catch (e) {
+        this.container.setLoading(false)
+      }
     }).bind(this)()
   }
 
@@ -459,38 +467,43 @@ export default class MapView extends React.Component {
     const workspaceModule = new Workspace()
     const point2dModule = new Point2D()
     ;(async function () {
-      this.workspace = await workspaceModule.createObj()
-      this.mapControl = await this.mapView.getMapControl()
-      this.map = await this.mapControl.getMap()
-      await this.map.setWorkspace(this.workspace)
+      try {
+        this.workspace = await workspaceModule.createObj()
+        this.mapControl = await this.mapView.getMapControl()
+        this.map = await this.mapControl.getMap()
+        await this.map.setWorkspace(this.workspace)
 
-      // this.mapName = await this.workspace.getMapName(0)
-      await this.map.setScale(0.0001)
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          let lat = position.coords.latitude
-          let lon = position.coords.longitude
-          ;(async () => {
-            let centerPoint = await point2dModule.createObj(lon, lat)
-            await this.map.setCenter(centerPoint)
-            await this.map.refresh()
+        // this.mapName = await this.map.getName()
+        
+        await this.map.setScale(0.0001)
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+            ;(async () => {
+              let centerPoint = await point2dModule.createObj(lon, lat)
+              await this.map.setCenter(centerPoint)
+              await this.map.refresh()
 
-            this.saveLatest()
-          }).bind(this)()
+              this.saveLatest()
+            }).bind(this)()
+          }
+        )
+        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+
+        let dataset = await dsBaseMap.getDataset(this.layerIndex)
+        await this.map.addLayer(dataset, true)
+
+        if (this.labelDSParams) {
+          let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
+          await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
         }
-      )
-      let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
 
-      let dataset = await dsBaseMap.getDataset(this.layerIndex)
-      await this.map.addLayer(dataset, true)
-
-      if (this.labelDSParams) {
-        let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
-        await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
+        await this._addGeometrySelectedListener()
+        this.container.setLoading(false)
+      } catch (e) {
+        this.container.setLoading(false)
       }
-
-      await this._addGeometrySelectedListener()
-      this.container.setLoading(false)
     }).bind(this)()
   }
 }

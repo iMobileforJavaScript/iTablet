@@ -8,7 +8,7 @@ export default StyleSheet.create({
     flexDirection: 'column',
     // backgroundColor: constUtil.USUAL_GREEN,
     // paddingTop:10,
-    paddingHorizontal: scaleSize(30),
+    // paddingHorizontal: scaleSize(30),
   },
   content: {
     flex: 1,
@@ -22,9 +22,6 @@ export default StyleSheet.create({
   rowTitle:{
     fontSize: size.fontSize.fontSizeLg,
   },
-  rowMarginTop: {
-    marginTop: scaleSize(30),
-  },
   btns: {
     height: scaleSize(60),
     flexDirection: 'row',
@@ -33,5 +30,16 @@ export default StyleSheet.create({
     alignItems: 'center',
     marginVertical: scaleSize(30),
     backgroundColor: 'transparent',
+  },
+  operationBtns: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    height: scaleSize(100),
+    marginTop: scaleSize(30),
+  },
+  operationBtn: {
+    marginLeft: scaleSize(30),
   },
 })
