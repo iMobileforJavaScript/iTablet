@@ -173,7 +173,7 @@ export default class MapView extends React.Component {
   _addLayer = () => {
     let ws = this.workspace
     let map = this.map
-    NavigationService.navigate('DataSourcelist',{ workspace: ws, map: map })
+    NavigationService.navigate('DataSourcelist',{ workspace: ws, map: map ,mapControl:this.mapControl })
   }
 
   //一级pop按钮 图层管理 点击函数
@@ -277,7 +277,7 @@ export default class MapView extends React.Component {
   btnClick = () => {}
 
   toDoAction = () => {
-    Toast.show('待完善')
+    NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map,mapControl:this.mapControl})
   }
 
   // 地图保存
@@ -428,6 +428,8 @@ export default class MapView extends React.Component {
     }
   }
 
+
+
   _addLocalMap = () => {
     let workspaceModule = new Workspace()
     ;(async function () {
@@ -444,13 +446,14 @@ export default class MapView extends React.Component {
 
         await this.map.open(this.mapName)
         // await this.map.setScale(0.00005)
+        await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
         await this._addGeometrySelectedListener()
-        await this._addGestureDetector()
 
         this.container.setLoading(false)
         this.saveLatest()
       } catch (e) {
+        console.error(e)
         this.container.setLoading(false)
       }
     }).bind(this)()
@@ -476,6 +479,7 @@ export default class MapView extends React.Component {
             ;(async () => {
               let centerPoint = await point2dModule.createObj(lon, lat)
               await this.map.setCenter(centerPoint)
+              await this.mapControl.setAction(Action.PAN)
               await this.map.refresh()
 
               this.saveLatest()
@@ -493,7 +497,6 @@ export default class MapView extends React.Component {
         }
 
         await this._addGeometrySelectedListener()
-        await this._addGestureDetector()
         this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)

@@ -8,6 +8,7 @@ android/.idea/*
 android/.settings/*
 android/build/*
 android/keystores/*
+android/app/build.gradle
 
 android/app/build/*
 ios/build/*
@@ -15,3 +16,10 @@ ios/build/*
 package-lock.json
 yarn-error.log
 yarn.lock
+
+.DS_Store
+.gitignore.swo
+.gitignore.swp
+android/.DS_Store
+src/.DS_Store
+src/assets/.DS_Store
