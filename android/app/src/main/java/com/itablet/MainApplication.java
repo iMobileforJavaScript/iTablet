@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import fr.greweb.reactnativeviewshot.RNViewShotPackage;
+import com.rt2zz.reactnativecontacts.ReactNativeContacts;
+import fr.greweb.reactnativeviewshot.RNViewShotPackage;
 import com.supermap.rnsupermap.SupermapFullPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -25,6 +27,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativeContacts(),
             new RNViewShotPackage(),
             new SupermapFullPackage()
       );

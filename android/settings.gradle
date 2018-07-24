@@ -1,6 +1,8 @@
 rootProject.name = 'iTablet'
 include ':react-native-view-shot'
 project(':react-native-view-shot').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-view-shot/android')
+include ':react-native-contacts'
+project(':react-native-contacts').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-contacts/android')
 include ':app'
 include ':imobile_for_javascript'
 project(':imobile_for_javascript').projectDir = new File(rootProject.projectDir, '../node_modules/imobile_for_javascript/android')

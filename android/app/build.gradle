@@ -98,7 +98,7 @@ android {
         release_config {
             keyAlias 'supermap'
             keyPassword 'supermap321'
-            storeFile file('/Users/Dragon/Documents/Workspace/SuperMap/iTablet/android/keystores/release.keystore')
+            storeFile file('/Users/imobile-xzy/Desktop/tablet/iTablet/android/keystores/release.keystore')
             storePassword 'supermap123'
         }
     }
@@ -152,6 +152,7 @@ android {
 
 dependencies {
     compile project(':react-native-view-shot')
+    compile project(':react-native-contacts')
     compile project(':imobile_for_javascript')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:23.0.1'

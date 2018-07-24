@@ -166,7 +166,7 @@ export default class MapView extends React.Component {
   _addLayer = () => {
     let ws = this.workspace
     let map = this.map
-    NavigationService.navigate('AddLayer',{ workspace: ws, map: map })
+    NavigationService.navigate('DataSourcelist',{ workspace: ws, map: map ,mapControl:this.mapControl })
   }
 
   //一级pop按钮 图层管理 点击函数
@@ -288,7 +288,7 @@ export default class MapView extends React.Component {
   btnClick = () => {}
 
   toDoAction = () => {
-    Toast.show('待完善')
+    NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map,mapControl:this.mapControl})
   }
 
   // 地图保存
@@ -321,7 +321,7 @@ export default class MapView extends React.Component {
     }, {
       title: '关闭',
       image: require('../../assets/public/close.png'),
-      action: this.toDoAction,
+      action: this.toCloesMap,
     }, {
       title: '首页',
       image: require('../../assets/public/icon-home-white.png'),
@@ -435,6 +435,8 @@ export default class MapView extends React.Component {
       this._addRemoteMap()
     }
   }
+
+
 
   _addLocalMap = () => {
     let workspaceModule = new Workspace()
