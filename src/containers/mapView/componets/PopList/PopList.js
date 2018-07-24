@@ -5,11 +5,12 @@ import {
   Action,
   DatasetType,
 } from 'imobile_for_javascript'
-import { PopBtnSectionList } from '../../../../components'
+import { PopBtnSectionList, MTBtnList } from '../../../../components'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../NavigationService'
 import NetworkAnalystToolBar from '../NetworkAnalystToolBar'
-import { bufferAnalyst, overlayAnalyst, facilityAnalyst,  } from '../../util'
+import CollectionToolBar from '../CollectionToolBar'
+import { bufferAnalyst, overlayAnalyst } from '../../util'
 import Setting from '../Setting'
 
 export default class PopList extends React.Component {
@@ -29,6 +30,7 @@ export default class PopList extends React.Component {
     selection: PropTypes.object,
     setLoading: PropTypes.func,
     setOverlaySetting: PropTypes.func,
+    POP_List: PropTypes.func,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -36,11 +38,15 @@ export default class PopList extends React.Component {
 
   constructor(props) {
     super(props)
+    let data = this.getData()
+    let { currentOperation, currentIndex, lastIndex } = this.findCurrentData(data, props.editLayer.type)
     this.state = {
-      data: this.getData(),
-      currentOperation: {},
-      subPopShow: !!props.editLayer.type,
+      data: data,
+      subPopShow: props.editLayer.type !== undefined && props.editLayer.type >= 0,
       toolbar: 'normal',
+      currentOperation: currentOperation,
+      currentIndex: currentIndex,  // currentOperation index
+      lastIndex: lastIndex,     // currentOperation last index
     }
     this.cbData = {}
   }
@@ -57,15 +63,15 @@ export default class PopList extends React.Component {
       })
     } else if (nextProps.popType !== this.props.popType) {
       let data = this.getData(nextProps.popType)
+      let { currentOperation, currentIndex, lastIndex } = this.findCurrentData(data, nextProps.editLayer.type)
       this.setState({
         data: data,
+        currentOperation: currentOperation,
+        currentIndex: currentIndex,  // currentOperation index
+        lastIndex: lastIndex,     // currentOperation last index
       })
     }
   }
-
-  // componentDidMount() {
-  //   this.getData()
-  // }
 
   // ===========================一级==================================
 
@@ -170,6 +176,7 @@ export default class PopList extends React.Component {
   _chooseLayer = async (cbData, type) => {
     this.cbData = cbData
     this.props.chooseLayer && this.props.chooseLayer(type, true)
+    this.popList && this.popList.setCurrentOption(cbData.data)
   }
 
   _analyst = async (cbData, type) => {
@@ -177,7 +184,7 @@ export default class PopList extends React.Component {
     this.cbData.callback && this.cbData.callback(true)
     // this.props.chooseLayer && this.props.chooseLayer(DatasetType.LINE)
     this.setState({
-      data: this.getData('analyst'),
+      data: this.getData(MTBtnList.Operation.ANALYST),
       subPopShow: true,
     })
   }
@@ -241,35 +248,14 @@ export default class PopList extends React.Component {
     }).bind(this)()
   }
 
-  /**网络分析**/
-  _networkAnalyst = () => {
-    // TODO 网络分析
-    // let data = this.getNetworkAnalystData()
-    // this.setState({
-    //   data: data,
-    // })
-    this.setState({
-      // data: this.getData(),
-      subPopShow: true,
-    })
-  }
-
-  /** 分析设置 **/
+  /** 打开分析设置 **/
   analystSetting = type => {
-    // if (this.props.selection && this.props.selection.id) {
     this.props.showSetting && this.props.showSetting(type)
-    // } else {
-    //   Toast.show('请选择目标')
-    // }
   }
 
-  /** 分析设置 **/
+  /** 数据分析操作界面 **/
   openNetworkToolBar = type => {
     (async function () {
-      // // TODO 临时测试
-      // if (type === NetworkAnalystToolBar.Type.TRACKING) {
-      //   await facilityAnalyst.loadModel(this.props.mapControl, )
-      // }
       this.setState({
         toolbar: 'network',
         networkType: type,
@@ -299,7 +285,7 @@ export default class PopList extends React.Component {
   getData = type => {
     let data = []
     switch (type || this.props.popType) {
-      case 'data_edit':
+      case MTBtnList.Operation.DATA_EDIT:
         data = [
           {
             key: '点编辑',
@@ -344,7 +330,7 @@ export default class PopList extends React.Component {
           },
         ]
         break
-      case 'analyst':
+      case MTBtnList.Operation.ANALYST:
         data = [
           {
             key: '缓冲区分析',
@@ -374,62 +360,71 @@ export default class PopList extends React.Component {
           },
         ]
         break
-      case 'tools':
+      case MTBtnList.Operation.COLLECTION:
+        break
+      case MTBtnList.Operation.TOOLS:
         data = [{ key: '量算', action: this.showMeasure }]
         break
     }
     return data
   }
-
-  // getNetworkAnalystData = () => {
-  //   let data = [
-  //     {
-  //       key: '路径分析',
-  //       type: DatasetType.POINT,
-  //       action: cbData => {this._chooseLayer(cbData, DatasetType.POINT)},
-  //       operations: [
-  //         { key: '设置', action: this.select }, { key: '设置起点', action: this.select },
-  //         { key: '设置终点', action: this.delete }, { key: '清除', action: this.addNode },
-  //       ],
-  //     },
-  //     {
-  //       key: '连通性分析',
-  //       type: DatasetType.LINE,
-  //       action: cbData => {this._chooseLayer(cbData, DatasetType.LINE)},
-  //       operations: [
-  //         { key: '设置', action: this.select }, { key: '设置起点', action: this.select },
-  //         { key: '设置终点', action: this.delete }, { key: '清除', action: this.addNode },
-  //       ],
-  //     },
-  //     {
-  //       key: '商旅分析',
-  //       type: DatasetType.REGION,
-  //       action: cbData => {this._chooseLayer(cbData, DatasetType.REGION)},
-  //       operations: [
-  //         { key: '设置', action: this.select }, { key: '设置起点', action: this.select },
-  //         { key: '添加站点', action: this.delete }, { key: '添加终点', action: this.addNode },
-  //         { key: '清除', action: this.deleteNode },
-  //       ],
-  //     },
-  //     {
-  //       key: '追踪分析',
-  //       type: DatasetType.TEXT,
-  //       action: cbData => {this._chooseLayer(cbData, DatasetType.TEXT)},
-  //       operations: [
-  //         { key: '设置', action: this.select }, { key: '添加站点', action: this.select },
-  //         { key: '清除', action: this.toDoAction },
-  //       ],
-  //     },
-  //   ]
-  //   return data
-  // }
+  
+  findCurrentData = (data = [], type) => {
+    let current = {
+      currentOperation: {},
+      currentIndex: -1,  // currentOperation index
+      lastIndex: -1,     // currentOperation last index}
+    }
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].type === type) {
+        current.currentOperation = data[i]
+        current.currentIndex = i
+        current.lastIndex = i
+      }
+    }
+    return current
+  }
+  
+  _btn_click_manager = ({item, index}) => {
+    item.action && item.action({
+      data: item,
+      index: index,
+      callback: hasChanged => {
+        if (hasChanged) {
+          // this.changeCategorySelected(index)
+          // this.operationRefs = [] // 清空二级菜单
+          // this.popList && this.popList.changeCategorySelected(index)
+          this.popList && this.popList.clearOperationRefs()
+          this.setState({
+            currentOperation: item,
+            currentIndex: index,
+            lastIndex: index,
+          })
+        }
+      }})
+  }
 
   render() {
     let currentData = {}
-    if (this.props.popType === 'data_edit') {
+    if (this.props.popType === MTBtnList.Operation.DATA_EDIT) {
       currentData = this.props.editLayer
-    } else if (this.props.popType === 'analyst') {
-
+    } else if (this.props.popType === MTBtnList.Operation.COLLECTION) {
+      return (
+        <CollectionToolBar
+          popType={this.state.networkType}
+          editLayer={this.props.editLayer}
+          selection={this.props.selection}
+          mapView={this.props.mapView}
+          mapControl={this.props.mapControl}
+          workspace={this.props.workspace}
+          map={this.props.map}
+          analyst={this._analyst}
+          showSetting={this.props.showSetting}
+          chooseLayer={this.props.chooseLayer}
+          POP_List={this.props.POP_List}
+          setLoading={this.props.setLoading}
+        />
+      )
     }
     if (this.state.toolbar === 'network') {
       return (
@@ -450,11 +445,17 @@ export default class PopList extends React.Component {
     } else {
       return (
         <PopBtnSectionList
+          ref={ref => this.popList = ref}
           popType={this.props.popType}
           style={styles.pop}
           subPopShow={this.state.subPopShow}
           data={this.state.data}
-          currentData={currentData} />
+          currentData={currentData}
+          operationAction={this._btn_click_manager}
+          currentOperation={this.state.currentOperation}
+          currentIndex={this.state.currentIndex}
+          lastIndex={this.state.lastIndex}
+        />
       )
     }
   }

@@ -1,7 +1,7 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Yang Shanglong
-  E-mail: yangshanglong@supermap.com 
+  E-mail: yangshanglong@supermap.com
 */
 
 import * as React from 'react'
@@ -19,27 +19,37 @@ export default class PopTitleBtn extends React.Component {
     title: PropTypes.string,
     style: PropTypes.any, // 按钮样式
     titleStyle: PropTypes.any, // 文字样式
+    selected: PropTypes.any, // 是否选择
   }
-  
+
+  static defaultProps = {
+    selected: undefined,
+  }
+
   constructor(props) {
     super(props)
     this.state = {
-      selected: false,
+      selected: props.selected,
     }
   }
-  
+
   setSelected = selected => {
     this.setState({
       selected: selected,
     })
   }
-  
+
   action = () => {
     this.props.btnClick && this.props.btnClick()
   }
 
   render() {
-    let containerStyle = this.state.selected ? styles.containerSelected : styles.container;
+    let containerStyle
+    if (this.props.selected !== undefined) {
+      containerStyle = this.props.selected ? styles.containerSelected : styles.container
+    } else {
+      containerStyle = this.state.selected ? styles.containerSelected : styles.container
+    }
     return (
       <TouchableOpacity accessible={true} accessibilityLabel={this.props.title} style={[containerStyle, this.props.style]} onPress={this.action}>
         {this.props.title && <Text style={[styles.text, this.props.titleStyle]}>{this.props.title}</Text>}
@@ -66,5 +76,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     height: size.fontSize.fontSizeLg + 5,
     textAlign: 'center',
-  }
+  },
 })

@@ -75,8 +75,8 @@ export default class Map3D extends React.Component {
   _layer_manager = () => {
     let ws = this.workspace
     let scene = this.scene
-    // NavigationService.navigate('Map3DLayerManager',{ workspace: ws, scene: scene })
-    Toast.show("待做")
+    NavigationService.navigate('Map3DLayerManager',{ workspace: ws, scene: scene })
+    // Toast.show("待做")
   }
 
   //一级pop按钮 数据采集 点击函数

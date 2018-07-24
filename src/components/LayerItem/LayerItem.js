@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { Text, TouchableOpacity, Image } from 'react-native'
+import { Text, TouchableOpacity, Image, View } from 'react-native'
 import PropTypes from 'prop-types'
 import { DatasetType } from 'imobile_for_javascript'
 
@@ -43,16 +43,16 @@ export default class LayerItem extends React.Component {
         icon = require('../../assets/map/icon-line.png')
         break
       case DatasetType.REGION: // 多边形数据集
-        icon = require('../../assets/map/icon-surface.png')
+        icon = require('../../assets/map/icon-polygon.png')
         break
       case DatasetType.TEXT: // 文本数据集
-        icon = require('../../assets/public/mapShare.png')
+        icon = require('../../assets/map/icon-text.png')
         break
       case DatasetType.IMAGE: // 影像数据集
         icon = require('../../assets/public/input.png')
         break
       case DatasetType.CAD: // 复合数据集
-        icon = require('../../assets/public/edit.png')
+        icon = require('../../assets/map/icon-cad.png')
         break
       default:
         icon = require('../../assets/public/mapLoad.png')
@@ -68,7 +68,12 @@ export default class LayerItem extends React.Component {
   render() {
     return (
       <TouchableOpacity key={this.props.data.id} style={[styles.container, this.props.style]} onPress={this._onPress}>
-        <Image style={[styles.image, this.props.imageStyle]} source={this.getIconByType(this.props.data.type)} />
+        <View style={styles.imageView}>
+          <Image style={[
+            styles.image,
+            this.props.data.type === DatasetType.POINT && styles.samllImage,
+            this.props.imageStyle]} source={this.getIconByType(this.props.data.type)} />
+        </View>
         <Text style={[styles.title, this.props.titleStyle]}>{this.props.data.name}</Text>
       </TouchableOpacity>
     )

@@ -1,3 +1,6 @@
 import AddLayer from './Add_Layer'
-
-export default AddLayer
+import { connect } from 'react-redux'
+const mapStateToProps = state => ({
+  nav: state.nav.toJS(),
+})
+export default connect(mapStateToProps, {})(AddLayer);

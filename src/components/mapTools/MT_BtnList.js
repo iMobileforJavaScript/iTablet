@@ -35,10 +35,13 @@ export default class MT_BtnList extends React.Component {
     layerManager: PropTypes.func,
     dataManager: PropTypes.func,
     addLayer: PropTypes.func,
+    chooseLayer: PropTypes.func,
+    editLayer: PropTypes.any,
   }
 
   static defaultProps = {
     type: MAP_LOCAL,
+    editLayer: {},
   }
 
   constructor(props) {
@@ -52,8 +55,8 @@ export default class MT_BtnList extends React.Component {
           { key: '数据编辑', image: require('../../assets/map/icon-data-edit.png'), btnClick: this._dataEdit },
           { key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager },
           { key: '数据管理', image: require('../../assets/map/icon-data-manangement.png'), btnClick: this._dataManager },
-          { key: '数据分析', image: require('../../assets/public/analyst.png'), btnClick: this._analyst },
-          { key: '工具', image: require('../../assets/public/tools.png'), btnClick: this._tools },
+          { key: '数据分析', image: require('../../assets/map/icon-analyst.png'), btnClick: this._analyst },
+          { key: '工具', image: require('../../assets/map/icon-tool.png'), btnClick: this._tools },
         ]
         : [{ key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager }],
     }
@@ -62,7 +65,10 @@ export default class MT_BtnList extends React.Component {
   _showManager = newPress => {
     if (oldPress && (oldPress === newPress)) {
       show = !show
-    } else if ((newPress === ADD_LAYER || newPress === COLLECTION || newPress === MAP_MANAGER || newPress === DATA_MANAGER) && show) {
+    } else if (
+      (newPress === ADD_LAYER || newPress === MAP_MANAGER || newPress === DATA_MANAGER)
+      && show
+    ) {
       show = false
       type = newPress
       oldPress = newPress
@@ -81,8 +87,16 @@ export default class MT_BtnList extends React.Component {
 
   _dataCollection = () => {
     this._showManager(COLLECTION)
-    this.props.POP_List && this.props.POP_List(false, null)
-    this.props.dataCollection && this.props.dataCollection()
+    if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
+      this.props.POP_List && this.props.POP_List(show, type)
+    } else {
+      this.props.POP_List && this.props.POP_List(false, null)
+      this.props.chooseLayer && this.props.chooseLayer(-1, true, isShow => { // 传 -1 查询所有类型的图层
+        if (this.props.POP_List) {
+          this.props.POP_List(isShow, type)
+        }
+      })
+    }
   }
 
   _dataEdit = () => {
@@ -124,7 +138,7 @@ export default class MT_BtnList extends React.Component {
       </View>
     )
   }
-  
+
   _renderItemSeparatorComponent = () => {
     return <ListSeparator mode={ListSeparator.mode.VERTICAL} />
   }
@@ -145,6 +159,16 @@ export default class MT_BtnList extends React.Component {
       </View>
     )
   }
+}
+
+MT_BtnList.Operation = {
+  ADD_LAYER: 'add_layer',
+  COLLECTION: 'collection',
+  DATA_EDIT: 'data_edit',
+  MAP_MANAGER: 'map_manager',
+  DATA_MANAGER: 'data_manager',
+  ANALYST: 'analyst',
+  TOOLS: 'tools',
 }
 
 const styles = StyleSheet.create({

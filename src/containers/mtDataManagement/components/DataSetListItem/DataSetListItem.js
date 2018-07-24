@@ -50,10 +50,13 @@ export default class DataSetListItem extends React.Component {
         image = require('../../../../assets/map/icon-dot.png')
         break
       case DatasetType.REGION:
-        image = require('../../../../assets/map/icon-surface.png')
+        image = require('../../../../assets/map/icon-polygon.png')
         break
       case DatasetType.IMAGE:
         image = require('../../../../assets/map/icon-surface.png')
+        break
+      case DatasetType.CAD:
+        image = require('../../../../assets/map/icon-cad.png')
         break
       default:
         image = require('../../../../assets/map/icon-surface.png')

@@ -9,13 +9,14 @@ import { View } from 'react-native'
 import BorderInput from '../../containers/register&getBack/border_input'
 import { Container, BtnTwo } from '../../components'
 import { Toast } from '../../utils'
-
+import NavigationService from '../NavigationService'
 import styles from './styles'
 
 export default class Add_Layer extends React.Component {
 
   props: {
     navigation: Object,
+    nav: Object,
   }
 
   constructor(props) {
@@ -47,7 +48,18 @@ export default class Add_Layer extends React.Component {
     this.setState({ InputText: text })
   }
 
+
+  _OK = async () => {
+    // Toast.show('待完善')
+    await this._addlayer()
+    await this._tomapview()
+  }
+  _tomapview =async () => {
+    await NavigationService.goBack(this.props.nav)
+  }
+
   _addlayer = async () => {
+
     // let name = this.state.InputText
     // let type = this.type
     // let dataSources = await this.workspace.getDatasources()
@@ -55,8 +67,21 @@ export default class Add_Layer extends React.Component {
     // let dsVector = await dataSource.createDatasetVector(name,type,0)
     // await this.map.addLayer(dsVector,true)
     // await this.map.refresh()
-
-    Toast.show('功能待完善')
+    try {
+      let layers = await this.map.getLayers()
+      let count = await layers.getCount()
+      for (let index = 0; index < count; index++) {
+        let name = await (await layers.get(index)).getName()
+        if (await (this.dataset.setCaption()) === name) {
+          Toast.show('此图层已存在')
+          return
+        }
+      }
+      await this.map.addDataset(this.dataset, true)
+      await this.map.refresh()
+    } catch (error) {
+      return error
+    }
   }
 
   render() {
@@ -71,7 +96,7 @@ export default class Add_Layer extends React.Component {
           <BorderInput placeholder='请输入图层名称' textChange={this._test_change} />
         </View>
         <View style={styles.sup}>
-          <BtnTwo text='确定' btnClick={this._addlayer} />
+          <BtnTwo text='确定' btnClick={this._OK} />
         </View>
       </Container>
     )

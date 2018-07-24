@@ -4,7 +4,7 @@ import { constUtil, scaleSize } from '../../../../utils'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    // alignItems: 'center',
     justifyContent: 'center',
     borderStyle:'solid',
     borderTopWidth:0,
@@ -14,25 +14,25 @@ export default StyleSheet.create({
     borderColor:'#bbbbbb',
   },
   rowOne: {
-    height:46,
-    width:constUtil.WIDTH,
-    padding:3,
+    // flex: 1,
+    height: scaleSize(80),
+    padding: scaleSize(6),
     flexDirection:'row',
     alignItems:'center',
     justifyContent:'space-between',
   },
   btn_container:{
-    height:40,
+    // height: scaleSize(80),
     // width:46*3,
     alignItems: 'center',
     flexDirection:'row',
     justifyContent:'space-between',
   },
   btn:{
-    height:40,
-    width:40,
-    marginLeft:3,
-    marginRight:3,
+    height: scaleSize(60),
+    width: scaleSize(60),
+    marginLeft: scaleSize(6),
+    marginRight: scaleSize(6),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -42,11 +42,15 @@ export default StyleSheet.create({
   },
   text_container:{
     // height:40,
-    width:150,
+    width: scaleSize(),
   },
   rowTwo: {
-    height:46,
+    height: scaleSize(90),
     width:constUtil.WIDTH,
     backgroundColor:'white',
+  },
+  samllImage: {
+    width: scaleSize(20),
+    height: scaleSize(20),
   },
 })
