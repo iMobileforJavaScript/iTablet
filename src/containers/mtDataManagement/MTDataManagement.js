@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
-import { Container, ListSeparator } from '../../components'
-import { DataManagerTab, DataSetListSection, DataSetListItem } from './components'
+import { Container, ListSeparator, DataSetListSection, DataSetListItem } from '../../components'
+import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
 import { Action } from 'imobile_for_javascript'
 
@@ -26,10 +26,11 @@ export default class MTDataManagement extends React.Component {
   }
 
   componentDidMount() {
-    this.getDatasets()
+    this.getData()
   }
 
-  getDatasets = async () => {
+  getData = async () => {
+    this.container.setLoading(true)
     try {
       let list = []
       let dataSources = await this.workspace.getDatasources()
@@ -59,6 +60,7 @@ export default class MTDataManagement extends React.Component {
           isShow: true,
           data: dataSetList,
           index: i,
+          datasource: dataSource,
         })
       }
       await this.mapControl.setAction(Action.PAN)
@@ -68,7 +70,7 @@ export default class MTDataManagement extends React.Component {
         this.container.setLoading(false)
       })
     } catch (e) {
-
+      this.container.setLoading(false)
     }
   }
 
@@ -98,11 +100,11 @@ export default class MTDataManagement extends React.Component {
   }
 
   _dSource = () => {
-    NavigationService.navigate('NewDSource', {ws: this.workspace, map: this.map})
+    NavigationService.navigate('NewDSource', {workspace: this.workspace, map: this.map, cb: this.getData})
   }
 
   _dSet = () => {
-    NavigationService.navigate('NewDSet', {ws: this.workspace, map: this.map})
+    NavigationService.navigate('ChooseDatasource', {workspace: this.workspace, map: this.map, data: this.state.dataSourceList, cb: this.getData})
   }
 
   _renderSetion = ({ section }) => {
@@ -121,9 +123,9 @@ export default class MTDataManagement extends React.Component {
     return section.isShow ? <ListSeparator /> : null
   }
 
-  // _renderSectionSeparatorComponent = ({ section }) => {
-  //   return section.isShow ? <ListSeparator height={scaleSize(20)} /> : null
-  // }
+  _renderSectionSeparatorComponent = ({ section }) => {
+    return section.isShow ? <ListSeparator /> : null
+  }
 
   _keyExtractor = item => (item.key + item.index)
 
@@ -131,7 +133,6 @@ export default class MTDataManagement extends React.Component {
     return (
       <Container
         ref={ref => this.container = ref}
-        initWithLoading
         headerProps={{
           title: '数据管理',
           navigation: this.props.navigation,
@@ -143,7 +144,7 @@ export default class MTDataManagement extends React.Component {
           keyExtractor={this._keyExtractor}
           sections={this.state.dataSourceList}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
         />
       </Container>
     )

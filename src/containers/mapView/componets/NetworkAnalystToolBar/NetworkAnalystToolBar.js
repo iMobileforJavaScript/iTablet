@@ -48,9 +48,12 @@ export default class NetworkAnalystToolBar extends React.Component {
 
   constructor(props) {
     super(props)
+    let data = this.getData(props.popType || ROUTE)
     this.state = {
-      data: this.getData(),
-      currentOperation: this.getData(props.popType || ROUTE),
+      data: data,
+      currentOperation: data[0],
+      currentIndex: 0,
+      lastIndex: 0,
       currentData: this.getData(props.popType || ROUTE),
       subPopShow: true,
       popType: props.popType || ROUTE,
@@ -109,18 +112,18 @@ export default class NetworkAnalystToolBar extends React.Component {
       (async function () {
         // this.toDoAction()
         // testing
-
-        let datasource = await this.props.workspace.getDatasource(0)
-        let dataset = await datasource.getDataset('RoadNet')
-        let datasetv = await dataset.toDatasetVector()
-
-        let result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
-        this.props.setLoading && this.props.setLoading(false)
-        if (result) {
-          Toast.show('加载数据成功')
-        } else {
-          Toast.show('加载数据成功')
-        }
+        //
+        // let datasource = await this.props.workspace.getDatasource(0)
+        // let dataset = await datasource.getDataset('RoadNet')
+        // let datasetv = await dataset.toDatasetVector()
+        //
+        // let result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
+        // this.props.setLoading && this.props.setLoading(false)
+        // if (result) {
+        //   Toast.show('加载数据成功')
+        // } else {
+        //   Toast.show('加载数据成功')
+        // }
       }).bind(this)()
     } catch (e) {
       this.props.setLoading && this.props.setLoading(false)
@@ -250,6 +253,25 @@ export default class NetworkAnalystToolBar extends React.Component {
     }
     return data
   }
+  
+  _btn_click_manager = ({item, index}) => {
+    item.action && item.action({
+      data: item,
+      index: index,
+      callback: hasChanged => {
+        if (hasChanged) {
+          // this.changeCategorySelected(index)
+          // this.operationRefs = [] // 清空二级菜单
+          // this.popList && this.popList.changeCategorySelected(index)
+          this.popList && this.popList.clearOperationRefs()
+          this.setState({
+            currentOperation: item,
+            currentIndex: index,
+            lastIndex: index,
+          })
+        }
+      }})
+  }
 
   renderSubRight = () => {
     return (
@@ -263,6 +285,7 @@ export default class NetworkAnalystToolBar extends React.Component {
   }
 
   render() {
+    let data = this.getData(this.props.editLayer && this.props.editLayer.type >= 0 ? this.props.editLayer.type : DatasetType.POINT)
     return (
       <PopBtnSectionList
         ref={ref => this.popBSL = ref}
@@ -272,7 +295,13 @@ export default class NetworkAnalystToolBar extends React.Component {
         currentData={this.state.currentData}
         subBtnType={PopBtnSectionList.SubBtnType.IMAGE_BTN}
         subRight={this.renderSubRight()}
-        data={this.state.data}/>
+        // data={this.state.data}
+        data={data}
+        operationAction={this._btn_click_manager}
+        currentOperation={this.state.currentOperation}
+        currentIndex={this.state.currentIndex}
+        lastIndex={this.state.lastIndex}
+      />
     )
   }
 }

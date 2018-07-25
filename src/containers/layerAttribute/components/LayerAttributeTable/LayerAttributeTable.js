@@ -23,7 +23,7 @@ export default class LayerAttributeTable extends React.Component {
     add: () => {},
     edit: () => {},
     selectRow: () => {},
-    
+
     selectable: boolean,
 
     tableHead: Array,
@@ -99,7 +99,7 @@ export default class LayerAttributeTable extends React.Component {
       this.props.edit()
     }
   }
-  
+
   getModifiedData = () => {
     return this.state.modifiedData
   }
@@ -144,27 +144,15 @@ export default class LayerAttributeTable extends React.Component {
     arr.push(obj.isRequired ? '是' : '否')
     return arr
   }
-  
+
   selectRow = (index, data) => {
     if (this.props.selectable && this.state.currentSelect !== index) {
-       this.setState({
-         currentSelect: index,
+      this.setState({
+        currentSelect: index,
       })
       this.props.selectRow && this.props.selectRow(data)
     }
   }
-
-  // dealAttributeCellData = (obj, index) => {
-  //   if (Object.keys(obj).length <= 0) return
-  //   let arr = []
-  //   arr.push(index + 1)
-  //   arr.push(obj.name)
-  //   arr.push(obj.type)
-  //   arr.push(obj.maxLength)
-  //   arr.push(obj.defaultValue)
-  //   arr.push(obj.isRequired ? '是' : '否')
-  //   return arr
-  // }
 
   renderInput = (item, index) => {
     return (
@@ -270,20 +258,6 @@ export default class LayerAttributeTable extends React.Component {
             />
           </Table>
           <ScrollView style={styles.dataWrapper}>
-            {/*<Table borderStyle={{ borderColor: '#C1C0B9' }}>*/}
-            {/*{*/}
-            {/*this.state.tableData.map((rowData, index) => (*/}
-            {/*<Row*/}
-            {/*// flexArr={[1, 1]}*/}
-            {/*key={index}*/}
-            {/*data={rowData}*/}
-            {/*widthArr={this.state.widthArr}*/}
-            {/*style={[styles.row, index % 2 && { backgroundColor: '#F7F6E7' }]}*/}
-            {/*textStyle={styles.text}*/}
-            {/*/>*/}
-            {/*))*/}
-            {/*}*/}
-            {/*</Table>*/}
 
             <Table borderStyle={{ borderColor: '#C1C0B9' }}>
               {

@@ -1,3 +1,7 @@
-import NewDSet from './NewDSet'
+import ChooseDatasource from './chooseDatasource'
+import NewDSet from './newDSet'
 
-export default NewDSet
+export {
+  ChooseDatasource,
+  NewDSet,
+}

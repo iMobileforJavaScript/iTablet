@@ -61,17 +61,17 @@ export default class Add_Layer extends React.Component {
       Toast.show('请输入图层名称')
     }
     else {
-      let key='';
+      let key=''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
             key=this.routes[index+1].key
         }
       }
-      await this._addlayer(key);
+      await this._addlayer(key)
     }
   }
 
-  _addlayer = async (key) => {
+  _addlayer = async key => {
     // let name = this.state.InputText
     // let type = this.type
     // let dataSources = await this.workspace.getDatasources()
@@ -80,23 +80,23 @@ export default class Add_Layer extends React.Component {
     // await this.map.addLayer(dsVector,true)
     // await this.map.refresh()
     try {
-      let layers = await this.map.getLayers();
-      let count = await layers.getCount();
+      let layers = await this.map.getLayers()
+      let count = await layers.getCount()
       for (let index = 0; index < count; index++) {
-        let name = await (await layers.get(index)).getCaption();
+        let name = await (await layers.get(index)).getCaption()
         if (this.state.InputText === name) {
           Toast.show('此图层已存在,请重新输入')
           return
         }
       }
       await this.map.addDataset(this.dataset, true)
-      await (await layers.get(0)).setCaption(this.state.InputText);
+      await (await layers.get(0)).setCaption(this.state.InputText)
       await this.mapControl.setAction(Action.SELECT)
       await this.map.refresh()
       Toast.show('新建图层成功')
       setTimeout(() => {
         this.props.navigation.goBack(key)
-      }, 2000)
+      }, 2000)    
     } catch (error) {
       return error
     }

@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { PixelRatio, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
 import { Container } from '../../components'
 import NavigationService from '../NavigationService'
-import { DatasourceConnectionInfo, Workspace, DatasetType } from 'imobile_for_javascript'
 const point = require('../../assets/map/icon-dot.png')
 const line = require('../../assets/map/icon-line.png')
 const text = require('../../assets/map/icon-surface.png')
@@ -11,45 +10,45 @@ const region = require('../../assets/map/icon-surface.png')
 export default class DataSets extends React.Component {
 
   props: {
-
+    navigation: Object,
   }
 
   constructor(props) {
-    super(props);
-    const { params } = this.props.navigation.state;
-    this.datasource = params.datasource;
-    this.workspace = params.workspace;
-    this.mapControl=params.mapControl;
-    this.map = params.map;
-    this.name = params.name;
+    super(props)
+    const { params } = this.props.navigation.state
+    this.datasource = params.datasource
+    this.workspace = params.workspace
+    this.mapControl=params.mapControl
+    this.map = params.map
+    this.name = params.name
     this.state = {
       data: [],
     }
   }
   componentDidMount() {
     this.container.setLoading(true)
-    this._adddata();
+    this._adddata()
   }
   _adddata = async () => {
-    let result = await this._getdatasetslist(this.datasource);
-    this.setState({ data: result });
+    let result = await this._getdatasetslist(this.datasource)
+    this.setState({ data: result })
     this.container.setLoading(false)
   }
 
-  _getdatasetslist = async (datasource) => {
+  _getdatasetslist = async datasource => {
     try {
-      let datasetslist = [];
-      let count = await datasource.getDatasetCount();
+      let datasetslist = []
+      let count = await datasource.getDatasetCount()
       for (let index = 0; index < count; index++) {
-        let dataset = await datasource.getDataset(index);
-        let type = await dataset.getType();
-        let name = await dataset.getName();
-        let result = { name: name, type: type, dataset: dataset };
-        datasetslist.push(result);
+        let dataset = await datasource.getDataset(index)
+        let type = await dataset.getType()
+        let name = await dataset.getName()
+        let result = { name: name, type: type, dataset: dataset }
+        datasetslist.push(result)
       }
       return datasetslist
     } catch (error) {
-      return error;
+      return error
     }
   }
 
@@ -94,7 +93,7 @@ export default class DataSets extends React.Component {
   }
 
   _keyExtractor = (item, index) => {
-    return index;
+    return index
   }
   render() {
     return (
@@ -115,7 +114,7 @@ export default class DataSets extends React.Component {
           keyExtractor={this._keyExtractor}
         />
       </Container>
-    );
+    )
   }
 }
 

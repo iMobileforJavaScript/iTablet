@@ -5,6 +5,7 @@
 */
 
 import * as React from 'react'
+import { View } from 'react-native'
 import { Workspace, SMMapView, Utility, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
@@ -47,6 +48,7 @@ export default class MapView extends React.Component {
       editLayer: {},
     }
     this.type = params.type || 'LOCAL'
+    this.isExample = params.isExample || false
     switch (params.type) {  //state.params.type最好进行判定
       case 'TD':
         this.DSParams = { server: 'http://t0.tianditu.com/vec_w/wmts', engineType: 23, driver: 'WMTS', alias: 'baseMap' }
@@ -95,6 +97,8 @@ export default class MapView extends React.Component {
 
   componentWillUnmount() {
     (async function(){
+      this.props.setEditLayer(null)
+      this.props.setSelection(null)
       await this._remove_measure_listener()
       await this._removeGeometrySelectedListener()
       this.map && await this.map.close()
@@ -110,6 +114,7 @@ export default class MapView extends React.Component {
   }
 
   saveLatest = () => {
+    if (this.isExample) return
     // Capture.snapshot(this.mapRef, {}, uri => {
     //   this.image = uri
     // }, error => {
@@ -139,7 +144,7 @@ export default class MapView extends React.Component {
       popType: type,
     })
     this.mapControl && (async function () {
-      if (type === 'analyst' && show) {
+      if ((type === 'analyst' || type === 'collector') && show) {
         await this.mapControl.setAction(Action.SELECT)
       } else if (type !== 'data_edit' || !show) {
         await this.mapControl.setAction(Action.NONEACTION)
@@ -148,8 +153,13 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  _chooseLayer = (type, isEdit = false) => {
-    NavigationService.navigate('ChooseEditLayer',{ workspace: this.workspace, map: this.map, type: type, mapControl: this.mapControl, isEdit })
+  _chooseLayer = (type, isEdit = false, cb? = () => {}) => {
+    NavigationService.navigate('ChooseEditLayer',{
+      workspace: this.workspace,
+      map: this.map,
+      type: type,
+      mapControl: this.mapControl,
+      isEdit, cb })
   }
 
   _showSetting = type => {
@@ -195,23 +205,6 @@ export default class MapView extends React.Component {
     // TODO list:优化，不需每次都添加listener
     this._add_measure_listener()
   }
-
-  // //二级pop按钮 缓冲区分析&&叠加分析 点击函数
-  // _pop_analyst_click = () => {
-  //   NavigationService.navigate('AnalystParams')
-  // }
-  //
-  // //三级pop按钮  点、线、面、文字编辑  点击函数
-  // _pop_edit_select = async () => {
-  //   await this.mapControl.setAction(Action.SELECT)
-  // }
-  //
-  // //二级pop按钮 添加图层（点、线、面、文字） 点击函数
-  // _pop_addLayer_click = (type) => {
-  //   let ws = this.workspace
-  //   let map = this.map
-  //   NavigationService.navigate('AddLayer', { type: type, workspace: ws, map: map })
-  // }
 
   /*测量功能模块*/
 
@@ -277,7 +270,6 @@ export default class MapView extends React.Component {
       Object.assign(event, {name: name})
       layerSelectable && this.props.setSelection(event)
     })
-
   }
 
   geometryMultiSelected = events => {
@@ -312,19 +304,20 @@ export default class MapView extends React.Component {
   }
 
   renderHeaderBtns = () => {
+    if (this.isExample) return null
     let arr = []
     let headerBtnData = [{
       title: '打开',
-      image: require('../../assets/map/icon_edit.png'),
+      image: require('../../assets/public/icon-open-white.png'),
       action: this.toOpen,
     }, {
       title: '保存',
-      image: require('../../assets/map/icon-save.png'),
+      image: require('../../assets/public/icon-save-white.png'),
       action: this.saveMap,
     }, {
       title: '关闭',
-      image: require('../../assets/public/close.png'),
-      action: this.toCloesMap,
+      image: require('../../assets/public/icon-close-white.png'),
+      action: this.toDoAction,
     }, {
       title: '首页',
       image: require('../../assets/public/icon-home-white.png'),
@@ -338,17 +331,13 @@ export default class MapView extends React.Component {
     return arr
   }
 
-  back = () => {
-    // if (this.setting) {
-    //   this.setting.closeChooseLayer()
-    // }
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-      // NavigationService.goBack(this.props.nav.routes[1].key)
-      NavigationService.goBack()
-    }
+  back = () => {if (this.setting && this.setting.isVisible()) {
+    this.setting.close()
+  } else {
+    // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
+    // NavigationService.goBack(this.props.nav.routes[1].key)
+    NavigationService.goBack()
+  }
   }
 
   setLoading = (loading = false) => {
@@ -362,6 +351,7 @@ export default class MapView extends React.Component {
         ref={ref => this.container = ref}
         initWithLoading
         headerProps={{
+          title: this.isExample ? '示例地图' : '',
           navigation: this.props.navigation,
           headerRight: headerRight,
           backAction: this.back,
@@ -387,6 +377,7 @@ export default class MapView extends React.Component {
             map={this.map}
             setLoading={this.setLoading}
             chooseLayer={this._chooseLayer}
+            POP_List={this._pop_list}
             showSetting={this._showSetting}
             analyst={this._analyst}
             bufferSetting={this.props.bufferSetting}
@@ -396,42 +387,36 @@ export default class MapView extends React.Component {
           />
         }
         <MTBtnList
+          hidden={this.isExample}
           POP_List={this._pop_list}
           layerManager={this._layer_manager}
           dataCollection={this._data_collection}
           dataManager={this._data_manager}
           addLayer={this._addLayer}
+          chooseLayer={this._chooseLayer}
+          editLayer={this.props.editLayer}
         />
-        <Setting
-          ref={ref => this.setting = ref}
-          selection={this.props.selection}
-          mapControl={this.mapControl}
-          workspace={this.workspace}
-          map={this.map}
-          setLoading={this.setLoading}
-          setBufferSetting={this.props.setBufferSetting}
-          setOverlaySetting={this.props.setOverlaySetting}
-          bufferSetting={this.props.bufferSetting}
-          overlaySetting={this.props.overlaySetting}
-          setAnalystLayer={this.props.setAnalystLayer}
-        />
+        {
+          !this.isExample &&
+          <Setting
+            ref={ref => this.setting = ref}
+            selection={this.props.selection}
+            mapControl={this.mapControl}
+            workspace={this.workspace}
+            map={this.map}
+            setLoading={this.setLoading}
+            setBufferSetting={this.props.setBufferSetting}
+            setOverlaySetting={this.props.setOverlaySetting}
+            bufferSetting={this.props.bufferSetting}
+            overlaySetting={this.props.overlaySetting}
+            setAnalystLayer={this.props.setAnalystLayer}
+          />
+        }
       </Container>
     )
   }
 
   _addMap = () => {
-    // if (
-    //   this.type === 'UDB' ||
-    //   this.type === 'TD' ||
-    //   this.type === 'Baidu' ||
-    //   this.type === 'Google' ||
-    //   this.type === 'OSM' ||
-    //   this.type === 'ONLINE')
-    // {
-    //   this._addRemoteMap()
-    // } else {
-    //   this._addLocalMap()
-    // }
     if (this.type === 'LOCAL') {
       this._addLocalMap()
     } else {
@@ -457,12 +442,14 @@ export default class MapView extends React.Component {
 
         await this.map.open(this.mapName)
         // await this.map.setScale(0.00005)
+        await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
         await this._addGeometrySelectedListener()
 
         this.container.setLoading(false)
         this.saveLatest()
       } catch (e) {
+        console.error(e)
         this.container.setLoading(false)
       }
     }).bind(this)()
@@ -479,7 +466,7 @@ export default class MapView extends React.Component {
         await this.map.setWorkspace(this.workspace)
 
         // this.mapName = await this.map.getName()
-        
+
         await this.map.setScale(0.0001)
         navigator.geolocation.getCurrentPosition(
           position => {
@@ -488,6 +475,7 @@ export default class MapView extends React.Component {
             ;(async () => {
               let centerPoint = await point2dModule.createObj(lon, lat)
               await this.map.setCenter(centerPoint)
+              await this.mapControl.setAction(Action.PAN)
               await this.map.refresh()
 
               this.saveLatest()

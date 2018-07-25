@@ -8,6 +8,7 @@ android/.idea/*
 android/.settings/*
 android/build/*
 android/keystores/*
+android/app/build.gradle
 
 android/app/build/*
 ios/build/*

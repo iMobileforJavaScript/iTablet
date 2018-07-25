@@ -14,7 +14,7 @@ import LocalMap from './localMap'
 import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
-import NewDSet from './newDSet'
+import { ChooseDatasource, NewDSet } from './newDSet'
 import MTLayerManager from './mtLayerManager'
 import Map3DLayerManager from './map3DLayerManager'
 import AnalystParams from './analystParams'
@@ -108,6 +108,12 @@ export default StackNavigator({
   },
   NewDSource: {
     screen: NewDSource,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ChooseDatasource: {
+    screen: ChooseDatasource,
     navigationOptions: {
       header: null,
     },
@@ -217,5 +223,6 @@ export default StackNavigator({
     animationEnabled: false,
     headerTitleStyle: { alignSelf: 'center' },
   },
-  mode: 'card',
+  lazy: true,
+  // mode: 'modal',
 })

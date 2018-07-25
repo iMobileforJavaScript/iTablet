@@ -14,9 +14,11 @@ export default class Dialog extends PureComponent {
     type?: string,
     style?: StyleSheet,
     titleStyle?: StyleSheet,
+    infoStyle?: StyleSheet,
     backgroundStyle?: StyleSheet,
     children: any,
     title?: string,
+    info?: string,
     backHide?: boolean ,
     activeOpacity?: number ,
     cancelBtnTitle?: string,
@@ -78,7 +80,7 @@ export default class Dialog extends PureComponent {
       </View>
     )
   }
-  
+
   renderModal = () => {
     return (
       <Modal
@@ -98,6 +100,10 @@ export default class Dialog extends PureComponent {
               this.props.title &&
               <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
             }
+            {
+              this.props.info &&
+              <Text style={[styles.info, this.props.infoStyle]}>{this.props.info}</Text>
+            }
             {this.props.children}
             {this.renderBtns()}
           </View>
@@ -105,7 +111,7 @@ export default class Dialog extends PureComponent {
       </Modal>
     )
   }
-  
+
   renderNonModal = () => {
     if (this.state.visible) {
       return (
@@ -114,6 +120,10 @@ export default class Dialog extends PureComponent {
             {
               this.props.title &&
               <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
+            }
+            {
+              this.props.info &&
+              <Text style={[styles.info, this.props.infoStyle]}>{this.props.info}</Text>
             }
             {this.props.children}
             {this.renderBtns()}

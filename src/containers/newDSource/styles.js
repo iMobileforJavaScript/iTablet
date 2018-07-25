@@ -1,31 +1,36 @@
-import { StyleSheet, Platform } from 'react-native'
-import { constUtil } from '../../utils'
+import { StyleSheet } from 'react-native'
+import { constUtil, scaleSize } from '../../utils'
+import { size } from '../../styles'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
     alignItems: 'center',
     paddingTop:10,
   },
   input: {
     width: 0.75 * constUtil.WIDTH,
-    height: 40,
+    marginTop: scaleSize(30),
+    marginHorizontal: scaleSize(100),
+    height: scaleSize(80),
     borderStyle: 'solid',
     borderColor: constUtil.USUAL_SEPARATORCOLOR,
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: scaleSize(10),
     backgroundColor: 'white',
-    marginBottom: 10,
-    ...Platform.select({
-      android: {
-        padding: 0,
-      },
-    }),
+    paddingHorizontal: scaleSize(10),
   },
   textContainer:{
-    height:40,
+    marginTop: scaleSize(30),
+    height: scaleSize(40),
     width:0.75* constUtil.WIDTH,
+  },
+  text: {
+    fontSize: size.fontSize.fontSizeMd,
+  },
+  btn: {
+    marginTop: scaleSize(60),
   },
 })

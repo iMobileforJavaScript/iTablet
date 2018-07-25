@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 import {
   StyleSheet,
   Text,
@@ -7,25 +7,26 @@ import {
   Image,
   PixelRatio,
 } from 'react-native';
-import { Container} from '../../components'
-import { OpenMapfile,WorkspaceConnectionInfo ,Action} from 'imobile_for_javascript'
+import { Container } from '../../components'
+import { OpenMapfile, WorkspaceConnectionInfo } from 'imobile_for_javascript'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 const Filesicon = require('../../assets/public/icon-files.png')
 const Fileicon = require('../../assets/public/icon-file.png')
-export default class WorkSpaceFileList extends React.Component {
+export default class WorkSpaceFileList extends Component {
 
   props: {
     title: string,
     navigation: Object,
     nav: Object,
   }
+
   constructor(props) {
     super(props);
     const { params } = this.props.navigation.state;
     this.workspace = params.workspace ? params.workspace : 'noworkspace'
     this.map = params.map ? params.map : 'nomap'
-    this.mapControl=params.mapControl? params.mapControl : 'nomapControl'
+    this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
     const { nav } = this.props
     this.routes = nav.routes
     this.path = '/sdcard/sampleData';
@@ -34,18 +35,16 @@ export default class WorkSpaceFileList extends React.Component {
       backpath: ''
 
     }
-
   }
 
   componentDidMount() {
-    this.container.setLoading(true)
-    this._getfilelist(this.path);
+    this._getfilelist(this.path)
   }
 
 
 
   _offLine_More = () => {
-    Toast.show('无法打开此文件');
+    Toast.show('无法打开此文件')
   }
 
 
@@ -59,7 +58,7 @@ export default class WorkSpaceFileList extends React.Component {
         this._toloadmapview(openpath)
       }
       else {
-        this._offLine_More();
+        this._offLine_More()
       }
 
     }
@@ -71,16 +70,16 @@ export default class WorkSpaceFileList extends React.Component {
       }
       this.setState({
         data: filelist,
-        backpath: path
-      });
+        backpath: path,
+      })
       this.container.setLoading(false)
     }
   }
 
 
-  _toloadmapview = async(path) => {
+  _toloadmapview = async (path) => {
 
-    if (this.workspace != 'noworkspace' && this.map != 'nomap'&&this.mapControl !='nomapControl') {
+    if (this.workspace != 'noworkspace' && this.map != 'nomap' && this.mapControl != 'nomapControl') {
       let key = ''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
@@ -88,9 +87,9 @@ export default class WorkSpaceFileList extends React.Component {
         }
       }
       await this.map.close()
-      let WorkspaceConnectionInfoModule= new WorkspaceConnectionInfo()
-      let workspaceCOnnectionInfo =await WorkspaceConnectionInfoModule.createJSObj()
-      let openpath='/sdcard'+path
+      let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
+      let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
+      let openpath = '/sdcard' + path
       await workspaceCOnnectionInfo.setServer(openpath)
       await workspaceCOnnectionInfo.setType(9)
       await this.workspace.open(workspaceCOnnectionInfo)
@@ -107,26 +106,26 @@ export default class WorkSpaceFileList extends React.Component {
   }
 
 
-  _refresh = async (path) => {
+  _refresh = async path => {
 
-    await this._getfilelist(path);
+    await this._getfilelist(path)
 
 
   }
 
   _toback = async () => {
-    if (this.state.backpath == '/sdcard/sampleData') {
-      return;
+    if (this.state.backpath === '/sdcard/sampleData') {
+      return
     }
     else {
       let backpath = this.state.backpath.substr(0, this.state.backpath.lastIndexOf("/", this.state.backpath.lastIndexOf('/')))
-      this.setState({ backpath: backpath });
-      await this._getfilelist(backpath);
+      this.setState({ backpath: backpath })
+      await this._getfilelist(backpath)
     }
   }
 
   headerback = () => {
-    if (this.state.backpath == '/sdcard/sampleData' || this.state.backpath == '/sdcard/sampleData') {
+    if (this.state.backpath === '/sdcard/sampleData' || this.state.backpath === '/sdcard/sampleData') {
       return null
     }
     else {
@@ -134,7 +133,7 @@ export default class WorkSpaceFileList extends React.Component {
     }
   }
   Fileicon = ({ item }) => {
-    if (item.isfile == 'isfile') {
+    if (item.isfile === 'isfile') {
       return (
         <TouchableOpacity onPress={() => this._refresh(item.key)} style={styles.row}>
           <Image source={Filesicon} style={styles.img} />
@@ -164,9 +163,6 @@ export default class WorkSpaceFileList extends React.Component {
         headerProps={{
           title: '选择文件',
           navigation: this.props.navigation,
-          headerRight: [
-
-          ],
         }}>
         <FlatList
           style={styles.container}
@@ -176,7 +172,7 @@ export default class WorkSpaceFileList extends React.Component {
           keyExtractor={this._keyExtractor}
         />
       </Container>
-    );
+    )
   }
 }
 
@@ -209,4 +205,4 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 10,
   },
-});
+})

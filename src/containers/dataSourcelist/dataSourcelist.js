@@ -1,21 +1,20 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { View, PixelRatio, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
 import { BtnOne } from '../../components'
 import { Container } from '../../components'
 import NavigationService from '../NavigationService'
-import { Workspace } from 'imobile_for_javascript'
 const src = require('../../assets/public/add_dataset.png')
 const Fileicon = require('../../assets/public/icon-file.png')
 export default class DataSourcelist extends React.Component {
   props: {
-
+    navigation: Object,
   }
 
   constructor(props) {
-    super(props);
-    const { params } = this.props.navigation.state;
-    this.workspace = params.workspace;
-    this.map = params.map;
+    super(props)
+    const { params } = this.props.navigation.state
+    this.workspace = params.workspace
+    this.map = params.map
     this.mapControl=params.mapControl
     this.state = {
       data: [],
@@ -23,7 +22,7 @@ export default class DataSourcelist extends React.Component {
   }
 
   componentDidMount() {
-    this._adddata();
+    this._adddata()
   }
 
   _addElement = (delegate, src, str) => {
@@ -36,22 +35,21 @@ export default class DataSourcelist extends React.Component {
   }
 
   _adddata = async () => {
-    let result = await this._getdatasourcelist();
+    let result = await this._getdatasourcelist()
     this.setState({ data: result })
     this.container.setLoading(false)
   }
 
-
   _getdatasourcelist = async () => {
     this.container.setLoading(true)
     try {
-      let datalist = [];
+      let datalist = []
       let count = await (await this.workspace.getDatasources()).getCount()
       for (let index = 0; index < count; index++) {
-        let datasource = await (await this.workspace.getDatasources()).get(index);
-        let datasourcename = await datasource.getAlias();
-        let result = { datasource: datasource, name: datasourcename };
-        datalist.push(result);
+        let datasource = await (await this.workspace.getDatasources()).get(index)
+        let datasourcename = await datasource.getAlias()
+        let result = { datasource: datasource, name: datasourcename }
+        datalist.push(result)
       }
       return datalist
     } catch (error) {
@@ -69,10 +67,10 @@ export default class DataSourcelist extends React.Component {
     //   else {
     //     let filename = filelist[i].substr(filelist[i].lastIndexOf('.')).toLowerCase();
     //     if (filename == '.udb') {
-    //       datasource = { name: filelist[i].substr(filelist[i].lastIndexOf('/', filelist[i].lastIndexOf('/')) + 1), 
+    //       datasource = { name: filelist[i].substr(filelist[i].lastIndexOf('/', filelist[i].lastIndexOf('/')) + 1),
     //                      path:filelist[i]
     //                     };
-    //       this.data.push(datasource);   
+    //       this.data.push(datasource);
     //     }
     //   }
     // }
@@ -90,7 +88,7 @@ export default class DataSourcelist extends React.Component {
   }
 
   _keyExtractor = (item, index) => {
-    return index;
+    return index
   }
   render() {
     return (
@@ -100,9 +98,6 @@ export default class DataSourcelist extends React.Component {
         headerProps={{
           title: '选择数据源',
           navigation: this.props.navigation,
-          headerRight: [
-
-          ],
         }}>
         <View style={styles.adddata}>
           {this._addElement(this._click_newdatasource, src, '新建数据源')}
@@ -114,7 +109,7 @@ export default class DataSourcelist extends React.Component {
           keyExtractor={this._keyExtractor}
         />
       </Container>
-    );
+    )
   }
 }
 const styles = StyleSheet.create({
@@ -126,7 +121,7 @@ const styles = StyleSheet.create({
     // justifyContent: 'flex-start',
     // height: 39,
     paddingLeft: 5,
-    textAlign: 'center'
+    textAlign: 'center',
   },
   itemclick: {
     flexDirection: 'row',

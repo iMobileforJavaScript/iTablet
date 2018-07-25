@@ -35,10 +35,16 @@ export default class MT_BtnList extends React.Component {
     layerManager: PropTypes.func,
     dataManager: PropTypes.func,
     addLayer: PropTypes.func,
+    chooseLayer: PropTypes.func,
+    editLayer: PropTypes.any,
+    style: PropTypes.any,
+    hidden: PropTypes.bool,
   }
 
   static defaultProps = {
     type: MAP_LOCAL,
+    hidden: false,
+    editLayer: {},
   }
 
   constructor(props) {
@@ -52,8 +58,8 @@ export default class MT_BtnList extends React.Component {
           { key: '数据编辑', image: require('../../assets/map/icon-data-edit.png'), btnClick: this._dataEdit },
           { key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager },
           { key: '数据管理', image: require('../../assets/map/icon-data-manangement.png'), btnClick: this._dataManager },
-          { key: '数据分析', image: require('../../assets/public/analyst.png'), btnClick: this._analyst },
-          { key: '工具', image: require('../../assets/public/tools.png'), btnClick: this._tools },
+          { key: '数据分析', image: require('../../assets/map/icon-analyst.png'), btnClick: this._analyst },
+          { key: '工具', image: require('../../assets/map/icon-tool.png'), btnClick: this._tools },
         ]
         : [{ key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager }],
     }
@@ -62,7 +68,10 @@ export default class MT_BtnList extends React.Component {
   _showManager = newPress => {
     if (oldPress && (oldPress === newPress)) {
       show = !show
-    } else if ((newPress === ADD_LAYER || newPress === COLLECTION || newPress === MAP_MANAGER || newPress === DATA_MANAGER) && show) {
+    } else if (
+      (newPress === ADD_LAYER || newPress === MAP_MANAGER || newPress === DATA_MANAGER)
+      && show
+    ) {
       show = false
       type = newPress
       oldPress = newPress
@@ -81,8 +90,16 @@ export default class MT_BtnList extends React.Component {
 
   _dataCollection = () => {
     this._showManager(COLLECTION)
-    this.props.POP_List && this.props.POP_List(false, null)
-    this.props.dataCollection && this.props.dataCollection()
+    if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
+      this.props.POP_List && this.props.POP_List(show, type)
+    } else {
+      this.props.POP_List && this.props.POP_List(false, null)
+      this.props.chooseLayer && this.props.chooseLayer(-1, true, isShow => { // 传 -1 查询所有类型的图层
+        if (this.props.POP_List) {
+          this.props.POP_List(isShow, type)
+        }
+      })
+    }
   }
 
   _dataEdit = () => {
@@ -124,7 +141,7 @@ export default class MT_BtnList extends React.Component {
       </View>
     )
   }
-  
+
   _renderItemSeparatorComponent = () => {
     return <ListSeparator mode={ListSeparator.mode.VERTICAL} />
   }
@@ -133,8 +150,9 @@ export default class MT_BtnList extends React.Component {
 
   render() {
     const data = this.state.data
+    // TODO BUG 临时处理 hidden map和map3d在关闭的时候会出现部分黑屏，必须要有可渲染的其他组件在屏幕上，才能正常关闭
     return (
-      <View style={styles.container}>
+      <View style={[this.props.hidden ? styles.hiddenContainer : styles.container, this.props.style]}>
         <FlatList
           data={data}
           renderItem={this._renderItem}
@@ -147,6 +165,16 @@ export default class MT_BtnList extends React.Component {
   }
 }
 
+MT_BtnList.Operation = {
+  ADD_LAYER: 'add_layer',
+  COLLECTION: 'collection',
+  DATA_EDIT: 'data_edit',
+  MAP_MANAGER: 'map_manager',
+  DATA_MANAGER: 'data_manager',
+  ANALYST: 'analyst',
+  TOOLS: 'tools',
+}
+
 const styles = StyleSheet.create({
   item: {
     display: 'flex',
@@ -156,6 +184,8 @@ const styles = StyleSheet.create({
     width: ITEM_WIDTH,
   },
   container: {
+    position: 'absolute',
+    bottom: 0,
     height: scaleSize(100),
     width: '100%',
     backgroundColor: constUtil.USUAL_GREEN,
@@ -167,5 +197,20 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderBottomWidth: 0,
     zIndex: 100,
+  },
+  hiddenContainer: {
+    position: 'absolute',
+    bottom: 0,
+    height: scaleSize(100),
+    width: '100%',
+    backgroundColor: constUtil.USUAL_GREEN,
+    alignSelf: 'center',
+    borderStyle: 'solid',
+    borderColor: BORDERCOLOR,
+    borderTopWidth: 1,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    borderBottomWidth: 0,
+    zIndex: -1,
   },
 })

@@ -14,7 +14,7 @@ export default class DataSetListItem extends React.Component {
   }
   
   static defaultProps = {
-    hidden: false,
+    hidden: true,
   }
 
   constructor(props) {
@@ -44,35 +44,32 @@ export default class DataSetListItem extends React.Component {
     let image
     switch (this.props.data.type) {
       case DatasetType.LINE:
-        image = require('../../../../assets/map/icon-line.png')
+        image = require('../../assets/map/icon-line.png')
         break
       case DatasetType.POINT:
-        image = require('../../../../assets/map/icon-dot.png')
+        image = require('../../assets/map/icon-dot.png')
         break
       case DatasetType.REGION:
-        image = require('../../../../assets/map/icon-surface.png')
+        image = require('../../assets/map/icon-polygon.png')
         break
       case DatasetType.IMAGE:
-        image = require('../../../../assets/map/icon-surface.png')
+        image = require('../../assets/map/icon-surface.png')
+        break
+      case DatasetType.CAD:
+        image = require('../../assets/map/icon-cad.png')
         break
       default:
-        image = require('../../../../assets/map/icon-surface.png')
+        image = require('../../assets/map/icon-surface.png')
         break
     }
     return image
   }
 
   renderRadioBtn = () => {
-    let viewStyle = styles.radioView,
-      dotStyle = styles.radioSelected
-    if (this.props.data.isAdd) {
-      viewStyle = styles.radioViewGray,
-      dotStyle = styles.radioSelectedGray
-    }
     return (
-      <View style={viewStyle}>
+      <View style={styles.radioView}>
         {
-          (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
+          this.state.selected && <View style={styles.radioSelected} />
         }
       </View>
     )
@@ -86,8 +83,10 @@ export default class DataSetListItem extends React.Component {
         style={[styles.container, this.props.height && {height: this.props.height}]}
         onPress={this.action}
       >
-        {this.renderRadioBtn()}
-        <Image style={styles.image} source={this.getImage()} />
+        {/*{this.renderRadioBtn()}*/}
+        <View style={styles.imageView}>
+          <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
+        </View>
         <Text style={styles.title}>{this.props.data.name}</Text>
       </TouchableOpacity>
     )

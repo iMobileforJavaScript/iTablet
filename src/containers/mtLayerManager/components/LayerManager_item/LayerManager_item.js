@@ -8,6 +8,7 @@ import * as React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import {
   Action,
+  DatasetType,
 } from 'imobile_for_javascript'
 import { PopBtnList } from '../../../../components'
 import { Toast } from '../../../../utils'
@@ -19,19 +20,20 @@ export default class LayerManager_item extends React.Component {
   props: {
     layer: Object,
     map: Object,
+    data: Object,
     mapControl: Object,
-    name: string,
     showRenameDialog: () => {},
     showRemoveDialog: () => {},
+    setEditable: () => {},
   }
 
   constructor(props){
     super(props)
     this.layer = this.props.layer
     this.map = this.props.map
-    let data = this.getData()
+    let options = this.getOptions()
     this.state = {
-      data: data,
+      options: options,
       editable:false,
       visable:false,
       selectable:false,
@@ -40,6 +42,10 @@ export default class LayerManager_item extends React.Component {
   }
 
   componentDidMount() {
+    this.getData()
+  }
+  
+  getData = () => {
     (async function () {
       let editable = await this.layer.getEditable()
       let {isVisible} = await this.layer.getVisible()// todo:  此处{}为底层bug,需要修改
@@ -55,16 +61,16 @@ export default class LayerManager_item extends React.Component {
     }).bind(this)()
   }
 
-  getData = () => {
-    let data
-    data = [
+  getOptions = () => {
+    let options
+    options = [
       { key: '可显示', action: this._visable_change }, { key: '可选择', action: this._selectable_change },
       { key: '可编辑', action: this._editable_change }, { key: '可捕捉', action: this._catchable_change },
       { key: '专题图', action: this._openTheme }, { key: '风格', action: this._openStyle },
       { key: '重命名', action: this._rename }, { key: '移除', action: this._remove },
     ]
 
-    return data
+    return options
   }
 
   action = () => {
@@ -73,13 +79,14 @@ export default class LayerManager_item extends React.Component {
 
   _editable_change=()=>{
     this.setState(oldstate=>{
-      let oldEdit = oldstate.editable
+      let newEdit = !oldstate.editable
       ;(async function (){
-        await this.layer.setEditable(!oldEdit)
+        await this.layer.setEditable(newEdit)
         await this.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
+        this.props.setEditable && this.props.setEditable(newEdit ? this.props.data : null)
       }).bind(this)()
-      return({editable:!oldEdit})
+      return({editable:newEdit})
     })
   }
 
@@ -148,12 +155,40 @@ export default class LayerManager_item extends React.Component {
 
   _renderAdditionView = () => {
     return (
-      <PopBtnList data={this.state.data} />
+      <PopBtnList data={this.state.options} />
     )
   }
 
+  getIconByType = type => {
+    let icon
+    switch (type) {
+      case DatasetType.POINT: // 点数据集
+        icon = require('../../../../assets/map/icon-dot.png')
+        break
+      case DatasetType.LINE: // 线数据集
+        icon = require('../../../../assets/map/icon-line.png')
+        break
+      case DatasetType.REGION: // 多边形数据集
+        icon = require('../../../../assets/map/icon-polygon.png')
+        break
+      case DatasetType.TEXT: // 文本数据集
+        icon = require('../../../../assets/map/icon-text.png')
+        break
+      case DatasetType.IMAGE: // 影像数据集
+        icon = require('../../../../assets/public/input.png')
+        break
+      case DatasetType.CAD: // 复合数据集
+        icon = require('../../../../assets/map/icon-cad.png')
+        break
+      default:
+        icon = require('../../../../assets/public/mapLoad.png')
+        break
+    }
+    return icon
+  }
+
   render() {
-    let name = this.props.name
+    let name = this.props.data.caption
     const image1 = this.state.editable ? require('../../../../assets/map/icon_edit_selected.png') :require('../../../../assets/map/icon_edit.png')
     const image2 = this.state.visable ? require('../../../../assets/map/icon_visible_selected.png') :require('../../../../assets/map/icon_visible.png')
     const image3 = this.state.selectable ? require('../../../../assets/map/icon_choose_seleted.png') :require('../../../../assets/map/icon_choose.png')
@@ -167,6 +202,9 @@ export default class LayerManager_item extends React.Component {
             <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>
+            <View style={styles.btn}>
+              <Image style={[this.props.data.type === DatasetType.POINT ? styles.samllImage : styles.btn_image]} source={this.getIconByType(this.props.data.type)} />
+            </View>
           </View>
           <View style={styles.text_container}><Text>{name}</Text></View>
           {/*<TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}>*/}

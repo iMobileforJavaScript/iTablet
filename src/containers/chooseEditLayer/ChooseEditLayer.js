@@ -27,9 +27,10 @@ export default class ChooseEditLayer extends React.Component {
     const { params } = this.props.navigation.state
     this.workspace = params.workspace
     this.mapControl = params.mapControl
-    this.isEdit = params.isEdit || false
+    this.isEdit = params.isEdit || false // 选择图层后是否为编辑状态
     this.map = params.map
-    this.type = params.type || 1
+    this.type = params.type || -1
+    this.cb = params.cb
   }
 
   componentDidMount() {
@@ -50,13 +51,14 @@ export default class ChooseEditLayer extends React.Component {
 
   _chooseEditLayer = item =>{
     (async function (){
-      let layer = await this.map.getLayer(item.index)
+      let layer = item.layer
       await layer.setSelectable(true)
       this.isEdit && await layer.setEditable(true)
-      await this.mapControl.setAction(Action.SELECT)
-      await this.map.refresh()
+      await this.mapControl.setAction(Action.PAN)
+      // await this.map.refresh()
       this.props.setEditLayer(item)
       this.props.navigation.goBack()
+      this.cb && this.cb(true, this.type)
     }).bind(this)()
   }
 
@@ -96,7 +98,6 @@ export default class ChooseEditLayer extends React.Component {
               : <EmptyView />
           )
         }
-
       </Container>
     )
   }

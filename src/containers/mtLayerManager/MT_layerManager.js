@@ -18,6 +18,8 @@ export default class MT_layerManager extends React.Component {
 
   props: {
     navigation: Object,
+    editLayer: Object,
+    setEditLayer: () => {},
   }
 
   constructor(props) {
@@ -32,6 +34,7 @@ export default class MT_layerManager extends React.Component {
       mapName: '',
       wsName: '',
       path: !this.showDialogCaption ? params.path : ConstPath.SampleDataPath,
+      currentEditIndex: props.editLayer.index >= 0 ? props.editLayer.index : -1, //当前编辑界面的index
     }
   }
 
@@ -42,19 +45,14 @@ export default class MT_layerManager extends React.Component {
   getData() {
     this.container.setLoading(true)
     ;(async function () {
-      let layerCount = await this.map.getLayersCount()
-      let layerNameArr = []
-
-      // let mapName = this.map.getName()
-      // let workspace = this.workspace.getCaption()
-      for (let i = 0; i < layerCount; i++) {
-        let layer = await this.map.getLayer(i)
-        if (!layer) continue
-        let name = await layer.getName()
-        let caption = await layer.getCaption()
-        let map = this.map
-        layerNameArr.push({ key: name, caption: caption, obj: layer, map:map })
+      this.itemRefs = []
+      let layerNameArr = await this.map.getLayersByType()
+      for(let i = 0; i < layerNameArr.length; i++) {
+        let layer = await this.map.getLayer(layerNameArr[i].index)
+        layerNameArr[i].layer = layer
+        layerNameArr[i].key = layerNameArr[i].name
       }
+
       await this.mapControl.setAction(Action.PAN)
       this.setState({
         datasourceList: layerNameArr,
@@ -80,7 +78,7 @@ export default class MT_layerManager extends React.Component {
       this.renameLayer = layer
     }
   }
-  
+
   showRemoveDialog = (isShow = true, layer = null) => {
     this.deleteDialog.setDialogVisible(isShow)
     if (layer) {
@@ -209,17 +207,25 @@ export default class MT_layerManager extends React.Component {
   }
 
   _renderItem = ({ item }) => {
-    let caption = item.caption
-    let layer = item.obj
-    let map = item.map
+    // let layer = item.obj
+    // let map = item.map
     return (
       <LayerManager_item
-        layer={layer}
-        name={caption}
-        map={map}
+        ref={ref => this.itemRefs[item.index] = ref}
+        layer={item.layer}
+        map={this.map}
+        data={item}
         mapControl={this.mapControl}
         showRemoveDialog={this.showRemoveDialog}
         showRenameDialog={this.showRenameDialog}
+        setEditable={data => {
+          // 更新上一个编辑layer状态
+          this.state.currentEditIndex >= 0 && this.itemRefs[this.state.currentEditIndex].getData()
+          this.setState({
+            currentEditIndex: data.index,
+          })
+          this.props.setEditLayer && this.props.setEditLayer(data)
+        }}
       />
     )
   }
