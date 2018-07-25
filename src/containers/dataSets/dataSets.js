@@ -8,7 +8,7 @@ const line = require('../../assets/map/icon-line.png')
 const text = require('../../assets/map/icon-surface.png')
 const cad = require('../../assets/map/icon-surface.png')
 const region = require('../../assets/map/icon-surface.png')
-export default class dataSets extends React.Component {
+export default class DataSets extends React.Component {
 
   props: {
 

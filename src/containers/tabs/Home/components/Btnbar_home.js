@@ -48,11 +48,8 @@ export default class Btnbar_home extends React.Component {
     return (
       <View style={styles.container}>
         {this._addElement(mapLoadClick, require('../../../../assets/home/icon-map-load.png'), '地图加载')}
-        <ListSeparator key={1} mode={ListSeparator.mode.VERTICAL} />
         {this._addElement(myMapClick, require('../../../../assets/home/icon-my-map.png'), '我的地图')}
-        <ListSeparator key={2} mode={ListSeparator.mode.VERTICAL} />
         {this._addElement(mapShareClick, require('../../../../assets/home/icon-map-share.png'), '地图分享')}
-        <ListSeparator key={3} mode={ListSeparator.mode.VERTICAL} />
         {this._addElement(trackClick, require('../../../../assets/home/icon-trail-mannagement.png'), '轨迹记录')}
       </View>
     )
@@ -64,7 +61,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    backgroundColor: 'transparent',
+    backgroundColor: 'white',
     alignSelf: 'center',
   },
 })

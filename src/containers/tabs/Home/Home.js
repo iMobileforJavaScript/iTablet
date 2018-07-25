@@ -18,15 +18,15 @@ export default class Home extends Component {
     }
   }
   
-  _goToMapLoad = () => { NavigationService.navigate('MapLoad') }
+  _goToMapLoad = () => { NavigationService.navigate('MapLoad',{}) }
 
   render() {
     return (
       <View style={styles.container}>
         <HomeSwiper />
-        <BtnbarHome mapLoad={this._goToMapLoad} />
+        <BtnbarHome mapLoad={this._goToMapLoad} style={styles.btnbarhome} />
         {/*<HomeUsualTitle />*/}
-        <HomeUsualMap data={this.props.latestMap} />
+        <HomeUsualMap data={this.props.latestMap} style={styles.ususalmap}/>
       </View>
     )
   }

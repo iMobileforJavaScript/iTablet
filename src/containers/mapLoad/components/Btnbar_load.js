@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { StackNavigator, NavigationActions } from 'react-navigation'
-
+import { scaleSize} from '../../../utils'
 import { BtnOne } from '../../../components'
 
 const width = Dimensions.get('window').width
@@ -24,7 +24,7 @@ export default class Btnbar_mapLoad extends React.Component {
   _addElement = (delegate, src, str) => {
     if (typeof delegate == 'function' && typeof str == 'string') {
 
-      let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} />
+      let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={styles.btntop} />
       return (element)
     } else {
       throw Error('BthBar: please check type of params')
@@ -67,8 +67,11 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: 0.8 * width,
+    width: 0.9 * width,
     backgroundColor: 'transparent',
     alignSelf: 'center',
   },
+  btntop:{
+    marginTop:scaleSize(5),
+  }
 })

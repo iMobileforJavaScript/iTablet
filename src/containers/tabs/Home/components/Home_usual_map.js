@@ -62,6 +62,7 @@ export default class HomeUsualMap extends React.Component {
     }
     return (
       <Thumbnails
+        style={styles.item}
         key={item.name}
         title={item.name}
         // src={item.image}
@@ -93,7 +94,6 @@ export default class HomeUsualMap extends React.Component {
             />
             : <EmptyView style={{backgroundColor: 'transparent'}} title={'您最近还未使用过地图'} />
         }
-
       </View>
     )
   }
@@ -103,23 +103,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: color.grayLight,
-    paddingHorizontal: scaleSize(20),
+    // paddingHorizontal: scaleSize(20),
     flexDirection: 'column',
-    paddingTop: scaleSize(20),
+    marginTop:scaleSize(20),
+    backgroundColor: '#FFFFFF',
   },
   listView: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: '#FFFFFF',
     width: '100%',
+    paddingHorizontal: scaleSize(15),
   },
   header: {
-    height: scaleSize(40),
+    height: scaleSize(50),
     justifyContent: 'center',
     backgroundColor: 'transparent',
     marginLeft: scaleSize(40),
+    paddingTop:scaleSize(10)
   },
   headerTitile: {
-    fontSize: size.fontSize.fontSizeSm,
+    fontSize: size.fontSize.fontSizeXl,
     color: color.content,
   },
 })

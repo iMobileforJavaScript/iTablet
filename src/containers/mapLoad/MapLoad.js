@@ -12,7 +12,13 @@ export default class MapLoad extends Component {
   props: {
     navigation: Object,
   }
-
+  constructor(props) {
+    super(props)
+    const { params } = this.props.navigation.state
+    this.workspace = params.workspace ? params.workspace : 'noworkspace'
+    this.map = params.map ? params.map : 'nomap'
+    this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
+  }
   _offLine_More = () => {
     Toast.show('待完善')
   }
@@ -20,6 +26,7 @@ export default class MapLoad extends Component {
   render() {
     return (
       <Container
+        style={styles.container}
         headerProps={{
           title: '打开数据',
           navigation: this.props.navigation,
@@ -27,26 +34,23 @@ export default class MapLoad extends Component {
 
           ],
         }}>
-        <UsualTitle title='本地地图'/>
-        <OffLineList />
-        <UsualTitle title='在线地图' themeColor='#F5FCFF' />
+        <View style={styles.linlist}>
+          <UsualTitle title='本地地图' />
+          <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} />
+        </View>
         <View style={styles.btnTabContainer}>
+          <UsualTitle title='在线地图' />
           <BtnbarLoad
             TD={() => { NavigationService.navigate('MapView', { type: 'TD' }) }}
             Baidu={() => { NavigationService.navigate('MapView', { type: 'Baidu' }) }}
             OSM={() => { NavigationService.navigate('MapView', { type: 'OSM' }) }}
             Google={() => { NavigationService.navigate('MapView', { type: 'Google' }) }}
           />
-          {/*<BtnbarLoad*/}
-          {/*TD={() => { NavigationService.navigate('Map', { type: 'TD' }) }}*/}
-          {/*Baidu={() => { NavigationService.navigate('Map', { type: 'Baidu' }) }}*/}
-          {/*OSM={() => { NavigationService.navigate('Map', { type: 'OSM' }) }}*/}
-          {/*Google={() => { NavigationService.navigate('Map', { type: 'Google' }) }}*/}
-          {/*/>*/}
         </View>
-        <View style={{ height: 2 / PixelRatio.get(), backgroundColor: '#bbbbbb'}} />
-        <UsualTitle title='示例地图' isRightBtn={true} btnText='更多' btnClick={this._offLine_More} />
-        <ExampleMapList />
+        <View style={styles.examplemaplist}> 
+          <UsualTitle title='示例地图' style={styles.examplemaplist} />
+          <ExampleMapList />
+        </View>
       </Container>
     )
   }

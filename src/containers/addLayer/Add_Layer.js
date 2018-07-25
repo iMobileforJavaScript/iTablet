@@ -63,7 +63,7 @@ export default class Add_Layer extends React.Component {
     else {
       let key='';
       for (let index = 0; index < this.routes.length; index++) {
-        if (this, this.routes[index].routeName === 'MapView') {
+        if (this.routes[index].routeName === 'MapView') {
             key=this.routes[index+1].key
         }
       }
@@ -93,7 +93,10 @@ export default class Add_Layer extends React.Component {
       await (await layers.get(0)).setCaption(this.state.InputText);
       await this.mapControl.setAction(Action.SELECT)
       await this.map.refresh()
-      NavigationService.goBack(key);
+      Toast.show('新建图层成功')
+      setTimeout(() => {
+        this.props.navigation.goBack(key)
+      }, 2000)
     } catch (error) {
       return error
     }

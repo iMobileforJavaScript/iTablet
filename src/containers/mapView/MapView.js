@@ -287,10 +287,13 @@ export default class MapView extends React.Component {
 
   btnClick = () => {}
 
-  toDoAction = () => {
+  toOpen = async() => {
     NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map,mapControl:this.mapControl})
   }
-
+  toCloesMap=async()=>{
+    // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
+    NavigationService.goBack(this.props.nav.routes[1].key)
+  }
   // 地图保存
   saveMap = () => {
     (async function(){
@@ -313,7 +316,7 @@ export default class MapView extends React.Component {
     let headerBtnData = [{
       title: '打开',
       image: require('../../assets/map/icon_edit.png'),
-      action: this.toDoAction,
+      action: this.toOpen,
     }, {
       title: '保存',
       image: require('../../assets/map/icon-save.png'),

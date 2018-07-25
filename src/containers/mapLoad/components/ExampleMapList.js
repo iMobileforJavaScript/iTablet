@@ -115,10 +115,9 @@ const styles = StyleSheet.create({
   //   alignSelf: 'center',
   // },
   container: {
+    backgroundColor:'white',
     flex: 1,
-    backgroundColor: color.grayLight,
     paddingHorizontal: scaleSize(20),
     flexDirection: 'column',
-    paddingTop: scaleSize(20),
   },
 })

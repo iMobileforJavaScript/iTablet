@@ -1,3 +1,6 @@
 import WorkspaceFlieList from './WorkspaceFlieList'
-
-export default WorkspaceFlieList
+import { connect } from 'react-redux'
+const mapStateToProps = state => ({
+  nav: state.nav.toJS(),
+})
+export default connect(mapStateToProps,[])(WorkspaceFlieList)

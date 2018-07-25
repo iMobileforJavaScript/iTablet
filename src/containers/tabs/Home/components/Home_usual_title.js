@@ -5,8 +5,12 @@ import {
   Dimensions
 } from 'react-native'
 
-import { UsualTitle } from '../../../../components'
-import { Toast } from '../../../../utils'
+import {
+  UsualTitle
+} from '../../../../components'
+import {
+  Toast
+} from '../../../../utils'
 
 export default class HomeUsualTitle extends React.Component {
   constructor(props) {
@@ -18,16 +22,16 @@ export default class HomeUsualTitle extends React.Component {
   }
 
   render() {
-    return ( <
-      UsualTitle title = '最近常用'
-      isRightBtn = {
+    return (<
+      UsualTitle title='最近常用'
+      isRightBtn={
         true
       }
-      btnText = '更多'
-      btnClick = {
+      btnText='更多'
+      btnClick={
         this._moreUsualMap
       }
-      />
+    />
     )
   }
 }

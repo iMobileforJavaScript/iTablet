@@ -77,5 +77,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: size.fontSize.fontSizeSm,
+    textAlign:'center',
   },
 })

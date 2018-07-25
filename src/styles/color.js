@@ -2,7 +2,7 @@ export default {
   white: 'white',
   background: '#e2e2e2',
   background1: '#f3f3f3',
-
+  background3: '#F1F1F1',
   headerBackground: '#959595',
 
   title: '#333333',

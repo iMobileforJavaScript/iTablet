@@ -1,10 +1,13 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions, Text, FlatList, TouchableOpacity, PixelRatio } from 'react-native'
 import NavigationService from '../../../containers/NavigationService'   //导航模块
-import { Utility } from 'imobile_for_javascript'
+import { Utility, Workspace, MapControl } from 'imobile_for_javascript'
 import { BtnOne } from '../../../components'
-import { Toast } from '../../../utils'
-const src = require('../../../assets/public/data_collect.png')
+import { Toast,scaleSize} from '../../../utils'
+const icon_workspace = require('../../../assets/MapLoad/icon-open-workspace.png')
+const icon_udb = require('../../../assets/MapLoad/icon-opne-udb.png')
+const icon_webudb = require('../../../assets/MapLoad/icon-open-webudb.png')
+const icon_newudb = require('../../../assets/MapLoad/icon-new-datasource.png')
 const width = Dimensions.get('window').width
 const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件型数据源" }, { key: "打开web型数据源" }, { key: "新建文件型数据源" }]
 
@@ -32,14 +35,31 @@ class Item extends React.Component {
 }
 
 export default class OffLineList extends React.Component {
-
+    
+ props:{
+    Workspace:any,
+    Map:any,
+ }
+    
+  constructor(props){
+     super(props)
+     this.workspace=this.props.Workspace
+     this.map=this.props.map
+     this.mapControl=this.props.mapControl
+  }
   _offLine_More = () => {
     Toast.show('待完善')
   }
 
 
   _btn_workspace_click = () => {
-    NavigationService.navigate('WorkspaceFlieList')
+    if(this.workspace !='noworkspace'){
+      NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl})
+    }
+    else{
+      NavigationService.navigate('WorkspaceFlieList',{})
+    }
+    
   }
   _btn_udb_click = () => {
     this._offLine_More()
@@ -56,7 +76,7 @@ export default class OffLineList extends React.Component {
   _addElement = (delegate, src, str, style) => {
     if (typeof delegate == 'function' && typeof str == 'string') {
 
-      let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={style} />
+      let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={styles.btntop} />
       return (element)
     } else {
       throw Error('BthBar: please check type of params')
@@ -67,10 +87,10 @@ export default class OffLineList extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {this._addElement(this._btn_workspace_click, src, testData[0].key, { width: 0.15 * width })}
-        {this._addElement(this._btn_udb_click, src, testData[1].key, { width: 0.15 * width })}
-        {this._addElement(this._btn_web_click, src, testData[2].key, { width: 0.15 * width })}
-        {this._addElement(this._btn_newudb_click, src, testData[3].key, { width: 0.15 * width })}
+        {this._addElement(this._btn_workspace_click, icon_workspace, testData[0].key)}
+        {this._addElement(this._btn_udb_click, icon_udb, testData[1].key)}
+        {this._addElement(this._btn_web_click, icon_webudb, testData[2].key)}
+        {this._addElement(this._btn_newudb_click, icon_newudb, testData[3].key)}
       </View>
     )
   }
@@ -81,10 +101,17 @@ const styles = StyleSheet.create({
 
   },
   container: {
-    width: 0.8 * width,
+    width: 0.9 * width,
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: 'transparent',
     alignSelf: 'center',
+    paddingTop:5,
+    height:105,
+    // backgroundColor:'white'
   },
+  btntop:{
+    width: 0.15 * width,
+    marginTop:scaleSize(10),
+  }
 })
