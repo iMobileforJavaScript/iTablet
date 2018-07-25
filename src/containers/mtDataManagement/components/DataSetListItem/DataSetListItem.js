@@ -84,7 +84,9 @@ export default class DataSetListItem extends React.Component {
         onPress={this.action}
       >
         {/*{this.renderRadioBtn()}*/}
-        <Image style={styles.image} source={this.getImage()} />
+        <View style={styles.imageView}>
+          <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
+        </View>
         <Text style={styles.title}>{this.props.data.name}</Text>
       </TouchableOpacity>
     )

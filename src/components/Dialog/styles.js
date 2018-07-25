@@ -28,6 +28,15 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     marginVertical: scaleSize(20),
     textAlign: 'center',
+    color: color.title,
+  },
+  info: {
+    marginTop: scaleSize(20),
+    fontSize: size.fontSize.fontSizeMd,
+    backgroundColor: 'transparent',
+    marginVertical: scaleSize(20),
+    textAlign: 'center',
+    color: color.content,
   },
   btns: {
     marginTop: scaleSize(60),

@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { constUtil, scaleSize } from '../../utils'
-import { size } from '../../styles'
+import { constUtil, scaleSize } from '../../../utils'
 
 export default StyleSheet.create({
   container: {
@@ -12,7 +11,7 @@ export default StyleSheet.create({
   },
   input: {
     width: 0.75 * constUtil.WIDTH,
-    marginTop: scaleSize(30),
+    marginTop: scaleSize(60),
     marginHorizontal: scaleSize(100),
     height: scaleSize(80),
     borderStyle: 'solid',
@@ -21,16 +20,5 @@ export default StyleSheet.create({
     borderRadius: scaleSize(10),
     backgroundColor: 'white',
     paddingHorizontal: scaleSize(10),
-  },
-  textContainer:{
-    marginTop: scaleSize(30),
-    height: scaleSize(40),
-    width:0.75* constUtil.WIDTH,
-  },
-  text: {
-    fontSize: size.fontSize.fontSizeMd,
-  },
-  btn: {
-    marginTop: scaleSize(60),
   },
 })
