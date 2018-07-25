@@ -5,6 +5,7 @@
 */
 
 import * as React from 'react'
+import { View } from 'react-native'
 import { Workspace, SMMapView, Utility, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
@@ -47,6 +48,7 @@ export default class MapView extends React.Component {
       editLayer: {},
     }
     this.type = params.type || 'LOCAL'
+    this.isExample = params.isExample || false
     switch (params.type) {  //state.params.type最好进行判定
       case 'TD':
         this.DSParams = { server: 'http://t0.tianditu.com/vec_w/wmts', engineType: 23, driver: 'WMTS', alias: 'baseMap' }
@@ -112,6 +114,7 @@ export default class MapView extends React.Component {
   }
 
   saveLatest = () => {
+    if (this.isExample) return
     // Capture.snapshot(this.mapRef, {}, uri => {
     //   this.image = uri
     // }, error => {
@@ -298,6 +301,7 @@ export default class MapView extends React.Component {
   }
 
   renderHeaderBtns = () => {
+    if (this.isExample) return null
     let arr = []
     let headerBtnData = [{
       title: '打开',
@@ -324,17 +328,13 @@ export default class MapView extends React.Component {
     return arr
   }
 
-  back = () => {
-    // if (this.setting) {
-    //   this.setting.closeChooseLayer()
-    // }
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-      // NavigationService.goBack(this.props.nav.routes[1].key)
-      NavigationService.goBack()
-    }
+  back = () => {if (this.setting && this.setting.isVisible()) {
+    this.setting.close()
+  } else {
+    // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
+    // NavigationService.goBack(this.props.nav.routes[1].key)
+    NavigationService.goBack()
+  }
   }
 
   setLoading = (loading = false) => {
@@ -348,6 +348,7 @@ export default class MapView extends React.Component {
         ref={ref => this.container = ref}
         initWithLoading
         headerProps={{
+          title: this.isExample ? '示例地图' : '',
           navigation: this.props.navigation,
           headerRight: headerRight,
           backAction: this.back,
@@ -383,6 +384,7 @@ export default class MapView extends React.Component {
           />
         }
         <MTBtnList
+          hidden={this.isExample}
           POP_List={this._pop_list}
           layerManager={this._layer_manager}
           dataCollection={this._data_collection}
@@ -391,36 +393,27 @@ export default class MapView extends React.Component {
           chooseLayer={this._chooseLayer}
           editLayer={this.props.editLayer}
         />
-        <Setting
-          ref={ref => this.setting = ref}
-          selection={this.props.selection}
-          mapControl={this.mapControl}
-          workspace={this.workspace}
-          map={this.map}
-          setLoading={this.setLoading}
-          setBufferSetting={this.props.setBufferSetting}
-          setOverlaySetting={this.props.setOverlaySetting}
-          bufferSetting={this.props.bufferSetting}
-          overlaySetting={this.props.overlaySetting}
-          setAnalystLayer={this.props.setAnalystLayer}
-        />
+        {
+          !this.isExample &&
+          <Setting
+            ref={ref => this.setting = ref}
+            selection={this.props.selection}
+            mapControl={this.mapControl}
+            workspace={this.workspace}
+            map={this.map}
+            setLoading={this.setLoading}
+            setBufferSetting={this.props.setBufferSetting}
+            setOverlaySetting={this.props.setOverlaySetting}
+            bufferSetting={this.props.bufferSetting}
+            overlaySetting={this.props.overlaySetting}
+            setAnalystLayer={this.props.setAnalystLayer}
+          />
+        }
       </Container>
     )
   }
 
   _addMap = () => {
-    // if (
-    //   this.type === 'UDB' ||
-    //   this.type === 'TD' ||
-    //   this.type === 'Baidu' ||
-    //   this.type === 'Google' ||
-    //   this.type === 'OSM' ||
-    //   this.type === 'ONLINE')
-    // {
-    //   this._addRemoteMap()
-    // } else {
-    //   this._addLocalMap()
-    // }
     if (this.type === 'LOCAL') {
       this._addLocalMap()
     } else {

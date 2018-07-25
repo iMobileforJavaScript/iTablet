@@ -37,10 +37,13 @@ export default class MT_BtnList extends React.Component {
     addLayer: PropTypes.func,
     chooseLayer: PropTypes.func,
     editLayer: PropTypes.any,
+    style: PropTypes.any,
+    hidden: PropTypes.bool,
   }
 
   static defaultProps = {
     type: MAP_LOCAL,
+    hidden: false,
     editLayer: {},
   }
 
@@ -147,8 +150,9 @@ export default class MT_BtnList extends React.Component {
 
   render() {
     const data = this.state.data
+    // TODO BUG 临时处理 hidden map和map3d在关闭的时候会出现部分黑屏，必须要有可渲染的其他组件在屏幕上，才能正常关闭
     return (
-      <View style={styles.container}>
+      <View style={[this.props.hidden ? styles.hiddenContainer : styles.container, this.props.style]}>
         <FlatList
           data={data}
           renderItem={this._renderItem}
@@ -180,6 +184,8 @@ const styles = StyleSheet.create({
     width: ITEM_WIDTH,
   },
   container: {
+    position: 'absolute',
+    bottom: 0,
     height: scaleSize(100),
     width: '100%',
     backgroundColor: constUtil.USUAL_GREEN,
@@ -191,5 +197,20 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderBottomWidth: 0,
     zIndex: 100,
+  },
+  hiddenContainer: {
+    position: 'absolute',
+    bottom: 0,
+    height: scaleSize(100),
+    width: '100%',
+    backgroundColor: constUtil.USUAL_GREEN,
+    alignSelf: 'center',
+    borderStyle: 'solid',
+    borderColor: BORDERCOLOR,
+    borderTopWidth: 1,
+    borderRightWidth: 0,
+    borderLeftWidth: 0,
+    borderBottomWidth: 0,
+    zIndex: -1,
   },
 })

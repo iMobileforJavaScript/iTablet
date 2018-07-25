@@ -26,27 +26,29 @@ export default class Map3D extends React.Component {
   constructor(props) {
     super(props)
     const params = this.props.navigation.state.params
+    this.isExample = params.isExample || false
     this.state = {
       path: params.path,
-      manageAble: params.manageAble,
+      title: '',
     }
     this.path = params.path
     this.type = params.type || 'MAP_3D'
     // this._addScene2(params.path)
   }
-  
+
   componentDidMount() {
     Toast.show("地图编辑待做")
   }
-  
+
   componentWillUnmount() {
     (async function(){
       this.scene && await this.scene.close()
       this.workspace && await this.workspace.closeWorkspace()
     }).bind(this)()
   }
-  
+
   saveLatest = () => {
+    if (this.isExample) return
     Capture.captureScreen({}, uri => {
       this.image = uri
       this.props.setLatestMap({
@@ -56,7 +58,7 @@ export default class Map3D extends React.Component {
         image: uri,
       })
     }, error => {
-    
+
     })
   }
 
@@ -123,37 +125,14 @@ export default class Map3D extends React.Component {
     return (
       <Container
         headerProps={{
-          title: '本地地图',
+          title: this.isExample ? '示例地图' : this.state.title,
           navigation: this.props.navigation,
           headerRight: [
 
           ],
         }}>
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
-        {/*<View style={styles.container}/>*/}
-        {
-          this.state.manageAble &&
-          <MTBtnList type={'MAP_3D'} POP_List={this._pop_list} layerManager={this._layer_manager} dataCollection={this._data_collection} />
-        }
-        {/* <View containerStyle={styles.imageBtnsView}>
-          <ImageButton
-            containerStyle={styles.imageBtn}
-            icon={require('../../assets/tabBar/chat-select.png')}
-            onPress={this._flyToPoint} />
-          <ImageButton
-            containerStyle={styles.imageBtn}
-            icon={require('../../assets/tabBar/message-select.png')}
-            onPress={this._flyToCamera} />
-          <ImageButton
-            containerStyle={styles.imageBtn}
-            icon={require('../../assets/tabBar/contact-select.png')}
-            onPress={this._changeLayerColor} />
-
-          <ImageButton
-            containerStyle={styles.imageBtn}
-            icon={require('../../assets/tabBar/contact-select.png')}
-            onPress={this._getObjectsColorCount} />
-        </View> */}
+        <MTBtnList hidden={this.isExample} type={'MAP_3D'} POP_List={this._pop_list} layerManager={this._layer_manager} dataCollection={this._data_collection} />
       </Container>
     )
   }
@@ -171,13 +150,16 @@ export default class Map3D extends React.Component {
         return
       }
       this.mapName = await this.workspace.getSceneName(0) //获取场景名称
+      this.setState({
+        title: this.mapName,
+      })
       await this.scene.open(this.mapName)                     //根据名称打开指定场景
       await this.scene.refresh()                           //刷新场景
 
       this.saveLatest()
     }).bind(this)()
   }
-  
+
   // _addScene2 = (path = '') => {
   //   let workspaceModule = new Workspace()
   //   console.log(0)

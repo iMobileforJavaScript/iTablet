@@ -22,7 +22,7 @@ export default class ExampleMapList extends React.Component {
         // path = '/SampleData/world/world.smwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('MapView', { path:  path})
+          NavigationService.navigate('MapView', { path: path, isExample: true})
         } else {
           Toast.show("本地实例文件不存在")
         }
@@ -31,7 +31,7 @@ export default class ExampleMapList extends React.Component {
         path = '/SampleData/凯德Mall/凯德Mall.sxwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('Map3D', { path:  path, manageAble: true})
+          NavigationService.navigate('Map3D', { path:  path, isExample: true})
         } else {
           Toast.show("本地实例文件不存在")
         }
@@ -41,7 +41,7 @@ export default class ExampleMapList extends React.Component {
         // path = '/SampleData/CBD_android/CBD_android.sxwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('Map3D', { path:  path, manageAble: true})
+          NavigationService.navigate('Map3D', { path:  path, isExample: true})
         } else {
           Toast.show("本地实例文件不存在")
         }
@@ -51,7 +51,7 @@ export default class ExampleMapList extends React.Component {
         exist = await Utility.fileIsExistInHomeDirectory(path)
         filePath = await Utility.appendingHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('MapView', { type: 'UDB', path: filePath})
+          NavigationService.navigate('MapView', { type: 'UDB', path: filePath, isExample: true})
         } else {
           Toast.show("本地实例文件不存在")
         }
