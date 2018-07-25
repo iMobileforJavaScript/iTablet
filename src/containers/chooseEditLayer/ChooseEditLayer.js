@@ -51,10 +51,7 @@ export default class ChooseEditLayer extends React.Component {
 
   _chooseEditLayer = item =>{
     (async function (){
-      debugger
-      // let layer = await this.map.getLayer(item.index)
       let layer = item.layer
-      debugger
       await layer.setSelectable(true)
       this.isEdit && await layer.setEditable(true)
       await this.mapControl.setAction(Action.PAN)

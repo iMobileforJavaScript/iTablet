@@ -217,5 +217,6 @@ export default StackNavigator({
     animationEnabled: false,
     headerTitleStyle: { alignSelf: 'center' },
   },
-  mode: 'card',
+  lazy: true,
+  // mode: 'modal',
 })

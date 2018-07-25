@@ -123,18 +123,18 @@ export default class CollectionToolBar extends React.Component {
       this.collector = await this.props.mapControl.getCollector()
       await this.collector.setDataset(dataset)
 
-      //风格
+      // 风格
       let geoStyle = await new GeoStyle().createObj()
-      //线颜色
+      // 线颜色
       await geoStyle.setLineColor(0, 110, 220)
-      //面颜色
+      // 面颜色
       await geoStyle.setFillForeColor(160, 255, 90)
-      //设置绘制风格
+      // 设置绘制风格
       await this.collector.setStyle(geoStyle)
 
-      //		//打开单指打点,默认不打开
-      //		collector.setSingleTapEnable(true)
-      //添加定位变化监听
+      // 打开单指打点,默认不打开
+      // collector.setSingleTapEnable(true)
+      // 添加定位变化监听
       await this.collector.setCollectionChangedListener({
         collectionChanged: this._collectionChanged,
       })
@@ -181,7 +181,7 @@ export default class CollectionToolBar extends React.Component {
   }
 
   toDoAction = () => {
-    // Toast.show('正在码ing')
+    Toast.show('敬请期待')
   }
 
   /** 采集 开始/结束 **/
@@ -216,8 +216,11 @@ export default class CollectionToolBar extends React.Component {
           case REGION_HAND_POINT:
             await this.handCollect(type)
             break
+          default:
+            this.toDoAction()
+            break
         }
-        await this.props.editLayer.layer.setEditable(true)
+        // await this.props.editLayer.layer.setEditable(true)
       } catch (e) {
         console.error(e)
       }
