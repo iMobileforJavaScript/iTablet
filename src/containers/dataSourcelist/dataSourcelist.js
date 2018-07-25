@@ -48,7 +48,7 @@ export default class dataSourcelist extends React.Component {
       for (let index = 0; index < count; index++) {
         let datasource = await (await this.workspace.getDatasources()).get(index)
         let datasourcename = await datasource.getAlias()
-        result = { datasource: datasource, name: datasourcename }
+        let result = { datasource: datasource, name: datasourcename }
         datalist.push(result)
       }
       return datalist
