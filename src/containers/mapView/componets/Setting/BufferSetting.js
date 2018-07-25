@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { Text, View } from 'react-native'
-import { constUtil, Toast } from '../../../../utils'
 import { Row, Button } from '../../../../components'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, Toast } from '../../../../utils'
 import { BufferEndType } from 'imobile_for_javascript'
 import ChooseLayer from './ChooseLayer'
 import styles from './styles'
@@ -77,7 +76,6 @@ export default class BufferSetting extends React.Component {
       this.props.setBufferSetting && this.props.setBufferSetting(this.getData())
       Toast.show('设置成功')
     }).bind(this)()
-    
   }
 
   close = () => {

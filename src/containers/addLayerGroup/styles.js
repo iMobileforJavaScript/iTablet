@@ -4,7 +4,7 @@ import { size, color } from '../../styles'
 
 export default StyleSheet.create({
   container: {
-    backgroundColor: color.background,
+    backgroundColor: color.white,
   },
   headerBtnTitle: {
     color: 'white',
@@ -15,7 +15,7 @@ export default StyleSheet.create({
     height: scaleSize(100),
     paddingHorizontal: scaleSize(40),
     alignItems: 'center',
-    backgroundColor: color.background,
+    backgroundColor: color.white,
   },
   title: {
     fontSize: size.fontSize.fontSizeMd,
@@ -27,5 +27,7 @@ export default StyleSheet.create({
     height: scaleSize(60),
     backgroundColor: 'white',
     borderRadius: scaleSize(8),
+    borderWidth: scaleSize(1),
+    borderColor: color.UNDERLAYCOLOR,
   },
 })

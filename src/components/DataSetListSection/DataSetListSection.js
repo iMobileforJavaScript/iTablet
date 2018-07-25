@@ -25,8 +25,8 @@ export default class DataSetListSection extends React.Component {
 
   renderArrow = () => {
     let image = this.props.data.isShow
-      ? require('../../../../assets/map/icon-arrow-up.png')
-      : require('../../../../assets/map/icon-arrow-down.png')
+      ? require('../../assets/map/icon-arrow-up.png')
+      : require('../../assets/map/icon-arrow-down.png')
     return (
       <Image style={styles.image} source={image} />
     )

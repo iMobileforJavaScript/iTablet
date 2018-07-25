@@ -5,11 +5,10 @@
  */
 
 import * as React from 'react'
-import { View, Text, TextInput, SectionList, FlatList } from 'react-native'
-import { Toast, scaleSize } from '../../utils'
+import { View, Text, TextInput, SectionList } from 'react-native'
+import { Toast } from '../../utils'
 import { color } from '../../styles'
-import { Container, ListSeparator, TextBtn } from '../../components'
-import { DataSetListSection, DataSetListItem } from './components'
+import { Container, ListSeparator, TextBtn, DataSetListSection, DataSetListItem } from '../../components'
 
 import styles from './styles'
 
@@ -32,75 +31,50 @@ export default class AddLayerGroup extends React.Component {
   }
 
   componentDidMount() {
-    // this.getDatasets()
     this.getData()
   }
 
-  getData() {
-    (async function () {
-      let layerCount = await this.map.getLayersCount()
-      let layerNameArr = []
-      for (let i = 0; i < layerCount; i++) {
-        let layer = await this.map.getLayer(i)
-        let layerName = await layer.getName()
-        let dataset = await layer.getDataset()
-        let dsType = await dataset.getType()
+  getData = async () => {
+    this.container.setLoading(true)
+    try {
+      let list = []
+      let dataSources = await this.workspace.getDatasources()
+      let count = await dataSources.getCount()
+      for (let i = 0; i < count; i++) {
+        let dataSetList = []
+        let dataSource = await dataSources.get(i)
+        let name = await dataSource.getAlias()
+        let dataSets = await dataSource.getDatasets()
+        let dataSetCount = await dataSets.getCount()
+        for (let j = 0; j < dataSetCount; j++) {
+          let dataset = await dataSets.get(j)
+          let dsName = await dataset.getName()
+          let dsType = await dataset.getType()
 
-        layerNameArr.push({
-          name: layerName,
-          type: dsType,
-          isAdd: false,
-          // section: i,
-          dataset: dataset,
-          key: layerName,
-          obj: layer,
-          map: this.map,
+          dataSetList.push({
+            name: dsName,
+            type: dsType,
+            isAdd: false,
+            section: i,
+            dataset: dataset,
+          })
+        }
+
+        list.push({
+          key: name,
+          isShow: true,
+          data: dataSetList,
+          index: i,
         })
       }
       this.setState({
-        dataList: layerNameArr,
+        dataList: list,
       }, () => {
         this.container.setLoading(false)
       })
-    }).bind(this)()
-  }
-
-  getDatasets = async () => {
-    let list = []
-    let dataSources = await this.workspace.getDatasources()
-    let count = await dataSources.getCount()
-    for (let i = 0; i < count; i++) {
-      let dataSetList = []
-      let dataSource = await dataSources.get(i)
-      let name = await dataSource.getAlias()
-      let dataSets = await dataSource.getDatasets()
-      let dataSetCount = await dataSets.getCount()
-      for (let j = 0; j < dataSetCount; j++) {
-        let dataset = await dataSets.get(j)
-        let dsName = await dataset.getName()
-        let dsType = await dataset.getType()
-
-        dataSetList.push({
-          name: dsName,
-          type: dsType,
-          isAdd: false,
-          section: i,
-          dataset: dataset,
-        })
-      }
-
-      list.push({
-        key: name,
-        isShow: true,
-        data: dataSetList,
-        index: i,
-      })
-    }
-    this.setState({
-      dataList: list,
-    }, () => {
+    } catch (e) {
       this.container.setLoading(false)
-    })
+    }
   }
 
   showSection = (section, isShow?: boolean) => {
@@ -183,11 +157,8 @@ export default class AddLayerGroup extends React.Component {
   }
 
   _renderItem = ({ item }) => {
-    // return (
-    //   <MapListItem hidden={!this.state.dataList[item.section].isShow} data={item} height={60} onPress={this.select} />
-    // )
     return (
-      <DataSetListItem data={item} height={60} onPress={this.select} />
+      <DataSetListItem hidden={!this.state.dataList[item.section].isShow} data={item} height={60} onPress={this.select} />
     )
   }
 
@@ -195,17 +166,16 @@ export default class AddLayerGroup extends React.Component {
     return <ListSeparator />
   }
 
-  // _renderSectionSeparatorComponent = ({ section }) => {
-  //   return section.isShow ? <ListSeparator height={scaleSize(20)} /> : null
-  // }
+  _renderSectionSeparatorComponent = ({ section }) => {
+    return section.isShow ? <ListSeparator /> : null
+  }
 
-  _keyExtractor = (item, index) => (item.key + index)
+  _keyExtractor = (item, index) => (item.name + index)
 
   render() {
     return (
       <Container
         ref={ref => this.container = ref}
-        initWithLoading
         headerProps={{
           title: '新建图层组',
           navigation: this.props.navigation,
@@ -213,19 +183,13 @@ export default class AddLayerGroup extends React.Component {
         }}>
         {this._renderInput()}
         {this._renderListHeader()}
-        {/*<SectionList*/}
-        {/*renderSectionHeader={this._renderSetion}*/}
-        {/*renderItem={this._renderItem}*/}
-        {/*keyExtractor={this._keyExtractor}*/}
-        {/*sections={this.state.dataList}*/}
-        {/*ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
-        {/*// SectionSeparatorComponent={this._renderSectionSeparatorComponent}*/}
-        {/*/>*/}
-        <FlatList
+        <SectionList
+          renderSectionHeader={this._renderSetion}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
-          data={this.state.dataList}
+          sections={this.state.dataList}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
         />
       </Container>
     )

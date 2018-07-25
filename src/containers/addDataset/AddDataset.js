@@ -6,9 +6,8 @@
 
 import * as React from 'react'
 import { SectionList } from 'react-native'
-import { Toast, scaleSize } from '../../utils'
-import { Container, ListSeparator, TextBtn } from '../../components'
-import { DataSetListSection, DataSetListItem } from './components'
+import { Toast } from '../../utils'
+import { Container, ListSeparator, TextBtn, DataSetListSection, DataSetListItem  } from '../../components'
 
 import styles from './styles'
 

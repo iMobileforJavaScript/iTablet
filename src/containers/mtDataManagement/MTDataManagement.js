@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
-import { Container, ListSeparator } from '../../components'
-import { scaleSize } from '../../utils'
-import { DataManagerTab, DataSetListSection, DataSetListItem } from './components'
+import { Container, ListSeparator, DataSetListSection, DataSetListItem } from '../../components'
+import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
 import { Action } from 'imobile_for_javascript'
 

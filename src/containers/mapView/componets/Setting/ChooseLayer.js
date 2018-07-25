@@ -5,9 +5,8 @@
 */
 
 import * as React from 'react'
-import { View, Text, FlatList, SectionList } from 'react-native'
-import { ListSeparator, EmptyView } from '../../../../components'
-import { DataSetListItem, DataSetListSection } from '../../componets'
+import { View, Text, SectionList } from 'react-native'
+import { ListSeparator, DataSetListItem, DataSetListSection } from '../../../../components'
 import PropTypes from 'prop-types'
 import { DatasetType } from 'imobile_for_javascript'
 import styles from './styles'
@@ -19,21 +18,18 @@ export default class ChooseLayer extends React.Component {
     mapControl: PropTypes.object,
     map: PropTypes.object,
     type: PropTypes.number,
-    // getLayer: PropTypes.func,
     getDataset: PropTypes.func,
     setLoading: PropTypes.func,
-    alwaysVisible: PropTypes.boolean,
+    alwaysVisible: PropTypes.bool,
   }
 
   static defaultProps = {
-    // type: DatasetType.REGION,
     alwaysVisible: false,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      // datasourceList: '',
       isShow: props.alwaysVisible || false,
       showList: false,
       type: props.type,
@@ -43,25 +39,8 @@ export default class ChooseLayer extends React.Component {
   }
 
   componentDidMount() {
-    // this.getData()
     this.getDatasets()
   }
-
-  // getData = type => {
-  //   let t = type || this.state.type
-  //   ;(async function () {
-  //     let layerNameArr = await this.props.map.getLayersByType(t)
-  //     for(let i = 0; i < layerNameArr.length; i++) {
-  //       let layer = await this.props.map.getLayer(layerNameArr[i].index)
-  //       layerNameArr[i].layer = layer
-  //     }
-  //     this.setState({
-  //       datasourceList: layerNameArr,
-  //       showList: true,
-  //       type: t,
-  //     })
-  //   }).bind(this)()
-  // }
 
   isVisible = () => {
     return this.state.isShow
@@ -100,14 +79,6 @@ export default class ChooseLayer extends React.Component {
     })
   }
 
-  // _chooseLayer = item =>{
-  //   (async function (){
-  //     // let layer = await this.props.map.getLayer(item.index)
-  //     this.props.getLayer && this.props.getLayer(item)
-  //     this.close()
-  //   }).bind(this)()
-  // }
-
   setLoading = (loading = false) => {
     this.props.setLoading && this.props.setLoading(loading)
   }
@@ -132,9 +103,6 @@ export default class ChooseLayer extends React.Component {
             let dsName = await dataset.getName()
             let dsType = await dataset.getType()
             if (t && dsType !== t) continue
-            // let isAdd = await this.props.map.containsCaption(dsName, name)
-            // let isAdd = await this.map.contains(dsName + "@" + name)
-            // let isAdd = false
 
             dataSetList.push({
               name: dsName,
@@ -228,18 +196,6 @@ export default class ChooseLayer extends React.Component {
               <Text style={styles.title}>{this.state.headerTitile}</Text>
             </View> : null
         }
-        {/*{*/}
-        {/*this.state.showList && (*/}
-        {/*this.state.datasourceList.length > 0*/}
-        {/*? <FlatList*/}
-        {/*keyExtractor={this._keyExtractor}*/}
-        {/*data={this.state.datasourceList}*/}
-        {/*renderItem={this._renderItem}*/}
-        {/*ItemSeparatorComponent={this._renderSeparator}*/}
-        {/*/>*/}
-        {/*: <EmptyView />*/}
-        {/*)*/}
-        {/*}*/}
         {
           this.state.showList && this.state.datasourceList.length > 0 &&
           <SectionList
