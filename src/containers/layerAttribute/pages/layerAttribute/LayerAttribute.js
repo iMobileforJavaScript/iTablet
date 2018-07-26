@@ -43,10 +43,18 @@ export default class LayerAttribute extends React.Component {
     this.getDatasets()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
+  // componentWillReceiveProps(nextProps) {
+  //   if (JSON.stringify(nextProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
+  //     this.setState({
+  //       attribute: nextProps.currentAttribute,
+  //     })
+  //   }
+  // }
+  
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
       this.setState({
-        attribute: nextProps.currentAttribute,
+        attribute: this.prop.currentAttribute,
       })
     }
   }

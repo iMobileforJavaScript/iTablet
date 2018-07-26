@@ -5,7 +5,6 @@
 */
 
 import * as React from 'react'
-import { View } from 'react-native'
 import { Workspace, SMMapView, Utility, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
@@ -106,9 +105,16 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
-      let name = nextProps.editLayer ? nextProps.editLayer.name : ''
+  // componentWillReceiveProps(nextProps) {
+  //   if (JSON.stringify(nextProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
+  //     let name = nextProps.editLayer ? nextProps.editLayer.name : ''
+  //     name && Toast.show('当前可编辑的图层为\n' + name)
+  //   }
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
+      let name = this.props.editLayer ? this.props.editLayer.name : ''
       name && Toast.show('当前可编辑的图层为\n' + name)
     }
   }
@@ -436,7 +442,7 @@ export default class MapView extends React.Component {
 
         let filePath = await Utility.appendingHomeDirectory(this.path)
 
-        let openWk = await this.workspace.open(filePath)
+        await this.workspace.open(filePath)
         await this.map.setWorkspace(this.workspace)
         this.mapName = await this.workspace.getMapName(0)
 
@@ -449,7 +455,7 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
         this.saveLatest()
       } catch (e) {
-        console.error(e)
+        // console.error(e)
         this.container.setLoading(false)
       }
     }).bind(this)()

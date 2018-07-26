@@ -32,11 +32,43 @@ export default class SaveDialog extends PureComponent {
     }
   }
 
+  // componentWillReceiveProps(nextProps) {
+  //   if (JSON.stringify(nextProps.mapName) !== JSON.stringify(this.props.mapName)) {
+  //     this.setState({
+  //       mapName: nextProps.mapName,
+  //     })
+  //   } else if (JSON.stringify(nextProps.wsName) !== JSON.stringify(this.props.wsName)) {
+  //     this.setState({
+  //       wsName: nextProps.wsName,
+  //     })
+  //   } else if (JSON.stringify(nextProps.path) !== JSON.stringify(this.props.path)) {
+  //     this.setState({
+  //       path: nextProps.path,
+  //     })
+  //   }
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.mapName) !== JSON.stringify(this.props.mapName)) {
+      this.setState({
+        mapName: this.props.mapName,
+      })
+    } else if (JSON.stringify(prevProps.wsName) !== JSON.stringify(this.props.wsName)) {
+      this.setState({
+        wsName: this.props.wsName,
+      })
+    } else if (JSON.stringify(prevProps.path) !== JSON.stringify(this.props.path)) {
+      this.setState({
+        path: this.props.path,
+      })
+    }
+  }
+
   //控制Modal框是否可以展示
   setDialogVisible(visible) {
     this.dialog && this.dialog.setDialogVisible(visible)
   }
-  
+
   confirm = () => {
     this.props.confirmAction && this.props.confirmAction({
       mapName: this.state.mapName,
@@ -44,7 +76,7 @@ export default class SaveDialog extends PureComponent {
       path: this.state.path,
     })
   }
-  
+
   cancel = () => {
     this.props.cancelAction && this.props.cancelAction()
   }
@@ -87,6 +119,7 @@ export default class SaveDialog extends PureComponent {
               })
             }}
             defaultValue={this.state.mapName}
+            value={this.state.mapName}
             // editable={!!value}
             placeholder={'请输入地图名称'}
             style={styles.textInputStyle} />

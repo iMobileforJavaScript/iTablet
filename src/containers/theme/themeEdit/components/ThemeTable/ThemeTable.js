@@ -6,10 +6,8 @@
 
 import * as React from 'react'
 import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity, Image } from 'react-native'
-import { scaleSize, dataUtil } from '../../../../../utils'
-import { color } from '../../../../../styles'
-import { Table, TableWrapper, Row, Rows, Col, Cell } from 'react-native-table-component'
-import { FieldType } from 'imobile_for_javascript'
+import { scaleSize } from '../../../../../utils'
+import { Table, TableWrapper, Row, Cell } from 'react-native-table-component'
 
 import styles from './styles'
 
@@ -62,16 +60,26 @@ export default class ThemeTable extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data)) {
-      let {dataList, colHeight} = this.dealData(nextProps.data)
+  // componentWillReceiveProps(nextProps) {
+  //   if (JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data)) {
+  //     let {dataList, colHeight} = this.dealData(nextProps.data)
+  //     this.setState({
+  //       colHeight: colHeight,
+  //       tableData: dataList,
+  //     })
+  //   }
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
+      let {dataList, colHeight} = this.dealData(this.props.data)
       this.setState({
         colHeight: colHeight,
         tableData: dataList,
       })
     }
   }
-  
+
   /**
    * 数据中如果有key = 'data'，则不显示在列表中。作为整行的数据
    * @param data
@@ -187,7 +195,7 @@ export default class ThemeTable extends React.Component {
     )
   }
 
-  renderStyleView = (item, index) => {
+  renderStyleView = item => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}

@@ -5,14 +5,10 @@
  */
 
 import * as React from 'react'
-import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, Button } from '../../../../components'
+import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
-import { LayerAttributeAdd } from '../layerAttributeAdd'
-import { QueryParameter, CursorType } from 'imobile_for_javascript'
-import styles from './styles'
 
 export default class LayerAttributeEdit extends React.Component {
 
@@ -26,9 +22,6 @@ export default class LayerAttributeEdit extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    // this.workspace = params.workspace
-    // this.map = params.map
-    // this.cb = params.cb
     this.state = {
       callBack: params.callBack,
       dataSourceList: [],
@@ -46,10 +39,18 @@ export default class LayerAttributeEdit extends React.Component {
     this.getDatasets()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
+  // componentWillReceiveProps(nextProps) {
+  //   if (JSON.stringify(nextProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
+  //     this.setState({
+  //       attribute: nextProps.currentAttribute,
+  //     })
+  //   }
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
       this.setState({
-        attribute: nextProps.currentAttribute,
+        attribute: this.props.currentAttribute,
       })
     }
   }

@@ -11,10 +11,12 @@ export default class DataSetListItem extends React.Component {
     data: PropTypes.object,
     height: PropTypes.number,
     hidden: PropTypes.bool,
+    radio: PropTypes.bool,
   }
-  
+
   static defaultProps = {
     hidden: true,
+    radio: false,
   }
 
   constructor(props) {
@@ -66,10 +68,16 @@ export default class DataSetListItem extends React.Component {
   }
 
   renderRadioBtn = () => {
+    let viewStyle = styles.radioView,
+      dotStyle = styles.radioSelected
+    if (this.props.data.isAdd) {
+      viewStyle = styles.radioViewGray
+      dotStyle = styles.radioSelectedGray
+    }
     return (
-      <View style={styles.radioView}>
+      <View style={viewStyle}>
         {
-          this.state.selected && <View style={styles.radioSelected} />
+          (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
         }
       </View>
     )
@@ -83,7 +91,7 @@ export default class DataSetListItem extends React.Component {
         style={[styles.container, this.props.height && {height: this.props.height}]}
         onPress={this.action}
       >
-        {/*{this.renderRadioBtn()}*/}
+        {this.props.radio && this.renderRadioBtn()}
         <View style={styles.imageView}>
           <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
         </View>

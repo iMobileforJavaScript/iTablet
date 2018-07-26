@@ -29,11 +29,13 @@ export default class MT_layerManager extends React.Component {
     this.mapControl = params.mapControl
     this.map = params.map
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
+    let path = params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
     this.state = {
       datasourceList: '',
       mapName: '',
-      wsName: '',
-      path: !this.showDialogCaption ? params.path : ConstPath.SampleDataPath,
+      wsName: wsName,
+      path: !this.showDialogCaption ? path : ConstPath.SampleDataPath,
       currentEditIndex: props.editLayer.index >= 0 ? props.editLayer.index : -1, //当前编辑界面的index
     }
   }
@@ -42,22 +44,27 @@ export default class MT_layerManager extends React.Component {
     this.getData()
   }
 
-  getData() {
+  getData = () => {
     this.container.setLoading(true)
     ;(async function () {
       this.itemRefs = []
+      this.map = await this.mapControl.getMap()
       let layerNameArr = await this.map.getLayersByType()
+      let currentEditIndex = -1
       for(let i = 0; i < layerNameArr.length; i++) {
         let layer = await this.map.getLayer(layerNameArr[i].index)
         layerNameArr[i].layer = layer
         layerNameArr[i].key = layerNameArr[i].name
+        if (layerNameArr[i].isEditable) {
+          currentEditIndex = layerNameArr[i].index
+        }
       }
-
-      await this.mapControl.setAction(Action.PAN)
+      this.mapControl && await this.mapControl.setAction(Action.PAN)
+      let mapName = await this.map.getName()
       this.setState({
-        datasourceList: layerNameArr,
-        // mapName: mapName,
-        // wsName: workspace,
+        datasourceList: layerNameArr.concat(),
+        mapName: mapName,
+        currentEditIndex: currentEditIndex,
       }, () => {
         this.container.setLoading(false)
       })
@@ -98,7 +105,7 @@ export default class MT_layerManager extends React.Component {
   }
 
   goToMapChange = () => {
-    NavigationService.navigate('MapChange',{workspace:this.workspace,map:this.map})
+    NavigationService.navigate('MapChange',{workspace: this.workspace, map:this.map, cb: this.getData})
   }
 
   // 地图保存
@@ -123,19 +130,26 @@ export default class MT_layerManager extends React.Component {
 
   // 保存
   saveMapAndWorkspace= ({mapName, wsName, path}) =>{
-    (async function(){
+    this.container.setLoading(true)
+    ;(async function(){
       try {
         let saveWs
         let info = {}
+        if (!wsName) {
+          Toast.show('请输入地图名称')
+          return
+        }
         if (this.state.path !== path || path === ConstPath.SampleDataPath) {
           info.path = path
         }
         if (wsName && this.showDialogCaption) {
           info.caption = wsName
         }
-        saveWs = await this.workspace.saveWorkspace(info)
         await this.map.setWorkspace(this.workspace)
-        let saveMap = await this.map.save(mapName)
+        // 若名称相同，则不另存为
+        let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+        saveWs = await this.workspace.saveWorkspace(info)
+        this.container.setLoading(false)
         if (!saveMap) {
           Toast.show('该名称地图已存在')
         } else if (saveWs || !this.showDialogCaption) {
@@ -145,9 +159,9 @@ export default class MT_layerManager extends React.Component {
           Toast.show('保存失败')
         }
       } catch (e) {
+        this.container.setLoading(false)
         Toast.show('保存失败')
       }
-
     }).bind(this)()
   }
 
@@ -160,7 +174,7 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  //添加数据集
+  //新建图层组
   _add_layer_group=()=>{
     NavigationService.navigate('AddLayerGroup',{
       workspace: this.workspace,
@@ -207,8 +221,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   _renderItem = ({ item }) => {
-    // let layer = item.obj
-    // let map = item.map
     return (
       <LayerManager_item
         ref={ref => this.itemRefs[item.index] = ref}
@@ -220,9 +232,10 @@ export default class MT_layerManager extends React.Component {
         showRenameDialog={this.showRenameDialog}
         setEditable={data => {
           // 更新上一个编辑layer状态
-          this.state.currentEditIndex >= 0 && this.itemRefs[this.state.currentEditIndex].getData()
+          // 若data为空，则表示取消当前编辑图层，且没有新增编辑图层
+          this.state.currentEditIndex >= 0 && this.itemRefs[this.state.currentEditIndex].updateEditable()
           this.setState({
-            currentEditIndex: data.index,
+            currentEditIndex: data ? data.index : -1,
           })
           this.props.setEditLayer && this.props.setEditLayer(data)
         }}
@@ -234,7 +247,6 @@ export default class MT_layerManager extends React.Component {
     return (
       <Container
         ref={ref => this.container = ref}
-        // initWithLoading
         headerProps={{
           title: '地图管理',
           navigation: this.props.navigation,

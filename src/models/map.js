@@ -4,9 +4,7 @@ import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
 export const SET_LATEST_MAP = 'SET_LATEST_MAP'
-export const SET_MAP = 'SET_MAP'
-export const SET_WORKSPACE = 'SET_WORKSPACE'
-export const SET_WORKSPACE_MAP = 'SET_WORKSPACE_MAP'
+export const SET_MAP_VIEW = 'SET_MAP_VIEW'
 
 // Actions
 // --------------------------------------------------
@@ -18,25 +16,9 @@ export const setLatestMap = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
-export const setMap = (params, cb = () => {}) => async dispatch => {
+export const setMapView = (params, cb = () => {}) => async dispatch => {
   await dispatch({
-    type: SET_MAP,
-    payload: params || {},
-  })
-  cb && cb()
-}
-
-export const setWorkspace = (params, cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: SET_MAP,
-    payload: params || {},
-  })
-  cb && cb()
-}
-
-export const setWsAndMap = (params, cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: SET_MAP,
+    type: SET_MAP_VIEW,
     payload: params || {},
   })
   cb && cb()
@@ -44,8 +26,9 @@ export const setWsAndMap = (params, cb = () => {}) => async dispatch => {
 
 const initialState = fromJS({
   latestMap: [],
-  currentMap: {},
-  currentWs: {},
+  map: {},
+  workspace: {},
+  mapControl: {},
 })
 
 export default handleActions(
@@ -68,15 +51,17 @@ export default handleActions(
       }
       return state.setIn(['latestMap'], fromJS(newData))
     },
-    [`${SET_MAP}`]: (state, { payload }) => {
-      return state.setIn(['currentMap'], fromJS(payload))
-    },
-    [`${SET_WORKSPACE}`]: (state, { payload }) => {
-      return state.setIn(['currentWs'], fromJS(payload))
-    },
-    [`${SET_WORKSPACE_MAP}`]: (state, { payload }) => {
-      return state.setIn(['currentWs'], fromJS(payload))
-        .setIn(['currentMap'], fromJS(payload))
+    [`${SET_MAP_VIEW}`]: (state, { payload }) => {
+      if (payload.workspace) {
+        state.setIn(['workspace'], fromJS(payload.workspace))
+      }
+      if (payload.map) {
+        state.setIn(['map'], fromJS(payload.map))
+      }
+      if (payload.mapControl) {
+        state.setIn(['mapControl'], fromJS(payload.mapControl))
+      }
+      return state
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.map ? fromJS(payload.map) : state

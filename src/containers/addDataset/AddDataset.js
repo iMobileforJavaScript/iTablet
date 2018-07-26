@@ -111,10 +111,9 @@ export default class AddDataset extends React.Component {
       await this.map.addLayer(item.dataset, true)
     }
     Toast.show('添加图层成功')
+
+    this.props.navigation.goBack()
     this.cb && this.cb()
-    setTimeout(() => {
-      this.props.navigation.goBack()
-    }, 1000)
   }
 
   _renderSetion = ({ section }) => {
@@ -125,14 +124,14 @@ export default class AddDataset extends React.Component {
 
   _renderItem = ({ item }) => {
     return (
-      <DataSetListItem hidden={!this.state.dataSourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
+      <DataSetListItem radio={true} hidden={!this.state.dataSourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
     )
   }
 
   _renderItemSeparatorComponent = ({ section }) => {
     return section.isShow ? <ListSeparator /> : null
   }
-  
+
   // _renderSectionSeparatorComponent = ({ section }) => {
   //   return section.isShow ? <ListSeparator height={scaleSize(20)} /> : null
   // }
