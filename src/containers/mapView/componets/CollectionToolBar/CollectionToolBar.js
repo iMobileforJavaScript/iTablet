@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { StyleSheet, View, TouchableOpacity, Image } from 'react-native'
-import { constUtil, Toast, scaleSize } from '../../../../utils'
+import { StyleSheet, View } from 'react-native'
+import { constUtil, Toast } from '../../../../utils'
 import {
   DatasetType,
-  EngineType,
   Action,
   GeoStyle,
 } from 'imobile_for_javascript'
@@ -313,7 +312,7 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(POINT_GPS) },
-              { key: '添加点', action: this._addPoint(POINT_GPS) },
+              { key: '添加点', action: () => this._addPoint(POINT_GPS) },
               { key: '属性', action: () => this._attribute(POINT_GPS) },
             ],
           },
@@ -340,7 +339,7 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(LINE_GPS_POINT) },
-              { key: '添加点', action: this._addPoint },
+              { key: '添加点', action: () =>this._addPoint(LINE_GPS_POINT) },
               { key: '撤销', action: this._undo },
               { key: '重做', action: this._redo },
               { key: '取消', action: () => this._cancel(LINE_GPS_POINT) },
@@ -405,7 +404,7 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(REGION_GPS_POINT) },
-              { key: '添加点', action: this._addPoint },
+              { key: '添加点', action: () => this._addPoint(REGION_GPS_POINT) },
               { key: '撤销', action: this._undo },
               { key: '重做', action: this._redo },
               { key: '取消', action: () => this._cancel(REGION_GPS_POINT) },
@@ -484,8 +483,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(CAD_LINE) },
-              { key: '点绘式', action: this._drawPoint },
-              { key: '自由式', action: this._freeStyle },
+              { key: '点绘式', action: () => this._drawPoint(CAD_LINE) },
+              { key: '自由式', action: () => this._freeStyle(CAD_LINE) },
               { key: '撤销', action: this._undo },
               { key: '重做', action: this._redo },
               { key: '取消', action: () => this._cancel(CAD_LINE) },
@@ -500,8 +499,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(CAD_REGION) },
-              { key: '点绘式', action: this._drawPoint },
-              { key: '自由式', action: this._freeStyle },
+              { key: '点绘式', action: () => this._drawPoint(CAD_REGION) },
+              { key: '自由式', action: () => this._freeStyle(CAD_REGION) },
               { key: '撤销', action: this._undo },
               { key: '重做', action: this._redo },
               { key: '取消', action: () => this._cancel(CAD_REGION) },

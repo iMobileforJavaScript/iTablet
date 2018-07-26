@@ -150,12 +150,7 @@ export default class MapView extends React.Component {
       popType: type,
     })
     this.mapControl && (async function () {
-      if ((type === 'analyst' || type === 'collector') && show) {
-        await this.mapControl.setAction(Action.SELECT)
-      } else if (type !== 'data_edit' || !show) {
-        await this.mapControl.setAction(Action.NONEACTION)
-        return
-      }
+      await this.mapControl.setAction(Action.PAN)
     }).bind(this)()
   }
 

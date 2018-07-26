@@ -57,6 +57,7 @@ export default class MT_layerManager extends React.Component {
         layerNameArr[i].key = layerNameArr[i].name
         if (layerNameArr[i].isEditable) {
           currentEditIndex = layerNameArr[i].index
+          this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
         }
       }
       this.mapControl && await this.mapControl.setAction(Action.PAN)
