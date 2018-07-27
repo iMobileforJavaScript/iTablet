@@ -31,43 +31,72 @@ export default class LayerManager_item extends React.Component {
     super(props)
     this.layer = this.props.layer
     this.map = this.props.map
-    let options = this.getOptions()
+    let data = this.props.data
+    let options = this.getOptions(data)
     this.state = {
       options: options,
-      editable:false,
-      visable:false,
-      selectable:false,
+      editable: data.isEditable,
+      visable: data.isVisible,
+      selectable: data.isSelectable,
+      snapable: data.isSnapable,
       rowShow:false,
+      image: this.getIconByType(data.type),
     }
   }
 
-  componentDidMount() {
-    this.getData()
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.map) !== JSON.stringify(this.props.map) ||
+      JSON.stringify(prevProps.layer) !== JSON.stringify(this.props.layer)
+    ) {
+      this.layer = this.props.layer
+      this.map = this.props.map
+      this.getData(this.props.data)
+    }
   }
-  
-  getData = () => {
+
+  getData = (data = this.props.data) => {
     (async function () {
-      let editable = await this.layer.getEditable()
-      let {isVisible} = await this.layer.getVisible()// todo:  此处{}为底层bug,需要修改
-      let selectable = await this.layer.isSelectable()
-      let catchable = await this.layer.isSnapable()
+      let options = this.getOptions(data)
       this.setState({
-        editable:editable,
-        visable:isVisible,
-        selectable:selectable,
-        catchable:catchable,
-        rowShow:false,
+        options: options,
+        editable: data.isEditable,
+        visable: data.isVisible,
+        selectable: data.isSelectable,
+        snapable: data.isSnapable,
+        rowShow: this.state.rowShow || false,
+        image: this.getIconByType(data.type),
       })
     }).bind(this)()
   }
 
-  getOptions = () => {
-    let options
+  updateEditable = () => {
+    (async function () {
+      let idEditable = await this.props.layer.getEditable()
+      this.setState({
+        editable: idEditable,
+      })
+    }).bind(this)()
+  }
+
+  getOptions = data => {
+    let options,
+      selectable = true
+    if (
+      data.type === DatasetType.GRID ||
+      data.type === DatasetType.IMAGE
+    ) {
+      selectable = false
+    }
     options = [
-      { key: '可显示', action: this._visable_change }, { key: '可选择', action: this._selectable_change },
-      { key: '可编辑', action: this._editable_change }, { key: '可捕捉', action: this._catchable_change },
-      { key: '专题图', action: this._openTheme }, { key: '风格', action: this._openStyle },
-      { key: '重命名', action: this._rename }, { key: '移除', action: this._remove },
+      { key: '可显示', selectable: true, action: this._visable_change },
+      { key: '可选择', selectable: true, action: this._selectable_change },
+      { key: '可编辑', selectable: true, action: this._editable_change },
+      { key: '可捕捉', selectable: true, action: this._catchable_change },
+      { key: '专题图', selectable: selectable, action: this._openTheme },
+      { key: '风格', selectable: selectable, action: this._openStyle },
+      { key: '重命名', selectable: true, action: this._rename },
+      { key: '移除', selectable: true, action: this._remove },
     ]
 
     return options
@@ -116,13 +145,13 @@ export default class LayerManager_item extends React.Component {
 
   _catchable_change=()=>{
     this.setState(oldstate=>{
-      let oldCatch = oldstate.catchable
+      let oldCatch = oldstate.snapable
       ;(async function (){
         await this.layer.setSnapable(!oldCatch)
         await this.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
       }).bind(this)()
-      return({catchable:!oldCatch})
+      return({snapable:!oldCatch})
     })
   }
 
@@ -192,7 +221,7 @@ export default class LayerManager_item extends React.Component {
     const image1 = this.state.editable ? require('../../../../assets/map/icon_edit_selected.png') :require('../../../../assets/map/icon_edit.png')
     const image2 = this.state.visable ? require('../../../../assets/map/icon_visible_selected.png') :require('../../../../assets/map/icon_visible.png')
     const image3 = this.state.selectable ? require('../../../../assets/map/icon_choose_seleted.png') :require('../../../../assets/map/icon_choose.png')
-    const image4 = this.state.catchable ? require('../../../../assets/map/icon_catch_selected.png') :require('../../../../assets/map/icon_catch.png')
+    const image4 = this.state.snapable ? require('../../../../assets/map/icon_catch_selected.png') :require('../../../../assets/map/icon_catch.png')
     const image5 = this.state.rowShow ? require('../../../../assets/map/icon-arrow-up.png') :require('../../../../assets/map/icon-arrow-down.png')
     return (
       <View style={styles.container}>
@@ -203,7 +232,7 @@ export default class LayerManager_item extends React.Component {
             <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>
             <View style={styles.btn}>
-              <Image style={[this.props.data.type === DatasetType.POINT ? styles.samllImage : styles.btn_image]} source={this.getIconByType(this.props.data.type)} />
+              <Image style={[this.props.data.type === DatasetType.POINT ? styles.samllImage : styles.btn_image]} source={this.state.image} />
             </View>
           </View>
           <View style={styles.text_container}><Text>{name}</Text></View>

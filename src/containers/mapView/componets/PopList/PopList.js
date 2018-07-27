@@ -31,6 +31,7 @@ export default class PopList extends React.Component {
     setLoading: PropTypes.func,
     setOverlaySetting: PropTypes.func,
     POP_List: PropTypes.func,
+    showRemoveObjectDialog: PropTypes.func,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -51,19 +52,19 @@ export default class PopList extends React.Component {
     this.cbData = {}
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
-      if (nextProps.editLayer.type !== this.props.editLayer.type) {
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
+      if (prevProps.editLayer.type !== this.props.editLayer.type) {
         this.cbData.callback && typeof this.cbData.callback === "function" && this.cbData.callback(true)
       }
-      let data = this.getData(nextProps.popType)
+      let data = this.getData(this.props.popType)
       this.setState({
         data: data,
         subPopShow: true,
       })
-    } else if (nextProps.popType !== this.props.popType) {
-      let data = this.getData(nextProps.popType)
-      let { currentOperation, currentIndex, lastIndex } = this.findCurrentData(data, nextProps.editLayer.type)
+    } else if (prevProps.popType !== this.props.popType) {
+      let data = this.getData(this.props.popType)
+      let { currentOperation, currentIndex, lastIndex } = this.findCurrentData(data, this.props.editLayer.type)
       this.setState({
         data: data,
         currentOperation: currentOperation,
@@ -111,7 +112,7 @@ export default class PopList extends React.Component {
   delete = async () => {
     // TODO 删除
     // await this.props.mapControl.setAction(Action.CREATEPOLYGON)
-    this.toDoAction()
+    this.props.showRemoveObjectDialog && this.props.showRemoveObjectDialog()
   }
 
   /*打断*/
@@ -368,7 +369,7 @@ export default class PopList extends React.Component {
     }
     return data
   }
-  
+
   findCurrentData = (data = [], type) => {
     let current = {
       currentOperation: {},
@@ -384,7 +385,7 @@ export default class PopList extends React.Component {
     }
     return current
   }
-  
+
   _btn_click_manager = ({item, index}) => {
     item.action && item.action({
       data: item,

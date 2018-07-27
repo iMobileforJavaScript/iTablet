@@ -34,6 +34,6 @@ export default {
   USUAL_GREEN: '#F5FCFF',
   USUAL_BLUE: '#2196f3',
   USUAL_PURPLE: '#871F78',
-  
+
   green1: '#1afa29',
 }

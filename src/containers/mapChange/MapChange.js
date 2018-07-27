@@ -15,8 +15,9 @@ export default class MapChange extends React.Component {
     super(props)
     const { state } = this.props.navigation
     this.workspace = state.params.workspace
-    this.map = state.params.map;
-    (async function () {
+    this.map = state.params.map
+    this.cb = state.params.cb
+    ;(async function () {
       let maps = await this.workspace.getMaps()
       let count = await maps.getCount()
       let mapNameArr = []
@@ -37,16 +38,14 @@ export default class MapChange extends React.Component {
     dataList: '',
   }
 
-  _map_change = ({key, num, map}) => {
+  _map_change = ({key, map}) => {
     (async function () {
       await map.close()
       await map.open(key)
       await map.refresh()
+      NavigationService.goBack()
+      this.cb && this.cb()
       Toast.show('地图切换成功')
-      setTimeout(() => {
-        // this.props.navigation.goBack()
-        NavigationService.goBack()
-      }, 2000)
     }).bind(this)()
   }
 

@@ -9,11 +9,8 @@ import MTBtn from './MT_Btn'
 
 const WIDTH = constUtil.WIDTH
 const ITEM_HEIGHT = 0.75 * 1.4 * 0.1 * WIDTH
-const ITEM_WIDTH = ITEM_HEIGHT
 const BORDERCOLOR = constUtil.USUAL_SEPARATORCOLOR
 const SEPATATOR_WIDTH = 1
-
-let measure_show = false
 
 export default class Pop_BtnSectionList extends React.Component {
 
@@ -40,14 +37,6 @@ export default class Pop_BtnSectionList extends React.Component {
 
   constructor(props) {
     super(props)
-    // let { currentOperation, index } = this.findData(props.data, props.currentData)
-    // this.state = {
-    //   data: props.data || [],
-    //   currentOperation: currentOperation,
-    //   currentIndex: index,
-    //   lastIndex: index,
-    // }
-
     this.categoryRefs = []
     this.operationRefs = []
   }
@@ -55,26 +44,7 @@ export default class Pop_BtnSectionList extends React.Component {
   componentDidMount() {
     let name = this.props.currentData && this.props.currentData.name ? this.props.currentData.name : ''
     name && Toast.show('当前可编辑的图层为\n' + name)
-    // this.props.subPopShow
-    // && this.changeCategorySelected(this.props.currentIndex)
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (
-  //     JSON.stringify(nextProps.data) !== JSON.stringify(this.state.data) ||
-  //     JSON.stringify(nextProps.currentData) !== JSON.stringify(this.props.currentData)
-  //   ) {
-  //     let { currentOperation, index, lastIndex } = this.findData(nextProps.data, nextProps.currentData)
-  //     this.setState({
-  //       data: nextProps.data || [],
-  //       currentOperation: currentOperation,
-  //       currentIndex: index,
-  //       lastIndex: lastIndex,
-  //     }, () => {
-  //       nextProps.subPopShow && this.changeCategorySelected(index)
-  //     })
-  //   }
-  // }
 
   findData = (data = [], currentData) => {
     let currentOperation = {},
@@ -97,37 +67,9 @@ export default class Pop_BtnSectionList extends React.Component {
     // this.index = index
   }
 
-  // changeCategorySelected = index => {
-  //   if (this.props.popType !== 'data_edit' && this.props.popType !== 'analyst') return
-  //   this.categoryRefs[index] && this.categoryRefs[index].setSelected(true)
-  //   if (index === this.state.lastIndex) return
-  //   this.categoryRefs[this.state.lastIndex] && this.categoryRefs[this.state.lastIndex].setSelected(false)
-  // }
-
-  _measure_btn_click = () => {
-    measure_show = !measure_show
-    this.props.measure(measure_show)
-  }
-
-  _analyst_btn_click = () =>{
-    this.props.analyst()
-  }
-
-  _addLayer_btn_click =type=>{
-    this.props.addlayer(type)
-  }
-
-  _edit_select_click = async() => {
-    this.props.edit && await this.props.edit()
-  }
-
   setCurrentOption = options => {
-    // this.changeCategorySelected(index)
-    // this.operationRefs = [] // 清空二级菜单
     this.setState({
       currentOperation: options,
-      // currentIndex: index,
-      // lastIndex: index,
     })
   }
 
@@ -138,20 +80,6 @@ export default class Pop_BtnSectionList extends React.Component {
    * @private
    */
   _btn_click_manager = ({item, index}) => {
-    // item.action && item.action({
-    //   data: item,
-    //   index: index,
-    //   callback: hasChanged => {
-    //     if (hasChanged) {
-    //       this.changeCategorySelected(index)
-    //       this.operationRefs = [] // 清空二级菜单
-    //       this.setState({
-    //         currentOperation: item,
-    //         currentIndex: index,
-    //         lastIndex: index,
-    //       })
-    //     }
-    //   }})
     this.props.operationAction && this.props.operationAction({ item, index })
   }
 
@@ -161,12 +89,11 @@ export default class Pop_BtnSectionList extends React.Component {
    * @param index
    * @private
    */
-  _btn_click_operation = ({item, index}) => {
+  _btn_click_operation = ({item}) => {
     item.action && item.action({
       data: item,
-      callback: hasChanged => {
-
-      }})
+      callback: () => {},
+    })
   }
 
   setCategoryRefs = (ref, index) => {
@@ -177,11 +104,11 @@ export default class Pop_BtnSectionList extends React.Component {
     this.operationRefs[index] = ref
   }
 
-  clearCategoryRefs = (ref, index) => {
+  clearCategoryRefs = () => {
     this.categoryRefs = []
   }
 
-  clearOperationRefs = (ref, index) => {
+  clearOperationRefs = () => {
     this.operationRefs = []
   }
 
@@ -225,9 +152,9 @@ export default class Pop_BtnSectionList extends React.Component {
     )
   }
 
-  _keyExtractor = (item, index) => item.key
+  _keyExtractor = item => item.key
 
-  _keySubExtractor = (item, index) => (item.key)
+  _keySubExtractor = item => item.key
 
   render() {
     let props = { ...this.props }

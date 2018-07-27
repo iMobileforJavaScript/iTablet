@@ -5,11 +5,10 @@
 */
 
 import * as React from 'react'
-import { View } from 'react-native'
 import { Workspace, SMMapView, Utility, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
-import { PopMeasureBar, MTBtnList, Container, MTBtn } from '../../components'
+import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
 import { Toast, Capture } from '../../utils'
 import NavigationService from '../NavigationService'
 
@@ -106,9 +105,16 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (JSON.stringify(nextProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
-      let name = nextProps.editLayer ? nextProps.editLayer.name : ''
+  // componentWillReceiveProps(nextProps) {
+  //   if (JSON.stringify(nextProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
+  //     let name = nextProps.editLayer ? nextProps.editLayer.name : ''
+  //     name && Toast.show('当前可编辑的图层为\n' + name)
+  //   }
+  // }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
+      let name = this.props.editLayer ? this.props.editLayer.name : ''
       name && Toast.show('当前可编辑的图层为\n' + name)
     }
   }
@@ -144,12 +150,7 @@ export default class MapView extends React.Component {
       popType: type,
     })
     this.mapControl && (async function () {
-      if ((type === 'analyst' || type === 'collector') && show) {
-        await this.mapControl.setAction(Action.SELECT)
-      } else if (type !== 'data_edit' || !show) {
-        await this.mapControl.setAction(Action.NONEACTION)
-        return
-      }
+      await this.mapControl.setAction(Action.PAN)
     }).bind(this)()
   }
 
@@ -303,6 +304,37 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
+  // 显示删除图层Dialog
+  showRemoveObjectDialog = () => {
+    if (!this.map || !this.props.selection || !this.props.selection.name) {
+      Toast.show('请选择目标')
+      return
+    }
+    this.removeObjectDialog && this.removeObjectDialog.setDialogVisible(true)
+  }
+
+  // 删除图层
+  removeObject = () => {
+    (async function(){
+      try {
+        if (!this.map || !this.props.selection || !this.props.selection.id) return
+        let selection = await this.props.selection.layer.getSelection()
+        let result = await selection.remove(this.props.selection.id)
+        if (result) {
+          Toast.show('删除成功')
+          this.props.setSelection({})
+          await this.map.refresh()
+          await this.mapControl.setAction(Action.PAN)
+        } else {
+          Toast.show('删除失败')
+        }
+        this.removeObjectDialog && this.removeObjectDialog.setDialogVisible(false)
+      } catch (e) {
+        Toast.show('删除失败')
+      }
+    }).bind(this)()
+  }
+
   renderHeaderBtns = () => {
     if (this.isExample) return null
     let arr = []
@@ -331,13 +363,14 @@ export default class MapView extends React.Component {
     return arr
   }
 
-  back = () => {if (this.setting && this.setting.isVisible()) {
-    this.setting.close()
-  } else {
-    // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-    // NavigationService.goBack(this.props.nav.routes[1].key)
-    NavigationService.goBack()
-  }
+  back = () => {
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
+      // NavigationService.goBack(this.props.nav.routes[1].key)
+      NavigationService.goBack()
+    }
   }
 
   setLoading = (loading = false) => {
@@ -384,6 +417,7 @@ export default class MapView extends React.Component {
             overlaySetting={this.props.overlaySetting}
             setOverlaySetting={this.props.setOverlaySetting}
             showMeasure={this._pop_measure_click}
+            showRemoveObjectDialog={this.showRemoveObjectDialog}
           />
         }
         <MTBtnList
@@ -412,6 +446,15 @@ export default class MapView extends React.Component {
             setAnalystLayer={this.props.setAnalystLayer}
           />
         }
+        <Dialog
+          ref={ref => this.removeObjectDialog = ref}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'是否要删除该对象吗？'}
+          confirmAction={this.removeObject}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
       </Container>
     )
   }
@@ -436,7 +479,7 @@ export default class MapView extends React.Component {
 
         let filePath = await Utility.appendingHomeDirectory(this.path)
 
-        let openWk = await this.workspace.open(filePath)
+        await this.workspace.open(filePath)
         await this.map.setWorkspace(this.workspace)
         this.mapName = await this.workspace.getMapName(0)
 
@@ -449,7 +492,7 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
         this.saveLatest()
       } catch (e) {
-        console.error(e)
+        // console.error(e)
         this.container.setLoading(false)
       }
     }).bind(this)()

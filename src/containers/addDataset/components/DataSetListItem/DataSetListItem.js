@@ -66,7 +66,7 @@ export default class DataSetListItem extends React.Component {
     let viewStyle = styles.radioView,
       dotStyle = styles.radioSelected
     if (this.props.data.isAdd) {
-      viewStyle = styles.radioViewGray,
+      viewStyle = styles.radioViewGray
       dotStyle = styles.radioSelectedGray
     }
     return (

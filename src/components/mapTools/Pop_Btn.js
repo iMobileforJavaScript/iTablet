@@ -5,12 +5,12 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
+import { color } from '../../styles'
 import PropTypes from 'prop-types'
 import * as Util from '../../utils/constUtil'
 
 const ICON_HEIGHT =0.75* 0.1 * Util.WIDTH
-const ICON_WIDTH = ICON_HEIGHT
 const CONTAINER_HEIGHT = 1.4 * ICON_HEIGHT
 const CONTAINER_WIDTH = CONTAINER_HEIGHT
 const BTN_UNDERCOLOR = Util.UNDERLAYCOLOR
@@ -23,20 +23,17 @@ const styles = StyleSheet.create({
     marginTop:5,
     marginBottom:5,
     borderStyle: 'solid',
-    borderColor: Util.USUAL_SEPARATORCOLOR,
     borderWidth: 1,
     borderRadius: 10,
   },
+  unselectedContainer: {
+    borderColor: color.USUAL_SEPARATORCOLOR,
+  },
   selectedContainer: {
-    height: CONTAINER_HEIGHT-10,
-    width: CONTAINER_WIDTH+10,
-    backgroundColor: 'white',
-    marginTop:5,
-    marginBottom:5,
-    borderStyle: 'solid',
-    borderColor: Util.USUAL_BLUE,
-    borderWidth: 1,
-    borderRadius: 10,
+    borderColor: color.USUAL_BLUE,
+  },
+  disableContainer: {
+    borderColor: color.grayLight2,
   },
   inner: {
     flex: 1,
@@ -51,10 +48,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   selectedText: {
-    backgroundColor: 'transparent',
-    width: CONTAINER_WIDTH+10,
-    textAlign: 'center',
-    color: Util.USUAL_BLUE,
+    color: color.USUAL_BLUE,
+  },
+  disableText: {
+    color: color.grayLight2,
   },
 })
 
@@ -68,21 +65,38 @@ export default class Pop_Btn extends React.Component {
     BtnText: PropTypes.string,
     btnClick: PropTypes.func,
     selected: PropTypes.bool,
+    selectable: PropTypes.bool,
   }
 
   static defaultProps = {
     selected: false,
+    selectable: true,
+  }
+
+  action = () => {
+    this.props.selectable && this.props.btnClick && this.props.btnClick()
   }
 
   render() {
-    let containerStyle = [styles.container, this.props.selectedStyle],
+    let containerStyle = [styles.container, styles.unselectedContainer, this.props.selectedStyle],
       titleStyle =[styles.text, this.props.selectedTitleStyle]
-    if (this.props.selected) {
-      containerStyle = [styles.selectedContainer, this.props.selectedStyle]
-      titleStyle = [styles.selectedText, this.props.selectedTitleStyle]
+    if (!this.props.selectable) {
+      containerStyle = [styles.container, styles.disableContainer, this.props.selectedStyle]
+      titleStyle = [styles.text, styles.disableText, this.props.selectedTitleStyle]
+    } else if (this.props.selected) {
+      containerStyle = [styles.container, styles.selectedContainer, this.props.selectedStyle]
+      titleStyle = [styles.text, styles.selectedText, this.props.selectedTitleStyle]
     }
     return (
-      <TouchableOpacity accessible={true} accessibilityLabel={this.props.BtnText} style={containerStyle} onPress={this.props.btnClick} underlayColor={BTN_UNDERCOLOR}>
+      <TouchableOpacity
+        disable={!this.props.selectable}
+        activeOpacity={this.props.selectable ? 0.8 : 1}
+        accessible={true}
+        accessibilityLabel={this.props.BtnText}
+        style={containerStyle}
+        onPress={this.action}
+        underlayColor={BTN_UNDERCOLOR}
+      >
         <View style={styles.inner}>
           {this.props.BtnText && <Text style={titleStyle}>{this.props.BtnText}</Text>}
         </View>

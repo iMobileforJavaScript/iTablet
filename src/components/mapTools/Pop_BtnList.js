@@ -1,16 +1,12 @@
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, FlatList } from 'react-native'
+import { View, StyleSheet, FlatList } from 'react-native'
 import * as Util from '../../utils/constUtil'
-import { color } from '../../styles'
 import PropTypes from 'prop-types'
 import Pop_Btn from './Pop_Btn'
-import PopTextBtn from './PopTextBtn'
 
 const WIDTH = Util.WIDTH
 const ITEM_HEIGHT = 0.75 * 1.4 * 0.1 * WIDTH
-const ITEM_WIDTH = ITEM_HEIGHT
 const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR
-const SEPATATOR_WIDTH = 1
 
 let measure_show = false
 
@@ -87,6 +83,7 @@ export default class Pop_BtnList extends React.Component {
           }}
           style={styles.itemBtn}
           BtnText={key}
+          selectable={item.selectable}
           btnClick={() => this._btnClick({item, index})} />
       </View>
     )
