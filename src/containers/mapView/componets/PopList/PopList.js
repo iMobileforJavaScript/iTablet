@@ -281,7 +281,7 @@ export default class PopList extends React.Component {
   }
 
   /** 清除缓冲分析 **/
-  clear = () => {
+  clearBuffer = () => {
     (async function () {
       let trackLayer = await this.props.map.getTrackingLayer()
       await trackLayer.clear()
@@ -359,7 +359,7 @@ export default class PopList extends React.Component {
             action: cbData => this._analyst(cbData, Setting.Type.BUFFER),
             operations: [
               { key: '设置', action: () => this.analystSetting(Setting.Type.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
-              { key: '清除', action: bufferAnalyst.clear(this.props.map) },
+              { key: '清除', action: this.clearBuffer },
             ],
           },
           {
