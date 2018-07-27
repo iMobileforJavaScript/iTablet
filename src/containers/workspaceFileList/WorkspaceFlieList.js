@@ -6,11 +6,13 @@ import {
   TouchableOpacity,
   Image,
   PixelRatio,
+  View
 } from 'react-native';
 import { Container } from '../../components'
-import { OpenMapfile, WorkspaceConnectionInfo } from 'imobile_for_javascript'
+import { OpenMapfile, WorkspaceConnectionInfo, EngineType ,Action} from 'imobile_for_javascript'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
+import {color} from '../../styles'
 const Filesicon = require('../../assets/public/icon-files.png')
 const Fileicon = require('../../assets/public/icon-file.png')
 export default class WorkSpaceFileList extends Component {
@@ -22,14 +24,16 @@ export default class WorkSpaceFileList extends Component {
   }
 
   constructor(props) {
-    super(props);
-    const { params } = this.props.navigation.state;
+    super(props)
+    const { params } = this.props.navigation.state
+    const { nav } = this.props
     this.workspace = params.workspace ? params.workspace : 'noworkspace'
     this.map = params.map ? params.map : 'nomap'
     this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
-    const { nav } = this.props
     this.routes = nav.routes
-    this.path = '/sdcard/sampleData';
+    this.path = '/sdcard/sampleData'
+    this.title = params.title
+    this.need = params.need
     this.state = {
       data: [],
       backpath: ''
@@ -44,7 +48,7 @@ export default class WorkSpaceFileList extends Component {
 
 
   _offLine_More = () => {
-    Toast.show('无法打开此文件')
+    Toast.show('无法打开此类型文件')
   }
 
 
@@ -53,14 +57,16 @@ export default class WorkSpaceFileList extends Component {
     let result = await OpenMapfileModule.isdirectory(path);
     if (result == 'notisfile') {
       let filename = path.substr(path.lastIndexOf('.')).toLowerCase();
-      if (filename == '.smwu') {
+      if (filename === '.smwu' && this.need === 'workspace') {
         let openpath = path.substr(path.indexOf('/') + 7, path.length);
-        this._toloadmapview(openpath)
+        this._toloadmapview(openpath, type = '')
+      }
+      else if (filename === '.udb' && this.need === 'udb') {
+        this._toloadmapview(path, type = 'UDB')
       }
       else {
         this._offLine_More()
       }
-
     }
     else {
       let filelist = await OpenMapfileModule.getfilelist(path);
@@ -77,9 +83,9 @@ export default class WorkSpaceFileList extends Component {
   }
 
 
-  _toloadmapview = async (path) => {
+  _toloadmapview = async (path, type) => {
 
-    if (this.workspace != 'noworkspace' && this.map != 'nomap' && this.mapControl != 'nomapControl') {
+    if (this.workspace != 'noworkspace' && this.need === 'workspace') {
       let key = ''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
@@ -96,12 +102,36 @@ export default class WorkSpaceFileList extends Component {
       await this.map.setWorkspace(this.workspace)
       this.mapName = await this.workspace.getMapName(0)
       await this.map.open(this.mapName)
-      // await this.mapControl.setAction(Action.SELECT)
+      await this.mapControl.setAction(Action.SELECT)
+      await this.map.refresh()
+      NavigationService.goBack(key)
+    }
+    if (this.workspace != 'noworkspace' && this.need === 'udb') {
+      let str = path.substr(path.lastIndexOf('/') + 1)
+      let name = str.substr(0, str.lastIndexOf('.'))
+      let datasources = await this.workspace.getDatasources()
+      let count = await datasources.getCount()
+      for (let index = 0; index < count; index++) {
+        datasourcename = await (await datasources.get(index)).getAlias()
+        if (name === datasourcename) {
+          Toast.show('空间中此数据源已被打开')
+          return
+        }
+      }
+      let key = ''
+      for (let index = 0; index < this.routes.length; index++) {
+        if (this.routes[index].routeName === 'MapView') {
+          key = this.routes[index + 1].key
+        }
+      }
+      this.DSParams = { server: path, engineType: EngineType.UDB }
+      let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+      await this.mapControl.setAction(Action.SELECT)
       await this.map.refresh()
       NavigationService.goBack(key)
     }
     else {
-      NavigationService.navigate('MapView', { path: path })
+      NavigationService.navigate('MapView', { path: path, type: type })
     }
   }
 
@@ -147,8 +177,10 @@ export default class WorkSpaceFileList extends Component {
         <Text style={styles.item}>{item.key}</Text>
       </TouchableOpacity>
     }
+  }
 
-
+  itemseparator=()=>{
+     return(<View style={styles.itemseparator}/>)
   }
 
   _keyExtractor = item => {
@@ -158,15 +190,17 @@ export default class WorkSpaceFileList extends Component {
   render() {
     return (
       <Container
+        style={styles.container}
         ref={ref => this.container = ref}
         initWithLoading
         headerProps={{
-          title: '选择文件',
+          title: this.title,
           navigation: this.props.navigation,
         }}>
         <FlatList
+         ItemSeparatorComponent={this.itemseparator}
           style={styles.container}
-          ListHeaderComponent={this.headerback()}
+          ListHeaderComponent={this.headerback}
           data={this.state.data}
           renderItem={this.Fileicon}
           keyExtractor={this._keyExtractor}
@@ -177,27 +211,29 @@ export default class WorkSpaceFileList extends Component {
 }
 
 const styles = StyleSheet.create({
-  listcontain: {
-    marginTop: 15,
+  container:{
+   backgroundColor:color.background2,
   },
   item: {
     fontSize: 20,
-    margin: 10,
-    flex: 1,
-    // borderBottomWidth:1,
-    // borderBottomColor:'#1296db'
+    // justifyContent:'center',
+    alignItems: 'center',
   },
   back: {
     fontSize: 20,
     color: '#1296db',
-    marginTop: 15,
-    marginBottom: 15,
-    marginLeft: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
+    paddingLeft: 15,
+    height: PixelRatio.get() * 40,
   },
   row: {
     flexDirection: 'row',
-    marginTop: 10,
-
+    borderColor:color.background3,
+    borderWidth:PixelRatio.get() * 1,
+    backgroundColor:'white',
+    // justifyContent:'center',
+    alignItems: 'center',
   },
   img: {
     width: PixelRatio.get() * 30,
@@ -205,4 +241,7 @@ const styles = StyleSheet.create({
     marginLeft: 15,
     marginRight: 10,
   },
+ itemseparator:{
+    height:PixelRatio.get() * 1,
+ },
 })

@@ -46,31 +46,35 @@ export default class OffLineList extends React.Component {
      this.map=this.props.map
      this.mapControl=this.props.mapControl
   }
-  _offLine_More = () => {
-
-  }
-
-
   _btn_workspace_click = () => {
     if(this.workspace !='noworkspace'){
-      NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl})
+      NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'workspace',title:'选择工作空间'})
     }
     else{
-      NavigationService.navigate('WorkspaceFlieList',{})
+      NavigationService.navigate('WorkspaceFlieList',{need:'workspace' ,title:'选择工作空间'})
     }
-    
   }
   _btn_udb_click = () => {
-    this._offLine_More()
+    if(this.workspace !='noworkspace'){
+      NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'udb',title:'选择数据源'})
+    }
+    else{
+      NavigationService.navigate('WorkspaceFlieList',{need:'udb',title:'选择数据源'})
+    }
   }
   _btn_web_click = () => {
-    this._offLine_More()
+    if(this.workspace !='noworkspace'){
+      NavigationService.navigate('webUdb',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'webudb'})
+    }
+    else{
+      NavigationService.navigate('webUdb',{need:'webudb'})
+    }
   }
   _btn_newudb_click = () => {
-    this._offLine_More()
+      NavigationService.navigate('NewDSource',{need:'newudb'})
   }
 
-  _addElement = (delegate, src, str, style) => {
+  _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
 
       let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={styles.btntop} />
@@ -109,5 +113,5 @@ const styles = StyleSheet.create({
   btntop:{
     width: 0.15 * width,
     marginTop:scaleSize(10),
-  }
+  },
 })

@@ -2,6 +2,7 @@ import React from 'react'
 import { PixelRatio, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
 import { Container } from '../../components'
 import NavigationService from '../NavigationService'
+import { DatasetType } from 'imobile_for_javascript'
 const point = require('../../assets/map/icon-dot.png')
 const line = require('../../assets/map/icon-line.png')
 const text = require('../../assets/map/icon-surface.png')
@@ -22,67 +23,46 @@ export default class DataSets extends React.Component {
     this.map = params.map
     this.name = params.name
     this.state = {
-      data: [],
+      data: [
+        {name:'点',type:DatasetType.POINT},
+        {name:'线',type:DatasetType.LINE},
+        {name:'面',type:DatasetType.REGION},
+        {name:'CAD',type:DatasetType.IMAGE},
+        {name:'文本',type:'txt'},
+      ],
     }
   }
-  componentDidMount() {
-    this.container.setLoading(true)
-    this._adddata()
-  }
-  _adddata = async () => {
-    let result = await this._getdatasetslist(this.datasource)
-    this.setState({ data: result })
-    this.container.setLoading(false)
-  }
-
-  _getdatasetslist = async datasource => {
-    try {
-      let datasetslist = []
-      let count = await datasource.getDatasetCount()
-      for (let index = 0; index < count; index++) {
-        let dataset = await datasource.getDataset(index)
-        let type = await dataset.getType()
-        let name = await dataset.getName()
-        let result = { name: name, type: type, dataset: dataset }
-        datasetslist.push(result)
-      }
-      return datasetslist
-    } catch (error) {
-      return error
-    }
-  }
-
-  _tosetlayer = (w, m, t, d) => {
-    NavigationService.navigate('AddLayer', { workspace: w, map: m, type: t, dataset: d ,mapControl:this.mapControl})
+  _tosetlayer = (w, m, t) => {
+    NavigationService.navigate('AddLayer', { workspace: w, map: m, type: t ,mapControl:this.mapControl})
   }
 
   _renderItem = ({ item }) => {
-    if (item.type == '1') {
-      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type, item.dataset)} style={styles.itemclick}>
+    if (item.type ===  DatasetType.POINT) {
+      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map,item.type)} style={styles.itemclick}>
         <Image source={point} style={styles.img} />
         <Text style={styles.item}>{item.name}</Text>
       </TouchableOpacity>)
     }
-    else if (item.type == '3') {
-      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.dataset, item.dataset)} style={styles.itemclick}>
+    else if (item.type === DatasetType.LINE) {
+      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
         <Image source={line} style={styles.img} />
         <Text style={styles.item}>{item.name}</Text>
       </TouchableOpacity>)
     }
-    else if (item.type == '7') {
-      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.dataset, item.dataset)} style={styles.itemclick}>
+    else if (item.type === 'txt') {
+      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
         <Image source={text} style={styles.img} />
         <Text style={styles.item}>{item.name}</Text>
       </TouchableOpacity>)
     }
-    else if (item.type == '149') {
-      return (<TouchableOpacity onPress={() => this._tosetlayer(this.state.workspace, this.state.map, item.dataset, item.dataset)} style={styles.itemclick}>
+    else if (item.type === DatasetType.IMAGE) {
+      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
         <Image source={cad} style={styles.img} />
         <Text style={styles.item}>{item.name}</Text>
       </TouchableOpacity>)
     }
-    else if (item.type == '5') {
-      return (<TouchableOpacity onPress={() => this._tosetlayer(this.state.workspace, this.state.map, item.dataset)} style={styles.itemclick}>
+    else if (item.type === DatasetType.REGION  ) {
+      return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
         <Image source={region} style={styles.img} />
         <Text style={styles.item}>{item.name}</Text>
       </TouchableOpacity>)

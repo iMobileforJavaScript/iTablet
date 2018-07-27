@@ -81,7 +81,7 @@ export default class MapView extends React.Component {
       case 'UDB':
         this.DSParams = { server: params.path, engineType: EngineType.UDB }
         this.labelDSParams = false
-        this.layerIndex = 'RoadNet'
+        this.layerIndex = 0
         break
       case 'LOCAL':
       default:
@@ -284,7 +284,7 @@ export default class MapView extends React.Component {
     NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map,mapControl:this.mapControl})
   }
   toCloesMap=async()=>{
-    // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
+    await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
     NavigationService.goBack(this.props.nav.routes[1].key)
   }
   // 地图保存
@@ -349,7 +349,7 @@ export default class MapView extends React.Component {
     }, {
       title: '关闭',
       image: require('../../assets/public/icon-close-white.png'),
-      action: this.toDoAction,
+      action: this.toCloesMap,
     }, {
       title: '首页',
       image: require('../../assets/public/icon-home-white.png'),
@@ -460,7 +460,7 @@ export default class MapView extends React.Component {
   }
 
   _addMap = () => {
-    if (this.type === 'LOCAL') {
+    if (this.type === 'LOCAL') {  
       this._addLocalMap()
     } else {
       this._addRemoteMap()
