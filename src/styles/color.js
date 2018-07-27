@@ -25,7 +25,6 @@ export default {
   title2: '#454545',
   content: '#555555',
   background2: '#f5f7fa',
-  background3: '#F8F9FB',
   statusBarColor: 'white',
   blue1: '#4BA0FF',
   blue2: '#1296db',

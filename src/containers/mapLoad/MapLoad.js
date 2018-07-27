@@ -41,7 +41,7 @@ export default class MapLoad extends Component {
         <View style={styles.btnTabContainer}>
           <UsualTitle title='在线地图' />
           <BtnbarLoad
-            TD={() => { NavigationService.navigate('MapView', { type: 'TD' }) }}
+            TD={() => { this.workspace='noworkspace'?  NavigationService.navigate('MapView', { type: 'TD' }): Toast.show('请关闭当前空间后再打开在线地图')}}
             Baidu={() => { NavigationService.navigate('MapView', { type: 'Baidu' }) }}
             OSM={() => { NavigationService.navigate('MapView', { type: 'OSM' }) }}
             Google={() => { NavigationService.navigate('MapView', { type: 'Google' }) }}
