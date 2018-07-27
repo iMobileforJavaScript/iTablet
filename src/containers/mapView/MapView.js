@@ -8,7 +8,7 @@ import * as React from 'react'
 import { Workspace, SMMapView, Utility, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
-import { PopMeasureBar, MTBtnList, Container, MTBtn } from '../../components'
+import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
 import { Toast, Capture } from '../../utils'
 import NavigationService from '../NavigationService'
 
@@ -304,6 +304,37 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
+  // 显示删除图层Dialog
+  showRemoveObjectDialog = () => {
+    if (!this.map || !this.props.selection || !this.props.selection.name) {
+      Toast.show('请选择目标')
+      return
+    }
+    this.removeObjectDialog && this.removeObjectDialog.setDialogVisible(true)
+  }
+
+  // 删除图层
+  removeObject = () => {
+    (async function(){
+      try {
+        if (!this.map || !this.props.selection || !this.props.selection.id) return
+        let selection = await this.props.selection.layer.getSelection()
+        let result = await selection.remove(this.props.selection.id)
+        if (result) {
+          Toast.show('删除成功')
+          this.props.setSelection({})
+          await this.map.refresh()
+          await this.mapControl.setAction(Action.PAN)
+        } else {
+          Toast.show('删除失败')
+        }
+        this.removeObjectDialog && this.removeObjectDialog.setDialogVisible(false)
+      } catch (e) {
+        Toast.show('删除失败')
+      }
+    }).bind(this)()
+  }
+
   renderHeaderBtns = () => {
     if (this.isExample) return null
     let arr = []
@@ -332,13 +363,14 @@ export default class MapView extends React.Component {
     return arr
   }
 
-  back = () => {if (this.setting && this.setting.isVisible()) {
-    this.setting.close()
-  } else {
-    // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-    // NavigationService.goBack(this.props.nav.routes[1].key)
-    NavigationService.goBack()
-  }
+  back = () => {
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
+      // NavigationService.goBack(this.props.nav.routes[1].key)
+      NavigationService.goBack()
+    }
   }
 
   setLoading = (loading = false) => {
@@ -385,6 +417,7 @@ export default class MapView extends React.Component {
             overlaySetting={this.props.overlaySetting}
             setOverlaySetting={this.props.setOverlaySetting}
             showMeasure={this._pop_measure_click}
+            showRemoveObjectDialog={this.showRemoveObjectDialog}
           />
         }
         <MTBtnList
@@ -413,6 +446,15 @@ export default class MapView extends React.Component {
             setAnalystLayer={this.props.setAnalystLayer}
           />
         }
+        <Dialog
+          ref={ref => this.removeObjectDialog = ref}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'是否要删除该对象吗？'}
+          confirmAction={this.removeObject}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
       </Container>
     )
   }
