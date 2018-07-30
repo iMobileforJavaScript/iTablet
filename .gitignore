@@ -3,18 +3,20 @@ node_modules/*
 __tests__/*
 .idea/*
 .gradle/*
-android/.gradle/*
-android/.idea/*
-android/.settings/*
-android/build/*
-android/keystores/*
-android/app/build.gradle
-android/app/app.iml
-android/local.properties
-android/app/build/*
-android/.DS_Store
+#android/.gradle/*
+#android/.idea/*
+#android/.settings/*
+#android/build/*
+#android/keystores/*
+#android/app/build.gradle
+#android/app/app.iml
+#android/local.properties
+#android/app/build/*
+#android/.DS_Store
+android/*
 
-ios/build/*
+#ios/build/*
+ios/*
 
 package-lock.json
 yarn-error.log

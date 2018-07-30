@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { Row, Button } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { BufferEndType } from 'imobile_for_javascript'
+import { BufferEndType, Action } from 'imobile_for_javascript'
 import ChooseLayer from './ChooseLayer'
 import styles from './styles'
 
@@ -74,6 +74,7 @@ export default class BufferSetting extends React.Component {
       let layer = await this.props.map.getLayer(this.state.selectedLayer.layerName)
       await layer.setSelectable(true)
       this.props.setBufferSetting && this.props.setBufferSetting(this.getData())
+      this.props.mapControl.setAction(Action.SELECT)
       Toast.show('设置成功')
     }).bind(this)()
   }

@@ -102,8 +102,9 @@ export default class Setting extends React.Component {
             data={this.props.bufferSetting}
             setBufferSetting={this.props.setBufferSetting}
             map={this.props.map}
-            mapcontrol={this.props.mapControl}
-            workspace={this.props.workspace} />
+            mapControl={this.props.mapControl}
+            workspace={this.props.workspace}
+            setLoading={this.props.setLoading}/>
         )
         break
       }
@@ -116,7 +117,7 @@ export default class Setting extends React.Component {
             data={this.props.overlaySetting}
             setOverlaySetting={this.props.setOverlaySetting}
             map={this.props.map}
-            mapcontrol={this.props.mapControl}
+            mapControl={this.props.mapControl}
             workspace={this.props.workspace}
             setLoading={this.props.setLoading}/>
         )
@@ -131,7 +132,7 @@ export default class Setting extends React.Component {
             data={this.props.overlaySetting}
             setOverlaySetting={this.props.setOverlaySetting}
             map={this.props.map}
-            mapcontrol={this.props.mapControl}
+            mapControl={this.props.mapControl}
             workspace={this.props.workspace}
             setLoading={this.props.setLoading}/>
         )
@@ -146,7 +147,7 @@ export default class Setting extends React.Component {
         //     data={this.props.overlaySetting}
         //     setOverlaySetting={this.props.setOverlaySetting}
         //     map={this.props.map}
-        //     mapcontrol={this.props.mapControl}
+        //     mapControl={this.props.mapControl}
         //     workspace={this.props.workspace}
         //     setLoading={this.props.setLoading}/>
         // )
@@ -155,7 +156,7 @@ export default class Setting extends React.Component {
             ref={ref => this.chooseLayer = ref}
             alwaysVisible={true}
             map={this.props.map}
-            mapcontrol={this.props.mapControl}
+            mapControl={this.props.mapControl}
             workspace={this.props.workspace}
             getDataset={this.trackingLoad}
             setLoading={this.props.setLoading}

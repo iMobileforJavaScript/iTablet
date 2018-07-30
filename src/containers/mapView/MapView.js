@@ -320,10 +320,10 @@ export default class MapView extends React.Component {
       try {
         if (!this.map || !this.props.selection || !this.props.selection.id) return
         let selection = await this.props.selection.layer.getSelection()
-        let result = await selection.remove(this.props.selection.id)
+        let result = await selection.recordset.deleteById(this.props.selection.id)
         if (result) {
           Toast.show('删除成功')
-          this.props.setSelection({})
+          this.props.setSelection()
           await this.map.refresh()
           await this.mapControl.setAction(Action.PAN)
         } else {

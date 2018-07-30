@@ -562,7 +562,7 @@ export default class CollectionToolBar extends React.Component {
     let {currentOperation, currentIndex, lastIndex} = this.checkCurrentOperation(data, this.state.currentOperation)
     return (
       <View style={styles.popView}>
-        <MTBtn style={styles.changeLayerBtn} BtnImageSrc={require('../../../../assets/map/icon-map-change.png')} BtnClick={this._changeLayer} />
+        <MTBtn style={styles.changeLayerBtn} BtnImageSrc={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer} />
         <PopBtnSectionList
           ref={ref => this.popBSL = ref}
           popType={this.state.popType}

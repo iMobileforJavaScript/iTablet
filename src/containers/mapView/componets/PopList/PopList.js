@@ -78,44 +78,60 @@ export default class PopList extends React.Component {
 
 
   //==============================二级==================================
-  /*选择*/
+  /** 选择 **/
   select = async () => {
     await this.props.mapControl.setAction(Action.SELECT)
   }
 
-  /*添加节点*/
+  /** 添加节点 **/
   addNode = async () => {
     await this.props.mapControl.setAction(Action.VERTEXADD)
   }
 
-  /*编辑节点*/
+  /** 编辑节点 **/
   editNode = async () => {
     await this.props.mapControl.setAction(Action.VERTEXEDIT)
   }
 
-  /*删除节点*/
+  /** 删除节点 **/
   deleteNode = async () => {
     await this.props.mapControl.setAction(Action.DELETENODE)
   }
+  
+  /** 撤销 **/
+  _undo = async () => {
+    if(this.props.mapControl) {
+      // await this.collector.undo()
+      await this.props.mapControl.undo()
+    }
+  }
+  
+  /** 重做 **/
+  _redo = async () => {
+    if(this.props.mapControl) {
+      // await this.collector.redo()
+      await this.props.mapControl.redo()
+    }
+  }
 
-  /*绘制直线*/
+  /** 绘制直线 **/
   createPolyline = async () => {
     await this.props.mapControl.setAction(Action.CREATEPOLYLINE)
   }
 
-  /*绘制多边形*/
+  /** 绘制多边形 **/
   createPolygon = async () => {
     await this.props.mapControl.setAction(Action.CREATEPOLYGON)
   }
 
-  /*删除*/
+  /** 删除 **/
   delete = async () => {
     // TODO 删除
     // await this.props.mapControl.setAction(Action.CREATEPOLYGON)
     this.props.showRemoveObjectDialog && this.props.showRemoveObjectDialog()
   }
 
-  /*打断*/
+  /** 打断 **/
   break = async () => {
     // TODO 打断
     // await this.props.mapControl.setAction(Action.CREATEPOLYGON)
@@ -123,27 +139,27 @@ export default class PopList extends React.Component {
   }
 
   //============================面操作======================================
-  /*切割面*/
+  /** 切割面 **/
   splitRegion = async () => {
     await this.props.mapControl.setAction(Action.SPLIT_BY_LINE)
   }
 
-  /*合并面*/
+  /** 合并面 **/
   merge = async () => {
     await this.props.mapControl.setAction(Action.UNION_REGION)
   }
 
-  /*岛洞*/
+  /** 岛洞 **/
   drawHollowRegion = async () => {
     await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
   }
 
-  /*填充岛洞*/
+  /** 填充岛洞 **/
   fillHollowRegion = async () => {
     await this.props.mapControl.setAction(Action.FILL_HOLLOW_REGION)
   }
 
-  /*补充岛洞*/
+  /** 补充岛洞 **/
   patchHollowRegion = async () => {
     await this.props.mapControl.setAction(Action.PATCH_POSOTIONAL_REGION)
   }
@@ -163,7 +179,7 @@ export default class PopList extends React.Component {
     // Toast.show('正在加紧制作ing...')
   }
 
-  /* 执行 */
+  /**  执行  **/
   submit = async () => {
     await this.props.mapControl.submit()
     await this.select()
@@ -195,7 +211,7 @@ export default class PopList extends React.Component {
   }
 
   //============================缓冲区操作======================================
-  /**缓冲区分析**/
+  /** *缓冲区分析* **/
   _bufferAnalyst = () => {
     bufferAnalyst.analyst({
       layer: this.props.selection.layer,
@@ -205,7 +221,7 @@ export default class PopList extends React.Component {
     })
   }
 
-  /**叠加分析**/
+  /** *叠加分析* **/
   _overlayAnalyst = () => {
     if (!this.props.overlaySetting.datasetVector._SMDatasetVectorId
       || !this.props.overlaySetting.targetDatasetVector._SMDatasetVectorId) {
@@ -265,7 +281,7 @@ export default class PopList extends React.Component {
   }
 
   /** 清除缓冲分析 **/
-  clear = () => {
+  clearBuffer = () => {
     (async function () {
       let trackLayer = await this.props.map.getTrackingLayer()
       await trackLayer.clear()
@@ -294,6 +310,8 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.POINT)},
             operations: [
               { key: '选择', action: this.select },
+              { key: '撤销', action: this._undo },
+              { key: '重做', action: this._redo },
               { key: '删除', action: this.deleteNode },
               { key: '属性', action: this.attribute }],
           },
@@ -303,6 +321,7 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.LINE)},
             operations: [
               { key: '选择', action: this.select }, { key: '删除', action: this.delete },
+              { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
               { key: '编辑节点', action: this.editNode }, { key: '打断', action: this.break },
               { key: '执行', action: this.submit }, { key: '属性', action: this.attribute }],
@@ -313,6 +332,7 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.REGION)},
             operations: [
               { key: '选择', action: this.select }, { key: '删除', action: this.delete },
+              { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
               { key: '编辑节点', action: this.editNode }, { key: '切割', action: this.splitRegion },
               { key: '合并', action: this.merge }, { key: '岛洞', action: this.drawHollowRegion },
@@ -326,6 +346,7 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.TEXT)},
             operations: [
               { key: '选择', action: this.select }, { key: '修改', action: this.toDoAction },
+              { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '删除', action: this.toDoAction }, { key: '属性', action: this.toDoAction },
             ],
           },
@@ -338,7 +359,7 @@ export default class PopList extends React.Component {
             action: cbData => this._analyst(cbData, Setting.Type.BUFFER),
             operations: [
               { key: '设置', action: () => this.analystSetting(Setting.Type.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
-              { key: '清除', action: bufferAnalyst.clear(this.props.map) },
+              { key: '清除', action: this.clearBuffer },
             ],
           },
           {

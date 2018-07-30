@@ -196,7 +196,7 @@ export default class OverlaySetting extends React.Component {
       <ChooseLayer
         ref={ref => this.chooseLayer = ref}
         map={this.props.map}
-        mapcontrol={this.props.mapControl}
+        mapControl={this.props.mapControl}
         workspace={this.props.workspace}
         getDataset={this.getDataset}
         setLoading={this.props.setLoading}
