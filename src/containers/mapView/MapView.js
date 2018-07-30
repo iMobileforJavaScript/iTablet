@@ -284,6 +284,7 @@ export default class MapView extends React.Component {
     NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map,mapControl:this.mapControl})
   }
   toCloesMap=async()=>{
+    await this.map.close()
     await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
     NavigationService.goBack(this.props.nav.routes[1].key)
   }

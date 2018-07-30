@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, PixelRatio } from 'react-native'
+import { View} from 'react-native'
 
 import { BtnbarLoad, ExampleMapList, OffLineList } from './components'
 import { UsualTitle, Container } from '../../components'

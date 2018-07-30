@@ -3,7 +3,6 @@
   Author: Wang zihao
   E-mail: zihaowang5325@qq.com
 */
-
 import * as React from 'react'
 import { View } from 'react-native'
 import BorderInput from '../../containers/register&getBack/border_input'
@@ -11,7 +10,7 @@ import { Container, BtnTwo } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 import styles from './styles'
-import { Action } from 'imobile_for_javascript'
+import { Action ,DatasetVectorInfo} from 'imobile_for_javascript'
 
 export default class Add_Layer extends React.Component {
 
@@ -29,26 +28,12 @@ export default class Add_Layer extends React.Component {
     this.map = params.map
     this.dataset = params.dataset
     this.mapControl = params.mapControl
-    switch (params.type) {
-      case 'point':
-        this.type = 1
-        break
-      case 'line':
-        this.type = 3
-        break
-      case 'area':
-        this.type = 5
-        break
-      case 'text':
-        this.type = 7
-        break
-    }
-  }
-
+    this.datasource=params.datasource
+    this.type=params.type
   state = {
     InputText: '',
   }
-
+  }
   _test_change = text => {
     this.setState({ InputText: text })
 
@@ -71,35 +56,36 @@ export default class Add_Layer extends React.Component {
     }
   }
 
-  _addlayer = async key => {
-    // let name = this.state.InputText
-    // let type = this.type
-    // let dataSources = await this.workspace.getDatasources()
-    // let dataSource = await dataSources.get(0)
-    // let dsVector = await dataSource.createDatasetVector(name,type,0)
-    // await this.map.addLayer(dsVector,true)
-    // await this.map.refresh()
-    try {
-      let layers = await this.map.getLayers()
-      let count = await layers.getCount()
-      for (let index = 0; index < count; index++) {
-        let name = await (await layers.get(index)).getCaption()
-        if (this.state.InputText === name) {
-          Toast.show('此图层已存在,请重新输入')
-          return
-        }
+  _addlayer = async (key) => {
+
+  let DatasetVectorInfomodule = new DatasetVectorInfo()
+  try {
+    let layers = await this.map.getLayers()
+    let count = await layers.getCount()
+    for (let index = 0; index < count; index++) {
+      let name = await (await layers.get(index)).getCaption()
+      if (this.state.InputText === name) {
+        Toast.show('此图层已存在,请重新输入')
+        return
       }
-      await this.map.addDataset(this.dataset, true)
-      await (await layers.get(0)).setCaption(this.state.InputText)
-      await this.mapControl.setAction(Action.SELECT)
-      await this.map.refresh()
-      Toast.show('新建图层成功')
-      setTimeout(() => {
-        this.props.navigation.goBack(key)
-      }, 2000)    
-    } catch (error) {
-      return error
     }
+    let datasets = await this.datasource.getDatasets()
+    let datasetname = await datasets.getAvailableDatasetName(this.state.InputText)
+    let DatasetVectorInfo = await DatasetVectorInfomodule.createObjByNameType(datasetname, this.type)
+    debugger
+    let dataset = await datasets.create(DatasetVectorInfo)  // 死了  
+    await this.map.addDataset(dataset, true)
+    let num = await layers.getCount()
+    await (await layers.get(0)).setCaption(this.state.InputText)
+    await this.mapControl.setAction(Action.SELECT)
+    await this.map.refresh()
+    Toast.show('新建图层成功')
+    setTimeout(() => {
+      this.props.navigation.goBack(key)
+    }, 2000)
+  } catch (error) {
+    return error
+  }
   }
 
   render() {

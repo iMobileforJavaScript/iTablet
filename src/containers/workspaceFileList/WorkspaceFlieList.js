@@ -5,14 +5,13 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  PixelRatio,
   View
 } from 'react-native';
 import { Container } from '../../components'
-import { OpenMapfile, WorkspaceConnectionInfo, EngineType ,Action} from 'imobile_for_javascript'
-import { Toast } from '../../utils'
+import { OpenMapfile, WorkspaceConnectionInfo, EngineType, Action } from 'imobile_for_javascript'
+import { Toast, scaleSize } from '../../utils'
 import NavigationService from '../NavigationService'
-import {color} from '../../styles'
+import { color } from '../../styles'
 const Filesicon = require('../../assets/public/icon-files.png')
 const Fileicon = require('../../assets/public/icon-file.png')
 export default class WorkSpaceFileList extends Component {
@@ -42,6 +41,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   componentDidMount() {
+    this.container.setLoading(true)
     this._getfilelist(this.path)
   }
 
@@ -125,7 +125,7 @@ export default class WorkSpaceFileList extends Component {
         }
       }
       this.DSParams = { server: path, engineType: EngineType.UDB }
-      let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+      await this.workspace.openDatasource(this.DSParams)
       await this.mapControl.setAction(Action.SELECT)
       await this.map.refresh()
       NavigationService.goBack(key)
@@ -166,21 +166,21 @@ export default class WorkSpaceFileList extends Component {
     if (item.isfile === 'isfile') {
       return (
         <TouchableOpacity onPress={() => this._refresh(item.key)} style={styles.row}>
-          <Image source={Filesicon} style={styles.img} />
+          <View><Image source={Filesicon} style={styles.img} /></View>
           <Text style={styles.item}>{item.key}</Text>
         </TouchableOpacity>
       )
     }
     else {
       return <TouchableOpacity onPress={() => this._refresh(item.key)} style={styles.row}>
-        <Image source={Fileicon} style={styles.img} />
+        <View><Image source={Fileicon} style={styles.img} /></View>
         <Text style={styles.item}>{item.key}</Text>
       </TouchableOpacity>
     }
   }
 
-  itemseparator=()=>{
-     return(<View style={styles.itemseparator}/>)
+  itemseparator = () => {
+    return (<View style={styles.itemseparator} />)
   }
 
   _keyExtractor = item => {
@@ -198,7 +198,7 @@ export default class WorkSpaceFileList extends Component {
           navigation: this.props.navigation,
         }}>
         <FlatList
-         ItemSeparatorComponent={this.itemseparator}
+          ItemSeparatorComponent={this.itemseparator}
           style={styles.container}
           ListHeaderComponent={this.headerback}
           data={this.state.data}
@@ -211,8 +211,8 @@ export default class WorkSpaceFileList extends Component {
 }
 
 const styles = StyleSheet.create({
-  container:{
-   backgroundColor:color.background2,
+  container: {
+    backgroundColor: color.background2,
   },
   item: {
     fontSize: 20,
@@ -222,26 +222,26 @@ const styles = StyleSheet.create({
   back: {
     fontSize: 20,
     color: '#1296db',
-    paddingTop: 15,
-    paddingBottom: 15,
-    paddingLeft: 15,
-    height: PixelRatio.get() * 40,
+    paddingTop: scaleSize(30),
+    paddingBottom: scaleSize(30),
+    paddingLeft: scaleSize(30),
+    height: scaleSize(100),
   },
   row: {
     flexDirection: 'row',
-    borderColor:color.background3,
-    borderWidth:PixelRatio.get() * 1,
-    backgroundColor:'white',
+    borderColor: color.background3,
+    borderWidth: scaleSize(2),
+    backgroundColor: 'white',
     // justifyContent:'center',
     alignItems: 'center',
   },
   img: {
-    width: PixelRatio.get() * 30,
-    height: PixelRatio.get() * 30,
-    marginLeft: 15,
-    marginRight: 10,
+    width: scaleSize(80),
+    height: scaleSize(80),
+    marginLeft: scaleSize(30),
+    marginRight: scaleSize(30),
   },
- itemseparator:{
-    height:PixelRatio.get() * 1,
- },
+  itemseparator: {
+    height: scaleSize(6),
+  },
 })

@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, PixelRatio, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
+import { View, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
 import { BtnOne } from '../../components'
 import { Container } from '../../components'
+import { scaleSize } from '../../utils'
 import NavigationService from '../NavigationService'
-const src = require('../../assets/public/add_dataset.png')
+const src = require('../../assets/map/icon-new-datasource.png')
 const Fileicon = require('../../assets/public/icon-file.png')
 export default class DataSourcelist extends React.Component {
   props: {
@@ -26,7 +27,7 @@ export default class DataSourcelist extends React.Component {
   }
 
   _addElement = (delegate, src, str) => {
-    let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} />
+    let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={styles.title} />
     return (element)
   }
 
@@ -94,7 +95,6 @@ export default class DataSourcelist extends React.Component {
     return (
       <Container
         ref={ref => this.container = ref}
-        initWithLoading
         headerProps={{
           title: '选择数据源',
           navigation: this.props.navigation,
@@ -116,11 +116,8 @@ const styles = StyleSheet.create({
   item: {
     color: '#1296db',
     fontSize: 20,
-    margin: 10,
-    // flex:,
-    // justifyContent: 'flex-start',
-    // height: 39,
-    paddingLeft: 5,
+    margin: scaleSize(20),
+    paddingLeft: scaleSize(10),
     textAlign: 'center',
   },
   itemclick: {
@@ -133,15 +130,18 @@ const styles = StyleSheet.create({
 
   },
   adddata: {
-    width: 100,
-    height: 100,
-    marginTop: 15,
-    marginLeft: 20,
+    width: scaleSize(140),
+    height: scaleSize(150),
+    marginTop: scaleSize(30),
+    marginLeft: scaleSize(30),
   },
   img: {
-    width: PixelRatio.get() * 30,
-    height: PixelRatio.get() * 30,
-    marginLeft: 15,
-    marginRight: 10,
+    width:scaleSize(80),
+    height: scaleSize(80),
+    marginLeft: scaleSize(40),
+    marginRight: scaleSize(20),
+  },
+  title:{
+    paddingTop:scaleSize(10),
   },
 })
