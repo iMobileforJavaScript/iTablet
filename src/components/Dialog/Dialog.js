@@ -19,7 +19,7 @@ export default class Dialog extends PureComponent {
     children: any,
     title?: string,
     info?: string,
-    backHide?: boolean ,
+    backHide?: boolean,
     activeOpacity?: number ,
     cancelBtnTitle?: string,
     confirmBtnTitle?: string,
@@ -29,6 +29,7 @@ export default class Dialog extends PureComponent {
     cancelAction?: () => {},
     confirmTitleStyle?: StyleSheet,
     cancelTitleStyle?: StyleSheet,
+    showBtns?: boolean,
   }
 
   static defaultProps = {
@@ -36,6 +37,7 @@ export default class Dialog extends PureComponent {
     activeOpacity: 0.8,
     cancelBtnTitle: '取消',
     confirmBtnTitle: '确定',
+    showBtns: true,
   }
 
   constructor(props) {
@@ -61,6 +63,7 @@ export default class Dialog extends PureComponent {
   }
 
   renderBtns = () => {
+    if (!this.props.showBtns) return null
     return (
       <View style={styles.btns}>
         <TouchableOpacity
@@ -90,7 +93,7 @@ export default class Dialog extends PureComponent {
         onRequestClose={() => {
           //点击物理按键需要隐藏对话框
           if (this.props.backHide) {
-            this.setModalVisible(false)
+            this.setDialogVisible(false)
           }
         }}
       >

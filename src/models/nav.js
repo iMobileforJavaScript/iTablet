@@ -7,7 +7,7 @@ export const NAV_SET = 'NAV_SET'
 
 // Actions
 // --------------------------------------------------
-export const setNav = (params, cb = () => {}) => async dispatch => {
+export const setNav = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: NAV_SET,
     payload: params,
@@ -23,7 +23,8 @@ export default handleActions(
       return fromJS(payload)
     },
     [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.nav ? fromJS(payload.nav) : state
+      // return payload && payload.nav ? fromJS(payload.nav) : state
+      return state
     },
   },
   initialState,

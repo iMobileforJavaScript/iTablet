@@ -5,10 +5,10 @@ import {
   FlatList,
   TouchableOpacity,
   Image,
-  View
-} from 'react-native';
+  View,
+} from 'react-native'
 import { Container } from '../../components'
-import { OpenMapfile, WorkspaceConnectionInfo, EngineType, Action } from 'imobile_for_javascript'
+import { OpenMapfile, WorkspaceConnectionInfo, EngineType, Action, Point2D } from 'imobile_for_javascript'
 import { Toast, scaleSize } from '../../utils'
 import NavigationService from '../NavigationService'
 import { color } from '../../styles'
@@ -35,7 +35,7 @@ export default class WorkSpaceFileList extends Component {
     this.need = params.need
     this.state = {
       data: [],
-      backpath: ''
+      backpath: '',
 
     }
   }
@@ -52,13 +52,13 @@ export default class WorkSpaceFileList extends Component {
   }
 
 
-  _getfilelist = async (path) => {
-    let OpenMapfileModule = new OpenMapfile();
-    let result = await OpenMapfileModule.isdirectory(path);
+  _getfilelist = async path => {
+    let OpenMapfileModule = new OpenMapfile()
+    let result = await OpenMapfileModule.isdirectory(path)
     if (result == 'notisfile') {
-      let filename = path.substr(path.lastIndexOf('.')).toLowerCase();
+      let filename = path.substr(path.lastIndexOf('.')).toLowerCase()
       if (filename === '.smwu' && this.need === 'workspace') {
-        let openpath = path.substr(path.indexOf('/') + 7, path.length);
+        let openpath = path.substr(path.indexOf('/') + 7, path.length)
         this._toloadmapview(openpath, type = '')
       }
       else if (filename === '.udb' && this.need === 'udb') {
@@ -69,10 +69,10 @@ export default class WorkSpaceFileList extends Component {
       }
     }
     else {
-      let filelist = await OpenMapfileModule.getfilelist(path);
+      let filelist = await OpenMapfileModule.getfilelist(path)
       for (i = 0; i < filelist.length; i++) {
-        let isfile = await OpenMapfileModule.isdirectory(filelist[i]);
-        filelist[i] = { key: filelist[i], isfile: isfile };
+        let isfile = await OpenMapfileModule.isdirectory(filelist[i])
+        filelist[i] = { key: filelist[i], isfile: isfile }
       }
       this.setState({
         data: filelist,
@@ -84,7 +84,6 @@ export default class WorkSpaceFileList extends Component {
 
 
   _toloadmapview = async (path, type) => {
-
     if (this.workspace != 'noworkspace' && this.need === 'workspace') {
       let key = ''
       for (let index = 0; index < this.routes.length; index++) {
@@ -93,6 +92,7 @@ export default class WorkSpaceFileList extends Component {
         }
       }
       await this.map.close()
+      await this.workspace.closeAllDatasource()
       let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
       let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
       let openpath = '/sdcard' + path
@@ -107,28 +107,54 @@ export default class WorkSpaceFileList extends Component {
       NavigationService.goBack(key)
     }
     if (this.workspace != 'noworkspace' && this.need === 'udb') {
-      let str = path.substr(path.lastIndexOf('/') + 1)
-      let name = str.substr(0, str.lastIndexOf('.'))
-      let datasources = await this.workspace.getDatasources()
-      let count = await datasources.getCount()
-      for (let index = 0; index < count; index++) {
-        datasourcename = await (await datasources.get(index)).getAlias()
-        if (name === datasourcename) {
-          Toast.show('空间中此数据源已被打开')
-          return
-        }
-      }
+      // let str = path.substr(path.lastIndexOf('/') + 1)
+      // let name = str.substr(0, str.lastIndexOf('.'))
+      await this.map.close()
+      await this.workspace.closeAllDatasource()
+      // let datasources = await this.workspace.getDatasources()
+      // let count = await datasources.getCount()
+      // for (let index = 0; index < count; index++) {
+      //   datasourcename = await (await datasources.get(index)).getAlias()
+      //   if (name === datasourcename) {
+      //     Toast.show('空间中此数据源已被打开')
+      //     return
+      //   }
+      // }
       let key = ''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
           key = this.routes[index + 1].key
         }
       }
+      // this.DSParams = { server: path, engineType: EngineType.UDB }
+      // await this.workspace.openDatasource(this.DSParams)
+      // await this.mapControl.setAction(Action.SELECT)
+      // await this.map.refresh()
+      // NavigationService.goBack(key)
+
+      const point2dModule = new Point2D()
+
+      // await this.map.setScale(0.0001)
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          let lat = position.coords.latitude
+          let lon = position.coords.longitude
+          ;(async () => {
+            let centerPoint = await point2dModule.createObj(lon, lat)
+            await this.map.setCenter(centerPoint)
+            await this.mapControl.setAction(Action.PAN)
+            await this.map.refresh()
+            key && NavigationService.goBack(key)
+          }).bind(this)()
+        }
+      )
       this.DSParams = { server: path, engineType: EngineType.UDB }
-      await this.workspace.openDatasource(this.DSParams)
-      await this.mapControl.setAction(Action.SELECT)
-      await this.map.refresh()
-      NavigationService.goBack(key)
+      let layerIndex = 0
+
+      let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+
+      let dataset = await dsBaseMap.getDataset(layerIndex)
+      await this.map.addLayer(dataset, true)
     }
     else {
       NavigationService.navigate('MapView', { path: path, type: type })

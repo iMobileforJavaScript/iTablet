@@ -15,7 +15,9 @@ import Loading from './Container/Loading'
 import Button from './Button'
 import DataSetListItem from './DataSetListItem'
 import DataSetListSection from './DataSetListSection'
-import { Dialog, InputDialog } from './Dialog'
+import { Dialog, InputDialog, BottomDialog } from './Dialog'
+import { AudioBottomDialog, AudioTopDialog, AudioCenterDialog, AudioDialog } from './AudioTools'
+import PanAudioButton from './PanAudioButton'
 import {
   Row,
   Radio,
@@ -60,6 +62,11 @@ export {
   Loading,
   Dialog,
   InputDialog,
+  AudioBottomDialog,
+  AudioTopDialog,
+  AudioCenterDialog,
+  AudioDialog,
+  BottomDialog,
   Button,
   Row,
   Radio,
@@ -69,4 +76,5 @@ export {
   LayerItem,
   DataSetListItem,
   DataSetListSection,
+  PanAudioButton,
 }

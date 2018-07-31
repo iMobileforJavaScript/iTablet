@@ -53,10 +53,6 @@ export default class ThemeUniqueView extends React.Component {
     this.defaultStyle = {}
   }
 
-  rowAction = ({ title }) => {
-
-  }
-
   goToChoosePage = type => {
     let cb = () => {
     }
@@ -77,9 +73,8 @@ export default class ThemeUniqueView extends React.Component {
       cb: value => cb(value),
     })
   }
-  
+
   selectRow = data => {
-    
     this.setState({
       currentItem: data,
     })
@@ -97,7 +92,7 @@ export default class ThemeUniqueView extends React.Component {
         let dataset = await this.props.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
         // await this.themeUnique.dispose()
-        this.themeUnique =  this.themeUnique._SMThemeId ? this.themeUnique : await (new ThemeUnique()).makeDefault(datasetVector, key, this.state.data.colorMethod.value)
+        this.themeUnique = this.themeUnique._SMThemeId ? this.themeUnique : await (new ThemeUnique()).makeDefault(datasetVector, key, this.state.data.colorMethod.value)
         this.defaultStyle = await this.themeUnique.getDefaultStyle()
         let count = await this.themeUnique.getCount()
         let themeItemList = []
@@ -211,7 +206,13 @@ export default class ThemeUniqueView extends React.Component {
         await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
         let routes = this.props.nav.routes
-        NavigationService.goBack(routes[routes.length - 3].key)
+        let key = ''
+        for (let i = 0; i < routes.length - 1; i++) {
+          if (routes[i].routeName === 'MapView') {
+            key = routes[i + 1].key
+          }
+        }
+        NavigationService.goBack(key)
         Toast.show('设置成功')
       } catch (e) {
         console.error(e)
@@ -255,7 +256,7 @@ export default class ThemeUniqueView extends React.Component {
     (async function () {
       try {
         let result = await this.themeUnique.remove(this.state.currentItem[0].rowIndex)
-      
+
         if (result) {
           await this.getExpression({key: this.state.data.expression})
           await this.props.map.refresh()
@@ -350,7 +351,7 @@ export default class ThemeUniqueView extends React.Component {
           setItemVisible={this.setItemVisible}
           selectRow={this.selectRow}
         />
-  
+
         <InputDialog
           ref={ref => this.dialog = ref}
           // title={'请输入单值'}

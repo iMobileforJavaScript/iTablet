@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
 import { Container, ListSeparator, DataSetListSection, DataSetListItem } from '../../components'
+import { Toast } from '../../utils'
 import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
 import { Action } from 'imobile_for_javascript'
@@ -107,15 +108,79 @@ export default class MTDataManagement extends React.Component {
     NavigationService.navigate('ChooseDatasource', {workspace: this.workspace, map: this.map, data: this.state.dataSourceList, cb: this.getData})
   }
 
+  addToMap = item => {
+    (async function () {
+      try {
+        let id = await this.map.addLayer(item.data.dataset, true)
+        if (id) {
+          Toast.show('添加图层成功')
+        } else {
+          Toast.show('添加图层失败')
+        }
+      } catch (e) {
+        Toast.show('添加图层失败')
+      }
+
+      // this.props.navigation.goBack()
+    }).bind(this)()
+  }
+
+  rename = data => {
+
+  }
+
+  delete = data => {
+
+  }
+
+  attribute = data => {
+
+  }
+
+  attrTable = data => {
+
+  }
+
+  getSectionOption = () => {
+    return (
+      [
+        { key: '重命名', action: data => this.rename(data) },
+        { key: '删除', action: data => this.delete(data) },
+      ]
+    )
+  }
+
+  getOption = item => {
+    return (
+      [
+        { key: '添加到当前地图', dataset: item.dataset, action: data => this.addToMap(data) },
+        { key: '重命名', dataset: item.dataset, action: data => this.rename(data) },
+        { key: '删除', dataset: item.dataset, action: data => this.delete(data) },
+        { key: '属性', dataset: item.dataset, action: data => this.attribute(data) },
+        { key: '浏览属性表', dataset: item.dataset, action: data => this.attrTable(data) },
+      ]
+    )
+  }
+
   _renderSetion = ({ section }) => {
     return (
-      <DataSetListSection data={section} height={60} onPress={this.showSection} />
+      <DataSetListSection
+        data={section}
+        onPress={this.showSection}
+        options={this.getSectionOption()}
+      />
     )
   }
 
   _renderItem = ({ item }) => {
     return (
-      <DataSetListItem hidden={!this.state.dataSourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
+      <DataSetListItem
+        hidden={!this.state.dataSourceList[item.section].isShow}
+        data={item}
+        height={60}
+        onPress={this.select}
+        options={this.getOption(item)}
+      />
     )
   }
 

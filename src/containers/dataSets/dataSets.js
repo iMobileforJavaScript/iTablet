@@ -89,7 +89,7 @@ export default class DataSets extends React.Component {
           title: '选择图层类型',
           navigation: this.props.navigation,
         }}>
-         <View style={styles.top}/>
+        <View style={styles.top}/>
         <FlatList
           ItemSeparatorComponent={this.itemseparator}
           style={styles.container}

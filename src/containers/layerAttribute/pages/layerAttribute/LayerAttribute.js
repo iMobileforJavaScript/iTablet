@@ -7,9 +7,9 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, Button } from '../../../../components/index'
-import { Toast } from '../../../../utils/index'
-import { LayerAttributeTab, LayerAttributeTable } from '../../components/index'
+import { Container, Button, AudioBottomDialog } from '../../../../components'
+import { Toast } from '../../../../utils'
+import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 
 import styles from './styles'
 
@@ -109,6 +109,30 @@ export default class LayerAttribute extends React.Component {
     Toast.show("待做")
   }
 
+  startAudio = () => {
+    if (GLOBAL.SpeechManager)
+      (async function () {
+        try {
+          await GLOBAL.SpeechManager.startListening({
+            onEndOfSpeech: () => {
+              console.log('onEndOfSpeech')
+            },
+            onVolumeChanged: () => {
+              console.log('onVolumeChanged')
+            },
+            onError: e => {
+              Toast.show(e)
+            },
+            onResult: result => {
+              console.log(result.isLast + '-result: ' + result.info)
+            },
+          })
+        } catch (e) {
+          console.error(e)
+        }
+      }).bind(this)()
+  }
+
   edit = () => {
     NavigationService.navigate('LayerAttributeEdit', {selection: this.state.selection, callBack: this.getDatasets})
   }
@@ -135,7 +159,12 @@ export default class LayerAttribute extends React.Component {
           title: '对象属性',
           navigation: this.props.navigation,
         }}>
-        <LayerAttributeTab add={this.add} edit={this.edit} />
+        <LayerAttributeTab
+          add={this.add}
+          edit={this.edit}
+          startAudio={() => {
+            GLOBAL.AudioBottomDialog.setVisible(true)
+          }} />
         <LayerAttributeTable
           ref={ref => this.table = ref}
           data={this.state.attribute}
@@ -145,6 +174,12 @@ export default class LayerAttribute extends React.Component {
           tableHead={['名称', '属性值']}
         />
         {this.renderBtns()}
+        {/*<AudioBottomDialog*/}
+          {/*startAudio={this.startAudio}*/}
+          {/*endAudio={this.startAudio}*/}
+          {/*confirmAction=""*/}
+          {/*cancelAction=""*/}
+        {/*/>*/}
       </Container>
     )
   }

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { View, Image, TouchableOpacity, Text } from 'react-native'
+import { PopBtnList } from '../../components'
 import { DatasetType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import styles from './styles'
@@ -12,9 +13,11 @@ export default class DataSetListItem extends React.Component {
     height: PropTypes.number,
     hidden: PropTypes.bool,
     radio: PropTypes.bool,
+    options: PropTypes.array,
   }
 
   static defaultProps = {
+    data: {},
     hidden: true,
     radio: false,
   }
@@ -23,11 +26,23 @@ export default class DataSetListItem extends React.Component {
     super(props)
     this.state = {
       selected: false,
+      rowShow: false,
     }
   }
 
   action = () => {
-    this.setSelected(!this.state.selected, this.props.onPress)
+    if (this.props.data && this.props.data.options || this.props.options) {
+      this._pop_row()
+    } else {
+      this.setSelected(!this.state.selected, this.props.onPress)
+    }
+  }
+
+  _pop_row=()=>{
+    this.setState(oldstate=>{
+      let oldshow = oldstate.rowShow
+      return({rowShow:!oldshow})
+    })
   }
 
   setSelected = (isSelect, cb?: () => {}) => {
@@ -83,20 +98,30 @@ export default class DataSetListItem extends React.Component {
     )
   }
 
+  _renderAdditionView = () => {
+    let options = this.props.data.option || this.props.options
+    return (
+      <PopBtnList data={options} />
+    )
+  }
+
   render() {
     return this.props.hidden ? <View /> : (
-      <TouchableOpacity
-        disable={this.props.data.isAdd}
-        activeOpacity={0.8}
-        style={[styles.container, this.props.height && {height: this.props.height}]}
-        onPress={this.action}
-      >
-        {this.props.radio && this.renderRadioBtn()}
-        <View style={styles.imageView}>
-          <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
-        </View>
-        <Text style={styles.title}>{this.props.data.name}</Text>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableOpacity
+          disable={this.props.data.isAdd}
+          activeOpacity={0.8}
+          style={[styles.topContainer, this.props.height && {height: this.props.height}]}
+          onPress={this.action}
+        >
+          {this.props.radio && this.renderRadioBtn()}
+          <View style={styles.imageView}>
+            <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
+          </View>
+          <Text style={styles.title}>{this.props.data.name}</Text>
+        </TouchableOpacity>
+        {(this.props.data.option || this.props.options) && this.state.rowShow && this._renderAdditionView()}
+      </View>
     )
   }
 }

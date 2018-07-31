@@ -5,10 +5,14 @@ import { scaleSize } from '../../utils'
 export default StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'center',
+  },
+  topContainer: {
+    // flex: 1,
     alignItems: 'center',
     flexDirection: 'row',
     backgroundColor: 'white',
-    paddingHorizontal: scaleSize(scaleSize(30)),
+    height: scaleSize(80),
     paddingVertical: 5,
     marginLeft: scaleSize(30),
   },

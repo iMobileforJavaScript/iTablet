@@ -5,11 +5,11 @@
 */
 
 import * as React from 'react'
-import { Workspace, SMMapView, Utility, Action, Point2D, EngineType } from 'imobile_for_javascript'
+import { Workspace, SMMapView, Utility, Action, Point2D } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
-import { Toast, Capture } from '../../utils'
+import { Toast, Capture, AudioAnalyst } from '../../utils'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'
@@ -48,45 +48,12 @@ export default class MapView extends React.Component {
     }
     this.type = params.type || 'LOCAL'
     this.isExample = params.isExample || false
-    switch (params.type) {  //state.params.type最好进行判定
-      case 'TD':
-        this.DSParams = { server: 'http://t0.tianditu.com/vec_w/wmts', engineType: 23, driver: 'WMTS', alias: 'baseMap' }
-        this.labelDSParams = { server: 'http://t0.tianditu.com/cva_w/wmts', engineType: 23, driver: 'WMTS', alias: 'label' }
-        this.layerIndex = 0
-        this.mapName = '天地图'
-        break
-      case 'Baidu':
-        this.DSParams = { server: 'http://www.baidu.com', engineType: 227 }
-        this.labelDSParams = false
-        this.layerIndex = 0
-        this.mapName = '百度地图'
-        break
-      case 'Google':
-        this.DSParams = { server: 'http://www.google.cn/maps', engineType: 223 }
-        this.labelDSParams = false
-        this.layerIndex = 'roadmap'
-        this.mapName = 'GOOGLE地图'
-        break
-      case 'OSM':
-        this.DSParams = { server: 'http://openstreetmap.org', engineType: 228 }
-        this.labelDSParams = false
-        this.layerIndex = 0
-        this.mapName = 'OSM'
-        break
-      case 'ONLINE':
-        this.DSParams = { server: params.path || 'http://openstreetmap.org', engineType: 228 }
-        this.labelDSParams = false
-        this.layerIndex = 0
-        break
-      case 'UDB':
-        this.DSParams = { server: params.path, engineType: EngineType.UDB }
-        this.labelDSParams = false
-        this.layerIndex = 0
-        break
-      case 'LOCAL':
-      default:
-        this.path = params.path
-    }
+
+    this.DSParams = params.DSParams || null
+    this.labelDSParams = params.labelDSParams || false
+    this.layerIndex = params.layerIndex || 0
+    this.mapName = params.mapName || ''
+    this.path = params.path || ''
   }
 
   componentDidMount() {
@@ -104,13 +71,6 @@ export default class MapView extends React.Component {
       this.workspace && await this.workspace.closeWorkspace()
     }).bind(this)()
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (JSON.stringify(nextProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
-  //     let name = nextProps.editLayer ? nextProps.editLayer.name : ''
-  //     name && Toast.show('当前可编辑的图层为\n' + name)
-  //   }
-  // }
 
   componentDidUpdate(prevProps) {
     if (JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
@@ -133,6 +93,10 @@ export default class MapView extends React.Component {
         type: this.type,
         name: this.mapName,
         image: uri,
+        DSParams: this.DSParams,
+        labelDSParams: this.labelDSParams,
+        layerIndex: this.layerIndex,
+        mapName: this.mapName,
       })
     }, error => {
 
@@ -461,22 +425,31 @@ export default class MapView extends React.Component {
   }
 
   _addMap = () => {
-    if (this.type === 'LOCAL') {  
+    if (this.type === 'LOCAL') {
       this._addLocalMap()
     } else {
       this._addRemoteMap()
     }
   }
 
-
-
   _addLocalMap = () => {
+    if (!this.path) {
+      Toast.show('没有找到地图')
+      return
+    }
     let workspaceModule = new Workspace()
     ;(async function () {
       try {
+
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
+
+        AudioAnalyst.setConfig({
+          workspace: this.workspace,
+          mapControl: this.mapControl,
+          map: this.map,
+        })
 
         let filePath = await Utility.appendingHomeDirectory(this.path)
 
@@ -500,6 +473,10 @@ export default class MapView extends React.Component {
   }
 
   _addRemoteMap = () => {
+    if (!this.DSParams) {
+      Toast.show('没有找到地图')
+      return
+    }
     const workspaceModule = new Workspace()
     const point2dModule = new Point2D()
     ;(async function () {
@@ -508,6 +485,12 @@ export default class MapView extends React.Component {
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
         await this.map.setWorkspace(this.workspace)
+
+        AudioAnalyst.setConfig({
+          workspace: this.workspace,
+          mapControl: this.mapControl,
+          map: this.map,
+        })
 
         // this.mapName = await this.map.getName()
 

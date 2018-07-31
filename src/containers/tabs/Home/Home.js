@@ -17,7 +17,7 @@ export default class Home extends Component {
     }
   }
 
-  _goToMapLoad = () => { NavigationService.navigate('MapLoad',{}) }
+  _goToMapLoad = () => {NavigationService.navigate('MapLoad',{})}
 
   render() {
     return (

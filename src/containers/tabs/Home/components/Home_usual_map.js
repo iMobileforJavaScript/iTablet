@@ -41,7 +41,7 @@ export default class HomeUsualMap extends React.Component {
     if (obj.type === MapView.Type.MAP_3D) {
       NavigationService.navigate('Map3D', { data: obj, type: obj.type, path: obj.path, manageAble: true })
     } else {
-      NavigationService.navigate('MapView', { data: obj, type: obj.type, path: obj.path })
+      NavigationService.navigate('MapView', obj)
     }
   }
 

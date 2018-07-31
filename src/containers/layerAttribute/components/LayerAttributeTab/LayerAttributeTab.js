@@ -18,10 +18,11 @@ export default class LayerAttributeTab extends React.Component {
     showSaveDialog: PropTypes.func,
     add: PropTypes.func,
     edit: PropTypes.func,
+    startAudio: PropTypes.func,
     delete: PropTypes.func,
     type: PropTypes.string,
   }
-  
+
   static defaultProps = {
     type: 'ATTRIBUTE',
   }
@@ -29,6 +30,12 @@ export default class LayerAttributeTab extends React.Component {
   add = () => {
     if(typeof this.props.add === 'function'){
       this.props.add()
+    }
+  }
+
+  startAudio = () => {
+    if(typeof this.props.startAudio === 'function'){
+      this.props.startAudio()
     }
   }
 
@@ -56,6 +63,13 @@ export default class LayerAttributeTab extends React.Component {
         <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
         <BtnOne
           size={BtnOne.SIZE.SMALL}
+          BtnText='输入语音'
+          BtnImageSrc={require('../../../../assets/map/icon-save.png')}
+          BtnClick={this.startAudio}
+        />
+        <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
+        <BtnOne
+          size={BtnOne.SIZE.SMALL}
           BtnText='编辑'
           BtnImageSrc={require('../../../../assets/map/icon-save.png')}
           BtnClick={this.edit}
@@ -63,7 +77,7 @@ export default class LayerAttributeTab extends React.Component {
       </View>
     )
   }
-  
+
   renderEdit() {
     return (
       <View style={styles.container}>
@@ -90,7 +104,7 @@ export default class LayerAttributeTab extends React.Component {
       </View>
     )
   }
-  
+
   render() {
     if (this.props.type === 'EDIT') {
       return this.renderEdit()

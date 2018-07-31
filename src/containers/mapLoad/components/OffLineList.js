@@ -34,20 +34,23 @@ const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件�
 // }
 
 export default class OffLineList extends React.Component {
-    
- props:{
-    Workspace:any,
-    Map:any,
- }
-    
-  constructor(props){
+
+   props:{
+     Workspace:any,
+     Map:any,
+     map:any,
+     mapControl:any,
+   }
+
+   constructor(props){
      super(props)
      this.workspace=this.props.Workspace
      this.map=this.props.map
      this.mapControl=this.props.mapControl
-  }
+   }
+
   _btn_workspace_click = () => {
-    if(this.workspace !='noworkspace'){
+    if(this.workspace !== 'noworkspace'){
       NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'workspace',title:'选择工作空间'})
     }
     else{
@@ -55,7 +58,7 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_udb_click = () => {
-    if(this.workspace !='noworkspace'){
+    if(this.workspace !== 'noworkspace'){
       NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'udb',title:'选择数据源'})
     }
     else{
@@ -63,7 +66,7 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_web_click = () => {
-    if(this.workspace !='noworkspace'){
+    if(this.workspace !== 'noworkspace'){
       NavigationService.navigate('webUdb',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'webudb'})
     }
     else{
@@ -71,7 +74,7 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_newudb_click = () => {
-      NavigationService.navigate('NewDSource',{need:'newudb'})
+    NavigationService.navigate('NewDSource',{need:'newudb'})
   }
 
   _addElement = (delegate, src, str) => {
