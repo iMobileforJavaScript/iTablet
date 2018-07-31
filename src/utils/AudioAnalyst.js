@@ -219,6 +219,7 @@ function setThemeByIndex(index, type = '') {
         map: this.map,
         mapControl: this.mapControl,
       })
+      GLOBAL.AudioDialog.setVisible(false)
       return
     }
     let dataset = await layer.getDataset()
