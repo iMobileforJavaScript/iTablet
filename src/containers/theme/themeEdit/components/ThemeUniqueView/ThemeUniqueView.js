@@ -11,7 +11,6 @@ import { Button, Row, BtnOne, InputDialog } from '../../../../../components'
 import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
 import ThemeTable from '../ThemeTable'
-// import AddDialog from '../AddDialog'
 import ChoosePage from '../../../choosePage'
 
 import styles from './styles'

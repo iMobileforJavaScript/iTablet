@@ -47,18 +47,16 @@ export default class HomeUsualMap extends React.Component {
 
   _renderItem = ({item}) => {
     let image
-    if (item.path) {
-      if (item.path.indexOf('beijing') >= 0) {
-        image = require('../../../../assets/public/beijing.png')
-      } else if (item.path.indexOf('凯德Mall') >= 0) {
+    if (item.image) {
+      image = item.image
+    } else {
+      if (item.path && item.path.indexOf('凯德Mall') >= 0) {
         image = require('../../../../assets/public/map3D.png')
-      } else if (item.path.indexOf('MaSai') >= 0) {
+      } else if (item.path && item.path.indexOf('MaSai') >= 0) {
         image = require('../../../../assets/public/ObliquePhoto.png')
       } else {
-        image = require('../../../../assets/public/beijing.png')
+        image = require('../../../../assets/public/default-3d-map.png')
       }
-    } else {
-      image = item.image
     }
     return (
       <Thumbnails

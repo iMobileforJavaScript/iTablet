@@ -42,6 +42,14 @@ export default class ChooseNumber extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.value !== this.props.value && this.props.value !== this.state.value) {
+      this.setState({
+        value: this.props.value,
+      })
+    }
+  }
+
   minus = () => {
     if (this.props.minValue === '' || this.state.value > this.props.minValue) {
       let value = this.props.times > 1

@@ -7,13 +7,13 @@ import {
   Image,
   View,
 } from 'react-native'
-import { Container } from '../../components'
-import { OpenMapfile, WorkspaceConnectionInfo, EngineType, Action, Point2D } from 'imobile_for_javascript'
+import { Container, EmptyView } from '../../components'
+import { OpenMapfile, WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility } from 'imobile_for_javascript'
 import { Toast, scaleSize } from '../../utils'
+import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
 import { color } from '../../styles'
-const Filesicon = require('../../assets/public/icon-files.png')
-const Fileicon = require('../../assets/public/icon-file.png')
+
 export default class WorkSpaceFileList extends Component {
 
   props: {
@@ -30,19 +30,35 @@ export default class WorkSpaceFileList extends Component {
     this.map = params.map ? params.map : 'nomap'
     this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
     this.routes = nav.routes
-    this.path = '/sdcard/sampleData'
+    this.path = ConstPath.SampleDataPath
     this.title = params.title
     this.need = params.need
     this.state = {
       data: [],
-      backpath: '',
-
+      backPath: '',
+      showData: false,
     }
   }
 
   componentDidMount() {
-    this.container.setLoading(true)
-    this._getfilelist(this.path)
+    (async function () {
+      try {
+        this.container.setLoading(true)
+        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.SampleDataPath)
+        if (!exist) {
+          this.setState({
+            showData: true,
+          }, () => {
+            this.container.setLoading(false)
+          })
+          return
+        } else {
+          this._getfilelist({path: this.path})
+        }
+      } catch (e) {
+        console.error(e)
+      }
+    }).bind(this)()
   }
 
 
@@ -52,39 +68,39 @@ export default class WorkSpaceFileList extends Component {
   }
 
 
-  _getfilelist = async path => {
-    let OpenMapfileModule = new OpenMapfile()
-    let result = await OpenMapfileModule.isdirectory(path)
-    if (result == 'notisfile') {
-      let filename = path.substr(path.lastIndexOf('.')).toLowerCase()
-      if (filename === '.smwu' && this.need === 'workspace') {
-        let openpath = path.substr(path.indexOf('/') + 7, path.length)
-        this._toloadmapview(openpath, type = '')
-      }
-      else if (filename === '.udb' && this.need === 'udb') {
-        this._toloadmapview(path, type = 'UDB')
+  _getfilelist = async item => {
+    try {
+      let OpenMapfileModule = new OpenMapfile()
+      let isDirectory = await OpenMapfileModule.isdirectory(item.path)
+      if (!isDirectory) {
+        let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
+        if (filename === '.smwu' && this.need === 'workspace') {
+          this._toLoadMapView(item.path, '')
+        }
+        else if (filename === '.udb' && this.need === 'udb') {
+          this._toLoadMapView(item.path, 'UDB')
+        }
+        else {
+          this._offLine_More()
+        }
       }
       else {
-        this._offLine_More()
+        let fileList = await OpenMapfileModule.getfilelist(item.path)
+        this.setState({
+          data: fileList,
+          backPath: item.path,
+          showData: true,
+        })
+        this.container.setLoading(false)
       }
-    }
-    else {
-      let filelist = await OpenMapfileModule.getfilelist(path)
-      for (i = 0; i < filelist.length; i++) {
-        let isfile = await OpenMapfileModule.isdirectory(filelist[i])
-        filelist[i] = { key: filelist[i], isfile: isfile }
-      }
-      this.setState({
-        data: filelist,
-        backpath: path,
-      })
-      this.container.setLoading(false)
+    } catch (e) {
+      console.error(e)
+      this.container.setLoading(true)
     }
   }
 
-
-  _toloadmapview = async (path, type) => {
-    if (this.workspace != 'noworkspace' && this.need === 'workspace') {
+  _toLoadMapView = async (path, type) => {
+    if (this.workspace !== 'noworkspace' && this.need === 'workspace') {
       let key = ''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
@@ -106,7 +122,7 @@ export default class WorkSpaceFileList extends Component {
       await this.map.refresh()
       NavigationService.goBack(key)
     }
-    if (this.workspace != 'noworkspace' && this.need === 'udb') {
+    if (this.workspace !== 'noworkspace' && this.need === 'udb') {
       // let str = path.substr(path.lastIndexOf('/') + 1)
       // let name = str.substr(0, str.lastIndexOf('.'))
       await this.map.close()
@@ -162,47 +178,45 @@ export default class WorkSpaceFileList extends Component {
   }
 
 
-  _refresh = async path => {
-
-    await this._getfilelist(path)
-
-
+  _refresh = async item => {
+    await this._getfilelist(item)
   }
 
-  _toback = async () => {
-    if (this.state.backpath === '/sdcard/sampleData') {
+  _toBack = async () => {
+    if (this.state.backPath === ConstPath.SampleDataPath) {
       return
     }
     else {
-      let backpath = this.state.backpath.substr(0, this.state.backpath.lastIndexOf("/", this.state.backpath.lastIndexOf('/')))
-      this.setState({ backpath: backpath })
-      await this._getfilelist(backpath)
+      let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
+      this.setState({ backPath: backPath })
+      await this._getfilelist({path: backPath})
     }
   }
 
-  headerback = () => {
-    if (this.state.backpath === '/sdcard/sampleData' || this.state.backpath === '/sdcard/sampleData') {
+  headerBack = () => {
+    if (this.state.backPath === '' || this.state.backPath === ConstPath.SampleDataPath || this.state.backPath === ConstPath.SampleDataPath) {
       return null
     }
     else {
-      return <TouchableOpacity onPress={() => this._toback()}><Text style={styles.back}>返回上一层目录</Text></TouchableOpacity>
-    }
-  }
-  Fileicon = ({ item }) => {
-    if (item.isfile === 'isfile') {
       return (
-        <TouchableOpacity onPress={() => this._refresh(item.key)} style={styles.row}>
-          <View><Image source={Filesicon} style={styles.img} /></View>
-          <Text style={styles.item}>{item.key}</Text>
+        <TouchableOpacity style={styles.headerBack} onPress={() => this._toBack()}>
+          <Text style={styles.back}>返回上一层目录</Text>
+          <Text style={styles.back}>{this.state.backPath}</Text>
         </TouchableOpacity>
       )
     }
-    else {
-      return <TouchableOpacity onPress={() => this._refresh(item.key)} style={styles.row}>
-        <View><Image source={Fileicon} style={styles.img} /></View>
-        <Text style={styles.item}>{item.key}</Text>
+  }
+
+  renderItem = ({ item }) => {
+    let image = item.isDirectory ? require('../../assets/public/icon-files.png') : require('../../assets/public/icon-file.png')
+    return (
+      <TouchableOpacity onPress={() => this._refresh(item)} style={styles.row}>
+        <View style={styles.imgView}>
+          <Image source={image} style={styles.img} />
+        </View>
+        <Text numberOfLines={1} style={styles.item}>{item.name}</Text>
       </TouchableOpacity>
-    }
+    )
   }
 
   itemseparator = () => {
@@ -210,7 +224,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   _keyExtractor = item => {
-    return item.key
+    return item.path
   }
 
   render() {
@@ -223,14 +237,20 @@ export default class WorkSpaceFileList extends Component {
           title: this.title,
           navigation: this.props.navigation,
         }}>
-        <FlatList
-          ItemSeparatorComponent={this.itemseparator}
-          style={styles.container}
-          ListHeaderComponent={this.headerback}
-          data={this.state.data}
-          renderItem={this.Fileicon}
-          keyExtractor={this._keyExtractor}
-        />
+        {this.headerBack()}
+        {
+          this.state.showData && (
+            this.state.data.length > 0
+              ? <FlatList
+                ItemSeparatorComponent={this.itemseparator}
+                style={styles.container}
+                // ListHeaderComponent={this.headerBack}
+                data={this.state.data}
+                renderItem={this.renderItem}
+                keyExtractor={this._keyExtractor}
+              />
+              : <EmptyView />)
+        }
       </Container>
     )
   }
@@ -241,33 +261,43 @@ const styles = StyleSheet.create({
     backgroundColor: color.background2,
   },
   item: {
+    marginLeft: scaleSize(30),
     fontSize: 20,
-    // justifyContent:'center',
-    alignItems: 'center',
   },
   back: {
     fontSize: 20,
     color: '#1296db',
     paddingTop: scaleSize(30),
     paddingBottom: scaleSize(30),
-    paddingLeft: scaleSize(30),
     height: scaleSize(100),
   },
   row: {
+    flex: 1,
+    height: scaleSize(80),
     flexDirection: 'row',
     borderColor: color.background3,
     borderWidth: scaleSize(2),
     backgroundColor: 'white',
-    // justifyContent:'center',
+    alignItems: 'center',
+    paddingHorizontal: scaleSize(30),
+  },
+  imgView: {
+    width: scaleSize(80),
+    height: scaleSize(80),
+    justifyContent: 'center',
     alignItems: 'center',
   },
   img: {
-    width: scaleSize(80),
-    height: scaleSize(80),
-    marginLeft: scaleSize(30),
-    marginRight: scaleSize(30),
+    width: scaleSize(60),
+    height: scaleSize(60),
   },
   itemseparator: {
     height: scaleSize(6),
+  },
+  headerBack: {
+    backgroundColor: 'white',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: scaleSize(30),
   },
 })

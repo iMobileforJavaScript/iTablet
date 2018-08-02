@@ -102,6 +102,7 @@ export default class Row extends PureComponent {
           maxValue={this.props.maxValue}
           minValue={this.props.minValue}
           defaultValue={this.props.defaultValue}
+          value={this.props.value}
           getValue={this.getValue}
           unit={this.props.unit}
           times={this.props.times}

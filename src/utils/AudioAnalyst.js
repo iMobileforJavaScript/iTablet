@@ -1,39 +1,14 @@
 import NavigationService from '../containers/NavigationService'
-import { ConstOnline, Const } from '../constains'
+import { ConstOnline, Const, AudioKeywords } from '../constains'
 import { Toast, dataUtil } from '../utils'
-import { Action, Point2D, ThemeUnique, ColorGradientType } from 'imobile_for_javascript'
-
+import { Action, Point2D, ThemeUnique, ColorGradientType, ThemeRange, RangeMode } from 'imobile_for_javascript'
+const {keywords, chineseNumber, themeType} = AudioKeywords
 let workspace, mapControl, map, nav = {}
-const keywords = {
-  Baidu: '百度',
-  Google: '谷歌',
-  OSM: 'OSM',
-  TD: '天地图',
-  THEME: '专题',
-}
-const chineseNumber = {
-  零: '零',
-  一: '一',
-  二: '二',
-  三: '三',
-  四: '四',
-  五: '五',
-  六: '六',
-  七: '七',
-  八: '八',
-  九: '九',
-  十: '十',
-  百: '百',
-  千: '千',
-  万: '万',
-  亿: '亿',
-}
-const themeType = {
-  UNIQUE: '单值',
-  RANGE: '分段设色',
-  UNIFIED: '标签',
-}
 
+/**
+ * 地图相关必须设置
+ * @param data
+ */
 function setConfig(data) {
   if (data.workspace) {
     workspace = data.workspace
@@ -212,23 +187,55 @@ function setThemeByIndex(index, type = '') {
   }
   (async function () {
     let layer = await map.getLayer(index)
-    if (!type) {
-      NavigationService.navigate('ThemeEdit', {
-        title: Const.UNIQUE,
-        layer: this.layer,
-        map: this.map,
-        mapControl: this.mapControl,
-      })
-      GLOBAL.AudioDialog.setVisible(false)
-      return
+    switch (type) {
+      case themeType.UNIQUE:
+        setUniqueTheme(layer)
+        break
+      case themeType.RANGE:
+        setRangeTheme(layer)
+        break
+      case themeType.UNIFIED:
+        break
+      default:
+        // 若不指定专题图类型，则跳转到选择专题图类型界面
+        NavigationService.navigate('ThemeEntry', {
+          // title: Const.UNIQUE,
+          layer: layer,
+          map: map,
+          mapControl: mapControl,
+        })
+        GLOBAL.AudioDialog.setVisible(false)
+        break
     }
+  }).bind(this)()
+}
+
+/**
+ * 设置单值专题图
+ * @param layer
+ */
+function setUniqueTheme(layer) {
+  (async function () {
     let dataset = await layer.getDataset()
     let datasetVector = await dataset.toDatasetVector()
-    // await this.themeUnique.dispose()
-    if (type === themeType.UNIQUE) {
-      let themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, 'SmID', ColorGradientType.YELLOWRED)
-      await map.addThemeLayer(dataset, themeUnique, true)
-    }
+    let themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, 'SmID', ColorGradientType.YELLOWRED)
+    await map.addThemeLayer(dataset, themeUnique, true)
+    await map.refresh()
+    await mapControl.setAction(Action.PAN)
+  }).bind(this)()
+}
+
+/**
+ * 设置分段专题图
+ * @param layer
+ */
+function setRangeTheme(layer) {
+  (async function () {
+    let dataset = await layer.getDataset()
+    let datasetVector = await dataset.toDatasetVector()
+    let themeRange = await (new ThemeRange()).makeDefault(
+      datasetVector, 'SmID', RangeMode.EQUALINTERVAL, 5, ColorGradientType.CYANGREEN)
+    await map.addThemeLayer(dataset, themeRange, true)
     await map.refresh()
     await mapControl.setAction(Action.PAN)
   }).bind(this)()

@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
+    textAlign: 'center',
   },
 })
 

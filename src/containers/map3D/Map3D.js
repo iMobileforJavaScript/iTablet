@@ -5,10 +5,9 @@
 */
 
 import * as React from 'react'
-import { View } from 'react-native'
 import { Workspace, SMSceneView, Utility, Point3D, Camera } from 'imobile_for_javascript'
 import { MTBtnList, Container } from '../../components'
-import { Toast, Capture } from '../../utils'
+import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'
@@ -49,16 +48,11 @@ export default class Map3D extends React.Component {
 
   saveLatest = () => {
     if (this.isExample) return
-    Capture.captureScreen({}, uri => {
-      this.image = uri
-      this.props.setLatestMap({
-        path: this.path,
-        type: this.type,
-        name: this.mapName,
-        image: uri,
-      })
-    }, error => {
-
+    this.props.setLatestMap({
+      path: this.path,
+      type: this.type,
+      name: this.mapName,
+      // image: uri,
     })
   }
 
