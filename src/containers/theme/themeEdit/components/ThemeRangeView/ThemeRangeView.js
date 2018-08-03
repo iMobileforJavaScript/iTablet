@@ -54,8 +54,7 @@ export default class ThemeRangeView extends React.Component {
   }
 
   goToChoosePage = type => {
-    let cb = () => {
-    }
+    let cb = () => {}
     switch (type) {
       case ChoosePage.Type.EXPRESSION:
         cb = this.getExpression
@@ -148,30 +147,6 @@ export default class ThemeRangeView extends React.Component {
     let key = Object.keys(obj)[0]
     if (data[key] === obj[key]) return
     Object.assign(data, obj)
-    this.setState({
-      data: data,
-    })
-  }
-
-  getFontName = value => {
-    let data = this.state.data
-    Object.assign(data, {fontName: value})
-    this.setState({
-      data: data,
-    })
-  }
-
-  getFontSize = value => {
-    let data = this.state.data
-    Object.assign(data, {fontSize: value})
-    this.setState({
-      data: data,
-    })
-  }
-
-  getRangeParameter = value => {
-    let data = this.state.data
-    Object.assign(data, {rangeParameter: value})
     this.setState({
       data: data,
     })

@@ -11,6 +11,7 @@ export default class Thumbnails extends React.Component {
 
   props: {
     src: any,
+    imageStyle: any,
     title: string,
     resizeMode: string,
     btnClick: () => {},
@@ -37,7 +38,7 @@ export default class Thumbnails extends React.Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity accessible={true} accessibilityLabel={this.props.title ? this.props.title : '默认标题'} activeOpacity={0.8} style={styles.subContainer} onPress={this.props.btnClick} underlayColor={'rgba(34,26,38,0.1)'}>
-          <Image resizeMode={this.props.resizeMode} style={styles.image} source={image}/>
+          <Image resizeMode={this.props.resizeMode} style={[styles.image, this.props.imageStyle]} source={image}/>
           <View style={styles.textView}>
             <Text numberOfLines={1} style={styles.title}>{this.props.title ? this.props.title : '默认标题'}</Text>
           </View>

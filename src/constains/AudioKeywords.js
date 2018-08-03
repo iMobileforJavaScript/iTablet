@@ -27,7 +27,7 @@ const chineseNumber = {
 const themeType = {
   UNIQUE: '单值',
   RANGE: '分段',
-  UNIFIED: '标签',
+  LABEL: '标签',
 }
 
 export default {

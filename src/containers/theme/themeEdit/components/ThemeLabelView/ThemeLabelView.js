@@ -5,10 +5,10 @@
 */
 
 import * as React from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
-import { TextAlignment, ThemeLabel, ThemeLabelItem, TextStyle } from 'imobile_for_javascript'
-import { BtnTwo, Button, Row, ListSeparator } from '../../../../../components'
-import { dataUtil, Toast } from '../../../../../utils'
+import { View } from 'react-native'
+import { TextAlignment, ThemeLabel, Action, TextStyle } from 'imobile_for_javascript'
+import { Button, Row } from '../../../../../components'
+import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
 import ChoosePage from '../../../choosePage'
 
@@ -26,9 +26,11 @@ export default class ThemeLabelView extends React.Component {
 
   props: {
     title: string,
+    nav: Object,
     map: Object,
     mapControl: Object,
     layer: Object,
+    setLoading: () => {},
   }
 
   constructor(props) {
@@ -36,7 +38,7 @@ export default class ThemeLabelView extends React.Component {
     this.state = {
       title: props.title,
       data: {
-        expression: '',
+        expression: 'SmID',
         fontName: '微软雅黑',
         align: TextAlignment.MIDDLECENTER,
         fontSize: 10,
@@ -45,26 +47,38 @@ export default class ThemeLabelView extends React.Component {
     }
   }
 
-  rowAction = ({title}) => {
-
-  }
-
-  getExpression = value => {
+  getExpression = () => {
     NavigationService.navigate('ChoosePage', {
       type: ChoosePage.Type.EXPRESSION,
       map: this.props.map,
       mapControl: this.props.mapControl,
       layer: this.props.layer,
-      cb: value => {
-        this.getValue({expression: value})
+      cb: ({key}) => {
+
+        this.getValue({expression: key})
       },
     })
   }
 
-  getFont = value => {
-    NavigationService.navigate('ChoosePage', {type: ChoosePage.Type.FONT, cb: value => {
-      this.getValue({fontName: value})
-    }})
+  getFontColor = () => {
+    NavigationService.navigate('ChoosePage', {
+      type: ChoosePage.Type.FONT_COLOR,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+      layer: this.props.layer,
+      cb: ({key}) => {
+        this.getValue({fontColor: key})
+      },
+    })
+  }
+
+  getFont = () => {
+    NavigationService.navigate('ChoosePage', {
+      type: ChoosePage.Type.FONT,
+      cb: ({key}) => {
+        this.getValue({fontName: key})
+      },
+    })
   }
 
   getValue = obj => {
@@ -77,84 +91,54 @@ export default class ThemeLabelView extends React.Component {
     })
   }
 
-  getFontName = value => {
-    let data = this.state.data
-    Object.assign(data, {fontName: value})
-    this.setState({
-      data: data,
-    })
-  }
-
-  getFontSize = value => {
-    let data = this.state.data
-    Object.assign(data, {fontSize: value})
-    this.setState({
-      data: data,
-    })
-  }
-
-  getAlign = value => {
-    let data = this.state.data
-    Object.assign(data, {align: value})
-    this.setState({
-      data: data,
-    })
-  }
-
   confirm = () => {
-    Toast.show('待做')
-    // Toast.show(JSON.stringify(this.state.data))
-    ;(async function () {
+    if (!this.state.data.expression) {
+      Toast.show('请选择表达式')
+      return
+    }
+    if (!this.state.data.fontColor) {
+      Toast.show('请选择文本颜色')
+      return
+    }
+    if (!this.state.data.fontName) {
+      Toast.show('请选择字体')
+      return
+    }
+    if (!this.state.data.align) {
+      Toast.show('请选择对齐方式')
+      return
+    }
+    (async function () {
       try {
-        // let dataset = await this.state.layer.getDataset()
-        // let datasetVector = await dataset.toDatasetVector()
-        //
-        // let themeLabel = await new ThemeLabel().createObj()
-        // await themeLabel.setLabelExpression(this.state.data.expression)
-        // await themeLabel.setRangeExpression(this.state.data.expression)
-        //
-        // let themeLabelItem = await new ThemeLabelItem().createObj()
-        // await themeLabelItem.setVisible(true)
-        // let style = await new TextStyle().createObj()
-        // await style.setForeColor(dataUtil.colorRgba(this.state.data.fontColor))
-        //
-        
-        // let themeLabel = new ThemeLabel().makeThemeLabel({
-        //   datasetVector: datasetVector,
-        //   rangeExpression: this.state.data.expression,
-        //   rangeMode: this.state.data.expression,
-        //   rangeParameter: this.state.data.expression,
-        //   colorGradientType: this.state.data.expression,
-        // })
-  
-        // ThemeLabel themeLabelMap = new ThemeLabel();
-        // themeLabelMap.setLabelExpression("Country");
-        // themeLabelMap.setRangeExpression("Pop_1994");
-        //
-        // ThemeLabelItem themeLabelItem1 = new ThemeLabelItem();
-        // themeLabelItem1.setVisible(true);
-        // TextStyle textStyle1 = new TextStyle();
-        // textStyle1.setForeColor(new Color(255, 10, 10));
-        // textStyle1.setFontName("111");
-        // themeLabelItem1.setStyle(textStyle1);
-        //
-        // themeLabelMap.addToHead(themeLabelItem1);
-        //
-        // Dataset dataset = mWorkspace.getDatasources().get(0).getDatasets().get("Countries");
-        // if (dataset != null) {
-        //   mUnifiedLayer = mMapControl.getMap().getLayers().add(dataset,themeLabelMap, true);
-        // }
-        //
-        // mMapControl.getMap().refresh();
-        
-        
+        let themeLabel = await new ThemeLabel().createObj()
+        let textStyle = await new TextStyle().createObj()
+
+        let rgba = dataUtil.colorRgba(this.state.data.fontColor)
+
+        await textStyle.setForeColor(rgba.r, rgba.g, rgba.b, rgba.a)
+        await textStyle.setFontName(this.state.data.fontName)
+        await textStyle.setAlignment(this.state.data.align)
+
+        await themeLabel.setUniformStyle(textStyle)
+
+        let dataset = await this.props.layer.getDataset()
+        await this.props.map.addThemeLayer(dataset, themeLabel, true)
+        await this.props.map.refresh()
+        await this.props.mapControl.setAction(Action.PAN)
+        let routes = this.props.nav.routes
+        let key = ''
+        for (let i = 0; i < routes.length - 1; i++) {
+          if (routes[i].routeName === 'MapView') {
+            key = routes[i + 1].key
+          }
+        }
+        NavigationService.goBack(key)
+        Toast.show('设置成功')
       } catch (e) {
+        Toast.show('设置失败')
+        console.warn(e)
       }
     }).bind(this)()
-    
-    
-    
-    
   }
 
   reset = () => {
@@ -225,7 +209,7 @@ export default class ThemeLabelView extends React.Component {
           value={this.state.data.fontColor}
           type={Row.Type.CHOOSE_COLOR}
           title={'文本颜色'}
-          getValue={value => this.getValue({fontColor: value})}
+          getValue={this.getFontColor}
         />
 
       </View>

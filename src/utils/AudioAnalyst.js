@@ -1,7 +1,17 @@
 import NavigationService from '../containers/NavigationService'
 import { ConstOnline, Const, AudioKeywords } from '../constains'
 import { Toast, dataUtil } from '../utils'
-import { Action, Point2D, ThemeUnique, ColorGradientType, ThemeRange, RangeMode } from 'imobile_for_javascript'
+import {
+  Action,
+  Point2D,
+  ThemeUnique,
+  ColorGradientType,
+  ThemeRange,
+  RangeMode,
+  ThemeLabel,
+  TextStyle,
+  TextAlignment,
+} from 'imobile_for_javascript'
 const {keywords, chineseNumber, themeType} = AudioKeywords
 let workspace, mapControl, map, nav = {}
 
@@ -194,7 +204,8 @@ function setThemeByIndex(index, type = '') {
       case themeType.RANGE:
         setRangeTheme(layer)
         break
-      case themeType.UNIFIED:
+      case themeType.LABEL:
+        setLabelTheme(layer)
         break
       default:
         // 若不指定专题图类型，则跳转到选择专题图类型界面
@@ -216,12 +227,17 @@ function setThemeByIndex(index, type = '') {
  */
 function setUniqueTheme(layer) {
   (async function () {
-    let dataset = await layer.getDataset()
-    let datasetVector = await dataset.toDatasetVector()
-    let themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, 'SmID', ColorGradientType.YELLOWRED)
-    await map.addThemeLayer(dataset, themeUnique, true)
-    await map.refresh()
-    await mapControl.setAction(Action.PAN)
+    try {
+      let dataset = await layer.getDataset()
+      let datasetVector = await dataset.toDatasetVector()
+      let themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, 'SmID', ColorGradientType.YELLOWRED)
+      await map.addThemeLayer(dataset, themeUnique, true)
+      await map.refresh()
+      await mapControl.setAction(Action.PAN)
+      Toast.show('设置单值专题图成功')
+    } catch (e) {
+      Toast.show('设置单值专题图失败')
+    }
   }).bind(this)()
 }
 
@@ -231,13 +247,44 @@ function setUniqueTheme(layer) {
  */
 function setRangeTheme(layer) {
   (async function () {
-    let dataset = await layer.getDataset()
-    let datasetVector = await dataset.toDatasetVector()
-    let themeRange = await (new ThemeRange()).makeDefault(
-      datasetVector, 'SmID', RangeMode.EQUALINTERVAL, 5, ColorGradientType.CYANGREEN)
-    await map.addThemeLayer(dataset, themeRange, true)
-    await map.refresh()
-    await mapControl.setAction(Action.PAN)
+    try {
+      let dataset = await layer.getDataset()
+      let datasetVector = await dataset.toDatasetVector()
+      let themeRange = await (new ThemeRange()).makeDefault(
+        datasetVector, 'SmID', RangeMode.EQUALINTERVAL, 5, ColorGradientType.CYANGREEN)
+      await map.addThemeLayer(dataset, themeRange, true)
+      await map.refresh()
+      await mapControl.setAction(Action.PAN)
+      Toast.show('设置分段专题图成功')
+    } catch (e) {
+      Toast.show('设置分段专题图失败')
+    }
+  }).bind(this)()
+}
+
+/**
+ * 设置标签专题图
+ * @param layer
+ */
+function setLabelTheme(layer) {
+  (async function () {
+    try {
+      let dataset = await layer.getDataset()
+  
+      let themeLabel = await new ThemeLabel().createObj()
+      let textStyle = await new TextStyle().createObj()
+      await textStyle.setForeColor(0, 255, 0, 1)
+      await textStyle.setFontName('微软雅黑')
+      await textStyle.setAlignment(TextAlignment.MIDDLECENTER)
+      await themeLabel.setUniformStyle(textStyle)
+  
+      await map.addThemeLayer(dataset, themeLabel, true)
+      await map.refresh()
+      await mapControl.setAction(Action.PAN)
+      Toast.show('设置标签专题图成功')
+    } catch (e) {
+      Toast.show('设置标签专题图失败')
+    }
   }).bind(this)()
 }
 

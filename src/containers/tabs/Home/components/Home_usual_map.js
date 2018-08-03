@@ -14,30 +14,9 @@ export default class HomeUsualMap extends React.Component {
 
   constructor(props){
     super(props)
-    // this.state = {
-    //   data: [
-    //     {
-    //       name: '成都市',
-    //       path: '/SampleData/Changchun/Changchun.smwu',
-    //     },
-    //     {
-    //       name: '北京市',
-    //       path: 'https://www.supermapol.com/apps/viewer/2095221593',
-    //       image: require('../../../../assets/public/mapImage1.png'),
-    //     },
-    //   ],
-    // }
   }
 
   _btnClick = obj => {
-    // if (obj.type === MapView.Type.MAP_3D) {
-    // NavigationService.navigate('Map3D', { data: obj, type: MapView.Type.MAP_3D, path: obj.path })
-    // NavigationService.navigate('Map3D', { data: obj, type: MapView.Type.MAP_3D, path: obj.path, manageAble: true })
-    // } else if(obj.path && obj.path.indexOf('http') >= 0) {
-    //   NavigationService.navigate('MapView', { data: obj, type: MapView.Type.ONLINE, path: obj.path })
-    // } else if(obj.type === '') {
-    //   NavigationService.navigate('MapView', { data: obj, type:path: obj.path })
-    // }
     if (obj.type === MapView.Type.MAP_3D) {
       NavigationService.navigate('Map3D', { data: obj, type: obj.type, path: obj.path, manageAble: true })
     } else {
@@ -60,10 +39,9 @@ export default class HomeUsualMap extends React.Component {
     }
     return (
       <Thumbnails
-        style={styles.item}
+        imageStyle={styles.item}
         key={item.name}
         title={item.name}
-        // src={item.image}
         src={image}
         btnClick={() => {
           this._btnClick(item)
@@ -100,8 +78,6 @@ export default class HomeUsualMap extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.grayLight,
-    // paddingHorizontal: scaleSize(20),
     flexDirection: 'column',
     marginTop:scaleSize(20),
     backgroundColor: '#FFFFFF',
@@ -117,10 +93,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'transparent',
     marginLeft: scaleSize(40),
-    paddingTop:scaleSize(10)
+    paddingTop:scaleSize(10),
   },
   headerTitile: {
     fontSize: size.fontSize.fontSizeXl,
     color: color.content,
+  },
+  imageStyle: {
+    backgroundColor: color.grayLight,
   },
 })

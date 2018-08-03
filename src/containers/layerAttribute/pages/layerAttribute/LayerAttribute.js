@@ -63,19 +63,27 @@ export default class LayerAttribute extends React.Component {
     this.props.setCurrentAttribute({})
   }
 
-  getDatasets = async () => {
-    let recordset = this.state.selection.recordset
-    let records = await recordset.getFieldInfosArray()
-    let attribute = []
-    if (records && records.length > 0) {
-      attribute = records[0]
-      this.props.setCurrentAttribute(attribute)
-      this.setState({
-        attribute: attribute,
-      })
-      this.table.setData(attribute, true)
-      this.container.setLoading(false)
-    }
+  getDatasets = () => {
+    this.container.setLoading(true)
+    ;(async function () {
+      try {
+        let recordset = this.state.selection.recordset
+        let records = await recordset.getFieldInfosArray()
+        let attribute = []
+        if (records && records.length > 0) {
+          attribute = records[0]
+          this.props.setCurrentAttribute(attribute)
+          this.setState({
+            attribute: attribute,
+          })
+          this.table.setData(attribute, true)
+          this.container.setLoading(false)
+        }
+      } catch (e) {
+        this.container.setLoading(false)
+        console.error(e)
+      }
+    }).bind(this)()
   }
 
   confirm = () => {
@@ -154,7 +162,7 @@ export default class LayerAttribute extends React.Component {
     return (
       <Container
         ref={ref => this.container = ref}
-        initWithLoading
+        // initWithLoading
         headerProps={{
           title: '对象属性',
           navigation: this.props.navigation,

@@ -51,9 +51,8 @@ export default class WorkSpaceFileList extends Component {
           }, () => {
             this.container.setLoading(false)
           })
-          return
         } else {
-          this._getfilelist({path: this.path})
+          this.getFileList({path: this.path})
         }
       } catch (e) {
         console.error(e)
@@ -68,128 +67,128 @@ export default class WorkSpaceFileList extends Component {
   }
 
 
-  _getfilelist = async item => {
-    try {
-      let OpenMapfileModule = new OpenMapfile()
-      let isDirectory = await OpenMapfileModule.isdirectory(item.path)
-      if (!isDirectory) {
-        let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
-        if (filename === '.smwu' && this.need === 'workspace') {
-          this._toLoadMapView(item.path, '')
+  getFileList = item => {
+    (async function () {
+      try {
+        let OpenMapfileModule = new OpenMapfile()
+        let isDirectory = await OpenMapfileModule.isdirectory(item.path)
+        if (!isDirectory) {
+          let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
+          if (filename === '.smwu' && this.need === 'workspace') {
+            this._toLoadMapView(item.path, '')
+          } else if (filename === '.udb' && this.need === 'udb') {
+            this._toLoadMapView(item.path, 'UDB')
+          } else {
+            this._offLine_More()
+          }
+        } else {
+          let fileList = await OpenMapfileModule.getfilelist(item.path)
+          this.setState({
+            data: fileList,
+            backPath: item.path,
+            showData: true,
+          })
+          this.container.setLoading(false)
         }
-        else if (filename === '.udb' && this.need === 'udb') {
-          this._toLoadMapView(item.path, 'UDB')
-        }
-        else {
-          this._offLine_More()
-        }
+      } catch (e) {
+        console.error(e)
+        this.container.setLoading(true)
       }
-      else {
-        let fileList = await OpenMapfileModule.getfilelist(item.path)
-        this.setState({
-          data: fileList,
-          backPath: item.path,
-          showData: true,
-        })
-        this.container.setLoading(false)
-      }
-    } catch (e) {
-      console.error(e)
-      this.container.setLoading(true)
-    }
+    }).bind(this)()
   }
 
-  _toLoadMapView = async (path, type) => {
-    if (this.workspace !== 'noworkspace' && this.need === 'workspace') {
-      let key = ''
-      for (let index = 0; index < this.routes.length; index++) {
-        if (this.routes[index].routeName === 'MapView') {
-          key = this.routes[index + 1].key
+  _toLoadMapView = (path, type) => {
+    (async function () {
+      if (this.workspace !== 'noworkspace' && this.need === 'workspace') {
+        let key = ''
+        for (let index = 0; index < this.routes.length; index++) {
+          if (this.routes[index].routeName === 'MapView') {
+            key = this.routes[index + 1].key
+          }
         }
+        await this.map.close()
+        await this.workspace.closeAllDatasource()
+        let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
+        let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
+        let openpath = '/sdcard' + path
+        await workspaceCOnnectionInfo.setServer(openpath)
+        await workspaceCOnnectionInfo.setType(9)
+        await this.workspace.open(workspaceCOnnectionInfo)
+        await this.map.setWorkspace(this.workspace)
+        this.mapName = await this.workspace.getMapName(0)
+        await this.map.open(this.mapName)
+        await this.mapControl.setAction(Action.SELECT)
+        await this.map.refresh()
+        NavigationService.goBack(key)
       }
-      await this.map.close()
-      await this.workspace.closeAllDatasource()
-      let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
-      let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
-      let openpath = '/sdcard' + path
-      await workspaceCOnnectionInfo.setServer(openpath)
-      await workspaceCOnnectionInfo.setType(9)
-      await this.workspace.open(workspaceCOnnectionInfo)
-      await this.map.setWorkspace(this.workspace)
-      this.mapName = await this.workspace.getMapName(0)
-      await this.map.open(this.mapName)
-      await this.mapControl.setAction(Action.SELECT)
-      await this.map.refresh()
-      NavigationService.goBack(key)
-    }
-    if (this.workspace !== 'noworkspace' && this.need === 'udb') {
-      // let str = path.substr(path.lastIndexOf('/') + 1)
-      // let name = str.substr(0, str.lastIndexOf('.'))
-      await this.map.close()
-      await this.workspace.closeAllDatasource()
-      // let datasources = await this.workspace.getDatasources()
-      // let count = await datasources.getCount()
-      // for (let index = 0; index < count; index++) {
-      //   datasourcename = await (await datasources.get(index)).getAlias()
-      //   if (name === datasourcename) {
-      //     Toast.show('空间中此数据源已被打开')
-      //     return
-      //   }
-      // }
-      let key = ''
-      for (let index = 0; index < this.routes.length; index++) {
-        if (this.routes[index].routeName === 'MapView') {
-          key = this.routes[index + 1].key
+      if (this.workspace !== 'noworkspace' && this.need === 'udb') {
+        // let str = path.substr(path.lastIndexOf('/') + 1)
+        // let name = str.substr(0, str.lastIndexOf('.'))
+        await this.map.close()
+        await this.workspace.closeAllDatasource()
+        // let datasources = await this.workspace.getDatasources()
+        // let count = await datasources.getCount()
+        // for (let index = 0; index < count; index++) {
+        //   datasourcename = await (await datasources.get(index)).getAlias()
+        //   if (name === datasourcename) {
+        //     Toast.show('空间中此数据源已被打开')
+        //     return
+        //   }
+        // }
+        let key = ''
+        for (let index = 0; index < this.routes.length; index++) {
+          if (this.routes[index].routeName === 'MapView') {
+            key = this.routes[index + 1].key
+          }
         }
+        // this.DSParams = { server: path, engineType: EngineType.UDB }
+        // await this.workspace.openDatasource(this.DSParams)
+        // await this.mapControl.setAction(Action.SELECT)
+        // await this.map.refresh()
+        // NavigationService.goBack(key)
+
+        const point2dModule = new Point2D()
+
+        // await this.map.setScale(0.0001)
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+            ;(async () => {
+              let centerPoint = await point2dModule.createObj(lon, lat)
+              await this.map.setCenter(centerPoint)
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              key && NavigationService.goBack(key)
+            }).bind(this)()
+          }
+        )
+        this.DSParams = { server: path, engineType: EngineType.UDB }
+        let layerIndex = 0
+
+        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+
+        let dataset = await dsBaseMap.getDataset(layerIndex)
+        await this.map.addLayer(dataset, true)
       }
-      // this.DSParams = { server: path, engineType: EngineType.UDB }
-      // await this.workspace.openDatasource(this.DSParams)
-      // await this.mapControl.setAction(Action.SELECT)
-      // await this.map.refresh()
-      // NavigationService.goBack(key)
-
-      const point2dModule = new Point2D()
-
-      // await this.map.setScale(0.0001)
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          let lat = position.coords.latitude
-          let lon = position.coords.longitude
-          ;(async () => {
-            let centerPoint = await point2dModule.createObj(lon, lat)
-            await this.map.setCenter(centerPoint)
-            await this.mapControl.setAction(Action.PAN)
-            await this.map.refresh()
-            key && NavigationService.goBack(key)
-          }).bind(this)()
-        }
-      )
-      this.DSParams = { server: path, engineType: EngineType.UDB }
-      let layerIndex = 0
-
-      let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-
-      let dataset = await dsBaseMap.getDataset(layerIndex)
-      await this.map.addLayer(dataset, true)
-    }
-    else {
-      NavigationService.navigate('MapView', { path: path, type: type })
-    }
+      else {
+        NavigationService.navigate('MapView', { path: path, type: type })
+      }
+    }).bind(this)()
   }
 
 
   _refresh = async item => {
-    await this._getfilelist(item)
+    await this.getFileList(item)
   }
 
   _toBack = async () => {
     if (this.state.backPath === ConstPath.SampleDataPath) {
       return
-    }
-    else {
+    } else {
       let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
       this.setState({ backPath: backPath })
-      await this._getfilelist({path: backPath})
+      await this.getFileList({path: backPath})
     }
   }
 
@@ -219,8 +218,8 @@ export default class WorkSpaceFileList extends Component {
     )
   }
 
-  itemseparator = () => {
-    return (<View style={styles.itemseparator} />)
+  itemSeparator = () => {
+    return (<View style={styles.itemSeparator} />)
   }
 
   _keyExtractor = item => {
@@ -242,7 +241,7 @@ export default class WorkSpaceFileList extends Component {
           this.state.showData && (
             this.state.data.length > 0
               ? <FlatList
-                ItemSeparatorComponent={this.itemseparator}
+                ItemSeparatorComponent={this.itemSeparator}
                 style={styles.container}
                 // ListHeaderComponent={this.headerBack}
                 data={this.state.data}
@@ -291,7 +290,7 @@ const styles = StyleSheet.create({
     width: scaleSize(60),
     height: scaleSize(60),
   },
-  itemseparator: {
+  itemSeparator: {
     height: scaleSize(6),
   },
   headerBack: {

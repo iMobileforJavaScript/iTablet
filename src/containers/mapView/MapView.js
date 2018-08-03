@@ -455,14 +455,32 @@ export default class MapView extends React.Component {
         this.mapName = await this.workspace.getMapName(0)
 
         await this.map.open(this.mapName)
-        await this.map.viewEntire()
+        // await this.map.viewEntire()
         // await this.map.setScale(0.00005)
-        await this.mapControl.setAction(Action.PAN)
-        await this.map.refresh()
+        // await this.mapControl.setAction(Action.PAN)
+        // await this.map.refresh()
+
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+            ;(async () => {
+              const point2dModule = new Point2D()
+              let centerPoint = await point2dModule.createObj(lon, lat)
+              await this.map.setCenter(centerPoint)
+              await this.map.viewEntire()
+              // await this.map.setScale(0.00005)
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              this.saveLatest()
+            }).bind(this)()
+          }
+        )
+
         await this._addGeometrySelectedListener()
 
         this.container.setLoading(false)
-        this.saveLatest()
+        // this.saveLatest()
       } catch (e) {
         // console.error(e)
         this.container.setLoading(false)
@@ -491,7 +509,7 @@ export default class MapView extends React.Component {
 
         // this.mapName = await this.map.getName()
 
-        // await this.map.setScale(0.0001)
+        // await this.map.setScale(0.0005)
         navigator.geolocation.getCurrentPosition(
           position => {
             let lat = position.coords.latitude

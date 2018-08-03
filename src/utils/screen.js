@@ -1,5 +1,5 @@
-import { Dimensions } from 'react-native'
-const defaultPixel = 2 //iphone6的像素密度
+import { Dimensions, PixelRatio } from 'react-native'
+const defaultPixel = PixelRatio.get() //iphone6的像素密度
 const deviceWidth = Dimensions.get('window').width //设备的宽度
 const deviceHeight = Dimensions.get('window').height //设备的高度
 

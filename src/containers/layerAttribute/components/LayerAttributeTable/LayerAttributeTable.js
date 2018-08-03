@@ -228,7 +228,9 @@ export default class LayerAttributeTable extends React.Component {
                             data={
                               cellIndex === 0
                                 ? cellData
-                                : isSystemField ? cellData.data.value : this.renderInput(cellData, index)}
+                                : isSystemField
+                                  ? (cellData.data.value === undefined ? '' : cellData.data.value)
+                                  : this.renderInput(cellData, index)}
                             textStyle={styles.text}/>
                         )
                       })
