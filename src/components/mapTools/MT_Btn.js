@@ -7,6 +7,7 @@
 import * as React from 'react'
 import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native'
 import { constUtil, scaleSize } from '../../utils'
+import { size } from '../../styles'
 
 const ICON_HEIGHT =0.75* 0.1 * constUtil.WIDTH
 const CONTAINER_HEIGHT = 1.4 * ICON_HEIGHT
@@ -49,8 +50,6 @@ MT_Btn.Size = {
 
 const styles = StyleSheet.create({
   container: {
-    height: CONTAINER_HEIGHT,
-    width: CONTAINER_WIDTH,
     flexDirection: 'column',
     backgroundColor: 'transparent',
     justifyContent: 'center',
@@ -75,14 +74,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   largeText: {
+    fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
-    width: CONTAINER_WIDTH+10,
+    width: scaleSize(100),
     textAlign: 'center',
   },
   smallText: {
-    fontSize: scaleSize(18),
+    fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
-    width: CONTAINER_WIDTH+10,
+    width: scaleSize(100),
     textAlign: 'center',
   },
 })

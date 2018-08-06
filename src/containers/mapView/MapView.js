@@ -9,7 +9,7 @@ import { Workspace, SMMapView, Utility, Action, Point2D } from 'imobile_for_java
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
-import { Toast, Capture, AudioAnalyst } from '../../utils'
+import { Toast, AudioAnalyst } from '../../utils'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'
@@ -81,26 +81,24 @@ export default class MapView extends React.Component {
 
   saveLatest = () => {
     if (this.isExample) return
-    // Capture.snapshot(this.mapRef, {}, uri => {
-    //   this.image = uri
-    // }, error => {
-    //
-    // })
-    Capture.captureScreen({}, uri => {
-      this.image = uri
-      this.props.setLatestMap({
-        path: this.DSParams && this.DSParams.server || this.path,
-        type: this.type,
-        name: this.mapName,
-        image: uri,
-        DSParams: this.DSParams,
-        labelDSParams: this.labelDSParams,
-        layerIndex: this.layerIndex,
-        mapName: this.mapName,
+    try {
+      this.mapControl && this.mapControl.outputMap({mapView: this.mapView}).then(({result, uri}) => {
+        if (result) {
+          this.props.setLatestMap({
+            path: this.DSParams && this.DSParams.server || this.path,
+            type: this.type,
+            name: this.mapName,
+            image: uri,
+            DSParams: this.DSParams,
+            labelDSParams: this.labelDSParams,
+            layerIndex: this.layerIndex,
+            mapName: this.mapName,
+          })
+        }
       })
-    }, error => {
-
-    })
+    } catch(e) {
+      console.error(e)
+    }
   }
 
   _onGetInstance = mapView => {
@@ -440,7 +438,6 @@ export default class MapView extends React.Component {
     let workspaceModule = new Workspace()
     ;(async function () {
       try {
-
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
@@ -458,13 +455,32 @@ export default class MapView extends React.Component {
         this.mapName = await this.workspace.getMapName(0)
 
         await this.map.open(this.mapName)
+        // await this.map.viewEntire()
         // await this.map.setScale(0.00005)
-        await this.mapControl.setAction(Action.PAN)
-        await this.map.refresh()
+        // await this.mapControl.setAction(Action.PAN)
+        // await this.map.refresh()
+
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+            ;(async () => {
+              const point2dModule = new Point2D()
+              let centerPoint = await point2dModule.createObj(lon, lat)
+              await this.map.setCenter(centerPoint)
+              await this.map.viewEntire()
+              // await this.map.setScale(0.00005)
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              this.saveLatest()
+            }).bind(this)()
+          }
+        )
+
         await this._addGeometrySelectedListener()
 
         this.container.setLoading(false)
-        this.saveLatest()
+        // this.saveLatest()
       } catch (e) {
         // console.error(e)
         this.container.setLoading(false)
@@ -485,8 +501,6 @@ export default class MapView extends React.Component {
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
         await this.map.setWorkspace(this.workspace)
-
-          this.mapControl.openSampleDemo("visual");
         AudioAnalyst.setConfig({
           workspace: this.workspace,
           mapControl: this.mapControl,
@@ -495,7 +509,7 @@ export default class MapView extends React.Component {
 
          this.mapName = await this.map.getName()
 
-        await this.map.setScale(0.0001)
+        // await this.map.setScale(0.0005)
         navigator.geolocation.getCurrentPosition(
           position => {
             let lat = position.coords.latitude
@@ -503,6 +517,7 @@ export default class MapView extends React.Component {
             ;(async () => {
               let centerPoint = await point2dModule.createObj(lon, lat)
               await this.map.setCenter(centerPoint)
+              await this.map.viewEntire()
               await this.mapControl.setAction(Action.PAN)
               await this.map.refresh()
 

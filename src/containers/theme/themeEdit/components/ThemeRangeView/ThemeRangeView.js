@@ -5,12 +5,13 @@
 */
 
 import * as React from 'react'
-import { ScrollView, View, Text } from 'react-native'
-import { RangeMode } from 'imobile_for_javascript'
-import { Button, Row, BtnOne } from '../../../../../components'
-import { Toast } from '../../../../../utils'
+import { ScrollView, View } from 'react-native'
+import { RangeMode, ColorGradientType, ThemeRange, Action } from 'imobile_for_javascript'
+import { Button, Row } from '../../../../../components'
+import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
 import ThemeTable from '../ThemeTable'
+import ChoosePage from '../../../choosePage'
 
 import styles from './styles'
 
@@ -20,6 +21,11 @@ export default class ThemeRangeView extends React.Component {
 
   props: {
     title: string,
+    nav: Object,
+    map: Object,
+    mapControl: Object,
+    layer: Object,
+    setLoading: () => {},
   }
 
   constructor(props) {
@@ -27,41 +33,113 @@ export default class ThemeRangeView extends React.Component {
     this.state = {
       title: props.title,
       themeRangeList: [
-        {visible: true, color: 'red', value: 1, caption: '标题1'},
-        {visible: false, color: 'green', value: 2, caption: '标题2'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
-        {visible: true, color: 'blue', value: 3, caption: '标题3'},
       ],
       data: {
-        expression: '',
+        expression: 'SmID',
         rangeMode: RangeMode.EQUALINTERVAL,
-        rangeCount: 1,
+        rangeCount: 5,
         precision: 1,
         fontSize: 10,
-        colorMethod: '#0000FF',
+        colorMethod: {
+          key: 'YELLOWRED',
+          value: ColorGradientType.CYANGREEN,
+        },
       },
     }
+    this.themeRange = {}
   }
 
-  rowAction = ({title}) => {
-
+  componentDidMount() {
+    this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
   }
 
-  getExpression = value => {
-    let data = this.state.data
-    Object.assign(data, {expression: value})
-    this.setState({
-      data: data,
+  goToChoosePage = type => {
+    let cb = () => {}
+    switch (type) {
+      case ChoosePage.Type.EXPRESSION:
+        cb = this.getExpression
+        break
+      case ChoosePage.Type.COLOR:
+        cb = this.getColorMethod
+        break
+    }
+
+    NavigationService.navigate('ChoosePage', {
+      type: type,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+      layer: this.props.layer,
+      cb: value => cb(value),
     })
+  }
+
+  getExpression = ({key}) => {
+    if (this.state.data.colorMethod.value === '') return
+    this.getData(key, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+  }
+
+  /**
+   * 获取颜色方案
+   */
+  getColorMethod = ({key, value}) => {
+    let datalist = this.state.data
+    if (this.state.data.expression === '') {
+      Object.assign(datalist, { colorMethod: {key, value} })
+      this.setState({
+        data: datalist,
+      })
+      return
+    }
+    this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, {key, value}, this.state.data.precision)
+  }
+
+  getData = (expression, rangeMode, rangeCount, colorMethod, precision) => {
+    this.props.setLoading && this.props.setLoading(true)
+    ;(async function () {
+      try {
+        // 获取表达式对应的所有Item
+        let dataset = await this.props.layer.getDataset()
+        let datasetVector = await dataset.toDatasetVector()
+        if (this.themeRange._SMThemeId) {
+          await this.themeRange.dispose()
+        }
+        this.themeRange = await (new ThemeRange()).makeDefault(
+          datasetVector, expression, rangeMode, rangeCount, colorMethod.value)
+        await this.themeRange.setPrecision(precision)
+        let customInterval = 0
+        if (rangeMode === RangeMode.CUSTOMINTERVAL) {
+          customInterval = await this.themeRange.getCustomInterval()
+        }
+        let count = await this.themeRange.getCount()
+        let themeRangeList = []
+
+        for (let i = 0; i < count; i++) {
+          let item = await this.themeRange.getItem(i)
+          let rangeValue = await item.getEnd()
+          // let style = await item.getStyle()
+          // let color1 = await style.getFillForeColor()
+          // let color = await style.getLineColor()
+          let visible = await item.isVisible()
+          let caption = await item.getCaption()
+          let data = { visible: visible, color: dataUtil.colorHex({r: 255, g: 0, b: 0}), value: rangeValue, caption, data: item }
+          themeRangeList.push(data)
+        }
+        let datalist = this.state.data
+        Object.assign(datalist, {
+          expression: expression,
+          rangeMode: rangeMode,
+          rangeCount: rangeMode === RangeMode.CUSTOMINTERVAL ? customInterval : count,
+          precision: precision,
+          colorMethod: {key: colorMethod.key, value: colorMethod.value},
+        })
+        this.setState({
+          themeRangeList: themeRangeList,
+          data: datalist,
+        }, () => this.props.setLoading && this.props.setLoading(false))
+      } catch (e) {
+        this.props.setLoading && this.props.setLoading(false)
+      }
+    }).bind(this)()
   }
 
   getValue = obj => {
@@ -74,66 +152,27 @@ export default class ThemeRangeView extends React.Component {
     })
   }
 
-  getFontName = value => {
-    let data = this.state.data
-    Object.assign(data, {fontName: value})
-    this.setState({
-      data: data,
-    })
-  }
-
-  getFontSize = value => {
-    let data = this.state.data
-    Object.assign(data, {fontSize: value})
-    this.setState({
-      data: data,
-    })
-  }
-
-  getAlign = value => {
-    let data = this.state.data
-    Object.assign(data, {align: value})
-    this.setState({
-      data: data,
-    })
-  }
-
   confirm = () => {
-    Toast.show(JSON.stringify(this.state.data))
-    // NavigationService.goBack()
+    (async function () {
+      Toast.show(JSON.stringify(this.state.data))
+      let dataset = await this.props.layer.getDataset()
+      await this.props.map.addThemeLayer(dataset, this.themeRange, true)
+      await this.props.map.refresh()
+      await this.props.mapControl.setAction(Action.PAN)
+      let routes = this.props.nav.routes
+      let key = ''
+      for (let i = 0; i < routes.length - 1; i++) {
+        if (routes[i].routeName === 'MapView') {
+          key = routes[i + 1].key
+        }
+      }
+      NavigationService.goBack(key)
+      Toast.show('设置成功')
+    }).bind(this)()
   }
 
   reset = () => {
     // TODO reset
-  }
-
-  add = () => {
-    // TODO add
-  }
-
-  delete = () => {
-    // TODO delete
-  }
-
-  renderOperationBtns = () => {
-    return (
-      <View style={styles.operationBtns}>
-        <BtnOne
-          style={styles.operationBtn}
-          size={BtnOne.SIZE.SMALL}
-          BtnText='添加'
-          BtnImageSrc={require('../../../../../assets/public/icon-add.png')}
-          BtnClick={this.add}
-        />
-        <BtnOne
-          style={styles.operationBtn}
-          size={BtnOne.SIZE.SMALL}
-          BtnText='删除'
-          BtnImageSrc={require('../../../../../assets/public/icon-delete.png')}
-          BtnClick={this.delete}
-        />
-      </View>
-    )
   }
 
   renderContent = () => {
@@ -145,16 +184,16 @@ export default class ThemeRangeView extends React.Component {
           value={this.state.data.expression || CHOOSE}
           type={Row.Type.TEXT_BTN}
           title={'表达式'}
-          getValue={value => this.getValue({expression: value === CHOOSE ? '' : value })}
+          getValue={() => this.goToChoosePage(ChoosePage.Type.EXPRESSION)}
         />
 
         <Row
           style={styles.row}
           key={'分段方法'}
-          value={this.state.data.align}
+          value={this.state.data.rangeMode}
           type={Row.Type.RADIO_GROUP}
           title={'分段方法'}
-          defaultValue={this.state.data.align}
+          defaultValue={this.state.data.rangeMode}
           radioColumn={2}
           radioArr={[
             {title: '等距分段', value: RangeMode.EQUALINTERVAL},
@@ -164,20 +203,29 @@ export default class ThemeRangeView extends React.Component {
             {title: '等计数分段', value: RangeMode.QUANTILE},
             {title: '自定义分段', value: RangeMode.CUSTOMINTERVAL},
           ]}
-          getValue={value => this.getValue({align: value})}
+          getValue={data => {
+            // this.getValue({rangeMode: value})
+            this.getData(this.state.data.expression, data.value, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+          }}
         />
 
-        <Row
-          style={styles.row}
-          key={'段数'}
-          defaultValue={10}
-          value={this.state.data.rangeCount}
-          type={Row.Type.CHOOSE_NUMBER}
-          minValue={2}
-          maxValue={32}
-          title={'段数'}
-          getValue={value => this.getValue({rangeCount: value})}
-        />
+        {
+          this.state.data.rangeMode !== RangeMode.STDDEVIATION &&
+          <Row
+            style={styles.row}
+            key={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '单段长度' : '段数'}
+            defaultValue={this.state.data.rangeCount}
+            value={this.state.data.rangeCount}
+            type={Row.Type.CHOOSE_NUMBER}
+            minValue={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '' : 2}
+            maxValue={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '' : 32}
+            title={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '单段长度' : '段数'}
+            getValue={value => {
+              // this.getValue({rangeCount: value})
+              this.getData(this.state.data.expression, this.state.data.rangeMode, value, this.state.data.colorMethod, this.state.data.precision)
+            }}
+          />
+        }
 
         <Row
           style={styles.row}
@@ -189,19 +237,29 @@ export default class ThemeRangeView extends React.Component {
           maxValue={10000000}
           times={10}
           title={'分段舍入精度'}
-          getValue={value => this.getValue({precision: value})}
+          getValue={value => {
+            // this.getValue({precision: value})
+            this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, value)
+          }}
         />
-  
+
+        {/*<Row*/}
+        {/*style={styles.row}*/}
+        {/*key={'颜色方案'}*/}
+        {/*value={this.state.data.colorMethod}*/}
+        {/*type={Row.Type.CHOOSE_COLOR}*/}
+        {/*title={'颜色方案'}*/}
+        {/*getValue={value => this.getValue({colorMethod: value})}*/}
+        {/*/>*/}
+
         <Row
           style={styles.row}
           key={'颜色方案'}
-          value={this.state.data.colorMethod}
-          type={Row.Type.CHOOSE_COLOR}
+          value={this.state.data.colorMethod.key || CHOOSE}
+          type={Row.Type.TEXT_BTN}
           title={'颜色方案'}
-          getValue={value => this.getValue({colorMethod: value})}
+          getValue={() => this.goToChoosePage(ChoosePage.Type.COLOR)}
         />
-
-        {this.renderOperationBtns()}
 
         <ThemeTable
           ref={ref => this.table = ref}

@@ -14,7 +14,7 @@ import NavigationService from '../../NavigationService'
 import styles from './styles'
 
 const fonts = [{key: '宋体'}, {key: '幼圆'}, {key: '黑体'}, {key: '华文新魏'}, {key: '微软黑雅'}]
-const colors = [{key: '#FF0000'}, {key: '#00FF00'}, {key: '#0000FF'}, {key: '#fa575c'}, {key: '#4BA0FF'}]
+const fontColors = [{key: '#FF0000'}, {key: '#00FF00'}, {key: '#0000FF'}, {key: '#fa575c'}, {key: '#4BA0FF'}]
 
 export default class ChoosePage extends React.Component {
 
@@ -26,9 +26,31 @@ export default class ChoosePage extends React.Component {
     super(props)
     let { params } = props.navigation.state
     this.type =  params && params.type || 'font'
-    this.title = this.type === 'font' ? '字体' : this.type === 'color' ? '颜色' : '表达式'
+    this.title = ''
+    let data = []
+    // this.title = this.type === 'font' ? '字体' : this.type === 'color' ? '颜色' : '表达式'
     this.cb = params && params.cb || (() => {})
-    let data = this.type === 'font' ? fonts : this.type === 'color' ? this.getColors() : []
+    // let data = this.type === 'font' ? fonts : this.type === 'color' ? this.getColors() : []
+
+    switch (this.type) {
+      case 'font':
+        this.title = '字体'
+        data = fonts
+        break
+      case 'color':
+        this.title = '颜色'
+        data = this.getColors()
+        break
+      case 'expression':
+        this.title = '表达式'
+        data = []
+        break
+      case 'fontColor':
+        this.title = '文本颜色'
+        data = fontColors
+        break
+    }
+
     this.state = {
       type: params && params.type,
       data: data,
@@ -37,13 +59,13 @@ export default class ChoosePage extends React.Component {
       mapControl: params && params.mapControl,
     }
   }
-  
+
   componentDidMount() {
     if (this.type === 'expression') {
       this.getData()
     }
   }
-  
+
   getColors = () => {
     let color = []
     for (let key in ColorGradientType) {
@@ -54,7 +76,7 @@ export default class ChoosePage extends React.Component {
     }
     return color
   }
-  
+
   getData = () => {
     this.container.setLoading(true)
     ;(async function () {
@@ -62,7 +84,7 @@ export default class ChoosePage extends React.Component {
         let dataset = await this.state.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
         let fieldInfos = await datasetVector.getFieldInfos()
-        
+
         let data = []
         Object.keys(fieldInfos).map(key => {
           data.push({
@@ -131,4 +153,5 @@ ChoosePage.Type = {
   FONT: 'font',
   EXPRESSION: 'expression',
   COLOR: 'color',
+  FONT_COLOR: 'fontColor',
 }

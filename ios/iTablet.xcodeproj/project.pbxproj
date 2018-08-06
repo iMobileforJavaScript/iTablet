@@ -176,6 +176,13 @@
 			remoteGlobalIDString = 005EF27D175F5F96005433E1;
 			remoteInfo = Super23D;
 		};
+		0A4D7FCE2117E2E300FAA035 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 9C3B74705C4C4496BF7DB110 /* RNViewShot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNViewShot;
+		};
 		0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
@@ -504,6 +511,7 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		995E625BA77141C79D10DBB2 /* libSupermap.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libSupermap.a; sourceTree = "<group>"; };
+		9C3B74705C4C4496BF7DB110 /* RNViewShot.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNViewShot.xcodeproj; path = "../node_modules/react-native-view-shot/ios/RNViewShot.xcodeproj"; sourceTree = "<group>"; };
 		A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNViewShot.xcodeproj; path = "../node_modules/react-native-view-shot/ios/RNViewShot.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B6715E489CA142739903C659 /* libRNViewShot.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNViewShot.a; sourceTree = "<group>"; };
@@ -730,6 +738,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0A4D7F9D2117E2E300FAA035 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A4D7FCF2117E2E300FAA035 /* libRNViewShot.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0A8EEDA221104B4000F206BB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -883,6 +899,7 @@
 				139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */,
 				25D0D5F6B6F64F03921A0E77 /* Supermap.xcodeproj */,
 				A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */,
+				9C3B74705C4C4496BF7DB110 /* RNViewShot.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1055,6 +1072,10 @@
 					ProjectRef = A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */;
 				},
 				{
+					ProductGroup = 0A4D7F9D2117E2E300FAA035 /* Products */;
+					ProjectRef = 9C3B74705C4C4496BF7DB110 /* RNViewShot.xcodeproj */;
+				},
+				{
 					ProductGroup = 0A8EEDA221104B4000F206BB /* Products */;
 					ProjectRef = 25D0D5F6B6F64F03921A0E77 /* Supermap.xcodeproj */;
 				},
@@ -1150,6 +1171,13 @@
 			fileType = wrapper.application;
 			path = Super23D.app;
 			remoteRef = 0A44A57521130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A4D7FCF2117E2E300FAA035 /* libRNViewShot.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNViewShot.a;
+			remoteRef = 0A4D7FCE2117E2E300FAA035 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A8EEDCC21104B4100F206BB /* libjsinspector.a */ = {
@@ -1535,6 +1563,7 @@
 					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
+					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1576,6 +1605,7 @@
 					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
+					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
@@ -1615,6 +1645,7 @@
 					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
+					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1654,6 +1685,7 @@
 					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
+					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 				);
 				INFOPLIST_FILE = "iTablet-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

@@ -6,7 +6,7 @@ export default StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     backgroundColor: 'transparent',
   },
   rowLabel: {

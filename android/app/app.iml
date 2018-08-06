@@ -115,6 +115,5 @@
     <orderEntry type="library" exported="" name="Gradle: org.webkit:android-jsc-r174650" level="project" />
     <orderEntry type="library" exported="" name="Gradle: com.facebook.fresco:imagepipeline-1.3.0" level="project" />
     <orderEntry type="module" module-name="imobile_for_javascript" exported="" />
-    <orderEntry type="module" module-name="react-native-view-shot" exported="" />
   </component>
 </module>

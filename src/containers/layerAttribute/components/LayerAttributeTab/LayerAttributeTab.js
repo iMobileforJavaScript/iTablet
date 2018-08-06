@@ -61,13 +61,13 @@ export default class LayerAttributeTab extends React.Component {
           BtnClick={this.add}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
-        <BtnOne
-          size={BtnOne.SIZE.SMALL}
-          BtnText='输入语音'
-          BtnImageSrc={require('../../../../assets/map/icon-save.png')}
-          BtnClick={this.startAudio}
-        />
-        <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
+        {/*<BtnOne*/}
+        {/*size={BtnOne.SIZE.SMALL}*/}
+        {/*BtnText='输入语音'*/}
+        {/*BtnImageSrc={require('../../../../assets/map/icon-save.png')}*/}
+        {/*BtnClick={this.startAudio}*/}
+        {/*/>*/}
+        {/*<ListSeparator mode={ListSeparator.mode.VERTICAL}/>*/}
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='编辑'

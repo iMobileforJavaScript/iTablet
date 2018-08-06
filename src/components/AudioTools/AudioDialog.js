@@ -55,15 +55,19 @@ export default class AudioDialog extends PureComponent {
       type: type,
       recording: false,
     })
-    ;(async function () {
-      try {
-        if (!visible && GLOBAL.SpeechManager) {
-          await GLOBAL.SpeechManager.stopListening()
+    if (GLOBAL.SpeechManager) {
+      (async function () {
+        try {
+          if (visible) {
+            this.startRecording()
+          } else {
+            await GLOBAL.SpeechManager.stopListening()
+          }
+        } catch (e) {
+          console.error(e)
         }
-      } catch (e) {
-        console.error(e)
-      }
-    }).bind(this)()
+      }).bind(this)()
+    }
   }
 
   startRecording = () => {
@@ -81,6 +85,7 @@ export default class AudioDialog extends PureComponent {
             this.setState({
               recording: false,
             })
+            console.log('onEndOfSpeech')
           },
           onVolumeChanged: () => {
             console.log('onVolumeChanged')
@@ -93,7 +98,9 @@ export default class AudioDialog extends PureComponent {
           },
           onResult: ({info, isLast}) => {
             if (isLast) {
-              AudioAnalyst.analyst(this.state.content, this.props.data)
+              GLOBAL.SpeechManager.stopListening().then(() => {
+                AudioAnalyst.analyst(this.state.content, this.props.data)
+              })
             } else {
               if (info === this.state.content) return
               this.setState({

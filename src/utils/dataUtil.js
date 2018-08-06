@@ -74,7 +74,7 @@ function getType(data) {
   return DataType[type]
 }
 
-function colorRgba (str,n) {
+function colorRgba (str, n = 1) {
   let reg = /^#([0-9a-fA-f]{3}|[0-9a-fA-f]{6})$/
   let sColor = str.toLowerCase()
   if (sColor && reg.test(sColor)) {
