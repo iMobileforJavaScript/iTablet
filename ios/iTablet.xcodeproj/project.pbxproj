@@ -12,7 +12,59 @@
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
-		00E356F31AD99517003FC87E /* iTabletTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* iTabletTests.m */; };
+		0A4421F1211442C50087C8FE /* VisualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4421EF211442C40087C8FE /* VisualViewController.m */; };
+		0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F5211442D50087C8FE /* VisualDemoData.zip */; };
+		0A44220F211442D60087C8FE /* 停止－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F7211442D60087C8FE /* 停止－当前.png */; };
+		0A442210211442D60087C8FE /* 停止－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F8211442D60087C8FE /* 停止－按下.png */; };
+		0A442211211442D60087C8FE /* 关系图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F9211442D60087C8FE /* 关系图－当前.png */; };
+		0A442212211442D60087C8FE /* 关系图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FA211442D60087C8FE /* 关系图－选中.png */; };
+		0A442213211442D60087C8FE /* 图表－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FB211442D60087C8FE /* 图表－当前.png */; };
+		0A442214211442D60087C8FE /* 图表－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FC211442D60087C8FE /* 图表－选中.png */; };
+		0A442215211442D60087C8FE /* 图－展开.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FD211442D60087C8FE /* 图－展开.png */; };
+		0A442216211442D60087C8FE /* 图－收起.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FE211442D60087C8FE /* 图－收起.png */; };
+		0A442217211442D60087C8FE /* 实时数据－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FF211442D60087C8FE /* 实时数据－当前.png */; };
+		0A442218211442D60087C8FE /* 实时数据－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442200211442D60087C8FE /* 实时数据－按下.png */; };
+		0A442219211442D60087C8FE /* 密度图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442201211442D60087C8FE /* 密度图－当前.png */; };
+		0A44221A211442D60087C8FE /* 密度图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442202211442D60087C8FE /* 密度图－选中.png */; };
+		0A44221B211442D60087C8FE /* 时空数据－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442203211442D60087C8FE /* 时空数据－当前.png */; };
+		0A44221C211442D60087C8FE /* 时空数据－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442204211442D60087C8FE /* 时空数据－按下.png */; };
+		0A44221D211442D60087C8FE /* 格网热度图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442205211442D60087C8FE /* 格网热度图－当前.png */; };
+		0A44221E211442D60087C8FE /* 格网热度图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442206211442D60087C8FE /* 格网热度图－选中.png */; };
+		0A44221F211442D60087C8FE /* 热点图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442207211442D60087C8FE /* 热点图－当前.png */; };
+		0A442220211442D60087C8FE /* 热点图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442208211442D60087C8FE /* 热点图－选中.png */; };
+		0A442221211442D60087C8FE /* 聚合图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442209211442D60087C8FE /* 聚合图－当前.png */; };
+		0A442222211442D60087C8FE /* 聚合图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220A211442D60087C8FE /* 聚合图－选中.png */; };
+		0A442223211442D60087C8FE /* 背景头加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220B211442D60087C8FE /* 背景头加一个.png */; };
+		0A442224211442D60087C8FE /* 背景尾加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220C211442D60087C8FE /* 背景尾加一个.png */; };
+		0A442225211442D60087C8FE /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220D211442D60087C8FE /* 选中.png */; };
+		0A442231211443F00087C8FE /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A442230211443EF0087C8FE /* Trial_License.slm */; };
+		0A44223C211445060087C8FE /* libzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A442234211445060087C8FE /* libzip.a */; };
+		0A44223F211445560087C8FE /* VisualMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A44223D211445560087C8FE /* VisualMain.storyboard */; };
+		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
+		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
+		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
+		0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF521104C7100F206BB /* libflyMSC.a */; };
+		0A8EEE0E21104C7100F206BB /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF621104C7100F206BB /* libSocketRocket.a */; };
+		0A8EEE0F21104C7100F206BB /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF721104C7100F206BB /* MessageQueue.framework */; };
+		0A8EEE1021104C7100F206BB /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF821104C7100F206BB /* SuperMap.framework */; };
+		0A8EEE1121104C7100F206BB /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF921104C7100F206BB /* SuperMap.framework */; };
+		0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */; };
+		0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFB21104C7100F206BB /* Accelerate.framework */; };
+		0A8EEE1421104C7100F206BB /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFC21104C7100F206BB /* AddressBook.framework */; };
+		0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFD21104C7100F206BB /* AudioToolbox.framework */; };
+		0A8EEE1621104C7100F206BB /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFE21104C7100F206BB /* MediaPlayer.framework */; };
+		0A8EEE1721104C7100F206BB /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDFF21104C7100F206BB /* MobileCoreServices.framework */; };
+		0A8EEE1821104C7100F206BB /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0021104C7100F206BB /* QuartzCore.framework */; };
+		0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0121104C7100F206BB /* Foundation.framework */; };
+		0A8EEE1A21104C7100F206BB /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0221104C7100F206BB /* AVFoundation.framework */; };
+		0A8EEE1B21104C7100F206BB /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0321104C7100F206BB /* CoreGraphics.framework */; };
+		0A8EEE1C21104C7100F206BB /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0421104C7100F206BB /* CoreLocation.framework */; };
+		0A8EEE1D21104C7100F206BB /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0521104C7100F206BB /* CoreTelephony.framework */; };
+		0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0621104C7100F206BB /* CoreText.framework */; };
+		0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0721104C7100F206BB /* Security.framework */; };
+		0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */; };
+		0A8EEE2121104C7100F206BB /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */; };
+		0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
 		139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139FDEF41B06529B00C62182 /* libRCTWebSocket.a */; };
@@ -20,7 +72,6 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
-		140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -33,7 +84,6 @@
 		2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E941DF850E9000B6D8A /* libRCTText-tvOS.a */; };
 		2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DAD3E991DF850E9000B6D8A /* libRCTWebSocket-tvOS.a */; };
 		2D16E6881FA4F8E400B85C8A /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D16E6891FA4F8E400B85C8A /* libReact.a */; };
-		2DCD954D1E0B4F2C00145EB5 /* iTabletTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* iTabletTests.m */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		70509297018646F28E352A20 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 995E625BA77141C79D10DBB2 /* libSupermap.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
@@ -77,12 +127,124 @@
 			remoteGlobalIDString = 832C81801AAF6DEF007FA2F7;
 			remoteInfo = RCTVibration;
 		};
-		00E356F41AD99517003FC87E /* PBXContainerItemProxy */ = {
+		0A44A56921130C040059932B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 13B07F861A680F5B00A75B9A;
-			remoteInfo = iTablet;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF34489A14EB99A700D8449F;
+			remoteInfo = LibUGC;
+		};
+		0A44A56B21130C040059932B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
+			remoteInfo = LibUGC_Base;
+		};
+		0A44A56D21130C040059932B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B46016F1A08700A19B73;
+			remoteInfo = LibUGC_2D;
+		};
+		0A44A56F21130C040059932B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
+			remoteInfo = LibUGC_3D;
+		};
+		0A44A57121130C040059932B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03BDDAED1714098D003EC801;
+			remoteInfo = Object_3D;
+		};
+		0A44A57321130C040059932B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00F6D375175F20A9008963A0;
+			remoteInfo = Objects_iOS;
+		};
+		0A44A57521130C040059932B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 005EF27D175F5F96005433E1;
+			remoteInfo = Super23D;
+		};
+		0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EBF21BDC1FC498900052F4D5;
+			remoteInfo = jsinspector;
+		};
+		0A8EEDCD21104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EBF21BFA1FC4989A0052F4D5;
+			remoteInfo = "jsinspector-tvOS";
+		};
+		0A8EEDCF21104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 139D7ECE1E25DB7D00323FB7;
+			remoteInfo = "third-party";
+		};
+		0A8EEDD121104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D383D3C1EBD27B6005632C8;
+			remoteInfo = "third-party-tvOS";
+		};
+		0A8EEDD321104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 139D7E881E25C6D100323FB7;
+			remoteInfo = "double-conversion";
+		};
+		0A8EEDD521104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
+			remoteInfo = "double-conversion-tvOS";
+		};
+		0A8EEDD721104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
+			remoteInfo = privatedata;
+		};
+		0A8EEDD921104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
+			remoteInfo = "privatedata-tvOS";
+		};
+		0A8EEDDC21104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNViewShot;
+		};
+		0A8EEDDF21104B4100F206BB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 25D0D5F6B6F64F03921A0E77 /* Supermap.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = Supermap;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -104,13 +266,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 83CBBA2E1A601D0E00E9B192;
 			remoteInfo = React;
-		};
-		2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83CBB9F71A601CBA00E9B192 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 2D02E47A1E0B4A5D006451C7;
-			remoteInfo = "iTablet-tvOS";
 		};
 		2D16E6711FA4F8DC00B85C8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -259,76 +414,6 @@
 			remoteGlobalIDString = 358F4ED71D1E81A9004DF814;
 			remoteInfo = RCTBlob;
 		};
-		D86B16802110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EBF21BDC1FC498900052F4D5;
-			remoteInfo = jsinspector;
-		};
-		D86B16822110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = EBF21BFA1FC4989A0052F4D5;
-			remoteInfo = "jsinspector-tvOS";
-		};
-		D86B16842110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 139D7ECE1E25DB7D00323FB7;
-			remoteInfo = "third-party";
-		};
-		D86B16862110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D383D3C1EBD27B6005632C8;
-			remoteInfo = "third-party-tvOS";
-		};
-		D86B16882110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 139D7E881E25C6D100323FB7;
-			remoteInfo = "double-conversion";
-		};
-		D86B168A2110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 3D383D621EBD27B9005632C8;
-			remoteInfo = "double-conversion-tvOS";
-		};
-		D86B168C2110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9936F3131F5F2E4B0010BF04;
-			remoteInfo = privatedata;
-		};
-		D86B168E2110559A003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 146833FF1AC3E56700842450 /* React.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 9936F32F1F5F2E5B0010BF04;
-			remoteInfo = "privatedata-tvOS";
-		};
-		D86B16952110559B003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = RNViewShot;
-		};
-		D86B16982110559B003A8796 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 25D0D5F6B6F64F03921A0E77 /* Supermap.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 134814201AA4EA6300B7C361;
-			remoteInfo = Supermap;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -338,9 +423,70 @@
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
 		00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTNetwork.xcodeproj; path = "../node_modules/react-native/Libraries/Network/RCTNetwork.xcodeproj"; sourceTree = "<group>"; };
 		00C302DF1ABCB9EE00DB3ED1 /* RCTVibration.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTVibration.xcodeproj; path = "../node_modules/react-native/Libraries/Vibration/RCTVibration.xcodeproj"; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* iTabletTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iTabletTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* iTabletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTabletTests.m; sourceTree = "<group>"; };
+		0A4421EF211442C40087C8FE /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualViewController.m; path = SampleCode/HotMap/HotMap/VisualViewController.m; sourceTree = SOURCE_ROOT; };
+		0A4421F0211442C40087C8FE /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualViewController.h; path = SampleCode/HotMap/HotMap/VisualViewController.h; sourceTree = SOURCE_ROOT; };
+		0A4421F5211442D50087C8FE /* VisualDemoData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = VisualDemoData.zip; path = SampleCode/HotMap/VisualDemoData.zip; sourceTree = SOURCE_ROOT; };
+		0A4421F7211442D60087C8FE /* 停止－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－当前.png"; sourceTree = "<group>"; };
+		0A4421F8211442D60087C8FE /* 停止－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－按下.png"; sourceTree = "<group>"; };
+		0A4421F9211442D60087C8FE /* 关系图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－当前.png"; sourceTree = "<group>"; };
+		0A4421FA211442D60087C8FE /* 关系图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－选中.png"; sourceTree = "<group>"; };
+		0A4421FB211442D60087C8FE /* 图表－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图表－当前.png"; sourceTree = "<group>"; };
+		0A4421FC211442D60087C8FE /* 图表－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图表－选中.png"; sourceTree = "<group>"; };
+		0A4421FD211442D60087C8FE /* 图－展开.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图－展开.png"; sourceTree = "<group>"; };
+		0A4421FE211442D60087C8FE /* 图－收起.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图－收起.png"; sourceTree = "<group>"; };
+		0A4421FF211442D60087C8FE /* 实时数据－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "实时数据－当前.png"; sourceTree = "<group>"; };
+		0A442200211442D60087C8FE /* 实时数据－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "实时数据－按下.png"; sourceTree = "<group>"; };
+		0A442201211442D60087C8FE /* 密度图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "密度图－当前.png"; sourceTree = "<group>"; };
+		0A442202211442D60087C8FE /* 密度图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "密度图－选中.png"; sourceTree = "<group>"; };
+		0A442203211442D60087C8FE /* 时空数据－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "时空数据－当前.png"; sourceTree = "<group>"; };
+		0A442204211442D60087C8FE /* 时空数据－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "时空数据－按下.png"; sourceTree = "<group>"; };
+		0A442205211442D60087C8FE /* 格网热度图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "格网热度图－当前.png"; sourceTree = "<group>"; };
+		0A442206211442D60087C8FE /* 格网热度图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "格网热度图－选中.png"; sourceTree = "<group>"; };
+		0A442207211442D60087C8FE /* 热点图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热点图－当前.png"; sourceTree = "<group>"; };
+		0A442208211442D60087C8FE /* 热点图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热点图－选中.png"; sourceTree = "<group>"; };
+		0A442209211442D60087C8FE /* 聚合图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "聚合图－当前.png"; sourceTree = "<group>"; };
+		0A44220A211442D60087C8FE /* 聚合图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "聚合图－选中.png"; sourceTree = "<group>"; };
+		0A44220B211442D60087C8FE /* 背景头加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景头加一个.png"; sourceTree = "<group>"; };
+		0A44220C211442D60087C8FE /* 背景尾加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景尾加一个.png"; sourceTree = "<group>"; };
+		0A44220D211442D60087C8FE /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
+		0A442230211443EF0087C8FE /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = SampleCode/HotMap/Trial_License.slm; sourceTree = SOURCE_ROOT; };
+		0A442234211445060087C8FE /* libzip.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzip.a; sourceTree = "<group>"; };
+		0A442236211445060087C8FE /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
+		0A442237211445060087C8FE /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
+		0A442238211445060087C8FE /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
+		0A442239211445060087C8FE /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
+		0A44223A211445060087C8FE /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
+		0A44223B211445060087C8FE /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
+		0A44223E211445560087C8FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = SampleCode/HotMap/HotMap/Base.lproj/VisualMain.storyboard; sourceTree = SOURCE_ROOT; };
+		0A44A55D21130C030059932B /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
+		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
+		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
+		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
+		0A8EEDF521104C7100F206BB /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
+		0A8EEDF621104C7100F206BB /* libSocketRocket.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libSocketRocket.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libSocketRocket.a; sourceTree = "<group>"; };
+		0A8EEDF721104C7100F206BB /* MessageQueue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageQueue.framework; path = ../../iTablet/ios/MessageQueue.sdk/MessageQueue.framework; sourceTree = "<group>"; };
+		0A8EEDF821104C7100F206BB /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
+		0A8EEDF921104C7100F206BB /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = ../../iTablet/ios/iPhoneSimulator.sdk/SuperMap.framework; sourceTree = "<group>"; };
+		0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.A.tbd; path = usr/lib/libicucore.A.tbd; sourceTree = SDKROOT; };
+		0A8EEDFB21104C7100F206BB /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		0A8EEDFC21104C7100F206BB /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		0A8EEDFD21104C7100F206BB /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		0A8EEDFE21104C7100F206BB /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
+		0A8EEDFF21104C7100F206BB /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		0A8EEE0021104C7100F206BB /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		0A8EEE0121104C7100F206BB /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0A8EEE0221104C7100F206BB /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		0A8EEE0321104C7100F206BB /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		0A8EEE0421104C7100F206BB /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		0A8EEE0521104C7100F206BB /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		0A8EEE0621104C7100F206BB /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		0A8EEE0721104C7100F206BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSampleCodeBridgeModule.h; sourceTree = "<group>"; };
+		0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSampleCodeBridgeModule.m; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
 		139FDEE61B06529A00C62182 /* RCTWebSocket.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTWebSocket.xcodeproj; path = "../node_modules/react-native/Libraries/WebSocket/RCTWebSocket.xcodeproj"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* iTablet.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iTablet.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -353,7 +499,6 @@
 		146833FF1AC3E56700842450 /* React.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = React.xcodeproj; path = "../node_modules/react-native/React/React.xcodeproj"; sourceTree = "<group>"; };
 		25D0D5F6B6F64F03921A0E77 /* Supermap.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_javascript/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "iTablet-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* iTablet-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "iTablet-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D16E6891FA4F8E400B85C8A /* libReact.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; path = libReact.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
@@ -365,33 +510,49 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		00E356EB1AD99517003FC87E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				140ED2AC1D01E1AD002B40FF /* libReact.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8C1A680F5B00A75B9A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A8EEE1A21104C7100F206BB /* AVFoundation.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
+				0A8EEE1D21104C7100F206BB /* CoreTelephony.framework in Frameworks */,
+				0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */,
+				0A8EEE1121104C7100F206BB /* SuperMap.framework in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
+				0A8EEE1B21104C7100F206BB /* CoreGraphics.framework in Frameworks */,
+				0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */,
+				0A44223C211445060087C8FE /* libzip.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
+				0A8EEE1C21104C7100F206BB /* CoreLocation.framework in Frameworks */,
+				0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */,
+				0A8EEE1621104C7100F206BB /* MediaPlayer.framework in Frameworks */,
+				0A8EEE1421104C7100F206BB /* AddressBook.framework in Frameworks */,
+				0A8EEE0E21104C7100F206BB /* libSocketRocket.a in Frameworks */,
+				0A8EEE1721104C7100F206BB /* MobileCoreServices.framework in Frameworks */,
+				0A8EEE1021104C7100F206BB /* SuperMap.framework in Frameworks */,
+				0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */,
+				0A8EEE0F21104C7100F206BB /* MessageQueue.framework in Frameworks */,
+				0A8EEE2121104C7100F206BB /* libstdc++.6.0.9.tbd in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
+				0A8EEE1821104C7100F206BB /* QuartzCore.framework in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
 				70509297018646F28E352A20 /* libSupermap.a in Frameworks */,
 				E8D4F75200B5420A963B7F2B /* libRNViewShot.a in Frameworks */,
+				0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */,
+				0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */,
+				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
+				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
+				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
+				0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,13 +568,6 @@
 				2D02E4C61E0B4AEC006451C7 /* libRCTSettings-tvOS.a in Frameworks */,
 				2D02E4C71E0B4AEC006451C7 /* libRCTText-tvOS.a in Frameworks */,
 				2D02E4C81E0B4AEC006451C7 /* libRCTWebSocket-tvOS.a in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E48D1E0B4A5D006451C7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -479,6 +633,130 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0A1C2E78211059DF00FFC856 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				995E625BA77141C79D10DBB2 /* libSupermap.a */,
+				B6715E489CA142739903C659 /* libRNViewShot.a */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		0A4421EE211442950087C8FE /* Visual */ = {
+			isa = PBXGroup;
+			children = (
+				0A442230211443EF0087C8FE /* Trial_License.slm */,
+				0A4421F6211442D60087C8FE /* 切图 */,
+				0A4421F5211442D50087C8FE /* VisualDemoData.zip */,
+				0A4421F0211442C40087C8FE /* VisualViewController.h */,
+				0A4421EF211442C40087C8FE /* VisualViewController.m */,
+				0A44223D211445560087C8FE /* VisualMain.storyboard */,
+			);
+			path = Visual;
+			sourceTree = "<group>";
+		};
+		0A4421F6211442D60087C8FE /* 切图 */ = {
+			isa = PBXGroup;
+			children = (
+				0A4421F7211442D60087C8FE /* 停止－当前.png */,
+				0A4421F8211442D60087C8FE /* 停止－按下.png */,
+				0A4421F9211442D60087C8FE /* 关系图－当前.png */,
+				0A4421FA211442D60087C8FE /* 关系图－选中.png */,
+				0A4421FB211442D60087C8FE /* 图表－当前.png */,
+				0A4421FC211442D60087C8FE /* 图表－选中.png */,
+				0A4421FD211442D60087C8FE /* 图－展开.png */,
+				0A4421FE211442D60087C8FE /* 图－收起.png */,
+				0A4421FF211442D60087C8FE /* 实时数据－当前.png */,
+				0A442200211442D60087C8FE /* 实时数据－按下.png */,
+				0A442201211442D60087C8FE /* 密度图－当前.png */,
+				0A442202211442D60087C8FE /* 密度图－选中.png */,
+				0A442203211442D60087C8FE /* 时空数据－当前.png */,
+				0A442204211442D60087C8FE /* 时空数据－按下.png */,
+				0A442205211442D60087C8FE /* 格网热度图－当前.png */,
+				0A442206211442D60087C8FE /* 格网热度图－选中.png */,
+				0A442207211442D60087C8FE /* 热点图－当前.png */,
+				0A442208211442D60087C8FE /* 热点图－选中.png */,
+				0A442209211442D60087C8FE /* 聚合图－当前.png */,
+				0A44220A211442D60087C8FE /* 聚合图－选中.png */,
+				0A44220B211442D60087C8FE /* 背景头加一个.png */,
+				0A44220C211442D60087C8FE /* 背景尾加一个.png */,
+				0A44220D211442D60087C8FE /* 选中.png */,
+			);
+			name = "切图";
+			path = "SampleCode/HotMap/切图";
+			sourceTree = SOURCE_ROOT;
+		};
+		0A442232211444D50087C8FE /* tools */ = {
+			isa = PBXGroup;
+			children = (
+				0A442233211445060087C8FE /* zip */,
+			);
+			path = tools;
+			sourceTree = "<group>";
+		};
+		0A442233211445060087C8FE /* zip */ = {
+			isa = PBXGroup;
+			children = (
+				0A442234211445060087C8FE /* libzip.a */,
+				0A442235211445060087C8FE /* minizip */,
+				0A44223B211445060087C8FE /* ZipArchive.h */,
+			);
+			path = zip;
+			sourceTree = "<group>";
+		};
+		0A442235211445060087C8FE /* minizip */ = {
+			isa = PBXGroup;
+			children = (
+				0A442236211445060087C8FE /* crypt.h */,
+				0A442237211445060087C8FE /* ioapi.h */,
+				0A442238211445060087C8FE /* mztools.h */,
+				0A442239211445060087C8FE /* unzip.h */,
+				0A44223A211445060087C8FE /* zip.h */,
+			);
+			path = minizip;
+			sourceTree = "<group>";
+		};
+		0A44A55E21130C030059932B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A44A56A21130C040059932B /* libLibUGC.a */,
+				0A44A56C21130C040059932B /* libLibUGC_Base.a */,
+				0A44A56E21130C040059932B /* libLibUGC_2D.a */,
+				0A44A57021130C040059932B /* libLibUGC_3D.a */,
+				0A44A57221130C040059932B /* libObject_3D.a */,
+				0A44A57421130C040059932B /* libObjects_iOS.a */,
+				0A44A57621130C040059932B /* Super23D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A8EEDA221104B4000F206BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A8EEDE021104B4100F206BB /* libSupermap.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A8EEDA421104B4100F206BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A8EEDDD21104B4100F206BB /* libRNViewShot.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0AD86AE821142103003964B6 /* SampleCode */ = {
+			isa = PBXGroup;
+			children = (
+				0A442232211444D50087C8FE /* tools */,
+				0A4421EE211442950087C8FE /* Visual */,
+				0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */,
+				0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */,
+			);
+			path = SampleCode;
+			sourceTree = "<group>";
+		};
 		139105B71AF99BAD00B5F7CC /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -502,6 +780,7 @@
 		13B07FAE1A68108700A75B9A /* iTablet */ = {
 			isa = PBXGroup;
 			children = (
+				0AD86AE821142103003964B6 /* SampleCode */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -524,14 +803,14 @@
 				3DAD3EAB1DF850E9000B6D8A /* libcxxreact.a */,
 				3DAD3EAD1DF850E9000B6D8A /* libjschelpers.a */,
 				3DAD3EAF1DF850E9000B6D8A /* libjschelpers.a */,
-				D86B16812110559A003A8796 /* libjsinspector.a */,
-				D86B16832110559A003A8796 /* libjsinspector-tvOS.a */,
-				D86B16852110559A003A8796 /* libthird-party.a */,
-				D86B16872110559A003A8796 /* libthird-party.a */,
-				D86B16892110559A003A8796 /* libdouble-conversion.a */,
-				D86B168B2110559A003A8796 /* libdouble-conversion.a */,
-				D86B168D2110559A003A8796 /* libprivatedata.a */,
-				D86B168F2110559A003A8796 /* libprivatedata-tvOS.a */,
+				0A8EEDCC21104B4100F206BB /* libjsinspector.a */,
+				0A8EEDCE21104B4100F206BB /* libjsinspector-tvOS.a */,
+				0A8EEDD021104B4100F206BB /* libthird-party.a */,
+				0A8EEDD221104B4100F206BB /* libthird-party.a */,
+				0A8EEDD421104B4100F206BB /* libdouble-conversion.a */,
+				0A8EEDD621104B4100F206BB /* libdouble-conversion.a */,
+				0A8EEDD821104B4100F206BB /* libprivatedata.a */,
+				0A8EEDDA21104B4100F206BB /* libprivatedata-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -539,6 +818,30 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A8EEDF221104C7100F206BB /* SuperMap.bundle */,
+				0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */,
+				0A8EEDF421104C7100F206BB /* libCorePlot.a */,
+				0A8EEDF521104C7100F206BB /* libflyMSC.a */,
+				0A8EEDF621104C7100F206BB /* libSocketRocket.a */,
+				0A8EEDF721104C7100F206BB /* MessageQueue.framework */,
+				0A8EEDF821104C7100F206BB /* SuperMap.framework */,
+				0A8EEDF921104C7100F206BB /* SuperMap.framework */,
+				0A8EEDFA21104C7100F206BB /* libicucore.A.tbd */,
+				0A8EEDFB21104C7100F206BB /* Accelerate.framework */,
+				0A8EEDFC21104C7100F206BB /* AddressBook.framework */,
+				0A8EEDFD21104C7100F206BB /* AudioToolbox.framework */,
+				0A8EEDFE21104C7100F206BB /* MediaPlayer.framework */,
+				0A8EEDFF21104C7100F206BB /* MobileCoreServices.framework */,
+				0A8EEE0021104C7100F206BB /* QuartzCore.framework */,
+				0A8EEE0121104C7100F206BB /* Foundation.framework */,
+				0A8EEE0221104C7100F206BB /* AVFoundation.framework */,
+				0A8EEE0321104C7100F206BB /* CoreGraphics.framework */,
+				0A8EEE0421104C7100F206BB /* CoreLocation.framework */,
+				0A8EEE0521104C7100F206BB /* CoreTelephony.framework */,
+				0A8EEE0621104C7100F206BB /* CoreText.framework */,
+				0A8EEE0721104C7100F206BB /* Security.framework */,
+				0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */,
+				0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 			);
 			name = Frameworks;
@@ -565,6 +868,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0A44A55D21130C030059932B /* LibUGC.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -600,7 +904,7 @@
 				00E356EF1AD99517003FC87E /* iTabletTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
-				D86B165A21105596003A8796 /* Recovered References */,
+				0A1C2E78211059DF00FFC856 /* Recovered References */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -611,9 +915,7 @@
 			isa = PBXGroup;
 			children = (
 				13B07F961A680F5B00A75B9A /* iTablet.app */,
-				00E356EE1AD99517003FC87E /* iTabletTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* iTablet-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -627,52 +929,9 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D86B165A21105596003A8796 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				995E625BA77141C79D10DBB2 /* libSupermap.a */,
-				B6715E489CA142739903C659 /* libRNViewShot.a */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		D86B16902110559A003A8796 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D86B16992110559B003A8796 /* libSupermap.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		D86B16922110559A003A8796 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				D86B16962110559B003A8796 /* libRNViewShot.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* iTabletTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "iTabletTests" */;
-			buildPhases = (
-				00E356EA1AD99517003FC87E /* Sources */,
-				00E356EB1AD99517003FC87E /* Frameworks */,
-				00E356EC1AD99517003FC87E /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				00E356F51AD99517003FC87E /* PBXTargetDependency */,
-			);
-			name = iTabletTests;
-			productName = iTabletTests;
-			productReference = 00E356EE1AD99517003FC87E /* iTabletTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		13B07F861A680F5B00A75B9A /* iTablet */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "iTablet" */;
@@ -709,24 +968,6 @@
 			productReference = 2D02E47B1E0B4A5D006451C7 /* iTablet-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* iTablet-tvOSTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "iTablet-tvOSTests" */;
-			buildPhases = (
-				2D02E48C1E0B4A5D006451C7 /* Sources */,
-				2D02E48D1E0B4A5D006451C7 /* Frameworks */,
-				2D02E48E1E0B4A5D006451C7 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
-			);
-			name = "iTablet-tvOSTests";
-			productName = "iTablet-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* iTablet-tvOSTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -736,21 +977,12 @@
 				LastUpgradeCheck = 610;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
-					00E356ED1AD99517003FC87E = {
-						CreatedOnToolsVersion = 6.2;
-						TestTargetID = 13B07F861A680F5B00A75B9A;
-					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = URZW253WPZ;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
 						ProvisioningStyle = Automatic;
-					};
-					2D02E48F1E0B4A5D006451C7 = {
-						CreatedOnToolsVersion = 8.2.1;
-						ProvisioningStyle = Automatic;
-						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
 				};
 			};
@@ -766,6 +998,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = 0A44A55E21130C030059932B /* Products */;
+					ProjectRef = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -815,20 +1051,18 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
-					ProductGroup = D86B16922110559A003A8796 /* Products */;
+					ProductGroup = 0A8EEDA421104B4100F206BB /* Products */;
 					ProjectRef = A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */;
 				},
 				{
-					ProductGroup = D86B16902110559A003A8796 /* Products */;
+					ProductGroup = 0A8EEDA221104B4000F206BB /* Products */;
 					ProjectRef = 25D0D5F6B6F64F03921A0E77 /* Supermap.xcodeproj */;
 				},
 			);
 			projectRoot = "";
 			targets = (
 				13B07F861A680F5B00A75B9A /* iTablet */,
-				00E356ED1AD99517003FC87E /* iTabletTests */,
 				2D02E47A1E0B4A5D006451C7 /* iTablet-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* iTablet-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -867,6 +1101,125 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A56A21130C040059932B /* libLibUGC.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC.a;
+			remoteRef = 0A44A56921130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A56C21130C040059932B /* libLibUGC_Base.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_Base.a;
+			remoteRef = 0A44A56B21130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A56E21130C040059932B /* libLibUGC_2D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_2D.a;
+			remoteRef = 0A44A56D21130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A57021130C040059932B /* libLibUGC_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_3D.a;
+			remoteRef = 0A44A56F21130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A57221130C040059932B /* libObject_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObject_3D.a;
+			remoteRef = 0A44A57121130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A57421130C040059932B /* libObjects_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjects_iOS.a;
+			remoteRef = 0A44A57321130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A44A57621130C040059932B /* Super23D.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Super23D.app;
+			remoteRef = 0A44A57521130C040059932B /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDCC21104B4100F206BB /* libjsinspector.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libjsinspector.a;
+			remoteRef = 0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDCE21104B4100F206BB /* libjsinspector-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libjsinspector-tvOS.a";
+			remoteRef = 0A8EEDCD21104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDD021104B4100F206BB /* libthird-party.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libthird-party.a";
+			remoteRef = 0A8EEDCF21104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDD221104B4100F206BB /* libthird-party.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libthird-party.a";
+			remoteRef = 0A8EEDD121104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDD421104B4100F206BB /* libdouble-conversion.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libdouble-conversion.a";
+			remoteRef = 0A8EEDD321104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDD621104B4100F206BB /* libdouble-conversion.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libdouble-conversion.a";
+			remoteRef = 0A8EEDD521104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDD821104B4100F206BB /* libprivatedata.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libprivatedata.a;
+			remoteRef = 0A8EEDD721104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDDA21104B4100F206BB /* libprivatedata-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libprivatedata-tvOS.a";
+			remoteRef = 0A8EEDD921104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDDD21104B4100F206BB /* libRNViewShot.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNViewShot.a;
+			remoteRef = 0A8EEDDC21104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A8EEDE021104B4100F206BB /* libSupermap.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSupermap.a;
+			remoteRef = 0A8EEDDF21104B4100F206BB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
@@ -1037,92 +1390,42 @@
 			remoteRef = ADBDB9261DFEBF0700ED6528 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		D86B16812110559A003A8796 /* libjsinspector.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libjsinspector.a;
-			remoteRef = D86B16802110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B16832110559A003A8796 /* libjsinspector-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libjsinspector-tvOS.a";
-			remoteRef = D86B16822110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B16852110559A003A8796 /* libthird-party.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libthird-party.a";
-			remoteRef = D86B16842110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B16872110559A003A8796 /* libthird-party.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libthird-party.a";
-			remoteRef = D86B16862110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B16892110559A003A8796 /* libdouble-conversion.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libdouble-conversion.a";
-			remoteRef = D86B16882110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B168B2110559A003A8796 /* libdouble-conversion.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libdouble-conversion.a";
-			remoteRef = D86B168A2110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B168D2110559A003A8796 /* libprivatedata.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libprivatedata.a;
-			remoteRef = D86B168C2110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B168F2110559A003A8796 /* libprivatedata-tvOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libprivatedata-tvOS.a";
-			remoteRef = D86B168E2110559A003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B16962110559B003A8796 /* libRNViewShot.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNViewShot.a;
-			remoteRef = D86B16952110559B003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		D86B16992110559B003A8796 /* libSupermap.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSupermap.a;
-			remoteRef = D86B16982110559B003A8796 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
-		00E356EC1AD99517003FC87E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F8E1A680F5B00A75B9A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */,
+				0A44220F211442D60087C8FE /* 停止－当前.png in Resources */,
+				0A442221211442D60087C8FE /* 聚合图－当前.png in Resources */,
+				0A442210211442D60087C8FE /* 停止－按下.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
+				0A44223F211445560087C8FE /* VisualMain.storyboard in Resources */,
+				0A442219211442D60087C8FE /* 密度图－当前.png in Resources */,
+				0A44221A211442D60087C8FE /* 密度图－选中.png in Resources */,
+				0A44221F211442D60087C8FE /* 热点图－当前.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				0A442231211443F00087C8FE /* Trial_License.slm in Resources */,
+				0A442216211442D60087C8FE /* 图－收起.png in Resources */,
+				0A442214211442D60087C8FE /* 图表－选中.png in Resources */,
+				0A442217211442D60087C8FE /* 实时数据－当前.png in Resources */,
+				0A442213211442D60087C8FE /* 图表－当前.png in Resources */,
+				0A442220211442D60087C8FE /* 热点图－选中.png in Resources */,
+				0A442222211442D60087C8FE /* 聚合图－选中.png in Resources */,
+				0A442215211442D60087C8FE /* 图－展开.png in Resources */,
+				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
+				0A44221B211442D60087C8FE /* 时空数据－当前.png in Resources */,
+				0A442218211442D60087C8FE /* 实时数据－按下.png in Resources */,
+				0A442212211442D60087C8FE /* 关系图－选中.png in Resources */,
+				0A442223211442D60087C8FE /* 背景头加一个.png in Resources */,
+				0A442211211442D60087C8FE /* 关系图－当前.png in Resources */,
+				0A44221C211442D60087C8FE /* 时空数据－按下.png in Resources */,
+				0A442225211442D60087C8FE /* 选中.png in Resources */,
+				0A44221E211442D60087C8FE /* 格网热度图－选中.png in Resources */,
+				0A442224211442D60087C8FE /* 背景尾加一个.png in Resources */,
+				0A44221D211442D60087C8FE /* 格网热度图－当前.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1131,13 +1434,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		2D02E48E1E0B4A5D006451C7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1175,19 +1471,13 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		00E356EA1AD99517003FC87E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				00E356F31AD99517003FC87E /* iTabletTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		13B07F871A680F5B00A75B9A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A4421F1211442C50087C8FE /* VisualViewController.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1201,30 +1491,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		2D02E48C1E0B4A5D006451C7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				2DCD954D1E0B4F2C00145EB5 /* iTabletTests.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* iTablet */;
-			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
-		};
-		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* iTablet-tvOS */;
-			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
+		0A44223D211445560087C8FE /* VisualMain.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				0A44223E211445560087C8FE /* Base */,
+			);
+			name = VisualMain.storyboard;
+			sourceTree = "<group>";
+		};
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1237,76 +1514,21 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		00E356F61AD99517003FC87E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/imobile_for_javascript/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
-					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
-					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
-				);
-				INFOPLIST_FILE = iTabletTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iTablet.app/iTablet";
-			};
-			name = Debug;
-		};
-		00E356F71AD99517003FC87E /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/../node_modules/imobile_for_javascript/ios/**",
-					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
-					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
-					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
-				);
-				INFOPLIST_FILE = iTabletTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-lc++",
-				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iTablet.app/iTablet";
-			};
-			name = Release;
-		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = URZW253WPZ;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/MessageQueue.sdk",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/imobile_for_javascript/ios/**",
@@ -1315,7 +1537,13 @@
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"$(PROJECT_DIR)/SampleCode/HotMap/zip",
+					"$(PROJECT_DIR)/SampleCode/tools/zip",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1323,6 +1551,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermap.iTablet;
 				PRODUCT_NAME = iTablet;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1331,8 +1560,16 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = URZW253WPZ;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/MessageQueue.sdk",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/imobile_for_javascript/ios/**",
@@ -1341,7 +1578,13 @@
 					"$(SRCROOT)/../node_modules/react-native-contacts/ios/RCTContacts",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"$(PROJECT_DIR)/SampleCode/HotMap/zip",
+					"$(PROJECT_DIR)/SampleCode/tools/zip",
+				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
@@ -1349,6 +1592,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.supermap.iTablet;
 				PRODUCT_NAME = iTablet;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
@@ -1431,60 +1675,6 @@
 			};
 			name = Release;
 		};
-		2D02E4991E0B4A5E006451C7 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				ENABLE_TESTABILITY = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "iTablet-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.iTablet-tvOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iTablet-tvOS.app/iTablet-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
-			};
-			name = Debug;
-		};
-		2D02E49A1E0B4A5E006451C7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = "iTablet-tvOSTests/Info.plist";
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-					"\"$(SRCROOT)/$(TARGET_NAME)\"",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.facebook.REACT.iTablet-tvOSTests";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iTablet-tvOS.app/iTablet-tvOS";
-				TVOS_DEPLOYMENT_TARGET = 10.1;
-			};
-			name = Release;
-		};
 		83CBBA201A601CBA00E9B192 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1564,15 +1754,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "iTabletTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				00E356F61AD99517003FC87E /* Debug */,
-				00E356F71AD99517003FC87E /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "iTablet" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1587,15 +1768,6 @@
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
 				2D02E4981E0B4A5E006451C7 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "iTablet-tvOSTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				2D02E4991E0B4A5E006451C7 /* Debug */,
-				2D02E49A1E0B4A5E006451C7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

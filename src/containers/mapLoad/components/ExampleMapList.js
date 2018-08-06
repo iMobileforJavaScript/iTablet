@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { NativeModules, Platform } from 'react-native'
 import { View, StyleSheet, FlatList } from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
@@ -7,8 +8,10 @@ import { color } from '../../../styles'
 import { scaleSize, Toast } from '../../../utils'
 import { Utility } from 'imobile_for_javascript'
 
+const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : () => {}
+
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
-const vectorMap = '矢量地图',map3D = '三维场景',ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
+const vectorMap = '数据可视化',map3D = '三维场景',ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
 const testData = [{ key: vectorMap }, { key: ObliquePhoto }, { key: gl }, { key: overLay }, { key: map3D }, { key: 'CAD' }]
 
 export default class ExampleMapList extends React.Component {
@@ -16,16 +19,18 @@ export default class ExampleMapList extends React.Component {
     let path, exist, filePath
     switch(key){
       case vectorMap:
+          console.log('+++++++++++++xzy+++++++++++,openn sampleCode')
+          openNativeSampleCode.open("Visual")
         // path = '/SampleData/Changchun/Changchun.smwu'
         // path = '/SampleData/FacilityAnalyst/FacilityAnalyst.smwu'
-        path = '/SampleData/beijing_new/beijing.smwu'
-        // path = '/SampleData/world/world.smwu'
-        exist = await Utility.fileIsExistInHomeDirectory(path)
-        if (exist) {
-          NavigationService.navigate('MapView', { path: path, isExample: true})
-        } else {
-          Toast.show("本地实例文件不存在")
-        }
+        //path = '/SampleData/beijing_new/beijing.smwu'
+        //// path = '/SampleData/world/world.smwu'
+        //exist = await Utility.fileIsExistInHomeDirectory(path)
+        //if (exist) {
+        //  NavigationService.navigate('MapView', { path: path, isExample: true})
+        //} else {
+        //  Toast.show("本地实例文件不存在")
+        //}
         break
       case map3D:
         path = '/SampleData/凯德Mall/凯德Mall.sxwu'
