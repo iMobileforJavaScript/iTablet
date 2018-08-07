@@ -507,7 +507,7 @@ export default class MapView extends React.Component {
           map: this.map,
         })
 
-        // this.mapName = await this.map.getName()
+         this.mapName = await this.map.getName()
 
         // await this.map.setScale(0.0005)
         navigator.geolocation.getCurrentPosition(
@@ -525,11 +525,13 @@ export default class MapView extends React.Component {
             }).bind(this)()
           }
         )
+
         let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
 
         let dataset = await dsBaseMap.getDataset(this.layerIndex)
         await this.map.addLayer(dataset, true)
-
+       // await this.map.viewEntire()
+        await this.map.refresh()
         if (this.labelDSParams) {
           let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
           await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)

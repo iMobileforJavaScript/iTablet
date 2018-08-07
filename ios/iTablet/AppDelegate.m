@@ -9,17 +9,25 @@
 
 #import "AppDelegate.h"
 
-     #import <React/RCTBundleURLProvider.h>
+#import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
+#import "VisualViewController.h"
 
+
+static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
 
++(void)SetSampleCodeName:(NSString*)name
+{
+  g_sampleCodeName = name;
+}
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
+  NSLog(@"%@",NSHomeDirectory());
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"iTablet"
                                                initialProperties:nil
@@ -29,9 +37,22 @@
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
-  self.window.rootViewController = rootViewController;
+  _nav=[[UINavigationController alloc]initWithRootViewController:rootViewController];
+  _nav.navigationBarHidden = YES;
+  self.window.rootViewController = _nav;
   [self.window makeKeyAndVisible];
+  
+   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   return YES;
 }
-
+-(void)doSampleCodeNotification:(NSNotification *)notification
+{
+  NSLog(@"成功收到===>通知");
+  if([g_sampleCodeName isEqualToString:@"Visual"]){
+    
+    VisualViewController* vt = [[UIStoryboard storyboardWithName:@"VisualMain" bundle:nil] instantiateViewControllerWithIdentifier:@"Visual"];
+    [self.nav pushViewController:vt animated:YES];
+     self.nav.navigationBarHidden = NO;
+  }
+}
 @end
