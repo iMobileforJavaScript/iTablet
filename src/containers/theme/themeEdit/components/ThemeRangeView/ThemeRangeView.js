@@ -100,12 +100,23 @@ export default class ThemeRangeView extends React.Component {
         // 获取表达式对应的所有Item
         let dataset = await this.props.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
-        if (this.themeRange._SMThemeId) {
-          await this.themeRange.dispose()
+debugger
+        if (
+          this.state.data.colorMethod.value !== colorMethod.value ||
+          this.state.data.rangeMode !== rangeMode ||
+          this.state.data.rangeCount !== rangeCount ||
+          !this.themeRange._SMThemeRangeId
+        ) {
+          this.themeRange = await (new ThemeRange()).makeDefault(
+            datasetVector, expression, rangeMode, rangeCount, colorMethod.value)
+        } else if(this.themeRange._SMThemeRangeId && this.state.data.expression !== expression) {
+          await this.themeRange.getRangeExpression(expression)
         }
-        this.themeRange = await (new ThemeRange()).makeDefault(
-          datasetVector, expression, rangeMode, rangeCount, colorMethod.value)
-        await this.themeRange.setPrecision(precision)
+
+        if (this.state.data.precision !== precision) {
+          await this.themeRange.setPrecision(precision)
+        }
+
         let customInterval = 0
         if (rangeMode === RangeMode.CUSTOMINTERVAL) {
           customInterval = await this.themeRange.getCustomInterval()
@@ -116,12 +127,11 @@ export default class ThemeRangeView extends React.Component {
         for (let i = 0; i < count; i++) {
           let item = await this.themeRange.getItem(i)
           let rangeValue = await item.getEnd()
-          // let style = await item.getStyle()
-          // let color1 = await style.getFillForeColor()
-          // let color = await style.getLineColor()
+          let style = await item.getStyle()
+          let color = await style.getFillForeColor()
           let visible = await item.isVisible()
           let caption = await item.getCaption()
-          let data = { visible: visible, color: dataUtil.colorHex({r: 255, g: 0, b: 0}), value: rangeValue, caption, data: item }
+          let data = { visible: visible, color: dataUtil.colorHex(color), value: rangeValue, caption, data: item }
           themeRangeList.push(data)
         }
         let datalist = this.state.data
@@ -130,7 +140,7 @@ export default class ThemeRangeView extends React.Component {
           rangeMode: rangeMode,
           rangeCount: rangeMode === RangeMode.CUSTOMINTERVAL ? customInterval : count,
           precision: precision,
-          colorMethod: {key: colorMethod.key, value: colorMethod.value},
+          colorMethod: colorMethod,
         })
         this.setState({
           themeRangeList: themeRangeList,
@@ -152,9 +162,20 @@ export default class ThemeRangeView extends React.Component {
     })
   }
 
+  changeStyle = data => {
+    NavigationService.navigate('ThemeStyle', {
+      layer: this.props.layer,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+      item: data,
+      cb: () => {
+        this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+      },
+    })
+  }
+
   confirm = () => {
     (async function () {
-      Toast.show(JSON.stringify(this.state.data))
       let dataset = await this.props.layer.getDataset()
       await this.props.map.addThemeLayer(dataset, this.themeRange, true)
       await this.props.map.refresh()
@@ -266,6 +287,7 @@ export default class ThemeRangeView extends React.Component {
           data={this.state.themeRangeList}
           tableHead={['可见', '风格', '段值', '标题']}
           flexArr={[1, 2, 1, 2]}
+          changeStyle={this.changeStyle}
         />
       </View>
     )

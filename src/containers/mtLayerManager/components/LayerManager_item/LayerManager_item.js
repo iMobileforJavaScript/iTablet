@@ -9,6 +9,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import {
   Action,
   DatasetType,
+  ThemeType,
 } from 'imobile_for_javascript'
 import { PopBtnList } from '../../../../components'
 import { Toast } from '../../../../utils'
@@ -40,7 +41,7 @@ export default class LayerManager_item extends React.Component {
       selectable: data.isSelectable,
       snapable: data.isSnapable,
       rowShow:false,
-      image: this.getIconByType(data.type),
+      image: this.getStyleIconByType(data),
     }
   }
 
@@ -65,7 +66,7 @@ export default class LayerManager_item extends React.Component {
         selectable: data.isSelectable,
         snapable: data.isSnapable,
         rowShow: this.state.rowShow || false,
-        image: this.getIconByType(data.type),
+        image: this.getStyleIconByType(data),
       })
     }).bind(this)()
   }
@@ -81,20 +82,22 @@ export default class LayerManager_item extends React.Component {
 
   getOptions = data => {
     let options,
-      selectable = true
+      themeSelectable = true,
+      styleSelectable = true
     if (
       data.type === DatasetType.GRID ||
       data.type === DatasetType.IMAGE
     ) {
-      selectable = false
+      themeSelectable = false
     }
+    styleSelectable = data.themeType <= 0
     options = [
       { key: '可显示', selectable: true, action: this._visable_change },
       { key: '可选择', selectable: true, action: this._selectable_change },
       { key: '可编辑', selectable: true, action: this._editable_change },
       { key: '可捕捉', selectable: true, action: this._catchable_change },
-      { key: '专题图', selectable: selectable, action: this._openTheme },
-      { key: '风格', selectable: selectable, action: this._openStyle },
+      { key: '专题图', selectable: themeSelectable, action: this._openTheme },
+      { key: '风格', selectable: styleSelectable, action: this._openStyle },
       { key: '重命名', selectable: true, action: this._rename },
       { key: '移除', selectable: true, action: this._remove },
     ]
@@ -164,7 +167,11 @@ export default class LayerManager_item extends React.Component {
   }
 
   _openStyle = () => {
-    this.action()
+    NavigationService.navigate('ThemeStyle', {
+      layer: this.props.layer,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+    })
   }
 
   _rename = () => {
@@ -187,8 +194,35 @@ export default class LayerManager_item extends React.Component {
       <PopBtnList data={this.state.options} />
     )
   }
+  
+  getStyleIconByType = item => {
+    if (item.themeType > 0) {
+      return this.getThemeIconByType(item.themeType)
+    } else {
+      return this.getLayerIconByType(item.type)
+    }
+  }
 
-  getIconByType = type => {
+  getThemeIconByType = type => {
+    let icon
+    switch (type) {
+      case ThemeType.UNIQUE: // 单值专题图
+        icon = require('../../../../assets/map/icon-add-datasets.png')
+        break
+      case ThemeType.RANGE: // 分段专题图
+        icon = require('../../../../assets/map/icon-data-collection.png')
+        break
+      case ThemeType.LABEL: // 标签专题图
+        icon = require('../../../../assets/map/icon-map-management.png')
+        break
+      default:
+        icon = require('../../../../assets/public/mapLoad.png')
+        break
+    }
+    return icon
+  }
+
+  getLayerIconByType = type => {
     let icon
     switch (type) {
       case DatasetType.POINT: // 点数据集
@@ -232,7 +266,7 @@ export default class LayerManager_item extends React.Component {
             <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>
             <View style={styles.btn}>
-              <Image style={[this.props.data.type === DatasetType.POINT ? styles.samllImage : styles.btn_image]} source={this.state.image} />
+              <Image style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
             </View>
           </View>
           <View style={styles.text_container}><Text>{name}</Text></View>

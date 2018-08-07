@@ -23,6 +23,7 @@ export default class ThemeTable extends React.Component {
     selectRow: () => {},
     updageValue: () => {},
     setItemVisible: () => {},
+    changeStyle: () => {},
 
     selectable: boolean,
 
@@ -163,8 +164,8 @@ export default class ThemeTable extends React.Component {
     }
   }
 
-  changeStyle = () => {
-    // TODO 修改风格
+  changeStyle = (item, index) => {
+    this.props.changeStyle && this.props.changeStyle(item.rowData.data, index)
   }
 
   renderInput = (item, index) => {
@@ -195,14 +196,14 @@ export default class ThemeTable extends React.Component {
     )
   }
 
-  renderStyleView = item => {
+  renderStyleView = (item, index) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.chooseColorContainer}
         accessible={true}
         accessibilityLabel={item.key}
-        onPress={() => this.changeStyle()}
+        onPress={() => this.changeStyle(item, index)}
       >
         <View style={[styles.subChooseColorContainer, {backgroundColor: item.value}]}/>
       </TouchableOpacity>

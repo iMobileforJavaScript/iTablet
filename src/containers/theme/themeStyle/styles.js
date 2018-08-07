@@ -1,18 +1,30 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../../utils/index'
-import { size } from '../../../../../styles/index'
+import { constUtil, scaleSize } from '../../../utils/index'
+import { size } from '../../../styles/index'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    // backgroundColor: constUtil.USUAL_GREEN,
-    // paddingTop:10,
-    paddingHorizontal: scaleSize(30),
+    backgroundColor: constUtil.USUAL_GREEN,
+    paddingTop:10,
   },
   content: {
     flex: 1,
-    flexDirection: 'column',
+  },
+  subContent: {
+    backgroundColor: 'white',
+  },
+  titleView: {
+    height: scaleSize(80),
+    width: '100%',
+    paddingHorizontal: scaleSize(30),
+    paddingVertical: scaleSize(20),
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: size.fontSize.fontSizeLg,
   },
   row: {
     paddingVertical: scaleSize(15),

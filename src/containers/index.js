@@ -24,7 +24,7 @@ import AddDataset from './addDataset'
 import AddLayerGroup from './addLayerGroup'
 import MapChange from './mapChange'
 import { LayerAttribute, LayerAttributeEdit, LayerAttributeAdd } from './layerAttribute'
-import { ThemeEntry, ThemeEdit, ChoosePage } from './theme'
+import { ThemeEntry, ThemeEdit, ChoosePage, ThemeStyle } from './theme'
 import workspaceFlieList from './workspaceFileList'
 import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
@@ -192,6 +192,12 @@ export default StackNavigator({
   },
   ChoosePage: {
     screen: ChoosePage,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  ThemeStyle: {
+    screen: ThemeStyle,
     navigationOptions: {
       header: null,
     },

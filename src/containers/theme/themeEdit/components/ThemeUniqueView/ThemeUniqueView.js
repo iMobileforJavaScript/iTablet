@@ -38,7 +38,7 @@ export default class ThemeUniqueView extends React.Component {
         // {visible: true, color: 'blue', value: 3},
       ],
       data: {
-        expression: '',
+        expression: 'SmID',
         rangeMode: RangeMode.EQUALINTERVAL,
         colorMethod: {
           key: 'YELLOWRED',
@@ -50,6 +50,10 @@ export default class ThemeUniqueView extends React.Component {
     }
     this.themeUnique = {}
     this.defaultStyle = {}
+  }
+
+  componentDidMount() {
+    this.getData(this.state.data.expression, this.state.data.colorMethod)
   }
 
   goToChoosePage = type => {
@@ -79,41 +83,24 @@ export default class ThemeUniqueView extends React.Component {
     })
   }
 
+  changeStyle = data => {
+    NavigationService.navigate('ThemeStyle', {
+      layer: this.props.layer,
+      map: this.props.map,
+      mapControl: this.props.mapControl,
+      item: data,
+      cb: () => {
+        this.getData(this.state.data.expression, this.state.data.colorMethod)
+      },
+    })
+  }
+
   /**
    * 获取表达式
    */
   getExpression = ({key}) => {
     if (this.state.data.colorMethod.value === '') return
-    this.props.setLoading && this.props.setLoading(true)
-    ;(async function () {
-      try {
-        // 获取表达式对应的所有Item
-        let dataset = await this.props.layer.getDataset()
-        let datasetVector = await dataset.toDatasetVector()
-        // await this.themeUnique.dispose()
-        this.themeUnique = this.themeUnique._SMThemeId ? this.themeUnique : await (new ThemeUnique()).makeDefault(datasetVector, key, this.state.data.colorMethod.value)
-        this.defaultStyle = await this.themeUnique.getDefaultStyle()
-        let count = await this.themeUnique.getCount()
-        let themeItemList = []
-        for (let i = 0; i < count; i++) {
-          let item = await this.themeUnique.getItem(i)
-          let style = await item.getStyle()
-          let visible = await item.isVisible()
-          let color = await style.getLineColor()
-          let uniqueValue = await item.getUnique()
-          let data = { visible: visible, color: dataUtil.colorHex(color), value: uniqueValue, data: item }
-          themeItemList.push(data)
-        }
-        let datalist = this.state.data
-        Object.assign(datalist, { expression: key })
-        this.setState({
-          themeItemList: themeItemList,
-          data: datalist,
-        }, () => this.props.setLoading && this.props.setLoading(false))
-      } catch (e) {
-        this.props.setLoading && this.props.setLoading(false)
-      }
-    }).bind(this)()
+    this.getData(key, this.state.data.colorMethod)
   }
 
   /**
@@ -128,15 +115,29 @@ export default class ThemeUniqueView extends React.Component {
       })
       return
     }
+    this.getData(this.state.data.expression, {key, value})
+  }
+
+  getData = (expression, colorMethod) => {
     this.props.setLoading && this.props.setLoading(true)
     ;(async function () {
       try {
         // 获取表达式对应的所有Item
+        let datalist = this.state.data
         let dataset = await this.props.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
         // await this.themeUnique.dispose()
-        this.themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, this.state.data.expression, value)
+
+        debugger
+        if (this.state.data.colorMethod.value !== colorMethod.value || !this.themeUnique._SMThemeUniqueId) {
+          this.themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, expression, colorMethod.value)
+        } else if(this.themeUnique._SMThemeUniqueId && this.state.data.expression !== expression) {
+          await this.themeUnique.setUniqueExpression(expression)
+        }
+        debugger
         this.defaultStyle = await this.themeUnique.getDefaultStyle()
+
+        // TODO 优化-更新时只更新变化的item
         let count = await this.themeUnique.getCount()
         let themeItemList = []
         for (let i = 0; i < count; i++) {
@@ -149,7 +150,10 @@ export default class ThemeUniqueView extends React.Component {
           themeItemList.push(data)
         }
         await this.props.map.addThemeLayer(dataset, this.themeUnique, true)
-        Object.assign(datalist, { colorMethod: {key, value} })
+        Object.assign(datalist, {
+          expression: expression,
+          colorMethod: colorMethod,
+        })
         this.setState({
           themeItemList: themeItemList,
           data: datalist,
@@ -349,6 +353,7 @@ export default class ThemeUniqueView extends React.Component {
           updageValue={this.updageValue}
           setItemVisible={this.setItemVisible}
           selectRow={this.selectRow}
+          changeStyle={this.changeStyle}
         />
 
         <InputDialog
