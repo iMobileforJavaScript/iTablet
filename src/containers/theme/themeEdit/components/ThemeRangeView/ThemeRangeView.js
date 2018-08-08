@@ -100,7 +100,7 @@ export default class ThemeRangeView extends React.Component {
         // 获取表达式对应的所有Item
         let dataset = await this.props.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
-debugger
+
         if (
           this.state.data.colorMethod.value !== colorMethod.value ||
           this.state.data.rangeMode !== rangeMode ||

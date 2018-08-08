@@ -127,14 +127,12 @@ export default class ThemeUniqueView extends React.Component {
         let dataset = await this.props.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
         // await this.themeUnique.dispose()
-
-        debugger
+        
         if (this.state.data.colorMethod.value !== colorMethod.value || !this.themeUnique._SMThemeUniqueId) {
           this.themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, expression, colorMethod.value)
         } else if(this.themeUnique._SMThemeUniqueId && this.state.data.expression !== expression) {
           await this.themeUnique.setUniqueExpression(expression)
         }
-        debugger
         this.defaultStyle = await this.themeUnique.getDefaultStyle()
 
         // TODO 优化-更新时只更新变化的item
