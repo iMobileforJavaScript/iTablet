@@ -97,6 +97,11 @@ function colorRgba (str, n = 1) {
   }
 }
 
+function checkColor(str) {
+  let reg = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/
+  return reg.test(str)
+}
+
 function colorHex(obj) {
   return "#" + ((1 << 24) + (obj.r << 16) + (obj.g << 8) + obj.b).toString(16).slice(1)
 }
@@ -159,4 +164,5 @@ export default {
   colorRgba,
   colorHex,
   ChineseToNumber,
+  checkColor,
 }

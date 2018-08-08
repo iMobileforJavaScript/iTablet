@@ -61,15 +61,20 @@ export default class LayerManager_item extends React.Component {
   }
 
   getValidate = data => {
-    let isNonOperatingThemeLayer = false, isVectorLayer = true
+    let isThemeLayer = false, isNonOperatingThemeLayer = false, isVectorLayer = true
     switch (data.themeType) {
       case 0: // 非专题图层
+        isThemeLayer = false
+        isNonOperatingThemeLayer = false
+        break
       case ThemeType.UNIQUE:
       case ThemeType.RANGE:
+        isThemeLayer = true
         isNonOperatingThemeLayer = false
         break
       case ThemeType.LABEL:
       default:
+        isThemeLayer = true
         isNonOperatingThemeLayer = true
         break
     }
@@ -80,7 +85,7 @@ export default class LayerManager_item extends React.Component {
       isVectorLayer = false
     }
 
-    return {isNonOperatingThemeLayer, isVectorLayer}
+    return {isThemeLayer, isNonOperatingThemeLayer, isVectorLayer}
   }
 
   getData = (data = this.props.data) => {
@@ -111,14 +116,22 @@ export default class LayerManager_item extends React.Component {
   }
 
   getOptions = data => {
-    let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
-    let options = !isNonOperatingThemeLayer && isVectorLayer ? [
+    let {isThemeLayer, isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
+    let options = !isThemeLayer && isVectorLayer ? [
+      { key: '可显示', selectable: true, action: this._visable_change },
+      { key: '可选择', selectable: !isThemeLayer, action: this._selectable_change },
+      { key: '可编辑', selectable: !isThemeLayer, action: this._editable_change },
+      { key: '可捕捉', selectable: !isThemeLayer, action: this._catchable_change },
+      { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
+      { key: '风格', selectable: !isThemeLayer, action: this._openStyle },
+      { key: '重命名', selectable: true, action: this._rename },
+      { key: '移除', selectable: true, action: this._remove },
+    ] : !isNonOperatingThemeLayer && isVectorLayer ? [
       { key: '可显示', selectable: true, action: this._visable_change },
       { key: '可选择', selectable: !isNonOperatingThemeLayer, action: this._selectable_change },
       { key: '可编辑', selectable: !isNonOperatingThemeLayer, action: this._editable_change },
       { key: '可捕捉', selectable: !isNonOperatingThemeLayer, action: this._catchable_change },
       { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
-      { key: '风格', selectable: !isNonOperatingThemeLayer, action: this._openStyle },
       { key: '重命名', selectable: true, action: this._rename },
       { key: '移除', selectable: true, action: this._remove },
     ] : isNonOperatingThemeLayer && isVectorLayer ? [

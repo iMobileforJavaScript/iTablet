@@ -5,12 +5,13 @@
 */
 import * as React from 'react'
 import { View, Text, TextInput } from 'react-native'
-import BorderInput from '../../containers/register&getBack/border_input'
-import { Container, BtnTwo } from '../../components'
-import { Toast, dataUtil } from '../../utils'
+import { Container, Button } from '../../components'
+import { dataUtil } from '../../utils'
+import { color } from '../../styles'
 import NavigationService from '../NavigationService'
 import styles from './styles'
-import { ColorPicker, TriangleColorPicker } from 'react-native-color-picker'
+import { TriangleColorPicker, fromHsv } from 'react-native-color-picker'
+import ColorShortcut from './ColorShortcut'
 
 export default class ColorPickerPage extends React.Component {
 
@@ -22,37 +23,106 @@ export default class ColorPickerPage extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    const { nav } = this.props
     this.cb = params && params.cb
     this.defaultColor = params && params.defaultColor || '#000000'
+    let colorHex = params && params.defaultColor && dataUtil.colorRgba(this.defaultColor) || {}
+    this.lastValidColor = this.defaultColor // 记录上一次正确格式的十六进制颜色
     this.state = {
       InputText: '',
       color: this.defaultColor,
+      colorHex: colorHex,
     }
   }
 
   onColorChange = color => {
-    this.setState({ color })
+    let hex = fromHsv(color)
+    this.setState({
+      color: hex,
+      colorHex: dataUtil.colorRgba(fromHsv(color)),
+    })
   }
-  
-  renderColorAttrRow = ({key, value}) => {
+
+  renderColorAttrRow = (key, value) => {
+    let isRgb = key === 'r' || key === 'g' || key === 'b' ||  key === 'a'
     return (
-      <View style={styles.row}>
-        <Text>{key}</Text>
-        <Text>{value}</Text>
+      <View style={styles.row} key={key}>
+        <Text style={styles.text}>{key.toUpperCase()}</Text>
+        {/*<Text>{value}</Text>*/}
+        <TextInput
+          accessible={true}
+          keyboardType={isRgb ? 'numeric' : 'default'}
+          accessibilityLabel={key}
+          maxLength={isRgb ? 3 : 7}
+          // value={isRgb ? (this.state.colorHex[key] + '') : this.state.color}
+          value={value + ''}
+          onChangeText={text => {
+            if (!isRgb) {
+              if (dataUtil.checkColor(text)) this.lastValidColor = text
+              let reg = /^([0-9a-fA-F])$/
+              if (text.length !== 1 && !reg.test(text.charAt(text.length - 1))) {
+                return
+              }
+
+              this.setState({
+                color: text === '' ? '#' : text,
+                colorHex: dataUtil.colorRgba(this.lastValidColor),
+              })
+              return
+            }
+            let val
+            if (text === '') {
+              val = 0
+            } else {
+              val = parseInt(text)
+            }
+            if (isNaN(val) || val < 0 || val > 255) {
+              return
+            }
+            let newColor = this.state.colorHex
+            Object.assign(newColor, {[key]: val})
+            this.setState({
+              colorHex: newColor,
+              color: dataUtil.colorHex(newColor),
+            })
+          }}
+          style={styles.input}
+          underlineColorAndroid='transparent'
+          placeholderTextColor={color.USUAL_SEPARATORCOLOR} />
       </View>
     )
   }
-  
+
   renderColorAttr = () => {
     let rows = []
-    let rgba = dataUtil.colorRgba(this.state.color) || {}
-    for (let key in Object.keys(rgba)) {
-      rows.push(this.renderColorAttrRow(key, rgba[key]))
+    let keys = Object.keys(this.state.colorHex)
+    for (let i = 0; i < keys.length; i++ ) {
+      rows.push(this.renderColorAttrRow(keys[i].toString(), this.state.colorHex[keys[i]]))
     }
+    rows.push(this.renderColorAttrRow('16进制', this.state.color))
     return (
       <View style={styles.rows}>
         {rows}
+      </View>
+    )
+  }
+
+  confirm = () => {
+    this.cb && this.cb(this.state.color)
+    NavigationService.goBack()
+  }
+
+  reset = () => {
+    this.setState({
+      color: this.defaultColor,
+      colorHex: dataUtil.colorRgba(this.defaultColor),
+    })
+  }
+
+  renderBtns = () => {
+    return (
+      <View style={styles.btns}>
+        <Button title={'确定'} onPress={this.confirm}/>
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
       </View>
     )
   }
@@ -61,20 +131,26 @@ export default class ColorPickerPage extends React.Component {
     return (
       <Container
         style={styles.container}
-        scrollable
         headerProps={{
-          title: '新建图层',
+          title: '颜色选择',
           navigation: this.props.navigation,
         }}>
+        <ColorShortcut onPress={color => {
+          this.setState({
+            color: color,
+            colorHex: dataUtil.colorRgba(color),
+          })
+        }} />
         <TriangleColorPicker
           oldColor={this.defaultColor}
-          color={this.state.color}
+          color={dataUtil.checkColor(this.state.color) ? this.state.color : this.lastValidColor}
           onColorChange={this.onColorChange}
           // onColorSelected={color => alert(`Color selected: ${color}`)}
           onOldColorSelected={this.onColorChange}
           style={styles.colorPicker}
         />
         {this.renderColorAttr()}
+        {this.renderBtns()}
       </Container>
     )
   }
