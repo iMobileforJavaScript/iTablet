@@ -28,6 +28,7 @@ import { ThemeEntry, ThemeEdit, ChoosePage, ThemeStyle } from './theme'
 import workspaceFlieList from './workspaceFileList'
 import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
+import ColorPickerPage from './colorPickerPage'
 
 import Map from './map'
 import MapView from './mapView'
@@ -220,6 +221,12 @@ export default StackNavigator({
       header:null,
     },
   },
+  ColorPickerPage:{
+    screen:ColorPickerPage,
+    navigationOptions:{
+      header:null,
+    },
+  },
 },{
   navigationOptions: {
     headerBackTitle: null,
@@ -230,5 +237,5 @@ export default StackNavigator({
     headerTitleStyle: { alignSelf: 'center' },
   },
   lazy: true,
-  // mode: 'modal',
+  mode: 'card',
 })

@@ -55,7 +55,12 @@ export default class NewDSource extends React.Component {
     (async function () {
       try {
         let filePath = await Utility.appendingHomeDirectory((this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb')
-        let datasource = await this.workspace.createDatasource(filePath, this.state.engineType)
+        let datasource = await this.workspace.createDatasource(filePath, this.state.engineType, this.state.name)
+        if (!datasource) {
+          this.dialog.setDialogVisible(false)
+          Toast.show('数据源名称已存在，请重新命名')
+          return
+        }
         if (datasource) {
           let fileAbsolutePath = await Utility.appendingHomeDirectory(filePath)
           let DSParams = { server: fileAbsolutePath, engineType: this.state.engineType }

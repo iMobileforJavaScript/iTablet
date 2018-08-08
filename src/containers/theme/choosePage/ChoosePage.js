@@ -54,9 +54,6 @@ export default class ChoosePage extends React.Component {
     this.state = {
       type: params && params.type,
       data: data,
-      layer: params && params.layer,
-      map: params && params.map,
-      mapControl: params && params.mapControl,
     }
   }
 

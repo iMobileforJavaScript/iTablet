@@ -13,6 +13,7 @@ import {
 } from 'imobile_for_javascript'
 import { PopBtnList } from '../../../../components'
 import { Toast } from '../../../../utils'
+import { Const } from '../../../../constains'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
@@ -34,6 +35,7 @@ export default class LayerManager_item extends React.Component {
     this.map = this.props.map
     let data = this.props.data
     let options = this.getOptions(data)
+    let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
     this.state = {
       options: options,
       editable: data.isEditable,
@@ -42,6 +44,8 @@ export default class LayerManager_item extends React.Component {
       snapable: data.isSnapable,
       rowShow:false,
       image: this.getStyleIconByType(data),
+      isNonOperatingThemeLayer: isNonOperatingThemeLayer,
+      isVectorLayer: isVectorLayer,
     }
   }
 
@@ -56,15 +60,41 @@ export default class LayerManager_item extends React.Component {
     }
   }
 
+  getValidate = data => {
+    let isNonOperatingThemeLayer = false, isVectorLayer = true
+    switch (data.themeType) {
+      case 0: // 非专题图层
+      case ThemeType.UNIQUE:
+      case ThemeType.RANGE:
+        isNonOperatingThemeLayer = false
+        break
+      case ThemeType.LABEL:
+      default:
+        isNonOperatingThemeLayer = true
+        break
+    }
+    if (
+      data.type === DatasetType.GRID ||
+      data.type === DatasetType.IMAGE
+    ) {
+      isVectorLayer = false
+    }
+
+    return {isNonOperatingThemeLayer, isVectorLayer}
+  }
+
   getData = (data = this.props.data) => {
     (async function () {
       let options = this.getOptions(data)
+      let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
       this.setState({
+        isNonOperatingThemeLayer: isNonOperatingThemeLayer,
+        isVectorLayer: isVectorLayer,
         options: options,
-        editable: data.isEditable,
-        visable: data.isVisible,
-        selectable: data.isSelectable,
-        snapable: data.isSnapable,
+        editable: data.isEditable && isNonOperatingThemeLayer,
+        visable: data.isVisible && isNonOperatingThemeLayer,
+        selectable: data.isSelectable && isNonOperatingThemeLayer,
+        snapable: data.isSnapable && isNonOperatingThemeLayer,
         rowShow: this.state.rowShow || false,
         image: this.getStyleIconByType(data),
       })
@@ -81,23 +111,23 @@ export default class LayerManager_item extends React.Component {
   }
 
   getOptions = data => {
-    let options,
-      themeSelectable = true,
-      styleSelectable = true
-    if (
-      data.type === DatasetType.GRID ||
-      data.type === DatasetType.IMAGE
-    ) {
-      themeSelectable = false
-    }
-    styleSelectable = data.themeType <= 0
-    options = [
+    let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
+    let options = !isNonOperatingThemeLayer && isVectorLayer ? [
       { key: '可显示', selectable: true, action: this._visable_change },
-      { key: '可选择', selectable: true, action: this._selectable_change },
-      { key: '可编辑', selectable: true, action: this._editable_change },
-      { key: '可捕捉', selectable: true, action: this._catchable_change },
-      { key: '专题图', selectable: themeSelectable, action: this._openTheme },
-      { key: '风格', selectable: styleSelectable, action: this._openStyle },
+      { key: '可选择', selectable: !isNonOperatingThemeLayer, action: this._selectable_change },
+      { key: '可编辑', selectable: !isNonOperatingThemeLayer, action: this._editable_change },
+      { key: '可捕捉', selectable: !isNonOperatingThemeLayer, action: this._catchable_change },
+      { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
+      { key: '风格', selectable: !isNonOperatingThemeLayer, action: this._openStyle },
+      { key: '重命名', selectable: true, action: this._rename },
+      { key: '移除', selectable: true, action: this._remove },
+    ] : isNonOperatingThemeLayer && isVectorLayer ? [
+      { key: '可显示', selectable: true, action: this._visable_change },
+      { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
+      { key: '重命名', selectable: true, action: this._rename },
+      { key: '移除', selectable: true, action: this._remove },
+    ] : [
+      { key: '可显示', selectable: true, action: this._visable_change },
       { key: '重命名', selectable: true, action: this._rename },
       { key: '移除', selectable: true, action: this._remove },
     ]
@@ -159,11 +189,32 @@ export default class LayerManager_item extends React.Component {
   }
 
   _openTheme = () => {
-    NavigationService.navigate('ThemeEntry', {
-      layer: this.props.layer,
-      map: this.props.map,
-      mapControl: this.props.mapControl,
-    })
+    let title = ''
+    switch (this.props.data.themeType) {
+      case ThemeType.LABEL:
+        title = Const.LABEL
+        break
+      case ThemeType.UNIQUE:
+        title = Const.UNIQUE
+        break
+      case ThemeType.RANGE:
+        title = Const.RANGE
+        break
+    }
+    if (title) {
+      NavigationService.navigate('ThemeEdit', {
+        title,
+        layer: this.layer,
+        map: this.map,
+        mapControl: this.mapControl,
+      })
+    } else {
+      NavigationService.navigate('ThemeEntry', {
+        layer: this.props.layer,
+        map: this.props.map,
+        mapControl: this.props.mapControl,
+      })
+    }
   }
 
   _openStyle = () => {
@@ -194,7 +245,7 @@ export default class LayerManager_item extends React.Component {
       <PopBtnList data={this.state.options} />
     )
   }
-  
+
   getStyleIconByType = item => {
     if (item.themeType > 0) {
       return this.getThemeIconByType(item.themeType)
@@ -261,13 +312,17 @@ export default class LayerManager_item extends React.Component {
       <View style={styles.container}>
         <TouchableOpacity activeOpacity={1} style={styles.rowOne}  onPress={this._pop_row}>
           <View style={styles.btn_container}>
-            <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>
+            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
+            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
+            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
             <View style={styles.btn}>
               <Image style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
             </View>
+            {/*占位View*/}
+            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
           </View>
           <View style={styles.text_container}><Text>{name}</Text></View>
           {/*<TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}>*/}

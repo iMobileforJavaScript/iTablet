@@ -7,13 +7,10 @@
 import * as React from 'react'
 import { TouchableOpacity, FlatList, Text } from 'react-native'
 import { Container, ListSeparator } from '../../../components'
+import { Const } from '../../../constains'
 import NavigationService from '../../NavigationService'
 
 import styles from './styles'
-
-const UNIQUE = '单值专题图'
-const RANGE = '分段设色专题图'
-const UNIFIED = '标签专题图'
 
 export default class ThemeEntry extends React.Component {
 
@@ -22,7 +19,7 @@ export default class ThemeEntry extends React.Component {
   }
 
   state = {
-    data: [{title: UNIQUE}, {title: RANGE}, {title: UNIFIED}],
+    data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.UNIFIED}],
   }
 
   constructor(props) {
@@ -33,7 +30,7 @@ export default class ThemeEntry extends React.Component {
     this.mapControl = params && params.mapControl
 
     this.state = {
-      data: [{title: UNIQUE}, {title: RANGE}, {title: UNIFIED}],
+      data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.UNIFIED}],
     }
   }
 
@@ -84,10 +81,4 @@ export default class ThemeEntry extends React.Component {
       </Container>
     )
   }
-}
-
-ThemeEntry.Type = {
-  UNIQUE: UNIQUE,
-  RANGE: RANGE,
-  UNIFIED: UNIFIED,
 }

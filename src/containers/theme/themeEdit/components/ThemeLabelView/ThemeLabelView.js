@@ -50,11 +50,7 @@ export default class ThemeLabelView extends React.Component {
   getExpression = () => {
     NavigationService.navigate('ChoosePage', {
       type: ChoosePage.Type.EXPRESSION,
-      map: this.props.map,
-      mapControl: this.props.mapControl,
-      layer: this.props.layer,
       cb: ({key}) => {
-
         this.getValue({expression: key})
       },
     })
@@ -63,9 +59,6 @@ export default class ThemeLabelView extends React.Component {
   getFontColor = () => {
     NavigationService.navigate('ChoosePage', {
       type: ChoosePage.Type.FONT_COLOR,
-      map: this.props.map,
-      mapControl: this.props.mapControl,
-      layer: this.props.layer,
       cb: ({key}) => {
         this.getValue({fontColor: key})
       },

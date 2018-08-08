@@ -126,13 +126,15 @@ export default class ThemeStyle extends React.Component {
   getColor = type => {
     NavigationService.navigate('ChoosePage', {
       type: Const.FONT_COLOR,
-      map: this.map,
-      mapControl: this.mapControl,
-      layer: this.layer,
       cb: ({ key }) => {
         this.getValue({ [type]: key })
       },
     })
+    // NavigationService.navigate('ColorPickerPage', {
+    //   cb: ({ key }) => {
+    //     this.getValue({ [type]: key })
+    //   },
+    // })
   }
 
   getValue = obj => {

@@ -25,7 +25,12 @@ export default class ThemeUniqueView extends React.Component {
     map: Object,
     mapControl: Object,
     layer: Object,
+    isThemeLayer: boolean,
     setLoading: () => {},
+  }
+
+  static defaultProps = {
+    isThemeLayer: false,
   }
 
   constructor(props) {
@@ -53,12 +58,28 @@ export default class ThemeUniqueView extends React.Component {
   }
 
   componentDidMount() {
+    // if (this.props.isThemeLayer) {
+    //   this.getDataByTheme()
+    // } else {
     this.getData(this.state.data.expression, this.state.data.colorMethod)
+    // }
+  }
+
+  getDataByTheme = () => {
+    // TODO 从专题图图层进入，获取专题图各个属性
+    (async function () {
+      try {
+        // this.themeUnique = await this.props.layer.getTheme()
+        // let expression = await this.themeUnique.getUniqueExpression()
+        // let colorMethod = await this.themeUnique.getUniqueExpression()
+      } catch (e) {
+        Toast.show('加载错误')
+      }
+    }).bind(this)()
   }
 
   goToChoosePage = type => {
-    let cb = () => {
-    }
+    let cb = () => {}
     switch (type) {
       case ChoosePage.Type.EXPRESSION:
         cb = this.getExpression
@@ -70,9 +91,6 @@ export default class ThemeUniqueView extends React.Component {
 
     NavigationService.navigate('ChoosePage', {
       type: type,
-      map: this.props.map,
-      mapControl: this.props.mapControl,
-      layer: this.props.layer,
       cb: value => cb(value),
     })
   }
@@ -135,7 +153,7 @@ export default class ThemeUniqueView extends React.Component {
         }
         this.defaultStyle = await this.themeUnique.getDefaultStyle()
 
-        // TODO 优化-更新时只更新变化的item
+        // TODO 优化-更新时只更新变化的item | 分页查询
         let count = await this.themeUnique.getCount()
         let themeItemList = []
         for (let i = 0; i < count; i++) {
