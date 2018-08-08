@@ -123,7 +123,7 @@ export default class ThemeStyle extends React.Component {
     }).bind(this)()
   }
 
-  getColor = type => {
+  getColor = (type, defaultColor) => {
     NavigationService.navigate('ChoosePage', {
       type: Const.FONT_COLOR,
       cb: ({ key }) => {
@@ -131,6 +131,7 @@ export default class ThemeStyle extends React.Component {
       },
     })
     // NavigationService.navigate('ColorPickerPage', {
+    //   defaultColor: defaultColor,
     //   cb: ({ key }) => {
     //     this.getValue({ [type]: key })
     //   },
@@ -203,7 +204,7 @@ export default class ThemeStyle extends React.Component {
           value={this.state.data.lineColor}
           type={Row.Type.CHOOSE_COLOR}
           title={'颜色'}
-          getValue={() => this.getColor('lineColor')}
+          getValue={() => this.getColor('lineColor', this.state.data.lineColor)}
         />
         <Row
           style={styles.row}
@@ -230,7 +231,7 @@ export default class ThemeStyle extends React.Component {
           value={this.state.data.lineColor}
           type={Row.Type.CHOOSE_COLOR}
           title={'颜色'}
-          getValue={() => this.getColor('lineColor')}
+          getValue={() => this.getColor('lineColor', this.state.data.lineColor)}
         />
         <Row
           style={styles.row}
@@ -257,7 +258,7 @@ export default class ThemeStyle extends React.Component {
           value={this.state.data.color}
           type={Row.Type.CHOOSE_COLOR}
           title={'填充颜色'}
-          getValue={() => this.getColor('color')}
+          getValue={() => this.getColor('color', this.state.data.color)}
         />
         <Row
           style={styles.row}
@@ -277,7 +278,7 @@ export default class ThemeStyle extends React.Component {
           value={this.state.data.lineColor}
           type={Row.Type.CHOOSE_COLOR}
           title={'边框颜色'}
-          getValue={() => this.getColor('lineColor')}
+          getValue={() => this.getColor('lineColor', this.state.data.lineColor)}
         />
       </View>
     )

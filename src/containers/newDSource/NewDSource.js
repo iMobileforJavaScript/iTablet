@@ -54,16 +54,10 @@ export default class NewDSource extends React.Component {
   createDatasource = () => {
     (async function () {
       try {
-        let filePath = await Utility.appendingHomeDirectory((this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb')
-        let datasource = await this.workspace.createDatasource(filePath, this.state.engineType, this.state.name)
-        if (!datasource) {
-          this.dialog.setDialogVisible(false)
-          Toast.show('数据源名称已存在，请重新命名')
-          return
-        }
+        let filePath = (await Utility.appendingHomeDirectory() + (this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb')
+        let datasource = await this.workspace.createDatasource(filePath, this.state.engineType)
         if (datasource) {
-          let fileAbsolutePath = await Utility.appendingHomeDirectory(filePath)
-          let DSParams = { server: fileAbsolutePath, engineType: this.state.engineType }
+          let DSParams = { server: filePath, engineType: this.state.engineType }
           await this.workspace.openDatasource(DSParams)
           this.cb && this.cb()
           this.dialog.setDialogVisible(false)
@@ -76,7 +70,6 @@ export default class NewDSource extends React.Component {
       } catch (e) {
         this.dialog.setDialogVisible(false)
         Toast.show('新建数据源失败')
-        console.error(e)
       }
     }).bind(this)()
   }
