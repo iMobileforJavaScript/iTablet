@@ -171,7 +171,10 @@ export default class MT_layerManager extends React.Component {
     NavigationService.navigate('AddDataset',{
       workspace: this.workspace,
       map: this.map,
-      cb: this.getData,
+      cb: () => {
+        this.getData()
+        this.map && this.map.refresh()
+      },
     })
   }
 

@@ -54,7 +54,7 @@ export default class NewDSource extends React.Component {
   createDatasource = () => {
     (async function () {
       try {
-        let filePath = (this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb'
+        let filePath = await Utility.appendingHomeDirectory((this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb')
         let datasource = await this.workspace.createDatasource(filePath, this.state.engineType)
         if (datasource) {
           let fileAbsolutePath = await Utility.appendingHomeDirectory(filePath)
