@@ -29,7 +29,7 @@ export default class NewDSource extends React.Component {
     this.state = {
       name: '',
       path: '',
-      defaultPath: ConstPath.Data,
+      defaultPath: ConstPath.LocalDataPath,
       engineType: EngineType.UDB,
     }
   }

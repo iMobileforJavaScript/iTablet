@@ -30,7 +30,7 @@ export default class WorkSpaceFileList extends Component {
     this.map = params.map ? params.map : 'nomap'
     this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
     this.routes = nav.routes
-    this.path = ConstPath.SampleDataPath
+    this.path = ConstPath.LocalDataPath
     this.title = params.title
     this.need = params.need
     this.state = {
@@ -44,7 +44,7 @@ export default class WorkSpaceFileList extends Component {
     (async function () {
       try {
         this.container.setLoading(true)
-        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.SampleDataPath)
+        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.LocalDataPath)
         if (!exist) {
           this.setState({
             showData: true,
@@ -183,7 +183,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   _toBack = async () => {
-    if (this.state.backPath === ConstPath.SampleDataPath) {
+    if (this.state.backPath === ConstPath.LocalDataPath) {
       return
     } else {
       let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
@@ -193,7 +193,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   headerBack = () => {
-    if (this.state.backPath === '' || this.state.backPath === ConstPath.SampleDataPath || this.state.backPath === ConstPath.SampleDataPath) {
+    if (this.state.backPath === '' || this.state.backPath === ConstPath.LocalDataPath || this.state.backPath === ConstPath.LocalDataPath) {
       return null
     }
     else {

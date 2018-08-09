@@ -20,16 +20,26 @@ export default class InputDialog extends PureComponent {
     label: string,
     value: string,
     defaultValue: string,
+    inputSelection: Object,
   }
-  
+
   static defaultProps = {
     label: '',
+    value: '',
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      value: '',
+      value: props.value,
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.value) !== JSON.stringify(this.props.value)) {
+      this.setState({
+        value: this.props.value,
+      })
     }
   }
 
@@ -71,6 +81,10 @@ export default class InputDialog extends PureComponent {
               this.setState({
                 value: text,
               })
+            }}
+            selection={this.props.inputSelection || {
+              start: this.state.value.length - 1,
+              end: this.state.value.length - 1,
             }}
           />
         </View>

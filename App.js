@@ -7,10 +7,11 @@ import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import ConfigStore from './src/store'
 import { Loading, PanAudioButton, AudioDialog } from './src/components'
-import { scaleSize, AudioAnalyst } from './src/utils'
+import { scaleSize, AudioAnalyst, Toast } from './src/utils'
+import { ConstPath } from './src/constains'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager } from 'imobile_for_javascript'
+import { SpeechManager, Utility } from 'imobile_for_javascript'
 
 const { persistor, store } = ConfigStore()
 
@@ -50,11 +51,39 @@ class AppRoot extends Component {
   componentDidMount() {
     (async function () {
       try {
+        // 初始化文件目录
+        this.initDirectories()
         // 初始化录音
         GLOBAL.SpeechManager = new SpeechManager()
         await GLOBAL.SpeechManager.init()
       } catch (e) {
         console.error(e)
+      }
+    }).bind(this)()
+  }
+
+  // 初始化文件目录
+  initDirectories = () => {
+    (async function () {
+      try {
+        let paths = [
+          ConstPath.AppPath, ConstPath.LicensePath, ConstPath.LocalDataPath,
+          ConstPath.SampleDataPath, ConstPath.UserPath,
+        ]
+        let isCreate = false, absolutePath = ''
+        debugger
+        for (let i = 0; i < paths.length; i++) {
+          absolutePath = await Utility.appendingHomeDirectory(paths[i])
+          debugger
+          isCreate = await Utility.createDirectory(absolutePath)
+        }
+debugger
+        if (!isCreate) {
+          Toast.show('创建文件目录失败')
+        }
+      } catch (e) {
+        console.warn(e)
+        Toast.show('创建文件目录失败')
       }
     }).bind(this)()
   }

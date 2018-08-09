@@ -35,7 +35,7 @@ export default class MT_layerManager extends React.Component {
       datasourceList: '',
       mapName: '',
       wsName: wsName,
-      path: !this.showDialogCaption ? path : ConstPath.SampleDataPath,
+      path: !this.showDialogCaption ? path : ConstPath.LocalDataPath,
       currentEditIndex: props.editLayer.index >= 0 ? props.editLayer.index : -1, //当前编辑界面的index
     }
   }
@@ -140,7 +140,7 @@ export default class MT_layerManager extends React.Component {
           Toast.show('请输入地图名称')
           return
         }
-        if (this.state.path !== path || path === ConstPath.SampleDataPath) {
+        if (this.state.path !== path || path === ConstPath.LocalDataPath) {
           info.path = path
         }
         if (wsName && this.showDialogCaption) {

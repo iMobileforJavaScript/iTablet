@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
-import { Container, ListSeparator, DataSetListSection, DataSetListItem } from '../../components'
+import { Container, ListSeparator, DataSetListSection, DataSetListItem, InputDialog } from '../../components'
 import { Toast } from '../../utils'
 import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
@@ -23,6 +23,11 @@ export default class MTDataManagement extends React.Component {
     this.state = {
       dataSourceList: [],
       openList: {},
+      dialogTitle: '',
+      dialogLabel: '',
+      currentData: {
+        name: '',
+      },
     }
   }
 
@@ -124,6 +129,17 @@ export default class MTDataManagement extends React.Component {
       // this.props.navigation.goBack()
     }).bind(this)()
   }
+  
+  showRenameDialog = item => {
+    let data = item.data
+    this.setState({
+      dialogTitle: data.datasource ? '数据源重命名' : '数据集重命名',
+      dialogLabel: data.datasource ? '数据源名称' : '数据集名称',
+      currentData: data,
+    }, () => {
+      this.renameDialog && this.renameDialog.setDialogVisible(true)
+    })
+  }
 
   rename = data => {
 
@@ -141,11 +157,11 @@ export default class MTDataManagement extends React.Component {
 
   }
 
-  getSectionOption = () => {
+  getSectionOption = item => {
     return (
       [
-        { key: '重命名', action: data => this.rename(data) },
-        { key: '删除', action: data => this.delete(data) },
+        { key: '重命名', name: item.key, datasource: item.datasource, action: data => this.showRenameDialog(data) },
+        { key: '删除', name: item.key, datasource: item.datasource, action: data => this.delete(data) },
       ]
     )
   }
@@ -153,11 +169,11 @@ export default class MTDataManagement extends React.Component {
   getOption = item => {
     return (
       [
-        { key: '添加到当前地图', dataset: item.dataset, action: data => this.addToMap(data) },
-        { key: '重命名', dataset: item.dataset, action: data => this.rename(data) },
-        { key: '删除', dataset: item.dataset, action: data => this.delete(data) },
-        { key: '属性', dataset: item.dataset, action: data => this.attribute(data) },
-        { key: '浏览属性表', dataset: item.dataset, action: data => this.attrTable(data) },
+        { key: '添加到当前地图', name: item.name, dataset: item.dataset, action: data => this.addToMap(data) },
+        { key: '重命名', name: item.name, dataset: item.dataset, action: data => this.showRenameDialog(data) },
+        { key: '删除', name: item.name, dataset: item.dataset, action: data => this.delete(data) },
+        { key: '属性', name: item.name, dataset: item.dataset, action: data => this.attribute(data) },
+        { key: '浏览属性表', name: item.name, dataset: item.dataset, action: data => this.attrTable(data) },
       ]
     )
   }
@@ -167,7 +183,7 @@ export default class MTDataManagement extends React.Component {
       <DataSetListSection
         data={section}
         onPress={this.showSection}
-        options={this.getSectionOption()}
+        options={this.getSectionOption(section)}
       />
     )
   }
@@ -210,6 +226,17 @@ export default class MTDataManagement extends React.Component {
           sections={this.state.dataSourceList}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+        />
+        <InputDialog
+          ref={ref => this.renameDialog = ref}
+          title={this.state.dialogTitle}
+          label={this.state.dialogLabel}
+          value={this.state.currentData.name}
+          confirmAction={this.rename}
+          inputSelection={{
+            start: 0,
+            end: this.state.currentData.name.length - 1,
+          }}
         />
       </Container>
     )
