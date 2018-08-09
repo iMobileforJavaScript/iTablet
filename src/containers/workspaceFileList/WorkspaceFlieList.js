@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { OpenMapfile, WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility } from 'imobile_for_javascript'
+import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility } from 'imobile_for_javascript'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
@@ -55,7 +55,7 @@ export default class WorkSpaceFileList extends Component {
           this.getFileList({path: this.path})
         }
       } catch (e) {
-        console.error(e)
+        this.container.setLoading(false)
       }
     }).bind(this)()
   }
@@ -70,8 +70,8 @@ export default class WorkSpaceFileList extends Component {
   getFileList = item => {
     (async function () {
       try {
-        let OpenMapfileModule = new OpenMapfile()
-        let isDirectory = await OpenMapfileModule.isdirectory(item.path)
+        let absolutePath = await Utility.appendingHomeDirectory(item.path)
+        let isDirectory = await Utility.isDirectory(absolutePath)
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
           if (filename === '.smwu' && this.need === 'workspace') {
@@ -82,7 +82,7 @@ export default class WorkSpaceFileList extends Component {
             this._offLine_More()
           }
         } else {
-          let fileList = await OpenMapfileModule.getfilelist(item.path)
+          let fileList = await Utility.getPathList(absolutePath)
           this.setState({
             data: fileList,
             backPath: item.path,
@@ -91,7 +91,6 @@ export default class WorkSpaceFileList extends Component {
           this.container.setLoading(false)
         }
       } catch (e) {
-        console.error(e)
         this.container.setLoading(true)
       }
     }).bind(this)()
@@ -187,7 +186,6 @@ export default class WorkSpaceFileList extends Component {
       return
     } else {
       let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
-      this.setState({ backPath: backPath })
       await this.getFileList({path: backPath})
     }
   }
@@ -243,7 +241,6 @@ export default class WorkSpaceFileList extends Component {
               ? <FlatList
                 ItemSeparatorComponent={this.itemSeparator}
                 style={styles.container}
-                // ListHeaderComponent={this.headerBack}
                 data={this.state.data}
                 renderItem={this.renderItem}
                 keyExtractor={this._keyExtractor}

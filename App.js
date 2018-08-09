@@ -49,15 +49,18 @@ class AppRoot extends Component {
   }
 
   componentDidMount() {
+    this.initDirectories()
+    this.initSpeechManager()
+  }
+
+  // 初始化录音
+  initSpeechManager = () => {
     (async function () {
       try {
-        // 初始化文件目录
-        this.initDirectories()
-        // 初始化录音
         GLOBAL.SpeechManager = new SpeechManager()
         await GLOBAL.SpeechManager.init()
       } catch (e) {
-        console.error(e)
+        Toast.show('语音初始化失败')
       }
     }).bind(this)()
   }
@@ -71,18 +74,14 @@ class AppRoot extends Component {
           ConstPath.SampleDataPath, ConstPath.UserPath,
         ]
         let isCreate = false, absolutePath = ''
-        debugger
         for (let i = 0; i < paths.length; i++) {
           absolutePath = await Utility.appendingHomeDirectory(paths[i])
-          debugger
           isCreate = await Utility.createDirectory(absolutePath)
         }
-debugger
         if (!isCreate) {
           Toast.show('创建文件目录失败')
         }
       } catch (e) {
-        console.warn(e)
         Toast.show('创建文件目录失败')
       }
     }).bind(this)()

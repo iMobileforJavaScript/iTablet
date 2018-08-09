@@ -129,7 +129,7 @@ export default class MTDataManagement extends React.Component {
       // this.props.navigation.goBack()
     }).bind(this)()
   }
-  
+
   showRenameDialog = item => {
     let data = item.data
     this.setState({
@@ -141,8 +141,21 @@ export default class MTDataManagement extends React.Component {
     })
   }
 
-  rename = data => {
+  rename = item => {
+    (async function () {
+      // try {
+      //   let id = await this.map.addLayer(item.data.dataset, true)
+      //   if (id) {
+      //     Toast.show('添加图层成功')
+      //   } else {
+      //     Toast.show('添加图层失败')
+      //   }
+      // } catch (e) {
+      //   Toast.show('添加图层失败')
+      // }
 
+      // this.props.navigation.goBack()
+    }).bind(this)()
   }
 
   delete = data => {
