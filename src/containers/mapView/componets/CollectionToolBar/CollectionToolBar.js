@@ -5,8 +5,11 @@ import {
   DatasetType,
   Action,
   GeoStyle,
+  GPSElementType,
+  CursorType,
 } from 'imobile_for_javascript'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
+import NavigationService from '../../../NavigationService'
 import PropTypes from 'prop-types'
 
 const POINT = DatasetType.POINT
@@ -49,6 +52,7 @@ export default class CollectionToolBar extends React.Component {
     chooseLayer: PropTypes.func,
     POP_List: PropTypes.func,
     setLoading: PropTypes.func,
+    setSelection: PropTypes.func,
   }
 
   constructor(props) {
@@ -64,6 +68,8 @@ export default class CollectionToolBar extends React.Component {
       popType: props.popType || POINT,
     }
     this.cbData = {}
+    this.collector = null
+    this.map = null
   }
 
   componentDidMount() {
@@ -91,7 +97,18 @@ export default class CollectionToolBar extends React.Component {
 
   createCollector = async () => {
     if (!this.props.editLayer || !this.props.editLayer.id || this.collector) return
-
+    this.collector = await this.props.mapControl.getCollector()
+    let dataset = await this.props.editLayer.layer.getDataset()
+    await this.collector.setDataset(dataset)
+    await this.collector.openGPS()
+    //风格
+    let geoStyle = await new GeoStyle().createObj()
+    //线颜色
+    await geoStyle.setLineColor(0, 110, 220)
+    //面颜色
+    await geoStyle.setFillForeColor(255, 0, 0)
+    //设置绘制风格
+    await this.collector.setStyle(geoStyle)
   }
 
   // 手绘采集
@@ -100,17 +117,34 @@ export default class CollectionToolBar extends React.Component {
       try {
         switch (type) {
           case POINT_HAND:
-            await this.props.mapControl.setAction(Action.CREATEPOINT)
+            // await this.props.mapControl.setAction(Action.CREATEPOINT)
+            await this.collector.createElement(GPSElementType.POINT)
+            await this.collector.setSingleTapEnable(true)
             break
           case LINE_HAND_POINT:
-            await this.props.mapControl.setAction(Action.CREATEPOLYLINE)
+            await this.collector.createElement(GPSElementType.LINE)
+            // await this.props.mapControl.setAction(Action.CREATEPOLYLINE)
+            await this.collector.setSingleTapEnable(true)
             break
           case REGION_HAND_POINT:
-            await this.props.mapControl.setAction(Action.CREATEPOLYGON)
+            await this.collector.createElement(GPSElementType.POLYGON)
+            // await this.props.mapControl.setAction(Action.CREATEPOLYGON)
+            await this.collector.setSingleTapEnable(true)
+            break
+          case LINE_HAND_PATH:
+            // await this.collector.createElement(GPSElementType.LINE)
+            await this.props.mapControl.setAction(Action.FREEDRAW)
+            // await this.collector.setSingleTapEnable(false)
+            break
+          case REGION_HAND_PATH:
+            // await this.collector.createElement(GPSElementType.POLYGON)
+            await this.props.mapControl.setAction(Action.DRAWPLOYGON)
+            // await this.collector.setSingleTapEnable(false)
             break
         }
+        Toast.show('开始采集')
       } catch (e) {
-        console.error(e)
+        Toast.show('采集失败')
       }
     }).bind(this)()
   }
@@ -119,7 +153,7 @@ export default class CollectionToolBar extends React.Component {
   gpsCollect = async () => {
     try {
       let dataset = await this.props.editLayer.layer.getDataset()
-      this.collector = await this.props.mapControl.getCollector()
+      // this.collector = await this.props.mapControl.getCollector()
       await this.collector.setDataset(dataset)
 
       // 风格
@@ -173,7 +207,6 @@ export default class CollectionToolBar extends React.Component {
   }
 
   _collectionChanged = event => {
-
     // event.x
     // event.y
     // event.dAccuracy
@@ -213,6 +246,8 @@ export default class CollectionToolBar extends React.Component {
           case POINT_HAND:
           case LINE_HAND_POINT:
           case REGION_HAND_POINT:
+          case LINE_HAND_PATH:
+          case REGION_HAND_PATH:
             await this.handCollect(type)
             break
           default:
@@ -253,41 +288,126 @@ export default class CollectionToolBar extends React.Component {
   }
 
   /** 撤销 **/
-  _undo = async () => {
-    if(this.props.mapControl) {
-      // await this.collector.undo()
-      await this.props.mapControl.undo()
-    }
+  _undo = type => {
+    (async function () {
+      try {
+        switch (type) {
+          case LINE_HAND_PATH:
+          case REGION_HAND_PATH:
+            if (this.props.mapControl) {
+              await this.props.mapControl.undo()
+            }
+            break
+          default:
+            this.collector && await this.collector.undo()
+            break
+        }
+        // await this.props.editLayer.layer.setEditable(true)
+      } catch (e) {
+        Toast.show('重做失败')
+      }
+    }).bind(this)()
   }
 
   /** 重做 **/
-  _redo = async () => {
-    if(this.props.mapControl) {
-      // await this.collector.redo()
-      await this.props.mapControl.redo()
-    }
+  _redo = type => {
+    (async function () {
+      try {
+        switch (type) {
+          case LINE_HAND_PATH:
+          case REGION_HAND_PATH:
+            if (this.props.mapControl) {
+              await this.props.mapControl.redo()
+            }
+            break
+          default:
+            this.collector && await this.collector.redo()
+            break
+        }
+        // await this.props.editLayer.layer.setEditable(true)
+      } catch (e) {
+        Toast.show('重做失败')
+      }
+    }).bind(this)()
   }
 
   /** 取消 **/
-  _cancel = async () => {
-    if(this.props.mapControl) {
-      // await this.props.mapControl.deleteCurrentGeometry()
-      await this.props.mapControl.cancel()
-      await this.props.mapControl.setAction(Action.SELECT)
-    }
+  _cancel = type => {
+    (async function () {
+      try {
+        switch (type) {
+          case LINE_HAND_PATH:
+          case REGION_HAND_PATH:
+            if (this.props.mapControl) {
+              await this.props.mapControl.cancel()
+            }
+            break
+          default:
+            this.collector && await this.collector.cancel()
+            break
+        }
+        // await this.props.editLayer.layer.setEditable(true)
+      } catch (e) {
+        Toast.show('取消失败')
+      }
+    }).bind(this)()
   }
 
   /** 保存 **/
-  _save = async () => {
-    if(this.props.mapControl) {
-      await this.props.mapControl.submit()
-      await this.props.mapControl.setAction(Action.PAN)
-    }
+  _save = type => {
+    (async function () {
+      try {
+        switch (type) {
+          case LINE_HAND_PATH:
+          case REGION_HAND_PATH:
+            if (this.props.mapControl) {
+              await this.props.mapControl.submit()
+            }
+            break
+          default:
+            this.collector && await this.collector.submit()
+            break
+        }
+        await this.props.mapControl.setAction(Action.SELECT)
+        let selection = await this.props.editLayer.layer.getSelection()
+        let ds = await this.props.editLayer.layer.getDataset()
+        let recordset = await (await ds.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
+        await recordset.moveLast()
+        let info = await recordset.getFieldInfo()
+        await selection.clear()
+        let index = await selection.add(info['SMID'].value)
+        if (index >= 0) {
+          this.props.setSelection && this.props.setSelection({
+            id: info['SMID'].value,
+            layerId: this.props.editLayer.layer._SMLayerId,
+            name: this.props.editLayer.name,
+            layer: this.props.editLayer.layer,
+          })
+        }
+        await recordset.dispose()
+      } catch (e) {
+        Toast.show('保存失败')
+      }
+    }).bind(this)()
   }
 
   /** 属性 **/
-  _attribute = async () => {
-    this.toDoAction()
+  _attribute = () => {
+    (async function() {
+      let editable = await await this.props.selection.layer.getEditable()
+      if (!editable) {
+        Toast.show('请选择图层' + this.props.editLayer.name + '上的一个对象')
+        return
+      }
+      let selection = await this.props.selection.layer.getSelection()
+      let count  = await selection.getCount()
+      if (count > 0) {
+        // NavigationService.navigate('LayerAttribute',{ selection: selection })
+        NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
+      } else {
+        Toast.show('请选择目标')
+      }
+    }.bind(this)())
   }
 
   /** 切换图层 **/
@@ -339,9 +459,9 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(LINE_GPS_POINT) },
-              { key: '添加点', action: () =>this._addPoint(LINE_GPS_POINT) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '添加点', action: () => this._addPoint(LINE_GPS_POINT) },
+              { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
+              { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
               { key: '取消', action: () => this._cancel(LINE_GPS_POINT) },
               { key: '保存', action: () => this._save(LINE_GPS_POINT) },
               { key: '属性', action: () => this._attribute(LINE_GPS_POINT) },
@@ -355,8 +475,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(LINE_GPS_PATH) },
-              { key: '记录', action: this._record },
-              { key: '暂停', action: this._pause },
+              // { key: '记录', action: this._record },
+              { key: '暂停', action: () => this._pause(LINE_GPS_POINT) },
               { key: '取消', action: () => this._cancel(LINE_GPS_PATH) },
               { key: '保存', action: () => this._save(LINE_GPS_PATH) },
               { key: '属性', action: () => this._attribute(LINE_GPS_PATH) },
@@ -370,8 +490,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(LINE_HAND_POINT) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '撤销', action: () => this._undo(LINE_HAND_POINT) },
+              { key: '重做', action: () => this._redo(LINE_HAND_POINT) },
               { key: '取消', action: () => this._cancel(LINE_HAND_POINT) },
               { key: '保存', action: () => this._save(LINE_HAND_POINT) },
               { key: '属性', action: () => this._attribute(LINE_HAND_POINT) },
@@ -385,8 +505,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(LINE_HAND_PATH) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '撤销', action: () => this._undo(LINE_HAND_PATH) },
+              { key: '重做', action: () => this._redo(LINE_HAND_PATH) },
               { key: '取消', action: () => this._cancel(LINE_HAND_PATH) },
               { key: '保存', action: () => this._save(LINE_HAND_PATH) },
               { key: '属性', action: () => this._attribute(LINE_HAND_PATH) },
@@ -405,8 +525,8 @@ export default class CollectionToolBar extends React.Component {
             operations: [
               { key: '开始采集', action: () => this._collect(REGION_GPS_POINT) },
               { key: '添加点', action: () => this._addPoint(REGION_GPS_POINT) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '撤销', action: () => this._undo(REGION_GPS_POINT) },
+              { key: '重做', action: () => this._redo(REGION_GPS_POINT) },
               { key: '取消', action: () => this._cancel(REGION_GPS_POINT) },
               { key: '保存', action: () => this._save(REGION_GPS_POINT) },
               { key: '属性', action: () => this._attribute(REGION_GPS_POINT) },
@@ -420,8 +540,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(REGION_GPS_PATH) },
-              { key: '记录', action: this._record },
-              { key: '暂停', action: this._pause },
+              // { key: '记录', action: this._record },
+              { key: '暂停', action: () => this._pause(REGION_GPS_PATH) },
               { key: '取消', action: () => this._cancel(REGION_GPS_PATH) },
               { key: '保存', action: () => this._save(REGION_GPS_PATH) },
               { key: '属性', action: () => this._attribute(REGION_GPS_PATH) },
@@ -435,8 +555,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(REGION_HAND_POINT) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '撤销', action: () => this._undo(REGION_HAND_POINT) },
+              { key: '重做', action: () => this._redo(REGION_HAND_POINT) },
               { key: '取消', action: () => this._cancel(REGION_HAND_POINT) },
               { key: '保存', action: () => this._save(REGION_HAND_POINT) },
               { key: '属性', action: () => this._attribute(REGION_HAND_POINT) },
@@ -450,8 +570,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(REGION_HAND_PATH) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '撤销', action: () => this._undo(REGION_HAND_PATH) },
+              { key: '重做', action: () => this._redo(REGION_HAND_PATH) },
               { key: '取消', action: () => this._cancel(REGION_HAND_PATH) },
               { key: '保存', action: () => this._save(REGION_HAND_PATH) },
               { key: '属性', action: () => this._attribute(REGION_HAND_PATH) },
@@ -459,56 +579,56 @@ export default class CollectionToolBar extends React.Component {
           },
         ]
         break
-      case CAD:
-        data = [
-          {
-            key: '涂鸦点',
-            type: CAD_POINT,
-            action: cbData => {
-              this.changeTap(cbData, CAD_POINT)
-            },
-            operations: [
-              { key: '开始采集', action: () => this._collect(CAD_POINT) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
-              { key: '取消', action: () => this._cancel(CAD_POINT) },
-              { key: '保存', action: () => this._save(CAD_POINT) },
-            ],
-          },
-          {
-            key: '涂鸦线',
-            type: CAD_LINE,
-            action: cbData => {
-              this.changeTap(cbData, CAD_LINE)
-            },
-            operations: [
-              { key: '开始采集', action: () => this._collect(CAD_LINE) },
-              { key: '点绘式', action: () => this._drawPoint(CAD_LINE) },
-              { key: '自由式', action: () => this._freeStyle(CAD_LINE) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
-              { key: '取消', action: () => this._cancel(CAD_LINE) },
-              { key: '保存', action: () => this._save(CAD_LINE) },
-            ],
-          },
-          {
-            key: '涂鸦面',
-            type: CAD_REGION,
-            action: cbData => {
-              this.changeTap(cbData, CAD_REGION)
-            },
-            operations: [
-              { key: '开始采集', action: () => this._collect(CAD_REGION) },
-              { key: '点绘式', action: () => this._drawPoint(CAD_REGION) },
-              { key: '自由式', action: () => this._freeStyle(CAD_REGION) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
-              { key: '取消', action: () => this._cancel(CAD_REGION) },
-              { key: '保存', action: () => this._save(CAD_REGION) },
-            ],
-          },
-        ]
-        break
+      // case CAD:
+      //   data = [
+      //     {
+      //       key: '涂鸦点',
+      //       type: CAD_POINT,
+      //       action: cbData => {
+      //         this.changeTap(cbData, CAD_POINT)
+      //       },
+      //       operations: [
+      //         { key: '开始采集', action: () => this._collect(CAD_POINT) },
+      //         { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
+      //         { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
+      //         { key: '取消', action: () => this._cancel(CAD_POINT) },
+      //         { key: '保存', action: () => this._save(CAD_POINT) },
+      //       ],
+      //     },
+      //     {
+      //       key: '涂鸦线',
+      //       type: CAD_LINE,
+      //       action: cbData => {
+      //         this.changeTap(cbData, CAD_LINE)
+      //       },
+      //       operations: [
+      //         { key: '开始采集', action: () => this._collect(CAD_LINE) },
+      //         { key: '点绘式', action: () => this._drawPoint(CAD_LINE) },
+      //         { key: '自由式', action: () => this._freeStyle(CAD_LINE) },
+      //         { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
+      //         { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
+      //         { key: '取消', action: () => this._cancel(CAD_LINE) },
+      //         { key: '保存', action: () => this._save(CAD_LINE) },
+      //       ],
+      //     },
+      //     {
+      //       key: '涂鸦面',
+      //       type: CAD_REGION,
+      //       action: cbData => {
+      //         this.changeTap(cbData, CAD_REGION)
+      //       },
+      //       operations: [
+      //         { key: '开始采集', action: () => this._collect(CAD_REGION) },
+      //         { key: '点绘式', action: () => this._drawPoint(CAD_REGION) },
+      //         { key: '自由式', action: () => this._freeStyle(CAD_REGION) },
+      //         { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
+      //         { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
+      //         { key: '取消', action: () => this._cancel(CAD_REGION) },
+      //         { key: '保存', action: () => this._save(CAD_REGION) },
+      //       ],
+      //     },
+      //   ]
+      //   break
       case TEXT:
         data = [
           {
@@ -519,8 +639,8 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(TEXT) },
-              { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
+              { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
+              { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
               { key: '取消', action: () => this._cancel(TEXT) },
               { key: '保存', action: () => this._save(TEXT) },
               { key: '属性', action: () => this._attribute(TEXT) },

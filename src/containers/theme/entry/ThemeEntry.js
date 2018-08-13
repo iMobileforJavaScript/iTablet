@@ -19,7 +19,7 @@ export default class ThemeEntry extends React.Component {
   }
 
   state = {
-    data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.UNIFIED}],
+    data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.LABEL}],
   }
 
   constructor(props) {
@@ -30,7 +30,7 @@ export default class ThemeEntry extends React.Component {
     this.mapControl = params && params.mapControl
 
     this.state = {
-      data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.UNIFIED}],
+      data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.LABEL}],
     }
   }
 

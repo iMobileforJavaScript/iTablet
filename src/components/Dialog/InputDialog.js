@@ -20,7 +20,7 @@ export default class InputDialog extends PureComponent {
     label: string,
     value: string,
     defaultValue: string,
-    inputSelection: Object,
+    // inputSelection: Object,
   }
 
   static defaultProps = {
@@ -82,10 +82,10 @@ export default class InputDialog extends PureComponent {
                 value: text,
               })
             }}
-            selection={this.props.inputSelection || {
-              start: this.state.value.length - 1,
-              end: this.state.value.length - 1,
-            }}
+            // selection={this.props.inputSelection || {
+            //   start: this.state.value.length - 1,
+            //   end: this.state.value.length - 1,
+            // }}
           />
         </View>
       </Dialog>

@@ -8,7 +8,7 @@ import {
   View,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility } from 'imobile_for_javascript'
+import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility, WorkspaceType } from 'imobile_for_javascript'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
@@ -83,6 +83,7 @@ export default class WorkSpaceFileList extends Component {
           }
         } else {
           let fileList = await Utility.getPathList(absolutePath)
+          // let fileList = await Utility.getPathListByFilter(absolutePath, {type: 'smwu'})
           this.setState({
             data: fileList,
             backPath: item.path,
@@ -109,13 +110,14 @@ export default class WorkSpaceFileList extends Component {
         await this.workspace.closeAllDatasource()
         let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
         let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
-        let openpath = '/sdcard' + path
+        let openpath = await Utility.appendingHomeDirectory(path)
         await workspaceCOnnectionInfo.setServer(openpath)
-        await workspaceCOnnectionInfo.setType(9)
+        await workspaceCOnnectionInfo.setType(WorkspaceType.SMWU)
         await this.workspace.open(workspaceCOnnectionInfo)
         await this.map.setWorkspace(this.workspace)
         this.mapName = await this.workspace.getMapName(0)
         await this.map.open(this.mapName)
+        await this.map.viewEntire()
         await this.mapControl.setAction(Action.SELECT)
         await this.map.refresh()
         NavigationService.goBack(key)
@@ -156,6 +158,7 @@ export default class WorkSpaceFileList extends Component {
             ;(async () => {
               let centerPoint = await point2dModule.createObj(lon, lat)
               await this.map.setCenter(centerPoint)
+              await this.map.viewEntire()
               await this.mapControl.setAction(Action.PAN)
               await this.map.refresh()
               key && NavigationService.goBack(key)

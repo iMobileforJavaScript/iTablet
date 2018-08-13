@@ -28,7 +28,7 @@ export default class LayerAttributeAdd extends React.Component {
     this.state = {
       callBack: params.callBack,
       data: params.data,
-      selection: params.selection,
+      dataset: params.dataset,
       name: params.data && params.data.name || '',
       type: params.data && params.data.type || '',
       maxLength: params.data && params.data.maxLength || '',
@@ -80,9 +80,7 @@ export default class LayerAttributeAdd extends React.Component {
     this.container.setLoading(true, '数据编辑中')
     ;(async function () {
       try {
-        let recordset = this.state.selection.recordset
-        let datasets = await recordset.getDataset()
-        let datasetVector = await datasets.toDatasetVector()
+        let datasetVector = await this.state.dataset.toDatasetVector()
         let index
         if (this.isEdit) {
           const { params } = this.props.navigation.state

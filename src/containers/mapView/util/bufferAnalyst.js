@@ -30,11 +30,11 @@ async function analyst(data) {
   let geoRegion
   let count = await queryRecordset.getRecordCount()
   if (count > 0) {
-    let datasource = await workspace.getDatasource(0)
-    let dtname = await datasource.getAvailableDatasetName('da')
-    let datasetVectorInfo = await new DatasetVectorInfo().createObjByNameType(dtname, DatasetType.REGION)
-    let datasetVector = await datasource.createDatasetVector(datasetVectorInfo)
-    let recordset = await datasetVector.getRecordset(false, CursorType.DYNAMIC)
+    // let datasource = await workspace.getDatasource(0)
+    // let dtname = await datasource.getAvailableDatasetName('da')
+    // let datasetVectorInfo = await new DatasetVectorInfo().createObjByNameType(dtname, DatasetType.REGION)
+    // let datasetVector = await datasource.createDatasetVector(datasetVectorInfo)
+    // let recordset = await datasetVector.getRecordset(false, CursorType.DYNAMIC)
     let isEOF = await queryRecordset.isEOF()
     while (!isEOF) {
       let bufferAnalystParameter = await new BufferAnalystParameter().createObj()

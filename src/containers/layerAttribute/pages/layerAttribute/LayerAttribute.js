@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, Button, AudioBottomDialog } from '../../../../components'
+import { Container, Button } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 
@@ -17,7 +17,6 @@ export default class LayerAttribute extends React.Component {
 
   props: {
     navigation: Object,
-    // selection: Object,
     currentAttribute: Object,
     setCurrentAttribute: () => {},
   }
@@ -25,13 +24,10 @@ export default class LayerAttribute extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    // this.workspace = params.workspace
-    // this.map = params.map
-    // this.cb = params.cb
     this.state = {
       dataSourceList: [],
       openList: {},
-      selection: params.selection,
+      recordset: params.recordset,
       attribute: {},
       tableTitle: [],
       tableHead: ['名称', '属性值'],
@@ -42,14 +38,6 @@ export default class LayerAttribute extends React.Component {
   componentDidMount() {
     this.getDatasets()
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (JSON.stringify(nextProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
-  //     this.setState({
-  //       attribute: nextProps.currentAttribute,
-  //     })
-  //   }
-  // }
 
   componentDidUpdate(prevProps) {
     if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
@@ -67,7 +55,7 @@ export default class LayerAttribute extends React.Component {
     this.container.setLoading(true)
     ;(async function () {
       try {
-        let recordset = this.state.selection.recordset
+        let recordset = this.state.recordset
         let records = await recordset.getFieldInfosArray()
         let attribute = []
         if (records && records.length > 0) {
@@ -81,7 +69,6 @@ export default class LayerAttribute extends React.Component {
         }
       } catch (e) {
         this.container.setLoading(false)
-        console.error(e)
       }
     }).bind(this)()
   }
@@ -95,7 +82,7 @@ export default class LayerAttribute extends React.Component {
       keys.forEach(key => {
         obj[key] =  modifiedData[key].data.value
       })
-      let recordset = this.state.selection.recordset
+      let recordset = this.state.recordset
       let { result, editResult, updateResult } = await recordset.setFieldValuesByNames(obj)
 
       this.container.setLoading(false)
@@ -110,35 +97,10 @@ export default class LayerAttribute extends React.Component {
         Toast.show("编辑成功")
       }
     }.bind(this)())
-    // NavigationService.goBack()
   }
 
   add = () => {
     Toast.show("待做")
-  }
-
-  startAudio = () => {
-    if (GLOBAL.SpeechManager)
-      (async function () {
-        try {
-          await GLOBAL.SpeechManager.startListening({
-            onEndOfSpeech: () => {
-              console.log('onEndOfSpeech')
-            },
-            onVolumeChanged: () => {
-              console.log('onVolumeChanged')
-            },
-            onError: e => {
-              Toast.show(e)
-            },
-            onResult: result => {
-              console.log(result.isLast + '-result: ' + result.info)
-            },
-          })
-        } catch (e) {
-          console.error(e)
-        }
-      }).bind(this)()
   }
 
   edit = () => {
@@ -182,12 +144,6 @@ export default class LayerAttribute extends React.Component {
           tableHead={['名称', '属性值']}
         />
         {this.renderBtns()}
-        {/*<AudioBottomDialog*/}
-          {/*startAudio={this.startAudio}*/}
-          {/*endAudio={this.startAudio}*/}
-          {/*confirmAction=""*/}
-          {/*cancelAction=""*/}
-        {/*/>*/}
       </Container>
     )
   }

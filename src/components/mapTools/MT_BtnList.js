@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
-import { constUtil, scaleSize } from '../../utils'
+import { constUtil, scaleSize, Toast } from '../../utils'
 import { ListSeparator } from '../../components'
 import PropTypes from 'prop-types'
 
@@ -19,7 +19,7 @@ const DATA_MANAGER = 'data_manager'
 const ANALYST = 'analyst'
 const TOOLS = 'tools'
 
-let show = false//
+let show = false
 let oldPress = null
 let type = ''
 
@@ -92,6 +92,8 @@ export default class MT_BtnList extends React.Component {
     this._showManager(COLLECTION)
     if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
       this.props.POP_List && this.props.POP_List(show, type)
+      let name = this.props.editLayer ? this.props.editLayer.name : ''
+      show && name && Toast.show('当前可编辑的图层为\n' + name)
     } else {
       this.props.POP_List && this.props.POP_List(false, null)
       this.props.chooseLayer && this.props.chooseLayer(-1, true, isShow => { // 传 -1 查询所有类型的图层
@@ -104,6 +106,8 @@ export default class MT_BtnList extends React.Component {
 
   _dataEdit = () => {
     this._showManager(DATA_EDIT)
+    let name = this.props.editLayer ? this.props.editLayer.name : ''
+    show && name && Toast.show('当前可编辑的图层为\n' + name)
     this.props.POP_List && this.props.POP_List(show, type)
   }
 

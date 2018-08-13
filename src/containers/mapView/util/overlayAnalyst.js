@@ -46,7 +46,7 @@ async function analyst({workspace, method, dataset, targetDataset, parameter}) {
     let datasourceName = await datasource.getAlias()
 
     let dtname = await datasource.getAvailableDatasetName(method)
-    let datasetVectorInfo = await new DatasetVectorInfo().createObjByNameType(dtname, DatasetType.REGION)
+    let datasetVectorInfo = await new DatasetVectorInfo().createObjByNameType(dtname, dataset.type)
     let resultDataset = await datasource.createDatasetVector(datasetVectorInfo)
 
     let overlay = new OverlayAnalyst()

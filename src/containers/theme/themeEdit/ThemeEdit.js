@@ -43,7 +43,7 @@ export default class ThemeEdit extends React.Component {
       case Const.RANGE:
         content = <ThemeRangeView isThemeLayer={this.isThemeLayer} nav={this.props.nav} setLoading={this.setLoading} map={this.map} mapControl={this.mapControl} layer={this.layer} />
         break
-      case Const.UNIFIED:
+      case Const.LABEL:
         content = <ThemeLabelView isThemeLayer={this.isThemeLayer} nav={this.props.nav} setLoading={this.setLoading} map={this.map} mapControl={this.mapControl} layer={this.layer} />
         break
       default:

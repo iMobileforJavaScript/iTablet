@@ -15,7 +15,6 @@ export default class LayerAttributeEdit extends React.Component {
   props: {
     navigation: Object,
     currentAttribute: Object,
-    selection: Object,
     setCurrentAttribute: () => {},
   }
 
@@ -26,7 +25,7 @@ export default class LayerAttributeEdit extends React.Component {
       callBack: params.callBack,
       dataSourceList: [],
       openList: {},
-      selection: params.selection,
+      dataset: params.dataset,
       attribute: props.currentAttribute,
       tableHead: ['序号', '名称', '类型', '长度', '缺省值', '必填'],
       tableTitle: [],
@@ -38,14 +37,6 @@ export default class LayerAttributeEdit extends React.Component {
   componentDidMount() {
     this.getDatasets()
   }
-
-  // componentWillReceiveProps(nextProps) {
-  //   if (JSON.stringify(nextProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
-  //     this.setState({
-  //       attribute: nextProps.currentAttribute,
-  //     })
-  //   }
-  // }
 
   componentDidUpdate(prevProps) {
     if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
@@ -59,9 +50,7 @@ export default class LayerAttributeEdit extends React.Component {
     this.container.setLoading(true)
     ;(async function () {
       try {
-        let recordset = this.state.selection.recordset
-        let dataset = await recordset.getDataset()
-        let datasetVector = await dataset.toDatasetVector()
+        let datasetVector = await this.state.dataset.toDatasetVector()
         let fieldInfos = await datasetVector.getFieldInfos()
 
         let attribute = fieldInfos
@@ -84,7 +73,8 @@ export default class LayerAttributeEdit extends React.Component {
   }
 
   add = () => {
-    NavigationService.navigate('LayerAttributeAdd', {selection: this.state.selection, callBack: this.refresh})
+    // NavigationService.navigate('LayerAttributeAdd', {selection: this.state.selection, callBack: this.refresh})
+    NavigationService.navigate('LayerAttributeAdd', {dataset: this.state.dataset, callBack: this.refresh})
   }
 
   edit = () => {
@@ -92,7 +82,8 @@ export default class LayerAttributeEdit extends React.Component {
       Toast.show('系统属性无法编辑')
     } else if (this.state.currentFieldInfo && Object.keys(this.state.currentFieldInfo).length > 0) {
       NavigationService.navigate('LayerAttributeAdd', {
-        selection: this.state.selection,
+        // selection: this.state.selection,
+        dataset: this.state.dataset,
         data: this.state.currentFieldInfo,
         callBack: this.getDatasets,
       })
@@ -115,7 +106,8 @@ export default class LayerAttributeEdit extends React.Component {
     this.container.setLoading(true)
     ;(async function () {
       try {
-        let recordset = this.state.selection.recordset
+        // let recordset = this.state.selection.recordset
+        let recordset = this.state.recordset
         let dataset = await recordset.getDataset()
         let datasetVector = await dataset.toDatasetVector()
         let result = await datasetVector.removeFieldInfo(this.state.currentFieldInfo.name)

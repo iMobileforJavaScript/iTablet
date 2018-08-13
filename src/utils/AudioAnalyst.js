@@ -138,6 +138,7 @@ function goToMapView(type) {
           ;(async () => {
             let centerPoint = await point2dModule.createObj(lon, lat)
             await map.setCenter(centerPoint)
+            await map.viewEntire()
             await mapControl.setAction(Action.PAN)
             await map.refresh()
             key && NavigationService.goBack(key)

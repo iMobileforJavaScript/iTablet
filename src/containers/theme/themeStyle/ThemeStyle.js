@@ -16,7 +16,7 @@ import styles from './styles'
 
 const UNIQUE = '单值专题图'
 const RANGE = '分段设色专题图'
-const UNIFIED = '标签专题图'
+const LABEL = '标签专题图'
 
 export default class ThemeStyle extends React.Component {
 
@@ -25,7 +25,7 @@ export default class ThemeStyle extends React.Component {
   }
 
   state = {
-    data: [{ title: UNIQUE }, { title: RANGE }, { title: UNIFIED }],
+    data: [{ title: UNIQUE }, { title: RANGE }, { title: LABEL }],
   }
 
   constructor(props) {

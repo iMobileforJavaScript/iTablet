@@ -60,7 +60,7 @@ export default class MT_layerManager extends React.Component {
           this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
         }
       }
-      this.mapControl && await this.mapControl.setAction(Action.PAN)
+      this.mapControl && await this.mapControl.setAction(Action.SELECT)
       let mapName = await this.map.getName()
       this.setState({
         datasourceList: layerNameArr.concat(),

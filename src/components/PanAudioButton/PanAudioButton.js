@@ -24,6 +24,7 @@ export default class PanAudioButton extends PureComponent {
     activeOpacity: number,
     type: string ,
     onPress: () => {},
+    fixed?: boolean,
     width?: number,
     height?: number,
     borderRadius?: number,
@@ -34,6 +35,7 @@ export default class PanAudioButton extends PureComponent {
     height: 50,
     width: 50,
     borderRadius: 25,
+    fixed: false,
   }
 
   constructor(props) {

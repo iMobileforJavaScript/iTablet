@@ -41,10 +41,10 @@ export default class Pop_BtnSectionList extends React.Component {
     this.operationRefs = []
   }
 
-  componentDidMount() {
-    let name = this.props.currentData && this.props.currentData.name ? this.props.currentData.name : ''
-    name && Toast.show('当前可编辑的图层为\n' + name)
-  }
+  // componentDidMount() {
+  //   let name = this.props.currentData && this.props.currentData.name ? this.props.currentData.name : ''
+  //   name && Toast.show('当前可编辑的图层为\n' + name)
+  // }
 
   findData = (data = [], currentData) => {
     let currentOperation = {},

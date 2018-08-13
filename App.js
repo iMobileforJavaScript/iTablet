@@ -107,15 +107,21 @@ class AppRoot extends Component {
             layer: this.props.editLayer,
           }}
         />
-        <PanAudioButton
-          onPress={() => {
-            if (this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName === 'MapView') {
-              GLOBAL.AudioDialog.setVisible(true, 'top')
-            } else {
-              GLOBAL.AudioDialog.setVisible(true)
-            }
-          }}
-          ref={ref => GLOBAL.PanAudioButton = ref}/>
+        {
+          (
+            !this.props.nav.routes ||
+            this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName !== 'MapView'
+          ) &&
+          <PanAudioButton
+            onPress={() => {
+              if (this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName === 'MapView') {
+                GLOBAL.AudioDialog.setVisible(true, 'top')
+              } else {
+                GLOBAL.AudioDialog.setVisible(true)
+              }
+            }}
+            ref={ref => GLOBAL.PanAudioButton = ref}/>
+        }
       </View>
     )
   }

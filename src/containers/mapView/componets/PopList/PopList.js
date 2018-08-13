@@ -23,7 +23,6 @@ export default class PopList extends React.Component {
     map: PropTypes.any,
     chooseLayer: PropTypes.func,
     showSetting: PropTypes.func,
-    analyst: PropTypes.func,
     showMeasure: PropTypes.func,
     subPopShow: PropTypes.bool,
     editLayer: PropTypes.object,
@@ -32,6 +31,7 @@ export default class PopList extends React.Component {
     setOverlaySetting: PropTypes.func,
     POP_List: PropTypes.func,
     showRemoveObjectDialog: PropTypes.func,
+    setSelection: PropTypes.func,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -97,7 +97,7 @@ export default class PopList extends React.Component {
   deleteNode = async () => {
     await this.props.mapControl.setAction(Action.DELETENODE)
   }
-  
+
   /** 撤销 **/
   _undo = async () => {
     if(this.props.mapControl) {
@@ -105,7 +105,7 @@ export default class PopList extends React.Component {
       await this.props.mapControl.undo()
     }
   }
-  
+
   /** 重做 **/
   _redo = async () => {
     if(this.props.mapControl) {
@@ -170,7 +170,8 @@ export default class PopList extends React.Component {
       let selection = await this.props.editLayer.layer.getSelection()
       let count  = await selection.getCount()
       if (count > 0) {
-        NavigationService.navigate('LayerAttribute',{ selection: selection })
+        // NavigationService.navigate('LayerAttribute',{ selection: selection })
+        NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
       } else {
         Toast.show('请选择目标')
       }
@@ -235,7 +236,7 @@ export default class PopList extends React.Component {
         let { result, resultDatasetName, resultLayerName } = await overlayAnalyst.analyst({
           workspace: this.props.workspace,
           method: this.props.overlaySetting.method,
-          dataset: this.props.overlaySetting.datasetVector,
+          dataset: this.props.overlaySetting.datasetVector.dataset,
           targetDataset: this.props.overlaySetting.targetDatasetVector,
         })
         this.props.setLoading(false)
@@ -309,7 +310,7 @@ export default class PopList extends React.Component {
             type: DatasetType.POINT,
             action: cbData => {this._chooseLayer(cbData, DatasetType.POINT)},
             operations: [
-              { key: '选择', action: this.select },
+              // { key: '选择', action: this.select },
               { key: '撤销', action: this._undo },
               { key: '重做', action: this._redo },
               { key: '删除', action: this.deleteNode },
@@ -320,24 +321,26 @@ export default class PopList extends React.Component {
             type: DatasetType.LINE,
             action: cbData => {this._chooseLayer(cbData, DatasetType.LINE)},
             operations: [
-              { key: '选择', action: this.select }, { key: '删除', action: this.delete },
+              // { key: '选择', action: this.select },
+              { key: '执行', action: this.submit }, { key: '删除', action: this.delete },
               { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
               { key: '编辑节点', action: this.editNode }, { key: '打断', action: this.break },
-              { key: '执行', action: this.submit }, { key: '属性', action: this.attribute }],
+              { key: '属性', action: this.attribute }],
           },
           {
             key: '面编辑',
             type: DatasetType.REGION,
             action: cbData => {this._chooseLayer(cbData, DatasetType.REGION)},
             operations: [
-              { key: '选择', action: this.select }, { key: '删除', action: this.delete },
+              // { key: '选择', action: this.select },
+              { key: '执行', action: this.submit }, { key: '删除', action: this.delete },
               { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
               { key: '编辑节点', action: this.editNode }, { key: '切割', action: this.splitRegion },
               { key: '合并', action: this.merge }, { key: '岛洞', action: this.drawHollowRegion },
               { key: '填充岛洞', action: this.fillHollowRegion }, { key: '补充岛洞', action: this.patchHollowRegion },
-              { key: '执行', action: this.submit }, { key: '属性', action: this.attribute },
+              { key: '属性', action: this.attribute },
             ],
           },
           {
@@ -345,7 +348,8 @@ export default class PopList extends React.Component {
             type: DatasetType.TEXT,
             action: cbData => {this._chooseLayer(cbData, DatasetType.TEXT)},
             operations: [
-              { key: '选择', action: this.select }, { key: '修改', action: this.toDoAction },
+              // { key: '选择', action: this.select },
+              { key: '修改', action: this.toDoAction },
               { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '删除', action: this.toDoAction }, { key: '属性', action: this.toDoAction },
             ],
@@ -445,6 +449,7 @@ export default class PopList extends React.Component {
           chooseLayer={this.props.chooseLayer}
           POP_List={this.props.POP_List}
           setLoading={this.props.setLoading}
+          setSelection={this.props.setSelection}
         />
       )
     }

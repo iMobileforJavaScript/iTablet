@@ -1,8 +1,8 @@
 /*
-  Copyright © SuperMap. All rights reserved.
-  Author: Wang zihao
-  E-mail: zihaowang5325@qq.com
-*/
+ Copyright © SuperMap. All rights reserved.
+ Author: Wang zihao
+ E-mail: zihaowang5325@qq.com
+ */
 
 import * as React from 'react'
 import { Workspace, SMMapView, Utility, Action, Point2D } from 'imobile_for_javascript'
@@ -62,7 +62,21 @@ export default class MapView extends React.Component {
   }
 
   componentWillUnmount() {
-    (async function(){
+    this.closeWorkspace()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer) &&
+      this.props.nav.routes[this.props.nav.index] === 'MapView'
+    ) {
+      let name = this.props.editLayer ? this.props.editLayer.name : ''
+      name && Toast.show('当前可编辑的图层为\n' + name)
+    }
+  }
+
+  closeWorkspace = () => {
+    (async function () {
       this.props.setEditLayer(null)
       this.props.setSelection(null)
       await this._remove_measure_listener()
@@ -72,17 +86,10 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer)) {
-      let name = this.props.editLayer ? this.props.editLayer.name : ''
-      name && Toast.show('当前可编辑的图层为\n' + name)
-    }
-  }
-
   saveLatest = () => {
     if (this.isExample) return
     try {
-      this.mapControl && this.mapControl.outputMap({mapView: this.mapView}).then(({result, uri}) => {
+      this.mapControl && this.mapControl.outputMap({ mapView: this.mapView }).then(({ result, uri }) => {
         if (result) {
           this.props.setLatestMap({
             path: this.DSParams && this.DSParams.server || this.path,
@@ -96,7 +103,7 @@ export default class MapView extends React.Component {
           })
         }
       })
-    } catch(e) {
+    } catch (e) {
       console.error(e)
     }
   }
@@ -112,52 +119,60 @@ export default class MapView extends React.Component {
       popType: type,
     })
     this.mapControl && (async function () {
-      await this.mapControl.setAction(Action.PAN)
+      await this.mapControl.setAction(show ? Action.SELECT : Action.PAN)
     }).bind(this)()
   }
 
   _chooseLayer = (type, isEdit = false, cb? = () => {}) => {
-    NavigationService.navigate('ChooseEditLayer',{
+    NavigationService.navigate('ChooseEditLayer', {
       workspace: this.workspace,
       map: this.map,
       type: type,
       mapControl: this.mapControl,
-      isEdit, cb })
+      isEdit, cb,
+    })
   }
 
   _showSetting = type => {
     this.setting.showSetting(type)
   }
 
-  _analyst = type => {
-    // let ws = this.workspace
-    // let map = this.map
-    // NavigationService.navigate('ChooseEditLayer',{ workspace: ws, map: map, type: type })
-  }
-
   //一级pop按钮 新增图层
   _addLayer = () => {
     let ws = this.workspace
     let map = this.map
-    NavigationService.navigate('DataSourcelist',{ workspace: ws, map: map ,mapControl:this.mapControl })
+    NavigationService.navigate('DataSourcelist', { workspace: ws, map: map, mapControl: this.mapControl })
   }
 
   //一级pop按钮 图层管理 点击函数
   _layer_manager = () => {
     let ws = this.workspace
     let map = this.map
-    NavigationService.navigate('LayerManager',{ workspace: ws, map: map, path: this.path, mapControl: this.mapControl })
+    NavigationService.navigate('LayerManager', {
+      workspace: ws,
+      map: map,
+      path: this.path,
+      mapControl: this.mapControl,
+    })
   }
 
   //一级pop按钮 数据采集 点击函数
   _data_collection = () => {
-    NavigationService.navigate('DataCollection', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+    NavigationService.navigate('DataCollection', {
+      workspace: this.workspace,
+      map: this.map,
+      mapControl: this.mapControl,
+    })
   }
 
 
   //一级pop按钮 数据管理 点击函数
   _data_manager = () => {
-    NavigationService.navigate('DataManagement', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+    NavigationService.navigate('DataManagement', {
+      workspace: this.workspace,
+      map: this.map,
+      mapControl: this.mapControl,
+    })
   }
 
   //二级pop按钮 量算 点击函数
@@ -225,12 +240,10 @@ export default class MapView extends React.Component {
     let layerSelectable = true
     if (this.props.selection && this.props.selection.layer) {
       layerSelectable = this.props.selection.layer._SMLayerId !== event.layer._SMLayerId || this.props.selection.id !== event.id
-    } else {
-      layerSelectable = true
     }
     event.layer.getName().then(name => {
       Toast.show('选中 ' + name)
-      Object.assign(event, {name: name})
+      Object.assign(event, { name: name })
       layerSelectable && this.props.setSelection(event)
     })
   }
@@ -240,19 +253,19 @@ export default class MapView extends React.Component {
     this.props.setSelection(events)
   }
 
-  btnClick = () => {}
-
-  toOpen = async() => {
-    NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map,mapControl:this.mapControl})
+  toOpen = async () => {
+    NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
   }
-  toCloesMap=async()=>{
+
+  toCloesMap = async () => {
     await this.map.close()
     await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
     NavigationService.goBack(this.props.nav.routes[1].key)
   }
+
   // 地图保存
   saveMap = () => {
-    (async function(){
+    (async function () {
       try {
         let saveMap = await this.map.save()
         if (!saveMap) {
@@ -278,7 +291,7 @@ export default class MapView extends React.Component {
 
   // 删除图层
   removeObject = () => {
-    (async function(){
+    (async function () {
       try {
         if (!this.map || !this.props.selection || !this.props.selection.id) return
         let selection = await this.props.selection.layer.getSelection()
@@ -302,6 +315,10 @@ export default class MapView extends React.Component {
     if (this.isExample) return null
     let arr = []
     let headerBtnData = [{
+      title: '语音',
+      image: require('../../assets/public/icon-audio-white.png'),
+      action: () => GLOBAL.AudioDialog.setVisible(true, 'top'),
+    }, {
       title: '打开',
       image: require('../../assets/public/icon-open-white.png'),
       action: this.toOpen,
@@ -313,14 +330,11 @@ export default class MapView extends React.Component {
       title: '关闭',
       image: require('../../assets/public/icon-close-white.png'),
       action: this.toCloesMap,
-    }, {
-      title: '首页',
-      image: require('../../assets/public/icon-home-white.png'),
-      action: () => NavigationService.goBack(this.props.nav.routes[1].key),
     }]
-    headerBtnData.forEach(({title, image, action}) => {
+    headerBtnData.forEach(({ title, image, action }) => {
       arr.push(
-        <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} BtnImageSrc={image} BtnClick={action} />
+        <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} BtnImageSrc={image}
+          BtnClick={action}/>
       )
     })
     return arr
@@ -332,94 +346,13 @@ export default class MapView extends React.Component {
     } else {
       // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
       // NavigationService.goBack(this.props.nav.routes[1].key)
+      this.closeWorkspace()
       NavigationService.goBack()
     }
   }
 
   setLoading = (loading = false) => {
     this.container && this.container.setLoading(loading)
-  }
-
-  render() {
-    let headerRight = this.renderHeaderBtns()
-    return (
-      <Container
-        ref={ref => this.container = ref}
-        initWithLoading
-        headerProps={{
-          title: this.isExample ? '示例地图' : '',
-          navigation: this.props.navigation,
-          headerRight: headerRight,
-          backAction: this.back,
-        }}>
-        <SMMapView ref={ref => GLOBAL.mapView = ref} style={styles.map} onGetInstance={this._onGetInstance} />
-        {
-          this.state.measureShow &&
-          <PopMeasureBar
-            measureLine={this._measure_line}
-            measureSquare={this._measure_square}
-            measurePause={this._measure_pause}
-            style={styles.measure}
-            result={this.state.measureResult} />
-        }
-        {
-          this.state.popShow && <PopList
-            popType={this.state.popType}
-            editLayer={this.props.editLayer}
-            selection={this.props.selection}
-            mapView={this.mapView}
-            mapControl={this.mapControl}
-            workspace={this.workspace}
-            map={this.map}
-            setLoading={this.setLoading}
-            chooseLayer={this._chooseLayer}
-            POP_List={this._pop_list}
-            showSetting={this._showSetting}
-            analyst={this._analyst}
-            bufferSetting={this.props.bufferSetting}
-            overlaySetting={this.props.overlaySetting}
-            setOverlaySetting={this.props.setOverlaySetting}
-            showMeasure={this._pop_measure_click}
-            showRemoveObjectDialog={this.showRemoveObjectDialog}
-          />
-        }
-        <MTBtnList
-          hidden={this.isExample}
-          POP_List={this._pop_list}
-          layerManager={this._layer_manager}
-          dataCollection={this._data_collection}
-          dataManager={this._data_manager}
-          addLayer={this._addLayer}
-          chooseLayer={this._chooseLayer}
-          editLayer={this.props.editLayer}
-        />
-        {
-          !this.isExample &&
-          <Setting
-            ref={ref => this.setting = ref}
-            selection={this.props.selection}
-            mapControl={this.mapControl}
-            workspace={this.workspace}
-            map={this.map}
-            setLoading={this.setLoading}
-            setBufferSetting={this.props.setBufferSetting}
-            setOverlaySetting={this.props.setOverlaySetting}
-            bufferSetting={this.props.bufferSetting}
-            overlaySetting={this.props.overlaySetting}
-            setAnalystLayer={this.props.setAnalystLayer}
-          />
-        }
-        <Dialog
-          ref={ref => this.removeObjectDialog = ref}
-          type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？'}
-          confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
-        />
-      </Container>
-    )
   }
 
   _addMap = () => {
@@ -507,7 +440,7 @@ export default class MapView extends React.Component {
           map: this.map,
         })
 
-         this.mapName = await this.map.getName()
+        this.mapName = await this.map.getName()
 
         // await this.map.setScale(0.0005)
         navigator.geolocation.getCurrentPosition(
@@ -530,7 +463,7 @@ export default class MapView extends React.Component {
 
         let dataset = await dsBaseMap.getDataset(this.layerIndex)
         await this.map.addLayer(dataset, true)
-       // await this.map.viewEntire()
+        // await this.map.viewEntire()
         await this.map.refresh()
         if (this.labelDSParams) {
           let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
@@ -543,6 +476,88 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
       }
     }).bind(this)()
+  }
+
+  render() {
+    let headerRight = this.renderHeaderBtns()
+    return (
+      <Container
+        ref={ref => this.container = ref}
+        initWithLoading
+        headerProps={{
+          title: this.isExample ? '示例地图' : '',
+          navigation: this.props.navigation,
+          headerRight: headerRight,
+          backAction: this.back,
+        }}>
+        <SMMapView ref={ref => GLOBAL.mapView = ref} style={styles.map} onGetInstance={this._onGetInstance}/>
+        {
+          this.state.measureShow &&
+          <PopMeasureBar
+            measureLine={this._measure_line}
+            measureSquare={this._measure_square}
+            measurePause={this._measure_pause}
+            style={styles.measure}
+            result={this.state.measureResult}/>
+        }
+        {
+          this.state.popShow && <PopList
+            popType={this.state.popType}
+            editLayer={this.props.editLayer}
+            selection={this.props.selection}
+            mapView={this.mapView}
+            mapControl={this.mapControl}
+            workspace={this.workspace}
+            map={this.map}
+            setLoading={this.setLoading}
+            chooseLayer={this._chooseLayer}
+            POP_List={this._pop_list}
+            showSetting={this._showSetting}
+            bufferSetting={this.props.bufferSetting}
+            overlaySetting={this.props.overlaySetting}
+            setOverlaySetting={this.props.setOverlaySetting}
+            showMeasure={this._pop_measure_click}
+            showRemoveObjectDialog={this.showRemoveObjectDialog}
+            setSelection={this.props.setSelection}
+          />
+        }
+        <MTBtnList
+          hidden={this.isExample}
+          POP_List={this._pop_list}
+          layerManager={this._layer_manager}
+          dataCollection={this._data_collection}
+          dataManager={this._data_manager}
+          addLayer={this._addLayer}
+          chooseLayer={this._chooseLayer}
+          editLayer={this.props.editLayer}
+        />
+        {
+          !this.isExample &&
+          <Setting
+            ref={ref => this.setting = ref}
+            selection={this.props.selection}
+            mapControl={this.mapControl}
+            workspace={this.workspace}
+            map={this.map}
+            setLoading={this.setLoading}
+            setBufferSetting={this.props.setBufferSetting}
+            setOverlaySetting={this.props.setOverlaySetting}
+            bufferSetting={this.props.bufferSetting}
+            overlaySetting={this.props.overlaySetting}
+            setAnalystLayer={this.props.setAnalystLayer}
+          />
+        }
+        <Dialog
+          ref={ref => this.removeObjectDialog = ref}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'是否要删除该对象吗？'}
+          confirmAction={this.removeObject}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
+      </Container>
+    )
   }
 }
 

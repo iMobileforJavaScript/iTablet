@@ -54,7 +54,7 @@ export default class ChooseEditLayer extends React.Component {
       let layer = item.layer
       await layer.setSelectable(true)
       this.isEdit && await layer.setEditable(true)
-      await this.mapControl.setAction(Action.PAN)
+      await this.mapControl.setAction(Action.SELECT)
       // await this.map.refresh()
       this.props.setEditLayer(item)
       this.props.navigation.goBack()

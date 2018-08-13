@@ -29,9 +29,20 @@ export default class NewDSource extends React.Component {
     this.state = {
       name: '',
       path: '',
-      defaultPath: ConstPath.LocalDataPath,
       engineType: EngineType.UDB,
     }
+  }
+
+  componentDidMount() {
+    (async function () {
+      let connInfo = await this.workspace.getConnectionInfo()
+      let server = await connInfo.getServer()
+      let path = server.substr(0, server.lastIndexOf('/'))
+      let isExist = await Utility.fileIsExist(path)
+      this.setState({
+        path: isExist ? path : ConstPath.LocalDataPath,
+      })
+    }).bind(this)()
   }
 
   checkNewDatasource = () => {
@@ -41,12 +52,12 @@ export default class NewDSource extends React.Component {
       return
     }
     (async function () {
-      let filePath = (this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb'
-      let isExist = await Utility.fileIsExistInHomeDirectory(filePath)
+      let filePath = this.state.path + '/' + this.state.name + '.udb'
+      let isExist = await Utility.fileIsExist(filePath)
       if (isExist) {
         this.dialog.setDialogVisible(true)
       } else {
-        this.createDatasource()
+        await this.createDatasource()
       }
     }).bind(this)()
   }
@@ -54,7 +65,7 @@ export default class NewDSource extends React.Component {
   createDatasource = () => {
     (async function () {
       try {
-        let filePath = (await Utility.appendingHomeDirectory() + (this.state.path || this.state.defaultPath) + '/' + this.state.name + '.udb')
+        let filePath = this.state.path + '/' + this.state.name + '.udb'
         let datasource = await this.workspace.createDatasource(filePath, this.state.engineType)
         if (datasource) {
           let DSParams = { server: filePath, engineType: this.state.engineType }
