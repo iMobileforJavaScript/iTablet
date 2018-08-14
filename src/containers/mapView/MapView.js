@@ -201,7 +201,7 @@ export default class MapView extends React.Component {
   }
 
   _remove_measure_listener = async () => {
-    await this.mapControl.removeMeasureListener()
+    this.mapControl && await this.mapControl.removeMeasureListener()
   }
 
   _measure_line = async () => {
@@ -233,7 +233,7 @@ export default class MapView extends React.Component {
   }
 
   _removeGeometrySelectedListener = async () => {
-    await this.mapControl.removeGeometrySelectedListener()
+    this.mapControl && await this.mapControl.removeGeometrySelectedListener()
   }
 
   geometrySelected = event => {
@@ -257,9 +257,10 @@ export default class MapView extends React.Component {
     NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
   }
 
-  toCloesMap = async () => {
-    await this.map.close()
-    await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
+  toCloesMap = () => {
+    // await this.map.close()
+    // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
+    this.closeWorkspace()
     NavigationService.goBack(this.props.nav.routes[1].key)
   }
 
@@ -381,9 +382,9 @@ export default class MapView extends React.Component {
           map: this.map,
         })
 
-        let filePath = await Utility.appendingHomeDirectory(this.path)
+        // let filePath = await Utility.appendingHomeDirectory(this.path)
 
-        await this.workspace.open(filePath)
+        await this.workspace.open(this.path)
         await this.map.setWorkspace(this.workspace)
         this.mapName = await this.workspace.getMapName(0)
 
@@ -439,7 +440,6 @@ export default class MapView extends React.Component {
           mapControl: this.mapControl,
           map: this.map,
         })
-
         this.mapName = await this.map.getName()
 
         // await this.map.setScale(0.0005)
@@ -458,9 +458,7 @@ export default class MapView extends React.Component {
             }).bind(this)()
           }
         )
-
         let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-
         let dataset = await dsBaseMap.getDataset(this.layerIndex)
         await this.map.addLayer(dataset, true)
         // await this.map.viewEntire()

@@ -26,9 +26,9 @@ export default class WorkSpaceFileList extends Component {
     super(props)
     const { params } = this.props.navigation.state
     const { nav } = this.props
-    this.workspace = params.workspace ? params.workspace : 'noworkspace'
-    this.map = params.map ? params.map : 'nomap'
-    this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
+    this.workspace = params.workspace
+    this.map = params.map
+    this.mapControl = params.mapControl
     this.routes = nav.routes
     this.path = ConstPath.LocalDataPath
     this.title = params.title
@@ -60,12 +60,9 @@ export default class WorkSpaceFileList extends Component {
     }).bind(this)()
   }
 
-
-
   _offLine_More = () => {
     Toast.show('无法打开此类型文件')
   }
-
 
   getFileList = item => {
     (async function () {
@@ -75,9 +72,9 @@ export default class WorkSpaceFileList extends Component {
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
           if (filename === '.smwu' && this.need === 'workspace') {
-            this._toLoadMapView(item.path, '')
+            this._toLoadMapView(absolutePath, '')
           } else if (filename === '.udb' && this.need === 'udb') {
-            this._toLoadMapView(item.path, 'UDB')
+            this._toLoadMapView(absolutePath, EngineType.UDB)
           } else {
             this._offLine_More()
           }
@@ -99,7 +96,7 @@ export default class WorkSpaceFileList extends Component {
 
   _toLoadMapView = (path, type) => {
     (async function () {
-      if (this.workspace !== 'noworkspace' && this.need === 'workspace') {
+      if (this.workspace && this.need === 'workspace') {
         let key = ''
         for (let index = 0; index < this.routes.length; index++) {
           if (this.routes[index].routeName === 'MapView') {
@@ -110,8 +107,8 @@ export default class WorkSpaceFileList extends Component {
         await this.workspace.closeAllDatasource()
         let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
         let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
-        let openpath = await Utility.appendingHomeDirectory(path)
-        await workspaceCOnnectionInfo.setServer(openpath)
+        // let openpath = await Utility.appendingHomeDirectory(path)
+        await workspaceCOnnectionInfo.setServer(path)
         await workspaceCOnnectionInfo.setType(WorkspaceType.SMWU)
         await this.workspace.open(workspaceCOnnectionInfo)
         await this.map.setWorkspace(this.workspace)
@@ -122,7 +119,7 @@ export default class WorkSpaceFileList extends Component {
         await this.map.refresh()
         NavigationService.goBack(key)
       }
-      if (this.workspace !== 'noworkspace' && this.need === 'udb') {
+      else if (this.workspace && this.map && this.need === 'udb') {
         // let str = path.substr(path.lastIndexOf('/') + 1)
         // let name = str.substr(0, str.lastIndexOf('.'))
         await this.map.close()
@@ -142,15 +139,8 @@ export default class WorkSpaceFileList extends Component {
             key = this.routes[index + 1].key
           }
         }
-        // this.DSParams = { server: path, engineType: EngineType.UDB }
-        // await this.workspace.openDatasource(this.DSParams)
-        // await this.mapControl.setAction(Action.SELECT)
-        // await this.map.refresh()
-        // NavigationService.goBack(key)
 
         const point2dModule = new Point2D()
-
-        // await this.map.setScale(0.0001)
         navigator.geolocation.getCurrentPosition(
           position => {
             let lat = position.coords.latitude
@@ -165,16 +155,16 @@ export default class WorkSpaceFileList extends Component {
             }).bind(this)()
           }
         )
+
+        // let openpath = await Utility.appendingHomeDirectory(path)
+        // await this.map.setScale(0.0001)
         this.DSParams = { server: path, engineType: EngineType.UDB }
         let layerIndex = 0
-
         let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-
         let dataset = await dsBaseMap.getDataset(layerIndex)
         await this.map.addLayer(dataset, true)
-      }
-      else {
-        NavigationService.navigate('MapView', { path: path, type: type })
+      } else {
+        NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
       }
     }).bind(this)()
   }
