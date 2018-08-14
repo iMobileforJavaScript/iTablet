@@ -105,7 +105,7 @@ export default class ThemeLabelView extends React.Component {
       try {
         let themeLabel = await new ThemeLabel().createObj()
         let textStyle = await new TextStyle().createObj()
-
+        await themeLabel.setLabelExpression(this.state.expression)
         let rgba = dataUtil.colorRgba(this.state.data.fontColor)
 
         await textStyle.setForeColor(rgba.r, rgba.g, rgba.b, rgba.a)

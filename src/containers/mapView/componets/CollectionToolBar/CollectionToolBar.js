@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { constUtil, Toast } from '../../../../utils'
+import { constUtil, Toast, scaleSize } from '../../../../utils'
 import {
   DatasetType,
   Action,
@@ -76,6 +76,12 @@ export default class CollectionToolBar extends React.Component {
     this.createCollector()
   }
 
+  // componentWillUnmount() {
+  //   (async function () {
+  //     await this.collector.removeListener()
+  //   }).bind(this)()
+  // }
+
   changeTap = async (cbData, type) => {
     this.props.setLoading && this.props.setLoading(true)
     switch (type) {
@@ -109,6 +115,10 @@ export default class CollectionToolBar extends React.Component {
     await geoStyle.setFillForeColor(255, 0, 0)
     //设置绘制风格
     await this.collector.setStyle(geoStyle)
+  
+    await this.collector.setCollectionChangedListener({
+      collectionChanged: this._collectionChanged,
+    })
   }
 
   // 手绘采集
@@ -244,10 +254,30 @@ export default class CollectionToolBar extends React.Component {
       try {
         switch (type) {
           case POINT_HAND:
+            await this.collector.createElement(GPSElementType.POINT)
+            await this.collector.setSingleTapEnable(true)
+            break
           case LINE_HAND_POINT:
+            await this.collector.createElement(GPSElementType.LINE)
+            await this.collector.setSingleTapEnable(true)
+            break
           case REGION_HAND_POINT:
+            await this.collector.createElement(GPSElementType.POLYGON)
+            await this.collector.setSingleTapEnable(true)
+            break
           case LINE_HAND_PATH:
+            await this.props.mapControl.setAction(Action.FREEDRAW)
+            break
           case REGION_HAND_PATH:
+            await this.props.mapControl.setAction(Action.DRAWPLOYGON)
+            break
+          case POINT_GPS:
+          case LINE_GPS_POINT:
+          case REGION_GPS_POINT:
+            await this.collector.addGPSPoint()
+            break
+          case LINE_GPS_PATH:
+          case REGION_GPS_PATH:
             await this.handCollect(type)
             break
           default:
@@ -444,6 +474,9 @@ export default class CollectionToolBar extends React.Component {
             },
             operations: [
               { key: '开始采集', action: () => this._collect(POINT_HAND) },
+              { key: '撤销', action: () => this._undo(POINT_HAND) },
+              { key: '重做', action: () => this._redo(POINT_HAND) },
+              { key: '保存', action: () => this._save(POINT_HAND) },
               { key: '属性', action: () => this._attribute(POINT_HAND) },
             ],
           },
@@ -498,7 +531,7 @@ export default class CollectionToolBar extends React.Component {
             ],
           },
           {
-            key: '手绘-轨迹式',
+            key: '手绘-自由式',
             type: LINE_HAND_PATH,
             action: cbData => {
               this.changeTap(cbData, LINE_HAND_PATH)
@@ -563,7 +596,7 @@ export default class CollectionToolBar extends React.Component {
             ],
           },
           {
-            key: '手绘-轨迹式',
+            key: '手绘-自由式',
             type: REGION_HAND_PATH,
             action: cbData => {
               this.changeTap(cbData, REGION_HAND_PATH)
@@ -682,7 +715,7 @@ export default class CollectionToolBar extends React.Component {
     let {currentOperation, currentIndex, lastIndex} = this.checkCurrentOperation(data, this.state.currentOperation)
     return (
       <View style={styles.popView}>
-        <MTBtn style={styles.changeLayerBtn} BtnImageSrc={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer} />
+        <MTBtn style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage} BtnImageSrc={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer} />
         <PopBtnSectionList
           ref={ref => this.popBSL = ref}
           popType={this.state.popType}
@@ -733,7 +766,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     left: 0,
-    bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
+    bottom: scaleSize(100),
     backgroundColor: 'transparent',
   },
   pop: {
@@ -741,5 +774,11 @@ const styles = StyleSheet.create({
   },
   changeLayerBtn: {
     alignSelf: 'flex-end',
+    marginRight: scaleSize(10),
+    marginBottom: scaleSize(10),
+  },
+  changeLayerImage: {
+    height: scaleSize(60),
+    width: scaleSize(60),
   },
 })

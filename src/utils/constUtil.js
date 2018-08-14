@@ -1,7 +1,7 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
 import * as React from 'react'
@@ -22,18 +22,18 @@ const HEADER_COLOR = USUAL_BLUE
 
 const SEPARATOR = ()=> <View style={{ height: 2 / PixelRatio.get(), backgroundColor: '#bbbbbb', marginLeft: 7, marginRight: 7 }} />
 export {
-	WIDTH,
-	HEIGHT,
-	USUAL_LINEWIDTH,
+  WIDTH,
+  HEIGHT,
+  USUAL_LINEWIDTH,
 
-	USUAL_SEPARATORCOLOR,
-	UNDERLAYCOLOR,
-	USUAL_GREEN,
-	USUAL_BLUE,
-	USUAL_PURPLE,
+  USUAL_SEPARATORCOLOR,
+  UNDERLAYCOLOR,
+  USUAL_GREEN,
+  USUAL_BLUE,
+  USUAL_PURPLE,
 
-	HEADER_HEIGHT,
-	HEADER_COLOR,
+  HEADER_HEIGHT,
+  HEADER_COLOR,
 
-	SEPARATOR,
+  SEPARATOR,
 }
