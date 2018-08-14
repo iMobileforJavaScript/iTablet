@@ -66,6 +66,7 @@ export default class ThemeRangeView extends React.Component {
 
     NavigationService.navigate('ChoosePage', {
       type: type,
+      layer: type === ChoosePage.Type.EXPRESSION && this.props.layer,
       cb: value => cb(value),
     })
   }

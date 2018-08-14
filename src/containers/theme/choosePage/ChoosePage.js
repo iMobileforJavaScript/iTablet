@@ -30,6 +30,7 @@ export default class ChoosePage extends React.Component {
     let data = []
     // this.title = this.type === 'font' ? '字体' : this.type === 'color' ? '颜色' : '表达式'
     this.cb = params && params.cb || (() => {})
+    this.layer = params && params.layer
     // let data = this.type === 'font' ? fonts : this.type === 'color' ? this.getColors() : []
 
     switch (this.type) {
@@ -75,10 +76,11 @@ export default class ChoosePage extends React.Component {
   }
 
   getData = () => {
+    if (!this.layer) return
     this.container.setLoading(true)
     ;(async function () {
       try {
-        let dataset = await this.state.layer.getDataset()
+        let dataset = await this.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
         let fieldInfos = await datasetVector.getFieldInfos()
 

@@ -50,6 +50,7 @@ export default class ThemeLabelView extends React.Component {
   getExpression = () => {
     NavigationService.navigate('ChoosePage', {
       type: ChoosePage.Type.EXPRESSION,
+      layer: this.props.layer,
       cb: ({key}) => {
         this.getValue({expression: key})
       },
@@ -57,10 +58,10 @@ export default class ThemeLabelView extends React.Component {
   }
 
   getFontColor = () => {
-    NavigationService.navigate('ChoosePage', {
-      type: ChoosePage.Type.FONT_COLOR,
-      cb: ({key}) => {
-        this.getValue({fontColor: key})
+    NavigationService.navigate('ColorPickerPage', {
+      defaultColor: this.state.data.fontColor,
+      cb: color => {
+        this.getValue({ fontColor: color })
       },
     })
   }
@@ -129,7 +130,6 @@ export default class ThemeLabelView extends React.Component {
         Toast.show('设置成功')
       } catch (e) {
         Toast.show('设置失败')
-        console.warn(e)
       }
     }).bind(this)()
   }

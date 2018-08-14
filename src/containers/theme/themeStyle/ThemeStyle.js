@@ -7,7 +7,6 @@
 import * as React from 'react'
 import { ScrollView, Text, View } from 'react-native'
 import { Container, Button, Row } from '../../../components'
-import { Const } from '../../../constains'
 import { Toast, dataUtil } from '../../../utils'
 import { DatasetType, GeoStyle, Size2D } from 'imobile_for_javascript'
 import NavigationService from '../../NavigationService'
