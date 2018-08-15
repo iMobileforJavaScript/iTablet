@@ -36,12 +36,10 @@ export default class Add_Layer extends React.Component {
   }
   _test_change = text => {
     this.setState({ InputText: text })
-
   }
 
 
   _OK = async () => {
-    // Toast.show('待完善')\
     if (this.state.InputText === '') {
       Toast.show('请输入图层名称')
     }
@@ -71,10 +69,11 @@ export default class Add_Layer extends React.Component {
       }
       let datasets = await this.datasource.getDatasets()
       let datasetname = await datasets.getAvailableDatasetName(this.state.InputText)
-      let DatasetVectorInfo = await DatasetVectorInfomodule.createObjByNameType(datasetname, this.type)
-      let dataset = await datasets.create(DatasetVectorInfo)  // 死了
-      await this.map.addDataset(dataset, true)
-      let num = await layers.getCount()
+      let datasetVectorInfo = await DatasetVectorInfomodule.createObjByNameType(datasetname, this.type)
+      let datasetVector = await this.datasource.createDatasetVector(datasetVectorInfo)
+      let datasetVectorname= await datasetVector.getName()
+      let dataset= await datasets.get(datasetVectorname)
+      await this.map.addLayer(dataset,true)
       await (await layers.get(0)).setCaption(this.state.InputText)
       await this.mapControl.setAction(Action.SELECT)
       await this.map.refresh()
