@@ -25,21 +25,24 @@ export default class ThemeRangeView extends React.Component {
     map: Object,
     mapControl: Object,
     layer: Object,
+    isThemeLayer: boolean,
     setLoading: () => {},
+  }
+  
+  static defaultProps = {
+    isThemeLayer: false,
   }
 
   constructor(props) {
     super(props)
     this.state = {
       title: props.title,
-      themeRangeList: [
-      ],
+      themeRangeList: [],
       data: {
-        expression: 'SmID',
+        expression: 'SMUSERID',
         rangeMode: RangeMode.EQUALINTERVAL,
         rangeCount: 5,
         precision: 1,
-        fontSize: 10,
         colorMethod: {
           key: 'YELLOWRED',
           value: ColorGradientType.CYANGREEN,
@@ -50,7 +53,33 @@ export default class ThemeRangeView extends React.Component {
   }
 
   componentDidMount() {
-    this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+    this.getInitData()
+  }
+  
+  getInitData = async () => {
+    let data = {
+      expression: 'SMUSERID',
+      rangeMode: RangeMode.EQUALINTERVAL,
+      rangeCount: 5,
+      precision: 1,
+      colorMethod: {
+        key: 'YELLOWRED',
+        value: ColorGradientType.CYANGREEN,
+      },
+    }
+    if (this.props.isThemeLayer) {
+      let theme = await this.props.layer.getTheme()
+      data.expression = await theme.getRangeExpression()
+      data.rangeMode = await theme.getRangeMode()
+      data.rangeCount = await theme.getCount()
+      data.precision = await theme.getPrecision()
+      // TODO 获取颜色方案
+    }
+    this.setState({
+      data: data,
+    }, () => {
+      this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+    })
   }
 
   goToChoosePage = type => {
@@ -122,6 +151,21 @@ export default class ThemeRangeView extends React.Component {
         let count = await this.themeRange.getCount()
         let themeRangeList = []
 
+        if (count > 3000) {
+          this.props.setLoading && this.props.setLoading(false)
+          this.setState({
+            data: {
+              expression: expression,
+              rangeMode: rangeMode,
+              rangeCount: rangeMode === RangeMode.CUSTOMINTERVAL ? customInterval : count,
+              precision: precision,
+              colorMethod: colorMethod,
+            },
+            themeItemList: [],
+          }, () => Toast.show('字段单值项炒超过3000，专题图制作失败'))
+          return
+        }
+        
         for (let i = 0; i < count; i++) {
           let item = await this.themeRange.getItem(i)
           let rangeValue = await item.getEnd()
@@ -175,7 +219,15 @@ export default class ThemeRangeView extends React.Component {
   confirm = () => {
     (async function () {
       let dataset = await this.props.layer.getDataset()
-      await this.props.map.addThemeLayer(dataset, this.themeRange, true)
+      if (this.props.isThemeLayer) {
+        await this.props.map.removeLayer(this.props.layer.index)
+        let newLayer = await this.props.map.addThemeLayer(dataset, this.themeRange, true)
+        await newLayer.setCaption(this.props.layer.caption)
+        await this.props.map.moveTo(0, this.props.layer.index)
+      } else {
+        await this.props.map.addThemeLayer(dataset, this.themeRange, true)
+      }
+      
       await this.props.map.refresh()
       await this.props.mapControl.setAction(Action.PAN)
       let routes = this.props.nav.routes

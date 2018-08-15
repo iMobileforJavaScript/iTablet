@@ -126,7 +126,7 @@ async function loadModel(mapView, mapControl, datasetVector) {
     mMapControl = mapControl
     mMap = await mMapControl.getMap()
     mTrackingLayer = await mMap.getTrackingLayer()
-  
+
     mDatasetVector = datasetVector
     await addGestureDetector()
 
@@ -152,7 +152,7 @@ async function loadModel(mapView, mapControl, datasetVector) {
 
     transportationAnalyst = await new TransportationAnalyst().createObj()
     await transportationAnalyst.setAnalystSetting(analystSetting)
-    
+
   } catch (e) {
     console.error(e)
     return false
@@ -209,7 +209,7 @@ async function analyst() {
     await parameter.setRoutesReturn(true)
 
     let result = await transportationAnalyst.findPath(parameter, false)
-    
+
     this.display(result)
   } catch (e) {
     console.error(e)

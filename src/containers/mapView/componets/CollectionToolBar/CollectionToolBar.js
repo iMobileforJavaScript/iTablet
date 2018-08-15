@@ -274,7 +274,12 @@ export default class CollectionToolBar extends React.Component {
           case POINT_GPS:
           case LINE_GPS_POINT:
           case REGION_GPS_POINT:
-            await this.collector.addGPSPoint()
+            await this.collector.openGPS()
+            await this.collector.setCollectionChangedListener({
+              collectionChanged: event => {
+                Toast.show(event.x, event.y)
+              },
+            })
             break
           case LINE_GPS_PATH:
           case REGION_GPS_PATH:

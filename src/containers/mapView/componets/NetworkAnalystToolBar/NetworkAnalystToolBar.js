@@ -160,9 +160,19 @@ export default class NetworkAnalystToolBar extends React.Component {
   }
 
   /** 连通性分析 **/
-  _connectedAnalyst = async () => {
+  _analyst = async type => {
     // this.toDoAction()
-    await facilityAnalyst.connectedAnalyst()
+    switch (type) {
+      case ROUTE:
+        break
+      case FACILITY:
+        await facilityAnalyst.connectedAnalyst()
+        break
+      case TSP:
+        break
+      case TRACKING:
+        break
+    }
   }
 
   clear = async () => {
@@ -182,10 +192,9 @@ export default class NetworkAnalystToolBar extends React.Component {
           this.changeTap(cbData, ROUTE)
         },
         operations: [
-          { key: '设置起点', action: this._setStart, image: require('../../../../assets/public/save.png') },
-          { key: '设置终点', action: this._setEnd, image: require('../../../../assets/public/save.png') },
-          { key: '清除', action: this.addNode, image: require('../../../../assets/public/save.png') },
-          { key: '分析模式', action: () => this._setting(ROUTE), image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(ROUTE), image: require('../../../../assets/public/save.png') },
+          { key: '分析', action: () => this._analyst(ROUTE), image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
         ],
       },
       {
@@ -195,9 +204,9 @@ export default class NetworkAnalystToolBar extends React.Component {
           this.changeTap(cbData, FACILITY)
         },
         operations: [
-          { key: '设置起点', action: this._setStart, image: require('../../../../assets/public/save.png') },
-          { key: '设置终点', action: this._setEnd, image: require('../../../../assets/public/save.png') },
-          { key: '清除', action: this.addNode, image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(FACILITY), image: require('../../../../assets/public/save.png') },
+          { key: '分析', action: () => this._analyst(FACILITY), image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
         ],
       },
       {
@@ -207,10 +216,9 @@ export default class NetworkAnalystToolBar extends React.Component {
           this.changeTap(cbData, TSP)
         },
         operations: [
-          { key: '设置起点', action: this._setStart, image: require('../../../../assets/public/save.png') },
-          { key: '添加站点', action: this._setMiddle, image: require('../../../../assets/public/save.png') },
-          { key: '添加终点', action: this._setEnd, image: require('../../../../assets/public/save.png') },
-          { key: '清除', action: this.deleteNode, image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(TSP), image: require('../../../../assets/public/save.png') },
+          { key: '分析', action: () => this._analyst(TSP), image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
         ],
       },
       {
@@ -220,6 +228,7 @@ export default class NetworkAnalystToolBar extends React.Component {
           this.changeTap(cbData, TRACKING)
         },
         operations: [
+          { key: '设置', action: () => this._setting(TRACKING), image: require('../../../../assets/public/save.png') },
           {
             key: '上游追踪', action: () => {
               this._traceUp()
@@ -231,7 +240,6 @@ export default class NetworkAnalystToolBar extends React.Component {
             }, image: require('../../../../assets/public/save.png'),
           },
           { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
-          { key: '设置', action: () => this._setting(), image: require('../../../../assets/public/save.png') },
         ],
       },
     ]
@@ -279,7 +287,7 @@ export default class NetworkAnalystToolBar extends React.Component {
         BtnText={'分析'}
         BtnImageSrc={require('../../../../assets/map/icon_edit.png')}
         style={{ marginRight: scaleSize(10) }}
-        BtnClick={this._connectedAnalyst}
+        BtnClick={this._analyst}
       />
     )
   }
@@ -294,7 +302,7 @@ export default class NetworkAnalystToolBar extends React.Component {
         subPopShow={this.state.subPopShow}
         currentData={this.state.currentData}
         subBtnType={PopBtnSectionList.SubBtnType.IMAGE_BTN}
-        subRight={this.renderSubRight()}
+        // subRight={this.renderSubRight()}
         // data={this.state.data}
         data={data}
         operationAction={this._btn_click_manager}

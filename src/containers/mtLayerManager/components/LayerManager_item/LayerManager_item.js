@@ -31,8 +31,6 @@ export default class LayerManager_item extends React.Component {
 
   constructor(props){
     super(props)
-    this.layer = this.props.layer
-    this.map = this.props.map
     let data = this.props.data
     let options = this.getOptions(data)
     let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
@@ -54,8 +52,6 @@ export default class LayerManager_item extends React.Component {
       JSON.stringify(prevProps.map) !== JSON.stringify(this.props.map) ||
       JSON.stringify(prevProps.layer) !== JSON.stringify(this.props.layer)
     ) {
-      this.layer = this.props.layer
-      this.map = this.props.map
       this.getData(this.props.data)
     }
   }
@@ -117,7 +113,7 @@ export default class LayerManager_item extends React.Component {
 
   getOptions = data => {
     let {isThemeLayer, isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
-    let options = !isThemeLayer && isVectorLayer ? [
+    let options = !isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非专题图，非文本类型的矢量图层
       // { key: '可显示', selectable: true, action: this._visable_change },
       // { key: '可选择', selectable: !isThemeLayer, action: this._selectable_change },
       // { key: '可编辑', selectable: !isThemeLayer, action: this._editable_change },
@@ -126,21 +122,12 @@ export default class LayerManager_item extends React.Component {
       { key: '风格', selectable: !isThemeLayer, action: this._openStyle },
       { key: '重命名', selectable: true, action: this._rename },
       { key: '移除', selectable: true, action: this._remove },
-    ] : !isNonOperatingThemeLayer && isVectorLayer ? [
-      // { key: '可显示', selectable: true, action: this._visable_change },
-      // { key: '可选择', selectable: !isNonOperatingThemeLayer, action: this._selectable_change },
-      // { key: '可编辑', selectable: !isNonOperatingThemeLayer, action: this._editable_change },
-      // { key: '可捕捉', selectable: !isNonOperatingThemeLayer, action: this._catchable_change },
+    // ] : !isNonOperatingThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
+    ] : this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
       { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
       { key: '重命名', selectable: true, action: this._rename },
       { key: '移除', selectable: true, action: this._remove },
-    ] : isNonOperatingThemeLayer && isVectorLayer ? [
-      // { key: '可显示', selectable: true, action: this._visable_change },
-      { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
-      { key: '重命名', selectable: true, action: this._rename },
-      { key: '移除', selectable: true, action: this._remove },
-    ] : [
-      // { key: '可显示', selectable: true, action: this._visable_change },
+    ] : [ // 文本矢量图层 和 非矢量图层
       { key: '重命名', selectable: true, action: this._rename },
       { key: '移除', selectable: true, action: this._remove },
     ]
@@ -156,8 +143,8 @@ export default class LayerManager_item extends React.Component {
     this.setState(oldstate=>{
       let newEdit = !oldstate.editable
       ;(async function (){
-        await this.layer.setEditable(newEdit)
-        await this.map.refresh()
+        await this.props.layer.setEditable(newEdit)
+        await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
         this.props.setEditable && this.props.setEditable(newEdit ? this.props.data : null)
       }).bind(this)()
@@ -169,8 +156,8 @@ export default class LayerManager_item extends React.Component {
     this.setState(oldstate=>{
       let oldVisibe = oldstate.visable
       ;(async function (){
-        await this.layer.setVisible(!oldVisibe)
-        await this.map.refresh()
+        await this.props.layer.setVisible(!oldVisibe)
+        await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
       }).bind(this)()
       return({visable:!oldVisibe})
@@ -181,8 +168,8 @@ export default class LayerManager_item extends React.Component {
     this.setState(oldstate=>{
       let oldSelect = oldstate.selectable
       ;(async function (){
-        await this.layer.setSelectable(!oldSelect)
-        await this.map.refresh()
+        await this.props.layer.setSelectable(!oldSelect)
+        await this.props.map.refresh()
         // await this.props.mapControl.setAction(Action.PAN)
       }).bind(this)()
       return({selectable:!oldSelect})
@@ -193,8 +180,8 @@ export default class LayerManager_item extends React.Component {
     this.setState(oldstate=>{
       let oldCatch = oldstate.snapable
       ;(async function (){
-        await this.layer.setSnapable(!oldCatch)
-        await this.map.refresh()
+        await this.props.layer.setSnapable(!oldCatch)
+        await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
       }).bind(this)()
       return({snapable:!oldCatch})
@@ -215,11 +202,19 @@ export default class LayerManager_item extends React.Component {
         break
     }
     if (title) {
+      let editLayer = this.props.layer
+      Object.assign(editLayer, {
+        index: this.props.data.index,
+        themeType: this.props.data.themeType,
+        name: this.props.data.name,
+        caption: this.props.data.caption,
+      })
       NavigationService.navigate('ThemeEdit', {
         title,
-        layer: this.layer,
-        map: this.map,
-        mapControl: this.mapControl,
+        layer: this.props.layer,
+        map: this.props.map,
+        mapControl: this.props.mapControl,
+        isThemeLayer: true,
       })
     } else {
       NavigationService.navigate('ThemeEntry', {

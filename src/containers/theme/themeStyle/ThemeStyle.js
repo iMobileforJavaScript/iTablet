@@ -21,6 +21,7 @@ export default class ThemeStyle extends React.Component {
 
   props: {
     navigation: Object,
+    nav: Object,
   }
 
   state = {
@@ -167,11 +168,19 @@ export default class ThemeStyle extends React.Component {
           }
           if (this.item) {
             await this.item.setStyle(geoStyle)
-            NavigationService.goBack()
             this.cb && this.cb()
           } else {
             await this.layerSetting.setStyle(geoStyle)
           }
+          await this.map.refresh()
+          let routes = this.props.nav.routes
+          let key = ''
+          for (let i = 0; i < routes.length - 1; i++) {
+            if (routes[i].routeName === 'MapView') {
+              key = routes[i + 1].key
+            }
+          }
+          NavigationService.goBack(key)
           Toast.show('设置成功')
         }
       } catch (e) {

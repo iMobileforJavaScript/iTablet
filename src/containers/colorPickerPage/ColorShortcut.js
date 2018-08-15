@@ -52,6 +52,7 @@ export default class ColorShortcut extends React.Component {
   renderItem = color => {
     return (
       <TouchableOpacity
+        key={color}
         activeOpacity={0.8}
         style={[styles.item, {backgroundColor: color}]}
         onPress={() => this.action(color)}

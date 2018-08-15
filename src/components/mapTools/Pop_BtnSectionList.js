@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   operation: {
     alignItems: 'center',
     justifyContent: 'center',
-    height: ITEM_HEIGHT,
+    height: scaleSize(100),
     width: ITEM_HEIGHT,
   },
   subContainer: {
