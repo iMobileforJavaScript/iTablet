@@ -95,7 +95,7 @@ export default class PopList extends React.Component {
 
   /** 删除节点 **/
   deleteNode = async () => {
-    await this.props.mapControl.setAction(Action.DELETENODE)
+    await this.props.mapControl.setAction(Action.VERTEXDELETE)
   }
 
   /** 撤销 **/
@@ -197,7 +197,7 @@ export default class PopList extends React.Component {
     this.popList && this.popList.setCurrentOption(cbData.data)
   }
 
-  _analyst = async (cbData, type) => {
+  _analyst = async cbData => {
     this.cbData = cbData
     this.cbData.callback && this.cbData.callback(true)
     // this.props.chooseLayer && this.props.chooseLayer(DatasetType.LINE)
@@ -232,11 +232,10 @@ export default class PopList extends React.Component {
     this.props.setLoading(true)
     ;(async function () {
       try {
-
         let { result, resultDatasetName, resultLayerName } = await overlayAnalyst.analyst({
           workspace: this.props.workspace,
           method: this.props.overlaySetting.method,
-          dataset: this.props.overlaySetting.datasetVector.dataset,
+          dataset: this.props.overlaySetting.datasetVector,
           targetDataset: this.props.overlaySetting.targetDatasetVector,
         })
         this.props.setLoading(false)
@@ -257,9 +256,6 @@ export default class PopList extends React.Component {
         })
         await this.select()
       } catch (e) {
-        console.log(e)
-
-
         this.props.setLoading(false)
         Toast.show('分析失败, 请重新设置')
       }

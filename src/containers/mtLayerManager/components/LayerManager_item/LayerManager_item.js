@@ -112,7 +112,7 @@ export default class LayerManager_item extends React.Component {
   }
 
   getOptions = data => {
-    let {isThemeLayer, isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
+    let {isThemeLayer, isVectorLayer} = this.getValidate(data)
     let options = !isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非专题图，非文本类型的矢量图层
       // { key: '可显示', selectable: true, action: this._visable_change },
       // { key: '可选择', selectable: !isThemeLayer, action: this._selectable_change },
