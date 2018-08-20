@@ -8,7 +8,6 @@ __tests__/*
 #android/.settings/*
 #android/build/*
 #android/keystores/*
-#android/app/build.gradle
 #android/app/app.iml
 #android/local.properties
 #android/app/build/*
