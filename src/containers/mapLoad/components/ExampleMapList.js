@@ -8,7 +8,7 @@ import { color } from '../../../styles'
 import { scaleSize, Toast } from '../../../utils'
 import { Utility } from 'imobile_for_javascript'
 
-const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : () => {}
+const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule :  NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
 const vectorMap = '数据可视化',map3D = '三维场景',ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
@@ -19,8 +19,9 @@ export default class ExampleMapList extends React.Component {
     let path, exist, filePath
     switch(key){
       case vectorMap:
-          console.log('+++++++++++++xzy+++++++++++,openn sampleCode')
+          // console.log('+++++++++++++xzy+++++++++++,openn sampleCode')
           openNativeSampleCode.open("Visual")
+          // console.log(NativeModules)
         // path = '/SampleData/Changchun/Changchun.smwu'
         // path = '/SampleData/FacilityAnalyst/FacilityAnalyst.smwu'
         //path = '/SampleData/beijing_new/beijing.smwu'
