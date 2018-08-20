@@ -1,3 +1,11 @@
+import { connect } from 'react-redux'
 import MapChange from './MapChange'
 
-export default MapChange
+const mapStateToProps = state => ({
+  nav: state.nav.toJS(),
+})
+
+const mapDispatchToProps = {
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MapChange)

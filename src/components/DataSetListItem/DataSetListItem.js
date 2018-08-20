@@ -14,6 +14,7 @@ export default class DataSetListItem extends React.Component {
     hidden: PropTypes.bool,
     radio: PropTypes.bool,
     options: PropTypes.array,
+    subTitle: PropTypes.string,
   }
 
   static defaultProps = {
@@ -75,6 +76,12 @@ export default class DataSetListItem extends React.Component {
       case DatasetType.CAD:
         image = require('../../assets/map/icon-cad.png')
         break
+      case DatasetType.TEXT:
+        image = require('../../assets/map/icon-text.png')
+        break
+      case DatasetType.Network:
+        image = require('../../assets/map/icon-layer-change.png')
+        break
       default:
         image = require('../../assets/map/icon-surface.png')
         break
@@ -85,14 +92,15 @@ export default class DataSetListItem extends React.Component {
   renderRadioBtn = () => {
     let viewStyle = styles.radioView,
       dotStyle = styles.radioSelected
-    if (this.props.data.isAdd) {
-      viewStyle = styles.radioViewGray
-      dotStyle = styles.radioSelectedGray
-    }
+    // if (this.props.data.isAdd) {
+    //   viewStyle = styles.radioViewGray
+    //   dotStyle = styles.radioSelectedGray
+    // }
     return (
       <View style={viewStyle}>
         {
-          (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
+          // (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
+          this.state.selected && <View style={dotStyle} />
         }
       </View>
     )
@@ -115,10 +123,16 @@ export default class DataSetListItem extends React.Component {
           onPress={this.action}
         >
           {this.props.radio && this.renderRadioBtn()}
-          <View style={styles.imageView}>
-            <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
+          <View style={styles.contentView}>
+            <View style={styles.imageView}>
+              <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
+            </View>
+            <Text style={styles.title}>{this.props.data.name}</Text>
           </View>
-          <Text style={styles.title}>{this.props.data.name}</Text>
+          {
+            this.props.subTitle && this.props.data.isAdd &&
+            <Text style={[styles.title, styles.textMarginRight]}>{this.props.subTitle}</Text>
+          }
         </TouchableOpacity>
         {(this.props.data.option || this.props.options) && this.state.rowShow && this._renderAdditionView()}
       </View>

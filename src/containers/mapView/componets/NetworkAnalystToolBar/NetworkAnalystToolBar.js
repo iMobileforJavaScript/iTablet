@@ -87,6 +87,7 @@ export default class NetworkAnalystToolBar extends React.Component {
 
   /** 设置 **/
   _setting = type => {
+    // NavigationService.navigate()
     (async function () {
       // testing
       // let datasource = await this.props.workspace.getDatasource('FacilityNet')
@@ -99,7 +100,7 @@ export default class NetworkAnalystToolBar extends React.Component {
       //
       // await facilityAnalyst.loadModel(this.props.mapControl, datasetv)
       // this.toDoAction()
-      // this.props.showSetting && this.props.showSetting(Setting.Type.NETWORK_TRACKING)
+      this.props.showSetting && this.props.showSetting(Setting.Type.NETWORK_TRACKING)
       // this.props.chooseLayer && this.props.chooseLayer(DatasetType.LINE, true)
       // NavigationService.navigate('ChooseEditLayer',{ workspace: this.props.workspace, map: this.props.map, type: DatasetType.LINE, mapControl: this.props.mapControl, isEdit: true })
     }).bind(this)()

@@ -9,6 +9,7 @@ export default class MapChange extends React.Component {
 
   props: {
     navigation: Object,
+    nav: Object,
   }
 
   constructor(props) {
@@ -43,8 +44,18 @@ export default class MapChange extends React.Component {
       await map.close()
       await map.open(key)
       await map.refresh()
-      NavigationService.goBack()
+      // NavigationService.goBack()
       this.cb && this.cb()
+  
+      let routes = this.props.nav.routes
+      let routeKey = ''
+      for (let i = 0; i < routes.length - 1; i++) {
+        if (routes[i].routeName === 'MapView') {
+          routeKey = routes[i + 1].key
+        }
+      }
+      NavigationService.goBack(routeKey)
+      
       Toast.show('地图切换成功')
     }).bind(this)()
   }

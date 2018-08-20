@@ -1,10 +1,9 @@
 import {
-  DatasetType,
   OverlayAnalystParameter,
   DatasetVectorInfo,
   OverlayAnalyst,
 } from 'imobile_for_javascript'
-
+import { Toast } from '../../../utils'
 const METHOD_CLIP = 'clip'
 const METHOD_ERASE = 'erase'
 const METHOD_UNION = 'union'
@@ -81,7 +80,7 @@ async function analyst({workspace, method, dataset, targetDataset, parameter}) {
       resultLayerName: dtname + '@' + datasourceName,
     }
   } catch (e) {
-    console.log(e)
+    Toast.show('分析失败')
   }
 }
 

@@ -4,9 +4,8 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, ScrollView, StyleSheet } from 'react-native'
+import { Text, ScrollView, StyleSheet } from 'react-native'
 import Dialog from './Dialog'
-import { color } from '../../styles'
 import { scaleSize } from '../../utils'
 
 const styles = StyleSheet.create({

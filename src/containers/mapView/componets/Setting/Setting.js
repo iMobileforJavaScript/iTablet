@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
+import { TouchableOpacity, View } from 'react-native'
 import BufferSetting from './BufferSetting'
 import OverlaySetting from './OverlaySetting'
 import RouteSetting from './RouteSetting'
 import TrackingSetting from './TrackingSetting'
 import ChooseLayer from './ChooseLayer'
-import { facilityAnalyst } from '../../util'
+import { Toast, facilityAnalyst, tranportationAnalyst } from '../../util'
 import { DatasetType } from 'imobile_for_javascript'
 
 import styles from './styles'
@@ -28,6 +28,7 @@ export default class Setting extends React.Component {
     mapControl: Object,
     workspace: Object,
     selection: Object,
+    mapView: Object,
     map: Object,
     bufferSetting: Object,
     overlaySetting: Object,
@@ -77,13 +78,24 @@ export default class Setting extends React.Component {
       })
     }
   }
-  
-  trackingLoad = async (data) => {
+
+  loadModel = async data => {
     this.close()
     try {
-      this.props.setLoading(true)
-      let datasetVector = await data.dataset.toDatasetVector()
-      await facilityAnalyst.loadModel(this.props.workspace, this.props.mapControl, datasetVector)
+      // this.props.setLoading(true)
+      // let datasetVector = await data.dataset.toDatasetVector()
+      // //  TODO 判断是否被加载
+      // let layer = await this.props.map.addLayer(data.dataset, true)
+      // let result = await facilityAnalyst.loadModel(this.props.mapControl, layer, datasetVector)
+      //
+      // // let result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
+      // this.props.setLoading && this.props.setLoading(false)
+      // if (result) {
+      //   Toast.show('加载数据成功')
+      // } else {
+      //   Toast.show('加载数据成功')
+      // }
+      //
       this.props.setLoading(false)
     } catch (e) {
       this.props.setLoading(false)
@@ -93,7 +105,7 @@ export default class Setting extends React.Component {
   getSetting = () => {
     let settingView
     switch (this.state.type) {
-      case BUFFER: {
+      case BUFFER:
         settingView = (
           <BufferSetting
             ref={ref => this.bufferSetting = ref}
@@ -107,8 +119,7 @@ export default class Setting extends React.Component {
             setLoading={this.props.setLoading}/>
         )
         break
-      }
-      case OVERLAY: {
+      case OVERLAY:
         settingView = (
           <OverlaySetting
             ref={ref => this.overlaySetting = ref}
@@ -122,8 +133,7 @@ export default class Setting extends React.Component {
             setLoading={this.props.setLoading}/>
         )
         break
-      }
-      case ROUTE: {
+      case ROUTE:
         settingView = (
           <RouteSetting
             ref={ref => this.overlaySetting = ref}
@@ -137,8 +147,9 @@ export default class Setting extends React.Component {
             setLoading={this.props.setLoading}/>
         )
         break
-      }
-      case NETWORK_TRACKING: {
+      case NETWORK_TRACKING:
+      case NETWORK_TSP:
+      case NETWORK_FACILITY:
         // settingView = (
         //   <TrackingSetting
         //     ref={ref => this.overlaySetting = ref}
@@ -154,17 +165,18 @@ export default class Setting extends React.Component {
         settingView = (
           <ChooseLayer
             ref={ref => this.chooseLayer = ref}
+            headerTitile={'图层选择'}
             alwaysVisible={true}
             map={this.props.map}
             mapControl={this.props.mapControl}
             workspace={this.props.workspace}
-            getDataset={this.trackingLoad}
+            getDataset={this.loadModel}
             setLoading={this.props.setLoading}
-            type={DatasetType.LINE}
+            type={DatasetType.Network}
+            // typeFilter={[DatasetType.Network]}
           />
         )
         break
-      }
     }
     return settingView
   }

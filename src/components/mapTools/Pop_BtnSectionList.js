@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
-import { constUtil, Toast, scaleSize} from '../../utils'
+import { constUtil, scaleSize} from '../../utils'
 import { color } from '../../styles'
 import PropTypes from 'prop-types'
 import Pop_Btn from './Pop_Btn'

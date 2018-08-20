@@ -58,6 +58,13 @@ export default StyleSheet.create({
     borderRadius: 5,
     backgroundColor: color.gray,
   },
+  contentView: {
+    flex: 1,
+    flexDirection: 'row',
+    height: scaleSize(40),
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+  },
   imageView: {
     height: scaleSize(40),
     width: scaleSize(40),
@@ -76,5 +83,8 @@ export default StyleSheet.create({
   title: {
     fontSize: scaleSize(30),
     marginLeft: scaleSize(30),
+  },
+  textMarginRight: {
+    marginRight: scaleSize(30),
   },
 })

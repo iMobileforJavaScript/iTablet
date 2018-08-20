@@ -108,16 +108,23 @@ async function longPressHandler(event) {
   }
 }
 
-async function loadModel(mapControl, datasetVector) {
+async function loadModel(mapControl, layer, datasetVector) {
   try {
     await clear()
     mMapControl = mapControl
+    
     mMap = await mMapControl.getMap()
-    let layer = await mMap.getLayer(1)
+    // TODO 更改layer
+    // let layer = await mMap.getLayer(1)
     mSelection = await layer.getSelection()
+    let name = await (await layer.getDataset()).getName()
+    debugger
     mTrackingLayer = await mMap.getTrackingLayer()
+    if (facilityAnalyst) {
+      await facilityAnalyst.dispose()
+    }
     analystSetting = await new FacilityAnalystSetting().createObj()
-
+    debugger
     await addGestureDetector()
     await analystSetting.setNetworkDataset(datasetVector)
     await analystSetting.setNodeIDField('SmNodeID')
@@ -125,22 +132,26 @@ async function loadModel(mapControl, datasetVector) {
     await analystSetting.setFNodeIDField('SmFNode')
     await analystSetting.setTNodeIDField('SmFNode')
     await analystSetting.setDirectionField('Direction')
-
+    debugger
     let fieldInfo = await new WeightFieldInfo().createObj()
+    debugger
     await fieldInfo.setName('length')
     await fieldInfo.setFTWeightField('SmLength')
     await fieldInfo.setTFWeightField('SmLength')
-
+    debugger
     let fieldInfos = await new WeightFieldInfos().createObj()
+    debugger
     await fieldInfos.add(fieldInfo)
-
+    debugger
     await analystSetting.setWeightFieldInfos(fieldInfos)
-
+    debugger
     facilityAnalyst = await new FacilityAnalyst().createObj()
+    debugger
     await facilityAnalyst.setAnalystSetting(analystSetting)
-
+    debugger
     let result = await facilityAnalyst.load()
-    await mMapControl.setAction(Action.PAN)
+    debugger
+    await mMapControl.setAction(Action.SELECT)
     return result
   } catch (e) {
     console.error(e)
@@ -279,6 +290,7 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
   try {
     if (!check()) return
     await mSelection.clear()
+    debugger
     for (let i = 0; i < mNodes.length - 1; i++) {
       let { edges, message } = await facilityAnalyst.findPathFromNodes(mNodes[i], mNodes[i + 1], weightName, isUncertainDirectionValid)
 
