@@ -21,7 +21,7 @@ export default class Loading extends Component {
     indicatorColor: 'white',
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE',  // BLACK_WITH_TITLE   NORMAL
-    info: '数据加载中',
+    info: '加载中',
   }
 
   constructor(props) {
@@ -32,11 +32,13 @@ export default class Loading extends Component {
     }
   }
 
-  setLoading = (loading, info = '数据加载中') => {
-    this.setState({
-      animating: loading,
-      info: info,
-    })
+  setLoading = (loading, info = '加载中') => {
+    if (loading !== this.state.animating || this.state.info !== info) {
+      this.setState({
+        animating: loading,
+        info: info,
+      })
+    }
   }
 
   renderModalIndicator = () => {
@@ -101,6 +103,8 @@ const styles = StyleSheet.create({
     borderRadius: scaleSize(8),
   },
   title: {
+    height: scaleSize(30),
+    fontSize: scaleSize(20),
     color: 'white',
     textAlign: 'center',
   },

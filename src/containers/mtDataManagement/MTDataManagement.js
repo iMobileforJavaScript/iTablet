@@ -185,18 +185,13 @@ export default class MTDataManagement extends React.Component {
   renameDataset = text => {
     (async function () {
       if (await this.state.currentData.dataset.isopen()) {
-
         await this.state.currentData.dataset.close()
       }
-      let newDataset = await this.state.currentData.datasource.copyDataset(this.state.currentData.dataset, text, this.state.currentData.type)
-      if (newDataset) {
-        Toast.show('重命名成功')
-        this.renameDialog && this.renameDialog.setDialogVisible(false)
-
-        await this.getData()
-      } else {
-        Toast.show('数据集名称已被占用')
-      }
+      await this.state.currentData.dataset.setName(text)
+      Toast.show('重命名成功')
+      this.renameDialog && this.renameDialog.setDialogVisible(false)
+      await this.map.refresh()
+      await this.getData()
     }).bind(this)()
   }
 
@@ -207,28 +202,12 @@ export default class MTDataManagement extends React.Component {
   renameDatasource = text => {
     (async function () {
       try {
-        let connInfo = await this.state.currentData.datasource.getConnectionInfo()
-        let server = await connInfo.getServer()
-        let alias = await connInfo.getAlias()
-        let type = await connInfo.getEngineType()
-        if (await this.state.currentData.datasource.isOpened()) {
-          await this.map.close()
-          await this.workspace.closeDatasource(alias)
-        }
-        let DSParams = { server: server, alias: text, engineType: type }
-        let newDatasource = await this.workspace.openDatasource(DSParams)
-        if (newDatasource) {
-          Toast.show('重命名成功')
-          let dataset = await newDatasource.getDataset(0)
-          let mapName = await this.workspace.getMapName(0)
-          await this.map.open(mapName)
-          // await this.map.addLayer(dataset, true)
-          await this.map.refresh()
-          this.renameDialog && this.renameDialog.setDialogVisible(false)
-          await this.getData()
-        } else {
-          Toast.show('数据源名称已被占用')
-        }
+        let alias = await this.state.currentData.datasource.getAlias()
+        await this.workspace.renameDatasource(alias, text)
+        Toast.show('重命名成功')
+        this.renameDialog && this.renameDialog.setDialogVisible(false)
+        await this.map.refresh()
+        await this.getData()
       } catch (e) {
         Toast.show('重命名失败')
       }

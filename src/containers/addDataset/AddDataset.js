@@ -22,6 +22,7 @@ export default class AddDataset extends React.Component {
     const { params } = this.props.navigation.state
     this.workspace = params.workspace
     this.map = params.map
+    this.layerList = params.layerList || []
     this.cb = params.cb
     this.state = {
       dataSourceList: [],
@@ -31,6 +32,23 @@ export default class AddDataset extends React.Component {
 
   componentDidMount() {
     this.getDatasets()
+  }
+  
+  checkContainsDataset = async dsName => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        for (let i = 0; i < this.layerList.length; i++) {
+          let ds = await this.layerList[i].layer.getDataset()
+          let name = await ds.getName()
+          if (name === dsName) {
+            resolve(true)
+          }
+        }
+        resolve(false)
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   getDatasets = async () => {
@@ -47,8 +65,8 @@ export default class AddDataset extends React.Component {
         let dataset = await dataSets.get(j)
         let dsName = await dataset.getName()
         let dsType = await dataset.getType()
-        let isAdd = await this.map.containsCaption(dsName, name)
-        // let isAdd = await this.map.contains(dsName + "@" + name)
+        // let isAdd = await this.map.containsCaption(dsName, name)
+        let isAdd = await this.checkContainsDataset(dsName)
         // let isAdd = false
 
         dataSetList.push({
@@ -124,7 +142,7 @@ export default class AddDataset extends React.Component {
 
   _renderItem = ({ item }) => {
     return (
-      <DataSetListItem radio={true} hidden={!this.state.dataSourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
+      <DataSetListItem subTitle={'已添加'} radio={true} hidden={!this.state.dataSourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
     )
   }
 

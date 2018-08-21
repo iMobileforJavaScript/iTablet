@@ -106,7 +106,8 @@ export default class MT_layerManager extends React.Component {
   }
 
   goToMapChange = () => {
-    NavigationService.navigate('MapChange',{workspace: this.workspace, map:this.map, cb: this.getData})
+    NavigationService.navigate('MapChange',{workspace: this.workspace, map:this.map})
+    // NavigationService.navigate('MapChange',{workspace: this.workspace, map:this.map, cb: this.getData})
   }
 
   // 地图保存
@@ -171,6 +172,7 @@ export default class MT_layerManager extends React.Component {
     NavigationService.navigate('AddDataset',{
       workspace: this.workspace,
       map: this.map,
+      layerList: this.state.datasourceList,
       cb: () => {
         this.getData()
         this.map && this.map.refresh()

@@ -10,7 +10,8 @@
     "start:android:reset": "react-native run-android --no-packager && npm run start-rn -- --reset-cache",
     "installRelease:android": "cd android && ./gradlew installRelease",
     "installDebug:android": "cd android && ./gradlew installDebug",
-    "assembleRelease": "cd android && ./gradlew assembleRelease"
+    "assembleRelease": "cd android && ./gradlew assembleRelease",
+    "lint": "eslint src"
   },
   "dependencies": {
     "immutable": "^3.8.2",

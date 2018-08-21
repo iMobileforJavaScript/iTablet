@@ -269,7 +269,8 @@ export default class MapView extends React.Component {
     (async function () {
       try {
         let saveMap = await this.map.save()
-        if (!saveMap) {
+        let saveWs = await this.workspace.saveWorkspace()
+        if (!saveMap || !saveWs) {
           Toast.show('保存失败')
         } else {
           Toast.show('保存成功')
@@ -536,6 +537,7 @@ export default class MapView extends React.Component {
             selection={this.props.selection}
             mapControl={this.mapControl}
             workspace={this.workspace}
+            mapView={this.mapView}
             map={this.map}
             setLoading={this.setLoading}
             setBufferSetting={this.props.setBufferSetting}

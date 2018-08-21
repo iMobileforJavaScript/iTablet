@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: scaleSize(100),
-    width: ITEM_WIDTH,
+    width: '100%',
   },
   container: {
     position: 'absolute',

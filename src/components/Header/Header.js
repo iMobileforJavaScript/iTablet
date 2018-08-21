@@ -60,7 +60,6 @@ class NavigationHeader extends Component {
 
   renderDefaultHeader = () => {
     const {
-      backBtnType,
       title,
       headerLeft,
       darkBackBtn,
@@ -79,9 +78,9 @@ class NavigationHeader extends Component {
     } = this.props
 
     let backBtnSource = require('../../assets/public/icon-back-white.png')
-      // backBtnType === 'white'
-      //   ? require('../../assets/public/icon-back-white.png')
-      //   : require('../../assets/public/icon-back-gray.png')
+    // backBtnType === 'white'
+    //   ? require('../../assets/public/icon-back-white.png')
+    //   : require('../../assets/public/icon-back-gray.png')
     let backBtn = (
       <TouchableOpacity
         accessible={true}
@@ -141,7 +140,7 @@ class NavigationHeader extends Component {
     let currentHeaderStyle = floatNoTitle
       ? styles.floatNoTitleHeaderView
       : float ? styles.floatHeaderView : styles.defaultHeaderView
-    
+
     return (
       <View style={[currentHeaderStyle, headerStyle, { opacity: opacity }]}>
         {header ? header : this.renderDefaultHeader()}

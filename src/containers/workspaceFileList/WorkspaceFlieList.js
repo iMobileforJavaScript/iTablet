@@ -200,7 +200,7 @@ export default class WorkSpaceFileList extends Component {
   renderItem = ({ item }) => {
     let image = item.isDirectory ? require('../../assets/public/icon-files.png') : require('../../assets/public/icon-file.png')
     return (
-      <TouchableOpacity onPress={() => this._refresh(item)} style={styles.row}>
+      <TouchableOpacity activeOpacity={0.8} onPress={() => this._refresh(item)} style={styles.row}>
         <View style={styles.imgView}>
           <Image source={image} style={styles.img} />
         </View>
@@ -251,10 +251,10 @@ const styles = StyleSheet.create({
   },
   item: {
     marginLeft: scaleSize(30),
-    fontSize: 20,
+    fontSize: scaleSize(30),
   },
   back: {
-    fontSize: 20,
+    fontSize: scaleSize(30),
     color: '#1296db',
     paddingTop: scaleSize(30),
     paddingBottom: scaleSize(30),

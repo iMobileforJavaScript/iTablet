@@ -49,7 +49,7 @@ export default class Dialog extends PureComponent {
 
   //控制Modal框是否可以展示
   setDialogVisible(visible) {
-    this.setState({ visible: visible })
+    visible !== this.state.visible && this.setState({ visible: visible })
   }
 
   confirm = () => {

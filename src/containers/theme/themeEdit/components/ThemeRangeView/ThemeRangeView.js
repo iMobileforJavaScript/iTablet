@@ -28,7 +28,7 @@ export default class ThemeRangeView extends React.Component {
     isThemeLayer: boolean,
     setLoading: () => {},
   }
-  
+
   static defaultProps = {
     isThemeLayer: false,
   }
@@ -55,7 +55,7 @@ export default class ThemeRangeView extends React.Component {
   componentDidMount() {
     this.getInitData()
   }
-  
+
   getInitData = async () => {
     let data = {
       expression: 'SMUSERID',
@@ -165,7 +165,7 @@ export default class ThemeRangeView extends React.Component {
           }, () => Toast.show('字段单值项炒超过3000，专题图制作失败'))
           return
         }
-        
+
         for (let i = 0; i < count; i++) {
           let item = await this.themeRange.getItem(i)
           let rangeValue = await item.getEnd()
@@ -227,7 +227,7 @@ export default class ThemeRangeView extends React.Component {
       } else {
         await this.props.map.addThemeLayer(dataset, this.themeRange, true)
       }
-      
+
       await this.props.map.refresh()
       await this.props.mapControl.setAction(Action.PAN)
       let routes = this.props.nav.routes

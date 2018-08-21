@@ -25,6 +25,7 @@ export default class ChooseLayer extends React.Component {
 
   static defaultProps = {
     alwaysVisible: false,
+    typeFilter: [],
   }
 
   constructor(props) {
@@ -100,10 +101,9 @@ export default class ChooseLayer extends React.Component {
           let dataSetCount = await dataSets.getCount()
           for (let j = 0; j < dataSetCount; j++) {
             let dataset = await dataSets.get(j)
-            let dsName = await dataset.getName()
             let dsType = await dataset.getType()
-            if (t && dsType !== t) continue
-
+            if (t && dsType !== t) continue // 过滤数据集类型
+            let dsName = await dataset.getName()
             dataSetList.push({
               name: dsName,
               layerName: dsName + "@" + name,
@@ -115,7 +115,7 @@ export default class ChooseLayer extends React.Component {
             })
           }
 
-          list.push({
+          dataSetList.length > 0 && list.push({
             key: name,
             isShow: true,
             data: dataSetList,
