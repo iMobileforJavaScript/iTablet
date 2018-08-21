@@ -28,3 +28,5 @@ yarn.lock
 
 src/.DS_Store
 src/assets/.DS_Store
+android/local.properties
+android/app/app.iml
