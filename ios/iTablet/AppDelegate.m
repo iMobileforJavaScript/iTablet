@@ -39,8 +39,21 @@ static NSString* g_sampleCodeName = @"#";;
   rootViewController.view = rootView;
   _nav=[[UINavigationController alloc]initWithRootViewController:rootViewController];
   _nav.navigationBarHidden = YES;
+  
+  [_nav.navigationBar setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+  
+  [_nav.navigationBar setShadowImage:[UIImage new]];
+  
   self.window.rootViewController = _nav;
   [self.window makeKeyAndVisible];
+  
+  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@""]];
+  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
+  NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
+  if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+    if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+      NSLog(@"拷贝数据失败");
+  }
   
    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   return YES;

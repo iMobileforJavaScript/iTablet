@@ -7,7 +7,7 @@ import Thumbnails from '../../../components/Thumbnails'
 import { color } from '../../../styles'
 import { scaleSize, Toast } from '../../../utils'
 import { Utility } from 'imobile_for_javascript'
-
+import { ConstPath } from '../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule :  NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
@@ -19,22 +19,16 @@ export default class ExampleMapList extends React.Component {
     let path, exist, filePath
     switch(key){
       case vectorMap:
-          // console.log('+++++++++++++xzy+++++++++++,openn sampleCode')
+        path = ConstPath.SampleDataPath+'/DataVisualizationDemo/hotMap.smwu'
+        exist = await Utility.fileIsExistInHomeDirectory(path)
+        if (exist) {
           openNativeSampleCode.open("Visual")
-          // console.log(NativeModules)
-        // path = '/SampleData/Changchun/Changchun.smwu'
-        // path = '/SampleData/FacilityAnalyst/FacilityAnalyst.smwu'
-        //path = '/SampleData/beijing_new/beijing.smwu'
-        //// path = '/SampleData/world/world.smwu'
-        //exist = await Utility.fileIsExistInHomeDirectory(path)
-        //if (exist) {
-        //  NavigationService.navigate('MapView', { path: path, isExample: true})
-        //} else {
-        //  Toast.show("本地实例文件不存在")
-        //}
+        } else {
+          Toast.show("本地实例文件不存在")
+        }
         break
       case map3D:
-        path = '/SampleData/凯德Mall/凯德Mall.sxwu'
+        path = ConstPath.SampleDataPath+'/凯德Mall/凯德Mall.smwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path:  path, isExample: true})
@@ -43,8 +37,7 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case ObliquePhoto:
-        path = '/SampleData/MaSai/MaSai.sxwu'
-        // path = '/SampleData/CBD_android/CBD_android.sxwu'
+        path = ConstPath.SampleDataPath+'/MaSai/MaSai.smwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path:  path, isExample: true})
@@ -53,18 +46,24 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case gl:
-        // path = '/SampleData/Changchun/Changchun.udb'
-        // exist = await Utility.fileIsExistInHomeDirectory(path)
-        // filePath = await Utility.appendingHomeDirectory(path)
-        // if (exist) {
-        //   NavigationService.navigate('MapView', { type: 'UDB', path: filePath, isExample: true})
-        // } else {
-        //   Toast.show("本地实例文件不存在")
-        // }
-        Toast.show('待完善')
+        path = '/SampleData/Changchun/Changchun.udb'
+        exist = await Utility.fileIsExistInHomeDirectory(path)
+        filePath = await Utility.appendingHomeDirectory(path)
+        if (exist) {
+          NavigationService.navigate('MapView', { type: 'UDB', path: filePath, isExample: true})
+        } else {
+          Toast.show("本地实例文件不存在")
+        }
         break
       default:
-        Toast.show('待完善')
+      path = '/SampleData/Changchun/Changchun.udb'
+      exist = await Utility.fileIsExistInHomeDirectory(path)
+      filePath = await Utility.appendingHomeDirectory(path)
+      if (exist) {
+        NavigationService.navigate('MapView', { type: 'UDB', path: filePath, isExample: true})
+      } else {
+        Toast.show("本地实例文件不存在")
+      }
         break
     }
   }
