@@ -53,7 +53,7 @@ export default class Setting extends React.Component {
   isVisible = () => {
     return this.state.visible
   }
-  
+
   chooseLayerIsVisible = () => {
     this.overlaySetting && this.overlaySetting.chooseLayerIsVisible()
   }
@@ -79,23 +79,76 @@ export default class Setting extends React.Component {
     }
   }
 
+  /**
+   * 判断数据集是否被添加
+   * @param dsName
+   * @returns {Promise}
+   */
+  checkContainsDataset = async dsName => {
+    return new Promise(async (resolve, reject) => {
+      try {
+        let layerNameArr = await this.props.map.getLayersByType()
+        let layer = null
+        for (let i = 0; i < layerNameArr.length; i++) {
+          let ds = await layerNameArr[i].layer.getDataset()
+          let name = await ds.getName()
+          if (name === dsName && layerNameArr[i].name.indexOf(name + '_Node') < 0) {
+            layer = layerNameArr[i].layer
+            break
+          }
+          // 若是网络数据集，则还要匹配其子数据集
+          else if (await ds.getType() === DatasetType.Network) {
+            let dv = await ds.toDatasetVector()
+            // let subDataset = await dv.getChildDataset()
+            // if (subDataset && await subDataset.getName() === dsName) {
+            //   layer = layerNameArr[i].layer
+            //   break
+            // }
+            let subDataset = await dv.getChildDataset()
+            if (subDataset && layerNameArr[i].name.indexOf(dsName) >= 0 && dsName.indexOf('_Node') >= 0) {
+              layer = layerNameArr[i].layer
+              break
+            }
+          }
+        }
+        resolve(layer)
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+
   loadModel = async data => {
     this.close()
     try {
-      // this.props.setLoading(true)
-      // let datasetVector = await data.dataset.toDatasetVector()
-      // //  TODO 判断是否被加载
-      // let layer = await this.props.map.addLayer(data.dataset, true)
-      // let result = await facilityAnalyst.loadModel(this.props.mapControl, layer, datasetVector)
-      //
-      // // let result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
-      // this.props.setLoading && this.props.setLoading(false)
-      // if (result) {
-      //   Toast.show('加载数据成功')
-      // } else {
-      //   Toast.show('加载数据成功')
-      // }
-      //
+      this.props.setLoading(true)
+      let datasetVector = await data.dataset.toDatasetVector()
+      let subDataset = await datasetVector.getChildDataset()
+      if (subDataset) {
+        // let subDatasetVector = await subDataset.toDatasetVector()
+        let analystLayerName = await data.dataset.getName()
+        let analystLayer = await this.checkContainsDataset(analystLayerName)
+        if (!analystLayer) {
+          analystLayer = await this.props.map.addLayer(data.dataset, true)
+          await this.props.map.refresh()
+        }
+
+        let subName = await subDataset.getName()
+        let nodeLayer = await this.checkContainsDataset(subName)
+        if (!nodeLayer) {
+          nodeLayer = await this.props.map.addLayer(subDataset, true)
+          await this.props.map.refresh()
+        }
+        let result = await facilityAnalyst.loadModel(this.props.mapControl, analystLayer, nodeLayer, datasetVector)
+        this.props.setLoading && this.props.setLoading(false)
+        if (result) {
+          Toast.show('加载数据成功')
+        } else {
+          Toast.show('加载数据失败')
+        }
+      } else {
+        Toast.show('加载数据失败')
+      }
       this.props.setLoading(false)
     } catch (e) {
       this.props.setLoading(false)
@@ -199,7 +252,7 @@ export default class Setting extends React.Component {
           style={styles.bg}
           // onPress={this.close}
         >
-          <View style={[styles.container, {justifyContent: 'space-between'}]}>
+          <View style={[styles.container, { justifyContent: 'space-between' }]}>
             {this.getSetting()}
             {/*{this.renderBtns()}*/}
           </View>

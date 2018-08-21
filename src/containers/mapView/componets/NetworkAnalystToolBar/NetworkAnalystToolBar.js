@@ -300,7 +300,8 @@ export default class NetworkAnalystToolBar extends React.Component {
         ref={ref => this.popBSL = ref}
         popType={this.state.popType}
         style={styles.pop}
-        subPopShow={this.state.subPopShow}
+        // subPopShow={this.state.subPopShow}
+        subPopShow={true}
         currentData={this.state.currentData}
         subBtnType={PopBtnSectionList.SubBtnType.IMAGE_BTN}
         // subRight={this.renderSubRight()}

@@ -52,8 +52,6 @@ export default class MT_layerManager extends React.Component {
       let layerNameArr = await this.map.getLayersByType()
       let currentEditIndex = -1
       for(let i = 0; i < layerNameArr.length; i++) {
-        let layer = await this.map.getLayer(layerNameArr[i].index)
-        layerNameArr[i].layer = layer
         layerNameArr[i].key = layerNameArr[i].name
         if (layerNameArr[i].isEditable) {
           currentEditIndex = layerNameArr[i].index

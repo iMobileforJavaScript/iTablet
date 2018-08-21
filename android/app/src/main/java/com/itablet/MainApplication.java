@@ -1,7 +1,7 @@
 package com.itablet;
 
-import android.support.multidex.MultiDexApplication;
-import com.supermap.imb.lic.LicConfig;
+import android.app.Application;
+
 import com.facebook.react.ReactApplication;
 import com.supermap.rnsupermap.SupermapFullPackage;
 import com.facebook.react.ReactNativeHost;
@@ -12,9 +12,8 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainApplication extends MultiDexApplication implements ReactApplication {
-    public static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
-  private  static MainApplication sInstance=null;
+public class MainApplication extends Application implements ReactApplication {
+
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
     @Override
     public boolean getUseDeveloperSupport() {
@@ -25,9 +24,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new SupermapFullPackage(),
-              new MyReactpackge()
-
+            new SupermapFullPackage()
       );
     }
 
@@ -42,18 +39,9 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     return mReactNativeHost;
   }
 
-  public static MainApplication getInstance(){
-    return sInstance;
-  }
-  public static int dp2px(int dp){
-    return (int) (dp*sInstance.getResources().getDisplayMetrics().density);
-  }
   @Override
   public void onCreate() {
     super.onCreate();
-    sInstance = this;
-    LicConfig.configLic(this);
     SoLoader.init(this, /* native exopackage */ false);
   }
-
 }

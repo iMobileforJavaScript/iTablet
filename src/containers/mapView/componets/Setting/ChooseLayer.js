@@ -21,6 +21,7 @@ export default class ChooseLayer extends React.Component {
     getDataset: PropTypes.func,
     setLoading: PropTypes.func,
     alwaysVisible: PropTypes.bool,
+    headerTitile: PropTypes.string,
   }
 
   static defaultProps = {
@@ -34,7 +35,7 @@ export default class ChooseLayer extends React.Component {
       isShow: props.alwaysVisible || false,
       showList: false,
       type: props.type,
-      headerTitile: '',
+      headerTitile: props.headerTitile || '',
       datasourceList: [],
     }
   }
@@ -104,6 +105,7 @@ export default class ChooseLayer extends React.Component {
             let dsType = await dataset.getType()
             if (t && dsType !== t) continue // 过滤数据集类型
             let dsName = await dataset.getName()
+            // TODO layerName需要处理
             dataSetList.push({
               name: dsName,
               layerName: dsName + "@" + name,
