@@ -41,7 +41,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   componentDidMount() {
-    (async function () {
+    (async function () {    
       try {
         this.container.setLoading(true)
         let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.LocalDataPath)
