@@ -93,7 +93,7 @@ export default StyleSheet.create({
     left: 0,
     right: 0,
     alignItems: 'center',
-    ustifyContent: 'center',
+    justifyContent: 'center',
   },
   headerTitle: {
     // fontSize: 18,
