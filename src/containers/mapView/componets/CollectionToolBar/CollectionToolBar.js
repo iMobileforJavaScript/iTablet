@@ -339,10 +339,11 @@ export default class CollectionToolBar extends React.Component {
         await recordset.moveLast()
         let info = await recordset.getFieldInfo()
         await selection.clear()
-        let index = await selection.add(info['SmID'].value)
+        let smId = info['SmID'] || info['SMID']
+        let index = await selection.add(smId.value)
         if (index >= 0) {
           this.props.setSelection && this.props.setSelection({
-            id: info['SmID'].value,
+            id: smId.value,
             layerId: this.props.editLayer.layer._SMLayerId,
             name: this.props.editLayer.name,
             layer: this.props.editLayer.layer,

@@ -302,7 +302,7 @@ export default class MapView extends React.Component {
           Toast.show('删除成功')
           this.props.setSelection()
           await this.map.refresh()
-          await this.mapControl.setAction(Action.PAN)
+          await this.mapControl.setAction(Action.SELECT)
         } else {
           Toast.show('删除失败')
         }
@@ -387,9 +387,7 @@ export default class MapView extends React.Component {
 
         await this.workspace.open(this.path)
         await this.map.setWorkspace(this.workspace)
-        console.log('---------1----------')
         this.mapName = await this.workspace.getMapName(0)
-        console.log('---------2---------')
 
         await this.map.open(this.mapName)
         // await this.map.viewEntire()
@@ -419,8 +417,6 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
         // this.saveLatest()
       } catch (e) {
-        console.log('---------3----------')
-        // console.error(e)
         this.container.setLoading(false)
       }
     }).bind(this)()
@@ -475,8 +471,6 @@ export default class MapView extends React.Component {
         await this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {
-        console.log('---------33----------')
-
         this.container.setLoading(false)
       }
     }).bind(this)()
