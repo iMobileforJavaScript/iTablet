@@ -2,7 +2,15 @@
 node_modules/
 android/app/app.iml
 android/local.properties
-ios/
+
+android/app/build/*
+android/.DS_Store
+android/*
+android/local.properties
+ android/app/app.iml
+#ios/build/*
+
+>>>>>>> Stashed changes
 package-lock.json
 yarn-error.log
 yarn.lock

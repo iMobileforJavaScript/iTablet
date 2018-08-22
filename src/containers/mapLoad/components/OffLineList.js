@@ -74,9 +74,12 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_newudb_click = () => {
-    NavigationService.navigate('NewDSource',{need:'newudb'})
+    if(this.workspace !== 'noworkspace'){
+    NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'newudb'})
+  }  else{
+    NavigationService.navigate('NewDSource',{workspace:this.workspace,need:'newudb'})
   }
-
+  }
   _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
 

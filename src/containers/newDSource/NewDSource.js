@@ -9,7 +9,7 @@ import { View, TextInput, Text } from 'react-native'
 import { BtnTwo, Container, Dialog } from '../../components'
 import { constUtil, Toast } from '../../utils'
 import { ConstPath } from '../../constains'
-import { EngineType, Utility } from 'imobile_for_javascript'
+import { EngineType, Utility ,Workspace} from 'imobile_for_javascript'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'
@@ -24,8 +24,10 @@ export default class NewDSource extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.workspace = params.workspace
+    this.workspacekey=params.workspace
     this.map = params.map
     this.cb = params.cb
+    this.defaultpath=''
     this.state = {
       name: '',
       path: '',
@@ -35,15 +37,21 @@ export default class NewDSource extends React.Component {
 
   componentDidMount() {
     (async function () {
+      if(this.workspace==='noworkspace'){
+          const workspaceMoudule= new Workspace()
+          this.workspace=await workspaceMoudule.createObj()
+      } 
+      this.defaultpath=await Utility.appendingHomeDirectory() +ConstPath.LocalDataPath;
       let connInfo = await this.workspace.getConnectionInfo()
       let server = await connInfo.getServer()
       let path = server.substr(0, server.lastIndexOf('/'))
       let isExist = await Utility.fileIsExist(path)
       this.setState({
-        path: isExist ? path : ConstPath.LocalDataPath,
+        path: isExist ? path : this.defaultpath
       })
     }).bind(this)()
   }
+  
 
   checkNewDatasource = () => {
     if (!this.workspace) return
@@ -52,6 +60,11 @@ export default class NewDSource extends React.Component {
       return
     }
     (async function () {
+      let strlength=this.state.path.length
+      if(this.state.path.substring(0,38)!=this.defaultpath && strlength<38){
+        Toast.show('此存储路径不符合标准')
+        return
+      }
       let filePath = this.state.path + '/' + this.state.name + '.udb'
       let isExist = await Utility.fileIsExist(filePath)
       if (isExist) {
