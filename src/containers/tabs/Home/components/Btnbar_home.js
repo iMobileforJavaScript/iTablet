@@ -28,7 +28,7 @@ export default class Btnbar_home extends React.Component {
 
       let element = <BtnOne BtnClick={() => {
         delegate(str)
-      }} BtnImageSrc={src} BtnText={str} />
+      }} image={src} BtnText={str} />
       return (element)
     } else {
       throw Error('BthBar: please check type of params')

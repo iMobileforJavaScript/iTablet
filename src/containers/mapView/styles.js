@@ -13,16 +13,16 @@ export default StyleSheet.create({
     position: 'absolute',
     left: 0,
     bottom: 0.75 * 1.4 * 0.1 * Util.WIDTH + 5,
-    backgroundColor: Util.USUAL_GREEN,
+    backgroundColor: 'white',
   },
   measure: {
     position: 'absolute',
     left: 0.25 * Util.WIDTH,
     top: 5,
     borderRadius: 5,
-    backgroundColor: Util.USUAL_GREEN,
+    backgroundColor: 'white',
     borderStyle: 'solid',
     borderColor: Util.USUAL_SEPARATORCOLOR,
     borderWidth: 1,
-  }
+  },
 })

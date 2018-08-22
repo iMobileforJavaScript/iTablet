@@ -14,6 +14,6 @@ export default StyleSheet.create({
     borderBottomWidth:1,
     borderColor:'#bbbbbb',
     justifyContent:'space-around',
-	  alignItems: 'center',
+    alignItems: 'center',
   },
 })

@@ -80,7 +80,7 @@ export default class OffLineList extends React.Component {
   _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
 
-      let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={styles.btntop} />
+      let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop} />
       return (element)
     } else {
       throw Error('BthBar: please check type of params')

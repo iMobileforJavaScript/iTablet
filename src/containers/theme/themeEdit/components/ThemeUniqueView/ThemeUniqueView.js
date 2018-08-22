@@ -332,14 +332,14 @@ export default class ThemeUniqueView extends React.Component {
           style={styles.operationBtn}
           size={BtnOne.SIZE.SMALL}
           BtnText='添加'
-          BtnImageSrc={require('../../../../../assets/public/icon-add.png')}
+          image={require('../../../../../assets/public/icon-add.png')}
           BtnClick={() => this.dialog && this.dialog.setDialogVisible(true)}
         />
         <BtnOne
           style={styles.operationBtn}
           size={BtnOne.SIZE.SMALL}
           BtnText='删除'
-          BtnImageSrc={require('../../../../../assets/public/icon-delete.png')}
+          image={require('../../../../../assets/public/icon-delete.png')}
           BtnClick={this.delete}
         />
       </View>

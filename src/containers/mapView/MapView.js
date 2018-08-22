@@ -335,7 +335,7 @@ export default class MapView extends React.Component {
     }]
     headerBtnData.forEach(({ title, image, action }) => {
       arr.push(
-        <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} BtnImageSrc={image}
+        <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} image={image}
           BtnClick={action}/>
       )
     })
@@ -387,7 +387,9 @@ export default class MapView extends React.Component {
 
         await this.workspace.open(this.path)
         await this.map.setWorkspace(this.workspace)
+        console.log('---------1----------')
         this.mapName = await this.workspace.getMapName(0)
+        console.log('---------2---------')
 
         await this.map.open(this.mapName)
         // await this.map.viewEntire()
@@ -417,6 +419,7 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
         // this.saveLatest()
       } catch (e) {
+        console.log('---------3----------')
         // console.error(e)
         this.container.setLoading(false)
       }
@@ -472,6 +475,8 @@ export default class MapView extends React.Component {
         await this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {
+        console.log('---------33----------')
+
         this.container.setLoading(false)
       }
     }).bind(this)()

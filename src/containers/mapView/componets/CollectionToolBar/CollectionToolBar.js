@@ -54,7 +54,7 @@ export default class CollectionToolBar extends React.Component {
     setLoading: PropTypes.func,
     setSelection: PropTypes.func,
   }
-  
+
   constructor(props) {
     super(props)
     let data = this.getData(this.props.editLayer && this.props.editLayer.type >= 0 ? this.props.editLayer.type : DatasetType.POINT)
@@ -123,7 +123,7 @@ export default class CollectionToolBar extends React.Component {
   }
 
   _collectionChanged = event => {
-    if (this.startedLoc && this.state.popType && this.state.popType.indexOf('gps_path') >= 0) {
+    if (this.startedLoc && this.state.currentOperation && this.state.currentOperation.type.indexOf('gps_path') >= 0) {
       (async function () {
         // TODO 使用 event.x, event.y 来添加点，point2D有时不准确，待修复
         // let result = await this.collector.addGPSPoint(this.props.map, event.point2D)
@@ -137,7 +137,7 @@ export default class CollectionToolBar extends React.Component {
   }
 
   _onSensorChanged = event => {
-    Toast.show('==_onSensorChanged==' + event.azimuth)
+    // Toast.show('==_onSensorChanged==' + event.azimuth)
   }
 
   toDoAction = () => {
@@ -244,7 +244,7 @@ export default class CollectionToolBar extends React.Component {
     }
     Toast.show(this.startedLoc ? '继续采集' : '暂停采集')
   }
-  
+
   /** 撤销 **/
   _undo = type => {
     (async function () {
@@ -266,7 +266,7 @@ export default class CollectionToolBar extends React.Component {
       }
     }).bind(this)()
   }
-  
+
   /** 重做 **/
   _redo = type => {
     (async function () {
@@ -288,7 +288,7 @@ export default class CollectionToolBar extends React.Component {
       }
     }).bind(this)()
   }
-  
+
   /** 取消 **/
   _cancel = type => {
     (async function () {
@@ -314,7 +314,7 @@ export default class CollectionToolBar extends React.Component {
       }
     }).bind(this)()
   }
-  
+
   /** 保存 **/
   _save = type => {
     (async function () {
@@ -354,7 +354,7 @@ export default class CollectionToolBar extends React.Component {
       }
     }).bind(this)()
   }
-  
+
   /** 属性 **/
   _attribute = () => {
     (async function () {
@@ -373,7 +373,7 @@ export default class CollectionToolBar extends React.Component {
       }
     }.bind(this)())
   }
-  
+
   /** 切换图层 **/
   _changeLayer = async () => {
     this.props.chooseLayer && this.props.chooseLayer(-1, true, () => { // 传 -1 查询所有类型的图层
@@ -382,7 +382,7 @@ export default class CollectionToolBar extends React.Component {
       }
     })
   }
-  
+
   getData = (type = DatasetType.POINT) => {
     let data = []
     switch (type) {
@@ -618,7 +618,7 @@ export default class CollectionToolBar extends React.Component {
     }
     return data
   }
-  
+
   checkCurrentOperation = (data = [], currentOperation) => {
     for (let i = 0; i < data.length; i++) {
       if (data[i].type === currentOperation.type) {
@@ -627,7 +627,7 @@ export default class CollectionToolBar extends React.Component {
     }
     return { currentOperation: data[0], currentIndex: 0, lastIndex: 0 }
   }
-  
+
   _btn_click_manager = ({ item, index }) => {
     item.action && item.action({
       data: item,
@@ -641,17 +641,18 @@ export default class CollectionToolBar extends React.Component {
             lastIndex: index,
           })
         }
-      }
+      },
     })
   }
-  
+
   render() {
     let data = this.getData(this.props.editLayer && this.props.editLayer.type >= 0 ? this.props.editLayer.type : DatasetType.POINT)
     let { currentOperation, currentIndex, lastIndex } = this.checkCurrentOperation(data, this.state.currentOperation)
     return (
       <View style={styles.popView}>
-        <MTBtn style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
-               BtnImageSrc={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer}/>
+        <MTBtn
+          style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
+          image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer}/>
         <PopBtnSectionList
           ref={ref => this.popBSL = ref}
           popType={this.state.popType}
@@ -706,7 +707,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   pop: {
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
   },
   changeLayerBtn: {
     alignSelf: 'flex-end',

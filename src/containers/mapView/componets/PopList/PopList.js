@@ -1,11 +1,11 @@
 import * as React from 'react'
-import { StyleSheet } from 'react-native'
-import { constUtil, Toast } from '../../../../utils'
+import { StyleSheet, View } from 'react-native'
+import { constUtil, Toast, scaleSize } from '../../../../utils'
 import {
   Action,
   DatasetType,
 } from 'imobile_for_javascript'
-import { PopBtnSectionList, MTBtnList } from '../../../../components'
+import { PopBtnSectionList, MTBtnList, MTBtn } from '../../../../components'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../NavigationService'
 import NetworkAnalystToolBar from '../NetworkAnalystToolBar'
@@ -398,7 +398,7 @@ export default class PopList extends React.Component {
       lastIndex: -1,     // currentOperation last index}
     }
     for (let i = 0; i < data.length; i++) {
-      if (data[i].type === type) {
+      if (data[i].type && data[i].type === type) {
         current.currentOperation = data[i]
         current.currentIndex = i
         current.lastIndex = i
@@ -466,19 +466,41 @@ export default class PopList extends React.Component {
         />
       )
     } else {
+      // return (
+      //   <PopBtnSectionList
+      //     ref={ref => this.popList = ref}
+      //     popType={this.props.popType}
+      //     style={styles.pop}
+      //     subPopShow={this.state.subPopShow}
+      //     data={this.state.data}
+      //     currentData={currentData}
+      //     operationAction={this._btn_click_manager}
+      //     currentOperation={this.state.currentOperation}
+      //     currentIndex={this.state.currentIndex}
+      //     lastIndex={this.state.lastIndex}
+      //   />
+      // )
       return (
-        <PopBtnSectionList
-          ref={ref => this.popList = ref}
-          popType={this.props.popType}
-          style={styles.pop}
-          subPopShow={this.state.subPopShow}
-          data={this.state.data}
-          currentData={currentData}
-          operationAction={this._btn_click_manager}
-          currentOperation={this.state.currentOperation}
-          currentIndex={this.state.currentIndex}
-          lastIndex={this.state.lastIndex}
-        />
+        <View style={styles.popView}>
+          {
+            this.props.popType === MTBtnList.Operation.DATA_EDIT &&
+            <MTBtn
+              style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
+              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer}/>
+          }
+          <PopBtnSectionList
+            ref={ref => this.popList = ref}
+            popType={this.props.popType}
+            style={styles.pop}
+            subPopShow={this.state.subPopShow}
+            data={this.state.data}
+            currentData={currentData}
+            operationAction={this._btn_click_manager}
+            currentOperation={this.state.currentOperation}
+            currentIndex={this.state.currentIndex}
+            lastIndex={this.state.lastIndex}
+          />
+        </View>
       )
     }
   }
@@ -486,9 +508,21 @@ export default class PopList extends React.Component {
 
 const styles = StyleSheet.create({
   pop: {
+    // position: 'absolute',
+    // left: 0,
+    // bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
+    backgroundColor: 'white',
+  },
+  popView: {
     position: 'absolute',
+    flexDirection: 'column',
     left: 0,
-    bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
-    backgroundColor: constUtil.USUAL_GREEN,
+    bottom: scaleSize(100),
+    backgroundColor: 'transparent',
+  },
+  changeLayerBtn: {
+    alignSelf: 'flex-end',
+    marginRight: scaleSize(10),
+    marginBottom: scaleSize(10),
   },
 })

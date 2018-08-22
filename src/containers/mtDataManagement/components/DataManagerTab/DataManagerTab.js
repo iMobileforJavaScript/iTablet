@@ -33,9 +33,9 @@ export default class DataManager_tab extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <BtnOne BtnText='新建数据源' size={BtnOne.SIZE.SMALL} BtnImageSrc={require('../../../../assets/map/icon-new-datasource.png')} BtnClick={this._new_datasource}/>
+        <BtnOne BtnText='新建数据源' size={BtnOne.SIZE.SMALL} image={require('../../../../assets/map/icon-new-datasource.png')} BtnClick={this._new_datasource}/>
         <ListSeparator key={1} mode={ListSeparator.mode.VERTICAL} />
-        <BtnOne BtnText='新建数据集' size={BtnOne.SIZE.SMALL} BtnImageSrc={require('../../../../assets/map/icon-new-datasets.png')} BtnClick={this._new_dataset}/>
+        <BtnOne BtnText='新建数据集' size={BtnOne.SIZE.SMALL} image={require('../../../../assets/map/icon-new-datasets.png')} BtnClick={this._new_dataset}/>
       </View>
     )
   }

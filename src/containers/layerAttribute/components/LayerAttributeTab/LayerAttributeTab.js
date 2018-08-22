@@ -57,21 +57,21 @@ export default class LayerAttributeTab extends React.Component {
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='添加图片或视频'
-          BtnImageSrc={require('../../../../assets/map/icon-add-datasets.png')}
+          image={require('../../../../assets/map/icon-add-datasets.png')}
           BtnClick={this.add}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
         {/*<BtnOne*/}
         {/*size={BtnOne.SIZE.SMALL}*/}
         {/*BtnText='输入语音'*/}
-        {/*BtnImageSrc={require('../../../../assets/map/icon-save.png')}*/}
+        {/*image={require('../../../../assets/map/icon-save.png')}*/}
         {/*BtnClick={this.startAudio}*/}
         {/*/>*/}
         {/*<ListSeparator mode={ListSeparator.mode.VERTICAL}/>*/}
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='编辑'
-          BtnImageSrc={require('../../../../assets/map/icon-save.png')}
+          image={require('../../../../assets/map/icon-save-color.png')}
           BtnClick={this.edit}
         />
       </View>
@@ -84,21 +84,21 @@ export default class LayerAttributeTab extends React.Component {
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='添加'
-          BtnImageSrc={require('../../../../assets/map/icon-add-datasets.png')}
+          image={require('../../../../assets/map/icon-add-datasets.png')}
           BtnClick={this.add}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL} />
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='编辑'
-          BtnImageSrc={require('../../../../assets/map/icon-save.png')}
+          image={require('../../../../assets/map/icon-save-color.png')}
           BtnClick={this.edit}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL} />
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='删除'
-          BtnImageSrc={require('../../../../assets/map/icon-save.png')}
+          image={require('../../../../assets/map/icon-save-color.png')}
           BtnClick={this.delete}
         />
       </View>

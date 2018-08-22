@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { StyleSheet, TouchableOpacity, Text } from 'react-native'
-import * as Util from '../utils/constUtil'
+import * as Util from '../../utils/constUtil'
 
 const bgColor = Util.USUAL_BLUE
 const fontColor = 'white'
