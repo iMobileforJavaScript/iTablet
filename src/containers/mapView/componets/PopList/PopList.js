@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { constUtil, Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import {
   Action,
   DatasetType,
@@ -519,6 +519,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     left: 0,
+    right: 0,
     bottom: scaleSize(100),
     backgroundColor: 'transparent',
   },

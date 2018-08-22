@@ -704,6 +704,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     left: 0,
+    right: 0,
     bottom: scaleSize(100),
     backgroundColor: 'transparent',
   },
