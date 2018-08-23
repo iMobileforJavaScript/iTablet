@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { Workspace, SMMapView, Utility, Action, Point2D } from 'imobile_for_javascript'
+import { Workspace, SMMapView, Action, Point2D } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
@@ -57,8 +57,7 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    this.props.setEditLayer(null)
-    this.props.setSelection(null)
+    this.clearData()
   }
 
   componentWillUnmount() {
@@ -75,10 +74,17 @@ export default class MapView extends React.Component {
     }
   }
 
+  clearData = () => {
+    this.props.setEditLayer(null)
+    this.props.setSelection(null)
+    this.props.setBufferSetting(null)
+    this.props.setOverlaySetting(null)
+    this.props.setAnalystLayer(null)
+  }
+
   closeWorkspace = () => {
     (async function () {
-      this.props.setEditLayer(null)
-      this.props.setSelection(null)
+      this.clearData()
       await this._remove_measure_listener()
       await this._removeGeometrySelectedListener()
       this.map && await this.map.close()
@@ -389,28 +395,30 @@ export default class MapView extends React.Component {
         await this.map.setWorkspace(this.workspace)
         this.mapName = await this.workspace.getMapName(0)
 
-        await this.map.open(this.mapName)
-        // await this.map.viewEntire()
-        // await this.map.setScale(0.00005)
-        // await this.mapControl.setAction(Action.PAN)
-        // await this.map.refresh()
+        if (this.mapName) {
+          await this.map.open(this.mapName)
+          // await this.map.viewEntire()
+          // await this.map.setScale(0.00005)
+          // await this.mapControl.setAction(Action.PAN)
+          // await this.map.refresh()
 
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              const point2dModule = new Point2D()
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              // await this.map.setScale(0.00005)
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              this.saveLatest()
-            }).bind(this)()
-          }
-        )
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              let lat = position.coords.latitude
+              let lon = position.coords.longitude
+              ;(async () => {
+                const point2dModule = new Point2D()
+                let centerPoint = await point2dModule.createObj(lon, lat)
+                await this.map.setCenter(centerPoint)
+                await this.map.viewEntire()
+                // await this.map.setScale(0.00005)
+                await this.mapControl.setAction(Action.PAN)
+                await this.map.refresh()
+                this.saveLatest()
+              }).bind(this)()
+            }
+          )
+        }
 
         await this._addGeometrySelectedListener()
 
@@ -458,15 +466,12 @@ export default class MapView extends React.Component {
             }).bind(this)()
           }
         )
-        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-        let dataset = await dsBaseMap.getDataset(this.layerIndex)
-        await this.map.addLayer(dataset, true)
-        // await this.map.viewEntire()
-        await this.map.refresh()
+        await this.workspace.openDatasource(this.DSParams)
         if (this.labelDSParams) {
           let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
-          await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
+          dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
         }
+        await this.map.refresh()
 
         await this._addGeometrySelectedListener()
         this.container.setLoading(false)

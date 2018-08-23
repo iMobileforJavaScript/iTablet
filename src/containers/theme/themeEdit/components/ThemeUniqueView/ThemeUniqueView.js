@@ -67,6 +67,7 @@ export default class ThemeUniqueView extends React.Component {
       let theme = await this.props.layer.getTheme()
       data.expression = await theme.getUniqueExpression()
       // TODO 获取颜色方案
+      this.themeUnique = theme
     }
     this.setState({
       data: data,

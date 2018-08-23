@@ -15,14 +15,14 @@ export const TRACKING_SETTING_SET = 'TRACKING_SETTING_SET'
 export const setBufferSetting = (params, cb = () => {}) => async dispatch => {
   await dispatch({
     type: BUFFER_SETTING_SET,
-    payload: params,
+    payload: params || {},
   })
   cb && cb()
 }
 
 export const setOverlaySetting = (params, cb = () => {}) => async dispatch => {
   await dispatch({
-    type: OVERLAY_SETTING_SET,
+    type: OVERLAY_SETTING_SET || {},
     payload: params,
   })
   cb && cb()
@@ -58,7 +58,7 @@ const initialState = fromJS({
   },
   route: {
     mode: '',
-  }
+  },
 })
 
 export default handleActions(
@@ -68,17 +68,29 @@ export default handleActions(
     },
     [`${OVERLAY_SETTING_SET}`]: (state, { payload }) => {
       let data = state.toJS().overlay
-      Object.assign(data, payload)
+      if (payload) {
+        Object.assign(data, payload)
+      } else {
+        data = initialState.toJS().overlay
+      }
       return state.setIn(['overlay'], fromJS(data))
     },
     [`${ROUTE_SETTING_SET}`]: (state, { payload }) => {
       let data = state.toJS().overlay
-      Object.assign(data, payload)
+      if (payload) {
+        Object.assign(data, payload)
+      } else {
+        data = initialState.toJS().overlay
+      }
       return state.setIn(['overlay'], fromJS(data))
     },
     [`${TRACKING_SETTING_SET}`]: (state, { payload }) => {
       let data = state.toJS().overlay
-      Object.assign(data, payload)
+      if (payload) {
+        Object.assign(data, payload)
+      } else {
+        data = initialState.toJS().overlay
+      }
       return state.setIn(['overlay'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {

@@ -24,35 +24,32 @@ export default class LayerAttributeAdd extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.isEdit = params.data && Object.keys(params.data).length > 0
     this.state = {
+      isEdit: params.data && Object.keys(params.data).length > 0,
       callBack: params.callBack,
       data: params.data,
       dataset: params.dataset,
       name: params.data && params.data.name || '',
+      caption: params.data && params.data.caption || '',
       type: params.data && params.data.type || '',
       maxLength: params.data && params.data.maxLength || '',
       defaultValue: params.data && params.data.defaultValue || '',
-      isRequired: params.data && params.data.isRequired || '',
+      isRequired: params.data && typeof params.data.isRequired === "boolean" ? params.data.isRequired : '',
     }
   }
 
   componentDidMount() {
   }
 
-  getDatasets = async () => {
-    this.container.setLoading(false)
-  }
-
   confirmValidate = () => {
     let isConfrim = false
 
-    if (this.isEdit) {
+    if (this.state.isEdit) {
       const { data } = this.props.navigation.state.params
       let keys = Object.keys(data)
       for (let i = 0; i < keys.length; i++) {
         let key = keys[i]
-        if (this.state[key] !== data[key] && key !== 'caption' && key !== 'isSystemField') {
+        if (this.state[key] !== data[key] && key !== 'isSystemField') {
           isConfrim = true
           break
         }
@@ -61,7 +58,9 @@ export default class LayerAttributeAdd extends React.Component {
     } else {
       if (!this.state.name) {
         Toast.show('请输入名称')
-      } else if (!this.state.type) {
+      } else if (!this.state.caption) {
+        Toast.show('请输入别名')
+      }else if (!this.state.type) {
         Toast.show('请选择类型')
       } else if (!this.state.maxLength) {
         Toast.show('请输入长度')
@@ -77,25 +76,20 @@ export default class LayerAttributeAdd extends React.Component {
 
   confirm = () => {
     if (!this.confirmValidate()) return
-    this.container.setLoading(true, '数据编辑中')
     ;(async function () {
       try {
+        this.container.setLoading(true)
         let datasetVector = await this.state.dataset.toDatasetVector()
         let index
-        if (this.isEdit) {
+        if (this.state.isEdit) {
           const { params } = this.props.navigation.state
           const name = params.data.name
           index = await datasetVector.editFieldInfo(name, {
-            caption: this.state.name,
-            name: this.state.name,
-            type: this.state.type,
-            maxLength: this.state.maxLength,
-            defaultValue: this.state.defaultValue,
-            isRequired: this.state.isRequired,
+            caption: this.state.caption,
           })
         } else {
           index = await datasetVector.addFieldInfo({
-            caption: this.state.name,
+            caption: this.state.caption,
             name: this.state.name,
             type: this.state.type,
             maxLength: this.state.maxLength,
@@ -103,7 +97,7 @@ export default class LayerAttributeAdd extends React.Component {
             isRequired: this.state.isRequired,
           })
         }
-        if (index >= 0 ) {
+        if (index === 0 || index ) {
           Toast.show("添加成功")
           this.state.callBack && this.state.callBack()
           NavigationService.goBack()
@@ -144,6 +138,11 @@ export default class LayerAttributeAdd extends React.Component {
           name: text,
         })
         break
+      case '别名':
+        this.setState({
+          caption: text,
+        })
+        break
       case '长度':
         this.setState({
           maxLength: parseInt(text),
@@ -176,9 +175,18 @@ export default class LayerAttributeAdd extends React.Component {
         <Row
           style={{marginTop: scaleSize(30)}}
           key={'名称'}
+          disable={this.state.isEdit}
           defaultValue={this.state.name}
           type={Row.Type.INPUT}
           title={'名称'}
+          getValue={this.getInputValue}
+        />
+        <Row
+          style={{marginTop: scaleSize(30)}}
+          key={'别名'}
+          defaultValue={this.state.caption}
+          type={Row.Type.INPUT}
+          title={'别名'}
           getValue={this.getInputValue}
         />
         <Row
@@ -187,6 +195,7 @@ export default class LayerAttributeAdd extends React.Component {
           type={Row.Type.RADIO_GROUP}
           title={'类型'}
           defaultValue={this.state.type}
+          disable={this.state.isEdit}
           radioArr={[
             {title: '文本', value: FieldType.TEXT},
             {title: '数值', value: FieldType.DOUBLE},
@@ -201,6 +210,7 @@ export default class LayerAttributeAdd extends React.Component {
           key={'长度'}
           type={Row.Type.INPUT}
           title={'长度'}
+          disable={this.state.isEdit}
           defaultValue={this.state.maxLength}
           getValue={this.getInputValue}
           inputType={Row.InputType.NUMERIC}
@@ -210,6 +220,7 @@ export default class LayerAttributeAdd extends React.Component {
           key={'缺省值'}
           type={Row.Type.INPUT}
           title={'缺省值'}
+          disable={this.state.isEdit}
           defaultValue={this.state.defaultValue}
           getValue={this.getInputValue}
         />
@@ -218,6 +229,7 @@ export default class LayerAttributeAdd extends React.Component {
           key={'必填'}
           type={Row.Type.RADIO_GROUP}
           title={'必填'}
+          disable={this.state.isEdit}
           defaultValue={this.state.isRequired}
           radioArr={[
             {title: '是', value: true},

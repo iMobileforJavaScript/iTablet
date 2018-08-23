@@ -173,7 +173,9 @@ export default class PopList extends React.Component {
       let count  = await selection.getCount()
       if (count > 0) {
         // NavigationService.navigate('LayerAttribute',{ selection: selection })
-        NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
+        // NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
+        let recordset = await selection.toRecordset()
+        NavigationService.navigate('LayerAttribute', { recordset: recordset })
       } else {
         Toast.show('请选择目标')
       }

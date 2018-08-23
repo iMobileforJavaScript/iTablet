@@ -103,8 +103,9 @@ export default class LayerAttribute extends React.Component {
     Toast.show("待做")
   }
 
-  edit = () => {
-    NavigationService.navigate('LayerAttributeEdit', {selection: this.state.selection, callBack: this.getDatasets})
+  edit = async () => {
+    let dataset = await this.state.recordset.getDataset()
+    NavigationService.navigate('LayerAttributeEdit', {dataset: dataset, callBack: this.getDatasets})
   }
 
   reset = () => {

@@ -20,6 +20,12 @@ export default class WorkSpaceFileList extends Component {
     title: string,
     navigation: Object,
     nav: Object,
+
+    setEditLayer: () => {},
+    setSelection: () => {},
+    setBufferSetting: () => {},
+    setOverlaySetting: () => {},
+    setAnalystLayer: () => {},
   }
 
   constructor(props) {
@@ -58,6 +64,14 @@ export default class WorkSpaceFileList extends Component {
         this.container.setLoading(false)
       }
     }).bind(this)()
+  }
+
+  clearData = () => {
+    this.props.setEditLayer(null)
+    this.props.setSelection(null)
+    this.props.setBufferSetting(null)
+    this.props.setOverlaySetting(null)
+    this.props.setAnalystLayer(null)
   }
 
   _offLine_More = () => {
@@ -102,6 +116,7 @@ export default class WorkSpaceFileList extends Component {
   _toLoadMapView = (path, type) => {
     (async function () {
       if (this.workspace && this.need === 'workspace') {
+        this.clearData()
         let key = ''
         for (let index = 0; index < this.routes.length; index++) {
           if (this.routes[index].routeName === 'MapView') {
@@ -125,6 +140,7 @@ export default class WorkSpaceFileList extends Component {
         NavigationService.goBack(key)
       }
       else if (this.workspace && this.map && this.need === 'udb') {
+        this.clearData()
         await this.map.close()
         await this.workspace.closeAllDatasource()
         let key = ''

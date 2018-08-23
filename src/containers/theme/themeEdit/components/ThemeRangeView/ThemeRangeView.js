@@ -74,6 +74,7 @@ export default class ThemeRangeView extends React.Component {
       data.rangeCount = await theme.getCount()
       data.precision = await theme.getPrecision()
       // TODO 获取颜色方案
+      this.themeRange = theme
     }
     this.setState({
       data: data,

@@ -21,6 +21,7 @@ export default class ChooseNumber extends PureComponent {
     maxValue: number,
     times?: number,
     commonDifference?: number,
+    disable?: boolean,
   }
 
   static defaultProps = {
@@ -31,6 +32,7 @@ export default class ChooseNumber extends PureComponent {
     defaultValue: 2,
     times: 1,
     commonDifference: 1,
+    disable: false,
   }
 
   constructor(props) {
@@ -51,6 +53,7 @@ export default class ChooseNumber extends PureComponent {
   }
 
   minus = () => {
+    if (this.props.disable) return
     if (this.props.minValue === '' || this.state.value > this.props.minValue) {
       let value = this.props.times > 1
         ? (this.state.value / this.props.times)
@@ -68,6 +71,7 @@ export default class ChooseNumber extends PureComponent {
   }
 
   plus = () => {
+    if (this.props.disable) return
     if (this.props.maxValue === '' || this.state.value < this.props.maxValue) {
       let value = this.props.times > 1
         ? (this.state.value * this.props.times)
@@ -90,7 +94,7 @@ export default class ChooseNumber extends PureComponent {
       <View style={styles.chooseNumberContainer}>
         <TouchableOpacity
           disable={!this.state.miusAble}
-          style={this.state.miusAble ? styles.imageBtnView : styles.disableImageBtnView}
+          style={this.state.miusAble && !this.props.disable ? styles.imageBtnView : styles.disableImageBtnView}
           accessible={true}
           accessibilityLabel={'减号'}
           onPress={() => this.minus()}
@@ -100,7 +104,7 @@ export default class ChooseNumber extends PureComponent {
         <Text style={[styles.numberTitle, this.props.valueStyle]}>{this.state.value + ' ' + this.props.unit}</Text>
         <TouchableOpacity
           disable={!this.state.plusAble}
-          style={this.state.plusAble ? styles.imageBtnView : styles.disableImageBtnView}
+          style={this.state.plusAble && !this.props.disable ? styles.imageBtnView : styles.disableImageBtnView}
           accessible={true}
           accessibilityLabel={'加号'}
           onPress={() => this.plus()}

@@ -40,7 +40,7 @@ export default class LayerAttributeTable extends React.Component {
     tableHead: [],
     tableTitle: [],
     tableData: [],
-    widthArr: [40, 200, 100, 100, 100, 80],
+    widthArr: [40, 200, 200, 100, 100, 100, 80],
     selectable: true,
   }
 
@@ -69,7 +69,8 @@ export default class LayerAttributeTable extends React.Component {
       Object.keys(data).forEach((key, index) => {
         titleList.push(key)
         dataList.push([
-          key,
+          // key,
+          data[key].fieldInfo.caption,
           {
             index: 1,
             key: key,
@@ -138,6 +139,7 @@ export default class LayerAttributeTable extends React.Component {
     let arr = []
     arr.push(index + 1)
     arr.push(obj.name)
+    arr.push(obj.caption)
     arr.push(obj.type)
     arr.push(obj.maxLength)
     arr.push(obj.defaultValue)
@@ -277,7 +279,7 @@ export default class LayerAttributeTable extends React.Component {
                         ]}>
                         {
                           arr.map((cellData, cellIndex) => {
-                            if (cellIndex === 2) {
+                            if (cellIndex === 3) {
                               let type = ''
 
                               switch (cellData) {
