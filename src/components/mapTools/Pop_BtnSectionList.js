@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
-import { constUtil, scaleSize} from '../../utils'
+import { constUtil, scaleSize } from '../../utils'
 import { color } from '../../styles'
 import PropTypes from 'prop-types'
 import Pop_Btn from './Pop_Btn'
 import PopTextBtn from './PopTextBtn'
+import { BtnOne } from '../Button'
 import MTBtn from './MT_Btn'
 
 const WIDTH = constUtil.WIDTH
@@ -46,26 +47,26 @@ export default class Pop_BtnSectionList extends React.Component {
   //   name && Toast.show('当前可编辑的图层为\n' + name)
   // }
 
-  findData = (data = [], currentData) => {
-    let currentOperation = {},
-      index = -1, lastIndex = -1
-    if (data.length <= 0) return
-    if (data[0].key !== this.props.data[0].key) {
-      lastIndex = 0
-    } else {
-      lastIndex = this.state ? this.props.currentIndex : 0
-    }
-    for (let i = 0; i < data.length; i++) {
-      if (currentData.type === data[i].type) {
-        currentOperation = data[i]
-        index = i
-        break
-      }
-    }
-    return {currentOperation, index, lastIndex}
-    // this.currentOperation = currentOperation
-    // this.index = index
-  }
+  // findData = (data = [], currentData) => {
+  //   let currentOperation = {},
+  //     index = -1, lastIndex = -1
+  //   if (data.length <= 0) return
+  //   if (data[0].key !== this.props.data[0].key) {
+  //     lastIndex = 0
+  //   } else {
+  //     lastIndex = this.state ? this.props.currentIndex : 0
+  //   }
+  //   for (let i = 0; i < data.length; i++) {
+  //     if (currentData.type === data[i].type) {
+  //       currentOperation = data[i]
+  //       index = i
+  //       break
+  //     }
+  //   }
+  //   return { currentOperation, index, lastIndex }
+  //   // this.currentOperation = currentOperation
+  //   // this.index = index
+  // }
 
   setCurrentOption = options => {
     this.setState({
@@ -79,7 +80,7 @@ export default class Pop_BtnSectionList extends React.Component {
    * @param index
    * @private
    */
-  _btn_click_manager = ({item, index}) => {
+  _btn_click_manager = ({ item, index }) => {
     this.props.operationAction && this.props.operationAction({ item, index })
   }
 
@@ -89,10 +90,11 @@ export default class Pop_BtnSectionList extends React.Component {
    * @param index
    * @private
    */
-  _btn_click_operation = ({item}) => {
+  _btn_click_operation = ({ item }) => {
     item.action && item.action({
       data: item,
-      callback: () => {},
+      callback: () => {
+      },
     })
   }
 
@@ -123,7 +125,7 @@ export default class Pop_BtnSectionList extends React.Component {
         selected={this.props.currentIndex === index}
         style={[styles.item, { width }]}
         title={key}
-        btnClick={() => this._btn_click_manager({item, index})} />
+        btnClick={() => this._btn_click_manager({ item, index })}/>
     )
   }
 
@@ -132,15 +134,16 @@ export default class Pop_BtnSectionList extends React.Component {
     return (
       <View style={styles.operationView}>
         {
-          this.props.subBtnType === 'imageBtn'
-            ? <MTBtn BtnText={key} BtnImageSrc={item.image} BtnClick={() => this._btn_click_operation({item, index})} />
+          // this.props.subBtnType === 'imageBtn'
+          item.image
+            ? <MTBtn BtnText={key} image={item.image} BtnClick={() => this._btn_click_operation({ item, index })}/>
             : <Pop_Btn
               ref={ref => {
                 this.setOperationRefs(ref, index)
               }}
               style={styles.operation}
               BtnText={key}
-              btnClick={() => this._btn_click_operation({item, index})} />
+              btnClick={() => this._btn_click_operation({ item, index })}/>
         }
       </View>
     )
@@ -148,7 +151,7 @@ export default class Pop_BtnSectionList extends React.Component {
 
   _renderSeparator = () => {
     return (
-      <View style={styles.separator} />
+      <View style={styles.separator}/>
     )
   }
 
@@ -157,15 +160,15 @@ export default class Pop_BtnSectionList extends React.Component {
   _keySubExtractor = item => item.key
 
   render() {
-    let props = { ...this.props }
-    this.findData(props.data, props.currentData)
+    // let props = { ...this.props }
+    // this.findData(props.data, props.currentData)
     return (
-      <View style={styles.container}{...props}>
+      <View style={styles.container}{...this.props}>
         <FlatList
           style={styles.categoryListView}
-          data={props.data}
+          data={this.props.data.concat([])}
           renderItem={this._renderItem}
-          ItemSeparatorComponent={this._renderSeparator}
+          // ItemSeparatorComponent={this._renderSeparator}
           horizontal={true}
           keyExtractor={this._keyExtractor}
           showsHorizontalScrollIndicator={false}
@@ -201,7 +204,7 @@ Pop_BtnSectionList.SubBtnType = {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,
@@ -212,12 +215,17 @@ const styles = StyleSheet.create({
   },
   categoryListView: {
     height: scaleSize(80),
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
+    borderTopWidth: 1,
     borderColor: color.USUAL_SEPARATORCOLOR,
+    backgroundColor: 'white',
   },
   operationsListView: {
     flex: 1,
+    borderTopWidth: 1,
+    borderColor: color.USUAL_SEPARATORCOLOR,
     paddingVertical: scaleSize(10),
+    backgroundColor: 'white',
   },
   separator: {
     alignSelf: 'center',

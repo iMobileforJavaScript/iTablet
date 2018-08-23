@@ -71,7 +71,9 @@ export default class WorkSpaceFileList extends Component {
         let isDirectory = await Utility.isDirectory(absolutePath)
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
-          if (filename === '.smwu' && this.need === 'workspace') {
+          if (filename === '.sxmu' && this.need === 'workspace') {
+
+          } else if (filename === '.smwu' && this.need === 'workspace') {
             this._toLoadMapView(absolutePath, '')
           } else if (filename === '.udb' && this.need === 'udb') {
             this._toLoadMapView(absolutePath, EngineType.UDB)
@@ -79,7 +81,10 @@ export default class WorkSpaceFileList extends Component {
             this._offLine_More()
           }
         } else {
-          let fileList = await Utility.getPathList(absolutePath)
+          let filter = this.need === 'workspace' ? 'sxmu,smwu' : this.need === 'udb' ? 'udb' : ''
+          let fileList = await Utility.getPathListByFilter(absolutePath, {
+            type: filter,
+          })
           // let fileList = await Utility.getPathListByFilter(absolutePath, {type: 'smwu'})
           this.setState({
             data: fileList,
@@ -120,19 +125,8 @@ export default class WorkSpaceFileList extends Component {
         NavigationService.goBack(key)
       }
       else if (this.workspace && this.map && this.need === 'udb') {
-        // let str = path.substr(path.lastIndexOf('/') + 1)
-        // let name = str.substr(0, str.lastIndexOf('.'))
         await this.map.close()
         await this.workspace.closeAllDatasource()
-        // let datasources = await this.workspace.getDatasources()
-        // let count = await datasources.getCount()
-        // for (let index = 0; index < count; index++) {
-        //   datasourcename = await (await datasources.get(index)).getAlias()
-        //   if (name === datasourcename) {
-        //     Toast.show('空间中此数据源已被打开')
-        //     return
-        //   }
-        // }
         let key = ''
         for (let index = 0; index < this.routes.length; index++) {
           if (this.routes[index].routeName === 'MapView') {
@@ -156,8 +150,6 @@ export default class WorkSpaceFileList extends Component {
           }
         )
 
-        // let openpath = await Utility.appendingHomeDirectory(path)
-        // await this.map.setScale(0.0001)
         this.DSParams = { server: path, engineType: EngineType.UDB }
         let layerIndex = 0
         let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
@@ -168,7 +160,6 @@ export default class WorkSpaceFileList extends Component {
       }
     }).bind(this)()
   }
-
 
   _refresh = async item => {
     await this.getFileList(item)

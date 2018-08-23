@@ -17,7 +17,7 @@ const BTN_UNDERCOLOR = constUtil.UNDERLAYCOLOR
 export default class MT_Btn extends React.Component {
 
   props: {
-    BtnImageSrc: any,
+    image: any,
     size: string,
     BtnText: string,
     BtnClick: () => {},
@@ -36,7 +36,7 @@ export default class MT_Btn extends React.Component {
     let textStyle = this.props.size === 'small' ? styles.smallText : styles.largeText
     return (
       <TouchableOpacity accessible={true} accessibilityLabel={this.props.BtnText} style={[styles.container, this.props.style]} onPress={this.props.BtnClick} underlayColor={BTN_UNDERCOLOR}>
-        {this.props.BtnImageSrc && <Image resizeMode={'contain'} style={[imageStyle, this.props.imageStyle]} source={this.props.BtnImageSrc} />}
+        {this.props.image && <Image resizeMode={'contain'} style={[imageStyle, this.props.imageStyle]} source={this.props.image} />}
         {this.props.BtnText && <Text style={[textStyle, this.props.textStyle, {color: this.props.textColor}]}>{this.props.BtnText}</Text>}
       </TouchableOpacity>
     )

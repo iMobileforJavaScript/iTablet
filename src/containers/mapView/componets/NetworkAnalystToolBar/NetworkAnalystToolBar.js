@@ -48,15 +48,14 @@ export default class NetworkAnalystToolBar extends React.Component {
 
   constructor(props) {
     super(props)
-    let data = this.getData(props.popType || ROUTE)
+    let {data, currentOperation, currentIndex} = this.getData(props.popType || ROUTE)
     this.state = {
-      data: data,
-      currentOperation: data[0],
-      currentIndex: 0,
-      lastIndex: 0,
-      currentData: this.getData(props.popType || ROUTE),
-      subPopShow: true,
-      popType: props.popType || ROUTE,
+      data: data,                         // 所有数据
+      currentOperation: currentOperation, // 当前操作选项
+      currentIndex: currentIndex,         // 当前操作选项序号
+      lastIndex: currentIndex,            // 上一次操作选项序号
+      subPopShow: true,                   // 是否显示子操作栏
+      popType: props.popType || ROUTE,    // 操作类型
     }
     this.cbData = {}
   }
@@ -77,6 +76,8 @@ export default class NetworkAnalystToolBar extends React.Component {
     cbData.callback && await cbData.callback(true)
     this.setState({
       popType: type,
+      currentIndex: cbData.index,
+      currentOperation: cbData.data,
     })
     this.props.setLoading && this.props.setLoading(false)
   }
@@ -87,21 +88,8 @@ export default class NetworkAnalystToolBar extends React.Component {
 
   /** 设置 **/
   _setting = type => {
-    // NavigationService.navigate()
     (async function () {
-      // testing
-      // let datasource = await this.props.workspace.getDatasource('FacilityNet')
-      // // let datasource = await datasources.get('FacilityNet')
-      // let dataset = await datasource.getDataset('WaterNet')
-      // // let dataset = await datasets.get('WaterNet')
-      // let datasetv = await dataset.toDatasetVector()
-      //
-      // let name = await datasetv.getName()
-      //
-      // await facilityAnalyst.loadModel(this.props.mapControl, datasetv)
-      // this.toDoAction()
       this.props.showSetting && this.props.showSetting(Setting.Type.NETWORK_TRACKING)
-      // this.props.chooseLayer && this.props.chooseLayer(DatasetType.LINE, true)
       // NavigationService.navigate('ChooseEditLayer',{ workspace: this.props.workspace, map: this.props.map, type: DatasetType.LINE, mapControl: this.props.mapControl, isEdit: true })
     }).bind(this)()
   }
@@ -189,9 +177,7 @@ export default class NetworkAnalystToolBar extends React.Component {
       {
         key: '路径分析',
         type: ROUTE,
-        action: cbData => {
-          this.changeTap(cbData, ROUTE)
-        },
+        action: async cbData => await this.changeTap(cbData, ROUTE),
         operations: [
           { key: '设置', action: () => this._setting(ROUTE), image: require('../../../../assets/public/save.png') },
           { key: '分析', action: () => this._analyst(ROUTE), image: require('../../../../assets/public/save.png') },
@@ -201,9 +187,7 @@ export default class NetworkAnalystToolBar extends React.Component {
       {
         key: '连通性分析',
         type: FACILITY,
-        action: cbData => {
-          this.changeTap(cbData, FACILITY)
-        },
+        action: async cbData => await this.changeTap(cbData, FACILITY),
         operations: [
           { key: '设置', action: () => this._setting(FACILITY), image: require('../../../../assets/public/save.png') },
           { key: '分析', action: () => this._analyst(FACILITY), image: require('../../../../assets/public/save.png') },
@@ -213,9 +197,7 @@ export default class NetworkAnalystToolBar extends React.Component {
       {
         key: '商旅分析',
         type: TSP,
-        action: cbData => {
-          this.changeTap(cbData, TSP)
-        },
+        action: async cbData => await this.changeTap(cbData, TSP),
         operations: [
           { key: '设置', action: () => this._setting(TSP), image: require('../../../../assets/public/save.png') },
           { key: '分析', action: () => this._analyst(TSP), image: require('../../../../assets/public/save.png') },
@@ -225,9 +207,7 @@ export default class NetworkAnalystToolBar extends React.Component {
       {
         key: '追踪分析',
         type: TRACKING,
-        action: cbData => {
-          this.changeTap(cbData, TRACKING)
-        },
+        action: async cbData => this.changeTap(cbData, TRACKING),
         operations: [
           { key: '设置', action: () => this._setting(TRACKING), image: require('../../../../assets/public/save.png') },
           {
@@ -244,23 +224,28 @@ export default class NetworkAnalystToolBar extends React.Component {
         ],
       },
     ]
+    let currentOperation = null, currentIndex = -1
     if (type) {
       switch (type) {
         case ROUTE:
-          data = data[0]
+          currentOperation = data[0]
+          currentIndex = 0
           break
         case FACILITY:
-          data = data[1]
+          currentOperation = data[1]
+          currentIndex = 1
           break
         case TSP:
-          data = data[2]
+          currentOperation = data[2]
+          currentIndex = 2
           break
         case TRACKING:
-          data = data[3]
+          currentOperation = data[3]
+          currentIndex = 3
           break
       }
     }
-    return data
+    return {data, currentOperation, currentIndex}
   }
   
   _btn_click_manager = ({item, index}) => {
@@ -286,7 +271,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     return (
       <MTBtn
         BtnText={'分析'}
-        BtnImageSrc={require('../../../../assets/map/icon_edit.png')}
+        image={require('../../../../assets/map/icon_edit.png')}
         style={{ marginRight: scaleSize(10) }}
         BtnClick={this._analyst}
       />
@@ -294,18 +279,18 @@ export default class NetworkAnalystToolBar extends React.Component {
   }
 
   render() {
-    let data = this.getData(this.props.editLayer && this.props.editLayer.type >= 0 ? this.props.editLayer.type : DatasetType.POINT)
+    // let data = this.getData(this.props.editLayer && this.props.editLayer.type >= 0 ? this.props.editLayer.type : DatasetType.POINT)
     return (
       <PopBtnSectionList
         ref={ref => this.popBSL = ref}
         popType={this.state.popType}
         style={styles.pop}
-        subPopShow={this.state.subPopShow}
-        currentData={this.state.currentData}
+        // subPopShow={this.state.subPopShow}
+        subPopShow={true}
         subBtnType={PopBtnSectionList.SubBtnType.IMAGE_BTN}
         // subRight={this.renderSubRight()}
         // data={this.state.data}
-        data={data}
+        data={this.state.data}
         operationAction={this._btn_click_manager}
         currentOperation={this.state.currentOperation}
         currentIndex={this.state.currentIndex}
@@ -327,6 +312,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
   },
 })

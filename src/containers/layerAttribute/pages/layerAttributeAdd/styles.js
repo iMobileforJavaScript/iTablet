@@ -5,7 +5,7 @@ import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.USUAL_GREEN,
+    backgroundColor: 'white',
     padding: scaleSize(20),
     justifyContent: 'space-between',
     // alignItems: 'center',

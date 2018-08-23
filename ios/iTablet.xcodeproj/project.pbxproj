@@ -13,10 +13,11 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0118FA2122D9CE00BC4AAB /* Contacts.framework */; };
+		0A1727CC212E996E00CF978C /* VisualMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A1727C9212E996E00CF978C /* VisualMain.storyboard */; };
+		0A1727CD212E996E00CF978C /* VisualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1727CB212E996E00CF978C /* VisualViewController.m */; };
 		0A3625AB212CFDF70016FC64 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625AA212CFDF60016FC64 /* Trial_License.slm */; };
 		0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */; };
 		0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3625B6212E3C2C0016FC64 /* VCViewController.m */; };
-		0A4421F1211442C50087C8FE /* VisualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4421EF211442C40087C8FE /* VisualViewController.m */; };
 		0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F5211442D50087C8FE /* VisualDemoData.zip */; };
 		0A44220F211442D60087C8FE /* 停止－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F7211442D60087C8FE /* 停止－当前.png */; };
 		0A442210211442D60087C8FE /* 停止－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F8211442D60087C8FE /* 停止－按下.png */; };
@@ -42,7 +43,6 @@
 		0A442224211442D60087C8FE /* 背景尾加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220C211442D60087C8FE /* 背景尾加一个.png */; };
 		0A442225211442D60087C8FE /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220D211442D60087C8FE /* 选中.png */; };
 		0A44223C211445060087C8FE /* libzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A442234211445060087C8FE /* libzip.a */; };
-		0A44223F211445560087C8FE /* VisualMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A44223D211445560087C8FE /* VisualMain.storyboard */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
@@ -387,12 +387,13 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* iTabletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTabletTests.m; sourceTree = "<group>"; };
 		0A0118FA2122D9CE00BC4AAB /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		0A1727C9212E996E00CF978C /* VisualMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = VisualMain.storyboard; path = SampleCode/HotMap/VisualMain.storyboard; sourceTree = SOURCE_ROOT; };
+		0A1727CA212E996E00CF978C /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualViewController.h; path = SampleCode/HotMap/VisualViewController.h; sourceTree = SOURCE_ROOT; };
+		0A1727CB212E996E00CF978C /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualViewController.m; path = SampleCode/HotMap/VisualViewController.m; sourceTree = SOURCE_ROOT; };
 		0A3625AA212CFDF60016FC64 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = SampleCode/Trial_License.slm; sourceTree = "<group>"; };
 		0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = VCMain.storyboard; path = SampleCode/vectorCache/VCMain.storyboard; sourceTree = SOURCE_ROOT; };
 		0A3625B5212E3C2C0016FC64 /* VCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VCViewController.h; path = SampleCode/vectorCache/VCViewController.h; sourceTree = SOURCE_ROOT; };
 		0A3625B6212E3C2C0016FC64 /* VCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VCViewController.m; path = SampleCode/vectorCache/VCViewController.m; sourceTree = SOURCE_ROOT; };
-		0A4421EF211442C40087C8FE /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualViewController.m; path = SampleCode/HotMap/HotMap/VisualViewController.m; sourceTree = SOURCE_ROOT; };
-		0A4421F0211442C40087C8FE /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualViewController.h; path = SampleCode/HotMap/HotMap/VisualViewController.h; sourceTree = SOURCE_ROOT; };
 		0A4421F5211442D50087C8FE /* VisualDemoData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = VisualDemoData.zip; path = SampleCode/HotMap/VisualDemoData.zip; sourceTree = SOURCE_ROOT; };
 		0A4421F7211442D60087C8FE /* 停止－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－当前.png"; sourceTree = "<group>"; };
 		0A4421F8211442D60087C8FE /* 停止－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－按下.png"; sourceTree = "<group>"; };
@@ -424,7 +425,6 @@
 		0A442239211445060087C8FE /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
 		0A44223A211445060087C8FE /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		0A44223B211445060087C8FE /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
-		0A44223E211445560087C8FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = SampleCode/HotMap/HotMap/Base.lproj/VisualMain.storyboard; sourceTree = SOURCE_ROOT; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
@@ -621,11 +621,11 @@
 		0A4421EE211442950087C8FE /* Visual */ = {
 			isa = PBXGroup;
 			children = (
+				0A1727C9212E996E00CF978C /* VisualMain.storyboard */,
+				0A1727CA212E996E00CF978C /* VisualViewController.h */,
+				0A1727CB212E996E00CF978C /* VisualViewController.m */,
 				0A4421F6211442D60087C8FE /* 切图 */,
 				0A4421F5211442D50087C8FE /* VisualDemoData.zip */,
-				0A4421F0211442C40087C8FE /* VisualViewController.h */,
-				0A4421EF211442C40087C8FE /* VisualViewController.m */,
-				0A44223D211445560087C8FE /* VisualMain.storyboard */,
 			);
 			path = Visual;
 			sourceTree = "<group>";
@@ -1330,9 +1330,9 @@
 				0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */,
 				0A44220F211442D60087C8FE /* 停止－当前.png in Resources */,
 				0A442221211442D60087C8FE /* 聚合图－当前.png in Resources */,
+				0A1727CC212E996E00CF978C /* VisualMain.storyboard in Resources */,
 				0A442210211442D60087C8FE /* 停止－按下.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				0A44223F211445560087C8FE /* VisualMain.storyboard in Resources */,
 				0A442219211442D60087C8FE /* 密度图－当前.png in Resources */,
 				0A44221A211442D60087C8FE /* 密度图－选中.png in Resources */,
 				0A44221F211442D60087C8FE /* 热点图－当前.png in Resources */,
@@ -1406,11 +1406,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A4421F1211442C50087C8FE /* VisualViewController.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
 				0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */,
 				0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
+				0A1727CD212E996E00CF978C /* VisualViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1426,14 +1426,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		0A44223D211445560087C8FE /* VisualMain.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0A44223E211445560087C8FE /* Base */,
-			);
-			name = VisualMain.storyboard;
-			sourceTree = "<group>";
-		};
 		13B07FB11A68108700A75B9A /* LaunchScreen.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1457,8 +1449,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1499,8 +1491,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 				);
 				HEADER_SEARCH_PATHS = (

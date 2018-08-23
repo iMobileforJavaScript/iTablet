@@ -6,7 +6,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
     paddingTop:10,
   },
   row: {

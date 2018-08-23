@@ -141,7 +141,7 @@ export default class MT_BtnList extends React.Component {
     let width = (ITEM_WIDTH < WIDTH / 6) ? WIDTH / 6 : ITEM_WIDTH
     return (
       <View style={[styles.item, { width: width }]}>
-        <MT_Btn BtnText={key} BtnImageSrc={image} BtnClick={btnClick} />
+        <MT_Btn BtnText={key} image={image} BtnClick={btnClick} />
       </View>
     )
   }
@@ -160,7 +160,7 @@ export default class MT_BtnList extends React.Component {
         <FlatList
           data={data}
           renderItem={this._renderItem}
-          ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
           keyExtractor={this._keyExtractor}
           horizontal={true}
         />
@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: scaleSize(100),
     width: '100%',
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: scaleSize(100),
     width: '100%',
-    backgroundColor: constUtil.USUAL_GREEN,
+    backgroundColor: 'white',
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,

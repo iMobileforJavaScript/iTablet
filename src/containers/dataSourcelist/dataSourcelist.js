@@ -16,7 +16,7 @@ export default class DataSourcelist extends React.Component {
     const { params } = this.props.navigation.state
     this.workspace = params.workspace
     this.map = params.map
-    this.mapControl=params.mapControl
+    this.mapControl = params.mapControl
     this.state = {
       data: [],
     }
@@ -27,7 +27,9 @@ export default class DataSourcelist extends React.Component {
   }
 
   _addElement = (delegate, src, str) => {
-    let element = <BtnOne BtnClick={delegate} BtnImageSrc={src} BtnText={str} titleStyle={styles.title} />
+    let element = <BtnOne
+      size={BtnOne.SIZE.SMALL} BtnClick={delegate} image={src} BtnText={str}
+      titleStyle={styles.title}/>
     return (element)
   }
 
@@ -54,8 +56,7 @@ export default class DataSourcelist extends React.Component {
       }
       return datalist
     } catch (error) {
-      console.log(error)
-      return
+      return []
     }
 
     // let OpenMapfileModule = new OpenMapfile();
@@ -78,19 +79,29 @@ export default class DataSourcelist extends React.Component {
   }
 
   _todataset = (w, m, p, n) => {
-    NavigationService.navigate('DataSets', { workspace: w, map: m, datasource: p, name: n ,mapControl:this.mapControl})
+    NavigationService.navigate('DataSets', {
+      workspace: w,
+      map: m,
+      datasource: p,
+      name: n,
+      mapControl: this.mapControl,
+    })
   }
 
   _renderItem = ({ item }) => {
-    return (<TouchableOpacity onPress={() => this._todataset(this.workspace, this.map, item.datasource, item.name)} style={styles.itemclick}>
-      <Image source={Fileicon} style={styles.img} />
-      <Text style={styles.item}>{item.name}</Text>
-    </TouchableOpacity>)
+    return (
+      <TouchableOpacity
+        onPress={() => this._todataset(this.workspace, this.map, item.datasource, item.name)}
+        style={styles.itemclick}>
+        <Image source={Fileicon} style={styles.img}/>
+        <Text style={styles.item}>{item.name}</Text>
+      </TouchableOpacity>)
   }
 
   _keyExtractor = (item, index) => {
     return index
   }
+
   render() {
     return (
       <Container
@@ -122,26 +133,29 @@ const styles = StyleSheet.create({
   },
   itemclick: {
     flexDirection: 'row',
-    // borderWidth: 1,
-    // borderColor: '#DBDBDB',
     marginTop: 15,
   },
-  container: {
-
-  },
+  container: {},
   adddata: {
-    width: scaleSize(140),
     height: scaleSize(150),
-    marginTop: scaleSize(30),
-    marginLeft: scaleSize(30),
+    paddingLeft: scaleSize(30),
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderStyle: 'solid',
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: '#bbbbbb',
+    alignItems: 'center',
   },
   img: {
-    width:scaleSize(80),
+    width: scaleSize(80),
     height: scaleSize(80),
-    marginLeft: scaleSize(40),
-    marginRight: scaleSize(20),
+    marginLeft: scaleSize(30),
   },
-  title:{
-    paddingTop:scaleSize(10),
+  title: {
+    backgroundColor: 'transparent',
   },
 })

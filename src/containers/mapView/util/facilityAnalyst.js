@@ -13,7 +13,7 @@ import { Toast } from '../../../utils'
 
 let mNodes = []
 let analystSetting, facilityAnalyst
-let mMapControl, mMap, mSelection, mTrackingLayer
+let mMapControl, mMap, mSelection, mAnalystLayer, mNodelLayer, mTrackingLayer
 
 function addNode(node) {
   mNodes.push(node)
@@ -43,6 +43,12 @@ function dispose() {
   if (mMap) {
     mMap = null
   }
+  if (mAnalystLayer) {
+    mAnalystLayer = null
+  }
+  if (mNodelLayer) {
+    mNodelLayer = null
+  }
   if (mSelection) {
     mSelection = null
   }
@@ -66,10 +72,9 @@ async function longPressHandler(event) {
   try {
     // if (!check()) return
     let pt = await new Point().createObj(event.x, event.y)
-    let layer = await mMap.getLayer(0)
-    let selection = await layer.hitTestEx(pt, 20)
+    // let layer = await mMap.getLayer(0)
+    let selection = await mNodelLayer.hitTestEx(pt, 20)
     let selectionCount = await selection.getCount()
-
     if (selection && selectionCount > 0) {
       let recordset = selection.recordset
       let geometry = await recordset.getGeometry()
@@ -108,53 +113,47 @@ async function longPressHandler(event) {
   }
 }
 
-async function loadModel(mapControl, layer, datasetVector) {
+async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector) {
   try {
     await clear()
     mMapControl = mapControl
-    
     mMap = await mMapControl.getMap()
     // TODO 更改layer
     // let layer = await mMap.getLayer(1)
-    mSelection = await layer.getSelection()
-    let name = await (await layer.getDataset()).getName()
-    debugger
+    mAnalystLayer = analystLayer
+    mNodelLayer = nodelLayer
+    mSelection = await mAnalystLayer.getSelection()
+
     mTrackingLayer = await mMap.getTrackingLayer()
     if (facilityAnalyst) {
       await facilityAnalyst.dispose()
     }
     analystSetting = await new FacilityAnalystSetting().createObj()
-    debugger
     await addGestureDetector()
     await analystSetting.setNetworkDataset(datasetVector)
     await analystSetting.setNodeIDField('SmNodeID')
     await analystSetting.setEdgeIDField('SmID')
     await analystSetting.setFNodeIDField('SmFNode')
-    await analystSetting.setTNodeIDField('SmFNode')
+    await analystSetting.setTNodeIDField('SmTNode')
     await analystSetting.setDirectionField('Direction')
-    debugger
+
     let fieldInfo = await new WeightFieldInfo().createObj()
-    debugger
     await fieldInfo.setName('length')
     await fieldInfo.setFTWeightField('SmLength')
     await fieldInfo.setTFWeightField('SmLength')
-    debugger
+
     let fieldInfos = await new WeightFieldInfos().createObj()
-    debugger
     await fieldInfos.add(fieldInfo)
-    debugger
+
     await analystSetting.setWeightFieldInfos(fieldInfos)
-    debugger
     facilityAnalyst = await new FacilityAnalyst().createObj()
-    debugger
     await facilityAnalyst.setAnalystSetting(analystSetting)
-    debugger
+
     let result = await facilityAnalyst.load()
-    debugger
     await mMapControl.setAction(Action.SELECT)
-    return result
+    return result || false
   } catch (e) {
-    console.error(e)
+    Toast.show('加载失败')
     return false
   }
 }
@@ -171,10 +170,10 @@ async function deleteGestureDetector() {
   await mMapControl.deleteGestureDetector()
 }
 
-async function display() {
+async function display(selection) {
   try {
     if (!check()) return
-    let recordSet = await mSelection.toRecordset()
+    let recordSet = await selection.toRecordset()
     // let recordSet = await mSelection.recordset
     await recordSet.moveFirst()
     // let bb = await recordSet.moveFirst()
@@ -189,7 +188,8 @@ async function display() {
 
       isEOF = await recordSet.isEOF()
     }
-    await mMap.refresh()
+    await (await mMapControl.getMap()).refresh()
+    // await mMap.refresh()
   } catch (e) {
     console.error(e)
     return false
@@ -227,7 +227,6 @@ async function getGeoStyle(w, h, r, g, b) {
 
     return geoStyle
   } catch (e) {
-    console.error(e)
     return false
   }
 }
@@ -255,15 +254,15 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
       let { edges } = await facilityAnalyst.traceUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
       // let { edges } = await facilityAnalyst.findPathUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
-      edges.forEach(edge => {
-        mSelection.add(edge)
+      edges && edges.forEach(async edge => {
+        await mSelection.add(edge)
       })
 
       await display(mSelection)
       await mMapControl.setAction(Action.PAN)
     }
   } catch (e) {
-    console.error(e)
+    Toast.show('上游追踪失败')
   }
 }
 
@@ -274,15 +273,15 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
     for (let i = 0; i < mNodes.length; i++) {
       let { edges } = await facilityAnalyst.traceDownFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
-      edges.forEach(edge => {
-        mSelection.add(edge)
+      edges && edges.forEach(async edge => {
+        await mSelection.add(edge)
       })
 
       await display(mSelection)
       await mMapControl.setAction(Action.PAN)
     }
   } catch (e) {
-    console.error(e)
+    Toast.show('下游追踪失败')
   }
 }
 
@@ -290,19 +289,18 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
   try {
     if (!check()) return
     await mSelection.clear()
-    debugger
     for (let i = 0; i < mNodes.length - 1; i++) {
-      let { edges, message } = await facilityAnalyst.findPathFromNodes(mNodes[i], mNodes[i + 1], weightName, isUncertainDirectionValid)
+      let { edges } = await facilityAnalyst.findPathFromNodes(mNodes[i], mNodes[i + 1], weightName, isUncertainDirectionValid)
 
-      edges && edges.forEach(edge => {
-        mSelection.add(edge)
+      edges && edges.forEach(async edge => {
+        await mSelection.add(edge)
       })
 
       await display(mSelection)
       await mMapControl.setAction(Action.PAN)
     }
   } catch (e) {
-    console.error(e)
+    Toast.show('下游追踪失败')
   }
 }
 

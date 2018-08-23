@@ -302,7 +302,7 @@ export default class MapView extends React.Component {
           Toast.show('删除成功')
           this.props.setSelection()
           await this.map.refresh()
-          await this.mapControl.setAction(Action.PAN)
+          await this.mapControl.setAction(Action.SELECT)
         } else {
           Toast.show('删除失败')
         }
@@ -335,7 +335,7 @@ export default class MapView extends React.Component {
     }]
     headerBtnData.forEach(({ title, image, action }) => {
       arr.push(
-        <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} BtnImageSrc={image}
+        <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} image={image}
           BtnClick={action}/>
       )
     })
@@ -417,7 +417,6 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
         // this.saveLatest()
       } catch (e) {
-        // console.error(e)
         this.container.setLoading(false)
       }
     }).bind(this)()

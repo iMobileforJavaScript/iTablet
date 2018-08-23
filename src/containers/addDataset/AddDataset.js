@@ -7,6 +7,7 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
 import { Toast } from '../../utils'
+import { DatasetType } from 'imobile_for_javascript'
 import { Container, ListSeparator, TextBtn, DataSetListSection, DataSetListItem  } from '../../components'
 
 import styles from './styles'
@@ -33,18 +34,28 @@ export default class AddDataset extends React.Component {
   componentDidMount() {
     this.getDatasets()
   }
-  
+
   checkContainsDataset = async dsName => {
     return new Promise(async (resolve, reject) => {
       try {
+        let isExist = false
         for (let i = 0; i < this.layerList.length; i++) {
           let ds = await this.layerList[i].layer.getDataset()
           let name = await ds.getName()
           if (name === dsName) {
-            resolve(true)
+            isExist = true
+            break
+          }
+          if (await ds.getType() === DatasetType.Network) {
+            let dv = await ds.toDatasetVector()
+            let subDataset = await dv.getChildDataset()
+            if (subDataset && await subDataset.getName() === dsName){
+              isExist = true
+              break
+            }
           }
         }
-        resolve(false)
+        resolve(isExist)
       } catch (e) {
         reject(e)
       }
@@ -77,6 +88,24 @@ export default class AddDataset extends React.Component {
           section: i,
           key: i + '-' + dsName,
         })
+
+        if (dsType === DatasetType.Network) {
+          let dv = await dataset.toDatasetVector()
+          let subDataset = await dv.getChildDataset()
+          let subDatasetName = await subDataset.getName()
+          let subDatasetType = await subDataset.getType()
+          let subDatasetIsAdd = await this.checkContainsDataset(subDatasetName)
+          if (subDataset) {
+            dataSetList.push({
+              name: subDatasetName,
+              type: subDatasetType,
+              isAdd: subDatasetIsAdd,
+              dataset: subDataset,
+              section: i,
+              key: 'sub-' + i + '-' + subDatasetName,
+            })
+          }
+        }
       }
 
       list.push({

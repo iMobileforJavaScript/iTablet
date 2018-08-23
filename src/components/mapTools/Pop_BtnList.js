@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: ITEM_HEIGHT + 5,
     width: WIDTH,
-    backgroundColor: Util.USUAL_GREEN,
+    backgroundColor: 'white',
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,

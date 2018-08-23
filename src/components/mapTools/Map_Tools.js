@@ -55,7 +55,7 @@ export default class Map_Tools extends React.Component {
     let width = (ITEM_WIDTH < WIDTH / this.state.data.length) ? WIDTH / this.state.data.length : ITEM_WIDTH
     return (
       <View style={[styles.item, { width: width }]}>
-        <MT_Btn BtnText={key} BtnImageSrc={image} btnClick={btnClick} />
+        <MT_Btn BtnText={key} image={image} btnClick={btnClick} />
       </View>
     )
   }
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   container: {
     height: ITEM_HEIGHT + 5,
     width: WIDTH,
-    backgroundColor: Util.USUAL_GREEN,
+    backgroundColor: 'white',
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,
