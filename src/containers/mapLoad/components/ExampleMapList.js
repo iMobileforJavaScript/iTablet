@@ -53,6 +53,7 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case gl:
+          openNativeSampleCode.open("glCache")
         // path = '/SampleData/Changchun/Changchun.udb'
         // exist = await Utility.fileIsExistInHomeDirectory(path)
         // filePath = await Utility.appendingHomeDirectory(path)

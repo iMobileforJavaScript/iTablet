@@ -13,7 +13,9 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0118FA2122D9CE00BC4AAB /* Contacts.framework */; };
-		0A068A96212AA90000D92502 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A068A95212AA90000D92502 /* Trial_License.slm */; };
+		0A3625AB212CFDF70016FC64 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625AA212CFDF60016FC64 /* Trial_License.slm */; };
+		0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */; };
+		0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3625B6212E3C2C0016FC64 /* VCViewController.m */; };
 		0A4421F1211442C50087C8FE /* VisualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A4421EF211442C40087C8FE /* VisualViewController.m */; };
 		0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F5211442D50087C8FE /* VisualDemoData.zip */; };
 		0A44220F211442D60087C8FE /* 停止－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F7211442D60087C8FE /* 停止－当前.png */; };
@@ -127,55 +129,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 832C81801AAF6DEF007FA2F7;
 			remoteInfo = RCTVibration;
-		};
-		0A44A56921130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF34489A14EB99A700D8449F;
-			remoteInfo = LibUGC;
-		};
-		0A44A56B21130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
-			remoteInfo = LibUGC_Base;
-		};
-		0A44A56D21130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B46016F1A08700A19B73;
-			remoteInfo = LibUGC_2D;
-		};
-		0A44A56F21130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
-			remoteInfo = LibUGC_3D;
-		};
-		0A44A57121130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03BDDAED1714098D003EC801;
-			remoteInfo = Object_3D;
-		};
-		0A44A57321130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 00F6D375175F20A9008963A0;
-			remoteInfo = Objects_iOS;
-		};
-		0A44A57521130C040059932B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 005EF27D175F5F96005433E1;
-			remoteInfo = Super23D;
 		};
 		0A4D7FCE2117E2E300FAA035 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -434,7 +387,10 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* iTabletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTabletTests.m; sourceTree = "<group>"; };
 		0A0118FA2122D9CE00BC4AAB /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
-		0A068A95212AA90000D92502 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = SampleCode/HotMap/Trial_License.slm; sourceTree = "<group>"; };
+		0A3625AA212CFDF60016FC64 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = SampleCode/Trial_License.slm; sourceTree = "<group>"; };
+		0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = VCMain.storyboard; path = SampleCode/vectorCache/VCMain.storyboard; sourceTree = SOURCE_ROOT; };
+		0A3625B5212E3C2C0016FC64 /* VCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VCViewController.h; path = SampleCode/vectorCache/VCViewController.h; sourceTree = SOURCE_ROOT; };
+		0A3625B6212E3C2C0016FC64 /* VCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VCViewController.m; path = SampleCode/vectorCache/VCViewController.m; sourceTree = SOURCE_ROOT; };
 		0A4421EF211442C40087C8FE /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualViewController.m; path = SampleCode/HotMap/HotMap/VisualViewController.m; sourceTree = SOURCE_ROOT; };
 		0A4421F0211442C40087C8FE /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualViewController.h; path = SampleCode/HotMap/HotMap/VisualViewController.h; sourceTree = SOURCE_ROOT; };
 		0A4421F5211442D50087C8FE /* VisualDemoData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = VisualDemoData.zip; path = SampleCode/HotMap/VisualDemoData.zip; sourceTree = SOURCE_ROOT; };
@@ -469,7 +425,6 @@
 		0A44223A211445060087C8FE /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		0A44223B211445060087C8FE /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
 		0A44223E211445560087C8FE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = SampleCode/HotMap/HotMap/Base.lproj/VisualMain.storyboard; sourceTree = SOURCE_ROOT; };
-		0A44A55D21130C030059932B /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
@@ -653,6 +608,16 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		0A3625AC212CFEAB0016FC64 /* VC */ = {
+			isa = PBXGroup;
+			children = (
+				0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */,
+				0A3625B5212E3C2C0016FC64 /* VCViewController.h */,
+				0A3625B6212E3C2C0016FC64 /* VCViewController.m */,
+			);
+			path = VC;
+			sourceTree = "<group>";
+		};
 		0A4421EE211442950087C8FE /* Visual */ = {
 			isa = PBXGroup;
 			children = (
@@ -726,20 +691,6 @@
 			path = minizip;
 			sourceTree = "<group>";
 		};
-		0A44A55E21130C030059932B /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0A44A56A21130C040059932B /* libLibUGC.a */,
-				0A44A56C21130C040059932B /* libLibUGC_Base.a */,
-				0A44A56E21130C040059932B /* libLibUGC_2D.a */,
-				0A44A57021130C040059932B /* libLibUGC_3D.a */,
-				0A44A57221130C040059932B /* libObject_3D.a */,
-				0A44A57421130C040059932B /* libObjects_iOS.a */,
-				0A44A57621130C040059932B /* Super23D.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		0A4D7F9D2117E2E300FAA035 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -767,6 +718,7 @@
 		0AD86AE821142103003964B6 /* SampleCode */ = {
 			isa = PBXGroup;
 			children = (
+				0A3625AC212CFEAB0016FC64 /* VC */,
 				0A442232211444D50087C8FE /* tools */,
 				0A4421EE211442950087C8FE /* Visual */,
 				0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */,
@@ -887,7 +839,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				0A44A55D21130C030059932B /* LibUGC.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -919,7 +870,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				0A068A95212AA90000D92502 /* Trial_License.slm */,
+				0A3625AA212CFDF60016FC64 /* Trial_License.slm */,
 				13B07FAE1A68108700A75B9A /* iTablet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* iTabletTests */,
@@ -1019,10 +970,6 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
-				{
-					ProductGroup = 0A44A55E21130C030059932B /* Products */;
-					ProjectRef = 0A44A55D21130C030059932B /* LibUGC.xcodeproj */;
-				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -1126,55 +1073,6 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A56A21130C040059932B /* libLibUGC.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC.a;
-			remoteRef = 0A44A56921130C040059932B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A56C21130C040059932B /* libLibUGC_Base.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_Base.a;
-			remoteRef = 0A44A56B21130C040059932B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A56E21130C040059932B /* libLibUGC_2D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_2D.a;
-			remoteRef = 0A44A56D21130C040059932B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A57021130C040059932B /* libLibUGC_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_3D.a;
-			remoteRef = 0A44A56F21130C040059932B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A57221130C040059932B /* libObject_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObject_3D.a;
-			remoteRef = 0A44A57121130C040059932B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A57421130C040059932B /* libObjects_iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObjects_iOS.a;
-			remoteRef = 0A44A57321130C040059932B /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A44A57621130C040059932B /* Super23D.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Super23D.app;
-			remoteRef = 0A44A57521130C040059932B /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A4D7FCF2117E2E300FAA035 /* libRNViewShot.a */ = {
@@ -1438,7 +1336,7 @@
 				0A442219211442D60087C8FE /* 密度图－当前.png in Resources */,
 				0A44221A211442D60087C8FE /* 密度图－选中.png in Resources */,
 				0A44221F211442D60087C8FE /* 热点图－当前.png in Resources */,
-				0A068A96212AA90000D92502 /* Trial_License.slm in Resources */,
+				0A3625AB212CFDF70016FC64 /* Trial_License.slm in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A442216211442D60087C8FE /* 图－收起.png in Resources */,
 				0A442214211442D60087C8FE /* 图表－选中.png in Resources */,
@@ -1457,6 +1355,7 @@
 				0A442225211442D60087C8FE /* 选中.png in Resources */,
 				0A44221E211442D60087C8FE /* 格网热度图－选中.png in Resources */,
 				0A442224211442D60087C8FE /* 背景尾加一个.png in Resources */,
+				0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */,
 				0A44221D211442D60087C8FE /* 格网热度图－当前.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1509,6 +1408,7 @@
 			files = (
 				0A4421F1211442C50087C8FE /* VisualViewController.m in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */,
 				0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
@@ -1557,8 +1457,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 				);
 				HEADER_SEARCH_PATHS = (
@@ -1599,8 +1499,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 				);
 				HEADER_SEARCH_PATHS = (

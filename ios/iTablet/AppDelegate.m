@@ -12,7 +12,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
-
+#import "VCViewController.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -66,6 +66,11 @@ static NSString* g_sampleCodeName = @"#";;
     VisualViewController* vt = [[UIStoryboard storyboardWithName:@"VisualMain" bundle:nil] instantiateViewControllerWithIdentifier:@"Visual"];
     [self.nav pushViewController:vt animated:YES];
      self.nav.navigationBarHidden = NO;
+  }else if([g_sampleCodeName isEqualToString:@"glCache"])
+  {
+    VCViewController* vt = [[UIStoryboard storyboardWithName:@"VCMain" bundle:nil] instantiateViewControllerWithIdentifier:@"VC"];
+    [self.nav pushViewController:vt animated:YES];
+    self.nav.navigationBarHidden = NO;
   }
 }
 @end
