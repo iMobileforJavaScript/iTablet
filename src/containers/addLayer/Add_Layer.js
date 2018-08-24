@@ -80,7 +80,7 @@ export default class Add_Layer extends React.Component {
       Toast.show('新建图层成功')
       setTimeout(() => {
         this.props.navigation.goBack(key)
-      }, 2000)
+      }, 1000)
     } catch (error) {
       return error
     }

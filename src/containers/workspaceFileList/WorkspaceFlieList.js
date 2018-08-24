@@ -85,11 +85,11 @@ export default class WorkSpaceFileList extends Component {
         let isDirectory = await Utility.isDirectory(absolutePath)
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
-          if (filename === '.sxmu' && this.need === 'workspace') {
+          if (filename === '.sxmu' ) {
             this._toLoadMapView(absolutePath, '')
-          } else if (filename === '.smwu' && this.need === 'workspace') {
+          } else if (filename === '.smwu' ) {
             this._toLoadMapView(absolutePath, '')
-          } else if (filename === '.udb' && this.need === 'udb') {
+          } else if (filename === '.udb') {
             this._toLoadMapView(absolutePath, EngineType.UDB)
           } else {
             this._offLine_More()
@@ -139,7 +139,7 @@ export default class WorkSpaceFileList extends Component {
         await this.map.refresh()
         NavigationService.goBack(key)
       }
-      else if (this.workspace && this.map && this.need === 'udb') {
+      else if (this.workspace && this.need === 'udb') {
         this.clearData()
         await this.map.close()
         await this.workspace.closeAllDatasource()
