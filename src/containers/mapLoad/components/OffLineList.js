@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import NavigationService from '../../../containers/NavigationService'   //导航模块
 import { BtnOne } from '../../../components'
-import { scaleSize} from '../../../utils'
+import { scaleSize } from '../../../utils'
 const icon_workspace = require('../../../assets/MapLoad/icon-open-workspace.png')
 const icon_udb = require('../../../assets/MapLoad/icon-opne-udb.png')
 const icon_webudb = require('../../../assets/MapLoad/icon-open-webudb.png')
@@ -35,62 +35,86 @@ const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件�
 
 export default class OffLineList extends React.Component {
 
-   props:{
-     Workspace:any,
-     Map:any,
-     map:any,
-     mapControl:any,
-   }
+  props: {
+    Workspace: any,
+    Map: any,
+    map: any,
+    mapControl: any,
+  }
 
-   constructor(props){
-     super(props)
-     this.workspace=this.props.Workspace
-     this.map=this.props.map
-     this.mapControl=this.props.mapControl
-   }
+  constructor(props) {
+    super(props)
+    this.workspace = this.props.Workspace
+    this.map = this.props.map
+    this.mapControl = this.props.mapControl
+  }
 
   _btn_workspace_click = () => {
-    if(this.workspace ){
-      NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'workspace',title:'选择工作空间'})
+    if (this.workspace) {
+      NavigationService.navigate('WorkspaceFlieList', {
+        workspace: this.workspace,
+        map: this.map,
+        mapControl: this.mapControl,
+        need: 'workspace',
+        title: '选择工作空间',
+      })
     }
-    else{
-      NavigationService.navigate('WorkspaceFlieList',{need:'workspace' ,title:'选择工作空间'})
+    else {
+      NavigationService.navigate('WorkspaceFlieList', { need: 'workspace', title: '选择工作空间' })
     }
   }
+
   _btn_udb_click = () => {
-    if(this.workspace ){
-      NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'udb',title:'选择数据源'})
+    if (this.workspace) {
+      NavigationService.navigate('WorkspaceFlieList', {
+        workspace: this.workspace,
+        map: this.map,
+        mapControl: this.mapControl,
+        need: 'udb',
+        title: '选择数据源',
+      })
     }
-    else{
-      NavigationService.navigate('WorkspaceFlieList',{need:'udb',title:'选择数据源'})
+    else {
+      NavigationService.navigate('WorkspaceFlieList', { need: 'udb', title: '选择数据源' })
     }
   }
+
   _btn_web_click = () => {
-    if(this.workspace ){
-      NavigationService.navigate('webUdb',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'webudb'})
+    if (this.workspace) {
+      NavigationService.navigate('webUdb', {
+        workspace: this.workspace,
+        map: this.map,
+        mapControl: this.mapControl,
+        need: 'webudb',
+      })
     }
-    else{
-      NavigationService.navigate('webUdb',{need:'webudb'})
+    else {
+      NavigationService.navigate('webUdb', { need: 'webudb' })
     }
   }
+
   _btn_newudb_click = () => {
-    if(this.workspace){
-      debugger
-    NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'newudb'})
-  }  else{
-    NavigationService.navigate('NewDSource',{workspace:this.workspace,need:'newudb'})
+    if (this.workspace) {
+      NavigationService.navigate('NewDSource', {
+        workspace: this.workspace,
+        map: this.map,
+        mapControl: this.mapControl,
+        need: 'newudb',
+      })
+    } else {
+      NavigationService.navigate('NewDSource', { workspace: this.workspace, need: 'newudb' })
+    }
   }
-  }
+
   _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
 
-      let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop} />
+      let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop}/>
       return (element)
     } else {
       throw Error('BthBar: please check type of params')
     }
   }
-
 
   render() {
     return (
@@ -105,20 +129,19 @@ export default class OffLineList extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  item: {
-  },
+  item: {},
   container: {
     width: 0.9 * width,
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: 'transparent',
     alignSelf: 'center',
-    paddingTop:5,
-    height:105,
+    paddingTop: 5,
+    height: 105,
     // backgroundColor:'white'
   },
-  btntop:{
+  btntop: {
     width: 0.15 * width,
-    marginTop:scaleSize(10),
+    marginTop: scaleSize(10),
   },
 })
