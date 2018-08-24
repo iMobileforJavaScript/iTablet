@@ -50,7 +50,7 @@ export default class OffLineList extends React.Component {
    }
 
   _btn_workspace_click = () => {
-    if(this.workspace !== 'noworkspace'){
+    if(this.workspace ){
       NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'workspace',title:'选择工作空间'})
     }
     else{
@@ -58,7 +58,7 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_udb_click = () => {
-    if(this.workspace !== 'noworkspace'){
+    if(this.workspace ){
       NavigationService.navigate('WorkspaceFlieList',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'udb',title:'选择数据源'})
     }
     else{
@@ -66,7 +66,7 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_web_click = () => {
-    if(this.workspace !== 'noworkspace'){
+    if(this.workspace ){
       NavigationService.navigate('webUdb',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'webudb'})
     }
     else{
@@ -74,7 +74,8 @@ export default class OffLineList extends React.Component {
     }
   }
   _btn_newudb_click = () => {
-    if(this.workspace !== 'noworkspace'){
+    if(this.workspace){
+      debugger
     NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,need:'newudb'})
   }  else{
     NavigationService.navigate('NewDSource',{workspace:this.workspace,need:'newudb'})

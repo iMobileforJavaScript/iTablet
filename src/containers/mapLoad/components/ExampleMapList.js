@@ -22,7 +22,7 @@ export default class ExampleMapList extends React.Component {
         path = ConstPath.SampleDataPath+'/hotMap.smwu'
         filepath=(await Utility.appendingHomeDirectory()) +ConstPath.SampleDataPath+'/edit.zip'
         exist = await Utility.fileIsExistInHomeDirectory(path)
-        if (!exist) {
+        if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
           // Toast.show("本地实例文件不存在")
@@ -55,9 +55,15 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case gl:
-
-          openNativeSampleCode.open("glCache")
-          break
+        path = '/SampleData/Changchun/Changchun.udb'
+        exist = await Utility.fileIsExistInHomeDirectory(path)
+        filePath = await Utility.appendingHomeDirectory(path)
+        if (exist) {
+          NavigationService.navigate('MapView', { type: 'UDB', path: filePath, isExample: true})
+        } else {
+          Toast.show("本地实例文件不存在")
+        }
+        break
       default:
       path = '/SampleData/Changchun/Changchun.udb'
       exist = await Utility.fileIsExistInHomeDirectory(path)

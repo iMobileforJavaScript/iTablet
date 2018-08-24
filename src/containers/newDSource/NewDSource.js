@@ -37,10 +37,10 @@ export default class NewDSource extends React.Component {
 
   componentDidMount() {
     (async function () {
-      if(this.workspace==='noworkspace'){
+      if(!this.workspace){
           const workspaceMoudule= new Workspace()
           this.workspace=await workspaceMoudule.createObj()
-      } 
+      }
       this.defaultpath=await Utility.appendingHomeDirectory() +ConstPath.LocalDataPath;
       let connInfo = await this.workspace.getConnectionInfo()
       let server = await connInfo.getServer()

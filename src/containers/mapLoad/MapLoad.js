@@ -17,9 +17,9 @@ export default class MapLoad extends Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.workspace = params.workspace ? params.workspace : 'noworkspace'
-    this.map = params.map ? params.map : 'nomap'
-    this.mapControl = params.mapControl ? params.mapControl : 'nomapControl'
+    this.workspace = params.workspace
+    this.map = params.map
+    this.mapControl = params.mapControl
   }
 
   render() {
@@ -40,7 +40,7 @@ export default class MapLoad extends Component {
         <View style={styles.btnTabContainer}>
           <UsualTitle title='在线地图' />
           <BtnbarLoad
-            TD={() => { this.workspace==='noworkspace' ? NavigationService.navigate('MapView', ConstOnline.TD): Toast.show('请关闭当前空间后再打开在线地图')}}
+            TD={() => {  NavigationService.navigate('MapView', ConstOnline.TD)}}
             Baidu={() => { NavigationService.navigate('MapView', ConstOnline.Baidu) }}
             OSM={() => { NavigationService.navigate('MapView', ConstOnline.OSM) }}
             Google={() => { NavigationService.navigate('MapView', ConstOnline.Google) }}
