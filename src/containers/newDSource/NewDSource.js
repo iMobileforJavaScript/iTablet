@@ -28,6 +28,7 @@ export default class NewDSource extends React.Component {
     this.map = params.map
     this.cb = params.cb
     this.defaultpath = ''
+    de
     this.state = {
       name: '',
       path: '',

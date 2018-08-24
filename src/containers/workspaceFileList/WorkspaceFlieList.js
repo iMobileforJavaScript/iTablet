@@ -194,7 +194,7 @@ export default class WorkSpaceFileList extends Component {
     if (this.state.backPath === '' || this.state.backPath === ConstPath.LocalDataPath) {
       return null
     }
-    else {this.workspace
+    else {
       return (
         <TouchableOpacity style={styles.headerBack} onPress={() => this._toBack()}>
           <Text style={styles.back}>返回上一层目录</Text>
