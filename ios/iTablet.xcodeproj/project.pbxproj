@@ -13,34 +13,34 @@
 		00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302DC1ABCB9D200DB3ED1 /* libRCTNetwork.a */; };
 		00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302E41ABCB9EE00DB3ED1 /* libRCTVibration.a */; };
 		0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0118FA2122D9CE00BC4AAB /* Contacts.framework */; };
-		0A1727CC212E996E00CF978C /* VisualMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A1727C9212E996E00CF978C /* VisualMain.storyboard */; };
-		0A1727CD212E996E00CF978C /* VisualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A1727CB212E996E00CF978C /* VisualViewController.m */; };
-		0A3625AB212CFDF70016FC64 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625AA212CFDF60016FC64 /* Trial_License.slm */; };
+		0A0A2016212FA21000BEBC1C /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2015212FA20F00BEBC1C /* Trial_License.slm */; };
+		0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2019212FA22300BEBC1C /* VisualMain.storyboard */; };
+		0A0A2036212FA22300BEBC1C /* VisualViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A0A201B212FA22300BEBC1C /* VisualViewController.m */; };
+		0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A201D212FA22300BEBC1C /* 停止－当前.png */; };
+		0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A201E212FA22300BEBC1C /* 停止－按下.png */; };
+		0A0A2039212FA22300BEBC1C /* 关系图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A201F212FA22300BEBC1C /* 关系图－当前.png */; };
+		0A0A203A212FA22300BEBC1C /* 关系图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2020212FA22300BEBC1C /* 关系图－选中.png */; };
+		0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2021212FA22300BEBC1C /* 图表－当前.png */; };
+		0A0A203C212FA22300BEBC1C /* 图表－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2022212FA22300BEBC1C /* 图表－选中.png */; };
+		0A0A203D212FA22300BEBC1C /* 图－展开.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2023212FA22300BEBC1C /* 图－展开.png */; };
+		0A0A203E212FA22300BEBC1C /* 图－收起.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2024212FA22300BEBC1C /* 图－收起.png */; };
+		0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2025212FA22300BEBC1C /* 实时数据－当前.png */; };
+		0A0A2040212FA22300BEBC1C /* 实时数据－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2026212FA22300BEBC1C /* 实时数据－按下.png */; };
+		0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2027212FA22300BEBC1C /* 密度图－当前.png */; };
+		0A0A2042212FA22300BEBC1C /* 密度图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2028212FA22300BEBC1C /* 密度图－选中.png */; };
+		0A0A2043212FA22300BEBC1C /* 时空数据－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2029212FA22300BEBC1C /* 时空数据－当前.png */; };
+		0A0A2044212FA22300BEBC1C /* 时空数据－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A202A212FA22300BEBC1C /* 时空数据－按下.png */; };
+		0A0A2045212FA22300BEBC1C /* 格网热度图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A202B212FA22300BEBC1C /* 格网热度图－当前.png */; };
+		0A0A2046212FA22300BEBC1C /* 格网热度图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A202C212FA22300BEBC1C /* 格网热度图－选中.png */; };
+		0A0A2047212FA22300BEBC1C /* 热点图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A202D212FA22300BEBC1C /* 热点图－当前.png */; };
+		0A0A2048212FA22300BEBC1C /* 热点图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A202E212FA22300BEBC1C /* 热点图－选中.png */; };
+		0A0A2049212FA22300BEBC1C /* 聚合图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A202F212FA22300BEBC1C /* 聚合图－当前.png */; };
+		0A0A204A212FA22300BEBC1C /* 聚合图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2030212FA22300BEBC1C /* 聚合图－选中.png */; };
+		0A0A204B212FA22300BEBC1C /* 背景头加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2031212FA22300BEBC1C /* 背景头加一个.png */; };
+		0A0A204C212FA22300BEBC1C /* 背景尾加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */; };
+		0A0A204D212FA22300BEBC1C /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2033212FA22300BEBC1C /* 选中.png */; };
 		0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */; };
 		0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3625B6212E3C2C0016FC64 /* VCViewController.m */; };
-		0A44220F211442D60087C8FE /* 停止－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F7211442D60087C8FE /* 停止－当前.png */; };
-		0A442210211442D60087C8FE /* 停止－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F8211442D60087C8FE /* 停止－按下.png */; };
-		0A442211211442D60087C8FE /* 关系图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F9211442D60087C8FE /* 关系图－当前.png */; };
-		0A442212211442D60087C8FE /* 关系图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FA211442D60087C8FE /* 关系图－选中.png */; };
-		0A442213211442D60087C8FE /* 图表－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FB211442D60087C8FE /* 图表－当前.png */; };
-		0A442214211442D60087C8FE /* 图表－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FC211442D60087C8FE /* 图表－选中.png */; };
-		0A442215211442D60087C8FE /* 图－展开.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FD211442D60087C8FE /* 图－展开.png */; };
-		0A442216211442D60087C8FE /* 图－收起.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FE211442D60087C8FE /* 图－收起.png */; };
-		0A442217211442D60087C8FE /* 实时数据－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421FF211442D60087C8FE /* 实时数据－当前.png */; };
-		0A442218211442D60087C8FE /* 实时数据－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442200211442D60087C8FE /* 实时数据－按下.png */; };
-		0A442219211442D60087C8FE /* 密度图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442201211442D60087C8FE /* 密度图－当前.png */; };
-		0A44221A211442D60087C8FE /* 密度图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442202211442D60087C8FE /* 密度图－选中.png */; };
-		0A44221B211442D60087C8FE /* 时空数据－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442203211442D60087C8FE /* 时空数据－当前.png */; };
-		0A44221C211442D60087C8FE /* 时空数据－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442204211442D60087C8FE /* 时空数据－按下.png */; };
-		0A44221D211442D60087C8FE /* 格网热度图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442205211442D60087C8FE /* 格网热度图－当前.png */; };
-		0A44221E211442D60087C8FE /* 格网热度图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442206211442D60087C8FE /* 格网热度图－选中.png */; };
-		0A44221F211442D60087C8FE /* 热点图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442207211442D60087C8FE /* 热点图－当前.png */; };
-		0A442220211442D60087C8FE /* 热点图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442208211442D60087C8FE /* 热点图－选中.png */; };
-		0A442221211442D60087C8FE /* 聚合图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A442209211442D60087C8FE /* 聚合图－当前.png */; };
-		0A442222211442D60087C8FE /* 聚合图－选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220A211442D60087C8FE /* 聚合图－选中.png */; };
-		0A442223211442D60087C8FE /* 背景头加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220B211442D60087C8FE /* 背景头加一个.png */; };
-		0A442224211442D60087C8FE /* 背景尾加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220C211442D60087C8FE /* 背景尾加一个.png */; };
-		0A442225211442D60087C8FE /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A44220D211442D60087C8FE /* 选中.png */; };
 		0A44223C211445060087C8FE /* libzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A442234211445060087C8FE /* libzip.a */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
@@ -386,36 +386,36 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* iTabletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTabletTests.m; sourceTree = "<group>"; };
 		0A0118FA2122D9CE00BC4AAB /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
-		0A1727C9212E996E00CF978C /* VisualMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = VisualMain.storyboard; path = SampleCode/HotMap/VisualMain.storyboard; sourceTree = SOURCE_ROOT; };
-		0A1727CA212E996E00CF978C /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VisualViewController.h; path = SampleCode/HotMap/VisualViewController.h; sourceTree = SOURCE_ROOT; };
-		0A1727CB212E996E00CF978C /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VisualViewController.m; path = SampleCode/HotMap/VisualViewController.m; sourceTree = SOURCE_ROOT; };
-		0A3625AA212CFDF60016FC64 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Trial_License.slm; path = SampleCode/Trial_License.slm; sourceTree = "<group>"; };
+		0A0A2015212FA20F00BEBC1C /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
+		0A0A2019212FA22300BEBC1C /* VisualMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VisualMain.storyboard; sourceTree = "<group>"; };
+		0A0A201A212FA22300BEBC1C /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualViewController.h; sourceTree = "<group>"; };
+		0A0A201B212FA22300BEBC1C /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualViewController.m; sourceTree = "<group>"; };
+		0A0A201D212FA22300BEBC1C /* 停止－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－当前.png"; sourceTree = "<group>"; };
+		0A0A201E212FA22300BEBC1C /* 停止－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－按下.png"; sourceTree = "<group>"; };
+		0A0A201F212FA22300BEBC1C /* 关系图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－当前.png"; sourceTree = "<group>"; };
+		0A0A2020212FA22300BEBC1C /* 关系图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－选中.png"; sourceTree = "<group>"; };
+		0A0A2021212FA22300BEBC1C /* 图表－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图表－当前.png"; sourceTree = "<group>"; };
+		0A0A2022212FA22300BEBC1C /* 图表－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图表－选中.png"; sourceTree = "<group>"; };
+		0A0A2023212FA22300BEBC1C /* 图－展开.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图－展开.png"; sourceTree = "<group>"; };
+		0A0A2024212FA22300BEBC1C /* 图－收起.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图－收起.png"; sourceTree = "<group>"; };
+		0A0A2025212FA22300BEBC1C /* 实时数据－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "实时数据－当前.png"; sourceTree = "<group>"; };
+		0A0A2026212FA22300BEBC1C /* 实时数据－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "实时数据－按下.png"; sourceTree = "<group>"; };
+		0A0A2027212FA22300BEBC1C /* 密度图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "密度图－当前.png"; sourceTree = "<group>"; };
+		0A0A2028212FA22300BEBC1C /* 密度图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "密度图－选中.png"; sourceTree = "<group>"; };
+		0A0A2029212FA22300BEBC1C /* 时空数据－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "时空数据－当前.png"; sourceTree = "<group>"; };
+		0A0A202A212FA22300BEBC1C /* 时空数据－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "时空数据－按下.png"; sourceTree = "<group>"; };
+		0A0A202B212FA22300BEBC1C /* 格网热度图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "格网热度图－当前.png"; sourceTree = "<group>"; };
+		0A0A202C212FA22300BEBC1C /* 格网热度图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "格网热度图－选中.png"; sourceTree = "<group>"; };
+		0A0A202D212FA22300BEBC1C /* 热点图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热点图－当前.png"; sourceTree = "<group>"; };
+		0A0A202E212FA22300BEBC1C /* 热点图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热点图－选中.png"; sourceTree = "<group>"; };
+		0A0A202F212FA22300BEBC1C /* 聚合图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "聚合图－当前.png"; sourceTree = "<group>"; };
+		0A0A2030212FA22300BEBC1C /* 聚合图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "聚合图－选中.png"; sourceTree = "<group>"; };
+		0A0A2031212FA22300BEBC1C /* 背景头加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景头加一个.png"; sourceTree = "<group>"; };
+		0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景尾加一个.png"; sourceTree = "<group>"; };
+		0A0A2033212FA22300BEBC1C /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
 		0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = VCMain.storyboard; path = SampleCode/vectorCache/VCMain.storyboard; sourceTree = SOURCE_ROOT; };
 		0A3625B5212E3C2C0016FC64 /* VCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VCViewController.h; path = SampleCode/vectorCache/VCViewController.h; sourceTree = SOURCE_ROOT; };
 		0A3625B6212E3C2C0016FC64 /* VCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VCViewController.m; path = SampleCode/vectorCache/VCViewController.m; sourceTree = SOURCE_ROOT; };
-		0A4421F7211442D60087C8FE /* 停止－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－当前.png"; sourceTree = "<group>"; };
-		0A4421F8211442D60087C8FE /* 停止－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－按下.png"; sourceTree = "<group>"; };
-		0A4421F9211442D60087C8FE /* 关系图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－当前.png"; sourceTree = "<group>"; };
-		0A4421FA211442D60087C8FE /* 关系图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－选中.png"; sourceTree = "<group>"; };
-		0A4421FB211442D60087C8FE /* 图表－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图表－当前.png"; sourceTree = "<group>"; };
-		0A4421FC211442D60087C8FE /* 图表－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图表－选中.png"; sourceTree = "<group>"; };
-		0A4421FD211442D60087C8FE /* 图－展开.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图－展开.png"; sourceTree = "<group>"; };
-		0A4421FE211442D60087C8FE /* 图－收起.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "图－收起.png"; sourceTree = "<group>"; };
-		0A4421FF211442D60087C8FE /* 实时数据－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "实时数据－当前.png"; sourceTree = "<group>"; };
-		0A442200211442D60087C8FE /* 实时数据－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "实时数据－按下.png"; sourceTree = "<group>"; };
-		0A442201211442D60087C8FE /* 密度图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "密度图－当前.png"; sourceTree = "<group>"; };
-		0A442202211442D60087C8FE /* 密度图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "密度图－选中.png"; sourceTree = "<group>"; };
-		0A442203211442D60087C8FE /* 时空数据－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "时空数据－当前.png"; sourceTree = "<group>"; };
-		0A442204211442D60087C8FE /* 时空数据－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "时空数据－按下.png"; sourceTree = "<group>"; };
-		0A442205211442D60087C8FE /* 格网热度图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "格网热度图－当前.png"; sourceTree = "<group>"; };
-		0A442206211442D60087C8FE /* 格网热度图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "格网热度图－选中.png"; sourceTree = "<group>"; };
-		0A442207211442D60087C8FE /* 热点图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热点图－当前.png"; sourceTree = "<group>"; };
-		0A442208211442D60087C8FE /* 热点图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "热点图－选中.png"; sourceTree = "<group>"; };
-		0A442209211442D60087C8FE /* 聚合图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "聚合图－当前.png"; sourceTree = "<group>"; };
-		0A44220A211442D60087C8FE /* 聚合图－选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "聚合图－选中.png"; sourceTree = "<group>"; };
-		0A44220B211442D60087C8FE /* 背景头加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景头加一个.png"; sourceTree = "<group>"; };
-		0A44220C211442D60087C8FE /* 背景尾加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景尾加一个.png"; sourceTree = "<group>"; };
-		0A44220D211442D60087C8FE /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
 		0A442234211445060087C8FE /* libzip.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libzip.a; sourceTree = "<group>"; };
 		0A442236211445060087C8FE /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
 		0A442237211445060087C8FE /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
@@ -597,6 +597,47 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		0A0A2017212FA22300BEBC1C /* DataVisualizationDemo */ = {
+			isa = PBXGroup;
+			children = (
+				0A0A2019212FA22300BEBC1C /* VisualMain.storyboard */,
+				0A0A201A212FA22300BEBC1C /* VisualViewController.h */,
+				0A0A201B212FA22300BEBC1C /* VisualViewController.m */,
+				0A0A201C212FA22300BEBC1C /* 切图 */,
+			);
+			path = DataVisualizationDemo;
+			sourceTree = "<group>";
+		};
+		0A0A201C212FA22300BEBC1C /* 切图 */ = {
+			isa = PBXGroup;
+			children = (
+				0A0A201D212FA22300BEBC1C /* 停止－当前.png */,
+				0A0A201E212FA22300BEBC1C /* 停止－按下.png */,
+				0A0A201F212FA22300BEBC1C /* 关系图－当前.png */,
+				0A0A2020212FA22300BEBC1C /* 关系图－选中.png */,
+				0A0A2021212FA22300BEBC1C /* 图表－当前.png */,
+				0A0A2022212FA22300BEBC1C /* 图表－选中.png */,
+				0A0A2023212FA22300BEBC1C /* 图－展开.png */,
+				0A0A2024212FA22300BEBC1C /* 图－收起.png */,
+				0A0A2025212FA22300BEBC1C /* 实时数据－当前.png */,
+				0A0A2026212FA22300BEBC1C /* 实时数据－按下.png */,
+				0A0A2027212FA22300BEBC1C /* 密度图－当前.png */,
+				0A0A2028212FA22300BEBC1C /* 密度图－选中.png */,
+				0A0A2029212FA22300BEBC1C /* 时空数据－当前.png */,
+				0A0A202A212FA22300BEBC1C /* 时空数据－按下.png */,
+				0A0A202B212FA22300BEBC1C /* 格网热度图－当前.png */,
+				0A0A202C212FA22300BEBC1C /* 格网热度图－选中.png */,
+				0A0A202D212FA22300BEBC1C /* 热点图－当前.png */,
+				0A0A202E212FA22300BEBC1C /* 热点图－选中.png */,
+				0A0A202F212FA22300BEBC1C /* 聚合图－当前.png */,
+				0A0A2030212FA22300BEBC1C /* 聚合图－选中.png */,
+				0A0A2031212FA22300BEBC1C /* 背景头加一个.png */,
+				0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */,
+				0A0A2033212FA22300BEBC1C /* 选中.png */,
+			);
+			path = "切图";
+			sourceTree = "<group>";
+		};
 		0A1C2E78211059DF00FFC856 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -615,48 +656,6 @@
 			);
 			path = VC;
 			sourceTree = "<group>";
-		};
-		0A4421EE211442950087C8FE /* Visual */ = {
-			isa = PBXGroup;
-			children = (
-				0A1727C9212E996E00CF978C /* VisualMain.storyboard */,
-				0A1727CA212E996E00CF978C /* VisualViewController.h */,
-				0A1727CB212E996E00CF978C /* VisualViewController.m */,
-				0A4421F6211442D60087C8FE /* 切图 */,
-			);
-			path = Visual;
-			sourceTree = "<group>";
-		};
-		0A4421F6211442D60087C8FE /* 切图 */ = {
-			isa = PBXGroup;
-			children = (
-				0A4421F7211442D60087C8FE /* 停止－当前.png */,
-				0A4421F8211442D60087C8FE /* 停止－按下.png */,
-				0A4421F9211442D60087C8FE /* 关系图－当前.png */,
-				0A4421FA211442D60087C8FE /* 关系图－选中.png */,
-				0A4421FB211442D60087C8FE /* 图表－当前.png */,
-				0A4421FC211442D60087C8FE /* 图表－选中.png */,
-				0A4421FD211442D60087C8FE /* 图－展开.png */,
-				0A4421FE211442D60087C8FE /* 图－收起.png */,
-				0A4421FF211442D60087C8FE /* 实时数据－当前.png */,
-				0A442200211442D60087C8FE /* 实时数据－按下.png */,
-				0A442201211442D60087C8FE /* 密度图－当前.png */,
-				0A442202211442D60087C8FE /* 密度图－选中.png */,
-				0A442203211442D60087C8FE /* 时空数据－当前.png */,
-				0A442204211442D60087C8FE /* 时空数据－按下.png */,
-				0A442205211442D60087C8FE /* 格网热度图－当前.png */,
-				0A442206211442D60087C8FE /* 格网热度图－选中.png */,
-				0A442207211442D60087C8FE /* 热点图－当前.png */,
-				0A442208211442D60087C8FE /* 热点图－选中.png */,
-				0A442209211442D60087C8FE /* 聚合图－当前.png */,
-				0A44220A211442D60087C8FE /* 聚合图－选中.png */,
-				0A44220B211442D60087C8FE /* 背景头加一个.png */,
-				0A44220C211442D60087C8FE /* 背景尾加一个.png */,
-				0A44220D211442D60087C8FE /* 选中.png */,
-			);
-			name = "切图";
-			path = "SampleCode/HotMap/切图";
-			sourceTree = SOURCE_ROOT;
 		};
 		0A442232211444D50087C8FE /* tools */ = {
 			isa = PBXGroup;
@@ -715,9 +714,9 @@
 		0AD86AE821142103003964B6 /* SampleCode */ = {
 			isa = PBXGroup;
 			children = (
+				0A0A2017212FA22300BEBC1C /* DataVisualizationDemo */,
 				0A3625AC212CFEAB0016FC64 /* VC */,
 				0A442232211444D50087C8FE /* tools */,
-				0A4421EE211442950087C8FE /* Visual */,
 				0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */,
 				0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */,
 			);
@@ -867,7 +866,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
-				0A3625AA212CFDF60016FC64 /* Trial_License.slm */,
+				0A0A2015212FA20F00BEBC1C /* Trial_License.slm */,
 				13B07FAE1A68108700A75B9A /* iTablet */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
 				00E356EF1AD99517003FC87E /* iTabletTests */,
@@ -1324,35 +1323,35 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A44220F211442D60087C8FE /* 停止－当前.png in Resources */,
-				0A442221211442D60087C8FE /* 聚合图－当前.png in Resources */,
-				0A1727CC212E996E00CF978C /* VisualMain.storyboard in Resources */,
-				0A442210211442D60087C8FE /* 停止－按下.png in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
-				0A442219211442D60087C8FE /* 密度图－当前.png in Resources */,
-				0A44221A211442D60087C8FE /* 密度图－选中.png in Resources */,
-				0A44221F211442D60087C8FE /* 热点图－当前.png in Resources */,
-				0A3625AB212CFDF70016FC64 /* Trial_License.slm in Resources */,
+				0A0A2048212FA22300BEBC1C /* 热点图－选中.png in Resources */,
+				0A0A2049212FA22300BEBC1C /* 聚合图－当前.png in Resources */,
+				0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */,
+				0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */,
+				0A0A204D212FA22300BEBC1C /* 选中.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
-				0A442216211442D60087C8FE /* 图－收起.png in Resources */,
-				0A442214211442D60087C8FE /* 图表－选中.png in Resources */,
-				0A442217211442D60087C8FE /* 实时数据－当前.png in Resources */,
-				0A442213211442D60087C8FE /* 图表－当前.png in Resources */,
-				0A442220211442D60087C8FE /* 热点图－选中.png in Resources */,
-				0A442222211442D60087C8FE /* 聚合图－选中.png in Resources */,
-				0A442215211442D60087C8FE /* 图－展开.png in Resources */,
+				0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */,
+				0A0A203C212FA22300BEBC1C /* 图表－选中.png in Resources */,
+				0A0A2040212FA22300BEBC1C /* 实时数据－按下.png in Resources */,
+				0A0A2044212FA22300BEBC1C /* 时空数据－按下.png in Resources */,
+				0A0A2016212FA21000BEBC1C /* Trial_License.slm in Resources */,
 				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
-				0A44221B211442D60087C8FE /* 时空数据－当前.png in Resources */,
-				0A442218211442D60087C8FE /* 实时数据－按下.png in Resources */,
-				0A442212211442D60087C8FE /* 关系图－选中.png in Resources */,
-				0A442223211442D60087C8FE /* 背景头加一个.png in Resources */,
-				0A442211211442D60087C8FE /* 关系图－当前.png in Resources */,
-				0A44221C211442D60087C8FE /* 时空数据－按下.png in Resources */,
-				0A442225211442D60087C8FE /* 选中.png in Resources */,
-				0A44221E211442D60087C8FE /* 格网热度图－选中.png in Resources */,
-				0A442224211442D60087C8FE /* 背景尾加一个.png in Resources */,
+				0A0A2039212FA22300BEBC1C /* 关系图－当前.png in Resources */,
 				0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */,
-				0A44221D211442D60087C8FE /* 格网热度图－当前.png in Resources */,
+				0A0A203A212FA22300BEBC1C /* 关系图－选中.png in Resources */,
+				0A0A2047212FA22300BEBC1C /* 热点图－当前.png in Resources */,
+				0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */,
+				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
+				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,
+				0A0A204A212FA22300BEBC1C /* 聚合图－选中.png in Resources */,
+				0A0A2042212FA22300BEBC1C /* 密度图－选中.png in Resources */,
+				0A0A204B212FA22300BEBC1C /* 背景头加一个.png in Resources */,
+				0A0A2045212FA22300BEBC1C /* 格网热度图－当前.png in Resources */,
+				0A0A2046212FA22300BEBC1C /* 格网热度图－选中.png in Resources */,
+				0A0A2043212FA22300BEBC1C /* 时空数据－当前.png in Resources */,
+				0A0A203E212FA22300BEBC1C /* 图－收起.png in Resources */,
+				0A0A203D212FA22300BEBC1C /* 图－展开.png in Resources */,
+				0A0A204C212FA22300BEBC1C /* 背景尾加一个.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1406,7 +1405,7 @@
 				0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */,
 				0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
-				0A1727CD212E996E00CF978C /* VisualViewController.m in Sources */,
+				0A0A2036212FA22300BEBC1C /* VisualViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
