@@ -38,8 +38,8 @@ export default class NewDSource extends React.Component {
   componentDidMount() {
     (async function () {
       if (!this.workspace) {
-        const workspaceMoudule = new Workspace()
-        this.workspace = await workspaceMoudule.createObj()
+        const workspaceModule = new Workspace()
+        this.workspace = await workspaceModule.createObj()
       }
       this.defaultpath = await Utility.appendingHomeDirectory() + ConstPath.LocalDataPath
       let connInfo = await this.workspace.getConnectionInfo()
@@ -61,7 +61,7 @@ export default class NewDSource extends React.Component {
     }
     (async function () {
       let strlength = this.state.path.length
-      if (this.state.path.substring(0, 38) != this.defaultpath && strlength < 38) {
+      if (this.state.path.substring(0, 38) !== this.defaultpath && strlength < 38) {
         Toast.show('此存储路径不符合标准')
         return
       }
