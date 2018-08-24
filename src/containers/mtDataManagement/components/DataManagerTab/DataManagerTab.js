@@ -12,7 +12,7 @@ import { BtnOne, ListSeparator } from '../../../../components'
 import styles from './styles'
 
 export default class DataManager_tab extends React.Component {
-  
+
   static propTypes = {
     dSource: PropTypes.func,
     dSet: PropTypes.func,

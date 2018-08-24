@@ -125,7 +125,8 @@ export default class ThemeTable extends React.Component {
   }
 
   getModifiedData = () => {
-    return this.state.modifiedData
+    return this.state.tableData
+    // return this.state.modifiedData
   }
 
   setData = data => {
@@ -145,7 +146,7 @@ export default class ThemeTable extends React.Component {
   }
 
   modified = (item, value, index) => {
-    let newTableData = this.state.tableData
+    let newTableData = JSON.parse(JSON.stringify(this.state.tableData))
     newTableData[item.rowIndex][index].value = value
     let modified = this.state.modifiedData
     modified[item.rowIndex] = newTableData[item.rowIndex]
@@ -164,8 +165,10 @@ export default class ThemeTable extends React.Component {
     }
   }
 
-  changeStyle = (item, index) => {
-    this.props.changeStyle && this.props.changeStyle(item.rowData.data, index)
+  changeStyle = (item, index, cellIndex) => {
+    let data = item.rowData.data
+    data.color = item.value
+    this.props.changeStyle && this.props.changeStyle(data, index, cellIndex)
   }
 
   renderInput = (item, index) => {
@@ -196,14 +199,14 @@ export default class ThemeTable extends React.Component {
     )
   }
 
-  renderStyleView = (item, index) => {
+  renderStyleView = (item, index, cellIndex) => {
     return (
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.chooseColorContainer}
         accessible={true}
         accessibilityLabel={item.key}
-        onPress={() => this.changeStyle(item, index)}
+        onPress={() => this.changeStyle(item, index, cellIndex)}
       >
         <View style={[styles.subChooseColorContainer, {backgroundColor: item.value}]}/>
       </TouchableOpacity>
@@ -234,7 +237,7 @@ export default class ThemeTable extends React.Component {
                           rowData.map((cellData, cellIndex) => {
                             let cell
                             if (cellIndex === 1) {
-                              cell = this.renderStyleView(cellData, cellIndex)
+                              cell = this.renderStyleView(cellData, index, cellIndex)
                             } else if (cellIndex === 2 || cellIndex === 3) {
                               cell = this.renderInput(cellData, cellIndex)
                             }

@@ -23,7 +23,7 @@ import styles from './styles'
 const CHOOSE = '请选择'
 
 export default class ThemeLabelView extends React.Component {
-  
+
   props: {
     title: string,
     nav: Object,
@@ -33,11 +33,11 @@ export default class ThemeLabelView extends React.Component {
     isThemeLayer: boolean,
     setLoading: () => {},
   }
-  
+
   static defaultProps = {
     isThemeLayer: false,
   }
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -46,11 +46,11 @@ export default class ThemeLabelView extends React.Component {
     }
     this.themeLabel = {}
   }
-  
+
   componentDidMount() {
     this.getInitData()
   }
-  
+
   getInitData = async () => {
     let data = {
       expression: 'SMUSERID',
@@ -67,12 +67,13 @@ export default class ThemeLabelView extends React.Component {
       data.fontSize = await textStyle.getFontWidth() || 10
       data.align = await textStyle.getAlignment()
       data.fontColor = dataUtil.colorHex(await textStyle.getForeColor())
+      this.themeUnique = await new ThemeLabel().createObjClone(theme)
     }
     this.setState({
       data: data,
     })
   }
-  
+
   getExpression = () => {
     NavigationService.navigate('ChoosePage', {
       type: ChoosePage.Type.EXPRESSION,
@@ -82,7 +83,7 @@ export default class ThemeLabelView extends React.Component {
       },
     })
   }
-  
+
   getFontColor = () => {
     NavigationService.navigate('ColorPickerPage', {
       defaultColor: this.state.data.fontColor,
@@ -91,7 +92,7 @@ export default class ThemeLabelView extends React.Component {
       },
     })
   }
-  
+
   getFont = () => {
     NavigationService.navigate('ChoosePage', {
       type: ChoosePage.Type.FONT,
@@ -100,7 +101,7 @@ export default class ThemeLabelView extends React.Component {
       },
     })
   }
-  
+
   getValue = obj => {
     let data = this.state.data
     let key = Object.keys(obj)[0]
@@ -110,7 +111,7 @@ export default class ThemeLabelView extends React.Component {
       data: data,
     })
   }
-  
+
   confirm = () => {
     if (!this.state.data.expression) {
       Toast.show('请选择表达式')
@@ -134,13 +135,13 @@ export default class ThemeLabelView extends React.Component {
         let textStyle = await new TextStyle().createObj()
         await this.themeLabel.setLabelExpression(this.state.data.expression)
         let rgba = dataUtil.colorRgba(this.state.data.fontColor)
-        
+
         await textStyle.setForeColor(rgba.r, rgba.g, rgba.b, rgba.a)
         await textStyle.setFontName(this.state.data.fontName)
         await textStyle.setAlignment(this.state.data.align)
         await textStyle.setFontHeight(this.state.data.fontSize)
         await textStyle.setFontWidth(this.state.data.fontSize)
-        
+
         await this.themeLabel.setUniformStyle(textStyle)
         let dataset = await this.props.layer.getDataset()
         if (this.props.isThemeLayer) {
@@ -152,7 +153,7 @@ export default class ThemeLabelView extends React.Component {
         } else {
           await this.props.map.addThemeLayer(dataset, this.themeLabel, true)
         }
-        
+
         await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
         let routes = this.props.nav.routes
@@ -169,12 +170,12 @@ export default class ThemeLabelView extends React.Component {
       }
     }).bind(this)()
   }
-  
+
   reset = () => {
     Toast.show('待做')
     // NavigationService.goBack()
   }
-  
+
   renderContent = () => {
     return (
       <View style={styles.content}>
@@ -259,7 +260,7 @@ export default class ThemeLabelView extends React.Component {
       </View>
     )
   }
-  
+
   renderBtns = () => {
     return (
       <View style={styles.btns}>
@@ -268,7 +269,7 @@ export default class ThemeLabelView extends React.Component {
       </View>
     )
   }
-  
+
   render() {
     return (
       <View style={styles.container}>

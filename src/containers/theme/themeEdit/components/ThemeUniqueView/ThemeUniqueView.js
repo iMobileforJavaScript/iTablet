@@ -46,7 +46,7 @@ export default class ThemeUniqueView extends React.Component {
       currentItem: {},
     }
     this.themeUnique = {}
-    this.defaultStyle = {}
+    // this.defaultStyle = {}
   }
 
   componentDidMount() {
@@ -67,7 +67,7 @@ export default class ThemeUniqueView extends React.Component {
       let theme = await this.props.layer.getTheme()
       data.expression = await theme.getUniqueExpression()
       // TODO 获取颜色方案
-      this.themeUnique = theme
+      this.themeUnique = await new ThemeUnique().createObjClone(theme)
     }
     this.setState({
       data: data,
@@ -100,14 +100,30 @@ export default class ThemeUniqueView extends React.Component {
     })
   }
 
-  changeStyle = data => {
-    NavigationService.navigate('ThemeStyle', {
-      layer: this.props.layer,
-      map: this.props.map,
-      mapControl: this.props.mapControl,
-      item: data,
-      cb: () => {
-        this.getData(this.state.data.expression, this.state.data.colorMethod)
+  changeStyle = (data, index, cellIndex) => {
+    // NavigationService.navigate('ThemeStyle', {
+    //   layer: this.props.layer,
+    //   map: this.props.map,
+    //   mapControl: this.props.mapControl,
+    //   item: data,
+    //   cb: () => {
+    //     this.getData(this.state.data.expression, this.state.data.colorMethod)
+    //   },
+    // })
+    NavigationService.navigate('ColorPickerPage', {
+      defaultColor: data.color,
+      cb: color => {
+        // json转一次, 复制一份新的数据，防止setState前把原始数据更新，导致不重新渲染
+        let list = JSON.parse(JSON.stringify(this.state.themeItemList))
+        Object.assign(list[index], {color: color})
+        this.setState({
+          themeItemList: list.concat([]),
+        }, async () => {
+          let style = await data.getStyle()
+          let rgb = dataUtil.colorRgba(color)
+          style && await style.setLineColor(rgb.r, rgb.g, rgb.b)
+        })
+        // this.getData(this.state.data.expression, this.state.data.colorMethod)
       },
     })
   }
@@ -145,12 +161,13 @@ export default class ThemeUniqueView extends React.Component {
         let datasetVector = await dataset.toDatasetVector()
         // await this.themeUnique.dispose()
 
-        if (this.state.data.colorMethod.value !== colorMethod.value || !this.themeUnique._SMThemeUniqueId) {
+        if (this.state.data.expression !== expression || this.state.data.colorMethod.value !== colorMethod.value || !this.themeUnique._SMThemeUniqueId) {
           this.themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, expression, colorMethod.value)
-        } else if(this.themeUnique._SMThemeUniqueId && this.state.data.expression !== expression) {
-          await this.themeUnique.setUniqueExpression(expression)
         }
-        this.defaultStyle = await this.themeUnique.getDefaultStyle()
+        // else if(this.themeUnique._SMThemeUniqueId && this.state.data.expression !== expression) {
+        //   await this.themeUnique.setUniqueExpression(expression)
+        // }
+        // this.defaultStyle = await this.themeUnique.getDefaultStyle()
 
         // TODO 优化-更新时只更新变化的item | 分页查询
         let count = await this.themeUnique.getCount()
@@ -171,6 +188,7 @@ export default class ThemeUniqueView extends React.Component {
           let item = await this.themeUnique.getItem(i)
           let style = await item.getStyle()
           let visible = await item.isVisible()
+          // let color = await style.getForeColor()
           let color = await style.getLineColor()
           let uniqueValue = await item.getUnique()
           let data = { visible: visible, color: dataUtil.colorHex(color), value: uniqueValue, data: item }
@@ -220,11 +238,11 @@ export default class ThemeUniqueView extends React.Component {
             await item.setVisible(listItem[0].value)
           }
 
-          if (listItem[1].value !== listItem[1].rowData.color) {
-            let style = await item.getStyle()
-            let rgb = dataUtil.colorRgba(listItem[1].value)
-            style && await style.setLineColor(rgb.r, rgb.g, rgb.b)
-          }
+          // if (listItem[1].value !== listItem[1].rowData.color) {
+          //   let style = await item.getStyle()
+          //   let rgb = dataUtil.colorRgba(listItem[1].value)
+          //   style && await style.setLineColor(rgb.r, rgb.g, rgb.b)
+          // }
 
           if (listItem[2].value !== listItem[2].rowData.value) {
             await item.setUnique(listItem[2].value)

@@ -173,14 +173,15 @@ export default class ThemeStyle extends React.Component {
             await this.layerSetting.setStyle(geoStyle)
           }
           await this.map.refresh()
-          let routes = this.props.nav.routes
-          let key = ''
-          for (let i = 0; i < routes.length - 1; i++) {
-            if (routes[i].routeName === 'MapView') {
-              key = routes[i + 1].key
-            }
-          }
-          NavigationService.goBack(key)
+          // let routes = this.props.nav.routes
+          // let key = ''
+          // for (let i = 0; i < routes.length - 1; i++) {
+          //   if (routes[i].routeName === 'MapView') {
+          //     key = routes[i + 1].key
+          //   }
+          // }
+          // NavigationService.goBack(key)
+          NavigationService.goBack()
           Toast.show('设置成功')
         }
       } catch (e) {

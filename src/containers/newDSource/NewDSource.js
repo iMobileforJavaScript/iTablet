@@ -38,20 +38,20 @@ export default class NewDSource extends React.Component {
   componentDidMount() {
     (async function () {
       if(this.workspace==='noworkspace'){
-          const workspaceMoudule= new Workspace()
-          this.workspace=await workspaceMoudule.createObj()
-      } 
-      this.defaultpath=await Utility.appendingHomeDirectory() +ConstPath.LocalDataPath;
+        const workspaceMoudule= new Workspace()
+        this.workspace=await workspaceMoudule.createObj()
+      }
+      this.defaultpath=await Utility.appendingHomeDirectory() +ConstPath.LocalDataPath
       let connInfo = await this.workspace.getConnectionInfo()
       let server = await connInfo.getServer()
       let path = server.substr(0, server.lastIndexOf('/'))
       let isExist = await Utility.fileIsExist(path)
       this.setState({
-        path: isExist ? path : this.defaultpath
+        path: isExist ? path : this.defaultpath,
       })
     }).bind(this)()
   }
-  
+
 
   checkNewDatasource = () => {
     if (!this.workspace) return
@@ -81,8 +81,6 @@ export default class NewDSource extends React.Component {
         let filePath = this.state.path + '/' + this.state.name + '.udb'
         let datasource = await this.workspace.createDatasource(filePath, this.state.engineType)
         if (datasource) {
-          let DSParams = { server: filePath, engineType: this.state.engineType }
-          await this.workspace.openDatasource(DSParams)
           this.cb && this.cb()
           this.dialog.setDialogVisible(false)
           Toast.show('新建数据源成功')

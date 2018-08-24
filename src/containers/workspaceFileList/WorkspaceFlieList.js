@@ -191,7 +191,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   headerBack = () => {
-    if (this.state.backPath === '' || this.state.backPath === ConstPath.LocalDataPath || this.state.backPath === ConstPath.LocalDataPath) {
+    if (this.state.backPath === '' || this.state.backPath === ConstPath.LocalDataPath) {
       return null
     }
     else {
