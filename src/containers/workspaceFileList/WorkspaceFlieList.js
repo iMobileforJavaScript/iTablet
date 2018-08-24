@@ -72,7 +72,7 @@ export default class WorkSpaceFileList extends Component {
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
           if (filename === '.sxmu' && this.need === 'workspace') {
-
+            this._toLoadMapView(absolutePath, '')
           } else if (filename === '.smwu' && this.need === 'workspace') {
             this._toLoadMapView(absolutePath, '')
           } else if (filename === '.udb' && this.need === 'udb') {

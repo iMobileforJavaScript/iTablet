@@ -34,7 +34,7 @@ export default class DataSourcelist extends React.Component {
   }
 
   _click_newdatasource = () => {
-    NavigationService.navigate('NewDSource')
+    NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl})
   }
 
   _adddata = async () => {

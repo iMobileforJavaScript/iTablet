@@ -46,6 +46,7 @@ import com.supermap.mapping.imChart.TimeLine;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -608,6 +609,7 @@ public class VisualizationActivity extends Activity{
             toast.show();
             bDataInit = true;
         }
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         mMapView.setBackgroundColor(0x0);
     }
 

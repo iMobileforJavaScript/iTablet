@@ -1,15 +1,15 @@
 import React from 'react'
-import {  Image, StyleSheet, FlatList, TouchableOpacity, Text, View} from 'react-native'
-import { Container } from '../../components'
+import {  Image, StyleSheet, FlatList, TouchableOpacity, Text, View,} from 'react-native'
+import { Container ,ListSeparator} from '../../components'
 import NavigationService from '../NavigationService'
 import { DatasetType } from 'imobile_for_javascript'
 import { scaleSize } from '../../utils'
-import {color} from '../../styles'
+import {color,size} from '../../styles'
 const point = require('../../assets/map/icon-dot.png')
 const line = require('../../assets/map/icon-line.png')
-const text = require('../../assets/map/icon-surface.png')
-const cad = require('../../assets/map/icon-surface.png')
-const region = require('../../assets/map/icon-surface.png')
+const text = require('../../assets/map/icon-text.png')
+const cad = require('../../assets/map/icon-cad.png')
+const region = require('../../assets/map/icon-polygon.png')
 export default class DataSets extends React.Component {
 
   props: {
@@ -26,7 +26,7 @@ export default class DataSets extends React.Component {
     this.name = params.name
     this.state = {
       data: [
-        {name:'点',type:DatasetType.POINT},
+        {name:'点',type:DatasetType.POINT,imageSize:'small'},
         {name:'线',type:DatasetType.LINE},
         {name:'面',type:DatasetType.REGION},
         {name:'CAD',type:DatasetType.CAD},
@@ -41,32 +41,32 @@ export default class DataSets extends React.Component {
   _renderItem = ({ item }) => {
     if (item.type ===  DatasetType.POINT) {
       return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map,item.type)} style={styles.itemclick}>
-        <Image source={point} style={styles.img} />
-        <Text style={styles.item}>{item.name}</Text>
+        <Image source={point} style={item.imageSize === 'small' ? styles.imageSmall : styles.image} />
+        <Text style={styles.rowTitle}>{item.name}</Text>
       </TouchableOpacity>)
     }
     else if (item.type === DatasetType.LINE) {
       return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
-        <Image source={line} style={styles.img} />
-        <Text style={styles.item}>{item.name}</Text>
+        <Image source={line} style={item.imageSize === 'small' ? styles.imageSmall : styles.image} />
+        <Text style={styles.rowTitle}>{item.name}</Text>
       </TouchableOpacity>)
     }
     else if (item.type === DatasetType.TEXT) {
       return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
-        <Image source={text} style={styles.img} />
-        <Text style={styles.item}>{item.name}</Text>
+        <Image source={text} style={item.imageSize === 'small' ? styles.imageSmall : styles.image} />
+        <Text style={styles.rowTitle}>{item.name}</Text>
       </TouchableOpacity>)
     }
     else if (item.type === DatasetType.CAD) {
       return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
-        <Image source={cad} style={styles.img} />
-        <Text style={styles.item}>{item.name}</Text>
+        <Image source={cad} style={item.imageSize === 'small' ? styles.imageSmall : styles.image} />
+        <Text style={styles.rowTitle}>{item.name}</Text>
       </TouchableOpacity>)
     }
     else if (item.type === DatasetType.REGION  ) {
       return (<TouchableOpacity onPress={() => this._tosetlayer(this.workspace, this.map, item.type)} style={styles.itemclick}>
-        <Image source={region} style={styles.img} />
-        <Text style={styles.item}>{item.name}</Text>
+        <Image source={region} style={item.imageSize === 'small' ? styles.imageSmall : styles.image} />
+        <Text style={styles.rowTitle}>{item.name}</Text>
       </TouchableOpacity>)
     }
     else {
@@ -74,9 +74,10 @@ export default class DataSets extends React.Component {
     }
   }
 
-  itemseparator = () => {
-    return (<View style={styles.itemseparator} />)
-  }
+    _renderItemSeparatorComponent = () => {
+      return <ListSeparator />
+    }
+
 
   _keyExtractor = (item, index) => {
     return index
@@ -91,7 +92,7 @@ export default class DataSets extends React.Component {
         }}>
         <View style={styles.top}/>
         <FlatList
-          ItemSeparatorComponent={this.itemseparator}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
           style={styles.container}
           data={this.state.data}
           renderItem={this._renderItem}
@@ -112,27 +113,32 @@ const styles = StyleSheet.create({
     // textAlign:'center'
   },
   itemclick: {
+    flex: 1,
+    height: scaleSize(80),
     flexDirection: 'row',
-    borderColor: color.background3,
-    borderWidth: scaleSize(2),
-    backgroundColor: 'white',
-    // justifyContent:'center',
     alignItems: 'center',
+    paddingHorizontal: scaleSize(30),
   },
   cantainer: {
     flex: 1,
     backgroundColor: color.background,
-  },
-  img: {
-    width: scaleSize(70),
-    height: scaleSize(70),
-    marginLeft: scaleSize(30),
-    marginRight:scaleSize(20),
   },
   itemseparator: {
     height: scaleSize(8),
   },
   top:{
     height: scaleSize(1),
+  },
+  rowTitle: {
+    fontSize: size.fontSize.fontSizeMd,
+    marginLeft: scaleSize(30),
+  },
+  image: {
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+  imageSmall: {
+    height: scaleSize(20),
+    width: scaleSize(20),
   },
 })

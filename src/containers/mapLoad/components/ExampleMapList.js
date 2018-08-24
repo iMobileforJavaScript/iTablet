@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { NativeModules, Platform } from 'react-native'
-import { View, StyleSheet, FlatList } from 'react-native'
+import { View, StyleSheet, FlatList ,Alert} from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
 import Thumbnails from '../../../components/Thumbnails'
 import { color } from '../../../styles'
 import { scaleSize, Toast } from '../../../utils'
-import { Utility } from 'imobile_for_javascript'
+import { Utility ,OnlineService} from 'imobile_for_javascript'
 import { ConstPath } from '../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule :  NativeModules.IntentModule
 
@@ -16,15 +16,24 @@ const testData = [{ key: vectorMap }, { key: ObliquePhoto }, { key: gl }, { key:
 
 export default class ExampleMapList extends React.Component {
   _itemClick = async key => {
-    let path, exist, filePath
+    let path, exist, filePath,downpath
     switch(key){
       case vectorMap:
-        path = ConstPath.SampleDataPath+'/DataVisualizationDemo/hotMap.smwu'
+        path = ConstPath.SampleDataPath+'/hotMap.smwu'
+        filepath=(await Utility.appendingHomeDirectory()) +ConstPath.SampleDataPath+'/edit.zip'
         exist = await Utility.fileIsExistInHomeDirectory(path)
-        if (exist) {
+        if (!exist) {
           openNativeSampleCode.open("Visual")
         } else {
-          Toast.show("本地实例文件不存在")
+          // Toast.show("本地实例文件不存在")
+          Alert.alert(
+            "温馨提示",
+            "本地实例文件不存在是否下载文件",
+            [{text:"确定",onPress:()=>this.downfile(filepath,'imobile1234','imobile','edit')},
+            {text:"取消",onPress:()=>console.log('Pressde'),style:"cancel"}
+          ],
+          {cancelable:true}
+        )
         }
         break
       case map3D:
@@ -66,6 +75,22 @@ export default class ExampleMapList extends React.Component {
       }
         break
     }
+  }
+
+  downfile=async(path,username,passworld,filename)=>{
+    
+     try {
+       debugger
+      let OnlineServiceMoudule= new OnlineService()
+      let result=await OnlineServiceMoudule.downLoad(path,username,passworld,filename)
+      if(result){
+        Toast.show('下载成功')
+      }else{
+        Toast.show('下载失败')
+      }
+     } catch (error) {
+        console.log(error)
+     }
   }
 
   _renderItem = ({ item }) => {

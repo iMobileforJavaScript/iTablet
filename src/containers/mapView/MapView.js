@@ -462,9 +462,9 @@ export default class MapView extends React.Component {
             }).bind(this)()
           }
         )
-        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-        let dataset = await dsBaseMap.getDataset(this.layerIndex)
-        await this.map.addLayer(dataset, true)
+        // let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+        // let dataset = await dsBaseMap.getDataset(this.layerIndex)
+        // await this.map.addLayer(dataset, true)
         // await this.map.viewEntire()
         await this.map.refresh()
         if (this.labelDSParams) {
