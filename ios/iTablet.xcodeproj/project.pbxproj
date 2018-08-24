@@ -18,7 +18,6 @@
 		0A3625AB212CFDF70016FC64 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625AA212CFDF60016FC64 /* Trial_License.slm */; };
 		0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */; };
 		0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3625B6212E3C2C0016FC64 /* VCViewController.m */; };
-		0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F5211442D50087C8FE /* VisualDemoData.zip */; };
 		0A44220F211442D60087C8FE /* 停止－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F7211442D60087C8FE /* 停止－当前.png */; };
 		0A442210211442D60087C8FE /* 停止－按下.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F8211442D60087C8FE /* 停止－按下.png */; };
 		0A442211211442D60087C8FE /* 关系图－当前.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A4421F9211442D60087C8FE /* 关系图－当前.png */; };
@@ -394,7 +393,6 @@
 		0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = VCMain.storyboard; path = SampleCode/vectorCache/VCMain.storyboard; sourceTree = SOURCE_ROOT; };
 		0A3625B5212E3C2C0016FC64 /* VCViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VCViewController.h; path = SampleCode/vectorCache/VCViewController.h; sourceTree = SOURCE_ROOT; };
 		0A3625B6212E3C2C0016FC64 /* VCViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VCViewController.m; path = SampleCode/vectorCache/VCViewController.m; sourceTree = SOURCE_ROOT; };
-		0A4421F5211442D50087C8FE /* VisualDemoData.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = VisualDemoData.zip; path = SampleCode/HotMap/VisualDemoData.zip; sourceTree = SOURCE_ROOT; };
 		0A4421F7211442D60087C8FE /* 停止－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－当前.png"; sourceTree = "<group>"; };
 		0A4421F8211442D60087C8FE /* 停止－按下.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "停止－按下.png"; sourceTree = "<group>"; };
 		0A4421F9211442D60087C8FE /* 关系图－当前.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "关系图－当前.png"; sourceTree = "<group>"; };
@@ -625,7 +623,6 @@
 				0A1727CA212E996E00CF978C /* VisualViewController.h */,
 				0A1727CB212E996E00CF978C /* VisualViewController.m */,
 				0A4421F6211442D60087C8FE /* 切图 */,
-				0A4421F5211442D50087C8FE /* VisualDemoData.zip */,
 			);
 			path = Visual;
 			sourceTree = "<group>";
@@ -1327,7 +1324,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A44220E211442D60087C8FE /* VisualDemoData.zip in Resources */,
 				0A44220F211442D60087C8FE /* 停止－当前.png in Resources */,
 				0A442221211442D60087C8FE /* 聚合图－当前.png in Resources */,
 				0A1727CC212E996E00CF978C /* VisualMain.storyboard in Resources */,
