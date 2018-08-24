@@ -182,9 +182,7 @@ export default class WorkSpaceFileList extends Component {
   }
 
   _toBack = async () => {
-    if (this.state.backPath === ConstPath.LocalDataPath) {
-      return
-    } else {
+    if (this.state.backPath !== ConstPath.LocalDataPath) {
       let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
       await this.getFileList({path: backPath})
     }
