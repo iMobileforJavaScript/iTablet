@@ -11,7 +11,7 @@ import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constains'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager, Utility } from 'imobile_for_javascript'
+import { SpeechManager, Utility, Environment } from 'imobile_for_javascript'
 
 const { persistor, store } = ConfigStore()
 
@@ -49,47 +49,65 @@ class AppRoot extends Component {
   }
 
   componentDidMount() {
-    this.initDirectories()
-    this.initSpeechManager()
-  }
-
-  // 初始化录音
-  initSpeechManager = () => {
     (async function () {
-      try {
-        GLOBAL.SpeechManager = new SpeechManager()
-        await GLOBAL.SpeechManager.init()
-      } catch (e) {
-        Toast.show('语音初始化失败')
-      }
+      await this.initDirectories()
+      await this.initEnvironment()
+      await this.initSpeechManager()
     }).bind(this)()
   }
 
   // 初始化文件目录
-  initDirectories = () => {
-    (async function () {
-      try {
-        let paths = [
-          ConstPath.AppPath, ConstPath.LicensePath, ConstPath.LocalDataPath,
-          ConstPath.SampleDataPath, ConstPath.UserPath,
-        ]
-        let isCreate = false, absolutePath = ''
-        for (let i = 0; i < paths.length; i++) {
-          absolutePath = await Utility.appendingHomeDirectory(paths[i])
-          isCreate = await Utility.createDirectory(absolutePath)
-        }
-        if (!isCreate) {
-          Toast.show('创建文件目录失败')
-        }
-      } catch (e) {
+  initDirectories = async () => {
+    try {
+      let paths = [
+        ConstPath.AppPath, ConstPath.LicensePath, ConstPath.LocalDataPath,
+        ConstPath.SampleDataPath, ConstPath.UserPath,
+      ]
+      let isCreate = false, absolutePath = ''
+      for (let i = 0; i < paths.length; i++) {
+        absolutePath = await Utility.appendingHomeDirectory(paths[i])
+        isCreate = await Utility.createDirectory(absolutePath)
+      }
+      if (!isCreate) {
         Toast.show('创建文件目录失败')
       }
-    }).bind(this)()
+    } catch (e) {
+      Toast.show('创建文件目录失败')
+    }
+  }
+
+  // 初始化环境
+  initEnvironment = async () => {
+    try {
+      let licensePath = await Utility.appendingHomeDirectory(ConstPath.LicensePath)
+      let en = new Environment()
+      let isSet = await en.setLicensePath(licensePath)
+      if (!isSet) {
+        Toast.show('许可文件设置失败')
+        return
+      }
+      let isInit = await en.initialization()
+      if (!isInit) {
+        Toast.show('环境初始化失败')
+      }
+    } catch (e) {
+      Toast.show('环境初始化失败')
+    }
+  }
+
+  // 初始化录音
+  initSpeechManager = async () => {
+    try {
+      GLOBAL.SpeechManager = new SpeechManager()
+      await GLOBAL.SpeechManager.init()
+    } catch (e) {
+      Toast.show('语音初始化失败')
+    }
   }
 
   render() {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <RootNavigator
           ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef)
