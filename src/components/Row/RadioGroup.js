@@ -18,6 +18,7 @@ export default class RadioGroup extends PureComponent {
     defaultValue?: any,
     getSelected?: () => {},
     separatorHeight?: number,
+    disable?: boolean,
   }
 
   static defaultProps = {
@@ -25,6 +26,7 @@ export default class RadioGroup extends PureComponent {
     type: 'input',
     column: 2,
     defaultValue: -1,
+    disable: false,
     separatorHeight: scaleSize(20),
   }
 
@@ -66,6 +68,7 @@ export default class RadioGroup extends PureComponent {
           key={obj.title + '-' + index}
           ref={ref => this.setRefs(ref, index)}
           index={index}
+          selectable={!this.props.disable}
           title={obj.title}
           value={obj.value}
           selected={this.props.defaultValue === obj.value}

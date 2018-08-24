@@ -339,10 +339,11 @@ export default class CollectionToolBar extends React.Component {
         await recordset.moveLast()
         let info = await recordset.getFieldInfo()
         await selection.clear()
-        let index = await selection.add(info['SmID'].value)
+        let smId = info['SmID'] || info['SMID']
+        let index = await selection.add(smId.value)
         if (index >= 0) {
           this.props.setSelection && this.props.setSelection({
-            id: info['SmID'].value,
+            id: smId.value,
             layerId: this.props.editLayer.layer._SMLayerId,
             name: this.props.editLayer.name,
             layer: this.props.editLayer.layer,
@@ -367,7 +368,8 @@ export default class CollectionToolBar extends React.Component {
       let count = await selection.getCount()
       if (count > 0) {
         // NavigationService.navigate('LayerAttribute',{ selection: selection })
-        NavigationService.navigate('LayerAttribute', { recordset: selection.recordset })
+        let recordset = await selection.toRecordset()
+        NavigationService.navigate('LayerAttribute', { recordset: recordset })
       } else {
         Toast.show('请选择目标')
       }
@@ -703,6 +705,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     left: 0,
+    right: 0,
     bottom: scaleSize(100),
     backgroundColor: 'transparent',
   },

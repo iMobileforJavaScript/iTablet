@@ -67,8 +67,10 @@ export default StyleSheet.create({
     fontSize: scaleSize(28),
     backgroundColor: 'transparent',
   },
-  input: {
+  inputView: {
     flex: 2,
+  },
+  input: {
     height: scaleSize(80),
     paddingHorizontal: scaleSize(15),
     ...Platform.select({
@@ -76,8 +78,18 @@ export default StyleSheet.create({
         padding: 0,
       },
     }),
+    borderWidth: scaleSize(1),
     backgroundColor: 'white',
     borderRadius: scaleSize(8),
+  },
+  inputOverLayer: {
+    position: 'absolute',
+    right: scaleSize(1),
+    top: scaleSize(1),
+    left: scaleSize(1),
+    bottom: scaleSize(1),
+    borderRadius: scaleSize(8),
+    backgroundColor: '#rgba(0, 0, 0, 0.1)',
   },
 
   /** RadioGroup **/

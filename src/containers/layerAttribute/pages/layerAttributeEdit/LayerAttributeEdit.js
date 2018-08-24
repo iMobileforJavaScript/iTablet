@@ -26,8 +26,9 @@ export default class LayerAttributeEdit extends React.Component {
       dataSourceList: [],
       openList: {},
       dataset: params.dataset,
-      attribute: props.currentAttribute,
-      tableHead: ['序号', '名称', '类型', '长度', '缺省值', '必填'],
+      // attribute: props.currentAttribute,
+      attribute: {},
+      tableHead: ['序号', '名称', '别名', '类型', '长度', '缺省值', '必填'],
       tableTitle: [],
       tableData: [],
       currentFieldInfo: {},
@@ -85,7 +86,7 @@ export default class LayerAttributeEdit extends React.Component {
         // selection: this.state.selection,
         dataset: this.state.dataset,
         data: this.state.currentFieldInfo,
-        callBack: this.getDatasets,
+        callBack: this.refresh,
       })
     } else {
       Toast.show('请选择一个属性')
@@ -107,9 +108,9 @@ export default class LayerAttributeEdit extends React.Component {
     ;(async function () {
       try {
         // let recordset = this.state.selection.recordset
-        let recordset = this.state.recordset
-        let dataset = await recordset.getDataset()
-        let datasetVector = await dataset.toDatasetVector()
+        // let recordset = this.state.recordset
+        // let dataset = await recordset.getDataset()
+        let datasetVector = await this.state.dataset.toDatasetVector()
         let result = await datasetVector.removeFieldInfo(this.state.currentFieldInfo.name)
 
         this.container.setLoading(false)

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { constUtil, Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import {
   Action,
   DatasetType,
@@ -151,7 +151,8 @@ export default class PopList extends React.Component {
 
   /** 岛洞 **/
   drawHollowRegion = async () => {
-    await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
+    // await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
+    await this.props.mapControl.setAction(Action.COMPOSE_HOLLOW_REGION)
   }
 
   /** 填充岛洞 **/
@@ -161,7 +162,8 @@ export default class PopList extends React.Component {
 
   /** 补充岛洞 **/
   patchHollowRegion = async () => {
-    await this.props.mapControl.setAction(Action.PATCH_POSOTIONAL_REGION)
+    // await this.props.mapControl.setAction(Action.PATCH_POSOTIONAL_REGION)
+    await this.props.mapControl.setAction(Action.PATCH_HOLLOW_REGION)
   }
 
   attribute = () => {
@@ -171,7 +173,9 @@ export default class PopList extends React.Component {
       let count  = await selection.getCount()
       if (count > 0) {
         // NavigationService.navigate('LayerAttribute',{ selection: selection })
-        NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
+        // NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
+        let recordset = await selection.toRecordset()
+        NavigationService.navigate('LayerAttribute', { recordset: recordset })
       } else {
         Toast.show('请选择目标')
       }
@@ -308,8 +312,8 @@ export default class PopList extends React.Component {
             operations: [
               // { key: '选择', action: this.select },
               { key: '撤销', action: this._undo },
-              { key: '重做', action: this._redo },
-              { key: '删除', action: this.deleteNode },
+              // { key: '重做', action: this._redo },
+              { key: '删除', action: this.delete },
               { key: '属性', action: this.attribute }],
           },
           {
@@ -517,6 +521,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'column',
     left: 0,
+    right: 0,
     bottom: scaleSize(100),
     backgroundColor: 'transparent',
   },
@@ -524,5 +529,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     marginRight: scaleSize(10),
     marginBottom: scaleSize(10),
+  },
+  changeLayerImage: {
+    height: scaleSize(60),
+    width: scaleSize(60),
   },
 })

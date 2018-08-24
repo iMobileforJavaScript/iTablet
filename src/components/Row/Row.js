@@ -32,12 +32,14 @@ export default class Row extends PureComponent {
     commonDifference?: number,
     times?: number,
     unit?: string,
+    disable?: boolean,
   }
 
   static defaultProps = {
     type: 'input',
     inputType: 'default',
     value: '',
+    disable: false,
   }
 
   constructor(props) {
@@ -48,6 +50,7 @@ export default class Row extends PureComponent {
   }
 
   labelChange = text => {
+    if (this.props.disable) return
     this.setState({
       value: text,
     })
@@ -75,16 +78,22 @@ export default class Row extends PureComponent {
       right = this.props.customRgihtView
     } else if (this.props.type === 'input') {
       right = (
-        <TextInput
-          keyboardType={this.props.inputType === 'numeric' ? 'numeric' : 'default'}
-          style={styles.input}
-          accessible={true}
-          value={this.state.value + ''}
-          defaultValue={this.props.defaultValue + ''}
-          accessibilityLabel={this.props.title}
-          underlineColorAndroid='transparent'
-          onChangeText={this.labelChange}
-        />
+        <View style={styles.inputView}>
+          <TextInput
+            keyboardType={this.props.inputType === 'numeric' ? 'numeric' : 'default'}
+            style={styles.input}
+            accessible={true}
+            value={this.state.value + ''}
+            defaultValue={this.props.defaultValue + ''}
+            disable={this.props.disable}
+            accessibilityLabel={this.props.title}
+            underlineColorAndroid='transparent'
+            onChangeText={this.labelChange}
+          />
+          {
+            this.props.disable && <View style={styles.inputOverLayer} />
+          }
+        </View>
       )
     } else if (this.props.type === 'radio_group') {
       right = (
@@ -92,6 +101,7 @@ export default class Row extends PureComponent {
           data={this.props.radioArr}
           column={this.props.radioColumn}
           getSelected={this.getSelected}
+          disable={this.props.disable}
           defaultValue={this.props.defaultValue}
           separatorHeight={this.props.separatorHeight}
         />
@@ -103,6 +113,7 @@ export default class Row extends PureComponent {
           minValue={this.props.minValue}
           defaultValue={this.props.defaultValue}
           value={this.props.value}
+          disable={this.props.disable}
           getValue={this.getValue}
           unit={this.props.unit}
           times={this.props.times}
@@ -115,7 +126,7 @@ export default class Row extends PureComponent {
       )
     } else if (this.props.type === 'choose_color') {
       right = (
-        <ChooseColor title={this.props.title} value={this.props.value} getValue={this.getValue}/>
+        <ChooseColor disable={this.props.disable} title={this.props.title} value={this.props.value} getValue={this.getValue}/>
       )
     } else if (this.props.type === 'radio') {
       // TODO 完善单选
