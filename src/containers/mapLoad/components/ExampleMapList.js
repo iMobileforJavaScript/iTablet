@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { NativeModules, Platform } from 'react-native'
+import { NativeModules, Platform,DeviceEventEmitter } from 'react-native'
 import { View, StyleSheet, FlatList, Alert } from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
@@ -14,6 +14,17 @@ const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾
 const testData = [{ key: vectorMap }, { key: ObliquePhoto }, { key: gl }, { key: overLay }, { key: map3D }, { key: 'CAD' }]
 
 export default class ExampleMapList extends React.Component {
+
+
+  componentDidMount(){
+    DeviceEventEmitter.addListener('DownLoad',function(progeress){
+        console.log(progeress)
+        if(progeress===99){
+          console.log('下载完成')
+        }
+    })
+  }
+
   _itemClick = async key => {
     let path, exist, filePath
     switch (key) {
@@ -25,14 +36,7 @@ export default class ExampleMapList extends React.Component {
           openNativeSampleCode.open("Visual")
         } else {
           // Toast.show("本地实例文件不存在")
-          Alert.alert(
-            "温馨提示",
-            "本地实例文件不存在是否下载文件",
-            [{ text: "确定", onPress: () => this.downfile(filePath, 'imobile1234', 'imobile', 'edit') },
-              { text: "取消", onPress: () => console.log('Pressde'), style: "cancel" },
-            ],
-            { cancelable: true }
-          )
+                    this.alertDown(filePath)
         }
         break
       case map3D:
@@ -75,17 +79,31 @@ export default class ExampleMapList extends React.Component {
         break
     }
   }
+  unZipFolder=async(zipfile,targetdir)=>{
+   let result= await Utility.UnZipFolder(zipfile,targetdir)
+   if (result){
+     Toast.show('下载完成')
+   }
+   else{
+    Toast.show('下载失败')
+   }
+  }
+  alertDown=async()=>{
+    Alert.alert(
+      "温馨提示",
+      "本地实例文件不存在是否下载文件",
+      [{ text: "确定", onPress: () => this.downfile(filePath, 'imobile1234', 'imobile', 'edit') },
+        { text: "取消", onPress: () => console.log('Pressde'), style: "cancel" },
+      ],
+      { cancelable: true }
+    )
+  }
 
+  
   downfile = async (path, username, passworld, filename) => {
-
     try {
       let OnlineServiceMoudule = new OnlineService()
       let result = await OnlineServiceMoudule.downLoad(path, username, passworld, filename)
-      if (result) {
-        Toast.show('下载成功')
-      } else {
-        Toast.show('下载失败')
-      }
     } catch (error) {
       console.log(error)
     }
@@ -138,7 +156,7 @@ const styles = StyleSheet.create({
   //   paddingLeft: 15,
   //   backgroundColor: color.grayLight,
   // },
-  // container: {
+  // container: {aa
   //   flex: 1,
   //   backgroundColor: 'white',
   //   alignSelf: 'center',
