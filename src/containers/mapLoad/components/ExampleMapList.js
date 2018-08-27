@@ -14,13 +14,17 @@ const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾
 const testData = [{ key: vectorMap }, { key: ObliquePhoto }, { key: gl }, { key: overLay }, { key: map3D }, { key: 'CAD' }]
 
 export default class ExampleMapList extends React.Component {
-
+  constructor(props) {
+    super(props)
+    this.finishdownLoad=false
+  }
 
   componentDidMount(){
     DeviceEventEmitter.addListener('DownLoad',function(progeress){
         console.log(progeress)
         if(progeress===99){
           console.log('下载完成')
+          this.finishdownLoad=true
         }
     })
   }
@@ -31,12 +35,16 @@ export default class ExampleMapList extends React.Component {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap.smwu'
         filePath = (await Utility.appendingHomeDirectory()) + ConstPath.SampleDataPath + '/edit.zip'
+        outPath=(await Utility.appendingHomeDirectory()) +ConstPath.SampleDataPath 
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
           // Toast.show("本地实例文件不存在")
                     this.alertDown(filePath)
+                    while(this.finishdownLoad){
+                       this.unZipFolder(filePath,outPath)
+                    }
         }
         break
       case map3D:
@@ -82,10 +90,10 @@ export default class ExampleMapList extends React.Component {
   unZipFolder=async(zipfile,targetdir)=>{
    let result= await Utility.UnZipFolder(zipfile,targetdir)
    if (result){
-     Toast.show('下载完成')
+     Toast.show('解压完成')
    }
    else{
-    Toast.show('下载失败')
+    Toast.show('解压失败')
    }
   }
   alertDown=async()=>{
