@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
+import com.supermap.data.Environment;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import io.reactivex.functions.Consumer;
 
 public class MainActivity extends ReactActivity {
+
+    public final static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
 
     /**
      * Returns the name of the main component registered from JavaScript.
@@ -25,7 +28,14 @@ public class MainActivity extends ReactActivity {
 
         super.onCreate(savedInstanceState);
         requestPermissions();
+        initEnvironment();
     }
+
+    private void initEnvironment() {
+        Environment.setLicensePath(SDCARD + "/iTablet/license");
+        Environment.initialization(this);
+    }
+
     private void requestPermissions() {
         RxPermissions rxPermission = new RxPermissions(this);
         rxPermission

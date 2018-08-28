@@ -98,7 +98,7 @@ android {
         release_config {
             keyAlias 'supermap'
             keyPassword 'supermap321'
-            storeFile file('F:/RN_project/iTablet/android/keystores/release.keystore')
+            storeFile file('/Users/Dragon/Documents/Workspace/SuperMap/iTablet/android/keystores/release.keystore')
             storePassword 'supermap123'
         }
     }
@@ -107,7 +107,7 @@ android {
     defaultConfig {
         applicationId "com.itablet"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 22
         versionCode 1
         versionName "1.0"
         ndk {

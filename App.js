@@ -51,7 +51,7 @@ class AppRoot extends Component {
   componentDidMount() {
     (async function () {
       await this.initDirectories()
-      await this.initEnvironment()
+      // await this.initEnvironment()
       await this.initSpeechManager()
     }).bind(this)()
   }
