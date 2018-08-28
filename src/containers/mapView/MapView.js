@@ -123,8 +123,10 @@ export default class MapView extends React.Component {
     this.setState({
       popShow: show,
       popType: type,
+      measureShow: false,
     })
     this.mapControl && (async function () {
+      await this._remove_measure_listener()
       await this.mapControl.setAction(show ? Action.SELECT : Action.PAN)
     }).bind(this)()
   }
@@ -247,9 +249,10 @@ export default class MapView extends React.Component {
     if (this.props.selection && this.props.selection.layer) {
       layerSelectable = this.props.selection.layer._SMLayerId !== event.layer._SMLayerId || this.props.selection.id !== event.id
     }
-    event.layer.getName().then(name => {
+    event.layer.getName().then(async name => {
+      let editable = await event.layer.getEditable()
       Toast.show('选中 ' + name)
-      Object.assign(event, { name: name })
+      Object.assign(event, { name: name, editable })
       layerSelectable && this.props.setSelection(event)
     })
   }
@@ -467,7 +470,11 @@ export default class MapView extends React.Component {
             }).bind(this)()
           }
         )
-        await this.workspace.openDatasource(this.DSParams)
+        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+        if (this.type === 'ONLINE') {
+          let dataset = await dsBaseMap.getDataset(this.layerIndex)
+          await this.map.addLayer(dataset, true)
+        }
         if (this.labelDSParams) {
           let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
           dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)

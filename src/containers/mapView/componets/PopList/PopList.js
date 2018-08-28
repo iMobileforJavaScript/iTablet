@@ -12,6 +12,7 @@ import NetworkAnalystToolBar from '../NetworkAnalystToolBar'
 import CollectionToolBar from '../CollectionToolBar'
 import { bufferAnalyst, overlayAnalyst } from '../../util'
 import Setting from '../Setting'
+import constants from '../constants'
 
 export default class PopList extends React.Component {
 
@@ -48,8 +49,11 @@ export default class PopList extends React.Component {
       currentOperation: currentOperation,
       currentIndex: currentIndex,  // currentOperation index
       lastIndex: lastIndex,     // currentOperation last index
+      currentSubKey: '',
+      lastSubKey: '',
     }
     this.cbData = {}
+    this.operationCallback = () => {} // 当前选择的二级操作的毁掉函数
   }
 
   componentDidUpdate(prevProps) {
@@ -70,12 +74,36 @@ export default class PopList extends React.Component {
         currentOperation: currentOperation,
         currentIndex: currentIndex,  // currentOperation index
         lastIndex: lastIndex,     // currentOperation last index
+        currentSubKey: currentOperation !== this.state.currentOperation ? '' : this.state.currentSubKey,
+        lastSubKey: currentOperation !== this.state.currentOperation ? '' : this.state.currentSubKey,
       })
     }
   }
 
-  // ===========================一级==================================
+  selectSubOperation = (key = '') => {
+    if (!key || key === this.state.currentSubKey) {
+      this.select()
+      this.setState({
+        currentSubKey: '',
+        lastSubKey: key === this.state.currentSubKey ? '' : this.state.currentSubKey,
+      })
+    } else {
+      this.setState({
+        currentSubKey: key,
+        lastSubKey: this.state.currentSubKey,
+      })
+    }
+  }
 
+  /**
+   * 判断是否选择了可编辑图层的对象
+   * @returns {Object|boolean|*}
+   */
+  checkSelection = () => {
+    let editable = this.props.selection && this.props.selection.editable
+    !editable && Toast.show('请选择一个可编辑对象')
+    return editable
+  }
 
   //==============================二级==================================
   /** 选择 **/
@@ -84,23 +112,42 @@ export default class PopList extends React.Component {
   }
 
   /** 添加节点 **/
-  addNode = async () => {
-    await this.props.mapControl.setAction(Action.VERTEXADD)
+  addNode = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.VERTEXADD)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.ADD_NODE)
   }
 
   /** 编辑节点 **/
-  editNode = async () => {
-    await this.props.mapControl.setAction(Action.VERTEXEDIT)
+  editNode = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.VERTEXEDIT)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.EDIT_NODE)
   }
 
   /** 删除节点 **/
-  deleteNode = async () => {
-    await this.props.mapControl.setAction(Action.VERTEXDELETE)
+  deleteNode = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.VERTEXDELETE)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.DELETE_NODE)
   }
 
   /** 撤销 **/
   _undo = async () => {
     if(this.props.mapControl) {
+      // this.selectSubOperation()
       // await this.collector.undo()
       await this.props.mapControl.undo()
     }
@@ -109,69 +156,127 @@ export default class PopList extends React.Component {
   /** 重做 **/
   _redo = async () => {
     if(this.props.mapControl) {
+      // this.selectSubOperation()
       // await this.collector.redo()
       await this.props.mapControl.redo()
     }
   }
 
   /** 绘制直线 **/
-  createPolyline = async () => {
-    await this.props.mapControl.setAction(Action.CREATEPOLYLINE)
+  createPolyline = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.CREATEPOLYLINE)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.CREATE_POLYLINE)
   }
 
   /** 绘制多边形 **/
-  createPolygon = async () => {
-    await this.props.mapControl.setAction(Action.CREATEPOLYGON)
+  createPolygon = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.CREATEPOLYGON)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.CREATE_POLYGON)
   }
 
   /** 删除 **/
   delete = async () => {
-    // TODO 删除
+    // this.selectSubOperation()
     // await this.props.mapControl.setAction(Action.CREATEPOLYGON)
     this.props.showRemoveObjectDialog && this.props.showRemoveObjectDialog()
   }
 
   /** 打断 **/
-  break = async () => {
+  break = async ({callback = () => {}}) => {
     // TODO 打断
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      this.toDoAction()
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.BREAK)
     // await this.props.mapControl.setAction(Action.CREATEPOLYGON)
-    this.toDoAction()
   }
 
   //============================面操作======================================
   /** 切割面 **/
-  splitRegion = async () => {
-    await this.props.mapControl.setAction(Action.SPLIT_BY_LINE)
+  splitRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.SPLIT_BY_LINE)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.SPLIT_REGION)
   }
 
   /** 合并面 **/
-  merge = async () => {
-    await this.props.mapControl.setAction(Action.UNION_REGION)
+  merge = async ({callback = () => {}}) => {
+    // this.selectSubOperation(constants.MERGE)
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.UNION_REGION)
+    } else {
+      await this.select()
+    }
   }
 
   /** 生成岛洞 **/
-  composeHollowRegion = async () => {
-    await this.props.mapControl.setAction(Action.COMPOSE_HOLLOW_REGION)
+  composeHollowRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.COMPOSE_HOLLOW_REGION)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.COMPOSE_HOLLOW_REGION)
   }
 
   /** 手绘岛洞 **/
-  drawHollowRegion = async () => {
-    await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
+  drawHollowRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.DRAW_HOLLOW_REGION)
   }
 
   /** 填充岛洞 **/
-  fillHollowRegion = async () => {
-    await this.props.mapControl.setAction(Action.FILL_HOLLOW_REGION)
+  fillHollowRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.FILL_HOLLOW_REGION)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.FILL_HOLLOW_REGION)
   }
 
   /** 补充岛洞 **/
-  patchHollowRegion = async () => {
+  patchHollowRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    if (this.checkSelection() && callback && callback()) {
+      await this.props.mapControl.setAction(Action.PATCH_HOLLOW_REGION)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.PATCH_HOLLOW_REGION)
     // await this.props.mapControl.setAction(Action.PATCH_POSOTIONAL_REGION)
-    await this.props.mapControl.setAction(Action.PATCH_HOLLOW_REGION)
   }
 
-  attribute = () => {
+  attribute = ({callback = () => {}}) => {
     (async function() {
+      callback && callback(true)
+      await this.select()
+      // this.selectSubOperation()
       // TODO selection 转化为 redux中的 selection
       let selection = await this.props.editLayer.layer.getSelection()
       let count  = await selection.getCount()
@@ -189,7 +294,9 @@ export default class PopList extends React.Component {
   }
 
   /**  执行  **/
-  submit = async () => {
+  submit = async ({callback = () => {}}) => {
+    callback && callback(true)
+    // this.selectSubOperation()
     await this.props.mapControl.submit()
     await this.select()
   }
@@ -201,6 +308,8 @@ export default class PopList extends React.Component {
   //============================分类操作======================================
   _chooseLayer = async (cbData, type) => {
     this.cbData = cbData
+    this.operationCallback(true)
+    await this.select()
     this.props.chooseLayer && this.props.chooseLayer(type, true)
     this.popList && this.popList.setCurrentOption(cbData.data)
   }
@@ -315,10 +424,10 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.POINT)},
             operations: [
               // { key: '选择', action: this.select },
-              { key: '撤销', action: this._undo },
-              // { key: '重做', action: this._redo },
-              { key: '删除', action: this.delete },
-              { key: '属性', action: this.attribute }],
+              { key: constants.UNDO, action: this._undo },
+              // { key: constants.REDO, action: this._redo },
+              { key: constants.DELETE, action: this.delete },
+              { key: constants.ATTRIBUTE, action: this.attribute }],
           },
           {
             key: '线编辑',
@@ -326,11 +435,11 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.LINE)},
             operations: [
               // { key: '选择', action: this.select },
-              { key: '执行', action: this.submit }, { key: '删除', action: this.delete },
-              { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
-              { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
-              { key: '编辑节点', action: this.editNode }, { key: '打断', action: this.break },
-              { key: '属性', action: this.attribute }],
+              { key: constants.SUBMIT, action: this.submit }, { key: constants.DELETE, action: this.delete },
+              { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
+              { key: constants.ADD_NODE, action: this.addNode }, { key: constants.DELETE_NODE, action: this.deleteNode },
+              { key: constants.EDIT_NODE, action: this.editNode }, { key: constants.BREAK, action: this.break },
+              { key: constants.ATTRIBUTE, action: this.attribute }],
           },
           {
             key: '面编辑',
@@ -338,13 +447,13 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.REGION)},
             operations: [
               // { key: '选择', action: this.select },
-              { key: '执行', action: this.submit }, { key: '删除', action: this.delete },
-              { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
-              { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
-              { key: '编辑节点', action: this.editNode }, { key: '切割', action: this.splitRegion },
-              { key: '合并', action: this.merge }, { key: '生成岛洞', action: this.composeHollowRegion },
-              { key: '手绘岛洞', action: this.drawHollowRegion }, { key: '填充岛洞', action: this.fillHollowRegion },
-              { key: '补充岛洞', action: this.patchHollowRegion }, { key: '属性', action: this.attribute },
+              { key: constants.SUBMIT, action: this.submit }, { key: constants.DELETE, action: this.delete },
+              { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
+              { key: constants.ADD_NODE, action: this.addNode }, { key: constants.DELETE_NODE, action: this.deleteNode },
+              { key: constants.EDIT_NODE, action: this.editNode }, { key: constants.SPLIT_REGION, action: this.splitRegion },
+              { key: constants.MERGE, action: this.merge }, { key: constants.COMPOSE_HOLLOW_REGION, action: this.composeHollowRegion },
+              { key: constants.DRAW_HOLLOW_REGION, action: this.drawHollowRegion }, { key: constants.FILL_HOLLOW_REGION, action: this.fillHollowRegion },
+              { key: constants.PATCH_HOLLOW_REGION, action: this.patchHollowRegion }, { key: constants.ATTRIBUTE, action: this.attribute },
             ],
           },
           {
@@ -353,9 +462,9 @@ export default class PopList extends React.Component {
             action: cbData => {this._chooseLayer(cbData, DatasetType.TEXT)},
             operations: [
               // { key: '选择', action: this.select },
-              { key: '修改', action: this.toDoAction },
-              { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
-              { key: '删除', action: this.toDoAction }, { key: '属性', action: this.toDoAction },
+              { key: constants.MODIFIED, action: this.toDoAction },
+              { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
+              { key: constants.DELETE, action: this.toDoAction }, { key: constants.ATTRIBUTE, action: this.toDoAction },
             ],
           },
         ]
@@ -516,6 +625,8 @@ export default class PopList extends React.Component {
             currentOperation={this.state.currentOperation}
             currentIndex={this.state.currentIndex}
             lastIndex={this.state.lastIndex}
+            currentSubKey={this.state.currentSubKey}
+            lastSubKey={this.state.lastSubKey}
           />
         </View>
       )
