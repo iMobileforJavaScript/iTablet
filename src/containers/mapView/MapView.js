@@ -419,6 +419,7 @@ export default class MapView extends React.Component {
             }
           )
         }
+        await this.map.refresh()
 
         await this._addGeometrySelectedListener()
 

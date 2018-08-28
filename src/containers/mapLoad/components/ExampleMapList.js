@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { NativeModules, Platform,DeviceEventEmitter } from 'react-native'
+import { NativeModules, Platform, DeviceEventEmitter } from 'react-native'
 import { View, StyleSheet, FlatList, Alert } from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
@@ -16,35 +16,35 @@ const testData = [{ key: vectorMap }, { key: ObliquePhoto }, { key: gl }, { key:
 export default class ExampleMapList extends React.Component {
   constructor(props) {
     super(props)
-    this.finishdownLoad=false
+    this.finishdownLoad = false
   }
 
-  componentDidMount(){
-    DeviceEventEmitter.addListener('DownLoad',function(progeress){
-        console.log(progeress)
-        if(progeress===99){
-          console.log('下载完成')
-          this.finishdownLoad=true
-        }
+  componentDidMount() {
+    DeviceEventEmitter.addListener('DownLoad', function (progeress) {
+      console.log(progeress)
+      if (progeress === 99) {
+        console.log('下载完成')
+        this.finishdownLoad = true
+      }
     })
   }
 
   _itemClick = async key => {
-    let path, exist, filePath
+    let path, exist, filePath, outPath
     switch (key) {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap.smwu'
         filePath = (await Utility.appendingHomeDirectory()) + ConstPath.SampleDataPath + '/edit.zip'
-        outPath=(await Utility.appendingHomeDirectory()) +ConstPath.SampleDataPath 
+        outPath = (await Utility.appendingHomeDirectory()) + ConstPath.SampleDataPath
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
           // Toast.show("本地实例文件不存在")
-                    this.alertDown(filePath)
-                    while(this.finishdownLoad){
-                       this.unZipFolder(filePath,outPath)
-                    }
+          this.alertDown(filePath)
+          while (this.finishdownLoad) {
+            this.unZipFolder(filePath, outPath)
+          }
         }
         break
       case map3D:
@@ -87,16 +87,18 @@ export default class ExampleMapList extends React.Component {
         break
     }
   }
-  unZipFolder=async(zipfile,targetdir)=>{
-   let result= await Utility.UnZipFolder(zipfile,targetdir)
-   if (result){
-     Toast.show('解压完成')
-   }
-   else{
-    Toast.show('解压失败')
-   }
+
+  unZipFolder = async (zipfile, targetdir) => {
+    let result = await Utility.UnZipFolder(zipfile, targetdir)
+    if (result) {
+      Toast.show('解压完成')
+    }
+    else {
+      Toast.show('解压失败')
+    }
   }
-  alertDown=async()=>{
+
+  alertDown = async filePath => {
     Alert.alert(
       "温馨提示",
       "本地实例文件不存在是否下载文件",
@@ -107,7 +109,7 @@ export default class ExampleMapList extends React.Component {
     )
   }
 
-  
+
   downfile = async (path, username, passworld, filename) => {
     try {
       let OnlineServiceMoudule = new OnlineService()

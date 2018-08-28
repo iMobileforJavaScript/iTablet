@@ -377,7 +377,7 @@ export default class CollectionToolBar extends React.Component {
   }
 
   /** 切换图层 **/
-  _changeLayer = async () => {
+  _changeLayer = () => {
     this.props.chooseLayer && this.props.chooseLayer(-1, true, () => { // 传 -1 查询所有类型的图层
       if (this.props.POP_List) {
         this.props.POP_List(true, 'collection')

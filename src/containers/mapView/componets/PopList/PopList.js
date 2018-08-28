@@ -149,10 +149,14 @@ export default class PopList extends React.Component {
     await this.props.mapControl.setAction(Action.UNION_REGION)
   }
 
-  /** 岛洞 **/
-  drawHollowRegion = async () => {
-    // await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
+  /** 生成岛洞 **/
+  composeHollowRegion = async () => {
     await this.props.mapControl.setAction(Action.COMPOSE_HOLLOW_REGION)
+  }
+
+  /** 手绘岛洞 **/
+  drawHollowRegion = async () => {
+    await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
   }
 
   /** 填充岛洞 **/
@@ -338,9 +342,9 @@ export default class PopList extends React.Component {
               { key: '撤销', action: this._undo }, { key: '重做', action: this._redo },
               { key: '添加节点', action: this.addNode }, { key: '删除节点', action: this.deleteNode },
               { key: '编辑节点', action: this.editNode }, { key: '切割', action: this.splitRegion },
-              { key: '合并', action: this.merge }, { key: '岛洞', action: this.drawHollowRegion },
-              { key: '填充岛洞', action: this.fillHollowRegion }, { key: '补充岛洞', action: this.patchHollowRegion },
-              { key: '属性', action: this.attribute },
+              { key: '合并', action: this.merge }, { key: '生成岛洞', action: this.composeHollowRegion },
+              { key: '手绘岛洞', action: this.drawHollowRegion }, { key: '填充岛洞', action: this.fillHollowRegion },
+              { key: '补充岛洞', action: this.patchHollowRegion }, { key: '属性', action: this.attribute },
             ],
           },
           {
@@ -428,6 +432,15 @@ export default class PopList extends React.Component {
           })
         }
       }})
+  }
+
+  /** 切换图层 **/
+  _changeLayer = () => {
+    this.props.chooseLayer && this.props.chooseLayer(-1, true, () => { // 传 -1 查询所有类型的图层
+      if (this.props.POP_List) {
+        this.props.POP_List(true, 'collection')
+      }
+    })
   }
 
   render() {
