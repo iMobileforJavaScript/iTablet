@@ -45,7 +45,7 @@ export default class ChooseNumber extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.value !== this.props.value || this.props.value !== this.state.value) {
+    if (this.props.value !== '' && (prevProps.value !== this.props.value || this.props.value !== this.state.value)) {
       this.setState({
         value: this.props.value,
         plusAble: this.props.maxValue === '' || this.props.value < this.props.maxValue,

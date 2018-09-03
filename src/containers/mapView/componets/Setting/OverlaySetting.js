@@ -184,6 +184,7 @@ export default class OverlaySetting extends React.Component {
         overlayType: this.state.overlayType,
       })
       this.close()
+      Toast.show('设置成功')
     }).bind(this)()
   }
 

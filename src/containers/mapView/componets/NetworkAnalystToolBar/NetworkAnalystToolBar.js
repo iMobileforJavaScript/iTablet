@@ -121,19 +121,14 @@ export default class NetworkAnalystToolBar extends React.Component {
     }
   }
 
-  /** 设置起点 **/
-  _setStart = type => {
-    tranportationAnalyst.setStart()
+  /** 设置配送中心 **/
+  _setCenter = type => {
+    tranportationAnalyst.setCenter()
   }
 
-  /** 设置终点 **/
-  _setEnd = type => {
-    tranportationAnalyst.setEnd()
-  }
-
-  /** 添加站点 **/
-  _setMiddle = type => {
-    this.toDoAction()
+  /** 设置目的地 **/
+  _setDist = type => {
+    tranportationAnalyst.setDist()
   }
 
   /** 上游追踪 **/
@@ -159,6 +154,7 @@ export default class NetworkAnalystToolBar extends React.Component {
         await facilityAnalyst.connectedAnalyst()
         break
       case Const.NETWORK_TSP:
+        await tranportationAnalyst.findMTSPPath()
         break
       case Const.NETWORK_TRACKING:
         break
@@ -169,14 +165,11 @@ export default class NetworkAnalystToolBar extends React.Component {
     // this.toDoAction()
     // await facilityAnalyst.clear()
     switch (type) {
+      case Const.NETWORK_TSP:
       case Const.NETWORK_ROUTE:
         await tranportationAnalyst.clear()
         break
       case Const.NETWORK_FACILITY:
-        await facilityAnalyst.clear()
-        break
-      case Const.NETWORK_TSP:
-        break
       case Const.NETWORK_TRACKING:
         await facilityAnalyst.clear()
         break
@@ -211,8 +204,8 @@ export default class NetworkAnalystToolBar extends React.Component {
         action: async cbData => await this.changeTap(cbData, Const.NETWORK_TSP),
         operations: [
           { key: '设置', action: () => this._setting(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
-          { key: '添加配送中心', action: () => this._setStart(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
-          { key: '添加目的地', action: () => this._setEnd(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '添加配送中心', action: () => this._setCenter(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '添加目的地', action: () => this._setDist(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
           { key: '分析', action: () => this._analyst(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
           { key: '清除', action: () => this.clear(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
         ],

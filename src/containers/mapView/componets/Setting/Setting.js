@@ -168,7 +168,7 @@ export default class Setting extends React.Component {
           case Const.NETWORK_ROUTE:
           case Const.NETWORK_TSP:
             await analystLayer.setSelectable(false)
-            result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetVector)
+            result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetVector, this.state.type)
             break
         }
         this.props.setLoading && this.props.setLoading(false)

@@ -19,7 +19,7 @@ export default {
   NETWORK_TSP: 'network_tsp',
   NETWORK_TRACKING: 'network_tracking',
 
-  START_POINT: 'start_point',
-  MIDDLE_POINT: 'middle_point',
-  END_POINT: 'end_point',
+  START_POINT: 'start_point',  // 起点
+  MIDDLE_POINT: 'middle_point',   // 中间点
+  END_POINT: 'end_point',   // 终点
 }

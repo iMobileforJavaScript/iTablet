@@ -86,9 +86,9 @@
 		70509297018646F28E352A20 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 995E625BA77141C79D10DBB2 /* libSupermap.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ADBDB9271DFEBF0700ED6528 /* libRCTBlob.a */; };
+		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
 		D877B55B21338D850044AE61 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = D877B55A21338D840044AE61 /* Trial_License.slm */; };
 		D877B5A92133D2AD0044AE61 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D877B5A82133D2AC0044AE61 /* SuperMap.framework */; };
-		D877B60C2134D2F00044AE61 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D877B60B2134D2F00044AE61 /* MessageQueue.framework */; };
 		E8D4F75200B5420A963B7F2B /* libRNViewShot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6715E489CA142739903C659 /* libRNViewShot.a */; };
 /* End PBXBuildFile section */
 
@@ -465,9 +465,9 @@
 		A1C5C08A9305494BBCF8D0D6 /* RNViewShot.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNViewShot.xcodeproj; path = "../node_modules/react-native-view-shot/ios/RNViewShot.xcodeproj"; sourceTree = "<group>"; };
 		ADBDB91F1DFEBF0600ED6528 /* RCTBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTBlob.xcodeproj; path = "../node_modules/react-native/Libraries/Blob/RCTBlob.xcodeproj"; sourceTree = "<group>"; };
 		B6715E489CA142739903C659 /* libRNViewShot.a */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = archive.ar; path = libRNViewShot.a; sourceTree = "<group>"; };
+		D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageQueue.framework; path = MessageQueue.sdk/MessageQueue.framework; sourceTree = "<group>"; };
 		D877B55A21338D840044AE61 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		D877B5A82133D2AC0044AE61 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
-		D877B60B2134D2F00044AE61 /* MessageQueue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageQueue.framework; path = MessageQueue.sdk/MessageQueue.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -486,7 +486,6 @@
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
 				0A8EEE1B21104C7100F206BB /* CoreGraphics.framework in Frameworks */,
-				D877B60C2134D2F00044AE61 /* MessageQueue.framework in Frameworks */,
 				0A8EEE1221104C7100F206BB /* libicucore.A.tbd in Frameworks */,
 				0A44223C211445060087C8FE /* libzip.a in Frameworks */,
 				00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */,
@@ -513,6 +512,7 @@
 				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
 				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
 				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
+				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
 				0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -781,7 +781,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				D877B60B2134D2F00044AE61 /* MessageQueue.framework */,
+				D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */,
 				D877B5A82133D2AC0044AE61 /* SuperMap.framework */,
 				0A0118FA2122D9CE00BC4AAB /* Contacts.framework */,
 				0A8EEDF221104C7100F206BB /* SuperMap.bundle */,

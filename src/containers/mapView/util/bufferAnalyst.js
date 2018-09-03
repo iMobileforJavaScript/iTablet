@@ -37,6 +37,7 @@ async function analyst(data) {
     // let recordset = await datasetVector.getRecordset(false, CursorType.DYNAMIC)
     let isEOF = await queryRecordset.isEOF()
     while (!isEOF) {
+      debugger
       let bufferAnalystParameter = await new BufferAnalystParameter().createObj()
       await bufferAnalystParameter.setEndType(bufferSetting.endType)
       await bufferAnalystParameter.setLeftDistance(bufferSetting.distance)

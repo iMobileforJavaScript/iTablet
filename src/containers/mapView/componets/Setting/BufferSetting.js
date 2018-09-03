@@ -21,18 +21,11 @@ export default class BufferSetting extends React.Component {
     setLoading: () => {},
   }
 
-  static defaultProps = {
-    data: {
-      endType: BufferEndType.ROUND,
-      distance: 10,
-    },
-  }
-
   constructor(props) {
     super(props)
     this.state = {
-      distance: props.data.distance,
-      endType: props.data.endType,
+      distance: props.data && props.data.distance || 3,
+      endType: props.data && props.data.endType || BufferEndType.ROUND,
 
       label: '请选择',
       selectedLayer: {},
@@ -75,6 +68,7 @@ export default class BufferSetting extends React.Component {
       await layer.setSelectable(true)
       this.props.setBufferSetting && this.props.setBufferSetting(this.getData())
       this.props.mapControl.setAction(Action.SELECT)
+      this.close()
       Toast.show('设置成功')
     }).bind(this)()
   }
@@ -104,7 +98,7 @@ export default class BufferSetting extends React.Component {
             key={'缓冲类型'}
             title={'缓冲类型'}
             type={Row.Type.RADIO_GROUP}
-            defaultValue={this.props.data.endType}
+            defaultValue={this.state.endType}
             radioArr={[
               {title: '圆头缓冲', value: BufferEndType.ROUND},
               {title: '平头缓冲', value: BufferEndType.FLAT},
@@ -120,7 +114,7 @@ export default class BufferSetting extends React.Component {
             maxValue={50}
             unit={'m'}
             type={Row.Type.CHOOSE_NUMBER}
-            defaultValue={this.props.data.distance}
+            defaultValue={this.state.distance}
             getValue={this.getDistance}
           />
         </View>

@@ -10,31 +10,32 @@ import {
   Callout,
   GeoStyle,
   Size2D,
-  Action,
   GeoPoint,
-  GeoLineM,
   PrjCoordSys,
   PrjCoordSysType,
-  SMMapView,
   TransportationAnalystParameter,
 } from 'imobile_for_javascript'
 import { Toast } from '../../../utils'
+import { Const } from '../../../constains'
 
-let point2Ds = []
+let point2Ds = [], // 目标坐标数组
+  centerPoints = [] // 配送中心坐标数组
 let analystSetting, transportationAnalyst
-let mMapView, mMapControl, mMap, mSelection, mTrackingLayer, mDatasetVector
-let longPressEnable = true,
-  endPointEnable = false, analystEnable = false
+let mMapView, mMapControl, mMap, mTrackingLayer
+let longPressEnable = true
+let taType = '', // 设置旅行商/最佳路径 类型
+  addPointType = '' // 设置旅行商 配送中心，目的地 标示   center | dist
+const CENTER = 'center', // 配送中心
+  DIST = 'dist' // 目的地
 
-// TODO 设置旅行商/最佳路径 类型
-// TODO 设置旅行商 配送中心，目的地 标示
-
-function setStart() {
-
+export function setCenter() {
+  Toast.show('请添加配送中心')
+  addPointType = CENTER
 }
 
-function setEnd() {
-
+export function setDist() {
+  Toast.show('请添加配送目的地')
+  addPointType = DIST
 }
 
 function addNode(node) {
@@ -47,6 +48,7 @@ function getNodes() {
 
 async function clear() {
   point2Ds = []
+  centerPoints = []
   longPressEnable = true
   // TODO 清除Selection
   mTrackingLayer && await mTrackingLayer.clear()
@@ -57,6 +59,7 @@ async function clear() {
 
 function dispose() {
   point2Ds = []
+  centerPoints = []
   // TODO 清除Selection
   if (mTrackingLayer) {
     mTrackingLayer = null
@@ -73,8 +76,11 @@ function check() {
   if (!analystSetting || !mMap || !mTrackingLayer) {
     Toast.show('请加载分析图层')
     return false
+  } else if (addPointType === CENTER && centerPoints.length === 0) {
+    Toast.show('请添加配送中心')
+    return false
   } else if (point2Ds.length === 0) {
-    Toast.show('请加选择节点')
+    Toast.show('请添加目的地')
     return false
   }
   return true
@@ -85,6 +91,10 @@ async function longPressHandler(event) {
   longPressEnable = false
   try {
     // if (!check()) return
+    if (taType === Const.NETWORK_TSP && addPointType === '') {
+      Toast.show('请选择添加目标类型')
+      return
+    }
     let pt = await new Point().createObj(event.x, event.y)
     let pt2D = await mMap.pixelToMap(pt)
     let callOut = await new Callout().createObj(mMapView)
@@ -111,11 +121,7 @@ async function longPressHandler(event) {
 
     let geoPoint = await new GeoPoint().createObj(pt2D.x, pt2D.y)
 
-    let geoStyle = await getGeoStyle(15, 15, 255, 0, 0)
-    await geoStyle.setMarkerSymbolID(3614)
-    await geoPoint.setStyle(geoStyle)
-    await mTrackingLayer.add(geoPoint, '')
-    await mMap.refresh()
+
 
     // if (!endPointEnable) {
     //   // await callOut.setContentView(Callout.Image.STARTPOINT)
@@ -130,14 +136,42 @@ async function longPressHandler(event) {
     // await callOut.setContentView(Callout.Image.DESTPOINT)
     // await mMapView.addCallOut(callOut, '终点')
     // await callOut.showAtXY(pt2D.x, pt2D.y)
-    point2Ds.push({x: pt2D.x, y: pt2D.y})
+
+    let geoStyle
+    if (taType === Const.NETWORK_TSP && addPointType === CENTER) {
+      geoStyle = await getGeoStyle(15, 15, 0, 0, 255)
+      centerPoints.push({ x: pt2D.x, y: pt2D.y })
+    } else {
+      geoStyle = await getGeoStyle(15, 15, 255, 0, 0)
+      point2Ds.push({ x: pt2D.x, y: pt2D.y })
+    }
+    await geoStyle.setMarkerSymbolID(new Date().getTime())
+    await geoPoint.setStyle(geoStyle)
+    await mTrackingLayer.add(geoPoint, '')
+    await mMap.refresh()
     // longPressEnable = false // 只有起点和终点
   } catch (e) {
-    console.error(e)
+    Toast.show('添加目标错误')
   }
 }
 
-async function loadModel(mapView, mapControl, datasetVector) {
+async function loadModel(mapView, mapControl, datasetVector, type) {
+  if (!type) {
+    Toast.show('请设置加载类型')
+    return
+  }
+  taType = type
+  switch (type) {
+    case Const.NETWORK_ROUTE:
+      return await loadRouteModel(mapView, mapControl, datasetVector)
+    case Const.NETWORK_TSP:
+      return await loadTSPPathModel(mapView, mapControl, datasetVector)
+    default:
+      return false
+  }
+}
+
+async function loadRouteModel(mapView, mapControl, datasetVector) {
   try {
     await clear()
     mMapView = mapView
@@ -147,7 +181,6 @@ async function loadModel(mapView, mapControl, datasetVector) {
     if (transportationAnalyst) {
       await transportationAnalyst.dispose()
     }
-    mDatasetVector = datasetVector
     await addGestureDetector()
 
     analystSetting = await new TransportationAnalystSetting().createObj()
@@ -175,12 +208,37 @@ async function loadModel(mapView, mapControl, datasetVector) {
 
     let result = await transportationAnalyst.load()
     return result
-    // return true
   } catch (e) {
-    Toast.show('加载失败')
+    // Toast.show('加载失败')
     return false
   }
 }
+
+async function loadTSPPathModel(mapView, mapControl, datasetVector) {
+  try {
+    await clear()
+    mMapView = mapView
+    mMapControl = mapControl
+    mMap = await mMapControl.getMap()
+    mTrackingLayer = await mMap.getTrackingLayer()
+    if (transportationAnalyst) {
+      await transportationAnalyst.dispose()
+    }
+    await addGestureDetector()
+
+    analystSetting = await new TransportationAnalystSetting().createObj()
+    await analystSetting.setNetworkDataset(datasetVector)
+    transportationAnalyst = await new TransportationAnalyst().createObj()
+    await transportationAnalyst.setAnalystSetting(analystSetting)
+    let result = await transportationAnalyst.load()
+    return result
+  } catch (e) {
+    // Toast.show('加载失败' + e)
+    return false
+  }
+}
+
+
 
 async function addGestureDetector() {
   await mMapControl.setGestureDetector({
@@ -203,23 +261,24 @@ async function display(result) {
     if (!routes || routes.length <= 0) {
       return
     }
-
     for (let i = 0; i < routes.length; i++) {
       let style = await getGeoLineStyle(1, 255, 80, 0)
       await routes[i].setStyle(style)
       await mTrackingLayer.add(routes[i], "result")
+      // await mTrackingLayer.add(routes[i], routes[i]._SMGeometryId)
+      // await routes[i].dispose()
     }
 
+    longPressEnable = false
     await mMap.refresh()
-
   } catch (e) {
-    console.error(e)
     return false
   }
 }
 
 async function findPath() {
   try {
+    addPointType = DIST
     if (!check()) return
     let parameter = await new TransportationAnalystParameter().createObj()
     await parameter.setWeightName('length')
@@ -240,18 +299,17 @@ async function findPath() {
 
 async function findMTSPPath() {
   try {
+    addPointType = CENTER
     if (!check()) return
     let parameter = await new TransportationAnalystParameter().createObj()
-    await parameter.setWeightName('length')
-    //设置最佳路径分析的返回对象
 
     await parameter.setPoints(point2Ds)
-    await parameter.setNodesReturn(true)
-    await parameter.setEdgesReturn(true)
-    await parameter.setPathGuidesReturn(true)
     await parameter.setRoutesReturn(true)
+    await parameter.setPathGuidesReturn(true)
+    await parameter.setStopIndexesReturn(true)
+    await parameter.setWeightName('length')
 
-    let result = await transportationAnalyst.findMTSPPath(parameter, false)
+    let result = await transportationAnalyst.findMTSPPathByPoint2Ds(parameter, centerPoints, false)
     this.display(result)
   } catch (e) {
     Toast.show('分析路径失败')
@@ -276,7 +334,6 @@ async function getGeoStyle(w, h, r, g, b) {
 
     return geoStyle
   } catch (e) {
-    console.error(e)
     return false
   }
 }
@@ -289,14 +346,13 @@ async function getGeoLineStyle(w, r, g, b) {
 
     return geoStyle
   } catch (e) {
-    console.error(e)
     return false
   }
 }
 
 export default {
-  setStart,
-  setEnd,
+  setCenter,
+  setDist,
 
   addNode,
   getNodes,
@@ -306,6 +362,7 @@ export default {
   display,
 
   findPath,
+  findMTSPPath,
 
   getGeoStyle,
   getGeoLineStyle,
