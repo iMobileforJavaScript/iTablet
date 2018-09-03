@@ -5,13 +5,14 @@ import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
 import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
+import { setUser } from './src/models/user'
 import ConfigStore from './src/store'
 import { Loading, PanAudioButton, AudioDialog } from './src/components'
 import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constains'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager, Utility, Environment } from 'imobile_for_javascript'
+import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_javascript'
 
 const { persistor, store } = ConfigStore()
 
@@ -36,8 +37,10 @@ class AppRoot extends Component {
 
   static propTypes = {
     nav: PropTypes.object,
+    user: PropTypes.object,
     editLayer: PropTypes.object,
     setNav: PropTypes.func,
+    setUser: PropTypes.func,
   }
 
   constructor(props) {
@@ -49,11 +52,32 @@ class AppRoot extends Component {
   }
 
   componentDidMount() {
-    (async function () {
+    AppState.addEventListener('change', this.handleStateChange)
+    ;(async function () {
       await this.initDirectories()
       // await this.initEnvironment()
       await this.initSpeechManager()
     }).bind(this)()
+  }
+
+  handleStateChange = appState => {
+    if (appState === 'active') {
+      if (this.props.user.currentUser && this.props.user.currentUser.userName) {
+        (async function () {
+          let result = await new OnlineService().login(
+            this.props.user.currentUser.userName,
+            this.props.user.currentUser.password,
+          )
+          if (typeof result !== 'boolean' && result) {
+            Toast.show('请重新登录')
+            this.props.setUser({
+              userName: '',
+              password: '',
+            })
+          }
+        }).bind(this)()
+      }
+    }
   }
 
   // 初始化文件目录
@@ -147,6 +171,7 @@ class AppRoot extends Component {
 
 const mapStateToProps = state => {
   return {
+    user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,
   }
@@ -154,6 +179,7 @@ const mapStateToProps = state => {
 
 const AppRootWithRedux = connect(mapStateToProps, {
   setNav,
+  setUser,
 })(AppRoot)
 
 const App = () =>

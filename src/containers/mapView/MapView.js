@@ -262,30 +262,50 @@ export default class MapView extends React.Component {
     this.props.setSelection(events)
   }
 
+  showAudio = () => {
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      GLOBAL.AudioDialog.setVisible(true, 'top')
+    }
+  }
+
   toOpen = async () => {
-    NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+    }
   }
 
   toCloesMap = () => {
     // await this.map.close()
     // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
-    this.closeWorkspace()
-    NavigationService.goBack(this.props.nav.routes[1].key)
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      this.closeWorkspace()
+      NavigationService.goBack(this.props.nav.routes[1].key)
+    }
   }
 
   // 地图保存
   saveMap = () => {
     (async function () {
-      try {
-        let saveMap = await this.map.save()
-        let saveWs = await this.workspace.saveWorkspace()
-        if (!saveMap || !saveWs) {
+      if (this.setting && this.setting.isVisible()) {
+        this.setting.close()
+      } else {
+        try {
+          let saveMap = await this.map.save()
+          let saveWs = await this.workspace.saveWorkspace()
+          if (!saveMap || !saveWs) {
+            Toast.show('保存失败')
+          } else {
+            Toast.show('保存成功')
+          }
+        } catch (e) {
           Toast.show('保存失败')
-        } else {
-          Toast.show('保存成功')
         }
-      } catch (e) {
-        Toast.show('保存失败')
       }
 
     }).bind(this)()
@@ -328,7 +348,7 @@ export default class MapView extends React.Component {
     let headerBtnData = [{
       title: '语音',
       image: require('../../assets/public/icon-audio-white.png'),
-      action: () => GLOBAL.AudioDialog.setVisible(true, 'top'),
+      action: this.showAudio,
     }, {
       title: '打开',
       image: require('../../assets/public/icon-open-white.png'),

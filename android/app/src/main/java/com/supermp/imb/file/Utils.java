@@ -30,6 +30,11 @@ public class Utils {
         }
     }
 
+    public static boolean fileIsExit(String filePath) {
+        File file = new File(filePath);
+        return file.exists();
+    }
+
     public static void deleteFile(String filePath) {
         File file = new File(filePath);
         if (file.isDirectory()) {

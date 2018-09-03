@@ -1,23 +1,40 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
-import * as React from 'react';
-import { View, StyleSheet, TextInput, Image, Platform } from 'react-native';
-import * as Util from '../../../utils/constUtil';
+import * as React from 'react'
+import { View, StyleSheet, TextInput, Image } from 'react-native'
+import * as Util from '../../../utils/constUtil'
 
-const BGCOLOR = Util.USUAL_GREEN;
-const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR;
-const WIDTH = 300;
+const BGCOLOR = Util.USUAL_GREEN
+const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR
+const WIDTH = 300
 
 export default class Input extends React.Component {
 
+  props: {
+    image: any,
+    password: string,
+    placeholder: string,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      value: '',
+    }
+  }
+
+  getValue = () => {
+    return this.state.value
+  }
+
   render() {
-    const imagePath = this.props.image ? this.props.image : require('../../../assets/public/input.png'); //add path
-    const isPassword = this.props.password ? this.props.password : false;
-    const placeholder = this.props.placeholder ? this.props.placeholder : 'place';
+    const imagePath = this.props.image ? this.props.image : require('../../../assets/public/input.png') //add path
+    const isPassword = this.props.password ? this.props.password : false
+    const placeholder = this.props.placeholder ? this.props.placeholder : 'place'
 
     return (
       <View style={styles.container}>
@@ -28,13 +45,15 @@ export default class Input extends React.Component {
         <TextInput
           style={styles.input}
           accessible={true}
+          value={this.state.value}
           accessibilityLabel={placeholder}
           secureTextEntry={isPassword}
           placeholder={placeholder}
           underlineColorAndroid='transparent'
-          placeholderTextColor={BORDERCOLOR} />
+          placeholderTextColor={BORDERCOLOR}
+          onChangeText={text => { this.setState({ value: text }) }}/>
       </View>
-    );
+    )
   }
 }
 
@@ -58,10 +77,13 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    ...Platform.select({
-      android: {
-        padding: 0,
-      },
-    }),
+    // ...Platform.select({
+    //   android: {
+    //     paddingVertical: 0,
+    //     paddingHorizontal: 8,
+    //   },
+    // }),
+    paddingVertical: 0,
+    paddingHorizontal: 8,
   },
-});
+})

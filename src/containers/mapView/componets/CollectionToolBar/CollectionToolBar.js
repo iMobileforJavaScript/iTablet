@@ -388,7 +388,7 @@ export default class CollectionToolBar extends React.Component {
   }
 
   /** 保存 **/
-  _save = type => {
+  _save = (type, callback = () => {}) => {
     (async function () {
       try {
         switch (type) {
@@ -403,6 +403,7 @@ export default class CollectionToolBar extends React.Component {
             await this.closeLocation()
             break
         }
+        callback && callback(true)
         await this.props.mapControl.setAction(Action.SELECT)
         await this.props.map.refresh()
         let selection = await this.props.editLayer.layer.getSelection()
@@ -450,7 +451,7 @@ export default class CollectionToolBar extends React.Component {
 
   /** 切换图层 **/
   _changeLayer = () => {
-    this.operationCallback(true)
+    this.operationCallback && this.operationCallback(true)
     this.props.chooseLayer && this.props.chooseLayer(-1, true, () => { // 传 -1 查询所有类型的图层
       if (this.props.POP_List) {
         this.props.POP_List(true, 'collection')
@@ -485,7 +486,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '开始采集', action: ({callback = () => {}}) => this._collect(POINT_HAND, callback) },
               { key: '撤销', action: () => this._undo(POINT_HAND) },
               { key: '重做', action: () => this._redo(POINT_HAND) },
-              { key: '保存', action: () => this._save(POINT_HAND) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(POINT_HAND, callback) },
               { key: '属性', action: () => this._attribute(POINT_HAND) },
             ],
           },
@@ -505,7 +506,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
               { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
               { key: '取消', action: () => this._cancel(LINE_GPS_POINT) },
-              { key: '保存', action: () => this._save(LINE_GPS_POINT) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(LINE_GPS_POINT, callback) },
               { key: '属性', action: () => this._attribute(LINE_GPS_POINT) },
             ],
           },
@@ -520,7 +521,7 @@ export default class CollectionToolBar extends React.Component {
               // { key: '记录', action: this._record },
               { key: '暂停', action: () => this._pause(LINE_GPS_POINT) },
               { key: '取消', action: () => this._cancel(LINE_GPS_PATH) },
-              { key: '保存', action: () => this._save(LINE_GPS_PATH) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(LINE_GPS_PATH, callback) },
               { key: '属性', action: () => this._attribute(LINE_GPS_PATH) },
             ],
           },
@@ -535,7 +536,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(LINE_HAND_POINT) },
               { key: '重做', action: () => this._redo(LINE_HAND_POINT) },
               { key: '取消', action: () => this._cancel(LINE_HAND_POINT) },
-              { key: '保存', action: () => this._save(LINE_HAND_POINT) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(LINE_HAND_POINT, callback) },
               { key: '属性', action: () => this._attribute(LINE_HAND_POINT) },
             ],
           },
@@ -550,7 +551,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(LINE_HAND_PATH) },
               { key: '重做', action: () => this._redo(LINE_HAND_PATH) },
               { key: '取消', action: () => this._cancel(LINE_HAND_PATH) },
-              { key: '保存', action: () => this._save(LINE_HAND_PATH) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(LINE_HAND_PATH, callback) },
               { key: '属性', action: () => this._attribute(LINE_HAND_PATH) },
             ],
           },
@@ -570,7 +571,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(REGION_GPS_POINT) },
               { key: '重做', action: () => this._redo(REGION_GPS_POINT) },
               { key: '取消', action: () => this._cancel(REGION_GPS_POINT) },
-              { key: '保存', action: () => this._save(REGION_GPS_POINT) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_GPS_POINT, callback) },
               { key: '属性', action: () => this._attribute(REGION_GPS_POINT) },
             ],
           },
@@ -585,7 +586,7 @@ export default class CollectionToolBar extends React.Component {
               // { key: '记录', action: this._record },
               { key: '暂停', action: () => this._pause(REGION_GPS_PATH) },
               { key: '取消', action: () => this._cancel(REGION_GPS_PATH) },
-              { key: '保存', action: () => this._save(REGION_GPS_PATH) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_GPS_PATH, callback) },
               { key: '属性', action: () => this._attribute(REGION_GPS_PATH) },
             ],
           },
@@ -600,7 +601,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(REGION_HAND_POINT) },
               { key: '重做', action: () => this._redo(REGION_HAND_POINT) },
               { key: '取消', action: () => this._cancel(REGION_HAND_POINT) },
-              { key: '保存', action: () => this._save(REGION_HAND_POINT) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_HAND_POINT, callback) },
               { key: '属性', action: () => this._attribute(REGION_HAND_POINT) },
             ],
           },
@@ -615,7 +616,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(REGION_HAND_PATH) },
               { key: '重做', action: () => this._redo(REGION_HAND_PATH) },
               { key: '取消', action: () => this._cancel(REGION_HAND_PATH) },
-              { key: '保存', action: () => this._save(REGION_HAND_PATH) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_HAND_PATH, callback) },
               { key: '属性', action: () => this._attribute(REGION_HAND_PATH) },
             ],
           },
@@ -684,7 +685,7 @@ export default class CollectionToolBar extends React.Component {
               { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
               { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
               { key: '取消', action: () => this._cancel(TEXT) },
-              { key: '保存', action: () => this._save(TEXT) },
+              { key: '保存', action: ({callback = () => {}}) => this._save(TEXT, callback) },
               { key: '属性', action: () => this._attribute(TEXT) },
             ],
           },

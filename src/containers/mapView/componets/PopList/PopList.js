@@ -6,6 +6,7 @@ import {
   DatasetType,
 } from 'imobile_for_javascript'
 import { PopBtnSectionList, MTBtnList, MTBtn } from '../../../../components'
+import { Const } from '../../../../constains'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../NavigationService'
 import NetworkAnalystToolBar from '../NetworkAnalystToolBar'
@@ -305,6 +306,29 @@ export default class PopList extends React.Component {
     this.props.showMeasure && this.props.showMeasure()
   }
 
+  /** 切换图层 **/
+  _changeLayer = type => {
+    this.props.chooseLayer && this.props.chooseLayer(-1, true, (isShow, dsType) => { // 传 -1 查询所有类型的图层
+      if (this.props.POP_List) {
+        let datas = this.getData(type)
+        let data
+        for (let i = 0; i < datas.length; i++) {
+          if (datas[i].type === dsType) {
+            data = datas[i]
+            break
+          }
+        }
+        let current = this.findCurrentData(datas, data.type)
+        this.setState({
+          ...current,
+        })
+        this.props.POP_List(true, type)
+        this.operationCallback(true)
+        this.popList && this.popList.setCurrentOption(data)
+      }
+    })
+  }
+
   //============================分类操作======================================
   _chooseLayer = async (cbData, type) => {
     this.cbData = cbData
@@ -473,17 +497,17 @@ export default class PopList extends React.Component {
         data = [
           {
             key: '缓冲区分析',
-            action: cbData => this._analyst(cbData, Setting.Type.BUFFER),
+            action: cbData => this._analyst(cbData, Const.BUFFER),
             operations: [
-              { key: '设置', action: () => this.analystSetting(Setting.Type.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
+              { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
               { key: '清除', action: this.clearBuffer },
             ],
           },
           {
             key: '叠加分析',
-            action: cbData => this._analyst(cbData, Setting.Type.OVERLAY),
+            action: cbData => this._analyst(cbData, Const.OVERLAY),
             operations: [
-              { key: '设置', action: () => this.analystSetting(Setting.Type.OVERLAY)}, { key: '分析', action: this._overlayAnalyst },
+              { key: '设置', action: () => this.analystSetting(Const.OVERLAY)}, { key: '分析', action: this._overlayAnalyst },
               { key: '清除', action: this.clearOverlay },
             ],
           },
@@ -491,10 +515,10 @@ export default class PopList extends React.Component {
             key: '网络分析',
             action: cbData => this._analyst(cbData, 'network'),
             operations: [
-              { key: '路径分析', action: () => this.openNetworkToolBar(NetworkAnalystToolBar.Type.ROUTE)},
-              { key: '连通性分析', action: () => this.openNetworkToolBar(NetworkAnalystToolBar.Type.FACILITY)},
-              { key: '商旅分析', action: () => this.openNetworkToolBar(NetworkAnalystToolBar.Type.TSP)},
-              { key: '追踪分析', action: () => this.openNetworkToolBar(NetworkAnalystToolBar.Type.TRACKING)},
+              { key: '路径分析', action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE)},
+              { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY)},
+              { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP)},
+              { key: '追踪分析', action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING)},
             ],
           },
         ]
@@ -541,15 +565,6 @@ export default class PopList extends React.Component {
           })
         }
       }})
-  }
-
-  /** 切换图层 **/
-  _changeLayer = () => {
-    this.props.chooseLayer && this.props.chooseLayer(-1, true, () => { // 传 -1 查询所有类型的图层
-      if (this.props.POP_List) {
-        this.props.POP_List(true, 'collection')
-      }
-    })
   }
 
   render() {
@@ -612,7 +627,7 @@ export default class PopList extends React.Component {
             this.props.popType === MTBtnList.Operation.DATA_EDIT &&
             <MTBtn
               style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
-              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer}/>
+              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={() => this._changeLayer(MTBtnList.Operation.DATA_EDIT)}/>
           }
           <PopBtnSectionList
             ref={ref => this.popList = ref}

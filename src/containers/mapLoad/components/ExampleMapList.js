@@ -48,7 +48,7 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case map3D:
-        path = ConstPath.SampleDataPath + '/凯德Mall/凯德Mall.smwu'
+        path = ConstPath.SampleDataPath + '/凯德Mall/凯德Mall.sxwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: path, isExample: true })
@@ -57,7 +57,7 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case ObliquePhoto:
-        path = ConstPath.SampleDataPath + '/MaSai/MaSai.smwu'
+        path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: path, isExample: true })

@@ -154,16 +154,17 @@ export default class Pop_BtnSectionList extends React.Component {
       <View style={styles.operationView}>
         {
           // this.props.subBtnType === 'imageBtn'
-          item.image
-            ? <MTBtn BtnText={key} image={item.image} BtnClick={() => this._btn_click_operation({ item, index })}/>
-            : <Pop_Btn
-              ref={ref => {
-                this.setOperationRefs(ref, index)
-              }}
-              selected={key === this.state.currentSubKey}
-              style={styles.operation}
-              BtnText={key}
-              btnClick={() => this._btn_click_operation({ item, index })}/>
+          // item.image
+          //   ? <MTBtn BtnText={key} image={item.image} BtnClick={() => this._btn_click_operation({ item, index })}/>
+          //   :
+          <Pop_Btn
+            ref={ref => {
+              this.setOperationRefs(ref, index)
+            }}
+            selected={key === this.state.currentSubKey}
+            style={styles.operation}
+            BtnText={key}
+            btnClick={() => this._btn_click_operation({ item, index })}/>
         }
       </View>
     )

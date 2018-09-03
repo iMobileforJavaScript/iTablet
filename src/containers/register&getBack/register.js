@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, WebView, Platform } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
 import BorderInput from './border_input'
@@ -15,6 +15,10 @@ const DEFAULTWIDTH = 300
 const BGCOLOR = constUtil.USUAL_GREEN
 
 export default class Register extends React.Component {
+
+  props: {
+    navigation: Object,
+  }
 
   _sendMessage = () => {
     Toast.show('功能待完善')
@@ -36,22 +40,30 @@ export default class Register extends React.Component {
           title: 'iTablet注册',
           navigation: this.props.navigation,
         }}>
-        <View style={styles.containerView}>
-          <BorderInput password={false} placeholder='手机号' />
-          <BorderInput password={false} placeholder='昵称' />
-          <View style={styles.message}>
-            <BorderInput password={false} placeholder='短信验证码' width={190} />
-            <BtnTwo text='发送验证码' width={100} size={13} radius={5} btnClick={this._sendMessage} />
-          </View>
-          <BorderInput password={true} placeholder='密码' />
-          <View style={styles.checkbox}>
-            <CheckBox onChange={this._checkBoxChange} />
-            <View style={styles.checkboxTextContainer}>
-              <Text style={styles.font}> 我已阅读并接受《超图软件用户服务协议》</Text>
-            </View>
-          </View>
-          <BtnTwo text='注册' btnClick={this._register} />
-        </View>
+        {/*<View style={styles.containerView}>*/}
+        {/*<BorderInput password={false} placeholder='手机号' />*/}
+        {/*<BorderInput password={false} placeholder='昵称' />*/}
+        {/*<View style={styles.message}>*/}
+        {/*<BorderInput password={false} placeholder='短信验证码' width={190} />*/}
+        {/*<BtnTwo text='发送验证码' width={100} size={13} radius={5} btnClick={this._sendMessage} />*/}
+        {/*</View>*/}
+        {/*<BorderInput password={true} placeholder='密码' />*/}
+        {/*<View style={styles.checkbox}>*/}
+        {/*<CheckBox onChange={this._checkBoxChange} />*/}
+        {/*<View style={styles.checkboxTextContainer}>*/}
+        {/*<Text style={styles.font}> 我已阅读并接受《超图软件用户服务协议》</Text>*/}
+        {/*</View>*/}
+        {/*</View>*/}
+        {/*<BtnTwo text='注册' btnClick={this._register} />*/}
+        {/*</View>*/}
+        <WebView
+          scalesPageToFit={Platform.OS === 'ios'}
+          // automaticallyAdjustContentInsets={true}
+          contentInset={{top:0,left:0,right:0,bottom:0}}
+          style={styles.webView}
+          source={{
+            uri: 'https://sso.supermap.com/register?service=http://www.supermapol.com',
+          }}/>
       </Container>
     )
   }
@@ -63,6 +75,13 @@ const styles = StyleSheet.create({
     backgroundColor: BGCOLOR,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  webView: {
+    flex: 1,
+    // height: '100%',
+    // width: '100%',
+    height: constUtil.HEIGHT,
+    width: constUtil.WIDTH,
   },
   containerView: {
     height: 0.45 * constUtil.HEIGHT,

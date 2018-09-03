@@ -5,21 +5,23 @@ import OverlaySetting from './OverlaySetting'
 import RouteSetting from './RouteSetting'
 import TrackingSetting from './TrackingSetting'
 import ChooseLayer from './ChooseLayer'
-import { Toast, facilityAnalyst, tranportationAnalyst } from '../../util'
-import { DatasetType } from 'imobile_for_javascript'
+import { facilityAnalyst, tranportationAnalyst } from '../../util'
+import { Toast, dataUtil } from '../../../../utils'
+import { Const } from '../../../../constains'
+import { DatasetType, GeoStyle, Size2D } from 'imobile_for_javascript'
 
 import styles from './styles'
 
-const BUFFER = 'buffer'
-const OVERLAY = 'overlay'
-const NETWORK = 'network'
-const NETWORK_ROUTE = 'network_route'
-const NETWORK_FACILITY = 'network_facility'
-const NETWORK_TSP = 'network_tsp'
-const NETWORK_TRACKING = 'network_tracking'
-
-const ROUTE = 'route'
-const TRACKING = 'tracking'
+// const BUFFER = 'buffer'
+// const OVERLAY = 'overlay'
+// const NETWORK = 'network'
+// const NETWORK_ROUTE = 'network_route'
+// const NETWORK_FACILITY = 'network_facility'
+// const NETWORK_TSP = 'network_tsp'
+// const NETWORK_TRACKING = 'network_tracking'
+//
+// const ROUTE = 'route'
+// const TRACKING = 'tracking'
 
 export default class Setting extends React.Component {
 
@@ -39,7 +41,7 @@ export default class Setting extends React.Component {
   }
 
   static defaultProps = {
-    type: BUFFER,
+    type: Const.BUFFER,
   }
 
   constructor(props) {
@@ -132,14 +134,43 @@ export default class Setting extends React.Component {
           analystLayer = await this.props.map.addLayer(data.dataset, true)
           await this.props.map.refresh()
         }
+        let subName, nodeLayer
+        let result = false
+        switch (this.state.type) {
+          case Const.NETWORK_TRACKING:
+          case Const.NETWORK_FACILITY:
+            subName = await subDataset.getName()
+            nodeLayer = await this.checkContainsDataset(subName)
+            if (!nodeLayer) {
+              nodeLayer = await this.props.map.addLayer(subDataset, true)
 
-        let subName = await subDataset.getName()
-        let nodeLayer = await this.checkContainsDataset(subName)
-        if (!nodeLayer) {
-          nodeLayer = await this.props.map.addLayer(subDataset, true)
-          await this.props.map.refresh()
+              let geoStyle = await new GeoStyle().createObj()
+              //   let colorRgb = dataUtil.colorRgba(this.state.data.color)
+              //   await geoStyle.setFillForeColor(colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a)
+
+              // if (this.state.data.lineColor) {
+              //   let lineColorRgb = dataUtil.colorRgba(this.state.data.lineColor)
+              //   await geoStyle.setLineColor(lineColorRgb.r, lineColorRgb.g, lineColorRgb.b, lineColorRgb.a)
+
+              //   let pointColorRgb = dataUtil.colorRgba(this.state.data.pointColor)
+              //   await geoStyle.setPointColor(pointColorRgb.r, pointColorRgb.g, pointColorRgb.b, pointColorRgb.a)
+
+              await geoStyle.setLineWidth(0)
+              let size2D = await new Size2D().createObj(0, 0)
+              await geoStyle.setMarkerSize(size2D)
+              await nodeLayer.setStyle(geoStyle)
+              await this.map.refresh()
+
+              await this.props.map.refresh()
+            }
+            result = await facilityAnalyst.loadModel(this.props.mapControl, analystLayer, nodeLayer, datasetVector)
+            break
+          case Const.NETWORK_ROUTE:
+          case Const.NETWORK_TSP:
+            await analystLayer.setSelectable(false)
+            result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetVector)
+            break
         }
-        let result = await facilityAnalyst.loadModel(this.props.mapControl, analystLayer, nodeLayer, datasetVector)
         this.props.setLoading && this.props.setLoading(false)
         if (result) {
           Toast.show('加载数据成功')
@@ -158,7 +189,7 @@ export default class Setting extends React.Component {
   getSetting = () => {
     let settingView
     switch (this.state.type) {
-      case BUFFER:
+      case Const.BUFFER:
         settingView = (
           <BufferSetting
             ref={ref => this.bufferSetting = ref}
@@ -172,7 +203,7 @@ export default class Setting extends React.Component {
             setLoading={this.props.setLoading}/>
         )
         break
-      case OVERLAY:
+      case Const.OVERLAY:
         settingView = (
           <OverlaySetting
             ref={ref => this.overlaySetting = ref}
@@ -186,7 +217,7 @@ export default class Setting extends React.Component {
             setLoading={this.props.setLoading}/>
         )
         break
-      case ROUTE:
+      case Const.ROUTE:
         settingView = (
           <RouteSetting
             ref={ref => this.overlaySetting = ref}
@@ -200,9 +231,10 @@ export default class Setting extends React.Component {
             setLoading={this.props.setLoading}/>
         )
         break
-      case NETWORK_TRACKING:
-      case NETWORK_TSP:
-      case NETWORK_FACILITY:
+      case Const.NETWORK_TRACKING:
+      case Const.NETWORK_ROUTE:
+      case Const.NETWORK_TSP:
+      case Const.NETWORK_FACILITY:
         // settingView = (
         //   <TrackingSetting
         //     ref={ref => this.overlaySetting = ref}
@@ -264,12 +296,12 @@ export default class Setting extends React.Component {
   }
 }
 
-Setting.Type = {
-  BUFFER: BUFFER,
-  OVERLAY: OVERLAY,
-  NETWORK: NETWORK,
-  NETWORK_ROUTE: NETWORK_ROUTE,
-  NETWORK_FACILITY: NETWORK_FACILITY,
-  NETWORK_TSP: NETWORK_TSP,
-  NETWORK_TRACKING: NETWORK_TRACKING,
-}
+// Setting.Type = {
+//   BUFFER: Const.BUFFER,
+//   OVERLAY: Const.OVERLAY,
+//   NETWORK: Const.NETWORK,
+//   NETWORK_ROUTE: Const.NETWORK_ROUTE,
+//   NETWORK_FACILITY: Const.NETWORK_FACILITY,
+//   NETWORK_TSP: Const.NETWORK_TSP,
+//   NETWORK_TRACKING: Const.NETWORK_TRACKING,
+// }

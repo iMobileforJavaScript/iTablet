@@ -118,8 +118,6 @@ async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector) {
     await clear()
     mMapControl = mapControl
     mMap = await mMapControl.getMap()
-    // TODO 更改layer
-    // let layer = await mMap.getLayer(1)
     mAnalystLayer = analystLayer
     mNodelLayer = nodelLayer
     mSelection = await mAnalystLayer.getSelection()
@@ -130,6 +128,7 @@ async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector) {
     }
     analystSetting = await new FacilityAnalystSetting().createObj()
     await addGestureDetector()
+
     await analystSetting.setNetworkDataset(datasetVector)
     await analystSetting.setNodeIDField('SmNodeID')
     await analystSetting.setEdgeIDField('SmID')
@@ -146,10 +145,12 @@ async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector) {
     await fieldInfos.add(fieldInfo)
 
     await analystSetting.setWeightFieldInfos(fieldInfos)
+
     facilityAnalyst = await new FacilityAnalyst().createObj()
     await facilityAnalyst.setAnalystSetting(analystSetting)
 
     let result = await facilityAnalyst.load()
+
     await mMapControl.setAction(Action.SELECT)
     return result || false
   } catch (e) {
