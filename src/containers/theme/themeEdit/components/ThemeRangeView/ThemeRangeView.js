@@ -41,7 +41,7 @@ export default class ThemeRangeView extends React.Component {
       data: {
         expression: 'SMUSERID',
         rangeMode: RangeMode.EQUALINTERVAL,
-        rangeCount: 5,
+        rangeCount: 2,
         precision: 1,
         colorMethod: {
           key: 'YELLOWRED',
@@ -74,7 +74,8 @@ export default class ThemeRangeView extends React.Component {
       data.rangeCount = await theme.getCount()
       data.precision = await theme.getPrecision()
       // TODO 获取颜色方案
-      this.themeRange = theme
+      this.themeRange = await new ThemeRange().createObjClone(theme)
+      // this.themeRange = theme
     }
     this.setState({
       data: data,
@@ -130,6 +131,7 @@ export default class ThemeRangeView extends React.Component {
         let datasetVector = await dataset.toDatasetVector()
 
         if (
+          this.state.data.expression !== expression ||
           this.state.data.colorMethod.value !== colorMethod.value ||
           this.state.data.rangeMode !== rangeMode ||
           this.state.data.rangeCount !== rangeCount ||
@@ -137,9 +139,10 @@ export default class ThemeRangeView extends React.Component {
         ) {
           this.themeRange = await (new ThemeRange()).makeDefault(
             datasetVector, expression, rangeMode, rangeCount, colorMethod.value)
-        } else if(this.themeRange._SMThemeRangeId && this.state.data.expression !== expression) {
-          await this.themeRange.getRangeExpression(expression)
         }
+        // else if(this.themeRange._SMThemeRangeId && this.state.data.expression !== expression) {
+        //   await this.themeRange.setRangeExpression(expression)
+        // }
 
         if (this.state.data.precision !== precision) {
           await this.themeRange.setPrecision(precision)
@@ -223,8 +226,8 @@ export default class ThemeRangeView extends React.Component {
       if (this.props.isThemeLayer) {
         await this.props.map.removeLayer(this.props.layer.index)
         let newLayer = await this.props.map.addThemeLayer(dataset, this.themeRange, true)
-        await newLayer.setCaption(this.props.layer.caption)
-        await this.props.map.moveTo(0, this.props.layer.index)
+        newLayer && await newLayer.setCaption(this.props.layer.caption)
+        newLayer && await this.props.map.moveTo(0, this.props.layer.index)
       } else {
         await this.props.map.addThemeLayer(dataset, this.themeRange, true)
       }

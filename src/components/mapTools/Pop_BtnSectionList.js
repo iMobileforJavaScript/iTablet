@@ -30,6 +30,8 @@ export default class Pop_BtnSectionList extends React.Component {
     operationAction: PropTypes.func,
     currentOperation: PropTypes.object,
     currentIndex: PropTypes.number,
+    // currentSubKey: PropTypes.string,
+    // lastSubKey: PropTypes.string,
   }
 
   static defaultProps = {
@@ -40,6 +42,10 @@ export default class Pop_BtnSectionList extends React.Component {
     super(props)
     this.categoryRefs = []
     this.operationRefs = []
+    this.state = {
+      currentSubKey: '',
+      lastSubKey: '',
+    }
   }
 
   // componentDidMount() {
@@ -93,7 +99,20 @@ export default class Pop_BtnSectionList extends React.Component {
   _btn_click_operation = ({ item }) => {
     item.action && item.action({
       data: item,
-      callback: () => {
+      callback: (reset = false) => {
+        let selected = false
+        if (reset || item.key === this.state.currentSubKey) {
+          this.setState({
+            currentSubKey: '',
+          })
+          selected = false
+        } else {
+          this.setState({
+            currentSubKey: item.key,
+          })
+          selected = true
+        }
+        return selected
       },
     })
   }
@@ -135,15 +154,17 @@ export default class Pop_BtnSectionList extends React.Component {
       <View style={styles.operationView}>
         {
           // this.props.subBtnType === 'imageBtn'
-          item.image
-            ? <MTBtn BtnText={key} image={item.image} BtnClick={() => this._btn_click_operation({ item, index })}/>
-            : <Pop_Btn
-              ref={ref => {
-                this.setOperationRefs(ref, index)
-              }}
-              style={styles.operation}
-              BtnText={key}
-              btnClick={() => this._btn_click_operation({ item, index })}/>
+          // item.image
+          //   ? <MTBtn BtnText={key} image={item.image} BtnClick={() => this._btn_click_operation({ item, index })}/>
+          //   :
+          <Pop_Btn
+            ref={ref => {
+              this.setOperationRefs(ref, index)
+            }}
+            selected={key === this.state.currentSubKey}
+            style={styles.operation}
+            BtnText={key}
+            btnClick={() => this._btn_click_operation({ item, index })}/>
         }
       </View>
     )
@@ -162,6 +183,10 @@ export default class Pop_BtnSectionList extends React.Component {
   render() {
     // let props = { ...this.props }
     // this.findData(props.data, props.currentData)
+    let operations = []
+    if (this.props.currentOperation.operations) {
+      operations = this.props.currentOperation.operations.concat()
+    }
     return (
       <View style={styles.container}{...this.props}>
         <FlatList
@@ -177,11 +202,13 @@ export default class Pop_BtnSectionList extends React.Component {
           this.props.currentOperation && this.props.subPopShow ? <View style={styles.subContainer}>
             {this.props.subLeft}
             {
-              this.props.currentOperation.operations && this.props.currentOperation.operations.length > 0 &&
+              // this.props.currentOperation.operations && this.props.currentOperation.operations.length > 0 &&
+              operations && operations.length > 0 &&
               <FlatList
                 ref={ref => (this.operationList = ref)}
                 style={styles.operationsListView}
-                data={this.props.currentOperation.operations || []}
+                // data={this.props.currentOperation.operations || []}
+                data={operations}
                 renderItem={this._renderOperationItem}
                 horizontal={true}
                 keyExtractor={this._keySubExtractor}

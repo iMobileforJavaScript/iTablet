@@ -38,6 +38,7 @@ import {
   PopMeasureBar,
 } from './mapTools'
 import LayerItem from './LayerItem'
+import Progress from './Progress'
 
 export {
   Container,
@@ -79,4 +80,5 @@ export {
   DataSetListItem,
   DataSetListSection,
   PanAudioButton,
+  Progress,
 }

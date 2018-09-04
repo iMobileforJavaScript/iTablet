@@ -123,8 +123,10 @@ export default class MapView extends React.Component {
     this.setState({
       popShow: show,
       popType: type,
+      measureShow: false,
     })
     this.mapControl && (async function () {
+      await this._remove_measure_listener()
       await this.mapControl.setAction(show ? Action.SELECT : Action.PAN)
     }).bind(this)()
   }
@@ -247,9 +249,10 @@ export default class MapView extends React.Component {
     if (this.props.selection && this.props.selection.layer) {
       layerSelectable = this.props.selection.layer._SMLayerId !== event.layer._SMLayerId || this.props.selection.id !== event.id
     }
-    event.layer.getName().then(name => {
+    event.layer.getName().then(async name => {
+      let editable = await event.layer.getEditable()
       Toast.show('选中 ' + name)
-      Object.assign(event, { name: name })
+      Object.assign(event, { name: name, editable })
       layerSelectable && this.props.setSelection(event)
     })
   }
@@ -259,30 +262,50 @@ export default class MapView extends React.Component {
     this.props.setSelection(events)
   }
 
+  showAudio = () => {
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      GLOBAL.AudioDialog.setVisible(true, 'top')
+    }
+  }
+
   toOpen = async () => {
-    NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+    }
   }
 
   toCloesMap = () => {
     // await this.map.close()
     // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
-    this.closeWorkspace()
-    NavigationService.goBack(this.props.nav.routes[1].key)
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      this.closeWorkspace()
+      NavigationService.goBack(this.props.nav.routes[1].key)
+    }
   }
 
   // 地图保存
   saveMap = () => {
     (async function () {
-      try {
-        let saveMap = await this.map.save()
-        let saveWs = await this.workspace.saveWorkspace()
-        if (!saveMap || !saveWs) {
+      if (this.setting && this.setting.isVisible()) {
+        this.setting.close()
+      } else {
+        try {
+          let saveMap = await this.map.save()
+          let saveWs = await this.workspace.saveWorkspace()
+          if (!saveMap || !saveWs) {
+            Toast.show('保存失败')
+          } else {
+            Toast.show('保存成功')
+          }
+        } catch (e) {
           Toast.show('保存失败')
-        } else {
-          Toast.show('保存成功')
         }
-      } catch (e) {
-        Toast.show('保存失败')
       }
 
     }).bind(this)()
@@ -325,7 +348,7 @@ export default class MapView extends React.Component {
     let headerBtnData = [{
       title: '语音',
       image: require('../../assets/public/icon-audio-white.png'),
-      action: () => GLOBAL.AudioDialog.setVisible(true, 'top'),
+      action: this.showAudio,
     }, {
       title: '打开',
       image: require('../../assets/public/icon-open-white.png'),
@@ -419,6 +442,7 @@ export default class MapView extends React.Component {
             }
           )
         }
+        await this.map.refresh()
 
         await this._addGeometrySelectedListener()
 
@@ -466,7 +490,11 @@ export default class MapView extends React.Component {
             }).bind(this)()
           }
         )
-        await this.workspace.openDatasource(this.DSParams)
+        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+        if (this.type === 'ONLINE') {
+          let dataset = await dsBaseMap.getDataset(this.layerIndex)
+          await this.map.addLayer(dataset, true)
+        }
         if (this.labelDSParams) {
           let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
           dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)

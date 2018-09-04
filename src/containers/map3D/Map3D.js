@@ -36,7 +36,11 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
-    Toast.show("地图编辑待做")
+    // Toast.show("地图编辑待做")
+    // 三维地图只允许单例
+    if (GLOBAL.sceneControl) {
+      this._addScene()
+    }
   }
 
   componentWillUnmount() {
@@ -57,7 +61,8 @@ export default class Map3D extends React.Component {
   }
 
   _onGetInstance = sceneControl => {
-    this.sceneControl = sceneControl
+    // GLOBAL.sceneControl = sceneControl
+    GLOBAL.sceneControl = sceneControl
     this._addScene()
   }
 
@@ -135,7 +140,7 @@ export default class Map3D extends React.Component {
     let workspaceModule = new Workspace()
     ;(async function () {
       this.workspace = await workspaceModule.createObj()   //创建workspace实例
-      this.scene = await this.sceneControl.getScene()      //获取场景对象
+      this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
       await this.scene.setWorkspace(this.workspace)        //设置工作空间
       let filePath = await Utility.appendingHomeDirectory(this.state.path)
       let openWk = await this.workspace.open(filePath)     //打开工作空间
@@ -161,7 +166,7 @@ export default class Map3D extends React.Component {
   //     this.workspace = await workspaceModule.createObj()   //创建workspace实例
   //
   //     console.log(1)
-  //     if (!this.sceneControl) {
+  //     if (!GLOBAL.sceneControl) {
   //       console.log(2)
   //       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
   //     }

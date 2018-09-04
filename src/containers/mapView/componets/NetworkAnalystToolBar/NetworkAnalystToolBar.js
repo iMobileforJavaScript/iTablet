@@ -1,26 +1,27 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { constUtil, Toast, scaleSize } from '../../../../utils'
-import {
-  DatasetType,
-  GeoStyle,
-  Size2D,
-  BufferAnalystGeometry,
-  BufferAnalystParameter,
-  BufferEndType,
-  DatasetVectorInfo,
-  CursorType,
-} from 'imobile_for_javascript'
+// import {
+//   DatasetType,
+//   GeoStyle,
+//   Size2D,
+//   BufferAnalystGeometry,
+//   BufferAnalystParameter,
+//   BufferEndType,
+//   DatasetVectorInfo,
+//   CursorType,
+// } from 'imobile_for_javascript'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
+import { Const } from '../../../../constains'
 import { facilityAnalyst, tranportationAnalyst } from '../../util'
 import PropTypes from 'prop-types'
-import Setting from '../Setting'
-import NavigationService from '../../../NavigationService'
+// import Setting from '../Setting'
+// import NavigationService from '../../../NavigationService'
 
-const ROUTE = 'route'
-const TSP = 'tsp'
-const FACILITY = 'facility'
-const TRACKING = 'tracking'
+// const Const.NETWORK_ROUTE = 'route'
+// const Const.NETWORK_TSP = 'tsp'
+// const Const.NETWORK_FACILITY = 'facility'
+// const Const.NETWORK_TRACKING = 'tracking'
 
 export default class NetworkAnalystToolBar extends React.Component {
 
@@ -39,23 +40,23 @@ export default class NetworkAnalystToolBar extends React.Component {
     setLoading: PropTypes.func,
   }
 
-  static Type = {
-    ROUTE: 'route',
-    TSP: 'tsp',
-    FACILITY: 'facility',
-    TRACKING: 'tracking',
-  }
+  // static Type = {
+  //   Const.NETWORK_ROUTE: 'route',
+  //   Const.NETWORK_TSP: 'tsp',
+  //   Const.NETWORK_FACILITY: 'facility',
+  //   Const.NETWORK_TRACKING: 'tracking',
+  // }
 
   constructor(props) {
     super(props)
-    let {data, currentOperation, currentIndex} = this.getData(props.popType || ROUTE)
+    let {data, currentOperation, currentIndex} = this.getData(props.popType || Const.NETWORK_ROUTE)
     this.state = {
       data: data,                         // 所有数据
       currentOperation: currentOperation, // 当前操作选项
       currentIndex: currentIndex,         // 当前操作选项序号
       lastIndex: currentIndex,            // 上一次操作选项序号
       subPopShow: true,                   // 是否显示子操作栏
-      popType: props.popType || ROUTE,    // 操作类型
+      popType: props.popType || Const.NETWORK_ROUTE,    // 操作类型
     }
     this.cbData = {}
   }
@@ -63,14 +64,14 @@ export default class NetworkAnalystToolBar extends React.Component {
   changeTap = async (cbData, type) => {
     this.props.setLoading && this.props.setLoading(true)
     switch (type) {
-      case ROUTE:
+      case Const.NETWORK_ROUTE:
         this._transportationLoad()
         break
-      case TSP:
+      case Const.NETWORK_TSP:
         break
-      case FACILITY:
+      case Const.NETWORK_FACILITY:
         break
-      case TRACKING:
+      case Const.NETWORK_TRACKING:
         break
     }
     cbData.callback && await cbData.callback(true)
@@ -89,7 +90,8 @@ export default class NetworkAnalystToolBar extends React.Component {
   /** 设置 **/
   _setting = type => {
     (async function () {
-      this.props.showSetting && this.props.showSetting(Setting.Type.NETWORK_TRACKING)
+      this.props.showSetting && this.props.showSetting(type)
+      // this.props.showSetting && this.props.showSetting(Setting.Type.NETWORK_TRACKING)
       // NavigationService.navigate('ChooseEditLayer',{ workspace: this.props.workspace, map: this.props.map, type: DatasetType.LINE, mapControl: this.props.mapControl, isEdit: true })
     }).bind(this)()
   }
@@ -119,21 +121,14 @@ export default class NetworkAnalystToolBar extends React.Component {
     }
   }
 
-  /** 设置起点 **/
-  _setStart = type => {
-    (async function () {
-      await tranportationAnalyst.analyst()
-    }).bind(this)()
+  /** 设置配送中心 **/
+  _setCenter = type => {
+    tranportationAnalyst.setCenter()
   }
 
-  /** 设置终点 **/
-  _setEnd = type => {
-    this.toDoAction()
-  }
-
-  /** 添加站点 **/
-  _setMiddle = type => {
-    this.toDoAction()
+  /** 设置目的地 **/
+  _setDist = type => {
+    tranportationAnalyst.setDist()
   }
 
   /** 上游追踪 **/
@@ -152,64 +147,75 @@ export default class NetworkAnalystToolBar extends React.Component {
   _analyst = async type => {
     // this.toDoAction()
     switch (type) {
-      case ROUTE:
+      case Const.NETWORK_ROUTE:
+        await tranportationAnalyst.findPath()
         break
-      case FACILITY:
+      case Const.NETWORK_FACILITY:
         await facilityAnalyst.connectedAnalyst()
         break
-      case TSP:
+      case Const.NETWORK_TSP:
+        await tranportationAnalyst.findMTSPPath()
         break
-      case TRACKING:
+      case Const.NETWORK_TRACKING:
         break
     }
   }
 
-  clear = async () => {
+  clear = async type => {
     // this.toDoAction()
-    await facilityAnalyst.clear()
-    // let trackLayer = await this.props.map.getTrackingLayer()
-    // await trackLayer.clear()
-    // await this.props.map.refresh()
+    // await facilityAnalyst.clear()
+    switch (type) {
+      case Const.NETWORK_TSP:
+      case Const.NETWORK_ROUTE:
+        await tranportationAnalyst.clear()
+        break
+      case Const.NETWORK_FACILITY:
+      case Const.NETWORK_TRACKING:
+        await facilityAnalyst.clear()
+        break
+    }
   }
 
   getData = type => {
     let data = [
       {
         key: '路径分析',
-        type: ROUTE,
-        action: async cbData => await this.changeTap(cbData, ROUTE),
+        type: Const.NETWORK_ROUTE,
+        action: async cbData => await this.changeTap(cbData, Const.NETWORK_ROUTE),
         operations: [
-          { key: '设置', action: () => this._setting(ROUTE), image: require('../../../../assets/public/save.png') },
-          { key: '分析', action: () => this._analyst(ROUTE), image: require('../../../../assets/public/save.png') },
-          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(Const.NETWORK_ROUTE), image: require('../../../../assets/public/save.png') },
+          { key: '分析', action: () => this._analyst(Const.NETWORK_ROUTE), image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: () => this.clear(Const.NETWORK_ROUTE), image: require('../../../../assets/public/save.png') },
         ],
       },
       {
         key: '连通性分析',
-        type: FACILITY,
-        action: async cbData => await this.changeTap(cbData, FACILITY),
+        type: Const.NETWORK_FACILITY,
+        action: async cbData => await this.changeTap(cbData, Const.NETWORK_FACILITY),
         operations: [
-          { key: '设置', action: () => this._setting(FACILITY), image: require('../../../../assets/public/save.png') },
-          { key: '分析', action: () => this._analyst(FACILITY), image: require('../../../../assets/public/save.png') },
-          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(Const.NETWORK_FACILITY), image: require('../../../../assets/public/save.png') },
+          { key: '分析', action: () => this._analyst(Const.NETWORK_FACILITY), image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: () => this.clear(Const.NETWORK_FACILITY), image: require('../../../../assets/public/save.png') },
         ],
       },
       {
         key: '商旅分析',
-        type: TSP,
-        action: async cbData => await this.changeTap(cbData, TSP),
+        type: Const.NETWORK_TSP,
+        action: async cbData => await this.changeTap(cbData, Const.NETWORK_TSP),
         operations: [
-          { key: '设置', action: () => this._setting(TSP), image: require('../../../../assets/public/save.png') },
-          { key: '分析', action: () => this._analyst(TSP), image: require('../../../../assets/public/save.png') },
-          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '添加配送中心', action: () => this._setCenter(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '添加目的地', action: () => this._setDist(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '分析', action: () => this._analyst(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: () => this.clear(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
         ],
       },
       {
         key: '追踪分析',
-        type: TRACKING,
-        action: async cbData => this.changeTap(cbData, TRACKING),
+        type: Const.NETWORK_TRACKING,
+        action: async cbData => this.changeTap(cbData, Const.NETWORK_TRACKING),
         operations: [
-          { key: '设置', action: () => this._setting(TRACKING), image: require('../../../../assets/public/save.png') },
+          { key: '设置', action: () => this._setting(Const.NETWORK_TRACKING), image: require('../../../../assets/public/save.png') },
           {
             key: '上游追踪', action: () => {
               this._traceUp()
@@ -220,26 +226,26 @@ export default class NetworkAnalystToolBar extends React.Component {
               this._traceDown()
             }, image: require('../../../../assets/public/save.png'),
           },
-          { key: '清除', action: this.clear, image: require('../../../../assets/public/save.png') },
+          { key: '清除', action: () => this.clear(Const.NETWORK_TRACKING), image: require('../../../../assets/public/save.png') },
         ],
       },
     ]
     let currentOperation = null, currentIndex = -1
     if (type) {
       switch (type) {
-        case ROUTE:
+        case Const.NETWORK_ROUTE:
           currentOperation = data[0]
           currentIndex = 0
           break
-        case FACILITY:
+        case Const.NETWORK_FACILITY:
           currentOperation = data[1]
           currentIndex = 1
           break
-        case TSP:
+        case Const.NETWORK_TSP:
           currentOperation = data[2]
           currentIndex = 2
           break
-        case TRACKING:
+        case Const.NETWORK_TRACKING:
           currentOperation = data[3]
           currentIndex = 3
           break
@@ -300,17 +306,18 @@ export default class NetworkAnalystToolBar extends React.Component {
   }
 }
 
-NetworkAnalystToolBar.Type = {
-  ROUTE: ROUTE,
-  TSP: TSP,
-  FACILITY: FACILITY,
-  TRACKING: TRACKING,
-}
+// NetworkAnalystToolBar.Type = {
+//   Const.NETWORK_ROUTE: Const.NETWORK_ROUTE,
+//   Const.NETWORK_TSP: Const.NETWORK_TSP,
+//   Const.NETWORK_FACILITY: Const.NETWORK_FACILITY,
+//   Const.NETWORK_TRACKING: Const.NETWORK_TRACKING,
+// }
 
 const styles = StyleSheet.create({
   pop: {
     position: 'absolute',
     left: 0,
+    right: 0,
     bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
     backgroundColor: 'white',
   },

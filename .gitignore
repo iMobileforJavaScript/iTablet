@@ -1,37 +1,20 @@
 # Created by .ignore support plugin (hsz.mobi)
-node_modules/*
-__tests__/*
-.idea/*
-.gradle/*
-android/.gradle/*
-android/.idea/*
-#android/.settings/*
-android/build/*
-android/keystores/*
-#android/app/app.iml
+node_modules/
+.idea/
+.gradle/
+android/keystores/
+android/app/app.iml
 android/local.properties
-android/app/build/*
-#android/.DS_Store
-# android/*
+android/app/build/
 
-#ios/build/*
-ios/Build
-ios/Index
+ios/SuperMap.framework
+ios/Trial_License.slm
 ios/iPhoneOS.sdk
 ios/iPhoneSimulator.sdk
 ios/MessageQueue.sdk
 ios/iTablet-tvOS
 ios/iTablet-tvOSTests
-
-package-lock.json
-yarn-error.log
-yarn.lock
-
-.DS_Store
-.gitignore.swo
-.gitignore.swp
-
-src/.DS_Store
-src/assets/.DS_Store
+ios/Build
+ios/Index
 
 

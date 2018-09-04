@@ -74,11 +74,14 @@ export default class ChooseEditLayer extends React.Component {
       }
     }).bind(this)()
   }
-  
+
   selectLayer = async () => {
     if (!this.currentItem.layer) return
     this.container.setLoading(true)
     let layer = this.currentItem.layer
+    if (this.type === -1) {
+      this.type = await (await layer.getDataset()).getType()
+    }
     await layer.setSelectable(true)
     this.isEdit && await layer.setEditable(true)
     await this.mapControl.setAction(Action.SELECT)
