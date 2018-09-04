@@ -10,7 +10,7 @@ import { Container, BtnTwo } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 import styles from './styles'
-import { Action ,DatasetVectorInfo} from 'imobile_for_javascript'
+import { Action, DatasetVectorInfo } from 'imobile_for_javascript'
 
 export default class Add_Layer extends React.Component {
 
@@ -28,12 +28,23 @@ export default class Add_Layer extends React.Component {
     this.map = params.map
     this.dataset = params.dataset
     this.mapControl = params.mapControl
-    this.datasource=params.datasource
-    this.type=params.type
+    this.datasource = params.datasource
+    this.type = params.type
     this.state = {
       InputText: '',
+      showloading: false
     }
   }
+  componentDidMount() {
+    (async function () {
+      try {
+        this.container.setLoading(false)
+      } catch (error) {
+        this.container.setLoading(true)
+      }
+    }).bind(this)()
+  }
+
   _test_change = text => {
     this.setState({ InputText: text })
   }
@@ -44,10 +55,10 @@ export default class Add_Layer extends React.Component {
       Toast.show('请输入图层名称')
     }
     else {
-      let key=''
+      let key = ''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
-          key=this.routes[index+1].key
+          key = this.routes[index + 1].key
         }
       }
       await this._addlayer(key)
@@ -55,8 +66,12 @@ export default class Add_Layer extends React.Component {
   }
 
   _addlayer = async key => {
-
     let DatasetVectorInfomodule = new DatasetVectorInfo()
+    let isReadOnly=await this.datasource.isReadOnly()
+    if(isReadOnly){
+        Toast.show("此数据源为只可读文件")
+        return
+    }
     try {
       let layers = await this.map.getLayers()
       let count = await layers.getCount()
@@ -71,16 +86,15 @@ export default class Add_Layer extends React.Component {
       let datasetname = await datasets.getAvailableDatasetName(this.state.InputText)
       let datasetVectorInfo = await DatasetVectorInfomodule.createObjByNameType(datasetname, this.type)
       let datasetVector = await this.datasource.createDatasetVector(datasetVectorInfo)
-      let datasetVectorname= await datasetVector.getName()
-      let dataset= await datasets.get(datasetVectorname)
-      await this.map.addLayer(dataset,true)
+      let datasetVectorname = await datasetVector.getName()
+      let dataset = await datasets.get(datasetVectorname)
+      await this.map.addLayer(dataset, true)
       await (await layers.get(0)).setCaption(this.state.InputText)
       await this.mapControl.setAction(Action.SELECT)
       await this.map.refresh()
+      this.container.setLoading(true)
       Toast.show('新建图层成功')
-      setTimeout(() => {
-        this.props.navigation.goBack(key)
-      }, 1000)
+      this.props.navigation.goBack(key)
     } catch (error) {
       return error
     }
@@ -89,7 +103,9 @@ export default class Add_Layer extends React.Component {
   render() {
     return (
       <Container
+        ref={ref => this.container = ref}
         style={styles.container}
+        initWithLoading
         headerProps={{
           title: '新建图层',
           navigation: this.props.navigation,

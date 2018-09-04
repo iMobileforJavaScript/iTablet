@@ -523,7 +523,7 @@ public class VisualizationActivity extends Activity{
         map = mMapView.getMapControl().getMap();
         workspace = map.getWorkspace();
 
-        String path =  rootPath + "/iTablet/data/sample/DataVisualizationDemo/hotMap.smwu";
+        String path =  rootPath + "/iTablet/data/sample/hotMap/hotMap.smwu";
         WorkspaceConnectionInfo info = new WorkspaceConnectionInfo();
         info.setServer(path);
         info.setType(WorkspaceType.SMWU);
