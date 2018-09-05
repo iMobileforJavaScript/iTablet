@@ -18,8 +18,7 @@ export default class ExampleMapList extends React.Component {
     super(props)
     this.islogin = false
     this.unzip = true
-    this.end=false
-    this.downloading=false
+    this.downloaded=false
     this.progeress = 0
   }
 
@@ -29,16 +28,15 @@ export default class ExampleMapList extends React.Component {
       try {
         DeviceEventEmitter.addListener(Constans.ONLINE_SERVICE_DOWNLOADING, function (progeress) {
           if (progeress > 0 && progeress !== that.progeress) {
-              that.progeress = progeress
-              if(!that.end){
+              if(!that.downloaded){
+                that.progeress = progeress
                 GLOBAL.child.updateprogress(that.progeress)
-
               }
             if (that.progeress == 99) {
+              that.downloaded=true
               if (that.unzip) {
-                that.unzip = false
-                that.unZipFolder(that.zipfile, that.targetdir)   
-                that.end=true
+                that.unzip = false                    
+                that.unZipFolder(that.zipfile, that.targetdir)                 
               }
               return GLOBAL.child = '', that.progeress=0
             }
@@ -172,6 +170,8 @@ export default class ExampleMapList extends React.Component {
         this.targetdir = outPath
         this.zipfile = filePath
         GLOBAL.child = child
+        this.downloaded=false
+        this.unzip = true
         Alert.alert(
           "温馨提示",
           "本地实例文件不存在是否下载文件",
