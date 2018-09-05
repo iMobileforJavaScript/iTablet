@@ -79,10 +79,7 @@ export default class DataSourcelist extends React.Component {
   }
 
   _todataset = (w, m, d, n) => {
-     if(d.isReadOnly()){
-       Toast.show("数据源打开方式为只读")
-     }
-     else{
+
       NavigationService.navigate('DataSets', {
         workspace: w,
         map: m,
@@ -90,7 +87,7 @@ export default class DataSourcelist extends React.Component {
         name: n,
         mapControl: this.mapControl,
       })
-     }
+     
 
   }
 
