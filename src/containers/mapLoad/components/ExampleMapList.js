@@ -18,6 +18,8 @@ export default class ExampleMapList extends React.Component {
     super(props)
     this.islogin = false
     this.unzip = true
+    this.end=false
+    this.downloading=false
     this.progeress = 0
   }
 
@@ -27,15 +29,18 @@ export default class ExampleMapList extends React.Component {
       try {
         DeviceEventEmitter.addListener(Constans.ONLINE_SERVICE_DOWNLOADING, function (progeress) {
           if (progeress > 0 && progeress !== that.progeress) {
-            that.progeress = progeress
-            GLOBAL.child.updateprogress(that.progeress)
+              that.progeress = progeress
+              if(!that.end){
+                GLOBAL.child.updateprogress(that.progeress)
+
+              }
             if (that.progeress == 99) {
               if (that.unzip) {
                 that.unzip = false
-                that.unZipFolder(that.zipfile, that.targetdir)
-                GLOBAL.child = ''
+                that.unZipFolder(that.zipfile, that.targetdir)   
+                that.end=true
               }
-              return
+              return GLOBAL.child = '', that.progeress=0
             }
             console.log(that.progeress)
           }
@@ -73,6 +78,7 @@ export default class ExampleMapList extends React.Component {
         path = ConstPath.SampleDataPath + '/凯德Mall/凯德Mall.sxwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "/凯德Mall.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        openPath= await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)+'/凯德Mall/凯德Mall.smwu'
         fileName = "凯德Mall"
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
@@ -85,36 +91,39 @@ export default class ExampleMapList extends React.Component {
         path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "/MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        openPath= await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)+'/MaSai/MaSai.smwu'
         fileName = "MaSai"
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('Map3D', { path: path, isExample: true })
+          NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
           this.alertDown(filePath, fileName, outPath, child)
         }
         break
       case gl:
-        path = ConstPath.SampleDataPath + '/World/World.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "/World.zip"
+        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
+        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "/Changchun.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        fileName = "World"
+        openPath= await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)+'/Changchun/Changchun.smwu'
+        fileName = "Changchun"
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
-          NavigationService.navigate('MapView', { path: path, type: "", DSParams: { server: path, engineType: EngineType.UDB } })
+          NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB } ,isExample: true })
         } else {
           this.alertDown(filePath, fileName, outPath, child)
 
         }
         break
       default:
-        path = ConstPath.SampleDataPath + '/Changchun/Changchun.udb'
+        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "/Changchun.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        openPath= await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)+'/Changchun/Changchun.smwu'
         fileName = "Changchun"
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('MapView', { path: path, isExample: true })
+          NavigationService.navigate('MapView',{ path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB } ,isExample: true })
         } else {
           Toast.show("本地实例文件不存在")
         }
@@ -146,7 +155,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   alertDown = async (filePath, fileName, outPath, child) => {
-    if (this.progeress > 0) {
+    if (this.progeress>0) {
       Alert.alert(
         "温馨提示",
         "有文件正在下载中，请稍后下载",
@@ -169,6 +178,16 @@ export default class ExampleMapList extends React.Component {
           [
             { text: "确定", onPress: () => this.OnlineService.download(filePath, fileName) },
             { text: "取消", onPress: () => console.log('Pressde'), style: "cancel" },
+          ],
+          { cancelable: true }
+        )
+      }
+      else{
+        Alert.alert(
+          "温馨提示",
+          "下载失败，请检查网路",
+          [
+            { text: "确定", onPress: () =>{}},
           ],
           { cancelable: true }
         )

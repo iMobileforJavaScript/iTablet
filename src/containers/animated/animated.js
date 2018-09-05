@@ -86,16 +86,18 @@ export default class animated extends React.Component {
     constructor(props) {
     super(props);
     this.progress = new Animated.Value(0);
+    this.add=0
   }
 
-  static defaultProps = {
-    style: styles,
-    easing: Easing.inOut(Easing.ease)
-  }
+  // static defaultProps = {
+  //   style: styles,
+  //   // easing: Easing.inOut(Easing.ease)
+  // }
 
   update() {
+    this.add+=1
     Animated.spring(this.progress, {
-      toValue: 1
+      toValue: this.add/100
     }).start();
   }
 

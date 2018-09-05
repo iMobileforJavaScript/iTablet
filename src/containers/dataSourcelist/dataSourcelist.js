@@ -2,7 +2,7 @@ import React from 'react'
 import { View, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
 import { BtnOne } from '../../components'
 import { Container } from '../../components'
-import { scaleSize } from '../../utils'
+import { scaleSize, Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 const src = require('../../assets/map/icon-new-datasource.png')
 const Fileicon = require('../../assets/public/icon-file.png')
@@ -34,7 +34,7 @@ export default class DataSourcelist extends React.Component {
   }
 
   _click_newdatasource = () => {
-    NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl})
+    NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,cb:this._adddata})
   }
 
   _adddata = async () => {
@@ -78,14 +78,20 @@ export default class DataSourcelist extends React.Component {
     // }
   }
 
-  _todataset = (w, m, p, n) => {
-    NavigationService.navigate('DataSets', {
-      workspace: w,
-      map: m,
-      datasource: p,
-      name: n,
-      mapControl: this.mapControl,
-    })
+  _todataset = (w, m, d, n) => {
+     if(d.isReadOnly()){
+       Toast.show("数据源打开方式为只读")
+     }
+     else{
+      NavigationService.navigate('DataSets', {
+        workspace: w,
+        map: m,
+        datasource: d,
+        name: n,
+        mapControl: this.mapControl,
+      })
+     }
+
   }
 
   _renderItem = ({ item }) => {
