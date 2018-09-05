@@ -110,10 +110,10 @@ export default class ExampleMapList extends React.Component {
   }
 
 
-  downfile = async (path, username, passworld, filename) => {
+  downfile = async (path, username, password, filename) => {
     try {
       let OnlineServiceMoudule = new OnlineService()
-      let result = await OnlineServiceMoudule.downLoad(path, username, passworld, filename)
+      let result = await OnlineServiceMoudule.downLoad(path, filename)
     } catch (error) {
       console.log(error)
     }

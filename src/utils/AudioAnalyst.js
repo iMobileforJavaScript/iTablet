@@ -1,5 +1,5 @@
 import NavigationService from '../containers/NavigationService'
-import { ConstOnline, Const, AudioKeywords } from '../constains'
+import { ConstOnline, AudioKeywords } from '../constains'
 import { Toast, dataUtil } from '../utils'
 import {
   Action,
