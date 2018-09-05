@@ -1,8 +1,8 @@
 /*
-  Copyright © SuperMap. All rights reserved.
-  Author: Wang zihao
-  E-mail: zihaowang5325@qq.com
-*/
+ Copyright © SuperMap. All rights reserved.
+ Author: Wang zihao
+ E-mail: zihaowang5325@qq.com
+ */
 import * as React from 'react'
 import { View } from 'react-native'
 import BorderInput from '../../containers/register&getBack/border_input'
@@ -32,9 +32,10 @@ export default class Add_Layer extends React.Component {
     this.type = params.type
     this.state = {
       InputText: '',
-      showloading: false
+      showloading: false,
     }
   }
+
   componentDidMount() {
     (async function () {
       try {
@@ -67,10 +68,10 @@ export default class Add_Layer extends React.Component {
 
   _addlayer = async key => {
     let DatasetVectorInfomodule = new DatasetVectorInfo()
-    let isReadOnly=await this.datasource.isReadOnly()
-    if(isReadOnly){
-        Toast.show("此数据源为只可读文件")
-        return
+    let isReadOnly = await this.datasource.isReadOnly()
+    if (isReadOnly) {
+      Toast.show("此数据源为只可读文件")
+      return
     }
     try {
       let layers = await this.map.getLayers()
@@ -111,10 +112,10 @@ export default class Add_Layer extends React.Component {
           navigation: this.props.navigation,
         }}>
         <View style={styles.sup}>
-          <BorderInput placeholder='请输入图层名称' textChange={this._test_change} />
+          <BorderInput placeholder='请输入图层名称' textChange={this._test_change}/>
         </View>
         <View style={styles.sup}>
-          <BtnTwo text='确定' btnClick={this._OK} />
+          <BtnTwo text='确定' btnClick={this._OK}/>
         </View>
       </Container>
     )
