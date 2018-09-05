@@ -87,6 +87,10 @@ function check() {
 }
 
 async function longPressHandler(event) {
+  if (!mTrackingLayer) {
+    Toast.show('请加载分析图层')
+    return
+  }
   if (!longPressEnable) return // 防止重复点击
   longPressEnable = false
   try {

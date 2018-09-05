@@ -1,5 +1,5 @@
 import { StackNavigator } from 'react-navigation'
-
+import animated from './animated'
 import Tabs from './tabs'
 //主页
 import MapLoad from './mapLoad'
@@ -227,7 +227,14 @@ export default StackNavigator({
       header:null,
     },
   },
-},{
+  animated:{
+    screen: animated,
+    navigationOptions: {
+      header: null,
+    },
+  },
+},
+{
   navigationOptions: {
     headerBackTitle: null,
     headerTintColor: '#333333',

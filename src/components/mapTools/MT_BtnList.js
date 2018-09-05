@@ -2,7 +2,9 @@ import * as React from 'react'
 import { View, StyleSheet, FlatList } from 'react-native'
 import { constUtil, scaleSize, Toast } from '../../utils'
 import { ListSeparator } from '../../components'
+import { Const } from '../../constains'
 import PropTypes from 'prop-types'
+import { Action } from 'imobile_for_javascript'
 
 import MT_Btn from './MT_Btn'
 
@@ -11,13 +13,13 @@ const ITEM_HEIGHT = 0.75 * 1.4 * 0.1 * WIDTH
 const ITEM_WIDTH = ITEM_HEIGHT
 const BORDERCOLOR = constUtil.USUAL_SEPARATORCOLOR
 
-const ADD_LAYER = 'add_layer'
-const COLLECTION = 'collection'
-const DATA_EDIT = 'data_edit'
-const MAP_MANAGER = 'map_manager'
-const DATA_MANAGER = 'data_manager'
-const ANALYST = 'analyst'
-const TOOLS = 'tools'
+// const ADD_LAYER = 'add_layer'
+// const COLLECTION = 'collection'
+// const DATA_EDIT = 'data_edit'
+// const MAP_MANAGER = 'map_manager'
+// const DATA_MANAGER = 'data_manager'
+// const ANALYST = 'analyst'
+// const TOOLS = 'tools'
 
 let show = false
 let oldPress = null
@@ -36,8 +38,10 @@ export default class MT_BtnList extends React.Component {
     dataManager: PropTypes.func,
     addLayer: PropTypes.func,
     chooseLayer: PropTypes.func,
+    setEditLayer: PropTypes.func,
     editLayer: PropTypes.any,
     style: PropTypes.any,
+    mapControl: PropTypes.any,
     hidden: PropTypes.bool,
   }
 
@@ -66,10 +70,11 @@ export default class MT_BtnList extends React.Component {
   }
 
   _showManager = newPress => {
+    GLOBAL.toolType = newPress
     if (oldPress && (oldPress === newPress)) {
       show = !show
     } else if (
-      (newPress === ADD_LAYER || newPress === MAP_MANAGER || newPress === DATA_MANAGER)
+      (newPress === Const.ADD_LAYER || newPress === Const.MAP_MANAGER || newPress === Const.DATA_MANAGER)
       && show
     ) {
       show = false
@@ -82,21 +87,43 @@ export default class MT_BtnList extends React.Component {
     }
   }
 
+  /**
+   * 设置可编辑图层的可编辑状态
+   * 除了数据编辑和地图管理之外，其余操作可编辑图层时，均为不可编辑状态
+   * @param editable
+   * @returns {Promise.<void>}
+   */
+  setLayerEditable = async (editable = false) => {
+    if (!this.props.editLayer.id) return
+    if (this.props.editLayer.isEditable !== editable) {
+      await this.props.editLayer.layer.setEditable(editable)
+      let newLayer = this.props.editLayer
+      newLayer.isEditable = await this.props.editLayer.layer.getEditable()
+
+      if (GLOBAL.toolType !== Const.DATA_EDIT) {
+        await this.props.mapControl.setAction(Action.SELECT)
+      }
+
+      this.props.setEditLayer(newLayer)
+    }
+  }
+
   _addLayer = () => {
-    this._showManager(ADD_LAYER)
+    this._showManager(Const.ADD_LAYER)
     this.props.POP_List && this.props.POP_List(false, null)
     this.props.addLayer && this.props.addLayer()
   }
 
-  _dataCollection = () => {
-    this._showManager(COLLECTION)
+  _dataCollection = async () => {
+    await this.setLayerEditable(false)
+    this._showManager(Const.COLLECTION)
     if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
       this.props.POP_List && this.props.POP_List(show, type)
       let name = this.props.editLayer ? this.props.editLayer.name : ''
-      show && name && Toast.show('当前可编辑的图层为\n' + name)
+      show && name && Toast.show('当前采集图层为\n' + name)
     } else {
       this.props.POP_List && this.props.POP_List(false, null)
-      this.props.chooseLayer && this.props.chooseLayer(-1, true, isShow => { // 传 -1 查询所有类型的图层
+      this.props.chooseLayer && this.props.chooseLayer(-1, false, isShow => { // 传 -1 查询所有类型的图层
         if (this.props.POP_List) {
           this.props.POP_List(isShow, type)
         }
@@ -104,32 +131,35 @@ export default class MT_BtnList extends React.Component {
     }
   }
 
-  _dataEdit = () => {
-    this._showManager(DATA_EDIT)
-    let name = this.props.editLayer ? this.props.editLayer.name : ''
+  _dataEdit = async () => {
+    let name = this.props.editLayer.name ? this.props.editLayer.name : ''
+    await this.setLayerEditable(true)
+    this._showManager(Const.DATA_EDIT)
     show && name && Toast.show('当前可编辑的图层为\n' + name)
     this.props.POP_List && this.props.POP_List(show, type)
   }
 
-  _layerManager = () => {
-    this._showManager(MAP_MANAGER)
+  _layerManager = async () => {
+    await this.setLayerEditable(true)
+    this._showManager(Const.MAP_MANAGER)
     this.props.POP_List && this.props.POP_List(false, null)
     this.props.layerManager && this.props.layerManager()
   }
 
   _dataManager = () => {
-    this._showManager(DATA_MANAGER)
+    this._showManager(Const.DATA_MANAGER)
     this.props.POP_List && this.props.POP_List(false, null)
     this.props.dataManager && this.props.dataManager()
   }
 
-  _analyst = () => {
-    this._showManager(ANALYST)
+  _analyst = async () => {
+    await this.setLayerEditable(false)
+    this._showManager(Const.ANALYST)
     this.props.POP_List && this.props.POP_List(show, type)
   }
 
   _tools = () => {
-    this._showManager(TOOLS)
+    this._showManager(Const.TOOLS)
     this.props.POP_List && this.props.POP_List(show, type)
   }
 
@@ -169,15 +199,15 @@ export default class MT_BtnList extends React.Component {
   }
 }
 
-MT_BtnList.Operation = {
-  ADD_LAYER: 'add_layer',
-  COLLECTION: 'collection',
-  DATA_EDIT: 'data_edit',
-  MAP_MANAGER: 'map_manager',
-  DATA_MANAGER: 'data_manager',
-  ANALYST: 'analyst',
-  TOOLS: 'tools',
-}
+// MT_BtnList.Operation = {
+//   ADD_LAYER: 'add_layer',
+//   COLLECTION: 'collection',
+//   DATA_EDIT: 'data_edit',
+//   MAP_MANAGER: 'map_manager',
+//   DATA_MANAGER: 'data_manager',
+//   ANALYST: 'analyst',
+//   TOOLS: 'tools',
+// }
 
 const styles = StyleSheet.create({
   item: {

@@ -84,6 +84,7 @@ export default class ChooseEditLayer extends React.Component {
     }
     await layer.setSelectable(true)
     this.isEdit && await layer.setEditable(true)
+    this.currentItem.isEditable = await layer.getEditable()
     await this.mapControl.setAction(Action.SELECT)
     this.props.setEditLayer(this.currentItem)
     this.container.setLoading(false)

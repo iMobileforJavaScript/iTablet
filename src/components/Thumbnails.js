@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Image } from 'react-native'
+import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Image} from 'react-native'
 import { scaleSize } from '../utils'
 import { size } from '../styles'
+import { Progress} from '../components'
 const SCREEN_WIDTH = Dimensions.get('window').width
 const ITEM_WIDTH = SCREEN_WIDTH * 0.5 - 10
 const IMAGE_WIDTH = ITEM_WIDTH - 20
 const imageBrokenPath = require('../assets/public/default-map.png')
-
 export default class Thumbnails extends React.Component {
 
   props: {
@@ -15,20 +15,34 @@ export default class Thumbnails extends React.Component {
     title: string,
     resizeMode: string,
     btnClick: () => {},
+    progress:any,
+    processcb:any,
   }
 
   static defaultProps: {
     resizeMode: 'stretch',
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
+    this.state={
+      opacity:1,
+    }
+
+  }
+  updateprogress=data=>{
+    if(data===99){
+      data++
+      this.setState({opacity:0})
+    }
+    this.mProgress.progress=data/100
+    console.log(this.mProgress.progress)
   }
 
   render() {
     let image
     if (this.props.src && typeof this.props.src === 'string') {
-      image = {uri: this.props.src}
+      image = { uri: this.props.src }
     } else if (this.props.src) {
       image = this.props.src
     } else {
@@ -38,7 +52,8 @@ export default class Thumbnails extends React.Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity accessible={true} accessibilityLabel={this.props.title ? this.props.title : '默认标题'} activeOpacity={0.8} style={styles.subContainer} onPress={this.props.btnClick} underlayColor={'rgba(34,26,38,0.1)'}>
-          <Image resizeMode={this.props.resizeMode} style={[styles.image, this.props.imageStyle]} source={image}/>
+          <Progress ref={ref=>this.mProgress=ref} style={[styles.animatedView,{opacity:this.state.opacity}]} progressAniDuration={0} progressColor={"#1296db"} />
+          <Image resizeMode={this.props.resizeMode} style={[styles.image, this.props.imageStyle]} source={image} />
           <View style={styles.textView}>
             <Text numberOfLines={1} style={styles.title}>{this.props.title ? this.props.title : '默认标题'}</Text>
           </View>
@@ -50,7 +65,6 @@ export default class Thumbnails extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    // height: ITEM_WIDTH * 0.7,
     width: ITEM_WIDTH,
     backgroundColor: 'transparent',
     justifyContent: 'center',
@@ -59,9 +73,7 @@ const styles = StyleSheet.create({
   },
   subContainer: {
     flexDirection: 'column',
-    // alignItems: 'space-between',
     justifyContent: 'space-between',
-    // height: IMAGE_WIDTH * 0.8,
     width: IMAGE_WIDTH,
     backgroundColor: 'white',
     borderRadius: 4,
@@ -69,12 +81,7 @@ const styles = StyleSheet.create({
   image: {
     height: IMAGE_WIDTH * 0.6,
     width: IMAGE_WIDTH,
-    // borderTopLeftRadius: 4,
-    // borderTopRightRadius: 4,
-    // borderColor: 'rgba(59,55,56,0.3)',
-    // borderWidth: 1,
     alignSelf: 'center',
-    // marginTop: 3,
   },
   textView: {
     height: scaleSize(40),
@@ -83,6 +90,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: size.fontSize.fontSizeSm,
-    textAlign:'center',
+    textAlign: 'center',
+  },
+  animatedView:{
+    position:'absolute',
+    top:IMAGE_WIDTH * 0.6-scaleSize(8),
+    left:0,
+    zIndex:1,
   },
 })

@@ -4,6 +4,7 @@ import NavigationService from '../../../NavigationService'
 import { Thumbnails, EmptyView } from '../../../../components'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
+import { Const } from '../../../../constains'
 import MapView from '../../../mapView'
 
 export default class HomeUsualMap extends React.Component {
@@ -17,7 +18,7 @@ export default class HomeUsualMap extends React.Component {
   }
 
   _btnClick = obj => {
-    if (obj.type === MapView.Type.MAP_3D) {
+    if (obj.type === Const.MAP_3D) {
       NavigationService.navigate('Map3D', { data: obj, type: obj.type, path: obj.path, manageAble: true })
     } else {
       NavigationService.navigate('MapView', obj)

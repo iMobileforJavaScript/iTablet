@@ -10,6 +10,7 @@ import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
 import { Toast, AudioAnalyst } from '../../utils'
+import { Const } from '../../constains'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'
@@ -252,8 +253,19 @@ export default class MapView extends React.Component {
     event.layer.getName().then(async name => {
       let editable = await event.layer.getEditable()
       Toast.show('选中 ' + name)
-      Object.assign(event, { name: name, editable })
+      Object.assign(event, { name: name, editable, geoID: event.id })
       layerSelectable && this.props.setSelection(event)
+      // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
+      // if (
+      //   this.mapControl && this.props.selection
+      //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
+      // ) {
+      //   let action = await this.mapControl.getAction()
+      //   action === 'SELECT'
+      //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
+      //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
+      //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
+      // }
     })
   }
 
@@ -416,6 +428,8 @@ export default class MapView extends React.Component {
 
         await this.workspace.open(this.path)
         await this.map.setWorkspace(this.workspace)
+        let count=await  (await this.workspace.getMaps()).getCount()
+        console.log(count)
         this.mapName = await this.workspace.getMapName(0)
 
         if (this.mapName) {
@@ -561,6 +575,8 @@ export default class MapView extends React.Component {
           addLayer={this._addLayer}
           chooseLayer={this._chooseLayer}
           editLayer={this.props.editLayer}
+          setEditLayer={this.props.setEditLayer}
+          mapControl={this.mapControl}
         />
         {
           !this.isExample &&
@@ -593,12 +609,12 @@ export default class MapView extends React.Component {
   }
 }
 
-MapView.Type = {
-  TD: 'TD',
-  Baidu: 'Baidu',
-  Google: 'Google',
-  OSM: 'OSM',
-  ONLINE: 'ONLINE',
-  LOCAL: 'LOCAL',
-  MAP_3D: 'MAP_3D',
-}
+// MapView.Type = {
+//   TD: 'TD',
+//   Baidu: 'Baidu',
+//   Google: 'Google',
+//   OSM: 'OSM',
+//   ONLINE: 'ONLINE',
+//   LOCAL: 'LOCAL',
+//   MAP_3D: 'MAP_3D',
+// }
