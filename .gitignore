@@ -14,5 +14,7 @@ ios/iPhoneSimulator.sdk
 ios/MessageQueue.sdk
 ios/iTablet-tvOS
 ios/iTablet-tvOSTests
+ios/Build
+ios/Index
 
 

@@ -30,7 +30,7 @@ export default class ExampleMapList extends React.Component {
         DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async function (progeress) {
           if (progeress > 0 && progeress !== that.progeress) {
             if (!that.downloaded) {
-              let downitem = await this.getDownitem(GLOBAL.downitemname)
+              let downitem = await that.getDownitem(GLOBAL.downitemname)
               that.progeress = progeress
               downitem.updateprogress(that.progeress)
             }
@@ -202,9 +202,9 @@ export default class ExampleMapList extends React.Component {
     item = { name: key, ref: child }
     this.downlist.push(item)
   }
-  getDownitem = (id) => {
-    for (let index = 0; index < this.downlist; index++) {
-      if (id === this.downlist[index].id) {
+  getDownitem = (key) => {
+    for (let index = 0; index < this.downlist.length; index++) {
+      if (key === this.downlist[index].name) {
         return this.downlist[index].ref
       }
     }

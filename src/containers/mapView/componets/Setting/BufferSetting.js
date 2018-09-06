@@ -64,7 +64,7 @@ export default class BufferSetting extends React.Component {
 
   confirm = () => {
     (async function() {
-      let layer = await this.props.map.getLayer(this.state.selectedLayer.layerName)
+      let layer = await this.props.map.getLayer(this.state.selectedLayer.name)
       await layer.setSelectable(true)
       this.props.setBufferSetting && this.props.setBufferSetting(this.getData())
       this.props.mapControl.setAction(Action.SELECT)
@@ -141,6 +141,7 @@ export default class BufferSetting extends React.Component {
         workspace={this.props.workspace}
         getDataset={this.getDataset}
         setLoading={this.props.setLoading}
+        listType={'layer'}
       />
     )
   }
