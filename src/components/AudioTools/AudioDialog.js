@@ -91,7 +91,7 @@ export default class AudioDialog extends PureComponent {
             console.log('onVolumeChanged')
           },
           onError: e => {
-            Toast.show(e)
+            // Toast.show(e)
             this.setState({
               recording: false,
             })
@@ -108,7 +108,6 @@ export default class AudioDialog extends PureComponent {
                 recording: !isLast,
               })
             }
-            console.log(isLast + '-result: ' + info)
           },
         })
       } catch (e) {

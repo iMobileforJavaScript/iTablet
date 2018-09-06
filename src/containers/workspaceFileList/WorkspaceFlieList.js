@@ -135,7 +135,8 @@ export default class WorkSpaceFileList extends Component {
         this.mapName = await this.workspace.getMapName(0)
         await this.map.open(this.mapName)
         await this.map.viewEntire()
-        await this.mapControl.setAction(Action.SELECT)
+        // await this.mapControl.setAction(Action.SELECT)
+        await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
         NavigationService.goBack(key)
       }

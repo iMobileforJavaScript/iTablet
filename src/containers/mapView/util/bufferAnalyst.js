@@ -1,17 +1,13 @@
 import { Toast } from '../../../utils'
 import {
-  DatasetType,
-  GeoRegion,
   GeoStyle,
   Size2D,
   BufferAnalystGeometry,
   BufferAnalystParameter,
-  DatasetVectorInfo,
-  CursorType,
 } from 'imobile_for_javascript'
 
 async function analyst(data) {
-  let { layer, bufferSetting, workspace, map } = data
+  let { layer, bufferSetting, map } = data
   if (!layer) {
     Toast.show('请选择分析对象')
     return
@@ -37,7 +33,6 @@ async function analyst(data) {
     // let recordset = await datasetVector.getRecordset(false, CursorType.DYNAMIC)
     let isEOF = await queryRecordset.isEOF()
     while (!isEOF) {
-      debugger
       let bufferAnalystParameter = await new BufferAnalystParameter().createObj()
       await bufferAnalystParameter.setEndType(bufferSetting.endType)
       await bufferAnalystParameter.setLeftDistance(bufferSetting.distance)

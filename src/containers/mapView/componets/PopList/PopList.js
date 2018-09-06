@@ -110,6 +110,8 @@ export default class PopList extends React.Component {
   /** 选择 **/
   select = async () => {
     await this.props.mapControl.setAction(Action.SELECT)
+    // await this.props.mapControl.setAction(Action.VERTEXEDIT)
+    await this.props.setSelection()
   }
 
   /** 添加节点 **/
@@ -209,7 +211,8 @@ export default class PopList extends React.Component {
   /** 切割面 **/
   splitRegion = async ({callback = () => {}}) => {
     this.operationCallback = callback
-    if (this.checkSelection() && callback && callback()) {
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
       await this.props.mapControl.setAction(Action.SPLIT_BY_LINE)
     } else {
       await this.select()
@@ -221,7 +224,8 @@ export default class PopList extends React.Component {
   merge = async ({callback = () => {}}) => {
     // this.selectSubOperation(constants.MERGE)
     this.operationCallback = callback
-    if (this.checkSelection() && callback && callback()) {
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
       await this.props.mapControl.setAction(Action.UNION_REGION)
     } else {
       await this.select()
@@ -231,7 +235,8 @@ export default class PopList extends React.Component {
   /** 生成岛洞 **/
   composeHollowRegion = async ({callback = () => {}}) => {
     this.operationCallback = callback
-    if (this.checkSelection() && callback && callback()) {
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
       await this.props.mapControl.setAction(Action.COMPOSE_HOLLOW_REGION)
     } else {
       await this.select()
@@ -242,7 +247,8 @@ export default class PopList extends React.Component {
   /** 手绘岛洞 **/
   drawHollowRegion = async ({callback = () => {}}) => {
     this.operationCallback = callback
-    if (this.checkSelection() && callback && callback()) {
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
       await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
     } else {
       await this.select()
@@ -253,7 +259,8 @@ export default class PopList extends React.Component {
   /** 填充岛洞 **/
   fillHollowRegion = async ({callback = () => {}}) => {
     this.operationCallback = callback
-    if (this.checkSelection() && callback && callback()) {
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
       await this.props.mapControl.setAction(Action.FILL_HOLLOW_REGION)
     } else {
       await this.select()
@@ -343,7 +350,7 @@ export default class PopList extends React.Component {
     this.cbData.callback && this.cbData.callback(true)
     // this.props.chooseLayer && this.props.chooseLayer(DatasetType.LINE)
     this.setState({
-      data: this.getData(MTBtnList.Operation.ANALYST),
+      data: this.getData(Const.ANALYST),
       subPopShow: true,
     })
   }
@@ -440,7 +447,7 @@ export default class PopList extends React.Component {
   getData = type => {
     let data = []
     switch (type || this.props.popType) {
-      case MTBtnList.Operation.DATA_EDIT:
+      case Const.DATA_EDIT:
         data = [
           {
             key: '点编辑',
@@ -462,7 +469,8 @@ export default class PopList extends React.Component {
               { key: constants.SUBMIT, action: this.submit }, { key: constants.DELETE, action: this.delete },
               { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
               { key: constants.ADD_NODE, action: this.addNode }, { key: constants.DELETE_NODE, action: this.deleteNode },
-              { key: constants.EDIT_NODE, action: this.editNode }, { key: constants.BREAK, action: this.break },
+              { key: constants.EDIT_NODE, action: this.editNode },
+              // { key: constants.BREAK, action: this.break },
               { key: constants.ATTRIBUTE, action: this.attribute }],
           },
           {
@@ -493,7 +501,7 @@ export default class PopList extends React.Component {
           },
         ]
         break
-      case MTBtnList.Operation.ANALYST:
+      case Const.ANALYST:
         data = [
           {
             key: '缓冲区分析',
@@ -523,9 +531,9 @@ export default class PopList extends React.Component {
           },
         ]
         break
-      case MTBtnList.Operation.COLLECTION:
+      case Const.COLLECTION:
         break
-      case MTBtnList.Operation.TOOLS:
+      case Const.TOOLS:
         data = [{ key: '量算', action: this.showMeasure }]
         break
     }
@@ -569,9 +577,9 @@ export default class PopList extends React.Component {
 
   render() {
     let currentData = {}
-    if (this.props.popType === MTBtnList.Operation.DATA_EDIT) {
+    if (this.props.popType === Const.DATA_EDIT) {
       currentData = this.props.editLayer
-    } else if (this.props.popType === MTBtnList.Operation.COLLECTION) {
+    } else if (this.props.popType === Const.COLLECTION) {
       return (
         <CollectionToolBar
           popType={this.state.networkType}
@@ -624,10 +632,10 @@ export default class PopList extends React.Component {
       return (
         <View style={styles.popView}>
           {
-            this.props.popType === MTBtnList.Operation.DATA_EDIT &&
+            this.props.popType === Const.DATA_EDIT &&
             <MTBtn
               style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
-              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={() => this._changeLayer(MTBtnList.Operation.DATA_EDIT)}/>
+              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={() => this._changeLayer(Const.DATA_EDIT)}/>
           }
           <PopBtnSectionList
             ref={ref => this.popList = ref}

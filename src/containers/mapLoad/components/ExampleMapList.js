@@ -6,7 +6,7 @@ import NavigationService from '../../../containers/NavigationService'
 import Thumbnails from '../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
-import { ConstPath, Constans } from '../../../constains'
+import { ConstPath, EventConst } from '../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
@@ -20,45 +20,47 @@ export default class ExampleMapList extends React.Component {
     this.unzip = true
     this.downloaded = false
     this.progeress = 0
+    this.downlist = []
   }
 
   componentDidMount() {
     (async function () {
       let that = this
       try {
-        DeviceEventEmitter.addListener(Constans.ONLINE_SERVICE_DOWNLOADING, function (progeress) {
+        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async function (progeress) {
           if (progeress > 0 && progeress !== that.progeress) {
             if (!that.downloaded) {
+              let downitem = await this.getDownitem(GLOBAL.downitemname)
               that.progeress = progeress
-              GLOBAL.child.updateprogress(that.progeress)
+              downitem.updateprogress(that.progeress)
             }
             if (that.progeress == 99) {
               that.downloaded = true
               if (that.unzip) {
                 that.unzip = false
-                that.unZipFolder(that.zipfile, that.targetdir)
+                await that.unZipFolder(that.zipfile, that.targetdir)
+                GLOBAL.downitemname = ''
+                that.progeress = 0
               }
-              return GLOBAL.child = '', that.progeress = 0
             }
-            console.log(that.progeress)
           }
-
         })
-        // DeviceEventEmitter.addListener(Constans.ONLINE_SERVICE_DOWNLOADED, function (result) {
+        // DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, function (result) {
         //    if(result){
         //      result=false
         //      that.unZipFolder(that.zipfile,that.targetdir)
         //      return
         //    }
         // })
+        console.log(this.downlist)
       } catch (error) {
-        console.log(error)
+        Toast.show('下载失败')
       }
     }).bind(this)()
   }
 
-  _itemClick = async (key, child) => {
-    let path, exist, filePath, outPath,fileName
+  _itemClick = async (key) => {
+    let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
@@ -69,7 +71,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
-          this.alertDown(filePath, fileName, outPath, child)
+          this.alertDown(filePath, fileName, outPath, vectorMap)
         }
         break
       case map3D:
@@ -82,7 +84,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: path, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, child)
+          this.alertDown(filePath, fileName, outPath, map3D)
         }
         break
       case ObliquePhoto:
@@ -109,7 +111,7 @@ export default class ExampleMapList extends React.Component {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, child)
+          this.alertDown(filePath, fileName, outPath, gl)
 
         }
         break
@@ -152,7 +154,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  alertDown = async (filePath, fileName, outPath, child) => {
+  alertDown = async (filePath, fileName, outPath, key) => {
     if (this.progeress > 0) {
       Alert.alert(
         "温馨提示",
@@ -169,7 +171,7 @@ export default class ExampleMapList extends React.Component {
       if (result) {
         this.targetdir = outPath
         this.zipfile = filePath
-        GLOBAL.child = child
+        GLOBAL.downitemname = key
         this.downloaded = false
         this.unzip = true
         Alert.alert(
@@ -196,10 +198,20 @@ export default class ExampleMapList extends React.Component {
 
   }
 
+  downList = (child, key) => {
+    item = { name: key, ref: child }
+    this.downlist.push(item)
+  }
+  getDownitem = (id) => {
+    for (let index = 0; index < this.downlist; index++) {
+      if (id === this.downlist[index].id) {
+        return this.downlist[index].ref
+      }
+    }
+  }
   _renderItem = ({ item }) => {
     let key = item.key
     let src = defalutImageSrc
-    let child
     switch (key) {
       case vectorMap:
         src = require('../../../assets/public/beijing.png')
@@ -215,7 +227,7 @@ export default class ExampleMapList extends React.Component {
         break
     }
     return (
-      <Thumbnails ref={ref => child = ref} title={key} src={src} btnClick={() => this._itemClick(key, child)} />
+      <Thumbnails ref={ref => this.downList(ref, key)} title={key} src={src} btnClick={() => this._itemClick(key)} />
     )
   }
 
