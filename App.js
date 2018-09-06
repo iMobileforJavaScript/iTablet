@@ -85,7 +85,7 @@ class AppRoot extends Component {
     try {
       let paths = [
         ConstPath.AppPath, ConstPath.LicensePath, ConstPath.LocalDataPath,
-        ConstPath.SampleDataPath, ConstPath.UserPath,
+        ConstPath.SampleDataPath, ConstPath.UserPath, ConstPath.Audio,
       ]
       let isCreate = false, absolutePath = ''
       for (let i = 0; i < paths.length; i++) {
