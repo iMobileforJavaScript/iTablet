@@ -68,7 +68,7 @@ class AppRoot extends Component {
             this.props.user.currentUser.userName,
             this.props.user.currentUser.password,
           )
-          if (typeof result !== 'boolean' && result) {
+          if (!(typeof result === 'boolean' && result)) {
             Toast.show('请重新登录')
             this.props.setUser({
               userName: '',

@@ -12,6 +12,7 @@ import { Container, TextBtn, BtnTwo } from '../../../components'
 import Input from './Input'
 import Tips from './Tips'
 import { OnlineService } from 'imobile_for_javascript'
+import forge from 'node-forge'
 
 const BGCOLOR = constUtil.USUAL_GREEN
 
@@ -49,9 +50,11 @@ export default class Login extends React.Component {
     this.container.setLoading(false)
     if (typeof result === 'boolean' && result) {
       Toast.show('登录成功')
+      let md = forge.md.md5.create()
+      md.update(password)
       this.props.setUser({
         userName: userName,
-        password: password,
+        password: md.digest().toHex(),
       })
     } else {
       this.props.setUser({

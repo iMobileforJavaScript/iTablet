@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 
 import styles from './styles'
 
@@ -27,20 +27,26 @@ export default class Button extends PureComponent {
   constructor(props) {
     super(props)
   }
-  
+
   action = () => {
     this.props.onPress && this.props.onPress()
   }
 
   render() {
-    let color
+    let color, textColor
     switch (this.props.type) {
       case 'GRAY':
         color = styles.gray
+        textColor = 'white'
+        break
+      case 'RED':
+        color = styles.red
+        textColor = 'white'
         break
       case 'BLUE':
       default:
         color = styles.blue
+        textColor = 'white'
         break
     }
     return (
@@ -51,7 +57,7 @@ export default class Button extends PureComponent {
         style={[styles.baseStyle, color, this.props.style]}
         onPress={this.action}
       >
-        <Text style={[styles.btnTitle, this.props.titleStyle]}>{this.props.title}</Text>
+        <Text style={[styles.btnTitle, textColor && {color: textColor}, this.props.titleStyle]}>{this.props.title}</Text>
       </TouchableOpacity>
     )
   }
@@ -59,5 +65,6 @@ export default class Button extends PureComponent {
 
 Button.Type = {
   BLUE: 'BLUE',
+  RED: 'RED',
   GRAY: 'GRAY',
 }
