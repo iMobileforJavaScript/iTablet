@@ -232,14 +232,35 @@ export default class PopList extends React.Component {
     }
   }
 
-  /** 生成岛洞 **/
+  /** 擦除面 **/
   eraseRegion = async ({callback = () => {}}) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
-      // await this.props.mapControl.setAction(Action.DRAW_HOLLOW_REGION)
       await this.props.mapControl.setAction(Action.ERASE_REGION)
-      // await this.props.mapControl.setAction(Action.SPLIT_BY_REGION)
+    } else {
+      await this.select()
+    }
+  }
+
+  /** 手绘擦除面 **/
+  drawRegionEraseRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
+      await this.props.mapControl.setAction(Action.DRAWREGION_ERASE_REGION)
+    } else {
+      await this.select()
+    }
+    // this.selectSubOperation(constants.DRAW_HOLLOW_REGION)
+  }
+
+  /** 生成岛洞 **/
+  drawHollowRegion = async ({callback = () => {}}) => {
+    this.operationCallback = callback
+    // if (this.checkSelection() && callback && callback()) {
+    if (callback && callback()) {
+      await this.props.mapControl.setAction(Action.DRAW_HOLLOW_REGION)
     } else {
       await this.select()
     }
@@ -247,13 +268,11 @@ export default class PopList extends React.Component {
   }
 
   /** 手绘岛洞 **/
-  drawRegionEraseRegion = async ({callback = () => {}}) => {
+  drawRegionHollowRegion = async ({callback = () => {}}) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
-      // await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
-      // await this.props.mapControl.setAction(Action.SPLIT_BY_DRAWREGION)
-      await this.props.mapControl.setAction(Action.DRAWREGION_ERASE_REGION)
+      await this.props.mapControl.setAction(Action.DRAWREGION_HOLLOW_REGION)
     } else {
       await this.select()
     }
@@ -487,8 +506,9 @@ export default class PopList extends React.Component {
               { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
               { key: constants.ADD_NODE, action: this.addNode }, { key: constants.DELETE_NODE, action: this.deleteNode },
               { key: constants.EDIT_NODE, action: this.editNode }, { key: constants.SPLIT_REGION, action: this.splitRegion },
-              { key: constants.MERGE, action: this.merge }, { key: constants.COMPOSE_HOLLOW_REGION, action: this.eraseRegion },
-              { key: constants.DRAW_HOLLOW_REGION, action: this.drawRegionEraseRegion }, { key: constants.FILL_HOLLOW_REGION, action: this.fillHollowRegion },
+              { key: constants.MERGE, action: this.merge }, { key: constants.ERASE_REGION, action: this.eraseRegion },
+              { key: constants.DRAWREGION_ERASE_REGION, action: this.drawRegionEraseRegion }, { key: constants.DRAW_HOLLOW_REGION, action: this.drawHollowRegion },
+              { key: constants.DRAWREGION_HOLLOW_REGION, action: this.drawRegionHollowRegion }, { key: constants.FILL_HOLLOW_REGION, action: this.fillHollowRegion },
               { key: constants.PATCH_HOLLOW_REGION, action: this.patchHollowRegion }, { key: constants.ATTRIBUTE, action: this.attribute },
             ],
           },
