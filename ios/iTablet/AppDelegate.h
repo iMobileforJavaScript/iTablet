@@ -13,5 +13,6 @@
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UINavigationController *nav;
+@property (nonatomic, assign) BOOL allowRotation;
 +(void)SetSampleCodeName:(NSString*)name;
 @end

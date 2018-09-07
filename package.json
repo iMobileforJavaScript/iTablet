@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "immutable": "^3.8.2",
+    "node-forge": "^0.7.6",
     "react": "16.2.0",
     "react-native": "0.52.3",
     "react-native-actionsheet": "^2.4.2",

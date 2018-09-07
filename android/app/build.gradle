@@ -98,7 +98,7 @@ android {
         release_config {
             keyAlias 'supermap'
             keyPassword 'supermap321'
-            storeFile file('/Users/imobile-xzy/Desktop/tablet/iTablet/android/keystores/release.keystore')
+            storeFile file('/Users/Dragon/Documents/Workspace/SuperMap/iTablet/android/keystores/release.keystore')
             storePassword 'supermap123'
         }
     }
@@ -109,7 +109,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "1.0"
+        versionName "0.3"
         ndk {
             abiFilters "armeabi-v7a"
         }
