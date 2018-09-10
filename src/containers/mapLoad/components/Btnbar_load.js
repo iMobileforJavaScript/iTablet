@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { StackNavigator, NavigationActions } from 'react-navigation'
-import { scaleSize} from '../../../utils'
+import { scaleSize } from '../../../utils'
 import { BtnOne } from '../../../components'
 
 const width = Dimensions.get('window').width
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     alignSelf: 'center',
   },
-  btntop:{
-    marginTop:scaleSize(5),
+  btntop: {
+    marginTop: scaleSize(5),
   }
 })

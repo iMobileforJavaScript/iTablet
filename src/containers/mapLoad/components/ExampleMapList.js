@@ -25,7 +25,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount () {
     (async function () {
       let that = this
       await this.mapexist()
@@ -56,6 +56,7 @@ export default class ExampleMapList extends React.Component {
         Toast.show('下载失败')
       }
     }).bind(this)()
+
   }
 
   mapexist = async () => {
@@ -149,6 +150,7 @@ export default class ExampleMapList extends React.Component {
 
   unZipFolder = async (zipfile, targetdir) => {
     let result = await Utility.unZipFolder(zipfile, targetdir)
+    console.log(result)
     if (result) {
       Alert.alert(
         "温馨提示",
@@ -162,9 +164,10 @@ export default class ExampleMapList extends React.Component {
     else {
       Alert.alert(
         "温馨提示",
-        "文件下载失败，请重新下载",
+        "文件下载失败， 是否重新下载",
         [
           { text: "确定", onPress: () => { } },
+          { text: "取消", onPress: () => { } }
         ],
         { cancelable: true }
       )
@@ -195,7 +198,7 @@ export default class ExampleMapList extends React.Component {
         "温馨提示",
         "有文件正在下载中，请稍后下载",
         [
-          { text: "确定", onPress: () => { } },
+          { text: "确定", onPress: () => { }, style: "cancel" },
         ],
         { cancelable: true }
       )
@@ -210,7 +213,7 @@ export default class ExampleMapList extends React.Component {
         "温馨提示",
         "本地实例文件不存在是否下载文件",
         [
-          { text: "确定", onPress: () => this.download(filePath, fileName)},
+          { text: "确定", onPress: () => this.download(filePath, fileName) },
           { text: "取消", onPress: () => { }, style: "cancel" },
         ],
         { cancelable: true }
