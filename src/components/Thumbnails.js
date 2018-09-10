@@ -17,6 +17,7 @@ export default class Thumbnails extends React.Component {
     btnClick: () => {},
     progress:any,
     processcb:any,
+    backgroundcolor:string,
   }
 
   static defaultProps: {
@@ -25,8 +26,9 @@ export default class Thumbnails extends React.Component {
 
   constructor(props) {
     super(props)
+    this.backgroundcolor=this.props.backgroundcolor ?  null :"#A3A3A3"
     this.state={
-      opacity:1,
+      opacity:0.6,
     }
 
   }
@@ -36,7 +38,6 @@ export default class Thumbnails extends React.Component {
       this.setState({opacity:0})
     }
     this.mProgress.progress=data/100
-    console.log(this.mProgress.progress)
   }
 
   render() {
@@ -52,7 +53,7 @@ export default class Thumbnails extends React.Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity accessible={true} accessibilityLabel={this.props.title ? this.props.title : '默认标题'} activeOpacity={0.8} style={styles.subContainer} onPress={this.props.btnClick} underlayColor={'rgba(34,26,38,0.1)'}>
-          <Progress ref={ref=>this.mProgress=ref} style={[styles.animatedView,{opacity:this.state.opacity}]} progressAniDuration={0} progressColor={"#1296db"} />
+          <Progress ref={ref=>this.mProgress=ref} style={[styles.animatedView,{opacity:this.state.opacity},{backgroundColor:this.backgroundcolor}]} progressAniDuration={0} progressColor={"#1296db"} />
           <Image resizeMode={this.props.resizeMode} style={[styles.image, this.props.imageStyle]} source={image} />
           <View style={styles.textView}>
             <Text numberOfLines={1} style={styles.title}>{this.props.title ? this.props.title : '默认标题'}</Text>
@@ -94,7 +95,8 @@ const styles = StyleSheet.create({
   },
   animatedView:{
     position:'absolute',
-    top:IMAGE_WIDTH * 0.6-scaleSize(8),
+    height:IMAGE_WIDTH * 0.6,
+    top:0,
     left:0,
     zIndex:1,
   },

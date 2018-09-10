@@ -168,10 +168,11 @@ export default class WorkSpaceFileList extends Component {
         )
 
         this.DSParams = { server: path, engineType: EngineType.UDB }
-        let layerIndex = 0
-        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-        let dataset = await dsBaseMap.getDataset(layerIndex)
-        await this.map.addLayer(dataset, true)
+        // let layerIndex = 0
+        // let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+        // let dataset = await dsBaseMap.getDataset(layerIndex)
+        // await this.map.addLayer(dataset, true)
+        await this.workspace.openDatasource(this.DSParams)
       } else {
         NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
       }

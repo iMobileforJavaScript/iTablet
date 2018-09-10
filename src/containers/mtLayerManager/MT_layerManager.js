@@ -31,11 +31,13 @@ export default class MT_layerManager extends React.Component {
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
     let path = params.path.substring(0, params.path.lastIndexOf('/') + 1)
     let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
+    wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
     this.state = {
       datasourceList: '',
       mapName: '',
       wsName: wsName,
-      path: !this.showDialogCaption ? path : ConstPath.LocalDataPath,
+      // path: !this.showDialogCaption ? path : ConstPath.LocalDataPath,
+      path: path,
       currentEditIndex: props.editLayer.index >= 0 ? props.editLayer.index : -1, //当前编辑界面的index
     }
   }
@@ -145,6 +147,7 @@ export default class MT_layerManager extends React.Component {
           info.path = path
         }
         if (wsName && this.showDialogCaption) {
+          info.path = path
           info.caption = wsName
         }
         await this.map.setWorkspace(this.workspace)
@@ -157,6 +160,8 @@ export default class MT_layerManager extends React.Component {
         } else if (saveWs || !this.showDialogCaption) {
           this.showSaveDialog(false)
           Toast.show('保存成功')
+        } else if (saveWs === undefined) {
+          Toast.show('gai')
         } else {
           Toast.show('保存失败')
         }

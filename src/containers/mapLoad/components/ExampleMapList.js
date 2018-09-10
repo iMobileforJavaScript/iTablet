@@ -11,7 +11,6 @@ const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeB
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
 const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
-const testData = [{ key: vectorMap }, { key: gl }, { key: overLay }, { key: map3D }, { key: ObliquePhoto }]
 
 export default class ExampleMapList extends React.Component {
   constructor(props) {
@@ -21,11 +20,15 @@ export default class ExampleMapList extends React.Component {
     this.downloaded = false
     this.progeress = 0
     this.downlist = []
+    this.state = {
+      maplist: [],
+    }
   }
 
   componentDidMount() {
     (async function () {
       let that = this
+      await this.mapexist()
       try {
         DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async function (progeress) {
           if (progeress > 0 && progeress !== that.progeress) {
@@ -34,32 +37,43 @@ export default class ExampleMapList extends React.Component {
               that.progeress = progeress
               downitem.updateprogress(that.progeress)
             }
-            if (that.progeress == 99) {
-              that.downloaded = true
-              if (that.unzip) {
-                that.unzip = false
-                await that.unZipFolder(that.zipfile, that.targetdir)
-                GLOBAL.downitemname = ''
-                that.progeress = 0
-              }
+          }
+        })
+        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async function (result) {
+          if (result) {
+            that.downloaded = true
+            if (that.unzip) {
+              that.unzip = false
+              await that.unZipFolder(that.zipfile, that.targetdir)
+              GLOBAL.downitemname = ''
+              that.progeress = 0
             }
           }
         })
-        // DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, function (result) {
-        //    if(result){
-        //      result=false
-        //      that.unZipFolder(that.zipfile,that.targetdir)
-        //      return
-        //    }
-        // })
-        console.log(this.downlist)
+
+
       } catch (error) {
         Toast.show('下载失败')
       }
     }).bind(this)()
   }
 
-  _itemClick = async (key) => {
+  mapexist = async () => {
+    let testData = [
+      { key: vectorMap, path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
+      { key: gl, path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
+      { key: overLay, path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
+      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
+    ]
+    for (let index = 0; index < testData.length; index++) {
+      let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
+      exist ? testData[index].backgroundcolor = true : testData[index].backgroundcolor = false
+    }
+    this.setState({ maplist: testData })
+  }
+
+
+  _itemClick = async key => {
     let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
@@ -132,6 +146,7 @@ export default class ExampleMapList extends React.Component {
         break
     }
   }
+
   unZipFolder = async (zipfile, targetdir) => {
     let result = await Utility.unZipFolder(zipfile, targetdir)
     if (result) {
@@ -139,7 +154,7 @@ export default class ExampleMapList extends React.Component {
         "温馨提示",
         "文件下载完成",
         [
-          { text: "确定", onPress: () => console.log('yes') },
+          { text: "确定", onPress: () => { } },
         ],
         { cancelable: true }
       )
@@ -149,7 +164,25 @@ export default class ExampleMapList extends React.Component {
         "温馨提示",
         "文件下载失败，请重新下载",
         [
-          { text: "确定", onPress: () => console.log('ok') },
+          { text: "确定", onPress: () => { } },
+        ],
+        { cancelable: true }
+      )
+    }
+  }
+
+  download = async (filePath, fileName) => {
+    this.OnlineService = new OnlineService()
+    let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
+    if (result) {
+      this.OnlineService.download(filePath, fileName)
+      Toast.show("开始下载")
+    } else {
+      Alert.alert(
+        "温馨提示",
+        "下载失败，请检查网路",
+        [
+          { text: "确定", onPress: () => { } },
         ],
         { cancelable: true }
       )
@@ -162,58 +195,46 @@ export default class ExampleMapList extends React.Component {
         "温馨提示",
         "有文件正在下载中，请稍后下载",
         [
-          { text: "确定", onPress: () => console.log('ok') },
+          { text: "确定", onPress: () => { } },
         ],
         { cancelable: true }
       )
     }
     else {
-      this.OnlineService = new OnlineService()
-      let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
-      if (result) {
-        this.targetdir = outPath
-        this.zipfile = filePath
-        GLOBAL.downitemname = key
-        this.downloaded = false
-        this.unzip = true
-        Alert.alert(
-          "温馨提示",
-          "本地实例文件不存在是否下载文件",
-          [
-            { text: "确定", onPress: () => this.OnlineService.download(filePath, fileName) },
-            { text: "取消", onPress: () => console.log('Pressde'), style: "cancel" },
-          ],
-          { cancelable: true }
-        )
-      }
-      else {
-        Alert.alert(
-          "温馨提示",
-          "下载失败，请检查网路",
-          [
-            { text: "确定", onPress: () => { } },
-          ],
-          { cancelable: true }
-        )
-      }
+      this.targetdir = outPath
+      this.zipfile = filePath
+      GLOBAL.downitemname = key
+      this.downloaded = false
+      this.unzip = true
+      Alert.alert(
+        "温馨提示",
+        "本地实例文件不存在是否下载文件",
+        [
+          { text: "确定", onPress: () => this.download(filePath, fileName)},
+          { text: "取消", onPress: () => { }, style: "cancel" },
+        ],
+        { cancelable: true }
+      )
     }
-
   }
 
   downList = (child, key) => {
-    item = { name: key, ref: child }
+    let item = { name: key, ref: child }
     this.downlist.push(item)
   }
-  getDownitem = (key) => {
+
+  getDownitem = key => {
     for (let index = 0; index < this.downlist.length; index++) {
       if (key === this.downlist[index].name) {
         return this.downlist[index].ref
       }
     }
   }
+
   _renderItem = ({ item }) => {
     let key = item.key
     let src = defalutImageSrc
+    let backgroundcolor = item.backgroundcolor
     switch (key) {
       case vectorMap:
         src = require('../../../assets/public/beijing.png')
@@ -224,12 +245,19 @@ export default class ExampleMapList extends React.Component {
       case ObliquePhoto:
         src = require('../../../assets/public/ObliquePhoto.png')
         break
+      case gl:
+        src = require('../../../assets/public/VectorMap.png')
+        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
+        break
+      case overLay:
+        src = require('../../../assets/public/VectorMap.png')
+        break
       default:
         src = require('../../../assets/public/VectorMap.png')
         break
     }
     return (
-      <Thumbnails ref={ref => this.downList(ref, key)} title={key} src={src} btnClick={() => this._itemClick(key)} />
+      <Thumbnails ref={ref => this.downList(ref, key)} title={key} src={src} btnClick={() => this._itemClick(key)} backgroundcolor={backgroundcolor} />
     )
   }
 
@@ -237,7 +265,7 @@ export default class ExampleMapList extends React.Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={testData}
+          data={this.state.maplist}
           renderItem={this._renderItem}
           horizontal={false}
           numColumns={2}

@@ -291,11 +291,12 @@ export default class ThemeStyle extends React.Component {
           defaultValue={this.state.data.size}
           value={this.state.data.size}
           type={Row.Type.CHOOSE_NUMBER}
-          minValue={1}
+          minValue={0.1}
           // maxValue={12}
           unit={'mm'}
           title={'线宽'}
           getValue={value => this.getValue({ size: value })}
+          commonDifference={0.1}
         />
       </View>
     )
@@ -318,11 +319,12 @@ export default class ThemeStyle extends React.Component {
           defaultValue={this.state.data.size}
           value={this.state.data.size}
           type={Row.Type.CHOOSE_NUMBER}
-          minValue={1}
+          minValue={0.1}
           // maxValue={12}
           title={'线宽'}
           unit={'mm'}
           getValue={value => this.getValue({ size: value })}
+          commonDifference={0.1}
         />
         <Row
           style={styles.row}

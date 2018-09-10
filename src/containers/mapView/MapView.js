@@ -475,9 +475,6 @@ export default class MapView extends React.Component {
     const point2dModule = new Point2D()
     ;(async function () {
       try {
-        if (this.map) {
-          await this.map.close()
-        }
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
