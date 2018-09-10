@@ -53,7 +53,11 @@ export default class GetBack extends React.Component {
           style={styles.webView}
           source={{
             uri: 'https://sso.supermap.com/password?service=https://www.supermapol.com',
-          }}/>
+          }}
+          javaScriptEnabled={true}
+          domStorageEnabled={true}
+        />
+
       </Container>
     )
   }
@@ -72,6 +76,7 @@ const styles = StyleSheet.create({
     // width: '100%',
     height: constUtil.HEIGHT,
     width: constUtil.WIDTH,
+    alignItems: 'center',
   },
   elementContainer: {
     height: 0.4 * constUtil.HEIGHT,

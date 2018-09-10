@@ -11,7 +11,7 @@ const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeB
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
 const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
-const testData = [{ key: vectorMap }, { key: gl }, { key: overLay }, { key: map3D }]
+const testData = [{ key: vectorMap }, { key: gl }, { key: overLay }, { key: map3D }, { key: ObliquePhoto }]
 
 export default class ExampleMapList extends React.Component {
   constructor(props) {
@@ -89,6 +89,8 @@ export default class ExampleMapList extends React.Component {
         break
       case ObliquePhoto:
         path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
+        // path = ConstPath.SampleDataPath + '/凯德Mall/凯德Mall.sxwu'
+
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
@@ -97,7 +99,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, child)
+          this.alertDown(filePath, fileName, outPath, ObliquePhoto)
         }
         break
       case gl:
@@ -114,7 +116,7 @@ export default class ExampleMapList extends React.Component {
           this.alertDown(filePath, fileName, outPath, gl)
         }
         break
-        case overLay:
+      case overLay:
         path = ConstPath.SampleDataPath + '/DOM/DOM.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "DOM.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)

@@ -107,21 +107,23 @@ export default class CollectionToolBar extends React.Component {
     this.props.setLoading && this.props.setLoading(false)
   }
 
-  createCollector = async () => {
-    if (!this.props.editLayer || !this.props.editLayer.id || this.collector) return
-    this.collector = await this.props.mapControl.getCollector()
-    let dataset = await this.props.editLayer.layer.getDataset()
-    await this.collector.setDataset(dataset)
-    // await this.collector.openGPS()
-    //风格
-    let geoStyle = await new GeoStyle().createObj()
-    await geoStyle.setPointColor(0, 255, 0)
-    //线颜色
-    await geoStyle.setLineColor(0, 110, 220)
-    //面颜色
-    await geoStyle.setFillForeColor(255, 0, 0)
-    //设置绘制风格
-    await this.collector.setStyle(geoStyle)
+  createCollector = () => {
+    (async function () {
+      if (!this.props.editLayer || !this.props.editLayer.id) return
+      this.collector = await this.props.mapControl.getCollector()
+      let dataset = await this.props.editLayer.layer.getDataset()
+      await this.collector.setDataset(dataset)
+      // await this.collector.openGPS()
+      //风格
+      let geoStyle = await new GeoStyle().createObj()
+      await geoStyle.setPointColor(0, 255, 0)
+      //线颜色
+      await geoStyle.setLineColor(0, 110, 220)
+      //面颜色
+      await geoStyle.setFillForeColor(255, 0, 0)
+      //设置绘制风格
+      await this.collector.setStyle(geoStyle)
+    }).bind(this)()
   }
 
   _collectionChanged = event => {
@@ -390,21 +392,36 @@ export default class CollectionToolBar extends React.Component {
   /** 保存 **/
   _save = (type, callback = () => {}) => {
     (async function () {
+      let result = false
       try {
         switch (type) {
           case LINE_HAND_PATH:
           case REGION_HAND_PATH:
             if (this.props.mapControl) {
-              await this.props.mapControl.submit()
+              result = await this.props.mapControl.submit()
+            }
+            break
+          case REGION_HAND_POINT:
+          case LINE_HAND_POINT:
+            if (this.collector) {
+              result = await this.collector.submit()
             }
             break
           default:
-            this.collector && await this.collector.submit()
+            if (this.collector) {
+              result = await this.collector.submit()
+            }
             await this.closeLocation()
+            // await this.collector.closeGPS()
             break
         }
         callback && callback(true)
+        if (!result) {
+          Toast.show('保存失败')
+          return
+        }
         await this.props.mapControl.setAction(Action.SELECT)
+        await this.props.map.refresh()
         let selection = await this.props.editLayer.layer.getSelection()
         let ds = await this.props.editLayer.layer.getDataset()
         let recordset = await (await ds.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
@@ -451,7 +468,12 @@ export default class CollectionToolBar extends React.Component {
   /** 切换图层 **/
   _changeLayer = () => {
     this.operationCallback && this.operationCallback(true)
-    this.props.chooseLayer && this.props.chooseLayer(-1, true, () => { // 传 -1 查询所有类型的图层
+    this.props.chooseLayer && this.props.chooseLayer({
+      type: -1,
+      isEdit: true,
+      title: '选择采集图层',
+    }, () => { // 传 -1 查询所有类型的图层
+      this.createCollector()
       if (this.props.POP_List) {
         this.props.POP_List(true, 'collection')
       }

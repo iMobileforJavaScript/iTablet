@@ -18,7 +18,7 @@ export default class ChooseLayer extends React.Component {
     mapControl: PropTypes.object,
     map: PropTypes.object,
     type: PropTypes.number,
-    listType: PropTypes.String,
+    listType: PropTypes.string,
     getDataset: PropTypes.func,
     setLoading: PropTypes.func,
     alwaysVisible: PropTypes.bool,
@@ -220,23 +220,24 @@ export default class ChooseLayer extends React.Component {
   _layerKeyExtractor = item => (item.key + item.index)
 
   renderLayerList = () => {
-    if (this.state.showList && this.state.datasourceList.length > 0) {
-      return (
-        <FlatList
+    let list = <View />
+    if (this.state.showList) {
+      list = this.state.datasourceList.length > 0
+        ? <FlatList
           data={this.state.datasourceList}
           renderItem={this._renderLayerItem}
           keyExtractor={this._layerKeyExtractor}
         />
-      )
-    } else {
-      return <EmptyView />
+        : <EmptyView />
     }
+    return list
   }
 
   renderDatasetList = () => {
+    let list = <View />
     if (this.state.showList && this.state.datasourceList.length > 0) {
-      return (
-        <SectionList
+      list = this.state.datasourceList.length > 0
+        ? <SectionList
           renderSectionHeader={this._renderDatasetSetion}
           renderItem={this._renderDatasetItem}
           keyExtractor={this._datasetKeyExtractor}
@@ -244,10 +245,9 @@ export default class ChooseLayer extends React.Component {
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
         />
-      )
-    } else {
-      return <EmptyView />
+        : <EmptyView />
     }
+    return list
   }
 
   render() {

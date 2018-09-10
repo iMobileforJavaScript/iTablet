@@ -123,7 +123,11 @@ export default class MT_BtnList extends React.Component {
       show && name && Toast.show('当前采集图层为\n' + name)
     } else {
       this.props.POP_List && this.props.POP_List(false, null)
-      this.props.chooseLayer && this.props.chooseLayer(-1, false, isShow => { // 传 -1 查询所有类型的图层
+      this.props.chooseLayer && this.props.chooseLayer({
+        type: -1,
+        isEdit: true,
+        title: '选择采集图层',
+      }, isShow => { // 传 -1 查询所有类型的图层
         if (this.props.POP_List) {
           this.props.POP_List(isShow, type)
         }

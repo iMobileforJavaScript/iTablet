@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
     height: scaleSize(50),
     width: scaleSize(50),
     alignSelf: 'center',
-    borderRadius: 5,
+    // borderRadius: 5,
   },
   smallImage: {
     height: scaleSize(30),
     width: scaleSize(30),
     alignSelf: 'center',
-    borderRadius: 5,
+    // borderRadius: 5,
   },
   largeText: {
     fontSize: size.fontSize.fontSizeXs,

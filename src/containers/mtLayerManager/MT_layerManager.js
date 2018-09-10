@@ -44,34 +44,32 @@ export default class MT_layerManager extends React.Component {
     this.getData()
   }
 
-  getData = () => {
+  getData = async () => {
     this.container.setLoading(true)
-    ;(async function () {
-      try {
-        this.itemRefs = []
-        this.map = await this.mapControl.getMap()
-        let layerNameArr = await this.map.getLayersByType()
-        let currentEditIndex = -1
-        for(let i = 0; i < layerNameArr.length; i++) {
-          layerNameArr[i].key = layerNameArr[i].name
-          if (layerNameArr[i].isEditable) {
-            currentEditIndex = layerNameArr[i].index
-            this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
-          }
+    try {
+      this.itemRefs = []
+      this.map = await this.mapControl.getMap()
+      let layerNameArr = await this.map.getLayersByType()
+      let currentEditIndex = -1
+      for(let i = 0; i < layerNameArr.length; i++) {
+        layerNameArr[i].key = layerNameArr[i].name
+        if (layerNameArr[i].isEditable) {
+          currentEditIndex = layerNameArr[i].index
+          this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
         }
-        this.mapControl && await this.mapControl.setAction(Action.SELECT)
-        let mapName = await this.map.getName()
-        this.setState({
-          datasourceList: layerNameArr.concat(),
-          mapName: mapName,
-          currentEditIndex: currentEditIndex,
-        }, () => {
-          this.container.setLoading(false)
-        })
-      } catch (e) {
-        this.container.setLoading(false)
       }
-    }).bind(this)()
+      this.mapControl && await this.mapControl.setAction(Action.SELECT)
+      let mapName = await this.map.getName()
+      this.setState({
+        datasourceList: layerNameArr.concat(),
+        mapName: mapName,
+        currentEditIndex: currentEditIndex,
+      }, () => {
+        this.container.setLoading(false)
+      })
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
   showSaveDialog = (isShow = true) => {
@@ -175,8 +173,8 @@ export default class MT_layerManager extends React.Component {
       workspace: this.workspace,
       map: this.map,
       layerList: this.state.datasourceList,
-      cb: () => {
-        this.getData()
+      cb: async () => {
+        await this.getData()
         this.map && this.map.refresh()
       },
     })

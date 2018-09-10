@@ -132,13 +132,13 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  _chooseLayer = (type, isEdit = false, cb? = () => {}) => {
+  //type, isEdit = false
+  _chooseLayer = (data, cb? = () => {}) => {
     NavigationService.navigate('ChooseEditLayer', {
       workspace: this.workspace,
       map: this.map,
-      type: type,
       mapControl: this.mapControl,
-      isEdit, cb,
+      ...data, cb,
     })
   }
 
@@ -475,6 +475,9 @@ export default class MapView extends React.Component {
     const point2dModule = new Point2D()
     ;(async function () {
       try {
+        if (this.map) {
+          await this.map.close()
+        }
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()

@@ -70,7 +70,7 @@ export default class Radio extends PureComponent {
     if (this.props.selectable) {
       return (
         <TouchableOpacity
-          style={styles.radioContainer}
+          style={[styles.radioContainer, this.props.style]}
           accessible={true}
           accessibilityLabel={this.props.title}
           onPress={() => this.selectAtion()}
@@ -85,7 +85,7 @@ export default class Radio extends PureComponent {
       )
     } else {
       return (
-        <View style={styles.radioContainer}>
+        <View style={[styles.radioContainer, this.props.style]}>
           <View style={viewStyle}>
             {
               this.state.selected && <View style={dotStyle} />

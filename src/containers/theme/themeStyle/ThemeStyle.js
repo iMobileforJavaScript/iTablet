@@ -5,17 +5,22 @@
  */
 
 import * as React from 'react'
-import { ScrollView, Text, View } from 'react-native'
+import { ScrollView, Text, View, TouchableOpacity } from 'react-native'
 import { Container, Button, Row } from '../../../components'
 import { Toast, dataUtil } from '../../../utils'
 import { DatasetType, GeoStyle, Size2D } from 'imobile_for_javascript'
 import NavigationService from '../../NavigationService'
 
 import styles from './styles'
+import TouchableItem from "react-navigation/src/views/TouchableItem";
 
 const UNIQUE = '单值专题图'
 const RANGE = '分段设色专题图'
 const LABEL = '标签专题图'
+
+const POINT_STYLE = '点风格'
+const LINE_STYLE = '线风格'
+const REGION_STYLE = '填充风格'
 
 export default class ThemeStyle extends React.Component {
 
@@ -34,7 +39,7 @@ export default class ThemeStyle extends React.Component {
     this.layer = params && params.layer
     this.map = params && params.map
     this.mapControl = params && params.mapControl
-    this.type = ''
+    this.originType = params && params.type || ''
     this.settingType = ''
     // 设置图层风格
     this.layerSetting = {}
@@ -43,9 +48,10 @@ export default class ThemeStyle extends React.Component {
     this.cb = params && params.cb  // themeUniqueItem || themeRangeItem || themeLabelItem 回调函数
     this.state = {
       title: '',
+      type: params && params.type || '',
       data: {
-        color: '',
-        lineColor: '',
+        color: '#ffffff',
+        lineColor: '#ffffff',
         pointColor: '',
         size: 0,
         pointSize: 0,
@@ -64,17 +70,17 @@ export default class ThemeStyle extends React.Component {
       try {
         let dataset = await this.layer.getDataset()
         let settingStyle
-        this.type = await dataset.getType()
+        let type = await dataset.getType()
         if (this.item) {
           settingStyle = await this.item.getStyle()
-          this.getStyle(settingStyle, this.type)
+          this.getStyle(settingStyle, type)
         } else {
           this.layerSetting = await this.layer.getAdditionalSetting()
           this.settingType = await this.layerSetting.getType()
           switch (this.settingType) {
             case 'VECTOR':
               settingStyle = await this.layerSetting.getStyle()
-              this.getStyle(settingStyle, this.type)
+              this.getStyle(settingStyle, type)
               break
             case 'RASTER':
               break
@@ -119,6 +125,7 @@ export default class ThemeStyle extends React.Component {
         showView: true,
         title,
         data,
+        type,
       })
     }).bind(this)()
   }
@@ -192,6 +199,48 @@ export default class ThemeStyle extends React.Component {
 
   reset = () => {
 
+  }
+
+  renderCAD = () => {
+    return (
+      <View>
+        {this.renderCADItem(POINT_STYLE)}
+        {this.renderCADItem(LINE_STYLE)}
+        {this.renderCADItem(REGION_STYLE)}
+      </View>
+    )
+  }
+
+  renderCADItem = title => {
+    return (
+      <TouchableOpacity
+        key={title}
+        activeOpacity={0.8}
+        style={styles.row}
+        onPress={() => this.rowAction(title)}
+      >
+        <Text style={styles.rowTitle}>{title}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  rowAction = title => {
+    let  type = ''
+    switch (title) {
+      case POINT_STYLE:
+        type = DatasetType.POINT
+        break
+      case LINE_STYLE:
+        type = DatasetType.LINE
+        break
+      case REGION_STYLE:
+        type = DatasetType.REGION
+        break
+    }
+    this.setState({
+      showView: true,
+      type,
+    })
   }
 
   /**
@@ -300,7 +349,10 @@ export default class ThemeStyle extends React.Component {
 
   renderSetting = () => {
     let setting
-    switch (this.type) {
+    switch (this.state.type) {
+      case DatasetType.CAD:
+        setting = this.renderCAD()
+        break
       case DatasetType.POINT:
         setting = this.renderPointSetting()
         break
@@ -316,9 +368,11 @@ export default class ThemeStyle extends React.Component {
     }
     return (
       <View>
-        <View style={styles.titleView}>
-          <Text style={styles.title}>基本设置</Text>
-        </View>
+        {
+          this.state.type !== DatasetType.CAD && <View style={styles.titleView}>
+            <Text style={styles.title}>基本设置</Text>
+          </View>
+        }
         {setting}
       </View>
     )
@@ -333,6 +387,16 @@ export default class ThemeStyle extends React.Component {
     )
   }
 
+  back = () => {
+    if (this.originType === DatasetType.CAD) {
+      this.setState({
+        type: DatasetType.CAD,
+      })
+    } else {
+      NavigationService.goBack()
+    }
+  }
+
   render() {
     return (
       <Container
@@ -341,12 +405,13 @@ export default class ThemeStyle extends React.Component {
         headerProps={{
           title: '图层风格',
           navigation: this.props.navigation,
+          backAction: this.back,
         }}>
         <ScrollView style={styles.content}>
           {/*{this.state.showView && this.renderResource()}*/}
           {this.state.showView && this.renderSetting()}
         </ScrollView>
-        {this.renderBtns()}
+        {this.state.type !== DatasetType.CAD && this.renderBtns()}
       </Container>
     )
   }

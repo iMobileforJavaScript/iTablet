@@ -38,7 +38,6 @@ export default StyleSheet.create({
   textView: {
     // height: scaleSize(80),
     justifyContent: 'center',
-    backgroundColor: 'yellow',
   },
   title: {
     height: scaleSize(30),
