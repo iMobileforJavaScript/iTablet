@@ -37,7 +37,6 @@ export default class OffLineList extends React.Component {
 
   props: {
     Workspace: any,
-    Map: any,
     map: any,
     mapControl: any,
   }

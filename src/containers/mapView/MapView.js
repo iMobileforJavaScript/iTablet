@@ -497,7 +497,6 @@ export default class MapView extends React.Component {
               await this.map.viewEntire()
               await this.mapControl.setAction(Action.PAN)
               await this.map.refresh()
-
               this.saveLatest()
             }).bind(this)()
           }
