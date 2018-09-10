@@ -54,8 +54,8 @@ static NSString* g_sampleCodeName = @"#";;
     if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
       NSLog(@"拷贝数据失败");
   }
-  
-   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
+  self.allowRotation = NO;
+  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   return YES;
 }
 -(void)doSampleCodeNotification:(NSNotification *)notification
@@ -71,6 +71,17 @@ static NSString* g_sampleCodeName = @"#";;
     VCViewController* vt = [[UIStoryboard storyboardWithName:@"VCMain" bundle:nil] instantiateViewControllerWithIdentifier:@"VC"];
     [self.nav pushViewController:vt animated:YES];
     self.nav.navigationBarHidden = NO;
+  }
+}
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
+{
+  if (self.allowRotation == YES) {
+    //横屏
+    return UIInterfaceOrientationMaskLandscape;
+  } else{
+    //竖屏
+    return UIInterfaceOrientationMaskPortrait;
   }
 }
 @end

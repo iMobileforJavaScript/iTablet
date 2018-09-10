@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import { Container } from '../../../components'
+import { Container, BtnOne } from '../../../components'
+import NavigationService from '../../NavigationService'
 import Login from './Login'
 
 import styles from './styles'
@@ -12,10 +13,14 @@ export default class Mine extends Component {
     setUser: () => {},
   }
 
+  goToPersonal = () => {
+    NavigationService.navigate('Personal')
+  }
+
   renderHeader = () => {
     return (
       <View style={styles.header}>
-        <TouchableOpacity style={styles.avatarView}>
+        <TouchableOpacity onPress={this.goToPersonal} activeOpacity={1} style={styles.avatarView}>
           <Image style={styles.avatar} source={require('../../../assets/public/icon-avatar-default.png')}/>
         </TouchableOpacity>
         <View style={styles.headerContent}>
@@ -44,7 +49,12 @@ export default class Mine extends Component {
             title: '我的iTablet',
             withoutBack: true,
             navigation: this.props.navigation,
-            // headerRight: <TextBtn btnText="添加" textStyle={styles.headerBtnTitle} btnClick={this.addNewLayerGroup} />,
+            // headerRight: (
+            //   <BtnOne
+            //     image={require('../../../assets/public/icon-setting-white.png')}
+            //     BtnClick={}
+            //   />
+            // ),
           }}>
           {this.renderHeader()}
         </Container>

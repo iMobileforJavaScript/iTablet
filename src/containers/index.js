@@ -7,6 +7,7 @@ import MapLoad from './mapLoad'
 //我的
 import Register from './register&getBack/register'
 import GetBack from './register&getBack/GetBack'
+import Personal from './personal'
 
 //地图加载
 import LocalMap from './localMap'
@@ -227,6 +228,12 @@ export default StackNavigator({
       header:null,
     },
   },
+  Personal: {
+    screen: Personal,
+    navigationOptions: {
+      header: null,
+    },
+  },
   animated:{
     screen: animated,
     navigationOptions: {
@@ -240,6 +247,7 @@ export default StackNavigator({
     headerTintColor: '#333333',
     showIcon: true,
     swipeEnabled: false,
+    gesturesEnabled: false,
     animationEnabled: false,
     headerTitleStyle: { alignSelf: 'center' },
   },

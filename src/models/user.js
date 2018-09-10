@@ -31,7 +31,7 @@ export default handleActions(
           userExist = true
         }
       }
-      if (!userExist) {
+      if (!userExist && payload.userName) {
         users.push(payload)
       }
       return state.setIn(['currentUser'], fromJS(payload))

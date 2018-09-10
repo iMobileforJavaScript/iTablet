@@ -24,6 +24,9 @@ export default StyleSheet.create({
   gray: {
     backgroundColor: color.gray,
   },
+  red: {
+    backgroundColor: color.red,
+  },
   btnTitle: {
     color: 'white',
     fontSize: size.fontSize.fontSizeSm,
