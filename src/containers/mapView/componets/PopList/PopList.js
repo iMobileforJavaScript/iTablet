@@ -627,8 +627,7 @@ export default class PopList extends React.Component {
           setSelection={this.props.setSelection}
         />
       )
-    }
-    if (this.state.toolbar === 'network') {
+    } else if (this.state.toolbar === 'network') {
       return (
         <NetworkAnalystToolBar
           popType={this.state.networkType}

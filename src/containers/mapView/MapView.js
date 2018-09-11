@@ -58,12 +58,14 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
+    this.container && this.container.setLoading(true, '地图加载...')
     this.clearData()
   }
 
-  componentWillUnmount() {
-    this.closeWorkspace()
-  }
+  // componentWillUnmount() {
+  //   this.saveLatest()
+  //   this.closeWorkspace()
+  // }
 
   componentDidUpdate(prevProps) {
     if (
@@ -84,12 +86,25 @@ export default class MapView extends React.Component {
   }
 
   closeWorkspace = () => {
+    this.container.setLoading(true, '正在保存')
+    this.saveLatest()
+    if (!this.map || !this.mapControl || !this.workspace) return
     (async function () {
+      // this.container.bgColor = 'white'
+      this.container.setLoading(true, '正在关闭', {bgColor: 'white'})
       this.clearData()
-      await this._remove_measure_listener()
-      await this._removeGeometrySelectedListener()
+      // await this._remove_measure_listener()
+      // await this._removeGeometrySelectedListener()
+      this.mapControl && await this.mapControl.removeMeasureListener()
+      this.mapControl && await this.mapControl.removeGeometrySelectedListener()
+
       this.map && await this.map.close()
+      this.mapControl && await this.mapControl.dispose()
       this.workspace && await this.workspace.closeWorkspace()
+      this.map = null
+      this.mapControl = null
+      this.workspace = null
+      this.container && this.container.setLoading(false)
     }).bind(this)()
   }
 
@@ -487,20 +502,20 @@ export default class MapView extends React.Component {
         this.mapName = await this.map.getName()
 
         // await this.map.setScale(0.0005)
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              this.saveLatest()
-            }).bind(this)()
-          }
-        )
+        // navigator.geolocation.getCurrentPosition(
+        //   position => {
+        //     let lat = position.coords.latitude
+        //     let lon = position.coords.longitude
+        //     ;(async () => {
+        //       let centerPoint = await point2dModule.createObj(lon, lat)
+        //       await this.map.setCenter(centerPoint)
+        //       await this.map.viewEntire()
+        //       await this.mapControl.setAction(Action.PAN)
+        //       await this.map.refresh()
+        //       this.saveLatest()
+        //     }).bind(this)()
+        //   }
+        // )
         let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
         if (this.type === 'ONLINE') {
           let dataset = await dsBaseMap.getDataset(this.layerIndex)
@@ -510,6 +525,9 @@ export default class MapView extends React.Component {
           let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
           dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
         }
+
+        await this.map.viewEntire()
+        await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
 
         await this._addGeometrySelectedListener()
@@ -525,7 +543,7 @@ export default class MapView extends React.Component {
     return (
       <Container
         ref={ref => this.container = ref}
-        initWithLoading
+        // initWithLoading
         headerProps={{
           title: this.isExample ? '示例地图' : '',
           navigation: this.props.navigation,

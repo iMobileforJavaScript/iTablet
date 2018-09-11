@@ -38,8 +38,8 @@ export default class Container extends PureComponent {
     this.props.initWithLoading && this.setLoading(true)
   }
 
-  setLoading = (loading, info) => {
-    this.loading.setLoading(loading, info)
+  setLoading = (loading, info, extra = {}) => {
+    this.loading.setLoading(loading, info, extra)
   }
 
   render() {

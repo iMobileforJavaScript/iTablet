@@ -11,13 +11,16 @@ export default class Loading extends Component {
     initLoading: boolean,
     indicatorSize: string,
     indicatorColor: string,
+    bgColor: string,
+    indicatorStyle: any,
     displayMode: string,
     info: string,
   }
 
   static defaultProps = {
     initLoading: true,
-    indicatorSize: 'large',
+    bgColor: 'large',
+    indicatorSize: 'transparent',
     indicatorColor: 'white',
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE',  // BLACK_WITH_TITLE   NORMAL
@@ -29,14 +32,21 @@ export default class Loading extends Component {
     this.state = {
       animating: props.initLoading,
       info: props.info,
+      extra: {
+        bgColor: props.bgColor,
+      },
     }
   }
 
-  setLoading = (loading, info = '加载中') => {
-    if (loading !== this.state.animating || this.state.info !== info) {
+  setLoading = (loading, info, extra = {}) => {
+    if (loading !== this.state.animating || this.state.info !== info || JSON.stringify(this.state.extra) !== JSON.stringify(extra)) {
+      if (!extra.bgColor) {
+        extra.bgColor = 'transparent'
+      }
       this.setState({
         animating: loading,
         info: info,
+        extra,
       })
     }
   }
@@ -62,7 +72,7 @@ export default class Loading extends Component {
           size={this.props.indicatorSize}
           color={this.props.indicatorColor}
         />
-        {this.props.info && <Text style={styles.title}>{this.props.info}</Text>}
+        {this.props.info && <Text style={styles.title}>{this.state.info}</Text>}
       </View>
     )
   }
@@ -71,7 +81,7 @@ export default class Loading extends Component {
     if (!this.state.animating) return null
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.state.extra.bgColor && {backgroundColor: this.state.extra.bgColor}]}>
         {
           this.props.displayMode === 'NORMAL'
             ? this.renderIndicator()
