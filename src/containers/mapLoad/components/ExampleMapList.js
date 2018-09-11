@@ -33,7 +33,7 @@ export default class ExampleMapList extends React.Component {
       await this.mapexist()
       try {
         DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async function (progeress) {
-          if (progeress > 0 && progeress !== that.progeress) {
+          if (progeress > 0 && progeress >that.progeress) {
             if (!that.downloaded) {
               let downitem = await that.getDownitem(GLOBAL.downitemname)
               that.progeress = progeress
@@ -52,7 +52,20 @@ export default class ExampleMapList extends React.Component {
             }
           }
         })
-
+        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async function (result) {
+          // let downitem = await that.getDownitem(GLOBAL.downitemname)
+          // Alert.alert(
+          //   "温馨提示",
+          //   "文件下载失败， 是否重新下载",
+          //   [
+          //     { text: "确定", onPress: () => {that.download(that.downpath,downfilename)} },
+          //     { text: "取消", onPress: () => {downitem.updateprogress(100)} }
+          //   ],
+          //   { cancelable: true }
+          // )
+          console.log("faile")
+        
+        })
 
       } catch (error) {
         Toast.show('下载失败')
@@ -207,6 +220,8 @@ export default class ExampleMapList extends React.Component {
     else {
       this.targetdir = outPath
       this.zipfile = filePath
+      this.downpath=filePath
+      this.downfilename=fileName
       GLOBAL.downitemname = key
       this.downloaded = false
       this.unzip = true
