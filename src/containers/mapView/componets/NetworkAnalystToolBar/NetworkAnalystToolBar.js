@@ -253,7 +253,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     }
     return {data, currentOperation, currentIndex}
   }
-  
+
   _btn_click_manager = ({item, index}) => {
     item.action && item.action({
       data: item,

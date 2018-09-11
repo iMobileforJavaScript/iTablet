@@ -36,6 +36,7 @@ export default class BufferSetting extends React.Component {
     return {
       distance: this.state.distance,
       endType: this.state.endType,
+      selectedLayer: this.state.selectedLayer,
     }
   }
 

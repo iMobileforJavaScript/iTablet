@@ -48,6 +48,7 @@ const initialState = fromJS({
   buffer: {
     endType: 1,
     distance: 10,
+    selectedLayer: {},
   },
   overlay: {
     datasetVector: {},

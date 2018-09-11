@@ -13,7 +13,7 @@ import { Toast, AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
 import NavigationService from '../NavigationService'
-import { Alert } from 'react-native'
+import { Alert, InteractionManager } from 'react-native'
 import styles from './styles'
 
 export default class MapView extends React.Component {
@@ -152,13 +152,12 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  _chooseLayer = (type, isEdit = false, cb?= () => { }) => {
+  _chooseLayer = (data, cb?= () => { }) => {
     NavigationService.navigate('ChooseEditLayer', {
       workspace: this.workspace,
       map: this.map,
-      type: type,
       mapControl: this.mapControl,
-      isEdit, cb,
+      ...data, cb,
     })
   }
 
@@ -460,14 +459,16 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-      // NavigationService.goBack(this.props.nav.routes[1].key)
-      this.closeWorkspace()
-      NavigationService.goBack()
-    }
+    InteractionManager.runAfterInteractions(() => {
+      if (this.setting && this.setting.isVisible()) {
+        this.setting.close()
+      } else {
+        // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
+        // NavigationService.goBack(this.props.nav.routes[1].key)
+        this.closeWorkspace()
+        NavigationService.goBack()
+      }
+    })
   }
 
   setLoading = (loading = false) => {
@@ -573,6 +574,8 @@ export default class MapView extends React.Component {
         }
 
         // await this.map.setScale(0.0005)
+        // 以UDB打开工作空间时，不加载数据
+        // 为防止添加图层不再可显示范围内，所以不定位当前位置
         if (this.DSParams && this.DSParams.engineType === EngineType.UDB) {
           await this.map.viewEntire()
           await this.mapControl.setAction(Action.PAN)
