@@ -255,6 +255,11 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
       let { edges } = await facilityAnalyst.traceUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
       // let { edges } = await facilityAnalyst.findPathUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
+      if (edges.length <= 0) {
+        Toast.show('没有上游')
+        return
+      }
+
       edges && edges.forEach(async edge => {
         await mSelection.add(edge)
       })
@@ -273,6 +278,11 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
     await mSelection.clear()
     for (let i = 0; i < mNodes.length; i++) {
       let { edges } = await facilityAnalyst.traceDownFromNode(mNodes[i], weightName, isUncertainDirectionValid)
+
+      if (edges.length <= 0) {
+        Toast.show('没有下游')
+        return
+      }
 
       edges && edges.forEach(async edge => {
         await mSelection.add(edge)
@@ -293,6 +303,11 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
     for (let i = 0; i < mNodes.length - 1; i++) {
       let { edges } = await facilityAnalyst.findPathFromNodes(mNodes[i], mNodes[i + 1], weightName, isUncertainDirectionValid)
 
+      if (edges.length <= 0) {
+        Toast.show('两点间不连通')
+        return
+      }
+
       edges && edges.forEach(async edge => {
         await mSelection.add(edge)
       })
@@ -301,7 +316,8 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
       await mMapControl.setAction(Action.PAN)
     }
   } catch (e) {
-    Toast.show('下游追踪失败')
+    console.warn(e)
+    Toast.show('连通性分析失败')
   }
 }
 

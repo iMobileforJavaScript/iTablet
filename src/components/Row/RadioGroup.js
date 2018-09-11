@@ -35,7 +35,7 @@ export default class RadioGroup extends PureComponent {
     this.current = this.getIndexByValue(props.defaultValue)
     this.refArr = []
   }
-  
+
   getIndexByValue = value => {
     let index = -1
     for (let i = 0; i < this.props.data.length; i++) {
@@ -65,6 +65,7 @@ export default class RadioGroup extends PureComponent {
       if (!group[row]) group[row] = []
       group[row].push(
         <Radio
+          style={{flex:1}}
           key={obj.title + '-' + index}
           ref={ref => this.setRefs(ref, index)}
           index={index}

@@ -105,7 +105,7 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
     defaultConfig {
-        applicationId "com.itablet"
+        applicationId "com.supermap.itablet"
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1

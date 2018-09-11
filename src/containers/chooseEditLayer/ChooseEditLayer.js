@@ -31,6 +31,7 @@ export default class ChooseEditLayer extends React.Component {
     this.isEdit = params.isEdit || false // 选择图层后是否为编辑状态
     this.map = params.map
     this.type = params.type || -1
+    this.title = params.title || '选择编辑图层'
     this.cb = params.cb
     this.currentItem = {}
   }
@@ -42,6 +43,8 @@ export default class ChooseEditLayer extends React.Component {
       for(let i = 0; i < layerNameArr.length; i++) {
         let layer = await this.map.getLayer(layerNameArr[i].index)
         let type = await (await layer.getDataset()).getType()
+        // 排除文本图层和专题图
+        if (type === DatasetType.TEXT || layerNameArr[i].themeType > 0) continue
         if (checkType.isVectorDataset(type)) {
           layerNameArr[i].layer = layer
           arr.push(layerNameArr[i])
@@ -83,7 +86,8 @@ export default class ChooseEditLayer extends React.Component {
       this.type = await (await layer.getDataset()).getType()
     }
     await layer.setSelectable(true)
-    this.isEdit && await layer.setEditable(true)
+    await layer.setVisible(true)
+    await layer.setEditable(this.isEdit)
     this.currentItem.isEditable = await layer.getEditable()
     await this.mapControl.setAction(Action.SELECT)
     this.props.setEditLayer(this.currentItem)
@@ -113,7 +117,7 @@ export default class ChooseEditLayer extends React.Component {
         ref={ref => this.container = ref}
         initWithLoading
         headerProps={{
-          title: '选择编辑图层',
+          title: this.title,
           navigation: this.props.navigation,
         }}>
         {

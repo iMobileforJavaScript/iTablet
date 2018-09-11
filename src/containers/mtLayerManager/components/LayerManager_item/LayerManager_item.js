@@ -57,7 +57,7 @@ export default class LayerManager_item extends React.Component {
   }
 
   getValidate = data => {
-    let isThemeLayer = false, isNonOperatingThemeLayer = false, isVectorLayer = true
+    let isThemeLayer = false, isNonOperatingThemeLayer = false, isVectorLayer = false
     switch (data.themeType) {
       case 0: // 非专题图层
         isThemeLayer = false
@@ -75,10 +75,17 @@ export default class LayerManager_item extends React.Component {
         break
     }
     if (
-      data.type === DatasetType.GRID ||
-      data.type === DatasetType.IMAGE
+      data.type === DatasetType.CAD ||
+      data.type === DatasetType.LINE ||
+      data.type === DatasetType.LINE3D ||
+      data.type === DatasetType.POINT ||
+      data.type === DatasetType.POINT3D ||
+      data.type === DatasetType.REGION ||
+      data.type === DatasetType.REGION3D ||
+      data.type === DatasetType.TEXT ||
+      data.type === DatasetType.TABULAR
     ) {
-      isVectorLayer = false
+      isVectorLayer = true
     }
 
     return {isThemeLayer, isNonOperatingThemeLayer, isVectorLayer}
@@ -113,24 +120,37 @@ export default class LayerManager_item extends React.Component {
 
   getOptions = data => {
     let {isThemeLayer, isVectorLayer} = this.getValidate(data)
-    let options = !isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非专题图，非文本类型的矢量图层
-      // { key: '可显示', selectable: true, action: this._visable_change },
-      // { key: '可选择', selectable: !isThemeLayer, action: this._selectable_change },
-      // { key: '可编辑', selectable: !isThemeLayer, action: this._editable_change },
-      // { key: '可捕捉', selectable: !isThemeLayer, action: this._catchable_change },
-      { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
-      { key: '风格', selectable: !isThemeLayer, action: this._openStyle },
-      { key: '重命名', selectable: true, action: this._rename },
-      { key: '移除', selectable: true, action: this._remove },
-    // ] : !isNonOperatingThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
-    ] : this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
-      { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
-      { key: '重命名', selectable: true, action: this._rename },
-      { key: '移除', selectable: true, action: this._remove },
-    ] : [ // 文本矢量图层 和 非矢量图层
-      { key: '重命名', selectable: true, action: this._rename },
-      { key: '移除', selectable: true, action: this._remove },
-    ]
+    let options = []
+    //   !isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT && this.props.data.type !== DatasetType.GRID ? [ // 非专题图，非文本类型的矢量图层
+    //   // { key: '可显示', selectable: true, action: this._visable_change },
+    //   // { key: '可选择', selectable: !isThemeLayer, action: this._selectable_change },
+    //   // { key: '可编辑', selectable: !isThemeLayer, action: this._editable_change },
+    //   // { key: '可捕捉', selectable: !isThemeLayer, action: this._catchable_change },
+    //   { key: '专题图', selectable: isVectorLayer, action: this._openTheme },
+    //   { key: '风格', selectable: !isThemeLayer, action: this._openStyle },
+    //   { key: '重命名', selectable: true, action: this._rename },
+    //   { key: '移除', selectable: true, action: this._remove },
+    // // ] : !isNonOperatingThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
+    // ] : isVectorLayer && this.props.data.type !== DatasetType.TEXT && this.props.data.type !== DatasetType.GRID ? [ // 非文本专题图的矢量图层
+    //   { key: '专题图', selectable: true, action: this._openTheme },
+    //   { key: '重命名', selectable: true, action: this._rename },
+    //   { key: '移除', selectable: true, action: this._remove },
+    // ] : this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
+    //   { key: '重命名', selectable: true, action: this._rename },
+    //   { key: '移除', selectable: true, action: this._remove },
+    // ] : [ // 文本矢量图层 和 非矢量图层
+    //   { key: '重命名', selectable: true, action: this._rename },
+    //   { key: '移除', selectable: true, action: this._remove },
+    // ]
+
+    if (!isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT && this.props.data.type !== DatasetType.CAD) {
+      options.push({ key: '专题图', selectable: isVectorLayer, action: this._openTheme })
+      options.push({ key: '风格', selectable: !isThemeLayer, action: this._openStyle })
+    } else if (isThemeLayer || this.props.data.type === DatasetType.CAD) {
+      options.push({ key: '专题图', selectable: isVectorLayer, action: this._openTheme })
+    }
+    options.push({ key: '重命名', selectable: true, action: this._rename })
+    options.push({ key: '移除', selectable: true, action: this._remove })
 
     return options
   }
@@ -230,6 +250,7 @@ export default class LayerManager_item extends React.Component {
       layer: this.props.layer,
       map: this.props.map,
       mapControl: this.props.mapControl,
+      type: this.props.data.type,
     })
   }
 
@@ -322,15 +343,15 @@ export default class LayerManager_item extends React.Component {
           <View style={styles.btn_container}>
             <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>
             {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
-            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
-            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
+            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && this.props.data.type !== DatasetType.CAD && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
+            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && this.props.data.type !== DatasetType.CAD && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
             <View style={styles.btn}>
               <Image style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
             </View>
             {/*占位View*/}
             {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
-            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
-            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer || this.props.data.type === DatasetType.CAD) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer || this.props.data.type === DatasetType.CAD) && <View style={styles.btn} />}
           </View>
           <View style={styles.text_container}><Text>{name}</Text></View>
           {/*<TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}>*/}

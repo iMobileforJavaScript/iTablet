@@ -60,6 +60,10 @@ export default class ChooseNumber extends PureComponent {
       let value = this.props.times > 1
         ? (this.state.value / this.props.times)
         : (this.state.value - this.props.commonDifference)
+      let dec = this.props.commonDifference.toString().split(".")[1]
+      if (dec) {
+        value = parseFloat(value.toFixed(dec.length))
+      }
       this.setState({
         value: this.props.minValue !== '' && value < this.props.minValue ? this.props.minValue : value,
         miusAble: this.props.minValue === '' || value > this.props.minValue,
@@ -78,6 +82,10 @@ export default class ChooseNumber extends PureComponent {
       let value = this.props.times > 1
         ? (this.state.value * this.props.times)
         : (this.state.value + this.props.commonDifference)
+      let dec = this.props.commonDifference.toString().split(".")[1]
+      if (dec) {
+        value = parseFloat(value.toFixed(dec.length))
+      }
       this.setState({
         value: this.props.maxValue !== '' && value > this.props.maxValue ? this.props.maxValue : value,
         plusAble: this.props.maxValue === '' || value < this.props.maxValue,

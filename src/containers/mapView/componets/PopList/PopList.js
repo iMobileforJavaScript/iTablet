@@ -306,7 +306,7 @@ export default class PopList extends React.Component {
   attribute = ({callback = () => {}}) => {
     (async function() {
       callback && callback(true)
-      await this.select()
+      // await this.select()
       // this.selectSubOperation()
       // TODO selection 转化为 redux中的 selection
       let selection = await this.props.editLayer.layer.getSelection()
@@ -338,7 +338,10 @@ export default class PopList extends React.Component {
 
   /** 切换图层 **/
   _changeLayer = type => {
-    this.props.chooseLayer && this.props.chooseLayer(-1, true, (isShow, dsType) => { // 传 -1 查询所有类型的图层
+    this.props.chooseLayer && this.props.chooseLayer({
+      type: -1,
+      isEdit: true,
+    }, (isShow, dsType) => { // 传 -1 查询所有类型的图层
       if (this.props.POP_List) {
         let datas = this.getData(type)
         let data
@@ -364,7 +367,10 @@ export default class PopList extends React.Component {
     this.cbData = cbData
     this.operationCallback(true)
     await this.select()
-    this.props.chooseLayer && this.props.chooseLayer(type, true)
+    this.props.chooseLayer && this.props.chooseLayer({
+      type,
+      isEdit: true,
+    })
     this.popList && this.popList.setCurrentOption(cbData.data)
   }
 

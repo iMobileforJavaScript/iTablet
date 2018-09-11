@@ -3,7 +3,7 @@ package com.supermap.imb.appconfig;
 import java.io.File;
 import java.io.InputStream;
 
-import com.itablet.MainApplication;
+import com.supermap.itablet.MainApplication;
 import com.supermp.imb.file.Decompressor;
 import com.supermp.imb.file.FileManager;
 import com.supermp.imb.file.MyAssetManager;

@@ -1,4 +1,4 @@
-package com.itablet;
+package com.supermap.itablet;
 
 import android.support.multidex.MultiDexApplication;
 import com.supermap.imb.lic.LicConfig;

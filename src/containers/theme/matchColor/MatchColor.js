@@ -11,7 +11,7 @@ import NavigationService from '../../NavigationService'
 
 import styles from './styles'
 
-const fonts = [{key: '宋体'}, {key: '幼圆'}, {key: '黑体'}, {key: '华文新魏'}, {key: '微软黑雅'}]
+const fonts = [{key: '宋体'}, {key: '幼圆'}, {key: '黑体'}, {key: '华文新魏'}, {key: '微软雅黑'}]
 const colors = [{key: '#FF000'}, {key: '#00FF00'}, {key: '#0000FF'}, {key: '#fa575c'}, {key: '#4BA0FF'}]
 
 export default class MatchColor extends React.Component {

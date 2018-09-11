@@ -1,4 +1,4 @@
-package com.itablet;
+package com.supermap.itablet;
 
 import android.Manifest;
 import android.os.Bundle;

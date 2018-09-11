@@ -26,11 +26,10 @@ export default class Thumbnails extends React.Component {
 
   constructor(props) {
     super(props)
-    this.backgroundcolor=this.props.backgroundcolor ?  null :"#A3A3A3"
+    this.backgroundcolor=this.props.backgroundcolor || null
     this.state={
       opacity:0.6,
     }
-
   }
   updateprogress=data=>{
     if(data===99){

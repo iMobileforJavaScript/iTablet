@@ -64,6 +64,10 @@ export default class BufferSetting extends React.Component {
 
   confirm = () => {
     (async function() {
+      if (!this.state.selectedLayer.name) {
+        Toast.show('请选择分析图层')
+        return
+      }
       let layer = await this.props.map.getLayer(this.state.selectedLayer.name)
       await layer.setSelectable(true)
       this.props.setBufferSetting && this.props.setBufferSetting(this.getData())

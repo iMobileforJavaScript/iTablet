@@ -10,11 +10,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 
-import com.itablet.R;
+import com.supermap.itablet.R;
 import com.supermap.data.CursorType;
 import com.supermap.data.DatasetVector;
 import com.supermap.data.Environment;
-import com.supermap.data.LicenseType;
 import com.supermap.data.Point2D;
 import com.supermap.data.Recordset;
 import com.supermap.data.Workspace;
@@ -44,10 +43,8 @@ import com.supermap.mapping.imChart.RelationPointChart;
 import com.supermap.mapping.imChart.RelationalChartPoint;
 import com.supermap.mapping.imChart.TimeLine;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

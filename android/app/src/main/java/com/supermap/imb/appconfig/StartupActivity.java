@@ -1,7 +1,7 @@
 package com.supermap.imb.appconfig;
 
 
-import com.itablet.MainApplication;
+import com.supermap.itablet.MainApplication;
 import com.supermap.DataVisualization.VisualizationActivity;
 import com.supermap.data.Environment;
 

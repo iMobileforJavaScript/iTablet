@@ -10,9 +10,9 @@ import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog } from '../../components'
 import { Toast, AudioAnalyst } from '../../utils'
-import { Const } from '../../constains'
+import { SaveDialog } from '../../containers/mtLayerManager/components'
 import NavigationService from '../NavigationService'
-
+import { Alert } from 'react-native'
 import styles from './styles'
 
 export default class MapView extends React.Component {
@@ -55,6 +55,10 @@ export default class MapView extends React.Component {
     this.layerIndex = params.layerIndex || 0
     this.mapName = params.mapName || ''
     this.path = params.path || ''
+    this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
+    let savepath = params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
+    wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
   }
 
   componentDidMount() {
@@ -132,7 +136,7 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  _chooseLayer = (type, isEdit = false, cb? = () => {}) => {
+  _chooseLayer = (type, isEdit = false, cb?= () => { }) => {
     NavigationService.navigate('ChooseEditLayer', {
       workspace: this.workspace,
       map: this.map,
@@ -269,6 +273,66 @@ export default class MapView extends React.Component {
     })
   }
 
+  alertSave = () => {
+    Alert.alert(
+      "温馨提示",
+      "空间已修改是否保存",
+      [
+        { text: "确定", onPress: () => { this.savemap()} },
+        { text: "取消", onPress: () => { } },
+      ],
+      { cancelable: true })
+  }
+ 
+ 
+  savemap=async()=>{
+  let mapName = await this.map.getName()
+  this.saveMapAndWorkspace({mapName,wsName,savepath})
+  
+  }
+
+
+
+    saveMapAndWorkspace= ({mapName, wsName, path}) =>{
+      this.container.setLoading(true)
+      ;(async function(){
+        try {
+          let saveWs
+          let info = {}
+          if (!wsName) {
+            Toast.show('请输入地图名称')
+            return
+          }
+          if (this.state.path !== path || path === ConstPath.LocalDataPath) {
+            info.path = path
+          }
+          if (wsName && this.showDialogCaption) {
+            info.path = path
+            info.caption = wsName
+          }
+          await this.map.setWorkspace(this.workspace)
+          // 若名称相同，则不另存为
+          let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+          saveWs = await this.workspace.saveWorkspace(info)
+          this.container.setLoading(false)
+          if (!saveMap) {
+            Toast.show('该名称地图已存在')
+          } else if (saveWs || !this.showDialogCaption) {
+            this.showSaveDialog(false)
+            Toast.show('保存成功')
+          } else if (saveWs === undefined) {
+            Toast.show('gai')
+          } else {
+            Toast.show('保存失败')
+          }
+        } catch (e) {
+          this.container.setLoading(false)
+          Toast.show('保存失败')
+        }
+      }).bind(this)()
+    }
+  
+
   geometryMultiSelected = events => {
     // TODO 处理多选
     this.props.setSelection(events)
@@ -286,6 +350,7 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
+      
       NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
     }
   }
@@ -303,24 +368,25 @@ export default class MapView extends React.Component {
 
   // 地图保存
   saveMap = () => {
-    (async function () {
-      if (this.setting && this.setting.isVisible()) {
-        this.setting.close()
-      } else {
-        try {
-          let saveMap = await this.map.save()
-          let saveWs = await this.workspace.saveWorkspace()
-          if (!saveMap || !saveWs) {
-            Toast.show('保存失败')
-          } else {
-            Toast.show('保存成功')
-          }
-        } catch (e) {
-          Toast.show('保存失败')
-        }
-      }
+    console.log(this.type)
 
-    }).bind(this)()
+    // (async function () {
+    //   if (this.setting && this.setting.isVisible()) {
+    //     this.setting.close()
+    //   } else {
+    //     try {
+    //       let saveMap = await this.map.save()
+    //       let saveWs = await this.workspace.saveWorkspace()
+    //       if (!saveMap || !saveWs) {
+    //         Toast.show('保存失败')
+    //       } else {
+    //         Toast.show('保存成功')
+    //       }
+    //     } catch (e) {
+    //       Toast.show('保存失败')
+    //     }
+    //   }
+    // }).bind(this)()
   }
 
   // 显示删除图层Dialog
@@ -377,7 +443,7 @@ export default class MapView extends React.Component {
     headerBtnData.forEach(({ title, image, action }) => {
       arr.push(
         <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} image={image}
-          BtnClick={action}/>
+          BtnClick={action} />
       )
     })
     return arr
@@ -412,58 +478,58 @@ export default class MapView extends React.Component {
       return
     }
     let workspaceModule = new Workspace()
-    ;(async function () {
-      try {
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
+      ; (async function () {
+        try {
+          this.workspace = await workspaceModule.createObj()
+          this.mapControl = await this.mapView.getMapControl()
+          this.map = await this.mapControl.getMap()
 
-        AudioAnalyst.setConfig({
-          workspace: this.workspace,
-          mapControl: this.mapControl,
-          map: this.map,
-        })
+          AudioAnalyst.setConfig({
+            workspace: this.workspace,
+            mapControl: this.mapControl,
+            map: this.map,
+          })
 
-        // let filePath = await Utility.appendingHomeDirectory(this.path)
+          // let filePath = await Utility.appendingHomeDirectory(this.path)
 
-        await this.workspace.open(this.path)
-        await this.map.setWorkspace(this.workspace)
-        this.mapName = await this.workspace.getMapName(0)
+          await this.workspace.open(this.path)
+          await this.map.setWorkspace(this.workspace)
+          this.mapName = await this.workspace.getMapName(0)
 
-        if (this.mapName) {
-          await this.map.open(this.mapName)
-          // await this.map.viewEntire()
-          // await this.map.setScale(0.00005)
-          // await this.mapControl.setAction(Action.PAN)
-          // await this.map.refresh()
+          if (this.mapName) {
+            await this.map.open(this.mapName)
+            // await this.map.viewEntire()
+            // await this.map.setScale(0.00005)
+            // await this.mapControl.setAction(Action.PAN)
+            // await this.map.refresh()
 
-          navigator.geolocation.getCurrentPosition(
-            position => {
-              let lat = position.coords.latitude
-              let lon = position.coords.longitude
-              ;(async () => {
-                const point2dModule = new Point2D()
-                let centerPoint = await point2dModule.createObj(lon, lat)
-                await this.map.setCenter(centerPoint)
-                await this.map.viewEntire()
-                // await this.map.setScale(0.00005)
-                await this.mapControl.setAction(Action.PAN)
-                await this.map.refresh()
-                this.saveLatest()
-              }).bind(this)()
-            }
-          )
+            navigator.geolocation.getCurrentPosition(
+              position => {
+                let lat = position.coords.latitude
+                let lon = position.coords.longitude
+                  ; (async () => {
+                    const point2dModule = new Point2D()
+                    let centerPoint = await point2dModule.createObj(lon, lat)
+                    await this.map.setCenter(centerPoint)
+                    await this.map.viewEntire()
+                    // await this.map.setScale(0.00005)
+                    await this.mapControl.setAction(Action.PAN)
+                    await this.map.refresh()
+                    this.saveLatest()
+                  }).bind(this)()
+              }
+            )
+          }
+          await this.map.refresh()
+
+          await this._addGeometrySelectedListener()
+
+          this.container.setLoading(false)
+          // this.saveLatest()
+        } catch (e) {
+          this.container.setLoading(false)
         }
-        await this.map.refresh()
-
-        await this._addGeometrySelectedListener()
-
-        this.container.setLoading(false)
-        // this.saveLatest()
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }).bind(this)()
+      }).bind(this)()
   }
 
   _addRemoteMap = () => {
@@ -473,51 +539,51 @@ export default class MapView extends React.Component {
     }
     const workspaceModule = new Workspace()
     const point2dModule = new Point2D()
-    ;(async function () {
-      try {
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
-        await this.map.setWorkspace(this.workspace)
-        AudioAnalyst.setConfig({
-          workspace: this.workspace,
-          mapControl: this.mapControl,
-          map: this.map,
-        })
-        this.mapName = await this.map.getName()
+      ; (async function () {
+        try {
+          this.workspace = await workspaceModule.createObj()
+          this.mapControl = await this.mapView.getMapControl()
+          this.map = await this.mapControl.getMap()
+          await this.map.setWorkspace(this.workspace)
+          AudioAnalyst.setConfig({
+            workspace: this.workspace,
+            mapControl: this.mapControl,
+            map: this.map,
+          })
+          this.mapName = await this.map.getName()
 
-        // await this.map.setScale(0.0005)
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              this.saveLatest()
-            }).bind(this)()
+          // await this.map.setScale(0.0005)
+          navigator.geolocation.getCurrentPosition(
+            position => {
+              let lat = position.coords.latitude
+              let lon = position.coords.longitude
+                ; (async () => {
+                  let centerPoint = await point2dModule.createObj(lon, lat)
+                  await this.map.setCenter(centerPoint)
+                  await this.map.viewEntire()
+                  await this.mapControl.setAction(Action.PAN)
+                  await this.map.refresh()
+                  this.saveLatest()
+                }).bind(this)()
+            }
+          )
+          let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+          if (this.type === 'ONLINE') {
+            let dataset = await dsBaseMap.getDataset(this.layerIndex)
+            await this.map.addLayer(dataset, true)
           }
-        )
-        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-        if (this.type === 'ONLINE') {
-          let dataset = await dsBaseMap.getDataset(this.layerIndex)
-          await this.map.addLayer(dataset, true)
-        }
-        if (this.labelDSParams) {
-          let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
-          dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
-        }
-        await this.map.refresh()
+          if (this.labelDSParams) {
+            let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
+            dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
+          }
+          await this.map.refresh()
 
-        await this._addGeometrySelectedListener()
-        this.container.setLoading(false)
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }).bind(this)()
+          await this._addGeometrySelectedListener()
+          this.container.setLoading(false)
+        } catch (e) {
+          this.container.setLoading(false)
+        }
+      }).bind(this)()
   }
 
   render() {
@@ -532,7 +598,7 @@ export default class MapView extends React.Component {
           headerRight: headerRight,
           backAction: this.back,
         }}>
-        <SMMapView ref={ref => GLOBAL.mapView = ref} style={styles.map} onGetInstance={this._onGetInstance}/>
+        <SMMapView ref={ref => GLOBAL.mapView = ref} style={styles.map} onGetInstance={this._onGetInstance} />
         {
           this.state.measureShow &&
           <PopMeasureBar
@@ -540,7 +606,7 @@ export default class MapView extends React.Component {
             measureSquare={this._measure_square}
             measurePause={this._measure_pause}
             style={styles.measure}
-            result={this.state.measureResult}/>
+            result={this.state.measureResult} />
         }
         {
           this.state.popShow && <PopList
@@ -600,6 +666,14 @@ export default class MapView extends React.Component {
           confirmAction={this.removeObject}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}
+        />
+        <SaveDialog
+          ref={ref => this.saveDialog = ref}
+          confirmAction={this.saveMapAndWorkspace}
+          showWsName={this.showDialogCaption}
+          mapName={this.state.mapName}
+          wsName={this.state.wsName}
+          path={this.state.path}
         />
       </Container>
     )

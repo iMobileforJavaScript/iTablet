@@ -158,7 +158,7 @@ export default class AddDataset extends React.Component {
       await this.map.addLayer(item.dataset, true)
     }
     Toast.show('添加图层成功')
-
+    this.map && await this.map.refresh()
     this.props.navigation.goBack()
     this.cb && this.cb()
   }

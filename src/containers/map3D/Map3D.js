@@ -142,8 +142,8 @@ export default class Map3D extends React.Component {
       this.workspace = await workspaceModule.createObj()   //创建workspace实例
       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
       await this.scene.setWorkspace(this.workspace)        //设置工作空间
-      let filePath = await Utility.appendingHomeDirectory(this.state.path)
-      let openWk = await this.workspace.open(filePath)     //打开工作空间
+      // let filePath = await Utility.appendingHomeDirectory(this.state.path)
+      let openWk = await this.workspace.open(this.state.path)     //打开工作空间
       if (!openWk) {
         Toast.show(" 打开工作空间失败")
         return

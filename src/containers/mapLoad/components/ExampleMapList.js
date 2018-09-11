@@ -26,6 +26,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
+
   componentDidMount () {
     (async function () {
       let that = this
@@ -69,7 +70,7 @@ export default class ExampleMapList extends React.Component {
     ]
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
-      exist ? testData[index].backgroundcolor = true : testData[index].backgroundcolor = false
+      exist ? testData[index].backgroundcolor = null : testData[index].backgroundcolor = "#A3A3A3"
     }
     this.setState({ maplist: testData })
   }
@@ -222,7 +223,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   downList = (child, key) => {
-    let item = { name: key, ref: child }
+    item = { name: key, ref: child }
     this.downlist.push(item)
   }
   getDownitem = (key) => {
