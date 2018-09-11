@@ -40,17 +40,6 @@ export default class MapView extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.state = {
-      data: params.data,
-      popShow: false,       //  一级popView显示控制
-      popType: '',
-      measureShow: false,
-      measureResult: 0,
-      editLayer: {},
-      mapName: " ",
-      wsName: " ",
-      savepath: " ",
-    }
     this.type = params.type || 'LOCAL'
     this.isExample = params.isExample || false
     this.DSParams = params.DSParams || null
@@ -59,6 +48,20 @@ export default class MapView extends React.Component {
     this.mapName = params.mapName || ''
     this.path = params.path || ''
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
+    this.savepath= params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
+    wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
+    this.state = {
+      data: params.data,
+      popShow: false,       //  一级popView显示控制
+      popType: '',
+      mapName: '',
+      wsName: wsName,
+      measureShow: false,
+      measureResult: 0,
+      editLayer: {},
+    }
+
   }
 
   componentDidMount() {
@@ -88,7 +91,6 @@ export default class MapView extends React.Component {
     this.props.setOverlaySetting(null)
     this.props.setAnalystLayer(null)
   }
-
   closeWorkspace = () => {
     this.container.setLoading(true, '正在保存')
     this.saveLatest()
@@ -288,29 +290,7 @@ export default class MapView extends React.Component {
   }
 
 
-  savemap = async () => {
-    let savepath = this.path.substring(0, this.path.lastIndexOf('/') + 1)
-    let wsName = this.path.substring(this.path.lastIndexOf('/') + 1)
-    wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
-    let mapName = await this.map.getName()
-    this.setState({
-      mapName: mapName,
-      wsName: wsName,
-      path: savepath
-    })
-    this.saveDialog.setDialogVisible(true)
-  }
 
-  alertSave = () => {
-    Alert.alert(
-      "温馨提示",
-      "空间已修改是否保存",
-      [
-        { text: "确定", onPress: () => { this.savemap() } },
-        { text: "取消", onPress: () => { } },
-      ],
-      { cancelable: true })
-  }
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, "正在保存")
       ; (async function () {
@@ -336,7 +316,7 @@ export default class MapView extends React.Component {
           if (!saveMap) {
             Toast.show('该名称地图已存在')
           } else if (saveWs || !this.showDialogCaption) {
-            this.showSaveDialog(false)
+            await this.saveDialog.setDialogVisible(false)
             Toast.show('保存成功')
           } else if (saveWs === undefined) {
             Toast.show('gai')
@@ -344,6 +324,7 @@ export default class MapView extends React.Component {
             Toast.show('保存失败')
           }
         } catch (e) {
+          console.log(e)
           this.container.setLoading(false)
           Toast.show('保存失败')
         }
@@ -367,8 +348,19 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
+      Alert.alert(
+        "温馨提示",
+        "是否保存当前工作空间",
+        [
+          { text: "保存", onPress: () => { this.saveMap() } },
+          {
+            text: "取消", onPress: () => {
+              NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+            }
+          },
+        ],
+        { cancelable: true })
 
-      NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
     }
   }
 
@@ -378,33 +370,48 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
-      this.closeWorkspace()
-      NavigationService.goBack(this.props.nav.routes[1].key)
+      Alert.alert(
+        "温馨提示",
+        "是否保存当前工作空间",
+        [
+          { text: "保存", onPress: () => { this.saveMap() } },
+          {
+            text: "取消", onPress: () => {
+              this.closeWorkspace()
+              NavigationService.goBack(this.props.nav.routes[1].key)
+            }
+          },
+        ],
+        { cancelable: true })
+
     }
   }
 
   // 地图保存
   saveMap = async () => {
-    // if (this.setting && this.setting.isVisible()) {
-    //   this.setting.close()
-    // } else {
-    //   if (this.type && this.type === "LOCAL") {
-    //     try {
-    //       let saveMap = await this.map.save()
-    //       let saveWs = await this.workspace.saveWorkspace()
-    //       if (!saveMap || !saveWs) {
-    //         Toast.show('保存失败')
-    //       } else {
-    //         Toast.show('保存成功')
-    //       }
-    //     } catch (e) {
-    //       Toast.show('保存失败')
-    //     }
-    //   } else {
-    //     this.alertSave()
-    //   }
-    // }
-    Toast.show("待完善")
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+       if(this.map.isModified()){
+        if (this.type && this.type === "LOCAL") {
+          try {
+            let saveMap = await this.map.save()
+            let saveWs = await this.workspace.saveWorkspace()
+            if (!saveMap || !saveWs) {
+              Toast.show('保存失败')
+            } else {
+              Toast.show('保存成功')
+            }
+          } catch (e) {
+            Toast.show('保存失败')
+          }
+        } else {
+          await this.saveDialog.setDialogVisible(true)
+        }
+       }else{
+         Toast.show("已保存")
+       }
+    }
   }
 
   // 显示删除图层Dialog
@@ -474,8 +481,25 @@ export default class MapView extends React.Component {
       } else {
         // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
         // NavigationService.goBack(this.props.nav.routes[1].key)
-        this.closeWorkspace()
-        NavigationService.goBack()
+        if(!this.isExample){
+          Alert.alert(
+            "温馨提示",
+            "是否保存当前工作空间",
+            [
+              { text: "保存", onPress: () => { this.saveMap() } },
+              {
+                text: "取消", onPress: () => {
+                  this.closeWorkspace()
+                  NavigationService.goBack()
+                }
+              },
+            ],
+            { cancelable: true })
+        }else{
+          this.closeWorkspace()
+          NavigationService.goBack()
+        }
+        
       }
     })
   }
@@ -701,7 +725,7 @@ export default class MapView extends React.Component {
           showWsName={this.showDialogCaption}
           mapName={this.state.mapName}
           wsName={this.state.wsName}
-          path={this.state.path}
+          path={this.savepath}
         />
       </Container>
     )
