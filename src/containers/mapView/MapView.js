@@ -47,17 +47,18 @@ export default class MapView extends React.Component {
       measureShow: false,
       measureResult: 0,
       editLayer: {},
+      mapName: " ",
+      wsName: " ",
+      savepath: " ",
     }
     this.type = params.type || 'LOCAL'
     this.isExample = params.isExample || false
-
     this.DSParams = params.DSParams || null
     this.labelDSParams = params.labelDSParams || false
     this.layerIndex = params.layerIndex || 0
     this.mapName = params.mapName || ''
     this.path = params.path || ''
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
-
   }
 
   componentDidMount() {
@@ -94,7 +95,7 @@ export default class MapView extends React.Component {
     if (!this.map || !this.mapControl || !this.workspace) return
     (async function () {
       // this.container.bgColor = 'white'
-      this.container.setLoading(true, '正在关闭', {bgColor: 'white'})
+      this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
       this.clearData()
       // await this._remove_measure_listener()
       // await this._removeGeometrySelectedListener()
@@ -287,62 +288,66 @@ export default class MapView extends React.Component {
   }
 
 
- savemap=async()=>{
-  let savepath = this.path.substring(0, this.path.lastIndexOf('/') + 1)
-  let wsName = this.path.substring(this.path.lastIndexOf('/') + 1)
-  wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
-  let mapName = await this.map.getName()
-  this.setState({mapName:mapName,wsName:wsName,path:savepath})
-  this.saveDialog.setDialogVisible(isShow)
- }
+  savemap = async () => {
+    let savepath = this.path.substring(0, this.path.lastIndexOf('/') + 1)
+    let wsName = this.path.substring(this.path.lastIndexOf('/') + 1)
+    wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
+    let mapName = await this.map.getName()
+    this.setState({
+      mapName: mapName,
+      wsName: wsName,
+      path: savepath
+    })
+    this.saveDialog.setDialogVisible(true)
+  }
 
   alertSave = () => {
     Alert.alert(
       "温馨提示",
       "空间已修改是否保存",
       [
-        { text: "确定", onPress: () => { this.savemap()} },
+        { text: "确定", onPress: () => { this.savemap() } },
         { text: "取消", onPress: () => { } },
       ],
       { cancelable: true })
   }
-  saveMapAndWorkspace= ({mapName, wsName, path}) =>{
-    this.container.setLoading(true,"正在保存")
-    ;(async function(){
-      try {
-        let saveWs
-        let info = {}
-        if (!wsName) {
-          Toast.show('请输入地图名称')
-          return
-        }
-        if (this.state.path !== path || path === ConstPath.LocalDataPath) {
-          info.path = path
-        }
-        if (wsName && this.showDialogCaption) {
-          info.path = path
-          info.caption = wsName
-        }
-        await this.map.setWorkspace(this.workspace)
-        // 若名称相同，则不另存为
-        let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-        saveWs = await this.workspace.saveWorkspace(info)
-        this.container.setLoading(false)
-        if (!saveMap) {
-          Toast.show('该名称地图已存在')
-        } else if (saveWs || !this.showDialogCaption) {
-          this.showSaveDialog(false)
-          Toast.show('保存成功')
-        } else if (saveWs === undefined) {
-          Toast.show('gai')
-        } else {
+  saveMapAndWorkspace = ({ mapName, wsName, path }) => {
+    this.container.setLoading(true, "正在保存")
+      ; (async function () {
+        try {
+          let saveWs
+          let info = {}
+          if (!wsName) {
+            Toast.show('请输入地图名称')
+            return
+          }
+          if (this.state.path !== path || path === ConstPath.LocalDataPath) {
+            info.path = path
+          }
+          if (wsName && this.showDialogCaption) {
+            info.path = path
+            info.caption = wsName
+          }
+          await this.map.setWorkspace(this.workspace)
+          // 若名称相同，则不另存为
+          let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+          saveWs = await this.workspace.saveWorkspace(info)
+          this.container.setLoading(false)
+          if (!saveMap) {
+            Toast.show('该名称地图已存在')
+          } else if (saveWs || !this.showDialogCaption) {
+            this.showSaveDialog(false)
+            Toast.show('保存成功')
+          } else if (saveWs === undefined) {
+            Toast.show('gai')
+          } else {
+            Toast.show('保存失败')
+          }
+        } catch (e) {
+          this.container.setLoading(false)
           Toast.show('保存失败')
         }
-      } catch (e) {
-        this.container.setLoading(false)
-        Toast.show('保存失败')
-      }
-    }).bind(this)()
+      }).bind(this)()
   }
 
   geometryMultiSelected = events => {
@@ -379,27 +384,27 @@ export default class MapView extends React.Component {
   }
 
   // 地图保存
-  saveMap =async () => {
-      // if (this.setting && this.setting.isVisible()) {
-      //   this.setting.close()
-      // } else {
-      //   if(this.type&&this.type==="LOCAL"){
-      //   try {
-      //     let saveMap = await this.map.save()
-      //     let saveWs = await this.workspace.saveWorkspace()
-      //     if (!saveMap || !saveWs) {
-      //       Toast.show('保存失败')
-      //     } else {
-      //       Toast.show('保存成功')
-      //     }
-      //   } catch (e) {
-      //     Toast.show('保存失败')
-      //   }
-      //   }else{
-      //       this.alertSave()
-      //   }
-      // }
-      Toast.show("待完善")
+  saveMap = async () => {
+    // if (this.setting && this.setting.isVisible()) {
+    //   this.setting.close()
+    // } else {
+    //   if (this.type && this.type === "LOCAL") {
+    //     try {
+    //       let saveMap = await this.map.save()
+    //       let saveWs = await this.workspace.saveWorkspace()
+    //       if (!saveMap || !saveWs) {
+    //         Toast.show('保存失败')
+    //       } else {
+    //         Toast.show('保存成功')
+    //       }
+    //     } catch (e) {
+    //       Toast.show('保存失败')
+    //     }
+    //   } else {
+    //     this.alertSave()
+    //   }
+    // }
+    Toast.show("待完善")
   }
 
   // 显示删除图层Dialog
@@ -493,58 +498,58 @@ export default class MapView extends React.Component {
       return
     }
     let workspaceModule = new Workspace()
-      ;(async function () {
-      try {
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
+      ; (async function () {
+        try {
+          this.workspace = await workspaceModule.createObj()
+          this.mapControl = await this.mapView.getMapControl()
+          this.map = await this.mapControl.getMap()
 
-        AudioAnalyst.setConfig({
-          workspace: this.workspace,
-          mapControl: this.mapControl,
-          map: this.map,
-        })
+          AudioAnalyst.setConfig({
+            workspace: this.workspace,
+            mapControl: this.mapControl,
+            map: this.map,
+          })
 
-        // let filePath = await Utility.appendingHomeDirectory(this.path)
+          // let filePath = await Utility.appendingHomeDirectory(this.path)
 
-        await this.workspace.open(this.path)
-        await this.map.setWorkspace(this.workspace)
-        this.mapName = await this.workspace.getMapName(0)
+          await this.workspace.open(this.path)
+          await this.map.setWorkspace(this.workspace)
+          this.mapName = await this.workspace.getMapName(0)
 
-        if (this.mapName) {
-          await this.map.open(this.mapName)
-          // await this.map.viewEntire()
-          // await this.map.setScale(0.00005)
-          // await this.mapControl.setAction(Action.PAN)
-          // await this.map.refresh()
+          if (this.mapName) {
+            await this.map.open(this.mapName)
+            // await this.map.viewEntire()
+            // await this.map.setScale(0.00005)
+            // await this.mapControl.setAction(Action.PAN)
+            // await this.map.refresh()
 
-          navigator.geolocation.getCurrentPosition(
-            position => {
-              let lat = position.coords.latitude
-              let lon = position.coords.longitude
+            navigator.geolocation.getCurrentPosition(
+              position => {
+                let lat = position.coords.latitude
+                let lon = position.coords.longitude
                   ; (async () => {
-                const point2dModule = new Point2D()
-                let centerPoint = await point2dModule.createObj(lon, lat)
-                await this.map.setCenter(centerPoint)
-                await this.map.viewEntire()
-                // await this.map.setScale(0.00005)
-                await this.mapControl.setAction(Action.PAN)
-                await this.map.refresh()
-                this.saveLatest()
-              }).bind(this)()
-            }
-          )
+                    const point2dModule = new Point2D()
+                    let centerPoint = await point2dModule.createObj(lon, lat)
+                    await this.map.setCenter(centerPoint)
+                    await this.map.viewEntire()
+                    // await this.map.setScale(0.00005)
+                    await this.mapControl.setAction(Action.PAN)
+                    await this.map.refresh()
+                    this.saveLatest()
+                  }).bind(this)()
+              }
+            )
+          }
+          await this.map.refresh()
+
+          await this._addGeometrySelectedListener()
+
+          this.container.setLoading(false)
+          // this.saveLatest()
+        } catch (e) {
+          this.container.setLoading(false)
         }
-        await this.map.refresh()
-
-        await this._addGeometrySelectedListener()
-
-        this.container.setLoading(false)
-        // this.saveLatest()
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }).bind(this)()
+      }).bind(this)()
   }
 
   _addRemoteMap = () => {
@@ -554,59 +559,59 @@ export default class MapView extends React.Component {
     }
     const workspaceModule = new Workspace()
     const point2dModule = new Point2D()
-    ;(async function () {
-      try {
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
-        await this.map.setWorkspace(this.workspace)
-        AudioAnalyst.setConfig({
-          workspace: this.workspace,
-          mapControl: this.mapControl,
-          map: this.map,
-        })
-        this.mapName = await this.map.getName()
+      ; (async function () {
+        try {
+          this.workspace = await workspaceModule.createObj()
+          this.mapControl = await this.mapView.getMapControl()
+          this.map = await this.mapControl.getMap()
+          await this.map.setWorkspace(this.workspace)
+          AudioAnalyst.setConfig({
+            workspace: this.workspace,
+            mapControl: this.mapControl,
+            map: this.map,
+          })
+          this.mapName = await this.map.getName()
 
-        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-        if (this.type === 'ONLINE') {
-          let dataset = await dsBaseMap.getDataset(this.layerIndex)
-          await this.map.addLayer(dataset, true)
-        }
-        if (this.labelDSParams) {
-          let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
-          dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
-        }
+          let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
+          if (this.type === 'ONLINE') {
+            let dataset = await dsBaseMap.getDataset(this.layerIndex)
+            await this.map.addLayer(dataset, true)
+          }
+          if (this.labelDSParams) {
+            let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
+            dsLabel && await this.map.addLayer(await dsLabel.getDataset(this.layerIndex), true)
+          }
 
-        // await this.map.setScale(0.0005)
-        // 以UDB打开工作空间时，不加载数据
-        // 为防止添加图层不再可显示范围内，所以不定位当前位置
-        if (this.DSParams && this.DSParams.engineType === EngineType.UDB) {
-          await this.map.viewEntire()
-          await this.mapControl.setAction(Action.PAN)
-          await this.map.refresh()
-        } else {
-          navigator.geolocation.getCurrentPosition(
-            position => {
-              let lat = position.coords.latitude
-              let lon = position.coords.longitude
-              ;(async () => {
-                let centerPoint = await point2dModule.createObj(lon, lat)
-                await this.map.setCenter(centerPoint)
-                await this.map.viewEntire()
-                await this.mapControl.setAction(Action.PAN)
-                await this.map.refresh()
-                this.saveLatest()
-              }).bind(this)()
-            }
-          )
-        }
+          // await this.map.setScale(0.0005)
+          // 以UDB打开工作空间时，不加载数据
+          // 为防止添加图层不再可显示范围内，所以不定位当前位置
+          if (this.DSParams && this.DSParams.engineType === EngineType.UDB) {
+            await this.map.viewEntire()
+            await this.mapControl.setAction(Action.PAN)
+            await this.map.refresh()
+          } else {
+            navigator.geolocation.getCurrentPosition(
+              position => {
+                let lat = position.coords.latitude
+                let lon = position.coords.longitude
+                  ; (async () => {
+                    let centerPoint = await point2dModule.createObj(lon, lat)
+                    await this.map.setCenter(centerPoint)
+                    await this.map.viewEntire()
+                    await this.mapControl.setAction(Action.PAN)
+                    await this.map.refresh()
+                    this.saveLatest()
+                  }).bind(this)()
+              }
+            )
+          }
 
-        await this._addGeometrySelectedListener()
-        this.container.setLoading(false)
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }).bind(this)()
+          await this._addGeometrySelectedListener()
+          this.container.setLoading(false)
+        } catch (e) {
+          this.container.setLoading(false)
+        }
+      }).bind(this)()
   }
 
   render() {

@@ -5,4 +5,5 @@ export default {
   ONLINE_SERVICE_DOWNLOADED :"com.supermap.RN.JSMapcontrol.online_service_downloaded",
   ONLINE_SERVICE_LOGIN : "com.supermap.RN.JSMapcontrol.online_service_login",
   ONLINE_SERVICE_LOGOUT : "com.supermap.RN.JSMapcontrol.online_service_logout",
+  ONLINE_SERVICE_DOWNLOADFAILURE : "com.supermap.RN.JSMapcontrol.online_service_downloadfailure",
 }
