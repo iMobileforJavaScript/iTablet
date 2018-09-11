@@ -91,12 +91,12 @@ export default class MapView extends React.Component {
   }
 
   closeWorkspace = () => {
-    this.container.setLoading(true, '正在保存')
+    this.container && this.container.setLoading(true, '正在保存')
     this.saveLatest()
     if (!this.map || !this.mapControl || !this.workspace) return
     (async function () {
       // this.container.bgColor = 'white'
-      this.container.setLoading(true, '正在关闭', {bgColor: 'white'})
+      this.container && this.container.setLoading(true, '正在关闭', {bgColor: 'white'})
       this.clearData()
       // await this._remove_measure_listener()
       // await this._removeGeometrySelectedListener()
@@ -104,8 +104,13 @@ export default class MapView extends React.Component {
       this.mapControl && await this.mapControl.removeGeometrySelectedListener()
 
       this.map && await this.map.close()
-      this.mapControl && await this.mapControl.dispose()
+      await this.workspace.closeAllDatasource()
       this.workspace && await this.workspace.closeWorkspace()
+
+      this.map && await this.map.dispose()
+      this.mapControl && await this.mapControl.dispose()
+      this.workspace && await this.workspace.dispose()
+
       this.map = null
       this.mapControl = null
       this.workspace = null
@@ -471,8 +476,8 @@ export default class MapView extends React.Component {
     })
   }
 
-  setLoading = (loading = false) => {
-    this.container && this.container.setLoading(loading)
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
   }
 
   _addMap = () => {

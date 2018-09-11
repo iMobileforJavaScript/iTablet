@@ -21,7 +21,7 @@ import { Const } from '../../../constains'
 let point2Ds = [], // 目标坐标数组
   centerPoints = [] // 配送中心坐标数组
 let analystSetting, transportationAnalyst
-let mMapView, mMapControl, mMap, mTrackingLayer
+let mMapView, mMapControl, mMap, mTrackingLayer, _setLoading = () => {}
 let longPressEnable = true
 let taType = '', // 设置旅行商/最佳路径 类型
   addPointType = '' // 设置旅行商 配送中心，目的地 标示   center | dist
@@ -54,10 +54,12 @@ async function clear() {
   mTrackingLayer && await mTrackingLayer.clear()
   // transportationAnalyst && transportationAnalyst.dispose()
   // mMapControl && await mMapControl.setAction(Action.PAN)
-  mMap && await mMap.refresh()
+  if (mMap) {
+    await mMap.refresh()
+  }
 }
 
-function dispose() {
+async function dispose() {
   point2Ds = []
   centerPoints = []
   // TODO 清除Selection
@@ -70,16 +72,22 @@ function dispose() {
   if (mMap) {
     mMap = null
   }
+  if (_setLoading) {
+    _setLoading = null
+  }
+  if (transportationAnalyst) {
+    await transportationAnalyst.dispose()
+  }
 }
 
-function check() {
+function check(checkNodes = true) {
   if (!analystSetting || !mMap || !mTrackingLayer) {
     Toast.show('请加载分析图层')
     return false
-  } else if (addPointType === CENTER && centerPoints.length === 0) {
+  } else if (addPointType === CENTER && centerPoints.length === 0 && checkNodes) {
     Toast.show('请添加配送中心')
     return false
-  } else if (point2Ds.length === 0) {
+  } else if (point2Ds.length === 0 && checkNodes) {
     Toast.show('请添加目的地')
     return false
   }
@@ -87,10 +95,7 @@ function check() {
 }
 
 async function longPressHandler(event) {
-  if (!mTrackingLayer) {
-    Toast.show('请加载分析图层')
-    return
-  }
+  if (!check(false)) return
   if (!longPressEnable) return // 防止重复点击
   longPressEnable = false
   try {
@@ -159,11 +164,12 @@ async function longPressHandler(event) {
   }
 }
 
-async function loadModel(mapView, mapControl, datasetVector, type) {
+async function loadModel(mapView, mapControl, datasetVector, type, setLoading = () => {}) {
   if (!type) {
     Toast.show('请设置加载类型')
     return
   }
+  _setLoading = setLoading
   taType = type
   switch (type) {
     case Const.NETWORK_ROUTE:
@@ -177,7 +183,7 @@ async function loadModel(mapView, mapControl, datasetVector, type) {
 
 async function loadRouteModel(mapView, mapControl, datasetVector) {
   try {
-    await clear()
+    await dispose()
     mMapView = mapView
     mMapControl = mapControl
     mMap = await mMapControl.getMap()
@@ -242,15 +248,12 @@ async function loadTSPPathModel(mapView, mapControl, datasetVector) {
   }
 }
 
-
-
 async function addGestureDetector() {
   await mMapControl.setGestureDetector({
     longPressHandler: longPressHandler,
     // scrollHandler: scrollHandler,
   })
 }
-
 
 async function deleteGestureDetector() {
   await mMapControl.deleteGestureDetector()
@@ -259,7 +262,7 @@ async function deleteGestureDetector() {
 async function display(result) {
   try {
     if (!result) return
-    await mTrackingLayer.clear()
+    mTrackingLayer && await mTrackingLayer.clear()
 
     let routes = result.routes
     if (!routes || routes.length <= 0) {
@@ -268,14 +271,16 @@ async function display(result) {
     for (let i = 0; i < routes.length; i++) {
       let style = await getGeoLineStyle(1, 255, 80, 0)
       await routes[i].setStyle(style)
-      await mTrackingLayer.add(routes[i], "result")
+      mTrackingLayer && await mTrackingLayer.add(routes[i], "result")
       // await mTrackingLayer.add(routes[i], routes[i]._SMGeometryId)
       // await routes[i].dispose()
     }
 
     longPressEnable = false
+    _setLoading(false)
     await mMap.refresh()
   } catch (e) {
+    _setLoading(false)
     return false
   }
 }
@@ -284,6 +289,7 @@ async function findPath() {
   try {
     addPointType = DIST
     if (!check()) return
+    _setLoading(true, '分析中')
     let parameter = await new TransportationAnalystParameter().createObj()
     await parameter.setWeightName('length')
     //设置最佳路径分析的返回对象
@@ -297,6 +303,7 @@ async function findPath() {
     let result = await transportationAnalyst.findPath(parameter, false)
     this.display(result)
   } catch (e) {
+    _setLoading(false)
     Toast.show('分析路径失败')
   }
 }
@@ -305,6 +312,7 @@ async function findMTSPPath() {
   try {
     addPointType = CENTER
     if (!check()) return
+    _setLoading(true, '分析中')
     let parameter = await new TransportationAnalystParameter().createObj()
 
     await parameter.setPoints(point2Ds)
@@ -316,6 +324,7 @@ async function findMTSPPath() {
     let result = await transportationAnalyst.findMTSPPathByPoint2Ds(parameter, centerPoints, false)
     this.display(result)
   } catch (e) {
+    _setLoading(false)
     Toast.show('分析路径失败')
   }
 }
