@@ -13,7 +13,7 @@ import { Toast, AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
 import NavigationService from '../NavigationService'
-import { Alert } from 'react-native'
+import { Alert, InteractionManager } from 'react-native'
 import styles from './styles'
 
 export default class MapView extends React.Component {
@@ -150,13 +150,12 @@ export default class MapView extends React.Component {
     }).bind(this)()
   }
 
-  _chooseLayer = (type, isEdit = false, cb?= () => { }) => {
+  _chooseLayer = (data, cb?= () => { }) => {
     NavigationService.navigate('ChooseEditLayer', {
       workspace: this.workspace,
       map: this.map,
-      type: type,
       mapControl: this.mapControl,
-      isEdit, cb,
+      ...data, cb,
     })
   }
 
@@ -289,11 +288,11 @@ export default class MapView extends React.Component {
 
 
  savemap=async()=>{
-  let savepath = params.path.substring(0, params.path.lastIndexOf('/') + 1)
-  let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
+  let savepath = this.path.substring(0, this.path.lastIndexOf('/') + 1)
+  let wsName = this.path.substring(this.path.lastIndexOf('/') + 1)
   wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
   let mapName = await this.map.getName()
-  thi.setState({mapName:mapName,wsName:wsName,path:savepath})
+  this.setState({mapName:mapName,wsName:wsName,path:savepath})
   this.saveDialog.setDialogVisible(isShow)
  }
 
@@ -381,27 +380,26 @@ export default class MapView extends React.Component {
 
   // 地图保存
   saveMap =async () => {
-    // (async function () {
-      if (this.setting && this.setting.isVisible()) {
-        this.setting.close()
-      } else {
-        if(this.type&&this.type==="LOCAL"){
-        try {
-          let saveMap = await this.map.save()
-          let saveWs = await this.workspace.saveWorkspace()
-          if (!saveMap || !saveWs) {
-            Toast.show('保存失败')
-          } else {
-            Toast.show('保存成功')
-          }
-        } catch (e) {
-          Toast.show('保存失败')
-        }
-        }else{
-            
-        }
-      }
-    // }).bind(this)()
+      // if (this.setting && this.setting.isVisible()) {
+      //   this.setting.close()
+      // } else {
+      //   if(this.type&&this.type==="LOCAL"){
+      //   try {
+      //     let saveMap = await this.map.save()
+      //     let saveWs = await this.workspace.saveWorkspace()
+      //     if (!saveMap || !saveWs) {
+      //       Toast.show('保存失败')
+      //     } else {
+      //       Toast.show('保存成功')
+      //     }
+      //   } catch (e) {
+      //     Toast.show('保存失败')
+      //   }
+      //   }else{
+      //       this.alertSave()
+      //   }
+      // }
+      Toast.show("待完善")
   }
 
   // 显示删除图层Dialog
@@ -465,14 +463,16 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-      // NavigationService.goBack(this.props.nav.routes[1].key)
-      this.closeWorkspace()
-      NavigationService.goBack()
-    }
+    InteractionManager.runAfterInteractions(() => {
+      if (this.setting && this.setting.isVisible()) {
+        this.setting.close()
+      } else {
+        // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
+        // NavigationService.goBack(this.props.nav.routes[1].key)
+        this.closeWorkspace()
+        NavigationService.goBack()
+      }
+    })
   }
 
   setLoading = (loading = false) => {
@@ -578,6 +578,8 @@ export default class MapView extends React.Component {
         }
 
         // await this.map.setScale(0.0005)
+        // 以UDB打开工作空间时，不加载数据
+        // 为防止添加图层不再可显示范围内，所以不定位当前位置
         if (this.DSParams && this.DSParams.engineType === EngineType.UDB) {
           await this.map.viewEntire()
           await this.mapControl.setAction(Action.PAN)

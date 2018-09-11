@@ -391,6 +391,10 @@ export default class PopList extends React.Component {
   //============================缓冲区操作======================================
   /** *缓冲区分析* **/
   _bufferAnalyst = () => {
+    if (this.props.selection.layer._SMLayerId !== this.props.bufferSetting.selectedLayer.id) {
+      Toast.show('请选择设置的图层进行分析')
+      return
+    }
     bufferAnalyst.analyst({
       layer: this.props.selection.layer,
       map: this.props.map,
@@ -627,7 +631,8 @@ export default class PopList extends React.Component {
           setSelection={this.props.setSelection}
         />
       )
-    } else if (this.state.toolbar === 'network') {
+    }
+    if (this.state.toolbar === 'network' && this.props.popType === Const.ANALYST) {
       return (
         <NetworkAnalystToolBar
           popType={this.state.networkType}
