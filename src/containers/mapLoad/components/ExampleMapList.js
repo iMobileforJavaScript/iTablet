@@ -12,6 +12,7 @@ const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeB
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
 const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
 
+
 export default class ExampleMapList extends React.Component {
   constructor(props) {
     super(props)
@@ -21,9 +22,10 @@ export default class ExampleMapList extends React.Component {
     this.progeress = 0
     this.downlist = []
     this.state = {
-      maplist: [],
+      maplist: []
     }
   }
+
 
   componentDidMount () {
     (async function () {
@@ -64,17 +66,17 @@ export default class ExampleMapList extends React.Component {
       { key: vectorMap, path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
       { key: gl, path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
       { key: overLay, path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
-      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
+      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' }
     ]
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
-      exist ? testData[index].backgroundcolor = true : testData[index].backgroundcolor = false
+      exist ? testData[index].backgroundcolor = null : testData[index].backgroundcolor = "#A3A3A3"
     }
     this.setState({ maplist: testData })
   }
 
 
-  _itemClick = async key => {
+  _itemClick = async (key) => {
     let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
@@ -104,8 +106,6 @@ export default class ExampleMapList extends React.Component {
         break
       case ObliquePhoto:
         path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
-        // path = ConstPath.SampleDataPath + '/凯德Mall/凯德Mall.sxwu'
-
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
@@ -114,7 +114,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, ObliquePhoto)
+          this.alertDown(filePath, fileName, outPath, child)
         }
         break
       case gl:
@@ -147,7 +147,6 @@ export default class ExampleMapList extends React.Component {
         break
     }
   }
-
   unZipFolder = async (zipfile, targetdir) => {
     let result = await Utility.unZipFolder(zipfile, targetdir)
     console.log(result)
@@ -173,6 +172,8 @@ export default class ExampleMapList extends React.Component {
       )
     }
   }
+
+
 
   download = async (filePath, fileName) => {
     this.OnlineService = new OnlineService()
@@ -222,17 +223,17 @@ export default class ExampleMapList extends React.Component {
   }
 
   downList = (child, key) => {
-    let item = { name: key, ref: child }
+    item = { name: key, ref: child }
     this.downlist.push(item)
   }
-
-  getDownitem = key => {
+  getDownitem = (key) => {
     for (let index = 0; index < this.downlist.length; index++) {
       if (key === this.downlist[index].name) {
         return this.downlist[index].ref
       }
     }
   }
+
 
   _renderItem = ({ item }) => {
     let key = item.key

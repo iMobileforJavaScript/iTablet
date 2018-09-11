@@ -22,6 +22,7 @@ export default class MapLoad extends Component {
     this.map = params.map
     this.routes = nav.routes
     this.mapControl = params.mapControl
+    this.fileexist=params.fileexist
   }
 
   TD = async () => {

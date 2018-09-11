@@ -19,8 +19,8 @@ export default class Loading extends Component {
 
   static defaultProps = {
     initLoading: true,
-    bgColor: 'large',
-    indicatorSize: 'transparent',
+    bgColor: 'transparent',
+    indicatorSize: 'large',
     indicatorColor: 'white',
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE',  // BLACK_WITH_TITLE   NORMAL

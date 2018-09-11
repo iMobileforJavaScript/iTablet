@@ -6,6 +6,6 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   sup: {
-    margin: 7,
+    margin: 30,
   },
 })
