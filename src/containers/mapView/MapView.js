@@ -57,9 +57,7 @@ export default class MapView extends React.Component {
     this.mapName = params.mapName || ''
     this.path = params.path || ''
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
-    let savepath = params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
-    wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
+
   }
 
   componentDidMount() {
@@ -289,6 +287,16 @@ export default class MapView extends React.Component {
     })
   }
 
+
+ savemap=async()=>{
+  let savepath = params.path.substring(0, params.path.lastIndexOf('/') + 1)
+  let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
+  wsName = wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
+  let mapName = await this.map.getName()
+  thi.setState({mapName:mapName,wsName:wsName,path:savepath})
+  this.saveDialog.setDialogVisible(isShow)
+ }
+
   alertSave = () => {
     Alert.alert(
       "温馨提示",
@@ -299,15 +307,8 @@ export default class MapView extends React.Component {
       ],
       { cancelable: true })
   }
-
-
-  savemap=async()=>{
-    let mapName = await this.map.getName()
-    // this.saveMapAndWorkspace({mapName,wsName,savepath})
-  }
-
   saveMapAndWorkspace= ({mapName, wsName, path}) =>{
-    this.container.setLoading(true)
+    this.container.setLoading(true,"正在保存")
     ;(async function(){
       try {
         let saveWs
@@ -379,23 +380,27 @@ export default class MapView extends React.Component {
   }
 
   // 地图保存
-  saveMap = () => {
+  saveMap =async () => {
     // (async function () {
-    //   if (this.setting && this.setting.isVisible()) {
-    //     this.setting.close()
-    //   } else {
-    //     try {
-    //       let saveMap = await this.map.save()
-    //       let saveWs = await this.workspace.saveWorkspace()
-    //       if (!saveMap || !saveWs) {
-    //         Toast.show('保存失败')
-    //       } else {
-    //         Toast.show('保存成功')
-    //       }
-    //     } catch (e) {
-    //       Toast.show('保存失败')
-    //     }
-    //   }
+      if (this.setting && this.setting.isVisible()) {
+        this.setting.close()
+      } else {
+        if(this.type&&this.type==="LOCAL"){
+        try {
+          let saveMap = await this.map.save()
+          let saveWs = await this.workspace.saveWorkspace()
+          if (!saveMap || !saveWs) {
+            Toast.show('保存失败')
+          } else {
+            Toast.show('保存成功')
+          }
+        } catch (e) {
+          Toast.show('保存失败')
+        }
+        }else{
+            
+        }
+      }
     // }).bind(this)()
   }
 
