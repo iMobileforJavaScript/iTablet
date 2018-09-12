@@ -1440,8 +1440,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1482,8 +1482,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);

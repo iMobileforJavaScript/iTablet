@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { FlatList } from 'react-native'
 import { Container, InputDialog } from '../../components'
-import { Toast } from '../../utils'
+import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
 import { Action } from 'imobile_for_javascript'
@@ -40,6 +40,7 @@ export default class MT_layerManager extends React.Component {
       path: path,
       currentEditIndex: props.editLayer.index >= 0 ? props.editLayer.index : -1, //当前编辑界面的index
     }
+    this.currentOpenIndex = -1
   }
 
   componentDidMount() {
@@ -51,7 +52,7 @@ export default class MT_layerManager extends React.Component {
     try {
       this.itemRefs = []
       this.map = await this.mapControl.getMap()
-      let layerNameArr = await this.map.getLayersByType()
+      let layerNameArr = await this.map.getLayersByType1()
       let currentEditIndex = -1
       for(let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
@@ -231,6 +232,25 @@ export default class MT_layerManager extends React.Component {
     }).bind(this)()
   }
 
+  getItemLayout = (data, index) => {
+    return {
+      length: scaleSize(80),
+      offset: scaleSize(80 + 1) * index,
+      index,
+    }
+  }
+
+  getChildList = async data => {
+    try {
+      if (data.type !== 'layerGroup') return
+      let count = await data.layer.getCount()
+      // TODO 图层组子图层
+      Toast.show('图层组子图层：' + count)
+    } catch (e) {
+      Toast.show('获取失败', e.toString())
+    }
+  }
+
   _renderItem = ({ item }) => {
     return (
       <LayerManager_item
@@ -238,6 +258,7 @@ export default class MT_layerManager extends React.Component {
         layer={item.layer}
         map={this.map}
         data={item}
+        isClose={this.state.currentOpenIndex !== item.index}
         mapControl={this.mapControl}
         showRemoveDialog={this.showRemoveDialog}
         showRenameDialog={this.showRenameDialog}
@@ -250,9 +271,11 @@ export default class MT_layerManager extends React.Component {
           })
           this.props.setEditLayer && this.props.setEditLayer(data)
         }}
-        onPress={() => {
-          this.listView && this.listView.scrollToEnd()
+        onOpen={data => {
+          this.currentOpenIndex >= 0 && this.currentOpenIndex !== data.index && this.itemRefs[this.currentOpenIndex].close()
+          this.currentOpenIndex = data.index
         }}
+        getChildList={this.getChildList}
       />
     )
   }
@@ -275,6 +298,7 @@ export default class MT_layerManager extends React.Component {
           ref={ref => this.listView = ref}
           data={this.state.datasourceList}
           renderItem={this._renderItem}
+          getItemLayout={this.getItemLayout}
         />
         <SaveDialog
           ref={ref => this.saveDialog = ref}

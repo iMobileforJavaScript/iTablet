@@ -589,7 +589,12 @@ export default class MapView extends React.Component {
 
         await this.workspace.open(this.path)
         await this.map.setWorkspace(this.workspace)
-        this.mapName = await this.workspace.getMapName(0)
+
+        let maps = await this.workspace.getMaps()
+        let count = await maps.getCount()
+        if (count > 0) {
+          this.mapName = await this.workspace.getMapName(0)
+        }
 
         if (this.mapName) {
           await this.map.open(this.mapName)

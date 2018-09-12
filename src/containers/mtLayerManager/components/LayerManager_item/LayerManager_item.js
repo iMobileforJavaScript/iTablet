@@ -15,8 +15,9 @@ import { PopBtnList } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { Const } from '../../../../constains'
 import NavigationService from '../../../NavigationService'
-import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
-
+// import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+import SwipeOut from 'react-native-swipeout'
+import { scaleSize } from '../../../../utils'
 import styles from './styles'
 
 const LAYER_GROUP = 'layerGroup'
@@ -28,10 +29,16 @@ export default class LayerManager_item extends React.Component {
     map: Object,
     data: Object,
     mapControl: Object,
+    isClose: boolean,
     showRenameDialog: () => {},
     showRemoveDialog: () => {},
     setEditable: () => {},
-    onPress: () => {},
+    getChildList: () => {},
+    onOpen: () => {},
+  }
+
+  static defaultProps = {
+    isClose: true,
   }
 
   constructor(props){
@@ -50,6 +57,7 @@ export default class LayerManager_item extends React.Component {
       showLevelOne: showLevelOne,
       showLevelTwo: showLevelTwo,
       isVectorLayer: isVectorLayer,
+      isClose: false,
     }
   }
 
@@ -151,13 +159,37 @@ export default class LayerManager_item extends React.Component {
     // ]
 
     if (!isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT && this.props.data.type !== DatasetType.CAD) {
-      options.push({ key: '专题图', selectable: isVectorLayer, action: this._openTheme })
-      options.push({ key: '风格', selectable: !isThemeLayer, action: this._openStyle })
+      // options.push({ key: '专题图', selectable: isVectorLayer, action: this._openTheme })
+      // options.push({ key: '风格', selectable: !isThemeLayer, action: this._openStyle })
+
+      options.push({
+        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-theme-white.png')} /></View>,
+        onPress: this._openTheme,
+      })
+      options.push({
+        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-style-white.png')} /></View>,
+        onPress: this._openStyle,
+      })
     } else if (isThemeLayer || this.props.data.type === DatasetType.CAD) {
-      options.push({ key: '专题图', selectable: isVectorLayer, action: this._openTheme })
+      // options.push({ key: '专题图', selectable: isVectorLayer, action: this._openTheme })
+      options.push({
+        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-theme-white.png')} /></View>,
+        onPress: this._openTheme,
+      })
     }
-    options.push({ key: '重命名', selectable: true, action: this._rename })
-    options.push({ key: '移除', selectable: true, action: this._remove })
+    // options.push({ key: '重命名', selectable: true, action: this._rename })
+    // options.push({ key: '移除', selectable: true, action: this._remove })
+
+    options.push({
+      component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-rename-white.png')} /></View>,
+      // component: <Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-rename-white.png')} />,
+      onPress: this._rename,
+    })
+    options.push({
+      component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-delete-white.png')} /></View>,
+      onPress: this._remove,
+    })
+
 
     return options
   }
@@ -216,7 +248,7 @@ export default class LayerManager_item extends React.Component {
   }
 
   _openTheme = () => {
-    let title = ''
+    let title = '', themeType = ''
     switch (this.props.data.themeType) {
       case ThemeType.LABEL:
         title = Const.LABEL
@@ -228,11 +260,15 @@ export default class LayerManager_item extends React.Component {
         title = Const.RANGE
         break
     }
+    if (this.props.data.type === DatasetType.CAD) {
+      title = Const.LABEL
+      themeType = ThemeType.LABEL
+    }
     if (title) {
       let editLayer = this.props.layer
       Object.assign(editLayer, {
         index: this.props.data.index,
-        themeType: this.props.data.themeType,
+        themeType: themeType || this.props.data.themeType,
         name: this.props.data.name,
         caption: this.props.data.caption,
       })
@@ -270,10 +306,13 @@ export default class LayerManager_item extends React.Component {
   }
 
   _pop_row = () => {
+    let isShow = !this.state.rowShow
     this.setState({
-      rowShow: !this.state.rowShow,
+      rowShow: isShow,
     }, () => {
-      this.props.onPress && this.props.onPress()
+      if (isShow) {
+        this.props.getChildList && this.props.getChildList(this.props.data)
+      }
     })
   }
 
@@ -341,36 +380,89 @@ export default class LayerManager_item extends React.Component {
     return icon
   }
 
+  close = () => {
+    this.setState({
+      isClose: true,
+    })
+  }
+
   render() {
     let name = this.props.data.caption
     const image1 = this.state.editable ? require('../../../../assets/map/icon_edit_selected.png') :require('../../../../assets/map/icon_edit.png')
     const image2 = this.state.visable ? require('../../../../assets/map/icon_visible_selected.png') :require('../../../../assets/map/icon_visible.png')
     const image3 = this.state.selectable ? require('../../../../assets/map/icon_choose_seleted.png') :require('../../../../assets/map/icon_choose.png')
     const image4 = this.state.snapable ? require('../../../../assets/map/icon_catch_selected.png') :require('../../../../assets/map/icon_catch.png')
-    const image5 = this.state.rowShow ? require('../../../../assets/map/icon-arrow-up.png') :require('../../../../assets/map/icon-arrow-down.png')
+    const image5 = this.state.rowShow ? require('../../../../assets/mapEdit/icon-arrow-down.png') :require('../../../../assets/mapEdit/icon-arrow-left.png')
+    // return (
+    //     <View style={[styles.container, {backgroundColor: 'white'}]}>
+    //       <TouchableOpacity activeOpacity={1} style={styles.rowOne}  onPress={this._pop_row}>
+    //         <View style={styles.btn_container}>
+    //           <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>
+    //           {this.state.isVectorLayer && this.state.showLevelOne && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
+    //           {this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
+    //           {this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
+    //           <View style={styles.btn}>
+    //             <Image style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
+    //           </View>
+    //           {/*占位View*/}
+    //           {(!this.state.isVectorLayer || !this.state.showLevelOne) && <View style={styles.btn} />}
+    //           {(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}
+    //           {(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}
+    //         </View>
+    //         <View style={styles.text_container}><Text>{name}</Text></View>
+    //         {/*<TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}>*/}
+    //         <Image style={styles.btn_image} source={image5}/>
+    //         {/*</TouchableOpacity>*/}
+    //       </TouchableOpacity>
+    //       {this.state.rowShow && this._renderAdditionView()}
+    //     </View>
+    // )
+
     return (
-      <View style={styles.container}>
+      <SwipeOut
+        style={styles.container}
+        close={this.state.isClose}
+        // left={rowData.left}
+        right={this.state.options}
+        rowID={this.props.data.id}
+        sectionID={this.props.data.name}
+        autoClose={true}
+        backgroundColor={'white'}
+        onOpen={(sectionID, rowID) => {
+          this.props.onOpen && this.props.onOpen(this.props.data)
+        }}
+        buttonWidth={scaleSize(100)}
+        onClose={() => console.log('===close') }
+        scroll={event => console.log('scroll event') }
+      >
         <TouchableOpacity activeOpacity={1} style={styles.rowOne}  onPress={this._pop_row}>
           <View style={styles.btn_container}>
+            {
+              this.props.data.type === LAYER_GROUP &&
+              <TouchableOpacity style={styles.btn} onPress={this._pop_row}>
+                <Image resizeMode={'contain'} style={styles.btn_image_samll} source={image5}/>
+              </TouchableOpacity>
+            }
             <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>
             {this.state.isVectorLayer && this.state.showLevelOne && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
             {this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
             {this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
             <View style={styles.btn}>
-              <Image style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
+              <Image resizeMode={'contain'} style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
             </View>
             {/*占位View*/}
-            {(!this.state.isVectorLayer || !this.state.showLevelOne) && <View style={styles.btn} />}
-            {(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}
-            {(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}
+            {/*{(!this.state.isVectorLayer || !this.state.showLevelOne) && <View style={styles.btn} />}*/}
+            {/*{(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}*/}
+            {/*{(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}*/}
           </View>
-          <View style={styles.text_container}><Text>{name}</Text></View>
+          <View style={styles.text_container}>
+            <Text style={styles.text}>{name}</Text>
+          </View>
           {/*<TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}>*/}
-          <Image style={styles.btn_image} source={image5}/>
+          {/*<Image style={styles.btn_image} source={image5}/>*/}
           {/*</TouchableOpacity>*/}
         </TouchableOpacity>
-        {this.state.rowShow && this._renderAdditionView()}
-      </View>
+      </SwipeOut>
     )
   }
 }
