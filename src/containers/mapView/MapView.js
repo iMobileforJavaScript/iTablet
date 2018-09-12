@@ -40,17 +40,6 @@ export default class MapView extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.state = {
-      data: params.data,
-      popShow: false,       //  一级popView显示控制
-      popType: '',
-      measureShow: false,
-      measureResult: 0,
-      editLayer: {},
-      mapName: " ",
-      wsName: " ",
-      savepath: " ",
-    }
     this.type = params.type || 'LOCAL'
     this.isExample = params.isExample || false
     this.DSParams = params.DSParams || null
@@ -59,6 +48,20 @@ export default class MapView extends React.Component {
     this.mapName = params.mapName || ''
     this.path = params.path || ''
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
+    this.savepath = params.type === "ONLINE" ? null : params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    let wsName = params.type === "ONLINE" ? null : params.path.substring(params.path.lastIndexOf('/') + 1)
+    wsName = params.type === "ONLINE" ? null : wsName.lastIndexOf('.') > 0 && wsName.substring(0, wsName.lastIndexOf('.'))
+    this.state = {
+      data: params.data,
+      popShow: false,       //  一级popView显示控制
+      popType: '',
+      mapName: '',
+      wsName: wsName,
+      measureShow: false,
+      measureResult: 0,
+      editLayer: {},
+    }
+
   }
 
   componentDidMount() {
@@ -90,7 +93,6 @@ export default class MapView extends React.Component {
   }
 
   closeWorkspace = (cb = () => {}) => {
-    this.container && this.container.setLoading(true, '正在保存')
     if (!this.map || !this.mapControl || !this.workspace) return
     this.saveLatest((async function () {
       // this.container.bgColor = 'white'
@@ -322,7 +324,7 @@ export default class MapView extends React.Component {
 
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, "正在保存")
-    ;(async function () {
+    ; (async function () {
       try {
         let saveWs
         let info = {}
@@ -339,19 +341,36 @@ export default class MapView extends React.Component {
         }
         await this.map.setWorkspace(this.workspace)
         // 若名称相同，则不另存为
-        let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+        // let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+        let saveMap = false
         saveWs = await this.workspace.saveWorkspace(info)
         this.container.setLoading(false)
-        if (!saveMap) {
-          Toast.show('该名称地图已存在')
-        } else if (saveWs || !this.showDialogCaption) {
-          this.showSaveDialog(false)
-          Toast.show('保存成功')
+
+        if (saveWs || !this.showDialogCaption) {
+          saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+          if (saveMap) {
+            this.saveDialog.setDialogVisible(false)
+            Toast.show('保存成功')
+            NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+          } else {
+            Toast.show('该名称地图已存在')
+          }
         } else if (saveWs === undefined) {
-          Toast.show('gai')
+          Toast.show('工作空间已存在')
         } else {
           Toast.show('保存失败')
         }
+
+        // if (!saveMap) {
+        //   Toast.show('该名称地图已存在')
+        // } else if (saveWs || !this.showDialogCaption) {
+        //   this.showSaveDialog(false)
+        //   Toast.show('保存成功')
+        // } else if (saveWs === undefined) {
+        //   Toast.show('工作空间已存在')
+        // } else {
+        //   Toast.show('保存失败')
+        // }
       } catch (e) {
         this.container.setLoading(false)
         Toast.show('保存失败')
@@ -376,8 +395,22 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
-
-      NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+      if (this.type !== "ONLINE"&&!this.isExample) {
+        Alert.alert(
+          "温馨提示",
+          "是否保存当前工作空间",
+          [
+            { text: "保存", onPress: () => { this.saveMap() } },
+            {
+              text: "取消", onPress: () => {
+                NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+              },
+            },
+          ],
+          { cancelable: true })
+      }else{
+        NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+      }
     }
   }
 
@@ -387,32 +420,52 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
-      this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+      if (this.type !== "ONLINE"&&!this.isExample) {
+        Alert.alert(
+          "温馨提示",
+          "是否保存当前工作空间",
+          [
+            { text: "保存", onPress: () => { this.saveMap() } },
+            {
+              text: "取消", onPress: () => {
+                this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+              },
+            },
+          ],
+          { cancelable: true })
+      }else{
+        this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+      }
     }
   }
 
   // 地图保存
   saveMap = async () => {
-    // if (this.setting && this.setting.isVisible()) {
-    //   this.setting.close()
-    // } else {
-    //   if (this.type && this.type === "LOCAL") {
-    //     try {
-    //       let saveMap = await this.map.save()
-    //       let saveWs = await this.workspace.saveWorkspace()
-    //       if (!saveMap || !saveWs) {
-    //         Toast.show('保存失败')
-    //       } else {
-    //         Toast.show('保存成功')
-    //       }
-    //     } catch (e) {
-    //       Toast.show('保存失败')
-    //     }
-    //   } else {
-    //     this.alertSave()
-    //   }
-    // }
-    Toast.show("待完善")
+    if (this.setting && this.setting.isVisible()) {
+      this.setting.close()
+    } else {
+      // if (this.map.isModified() && this.type !== "ONLINE" ) {
+      if (this.map.isModified() && this.type !== "ONLINE" ) {
+        if (this.type && this.type === "LOCAL") {
+          try {
+            let saveMap = await this.map.save()
+            let saveWs = await this.workspace.saveWorkspace()
+            if (!saveMap || !saveWs) {
+              Toast.show('保存失败')
+            } else {
+              Toast.show('保存成功')
+              this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+            }
+          } catch (e) {
+            Toast.show('保存失败')
+          }
+        } else {
+          await this.saveDialog.setDialogVisible(true)
+        }
+      } else {
+        this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+      }
+    }
   }
 
   // 显示删除图层Dialog
@@ -482,8 +535,22 @@ export default class MapView extends React.Component {
       } else {
         // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
         // NavigationService.goBack(this.props.nav.routes[1].key)
-        this.closeWorkspace(NavigationService.goBack())
-
+        if (this.type!=="ONLINE"&& !this.isExample) {
+          Alert.alert(
+            "温馨提示",
+            "是否保存当前工作空间",
+            [
+              { text: "保存", onPress: () => { this.saveMap() } },
+              {
+                text: "取消", onPress: () => {
+                  this.closeWorkspace(NavigationService.goBack())
+                },
+              },
+            ],
+            { cancelable: true })
+        } else {
+          this.closeWorkspace(NavigationService.goBack())
+        }
       }
     })
   }
@@ -506,7 +573,7 @@ export default class MapView extends React.Component {
       return
     }
     let workspaceModule = new Workspace()
-      ;(async function () {
+      ; (async function () {
       try {
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
@@ -544,15 +611,18 @@ export default class MapView extends React.Component {
                 await this.mapControl.setAction(Action.PAN)
                 await this.map.refresh()
                 // this.saveLatest()
+                this.container.setLoading(false)
               }).bind(this)()
             }
           )
+        } else {
+          await this.map.refresh()
+
+          await this._addGeometrySelectedListener()
+
+          this.container.setLoading(false)
         }
-        await this.map.refresh()
 
-        await this._addGeometrySelectedListener()
-
-        this.container.setLoading(false)
         // this.saveLatest()
       } catch (e) {
         this.container.setLoading(false)
@@ -597,25 +667,24 @@ export default class MapView extends React.Component {
           await this.map.viewEntire()
           await this.mapControl.setAction(Action.PAN)
           await this.map.refresh()
+          this.container.setLoading(false)
         } else {
           navigator.geolocation.getCurrentPosition(
             position => {
               let lat = position.coords.latitude
               let lon = position.coords.longitude
-                  ; (async () => {
+                ;(async () => {
                 let centerPoint = await point2dModule.createObj(lon, lat)
                 await this.map.setCenter(centerPoint)
                 await this.map.viewEntire()
                 await this.mapControl.setAction(Action.PAN)
                 await this.map.refresh()
                 // this.saveLatest()
+                this.container.setLoading(false)
               }).bind(this)()
             }
           )
         }
-
-        await this._addGeometrySelectedListener()
-        this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)
       }
@@ -709,7 +778,7 @@ export default class MapView extends React.Component {
           showWsName={this.showDialogCaption}
           mapName={this.state.mapName}
           wsName={this.state.wsName}
-          path={this.state.path}
+          path={this.savepath}
         />
       </Container>
     )
