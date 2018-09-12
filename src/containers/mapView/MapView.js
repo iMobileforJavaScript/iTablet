@@ -343,7 +343,7 @@ export default class MapView extends React.Component {
           if (!saveMap) {
             Toast.show('该名称地图已存在')
           } else if (saveWs || !this.showDialogCaption) {
-            this.showSaveDialog(false)
+            this.saveDialog.setDialogVisible(false)
             Toast.show('保存成功')
           } else if (saveWs === undefined) {
             Toast.show('gai')

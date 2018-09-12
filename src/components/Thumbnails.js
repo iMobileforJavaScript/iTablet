@@ -31,12 +31,12 @@ export default class Thumbnails extends React.Component {
       opacity:0.6,
     }
   }
-  updateprogress=data=>{
+  updateprogress= async(data)=>{
     if(data===99){
       data++
       this.setState({opacity:0})
     }
-    this.mProgress.progress=data/100
+    this.mProgress.progress=(data/100)
   }
 
   render() {

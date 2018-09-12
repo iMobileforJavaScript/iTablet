@@ -46,7 +46,7 @@ export default class ExampleMapList extends React.Component {
             that.downloaded = true
             if (that.unzip) {
               that.unzip = false
-              await that.unZipFolder(that.zipfile, that.targetdir)
+              await that.unZipFile(that.zipfile, that.targetdir)
               GLOBAL.downitemname = ''
               that.progeress = 0
             }
@@ -79,7 +79,8 @@ export default class ExampleMapList extends React.Component {
       { key: vectorMap, path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
       { key: gl, path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
       { key: overLay, path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
-      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' }
+      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
+      // { key: ObliquePhoto, path: ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu' },
     ]
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
@@ -160,8 +161,8 @@ export default class ExampleMapList extends React.Component {
         break
     }
   }
-  unZipFolder = async (zipfile, targetdir) => {
-    let result = await Utility.unZipFolder(zipfile, targetdir)
+  unZipFile = async (zipfile, targetdir) => {
+    let result = await Utility.unZipFile(zipfile, targetdir)
     console.log(result)
     if (result) {
       Alert.alert(
@@ -189,11 +190,11 @@ export default class ExampleMapList extends React.Component {
 
 
   download = async (filePath, fileName) => {
+    Toast.show("开始下载")
     this.OnlineService = new OnlineService()
     let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
     if (result) {
       this.OnlineService.download(filePath, fileName)
-      Toast.show("开始下载")
     } else {
       Alert.alert(
         "温馨提示",
