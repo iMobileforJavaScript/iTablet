@@ -15,7 +15,11 @@ import { PopBtnList } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { Const } from '../../../../constains'
 import NavigationService from '../../../NavigationService'
+import { SwipeListView, SwipeRow } from 'react-native-swipe-list-view'
+
 import styles from './styles'
+
+const LAYER_GROUP = 'layerGroup'
 
 export default class LayerManager_item extends React.Component {
 
@@ -27,13 +31,14 @@ export default class LayerManager_item extends React.Component {
     showRenameDialog: () => {},
     showRemoveDialog: () => {},
     setEditable: () => {},
+    onPress: () => {},
   }
 
   constructor(props){
     super(props)
     let data = this.props.data
     let options = this.getOptions(data)
-    let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
+    let {showLevelOne, showLevelTwo, isVectorLayer} = this.getValidate(data)
     this.state = {
       options: options,
       editable: data.isEditable,
@@ -42,7 +47,8 @@ export default class LayerManager_item extends React.Component {
       snapable: data.isSnapable,
       rowShow:false,
       image: this.getStyleIconByType(data),
-      isNonOperatingThemeLayer: isNonOperatingThemeLayer,
+      showLevelOne: showLevelOne,
+      showLevelTwo: showLevelTwo,
       isVectorLayer: isVectorLayer,
     }
   }
@@ -57,23 +63,24 @@ export default class LayerManager_item extends React.Component {
   }
 
   getValidate = data => {
-    let isThemeLayer = false, isNonOperatingThemeLayer = false, isVectorLayer = false
+    let isThemeLayer = false, showLevelOne = true, isVectorLayer = false
     switch (data.themeType) {
       case 0: // 非专题图层
         isThemeLayer = false
-        isNonOperatingThemeLayer = false
+        showLevelOne = true
         break
       case ThemeType.UNIQUE:
       case ThemeType.RANGE:
         isThemeLayer = true
-        isNonOperatingThemeLayer = false
+        showLevelOne = true
         break
       case ThemeType.LABEL:
       default:
         isThemeLayer = true
-        isNonOperatingThemeLayer = true
+        showLevelOne = false
         break
     }
+    let showLevelTwo = data.type !== DatasetType.CAD && data.type !== LAYER_GROUP
     if (
       data.type === DatasetType.CAD ||
       data.type === DatasetType.LINE ||
@@ -88,21 +95,21 @@ export default class LayerManager_item extends React.Component {
       isVectorLayer = true
     }
 
-    return {isThemeLayer, isNonOperatingThemeLayer, isVectorLayer}
+    return {isThemeLayer, showLevelOne, showLevelTwo, isVectorLayer}
   }
 
   getData = (data = this.props.data) => {
     (async function () {
       let options = this.getOptions(data)
-      let {isNonOperatingThemeLayer, isVectorLayer} = this.getValidate(data)
+      let {showLevelOne, isVectorLayer} = this.getValidate(data)
       this.setState({
-        isNonOperatingThemeLayer: isNonOperatingThemeLayer,
+        showLevelOne: !showLevelOne,
         isVectorLayer: isVectorLayer,
         options: options,
-        editable: data.isEditable && isNonOperatingThemeLayer,
-        visable: data.isVisible && isNonOperatingThemeLayer,
-        selectable: data.isSelectable && isNonOperatingThemeLayer,
-        snapable: data.isSnapable && isNonOperatingThemeLayer,
+        editable: data.isEditable && !showLevelOne,
+        visable: data.isVisible && !showLevelOne,
+        selectable: data.isSelectable && !showLevelOne,
+        snapable: data.isSnapable && !showLevelOne,
         rowShow: this.state.rowShow || false,
         image: this.getStyleIconByType(data),
       })
@@ -130,7 +137,7 @@ export default class LayerManager_item extends React.Component {
     //   { key: '风格', selectable: !isThemeLayer, action: this._openStyle },
     //   { key: '重命名', selectable: true, action: this._rename },
     //   { key: '移除', selectable: true, action: this._remove },
-    // // ] : !isNonOperatingThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
+    // // ] : !showLevelOne && isVectorLayer && this.props.data.type !== DatasetType.TEXT ? [ // 非文本专题图的矢量图层
     // ] : isVectorLayer && this.props.data.type !== DatasetType.TEXT && this.props.data.type !== DatasetType.GRID ? [ // 非文本专题图的矢量图层
     //   { key: '专题图', selectable: true, action: this._openTheme },
     //   { key: '重命名', selectable: true, action: this._rename },
@@ -262,10 +269,11 @@ export default class LayerManager_item extends React.Component {
     this.props.showRemoveDialog && this.props.showRemoveDialog(true, this.props.layer)
   }
 
-  _pop_row=()=>{
-    this.setState(oldstate=>{
-      let oldshow = oldstate.rowShow
-      return({rowShow:!oldshow})
+  _pop_row = () => {
+    this.setState({
+      rowShow: !this.state.rowShow,
+    }, () => {
+      this.props.onPress && this.props.onPress()
     })
   }
 
@@ -305,6 +313,9 @@ export default class LayerManager_item extends React.Component {
   getLayerIconByType = type => {
     let icon
     switch (type) {
+      case LAYER_GROUP:
+        icon = require('../../../../assets/map/icon-directory.png')
+        break
       case DatasetType.POINT: // 点数据集
         icon = require('../../../../assets/map/icon-dot.png')
         break
@@ -342,16 +353,16 @@ export default class LayerManager_item extends React.Component {
         <TouchableOpacity activeOpacity={1} style={styles.rowOne}  onPress={this._pop_row}>
           <View style={styles.btn_container}>
             <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>
-            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
-            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && this.props.data.type !== DatasetType.CAD && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
-            {this.state.isVectorLayer && !this.state.isNonOperatingThemeLayer && this.props.data.type !== DatasetType.CAD && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
+            {this.state.isVectorLayer && this.state.showLevelOne && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
+            {this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
+            {this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
             <View style={styles.btn}>
               <Image style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
             </View>
             {/*占位View*/}
-            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer) && <View style={styles.btn} />}
-            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer || this.props.data.type === DatasetType.CAD) && <View style={styles.btn} />}
-            {(!this.state.isVectorLayer || this.state.isNonOperatingThemeLayer || this.props.data.type === DatasetType.CAD) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || !this.state.showLevelOne) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}
+            {(!this.state.isVectorLayer || !this.state.showLevelOne || this.state.showLevelTwo) && <View style={styles.btn} />}
           </View>
           <View style={styles.text_container}><Text>{name}</Text></View>
           {/*<TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}>*/}

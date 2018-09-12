@@ -250,6 +250,9 @@ export default class MT_layerManager extends React.Component {
           })
           this.props.setEditLayer && this.props.setEditLayer(data)
         }}
+        onPress={() => {
+          this.listView && this.listView.scrollToEnd()
+        }}
       />
     )
   }
@@ -269,6 +272,7 @@ export default class MT_layerManager extends React.Component {
           addLayerGroup={this._add_layer_group}
         />
         <FlatList
+          ref={ref => this.listView = ref}
           data={this.state.datasourceList}
           renderItem={this._renderItem}
         />

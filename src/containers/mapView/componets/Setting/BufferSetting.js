@@ -27,8 +27,8 @@ export default class BufferSetting extends React.Component {
       distance: props.data && props.data.distance || 3,
       endType: props.data && props.data.endType || BufferEndType.ROUND,
 
-      label: '请选择',
-      selectedLayer: {},
+      label: props.data && props.data.selectedLayer && props.data.selectedLayer.caption || '请选择',
+      selectedLayer: props.data && props.data.selectedLayer || {},
     }
   }
 

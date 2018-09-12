@@ -89,13 +89,13 @@ export default class MapView extends React.Component {
     this.props.setAnalystLayer(null)
   }
 
-  closeWorkspace = () => {
+  closeWorkspace = (cb = () => {}) => {
     this.container && this.container.setLoading(true, '正在保存')
-    this.saveLatest()
     if (!this.map || !this.mapControl || !this.workspace) return
-    (async function () {
+    this.saveLatest((async function () {
       // this.container.bgColor = 'white'
       this.container && this.container.setLoading(true, '正在关闭', {bgColor: 'white'})
+      // this.container && this.container.setLoading(true, '正在关闭')
       this.clearData()
       // await this._remove_measure_listener()
       // await this._removeGeometrySelectedListener()
@@ -106,19 +106,23 @@ export default class MapView extends React.Component {
       await this.workspace.closeAllDatasource()
       this.workspace && await this.workspace.closeWorkspace()
 
-      this.map && await this.map.dispose()
-      this.mapControl && await this.mapControl.dispose()
-      this.workspace && await this.workspace.dispose()
+      // this.map && await this.map.dispose()
+      // this.mapControl && await this.mapControl.dispose()
+      // this.workspace && await this.workspace.dispose()
 
       this.map = null
       this.mapControl = null
       this.workspace = null
       this.container && this.container.setLoading(false)
-    }).bind(this)()
+      cb && cb()
+    }).bind(this))
   }
 
-  saveLatest = () => {
-    if (this.isExample) return
+  saveLatest = (cb = () => {}) => {
+    if (this.isExample) {
+      cb()
+      return
+    }
     try {
       this.mapControl && this.mapControl.outputMap({ mapView: this.mapView }).then(({ result, uri }) => {
         if (result) {
@@ -131,7 +135,7 @@ export default class MapView extends React.Component {
             labelDSParams: this.labelDSParams,
             layerIndex: this.layerIndex,
             mapName: this.mapName,
-          })
+          }, cb)
         }
       })
     } catch (e) {
@@ -383,8 +387,7 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
-      this.closeWorkspace()
-      NavigationService.goBack(this.props.nav.routes[1].key)
+      this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
     }
   }
 
@@ -479,8 +482,8 @@ export default class MapView extends React.Component {
       } else {
         // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
         // NavigationService.goBack(this.props.nav.routes[1].key)
-        this.closeWorkspace()
-        NavigationService.goBack()
+        this.closeWorkspace(NavigationService.goBack())
+
       }
     })
   }
@@ -540,7 +543,7 @@ export default class MapView extends React.Component {
                 // await this.map.setScale(0.00005)
                 await this.mapControl.setAction(Action.PAN)
                 await this.map.refresh()
-                this.saveLatest()
+                // this.saveLatest()
               }).bind(this)()
             }
           )
@@ -605,7 +608,7 @@ export default class MapView extends React.Component {
                 await this.map.viewEntire()
                 await this.mapControl.setAction(Action.PAN)
                 await this.map.refresh()
-                this.saveLatest()
+                // this.saveLatest()
               }).bind(this)()
             }
           )
