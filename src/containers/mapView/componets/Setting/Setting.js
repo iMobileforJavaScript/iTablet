@@ -159,16 +159,15 @@ export default class Setting extends React.Component {
               let size2D = await new Size2D().createObj(0, 0)
               await geoStyle.setMarkerSize(size2D)
               await nodeLayer.setStyle(geoStyle)
-              await this.map.refresh()
 
               await this.props.map.refresh()
             }
-            result = await facilityAnalyst.loadModel(this.props.mapControl, analystLayer, nodeLayer, datasetVector)
+            result = await facilityAnalyst.loadModel(this.props.mapControl, analystLayer, nodeLayer, datasetVector, this.props.setLoading)
             break
           case Const.NETWORK_ROUTE:
           case Const.NETWORK_TSP:
             await analystLayer.setSelectable(false)
-            result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetVector, this.state.type)
+            result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetVector, this.state.type, this.props.setLoading)
             break
         }
         this.props.setLoading && this.props.setLoading(false)

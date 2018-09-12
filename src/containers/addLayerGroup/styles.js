@@ -24,6 +24,7 @@ export default StyleSheet.create({
   input: {
     flex: 1,
     marginLeft: scaleSize(30),
+    paddingVertical: 0,
     height: scaleSize(60),
     backgroundColor: 'white',
     borderRadius: scaleSize(8),

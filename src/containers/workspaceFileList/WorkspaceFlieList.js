@@ -151,21 +151,21 @@ export default class WorkSpaceFileList extends Component {
           }
         }
 
-        const point2dModule = new Point2D()
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              key && NavigationService.goBack(key)
-            }).bind(this)()
-          }
-        )
+        // const point2dModule = new Point2D()
+        // navigator.geolocation.getCurrentPosition(
+        //   position => {
+        //     let lat = position.coords.latitude
+        //     let lon = position.coords.longitude
+        //     ;(async () => {
+        //       let centerPoint = await point2dModule.createObj(lon, lat)
+        //       await this.map.setCenter(centerPoint)
+        //       await this.map.viewEntire()
+        //       await this.mapControl.setAction(Action.PAN)
+        //       await this.map.refresh()
+        //       key && NavigationService.goBack(key)
+        //     }).bind(this)()
+        //   }
+        // )
 
         this.DSParams = { server: path, engineType: EngineType.UDB }
         // let layerIndex = 0
@@ -173,6 +173,10 @@ export default class WorkSpaceFileList extends Component {
         // let dataset = await dsBaseMap.getDataset(layerIndex)
         // await this.map.addLayer(dataset, true)
         await this.workspace.openDatasource(this.DSParams)
+        await this.map.viewEntire()
+        await this.mapControl.setAction(Action.PAN)
+        await this.map.refresh()
+        key && NavigationService.goBack(key)
       } else {
         NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
       }

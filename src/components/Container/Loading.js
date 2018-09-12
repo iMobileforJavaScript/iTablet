@@ -3,6 +3,8 @@ import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
 import { scaleSize } from '../../utils'
 export const NORMAL = 'NORMAL'
 
+const INFO = '加载中'
+
 export default class Loading extends Component {
 
   props: {
@@ -24,7 +26,7 @@ export default class Loading extends Component {
     indicatorColor: 'white',
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE',  // BLACK_WITH_TITLE   NORMAL
-    info: '加载中',
+    info: INFO,
   }
 
   constructor(props) {
@@ -45,7 +47,7 @@ export default class Loading extends Component {
       }
       this.setState({
         animating: loading,
-        info: info,
+        info: info || INFO,
         extra,
       })
     }
