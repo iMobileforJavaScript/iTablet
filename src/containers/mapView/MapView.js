@@ -624,11 +624,9 @@ export default class MapView extends React.Component {
           )
         } else {
           await this.map.refresh()
-
-          await this._addGeometrySelectedListener()
-
           this.container.setLoading(false)
         }
+        await this._addGeometrySelectedListener()
 
         // this.saveLatest()
       } catch (e) {
@@ -644,7 +642,7 @@ export default class MapView extends React.Component {
     }
     const workspaceModule = new Workspace()
     const point2dModule = new Point2D()
-      ; (async function () {
+    ; (async function () {
       try {
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
@@ -692,6 +690,7 @@ export default class MapView extends React.Component {
             }
           )
         }
+        await this._addGeometrySelectedListener()
       } catch (e) {
         this.container.setLoading(false)
       }
