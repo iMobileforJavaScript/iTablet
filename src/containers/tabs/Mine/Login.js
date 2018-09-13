@@ -45,7 +45,7 @@ export default class Login extends React.Component {
       return
     }
 
-    this.container.setLoading(true)
+    this.container.setLoading(true, '登录中')
     let result = await new OnlineService().login(userName, password)
     this.container.setLoading(false)
     if (typeof result === 'boolean' && result) {
@@ -77,7 +77,8 @@ export default class Login extends React.Component {
         }}>
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
           <View style={{ alignItems: 'center' }}>
-            <Input ref={ref => this.phone = ref} placeholder='账号/手机号' />
+            {/*<Input ref={ref => this.phone = ref} placeholder='账号/手机号' />*/}
+            <Input ref={ref => this.phone = ref} placeholder='账号(暂不支持手机号)' />
             <Input ref={ref => this.password = ref} placeholder='密码' password={true} image={require('../../../assets/public/lock.png')} />
             <Tips tipText='地图慧账户可直接登录' btnText='忘记密码' btnClick={this._forgetPassword} />
             <View style={{ marginTop: 50, marginBottom: 70 }}>

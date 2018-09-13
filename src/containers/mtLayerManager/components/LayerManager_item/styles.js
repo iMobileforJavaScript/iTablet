@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { constUtil, scaleSize } from '../../../../utils'
+import { color, size } from '../../../../styles'
 
 export default StyleSheet.create({
   container: {
@@ -12,6 +13,7 @@ export default StyleSheet.create({
     borderRightWidth:0,
     borderBottomWidth:1,
     borderColor:'#bbbbbb',
+    height: scaleSize(80),
   },
   rowOne: {
     // flex: 1,
@@ -19,14 +21,14 @@ export default StyleSheet.create({
     padding: scaleSize(6),
     flexDirection:'row',
     alignItems:'center',
-    justifyContent:'space-between',
+    // justifyContent:'space-between',
   },
   btn_container:{
     // height: scaleSize(80),
     // width:46*3,
     alignItems: 'center',
     flexDirection:'row',
-    justifyContent:'space-between',
+    // justifyContent:'space-between',
   },
   btn:{
     height: scaleSize(60),
@@ -40,9 +42,30 @@ export default StyleSheet.create({
     height: scaleSize(40),
     width: scaleSize(40),
   },
+  btn_image_samll:{
+    height: scaleSize(30),
+    width: scaleSize(30),
+  },
+  btnImage:{
+    // height: scaleSize(40),
+    width: scaleSize(40),
+  },
+  btnImageView: {
+    height: scaleSize(80),
+    width: scaleSize(100),
+    // paddingHorizontal: scaleSize(10),
+    backgroundColor: color.blue2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   text_container:{
     // height:40,
-    width: scaleSize(),
+    // width: scaleSize(),
+    marginLeft: scaleSize(30),
+  },
+  text: {
+    fontSize: size.fontSize.fontSizeMd,
+    backgroundColor: 'transparent',
   },
   rowTwo: {
     height: scaleSize(90),
