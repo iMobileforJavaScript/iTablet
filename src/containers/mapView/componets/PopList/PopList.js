@@ -522,17 +522,17 @@ export default class PopList extends React.Component {
               { key: constants.PATCH_HOLLOW_REGION, action: this.patchHollowRegion }, { key: constants.ATTRIBUTE, action: this.attribute },
             ],
           },
-          {
-            key: '文字编辑',
-            type: DatasetType.TEXT,
-            action: cbData => {this._chooseLayer(cbData, DatasetType.TEXT)},
-            operations: [
-              // { key: '选择', action: this.select },
-              { key: constants.MODIFIED, action: this.toDoAction },
-              { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
-              { key: constants.DELETE, action: this.toDoAction }, { key: constants.ATTRIBUTE, action: this.toDoAction },
-            ],
-          },
+          // {
+          //   key: '文字编辑',
+          //   type: DatasetType.TEXT,
+          //   action: cbData => {this._chooseLayer(cbData, DatasetType.TEXT)},
+          //   operations: [
+          //     // { key: '选择', action: this.select },
+          //     { key: constants.MODIFIED, action: this.toDoAction },
+          //     { key: constants.UNDO, action: this._undo }, { key: constants.REDO, action: this._redo },
+          //     { key: constants.DELETE, action: this.toDoAction }, { key: constants.ATTRIBUTE, action: this.toDoAction },
+          //   ],
+          // },
         ]
         break
       case Const.ANALYST:
