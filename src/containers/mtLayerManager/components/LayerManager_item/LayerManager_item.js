@@ -277,7 +277,7 @@ export default class LayerManager_item extends React.Component {
         layer: this.props.layer,
         map: this.props.map,
         mapControl: this.props.mapControl,
-        isThemeLayer: true,
+        isThemeLayer: !themeType,
       })
     } else {
       NavigationService.navigate('ThemeEntry', {

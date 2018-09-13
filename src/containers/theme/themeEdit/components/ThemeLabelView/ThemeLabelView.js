@@ -61,13 +61,15 @@ export default class ThemeLabelView extends React.Component {
     }
     if (this.props.isThemeLayer) {
       let theme = await this.props.layer.getTheme()
-      data.expression = await theme.getLabelExpression()
-      let textStyle = await theme.getStyle()
-      data.fontName = await textStyle.getFontName()
-      data.fontSize = await textStyle.getFontWidth() || 10
-      data.align = await textStyle.getAlignment()
-      data.fontColor = dataUtil.colorHex(await textStyle.getForeColor())
-      this.themeUnique = await new ThemeLabel().createObjClone(theme)
+      if (theme) {
+        data.expression = await theme.getLabelExpression()
+        let textStyle = await theme.getStyle()
+        data.fontName = await textStyle.getFontName()
+        data.fontSize = await textStyle.getFontWidth() || 10
+        data.align = await textStyle.getAlignment()
+        data.fontColor = dataUtil.colorHex(await textStyle.getForeColor())
+        this.themeLabel = await new ThemeLabel().createObjClone(theme)
+      }
     }
     this.setState({
       data: data,

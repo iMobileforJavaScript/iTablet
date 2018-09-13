@@ -342,13 +342,15 @@ export default class MapView extends React.Component {
         await this.map.setWorkspace(this.workspace)
         // 若名称相同，则不另存为
         // let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-        let saveMap = false
-        saveWs = await this.workspace.saveWorkspace(info)
+        // let saveMap = false
+        // saveWs = await this.workspace.saveWorkspace(info)
         this.container.setLoading(false)
-
-        if (saveWs || !this.showDialogCaption) {
-          saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-          if (saveMap) {
+        let index = await this.workspace.addMap(mapName, await this.map.toXML())
+        if (index >= 0 || !this.showDialogCaption) {
+          saveWs = await this.workspace.saveWorkspace(info)
+          // saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+          // if (saveMap) {
+          if (saveWs) {
             this.saveDialog.setDialogVisible(false)
             Toast.show('保存成功')
             NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })

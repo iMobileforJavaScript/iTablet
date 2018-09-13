@@ -153,19 +153,38 @@ export default class MT_layerManager extends React.Component {
         }
         await this.map.setWorkspace(this.workspace)
         // 若名称相同，则不另存为
-        let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-        saveWs = await this.workspace.saveWorkspace(info)
-        this.container.setLoading(false)
-        if (!saveMap) {
-          Toast.show('该名称地图已存在')
-        } else if (saveWs || !this.showDialogCaption) {
-          this.showSaveDialog(false)
-          Toast.show('保存成功')
-        } else if (saveWs === undefined) {
-          Toast.show('gai')
+        // let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+
+        // saveWs = await this.workspace.saveWorkspace(info)
+        if (this.showDialogCaption) {
+          let index = await this.workspace.addMap(mapName, await this.map.toXML())
+          if (index >= 0) {
+            saveWs = await this.workspace.saveWorkspace(info)
+            if (saveWs) {
+              this.showSaveDialog(false)
+              Toast.show('保存成功')
+            } else {
+              Toast.show('保存失败')
+            }
+          } else {
+            Toast.show('该名称地图已存在')
+          }
         } else {
-          Toast.show('保存失败')
+          // 若名称相同，则不另存为
+          let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+          saveWs = await this.workspace.saveWorkspace(info)
+          if (!saveMap) {
+            Toast.show('该名称地图已存在')
+          } else if (saveWs || !this.showDialogCaption) {
+            this.showSaveDialog(false)
+            Toast.show('保存成功')
+          } else if (saveWs === undefined) {
+            Toast.show('该工作空间已存在')
+          } else {
+            Toast.show('保存失败')
+          }
         }
+        this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)
         Toast.show('保存失败')
@@ -265,14 +284,14 @@ export default class MT_layerManager extends React.Component {
         setEditable={data => {
           // 更新上一个编辑layer状态
           // 若data为空，则表示取消当前编辑图层，且没有新增编辑图层
-          this.state.currentEditIndex >= 0 && this.itemRefs[this.state.currentEditIndex].updateEditable()
+          this.state.currentEditIndex >= 0 && this.itemRefs[this.currentOpenIndex] && this.itemRefs[this.state.currentEditIndex].updateEditable()
           this.setState({
             currentEditIndex: data ? data.index : -1,
           })
           this.props.setEditLayer && this.props.setEditLayer(data)
         }}
         onOpen={data => {
-          this.currentOpenIndex >= 0 && this.currentOpenIndex !== data.index && this.itemRefs[this.currentOpenIndex].close()
+          this.currentOpenIndex >= 0 && this.currentOpenIndex !== data.index && this.itemRefs[this.currentOpenIndex] && this.itemRefs[this.currentOpenIndex].close()
           this.currentOpenIndex = data.index
         }}
         getChildList={this.getChildList}
