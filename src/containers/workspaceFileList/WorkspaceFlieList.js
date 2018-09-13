@@ -132,9 +132,14 @@ export default class WorkSpaceFileList extends Component {
         await workspaceCOnnectionInfo.setType(WorkspaceType.SMWU)
         await this.workspace.open(workspaceCOnnectionInfo)
         await this.map.setWorkspace(this.workspace)
-        this.mapName = await this.workspace.getMapName(0)
-        await this.map.open(this.mapName)
-        await this.map.viewEntire()
+
+        let maps = await this.workspace.getMaps()
+        let count = await maps.getCount()
+        if (count > 0) {
+          this.mapName = await this.workspace.getMapName(0)
+          await this.map.open(this.mapName)
+          await this.map.viewEntire()
+        }
         // await this.mapControl.setAction(Action.SELECT)
         await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
