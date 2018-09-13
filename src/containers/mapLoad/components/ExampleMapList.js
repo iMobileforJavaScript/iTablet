@@ -42,15 +42,29 @@ export default class ExampleMapList extends React.Component {
           }
         })
         DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async function (result) {
-          if (result) {
-            that.downloaded = true
-            if (that.unzip) {
-              that.unzip = false
-              await that.unZipFolder(that.zipfile, that.targetdir)
-              GLOBAL.downitemname = ''
+              console.log("success")
+              that.downloaded = true
               that.progeress = 0
-            }
-          }
+
+              setTimeout(()=>{
+                if(that.unzip){
+                  that.unzip=false
+                  Alert.alert(
+                    "温馨提示",
+                    "文件下载完成，是否解压",
+                    [
+                      { text: "确定", onPress: () => {that.unZipFile(that.zipfile, that.targetdir)} },
+                      { text: "取消", onPress: async() => {
+                        Utility.deleteZip(zipfile)
+                        that.mapexist()
+                       } }
+                    ],
+                    { cancelable: false }
+                  )
+               }
+              },1000)
+
+        
         })
         DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async function (result) {
           // let downitem = await that.getDownitem(GLOBAL.downitemname)
@@ -79,7 +93,8 @@ export default class ExampleMapList extends React.Component {
       { key: vectorMap, path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
       { key: gl, path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
       { key: overLay, path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
-      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' }
+      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
+      // { key: ObliquePhoto, path: ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu' },
     ]
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
@@ -160,15 +175,16 @@ export default class ExampleMapList extends React.Component {
         break
     }
   }
-  unZipFolder = async (zipfile, targetdir) => {
-    let result = await Utility.unZipFolder(zipfile, targetdir)
-    console.log(result)
-    if (result) {
+  unZipFile = async (zipfile, targetdir) => {
+    console.log("zip")
+    let result = await Utility.unZipFile(zipfile, targetdir)
+    if (result.isUnZiped) {
+      GLOBAL.downitemname = ''
       Alert.alert(
         "温馨提示",
-        "文件下载完成",
+        "文件解压完成",
         [
-          { text: "确定", onPress: () => { } },
+          { text: "确定", onPress: () => {Utility.deleteZip(zipfile)} },
         ],
         { cancelable: true }
       )
@@ -176,10 +192,10 @@ export default class ExampleMapList extends React.Component {
     else {
       Alert.alert(
         "温馨提示",
-        "文件下载失败， 是否重新下载",
+        "文件解压失败，是否重新下载",
         [
-          { text: "确定", onPress: () => { } },
-          { text: "取消", onPress: () => { } }
+          { text: "确定", onPress: () => {this.download(this.downpath,this.downfilename)} },
+          { text: "取消", onPress: () => {Utility.deleteZip(zipfile) } }
         ],
         { cancelable: true }
       )
@@ -189,11 +205,11 @@ export default class ExampleMapList extends React.Component {
 
 
   download = async (filePath, fileName) => {
+    Toast.show("开始下载")
     this.OnlineService = new OnlineService()
     let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
     if (result) {
       this.OnlineService.download(filePath, fileName)
-      Toast.show("开始下载")
     } else {
       Alert.alert(
         "温馨提示",
@@ -214,7 +230,7 @@ export default class ExampleMapList extends React.Component {
         [
           { text: "确定", onPress: () => { }, style: "cancel" },
         ],
-        { cancelable: true }
+        { cancelable: false }
       )
     }
     else {
