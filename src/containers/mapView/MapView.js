@@ -382,6 +382,7 @@ export default class MapView extends React.Component {
         //   Toast.show('保存失败')
         // }
       } catch (e) {
+        console.log(e)
         this.container.setLoading(false)
         Toast.show('保存失败')
       }
