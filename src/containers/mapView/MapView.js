@@ -329,7 +329,7 @@ export default class MapView extends React.Component {
         let saveWs
         let info = {}
         if (!wsName) {
-          Toast.show('请输入地图名称')
+          Toast.show('请输入工作空间名称')
           return
         }
         if (this.state.path !== path || path === ConstPath.LocalDataPath) {
@@ -345,8 +345,16 @@ export default class MapView extends React.Component {
         // let saveMap = false
         // saveWs = await this.workspace.saveWorkspace(info)
         this.container.setLoading(false)
-        let index = await this.workspace.addMap(mapName, await this.map.toXML())
-        if (index >= 0 || !this.showDialogCaption) {
+        let index = -1
+        if (this.showDialogCaption && mapName) {
+          index = await this.workspace.addMap(mapName, await this.map.toXML())
+          if (index < 0) {
+            Toast.show('该名称地图已存在')
+            return
+          }
+        }
+        // 新建工作空间，新建地图 | 新建工作空间，不新建地图 | 保存工作空间
+        if (mapName && index >= 0 || !mapName && this.showDialogCaption || !this.showDialogCaption) {
           saveWs = await this.workspace.saveWorkspace(info)
           // saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
           // if (saveMap) {
@@ -355,7 +363,7 @@ export default class MapView extends React.Component {
             Toast.show('保存成功')
             NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
           } else {
-            Toast.show('该名称地图已存在')
+            Toast.show('工作空间已存在')
           }
         } else if (saveWs === undefined) {
           Toast.show('工作空间已存在')
