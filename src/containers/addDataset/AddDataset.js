@@ -41,6 +41,7 @@ export default class AddDataset extends React.Component {
         let isExist = false
         for (let i = 0; i < this.layerList.length; i++) {
           let ds = await this.layerList[i].layer.getDataset()
+          if (!ds) continue
           let name = await ds.getName()
           if (name === dsName) {
             isExist = true

@@ -4,7 +4,7 @@ import { Container, ListSeparator, DataSetListSection, DataSetListItem, InputDia
 import { Toast } from '../../utils'
 import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
-import { Action, CursorType } from 'imobile_for_javascript'
+import { Action, CursorType, DatasetType } from 'imobile_for_javascript'
 
 // import styles from './styles'
 
@@ -60,6 +60,23 @@ export default class MTDataManagement extends React.Component {
             section: i,
             key: i + '-' + dsName,
           })
+
+          if (dsType === DatasetType.Network) {
+            let dv = await dataset.toDatasetVector()
+            let subDataset = await dv.getChildDataset()
+            let subDatasetName = await subDataset.getName()
+            let subDatasetType = await subDataset.getType()
+            if (subDataset) {
+              dataSetList.push({
+                name: subDatasetName,
+                type: subDatasetType,
+                datasource: dataSource,
+                dataset: subDataset,
+                section: i,
+                key: 'sub-' + i + '-' + subDatasetName,
+              })
+            }
+          }
         }
 
         list.push({
