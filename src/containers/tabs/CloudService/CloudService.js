@@ -22,11 +22,11 @@ export default class CloudService extends Component {
           ],
           withoutBack: true,
         }}>
-        <TouchableOpacity style={styles.headupload} onPress={() => this.upload()}>
-          <View style={styles.uploadview}>
-            <Text style={styles.uploadtitle}>上传</Text>
-          </View>
-        </TouchableOpacity>
+        {/*<TouchableOpacity style={styles.headupload} onPress={() => this.upload()}>*/}
+        {/*<View style={styles.uploadview}>*/}
+        {/*<Text style={styles.uploadtitle}>上传</Text>*/}
+        {/*</View>*/}
+        {/*</TouchableOpacity>*/}
         <EmptyView title={'待完善'} />
       </Container>
     )
@@ -38,10 +38,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   headupload: {
-    
     backgroundColor: 'white',
     paddingHorizontal: scaleSize(30),
-    marginTop:scaleSize(10)
+    marginTop:scaleSize(10),
   },
   uploadview: {
     width: scaleSize(120),
@@ -54,5 +53,5 @@ const styles = StyleSheet.create({
   uploadtitle:{
     color: 'white',
     fontSize: scaleSize(28),
-  }
+  },
 })
