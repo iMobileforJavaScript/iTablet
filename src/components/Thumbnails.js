@@ -15,9 +15,8 @@ export default class Thumbnails extends React.Component {
     title: string,
     resizeMode: string,
     btnClick: () => {},
-    progress:any,
-    processcb:any,
     backgroundcolor:string,
+    opacity:any,
   }
 
   static defaultProps: {
@@ -27,18 +26,30 @@ export default class Thumbnails extends React.Component {
   constructor(props) {
     super(props)
     this.backgroundcolor=this.props.backgroundcolor || null
-    this.opacity=false
     this.state={
-      opacity:0.6,
+      opacity:this.props.opacity ||0.6,
     }
   }
+ 
   updateprogress= async(data)=>{
-    if(data===99&&!this.opacity){
-      data++
-      this.opacity=true
+    if(data===99||data===100){
       this.setState({opacity:0})
     }
-    this.mProgress.progress=(data/100)
+    else if(data!==null&&this.mProgress){
+     this.mProgress.progress=data/100
+    }
+    else{
+      return
+    }
+  }
+
+  downloaded=async(result)=>{
+    if(result){
+      this.setState({opacity:0.6})
+      this.updateprogress(0)
+    }else{
+      return
+    }
   }
 
   render() {

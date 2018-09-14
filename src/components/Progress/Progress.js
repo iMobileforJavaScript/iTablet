@@ -36,7 +36,7 @@ export default class Progress extends Component {
   }
 
   componentWillMount() {
-    this.progress = this.props.progress
+    this.progress = this.props.progress || 0
     this.buffer = this.props.buffer
   }
 
