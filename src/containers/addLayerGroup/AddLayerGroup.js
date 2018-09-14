@@ -41,7 +41,7 @@ export default class AddLayerGroup extends React.Component {
     try {
       this.itemRefs = {}
       this.map = await this.mapControl.getMap()
-      let layerNameArr = await this.map.getLayersByType1()
+      let layerNameArr = await this.map.getLayersByType()
       for(let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
       }
