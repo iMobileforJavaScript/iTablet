@@ -56,6 +56,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -93,6 +94,7 @@ import android.widget.Toast;
 
 public class VisualizationActivity extends Activity{
     public static String rootPath =android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
+    private ImageButton backBtn;
     private Button btn1;
     private Button btn2;
     private Button btn3;
@@ -537,7 +539,13 @@ public class VisualizationActivity extends Activity{
         map.refresh();
         view.addView(mMapView,0);
 
-
+        backBtn = (ImageButton)findViewById(R.id.btn_back);
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                VisualizationActivity.this.finish();
+            }
+        });
 
         m_pieChart = (PieChart) findViewById(R.id.pieChart);
         m_lineChart = (LineChart) findViewById(R.id.lineChart);
@@ -591,6 +599,7 @@ public class VisualizationActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        checkPermission();
+
         if(!bDataInit) {
             openMap();
             ExecutorService mFixedThreadPool = Executors.newFixedThreadPool(1);

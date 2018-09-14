@@ -6,6 +6,10 @@ android/keystores/
 android/app/app.iml
 android/local.properties
 android/app/build/
+.DS_Store
+android/.DS_Store
+src/.DS_Store
+
 
 ios/SuperMap.framework
 ios/Trial_License.slm

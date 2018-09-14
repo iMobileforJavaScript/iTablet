@@ -5,6 +5,10 @@ import { color, size } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+  },
+  mainContainer: {
+    flex: 1,
     // alignItems: 'center',
     justifyContent: 'center',
     borderStyle:'solid',
@@ -75,5 +79,44 @@ export default StyleSheet.create({
   samllImage: {
     width: scaleSize(20),
     height: scaleSize(20),
+  },
+  additionView: {
+    flexDirection: 'column',
+    width: '100%',
+    paddingLeft: scaleSize(72),
+  },
+  radioView: {
+    marginLeft: scaleSize(30),
+    height: scaleSize(30),
+    width: scaleSize(30),
+    borderRadius: scaleSize(15),
+    borderWidth: scaleSize(2),
+    borderColor: color.USUAL_BLUE,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  radioSelected: {
+    height: scaleSize(20),
+    width: scaleSize(20),
+    borderRadius: scaleSize(10),
+    backgroundColor: color.USUAL_BLUE,
+  },
+  radioViewGray: {
+    marginLeft: scaleSize(30),
+    height: scaleSize(30),
+    width: scaleSize(30),
+    borderRadius: scaleSize(15),
+    borderWidth: scaleSize(2),
+    borderColor: color.gray,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+  },
+  radioSelectedGray: {
+    height: scaleSize(20),
+    width: scaleSize(20),
+    borderRadius: scaleSize(10),
+    backgroundColor: color.gray,
   },
 })

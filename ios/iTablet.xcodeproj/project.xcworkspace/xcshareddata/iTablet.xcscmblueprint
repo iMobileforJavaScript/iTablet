@@ -1,13 +1,10 @@
 {
   "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "248CD3E3BD2ADC7A83A6638A40657282FB52A3DB+++E777783",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
-    "406e1a0e-4304-9142-8a5a-509af13e7845++9368+++149106C" : {
+    "6309a5fb-4868-c048-b2b2-53599d14711e++789+++7A922E1" : {
 
     },
     "406e1a0e-4304-9142-8a5a-509af13e7845++2375+++2F16786" : {
-
-    },
-    "6309a5fb-4868-c048-b2b2-53599d14711e++789+++7A922E1" : {
 
     },
     "6309a5fb-4868-c048-b2b2-53599d14711e++789+++AE14FD3" : {
@@ -15,26 +12,29 @@
     },
     "6309a5fb-4868-c048-b2b2-53599d14711e++789+++0A05F8E" : {
 
+    },
+    "406e1a0e-4304-9142-8a5a-509af13e7845++8980+++149106C" : {
+
     }
   },
   "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
     "248CD3E3BD2ADC7A83A6638A40657282FB52A3DB+++E777783" : 0,
-    "6309a5fb-4868-c048-b2b2-53599d14711e++789+++0A05F8E" : 9223372036854775807,
     "6309a5fb-4868-c048-b2b2-53599d14711e++789+++AE14FD3" : 0,
+    "6309a5fb-4868-c048-b2b2-53599d14711e++789+++0A05F8E" : 9223372036854775807,
     "6309a5fb-4868-c048-b2b2-53599d14711e++789+++7A922E1" : 9223372036854775807,
     "EEDD288248AFE34171E79F9FFC6BAA3AAA690844+++E4A159D" : 0,
     "406e1a0e-4304-9142-8a5a-509af13e7845++2375+++2F16786" : 0,
-    "406e1a0e-4304-9142-8a5a-509af13e7845++9368+++149106C" : 9223372036854775807
+    "406e1a0e-4304-9142-8a5a-509af13e7845++8980+++149106C" : 9223372036854775807
   },
   "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1554A47E-1A12-4A29-AE2F-57DA8D72A9CB",
   "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
     "248CD3E3BD2ADC7A83A6638A40657282FB52A3DB+++E777783" : "iTablet\/",
-    "6309a5fb-4868-c048-b2b2-53599d14711e++789+++0A05F8E" : "..\/sourceCode",
     "6309a5fb-4868-c048-b2b2-53599d14711e++789+++AE14FD3" : "..\/sourceCode\/01_SourceCode_Objects",
+    "6309a5fb-4868-c048-b2b2-53599d14711e++789+++0A05F8E" : "..\/sourceCode",
     "6309a5fb-4868-c048-b2b2-53599d14711e++789+++7A922E1" : "..\/sourceCode",
     "EEDD288248AFE34171E79F9FFC6BAA3AAA690844+++E4A159D" : "iTablet\/node_modules\/imobile_for_javascript\/",
     "406e1a0e-4304-9142-8a5a-509af13e7845++2375+++2F16786" : "..\/codes",
-    "406e1a0e-4304-9142-8a5a-509af13e7845++9368+++149106C" : "..\/sourceCode\/UGC"
+    "406e1a0e-4304-9142-8a5a-509af13e7845++8980+++149106C" : "..\/sourceCode\/UGC"
   },
   "DVTSourceControlWorkspaceBlueprintNameKey" : "iTablet",
   "DVTSourceControlWorkspaceBlueprintVersion" : 204,
@@ -53,7 +53,7 @@
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/192.168.115.120:8080\/UGO6R\/01_SourceCode",
       "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Subversion",
-      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "406e1a0e-4304-9142-8a5a-509af13e7845++9368+++149106C"
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "406e1a0e-4304-9142-8a5a-509af13e7845++8980+++149106C"
     },
     {
       "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "http:\/\/192.168.112.3:2012\/svn\/iMobile",

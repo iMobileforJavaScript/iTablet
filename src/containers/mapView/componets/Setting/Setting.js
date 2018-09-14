@@ -134,6 +134,7 @@ export default class Setting extends React.Component {
           analystLayer = await this.props.map.addLayer(data.dataset, true)
           await this.props.map.refresh()
         }
+
         let subName, nodeLayer
         let result = false
         switch (this.state.type) {
@@ -158,8 +159,8 @@ export default class Setting extends React.Component {
               await geoStyle.setLineWidth(0)
               let size2D = await new Size2D().createObj(0, 0)
               await geoStyle.setMarkerSize(size2D)
-              await nodeLayer.setStyle(geoStyle)
-
+              let nodeLayerSetting = await nodeLayer.getAdditionalSetting()
+              nodeLayerSetting.setStyle(geoStyle)
               await this.props.map.refresh()
             }
             result = await facilityAnalyst.loadModel(this.props.mapControl, analystLayer, nodeLayer, datasetVector, this.props.setLoading)
