@@ -206,6 +206,7 @@ export default class MT_layerManager extends React.Component {
   _add_layer_group=()=>{
     NavigationService.navigate('AddLayerGroup',{
       workspace: this.workspace,
+      mapControl: this.mapControl,
       map: this.map,
       cb: this.getData,
     })
@@ -281,7 +282,6 @@ export default class MT_layerManager extends React.Component {
     try {
       if (data.type !== 'layerGroup') return
       let layer = data.layer
-      if (!(await layer.getDataset)) return
       this.container.setLoading(true)
       let layerGroup = layer
       let count = await layerGroup.getCount()
@@ -341,7 +341,7 @@ export default class MT_layerManager extends React.Component {
             currentOpenItemName: data.name,
           })
         }}
-        getChildList={this.getChildList}
+        onPress={this.getChildList}
       />
     )
   }
