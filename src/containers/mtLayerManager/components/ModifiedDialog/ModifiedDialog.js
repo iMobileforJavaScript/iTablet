@@ -19,18 +19,27 @@ export default class ModifiedDialog extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
+      info: props.info,
     }
   }
 
   //控制是否可以展示
-  setDialogVisible(visible) {
-    this.dialog && this.dialog.setDialogVisible(visible)
+  setDialogVisible(visible, info) {
+    if (info) {
+      this.setState({
+        info: info,
+      }, () => {
+        this.dialog && this.dialog.setDialogVisible(visible)
+      })
+    } else {
+      this.dialog && this.dialog.setDialogVisible(visible)
+    }
   }
-  
+
   confirm = () => {
     this.props.confirmAction && this.props.confirmAction()
   }
-  
+
   cancel = () => {
     this.props.cancelAction && this.props.cancelAction()
   }
@@ -46,7 +55,7 @@ export default class ModifiedDialog extends PureComponent {
         cancelBtnTitle={'否'}
       >
         <View style={styles.container}>
-          <Text style={styles.title}>{this.props.info}</Text>
+          <Text style={styles.title}>{this.state.info}</Text>
         </View>
       </Dialog>
     )

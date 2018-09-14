@@ -5,6 +5,10 @@ import { color, size } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+  },
+  mainContainer: {
+    flex: 1,
     // alignItems: 'center',
     justifyContent: 'center',
     borderStyle:'solid',
@@ -75,5 +79,10 @@ export default StyleSheet.create({
   samllImage: {
     width: scaleSize(20),
     height: scaleSize(20),
+  },
+  additionView: {
+    flexDirection: 'column',
+    width: '100%',
+    paddingLeft: scaleSize(72),
   },
 })

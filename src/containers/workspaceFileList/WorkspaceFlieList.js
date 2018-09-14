@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   View,
+  Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
 import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility, WorkspaceType } from 'imobile_for_javascript'
@@ -193,14 +194,17 @@ export default class WorkSpaceFileList extends Component {
   }
 
   _toBack = async () => {
-    if (this.state.backPath !== ConstPath.LocalDataPath) {
+    // let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
+    // if (this.state.backPath !== ConstPath.AppPath) {
+    // if (isRootPath) {
       let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
       await this.getFileList({path: backPath})
-    }
+    // }
   }
 
   headerBack = () => {
-    if (this.state.backPath === '' || this.state.backPath === ConstPath.LocalDataPath) {
+    let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
+    if (this.state.backPath === '' || isRootPath) {
       return null
     }
     else {

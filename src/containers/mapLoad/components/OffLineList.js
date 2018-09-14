@@ -111,7 +111,7 @@ export default class OffLineList extends React.Component {
       let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop}/>
       return (element)
     } else {
-      throw Error('BthBar: please check type of params')
+      return <View style={styles.item}/>
     }
   }
 
@@ -120,15 +120,18 @@ export default class OffLineList extends React.Component {
       <View style={styles.container}>
         {this._addElement(this._btn_workspace_click, icon_workspace, testData[0].key)}
         {this._addElement(this._btn_udb_click, icon_udb, testData[1].key)}
-        {this._addElement(this._btn_web_click, icon_webudb, testData[2].key)}
+        {/*{this._addElement(this._btn_web_click, icon_webudb, testData[2].key)}*/}
         {this._addElement(this._btn_newudb_click, icon_newudb, testData[3].key)}
+        {this._addElement()}
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  item: {},
+  item: {
+    width: scaleSize(120),
+  },
   container: {
     width: 0.9 * width,
     flexDirection: 'row',

@@ -65,7 +65,7 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    this.container && this.container.setLoading(true, '地图加载...')
+    this.container && this.container.setLoading(true, '地图加载中')
     this.clearData()
   }
 
