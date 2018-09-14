@@ -23,6 +23,7 @@ export default class AddLayerGroup extends React.Component {
     const { params } = this.props.navigation.state
     this.workspace = params.workspace
     this.map = params.map
+    this.cb = params.cb
     this.state = {
       dataList: [],
       layerList: {},
@@ -31,7 +32,8 @@ export default class AddLayerGroup extends React.Component {
   }
 
   componentDidMount() {
-    this.getData()
+    // TODO 获取图层数据
+    // this.getData()
   }
 
   getData = async () => {
@@ -103,25 +105,39 @@ export default class AddLayerGroup extends React.Component {
   }
 
   addNewLayerGroup = async () => {
-    if (this.groupName.trim() === '') {
-      Toast.show('请输入图层组名称')
-      return
+    try {
+      if (this.groupName.trim() === '') {
+        Toast.show('请输入图层组名称')
+        return
+      }
+      // TODO 新建图层组，并添加图层
+      // if (Object.getOwnPropertyNames(this.state.layerList).length <= 0) {
+      //   Toast.show('请输选择图层')
+      //   return
+      // }
+      this.container.setLoading(true, '创建中')
+      let layers = []
+      for(let key in this.state.layerList) {
+        let item = this.state.layerList[key]
+        layers.push(item.dataset._SMDatasetId)
+      }
+      let layerGroup = await this.map.addEmptyLayerGroup(this.groupName)
+      // Toast.show('新建图层组成功')
+      // Toast.show('新建图层组-待完成')
+      this.container.setLoading(false)
+      if (!layerGroup) {
+        Toast.show('新建图层组失败')
+      } else {
+        Toast.show('新建图层组成功')
+      }
+      setTimeout(() => {
+        this.cb && this.cb()
+        this.props.navigation.goBack()
+      }, 2000)
+    } catch (e) {
+      this.container.setLoading(false)
+      Toast.show('新建图层组失败')
     }
-    if (Object.getOwnPropertyNames(this.state.layerList).length <= 0) {
-      Toast.show('请输选择图层')
-      return
-    }
-    let datasets = []
-    for(let key in this.state.layerList) {
-      let item = this.state.layerList[key]
-      datasets.push(item.dataset._SMDatasetId)
-    }
-    // let layerGroup = await this.map.addLayerGroup(datasets, this.groupName)
-    // Toast.show('新建图层组成功')
-    Toast.show('新建图层组-待完成')
-    setTimeout(() => {
-      this.props.navigation.goBack()
-    }, 2000)
   }
 
   _renderInput = () => {

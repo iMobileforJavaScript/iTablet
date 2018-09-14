@@ -13,8 +13,7 @@ import { Toast } from '../../../utils'
 
 let mNodes = []
 let analystSetting, facilityAnalyst
-let mMapControl, mMap, mSelection, mAnalystLayer, mNodelLayer, mTrackingLayer
-
+let mMapControl, mMap, mSelection, mAnalystLayer, mNodelLayer, mTrackingLayer, _setLoading = () => {}
 function addNode(node) {
   mNodes.push(node)
 }
@@ -27,11 +26,15 @@ async function clear() {
   mNodes = []
   // TODO 清除Selection
   mTrackingLayer && await mTrackingLayer.clear()
-  mMapControl && await mMapControl.setAction(Action.PAN)
-  mMap && await mMap.refresh()
+  if (mMapControl) {
+    await mMapControl.setAction(Action.PAN)
+  }
+  if (mMap) {
+    await mMap.refresh()
+  }
 }
 
-function dispose() {
+async function dispose() {
   mNodes = []
   // TODO 清除Selection
   if (mTrackingLayer) {
@@ -52,16 +55,19 @@ function dispose() {
   if (mSelection) {
     mSelection = null
   }
-  if (mTrackingLayer) {
-    mTrackingLayer = null
+  if (_setLoading) {
+    _setLoading = () => {}
+  }
+  if (facilityAnalyst) {
+    await facilityAnalyst.dispose()
   }
 }
 
-function check() {
+function check(checkNodes = true) {
   if (!analystSetting || !mMap || !mSelection || !mTrackingLayer) {
     Toast.show('请加载分析图层')
     return false
-  } else if (mNodes.length === 0) {
+  } else if (mNodes.length === 0 && checkNodes) {
     Toast.show('请加选择节点')
     return false
   }
@@ -70,7 +76,7 @@ function check() {
 
 async function longPressHandler(event) {
   try {
-    // if (!check()) return
+    if (!check(false)) return
     let pt = await new Point().createObj(event.x, event.y)
     // let layer = await mMap.getLayer(0)
     let selection = await mNodelLayer.hitTestEx(pt, 20)
@@ -113,9 +119,10 @@ async function longPressHandler(event) {
   }
 }
 
-async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector) {
+async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector, setLoading = () => {}) {
   try {
-    await clear()
+    await dispose()
+    _setLoading = setLoading
     mMapControl = mapControl
     mMap = await mMapControl.getMap()
     mAnalystLayer = analystLayer
@@ -151,7 +158,7 @@ async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector) {
 
     let result = await facilityAnalyst.load()
 
-    await mMapControl.setAction(Action.SELECT)
+    mMapControl && await mMapControl.setAction(Action.SELECT)
     return result || false
   } catch (e) {
     Toast.show('加载失败')
@@ -184,15 +191,16 @@ async function display(selection) {
       let geometry = await recordSet.getGeometry()
       let style = await getGeoStyle(10, 10, 255, 105, 0)
       await geometry.setStyle(style)
-      await mTrackingLayer.add(geometry, '')
+      mTrackingLayer && await mTrackingLayer.add(geometry, '')
       await recordSet.moveNext()
 
       isEOF = await recordSet.isEOF()
     }
+    _setLoading(false)
     await (await mMapControl.getMap()).refresh()
     // await mMap.refresh()
   } catch (e) {
-    console.error(e)
+    _setLoading(false)
     return false
   }
 }
@@ -251,11 +259,12 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
   try {
     if (!check()) return
     await mSelection.clear()
+    _setLoading(true, '分析中')
     for (let i = 0; i < mNodes.length; i++) {
       let { edges } = await facilityAnalyst.traceUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
       // let { edges } = await facilityAnalyst.findPathUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
-      if (edges.length <= 0) {
+      if (!edges || edges.length <= 0) {
         Toast.show('没有上游')
         return
       }
@@ -263,11 +272,11 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
       edges && edges.forEach(async edge => {
         await mSelection.add(edge)
       })
-
-      await display(mSelection)
-      await mMapControl.setAction(Action.PAN)
     }
+    await display(mSelection)
+    await mMapControl.setAction(Action.PAN)
   } catch (e) {
+    _setLoading(false)
     Toast.show('上游追踪失败')
   }
 }
@@ -276,10 +285,11 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
   try {
     if (!check()) return
     await mSelection.clear()
+    _setLoading(true, '分析中')
     for (let i = 0; i < mNodes.length; i++) {
       let { edges } = await facilityAnalyst.traceDownFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
-      if (edges.length <= 0) {
+      if (!edges || edges.length <= 0) {
         Toast.show('没有下游')
         return
       }
@@ -287,11 +297,11 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
       edges && edges.forEach(async edge => {
         await mSelection.add(edge)
       })
-
-      await display(mSelection)
-      await mMapControl.setAction(Action.PAN)
     }
+    await display(mSelection)
+    await mMapControl.setAction(Action.PAN)
   } catch (e) {
+    _setLoading(false)
     Toast.show('下游追踪失败')
   }
 }
@@ -300,10 +310,12 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
   try {
     if (!check()) return
     await mSelection.clear()
+    _setLoading(true, '分析中')
     for (let i = 0; i < mNodes.length - 1; i++) {
       let { edges } = await facilityAnalyst.findPathFromNodes(mNodes[i], mNodes[i + 1], weightName, isUncertainDirectionValid)
 
-      if (edges.length <= 0) {
+      if (!edges || edges.length <= 0) {
+        _setLoading(false)
         Toast.show('两点间不连通')
         return
       }
@@ -311,12 +323,12 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
       edges && edges.forEach(async edge => {
         await mSelection.add(edge)
       })
-
-      await display(mSelection)
-      await mMapControl.setAction(Action.PAN)
     }
+
+    await display(mSelection)
+    await mMapControl.setAction(Action.PAN)
   } catch (e) {
-    console.warn(e)
+    _setLoading(false)
     Toast.show('连通性分析失败')
   }
 }

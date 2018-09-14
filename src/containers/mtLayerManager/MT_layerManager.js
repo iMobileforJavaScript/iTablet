@@ -7,10 +7,10 @@
 import * as React from 'react'
 import { FlatList } from 'react-native'
 import { Container, InputDialog } from '../../components'
-import { Toast } from '../../utils'
+import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
-import { Action } from 'imobile_for_javascript'
+import { Action, LayerGroup } from 'imobile_for_javascript'
 
 import { LayerManager_item, LayerManager_tab, SaveDialog, ModifiedDialog } from './components'
 
@@ -36,10 +36,10 @@ export default class MT_layerManager extends React.Component {
       datasourceList: '',
       mapName: '',
       wsName: wsName,
-      // path: !this.showDialogCaption ? path : ConstPath.LocalDataPath,
       path: path,
-      currentEditIndex: props.editLayer.index >= 0 ? props.editLayer.index : -1, //当前编辑界面的index
+      currentOpenItemName: '', // 记录左滑的图层的名称
     }
+    this.currentEditItemName = '' // 记录当前可编辑的图层的名称
   }
 
   componentDidMount() {
@@ -49,14 +49,13 @@ export default class MT_layerManager extends React.Component {
   getData = async () => {
     this.container.setLoading(true)
     try {
-      this.itemRefs = []
+      this.itemRefs = {}
       this.map = await this.mapControl.getMap()
-      let layerNameArr = await this.map.getLayersByType()
-      let currentEditIndex = -1
+      let layerNameArr = await this.map.getLayersByType1()
       for(let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
         if (layerNameArr[i].isEditable) {
-          currentEditIndex = layerNameArr[i].index
+          this.currentEditItemName = layerNameArr[i].name
           this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
         }
       }
@@ -65,7 +64,6 @@ export default class MT_layerManager extends React.Component {
       this.setState({
         datasourceList: layerNameArr.concat(),
         mapName: mapName,
-        currentEditIndex: currentEditIndex,
       }, () => {
         this.container.setLoading(false)
       })
@@ -89,10 +87,10 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  showRemoveDialog = (isShow = true, layer = null) => {
-    this.deleteDialog.setDialogVisible(isShow)
-    if (layer) {
-      this.removeLayer = layer
+  showRemoveDialog = (isShow = true, data = null, info = '') => {
+    this.deleteDialog.setDialogVisible(isShow, info)
+    if (data) {
+      this.removeLayerData = data
     }
   }
 
@@ -152,19 +150,38 @@ export default class MT_layerManager extends React.Component {
         }
         await this.map.setWorkspace(this.workspace)
         // 若名称相同，则不另存为
-        let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-        saveWs = await this.workspace.saveWorkspace(info)
-        this.container.setLoading(false)
-        if (!saveMap) {
-          Toast.show('该名称地图已存在')
-        } else if (saveWs || !this.showDialogCaption) {
-          this.showSaveDialog(false)
-          Toast.show('保存成功')
-        } else if (saveWs === undefined) {
-          Toast.show('gai')
+        // let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+
+        // saveWs = await this.workspace.saveWorkspace(info)
+        if (this.showDialogCaption) {
+          let index = await this.workspace.addMap(mapName, await this.map.toXML())
+          if (index >= 0) {
+            saveWs = await this.workspace.saveWorkspace(info)
+            if (saveWs) {
+              this.showSaveDialog(false)
+              Toast.show('保存成功')
+            } else {
+              Toast.show('保存失败')
+            }
+          } else {
+            Toast.show('该名称地图已存在')
+          }
         } else {
-          Toast.show('保存失败')
+          // 若名称相同，则不另存为
+          let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
+          saveWs = await this.workspace.saveWorkspace(info)
+          if (!saveMap) {
+            Toast.show('该名称地图已存在')
+          } else if (saveWs || !this.showDialogCaption) {
+            this.showSaveDialog(false)
+            Toast.show('保存成功')
+          } else if (saveWs === undefined) {
+            Toast.show('该工作空间已存在')
+          } else {
+            Toast.show('保存失败')
+          }
         }
+        this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)
         Toast.show('保存失败')
@@ -173,7 +190,7 @@ export default class MT_layerManager extends React.Component {
   }
 
   //添加数据集
-  _add_dataset=()=>{
+  _add_dataset = () => {
     NavigationService.navigate('AddDataset',{
       workspace: this.workspace,
       map: this.map,
@@ -194,19 +211,40 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  //删除图层
+  //删除图层 / 解散图层组
   _removeLayer = () => {
     (async function () {
       try {
-        if (!this.map || !this.removeLayer) return
-        let name = await this.removeLayer.getName()
-        let result = await this.map.removeLayer(name)
+        if (!this.map || !this.removeLayerData) return
+        let result = false, info = '删除', isDeletedFromGroup = false
+        if (this.removeLayerData.layer._SMLayerGroupId) { // 解散图层组
+          result = await this.removeLayerData.layer.ungroup()
+          info = '解散图层组'
+        } else if (this.removeLayerData.groupName) { // 从图层组中删除图层
+          let group = new LayerGroup()
+          group._SMLayerId = this.removeLayerData.layerGroupId
+          result = await group.remove(this.removeLayerData.layer)
+          isDeletedFromGroup = true
+        } else { // 删除图层
+          let name = this.removeLayerData.name
+          result = await this.map.removeLayer(name)
+        }
         if (result) {
-          Toast.show('删除成功')
-          this.removeLayer = null
-          await this.getData()
+          Toast.show(info + '成功')
+
+          // TODO 更新解散的图层组
+          if (this.removeLayerData.layer._SMLayerGroupId && this.removeLayerData.groupName || isDeletedFromGroup) {
+            let child = await this.getChildList({
+              data: this.itemRefs[this.removeLayerData.groupName].props.data,
+            })
+            this.itemRefs[this.removeLayerData.groupName].updateChild(child)
+          } else {
+            await this.getData()
+          }
+          delete this.itemRefs[this.removeLayerData.name]
+          this.removeLayerData = null
         } else {
-          Toast.show('删除失败')
+          Toast.show(info + '失败')
         }
         this.deleteDialog && this.deleteDialog.setDialogVisible(false)
       } catch (e) {
@@ -231,25 +269,79 @@ export default class MT_layerManager extends React.Component {
     }).bind(this)()
   }
 
+  getItemLayout = (data, index) => {
+    return {
+      length: scaleSize(80),
+      offset: scaleSize(80 + 1) * index,
+      index,
+    }
+  }
+
+  getChildList = async ({data}) => {
+    try {
+      if (data.type !== 'layerGroup') return
+      let layer = data.layer
+      if (!(await layer.getDataset)) return
+      this.container.setLoading(true)
+      let layerGroup = layer
+      let count = await layerGroup.getCount()
+      let child = []
+      for (let i = 0; i < count; i++) {
+        let item = await layerGroup.getLayer(i)
+        if (item.isEditable) {
+          this.currentEditItemName = item.name
+          this.props.setEditLayer && this.props.setEditLayer(item)
+        }
+        child.push(this._renderItem({item}))
+      }
+      this.container.setLoading(false)
+      return child
+    } catch (e) {
+      this.container.setLoading(false)
+      Toast.show('获取失败')
+      return []
+    }
+  }
+
   _renderItem = ({ item }) => {
+    // sectionID = sectionID || 0
     return (
       <LayerManager_item
-        ref={ref => this.itemRefs[item.index] = ref}
+        key={item.id}
+        // sectionID={sectionID}
+        // rowID={item.index}
+        ref={ref => {
+          if (!this.itemRefs) {
+            this.itemRefs = {}
+          }
+          this.itemRefs[item.name] = ref
+          return this.itemRefs[item.name]
+        }}
         layer={item.layer}
         map={this.map}
         data={item}
+        isClose={this.state.currentOpenItemName !== item.name}
         mapControl={this.mapControl}
         showRemoveDialog={this.showRemoveDialog}
         showRenameDialog={this.showRenameDialog}
-        setEditable={data => {
-          // 更新上一个编辑layer状态
-          // 若data为空，则表示取消当前编辑图层，且没有新增编辑图层
-          this.state.currentEditIndex >= 0 && this.itemRefs[this.state.currentEditIndex].updateEditable()
-          this.setState({
-            currentEditIndex: data ? data.index : -1,
-          })
+        setEditable={(data, sectionID, rowID) => {
+          if (this.currentEditItemName !== data.name) {
+            let item = this.itemRefs[this.currentEditItemName]
+            item && item.updateEditable()
+          }
+          this.currentEditItemName = data.name
           this.props.setEditLayer && this.props.setEditLayer(data)
         }}
+        onOpen={(data, sectionID, rowID) => {
+          if (this.state.currentOpenItemName !== data.name) {
+            let item = this.itemRefs[this.state.currentOpenItemName]
+            item && item.close()
+          }
+          this.setState({
+            currentOpenItemName: data.name,
+          })
+        }}
+        getChildList={this.getChildList}
       />
     )
   }
@@ -269,8 +361,10 @@ export default class MT_layerManager extends React.Component {
           addLayerGroup={this._add_layer_group}
         />
         <FlatList
+          ref={ref => this.listView = ref}
           data={this.state.datasourceList}
           renderItem={this._renderItem}
+          getItemLayout={this.getItemLayout}
         />
         <SaveDialog
           ref={ref => this.saveDialog = ref}

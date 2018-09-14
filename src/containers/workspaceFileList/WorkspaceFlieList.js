@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   View,
+  Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
 import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility, WorkspaceType } from 'imobile_for_javascript'
@@ -132,9 +133,14 @@ export default class WorkSpaceFileList extends Component {
         await workspaceCOnnectionInfo.setType(WorkspaceType.SMWU)
         await this.workspace.open(workspaceCOnnectionInfo)
         await this.map.setWorkspace(this.workspace)
-        this.mapName = await this.workspace.getMapName(0)
-        await this.map.open(this.mapName)
-        await this.map.viewEntire()
+
+        let maps = await this.workspace.getMaps()
+        let count = await maps.getCount()
+        if (count > 0) {
+          this.mapName = await this.workspace.getMapName(0)
+          await this.map.open(this.mapName)
+          await this.map.viewEntire()
+        }
         // await this.mapControl.setAction(Action.SELECT)
         await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
@@ -151,21 +157,21 @@ export default class WorkSpaceFileList extends Component {
           }
         }
 
-        const point2dModule = new Point2D()
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              key && NavigationService.goBack(key)
-            }).bind(this)()
-          }
-        )
+        // const point2dModule = new Point2D()
+        // navigator.geolocation.getCurrentPosition(
+        //   position => {
+        //     let lat = position.coords.latitude
+        //     let lon = position.coords.longitude
+        //     ;(async () => {
+        //       let centerPoint = await point2dModule.createObj(lon, lat)
+        //       await this.map.setCenter(centerPoint)
+        //       await this.map.viewEntire()
+        //       await this.mapControl.setAction(Action.PAN)
+        //       await this.map.refresh()
+        //       key && NavigationService.goBack(key)
+        //     }).bind(this)()
+        //   }
+        // )
 
         this.DSParams = { server: path, engineType: EngineType.UDB }
         // let layerIndex = 0
@@ -173,6 +179,10 @@ export default class WorkSpaceFileList extends Component {
         // let dataset = await dsBaseMap.getDataset(layerIndex)
         // await this.map.addLayer(dataset, true)
         await this.workspace.openDatasource(this.DSParams)
+        await this.map.viewEntire()
+        await this.mapControl.setAction(Action.PAN)
+        await this.map.refresh()
+        key && NavigationService.goBack(key)
       } else {
         NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
       }
@@ -184,14 +194,17 @@ export default class WorkSpaceFileList extends Component {
   }
 
   _toBack = async () => {
-    if (this.state.backPath !== ConstPath.LocalDataPath) {
+    // let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
+    // if (this.state.backPath !== ConstPath.AppPath) {
+    // if (isRootPath) {
       let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
       await this.getFileList({path: backPath})
-    }
+    // }
   }
 
   headerBack = () => {
-    if (this.state.backPath === '' || this.state.backPath === ConstPath.LocalDataPath) {
+    let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
+    if (this.state.backPath === '' || isRootPath) {
       return null
     }
     else {

@@ -65,7 +65,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     this.props.setLoading && this.props.setLoading(true)
     switch (type) {
       case Const.NETWORK_ROUTE:
-        this._transportationLoad()
+        // this._transportationLoad()
         break
       case Const.NETWORK_TSP:
         break
@@ -74,6 +74,8 @@ export default class NetworkAnalystToolBar extends React.Component {
       case Const.NETWORK_TRACKING:
         break
     }
+    await this.clear(type)
+    await this.dispose(type)
     cbData.callback && await cbData.callback(true)
     this.setState({
       popType: type,
@@ -172,6 +174,21 @@ export default class NetworkAnalystToolBar extends React.Component {
       case Const.NETWORK_FACILITY:
       case Const.NETWORK_TRACKING:
         await facilityAnalyst.clear()
+        break
+    }
+  }
+
+  dispose = async type => {
+    // this.toDoAction()
+    // await facilityAnalyst.clear()
+    switch (type) {
+      case Const.NETWORK_TSP:
+      case Const.NETWORK_ROUTE:
+        await tranportationAnalyst.dispose()
+        break
+      case Const.NETWORK_FACILITY:
+      case Const.NETWORK_TRACKING:
+        await facilityAnalyst.dispose()
         break
     }
   }

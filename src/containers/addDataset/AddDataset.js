@@ -74,8 +74,9 @@ export default class AddDataset extends React.Component {
       let dataSetCount = await dataSets.getCount()
       for (let j = 0; j < dataSetCount; j++) {
         let dataset = await dataSets.get(j)
-        let dsName = await dataset.getName()
         let dsType = await dataset.getType()
+        if (dsType === DatasetType.TABULAR) continue
+        let dsName = await dataset.getName()
         // let isAdd = await this.map.containsCaption(dsName, name)
         let isAdd = await this.checkContainsDataset(dsName)
         // let isAdd = false

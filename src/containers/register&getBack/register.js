@@ -57,13 +57,17 @@ export default class Register extends React.Component {
         {/*<BtnTwo text='注册' btnClick={this._register} />*/}
         {/*</View>*/}
         <WebView
+          // javaScriptEnabled={true}
           scalesPageToFit={Platform.OS === 'ios'}
           // automaticallyAdjustContentInsets={true}
           contentInset={{top:0,left:0,right:0,bottom:0}}
           style={styles.webView}
           source={{
             uri: 'https://sso.supermap.com/register?service=http://www.supermapol.com',
-          }}/>
+          }}
+          // injectedJavaScript="var body = document.getElementsByTagName('body');
+          //    body.style.cssText += 'width: 100% !important; height: 100% !important'"
+        />
       </Container>
     )
   }

@@ -17,4 +17,6 @@ ios/iTablet-tvOSTests
 ios/Build
 ios/Index
 
+yarn.lock
+yarn-error.log
 

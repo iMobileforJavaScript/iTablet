@@ -12,6 +12,7 @@ import styles from './styles'
 export default class MapLoad extends Component {
   props: {
     navigation: Object,
+    nav: Object,
   }
 
   constructor(props) {
@@ -20,49 +21,108 @@ export default class MapLoad extends Component {
     const { nav } = this.props
     this.workspace = params.workspace
     this.map = params.map
-    this.routes = nav.routes
     this.mapControl = params.mapControl
     this.fileexist=params.fileexist
   }
 
-  TD = async () => {
-      this.map && await this.map.close()
-      this.workspace && this.workspace.closeAllDatasource()
-      const point2dModule = new Point2D()
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          let lat = position.coords.latitude
-          let lon = position.coords.longitude
-          ;(async () => {
-            let centerPoint = await point2dModule.createObj(lon, lat)
-            await this.map.setCenter(centerPoint)
-            await this.map.viewEntire()
-            await this.mapControl.setAction(Action.PAN)
-            await this.map.refresh()
-            NavigationService.goBack()
-          }).bind(this)()
-        }
-      )
-      let layerIndex = 0
-      let dsBaseMap = await this.workspace.openDatasource(ConstOnline.TD.DSParams)
-      let dataset = await dsBaseMap.getDataset(layerIndex)
-      await this.map.addLayer(dataset, true)
-    }
+  // TD = async () => {
+  //     this.map && await this.map.close()
+  //     this.workspace && this.workspace.closeAllDatasource()
+  //     const point2dModule = new Point2D()
+  //     navigator.geolocation.getCurrentPosition(
+  //       position => {
+  //         let lat = position.coords.latitude
+  //         let lon = position.coords.longitude
+  //         ;(async () => {
+  //           let centerPoint = await point2dModule.createObj(lon, lat)
+  //           await this.map.setCenter(centerPoint)
+  //           await this.map.viewEntire()
+  //           await this.mapControl.setAction(Action.PAN)
+  //           await this.map.refresh()
+  //           NavigationService.goBack()
+  //         }).bind(this)()
+  //       }
+  //     )
+  //     let layerIndex = 0
+  //     let dsBaseMap = await this.workspace.openDatasource(ConstOnline.TD.DSParams)
+  //     let dataset = await dsBaseMap.getDataset(layerIndex)
+  //     await this.map.addLayer(dataset, true)
+  //   }
+
+  TD = () => {
+    this.cb && this.cb()
+    this.goToMapView('TD')
+  }
+
   Baidu = () => {
     this.cb && this.cb()
-    NavigationService.navigate('MapView', ConstOnline.Baidu)
-
+    this.goToMapView('Baidu')
   }
+
   OSM = () => {
     this.cb && this.cb()
-    NavigationService.navigate('MapView', ConstOnline.OSM)
-
+    this.goToMapView('OSM')
   }
+
   Google = () => {
     this.cb && this.cb()
-    NavigationService.navigate('MapView', ConstOnline.Google)
-
+    this.goToMapView('Google')
   }
+
+  goToMapView = type => {
+    (async function () {
+      let key = '', exist = false
+      let routes = this.props.nav.routes
+
+      if (routes && routes.length > 0) {
+        for (let index = 0; index < routes.length; index++) {
+          if (routes[index].routeName === 'MapView') {
+            key = index === routes.length - 1 ? '' : routes[index + 1].key
+            exist = true
+            break
+          }
+        }
+      }
+
+      if (exist && this.workspace && this.mapControl && this.map) {
+        await this.map.close()
+        await this.workspace.closeAllDatasource()
+        const point2dModule = new Point2D()
+
+        await this.map.setScale(0.0001)
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+            ;(async () => {
+              let centerPoint = await point2dModule.createObj(lon, lat)
+              await this.map.setCenter(centerPoint)
+              await this.map.viewEntire()
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              key && NavigationService.goBack(key)
+            }).bind(this)()
+          }
+        )
+        let DSParams = ConstOnline[type].DSParams
+        let labelDSParams = ConstOnline[type].labelDSParams
+        let layerIndex = ConstOnline[type].layerIndex
+
+        let dsBaseMap = await this.workspace.openDatasource(DSParams)
+
+        let dataset = await dsBaseMap.getDataset(layerIndex)
+        await this.map.addLayer(dataset, true)
+
+        if (ConstOnline[type].labelDSParams) {
+          let dsLabel = await this.workspace.openDatasource(labelDSParams)
+          await this.map.addLayer(await dsLabel.getDataset(layerIndex), true)
+        }
+      } else {
+        NavigationService.navigate('MapView', ConstOnline[type])
+      }
+    }).bind(this)()
+  }
+
   render() {
     return (
       <Container
