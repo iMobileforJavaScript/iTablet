@@ -153,5 +153,5 @@ const styles = StyleSheet.create({
   btnImage:{
     width: scaleSize(45),
     height: scaleSize(45),
-  }
+  },
 })

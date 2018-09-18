@@ -64,10 +64,9 @@ export default class HomeUsualMap extends React.Component {
               style={styles.listView}
               data={this.props.data}
               renderItem={this._renderItem}
-              horizontal={false}
+              horizontal={true}
               keyExtractor={this._keyExtractor}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
             />
             : <EmptyView style={{backgroundColor: 'transparent'}} title={'您最近还未使用过地图'} />
         }
@@ -80,7 +79,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    marginTop:scaleSize(20),
+    marginTop:scaleSize(15),
     backgroundColor: '#FFFFFF',
   },
   listView: {
@@ -94,7 +93,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'transparent',
     marginLeft: scaleSize(40),
-    paddingTop:scaleSize(10),
+    // paddingTop:scaleSize(10),
   },
   headerTitile: {
     fontSize: size.fontSize.fontSizeXl,

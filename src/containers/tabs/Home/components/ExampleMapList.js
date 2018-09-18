@@ -1,15 +1,15 @@
 import * as React from 'react'
-import { NativeModules, Platform } from 'react-native'
+import { NativeModules, Platform, DeviceEventEmitter } from 'react-native'
 import { View, StyleSheet, FlatList, Alert } from 'react-native'
 
-import NavigationService from '../../../containers/NavigationService'
-import Thumbnails from '../../../components/Thumbnails'
-import { scaleSize, Toast } from '../../../utils'
+import NavigationService from '../../../../containers/NavigationService'
+import Thumbnails from '../../../../components/Thumbnails'
+import { scaleSize, Toast } from '../../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
-import { ConstPath } from '../../../constains'
+import { ConstPath, EventConst } from '../../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
-const defalutImageSrc = require('../../../assets/public/mapImage0.png')
+const defalutImageSrc = require('../../../../assets/public/mapImage0.png')
 const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
 
 
@@ -20,7 +20,7 @@ export default class ExampleMapList extends React.Component {
     this.unzip = true
     this.ziping = false
     this.downloaded = false
-    this.progress = null
+    this.progeress = null
     this.downlist = []
     this.state = {
       maplist: [],
@@ -31,75 +31,72 @@ export default class ExampleMapList extends React.Component {
   componentDidMount() {
     (async function () {
       await this.mapexist()
-      // try {
-      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async progress => {
-      //     if (progress > 0 && progress > this.progress) {
-      //       if (!this.downloaded) {
-      //         let downitem = await this.getDownitem(GLOBAL.downitemname)
-      //         this.progress = progress
-      //         downitem.updateprogress(progress)
-      //         console.log(progress)
-      //       }
-      //     }
-      //   })
-      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async result => {
-      //     console.log("success")
-      //     this.downloaded = true
-      //     this.progress = null
-      //     try {
-      //       if (this.unzip) {
-      //         this.unzip = false
-      //         Toast.show("文件解压中,请等待")
-      //         console.log("zip")
-      //         this.ziping = true
-      //         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-      //         if (result.isUnZiped) {
-      //           GLOBAL.downitemname = ''
-      //           Alert.alert(
-      //             "温馨提示",
-      //             "文件解压完成",
-      //             [
-      //               { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
-      //             ],
-      //             { cancelable: true }
-      //           )
-      //         }
-      //       }
-      //     } catch (error) {
-      //       if (this.unzip) {
-      //         this.unzip = false
-      //         Alert.alert(
-      //           "温馨提示",
-      //           "文件解压失败，是否重新下载",
-      //           [
-      //             { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
-      //             { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
-      //           ],
-      //           { cancelable: true }
-      //         )
-      //       }
-      //     }
-      //   })
-      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async function (result) {
-      //     // let downitem = await that.getDownitem(GLOBAL.downitemname)
-      //     // Alert.alert(
-      //     //   "温馨提示",
-      //     //   "文件下载失败， 是否重新下载",
-      //     //   [
-      //     //     { text: "确定", onPress: () => {that.download(that.downpath,downfilename)} },
-      //     //     { text: "取消", onPress: () => {downitem.updateprogress(100)} }
-      //     //   ],
-      //     //   { cancelable: true }
-      //     // )
-      //     // console.log("faile")
-      //   })
-      // } catch (error) {
-      //   Toast.show('下载失败')
-      // }
+      try {
+        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async progeress => {
+          if (progeress > 0 && progeress > this.progeress) {
+            if (!this.downloaded) {
+              let downitem = await this.getDownitem(GLOBAL.downitemname)
+              this.progeress = progeress
+              downitem.updateprogress(progeress)
+            }
+          }
+        })
+        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async result => {
+          this.downloaded = true
+          this.progeress = null
+          try {
+            if (this.unzip) {
+              this.unzip = false
+              Toast.show("文件解压中,请等待")
+              this.ziping = true
+              let result = await Utility.unZipFile(this.zipfile, this.targetdir)
+              if (result.isUnZiped) {
+                GLOBAL.downitemname = ''
+                Alert.alert(
+                  "温馨提示",
+                  "文件解压完成",
+                  [
+                    { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+                  ],
+                  { cancelable: true }
+                )
+              }
+            }
+          } catch (error) {
+            if (this.unzip) {
+              this.unzip = false
+              Alert.alert(
+                "温馨提示",
+                "文件损坏失败，是否重新下载",
+                [
+                  { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
+                  { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
+                ],
+                { cancelable: true }
+              )
+            }
+          }
+        })
+        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async () => {
+          // let downitem = await that.getDownitem(GLOBAL.downitemname)
+          Alert.alert(
+            "温馨提示",
+            "文件下载失败， 是否重新下载",
+            [
+              { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
+              { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
+            ],
+            { cancelable: true }
+          )
+          console.log("faile")
+        })
+      } catch (error) {
+        Toast.show('下载失败')
+      }
     }).bind(this)()
   }
 
-  cancel = async zipfile => {
+  cancel = async (zipfile) => {
     await Utility.deleteZip(zipfile)
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     downitem.downloaded(true)
@@ -123,7 +120,7 @@ export default class ExampleMapList extends React.Component {
   }
 
 
-  _itemClick = async key => {
+  _itemClick = async (key) => {
     let path, exist, filePath, outPath, fileName, openPath, zipexist
     switch (key) {
       case vectorMap:
@@ -162,7 +159,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, key)
+          this.alertDown(filePath, fileName, outPath, ObliquePhoto)
         }
         break
       case gl:
@@ -196,81 +193,13 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  downloading = async progress => {
-    try {
-      let mProgress
-      if (progress instanceof Object) {
-        mProgress = progress.progress
-      } else {
-        mProgress = progress
-      }
-      if (mProgress > 0 && mProgress > this.progress) {
-        if (!this.downloaded) {
-          let downitem = await this.getDownitem(GLOBAL.downitemname)
-          this.progress = mProgress
-          downitem.updateprogress(mProgress)
-          console.log(mProgress)
-        }
-      }
-    } catch (e) {
-      Toast.show('下载失败')
-    }
-  }
-
-  downloaded = async result => {
-    console.log("success")
-    this.downloaded = true
-    this.progress = null
-    try {
-      if (this.unzip) {
-        this.unzip = false
-        Toast.show("文件解压中,请等待")
-        console.log("zip")
-        this.ziping = true
-        let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-        if (result.isUnZiped) {
-          GLOBAL.downitemname = ''
-          Alert.alert(
-            "温馨提示",
-            "文件解压完成",
-            [
-              { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
-            ],
-            { cancelable: true }
-          )
-        }
-      }
-    } catch (error) {
-      if (this.unzip) {
-        this.unzip = false
-        Alert.alert(
-          "温馨提示",
-          "文件解压失败，是否重新下载",
-          [
-            { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
-            { text: "取消", onPress: () => { this.cancel(this.zipfile) } },
-          ],
-          { cancelable: true }
-        )
-      }
-    }
-  }
-
-  downloadFailure = async error => {
-    Toast.show('下载失败')
-  }
-
   download = async (filePath, fileName) => {
     Toast.show("开始下载")
-    this.progress = null
+    this.progeress = null
     this.OnlineService = new OnlineService()
     let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
     if (result) {
-      this.OnlineService.download(filePath, fileName, {
-        onProgress: this.downloading,
-        onComplete: this.downloaded,
-        onFailure: this.downloadFailure,
-      })
+      this.OnlineService.download(filePath, fileName)
     }
     else {
       Alert.alert(
@@ -285,8 +214,8 @@ export default class ExampleMapList extends React.Component {
   }
 
   alertDown = async (filePath, fileName, outPath, key) => {
-    if (this.progress) {
-      console.log(this.progress)
+    if (this.progeress) {
+      console.log(this.progeress)
       Alert.alert(
         "温馨提示",
         "有文件正在下载中，请稍后",
@@ -316,10 +245,10 @@ export default class ExampleMapList extends React.Component {
   }
 
   downList = (child, key) => {
-    let item = { name: key, ref: child }
+    item = { name: key, ref: child }
     this.downlist.push(item)
   }
-  getDownitem = key => {
+  getDownitem = (key) => {
     for (let index = 0; index < this.downlist.length; index++) {
       if (key === this.downlist[index].name) {
         return this.downlist[index].ref
@@ -335,23 +264,23 @@ export default class ExampleMapList extends React.Component {
     let opacity = item.opacity
     switch (key) {
       case vectorMap:
-        src = require('../../../assets/public/beijing.png')
+        src = require('../../../../assets/public/beijing.png')
         break
       case map3D:
-        src = require('../../../assets/public/map3D.png')
+        src = require('../../../../assets/public/map3D.png')
         break
       case ObliquePhoto:
-        src = require('../../../assets/public/ObliquePhoto.png')
+        src = require('../../../../assets/public/ObliquePhoto.png')
         break
       case gl:
-        src = require('../../../assets/public/VectorMap.png')
-        // path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
+        src = require('../../../../assets/public/VectorMap.png')
+        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
         break
       case overLay:
-        src = require('../../../assets/public/VectorMap.png')
+        src = require('../../../../assets/public/VectorMap.png')
         break
       default:
-        src = require('../../../assets/public/VectorMap.png')
+        src = require('../../../../assets/public/VectorMap.png')
         break
     }
     return (
@@ -365,10 +294,9 @@ export default class ExampleMapList extends React.Component {
         <FlatList
           data={this.state.maplist}
           renderItem={this._renderItem}
-          horizontal={false}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps={'always'}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps={'always'} 
         />
       </View>
     )

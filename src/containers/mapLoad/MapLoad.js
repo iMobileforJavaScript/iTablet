@@ -18,7 +18,6 @@ export default class MapLoad extends Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    const { nav } = this.props
     this.workspace = params.workspace
     this.map = params.map
     this.mapControl = params.mapControl
