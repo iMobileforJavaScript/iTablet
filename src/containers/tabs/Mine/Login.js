@@ -44,25 +44,33 @@ export default class Login extends React.Component {
       Toast.show('请输入密码')
       return
     }
-
     this.container.setLoading(true, '登录中')
-    let result = await new OnlineService().login(userName, password)
-    this.container.setLoading(false)
-    if (typeof result === 'boolean' && result) {
-      Toast.show('登录成功')
-      let md = forge.md.md5.create()
-      md.update(password)
-      this.props.setUser({
-        userName: userName,
-        // password: md.digest().toHex(),
-        password: password,
-      })
-    } else {
+    try {
+      let result = await new OnlineService().login(userName, password)
+      this.container.setLoading(false)
+      if (typeof result === 'boolean' && result) {
+        Toast.show('登录成功')
+        let md = forge.md.md5.create()
+        md.update(password)
+        this.props.setUser({
+          userName: userName,
+          // password: md.digest().toHex(),
+          password: password,
+        })
+      } else {
+        this.props.setUser({
+          userName: '',
+          password: '',
+        })
+        Toast.show('登录失败')
+      }
+    } catch (e) {
+      this.container.setLoading(false)
       this.props.setUser({
         userName: '',
         password: '',
       })
-      Toast.show('登录失败' + result)
+      Toast.show('登录失败')
     }
   }
 
