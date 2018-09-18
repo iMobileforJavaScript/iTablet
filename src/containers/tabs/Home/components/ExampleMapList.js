@@ -2,14 +2,14 @@ import * as React from 'react'
 import { NativeModules, Platform, DeviceEventEmitter } from 'react-native'
 import { View, StyleSheet, FlatList, Alert } from 'react-native'
 
-import NavigationService from '../../../containers/NavigationService'
-import Thumbnails from '../../../components/Thumbnails'
-import { scaleSize, Toast } from '../../../utils'
+import NavigationService from '../../../../containers/NavigationService'
+import Thumbnails from '../../../../components/Thumbnails'
+import { scaleSize, Toast } from '../../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
-import { ConstPath, EventConst } from '../../../constains'
+import { ConstPath, EventConst } from '../../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
-const defalutImageSrc = require('../../../assets/public/mapImage0.png')
+const defalutImageSrc = require('../../../../assets/public/mapImage0.png')
 const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
 
 
@@ -159,7 +159,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, child)
+          this.alertDown(filePath, fileName, outPath, ObliquePhoto)
         }
         break
       case gl:
@@ -264,23 +264,23 @@ export default class ExampleMapList extends React.Component {
     let opacity = item.opacity
     switch (key) {
       case vectorMap:
-        src = require('../../../assets/public/beijing.png')
+        src = require('../../../../assets/public/beijing.png')
         break
       case map3D:
-        src = require('../../../assets/public/map3D.png')
+        src = require('../../../../assets/public/map3D.png')
         break
       case ObliquePhoto:
-        src = require('../../../assets/public/ObliquePhoto.png')
+        src = require('../../../../assets/public/ObliquePhoto.png')
         break
       case gl:
-        src = require('../../../assets/public/VectorMap.png')
+        src = require('../../../../assets/public/VectorMap.png')
         path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
         break
       case overLay:
-        src = require('../../../assets/public/VectorMap.png')
+        src = require('../../../../assets/public/VectorMap.png')
         break
       default:
-        src = require('../../../assets/public/VectorMap.png')
+        src = require('../../../../assets/public/VectorMap.png')
         break
     }
     return (
@@ -294,10 +294,9 @@ export default class ExampleMapList extends React.Component {
         <FlatList
           data={this.state.maplist}
           renderItem={this._renderItem}
-          horizontal={false}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps={'always'}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+          keyboardShouldPersistTaps={'always'} 
         />
       </View>
     )

@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Image} from 'react-native'
+import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Image } from 'react-native'
 import { scaleSize } from '../utils'
 import { size } from '../styles'
-import { Progress} from '../components'
+import { Progress } from '../components'
 const SCREEN_WIDTH = Dimensions.get('window').width
 const ITEM_WIDTH = SCREEN_WIDTH * 0.5 - 10
 const IMAGE_WIDTH = ITEM_WIDTH - 20
@@ -15,8 +15,8 @@ export default class Thumbnails extends React.Component {
     title: string,
     resizeMode: string,
     btnClick: () => {},
-    backgroundcolor:string,
-    opacity:any,
+    backgroundcolor: string,
+    opacity: any,
   }
 
   static defaultProps: {
@@ -25,29 +25,29 @@ export default class Thumbnails extends React.Component {
 
   constructor(props) {
     super(props)
-    this.backgroundcolor=this.props.backgroundcolor || null
-    this.state={
-      opacity:this.props.opacity ||0.6,
+    this.backgroundcolor = this.props.backgroundcolor || null
+    this.state = {
+      opacity: this.props.opacity || 0.6,
     }
   }
- 
-  updateprogress= async(data)=>{
-    if(data===99||data===100){
-      this.setState({opacity:0})
+
+  updateprogress = async (data) => {
+    if (data === 100) {
+      this.setState({ opacity: 0 })
     }
-    else if(data!==null&&this.mProgress){
-     this.mProgress.progress=data/100
+    else if (data !== null && this.mProgress) {
+      this.mProgress.progress = data / 100
     }
-    else{
+    else {
       return
     }
   }
 
-  downloaded=async(result)=>{
-    if(result){
-      this.setState({opacity:0.6})
+  downloaded = async (result) => {
+    if (result) {
+      this.setState({ opacity: 0.6 })
       this.updateprogress(0)
-    }else{
+    } else {
       return
     }
   }
@@ -65,7 +65,7 @@ export default class Thumbnails extends React.Component {
     return (
       <View style={styles.container}>
         <TouchableOpacity accessible={true} accessibilityLabel={this.props.title ? this.props.title : '默认标题'} activeOpacity={0.8} style={styles.subContainer} onPress={this.props.btnClick} underlayColor={'rgba(34,26,38,0.1)'}>
-          <Progress ref={ref=>this.mProgress=ref} style={[styles.animatedView,{opacity:this.state.opacity},{backgroundColor:this.backgroundcolor}]} progressAniDuration={0} progressColor={"#1296db"} />
+          <Progress ref={ref => this.mProgress = ref} style={[styles.animatedView, { opacity: this.state.opacity }, { backgroundColor: this.backgroundcolor }]} progressAniDuration={0} progressColor={"#1296db"} />
           <Image resizeMode={this.props.resizeMode} style={[styles.image, this.props.imageStyle]} source={image} />
           <View style={styles.textView}>
             <Text numberOfLines={1} style={styles.title}>{this.props.title ? this.props.title : '默认标题'}</Text>
@@ -105,11 +105,11 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeSm,
     textAlign: 'center',
   },
-  animatedView:{
-    position:'absolute',
-    height:IMAGE_WIDTH * 0.6,
-    top:0,
-    left:0,
-    zIndex:1,
+  animatedView: {
+    position: 'absolute',
+    height: IMAGE_WIDTH * 0.6,
+    top: 0,
+    left: 0,
+    zIndex: 1,
   },
 })
