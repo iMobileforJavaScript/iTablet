@@ -122,12 +122,14 @@ export default class Home extends Component {
      })
    }
 
-  _goToMapLoad = () => {
-    this.setState({
-      mapviewshow:!this.state.mapviewshow,
-      selectlist:!this.state.selectlist,
-    })
-  }
+  // _goToMapLoad = () => {
+  //   this.setState({
+  //     mapviewshow:!this.state.mapviewshow,
+  //     selectlist:!this.state.selectlist,
+  //   })
+  // }
+
+  _goToMapLoad = () => {NavigationService.navigate('MapLoad',{})}
 
   render() {
     return (
@@ -158,7 +160,7 @@ export default class Home extends Component {
         <View style={styles.btnbarhome} />
         <HomeUsualMap data={this.props.latestMap} style={styles.ususalmap} />
         <UsualTitle title='示例地图' style={styles.examplemaplist} />
-        <ExampleMapList />
+        {/*<ExampleMapList />*/}
       </Container>
     )
   }

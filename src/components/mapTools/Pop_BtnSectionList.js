@@ -16,6 +16,7 @@ const SEPATATOR_WIDTH = 1
 export default class Pop_BtnSectionList extends React.Component {
 
   static propTypes = {
+    style: PropTypes.any,
     data: PropTypes.array,
     measure: PropTypes.func,
     analyst: PropTypes.func,
@@ -30,12 +31,16 @@ export default class Pop_BtnSectionList extends React.Component {
     operationAction: PropTypes.func,
     currentOperation: PropTypes.object,
     currentIndex: PropTypes.number,
+    separatorWidth: PropTypes.number,
+    separatorColor: PropTypes.string,
     // currentSubKey: PropTypes.string,
     // lastSubKey: PropTypes.string,
   }
 
   static defaultProps = {
     subBtnType: 'textBtn',
+    separatorWidth: scaleSize(20),
+    separatorColor: 'transparent',
   }
 
   constructor(props) {
@@ -150,21 +155,31 @@ export default class Pop_BtnSectionList extends React.Component {
 
   _renderOperationItem = ({ item, index }) => {
     let key = item.key
+    console.log(item.image)
     return (
       <View style={styles.operationView}>
         {
           // this.props.subBtnType === 'imageBtn'
-          // item.image
-          //   ? <MTBtn BtnText={key} image={item.image} BtnClick={() => this._btn_click_operation({ item, index })}/>
-          //   :
-          <Pop_Btn
-            ref={ref => {
-              this.setOperationRefs(ref, index)
-            }}
-            selected={key === this.state.currentSubKey}
-            style={styles.operation}
-            BtnText={key}
-            btnClick={() => this._btn_click_operation({ item, index })}/>
+          item.image
+            ? <MTBtn
+              ref={ref => {
+                this.setOperationRefs(ref, index)
+              }}
+              selected={key === this.state.currentSubKey}
+              BtnText={item.title}
+              size={item.size}
+              image={item.image}
+              selectMode={item.selectMode}
+              selectedImage={item.selectedImage}
+              BtnClick={() => this._btn_click_operation({ item, index })}/>
+            : <Pop_Btn
+              ref={ref => {
+                this.setOperationRefs(ref, index)
+              }}
+              selected={key === this.state.currentSubKey}
+              style={styles.operation}
+              BtnText={key}
+              btnClick={() => this._btn_click_operation({ item, index })}/>
         }
       </View>
     )
@@ -180,6 +195,13 @@ export default class Pop_BtnSectionList extends React.Component {
 
   _keySubExtractor = item => item.key
 
+  _renderItemSeparatorComponent = () => {
+    return <View style={[styles.separator, this.props.separatorWidth >= 0 && {
+      width: scaleSize(this.props.separatorWidth),
+      backgroundColor: this.props.separatorColor,
+    }]} />
+  }
+
   render() {
     // let props = { ...this.props }
     // this.findData(props.data, props.currentData)
@@ -188,7 +210,7 @@ export default class Pop_BtnSectionList extends React.Component {
       operations = this.props.currentOperation.operations.concat()
     }
     return (
-      <View style={styles.container}{...this.props}>
+      <View style={[styles.container, this.props.style]}{...this.props}>
         <FlatList
           style={styles.categoryListView}
           data={this.props.data.concat([])}
@@ -207,12 +229,14 @@ export default class Pop_BtnSectionList extends React.Component {
               <FlatList
                 ref={ref => (this.operationList = ref)}
                 style={styles.operationsListView}
+                contentContainerStyle={[styles.contentContainerStyle]}
                 // data={this.props.currentOperation.operations || []}
                 data={operations}
                 renderItem={this._renderOperationItem}
                 horizontal={true}
                 keyExtractor={this._keySubExtractor}
                 showsHorizontalScrollIndicator={false}
+                ItemSeparatorComponent={this._renderItemSeparatorComponent}
               />
             }
             {this.props.subRight}
@@ -231,7 +255,7 @@ Pop_BtnSectionList.SubBtnType = {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: 'red',
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,
@@ -246,6 +270,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     borderColor: color.USUAL_SEPARATORCOLOR,
     backgroundColor: 'white',
+  },
+  contentContainerStyle: {
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    paddingVertical: scaleSize(30),
   },
   operationsListView: {
     flex: 1,

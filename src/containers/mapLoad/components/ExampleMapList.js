@@ -204,6 +204,7 @@ export default class ExampleMapList extends React.Component {
       } else {
         mProgress = progress
       }
+      console.log(mProgress)
       if (mProgress > 0 && mProgress > this.progress) {
         if (!this.downloaded) {
           let downitem = await this.getDownitem(GLOBAL.downitemname)
@@ -217,8 +218,8 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  downloaded = async result => {
-    // console.log("success")
+  onComplete = async result => {
+    console.log("success")
     this.downloaded = true
     this.progress = null
     try {
@@ -268,7 +269,7 @@ export default class ExampleMapList extends React.Component {
     if (result) {
       this.OnlineService.download(filePath, fileName, {
         onProgress: this.downloading,
-        onComplete: this.downloaded,
+        onComplete: this.onComplete,
         onFailure: this.downloadFailure,
       })
     }
@@ -318,6 +319,7 @@ export default class ExampleMapList extends React.Component {
     let item = { name: key, ref: child }
     this.downlist.push(item)
   }
+
   getDownitem = key => {
     for (let index = 0; index < this.downlist.length; index++) {
       if (key === this.downlist[index].name) {
@@ -325,7 +327,6 @@ export default class ExampleMapList extends React.Component {
       }
     }
   }
-
 
   _renderItem = ({ item }) => {
     let key = item.key

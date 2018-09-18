@@ -382,6 +382,7 @@ export default class CollectionToolBar extends React.Component {
             this.toDoAction()
             break
         }
+        this.operationCallback && this.operationCallback(true)
         // await this.props.editLayer.layer.setEditable(true)
       } catch (e) {
         Toast.show('取消失败')
@@ -588,13 +589,13 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, REGION_GPS_POINT)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_GPS_POINT, callback) },
-              { key: '添加点', action: () => this._addPoint(REGION_GPS_POINT) },
-              { key: '撤销', action: () => this._undo(REGION_GPS_POINT) },
-              { key: '重做', action: () => this._redo(REGION_GPS_POINT) },
-              { key: '取消', action: () => this._cancel(REGION_GPS_POINT) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_GPS_POINT, callback) },
-              { key: '属性', action: () => this._attribute(REGION_GPS_POINT) },
+              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_GPS_POINT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
+              { key: '添加点', action: () => this._addPoint(REGION_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_add_point.png'), selectedImage:require('../../../../assets/mapTools/icon_add_node_seleted.png') },
+              { key: '撤销', action: () => this._undo(REGION_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: '重做', action: () => this._redo(REGION_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
+              { key: '取消', action: () => this._cancel(REGION_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_cancel.png'), selectedImage:require('../../../../assets/mapTools/icon_cancel_selected.png'), selectMode: 'flash' },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_GPS_POINT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_save.png'), selectedImage:require('../../../../assets/mapTools/icon_save_selected.png'), selectMode: 'flash' },
+              { key: '属性', action: () => this._attribute(REGION_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
           {
@@ -604,12 +605,12 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, REGION_GPS_PATH)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_GPS_PATH, callback) },
+              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_GPS_PATH, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
               // { key: '记录', action: this._record },
-              { key: '暂停', action: () => this._pause(REGION_GPS_PATH) },
-              { key: '取消', action: () => this._cancel(REGION_GPS_PATH) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_GPS_PATH, callback) },
-              { key: '属性', action: () => this._attribute(REGION_GPS_PATH) },
+              { key: '暂停', action: () => this._pause(REGION_GPS_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_pause.png'), selectedImage:require('../../../../assets/mapTools/icon_pause_selected.png'), selectMode: 'flash' },
+              { key: '取消', action: () => this._cancel(REGION_GPS_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_cancel.png'), selectedImage:require('../../../../assets/mapTools/icon_cancel_selected.png'), selectMode: 'flash' },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_GPS_PATH, callback), size: 'large', image:require('../../../../assets/mapTools/icon_save.png'), selectedImage:require('../../../../assets/mapTools/icon_save_selected.png'), selectMode: 'flash' },
+              { key: '属性', action: () => this._attribute(REGION_GPS_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
           {
@@ -619,12 +620,12 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, REGION_HAND_POINT)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_HAND_POINT, callback) },
-              { key: '撤销', action: () => this._undo(REGION_HAND_POINT) },
-              { key: '重做', action: () => this._redo(REGION_HAND_POINT) },
-              { key: '取消', action: () => this._cancel(REGION_HAND_POINT) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_HAND_POINT, callback) },
-              { key: '属性', action: () => this._attribute(REGION_HAND_POINT) },
+              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_HAND_POINT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
+              { key: '撤销', action: () => this._undo(REGION_HAND_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: '重做', action: () => this._redo(REGION_HAND_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
+              { key: '取消', action: () => this._cancel(REGION_HAND_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_cancel.png'), selectedImage:require('../../../../assets/mapTools/icon_cancel_selected.png'), selectMode: 'flash' },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_HAND_POINT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_save.png'), selectedImage:require('../../../../assets/mapTools/icon_save_selected.png'), selectMode: 'flash' },
+              { key: '属性', action: () => this._attribute(REGION_HAND_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
           {
@@ -634,12 +635,12 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, REGION_HAND_PATH)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_HAND_PATH, callback) },
-              { key: '撤销', action: () => this._undo(REGION_HAND_PATH) },
-              { key: '重做', action: () => this._redo(REGION_HAND_PATH) },
-              { key: '取消', action: () => this._cancel(REGION_HAND_PATH) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_HAND_PATH, callback) },
-              { key: '属性', action: () => this._attribute(REGION_HAND_PATH) },
+              { key: '开始采集', action: ({callback = () => {}}) => this._collect(REGION_HAND_PATH, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
+              { key: '撤销', action: () => this._undo(REGION_HAND_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: '重做', action: () => this._redo(REGION_HAND_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
+              { key: '取消', action: () => this._cancel(REGION_HAND_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_cancel.png'), selectedImage:require('../../../../assets/mapTools/icon_cancel_selected.png'), selectMode: 'flash' },
+              { key: '保存', action: ({callback = () => {}}) => this._save(REGION_HAND_PATH, callback), size: 'large', image:require('../../../../assets/mapTools/icon_save.png'), selectedImage:require('../../../../assets/mapTools/icon_save_selected.png'), selectMode: 'flash' },
+              { key: '属性', action: () => this._attribute(REGION_HAND_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
         ]
@@ -703,12 +704,12 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, TEXT)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(TEXT, callback) },
-              { key: '撤销', action: () => this._undo(LINE_GPS_POINT) },
-              { key: '重做', action: () => this._redo(LINE_GPS_POINT) },
-              { key: '取消', action: () => this._cancel(TEXT) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(TEXT, callback) },
-              { key: '属性', action: () => this._attribute(TEXT) },
+              { key: '开始采集', action: ({callback = () => {}}) => this._collect(TEXT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
+              { key: '撤销', action: () => this._undo(LINE_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: '重做', action: () => this._redo(LINE_GPS_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
+              { key: '取消', action: () => this._cancel(TEXT), size: 'large', image:require('../../../../assets/mapTools/icon_cancel.png'), selectedImage:require('../../../../assets/mapTools/icon_cancel_selected.png'), selectMode: 'flash' },
+              { key: '保存', action: ({callback = () => {}}) => this._save(TEXT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_save.png'), selectedImage:require('../../../../assets/mapTools/icon_save_selected.png'), selectMode: 'flash' },
+              { key: '属性', action: () => this._attribute(TEXT), size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
         ]
