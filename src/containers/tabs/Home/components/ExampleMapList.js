@@ -133,7 +133,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
-          this.alertDown(filePath, fileName, outPath, vectorMap)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case map3D:
@@ -146,7 +146,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, map3D)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case ObliquePhoto:
@@ -159,7 +159,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, ObliquePhoto)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case gl:
@@ -173,7 +173,7 @@ export default class ExampleMapList extends React.Component {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, gl)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case overLay:
@@ -187,7 +187,7 @@ export default class ExampleMapList extends React.Component {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, overLay)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
     }
@@ -274,7 +274,6 @@ export default class ExampleMapList extends React.Component {
         break
       case gl:
         src = require('../../../../assets/public/VectorMap.png')
-        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
         break
       case overLay:
         src = require('../../../../assets/public/VectorMap.png')
