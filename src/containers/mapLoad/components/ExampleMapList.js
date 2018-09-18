@@ -209,7 +209,7 @@ export default class ExampleMapList extends React.Component {
           let downitem = await this.getDownitem(GLOBAL.downitemname)
           this.progress = mProgress
           downitem.updateprogress(mProgress)
-          console.log(mProgress)
+          // console.log(mProgress)
         }
       }
     } catch (e) {
@@ -218,7 +218,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   downloaded = async result => {
-    console.log("success")
+    // console.log("success")
     this.downloaded = true
     this.progress = null
     try {
@@ -286,7 +286,6 @@ export default class ExampleMapList extends React.Component {
 
   alertDown = async (filePath, fileName, outPath, key) => {
     if (this.progress) {
-      console.log(this.progress)
       Alert.alert(
         "温馨提示",
         "有文件正在下载中，请稍后",
