@@ -14,7 +14,11 @@ import { Toast, AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
 import NavigationService from '../NavigationService'
+<<<<<<< HEAD
 import { Alert, InteractionManager, View } from 'react-native'
+=======
+import { Alert, InteractionManager, Platform } from 'react-native'
+>>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
 import styles from './styles'
 
 export default class MapView extends React.Component {
@@ -388,7 +392,26 @@ export default class MapView extends React.Component {
           this.container.setLoading(false)
           Toast.show('保存失败')
         }
+<<<<<<< HEAD
       }).bind(this)()
+=======
+
+        // if (!saveMap) {
+        //   Toast.show('该名称地图已存在')
+        // } else if (saveWs || !this.showDialogCaption) {
+        //   this.showSaveDialog(false)
+        //   Toast.show('保存成功')
+        // } else if (saveWs === undefined) {
+        //   Toast.show('工作空间已存在')
+        // } else {
+        //   Toast.show('保存失败')
+        // }
+      } catch (e) {
+        this.container.setLoading(false)
+        Toast.show('保存失败')
+      }
+    }).bind(this)()
+>>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
   }
 
   geometryMultiSelected = events => {
@@ -645,6 +668,7 @@ export default class MapView extends React.Component {
             this.mapName = await this.workspace.getMapName(0)
           }
 
+<<<<<<< HEAD
           if (this.mapName) {
             await this.map.open(this.mapName)
             // await this.map.viewEntire()
@@ -652,10 +676,23 @@ export default class MapView extends React.Component {
             // await this.mapControl.setAction(Action.PAN)
             // await this.map.refresh()
 
+=======
+        if (this.mapName) {
+          await this.map.open(this.mapName)
+
+          // TODO iOS不会进入？
+          if (Platform.OS === 'ios') {
+            await this.map.viewEntire()
+            await this.mapControl.setAction(Action.PAN)
+            await this.map.refresh()
+            this.container.setLoading(false)
+          } else {
+>>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
             navigator.geolocation.getCurrentPosition(
               position => {
                 let lat = position.coords.latitude
                 let lon = position.coords.longitude
+<<<<<<< HEAD
                   ; (async () => {
                     const point2dModule = new Point2D()
                     let centerPoint = await point2dModule.createObj(lon, lat)
@@ -677,6 +714,23 @@ export default class MapView extends React.Component {
 
           // this.saveLatest()
         } catch (e) {
+=======
+                ;(async () => {
+                  const point2dModule = new Point2D()
+                  let centerPoint = await point2dModule.createObj(lon, lat)
+                  await this.map.setCenter(centerPoint)
+                  await this.map.viewEntire()
+                  // await this.map.setScale(0.00005)
+                  await this.mapControl.setAction(Action.PAN)
+                  await this.map.refresh()
+                  this.container.setLoading(false)
+                }).bind(this)()
+              }
+            )
+          }
+        } else {
+          await this.map.refresh()
+>>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
           this.container.setLoading(false)
         }
       }).bind(this)()
@@ -740,6 +794,32 @@ export default class MapView extends React.Component {
           await this._addGeometrySelectedListener()
         } catch (e) {
           this.container.setLoading(false)
+<<<<<<< HEAD
+=======
+        } else {
+          if (Platform.OS === 'ios') {
+            await this.map.viewEntire()
+            // await this.map.setScale(0.00005)
+            await this.mapControl.setAction(Action.PAN)
+            await this.map.refresh()
+            this.container.setLoading(false)
+          } else {
+            navigator.geolocation.getCurrentPosition(
+              position => {
+                let lat = position.coords.latitude
+                let lon = position.coords.longitude
+                ;(async () => {
+                  let centerPoint = await point2dModule.createObj(lon, lat)
+                  await this.map.setCenter(centerPoint)
+                  await this.map.viewEntire()
+                  await this.mapControl.setAction(Action.PAN)
+                  await this.map.refresh()
+                  this.container.setLoading(false)
+                }).bind(this)()
+              }
+            )
+          }
+>>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
         }
       }).bind(this)()
   }

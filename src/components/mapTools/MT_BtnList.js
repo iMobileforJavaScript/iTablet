@@ -57,13 +57,13 @@ export default class MT_BtnList extends React.Component {
     this.state = {
       data: props.type === MAP_LOCAL
         ? [
-          { key: '新建图层', image: require('../../assets/map/icon-add-layer.png'), btnClick: this._addLayer },
-          { key: '数据采集', image: require('../../assets/map/icon-data-collection.png'), btnClick: this._dataCollection },
-          { key: '数据编辑', image: require('../../assets/map/icon-data-edit.png'), btnClick: this._dataEdit },
-          { key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager },
-          { key: '数据管理', image: require('../../assets/map/icon-data-manangement.png'), btnClick: this._dataManager },
-          { key: '数据分析', image: require('../../assets/map/icon-analyst.png'), btnClick: this._analyst },
-          { key: '工具', image: require('../../assets/map/icon-tool.png'), btnClick: this._tools },
+          { key: '新建图层', title: '新建图层', image: require('../../assets/map/icon-add-layer.png'), btnClick: this._addLayer },
+          { key: '数据采集', title: '数据采集', image: require('../../assets/map/icon-data-collection.png'), btnClick: this._dataCollection },
+          { key: '数据编辑', title: '数据编辑', image: require('../../assets/map/icon-data-edit.png'), btnClick: this._dataEdit },
+          { key: '地图管理', title: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager },
+          { key: '数据管理', title: '数据管理', image: require('../../assets/map/icon-data-manangement.png'), btnClick: this._dataManager },
+          { key: '数据分析', title: '数据分析', image: require('../../assets/map/icon-analyst.png'), btnClick: this._analyst },
+          { key: '工具', title: '工具', image: require('../../assets/map/icon-tool.png'), btnClick: this._tools },
         ]
         : [{ key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager }],
     }

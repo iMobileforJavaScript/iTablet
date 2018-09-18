@@ -5,19 +5,20 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, Image, TouchableOpacity, Text } from 'react-native'
+import { StyleSheet, Image, TouchableOpacity, Text, View } from 'react-native'
 import { constUtil, scaleSize } from '../../utils'
 import { size } from '../../styles'
 
-const ICON_HEIGHT =0.75* 0.1 * constUtil.WIDTH
-const CONTAINER_HEIGHT = 1.4 * ICON_HEIGHT
-const CONTAINER_WIDTH = CONTAINER_HEIGHT
+// const ICON_HEIGHT =0.75* 0.1 * constUtil.WIDTH
+// const CONTAINER_HEIGHT = 1.4 * ICON_HEIGHT
+// const CONTAINER_WIDTH = CONTAINER_HEIGHT
 const BTN_UNDERCOLOR = constUtil.UNDERLAYCOLOR
 
 export default class MT_Btn extends React.Component {
 
   props: {
     image: any,
+    selectedImage?: any,
     size: string,
     BtnText: string,
     BtnClick: () => {},
@@ -25,19 +26,102 @@ export default class MT_Btn extends React.Component {
     textColor: string,
     imageStyle: any,
     style: any,
+    selected?: boolean,
+    selectMode?: string,
+    activeOpacity?: number,
   }
-  
+
   static defaultProps = {
-    size: 'large',
+    activeOpacity: 1,
+    size: 'normal',
+    selected: false,
+    selectMode: 'normal', // normal: 选择 | 非选择状态     ---    flash：按下和松开
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      selected: props.selected,
+    }
+  }
+
+  action = () => {
+    if (this.props.selectMode === 'flash') return
+    this.props.BtnClick && this.props.BtnClick()
+  }
+
+  _onPressOut = () => {
+    if (this.props.selectMode === 'normal') return
+    this.setState({
+      selected: false,
+    }, () => {
+      this.props.BtnClick && this.props.BtnClick()
+    })
+  }
+
+  _onPressIn = () => {
+    if (this.props.selectMode === 'normal') return
+    this.setState({
+      selected: true,
+    })
   }
 
   render() {
-    let imageStyle = this.props.size === 'small' ? styles.smallImage : styles.largeImage
-    let textStyle = this.props.size === 'small' ? styles.smallText : styles.largeText
+    let imageStyle, textStyle
+
+    switch (this.props.size) {
+      case 'small':
+        imageStyle = styles.smallImage
+        textStyle = styles.smallText
+        break
+      case 'large':
+        imageStyle = styles.largeImage
+        textStyle = styles.largeText
+        break
+      default:
+        imageStyle = styles.normalImage
+        textStyle = styles.normalText
+        break
+    }
+
+    let image
+    if (this.props.selectMode === 'flash' && this.props.selectedImage) {
+      image = this.state.selected ? this.props.selectedImage : this.props.image
+    } else if (this.props.selectedImage) {
+      image = this.props.selected ? this.props.selectedImage : this.props.image
+    } else {
+      image = this.props.image
+    }
+
     return (
-      <TouchableOpacity accessible={true} accessibilityLabel={this.props.BtnText} style={[styles.container, this.props.style]} onPress={this.props.BtnClick} underlayColor={BTN_UNDERCOLOR}>
-        {this.props.image && <Image resizeMode={'contain'} style={[imageStyle, this.props.imageStyle]} source={this.props.image} />}
-        {this.props.BtnText && <Text style={[textStyle, this.props.textStyle, {color: this.props.textColor}]}>{this.props.BtnText}</Text>}
+      <TouchableOpacity
+        accessible={true}
+        activeOpacity={this.props.activeOpacity}
+        accessibilityLabel={this.props.BtnText}
+        style={[styles.container, this.props.style]}
+        onPress={this.action}
+        underlayColor={BTN_UNDERCOLOR}
+        onPressOut={() => this._onPressOut()}
+        onPressIn={() => this._onPressIn()}
+      >
+        <View>
+          {
+            image &&
+            <Image
+              resizeMode={'contain'}
+              style={[imageStyle, this.props.imageStyle]}
+              source={image}
+            />
+          }
+          {
+            this.props.BtnText &&
+            <Text
+              style={[textStyle, this.props.textStyle, {color: this.props.textColor}]}
+            >
+              {this.props.BtnText}
+            </Text>
+          }
+        </View>
       </TouchableOpacity>
     )
   }
@@ -62,6 +146,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   largeImage: {
+    height: scaleSize(70),
+    width: scaleSize(70),
+    alignSelf: 'center',
+    // borderRadius: 5,
+  },
+  normalImage: {
     height: scaleSize(50),
     width: scaleSize(50),
     alignSelf: 'center',
@@ -74,6 +164,12 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
   },
   largeText: {
+    fontSize: size.fontSize.fontSizeMd,
+    backgroundColor: 'transparent',
+    width: scaleSize(100),
+    textAlign: 'center',
+  },
+  normalText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     width: scaleSize(100),

@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { NativeModules, Platform, DeviceEventEmitter } from 'react-native'
+import { NativeModules, Platform } from 'react-native'
 import { View, StyleSheet, FlatList, Alert } from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
 import Thumbnails from '../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
-import { ConstPath, EventConst } from '../../../constains'
+import { ConstPath } from '../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
@@ -20,7 +20,7 @@ export default class ExampleMapList extends React.Component {
     this.unzip = true
     this.ziping = false
     this.downloaded = false
-    this.progeress = null
+    this.progress = null
     this.downlist = []
     this.state = {
       maplist: [],
@@ -31,72 +31,75 @@ export default class ExampleMapList extends React.Component {
   componentDidMount() {
     (async function () {
       await this.mapexist()
-      try {
-        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async progeress => {
-          if (progeress > 0 && progeress > this.progeress) {
-            if (!this.downloaded) {
-              let downitem = await this.getDownitem(GLOBAL.downitemname)
-              this.progeress = progeress
-              downitem.updateprogress(progeress)
-            }
-          }
-        })
-        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async result => {
-          this.downloaded = true
-          this.progeress = null
-          try {
-            if (this.unzip) {
-              this.unzip = false
-              Toast.show("文件解压中,请等待")
-              this.ziping = true
-              let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-              if (result.isUnZiped) {
-                GLOBAL.downitemname = ''
-                Alert.alert(
-                  "温馨提示",
-                  "文件解压完成",
-                  [
-                    { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
-                  ],
-                  { cancelable: true }
-                )
-              }
-            }
-          } catch (error) {
-            if (this.unzip) {
-              this.unzip = false
-              Alert.alert(
-                "温馨提示",
-                "文件损坏失败，是否重新下载",
-                [
-                  { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
-                  { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
-                ],
-                { cancelable: true }
-              )
-            }
-          }
-        })
-        DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async () => {
-          // let downitem = await that.getDownitem(GLOBAL.downitemname)
-          Alert.alert(
-            "温馨提示",
-            "文件下载失败， 是否重新下载",
-            [
-              { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
-              { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
-            ],
-            { cancelable: true }
-          )
-          console.log("faile")
-        })
-      } catch (error) {
-        Toast.show('下载失败')
-      }
+      // try {
+      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async progress => {
+      //     if (progress > 0 && progress > this.progress) {
+      //       if (!this.downloaded) {
+      //         let downitem = await this.getDownitem(GLOBAL.downitemname)
+      //         this.progress = progress
+      //         downitem.updateprogress(progress)
+      //         console.log(progress)
+      //       }
+      //     }
+      //   })
+      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async result => {
+      //     console.log("success")
+      //     this.downloaded = true
+      //     this.progress = null
+      //     try {
+      //       if (this.unzip) {
+      //         this.unzip = false
+      //         Toast.show("文件解压中,请等待")
+      //         console.log("zip")
+      //         this.ziping = true
+      //         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
+      //         if (result.isUnZiped) {
+      //           GLOBAL.downitemname = ''
+      //           Alert.alert(
+      //             "温馨提示",
+      //             "文件解压完成",
+      //             [
+      //               { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+      //             ],
+      //             { cancelable: true }
+      //           )
+      //         }
+      //       }
+      //     } catch (error) {
+      //       if (this.unzip) {
+      //         this.unzip = false
+      //         Alert.alert(
+      //           "温馨提示",
+      //           "文件解压失败，是否重新下载",
+      //           [
+      //             { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
+      //             { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
+      //           ],
+      //           { cancelable: true }
+      //         )
+      //       }
+      //     }
+      //   })
+      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async function (result) {
+      //     // let downitem = await that.getDownitem(GLOBAL.downitemname)
+      //     // Alert.alert(
+      //     //   "温馨提示",
+      //     //   "文件下载失败， 是否重新下载",
+      //     //   [
+      //     //     { text: "确定", onPress: () => {that.download(that.downpath,downfilename)} },
+      //     //     { text: "取消", onPress: () => {downitem.updateprogress(100)} }
+      //     //   ],
+      //     //   { cancelable: true }
+      //     // )
+      //     // console.log("faile")
+      //   })
+      // } catch (error) {
+      //   Toast.show('下载失败')
+      // }
     }).bind(this)()
   }
 
-  cancel = async (zipfile) => {
+  cancel = async zipfile => {
     await Utility.deleteZip(zipfile)
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     downitem.downloaded(true)
@@ -120,7 +123,7 @@ export default class ExampleMapList extends React.Component {
   }
 
 
-  _itemClick = async (key) => {
+  _itemClick = async key => {
     let path, exist, filePath, outPath, fileName, openPath, zipexist
     switch (key) {
       case vectorMap:
@@ -159,7 +162,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, child)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case gl:
@@ -193,13 +196,82 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
+  downloading = async progress => {
+    try {
+      let mProgress
+      if (progress instanceof Object) {
+        mProgress = progress.progress
+      } else {
+        mProgress = progress
+      }
+      console.log(mProgress)
+      if (mProgress > 0 && mProgress > this.progress) {
+        if (!this.downloaded) {
+          let downitem = await this.getDownitem(GLOBAL.downitemname)
+          this.progress = mProgress
+          downitem.updateprogress(mProgress)
+          // console.log(mProgress)
+        }
+      }
+    } catch (e) {
+      Toast.show('下载失败')
+    }
+  }
+
+  onComplete = async result => {
+    console.log("success")
+    this.downloaded = true
+    this.progress = null
+    try {
+      if (this.unzip) {
+        this.unzip = false
+        Toast.show("文件解压中,请等待")
+        console.log("zip")
+        this.ziping = true
+        let result = await Utility.unZipFile(this.zipfile, this.targetdir)
+        if (result.isUnZiped) {
+          GLOBAL.downitemname = ''
+          Alert.alert(
+            "温馨提示",
+            "文件解压完成",
+            [
+              { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+            ],
+            { cancelable: true }
+          )
+        }
+      }
+    } catch (error) {
+      if (this.unzip) {
+        this.unzip = false
+        Alert.alert(
+          "温馨提示",
+          "文件解压失败，是否重新下载",
+          [
+            { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
+            { text: "取消", onPress: () => { this.cancel(this.zipfile) } },
+          ],
+          { cancelable: true }
+        )
+      }
+    }
+  }
+
+  downloadFailure = async error => {
+    Toast.show('下载失败')
+  }
+
   download = async (filePath, fileName) => {
     Toast.show("开始下载")
-    this.progeress = null
+    this.progress = null
     this.OnlineService = new OnlineService()
     let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
     if (result) {
-      this.OnlineService.download(filePath, fileName)
+      this.OnlineService.download(filePath, fileName, {
+        onProgress: this.downloading,
+        onComplete: this.onComplete,
+        onFailure: this.downloadFailure,
+      })
     }
     else {
       Alert.alert(
@@ -214,8 +286,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   alertDown = async (filePath, fileName, outPath, key) => {
-    if (this.progeress) {
-      console.log(this.progeress)
+    if (this.progress) {
       Alert.alert(
         "温馨提示",
         "有文件正在下载中，请稍后",
@@ -245,17 +316,17 @@ export default class ExampleMapList extends React.Component {
   }
 
   downList = (child, key) => {
-    item = { name: key, ref: child }
+    let item = { name: key, ref: child }
     this.downlist.push(item)
   }
-  getDownitem = (key) => {
+
+  getDownitem = key => {
     for (let index = 0; index < this.downlist.length; index++) {
       if (key === this.downlist[index].name) {
         return this.downlist[index].ref
       }
     }
   }
-
 
   _renderItem = ({ item }) => {
     let key = item.key
@@ -274,7 +345,7 @@ export default class ExampleMapList extends React.Component {
         break
       case gl:
         src = require('../../../assets/public/VectorMap.png')
-        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
+        // path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
         break
       case overLay:
         src = require('../../../assets/public/VectorMap.png')

@@ -47,8 +47,8 @@ export default class GetBack extends React.Component {
         {/*<BtnTwo text='找回密码' width={90} btnClick={this._register} />*/}
         {/*</View>*/}
         <WebView
-          // scalesPageToFit={Platform.OS === 'ios'}
-          scalesPageToFit={true}
+          scalesPageToFit={Platform.OS === 'ios'}
+          // scalesPageToFit={true}
           // automaticallyAdjustContentInsets={true}
           contentInset={{top:0,left:0,right:0,bottom:0}}
           style={styles.webView}

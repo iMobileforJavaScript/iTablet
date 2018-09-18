@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_javascript/ios/objNative/JSMap.m"
-            timestampString = "557907738.546303"
+            timestampString = "558860294.160841"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -26,7 +26,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_javascript/ios/objNative/JSAdoptMapView.m"
-            timestampString = "557996715.152344"
+            timestampString = "558860294.160992"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "191"
@@ -42,7 +42,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_javascript/ios/objNative/JSAdoptMapView.m"
-            timestampString = "557996715.1524251"
+            timestampString = "558860294.161054"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "187"
@@ -58,7 +58,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_javascript/ios/objNative/JSAdoptMapView.m"
-            timestampString = "557996715.1524709"
+            timestampString = "558860294.161097"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "189"
@@ -369,38 +369,6 @@
             endingLineNumber = "100"
             landmarkName = "+parseRecordset:fieldsDics:"
             landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_javascript/ios/objNative/JSAdoptMapView.m"
-            timestampString = "557996715.153414"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "201"
-            endingLineNumber = "201"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_javascript/ios/objNative/JSAdoptMapView.m"
-            timestampString = "557996715.153453"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "198"
-            endingLineNumber = "198"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

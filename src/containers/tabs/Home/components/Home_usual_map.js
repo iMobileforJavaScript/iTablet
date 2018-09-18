@@ -5,7 +5,7 @@ import { Thumbnails, EmptyView } from '../../../../components'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import { Const } from '../../../../constains'
-import MapView from '../../../mapView'
+// import MapView from '../../../mapView'
 
 export default class HomeUsualMap extends React.Component {
 
