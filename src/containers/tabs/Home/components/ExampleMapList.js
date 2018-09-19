@@ -301,7 +301,7 @@ export default class ExampleMapList extends React.Component {
           renderItem={this._renderItem}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
-          // keyboardShouldPersistTaps={'always'}
+        // keyboardShouldPersistTaps={'always'}
         />
       </View>
     )

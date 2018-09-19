@@ -555,14 +555,6 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, LINE_HAND_POINT)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(LINE_HAND_POINT, callback) },
-              { key: '撤销', action: () => this._undo(LINE_HAND_POINT) },
-              { key: '重做', action: () => this._redo(LINE_HAND_POINT) },
-              { key: '取消', action: () => this._cancel(LINE_HAND_POINT) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(LINE_HAND_POINT, callback) },
-              { key: '属性', action: () => this._attribute(LINE_HAND_POINT) },
-
-
               { key: '开始采集', action: ({callback = () => {}}) => this._collect(LINE_HAND_POINT, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
               { key: '撤销', action: () => this._undo(LINE_HAND_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
               { key: '重做', action: () => this._redo(LINE_HAND_POINT), size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
@@ -578,14 +570,6 @@ export default class CollectionToolBar extends React.Component {
               this.changeTap(cbData, LINE_HAND_PATH)
             },
             operations: [
-              { key: '开始采集', action: ({callback = () => {}}) => this._collect(LINE_HAND_PATH, callback) },
-              { key: '撤销', action: () => this._undo(LINE_HAND_PATH) },
-              { key: '重做', action: () => this._redo(LINE_HAND_PATH) },
-              { key: '取消', action: () => this._cancel(LINE_HAND_PATH) },
-              { key: '保存', action: ({callback = () => {}}) => this._save(LINE_HAND_PATH, callback) },
-              { key: '属性', action: () => this._attribute(LINE_HAND_PATH) },
-
-
               { key: '开始采集', action: ({callback = () => {}}) => this._collect(LINE_HAND_PATH, callback), size: 'large', image:require('../../../../assets/mapTools/icon_location.png'), selectedImage:require('../../../../assets/mapTools/icon_location_selected.png') },
               { key: '撤销', action: () => this._undo(LINE_HAND_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
               { key: '重做', action: () => this._redo(LINE_HAND_PATH), size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },

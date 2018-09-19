@@ -152,6 +152,7 @@ export default class WorkSpaceFileList extends Component {
         for (let index = 0; index < routes.length; index++) {
           if (routes[index].routeName === 'Map3D') {
               key = index === routes.length - 1 ? '' : routes[index + 1].key
+              
           }
         }
         let workspaceModule = new Workspace()
