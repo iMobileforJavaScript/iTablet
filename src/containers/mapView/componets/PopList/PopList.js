@@ -547,35 +547,63 @@ export default class PopList extends React.Component {
         ]
         break
       case Const.ANALYST:
+        // data = [
+        //   {
+        //     key: '缓冲区分析',
+        //     action: cbData => this._analyst(cbData, Const.BUFFER),
+        //     operations: [
+        //       // { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
+        //       // { key: '清除', action: this.clearBuffer },
+        //       { key: '设置', action: () => this.analystSetting(Const.BUFFER), size: 'large',image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
+        //       { key: '分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+        //       { key: constants.DELETE,action: this.clearBuffer, size: 'large', action: this.delete, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+        //     ],
+        //   },
+        //   {
+        //     key: '叠加分析',
+        //     action: cbData => this._analyst(cbData, Const.OVERLAY),
+        //     operations: [
+        //       { key: '设置',action: () => this.analystSetting(Const.OVERLAY), size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
+        //       { key: '分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+        //       { key: constants.DELETE, action: this.clearOverlay ,size: 'large', action: this.delete, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+        //     ],
+        //   },
+        //   {
+        //     key: '网络分析',
+        //     action: cbData => this._analyst(cbData, 'network'),
+        //     operations: [
+        //       { key: '路径分析',action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE), size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_routanalysis.png'), selectedImage: require('../../../../assets/mapTools/icon_routanalysis_selected.png') },
+        //       { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY), size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_connected.png'), selectedImage: require('../../../../assets/mapTools/icon_connected_selectd.png') },
+        //       { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP),size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_travel.png'), selectedImage: require('../../../../assets/mapTools/icon_travel_selected.png') },
+        //       { key: '追踪分析',action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING), size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_track.png'), selectedImage: require('../../../../assets/mapTools/icon_track_selected.png') },
+        //     ],
+        //   },
+        // ]
         data = [
           {
             key: '缓冲区分析',
             action: cbData => this._analyst(cbData, Const.BUFFER),
             operations: [
-              // { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
-              // { key: '清除', action: this.clearBuffer },
-              { key: '设置', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              { key: '分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png') ,selectMode: 'flash'  },
-              { key: constants.DELETE, size: 'large', action: this.delete, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+              { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
+              { key: '清除', action: this.clearBuffer },
             ],
           },
           {
             key: '叠加分析',
             action: cbData => this._analyst(cbData, Const.OVERLAY),
             operations: [
-              { key: '设置', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              { key: '分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png') ,selectMode: 'flash'  },
-              { key: constants.DELETE, size: 'large', action: this.delete, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+              { key: '设置', action: () => this.analystSetting(Const.OVERLAY)}, { key: '分析', action: this._overlayAnalyst },
+              { key: '清除', action: this.clearOverlay },
             ],
           },
           {
             key: '网络分析',
             action: cbData => this._analyst(cbData, 'network'),
             operations: [
-              { key: '路径分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_routanalysis.png'), selectedImage: require('../../../../assets/mapTools/icon_routanalysis_selected.png') },
-              { key: '连通性分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_connected.png'), selectedImage: require('../../../../assets/mapTools/icon_connected_selectd.png') },
-              { key: '商旅分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_travel.png'), selectedImage: require('../../../../assets/mapTools/icon_travel_selected.png') },
-              { key: '追踪分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_track.png'), selectedImage: require('../../../../assets/mapTools/icon_track_selected.png') },
+              { key: '路径分析', action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE)},
+              { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY)},
+              { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP)},
+              { key: '追踪分析', action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING)},
             ],
           },
         ]
@@ -589,7 +617,7 @@ export default class PopList extends React.Component {
             action: this.showMeasure,
             operations: [
               { key: '距离量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_distance.png'), selectedImage: require('../../../../assets/mapTools/icon_distance_selected.png') },
-              { key: '面积量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png') },             
+              { key: '面积量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png') },
               { key: '设置', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
             ]
           }]
