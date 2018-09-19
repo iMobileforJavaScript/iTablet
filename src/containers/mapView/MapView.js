@@ -8,17 +8,13 @@ import * as React from 'react'
 import { Workspace, SMMapView, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
+import { BtnbarLoad, OffLineList } from '../mapLoad/components'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle } from '../../components'
-import { OffLineList, BtnbarLoad } from '../../containers/tabs/Home/components'
 import { Toast, AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
 import NavigationService from '../NavigationService'
-<<<<<<< HEAD
-import { Alert, InteractionManager, View } from 'react-native'
-=======
-import { Alert, InteractionManager, Platform } from 'react-native'
->>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
+import { Alert, InteractionManager, Platform, View } from 'react-native'
 import styles from './styles'
 
 export default class MapView extends React.Component {
@@ -65,7 +61,7 @@ export default class MapView extends React.Component {
       measureShow: false,
       measureResult: 0,
       editLayer: {},
-      showmapMenu: true
+      showmapMenu: true,
     }
 
   }
@@ -74,12 +70,6 @@ export default class MapView extends React.Component {
     this.container && this.container.setLoading(true, '地图加载中')
     this.clearData()
   }
-
-  // componentWillUnmount() {
-  //   this.saveLatest()
-  //   this.closeWorkspace()
-  // }
-
   componentDidUpdate(prevProps) {
     if (
       JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer) &&
@@ -88,8 +78,8 @@ export default class MapView extends React.Component {
       let name = this.props.editLayer ? this.props.editLayer.name : ''
       name && Toast.show('当前可编辑的图层为\n' + name)
     }
-  }
 
+  }
   clearData = () => {
     this.props.setEditLayer(null)
     this.props.setSelection(null)
@@ -388,30 +378,10 @@ export default class MapView extends React.Component {
           //   Toast.show('保存失败')
           // }
         } catch (e) {
-          console.log(e)
           this.container.setLoading(false)
           Toast.show('保存失败')
         }
-<<<<<<< HEAD
       }).bind(this)()
-=======
-
-        // if (!saveMap) {
-        //   Toast.show('该名称地图已存在')
-        // } else if (saveWs || !this.showDialogCaption) {
-        //   this.showSaveDialog(false)
-        //   Toast.show('保存成功')
-        // } else if (saveWs === undefined) {
-        //   Toast.show('工作空间已存在')
-        // } else {
-        //   Toast.show('保存失败')
-        // }
-      } catch (e) {
-        this.container.setLoading(false)
-        Toast.show('保存失败')
-      }
-    }).bind(this)()
->>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
   }
 
   geometryMultiSelected = events => {
@@ -440,13 +410,14 @@ export default class MapView extends React.Component {
             {
               text: "取消", onPress: () => {
                 // NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
-                this.setState({showmapMenu:!this.state.showmapMenu})
+                this.setState({ showmapMenu: !this.state.showmapMenu })
               },
             },
           ],
           { cancelable: true })
       } else {
-        NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+        // NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+        this.setState({ showmapMenu: !this.state.showmapMenu })
       }
     }
   }
@@ -457,7 +428,7 @@ export default class MapView extends React.Component {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
-      if (this.type !== "ONLINE" && !this.isExamplez) {
+      if (this.type !== "ONLINE" && !this.isExample) {
         Alert.alert(
           "温馨提示",
           "是否保存当前工作空间",
@@ -503,14 +474,6 @@ export default class MapView extends React.Component {
         this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
       }
     }
-  }
-
-
-  toUpLoad = async () => {
-
-  }
-  toDownLoad = async () => {
-
   }
 
   // 显示删除图层Dialog
@@ -572,7 +535,7 @@ export default class MapView extends React.Component {
         title: '关闭',
         image: require('../../assets/public/icon-close-white.png'),
         action: this.toCloesMap,
-      },]
+      }]
     headerBtnData.forEach(({ title, image, action }) => {
       arr.push(
         <MTBtn key={title} BtnText={title} textColor={'white'} size={MTBtn.Size.SMALL} image={image}
@@ -613,24 +576,6 @@ export default class MapView extends React.Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
-  TD = () => {
-
-    AudioAnalyst.goToMapView('TD')
-  }
-
-  Baidu = () => {
-    AudioAnalyst.goToMapView('Baidu')
-  }
-
-  OSM = () => {
-    AudioAnalyst.goToMapView('OSM')
-  }
-
-  Google = () => {
-    AudioAnalyst.goToMapView('Google')
-  }
-
-
   _addMap = () => {
     if (this.type === 'LOCAL') {
       this._addLocalMap()
@@ -668,44 +613,33 @@ export default class MapView extends React.Component {
             this.mapName = await this.workspace.getMapName(0)
           }
 
-<<<<<<< HEAD
           if (this.mapName) {
             await this.map.open(this.mapName)
-            // await this.map.viewEntire()
-            // await this.map.setScale(0.00005)
-            // await this.mapControl.setAction(Action.PAN)
-            // await this.map.refresh()
 
-=======
-        if (this.mapName) {
-          await this.map.open(this.mapName)
-
-          // TODO iOS不会进入？
-          if (Platform.OS === 'ios') {
-            await this.map.viewEntire()
-            await this.mapControl.setAction(Action.PAN)
-            await this.map.refresh()
-            this.container.setLoading(false)
-          } else {
->>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
-            navigator.geolocation.getCurrentPosition(
-              position => {
-                let lat = position.coords.latitude
-                let lon = position.coords.longitude
-<<<<<<< HEAD
-                  ; (async () => {
-                    const point2dModule = new Point2D()
-                    let centerPoint = await point2dModule.createObj(lon, lat)
-                    await this.map.setCenter(centerPoint)
-                    await this.map.viewEntire()
-                    // await this.map.setScale(0.00005)
-                    await this.mapControl.setAction(Action.PAN)
-                    await this.map.refresh()
-                    // this.saveLatest()
-                    this.container.setLoading(false)
-                  }).bind(this)()
-              }
-            )
+            // TODO iOS不会进入？
+            if (Platform.OS === 'ios') {
+              await this.map.viewEntire()
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              this.container.setLoading(false)
+            } else {
+              navigator.geolocation.getCurrentPosition(
+                position => {
+                  let lat = position.coords.latitude
+                  let lon = position.coords.longitude
+                    ; (async () => {
+                      const point2dModule = new Point2D()
+                      let centerPoint = await point2dModule.createObj(lon, lat)
+                      await this.map.setCenter(centerPoint)
+                      await this.map.viewEntire()
+                      // await this.map.setScale(0.00005)
+                      await this.mapControl.setAction(Action.PAN)
+                      await this.map.refresh()
+                      this.container.setLoading(false)
+                    }).bind(this)()
+                }
+              )
+            }
           } else {
             await this.map.refresh()
             this.container.setLoading(false)
@@ -714,23 +648,6 @@ export default class MapView extends React.Component {
 
           // this.saveLatest()
         } catch (e) {
-=======
-                ;(async () => {
-                  const point2dModule = new Point2D()
-                  let centerPoint = await point2dModule.createObj(lon, lat)
-                  await this.map.setCenter(centerPoint)
-                  await this.map.viewEntire()
-                  // await this.map.setScale(0.00005)
-                  await this.mapControl.setAction(Action.PAN)
-                  await this.map.refresh()
-                  this.container.setLoading(false)
-                }).bind(this)()
-              }
-            )
-          }
-        } else {
-          await this.map.refresh()
->>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
           this.container.setLoading(false)
         }
       }).bind(this)()
@@ -775,53 +692,54 @@ export default class MapView extends React.Component {
             await this.map.refresh()
             this.container.setLoading(false)
           } else {
-            navigator.geolocation.getCurrentPosition(
-              position => {
-                let lat = position.coords.latitude
-                let lon = position.coords.longitude
-                  ; (async () => {
-                    let centerPoint = await point2dModule.createObj(lon, lat)
-                    await this.map.setCenter(centerPoint)
-                    await this.map.viewEntire()
-                    await this.mapControl.setAction(Action.PAN)
-                    await this.map.refresh()
-                    // this.saveLatest()
-                    this.container.setLoading(false)
-                  }).bind(this)()
-              }
-            )
+            if (Platform.OS === 'ios') {
+              await this.map.viewEntire()
+              // await this.map.setScale(0.00005)
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              this.container.setLoading(false)
+            } else {
+              navigator.geolocation.getCurrentPosition(
+                position => {
+                  let lat = position.coords.latitude
+                  let lon = position.coords.longitude
+                    ; (async () => {
+                      let centerPoint = await point2dModule.createObj(lon, lat)
+                      await this.map.setCenter(centerPoint)
+                      await this.map.viewEntire()
+                      await this.mapControl.setAction(Action.PAN)
+                      await this.map.refresh()
+                      this.container.setLoading(false)
+                    }).bind(this)()
+                }
+              )
+            }
           }
           await this._addGeometrySelectedListener()
         } catch (e) {
           this.container.setLoading(false)
-<<<<<<< HEAD
-=======
-        } else {
-          if (Platform.OS === 'ios') {
-            await this.map.viewEntire()
-            // await this.map.setScale(0.00005)
-            await this.mapControl.setAction(Action.PAN)
-            await this.map.refresh()
-            this.container.setLoading(false)
-          } else {
-            navigator.geolocation.getCurrentPosition(
-              position => {
-                let lat = position.coords.latitude
-                let lon = position.coords.longitude
-                ;(async () => {
-                  let centerPoint = await point2dModule.createObj(lon, lat)
-                  await this.map.setCenter(centerPoint)
-                  await this.map.viewEntire()
-                  await this.mapControl.setAction(Action.PAN)
-                  await this.map.refresh()
-                  this.container.setLoading(false)
-                }).bind(this)()
-              }
-            )
-          }
->>>>>>> 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc
         }
       }).bind(this)()
+  }
+
+  TD = () => {
+    this.setState({ showmapMenu: !this.state.showmapMenu })
+    AudioAnalyst.goToMapView('TD')
+  }
+
+  Baidu = () => {
+    this.setState({ showmapMenu: !this.state.showmapMenu })
+    AudioAnalyst.goToMapView('Baidu')
+  }
+
+  OSM = () => {
+    this.setState({ showmapMenu: !this.state.showmapMenu })
+    AudioAnalyst.goToMapView('OSM')
+  }
+
+  Google = () => {
+    this.setState({ showmapMenu: !this.state.showmapMenu })
+    AudioAnalyst.goToMapView('Google')
   }
 
   render() {

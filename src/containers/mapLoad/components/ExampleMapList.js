@@ -31,71 +31,6 @@ export default class ExampleMapList extends React.Component {
   componentDidMount() {
     (async function () {
       await this.mapexist()
-      // try {
-      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADING, async progress => {
-      //     if (progress > 0 && progress > this.progress) {
-      //       if (!this.downloaded) {
-      //         let downitem = await this.getDownitem(GLOBAL.downitemname)
-      //         this.progress = progress
-      //         downitem.updateprogress(progress)
-      //         console.log(progress)
-      //       }
-      //     }
-      //   })
-      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADED, async result => {
-      //     console.log("success")
-      //     this.downloaded = true
-      //     this.progress = null
-      //     try {
-      //       if (this.unzip) {
-      //         this.unzip = false
-      //         Toast.show("文件解压中,请等待")
-      //         console.log("zip")
-      //         this.ziping = true
-      //         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-      //         if (result.isUnZiped) {
-      //           GLOBAL.downitemname = ''
-      //           Alert.alert(
-      //             "温馨提示",
-      //             "文件解压完成",
-      //             [
-      //               { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
-      //             ],
-      //             { cancelable: true }
-      //           )
-      //         }
-      //       }
-      //     } catch (error) {
-      //       if (this.unzip) {
-      //         this.unzip = false
-      //         Alert.alert(
-      //           "温馨提示",
-      //           "文件解压失败，是否重新下载",
-      //           [
-      //             { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
-      //             { text: "取消", onPress: () => { this.cancel(this.zipfile) } }
-      //           ],
-      //           { cancelable: true }
-      //         )
-      //       }
-      //     }
-      //   })
-      //   DeviceEventEmitter.addListener(EventConst.ONLINE_SERVICE_DOWNLOADFAILURE, async function (result) {
-      //     // let downitem = await that.getDownitem(GLOBAL.downitemname)
-      //     // Alert.alert(
-      //     //   "温馨提示",
-      //     //   "文件下载失败， 是否重新下载",
-      //     //   [
-      //     //     { text: "确定", onPress: () => {that.download(that.downpath,downfilename)} },
-      //     //     { text: "取消", onPress: () => {downitem.updateprogress(100)} }
-      //     //   ],
-      //     //   { cancelable: true }
-      //     // )
-      //     // console.log("faile")
-      //   })
-      // } catch (error) {
-      //   Toast.show('下载失败')
-      // }
     }).bind(this)()
   }
 
@@ -204,7 +139,6 @@ export default class ExampleMapList extends React.Component {
       } else {
         mProgress = progress
       }
-      console.log(mProgress)
       if (mProgress > 0 && mProgress > this.progress) {
         if (!this.downloaded) {
           let downitem = await this.getDownitem(GLOBAL.downitemname)
@@ -219,14 +153,14 @@ export default class ExampleMapList extends React.Component {
   }
 
   onComplete = async result => {
-    console.log("success")
+    // console.log("success")
     this.downloaded = true
     this.progress = null
     try {
       if (this.unzip) {
         this.unzip = false
         Toast.show("文件解压中,请等待")
-        console.log("zip")
+        // console.log("zip")
         this.ziping = true
         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
         if (result.isUnZiped) {
