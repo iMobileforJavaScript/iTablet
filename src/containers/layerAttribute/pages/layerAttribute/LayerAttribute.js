@@ -65,8 +65,8 @@ export default class LayerAttribute extends React.Component {
             attribute: attribute,
           })
           this.table.setData(attribute, true)
-          this.container.setLoading(false)
         }
+        this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)
       }
