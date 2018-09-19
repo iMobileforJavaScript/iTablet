@@ -450,8 +450,9 @@ export default class CollectionToolBar extends React.Component {
   /** 属性 **/
   _attribute = () => {
     (async function () {
-      let editable = await await this.props.selection.layer.getEditable()
-      if (!editable) {
+      // let editable = await await this.props.selection.layer.getEditable()
+      // if (!editable) {
+      if (this.props.selection.layerId !== this.props.editLayer.id) {
         Toast.show('请选择图层' + this.props.editLayer.name + '上的一个对象')
         return
       }
