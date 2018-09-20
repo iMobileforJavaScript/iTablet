@@ -27,7 +27,7 @@ static NSString* g_sampleCodeName = @"#";;
 
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
-  NSLog(@"%@",NSHomeDirectory());
+  NSLog(@"============== %@",NSHomeDirectory());
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"iTablet"
                                                initialProperties:nil
