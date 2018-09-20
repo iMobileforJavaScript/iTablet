@@ -34,11 +34,13 @@ export default class PopList extends React.Component {
     POP_List: PropTypes.func,
     showRemoveObjectDialog: PropTypes.func,
     setSelection: PropTypes.func,
-
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
+    measureLine:PropTypes.func,
+    measureSquare: PropTypes.func,
+    measurePause: PropTypes.func,
   }
-
+ 
   constructor(props) {
     super(props)
     let data = this.getData()
@@ -384,6 +386,16 @@ export default class PopList extends React.Component {
     })
   }
 
+  _tools=async cbData=>{
+    this.showMeasure()
+    this.cbData = cbData
+    this.cbData.callback && this.cbData.callback(true)
+    this.setState({
+      data: this.getData(Const.TOOLS),
+      subPopShow: true,
+    })
+  }
+
   toDoAction = () => {
     Toast.show('功能待完善')
   }
@@ -563,7 +575,7 @@ export default class PopList extends React.Component {
               // { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
               // { key: '清除', action: this.clearBuffer },
               { key: '设置', action: () => this.analystSetting(Const.BUFFER), size: 'large',image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              // { key: '分析', size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: '分析', action: () => this._bufferAnalyst,size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
               { key: constants.DELETE, action: this.clearBuffer , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
@@ -572,8 +584,8 @@ export default class PopList extends React.Component {
             action: cbData => this._analyst(cbData, Const.OVERLAY),
             operations: [
               { key: '设置', action: () => this.analystSetting(Const.OVERLAY) , size: 'large', image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              // { key: '分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
-              { key: constants.DELETE, action: this.clearBuffer ,size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+              { key: '分析', action: ()=>this._overlayAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.DELETE, action: this.clearOverlay ,size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
           {
@@ -622,12 +634,12 @@ export default class PopList extends React.Component {
         data = [
           {
             key: '量算',
-            action: this.showMeasure,
+            action: cbData=>this._tools(cbData,"tools"),
             operations: [
-              { key: '距离量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_distance.png'), selectedImage: require('../../../../assets/mapTools/icon_distance_selected.png') },
-              { key: '面积量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png') },
-              { key: '设置', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-            ]
+              { key: '距离量算', size: 'large', action: this.props.measureLine, image: require('../../../../assets/mapTools/icon_distance.png'), selectedImage: require('../../../../assets/mapTools/icon_distance_selected.png') },
+              { key: '面积量算', size: 'large', action: this.props.measureSquare, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png') },
+              { key: 'constants.DELETE', size: 'large', action: this.props.measurePause, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash'},
+            ],
           }]
         break
     }
