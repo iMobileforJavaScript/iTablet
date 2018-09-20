@@ -8,7 +8,7 @@ import * as React from 'react'
 import { Workspace, SMMapView, Action, Point2D, EngineType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
-import { BtnbarLoad, OffLineList } from '../mapLoad/components'
+import { BtnbarLoad, OffLineList } from '../tabs/Home/components'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle } from '../../components'
 import { Toast, AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
@@ -742,6 +742,13 @@ export default class MapView extends React.Component {
     AudioAnalyst.goToMapView('Google')
   }
 
+  closemapMenu(that) {
+    that.setState({ showmapMenu: !this.state.showmapMenu })
+    // (async function(){
+    //   this.setState({ showmapMenu: !this.state.showmapMenu })
+    // }).bind(this)
+  }
+
   render() {
     let headerRight = this.renderHeaderBtns()
     return (
@@ -757,7 +764,7 @@ export default class MapView extends React.Component {
         {this.state.showmapMenu ? (null) :
           (<View style={styles.mapMenu}>
             <UsualTitle title='本地地图' />
-            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} />
+            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closemapMenu(this) }} />
             <View style={styles.cutline}></View>
             <UsualTitle title='在线地图' />
             <BtnbarLoad
@@ -779,6 +786,9 @@ export default class MapView extends React.Component {
         }
         {
           this.state.popShow && <PopList
+            measureLine={this._measure_line}
+            measureSquare={this._measure_square}
+            measurePause={this._measure_pause}
             popType={this.state.popType}
             editLayer={this.props.editLayer}
             selection={this.props.selection}
