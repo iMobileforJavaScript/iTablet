@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility, WorkspaceType } from 'imobile_for_javascript'
+import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility, WorkspaceType,Workspace } from 'imobile_for_javascript'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
@@ -32,11 +32,9 @@ export default class WorkSpaceFileList extends Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    const { nav } = this.props
     this.workspace = params.workspace
     this.map = params.map
     this.mapControl = params.mapControl
-    this.routes = nav.routes
     this.path = ConstPath.LocalDataPath
     this.title = params.title
     this.need = params.need
@@ -87,7 +85,7 @@ export default class WorkSpaceFileList extends Component {
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
           if (filename === '.sxmu' ) {
-            this._toLoadMapView(absolutePath, '')
+            this._toLoadMapView(absolutePath, 'map3D')
           } else if (filename === '.smwu' ) {
             this._toLoadMapView(absolutePath, '')
           } else if (filename === '.udb') {
@@ -119,9 +117,10 @@ export default class WorkSpaceFileList extends Component {
       if (this.workspace && this.need === 'workspace') {
         this.clearData()
         let key = ''
-        for (let index = 0; index < this.routes.length; index++) {
-          if (this.routes[index].routeName === 'MapView') {
-            key = this.routes[index + 1].key
+        let routes = this.props.nav.routes
+        for (let index = 0; index < routes.length; index++) {
+          if (routes[index].routeName === 'MapView') {
+              key = index === routes.length - 1 ? '' : routes[index + 1].key
           }
         }
         await this.map.close()
@@ -146,15 +145,44 @@ export default class WorkSpaceFileList extends Component {
         await this.map.refresh()
         NavigationService.goBack(key)
       }
+      else if(type==="map3D"&&this.workspace&&this.need === 'workspace'){
+        this.clearData()
+        let key = ''
+        let routes = this.props.nav.routes
+        for (let index = 0; index < routes.length; index++) {
+          if (routes[index].routeName === 'Map3D') {
+              key = index === routes.length - 1 ? '' : routes[index + 1].key
+              
+          }
+        }
+        let workspaceModule = new Workspace()
+        this.workspace = await workspaceModule.createObj()   //创建workspace实例
+        this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
+        await this.scene.setWorkspace(this.workspace)        //设置工作空间
+        // let filePath = await Utility.appendingHomeDirectory(this.state.path)
+        let openWk = await this.workspace.open(path)     //打开工作空间
+        if (!openWk) {
+          Toast.show(" 打开工作空间失败")
+          return
+        }
+        this.mapName = await this.workspace.getSceneName(0) //获取场景名称
+        this.setState({
+          title: this.mapName,
+        })
+        await this.scene.open(this.mapName)                     //根据名称打开指定场景
+        await this.scene.refresh()
+        NavigationService.goBack(key)                           //刷新场景
+      }
       else if (this.workspace && this.need === 'udb') {
         this.clearData()
         await this.map.close()
         await this.workspace.closeAllDatasource()
         let key = ''
-        for (let index = 0; index < this.routes.length; index++) {
-          if (this.routes[index].routeName === 'MapView') {
-            key = this.routes[index + 1].key
-          }
+        let routes = this.props.nav.routes
+        for (let index = 0; index < routes.length; index++) {
+          if (routes[index].routeName === 'MapView') {
+            key = index === routes.length - 1 ? '' : routes[index + 1].key
+        }
         }
 
         // const point2dModule = new Point2D()
@@ -184,6 +212,9 @@ export default class WorkSpaceFileList extends Component {
         await this.map.refresh()
         key && NavigationService.goBack(key)
       } else {
+        if(type==="map3D"){
+          NavigationService.navigate('Map3D', { path: path, isExample: true })
+        }
         NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
       }
     }).bind(this)()

@@ -1,9 +1,11 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
 import { StackNavigator, NavigationActions } from 'react-navigation'
+import { ConstOnline } from '../../../../constains'
 import { scaleSize } from '../../../../utils'
 import { BtnOne } from '../../../../components'
-
+import NavigationService from '../../../NavigationService'
+import { Point2D ,Action} from 'imobile_for_javascript'
 const width = Dimensions.get('window').width
 
 const TDImgSrc = require('../../../../assets/public/TD.png')
@@ -32,19 +34,73 @@ export default class Btnbar_mapLoad extends React.Component {
   }
 
   _click_TD = () => {
-    console.log(TD)
+    this.goToMapView('TD')
   }
 
   _click_Baidu = () => {
-    console.log(Baidu)
+    this.goToMapView('Baidu')
   }
 
   _click_OSM = () => {
-    console.log(OSM)
+    this.goToMapView('OSM')
   }
 
   _click_Google = () => {
-    console.log(Google)
+    this.goToMapView('Google')
+  }
+
+  goToMapView = type => {
+    (async function () {
+      let key = '', exist = false
+      // let routes = this.props.nav.routes
+
+      // if (routes && routes.length > 0) {
+      //   for (let index = 0; index < routes.length; index++) {
+      //     if (routes[index].routeName === 'MapView') {
+      //       key = index === routes.length - 1 ? '' : routes[index + 1].key
+      //       exist = true
+      //       break
+      //     }
+      //   }
+      // }
+
+      if (exist && this.workspace && this.mapControl && this.map) {
+        await this.map.close()
+        await this.workspace.closeAllDatasource()
+        const point2dModule = new Point2D()
+
+        await this.map.setScale(0.0001)
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            let lat = position.coords.latitude
+            let lon = position.coords.longitude
+            ;(async () => {
+              let centerPoint = await point2dModule.createObj(lon, lat)
+              await this.map.setCenter(centerPoint)
+              await this.map.viewEntire()
+              await this.mapControl.setAction(Action.PAN)
+              await this.map.refresh()
+              // key && NavigationService.goBack(key)
+            }).bind(this)()
+          }
+        )
+        let DSParams = ConstOnline[type].DSParams
+        let labelDSParams = ConstOnline[type].labelDSParams
+        let layerIndex = ConstOnline[type].layerIndex
+
+        let dsBaseMap = await this.workspace.openDatasource(DSParams)
+
+        let dataset = await dsBaseMap.getDataset(layerIndex)
+        await this.map.addLayer(dataset, true)
+
+        if (ConstOnline[type].labelDSParams) {
+          let dsLabel = await this.workspace.openDatasource(labelDSParams)
+          await this.map.addLayer(await dsLabel.getDataset(layerIndex), true)
+        }
+      } else {
+        NavigationService.navigate('MapView', ConstOnline[type])
+      }
+    }).bind(this)()
   }
 
   render() {

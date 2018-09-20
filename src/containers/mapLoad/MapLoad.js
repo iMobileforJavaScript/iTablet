@@ -21,7 +21,6 @@ export default class MapLoad extends Component {
     this.workspace = params.workspace
     this.map = params.map
     this.mapControl = params.mapControl
-    this.fileexist=params.fileexist
   }
 
   // TD = async () => {

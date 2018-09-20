@@ -294,4 +294,5 @@ function setLabelTheme(layer) {
 export default {
   analyst,
   setConfig,
+  goToMapView,
 }
