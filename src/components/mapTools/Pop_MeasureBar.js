@@ -35,8 +35,13 @@ export default class Pop_MeasureBar extends React.Component {
             <TouchableOpacity style={styles.btn} onPress={this.props.measureLine} underlayColor={Util.UNDERLAYCOLOR}><Image style={styles.image} source={require('../../assets/public/measure_line.png')}></Image></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this.props.measureSquare} underlayColor={Util.UNDERLAYCOLOR}><Image style={styles.image} source={require('../../assets/public/measure_square.png')}></Image></TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={this.props.measurePause} underlayColor={Util.UNDERLAYCOLOR}><Image style={styles.image} source={require('../../assets/public/pause.png')}></Image></TouchableOpacity>
+<<<<<<< HEAD
           </View> */}
           <Text>{showNum + 'm'}</Text>
+=======
+          </View>
+          <Text>{showNum + '㎡'}</Text>
+>>>>>>> 5d4d9dbb55200c5649ec39bbe95b0bd8361fba04
         </View>
       </View>
     )

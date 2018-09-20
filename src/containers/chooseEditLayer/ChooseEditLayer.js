@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { FlatList } from 'react-native'
-import { ListSeparator, Container, EmptyView, LayerItem, Dialog } from '../../components'
+import { ListSeparator, Container, EmptyView, Dialog } from '../../components'
 import { checkType, Toast, scaleSize } from '../../utils'
 import PropTypes from 'prop-types'
 import { Action, DatasetType } from 'imobile_for_javascript'
@@ -117,7 +117,7 @@ export default class ChooseEditLayer extends React.Component {
         let item = await layerGroup.getLayer(i)
         // 排除文本图层和专题图
         if (item.type === DatasetType.TEXT || item.themeType > 0 || item.type !== this.type && !checkType.isVectorDataset(item.type) && item.type !== 'layerGroup') continue
-        if (item.type === 'layerGroup' || item.type === this.type || this.type == -1) {
+        if (item.type === 'layerGroup' || item.type === this.type || this.type === -1) {
           child.push(this._renderItem({item}))
         }
       }

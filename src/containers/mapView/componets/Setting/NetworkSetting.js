@@ -6,7 +6,7 @@ import { BufferEndType, Action, DatasetType } from 'imobile_for_javascript'
 import ChooseLayer from './ChooseLayer'
 import styles from './styles'
 
-export default class BufferSetting extends React.Component {
+export default class NetworkSetting extends React.Component {
 
   props: {
     data: Object,

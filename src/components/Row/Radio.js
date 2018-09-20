@@ -34,6 +34,14 @@ export default class Radio extends PureComponent {
     }
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.state.selected !== this.props.selected && prevProps.selected !== this.props.selected) {
+      this.setState({
+        selected: this.props.selected,
+      })
+    }
+  }
+
   select = selected => {
     let sel = selected
     if (selected === undefined) {

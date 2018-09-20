@@ -406,7 +406,13 @@ export default class MapView extends React.Component {
           "温馨提示",
           "是否保存当前工作空间",
           [
-            { text: "保存", onPress: () => { this.saveMap() } },
+            {
+              text: "保存", onPress: () => {
+                this.saveMap(() => {
+                  NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+                })
+              },
+            },
             {
               text: "取消", onPress: () => {
                 // NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
@@ -448,7 +454,7 @@ export default class MapView extends React.Component {
   }
 
   // 地图保存
-  saveMap = async () => {
+  saveMap = async (cb = () => {}) => {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
@@ -462,7 +468,7 @@ export default class MapView extends React.Component {
               Toast.show('保存失败')
             } else {
               Toast.show('保存成功')
-              this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+              cb && cb ()
             }
           } catch (e) {
             Toast.show('保存失败')
@@ -557,7 +563,9 @@ export default class MapView extends React.Component {
             "温馨提示",
             "是否保存当前工作空间",
             [
-              { text: "保存", onPress: () => { this.saveMap() } },
+              { text: "保存", onPress: () => { this.saveMap(() => {
+                this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+              }) } },
               {
                 text: "取消", onPress: () => {
                   this.closeWorkspace(NavigationService.goBack())

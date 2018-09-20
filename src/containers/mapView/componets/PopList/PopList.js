@@ -403,7 +403,15 @@ export default class PopList extends React.Component {
   //============================缓冲区操作======================================
   /** *缓冲区分析* **/
   _bufferAnalyst = () => {
-    if (this.props.selection.layer._SMLayerId !== this.props.bufferSetting.selectedLayer.id) {
+    if (!this.props.bufferSetting.selectedLayer || !this.props.bufferSetting.selectedLayer.id) {
+      Toast.show('请设置缓冲区分析')
+      return
+    }
+    if (!this.props.selection.layer || !this.props.selection.layer._SMLayerId) {
+      Toast.show('请选择分析对象')
+      return
+    }
+    if (this.props.selection.layer && this.props.selection.layer._SMLayerId !== this.props.bufferSetting.selectedLayer.id) {
       Toast.show('请选择设置的图层进行分析')
       return
     }
@@ -419,7 +427,7 @@ export default class PopList extends React.Component {
   _overlayAnalyst = () => {
     if (!this.props.overlaySetting.datasetVector._SMDatasetVectorId
       || !this.props.overlaySetting.targetDatasetVector._SMDatasetVectorId) {
-      Toast.show('请设置分析')
+      Toast.show('请设置叠加分析')
       return
     }
     this.props.setLoading(true)

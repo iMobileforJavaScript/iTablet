@@ -137,14 +137,18 @@ export default class MT_layerManager extends React.Component {
       try {
         let saveWs
         let info = {}
-        if (!wsName) {
+        if (!mapName) {
           Toast.show('请输入地图名称')
           return
         }
         if (this.state.path !== path || path === ConstPath.LocalDataPath) {
           info.path = path
         }
-        if (wsName && this.showDialogCaption) {
+        if (this.showDialogCaption) {
+          if (!wsName) {
+            Toast.show('请输入工作空间名称')
+            return
+          }
           info.path = path
           info.caption = wsName
         }
