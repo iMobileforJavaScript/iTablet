@@ -239,14 +239,17 @@ export default class MapView extends React.Component {
   }
 
   _measure_line = async () => {
+    this.PopMeasureBar._showtext(false)
     await this.mapControl.setAction(Action.MEASURELENGTH)
   }
 
   _measure_square = async () => {
+    this.PopMeasureBar._showtext(true)
     await this.mapControl.setAction(Action.MEASUREAREA)
   }
 
   _measure_pause = async () => {
+    this.PopMeasureBar._showtext(false)
     await this.mapControl.setAction(Action.PAN)
     this.setState({
       measureResult: 0,
@@ -786,6 +789,7 @@ export default class MapView extends React.Component {
         {
           this.state.measureShow &&
           <PopMeasureBar
+            ref={ref=>this.PopMeasureBar=ref}
             measureLine={this._measure_line}
             measureSquare={this._measure_square}
             measurePause={this._measure_pause}
