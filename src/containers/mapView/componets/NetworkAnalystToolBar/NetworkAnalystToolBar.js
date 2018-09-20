@@ -276,8 +276,8 @@ export default class NetworkAnalystToolBar extends React.Component {
         action: async cbData => await this.changeTap(cbData, Const.NETWORK_TSP),
         operations: [
           { key: '设置',  action: () => this._setting(Const.NETWORK_TSP), size: 'large',image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-          // { key: '添加配送中心', action: () => this._setCenter(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
-          // { key: '添加目的地', action: () => this._setDist(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '添加配送中心', action: () => this._setCenter(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
+          { key: '添加目的地', action: () => this._setDist(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
           { key: '分析',action: () => this._analyst(Const.NETWORK_TSP), size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
           { key: "清除",action: () => this.clear(Const.NETWORK_TSP) , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
           
