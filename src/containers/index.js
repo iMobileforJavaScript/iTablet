@@ -234,12 +234,6 @@ export default StackNavigator({
       header: null,
     },
   },
-  animated:{
-    screen: animated,
-    navigationOptions: {
-      header: null,
-    },
-  },
 },
 {
   navigationOptions: {
