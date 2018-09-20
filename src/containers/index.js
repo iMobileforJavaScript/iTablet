@@ -1,5 +1,4 @@
 import { StackNavigator } from 'react-navigation'
-import animated from './animated'
 import Tabs from './tabs'
 //主页
 import MapLoad from './mapLoad'
