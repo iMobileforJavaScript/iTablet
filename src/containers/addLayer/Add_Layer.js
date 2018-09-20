@@ -67,7 +67,7 @@ export default class Add_Layer extends React.Component {
   }
 
   _addlayer = async key => {
-    let DatasetVectorInfomodule = new DatasetVectorInfo()
+    let datasetVectorInfoModule = new DatasetVectorInfo()
     let isReadOnly = await this.datasource.isReadOnly()
     if (isReadOnly) {
       Toast.show("此数据源为只可读文件")
@@ -85,7 +85,7 @@ export default class Add_Layer extends React.Component {
       }
       let datasets = await this.datasource.getDatasets()
       let datasetname = await datasets.getAvailableDatasetName(this.state.InputText)
-      let datasetVectorInfo = await DatasetVectorInfomodule.createObjByNameType(datasetname, this.type)
+      let datasetVectorInfo = await datasetVectorInfoModule.createObjByNameType(datasetname, this.type)
       let datasetVector = await this.datasource.createDatasetVector(datasetVectorInfo)
       let datasetVectorname = await datasetVector.getName()
       let dataset = await datasets.get(datasetVectorname)
@@ -97,7 +97,7 @@ export default class Add_Layer extends React.Component {
       Toast.show('新建图层成功')
       this.props.navigation.goBack(key)
     } catch (error) {
-      return error
+      Toast.show('新建图层失败')
     }
   }
 

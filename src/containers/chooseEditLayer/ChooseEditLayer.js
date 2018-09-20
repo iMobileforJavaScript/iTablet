@@ -6,10 +6,11 @@
 
 import * as React from 'react'
 import { FlatList } from 'react-native'
-import { ListSeparator, Container, EmptyView, LayerItem, Dialog } from '../../components'
-import { checkType, Toast } from '../../utils'
+import { ListSeparator, Container, EmptyView, Dialog } from '../../components'
+import { checkType, Toast, scaleSize } from '../../utils'
 import PropTypes from 'prop-types'
 import { Action, DatasetType } from 'imobile_for_javascript'
+import { LayerManager_item } from '../mtLayerManager/components'
 
 export default class ChooseEditLayer extends React.Component {
 
@@ -37,26 +38,96 @@ export default class ChooseEditLayer extends React.Component {
   }
 
   componentDidMount() {
-    (async function () {
+    // (async function () {
+    //   let layerNameArr = await this.map.getLayersByType(this.type)
+    //   let arr = []
+    //   for(let i = 0; i < layerNameArr.length; i++) {
+    //     let layer = await this.map.getLayer(layerNameArr[i].index)
+    //     let type = await (await layer.getDataset()).getType()
+    // 排除文本图层和专题图
+    // if (type === DatasetType.TEXT || layerNameArr[i].themeType > 0) continue
+    // if (checkType.isVectorDataset(type)) {
+    //   layerNameArr[i].layer = layer
+    //   arr.push(layerNameArr[i])
+    // }
+    //   }
+    //   this.setState({
+    //     datasourceList: arr,
+    //     showList: true,
+    //   }, () => {
+    //     this.container.setLoading(false)
+    //   })
+    // }).bind(this)()
+    this.getData()
+  }
+
+  getData = async () => {
+    this.container.setLoading(true)
+    try {
+      this.itemRefs = {}
+      this.map = await this.mapControl.getMap()
       let layerNameArr = await this.map.getLayersByType(this.type)
       let arr = []
       for(let i = 0; i < layerNameArr.length; i++) {
-        let layer = await this.map.getLayer(layerNameArr[i].index)
-        let type = await (await layer.getDataset()).getType()
-        // 排除文本图层和专题图
-        if (type === DatasetType.TEXT || layerNameArr[i].themeType > 0) continue
-        if (checkType.isVectorDataset(type)) {
-          layerNameArr[i].layer = layer
+        layerNameArr[i].key = layerNameArr[i].name
+        if (layerNameArr[i].type === DatasetType.TEXT || layerNameArr[i].themeType > 0) continue
+        if (layerNameArr[i].type === 'layerGroup' || checkType.isVectorDataset(layerNameArr[i].type)) {
           arr.push(layerNameArr[i])
         }
       }
+      let mapName = await this.map.getName()
       this.setState({
         datasourceList: arr,
+        mapName: mapName,
         showList: true,
       }, () => {
         this.container.setLoading(false)
       })
-    }).bind(this)()
+    } catch (e) {
+      this.container.setLoading(false)
+    }
+  }
+
+  select = ({data}) => {
+    if (data.type === 'layerGroup') {
+      return this.getChildList({data})
+    } else {
+      // let newList = this.state.layerList
+      // if (newList[data.section + '-' + data.name]) {
+      //   delete(newList[data.section + '-' + data.name])
+      // } else {
+      //   newList[data.section + '-' + data.name] = data
+      // }
+      // this.setState({
+      //   layerList: newList,
+      // })
+      this._chooseEditLayer(data)
+    }
+  }
+
+  getChildList = async ({data}) => {
+    try {
+      if (data.type !== 'layerGroup') return
+      let layer = data.layer
+      this.container.setLoading(true)
+      let layerGroup = layer
+      let count = await layerGroup.getCount()
+      let child = []
+      for (let i = 0; i < count; i++) {
+        let item = await layerGroup.getLayer(i)
+        // 排除文本图层和专题图
+        if (item.type === DatasetType.TEXT || item.themeType > 0 || item.type !== this.type && !checkType.isVectorDataset(item.type) && item.type !== 'layerGroup') continue
+        if (item.type === 'layerGroup' || item.type === this.type || this.type === -1) {
+          child.push(this._renderItem({item}))
+        }
+      }
+      this.container.setLoading(false)
+      return child
+    } catch (e) {
+      this.container.setLoading(false)
+      Toast.show('获取失败')
+      return []
+    }
   }
 
   _chooseEditLayer = item =>{
@@ -96,10 +167,35 @@ export default class ChooseEditLayer extends React.Component {
     this.cb && this.cb(true, this.type)
   }
 
-  _renderItem =  ({item}) => {
-    let key = item.id
+  // _renderItem =  ({item}) => {
+  //   let key = item.id
+  //   return (
+  //     <LayerItem key={key} data={item} map={this.map} onPress={this._chooseEditLayer}/>
+  //   )
+  // }
+
+  _renderItem = ({ item }) => {
+    // sectionID = sectionID || 0
     return (
-      <LayerItem key={key} data={item} map={this.map} onPress={this._chooseEditLayer}/>
+      <LayerManager_item
+        key={item.id}
+        operable={false}
+        swipeEnabled={false}
+        // sectionID={sectionID}
+        // rowID={item.index}
+        ref={ref => {
+          if (!this.itemRefs) {
+            this.itemRefs = {}
+          }
+          this.itemRefs[item.name] = ref
+          return this.itemRefs[item.name]
+        }}
+        layer={item.layer}
+        map={this.map}
+        data={item}
+        mapControl={this.mapControl}
+        onPress={this.select}
+      />
     )
   }
 
@@ -110,6 +206,14 @@ export default class ChooseEditLayer extends React.Component {
   }
 
   _keyExtractor = (item, index) => (index + '-' + item.name)
+
+  getItemLayout = (data, index) => {
+    return {
+      length: scaleSize(80),
+      offset: scaleSize(80 + 1) * index,
+      index,
+    }
+  }
 
   render() {
     return (
@@ -124,10 +228,12 @@ export default class ChooseEditLayer extends React.Component {
           this.state.showList && (
             this.state.datasourceList.length > 0
               ? <FlatList
+                ref={ref => this.listView = ref}
                 keyExtractor={this._keyExtractor}
                 data={this.state.datasourceList}
                 renderItem={this._renderItem}
                 ItemSeparatorComponent={this._renderSeparator}
+                getItemLayout={this.getItemLayout}
               />
               : <EmptyView />
           )

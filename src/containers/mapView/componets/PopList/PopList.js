@@ -54,7 +54,7 @@ export default class PopList extends React.Component {
       lastSubKey: '',
     }
     this.cbData = {}
-    this.operationCallback = () => {} // 当前选择的二级操作的毁掉函数
+    this.operationCallback = () => { } // 当前选择的二级操作的毁掉函数
   }
 
   componentDidUpdate(prevProps) {
@@ -115,7 +115,7 @@ export default class PopList extends React.Component {
   }
 
   /** 添加节点 **/
-  addNode = async ({callback = () => {}}) => {
+  addNode = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
       await this.props.mapControl.setAction(Action.VERTEXADD)
@@ -126,7 +126,7 @@ export default class PopList extends React.Component {
   }
 
   /** 编辑节点 **/
-  editNode = async ({callback = () => {}}) => {
+  editNode = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
       await this.props.mapControl.setAction(Action.VERTEXEDIT)
@@ -137,7 +137,7 @@ export default class PopList extends React.Component {
   }
 
   /** 删除节点 **/
-  deleteNode = async ({callback = () => {}}) => {
+  deleteNode = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
       await this.props.mapControl.setAction(Action.VERTEXDELETE)
@@ -149,7 +149,7 @@ export default class PopList extends React.Component {
 
   /** 撤销 **/
   _undo = async () => {
-    if(this.props.mapControl) {
+    if (this.props.mapControl) {
       // this.selectSubOperation()
       // await this.collector.undo()
       await this.props.mapControl.undo()
@@ -158,7 +158,7 @@ export default class PopList extends React.Component {
 
   /** 重做 **/
   _redo = async () => {
-    if(this.props.mapControl) {
+    if (this.props.mapControl) {
       // this.selectSubOperation()
       // await this.collector.redo()
       await this.props.mapControl.redo()
@@ -166,7 +166,7 @@ export default class PopList extends React.Component {
   }
 
   /** 绘制直线 **/
-  createPolyline = async ({callback = () => {}}) => {
+  createPolyline = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
       await this.props.mapControl.setAction(Action.CREATEPOLYLINE)
@@ -177,7 +177,7 @@ export default class PopList extends React.Component {
   }
 
   /** 绘制多边形 **/
-  createPolygon = async ({callback = () => {}}) => {
+  createPolygon = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
       await this.props.mapControl.setAction(Action.CREATEPOLYGON)
@@ -195,7 +195,7 @@ export default class PopList extends React.Component {
   }
 
   /** 打断 **/
-  break = async ({callback = () => {}}) => {
+  break = async ({ callback = () => { } }) => {
     // TODO 打断
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
@@ -209,7 +209,7 @@ export default class PopList extends React.Component {
 
   //============================面操作======================================
   /** 切割面 **/
-  splitRegion = async ({callback = () => {}}) => {
+  splitRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
@@ -221,7 +221,7 @@ export default class PopList extends React.Component {
   }
 
   /** 合并面 **/
-  merge = async ({callback = () => {}}) => {
+  merge = async ({ callback = () => { } }) => {
     // this.selectSubOperation(constants.MERGE)
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
@@ -233,7 +233,7 @@ export default class PopList extends React.Component {
   }
 
   /** 擦除面 **/
-  eraseRegion = async ({callback = () => {}}) => {
+  eraseRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
@@ -244,7 +244,7 @@ export default class PopList extends React.Component {
   }
 
   /** 手绘擦除面 **/
-  drawRegionEraseRegion = async ({callback = () => {}}) => {
+  drawRegionEraseRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
@@ -256,7 +256,7 @@ export default class PopList extends React.Component {
   }
 
   /** 生成岛洞 **/
-  drawHollowRegion = async ({callback = () => {}}) => {
+  drawHollowRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
@@ -268,7 +268,7 @@ export default class PopList extends React.Component {
   }
 
   /** 手绘岛洞 **/
-  drawRegionHollowRegion = async ({callback = () => {}}) => {
+  drawRegionHollowRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
@@ -280,7 +280,7 @@ export default class PopList extends React.Component {
   }
 
   /** 填充岛洞 **/
-  fillHollowRegion = async ({callback = () => {}}) => {
+  fillHollowRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     // if (this.checkSelection() && callback && callback()) {
     if (callback && callback()) {
@@ -292,7 +292,7 @@ export default class PopList extends React.Component {
   }
 
   /** 补充岛洞 **/
-  patchHollowRegion = async ({callback = () => {}}) => {
+  patchHollowRegion = async ({ callback = () => { } }) => {
     this.operationCallback = callback
     if (this.checkSelection() && callback && callback()) {
       await this.props.mapControl.setAction(Action.PATCH_HOLLOW_REGION)
@@ -303,14 +303,14 @@ export default class PopList extends React.Component {
     // await this.props.mapControl.setAction(Action.PATCH_POSOTIONAL_REGION)
   }
 
-  attribute = ({callback = () => {}}) => {
-    (async function() {
+  attribute = ({ callback = () => { } }) => {
+    (async function () {
       callback && callback(true)
       // await this.select()
       // this.selectSubOperation()
       // TODO selection 转化为 redux中的 selection
       let selection = await this.props.editLayer.layer.getSelection()
-      let count  = await selection.getCount()
+      let count = await selection.getCount()
       if (count > 0) {
         // NavigationService.navigate('LayerAttribute',{ selection: selection })
         // NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
@@ -325,7 +325,7 @@ export default class PopList extends React.Component {
   }
 
   /**  执行  **/
-  submit = async ({callback = () => {}}) => {
+  submit = async ({ callback = () => { } }) => {
     callback && callback(true)
     // this.selectSubOperation()
     await this.props.mapControl.submit()
@@ -391,7 +391,15 @@ export default class PopList extends React.Component {
   //============================缓冲区操作======================================
   /** *缓冲区分析* **/
   _bufferAnalyst = () => {
-    if (this.props.selection.layer._SMLayerId !== this.props.bufferSetting.selectedLayer.id) {
+    if (!this.props.bufferSetting.selectedLayer || !this.props.bufferSetting.selectedLayer.id) {
+      Toast.show('请设置缓冲区分析')
+      return
+    }
+    if (!this.props.selection.layer || !this.props.selection.layer._SMLayerId) {
+      Toast.show('请选择分析对象')
+      return
+    }
+    if (this.props.selection.layer && this.props.selection.layer._SMLayerId !== this.props.bufferSetting.selectedLayer.id) {
       Toast.show('请选择设置的图层进行分析')
       return
     }
@@ -407,40 +415,40 @@ export default class PopList extends React.Component {
   _overlayAnalyst = () => {
     if (!this.props.overlaySetting.datasetVector._SMDatasetVectorId
       || !this.props.overlaySetting.targetDatasetVector._SMDatasetVectorId) {
-      Toast.show('请设置分析')
+      Toast.show('请设置叠加分析')
       return
     }
     this.props.setLoading(true)
-    ;(async function () {
-      try {
-        let { result, resultDatasetName, resultLayerName } = await overlayAnalyst.analyst({
-          workspace: this.props.workspace,
-          method: this.props.overlaySetting.method,
-          dataset: this.props.overlaySetting.datasetVector,
-          targetDataset: this.props.overlaySetting.targetDatasetVector,
-        })
-        this.props.setLoading(false)
-        if (result) {
-          Toast.show('分析成功')
-        } else {
-          Toast.show('分析失败')
+      ; (async function () {
+        try {
+          let { result, resultDatasetName, resultLayerName } = await overlayAnalyst.analyst({
+            workspace: this.props.workspace,
+            method: this.props.overlaySetting.method,
+            dataset: this.props.overlaySetting.datasetVector,
+            targetDataset: this.props.overlaySetting.targetDatasetVector,
+          })
+          this.props.setLoading(false)
+          if (result) {
+            Toast.show('分析成功')
+          } else {
+            Toast.show('分析失败')
+          }
+
+          let datasource = await this.props.workspace.getDatasource(0)
+          let dataset = await datasource.getDataset(resultDatasetName)
+
+          await this.props.map.addLayer(dataset, true)
+
+          await this.props.map.refresh()
+          this.props.setOverlaySetting && this.props.setOverlaySetting({
+            resultDataset: { resultDatasetName, resultLayerName },
+          })
+          await this.select()
+        } catch (e) {
+          this.props.setLoading(false)
+          Toast.show('分析失败, 请重新设置')
         }
-
-        let datasource = await this.props.workspace.getDatasource(0)
-        let dataset = await datasource.getDataset(resultDatasetName)
-
-        await this.props.map.addLayer(dataset, true)
-
-        await this.props.map.refresh()
-        this.props.setOverlaySetting && this.props.setOverlaySetting({
-          resultDataset: {resultDatasetName, resultLayerName},
-        })
-        await this.select()
-      } catch (e) {
-        this.props.setLoading(false)
-        Toast.show('分析失败, 请重新设置')
-      }
-    }).bind(this)()
+      }).bind(this)()
   }
 
   /** 打开分析设置 **/
@@ -470,7 +478,7 @@ export default class PopList extends React.Component {
   /** 清除叠加分析 **/
   clearOverlay = () => {
     (async function () {
-      if(this.props.overlaySetting.resultDataset && this.props.overlaySetting.resultDataset) {
+      if (this.props.overlaySetting.resultDataset && this.props.overlaySetting.resultDataset) {
         await this.props.map.removeLayer(this.props.overlaySetting.resultDataset.resultLayerName)
         await this.props.map.refresh()
       }
@@ -485,52 +493,52 @@ export default class PopList extends React.Component {
           {
             key: '点编辑',
             type: DatasetType.POINT,
-            action: cbData => {this._chooseLayer(cbData, DatasetType.POINT)},
+            action: cbData => { this._chooseLayer(cbData, DatasetType.POINT) },
             operations: [
               // { key: '选择', action: this.select },
-              { key: constants.UNDO, action: this._undo, size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: constants.UNDO, action: this._undo, size: 'large', image: require('../../../../assets/mapTools/icon_undo.png'), selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
               // { key: constants.REDO, action: this._redo },
-              { key: constants.DELETE, action: this.delete, size: 'large', image:require('../../../../assets/mapTools/icon_delete.png'), selectedImage:require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
-              { key: constants.ATTRIBUTE, action: this.attribute, size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' }],
+              { key: constants.DELETE, action: this.delete, size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+              { key: constants.ATTRIBUTE, action: this.attribute, size: 'large', image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' }],
           },
           {
             key: '线编辑',
             type: DatasetType.LINE,
-            action: cbData => {this._chooseLayer(cbData, DatasetType.LINE)},
+            action: cbData => { this._chooseLayer(cbData, DatasetType.LINE) },
             operations: [
               // { key: '选择', action: this.select },
-              { key: constants.SUBMIT, action: this.submit, size: 'large', image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
-              { key: constants.DELETE, action: this.delete, size: 'large', image:require('../../../../assets/mapTools/icon_delete.png'), selectedImage:require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
-              { key: constants.UNDO, action: this._undo, size: 'large', image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
-              { key: constants.REDO, action: this._redo, size: 'large', image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
-              { key: constants.ADD_NODE, action: this.addNode, size: 'large', image:require('../../../../assets/mapTools/icon_add_node.png'), selectedImage:require('../../../../assets/mapTools/icon_add_node_seleted.png') },
-              { key: constants.DELETE_NODE, action: this.deleteNode, size: 'large', image:require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage:require('../../../../assets/mapTools/icon_delete_node_selected.png') },
-              { key: constants.EDIT_NODE, action: this.editNode, size: 'large', image:require('../../../../assets/mapTools/icon_edit_node.png'), selectedImage:require('../../../../assets/mapTools/icon_edit_node_selected.png') },
+              { key: constants.SUBMIT, action: this.submit, size: 'large', image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
+              { key: constants.DELETE, action: this.delete, size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+              { key: constants.UNDO, action: this._undo, size: 'large', image: require('../../../../assets/mapTools/icon_undo.png'), selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: constants.REDO, action: this._redo, size: 'large', image: require('../../../../assets/mapTools/icon_redo.png'), selectedImage: require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
+              { key: constants.ADD_NODE, action: this.addNode, size: 'large', image: require('../../../../assets/mapTools/icon_add_node.png'), selectedImage: require('../../../../assets/mapTools/icon_add_node_seleted.png') },
+              { key: constants.DELETE_NODE, action: this.deleteNode, size: 'large', image: require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_node_selected.png') },
+              { key: constants.EDIT_NODE, action: this.editNode, size: 'large', image: require('../../../../assets/mapTools/icon_edit_node.png'), selectedImage: require('../../../../assets/mapTools/icon_edit_node_selected.png') },
               // { key: constants.BREAK, action: this.break },
-              { key: constants.ATTRIBUTE, action: this.attribute, size: 'large', image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' }],
+              { key: constants.ATTRIBUTE, action: this.attribute, size: 'large', image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' }],
           },
           {
             key: '面编辑',
             type: DatasetType.REGION,
-            action: cbData => {this._chooseLayer(cbData, DatasetType.REGION)},
+            action: cbData => { this._chooseLayer(cbData, DatasetType.REGION) },
             operations: [
               // { key: '选择', action: this.select },
-              { key: constants.SUBMIT, size: 'large', action: this.submit, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
-              { key: constants.DELETE, size: 'large', action: this.delete, image:require('../../../../assets/mapTools/icon_delete.png'), selectedImage:require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
-              { key: constants.UNDO, size: 'large', action: this._undo, image:require('../../../../assets/mapTools/icon_undo.png'), selectedImage:require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
-              { key: constants.REDO, size: 'large', action: this._redo, image:require('../../../../assets/mapTools/icon_redo.png'), selectedImage:require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
-              { key: constants.ADD_NODE, size: 'large', action: this.addNode, image:require('../../../../assets/mapTools/icon_add_node.png'), selectedImage:require('../../../../assets/mapTools/icon_add_node_seleted.png') },
-              { key: constants.DELETE_NODE, size: 'large', action: this.deleteNode, image:require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage:require('../../../../assets/mapTools/icon_delete_node_selected.png') },
-              { key: constants.EDIT_NODE, size: 'large', action: this.editNode, image:require('../../../../assets/mapTools/icon_edit_node.png'), selectedImage:require('../../../../assets/mapTools/icon_edit_node_selected.png') },
-              { key: constants.SPLIT_REGION, size: 'large', action: this.splitRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.MERGE, size: 'large', action: this.merge, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.ERASE_REGION, size: 'large', action: this.eraseRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.DRAWREGION_ERASE_REGION, size: 'large', action: this.drawRegionEraseRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.DRAW_HOLLOW_REGION, size: 'large', action: this.drawHollowRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.DRAWREGION_HOLLOW_REGION, size: 'large', action: this.drawRegionHollowRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.FILL_HOLLOW_REGION, size: 'large', action: this.fillHollowRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.PATCH_HOLLOW_REGION, size: 'large', action: this.patchHollowRegion, image:require('../../../../assets/mapTools/icon_submit.png'), selectedImage:require('../../../../assets/mapTools/icon_submit_select.png') },
-              { key: constants.ATTRIBUTE, size: 'large', action: this.attribute, image:require('../../../../assets/mapTools/icon_attribute.png'), selectedImage:require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
+              { key: constants.SUBMIT, size: 'large', action: this.submit, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
+              { key: constants.DELETE, size: 'large', action: this.delete, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+              { key: constants.UNDO, size: 'large', action: this._undo, image: require('../../../../assets/mapTools/icon_undo.png'), selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
+              { key: constants.REDO, size: 'large', action: this._redo, image: require('../../../../assets/mapTools/icon_redo.png'), selectedImage: require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
+              { key: constants.ADD_NODE, size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_add_node.png'), selectedImage: require('../../../../assets/mapTools/icon_add_node_seleted.png') },
+              { key: constants.DELETE_NODE, size: 'large', action: this.deleteNode, image: require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_node_selected.png') },
+              { key: constants.EDIT_NODE, size: 'large', action: this.editNode, image: require('../../../../assets/mapTools/icon_edit_node.png'), selectedImage: require('../../../../assets/mapTools/icon_edit_node_selected.png') },
+              { key: constants.SPLIT_REGION, size: 'large', action: this.splitRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.MERGE, size: 'large', action: this.merge, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.ERASE_REGION, size: 'large', action: this.eraseRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.DRAWREGION_ERASE_REGION, size: 'large', action: this.drawRegionEraseRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.DRAW_HOLLOW_REGION, size: 'large', action: this.drawHollowRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.DRAWREGION_HOLLOW_REGION, size: 'large', action: this.drawRegionHollowRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.FILL_HOLLOW_REGION, size: 'large', action: this.fillHollowRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.PATCH_HOLLOW_REGION, size: 'large', action: this.patchHollowRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              { key: constants.ATTRIBUTE, size: 'large', action: this.attribute, image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
           // {
@@ -552,34 +560,75 @@ export default class PopList extends React.Component {
             key: '缓冲区分析',
             action: cbData => this._analyst(cbData, Const.BUFFER),
             operations: [
-              { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
-              { key: '清除', action: this.clearBuffer },
+              // { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
+              // { key: '清除', action: this.clearBuffer },
+              { key: '设置', action: () => this.analystSetting(Const.BUFFER), size: 'large',image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
+              // { key: '分析', size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.DELETE, action: this.clearBuffer , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
           {
             key: '叠加分析',
             action: cbData => this._analyst(cbData, Const.OVERLAY),
             operations: [
-              { key: '设置', action: () => this.analystSetting(Const.OVERLAY)}, { key: '分析', action: this._overlayAnalyst },
-              { key: '清除', action: this.clearOverlay },
+              { key: '设置', action: () => this.analystSetting(Const.OVERLAY) , size: 'large', image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
+              // { key: '分析', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.DELETE, action: this.clearBuffer ,size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
           {
             key: '网络分析',
             action: cbData => this._analyst(cbData, 'network'),
             operations: [
-              { key: '路径分析', action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE)},
-              { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY)},
-              { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP)},
-              { key: '追踪分析', action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING)},
+              { key: '路径分析',action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE), size: 'large', image: require('../../../../assets/mapTools/icon_routanalysis.png'), selectedImage: require('../../../../assets/mapTools/icon_routanalysis_selected.png') },
+              { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY), size: 'large', image: require('../../../../assets/mapTools/icon_connected.png'), selectedImage: require('../../../../assets/mapTools/icon_connected_selectd.png') },
+              { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP),size: 'large', image: require('../../../../assets/mapTools/icon_travel.png'), selectedImage: require('../../../../assets/mapTools/icon_travel_selected.png') },
+              { key: '追踪分析',action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING), size: 'large', image: require('../../../../assets/mapTools/icon_track.png'), selectedImage: require('../../../../assets/mapTools/icon_track_selected.png') },
             ],
           },
         ]
+        // data = [
+        //   {
+        //     key: '缓冲区分析',
+        //     action: cbData => this._analyst(cbData, Const.BUFFER),
+        //     operations: [
+        //       { key: '设置', action: () => this.analystSetting(Const.BUFFER) }, { key: '分析', action: this._bufferAnalyst },
+        //       { key: '清除', action: this.clearBuffer },
+        //     ],
+        //   },
+        //   {
+        //     key: '叠加分析',
+        //     action: cbData => this._analyst(cbData, Const.OVERLAY),
+        //     operations: [
+        //       { key: '设置', action: () => this.analystSetting(Const.OVERLAY) }, { key: '分析', action: this._overlayAnalyst },
+        //       { key: '清除', action: this.clearOverlay },
+        //     ],
+        //   },
+        //   {
+        //     key: '网络分析',
+        //     action: cbData => this._analyst(cbData, 'network'),
+        //     operations: [
+        //       { key: '路径分析', action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE) },
+        //       { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY) },
+        //       { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP) },
+        //       { key: '追踪分析', action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING) },
+        //     ],
+        //   },
+        // ]
         break
       case Const.COLLECTION:
         break
       case Const.TOOLS:
-        data = [{ key: '量算', action: this.showMeasure }]
+        data = [
+          {
+            key: '量算',
+            action: this.showMeasure,
+            operations: [
+              { key: '距离量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_distance.png'), selectedImage: require('../../../../assets/mapTools/icon_distance_selected.png') },
+              { key: '面积量算', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png') },
+              { key: '设置', size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
+            ]
+          }]
         break
     }
     return data
@@ -601,7 +650,7 @@ export default class PopList extends React.Component {
     return current
   }
 
-  _btn_click_manager = ({item, index}) => {
+  _btn_click_manager = ({ item, index }) => {
     item.action && item.action({
       data: item,
       index: index,
@@ -617,7 +666,8 @@ export default class PopList extends React.Component {
             lastIndex: index,
           })
         }
-      }})
+      }
+    })
   }
 
   render() {
@@ -680,7 +730,7 @@ export default class PopList extends React.Component {
             this.props.popType === Const.DATA_EDIT &&
             <MTBtn
               style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
-              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={() => this._changeLayer(Const.DATA_EDIT)}/>
+              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={() => this._changeLayer(Const.DATA_EDIT)} />
           }
           <PopBtnSectionList
             ref={ref => this.popList = ref}

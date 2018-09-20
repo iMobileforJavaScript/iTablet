@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { Row, Button } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { BufferEndType, Action } from 'imobile_for_javascript'
+import { BufferEndType, Action, DatasetType } from 'imobile_for_javascript'
 import ChooseLayer from './ChooseLayer'
 import styles from './styles'
 
@@ -23,12 +23,19 @@ export default class BufferSetting extends React.Component {
 
   constructor(props) {
     super(props)
+    let layer = props.data && props.data.selectedLayer
     this.state = {
       distance: props.data && props.data.distance || 3,
       endType: props.data && props.data.endType || BufferEndType.ROUND,
 
-      label: props.data && props.data.selectedLayer && props.data.selectedLayer.caption || '请选择',
+      label: layer && layer.caption || '请选择',
       selectedLayer: props.data && props.data.selectedLayer || {},
+      bufferTypes: layer && layer.type === DatasetType.LINE || !layer ? [
+        {title: '圆头缓冲', value: BufferEndType.ROUND},
+        {title: '平头缓冲', value: BufferEndType.FLAT},
+      ] : [
+        {title: '圆头缓冲', value: BufferEndType.ROUND},
+      ],
     }
   }
 
@@ -60,6 +67,15 @@ export default class BufferSetting extends React.Component {
     this.setState({
       label: item.name,
       selectedLayer: item,
+      bufferTypes: item.type === DatasetType.LINE ? [
+        {title: '圆头缓冲', value: BufferEndType.ROUND},
+        {title: '平头缓冲', value: BufferEndType.FLAT},
+      ] : [
+        {title: '圆头缓冲', value: BufferEndType.ROUND},
+      ],
+      endType: item.type !== DatasetType.LINE
+        ? BufferEndType.ROUND
+        : this.state.endType,
     })
   }
 
@@ -104,10 +120,7 @@ export default class BufferSetting extends React.Component {
             title={'缓冲类型'}
             type={Row.Type.RADIO_GROUP}
             defaultValue={this.state.endType}
-            radioArr={[
-              {title: '圆头缓冲', value: BufferEndType.ROUND},
-              {title: '平头缓冲', value: BufferEndType.FLAT},
-            ]}
+            radioArr={this.state.bufferTypes}
             radioColumn={1}
             getValue={this.getEndType}
           />

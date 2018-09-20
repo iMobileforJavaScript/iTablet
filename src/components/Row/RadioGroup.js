@@ -36,6 +36,12 @@ export default class RadioGroup extends PureComponent {
     this.refArr = []
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.defaultValue !== this.props.defaultValue) {
+      this.current = this.getIndexByValue(this.props.defaultValue)
+    }
+  }
+
   getIndexByValue = value => {
     let index = -1
     for (let i = 0; i < this.props.data.length; i++) {
