@@ -416,14 +416,12 @@ export default class CollectionToolBar extends React.Component {
             // await this.collector.closeGPS()
             break
         }
-        await this.props.map.refresh()
         callback && callback(true)
         if (!result) {
           Toast.show('保存失败')
           return
         }
         await this.props.mapControl.setAction(Action.SELECT)
-
         let selection = await this.props.editLayer.layer.getSelection()
         let ds = await this.props.editLayer.layer.getDataset()
         let recordset = await (await ds.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
@@ -440,6 +438,7 @@ export default class CollectionToolBar extends React.Component {
             layer: this.props.editLayer.layer,
           })
         }
+        await this.props.map.refresh()
         await recordset.dispose()
       } catch (e) {
         Toast.show('保存失败')
