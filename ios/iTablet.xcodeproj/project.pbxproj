@@ -128,6 +128,55 @@
 			remoteGlobalIDString = 832C81801AAF6DEF007FA2F7;
 			remoteInfo = RCTVibration;
 		};
+		0A04F3BE215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF34489A14EB99A700D8449F;
+			remoteInfo = LibUGC;
+		};
+		0A04F3C0215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
+			remoteInfo = LibUGC_Base;
+		};
+		0A04F3C2215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B46016F1A08700A19B73;
+			remoteInfo = LibUGC_2D;
+		};
+		0A04F3C4215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
+			remoteInfo = LibUGC_3D;
+		};
+		0A04F3C6215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03BDDAED1714098D003EC801;
+			remoteInfo = Object_3D;
+		};
+		0A04F3C8215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00F6D375175F20A9008963A0;
+			remoteInfo = Objects_iOS;
+		};
+		0A04F3CA215350F400F66550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 005EF27D175F5F96005433E1;
+			remoteInfo = Super23D;
+		};
 		0A4D7FCE2117E2E300FAA035 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 9C3B74705C4C4496BF7DB110 /* RNViewShot.xcodeproj */;
@@ -385,6 +434,7 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* iTabletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTabletTests.m; sourceTree = "<group>"; };
 		0A0118FA2122D9CE00BC4AAB /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
+		0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A0A2019212FA22300BEBC1C /* VisualMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VisualMain.storyboard; sourceTree = "<group>"; };
 		0A0A201A212FA22300BEBC1C /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualViewController.h; sourceTree = "<group>"; };
 		0A0A201B212FA22300BEBC1C /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualViewController.m; sourceTree = "<group>"; };
@@ -592,6 +642,20 @@
 				00E356F11AD99517003FC87E /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		0A04F3B2215350F200F66550 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A04F3BF215350F400F66550 /* libLibUGC.a */,
+				0A04F3C1215350F400F66550 /* libLibUGC_Base.a */,
+				0A04F3C3215350F400F66550 /* libLibUGC_2D.a */,
+				0A04F3C5215350F400F66550 /* libLibUGC_3D.a */,
+				0A04F3C7215350F400F66550 /* libObject_3D.a */,
+				0A04F3C9215350F400F66550 /* libObjects_iOS.a */,
+				0A04F3CB215350F400F66550 /* Super23D.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		0A0A2017212FA22300BEBC1C /* DataVisualizationDemo */ = {
@@ -831,6 +895,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -963,6 +1028,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 0A04F3B2215350F200F66550 /* Products */;
+					ProjectRef = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1065,6 +1134,55 @@
 			fileType = archive.ar;
 			path = libRCTVibration.a;
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3BF215350F400F66550 /* libLibUGC.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC.a;
+			remoteRef = 0A04F3BE215350F400F66550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3C1215350F400F66550 /* libLibUGC_Base.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_Base.a;
+			remoteRef = 0A04F3C0215350F400F66550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3C3215350F400F66550 /* libLibUGC_2D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_2D.a;
+			remoteRef = 0A04F3C2215350F400F66550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3C5215350F400F66550 /* libLibUGC_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_3D.a;
+			remoteRef = 0A04F3C4215350F400F66550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3C7215350F400F66550 /* libObject_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObject_3D.a;
+			remoteRef = 0A04F3C6215350F400F66550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3C9215350F400F66550 /* libObjects_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjects_iOS.a;
+			remoteRef = 0A04F3C8215350F400F66550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A04F3CB215350F400F66550 /* Super23D.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Super23D.app;
+			remoteRef = 0A04F3CA215350F400F66550 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A4D7FCF2117E2E300FAA035 /* libRNViewShot.a */ = {
@@ -1440,8 +1558,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1482,8 +1600,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
