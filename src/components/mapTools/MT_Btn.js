@@ -26,6 +26,7 @@ export default class MT_Btn extends React.Component {
     textColor: string,
     imageStyle: any,
     style: any,
+    customStyle?: any,
     selected?: boolean,
     selectMode?: string,
     activeOpacity?: number,
@@ -98,7 +99,7 @@ export default class MT_Btn extends React.Component {
         accessible={true}
         activeOpacity={this.props.activeOpacity}
         accessibilityLabel={this.props.BtnText}
-        style={[styles.container, this.props.style]}
+        style={this.props.customStyle ? this.props.customStyle : [styles.container, this.props.style]}
         onPress={this.action}
         underlayColor={BTN_UNDERCOLOR}
         onPressOut={() => this._onPressOut()}

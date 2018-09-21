@@ -155,7 +155,6 @@ export default class Pop_BtnSectionList extends React.Component {
 
   _renderOperationItem = ({ item, index }) => {
     let key = item.key
-    console.log(item.image)
     return (
       <View style={styles.operationView}>
         {

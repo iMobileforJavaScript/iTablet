@@ -106,11 +106,11 @@ async function longPressHandler(event) {
     }
     let pt = await new Point().createObj(event.x, event.y)
     let pt2D = await mMap.pixelToMap(pt)
-    let callOut = await new Callout().createObj(mMapView)
+    // let callOut = await new Callout().createObj(mMapView)
     // callOut.setStyle()
-    await callOut.setCustomize(true)
+    // await callOut.setCustomize(true)
     // await callOut.setLocation(pt2D)
-    await callOut.setLocation(pt2D.x, pt2D.y)
+    // await callOut.setLocation(pt2D.x, pt2D.y)
 
     // 判断是否是经纬坐标
     let prjCoordSys = await mMap.getPrjCoordSys()
@@ -154,7 +154,7 @@ async function longPressHandler(event) {
       geoStyle = await getGeoStyle(15, 15, 255, 0, 0)
       point2Ds.push({ x: pt2D.x, y: pt2D.y })
     }
-    await geoStyle.setMarkerSymbolID(new Date().getTime())
+    await geoStyle.setMarkerSymbolID(new Date().getTime() / 1000)
     await geoPoint.setStyle(geoStyle)
     await mTrackingLayer.add(geoPoint, '')
     await mMap.refresh()
@@ -277,10 +277,10 @@ async function display(result) {
     }
 
     longPressEnable = false
-    _setLoading(false)
+    _setLoading && _setLoading(false)
     await mMap.refresh()
   } catch (e) {
-    _setLoading(false)
+    _setLoading && _setLoading(false)
     return false
   }
 }
@@ -289,7 +289,7 @@ async function findPath() {
   try {
     addPointType = DIST
     if (!check()) return
-    _setLoading(true, '分析中')
+    _setLoading && _setLoading(true, '分析中')
     let parameter = await new TransportationAnalystParameter().createObj()
     await parameter.setWeightName('length')
     //设置最佳路径分析的返回对象

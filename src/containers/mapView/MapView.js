@@ -9,10 +9,11 @@ import { Workspace, SMMapView, Action, Point2D, EngineType } from 'imobile_for_j
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { BtnbarLoad, OffLineList } from '../tabs/Home/components'
-import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle ,AlertDialog} from '../../components'
-import { Toast, AudioAnalyst } from '../../utils'
-import { ConstPath } from '../../constains'
+import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle, } from '../../components'
+import { Toast, AudioAnalyst, scaleSize } from '../../utils'
+import { ConstPath, Const } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
+import { AlertDialog } from './componets/AlertDialog'
 import NavigationService from '../NavigationService'
 import { Alert, InteractionManager, Platform, View } from 'react-native'
 import styles from './styles'
@@ -62,6 +63,7 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showmapMenu: true,
+      changeLayerBtnBottom: scaleSize(200),
     }
 
   }
@@ -70,6 +72,7 @@ export default class MapView extends React.Component {
     this.container && this.container.setLoading(true, '地图加载中')
     this.clearData()
   }
+
   componentDidUpdate(prevProps) {
     if (
       JSON.stringify(prevProps.editLayer) !== JSON.stringify(this.props.editLayer) &&
@@ -77,6 +80,13 @@ export default class MapView extends React.Component {
     ) {
       let name = this.props.editLayer ? this.props.editLayer.name : ''
       name && Toast.show('当前可编辑的图层为\n' + name)
+    }
+    // 显示切换图层按钮
+    if (this.props.editLayer.name && this.popList) {
+      let bottom = this.popList.state.subPopShow ? scaleSize(400) : scaleSize(200)
+      bottom !== this.state.changeLayerBtnBottom && this.setState({
+        changeLayerBtnBottom: bottom,
+      })
     }
 
   }
@@ -167,6 +177,15 @@ export default class MapView extends React.Component {
     })
   }
 
+  _changeLayer = type => {
+    this._chooseLayer({
+      type: -1,
+      isEdit: true,
+    }, (isShow, dsType) => { // 传 -1 查询所有类型的图层
+      this.popList && this.popList.setCurrentOption(type, dsType)
+    })
+  }
+
   _showSetting = type => {
     this.setting.showSetting(type)
   }
@@ -239,13 +258,26 @@ export default class MapView extends React.Component {
   }
 
   _measure_line = async () => {
-    this.PopMeasureBar._showtext(false)
-    await this.mapControl.setAction(Action.MEASURELENGTH)
+    let maps = await this.workspace.getMaps()
+    let count = await maps.getCount()
+    if(count>0){
+      this.PopMeasureBar._showtext(false)
+      await this.mapControl.setAction(Action.MEASURELENGTH)
+    }else{
+      Toast.show("请添加地图")
+    }
   }
 
   _measure_square = async () => {
-    this.PopMeasureBar._showtext(true)
-    await this.mapControl.setAction(Action.MEASUREAREA)
+    let maps = await this.workspace.getMaps()
+    let count = await maps.getCount()
+    if(count>0){
+      this.PopMeasureBar._showtext(true)
+      await this.mapControl.setAction(Action.MEASUREAREA)
+    }else{
+      Toast.show("请添加地图")
+    }
+
   }
 
   _measure_pause = async () => {
@@ -390,32 +422,19 @@ export default class MapView extends React.Component {
     }
   }
 
+
   toOpen = async () => {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
       if (this.type !== "ONLINE" && !this.isExample) {
-        Alert.alert(
-          "温馨提示",
-          "是否保存当前工作空间",
-          [
-            {
-              text: "保存", onPress: () => {
-                this.saveMap(() => {
-                  NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
-                })
-              },
-            },
-            {
-              text: "取消", onPress: () => {
-                // NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
-                this.setState({ showmapMenu: !this.state.showmapMenu })
-              },
-            },
-          ],
-          { cancelable: true })
+        if(!this.state.showmapMenu){
+           this.setState({showmapMenu:!this.state.showmapMenu})
+           return
+        }
+        this.openDialog.setDialogVisible(true)
       } else {
-        // NavigationService.navigate('MapLoad', { workspace: this.workspace, map: this.map, mapControl: this.mapControl })
+        this.openDialog.setDialogVisible(false)
         this.setState({ showmapMenu: !this.state.showmapMenu })
       }
     }
@@ -435,8 +454,14 @@ export default class MapView extends React.Component {
     }
   }
 
+  toUpLoad=()=>{
+     Toast.show("功能待完善")
+  }
+  toDownLoad=()=>{
+    Toast.show("功能待完善")
+  }
   // 地图保存
-  saveMap = async (cb = () => {}) => {
+  saveMap = async (cb = () => { }) => {
     if (this.setting && this.setting.isVisible()) {
       this.setting.close()
     } else {
@@ -450,7 +475,7 @@ export default class MapView extends React.Component {
               Toast.show('保存失败')
             } else {
               Toast.show('保存成功')
-              cb && cb ()
+              cb && cb()
             }
           } catch (e) {
             Toast.show('保存失败')
@@ -499,15 +524,16 @@ export default class MapView extends React.Component {
     if (this.isExample) return null
     let arr = []
     let headerBtnData = [
+      // {
+      //   title: '上传',
+      //   image: require('../../assets/public/icon-upload.png'),
+      //   action: this.toUpLoad,
+      // }, {
+      //   title: '下载',
+      //   image: require('../../assets/public/icon-download.png'),
+      //   action: this.toDownLoad,
+      // }, 
       {
-        title: '上传',
-        image: require('../../assets/public/icon-upload.png'),
-        action: this.toUpLoad,
-      }, {
-        title: '下载',
-        image: require('../../assets/public/icon-download.png'),
-        action: this.toDownLoad,
-      }, {
         title: '语音',
         image: require('../../assets/public/icon-audio-white.png'),
         action: this.showAudio,
@@ -541,20 +567,7 @@ export default class MapView extends React.Component {
         // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
         // NavigationService.goBack(this.props.nav.routes[1].key)
         if (this.type !== "ONLINE" && !this.isExample) {
-          Alert.alert(
-            "温馨提示",
-            "是否保存当前工作空间",
-            [
-              { text: "保存", onPress: () => { this.saveMap(() => {
-                this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
-              }) } },
-              {
-                text: "取消", onPress: () => {
-                  this.closeWorkspace(NavigationService.goBack())
-                },
-              },
-            ],
-            { cancelable: true })
+          this.AlertDialog.setDialogVisible(true)
         } else {
           this.closeWorkspace(NavigationService.goBack())
         }
@@ -738,10 +751,28 @@ export default class MapView extends React.Component {
     //   this.setState({ showmapMenu: !this.state.showmapMenu })
     // }).bind(this)
   }
-
   render() {
     let headerRight = this.renderHeaderBtns()
-    let data=[{ btntitle:"关闭并保存",action:()=>{this.saveMap()}},{btntitle:"关闭不保存",action:()=>{this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))}},{btntitle:"取消",action:()=>{this.AlertDialog.setDialogVisible(false)}}]
+    let data = [
+      {
+        btntitle: "关闭并保存",
+        action: () => {
+          this.saveMap(NavigationService.goBack(this.props.nav.routes[1].key))
+          this.AlertDialog.setDialogVisible(false)
+        }
+      },
+      {
+        btntitle: "关闭不保存",
+        action: () => {
+          this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
+          this.AlertDialog.setDialogVisible(false)
+        }
+      },
+      {
+        btntitle: "取消",
+        action: () => { this.AlertDialog.setDialogVisible(false) }
+      }
+    ]
     return (
       <Container
         ref={ref => this.container = ref}
@@ -752,24 +783,28 @@ export default class MapView extends React.Component {
           headerRight: headerRight,
           backAction: this.back,
         }}>
-        {this.state.showmapMenu ? (null) :
-          (<View style={styles.mapMenu}>
-            <UsualTitle title='本地地图' />
-            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closemapMenu(this) }} />
-            <View style={styles.cutline}></View>
-            <UsualTitle title='在线地图' />
-            <BtnbarLoad
-              TD={this.TD}
-              Baidu={this.Baidu}
-              OSM={this.OSM}
-              Google={this.Google}
-            />
-          </View>)}
+        {
+          this.state.showmapMenu ? (null) :
+            (
+              <View style={styles.mapMenu}>
+                <UsualTitle title='本地地图' />
+                <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closemapMenu(this) }} />
+                <View style={styles.cutline} />
+                <UsualTitle title='在线地图' />
+                <BtnbarLoad
+                  TD={this.TD}
+                  Baidu={this.Baidu}
+                  OSM={this.OSM}
+                  Google={this.Google}
+                />
+              </View>
+            )
+        }
         <SMMapView ref={ref => GLOBAL.mapView = ref} style={styles.map} onGetInstance={this._onGetInstance} />
         {
           this.state.measureShow &&
           <PopMeasureBar
-            ref={ref=>this.PopMeasureBar=ref}
+            ref={ref => this.PopMeasureBar = ref}
             measureLine={this._measure_line}
             measureSquare={this._measure_square}
             measurePause={this._measure_pause}
@@ -777,7 +812,22 @@ export default class MapView extends React.Component {
             result={this.state.measureResult} />
         }
         {
+          this.state.popShow && this.state.popType === Const.DATA_EDIT &&
+          <MTBtn
+            customStyle={[
+              styles.changeLayerBtn,
+              {
+                bottom: this.state.changeLayerBtnBottom,
+              },
+            ]}
+            imageStyle={styles.changeLayerImage}
+            image={require('../../assets/map/icon-layer-change.png')}
+            BtnClick={() => this._changeLayer(Const.DATA_EDIT)}
+          />
+        }
+        {
           this.state.popShow && <PopList
+            ref={ref => this.popList = ref}
             measureLine={this._measure_line}
             measureSquare={this._measure_square}
             measurePause={this._measure_pause}
@@ -838,6 +888,18 @@ export default class MapView extends React.Component {
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}
         />
+        <Dialog
+          ref={ref => this.openDialog = ref}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={"是否保存当前空间"}
+          confirmAction={()=>{this.saveMap(()=>{
+            this.setState({showmapMenu:false},function(){this.openDialog.setDialogVisible(false)})
+          })}}
+          cancelAction={()=>{this.setState({showmapMenu:false},function(){this.openDialog.setDialogVisible(false)})}}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
         <SaveDialog
           ref={ref => this.saveDialog = ref}
           confirmAction={this.saveMapAndWorkspace}
@@ -846,7 +908,11 @@ export default class MapView extends React.Component {
           wsName={this.state.wsName}
           path={this.savepath}
         />
-        {/* <AlertDialog  ref={ref=>this.AlertDialog=ref}  childrens={data} Alerttitle={"关闭当前任务？"}/> */}
+        <AlertDialog
+          ref={ref => this.AlertDialog = ref}
+          childrens={data}
+          Alerttitle={"关闭当前任务?"}
+        />
       </Container>
     )
   }

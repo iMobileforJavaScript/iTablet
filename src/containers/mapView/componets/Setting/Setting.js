@@ -156,7 +156,7 @@ export default class Setting extends React.Component {
               //   let pointColorRgb = dataUtil.colorRgba(this.state.data.pointColor)
               //   await geoStyle.setPointColor(pointColorRgb.r, pointColorRgb.g, pointColorRgb.b, pointColorRgb.a)
 
-              await geoStyle.setLineWidth(0)
+              await geoStyle.setLineWidth(0.1)
               let size2D = await new Size2D().createObj(0, 0)
               await geoStyle.setMarkerSize(size2D)
               let nodeLayerSetting = await nodeLayer.getAdditionalSetting()
@@ -172,6 +172,7 @@ export default class Setting extends React.Component {
             break
         }
         this.props.setLoading && this.props.setLoading(false)
+        await this.props.map.refresh()
         if (result) {
           Toast.show('加载数据成功')
         } else {

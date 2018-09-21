@@ -279,7 +279,8 @@ export default class NetworkAnalystToolBar extends React.Component {
           { key: '添加配送中心', title:'添加配送中心', action: () => this._setCenter(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
           { key: '添加目的地', title:'添加目的地', action: () => this._setDist(Const.NETWORK_TSP), image: require('../../../../assets/public/save.png') },
           { key: '分析', title:'分析',action: () => this._analyst(Const.NETWORK_TSP), size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
-          { key: "清除", title:'清除',action: () => this.clear(Const.NETWORK_TSP) , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },          
+          { key: "清除", title:'清除',action: () => this.clear(Const.NETWORK_TSP) , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
+
         ],
       },
       {
@@ -292,7 +293,6 @@ export default class NetworkAnalystToolBar extends React.Component {
           { key: '下游追踪', title:'下游追踪',action:()=> this._traceDown(), size: 'large', image: require('../../../../assets/mapTools/icon_downtrack.png'), selectedImage: require('../../../../assets/mapTools/icon_downtrack_selected.png'), selectMode: 'flash' },
           { key: '分析', title:'分析',action: () => this._analyst(Const.NETWORK_TSP), size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
           { key: "清除", title:'清除',action: () => this.clear(Const.NETWORK_TRACKING) , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
-
         ],
       },
     ]

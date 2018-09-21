@@ -4,7 +4,6 @@ import {
   WeightFieldInfo,
   WeightFieldInfos,
   Point,
-  Point2D,
   GeoStyle,
   Size2D,
   Action,
@@ -116,7 +115,7 @@ async function longPressHandler(event) {
 
     }
   } catch (e) {
-    console.error(e)
+    Toast.show('选取目标失败')
   }
 }
 
@@ -215,7 +214,7 @@ async function startSelect() {
     await geoStyle.setLineWidth(0.4)
     await mSelection.setStyle(geoStyle)
   } catch (e) {
-    console.error(e)
+    Toast.show('开始选取失败')
   }
 }
 

@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react'
+import * as React from 'react'
 import { View, Text, StyleSheet, Modal, TouchableOpacity, FlatList } from 'react-native'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 
-export default class AlertDialog extends PureComponent {
+export default class AlertDialog extends React.Component {
   props: {
     btnStyle: StyleSheet,
     btnTitleStyle: StyleSheet,

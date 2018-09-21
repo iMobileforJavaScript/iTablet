@@ -30,7 +30,8 @@ export default class LayerAttribute extends React.Component {
       recordset: params.recordset,
       attribute: {},
       tableTitle: [],
-      tableHead: ['名称', '属性值'],
+      // tableHead: ['名称', '属性值'],
+      tableHead: [],
       tableData: [],
     }
   }
@@ -61,9 +62,12 @@ export default class LayerAttribute extends React.Component {
         if (records && records.length > 0) {
           attribute = records[0]
           this.props.setCurrentAttribute(attribute)
+          // let tableHead = Object.keys(records[0])
           this.setState({
             attribute: attribute,
+            // tableHead: tableHead,
           })
+
           this.table.setData(attribute, true)
         }
         this.container.setLoading(false)
@@ -135,15 +139,20 @@ export default class LayerAttribute extends React.Component {
           edit={this.edit}
           startAudio={() => {
             GLOBAL.AudioBottomDialog.setVisible(true)
-          }} />
-        <LayerAttributeTable
-          ref={ref => this.table = ref}
-          data={this.state.attribute}
-          // tableData={this.state.tableData}
-          tableTitle={this.state.tableTitle}
-          // colHeight={this.state.colHeight}
-          tableHead={['名称', '属性值']}
+          }}
         />
+        {
+          // this.state.tableHead.length > 0 &&
+          <LayerAttributeTable
+            ref={ref => this.table = ref}
+            data={this.state.attribute}
+            // tableData={this.state.tableData}
+            tableTitle={this.state.tableTitle}
+            // colHeight={this.state.colHeight}
+            tableHead={['名称', '属性值']}
+            // tableHead={this.state.tableHead}
+          />
+        }
         {this.renderBtns()}
       </Container>
     )

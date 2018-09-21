@@ -45,4 +45,16 @@ export default StyleSheet.create({
     backgroundColor:"#E8E8E8",
     height:scaleSize(3),
   },
+  changeLayerBtn: {
+    position: 'absolute',
+    // flexDirection: 'column',
+    // left: 0,
+    right: 0,
+    bottom: scaleSize(200),
+    backgroundColor: 'transparent',
+  },
+  changeLayerImage: {
+    height: scaleSize(60),
+    width: scaleSize(60),
+  },
 })
