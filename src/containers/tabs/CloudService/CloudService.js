@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View, Image, FlatList ,Dimensions} from 'react-native'
 import { Container, EmptyView, MTBtn } from '../../../components'
 import { Toast, scaleSize } from '../../../utils'
+import{ AlertDialog} from '../../mapView/componets/AlertDialog'
 const SCREEN_WIDTH = Dimensions.get('window').width
 const IMAGE_WIDTH=SCREEN_WIDTH*0.87
 export default class CloudService extends Component {
@@ -27,10 +28,13 @@ export default class CloudService extends Component {
 
   componentDidMount() {
     // this.container.setLoading(false)
+    
+    // this.AlertDialog.getData(data)
+    this.AlertDialog.setDialogVisible(true)
   }
 
   getdata = async () => {
-
+      console.log("aaa")
   }
 
   _keyExtractor = item => {
@@ -58,6 +62,10 @@ export default class CloudService extends Component {
       </View>)
 
   }
+
+
+     
+
 
   render() {
     return (
