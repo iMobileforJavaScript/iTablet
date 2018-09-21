@@ -148,12 +148,14 @@ export default class ExampleMapList extends React.Component {
         }
       }
     } catch (e) {
+      this.progress = null
       Toast.show('下载失败')
     }
   }
 
   onComplete = async result => {
     // console.log("success")
+    let downitem = await this.getDownitem(GLOBAL.downitemname)
     this.downloaded = true
     this.progress = null
     try {
@@ -169,7 +171,12 @@ export default class ExampleMapList extends React.Component {
             "温馨提示",
             "文件解压完成",
             [
-              { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+              {
+                text: "确定", onPress: () => {
+                  downitem.hideProgress()
+                  Utility.deleteZip(this.zipfile)
+                },
+              },
             ],
             { cancelable: true }
           )

@@ -228,8 +228,8 @@ export default class WorkSpaceFileList extends Component {
     // let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
     // if (this.state.backPath !== ConstPath.AppPath) {
     // if (isRootPath) {
-      let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
-      await this.getFileList({path: backPath})
+    let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
+    await this.getFileList({path: backPath})
     // }
   }
 

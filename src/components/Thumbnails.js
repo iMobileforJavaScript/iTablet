@@ -31,11 +31,16 @@ export default class Thumbnails extends React.Component {
     }
   }
 
+  hideProgress = () => {
+    this.setState({ opacity: 0 })
+  }
+
   updateprogress = async (data) => {
-    if (data === 100) {
-      this.setState({ opacity: 0 })
-    }
-    else if (data !== null && this.mProgress) {
+    // if (data === 100) {
+    //   this.setState({ opacity: 0 })
+    // }
+    // else
+    if (data !== null && this.mProgress) {
       this.mProgress.progress = data / 100
     }
     else {
