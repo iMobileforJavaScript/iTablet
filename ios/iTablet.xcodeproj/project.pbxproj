@@ -62,6 +62,7 @@
 		0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0721104C7100F206BB /* Security.framework */; };
 		0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */; };
 		0A8EEE2121104C7100F206BB /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */; };
+		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
 		0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
 		139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 139105C11AF99BAD00B5F7CC /* libRCTSettings.a */; };
@@ -127,55 +128,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 832C81801AAF6DEF007FA2F7;
 			remoteInfo = RCTVibration;
-		};
-		0A04F3BE215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF34489A14EB99A700D8449F;
-			remoteInfo = LibUGC;
-		};
-		0A04F3C0215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
-			remoteInfo = LibUGC_Base;
-		};
-		0A04F3C2215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B46016F1A08700A19B73;
-			remoteInfo = LibUGC_2D;
-		};
-		0A04F3C4215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
-			remoteInfo = LibUGC_3D;
-		};
-		0A04F3C6215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03BDDAED1714098D003EC801;
-			remoteInfo = Object_3D;
-		};
-		0A04F3C8215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 00F6D375175F20A9008963A0;
-			remoteInfo = Objects_iOS;
-		};
-		0A04F3CA215350F400F66550 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 005EF27D175F5F96005433E1;
-			remoteInfo = Super23D;
 		};
 		0A4D7FCE2117E2E300FAA035 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -253,6 +205,55 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = Supermap;
+		};
+		0AC1FA09215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF34489A14EB99A700D8449F;
+			remoteInfo = LibUGC;
+		};
+		0AC1FA0B215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
+			remoteInfo = LibUGC_Base;
+		};
+		0AC1FA0D215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B46016F1A08700A19B73;
+			remoteInfo = LibUGC_2D;
+		};
+		0AC1FA0F215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
+			remoteInfo = LibUGC_3D;
+		};
+		0AC1FA11215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03BDDAED1714098D003EC801;
+			remoteInfo = Object_3D;
+		};
+		0AC1FA13215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00F6D375175F20A9008963A0;
+			remoteInfo = Objects_iOS;
+		};
+		0AC1FA15215484F500490605 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 005EF27D175F5F96005433E1;
+			remoteInfo = Super23D;
 		};
 		139105C01AF99BAD00B5F7CC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -434,7 +435,6 @@
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* iTabletTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = iTabletTests.m; sourceTree = "<group>"; };
 		0A0118FA2122D9CE00BC4AAB /* Contacts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Contacts.framework; path = System/Library/Frameworks/Contacts.framework; sourceTree = SDKROOT; };
-		0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A0A2019212FA22300BEBC1C /* VisualMain.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = VisualMain.storyboard; sourceTree = "<group>"; };
 		0A0A201A212FA22300BEBC1C /* VisualViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VisualViewController.h; sourceTree = "<group>"; };
 		0A0A201B212FA22300BEBC1C /* VisualViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisualViewController.m; sourceTree = "<group>"; };
@@ -492,6 +492,8 @@
 		0A8EEE0721104C7100F206BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
+		0AC1FA172154872E00490605 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSampleCodeBridgeModule.h; sourceTree = "<group>"; };
 		0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSampleCodeBridgeModule.m; sourceTree = "<group>"; };
 		139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTSettings.xcodeproj; path = "../node_modules/react-native/Libraries/Settings/RCTSettings.xcodeproj"; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */,
 				0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */,
 				0A8EEE1A21104C7100F206BB /* AVFoundation.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -644,20 +647,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		0A04F3B2215350F200F66550 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0A04F3BF215350F400F66550 /* libLibUGC.a */,
-				0A04F3C1215350F400F66550 /* libLibUGC_Base.a */,
-				0A04F3C3215350F400F66550 /* libLibUGC_2D.a */,
-				0A04F3C5215350F400F66550 /* libLibUGC_3D.a */,
-				0A04F3C7215350F400F66550 /* libObject_3D.a */,
-				0A04F3C9215350F400F66550 /* libObjects_iOS.a */,
-				0A04F3CB215350F400F66550 /* Super23D.app */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		0A0A2017212FA22300BEBC1C /* DataVisualizationDemo */ = {
 			isa = PBXGroup;
 			children = (
@@ -772,6 +761,20 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		0AC1F9FD215484F300490605 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0AC1FA0A215484F500490605 /* libLibUGC.a */,
+				0AC1FA0C215484F500490605 /* libLibUGC_Base.a */,
+				0AC1FA0E215484F500490605 /* libLibUGC_2D.a */,
+				0AC1FA10215484F500490605 /* libLibUGC_3D.a */,
+				0AC1FA12215484F500490605 /* libObject_3D.a */,
+				0AC1FA14215484F500490605 /* libObjects_iOS.a */,
+				0AC1FA16215484F500490605 /* Super23D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0AD86AE821142103003964B6 /* SampleCode */ = {
 			isa = PBXGroup;
 			children = (
@@ -845,6 +848,7 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AC1FA172154872E00490605 /* UIKit.framework */,
 				D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */,
 				D877B5A82133D2AC0044AE61 /* SuperMap.framework */,
 				0A0118FA2122D9CE00BC4AAB /* Contacts.framework */,
@@ -895,7 +899,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */,
+				0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -1028,8 +1032,8 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 0A04F3B2215350F200F66550 /* Products */;
-					ProjectRef = 0A04F3B1215350F200F66550 /* LibUGC.xcodeproj */;
+					ProductGroup = 0AC1F9FD215484F300490605 /* Products */;
+					ProjectRef = 0AC1F9FC215484F300490605 /* LibUGC.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1136,55 +1140,6 @@
 			remoteRef = 00C302E31ABCB9EE00DB3ED1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		0A04F3BF215350F400F66550 /* libLibUGC.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC.a;
-			remoteRef = 0A04F3BE215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A04F3C1215350F400F66550 /* libLibUGC_Base.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_Base.a;
-			remoteRef = 0A04F3C0215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A04F3C3215350F400F66550 /* libLibUGC_2D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_2D.a;
-			remoteRef = 0A04F3C2215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A04F3C5215350F400F66550 /* libLibUGC_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_3D.a;
-			remoteRef = 0A04F3C4215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A04F3C7215350F400F66550 /* libObject_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObject_3D.a;
-			remoteRef = 0A04F3C6215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A04F3C9215350F400F66550 /* libObjects_iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObjects_iOS.a;
-			remoteRef = 0A04F3C8215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A04F3CB215350F400F66550 /* Super23D.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Super23D.app;
-			remoteRef = 0A04F3CA215350F400F66550 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		0A4D7FCF2117E2E300FAA035 /* libRNViewShot.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1260,6 +1215,55 @@
 			fileType = archive.ar;
 			path = libSupermap.a;
 			remoteRef = 0A8EEDDF21104B4100F206BB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA0A215484F500490605 /* libLibUGC.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC.a;
+			remoteRef = 0AC1FA09215484F500490605 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA0C215484F500490605 /* libLibUGC_Base.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_Base.a;
+			remoteRef = 0AC1FA0B215484F500490605 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA0E215484F500490605 /* libLibUGC_2D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_2D.a;
+			remoteRef = 0AC1FA0D215484F500490605 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA10215484F500490605 /* libLibUGC_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_3D.a;
+			remoteRef = 0AC1FA0F215484F500490605 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA12215484F500490605 /* libObject_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObject_3D.a;
+			remoteRef = 0AC1FA11215484F500490605 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA14215484F500490605 /* libObjects_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjects_iOS.a;
+			remoteRef = 0AC1FA13215484F500490605 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0AC1FA16215484F500490605 /* Super23D.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Super23D.app;
+			remoteRef = 0AC1FA15215484F500490605 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		139105C11AF99BAD00B5F7CC /* libRCTSettings.a */ = {
@@ -1558,8 +1562,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1572,7 +1576,7 @@
 					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
@@ -1600,8 +1604,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1614,13 +1618,13 @@
 					"$(SRCROOT)/../node_modules/react-native-view-shot/ios",
 				);
 				INFOPLIST_FILE = iTablet/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 				);
-				ONLY_ACTIVE_ARCH = YES;
+				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
