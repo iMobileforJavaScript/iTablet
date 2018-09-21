@@ -611,7 +611,7 @@ export default class PopList extends React.Component {
               // { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
               // { key: '清除', action: this.clearBuffer },
               { key: constants.SETTING, title:constants.SETTING, action: () => this.analystSetting(Const.BUFFER), size: 'large',image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: () => this._bufferAnalyst,size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: this._bufferAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
               { key: constants.DELETE, title:constants.DELETE, action: this.clearBuffer , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
@@ -620,7 +620,7 @@ export default class PopList extends React.Component {
             action: cbData => this._analyst(cbData, Const.OVERLAY),
             operations: [
               { key: constants.SETTING, title:constants.SETTING, action: () => this.analystSetting(Const.OVERLAY) , size: 'large', image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: ()=>this._overlayAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: this._overlayAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
               { key: constants.DELETE, title:constants.DELETE, action: this.clearOverlay ,size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
