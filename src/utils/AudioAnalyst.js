@@ -114,7 +114,6 @@ function goToMapView(type) {
   (async function () {
     let key = '', exist = false
     let routes = nav.routes
-
     if (routes && routes.length > 0) {
       for (let index = 0; index < routes.length; index++) {
         if (routes[index].routeName === 'MapView') {
@@ -271,14 +270,12 @@ function setLabelTheme(layer) {
   (async function () {
     try {
       let dataset = await layer.getDataset()
-  
       let themeLabel = await new ThemeLabel().createObj()
       let textStyle = await new TextStyle().createObj()
       await textStyle.setForeColor(0, 255, 0, 1)
       await textStyle.setFontName('微软雅黑')
       await textStyle.setAlignment(TextAlignment.MIDDLECENTER)
       await themeLabel.setUniformStyle(textStyle)
-  
       await map.addThemeLayer(dataset, themeLabel, true)
       await map.refresh()
       await mapControl.setAction(Action.PAN)

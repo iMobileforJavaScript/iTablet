@@ -39,6 +39,7 @@ export default class OffLineList extends React.Component {
     Workspace: any,
     map: any,
     mapControl: any,
+    cb:any,
   }
 
   constructor(props) {
@@ -122,7 +123,7 @@ export default class OffLineList extends React.Component {
         {this._addElement(this._btn_udb_click, icon_udb, testData[1].key)}
         {/*{this._addElement(this._btn_web_click, icon_webudb, testData[2].key)}*/}
         {this._addElement(this._btn_newudb_click, icon_newudb, testData[3].key)}
-        {this._addElement()}
+        {/* {this._addElement()} */}
       </View>
     )
   }

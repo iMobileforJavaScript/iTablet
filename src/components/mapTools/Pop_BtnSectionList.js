@@ -171,6 +171,7 @@ export default class Pop_BtnSectionList extends React.Component {
               image={item.image}
               selectMode={item.selectMode}
               selectedImage={item.selectedImage}
+              textStyle={item.textStyle}
               BtnClick={() => this._btn_click_operation({ item, index })}/>
             : <Pop_Btn
               ref={ref => {
