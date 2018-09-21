@@ -163,13 +163,25 @@ export default class ExampleMapList extends React.Component {
         // console.log("zip")
         this.ziping = true
         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-        if (result.isUnZiped) {
+        if (result) {
           GLOBAL.downitemname = ''
           Alert.alert(
             "温馨提示",
             "文件解压完成",
             [
               { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+            ],
+            { cancelable: true }
+          )
+        } else {
+          this.unzip = false
+          await Utility.deleteZip(this.zipfile)
+          Alert.alert(
+            "温馨提示",
+            "文件解压失败，是否重新下载",
+            [
+              { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
+              { text: "取消", onPress: () => { this.cancel(this.zipfile) } },
             ],
             { cancelable: true }
           )

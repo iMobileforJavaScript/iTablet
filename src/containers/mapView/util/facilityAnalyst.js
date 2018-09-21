@@ -115,7 +115,7 @@ async function longPressHandler(event) {
 
     }
   } catch (e) {
-    Toast.show('选取目标失败')
+    console.error(e)
   }
 }
 
@@ -214,7 +214,7 @@ async function startSelect() {
     await geoStyle.setLineWidth(0.4)
     await mSelection.setStyle(geoStyle)
   } catch (e) {
-    Toast.show('开始选取失败')
+    console.error(e)
   }
 }
 
@@ -265,6 +265,7 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
       // let { edges } = await facilityAnalyst.findPathUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
       if (!edges || edges.length <= 0) {
+        _setLoading(false)
         Toast.show('没有上游')
         return
       }
@@ -290,6 +291,7 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
       let { edges } = await facilityAnalyst.traceDownFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
       if (!edges || edges.length <= 0) {
+        _setLoading(false)
         Toast.show('没有下游')
         return
       }

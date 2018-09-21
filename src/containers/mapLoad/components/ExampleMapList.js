@@ -163,7 +163,7 @@ export default class ExampleMapList extends React.Component {
         // console.log("zip")
         this.ziping = true
         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-        if (result.isUnZiped) {
+        if (result) {
           GLOBAL.downitemname = ''
           Alert.alert(
             "温馨提示",
