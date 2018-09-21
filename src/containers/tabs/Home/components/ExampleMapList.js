@@ -14,6 +14,11 @@ const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾
 
 
 export default class ExampleMapList extends React.Component {
+
+  props: {
+    setLoading: () => {},
+  }
+
   constructor(props) {
     super(props)
     this.islogin = false
