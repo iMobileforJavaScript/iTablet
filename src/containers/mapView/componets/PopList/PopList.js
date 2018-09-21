@@ -5,27 +5,26 @@ import {
   Action,
   DatasetType,
 } from 'imobile_for_javascript'
-import { PopBtnSectionList, MTBtnList, MTBtn } from '../../../../components'
+import { PopBtnSectionList } from '../../../../components'
 import { Const } from '../../../../constains'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../NavigationService'
 import NetworkAnalystToolBar from '../NetworkAnalystToolBar'
 import CollectionToolBar from '../CollectionToolBar'
 import { bufferAnalyst, overlayAnalyst } from '../../util'
-import Setting from '../Setting'
 import constants from '../constants'
 
 const textstyles1={
   fontSize: scaleSize(26),
   backgroundColor: 'transparent',
   width: scaleSize(120),
-  textAlign: 'center'
+  textAlign: 'center',
 }
 const textstyles2={
   fontSize: scaleSize(26),
   backgroundColor: 'transparent',
   width: scaleSize(130),
-  textAlign: 'center'
+  textAlign: 'center',
 }
 export default class PopList extends React.Component {
 
@@ -52,7 +51,7 @@ export default class PopList extends React.Component {
     measureSquare: PropTypes.func,
     measurePause: PropTypes.func,
   }
- 
+
   constructor(props) {
     super(props)
     let data = this.getData()
@@ -68,7 +67,7 @@ export default class PopList extends React.Component {
       lastSubKey: '',
     }
     this.cbData = {}
-    this.operationCallback = () => { } // 当前选择的二级操作的毁掉函数
+    this.operationCallback = () => { } // 当前选择的二级操作的回调函数
   }
 
   componentDidUpdate(prevProps) {
@@ -356,24 +355,49 @@ export default class PopList extends React.Component {
       type: -1,
       isEdit: true,
     }, (isShow, dsType) => { // 传 -1 查询所有类型的图层
-      if (this.props.POP_List) {
-        let datas = this.getData(type)
-        let data
-        for (let i = 0; i < datas.length; i++) {
-          if (datas[i].type === dsType) {
-            data = datas[i]
-            break
-          }
-        }
-        let current = this.findCurrentData(datas, data.type)
-        this.setState({
-          ...current,
-        })
-        this.props.POP_List(true, type)
-        this.operationCallback(true)
-        this.popList && this.popList.setCurrentOption(data)
-      }
+      // if (this.props.POP_List) {
+      //   let datas = this.getData(type)
+      //   let data
+      //   for (let i = 0; i < datas.length; i++) {
+      //     if (datas[i].type === dsType) {
+      //       data = datas[i]
+      //       break
+      //     }
+      //   }
+      //   let current = this.findCurrentData(datas, data.type)
+      //   this.setState({
+      //     ...current,
+      //   })
+      //   this.props.POP_List(true, type)
+      //   this.operationCallback(true)
+      //   this.popList && this.popList.setCurrentOption(data)
+      // }
+      this.setCurrentOption(type, dsType)
     })
+  }
+
+  /**
+   * 设置当前选中的section
+   * @param data
+   */
+  setCurrentOption = (type, dsType) => {
+    if (this.props.POP_List) {
+      let datas = this.getData(type)
+      let data
+      for (let i = 0; i < datas.length; i++) {
+        if (datas[i].type === dsType) {
+          data = datas[i]
+          break
+        }
+      }
+      let current = this.findCurrentData(datas, data.type)
+      this.setState({
+        ...current,
+      })
+      this.props.POP_List(true, type)
+      this.operationCallback(true)
+      this.popList && this.popList.setCurrentOption(data)
+    }
   }
 
   //============================分类操作======================================
@@ -443,36 +467,36 @@ export default class PopList extends React.Component {
       return
     }
     this.props.setLoading(true)
-      ; (async function () {
-        try {
-          let { result, resultDatasetName, resultLayerName } = await overlayAnalyst.analyst({
-            workspace: this.props.workspace,
-            method: this.props.overlaySetting.method,
-            dataset: this.props.overlaySetting.datasetVector,
-            targetDataset: this.props.overlaySetting.targetDatasetVector,
-          })
-          this.props.setLoading(false)
-          if (result) {
-            Toast.show('分析成功')
-          } else {
-            Toast.show('分析失败')
-          }
-
-          let datasource = await this.props.workspace.getDatasource(0)
-          let dataset = await datasource.getDataset(resultDatasetName)
-
-          await this.props.map.addLayer(dataset, true)
-
-          await this.props.map.refresh()
-          this.props.setOverlaySetting && this.props.setOverlaySetting({
-            resultDataset: { resultDatasetName, resultLayerName },
-          })
-          await this.select()
-        } catch (e) {
-          this.props.setLoading(false)
-          Toast.show('分析失败, 请重新设置')
+    ; (async function () {
+      try {
+        let { result, resultDatasetName, resultLayerName } = await overlayAnalyst.analyst({
+          workspace: this.props.workspace,
+          method: this.props.overlaySetting.method,
+          dataset: this.props.overlaySetting.datasetVector,
+          targetDataset: this.props.overlaySetting.targetDatasetVector,
+        })
+        this.props.setLoading(false)
+        if (result) {
+          Toast.show('分析成功')
+        } else {
+          Toast.show('分析失败')
         }
-      }).bind(this)()
+
+        let datasource = await this.props.workspace.getDatasource(0)
+        let dataset = await datasource.getDataset(resultDatasetName)
+
+        await this.props.map.addLayer(dataset, true)
+
+        await this.props.map.refresh()
+        this.props.setOverlaySetting && this.props.setOverlaySetting({
+          resultDataset: { resultDatasetName, resultLayerName },
+        })
+        await this.select()
+      } catch (e) {
+        this.props.setLoading(false)
+        Toast.show('分析失败, 请重新设置')
+      }
+    }).bind(this)()
   }
 
   /** 打开分析设置 **/
@@ -587,7 +611,7 @@ export default class PopList extends React.Component {
               // { key: '设置', action: () => this.analystSetting(Const.BUFFER)}, { key: '分析', action: this._bufferAnalyst },
               // { key: '清除', action: this.clearBuffer },
               { key: constants.SETTING, title:constants.SETTING, action: () => this.analystSetting(Const.BUFFER), size: 'large',image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: () => this._bufferAnalyst,size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: this._bufferAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
               { key: constants.DELETE, title:constants.DELETE, action: this.clearBuffer , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
@@ -596,7 +620,7 @@ export default class PopList extends React.Component {
             action: cbData => this._analyst(cbData, Const.OVERLAY),
             operations: [
               { key: constants.SETTING, title:constants.SETTING, action: () => this.analystSetting(Const.OVERLAY) , size: 'large', image: require('../../../../assets/mapTools/icon_setting.png'), selectedImage: require('../../../../assets/mapTools/icon_setting_selected.png') },
-              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: ()=>this._overlayAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
+              { key: constants.ANALYSIS, title:constants.ANALYSIS, action: this._overlayAnalyst, size: 'large', image: require('../../../../assets/mapTools/icon_analysis.png'), selectedImage: require('../../../../assets/mapTools/icon_analysis_seleted.png'), selectMode: 'flash' },
               { key: constants.DELETE, title:constants.DELETE, action: this.clearOverlay ,size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           },
@@ -690,7 +714,7 @@ export default class PopList extends React.Component {
             lastIndex: index,
           })
         }
-      }
+      },
     })
   }
 
@@ -750,12 +774,14 @@ export default class PopList extends React.Component {
       // )
       return (
         <View style={styles.popView}>
-          {
-            this.props.popType === Const.DATA_EDIT &&
-            <MTBtn
-              style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
-              image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={() => this._changeLayer(Const.DATA_EDIT)} />
-          }
+          {/*{*/}
+          {/*this.props.popType === Const.DATA_EDIT &&*/}
+          {/*<MTBtn*/}
+          {/*style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}*/}
+          {/*image={require('../../../../assets/map/icon-layer-change.png')}*/}
+          {/*BtnClick={() => this._changeLayer(Const.DATA_EDIT)}*/}
+          {/*/>*/}
+          {/*}*/}
           <PopBtnSectionList
             ref={ref => this.popList = ref}
             popType={this.props.popType}

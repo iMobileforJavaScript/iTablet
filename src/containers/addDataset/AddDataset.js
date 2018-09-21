@@ -155,12 +155,17 @@ export default class AddDataset extends React.Component {
    */
   addDatasets = async () => {
     if (Object.getOwnPropertyNames(this.state.openList).length <= 0) return
+    let showEntireMap = false
     for(let key in this.state.openList) {
       let item = this.state.openList[key]
       await this.map.addLayer(item.dataset, true)
+      if (item.type === DatasetType.IMAGE || item.type === DatasetType.Grid) {
+        showEntireMap = true
+      }
     }
     Toast.show('添加图层成功')
     this.map && await this.map.refresh()
+    showEntireMap && this.map && await this.map.viewEntire()
     this.props.navigation.goBack()
     this.cb && this.cb()
   }
