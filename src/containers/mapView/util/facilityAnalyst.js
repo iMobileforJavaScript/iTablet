@@ -4,7 +4,6 @@ import {
   WeightFieldInfo,
   WeightFieldInfos,
   Point,
-  Point2D,
   GeoStyle,
   Size2D,
   Action,

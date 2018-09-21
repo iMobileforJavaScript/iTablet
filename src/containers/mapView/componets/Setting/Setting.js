@@ -172,6 +172,7 @@ export default class Setting extends React.Component {
             break
         }
         this.props.setLoading && this.props.setLoading(false)
+        await this.props.map.refresh()
         if (result) {
           Toast.show('加载数据成功')
         } else {

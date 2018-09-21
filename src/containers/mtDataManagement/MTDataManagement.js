@@ -265,15 +265,15 @@ export default class MTDataManagement extends React.Component {
 
   attribute = item => {
     (async function () {
-      let recordset = await (await item.data.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
-      NavigationService.navigate('LayerAttribute',{ recordset: recordset })
+      // let recordset = await (await item.data.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
+      NavigationService.navigate('LayerAttributeEdit',{ dataset: item.data.dataset })
     }).bind(this)()
   }
 
   attrTable = item => {
     (async function () {
-      // let recordset = await (await item.data.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
-      NavigationService.navigate('LayerAttributeEdit',{ dataset: item.data.dataset })
+      let recordset = await (await item.data.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
+      NavigationService.navigate('LayerAttribute',{ recordset: recordset })
     }).bind(this)()
   }
 
