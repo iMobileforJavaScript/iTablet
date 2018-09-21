@@ -9,7 +9,7 @@ import { Workspace, SMMapView, Action, Point2D, EngineType } from 'imobile_for_j
 import PropTypes from 'prop-types'
 import { PopList, Setting } from './componets'
 import { BtnbarLoad, OffLineList } from '../tabs/Home/components'
-import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle } from '../../components'
+import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle ,AlertDialog} from '../../components'
 import { Toast, AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
@@ -310,16 +310,6 @@ export default class MapView extends React.Component {
     this.saveDialog.setDialogVisible(true)
   }
 
-  alertSave = () => {
-    Alert.alert(
-      "温馨提示",
-      "空间已修改是否保存",
-      [
-        { text: "确定", onPress: () => { this.savemap() } },
-        { text: "取消", onPress: () => { } },
-      ],
-      { cancelable: true })
-  }
 
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, "正在保存")
@@ -438,18 +428,7 @@ export default class MapView extends React.Component {
       this.setting.close()
     } else {
       if (this.type !== "ONLINE" && !this.isExample) {
-        Alert.alert(
-          "温馨提示",
-          "是否保存当前工作空间",
-          [
-            { text: "保存", onPress: () => { this.saveMap() } },
-            {
-              text: "取消", onPress: () => {
-                this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
-              },
-            },
-          ],
-          { cancelable: true })
+        this.AlertDialog.setDialogVisible(true)
       } else {
         this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))
       }
@@ -762,6 +741,7 @@ export default class MapView extends React.Component {
 
   render() {
     let headerRight = this.renderHeaderBtns()
+    let data=[{ btntitle:"关闭并保存",action:()=>{this.saveMap()}},{btntitle:"关闭不保存",action:()=>{this.closeWorkspace(() => NavigationService.goBack(this.props.nav.routes[1].key))}},{btntitle:"取消",action:()=>{this.AlertDialog.setDialogVisible(false)}}]
     return (
       <Container
         ref={ref => this.container = ref}
@@ -866,6 +846,7 @@ export default class MapView extends React.Component {
           wsName={this.state.wsName}
           path={this.savepath}
         />
+        {/* <AlertDialog  ref={ref=>this.AlertDialog=ref}  childrens={data} Alerttitle={"关闭当前任务？"}/> */}
       </Container>
     )
   }
