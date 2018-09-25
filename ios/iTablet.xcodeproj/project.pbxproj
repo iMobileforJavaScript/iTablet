@@ -90,6 +90,7 @@
 		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
 		D877B55B21338D850044AE61 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = D877B55A21338D840044AE61 /* Trial_License.slm */; };
 		D877B5A92133D2AD0044AE61 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D877B5A82133D2AC0044AE61 /* SuperMap.framework */; };
+		D87A936D2154D81B0095CC05 /* JSZipArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = D87A936C2154D81B0095CC05 /* JSZipArchive.m */; };
 		E8D4F75200B5420A963B7F2B /* libRNViewShot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6715E489CA142739903C659 /* libRNViewShot.a */; };
 /* End PBXBuildFile section */
 
@@ -470,6 +471,8 @@
 		D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageQueue.framework; path = MessageQueue.sdk/MessageQueue.framework; sourceTree = "<group>"; };
 		D877B55A21338D840044AE61 /* Trial_License.slm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Trial_License.slm; sourceTree = "<group>"; };
 		D877B5A82133D2AC0044AE61 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
+		D87A936B2154D81B0095CC05 /* JSZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSZipArchive.h; path = Tools/JSZipArchive.h; sourceTree = SOURCE_ROOT; };
+		D87A936C2154D81B0095CC05 /* JSZipArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JSZipArchive.m; path = Tools/JSZipArchive.m; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -746,6 +749,7 @@
 		13B07FAE1A68108700A75B9A /* iTablet */ = {
 			isa = PBXGroup;
 			children = (
+				D87A936A2154D7F50095CC05 /* Tools */,
 				0AD86AE821142103003964B6 /* SampleCode */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -895,6 +899,16 @@
 				2D16E6721FA4F8DC00B85C8A /* libRCTBlob-tvOS.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		D87A936A2154D7F50095CC05 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				D87A936B2154D81B0095CC05 /* JSZipArchive.h */,
+				D87A936C2154D81B0095CC05 /* JSZipArchive.m */,
+			);
+			name = Tools;
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1406,6 +1420,7 @@
 				0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				0A0A2036212FA22300BEBC1C /* VisualViewController.m in Sources */,
+				D87A936D2154D81B0095CC05 /* JSZipArchive.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

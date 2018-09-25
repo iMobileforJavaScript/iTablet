@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Toast } from '../../../../utils'
+import { Toast ,scaleSize} from '../../../../utils'
 
 import { BtnOne, ListSeparator } from '../../../../components'
 

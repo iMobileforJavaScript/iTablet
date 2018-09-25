@@ -14,6 +14,11 @@ const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾
 
 
 export default class ExampleMapList extends React.Component {
+
+  props: {
+    setLoading: () => {},
+  }
+
   constructor(props) {
     super(props)
     this.islogin = false
@@ -148,12 +153,14 @@ export default class ExampleMapList extends React.Component {
         }
       }
     } catch (e) {
+      this.progress = null
       Toast.show('下载失败')
     }
   }
 
   onComplete = async result => {
     // console.log("success")
+    let downitem = await this.getDownitem(GLOBAL.downitemname)
     this.downloaded = true
     this.progress = null
     try {
@@ -163,13 +170,30 @@ export default class ExampleMapList extends React.Component {
         // console.log("zip")
         this.ziping = true
         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
-        if (result.isUnZiped) {
+        if (result) {
           GLOBAL.downitemname = ''
           Alert.alert(
             "温馨提示",
             "文件解压完成",
             [
-              { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+              {
+                text: "确定", onPress: () => {
+                  downitem.hideProgress()
+                  Utility.deleteZip(this.zipfile)
+                },
+              },
+            ],
+            { cancelable: true }
+          )
+        } else {
+          this.unzip = false
+          await Utility.deleteZip(this.zipfile)
+          Alert.alert(
+            "温馨提示",
+            "文件解压失败，是否重新下载",
+            [
+              { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
+              { text: "取消", onPress: () => { this.cancel(this.zipfile) } },
             ],
             { cancelable: true }
           )

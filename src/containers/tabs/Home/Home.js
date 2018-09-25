@@ -58,11 +58,16 @@ export default class Home extends Component {
     this.setState({ BtnbarLoad: false, OffLineList: true, mapbtn1: styles.mapbtn, mapbtn2: styles.mapbtnselected })
   }
 
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
   _goToMapLoad = () => { this.setState({ mapviewshow: !this.state.mapviewshow, selectlist: !this.state.selectlist }) }
   // _goToMapLoad = () => {NavigationService.navigate('MapLoad',{})}
   render() {
     return (
       <Container
+        ref={ref => this.container = ref}
         scrollable={true}
         withoutHeader
         style={styles.container}>
@@ -91,7 +96,7 @@ export default class Home extends Component {
         <View style={styles.btnbarhome}></View>
         <HomeUsualMap data={this.props.latestMap} style={styles.ususalmap} />
         <UsualTitle title='示例地图' style={styles.examplemaplist} />
-        <ExampleMapList />
+        <ExampleMapList setLoading={this.setLoading}  />
       </Container>
     )
   }
