@@ -14,7 +14,7 @@ import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
 import { color } from '../../styles'
-import Btnone from './component'
+import {Btnone,UploadDialog} from './component'
 export default class UpLoadList extends Component {
 
   props: {
@@ -93,10 +93,9 @@ export default class UpLoadList extends Component {
       })
   }
   
-  upload=async()=>{
-      
+  addupload=async()=>{
+    JSON.stringify(this.state.uploadlist)!=="{}"? this.uploadDialog.setDialogVisible(true): Toast.show("请选择要上传的文件")
   }
-
   _toBack = async () => {
     let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
     await this.getFileList({ path: backPath })
@@ -149,7 +148,7 @@ export default class UpLoadList extends Component {
         headerProps={{
           title: "上传文件",
           navigation: this.props.navigation,
-          headerRight: <TextBtn btnText="添加" textStyle={styles.headerBtnTitle} btnClick={this.upload} />,
+          headerRight: <TextBtn btnText="添加" textStyle={styles.headerBtnTitle} btnClick={this.addupload} />,
         }}>
         {this.headerBack()}
         {
@@ -164,6 +163,11 @@ export default class UpLoadList extends Component {
               />
               : <EmptyView />)
         }
+       <UploadDialog
+         ref={ref=>this.uploadDialog=ref}
+         data={this.state.uploadlist} 
+         confirmBtnTitle={"上传"}
+       />
       </Container>
     )
   }

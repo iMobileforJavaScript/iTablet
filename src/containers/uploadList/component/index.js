@@ -1,2 +1,6 @@
 import Btnone from './Btnone'
-export default Btnone
+import UploadDialog from './UploadDialog'
+export {
+  Btnone,
+  UploadDialog,
+} 

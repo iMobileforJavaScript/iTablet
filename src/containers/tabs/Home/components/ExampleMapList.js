@@ -40,7 +40,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   cancel = async zipfile => {
-    await Utility.deleteZip(zipfile)
+    await Utility.deleteFile(zipfile)
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     downitem.downloaded(true)
   }
@@ -179,7 +179,7 @@ export default class ExampleMapList extends React.Component {
               {
                 text: "确定", onPress: () => {
                   downitem.hideProgress()
-                  Utility.deleteZip(this.zipfile)
+                  Utility.deleteFile(this.zipfile)
                 },
               },
             ],
@@ -187,7 +187,7 @@ export default class ExampleMapList extends React.Component {
           )
         } else {
           this.unzip = false
-          await Utility.deleteZip(this.zipfile)
+          await Utility.deleteFile(this.zipfile)
           Alert.alert(
             "温馨提示",
             "文件解压失败，是否重新下载",

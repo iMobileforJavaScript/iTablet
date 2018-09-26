@@ -1,14 +1,10 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  Text,
-  FlatList,
   TouchableOpacity,
   Image,
-  View,
-  Platform,
 } from 'react-native'
-import { Toast, scaleSize } from '../../../utils'
+import { scaleSize } from '../../../utils'
 
 export default class Btnone extends Component{
      props:{
