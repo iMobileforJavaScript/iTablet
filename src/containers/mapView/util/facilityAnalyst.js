@@ -88,7 +88,12 @@ async function longPressHandler(event) {
       geoPoint._SMGeoPointId = geometry._SMGeometryId
       let records = await recordset.getFieldInfosArray()
 
-      mNodes.push(records[0]['SMNODEID'].value)
+      for (let i = 0; i < records[0].length; i++) {
+        if (records[0].name === 'SMNODEID') {
+          mNodes.push(records[0]['SMNODEID'].value)
+          break
+        }
+      }
 
       // TODO 显示分析按钮可选
 

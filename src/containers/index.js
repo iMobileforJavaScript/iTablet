@@ -23,7 +23,7 @@ import ChooseEditLayer from './chooseEditLayer'
 import AddDataset from './addDataset'
 import AddLayerGroup from './addLayerGroup'
 import MapChange from './mapChange'
-import { LayerAttribute, LayerAttributeEdit, LayerAttributeAdd } from './layerAttribute'
+import { LayerAttribute, LayerAttributeEdit, LayerAttributeAdd, LayerAttributeObj } from './layerAttribute'
 import { ThemeEntry, ThemeEdit, ChoosePage, ThemeStyle } from './theme'
 import workspaceFlieList from './workspaceFileList'
 import dataSourcelist from './dataSourcelist'
@@ -169,6 +169,12 @@ export default StackNavigator({
   },
   LayerAttributeEdit: {
     screen: LayerAttributeEdit,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  LayerAttributeObj: {
+    screen: LayerAttributeObj,
     navigationOptions: {
       header: null,
     },
