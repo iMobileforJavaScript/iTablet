@@ -319,22 +319,21 @@ export default class PopList extends React.Component {
   attribute = ({ callback = () => { } }) => {
     (async function () {
       callback && callback(true)
-      // await this.select()
-      // this.selectSubOperation()
       // TODO selection 转化为 redux中的 selection
+      if (this.props.selection.layerId !== this.props.editLayer.id) {
+        Toast.show('请选择可编辑图层中的对象')
+        return
+      }
       let selection = await this.props.editLayer.layer.getSelection()
       let count = await selection.getCount()
       if (count > 0) {
-        // NavigationService.navigate('LayerAttribute',{ selection: selection })
-        // NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
         let recordset = await selection.toRecordset()
-        NavigationService.navigate('LayerAttribute', { recordset: recordset })
+        let dataset = await recordset.getDataset()
+        NavigationService.navigate('LayerAttributeObj', { dataset, recordset, filter: 'SmID=' + this.props.selection.id })
       } else {
         Toast.show('请选择目标')
       }
     }.bind(this)())
-    // NavigationService.navigate('LayerAttribute', { selection: '' })
-    // Toast.show('正在加紧制作ing...')
   }
 
   /**  执行  **/

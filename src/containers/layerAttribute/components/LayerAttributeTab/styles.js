@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import * as Util from '../../../../utils/constUtil'
+import { scaleSize } from '../../../../utils'
 
 export default StyleSheet.create({
   container: {
@@ -13,7 +14,10 @@ export default StyleSheet.create({
     borderRightWidth:0,
     borderBottomWidth:1,
     borderColor:'#bbbbbb',
-    justifyContent:'space-around',
-	  alignItems: 'center',
+    // justifyContent:'space-around',
+    alignItems: 'center',
+  },
+  btn: {
+    marginLeft: scaleSize(60),
   },
 })

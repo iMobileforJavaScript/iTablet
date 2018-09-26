@@ -25,7 +25,6 @@ export default class LayerAttributeTable extends React.Component {
     selectRow: () => {},
 
     selectable: boolean,
-    hasIndex: boolean,
 
     tableHead: Array,
     tableTitle: Array,
@@ -41,108 +40,47 @@ export default class LayerAttributeTable extends React.Component {
     tableHead: [],
     tableTitle: [],
     tableData: [],
-    // widthArr: [40, 200, 200, 100, 100, 100, 80],
-    widthArr: [],
+    widthArr: [40, 200, 200, 100, 100, 100, 80],
     selectable: true,
-    hasIndex: true,
   }
 
   constructor(props) {
     super(props)
-    let {titleList, dataList, colHeight, widthArr} = this.dealData(props.tableTitle, props.data)
-    let tableHead = this.props.hasIndex ? ['序号', ...props.tableHead] : props.tableHead
+    let {titleList, dataList, colHeight} = this.dealData(props.tableTitle, props.data)
     this.state = {
       colHeight: colHeight,
-      widthArr: props.widthArr.length > 0 ? props.widthArr : widthArr,
+      widthArr: props.widthArr,
       modifiedData: {},
       tableTitle: props.tableTitle,
       // tableData: props.tableData,
-      tableHead: tableHead,
+      tableHead: props.tableHead,
       // tableTitle: titleList,
       tableData: dataList,
       currentSelect: -1,
     }
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(prevProps.tableTitle) !== JSON.stringify(this.props.tableTitle) ||
-      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
-    ) {
-      let {titleList, dataList, colHeight, widthArr} = this.dealData(this.props.tableTitle, this.props.data)
-
-      this.setState({
-        colHeight: colHeight,
-        widthArr: this.props.widthArr.length > 0 ? this.props.widthArr : widthArr,
-        tableData: dataList,
-      })
-    }
-  }
-
   dealData = (title = [], data, height = COL_HEIGHT) => {
-    let titleList = title, dataList = data, colHeight = [], widthArr = []
+    let titleList = title, dataList = data, colHeight = []
+
     if (data instanceof Object) {
       titleList = []
       dataList = []
-      // Object.keys(data).forEach((key, index) => {
-      //   titleList.push(key)
-      //   dataList.push([
-      //     // key,
-      //     data[key].fieldInfo.caption,
-      //     {
-      //       index: 1,
-      //       key: key,
-      //       data: data[key],
-      //       type: dataUtil.getType(data[key].value),
-      //     },
-      //   ])
-      //   colHeight.push(height)
-      // })
-
-      for(let i = 0; i < data.length; i++) {
-        let arr = [], rowData = {}
-        if (this.props.hasIndex) {
-          arr.push(i + 1) // 序号
-          i === 0 && widthArr.push(100)
-        }
-        let item = data[i]
-        if (item instanceof Array) {
-          for(let j = 0; j < item.length; j++) {
-            // arr.push(item[j].name)
-            arr.push(item[j].value)
-            i === 0 && widthArr.push(100)
-          }
-          // titleList.push(item.name)
-          rowData = {
-            index: i,
-            arr: arr,
-            data: item,
-          }
-          dataList.push(rowData)
-        } else {
-          dataList.push([
-            // key,
-            item.name,
-            {
-              index: 1,
-              key: item.name,
-              data: item,
-              type: dataUtil.getType(item.value),
-            },
-          ])
-          titleList.push(item.name)
-          // colHeight.push(height)
-          // rowData = {
-          //   index: i,
-          //   arr: arr,
-          //   data: item,
-          // }
-        }
-
-
+      Object.keys(data).forEach((key, index) => {
+        titleList.push(key)
+        dataList.push([
+          // key,
+          data[key].fieldInfo.caption,
+          {
+            index: 1,
+            key: key,
+            data: data[key],
+            type: dataUtil.getType(data[key].value),
+          },
+        ])
         colHeight.push(height)
-      }
-      return {titleList, dataList, colHeight, widthArr}
+      })
+      return {titleList, dataList, colHeight}
     }
 
     for (let i = 0; i < dataList.length; i++) {
@@ -214,7 +152,7 @@ export default class LayerAttributeTable extends React.Component {
       this.setState({
         currentSelect: index,
       })
-      this.props.selectRow && this.props.selectRow(data, index)
+      this.props.selectRow && this.props.selectRow(data)
     }
   }
 
@@ -285,7 +223,7 @@ export default class LayerAttributeTable extends React.Component {
                   <TableWrapper key={index} style={styles.row}>
                     {
                       rowData.map((cellData, cellIndex) => {
-                        let isSystemField = cellIndex !== 0 && cellData.key.toLowerCase().indexOf('sm') === 0
+                        let isSystemField = cellData.data && cellData.data.fieldInfo && cellData.data.fieldInfo.isSystemField
                         return (
                           <Cell
                             key={cellIndex}
@@ -328,10 +266,8 @@ export default class LayerAttributeTable extends React.Component {
             <Table borderStyle={{ borderColor: '#C1C0B9' }}>
               {
                 this.state.tableData.map((rowData, index) => {
-                  // let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
-                  let data = rowData.data
-                  let arr = rowData.arr
-                  // let arr = this.dealEditCellData(data, index)
+                  let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
+                  let arr = this.dealEditCellData(data, index)
                   return (
                     <TouchableOpacity activeOpacity={0.8} key={index} onPress={() => this.selectRow(index, data)}>
                       <TableWrapper
@@ -343,6 +279,36 @@ export default class LayerAttributeTable extends React.Component {
                         ]}>
                         {
                           arr.map((cellData, cellIndex) => {
+                            if (cellIndex === 3) {
+                              let type = ''
+
+                              switch (cellData) {
+                                case FieldType.WTEXT:
+                                case FieldType.CHAR:
+                                case FieldType.TEXT:
+                                  type = '文本'
+                                  break
+                                case FieldType.BYTE:
+                                case FieldType.INT16:
+                                case FieldType.INT32:
+                                case FieldType.INT64:
+                                case FieldType.LONGBINARY:
+                                case FieldType.SINGLE:
+                                case FieldType.DOUBLE:
+                                  type = '数值'
+                                  break
+                                case FieldType.BOOLEAN:
+                                  type = '布尔'
+                                  break
+                                case FieldType.DATETIME:
+                                  type = '日期'
+                                  break
+                                default:
+                                  type = '未知属性'
+                                  break
+                              }
+                              cellData = type
+                            }
                             return (
                               <Cell
                                 width={this.state.widthArr[cellIndex]}
@@ -370,11 +336,9 @@ export default class LayerAttributeTable extends React.Component {
         <View style={styles.container}>
 
           {
-            this.state.widthArr.length > 0 ?
-              this.props.type === 'EDIT_ATTRIBUTE'
-                ? this.renderScrollTable()
-                : this.renderNormalTable()
-              : <View style={{flex: 1}} />
+            this.props.type === 'EDIT_ATTRIBUTE'
+              ? this.renderScrollTable()
+              : this.renderNormalTable()
           }
           {/*{this.renderScrollTable()}*/}
           {/*{this.renderNormalTable()}*/}

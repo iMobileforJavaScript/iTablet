@@ -51,12 +51,18 @@ export default class MatchColor extends React.Component {
         let fieldInfos = await datasetVector.getFieldInfos()
 
         let data = []
-        Object.keys(fieldInfos).map(key => {
+        fieldInfos.forEach(obj => {
           data.push({
-            key: key,
-            data: fieldInfos[key],
+            key: obj.name,
+            data: obj,
           })
         })
+        // Object.keys(fieldInfos).map(key => {
+        //   data.push({
+        //     key: key,
+        //     data: fieldInfos[key],
+        //   })
+        // })
         this.setState({
           data: data,
         })
