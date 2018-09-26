@@ -80,7 +80,9 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     marginTop:scaleSize(15),
-    height:scaleSize(330),
+    // height:scaleSize(330),
+    padding: scaleSize(5),
+    minHeight:scaleSize(330),
     backgroundColor: '#FFFFFF',
   },
   listView: {

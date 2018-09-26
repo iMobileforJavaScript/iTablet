@@ -64,7 +64,7 @@ export default class ExampleMapList extends React.Component {
 
 
   _itemClick = async key => {
-    let path, exist, filePath, outPath, fileName, openPath, zipexist
+    let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
@@ -72,7 +72,6 @@ export default class ExampleMapList extends React.Component {
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         fileName = "hotMap"
         exist = await Utility.fileIsExistInHomeDirectory(path)
-        zipexist = await Utility.fileIsExistInHomeDirectory(filePath)
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
@@ -87,7 +86,8 @@ export default class ExampleMapList extends React.Component {
         fileName = "CBD"
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
           this.alertDown(filePath, fileName, outPath, map3D)
         }

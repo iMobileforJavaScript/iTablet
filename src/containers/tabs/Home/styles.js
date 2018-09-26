@@ -24,7 +24,7 @@ export default StyleSheet.create({
   },
   btnbarhome:{
     width:SCREEN_WIDTH,
-    height:scaleSize(12),
+    height:scaleSize(10),
     backgroundColor:"#f3f3f3",
     borderBottomWidth:scaleSize(1),
     borderColor:"#E8E8E8",
@@ -36,7 +36,7 @@ export default StyleSheet.create({
     alignItems:'center',
     justifyContent: 'center',
     borderColor:"#E8E8E8",
-    borderTopWidth:scaleSize(2),
+    borderTopWidth:scaleSize(10),
   },
   mapbtn:{
     width:SCREEN_WIDTH *0.5-scaleSize(1),
