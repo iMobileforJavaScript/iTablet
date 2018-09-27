@@ -43,6 +43,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     showSetting: PropTypes.func,
     chooseLayer: PropTypes.func,
     setLoading: PropTypes.func,
+    columns: PropTypes.number,
   }
 
   // static Type = {
@@ -344,6 +345,10 @@ export default class NetworkAnalystToolBar extends React.Component {
       }})
   }
 
+  setGridListProps = props => {
+    this.popBSL && this.popBSL.setGridListProps(props)
+  }
+
   renderSubRight = () => {
     return (
       <MTBtn
@@ -372,24 +377,14 @@ export default class NetworkAnalystToolBar extends React.Component {
         currentOperation={this.state.currentOperation}
         currentIndex={this.state.currentIndex}
         lastIndex={this.state.lastIndex}
+        columns={this.props.columns}
       />
     )
   }
 }
 
-// NetworkAnalystToolBar.Type = {
-//   Const.NETWORK_ROUTE: Const.NETWORK_ROUTE,
-//   Const.NETWORK_TSP: Const.NETWORK_TSP,
-//   Const.NETWORK_FACILITY: Const.NETWORK_FACILITY,
-//   Const.NETWORK_TRACKING: Const.NETWORK_TRACKING,
-// }
-
 const styles = StyleSheet.create({
   pop: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
     backgroundColor: 'white',
   },
 })

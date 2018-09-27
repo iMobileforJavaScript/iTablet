@@ -21,10 +21,6 @@ const BORDERCOLOR = constUtil.USUAL_SEPARATORCOLOR
 // const ANALYST = 'analyst'
 // const TOOLS = 'tools'
 
-let show = false
-let oldPress = null
-let type = ''
-
 export const MAP_LOCAL = 'MAP_LOCAL'
 export const MAP_3D = 'MAP_3D'
 
@@ -54,6 +50,10 @@ export default class MT_BtnList extends React.Component {
   constructor(props) {
     super(props)
 
+    this.show = false
+    this.oldPress = null
+    this.type = ''
+
     this.state = {
       data: props.type === MAP_LOCAL
         ? [
@@ -71,19 +71,19 @@ export default class MT_BtnList extends React.Component {
 
   _showManager = newPress => {
     GLOBAL.toolType = newPress
-    if (oldPress && (oldPress === newPress)) {
-      show = !show
+    if (this.oldPress && (this.oldPress === newPress)) {
+      this.show = !this.show
     } else if (
       (newPress === Const.ADD_LAYER || newPress === Const.MAP_MANAGER || newPress === Const.DATA_MANAGER)
-      && show
+      && this.show
     ) {
-      show = false
-      type = newPress
-      oldPress = newPress
+      this.show = false
+      this.type = newPress
+      this.oldPress = newPress
     } else {
-      show = true
-      type = newPress
-      oldPress = newPress
+      this.show = true
+      this.type = newPress
+      this.oldPress = newPress
     }
   }
 
@@ -118,9 +118,9 @@ export default class MT_BtnList extends React.Component {
     await this.setLayerEditable(false)
     this._showManager(Const.COLLECTION)
     if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
-      this.props.POP_List && this.props.POP_List(show, type)
+      this.props.POP_List && this.props.POP_List(this.show, this.type)
       let name = this.props.editLayer ? this.props.editLayer.name : ''
-      show && name && Toast.show('当前采集图层为\n' + name)
+      this.show && name && Toast.show('当前采集图层为\n' + name)
     } else {
       this.props.POP_List && this.props.POP_List(false, null)
       this.props.chooseLayer && this.props.chooseLayer({
@@ -129,18 +129,31 @@ export default class MT_BtnList extends React.Component {
         title: '选择采集图层',
       }, isShow => { // 传 -1 查询所有类型的图层
         if (this.props.POP_List) {
-          this.props.POP_List(isShow, type)
+          this.props.POP_List(isShow, this.type)
         }
       })
     }
   }
 
   _dataEdit = async () => {
-    let name = this.props.editLayer.name ? this.props.editLayer.name : ''
     await this.setLayerEditable(true)
     this._showManager(Const.DATA_EDIT)
-    show && name && Toast.show('当前可编辑的图层为\n' + name)
-    this.props.POP_List && this.props.POP_List(show, type)
+    if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
+      let name = this.props.editLayer.name ? this.props.editLayer.name : ''
+      this.show && name && Toast.show('当前可编辑的图层为\n' + name)
+      this.props.POP_List && this.props.POP_List(this.show, this.type)
+    } else {
+      this.props.POP_List && this.props.POP_List(false, null)
+      this.props.chooseLayer && this.props.chooseLayer({
+        type: -1,
+        isEdit: true,
+        title: '选择编辑图层',
+      }, isShow => { // 传 -1 查询所有类型的图层
+        if (this.props.POP_List) {
+          this.props.POP_List(isShow, this.type)
+        }
+      })
+    }
   }
 
   _layerManager = async () => {
@@ -159,12 +172,12 @@ export default class MT_BtnList extends React.Component {
   _analyst = async () => {
     await this.setLayerEditable(false)
     this._showManager(Const.ANALYST)
-    this.props.POP_List && this.props.POP_List(show, type)
+    this.props.POP_List && this.props.POP_List(this.show, this.type)
   }
 
   _tools = () => {
     this._showManager(Const.TOOLS)
-    this.props.POP_List && this.props.POP_List(show, type)
+    this.props.POP_List && this.props.POP_List(this.show, this.type)
   }
 
   _renderItem = ({ item }) => {
