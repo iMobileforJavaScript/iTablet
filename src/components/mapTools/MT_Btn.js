@@ -67,6 +67,10 @@ export default class MT_Btn extends React.Component {
     })
   }
 
+  setNativeProps = props => {
+    this.mtBtn && this.mtBtn.setNativeProps(props)
+  }
+
   render() {
     let imageStyle, textStyle
 
@@ -96,6 +100,7 @@ export default class MT_Btn extends React.Component {
 
     return (
       <TouchableOpacity
+        ref={ref => this.mtBtn = ref}
         accessible={true}
         activeOpacity={this.props.activeOpacity}
         accessibilityLabel={this.props.BtnText}
@@ -169,17 +174,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: scaleSize(100),
     textAlign: 'center',
+    marginTop: scaleSize(5),
   },
   normalText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     width: scaleSize(100),
     textAlign: 'center',
+    marginTop: scaleSize(5),
   },
   smallText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     width: scaleSize(100),
     textAlign: 'center',
+    marginTop: scaleSize(5),
   },
 })

@@ -59,6 +59,7 @@ export default class CollectionToolBar extends React.Component {
     POP_List: PropTypes.func,
     setLoading: PropTypes.func,
     setSelection: PropTypes.func,
+    columns: PropTypes.number,
   }
 
   constructor(props) {
@@ -750,14 +751,18 @@ export default class CollectionToolBar extends React.Component {
     })
   }
 
+  setGridListProps = props => {
+    this.popBSL && this.popBSL.setGridListProps(props)
+  }
+
   render() {
     let data = this.getData(this.props.editLayer && this.props.editLayer.type >= 0 ? this.props.editLayer.type : DatasetType.POINT)
     let { currentOperation, currentIndex, lastIndex } = this.checkCurrentOperation(data, this.state.currentOperation)
     return (
       <View style={styles.popView}>
-        <MTBtn
-          style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}
-          image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer}/>
+        {/*<MTBtn*/}
+        {/*style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}*/}
+        {/*image={require('../../../../assets/map/icon-layer-change.png')} BtnClick={this._changeLayer}/>*/}
         <PopBtnSectionList
           ref={ref => this.popBSL = ref}
           popType={this.state.popType}
@@ -772,6 +777,7 @@ export default class CollectionToolBar extends React.Component {
           currentOperation={currentOperation}
           currentIndex={currentIndex}
           lastIndex={lastIndex}
+          columns={this.props.columns}
         />
       </View>
     )
@@ -805,11 +811,11 @@ CollectionToolBar.OperationType = {
 
 const styles = StyleSheet.create({
   popView: {
-    position: 'absolute',
-    flexDirection: 'column',
-    left: 0,
-    right: 0,
-    bottom: scaleSize(100),
+    // position: 'absolute',
+    // flexDirection: 'column',
+    // left: 0,
+    // right: 0,
+    // bottom: scaleSize(100),
     backgroundColor: 'transparent',
   },
   pop: {

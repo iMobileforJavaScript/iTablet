@@ -37,6 +37,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     borderColor:"#E8E8E8",
     borderTopWidth:scaleSize(10),
+    paddingVertical: scaleSize(10),
   },
   mapbtn:{
     width:SCREEN_WIDTH *0.5-scaleSize(1),
@@ -70,6 +71,7 @@ export default StyleSheet.create({
   },
   selectlist:{
     width:SCREEN_WIDTH,
+    paddingVertical: scaleSize(10),
     // height:scaleSize(50),
     // backgroundColor:"blue",
   },

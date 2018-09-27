@@ -63,5 +63,6 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: 'white',
     alignSelf: 'center',
+    paddingVertical: scaleSize(10),
   },
 })

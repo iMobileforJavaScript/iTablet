@@ -50,6 +50,7 @@ export default class PopList extends React.Component {
     measureLine:PropTypes.func,
     measureSquare: PropTypes.func,
     measurePause: PropTypes.func,
+    columns: PropTypes.number,
   }
 
   constructor(props) {
@@ -358,6 +359,40 @@ export default class PopList extends React.Component {
     this.props.showMeasure && this.props.showMeasure()
   }
 
+  /**  距离量算  **/
+  measureLine = ({ callback = () => { } }) => {
+    this.operationCallback = callback
+    if (callback && callback()) {
+      this.props.measureLine && this.props.measureLine()
+    } else {
+      this.props.measurePause && this.props.measurePause(false)
+      this.select()
+    }
+  }
+
+  /**  面积量算  **/
+  measureSquare = ({ callback = () => { } }) => {
+    // this.props.measureSquare && this.props.measureSquare()
+    this.operationCallback = callback
+    if (callback && callback()) {
+      this.props.measureSquare && this.props.measureSquare()
+    } else {
+      this.props.measurePause && this.props.measurePause(false)
+      this.select()
+    }
+  }
+
+  /**  删除  **/
+  measurePause = ({ callback = () => { } }) => {
+    // this.props.measurePause && this.props.measurePause()
+    this.operationCallback = callback
+    if (callback && callback()) {
+      this.props.measurePause && this.props.measurePause()
+    } else {
+      this.select()
+    }
+  }
+
   /** 切换图层 **/
   _changeLayer = type => {
     this.props.chooseLayer && this.props.chooseLayer({
@@ -431,7 +466,7 @@ export default class PopList extends React.Component {
     })
   }
 
-  _tools=async cbData=>{
+  _tools = async cbData => {
     this.showMeasure()
     this.cbData = cbData
     this.cbData.callback && this.cbData.callback(true)
@@ -687,9 +722,9 @@ export default class PopList extends React.Component {
             key: '量算',
             action: cbData=>this._tools(cbData,"tools"),
             operations: [
-              { key: constants.DISTANCECALCULATE, title:constants.DISTANCECALCULATE, size: 'large', action: this.props.measureLine, image: require('../../../../assets/mapTools/icon_distance.png'), selectedImage: require('../../../../assets/mapTools/icon_distance_selected.png'), textStyle:textstyles1 },
-              { key: constants.ACREAGECALCULATE, title:constants.ACREAGECALCULATE, size: 'large', action: this.props.measureSquare, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png'), textStyle:textstyles1 },
-              { key: constants.DELETE, title:constants.DELETE, size: 'large', action: this.props.measurePause, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash', textStyle:textstyles1},
+              { key: constants.DISTANCECALCULATE, title:constants.DISTANCECALCULATE, size: 'large', action: this.measureLine, image: require('../../../../assets/mapTools/icon_distance.png'), selectedImage: require('../../../../assets/mapTools/icon_distance_selected.png') },
+              { key: constants.ACREAGECALCULATE, title:constants.ACREAGECALCULATE, size: 'large', action: this.measureSquare, image: require('../../../../assets/mapTools/icon_acreage.png'), selectedImage: require('../../../../assets/mapTools/icon_acreage_selected.png') },
+              { key: constants.DELETE, title:constants.DELETE, size: 'large', action: this.measurePause, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
             ],
           }]
         break
@@ -733,6 +768,16 @@ export default class PopList extends React.Component {
     })
   }
 
+  setGridListProps = props => {
+    if (this.popList) {
+      this.popList.setGridListProps(props)
+    } else if (this.collectionBar) {
+      this.collectionBar.setGridListProps(props)
+    } else if (this.networkBar) {
+      this.networkBar.setGridListProps(props)
+    }
+  }
+
   render() {
     let currentData = {}
     if (this.props.popType === Const.DATA_EDIT) {
@@ -740,6 +785,7 @@ export default class PopList extends React.Component {
     } else if (this.props.popType === Const.COLLECTION) {
       return (
         <CollectionToolBar
+          ref={ref => this.collectionBar = ref}
           popType={this.state.networkType}
           editLayer={this.props.editLayer}
           selection={this.props.selection}
@@ -753,12 +799,14 @@ export default class PopList extends React.Component {
           POP_List={this.props.POP_List}
           setLoading={this.props.setLoading}
           setSelection={this.props.setSelection}
+          columns={this.props.columns}
         />
       )
     }
     if (this.state.toolbar === 'network' && this.props.popType === Const.ANALYST) {
       return (
         <NetworkAnalystToolBar
+          ref={ref => this.networkBar = ref}
           popType={this.state.networkType}
           editLayer={this.props.editLayer}
           selection={this.props.selection}
@@ -770,50 +818,52 @@ export default class PopList extends React.Component {
           showSetting={this.props.showSetting}
           chooseLayer={this.props.chooseLayer}
           setLoading={this.props.setLoading}
+          columns={this.props.columns}
         />
       )
     } else {
-      // return (
-      //   <PopBtnSectionList
-      //     ref={ref => this.popList = ref}
-      //     popType={this.props.popType}
-      //     style={styles.pop}
-      //     subPopShow={this.state.subPopShow}
-      //     data={this.state.data}
-      //     currentData={currentData}
-      //     operationAction={this._btn_click_manager}
-      //     currentOperation={this.state.currentOperation}
-      //     currentIndex={this.state.currentIndex}
-      //     lastIndex={this.state.lastIndex}
-      //   />
-      // )
       return (
-        <View style={styles.popView}>
-          {/*{*/}
-          {/*this.props.popType === Const.DATA_EDIT &&*/}
-          {/*<MTBtn*/}
-          {/*style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}*/}
-          {/*image={require('../../../../assets/map/icon-layer-change.png')}*/}
-          {/*BtnClick={() => this._changeLayer(Const.DATA_EDIT)}*/}
-          {/*/>*/}
-          {/*}*/}
-          <PopBtnSectionList
-            ref={ref => this.popList = ref}
-            popType={this.props.popType}
-            style={styles.pop}
-            separatorWidth={15}
-            subPopShow={this.state.subPopShow}
-            data={this.state.data}
-            currentData={currentData}
-            operationAction={this._btn_click_manager}
-            currentOperation={this.state.currentOperation}
-            currentIndex={this.state.currentIndex}
-            lastIndex={this.state.lastIndex}
-            currentSubKey={this.state.currentSubKey}
-            lastSubKey={this.state.lastSubKey}
-          />
-        </View>
+        <PopBtnSectionList
+          ref={ref => this.popList = ref}
+          popType={this.props.popType}
+          style={styles.pop}
+          subPopShow={this.state.subPopShow}
+          data={this.state.data}
+          currentData={currentData}
+          columns={this.props.columns}
+          operationAction={this._btn_click_manager}
+          currentOperation={this.state.currentOperation}
+          currentIndex={this.state.currentIndex}
+          lastIndex={this.state.lastIndex}
+        />
       )
+      // return (
+      //   <View style={styles.popView}>
+      //     {/*{*/}
+      //     {/*this.props.popType === Const.DATA_EDIT &&*/}
+      //     {/*<MTBtn*/}
+      //     {/*style={styles.changeLayerBtn} imageStyle={styles.changeLayerImage}*/}
+      //     {/*image={require('../../../../assets/map/icon-layer-change.png')}*/}
+      //     {/*BtnClick={() => this._changeLayer(Const.DATA_EDIT)}*/}
+      //     {/*/>*/}
+      //     {/*}*/}
+      //     <PopBtnSectionList
+      //       ref={ref => this.popList = ref}
+      //       popType={this.props.popType}
+      //       style={styles.pop}
+      //       separatorWidth={15}
+      //       subPopShow={this.state.subPopShow}
+      //       data={this.state.data}
+      //       currentData={currentData}
+      //       operationAction={this._btn_click_manager}
+      //       currentOperation={this.state.currentOperation}
+      //       currentIndex={this.state.currentIndex}
+      //       lastIndex={this.state.lastIndex}
+      //       currentSubKey={this.state.currentSubKey}
+      //       lastSubKey={this.state.lastSubKey}
+      //     />
+      //   </View>
+      // )
     }
   }
 }
@@ -824,7 +874,9 @@ const styles = StyleSheet.create({
     // left: 0,
     // bottom: 0.75 * 1.4 * 0.1 * constUtil.WIDTH + 5,
     // paddingVertical: scaleSize(30),
-    backgroundColor: 'white',
+    backgroundColor: 'transparent',
+    // marginVertical: 0,
+
   },
   popView: {
     position: 'absolute',

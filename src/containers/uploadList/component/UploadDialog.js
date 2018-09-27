@@ -11,6 +11,7 @@ export default class UploadDialog extends PureComponent {
   props: {
     confirmAction: any,
     data: any,
+    cancelAction: any,
   }
   constructor(props) {
     super(props)
@@ -21,11 +22,12 @@ export default class UploadDialog extends PureComponent {
   setDialogVisible(visible) {
     this.dialog && this.dialog.setDialogVisible(visible)
   }
+
   cancel = () => {
     this.props.cancelAction && this.props.cancelAction()
   }
+
   upload = async () => {
-    debugger
     try {
       let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName
       let exist = await Utility.fileIsExistInHomeDirectory(toPath)
