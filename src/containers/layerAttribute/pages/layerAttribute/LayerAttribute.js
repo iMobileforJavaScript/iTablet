@@ -7,9 +7,10 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, Button } from '../../../../components'
+import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
+import { CursorType } from 'imobile_for_javascript'
 
 import styles from './styles'
 
@@ -27,26 +28,29 @@ export default class LayerAttribute extends React.Component {
     this.state = {
       dataSourceList: [],
       openList: {},
-      recordset: params.recordset,
+      dataset: params.dataset,
       attribute: {},
       tableTitle: [],
       // tableHead: ['名称', '属性值'],
       tableHead: [],
       tableData: [],
     }
+
+    this.currentFieldInfo = []
+    this.currentFieldIndex = -1
   }
 
   componentDidMount() {
     this.getDatasets()
   }
 
-  componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
-      this.setState({
-        attribute: this.props.currentAttribute,
-      })
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
+  //     this.setState({
+  //       attribute: this.props.currentAttribute,
+  //     })
+  //   }
+  // }
 
   componentWillUnmount() {
     this.props.setCurrentAttribute({})
@@ -56,19 +60,23 @@ export default class LayerAttribute extends React.Component {
     this.container.setLoading(true)
     ;(async function () {
       try {
-        let recordset = this.state.recordset
+        let recordset = await (await this.state.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
+
+        // let recordset = this.state.recordset
         let records = await recordset.getFieldInfosArray()
         let attribute = []
         if (records && records.length > 0) {
           attribute = records[0]
           this.props.setCurrentAttribute(attribute)
-          // let tableHead = Object.keys(records[0])
-          this.setState({
-            attribute: attribute,
-            // tableHead: tableHead,
+          let tableHead = []
+          records[0].forEach(item => {
+            tableHead.push(item.fieldInfo.caption)
           })
-
-          this.table.setData(attribute, true)
+          this.setState({
+            attribute: records,
+            // attribute: attribute,
+            tableHead: tableHead,
+          })
         }
         this.container.setLoading(false)
       } catch (e) {
@@ -77,83 +85,58 @@ export default class LayerAttribute extends React.Component {
     }).bind(this)()
   }
 
-  confirm = () => {
-    this.container.setLoading(true, '数据编辑中')
-    ;(async function() {
-      let modifiedData = this.table.getModifiedData()
-      let obj = {}
-      let keys = Object.keys(modifiedData)
-      keys.forEach(key => {
-        obj[key] =  modifiedData[key].data.value
-      })
-      let recordset = this.state.recordset
-      let { result, editResult, updateResult } = await recordset.setFieldValuesByNames(obj)
-
-      this.container.setLoading(false)
-
-      if (!result) {
-        Toast.show("尚未更改属性")
-      } else if (!editResult) {
-        Toast.show("编辑失败")
-      } else if (!updateResult) {
-        Toast.show("更新失败")
-      } else{
-        Toast.show("编辑成功")
-      }
-    }.bind(this)())
-  }
-
   add = () => {
     Toast.show("待做")
   }
 
-  edit = async () => {
-    let dataset = await this.state.recordset.getDataset()
-    NavigationService.navigate('LayerAttributeEdit', {dataset: dataset, callBack: this.getDatasets})
+  edit = () => {
+    if (this.currentFieldInfo.length > 0) {
+      let smID = -1
+      for (let i = 0; i < this.currentFieldInfo.length; i++) {
+        if (this.currentFieldInfo[i].name === 'SMID') {
+          smID = this.currentFieldInfo[i].value
+          break
+        }
+      }
+      smID >= 0 && NavigationService.navigate('LayerAttributeObj', {dataset: this.state.dataset, filter: 'SmID=' + smID, index: this.currentFieldIndex, callBack: this.getDatasets})
+    } else {
+      Toast.show('请选择一个属性')
+    }
   }
 
-  reset = () => {
-    this.table && this.table.reset(this.props.currentAttribute)
-  }
-
-  renderBtns = () => {
-    return (
-      <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
-      </View>
-    )
+  selectRow = (data, index) => {
+    if (!data || index < 0) return
+    this.currentFieldInfo = data
+    this.currentFieldIndex = index
   }
 
   render() {
     return (
       <Container
         ref={ref => this.container = ref}
-        // initWithLoading
         headerProps={{
-          title: '对象属性',
+          title: '属性表',
           navigation: this.props.navigation,
         }}>
         <LayerAttributeTab
-          add={this.add}
           edit={this.edit}
+          btns={['edit']}
           startAudio={() => {
             GLOBAL.AudioBottomDialog.setVisible(true)
           }}
         />
         {
-          // this.state.tableHead.length > 0 &&
-          <LayerAttributeTable
-            ref={ref => this.table = ref}
-            data={this.state.attribute}
-            // tableData={this.state.tableData}
-            tableTitle={this.state.tableTitle}
-            // colHeight={this.state.colHeight}
-            tableHead={['名称', '属性值']}
-            // tableHead={this.state.tableHead}
-          />
+          this.state.tableHead.length > 0
+            ? <LayerAttributeTable
+              ref={ref => this.table = ref}
+              data={this.state.attribute}
+              type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
+              tableTitle={this.state.tableTitle}
+              tableHead={this.state.tableHead}
+              selectRow={this.selectRow}
+            />
+            : <View style={{flex: 1}} />
         }
-        {this.renderBtns()}
       </Container>
     )
   }

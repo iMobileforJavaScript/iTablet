@@ -207,6 +207,16 @@ export default class PopList extends React.Component {
     this.props.showRemoveObjectDialog && this.props.showRemoveObjectDialog()
   }
 
+  /** 平移 **/
+  move = async ({ callback = () => { } }) => {
+    this.operationCallback = callback
+    if (callback && callback()) {
+      await this.props.mapControl.setAction(Action.MOVE_GEOMETRY)
+    } else {
+      await this.select()
+    }
+  }
+
   /** 打断 **/
   break = async ({ callback = () => { } }) => {
     // TODO 打断
@@ -319,22 +329,21 @@ export default class PopList extends React.Component {
   attribute = ({ callback = () => { } }) => {
     (async function () {
       callback && callback(true)
-      // await this.select()
-      // this.selectSubOperation()
       // TODO selection 转化为 redux中的 selection
+      if (this.props.selection.layerId !== this.props.editLayer.id) {
+        Toast.show('请选择可编辑图层中的对象')
+        return
+      }
       let selection = await this.props.editLayer.layer.getSelection()
       let count = await selection.getCount()
       if (count > 0) {
-        // NavigationService.navigate('LayerAttribute',{ selection: selection })
-        // NavigationService.navigate('LayerAttribute',{ recordset: selection.recordset })
         let recordset = await selection.toRecordset()
-        NavigationService.navigate('LayerAttribute', { recordset: recordset })
+        let dataset = await recordset.getDataset()
+        NavigationService.navigate('LayerAttributeObj', { dataset, recordset, filter: 'SmID=' + this.props.selection.id })
       } else {
         Toast.show('请选择目标')
       }
     }.bind(this)())
-    // NavigationService.navigate('LayerAttribute', { selection: '' })
-    // Toast.show('正在加紧制作ing...')
   }
 
   /**  执行  **/
@@ -544,10 +553,13 @@ export default class PopList extends React.Component {
             action: cbData => { this._chooseLayer(cbData, DatasetType.POINT) },
             operations: [
               // { key: '选择', action: this.select },
+              { key: constants.SUBMIT, title:constants.SUBMIT, action: this.submit, size: 'large', image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
+              { key: constants.ATTRIBUTE, title:constants.ATTRIBUTE, action: this.attribute, size: 'large', image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
+              { key: constants.DELETE, title:constants.DELETE, action: this.delete, size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
               { key: constants.UNDO, title:constants.UNDO,action: this._undo, size: 'large', image: require('../../../../assets/mapTools/icon_undo.png'), selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
               // { key: constants.REDO, action: this._redo },
-              { key: constants.DELETE,title:constants.DELETE, action: this.delete, size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
-              { key: constants.ATTRIBUTE,title:constants.ATTRIBUTE, action: this.attribute, size: 'large', image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' }],
+              { key: constants.MOVE, title:constants.MOVE, action: this.move, size: 'large', image: require('../../../../assets/mapTools/icon_move.png'), selectedImage: require('../../../../assets/mapTools/icon_move_selected.png') },
+            ],
           },
           {
             key: '线编辑',
@@ -556,14 +568,16 @@ export default class PopList extends React.Component {
             operations: [
               // { key: '选择', action: this.select },
               { key: constants.SUBMIT, title:constants.SUBMIT, action: this.submit, size: 'large', image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
+              { key: constants.ATTRIBUTE,title:constants.ATTRIBUTE ,action: this.attribute, size: 'large', image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
+              { key: constants.MOVE, title:constants.MOVE, action: this.move, size: 'large', image: require('../../../../assets/mapTools/icon_move.png'), selectedImage: require('../../../../assets/mapTools/icon_move_selected.png') },
               { key: constants.DELETE, title:constants.DELETE, action: this.delete, size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
               { key: constants.UNDO, title:constants.UNDO, action: this._undo, size: 'large', image: require('../../../../assets/mapTools/icon_undo.png'), selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
               { key: constants.REDO, title:constants.REDO, action: this._redo, size: 'large', image: require('../../../../assets/mapTools/icon_redo.png'), selectedImage: require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
-              { key: constants.ADD_NODE, title:constants.ADD_NODE, action: this.addNode, size: 'large', image: require('../../../../assets/mapTools/icon_add_node.png'), selectedImage: require('../../../../assets/mapTools/icon_add_node_seleted.png'),textStyle:textstyles1 },
-              { key: constants.DELETE_NODE, title:constants.DELETE_NODE, action: this.deleteNode, size: 'large', image: require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_node_selected.png'), textStyle:textstyles1},
               { key: constants.EDIT_NODE, title:constants.EDIT_NODE, action: this.editNode, size: 'large', image: require('../../../../assets/mapTools/icon_edit_node.png'), selectedImage: require('../../../../assets/mapTools/icon_edit_node_selected.png'), textStyle:textstyles1},
+              { key: constants.DELETE_NODE, title:constants.DELETE_NODE, action: this.deleteNode, size: 'large', image: require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_node_selected.png'), textStyle:textstyles1},
+              { key: constants.ADD_NODE, title:constants.ADD_NODE, action: this.addNode, size: 'large', image: require('../../../../assets/mapTools/icon_add_node.png'), selectedImage: require('../../../../assets/mapTools/icon_add_node_seleted.png'),textStyle:textstyles1 },
               // { key: constants.BREAK, action: this.break },
-              { key: constants.ATTRIBUTE,title:constants.ATTRIBUTE ,action: this.attribute, size: 'large', image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' }],
+            ],
           },
           {
             key: '面编辑',
@@ -572,21 +586,22 @@ export default class PopList extends React.Component {
             operations: [
               // { key: '选择', action: this.select },
               { key: constants.SUBMIT, title:constants.SUBMIT, size: 'large', action: this.submit, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), selectMode: 'flash' },
+              { key: constants.ATTRIBUTE, title:constants.ATTRIBUTE, size: 'large', action: this.attribute, image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
+              { key: constants.MOVE, title:constants.MOVE, action: this.move, size: 'large', image: require('../../../../assets/mapTools/icon_move.png'), selectedImage: require('../../../../assets/mapTools/icon_move_selected.png') },
               { key: constants.DELETE, title:constants.DELETE, size: 'large', action: this.delete, image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
               { key: constants.UNDO, title:constants.UNDO, size: 'large', action: this._undo, image: require('../../../../assets/mapTools/icon_undo.png'), selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'), selectMode: 'flash' },
               { key: constants.REDO, title:constants.REDO, size: 'large', action: this._redo, image: require('../../../../assets/mapTools/icon_redo.png'), selectedImage: require('../../../../assets/mapTools/icon_redo_selected.png'), selectMode: 'flash' },
-              { key: constants.ADD_NODE, title:constants.ADD_NODE, size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_add_node.png'), selectedImage: require('../../../../assets/mapTools/icon_add_node_seleted.png'), textStyle:textstyles1 },
-              { key: constants.DELETE_NODE, title:constants.DELETE_NODE, size: 'large', action: this.deleteNode, image: require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_node_selected.png'), textStyle:textstyles1},
               { key: constants.EDIT_NODE, title:constants.EDIT_NODE, size: 'large', action: this.editNode, image: require('../../../../assets/mapTools/icon_edit_node.png'), selectedImage: require('../../../../assets/mapTools/icon_edit_node_selected.png'), textStyle:textstyles1},
+              { key: constants.DELETE_NODE, title:constants.DELETE_NODE, size: 'large', action: this.deleteNode, image: require('../../../../assets/mapTools/icon_delete_node.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_node_selected.png'), textStyle:textstyles1},
+              { key: constants.ADD_NODE, title:constants.ADD_NODE, size: 'large', action: this.addNode, image: require('../../../../assets/mapTools/icon_add_node.png'), selectedImage: require('../../../../assets/mapTools/icon_add_node_seleted.png'), textStyle:textstyles1 },
+              { key: constants.ERASE_REGION, title:constants.ERASE_REGION, size: 'large', action: this.eraseRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
               { key: constants.SPLIT_REGION, title:constants.SPLIT_REGION, size: 'large', action: this.splitRegion, image: require('../../../../assets/mapTools/icon_cut.png'), selectedImage: require('../../../../assets/mapTools/icon_cut_selected.png') },
               { key: constants.MERGE, title:constants.MERGE, size: 'large', action: this.merge, image: require('../../../../assets/mapTools/icon_merge.png'), selectedImage: require('../../../../assets/mapTools/icon_merge_selected.png') },
-              { key: constants.ERASE_REGION, title:constants.ERASE_REGION, size: 'large', action: this.eraseRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png') },
+              // { key: constants.DRAW_HOLLOW_REGION, title:constants.DRAW_HOLLOW_REGION, size: 'large', action: this.drawHollowRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), textStyle:textstyles1 },
               { key: constants.DRAWREGION_ERASE_REGION, title:constants.DRAWREGION_ERASE_REGION, size: 'large', action: this.drawRegionEraseRegion, image: require('../../../../assets/mapTools/icon_erasure.png'), selectedImage: require('../../../../assets/mapTools/icon_erasure_selected.png'), textStyle:textstyles1},
-              { key: constants.DRAW_HOLLOW_REGION, title:constants.DRAW_HOLLOW_REGION, size: 'large', action: this.drawHollowRegion, image: require('../../../../assets/mapTools/icon_submit.png'), selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'), textStyle:textstyles1 },
               { key: constants.DRAWREGION_HOLLOW_REGION, title:constants.DRAWREGION_HOLLOW_REGION, size: 'large', action: this.drawRegionHollowRegion, image: require('../../../../assets/mapTools/icon_drawingisland.png'), selectedImage: require('../../../../assets/mapTools/icon_drawingisland_selected.png'), textStyle:textstyles1},
               { key: constants.FILL_HOLLOW_REGION, title:constants.FILL_HOLLOW_REGION, size: 'large', action: this.fillHollowRegion, image: require('../../../../assets/mapTools/icon_fillingisland.png'), selectedImage: require('../../../../assets/mapTools/icon_fillingisland_selected.png'), textStyle:textstyles1 },
               { key: constants.PATCH_HOLLOW_REGION, title:constants.PATCH_HOLLOW_REGION, size: 'large', action: this.patchHollowRegion, image: require('../../../../assets/mapTools/icon_addisland.png'), selectedImage: require('../../../../assets/mapTools/icon_addisland_selected.png'), textStyle:textstyles1},
-              { key: constants.ATTRIBUTE, title:constants.ATTRIBUTE, size: 'large', action: this.attribute, image: require('../../../../assets/mapTools/icon_attribute.png'), selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'), selectMode: 'flash' },
             ],
           },
           // {

@@ -23,13 +23,13 @@ import ChooseEditLayer from './chooseEditLayer'
 import AddDataset from './addDataset'
 import AddLayerGroup from './addLayerGroup'
 import MapChange from './mapChange'
-import { LayerAttribute, LayerAttributeEdit, LayerAttributeAdd } from './layerAttribute'
+import { LayerAttribute, LayerAttributeEdit, LayerAttributeAdd, LayerAttributeObj } from './layerAttribute'
 import { ThemeEntry, ThemeEdit, ChoosePage, ThemeStyle } from './theme'
 import workspaceFlieList from './workspaceFileList'
 import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
-
+import UpLoadList from './uploadList'
 import Map from './map'
 import MapView from './mapView'
 import Map3D from './map3D'
@@ -173,6 +173,12 @@ export default StackNavigator({
       header: null,
     },
   },
+  LayerAttributeObj: {
+    screen: LayerAttributeObj,
+    navigationOptions: {
+      header: null,
+    },
+  },
   LayerAttributeAdd: {
     screen: LayerAttributeAdd,
     navigationOptions: {
@@ -229,6 +235,12 @@ export default StackNavigator({
   },
   Personal: {
     screen: Personal,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  UpLoadList: {
+    screen: UpLoadList,
     navigationOptions: {
       header: null,
     },

@@ -49,10 +49,13 @@ export default class LayerItem extends React.Component {
         icon = require('../../assets/map/icon-text.png')
         break
       case DatasetType.IMAGE: // 影像数据集
-        icon = require('../../assets/public/input.png')
+        icon = require('../../assets/map/icon-surface.png')
         break
       case DatasetType.CAD: // 复合数据集
         icon = require('../../assets/map/icon-cad.png')
+        break
+      case DatasetType.Network: // 复合数据集
+        icon = require('../../assets/map/icon-network.png')
         break
       default:
         icon = require('../../assets/public/mapLoad.png')

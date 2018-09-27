@@ -18,6 +18,7 @@ export default {
   FILL_HOLLOW_REGION: '填充岛洞',
   PATCH_HOLLOW_REGION: '补充岛洞',
   ATTRIBUTE: '属性',
+  MOVE: '平移',
   MODIFIED: '修改',
   SETTING:"设置",
   ANALYSIS:"分析",

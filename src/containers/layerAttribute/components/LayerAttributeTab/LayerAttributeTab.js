@@ -21,10 +21,12 @@ export default class LayerAttributeTab extends React.Component {
     startAudio: PropTypes.func,
     delete: PropTypes.func,
     type: PropTypes.string,
+    btns: PropTypes.array,
   }
 
   static defaultProps = {
     type: 'ATTRIBUTE',
+    btns: [],
   }
 
   add = () => {
@@ -57,7 +59,7 @@ export default class LayerAttributeTab extends React.Component {
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='添加图片或视频'
-          image={require('../../../../assets/map/icon-add-datasets.png')}
+          image={require('../../../../assets/mapTools/icon_add_selected.png')}
           BtnClick={this.add}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
@@ -71,11 +73,63 @@ export default class LayerAttributeTab extends React.Component {
         <BtnOne
           size={BtnOne.SIZE.SMALL}
           BtnText='编辑'
-          image={require('../../../../assets/map/icon-save-color.png')}
+          image={require('../../../../assets/mapTools/icon_edit_selected.png')}
           BtnClick={this.edit}
         />
       </View>
     )
+  }
+
+  addBtn = type => {
+    if (typeof type !== 'string') {
+      return type
+    }
+    switch (type) {
+      case 'add':
+        return (
+          <BtnOne
+            key={type}
+            style={styles.btn}
+            size={BtnOne.SIZE.SMALL}
+            BtnText='添加'
+            image={require('../../../../assets/mapTools/icon_add_selected.png')}
+            BtnClick={this.add}
+          />
+        )
+      case 'edit':
+        return (
+          <BtnOne
+            key={type}
+            style={styles.btn}
+            size={BtnOne.SIZE.SMALL}
+            BtnText='编辑'
+            image={require('../../../../assets/mapTools/icon_edit_selected.png')}
+            BtnClick={this.edit}
+          />
+        )
+      case 'delete':
+        return (
+          <BtnOne
+            key={type}
+            style={styles.btn}
+            size={BtnOne.SIZE.SMALL}
+            BtnText='删除'
+            image={require('../../../../assets/mapTools/icon_delete_selected.png')}
+            BtnClick={this.delete}
+          />
+        )
+      case 'addImageVideo':
+        return (
+          <BtnOne
+            key={type}
+            style={styles.btn}
+            size={BtnOne.SIZE.SMALL}
+            BtnText='添加图片或视频'
+            image={require('../../../../assets/mapTools/icon_add_selected.png')}
+            BtnClick={this.add}
+          />
+        )
+    }
   }
 
   renderEdit() {
@@ -106,11 +160,22 @@ export default class LayerAttributeTab extends React.Component {
   }
 
   render() {
-    if (this.props.type === 'EDIT') {
-      return this.renderEdit()
-    } else {
-      return this.renderAttribute()
+    let btns = []
+    for (let i = 0; i < this.props.btns.length; i++) {
+      btns.push(this.addBtn(this.props.btns[i]))
     }
+
+    return (
+      <View style={styles.container}>
+        {btns}
+      </View>
+    )
+
+    // if (this.props.type === 'EDIT') {
+    //   return this.renderEdit()
+    // } else {
+    //   return this.renderAttribute()
+    // }
   }
 }
 

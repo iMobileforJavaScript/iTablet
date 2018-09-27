@@ -80,7 +80,7 @@ export default class DataSetListItem extends React.Component {
         image = require('../../assets/map/icon-text.png')
         break
       case DatasetType.Network:
-        image = require('../../assets/map/icon-layer-change.png')
+        image = require('../../assets/map/icon-network.png')
         break
       default:
         image = require('../../assets/map/icon-surface.png')
