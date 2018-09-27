@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet } from 'react-native'
 import { Dialog } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { color, size } from '../../../styles'
-import { Utility } from 'imobile_for_javascript'
+import { Utility ,OnlineService} from 'imobile_for_javascript'
 import { ConstPath } from '../../../constains'
 import Toast from 'react-native-root-toast';
 export default class UploadDialog extends PureComponent {
@@ -24,23 +24,34 @@ export default class UploadDialog extends PureComponent {
   cancel = () => {
     this.props.cancelAction && this.props.cancelAction()
   }
-  upload = async () => {
+
+  getZipList=async()=>{
+    let zipList=[]
+    Object.keys(this.props.data).forEach(element => {
+      // Utility.copyFile(this.props.data[element], fartherPath)
+      ziplist.push(this.props.data[element])
+    })
+    return zipList
+  }
+  upLoad = async () => {
     debugger
     try {
-      let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName
-      let exist = await Utility.fileIsExistInHomeDirectory(toPath)
-      if (exist) {
-        Toast.show("已存在文件夹，请重命名")
-      } else {
-        let result =await Utility.createDirectory(toPath)
-        if (result) {
-          Object.keys(this.props.data).forEach(element => {
-            // this.props.data[element]
-            Utility.copyFile(this.props.data[element],toPath)
+      if (this.state.dataName === "") {
+        let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName
+        let zipList=await this.getZipList()
+        let result=await Utility.zipFiles(zipList,toPath)
+        if(result){
+          Toast.show("文件压缩中")
+          await OnlineService.upload(toPath,this.state.dataName,{
+            onProgress: this.downloading,
+            onComplete: this.onComplete,
+            onFailure: this.downloadFailure,
           })
         }else{
-          Toast.show("上传失败")
+          Toast.show("文件压缩失败")
         }
+      } else {
+        Toast.show("请输入数据名称")
       }
     } catch (error) {
       Toast.show("上传失败")
