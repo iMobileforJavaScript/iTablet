@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { StyleSheet, TouchableOpacity, Text, View, Image, FlatList ,Dimensions} from 'react-native'
 import { Container, EmptyView, MTBtn } from '../../../components'
 import { Toast, scaleSize } from '../../../utils'
-import{ AlertDialog} from '../../mapView/componets/AlertDialog'
+import NavigationService from '../../NavigationService'
+// import{ Dialog} from '../../../components'
 const SCREEN_WIDTH = Dimensions.get('window').width
 const IMAGE_WIDTH=SCREEN_WIDTH*0.87
 export default class CloudService extends Component {
@@ -28,15 +29,7 @@ export default class CloudService extends Component {
 
   componentDidMount() {
     // this.container.setLoading(false)
-    
-    // this.AlertDialog.getData(data)
-    this.AlertDialog.setDialogVisible(true)
   }
-
-  getdata = async () => {
-      console.log("aaa")
-  }
-
   _keyExtractor = item => {
     return item
   }
@@ -62,11 +55,24 @@ export default class CloudService extends Component {
       </View>)
 
   }
-
-
-     
-
-
+  upload=async(filePath,fileName)=>{
+    // this.OnlineService = new OnlineService()
+    // let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
+    // if(result){
+    //   filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'World.zip'
+    //   await this.OnlineService.upload(filePath, "World",{
+    //     onProgress: this.uploading,
+    //     onComplete: this.onComplete,
+    //     onFailure: this.uploadFailure,
+    //   })     
+    // }
+    NavigationService.navigate('UpLoadList', { })
+  }
+  uploading=async progress=>{
+     if(progress===99){
+           this.uploadDialog.setDialogVisible(true)
+     }
+  }
   render() {
     return (
       <Container
@@ -77,8 +83,8 @@ export default class CloudService extends Component {
           title: '云服务',
           navigation: this.props.navigation,
           headerRight: [
-            // <MTBtn key={'upload'} image={require('../../../assets/public/上传.png')} imageStyle={styles.upload}
-            //   BtnClick={this.upload} />
+            <MTBtn key={'upload'} image={require('../../../assets/public/上传.png')} imageStyle={styles.upload}
+              BtnClick={this.upload} />
           ],
           withoutBack: true,
         }}>
@@ -93,6 +99,14 @@ export default class CloudService extends Component {
           keyExtractor={this._keyExtractor}
         /> */}
       <EmptyView title={'待完善'} />
+      {/* <Dialog
+          ref={ref => this.uploadDialog = ref}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'上传成功'}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        /> */}
       </Container>
 
     )

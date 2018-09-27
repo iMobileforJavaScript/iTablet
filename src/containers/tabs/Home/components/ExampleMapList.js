@@ -40,7 +40,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   cancel = async zipfile => {
-    await Utility.deleteZip(zipfile)
+    await Utility.deleteFile(zipfile)
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     downitem.downloaded(true)
   }
@@ -64,7 +64,7 @@ export default class ExampleMapList extends React.Component {
 
 
   _itemClick = async key => {
-    let path, exist, filePath, outPath, fileName, openPath, zipexist
+    let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
@@ -72,7 +72,6 @@ export default class ExampleMapList extends React.Component {
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         fileName = "hotMap"
         exist = await Utility.fileIsExistInHomeDirectory(path)
-        zipexist = await Utility.fileIsExistInHomeDirectory(filePath)
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
@@ -87,7 +86,8 @@ export default class ExampleMapList extends React.Component {
         fileName = "CBD"
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
           this.alertDown(filePath, fileName, outPath, map3D)
         }
@@ -179,7 +179,7 @@ export default class ExampleMapList extends React.Component {
               {
                 text: "确定", onPress: () => {
                   downitem.hideProgress()
-                  Utility.deleteZip(this.zipfile)
+                  Utility.deleteFile(this.zipfile)
                 },
               },
             ],
@@ -187,7 +187,7 @@ export default class ExampleMapList extends React.Component {
           )
         } else {
           this.unzip = false
-          await Utility.deleteZip(this.zipfile)
+          await Utility.deleteFile(this.zipfile)
           Alert.alert(
             "温馨提示",
             "文件解压失败，是否重新下载",

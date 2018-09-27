@@ -29,7 +29,7 @@ import workspaceFlieList from './workspaceFileList'
 import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
-
+import UpLoadList from './uploadList'
 import Map from './map'
 import MapView from './mapView'
 import Map3D from './map3D'
@@ -235,6 +235,12 @@ export default StackNavigator({
   },
   Personal: {
     screen: Personal,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  UpLoadList: {
+    screen: UpLoadList,
     navigationOptions: {
       header: null,
     },

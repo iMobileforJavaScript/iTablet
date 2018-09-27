@@ -144,8 +144,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     backgroundColor: 'transparent',
     alignSelf: 'center',
-    paddingTop: 5,
-    height: 105,
+    padding: scaleSize(5),
+    // height: 105,
     // backgroundColor:'white'
   },
   btntop: {
