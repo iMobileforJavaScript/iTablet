@@ -113,7 +113,6 @@ export default class MapView extends React.Component {
   closeWorkspace = (cb = () => { }) => {
     if (!this.map || !this.mapControl || !this.workspace) return
     this.saveLatest((async function () {
-      // this.container.bgColor = 'white'
       this.container && this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
       // this.container && this.container.setLoading(true, '正在关闭')
       this.clearData()
@@ -212,6 +211,7 @@ export default class MapView extends React.Component {
       type: -1,
       isEdit: true,
       toolbarThreshold: toolbarThreshold,
+      title: type === Const.DATA_EDIT ?'选择编辑图层' : '选择采集图层',
     }, (isShow, dsType) => { // 传 -1 查询所有类型的图层
       this.popList && this.popList.setCurrentOption(type, dsType)
     })
@@ -488,9 +488,11 @@ export default class MapView extends React.Component {
   toUpLoad=()=>{
     Toast.show("功能待完善")
   }
+
   toDownLoad=()=>{
     Toast.show("功能待完善")
   }
+
   // 地图保存
   saveMap = async (cb = () => { }) => {
     if (this.setting && this.setting.isVisible()) {
@@ -628,10 +630,9 @@ export default class MapView extends React.Component {
       Toast.show('没有找到地图')
       return
     }
-    console.log('_addLocalMap')
-    let workspaceModule = new Workspace()
-    ;(async function () {
+    (async function () {
       try {
+        let workspaceModule = new Workspace()
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
@@ -675,10 +676,10 @@ export default class MapView extends React.Component {
                   // await this.map.setScale(0.00005)
                   await this.mapControl.setAction(Action.PAN)
                   await this.map.refresh()
-                  this.container.setLoading(false)
                 }).bind(this)()
               }
             )
+            this.container.setLoading(false)
           }
         } else {
           await this.map.refresh()
@@ -698,9 +699,9 @@ export default class MapView extends React.Component {
       Toast.show('没有找到地图')
       return
     }
-    const workspaceModule = new Workspace()
-    const point2dModule = new Point2D()
-      ; (async function () {
+    (async function () {
+      const workspaceModule = new Workspace()
+      const point2dModule = new Point2D()
       try {
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
@@ -749,10 +750,10 @@ export default class MapView extends React.Component {
                   await this.map.viewEntire()
                   await this.mapControl.setAction(Action.PAN)
                   await this.map.refresh()
-                  this.container.setLoading(false)
                 }).bind(this)()
               }
             )
+            this.container.setLoading(false)
           }
         }
         await this._addGeometrySelectedListener()
@@ -782,12 +783,13 @@ export default class MapView extends React.Component {
     AudioAnalyst.goToMapView('Google')
   }
 
-  closemapMenu(that) {
+  closeMapMenu(that) {
     that.setState({ showmapMenu: !this.state.showmapMenu })
     // (async function(){
     //   this.setState({ showmapMenu: !this.state.showmapMenu })
     // }).bind(this)
   }
+
   render() {
     let headerRight = this.renderHeaderBtns()
     let data = [
@@ -824,7 +826,7 @@ export default class MapView extends React.Component {
             (
               <View style={styles.mapMenu}>
                 <UsualTitle title='本地地图' />
-                <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closemapMenu(this) }} />
+                <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closeMapMenu(this) }} />
                 <View style={styles.cutline} />
                 <UsualTitle title='在线地图' />
                 <BtnbarLoad
@@ -849,8 +851,7 @@ export default class MapView extends React.Component {
         }
         {
           this.state.popShow &&
-          this.state.popType === Const.DATA_EDIT &&
-          this.state.popType === Const.COLLECTION &&
+          (this.state.popType === Const.DATA_EDIT || this.state.popType === Const.COLLECTION) &&
           <MTBtn
             ref={ref => this.changeLayerBtn = ref}
             customStyle={[
