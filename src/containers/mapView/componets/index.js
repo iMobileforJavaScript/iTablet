@@ -3,6 +3,7 @@ import NetworkAnalystToolBar from './NetworkAnalystToolBar'
 import CollectionToolBar from './CollectionToolBar'
 import Setting from './Setting'
 import AlertDialog from './AlertDialog'
+import DrawerView from './DrawerView'
 
 export {
   PopList,
@@ -10,4 +11,5 @@ export {
   CollectionToolBar,
   Setting,
   AlertDialog,
+  DrawerView,
 }

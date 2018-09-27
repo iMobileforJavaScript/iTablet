@@ -5,18 +5,22 @@
  */
 
 import * as React from 'react'
-import { Workspace, SMMapView, Action, Point2D, EngineType } from 'imobile_for_javascript'
+import { Workspace, SMMapView, Action, Point2D, EngineType, DatasetType } from 'imobile_for_javascript'
 import PropTypes from 'prop-types'
-import { PopList, Setting } from './componets'
+import { PopList, Setting, AlertDialog, DrawerView } from './componets'
 import { BtnbarLoad, OffLineList } from '../tabs/Home/components'
 import { PopMeasureBar, MTBtnList, Container, MTBtn, Dialog, UsualTitle } from '../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../utils'
 import { ConstPath, Const } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
-import { AlertDialog } from './componets/AlertDialog'
 import NavigationService from '../NavigationService'
-import { Alert, InteractionManager, Platform, View } from 'react-native'
+import { InteractionManager, Platform, View, BackHandler } from 'react-native'
 import styles from './styles'
+
+// 数组的第一个为DrawerView的默认高度
+const LVL_0 = [scaleSize(300)]
+const LVL_1 = [scaleSize(300), scaleSize(430)]
+const LVL_2 = [scaleSize(430), scaleSize(300), scaleSize(600)]
 
 export default class MapView extends React.Component {
 
@@ -64,12 +68,14 @@ export default class MapView extends React.Component {
       editLayer: {},
       showmapMenu: true,
       changeLayerBtnBottom: scaleSize(200),
+      toolbarThreshold: LVL_2,
     }
 
   }
 
   componentDidMount() {
     this.container && this.container.setLoading(true, '地图加载中')
+    Platform.OS === 'android' && BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
   }
 
@@ -88,8 +94,14 @@ export default class MapView extends React.Component {
         changeLayerBtnBottom: bottom,
       })
     }
-
   }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    }
+  }
+
   clearData = () => {
     this.props.setEditLayer(null)
     this.props.setSelection(null)
@@ -101,7 +113,6 @@ export default class MapView extends React.Component {
   closeWorkspace = (cb = () => { }) => {
     if (!this.map || !this.mapControl || !this.workspace) return
     this.saveLatest((async function () {
-      // this.container.bgColor = 'white'
       this.container && this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
       // this.container && this.container.setLoading(true, '正在关闭')
       this.clearData()
@@ -156,11 +167,28 @@ export default class MapView extends React.Component {
     this._addMap()
   }
 
+  getToolbarThreshold = type => {
+    switch (type) {
+      case Const.TOOLS:
+      case Const.ANALYST:
+        return LVL_0
+      case Const.COLLECTION:
+      case DatasetType.POINT:
+        return LVL_1
+      case Const.DATA_EDIT:
+        return LVL_2
+      default:
+        return []
+    }
+  }
+
   _pop_list = (show, type) => {//底部BtnBar事件点击回掉，负责底部二级pop的弹出
+    let toolbarThreshold = this.getToolbarThreshold(type)
     this.setState({
       popShow: show,
       popType: type,
       measureShow: false,
+      toolbarThreshold: toolbarThreshold,
     })
     this.mapControl && (async function () {
       await this._remove_measure_listener()
@@ -178,9 +206,12 @@ export default class MapView extends React.Component {
   }
 
   _changeLayer = type => {
+    let toolbarThreshold = this.getToolbarThreshold(type)
     this._chooseLayer({
       type: -1,
       isEdit: true,
+      toolbarThreshold: toolbarThreshold,
+      title: type === Const.DATA_EDIT ?'选择编辑图层' : '选择采集图层',
     }, (isShow, dsType) => { // 传 -1 查询所有类型的图层
       this.popList && this.popList.setCurrentOption(type, dsType)
     })
@@ -280,9 +311,9 @@ export default class MapView extends React.Component {
 
   }
 
-  _measure_pause = async () => {
+  _measure_pause = async (isResetAction = true) => {
     this.PopMeasureBar._showtext(false)
-    await this.mapControl.setAction(Action.PAN)
+    isResetAction && await this.mapControl.setAction(Action.PAN)
     this.setState({
       measureResult: 0,
     })
@@ -457,9 +488,11 @@ export default class MapView extends React.Component {
   toUpLoad=()=>{
     Toast.show("功能待完善")
   }
+
   toDownLoad=()=>{
     Toast.show("功能待完善")
   }
+
   // 地图保存
   saveMap = async (cb = () => { }) => {
     if (this.setting && this.setting.isVisible()) {
@@ -561,9 +594,13 @@ export default class MapView extends React.Component {
 
   back = () => {
     InteractionManager.runAfterInteractions(() => {
-      if (this.setting && this.setting.isVisible()) {
+      if (this.setting && this.setting.isVisible()) { // 关闭设置页面
         this.setting.close()
-      } else {
+      } else if (this.state.popShow) { // 隐藏工具栏
+        this.setState({
+          popShow: false,
+        })
+      } else { // 返回
         // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
         // NavigationService.goBack(this.props.nav.routes[1].key)
         if (this.type !== "ONLINE" && !this.isExample) {
@@ -573,6 +610,7 @@ export default class MapView extends React.Component {
         }
       }
     })
+    return true
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -592,10 +630,9 @@ export default class MapView extends React.Component {
       Toast.show('没有找到地图')
       return
     }
-    console.log('_addLocalMap')
-    let workspaceModule = new Workspace()
-    ;(async function () {
+    (async function () {
       try {
+        let workspaceModule = new Workspace()
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
         this.map = await this.mapControl.getMap()
@@ -639,10 +676,10 @@ export default class MapView extends React.Component {
                   // await this.map.setScale(0.00005)
                   await this.mapControl.setAction(Action.PAN)
                   await this.map.refresh()
-                  this.container.setLoading(false)
                 }).bind(this)()
               }
             )
+            this.container.setLoading(false)
           }
         } else {
           await this.map.refresh()
@@ -662,9 +699,9 @@ export default class MapView extends React.Component {
       Toast.show('没有找到地图')
       return
     }
-    const workspaceModule = new Workspace()
-    const point2dModule = new Point2D()
-      ; (async function () {
+    (async function () {
+      const workspaceModule = new Workspace()
+      const point2dModule = new Point2D()
       try {
         this.workspace = await workspaceModule.createObj()
         this.mapControl = await this.mapView.getMapControl()
@@ -713,10 +750,10 @@ export default class MapView extends React.Component {
                   await this.map.viewEntire()
                   await this.mapControl.setAction(Action.PAN)
                   await this.map.refresh()
-                  this.container.setLoading(false)
                 }).bind(this)()
               }
             )
+            this.container.setLoading(false)
           }
         }
         await this._addGeometrySelectedListener()
@@ -746,12 +783,18 @@ export default class MapView extends React.Component {
     AudioAnalyst.goToMapView('Google')
   }
 
+<<<<<<< HEAD
   closemapMenu=async()=> {
     this.setState({ showmapMenu: !this.state.showmapMenu })
+=======
+  closeMapMenu(that) {
+    that.setState({ showmapMenu: !this.state.showmapMenu })
+>>>>>>> e900d45edc11eb2e349d6fd4932861a52db3cffd
     // (async function(){
     //   this.setState({ showmapMenu: !this.state.showmapMenu })
     // }).bind(this)
   }
+
   render() {
     let headerRight = this.renderHeaderBtns()
     let data = [
@@ -777,7 +820,6 @@ export default class MapView extends React.Component {
     return (
       <Container
         ref={ref => this.container = ref}
-        // initWithLoading
         headerProps={{
           title: this.isExample ? '示例地图' : '',
           navigation: this.props.navigation,
@@ -789,7 +831,11 @@ export default class MapView extends React.Component {
             (
               <View style={styles.mapMenu}>
                 <UsualTitle title='本地地图' />
+<<<<<<< HEAD
                 <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu } />
+=======
+                <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closeMapMenu(this) }} />
+>>>>>>> e900d45edc11eb2e349d6fd4932861a52db3cffd
                 <View style={styles.cutline} />
                 <UsualTitle title='在线地图' />
                 <BtnbarLoad
@@ -813,56 +859,74 @@ export default class MapView extends React.Component {
             result={this.state.measureResult} />
         }
         {
-          this.state.popShow && this.state.popType === Const.DATA_EDIT &&
+          this.state.popShow &&
+          (this.state.popType === Const.DATA_EDIT || this.state.popType === Const.COLLECTION) &&
           <MTBtn
+            ref={ref => this.changeLayerBtn = ref}
             customStyle={[
               styles.changeLayerBtn,
               {
-                bottom: this.state.changeLayerBtnBottom,
+                bottom: this.state.toolbarThreshold[0] + scaleSize(20),
               },
             ]}
             imageStyle={styles.changeLayerImage}
             image={require('../../assets/map/icon-layer-change.png')}
-            BtnClick={() => this._changeLayer(Const.DATA_EDIT)}
+            BtnClick={() => this._changeLayer(this.state.popType)}
           />
         }
+
         {
-          this.state.popShow && <PopList
-            ref={ref => this.popList = ref}
-            measureLine={this._measure_line}
-            measureSquare={this._measure_square}
-            measurePause={this._measure_pause}
-            popType={this.state.popType}
-            editLayer={this.props.editLayer}
-            selection={this.props.selection}
-            mapView={this.mapView}
-            mapControl={this.mapControl}
-            workspace={this.workspace}
-            map={this.map}
-            setLoading={this.setLoading}
-            chooseLayer={this._chooseLayer}
-            POP_List={this._pop_list}
-            showSetting={this._showSetting}
-            bufferSetting={this.props.bufferSetting}
-            overlaySetting={this.props.overlaySetting}
-            setOverlaySetting={this.props.setOverlaySetting}
-            showMeasure={this._pop_measure_click}
-            showRemoveObjectDialog={this.showRemoveObjectDialog}
-            setSelection={this.props.setSelection}
-          />
+          this.state.popShow
+            ? <DrawerView
+              thresholds={this.state.toolbarThreshold}
+              heightChangeListener={({childrenHeight, drawerHeight}) => {
+                this.changeLayerBtn && this.changeLayerBtn.setNativeProps({
+                  style: [styles.changeLayerBtn, {bottom: drawerHeight + scaleSize(20)}],
+                })
+                this.popList && this.popList.setGridListProps({
+                  style: {
+                    height: childrenHeight,
+                  },
+                })
+              }}>
+              <PopList
+                ref={ref => this.popList = ref}
+                measureLine={this._measure_line}
+                measureSquare={this._measure_square}
+                measurePause={this._measure_pause}
+                popType={this.state.popType}
+                editLayer={this.props.editLayer}
+                selection={this.props.selection}
+                mapView={this.mapView}
+                mapControl={this.mapControl}
+                workspace={this.workspace}
+                map={this.map}
+                setLoading={this.setLoading}
+                chooseLayer={this._chooseLayer}
+                POP_List={this._pop_list}
+                showSetting={this._showSetting}
+                bufferSetting={this.props.bufferSetting}
+                overlaySetting={this.props.overlaySetting}
+                setOverlaySetting={this.props.setOverlaySetting}
+                showMeasure={this._pop_measure_click}
+                showRemoveObjectDialog={this.showRemoveObjectDialog}
+                setSelection={this.props.setSelection}
+                columns={6}
+              />
+            </DrawerView>
+            : <MTBtnList
+              hidden={this.isExample}
+              POP_List={this._pop_list}
+              layerManager={this._layer_manager}
+              dataCollection={this._data_collection}
+              dataManager={this._data_manager}
+              addLayer={this._addLayer}
+              chooseLayer={this._chooseLayer}
+              editLayer={this.props.editLayer}
+              setEditLayer={this.props.setEditLayer}
+              mapControl={this.mapControl}
+            />
         }
-        <MTBtnList
-          hidden={this.isExample}
-          POP_List={this._pop_list}
-          layerManager={this._layer_manager}
-          dataCollection={this._data_collection}
-          dataManager={this._data_manager}
-          addLayer={this._addLayer}
-          chooseLayer={this._chooseLayer}
-          editLayer={this.props.editLayer}
-          setEditLayer={this.props.setEditLayer}
-          mapControl={this.mapControl}
-        />
         {
           !this.isExample &&
           <Setting

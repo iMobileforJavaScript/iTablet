@@ -49,7 +49,7 @@ export default StyleSheet.create({
     position: 'absolute',
     // flexDirection: 'column',
     // left: 0,
-    right: 0,
+    right: scaleSize(20),
     bottom: scaleSize(200),
     backgroundColor: 'transparent',
   },

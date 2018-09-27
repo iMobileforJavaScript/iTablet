@@ -39,6 +39,7 @@ import {
 } from './mapTools'
 import LayerItem from './LayerItem'
 import Progress from './Progress'
+import GridList from './GridList'
 
 export {
   Container,
@@ -81,4 +82,5 @@ export {
   DataSetListSection,
   PanAudioButton,
   Progress,
+  GridList,
 }

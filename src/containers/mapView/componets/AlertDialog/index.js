@@ -1,5 +1,3 @@
 import AlertDialog from './alertDialog'
 
-export{
-  AlertDialog,
-}
+export default AlertDialog

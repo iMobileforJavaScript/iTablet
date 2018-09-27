@@ -73,26 +73,35 @@ export default class Home extends Component {
         style={styles.container}>
         <HomeSwiper />
         <BtnbarHome mapLoad={this._goToMapLoad} />
-        {this.state.mapviewshow ? (null) :
-          (<View style={styles.mapbtnview}>
-            <TouchableOpacity style={this.state.mapbtn1} onPress={this.offmap}><Text style={styles.mapunselect}>本地地图</Text></TouchableOpacity>
-            <View style={styles.cutline}></View>
-            <TouchableOpacity style={this.state.mapbtn2} onPress={this.onlinemap}><Text style={styles.mapunselect}>在线地图</Text></TouchableOpacity>
-          </View>)}
+        {
+          this.state.mapviewshow ? (null) :
+            (
+              <View style={styles.mapbtnview}>
+                <TouchableOpacity style={this.state.mapbtn1} onPress={this.offmap}><Text style={styles.mapunselect}>本地地图</Text></TouchableOpacity>
+                <View style={styles.cutline} />
+                <TouchableOpacity style={this.state.mapbtn2} onPress={this.onlinemap}><Text style={styles.mapunselect}>在线地图</Text></TouchableOpacity>
+              </View>
+            )
+        }
         {this.state.selectlist ? (null) :
-          (<View style={styles.selectlist}>
-            <View>
-              {this.state.OffLineList ? (null) : (<OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} />)}
+          (
+            <View style={styles.selectlist}>
+              <View>
+                {this.state.OffLineList ? (null) : (<OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} />)}
+              </View>
+              <View>
+                {
+                  this.state.BtnbarLoad ? (null) : <BtnbarLoad
+                    TD={this.TD}
+                    Baidu={this.Baidu}
+                    OSM={this.OSM}
+                    Google={this.Google}
+                  />
+                }
+              </View>
             </View>
-            <View>
-              {this.state.BtnbarLoad ? (null) : (<BtnbarLoad
-                TD={this.TD}
-                Baidu={this.Baidu}
-                OSM={this.OSM}
-                Google={this.Google}
-              />)}
-            </View>
-          </View>)}
+          )
+        }
         <View style={styles.btnbarhome}></View>
         <HomeUsualMap data={this.props.latestMap} style={styles.ususalmap} />
         <UsualTitle title='示例地图' style={styles.examplemaplist} />
