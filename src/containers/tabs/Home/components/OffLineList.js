@@ -36,6 +36,7 @@ const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件�
 export default class OffLineList extends React.Component {
 
   props: {
+    style: any,
     Workspace: any,
     map: any,
     mapControl: any,
@@ -123,7 +124,7 @@ export default class OffLineList extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         {this._addElement(this._btn_workspace_click, icon_workspace, testData[0].key)}
         {this._addElement(this._btn_udb_click, icon_udb, testData[1].key)}
         {/*{this._addElement(this._btn_web_click, icon_webudb, testData[2].key)}*/}

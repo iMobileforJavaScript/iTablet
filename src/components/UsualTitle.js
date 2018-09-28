@@ -5,15 +5,23 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, Text, TouchableHighlight } from 'react-native'
-import * as Util from '../utils/constUtil'
+import { View, StyleSheet, Text } from 'react-native'
 import { TextBtn } from '../components'
-import { scaleSize} from '../utils'
-const WIDTH = Util.WIDTH
-const themeColor = Util.USUAL_GREEN
-const headColor = Util.USUAL_BLUE
-
+import { scaleSize } from '../utils'
+import { size } from '../styles'
 export default class UsualTitle extends React.Component {
+  props: {
+    style: any,
+    titleStyle: any,
+    headColor: any,
+    headColor: any,
+    themeColor: any,
+    isRightBtn: boolean,
+    title: String,
+    btnText: String,
+    btnClick: () => {},
+  }
+
   constructor(props) {
     super(props)
   }
@@ -22,9 +30,9 @@ export default class UsualTitle extends React.Component {
     const bgColorCon = this.props.headColor ? { backgroundColor: this.props.headColor } : null
     const bgColorTitle = this.props.themeColor ? { backgroundColor: this.props.themeColor } : null
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <View style={[styles.title, bgColorTitle]}>
-          <Text style={styles.titleText}>{this.props.title ? this.props.title : '默认标题'}</Text>
+          <Text style={[styles.titleText, this.props.titleStyle]}>{this.props.title ? this.props.title : '默认标题'}</Text>
           {this.props.isRightBtn && <TextBtn btnText={this.props.btnText} btnClick={this.props.btnClick} />}
         </View>
       </View>
@@ -48,7 +56,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     marginLeft: scaleSize(20),
-    fontSize: scaleSize(30),
+    fontSize: size.fontSize.fontSizeXl,
     color:"#555555",
   },
 })

@@ -145,7 +145,7 @@ export default class MapLoad extends Component {
             Google={this.Google} />
         </View>
         <View style={styles.examplemaplist}>
-          <UsualTitle title='示例地图' style={styles.examplemaplist} />
+          <UsualTitle title='示例地图' titleStyle={styles.examplemaplist} />
           <ExampleMapList />
         </View>
       </Container>
