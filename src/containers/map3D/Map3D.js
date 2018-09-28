@@ -55,9 +55,9 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = () => {
-    let workspaceModule = new Workspace()
     ;(async function () {
       try {
+        let workspaceModule = new Workspace()
         this.workspace = await workspaceModule.createObj()   //创建workspace实例
         this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
         await this.scene.setWorkspace(this.workspace)        //设置工作空间
@@ -67,13 +67,18 @@ export default class Map3D extends React.Component {
           Toast.show(" 打开工作空间失败")
           return
         }
-        this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-        this.setState({
-          title: this.mapName,
-        })
-        await this.scene.open(this.mapName)                     //根据名称打开指定场景
-        await this.scene.refresh()                           //刷新场景
-
+        let count = await this.workspace.getSceneCount()
+        if (count > 0) {
+          this.mapName = await this.workspace.getSceneName(0)
+          this.setState({
+            title: this.mapName,
+          })
+        }
+        // this.mapName = await this.workspace.getSceneName(0) //获取场景名称
+        if (this.mapName) {
+          await this.scene.open(this.mapName)                     //根据名称打开指定场景
+          await this.scene.refresh()                           //刷新场景
+        }
         this.container && this.container.setLoading(false)
         this.saveLatest()
       } catch (e) {
