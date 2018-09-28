@@ -241,7 +241,7 @@ export default class ThemeLabelView extends React.Component {
               value={this.state.data.fontSize || 10}
               type={Row.Type.CHOOSE_NUMBER}
               minValue={8}
-              maxValue={50}
+              maxValue={150}
               title={'字号'}
               getValue={value => this.getValue({ fontSize: value })}
             />

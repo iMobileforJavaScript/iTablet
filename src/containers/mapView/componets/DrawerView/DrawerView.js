@@ -140,13 +140,14 @@ export default class DrawerView extends React.Component {
 
   showBtnAction = () => {
     this.props.showBtnAction && this.props.showBtnAction()
-    this._drawerHeight = this.props.thresholds.length > 0 ? this.props.thresholds[0] : drawerHeight
-    this.props.heightChangeListener && this.props.heightChangeListener({
-      drawerHeight: this._drawerHeight,
-      childrenHeight: this._drawerHeight - drawerBtnHeight,
-    })
     this.setState({
       visible: true,
+    }, () => {
+      this._drawerHeight = this.props.thresholds.length > 0 ? this.props.thresholds[0] : drawerHeight
+      this.props.heightChangeListener && this.props.heightChangeListener({
+        drawerHeight: this._drawerHeight,
+        childrenHeight: this._drawerHeight - drawerBtnHeight,
+      })
     })
   }
 

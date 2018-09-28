@@ -18,9 +18,9 @@ import { InteractionManager, Platform, View, BackHandler } from 'react-native'
 import styles from './styles'
 
 // 数组的第一个为DrawerView的默认高度
-const LVL_0 = [scaleSize(300)]
-const LVL_1 = [scaleSize(300), scaleSize(430)]
-const LVL_2 = [scaleSize(430), scaleSize(300), scaleSize(600)]
+const LVL_0 = [scaleSize(280)]
+const LVL_1 = [scaleSize(280), scaleSize(410)]
+const LVL_2 = [scaleSize(410), scaleSize(280), scaleSize(560)]
 
 export default class MapView extends React.Component {
 

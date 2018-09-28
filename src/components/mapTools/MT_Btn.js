@@ -174,17 +174,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: scaleSize(100),
     textAlign: 'center',
+    marginTop: scaleSize(5),
   },
   normalText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     width: scaleSize(100),
     textAlign: 'center',
+    marginTop: scaleSize(5),
   },
   smallText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     width: scaleSize(100),
     textAlign: 'center',
+    marginTop: scaleSize(5),
   },
 })
