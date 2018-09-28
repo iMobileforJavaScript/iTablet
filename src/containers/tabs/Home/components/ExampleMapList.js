@@ -81,12 +81,13 @@ export default class ExampleMapList extends React.Component {
       case map3D:
         path = ConstPath.SampleDataPath + '/CBD/CBD.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.smwu'       
+        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)     
         if(Platform.OS === 'ios'){
           fileName = "CBD_ios"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD.smwu'  
         }else{
           fileName = "CBD"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.smwu'  
         }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
@@ -100,11 +101,12 @@ export default class ExampleMapList extends React.Component {
         path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
         if(Platform.OS === 'ios'){
           fileName = "MaSai_ios"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai_ios/MaSai.sxwu'
         }else{
           fileName = "MaSai"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
         }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {

@@ -6,6 +6,7 @@ import { color, size } from '../../../styles'
 import { Utility, OnlineService } from 'imobile_for_javascript'
 import { ConstPath } from '../../../constains'
 import Toast from 'react-native-root-toast';
+import { platform } from 'os';
 export default class UploadDialog extends PureComponent {
 
   props: {
@@ -28,6 +29,7 @@ export default class UploadDialog extends PureComponent {
   }
 
   getZipList = async () => {
+    debugger
     let zipList = []
     // Object.keys(this.props.data).forEach(element => {
     //   // Utility.copyFile(this.props.data[element], fartherPath)
@@ -41,27 +43,41 @@ export default class UploadDialog extends PureComponent {
     }
     return zipList
   }
+
+  uploading=async(progress)=>{
+      if(Platform.OS==='ios'){
+
+      }else{
+        progress===99&&this.onComplete()
+      }
+  }
+  onComplete(){
+     Toast.show("上传成功")
+     NavigationService.goBack()
+  }
   upLoad = async () => {
-    debugger
     try {
       if (this.state.dataName !== "") {
         let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName + ".zip"
         let zipList = await this.getZipList()
         let result = await Utility.zipFiles(zipList, toPath)
         if (result) {
+          this.dialog.setDialogVisible(false)
           Toast.show("文件压缩中")
           await OnlineService.upload(toPath, this.state.dataName, {
-            onProgress: this.downloading,
+            onProgress: this.uploading,
             onComplete: this.onComplete,
-            onFailure: this.downloadFailure,
+            onFailure: this.uploadFailure,
           })
         } else {
+          this.dialog.setDialogVisible(false)
           Toast.show("文件压缩失败")
         }
       } else {
         Toast.show("请输入数据名称")
       }
     } catch (error) {
+      this.dialog.setDialogVisible(false)
       Toast.show("上传失败")
     }
   }
