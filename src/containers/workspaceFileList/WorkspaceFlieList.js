@@ -84,7 +84,7 @@ export default class WorkSpaceFileList extends Component {
         let isDirectory = await Utility.isDirectory(absolutePath)
         if (!isDirectory) {
           let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
-          if (filename === '.sxmu' ) {
+          if (filename === '.sxwu' ) {
             this._toLoadMapView(absolutePath, 'map3D')
           } else if (filename === '.smwu' ) {
             this._toLoadMapView(absolutePath, '')
@@ -94,11 +94,11 @@ export default class WorkSpaceFileList extends Component {
             this._offLine_More()
           }
         } else {
-          let filter = this.need === 'workspace' ? 'sxmu,smwu' : this.need === 'udb' ? 'udb' : ''
+          let filter = this.need === 'workspace' ? 'smwu,sxwu' : this.need === 'udb' ? 'udb' : ''
           let fileList = await Utility.getPathListByFilter(absolutePath, {
             type: filter,
           })
-          // let fileList = await Utility.getPathListByFilter(absolutePath, {type: 'smwu'})
+          // let fileList = await Utility.getPathListByFilter(absolutePath)
           this.setState({
             data: fileList,
             backPath: item.path,

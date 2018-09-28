@@ -10,7 +10,7 @@ import { ConstPath,ExampleMapData } from '../../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../../assets/public/mapImage0.png')
-const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
+const vectorMap = '数据可视化', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图', map3D = '三维场景'
 
 
 export default class ExampleMapList extends React.Component {
@@ -67,7 +67,7 @@ export default class ExampleMapList extends React.Component {
     let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
-        path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
+        path = ConstPath.SampleDataPath + 'hotMap/hotMap.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'hotMap.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         fileName = "hotMap"
@@ -83,12 +83,12 @@ export default class ExampleMapList extends React.Component {
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)     
         if(Platform.OS === 'ios'){
           fileName = "CBD_ios"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD.sxwu' 
-          path = ConstPath.SampleDataPath + '/CBD_ios/CBD.sxwu' 
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD_ios.sxwu' 
+          path = ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu' 
         }else{
           fileName = "CBD"
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.sxwu'
-          path = ConstPath.SampleDataPath + '/CBD/CBD.sxwu'
+          path = ConstPath.SampleDataPath + 'CBD/CBD.sxwu'
         }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
@@ -99,17 +99,16 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case ObliquePhoto:
-        
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         if(Platform.OS === 'ios'){
           fileName = "MaSai_ios"
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai_ios/MaSai.sxwu'
-          path = ConstPath.SampleDataPath + '/MaSai_ios/MaSai.sxwu'
+          path = ConstPath.SampleDataPath + 'MaSai_ios/MaSai.sxwu'
         }else{
           fileName = "MaSai"
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
-          path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
+          path = ConstPath.SampleDataPath + 'MaSai/MaSai.sxwu'
         }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
@@ -119,7 +118,7 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case gl:
-        path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
+        path = ConstPath.SampleDataPath + 'Changchun/Changchun.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "Changchun.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'Changchun/Changchun.smwu'
@@ -133,7 +132,7 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case overLay:
-        path = ConstPath.SampleDataPath + '/DOM/DOM.smwu'
+        path = ConstPath.SampleDataPath + 'DOM/DOM.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "DOM.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'DOM/DOM.smwu'

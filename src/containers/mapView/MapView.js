@@ -66,7 +66,7 @@ export default class MapView extends React.Component {
       measureShow: false,
       measureResult: 0,
       editLayer: {},
-      showMapMenu: true,
+      showMapMenu: false,
       changeLayerBtnBottom: scaleSize(200),
       toolbarThreshold: LVL_2,
     }
@@ -477,14 +477,14 @@ export default class MapView extends React.Component {
       this.setting.close()
     } else {
       if (this.type !== "ONLINE" && !this.isExample) {
-        if(!this.state.showMapMenu){
+        if(this.state.showMapMenu){
           this.setState({showMapMenu:!this.state.showMapMenu})
           return
         }
         this.openDialog.setDialogVisible(true)
       } else {
         this.openDialog.setDialogVisible(false)
-        this.setState({ showMapMenu: !this.state.showMapMenu })
+        this.setMapMenuStatus()
       }
     }
   }
@@ -782,31 +782,26 @@ export default class MapView extends React.Component {
   }
 
   TD = () => {
-    this.setState({ showMapMenu: !this.state.showMapMenu })
+    this.setMapMenuStatus()
     AudioAnalyst.goToMapView('TD')
   }
 
   Baidu = () => {
-    this.setState({ showMapMenu: !this.state.showMapMenu })
+    this.setMapMenuStatus()
     AudioAnalyst.goToMapView('Baidu')
   }
 
   OSM = () => {
-    this.setState({ showMapMenu: !this.state.showMapMenu })
+    this.setMapMenuStatus()
     AudioAnalyst.goToMapView('OSM')
   }
 
   Google = () => {
-    this.setState({ showMapMenu: !this.state.showMapMenu })
+    this.setMapMenuStatus()
     AudioAnalyst.goToMapView('Google')
   }
 
-  closemapMenu = async () => {
-    this.setState({ showMapMenu: !this.state.showMapMenu })
-    // (async function(){
-    //   this.setState({ showMapMenu: !this.state.showMapMenu })
-    // }).bind(this)
-  }
+
 
   setMapMenuStatus = (isShow = false) => {
     if (isShow !== this.state.showMapMenu) {
@@ -821,16 +816,16 @@ export default class MapView extends React.Component {
    * @returns {XML}
    */
   renderMapMenu = () => {
-    if (!this.state.showMapMenu) {
+    if (this.state.showMapMenu) {
       return (
         <TouchableOpacity
           activeOpacity={1}
           style={styles.mapMenuOverlay}
-          onPress={() => this.setMapMenuStatus(true)}
+          onPress={() => this.setMapMenuStatus(false)}
         >
           <View style={styles.mapMenu}>
             <UsualTitle title='本地地图' />
-            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu} />
+            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.setMapMenuStatus} />
             <View style={styles.cutline} />
             <UsualTitle title='在线地图' />
             <BtnbarLoad
@@ -1018,9 +1013,9 @@ export default class MapView extends React.Component {
           title={'提示'}
           info={"是否保存当前空间"}
           confirmAction={()=>{this.saveMap(()=>{
-            this.setState({showMapMenu:false},function(){this.openDialog.setDialogVisible(false)})
+            this.setState({showMapMenu:true},function(){this.openDialog.setDialogVisible(false)})
           })}}
-          cancelAction={()=>{this.setState({showMapMenu:false},function(){this.openDialog.setDialogVisible(false)})}}
+          cancelAction={()=>{this.setState({showMapMenu:true},function(){this.openDialog.setDialogVisible(false)})}}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}
         />

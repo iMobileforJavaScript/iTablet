@@ -4,7 +4,7 @@ export default {
     { key: '数据可视化', path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
     { key: 'GL地图瓦片', path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
     { key: '影像叠加矢量地图', path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
-    { key: '三维场景', path: ConstPath.SampleDataPath + '/CBD/CBD.sxwu' },
+    { key: '三维场景', path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
     { key: '倾斜摄影', path: ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu' },
   ],
   testData_ios: [
