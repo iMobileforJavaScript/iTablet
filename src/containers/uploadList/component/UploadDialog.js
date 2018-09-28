@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
 import { View, Text, TextInput, StyleSheet, Platform} from 'react-native'
 import { Dialog } from '../../../components'
-import { scaleSize } from '../../../utils'
+import { scaleSize,Toast } from '../../../utils'
 import { color, size } from '../../../styles'
 import { Utility, OnlineService } from 'imobile_for_javascript'
 import { ConstPath } from '../../../constains'
-import Toast from 'react-native-root-toast';
+import NavigationService from '../../NavigationService'
 export default class UploadDialog extends PureComponent {
 
   props: {
@@ -47,10 +47,12 @@ export default class UploadDialog extends PureComponent {
       if(Platform.OS==='ios'){
 
       }else{
-        progress===99&&this.onComplete()
+        progress===100&&this.onComplete()
       }
+      console.log(progress)
   }
   onComplete(){
+     Utility.deleteFile(this.zipPath)
      Toast.show("上传成功")
      NavigationService.goBack()
   }
@@ -58,16 +60,22 @@ export default class UploadDialog extends PureComponent {
     try {
       if (this.state.dataName !== "") {
         let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName + ".zip"
+        this.zipPath=toPath
         let zipList = await this.getZipList()
+        await Toast.show("文件压缩中")
         let result = await Utility.zipFiles(zipList, toPath)
         if (result) {
           this.dialog.setDialogVisible(false)
-          Toast.show("文件压缩中")
-          await OnlineService.upload(toPath, this.state.dataName, {
-            onProgress: this.uploading,
-            onComplete: this.onComplete,
-            onFailure: this.uploadFailure,
-          })
+          Toast.show("文件上传中......")
+          this.OnlineService = new OnlineService()
+          let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
+          if(result){
+          await this.OnlineService.upload(toPath, this.state.dataName, {
+              onProgress: this.uploading,
+              onComplete: this.onComplete,
+              onFailure: this.uploadFailure,
+            })
+          }
         } else {
           this.dialog.setDialogVisible(false)
           Toast.show("文件压缩失败")
@@ -78,6 +86,7 @@ export default class UploadDialog extends PureComponent {
     } catch (error) {
       this.dialog.setDialogVisible(false)
       Toast.show("上传失败")
+      console.log(error)
     }
   }
 

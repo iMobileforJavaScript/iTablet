@@ -12,7 +12,7 @@ import { Container, EmptyView, TextBtn } from '../../components'
 import { Utility } from 'imobile_for_javascript'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
-import NavigationService from '../NavigationService'
+
 import { color } from '../../styles'
 import {Btnone,UploadDialog} from './component'
 export default class UpLoadList extends Component {

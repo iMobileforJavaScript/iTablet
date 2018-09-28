@@ -6,7 +6,7 @@ import NavigationService from '../../../../containers/NavigationService'
 import Thumbnails from '../../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
-import { ConstPath } from '../../../../constains'
+import { ConstPath,ExampleMapData } from '../../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../../assets/public/mapImage0.png')
@@ -47,13 +47,13 @@ export default class ExampleMapList extends React.Component {
 
 
   mapexist = async () => {
-    let testData = [
-      { key: vectorMap, path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
-      { key: gl, path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
-      { key: overLay, path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
-      { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
-      { key: ObliquePhoto, path: ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu' },
-    ]
+    let testData 
+    if(Platform.OS==="android"){
+      testData=ExampleMapData.testData_android
+    }
+    if(Platform.OS==='ios'){
+      testData=ExampleMapData.testData_ios
+    }
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
       exist ? testData[index].backgroundcolor = null : testData[index].backgroundcolor = "#A3A3A3"
