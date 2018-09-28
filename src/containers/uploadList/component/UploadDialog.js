@@ -28,7 +28,6 @@ export default class UploadDialog extends PureComponent {
   }
 
   getZipList = async () => {
-    debugger
     let zipList = []
     // Object.keys(this.props.data).forEach(element => {
     //   // Utility.copyFile(this.props.data[element], fartherPath)
@@ -49,7 +48,6 @@ export default class UploadDialog extends PureComponent {
       }else{
         progress===100&&this.onComplete()
       }
-      console.log(progress)
   }
   onComplete(){
      Utility.deleteFile(this.zipPath)
@@ -86,7 +84,6 @@ export default class UploadDialog extends PureComponent {
     } catch (error) {
       this.dialog.setDialogVisible(false)
       Toast.show("上传失败")
-      console.log(error)
     }
   }
 
