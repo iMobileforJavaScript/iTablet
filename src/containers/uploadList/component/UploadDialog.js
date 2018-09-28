@@ -27,7 +27,6 @@ export default class UploadDialog extends PureComponent {
     this.props.cancelAction && this.props.cancelAction()
   }
 
-<<<<<<< HEAD
   getZipList=async()=>{
     let zipList=[]
     Object.keys(this.props.data).forEach(element => {
@@ -38,9 +37,6 @@ export default class UploadDialog extends PureComponent {
   }
   upLoad = async () => {
     debugger
-=======
-  upload = async () => {
->>>>>>> e900d45edc11eb2e349d6fd4932861a52db3cffd
     try {
       if (this.state.dataName === "") {
         let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName

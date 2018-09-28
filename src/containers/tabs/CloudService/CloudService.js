@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   itemImage: {
    width:IMAGE_WIDTH,
    height: scaleSize(250),
-   backgroundColor:"blue"
+   backgroundColor:"blue",
   },
   itemTitle:{
     width:IMAGE_WIDTH,
