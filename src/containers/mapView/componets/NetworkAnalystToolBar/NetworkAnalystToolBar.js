@@ -151,7 +151,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     await facilityAnalyst.traceDown()
   }
 
-  /** 连通性分析 **/
+  /** 连通分析 **/
   _analyst = async type => {
     // this.toDoAction()
     switch (type) {
@@ -213,7 +213,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     //     ],
     //   },
     //   {
-    //     key: '连通性分析',
+    //     key: '连通分析',
     //     type: Const.NETWORK_FACILITY,
     //     action: async cbData => await this.changeTap(cbData, Const.NETWORK_FACILITY),
     //     operations: [
@@ -267,7 +267,7 @@ export default class NetworkAnalystToolBar extends React.Component {
           { key: "清除", title:'清除',action: () => this.clear(Const.NETWORK_ROUTE) , size: 'large', image: require('../../../../assets/mapTools/icon_delete.png'), selectedImage: require('../../../../assets/mapTools/icon_delete_selected.png'), selectMode: 'flash' },
         ]},
       {
-        key: '连通性分析',
+        key: '连通分析',
         type: Const.NETWORK_FACILITY,
         action: async cbData => await this.changeTap(cbData, Const.NETWORK_FACILITY),
         operations: [

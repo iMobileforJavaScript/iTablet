@@ -48,9 +48,9 @@ export default class Btnbar_home extends React.Component {
     return (
       <View style={styles.container}>
         {this._addElement(mapLoadClick, require('../../../../assets/home/icon-map-load.png'), '地图加载')}
-        {this._addElement(myMapClick, require('../../../../assets/home/icon-my-map.png'), '我的地图')}
+        {/*{this._addElement(myMapClick, require('../../../../assets/home/icon-my-map.png'), '我的地图')}*/}
         {this._addElement(mapShareClick, require('../../../../assets/home/icon-map-share.png'), '地图分享')}
-        {this._addElement(trackClick, require('../../../../assets/home/icon-trail-mannagement.png'), '轨迹记录')}
+        {/*{this._addElement(trackClick, require('../../../../assets/home/icon-trail-mannagement.png'), '轨迹记录')}*/}
       </View>
     )
   }

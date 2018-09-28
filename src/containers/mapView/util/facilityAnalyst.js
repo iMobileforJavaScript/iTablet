@@ -336,7 +336,7 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
     await mMapControl.setAction(Action.PAN)
   } catch (e) {
     _setLoading(false)
-    Toast.show('连通性分析失败')
+    Toast.show('连通分析失败')
   }
 }
 

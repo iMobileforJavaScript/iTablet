@@ -707,7 +707,7 @@ export default class PopList extends React.Component {
         //     action: cbData => this._analyst(cbData, 'network'),
         //     operations: [
         //       { key: '路径分析', action: () => this.openNetworkToolBar(Const.NETWORK_ROUTE) },
-        //       { key: '连通性分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY) },
+        //       { key: '连通分析', action: () => this.openNetworkToolBar(Const.NETWORK_FACILITY) },
         //       { key: '商旅分析', action: () => this.openNetworkToolBar(Const.NETWORK_TSP) },
         //       { key: '追踪分析', action: () => this.openNetworkToolBar(Const.NETWORK_TRACKING) },
         //     ],
