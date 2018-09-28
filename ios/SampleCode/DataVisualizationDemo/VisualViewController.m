@@ -255,7 +255,7 @@ static Workspace* g_workspace;
         g_workspace = _workspace;
     }
     
-    NSString* workspace =  [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/data/sample/DataVisualizationDemo/%@",@"hotMap.smwu"];//[NSHomeDirectory() stringByAppendingString:@"/Library/Caches/VisualDemoData/hotMap.smwu"];
+    NSString* workspace =  [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/data/sample/hotMap/%@",@"hotMap.smwu"];//[NSHomeDirectory() stringByAppendingString:@"/Library/Caches/VisualDemoData/hotMap.smwu"];
    // NSString* workspace = [NSHomeDirectory() stringByAppendingString:@"/Documents/china2013/china7C-20140806.smwu"];
     m_Info = [[WorkspaceConnectionInfo alloc]init];
     m_Info.server = workspace;

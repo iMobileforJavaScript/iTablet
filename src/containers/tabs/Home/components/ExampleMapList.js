@@ -79,11 +79,17 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case map3D:
-        path = ConstPath.SampleDataPath + '/CBD/CBD.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.smwu'
-        fileName = "CBD"
+        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)     
+        if(Platform.OS === 'ios'){
+          fileName = "CBD_ios"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD.sxwu' 
+          path = ConstPath.SampleDataPath + '/CBD_ios/CBD.sxwu' 
+        }else{
+          fileName = "CBD"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.sxwu'
+          path = ConstPath.SampleDataPath + '/CBD/CBD.sxwu'
+        }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
@@ -93,11 +99,18 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case ObliquePhoto:
-        path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
+        
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
-        fileName = "MaSai"
+        if(Platform.OS === 'ios'){
+          fileName = "MaSai_ios"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai_ios/MaSai.sxwu'
+          path = ConstPath.SampleDataPath + '/MaSai_ios/MaSai.sxwu'
+        }else{
+          fileName = "MaSai"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
+          path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
+        }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })

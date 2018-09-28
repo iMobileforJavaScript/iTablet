@@ -46,10 +46,10 @@ export default class CloudService extends Component {
         <View style={styles.itemBottom}>
           <Text style={styles.upLoadtime}>{item.uploadTime}</Text>
           <TouchableOpacity style={styles.itmeBtn1}>
-            <Image source={require('../../../assets/public/下载-选中.png') } style={styles.btnImage}/>
+            <Image source={require('../../../assets/public/icon_download_select.png') } style={styles.btnImage}/>
           </TouchableOpacity>
           <TouchableOpacity style={styles.itmeBtn2}>
-            <Image source={require('../../../assets/public/分享.png')} style={styles.btnImage}/>
+            <Image source={require('../../../assets/public/icon_share.png')} style={styles.btnImage}/>
           </TouchableOpacity>
         </View>
       </View>)
@@ -83,7 +83,7 @@ export default class CloudService extends Component {
           title: '云服务',
           navigation: this.props.navigation,
           headerRight: [
-            <MTBtn key={'upload'} image={require('../../../assets/public/上传.png')} imageStyle={styles.upload}
+            <MTBtn key={'upload'} image={require('../../../assets/public/icon_upload.png')} imageStyle={styles.upload}
               BtnClick={this.upload} />
           ],
           withoutBack: true,
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   itemImage: {
    width:IMAGE_WIDTH,
    height: scaleSize(250),
-   backgroundColor:"blue"
+   backgroundColor:"blue",
   },
   itemTitle:{
     width:IMAGE_WIDTH,

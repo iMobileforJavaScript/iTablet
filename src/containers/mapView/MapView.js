@@ -801,8 +801,8 @@ export default class MapView extends React.Component {
     AudioAnalyst.goToMapView('Google')
   }
 
-  closeMapMenu(that) {
-    that.setState({ showmapMenu: !this.state.showmapMenu })
+  closemapMenu=async()=> {
+    this.setState({ showmapMenu: !this.state.showmapMenu })
     // (async function(){
     //   this.setState({ showmapMenu: !this.state.showmapMenu })
     // }).bind(this)
@@ -817,7 +817,7 @@ export default class MapView extends React.Component {
       return (
         <View style={styles.mapMenu}>
           <UsualTitle title='本地地图' />
-          <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} cb={() => { this.closeMapMenu(this) }} />
+          <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu} />
           <View style={styles.cutline} />
           <UsualTitle title='在线地图' />
           <BtnbarLoad

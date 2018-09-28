@@ -39,7 +39,7 @@ export default class OffLineList extends React.Component {
     Workspace: any,
     map: any,
     mapControl: any,
-    cb:any,
+    closemapMenu:any,
   }
 
   constructor(props) {
@@ -47,11 +47,11 @@ export default class OffLineList extends React.Component {
     this.workspace = this.props.Workspace
     this.map = this.props.map
     this.mapControl = this.props.mapControl
-    this.cb=this.props.cb  ?  this.props.cb : null
+    this.closemapMenu=this.props.closemapMenu  ?  this.props.closemapMenu : null
   }
 
   _btn_workspace_click = () => {
-    this.cb&&this.cb()
+    this.closemapMenu&&this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('WorkspaceFlieList', {
         workspace: this.workspace,
@@ -67,7 +67,7 @@ export default class OffLineList extends React.Component {
   }
 
   _btn_udb_click = () => {
-    this.cb&&this.cb()
+    this.closemapMenu&&this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('WorkspaceFlieList', {
         workspace: this.workspace,
@@ -83,7 +83,7 @@ export default class OffLineList extends React.Component {
   }
 
   _btn_web_click = () => {
-    this.cb&&this.cb()
+    this.closemapMenu&&this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('webUdb', {
         workspace: this.workspace,
@@ -98,7 +98,7 @@ export default class OffLineList extends React.Component {
   }
 
   _btn_newudb_click = () => {
-    this.cb&&this.cb()
+    this.closemapMenu&&this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('NewDSource', {
         workspace: this.workspace,
