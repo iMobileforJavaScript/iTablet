@@ -58,35 +58,35 @@ const Tabs = TabNavigator(
         }
       },
     },
-    CloudService: {
-      screen: CloudService,
-      navigationOptions: () => {
-        return {
-          tabBarLabel: data => {
-            return (
-              <View style={styles.labelView}>
-                <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
-                >
-                  云服务
-                </Text>
-              </View>
-            )
-          },
-          tabBarIcon: ({ focused }: any) =>
-            <Image
-              resizeMode="contain"
-              source={
-                focused
-                  ? require('../../assets/tabBar/icon-service-selected.png')
-                  : require('../../assets/tabBar/icon-service.png')
-              }
-              style={styles.icon}
-            />,
-          header: null,
-        }
-      },
-    },
+    // CloudService: {
+    //   screen: CloudService,
+    //   navigationOptions: () => {
+    //     return {
+    //       tabBarLabel: data => {
+    //         return (
+    //           <View style={styles.labelView}>
+    //             <Text
+    //               style={data.focused ? styles.selectedTabText : styles.tabText}
+    //             >
+    //               云服务
+    //             </Text>
+    //           </View>
+    //         )
+    //       },
+    //       tabBarIcon: ({ focused }: any) =>
+    //         <Image
+    //           resizeMode="contain"
+    //           source={
+    //             focused
+    //               ? require('../../assets/tabBar/icon-service-selected.png')
+    //               : require('../../assets/tabBar/icon-service.png')
+    //           }
+    //           style={styles.icon}
+    //         />,
+    //       header: null,
+    //     }
+    //   },
+    // },
     Mine: {
       screen: Mine,
       navigationOptions: () => {
