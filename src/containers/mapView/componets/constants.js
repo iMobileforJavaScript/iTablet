@@ -23,7 +23,7 @@ export default {
   SETTING:"设置",
   ANALYSIS:"分析",
   ROUTANALYSIS:"路径分析",
-  CONNETCTED:"连通性分析",
+  CONNETCTED:"连通分析",
   TRAVEL:"商旅分析",
   TRACK:"追踪分析",
   DISTANCECALCULATE:"距离量算",

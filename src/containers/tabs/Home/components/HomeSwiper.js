@@ -10,10 +10,12 @@ export default class HomeSwiper extends React.Component {
 
   static propTypes = {
     data: PropTypes.array,
+    activeOpacity: PropTypes.number,
   }
 
   static defaultProps = {
     data: [],
+    activeOpacity: 1,
   }
 
   constructor(props){
@@ -29,17 +31,17 @@ export default class HomeSwiper extends React.Component {
     if (this.props.data.length > 0) {
       this.props.data.forEach(({obj, index}) => {
         datas.push(
-          <TouchableOpacity key={'home_swiper_' + index} activeOpacity={0.8} style={styles.ImageContainaer}>
+          <TouchableOpacity key={'home_swiper_' + index} activeOpacity={this.props.activeOpacity} style={styles.ImageContainaer}>
             <Image resizeMode='stretch' style={styles.scrollImage} source={{uri: obj.uri}}/>
           </TouchableOpacity>
         )
       })
     } else {
       datas = [
-        <TouchableOpacity key={'home_swiper_0'} activeOpacity={0.8} style={styles.ImageContainaer}>
+        <TouchableOpacity key={'home_swiper_0'} activeOpacity={this.props.activeOpacity} style={styles.ImageContainaer}>
           <Image resizeMode='stretch' style={styles.scrollImage} source={require('../../../../assets/home/home_scroll1.jpg')}/>
         </TouchableOpacity>,
-        <TouchableOpacity key={'home_swiper_1'} activeOpacity={0.8} style={styles.ImageContainaer}>
+        <TouchableOpacity key={'home_swiper_1'} activeOpacity={this.props.activeOpacity} style={styles.ImageContainaer}>
           <Image resizeMode='stretch' style={styles.scrollImage} source={require('../../../../assets/home/home_scroll2.jpg')}/>
         </TouchableOpacity>,
       ]

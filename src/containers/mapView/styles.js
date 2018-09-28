@@ -57,4 +57,12 @@ export default StyleSheet.create({
     height: scaleSize(60),
     width: scaleSize(60),
   },
+  popView: {
+    position: 'absolute',
+    flexDirection: 'column',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'white',
+  },
 })

@@ -433,17 +433,25 @@ export default class CollectionToolBar extends React.Component {
         let ds = await this.props.editLayer.layer.getDataset()
         let recordset = await (await ds.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
         await recordset.moveLast()
-        let info = await recordset.getFieldInfo()
+        let info = await recordset.getFieldInfo() || []
         await selection.clear()
-        let smId = info['SmID'] || info['SMID']
-        let index = await selection.add(smId.value)
-        if (index >= 0) {
-          this.props.setSelection && this.props.setSelection({
-            id: smId.value,
-            layerId: this.props.editLayer.layer._SMLayerId,
-            name: this.props.editLayer.name,
-            layer: this.props.editLayer.layer,
-          })
+        let smId = null
+        for (let i = 0; i < info.length; i++) {
+          if (info[i].name === 'SmID' || info[i].name === 'SmID') {
+            smId = info[i]
+            break
+          }
+        }
+        if (smId) {
+          let index = await selection.add(smId.value)
+          if (index >= 0) {
+            this.props.setSelection && this.props.setSelection({
+              id: smId.value,
+              layerId: this.props.editLayer.layer._SMLayerId,
+              name: this.props.editLayer.name,
+              layer: this.props.editLayer.layer,
+            })
+          }
         }
         await this.props.map.refresh()
         await recordset.dispose()
