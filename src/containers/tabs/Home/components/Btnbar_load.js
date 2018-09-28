@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
-import { StackNavigator, NavigationActions } from 'react-navigation'
 import { ConstOnline } from '../../../../constains'
 import { scaleSize } from '../../../../utils'
 import { BtnOne } from '../../../../components'
@@ -19,12 +18,21 @@ const OSM = 'OSM'
 const Google = '谷歌'
 
 export default class Btnbar_mapLoad extends React.Component {
+
+  props: {
+    style: any,
+    TD: () => {},
+    Baidu: () => {},
+    OSM: () => {},
+    Google: () => {},
+  }
+
   constructor(props) {
     super(props)
   }
 
   _addElement = (delegate, src, str) => {
-    if (typeof delegate == 'function' && typeof str == 'string') {
+    if (typeof delegate === 'function' && typeof str === 'string') {
 
       let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop} />
       return (element)
@@ -51,7 +59,7 @@ export default class Btnbar_mapLoad extends React.Component {
 
   goToMapView = type => {
     (async function () {
-      let key = '', exist = false
+      let exist = false
       // let routes = this.props.nav.routes
 
       // if (routes && routes.length > 0) {
@@ -109,7 +117,7 @@ export default class Btnbar_mapLoad extends React.Component {
     const OSMClick = this.props.OSM ? this.props.OSM : this._click_OSM
     const GoogleClick = this.props.Google ? this.props.Google : this._click_Google
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         {this._addElement(TDClick, TDImgSrc, TD)}
         {this._addElement(BaiduClick, BaiduMapImgSrc, Baidu)}
         {this._addElement(OSMClick, OSMImgSrc, OSM)}
@@ -129,5 +137,5 @@ const styles = StyleSheet.create({
   },
   btntop: {
     marginTop: scaleSize(5),
-  }
+  },
 })

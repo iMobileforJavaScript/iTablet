@@ -102,9 +102,9 @@ export default class Home extends Component {
             </View>
           )
         }
-        <View style={styles.btnbarhome}></View>
+        <View style={styles.btnbarhome} />
         <HomeUsualMap data={this.props.latestMap} style={styles.ususalmap} />
-        <UsualTitle title='示例地图' style={styles.examplemaplist} />
+        <UsualTitle title='示例地图' titleStyle={styles.examplemaplist} />
         <ExampleMapList setLoading={this.setLoading}  />
       </Container>
     )

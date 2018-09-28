@@ -45,10 +45,11 @@ export default StyleSheet.create({
     zIndex:1,
     backgroundColor: '#rgba(0, 0, 0, 0.3)',
   },
-  cutline:{
+  cutline: {
     width: '100%',
     backgroundColor:"#E8E8E8",
-    height:scaleSize(3),
+    height: scaleSize(3),
+    marginVertical: scaleSize(10),
   },
   changeLayerBtn: {
     position: 'absolute',

@@ -829,11 +829,12 @@ export default class MapView extends React.Component {
           onPress={() => this.setMapMenuStatus(true)}
         >
           <View style={styles.mapMenu}>
-            <UsualTitle title='本地地图' />
-            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu} />
+            <UsualTitle style={{marginTop: scaleSize(10)}} title='本地地图' />
+            <OffLineList style={{marginVertical: scaleSize(10)}} Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu} />
             <View style={styles.cutline} />
             <UsualTitle title='在线地图' />
             <BtnbarLoad
+              style={{marginVertical: scaleSize(10)}}
               TD={this.TD}
               Baidu={this.Baidu}
               OSM={this.OSM}
