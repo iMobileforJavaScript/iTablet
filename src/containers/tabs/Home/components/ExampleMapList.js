@@ -82,8 +82,12 @@ export default class ExampleMapList extends React.Component {
         path = ConstPath.SampleDataPath + '/CBD/CBD.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.smwu'
-        fileName = "CBD"
+        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.smwu'       
+        if(Platform.OS === 'ios'){
+          fileName = "CBD_ios"
+        }else{
+          fileName = "CBD"
+        }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
@@ -97,7 +101,11 @@ export default class ExampleMapList extends React.Component {
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
-        fileName = "MaSai"
+        if(Platform.OS === 'ios'){
+          fileName = "MaSai_ios"
+        }else{
+          fileName = "MaSai"
+        }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })

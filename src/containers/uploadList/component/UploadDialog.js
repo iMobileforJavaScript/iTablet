@@ -1,9 +1,9 @@
 import React, { PureComponent } from 'react'
-import { View, Text, TextInput, StyleSheet } from 'react-native'
+import { View, Text, TextInput, StyleSheet, } from 'react-native'
 import { Dialog } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { color, size } from '../../../styles'
-import { Utility ,OnlineService} from 'imobile_for_javascript'
+import { Utility, OnlineService } from 'imobile_for_javascript'
 import { ConstPath } from '../../../constains'
 import Toast from 'react-native-root-toast';
 export default class UploadDialog extends PureComponent {
@@ -27,29 +27,35 @@ export default class UploadDialog extends PureComponent {
     this.props.cancelAction && this.props.cancelAction()
   }
 
-  getZipList=async()=>{
-    let zipList=[]
-    Object.keys(this.props.data).forEach(element => {
-      // Utility.copyFile(this.props.data[element], fartherPath)
-      ziplist.push(this.props.data[element])
-    })
+  getZipList = async () => {
+    let zipList = []
+    // Object.keys(this.props.data).forEach(element => {
+    //   // Utility.copyFile(this.props.data[element], fartherPath)
+    //   zipList.push(this.props.data[element])
+    // })
+    for (const key in this.props.data) {
+      if (this.props.data.hasOwnProperty(key)) {
+        let path = await Utility.appendingHomeDirectory(this.props.data[key])
+        zipList.push(path);
+      }
+    }
     return zipList
   }
   upLoad = async () => {
     debugger
     try {
-      if (this.state.dataName === "") {
-        let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName
-        let zipList=await this.getZipList()
-        let result=await Utility.zipFiles(zipList,toPath)
-        if(result){
+      if (this.state.dataName !== "") {
+        let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName + ".zip"
+        let zipList = await this.getZipList()
+        let result = await Utility.zipFiles(zipList, toPath)
+        if (result) {
           Toast.show("文件压缩中")
-          await OnlineService.upload(toPath,this.state.dataName,{
+          await OnlineService.upload(toPath, this.state.dataName, {
             onProgress: this.downloading,
             onComplete: this.onComplete,
             onFailure: this.downloadFailure,
           })
-        }else{
+        } else {
           Toast.show("文件压缩失败")
         }
       } else {
@@ -65,7 +71,7 @@ export default class UploadDialog extends PureComponent {
       <Dialog
         ref={ref => this.dialog = ref}
         style={{ marginVertical: 15 }}
-        confirmAction={this.upload}
+        confirmAction={this.upLoad}
         cancelAction={this.cancel}
         confirmBtnTitle={this.props.confirmBtnTitle}
       >
