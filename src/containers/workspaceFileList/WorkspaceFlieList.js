@@ -120,7 +120,7 @@ export default class WorkSpaceFileList extends Component {
         let routes = this.props.nav.routes
         for (let index = 0; index < routes.length; index++) {
           if (routes[index].routeName === 'MapView') {
-              key = index === routes.length - 1 ? '' : routes[index + 1].key
+            key = index === routes.length - 1 ? '' : routes[index + 1].key
           }
         }
         await this.map.close()
@@ -151,8 +151,7 @@ export default class WorkSpaceFileList extends Component {
         let routes = this.props.nav.routes
         for (let index = 0; index < routes.length; index++) {
           if (routes[index].routeName === 'Map3D') {
-              key = index === routes.length - 1 ? '' : routes[index + 1].key
-              
+            key = index === routes.length - 1 ? '' : routes[index + 1].key
           }
         }
         let workspaceModule = new Workspace()
@@ -182,7 +181,7 @@ export default class WorkSpaceFileList extends Component {
         for (let index = 0; index < routes.length; index++) {
           if (routes[index].routeName === 'MapView') {
             key = index === routes.length - 1 ? '' : routes[index + 1].key
-        }
+          }
         }
 
         // const point2dModule = new Point2D()
@@ -328,8 +327,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   img: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(40),
+    height: scaleSize(40),
   },
   itemSeparator: {
     height: scaleSize(6),
