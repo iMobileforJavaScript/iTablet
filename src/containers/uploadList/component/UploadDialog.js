@@ -1,12 +1,11 @@
 import React, { PureComponent } from 'react'
-import { View, Text, TextInput, StyleSheet, } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Platform} from 'react-native'
 import { Dialog } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { color, size } from '../../../styles'
 import { Utility, OnlineService } from 'imobile_for_javascript'
 import { ConstPath } from '../../../constains'
 import Toast from 'react-native-root-toast';
-import { platform } from 'os';
 export default class UploadDialog extends PureComponent {
 
   props: {
