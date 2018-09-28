@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { Toast ,scaleSize} from '../../../../utils'
 
-import { BtnOne, ListSeparator } from '../../../../components'
+import { BtnOne } from '../../../../components'
 
 export default class Btnbar_home extends React.Component {
 
@@ -21,36 +21,74 @@ export default class Btnbar_home extends React.Component {
 
   constructor(props) {
     super(props)
-  }
-
-  _addElement = (delegate, src, str) => {
-    if (typeof delegate === 'function' && typeof str === 'string') {
-
-      let element = <BtnOne BtnClick={() => {
-        delegate(str)
-      }} image={src} BtnText={str} />
-      return (element)
-    } else {
-      throw Error('BthBar: please check type of params')
+    this.state = {
+      data: [
+        {
+          title: '地图加载',
+          action: props.mapLoad,
+          image: require('../../../../assets/home/icon-map-load.png'),
+        },
+        {
+          // title: '我的地图',
+          action: props.myMap,
+          image: require('../../../../assets/home/icon-my-map.png'),
+        },
+        {
+          // title: '地图分享',
+          action: props.mapShare,
+          image: require('../../../../assets/home/icon-map-share.png'),
+        },
+        {
+          // title: '轨迹记录',
+          action: props.track,
+          image: require('../../../../assets/home/icon-trail-mannagement.png'),
+        },
+      ],
     }
   }
 
+  renderBtn = ({data, index}) => {
+    if (data.title) {
+      return (
+        <BtnOne
+          key={index}
+          BtnClick={() => {
+            if (data.action && typeof data.action === 'function') {
+              data.action(data.title)
+            } else {
+              this._click_defalt(data.title)
+            }
+          }}
+          image={data.image}
+          BtnText={data.title}
+        />
+      )
+    } else {
+      return (
+        <View key={index} style={styles.placeHolder} />
+      )
+    }
+  }
+
+  renderBtns = () => {
+    let btns = []
+    for (let i = 0; i < this.state.data.length; i++) {
+      btns.push(this.renderBtn({
+        data: this.state.data[i],
+        index: i,
+      }))
+    }
+    return btns
+  }
+
   _click_defalt = str => {
-    // defalt function
-    Toast.show("待做" + str || '√')
+    Toast.show("待做" + str || '')
   }
 
   render() {
-    const mapLoadClick = this.props.mapLoad ? this.props.mapLoad : this._click_defalt
-    const myMapClick = this.props.myMap ? this.props.myMap : this._click_defalt
-    const mapShareClick = this.props.mapShare ? this.props.mapShare : this._click_defalt
-    const trackClick = this.props.track ? this.props.track : this._click_defalt
     return (
       <View style={styles.container}>
-        {this._addElement(mapLoadClick, require('../../../../assets/home/icon-map-load.png'), '地图加载')}
-        {/*{this._addElement(myMapClick, require('../../../../assets/home/icon-my-map.png'), '我的地图')}*/}
-        {this._addElement(mapShareClick, require('../../../../assets/home/icon-map-share.png'), '地图分享')}
-        {/*{this._addElement(trackClick, require('../../../../assets/home/icon-trail-mannagement.png'), '轨迹记录')}*/}
+        {this.renderBtns()}
       </View>
     )
   }
@@ -60,9 +98,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '100%',
     backgroundColor: 'white',
     alignSelf: 'center',
     paddingVertical: scaleSize(10),
+    width: '90%',
+  },
+  placeHolder: {
+    width: scaleSize(80),
+    height: scaleSize(80),
   },
 })

@@ -14,7 +14,7 @@ import { Toast, AudioAnalyst, scaleSize } from '../../utils'
 import { ConstPath, Const } from '../../constains'
 import { SaveDialog } from '../../containers/mtLayerManager/components'
 import NavigationService from '../NavigationService'
-import { InteractionManager, Platform, View, BackHandler } from 'react-native'
+import { InteractionManager, Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
 
 // 数组的第一个为DrawerView的默认高度
@@ -66,7 +66,7 @@ export default class MapView extends React.Component {
       measureShow: false,
       measureResult: 0,
       editLayer: {},
-      showmapMenu: true,
+      showMapMenu: true,
       changeLayerBtnBottom: scaleSize(200),
       toolbarThreshold: LVL_2,
     }
@@ -477,14 +477,14 @@ export default class MapView extends React.Component {
       this.setting.close()
     } else {
       if (this.type !== "ONLINE" && !this.isExample) {
-        if(!this.state.showmapMenu){
-          this.setState({showmapMenu:!this.state.showmapMenu})
+        if(!this.state.showMapMenu){
+          this.setState({showMapMenu:!this.state.showMapMenu})
           return
         }
         this.openDialog.setDialogVisible(true)
       } else {
         this.openDialog.setDialogVisible(false)
-        this.setState({ showmapMenu: !this.state.showmapMenu })
+        this.setState({ showMapMenu: !this.state.showMapMenu })
       }
     }
   }
@@ -782,30 +782,38 @@ export default class MapView extends React.Component {
   }
 
   TD = () => {
-    this.setState({ showmapMenu: !this.state.showmapMenu })
+    this.setState({ showMapMenu: !this.state.showMapMenu })
     AudioAnalyst.goToMapView('TD')
   }
 
   Baidu = () => {
-    this.setState({ showmapMenu: !this.state.showmapMenu })
+    this.setState({ showMapMenu: !this.state.showMapMenu })
     AudioAnalyst.goToMapView('Baidu')
   }
 
   OSM = () => {
-    this.setState({ showmapMenu: !this.state.showmapMenu })
+    this.setState({ showMapMenu: !this.state.showMapMenu })
     AudioAnalyst.goToMapView('OSM')
   }
 
   Google = () => {
-    this.setState({ showmapMenu: !this.state.showmapMenu })
+    this.setState({ showMapMenu: !this.state.showMapMenu })
     AudioAnalyst.goToMapView('Google')
   }
 
-  closemapMenu=async()=> {
-    this.setState({ showmapMenu: !this.state.showmapMenu })
+  closemapMenu = async () => {
+    this.setState({ showMapMenu: !this.state.showMapMenu })
     // (async function(){
-    //   this.setState({ showmapMenu: !this.state.showmapMenu })
+    //   this.setState({ showMapMenu: !this.state.showMapMenu })
     // }).bind(this)
+  }
+
+  setMapMenuStatus = (isShow = false) => {
+    if (isShow !== this.state.showMapMenu) {
+      this.setState({
+        showMapMenu: isShow,
+      })
+    }
   }
 
   /**
@@ -813,20 +821,26 @@ export default class MapView extends React.Component {
    * @returns {XML}
    */
   renderMapMenu = () => {
-    if (!this.state.showmapMenu) {
+    if (!this.state.showMapMenu) {
       return (
-        <View style={styles.mapMenu}>
-          <UsualTitle title='本地地图' />
-          <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu} />
-          <View style={styles.cutline} />
-          <UsualTitle title='在线地图' />
-          <BtnbarLoad
-            TD={this.TD}
-            Baidu={this.Baidu}
-            OSM={this.OSM}
-            Google={this.Google}
-          />
-        </View>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.mapMenuOverlay}
+          onPress={() => this.setMapMenuStatus(true)}
+        >
+          <View style={styles.mapMenu}>
+            <UsualTitle title='本地地图' />
+            <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} closemapMenu={this.closemapMenu} />
+            <View style={styles.cutline} />
+            <UsualTitle title='在线地图' />
+            <BtnbarLoad
+              TD={this.TD}
+              Baidu={this.Baidu}
+              OSM={this.OSM}
+              Google={this.Google}
+            />
+          </View>
+        </TouchableOpacity>
       )
     }
   }
@@ -1004,9 +1018,9 @@ export default class MapView extends React.Component {
           title={'提示'}
           info={"是否保存当前空间"}
           confirmAction={()=>{this.saveMap(()=>{
-            this.setState({showmapMenu:false},function(){this.openDialog.setDialogVisible(false)})
+            this.setState({showMapMenu:false},function(){this.openDialog.setDialogVisible(false)})
           })}}
-          cancelAction={()=>{this.setState({showmapMenu:false},function(){this.openDialog.setDialogVisible(false)})}}
+          cancelAction={()=>{this.setState({showMapMenu:false},function(){this.openDialog.setDialogVisible(false)})}}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}
         />

@@ -1,7 +1,7 @@
-import { StyleSheet ,Dimensions} from 'react-native'
+import { StyleSheet } from 'react-native'
 import * as Util from '../../utils/constUtil'
 import { scaleSize } from '../../utils'
-const SCREEN_WIDTH = Dimensions.get('window').width
+
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -30,18 +30,23 @@ export default StyleSheet.create({
     borderWidth: 1,
   },
   mapMenu:{
-    width:SCREEN_WIDTH,
-    position: 'absolute',
-    zIndex:1,
-    borderBottomWidth:scaleSize(3),
+    width: '100%',
+    borderBottomWidth: scaleSize(3),
     borderColor:"#E8E8E8",
-    // left:0,
-    // bottom: 0.75 * 1.4 * 0.1 * Util.WIDTH + 5,
     backgroundColor: 'white',
     alignSelf: 'center',
+    paddingVertical: scaleSize(10),
+  },
+  mapMenuOverlay: {
+    // flex: 1,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    zIndex:1,
+    backgroundColor: '#rgba(0, 0, 0, 0.3)',
   },
   cutline:{
-    width:SCREEN_WIDTH,
+    width: '100%',
     backgroundColor:"#E8E8E8",
     height:scaleSize(3),
   },

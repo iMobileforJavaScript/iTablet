@@ -5,6 +5,7 @@
 */
 
 import * as React from 'react'
+import { BackHandler, Platform } from 'react-native'
 import { Workspace, SMSceneView, Utility, Point3D, Camera } from 'imobile_for_javascript'
 import { MTBtnList, Container } from '../../components'
 import { Toast } from '../../utils'
@@ -36,7 +37,8 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
-    // Toast.show("地图编辑待做")
+    this.container && this.container.setLoading(true, '地图加载中')
+    Platform.OS === 'android' && BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     if (GLOBAL.sceneControl) {
       this._addScene()
@@ -44,11 +46,70 @@ export default class Map3D extends React.Component {
   }
 
   componentWillUnmount() {
-    (async function(){
-      this.scene && await this.scene.close()
-      this.workspace && await this.workspace.closeWorkspace()
+    Platform.OS === 'android' && BackHandler.removeEventListener('hardwareBackPress', this.back)
+
+    // (async function(){
+    //   this.scene && await this.scene.close()
+    //   this.workspace && await this.workspace.closeWorkspace()
+    // }).bind(this)()
+  }
+
+  _addScene = () => {
+    let workspaceModule = new Workspace()
+    ;(async function () {
+      try {
+        this.workspace = await workspaceModule.createObj()   //创建workspace实例
+        this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
+        await this.scene.setWorkspace(this.workspace)        //设置工作空间
+        // let filePath = await Utility.appendingHomeDirectory(this.state.path)
+        let openWk = await this.workspace.open(this.state.path)     //打开工作空间
+        if (!openWk) {
+          Toast.show(" 打开工作空间失败")
+          return
+        }
+        this.mapName = await this.workspace.getSceneName(0) //获取场景名称
+        this.setState({
+          title: this.mapName,
+        })
+        await this.scene.open(this.mapName)                     //根据名称打开指定场景
+        await this.scene.refresh()                           //刷新场景
+
+        this.container && this.container.setLoading(false)
+        this.saveLatest()
+      } catch (e) {
+        this.container && this.container.setLoading(false)
+      }
     }).bind(this)()
   }
+
+  // _addScene2 = (path = '') => {
+  //   let workspaceModule = new Workspace()
+  //   console.log(0)
+  //   ;(async function () {
+  //     this.workspace = await workspaceModule.createObj()   //创建workspace实例
+  //
+  //     console.log(1)
+  //     if (!GLOBAL.sceneControl) {
+  //       console.log(2)
+  //       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
+  //     }
+  //     console.log(3)
+  //     await this.scene.setWorkspace(this.workspace)        //设置工作空间
+  //     let filePath = await Utility.appendingHomeDirectory(path)
+  //     let openWk = await this.workspace.open(filePath)     //打开工作空间
+  //
+  //     console.log(4)
+  //     if (!openWk) {
+  //       Toast.show(" 打开工作空间失败")
+  //       return
+  //     }
+  //     this.mapName = await this.workspace.getSceneName(0) //获取场景名称
+  //     await this.scene.open(this.mapName)                     //根据名称打开指定场景
+  //     await this.scene.refresh()                           //刷新场景
+  //
+  //     this.saveLatest()
+  //   }).bind(this)()
+  // }
 
   saveLatest = () => {
     if (this.isExample) return
@@ -120,72 +181,36 @@ export default class Map3D extends React.Component {
     }).bind(this)()
   }
 
+  back = () => {
+    try {
+      this.container && this.container.setLoading(true, '正在关闭')
+      ;(async function(){
+        this.scene && await this.scene.close()
+        this.workspace && await this.workspace.closeWorkspace()
+        this.container && this.container.setLoading(false)
+        NavigationService.goBack()
+      }).bind(this)()
+    } catch (e) {
+      this.container && this.container.setLoading(false)
+    }
+    return true
+  }
+
   render() {
     return (
       <Container
+        ref={ref => this.container = ref}
         headerProps={{
           title: this.isExample ? '示例地图' : this.state.title,
           navigation: this.props.navigation,
           headerRight: [
 
           ],
+          backAction: this.back,
         }}>
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
         <MTBtnList hidden={this.isExample} type={'MAP_3D'} POP_List={this._pop_list} layerManager={this._layer_manager} dataCollection={this._data_collection} />
       </Container>
     )
   }
-
-  _addScene = () => {
-    let workspaceModule = new Workspace()
-    ;(async function () {
-      this.workspace = await workspaceModule.createObj()   //创建workspace实例
-      this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-      await this.scene.setWorkspace(this.workspace)        //设置工作空间
-      // let filePath = await Utility.appendingHomeDirectory(this.state.path)
-      let openWk = await this.workspace.open(this.state.path)     //打开工作空间
-      if (!openWk) {
-        Toast.show(" 打开工作空间失败")
-        return
-      }
-      this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-      this.setState({
-        title: this.mapName,
-      })
-      await this.scene.open(this.mapName)                     //根据名称打开指定场景
-      await this.scene.refresh()                           //刷新场景
-
-      this.saveLatest()
-    }).bind(this)()
-  }
-
-  // _addScene2 = (path = '') => {
-  //   let workspaceModule = new Workspace()
-  //   console.log(0)
-  //   ;(async function () {
-  //     this.workspace = await workspaceModule.createObj()   //创建workspace实例
-  //
-  //     console.log(1)
-  //     if (!GLOBAL.sceneControl) {
-  //       console.log(2)
-  //       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-  //     }
-  //     console.log(3)
-  //     await this.scene.setWorkspace(this.workspace)        //设置工作空间
-  //     let filePath = await Utility.appendingHomeDirectory(path)
-  //     let openWk = await this.workspace.open(filePath)     //打开工作空间
-  //
-  //     console.log(4)
-  //     if (!openWk) {
-  //       Toast.show(" 打开工作空间失败")
-  //       return
-  //     }
-  //     this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-  //     await this.scene.open(this.mapName)                     //根据名称打开指定场景
-  //     await this.scene.refresh()                           //刷新场景
-  //
-  //     this.saveLatest()
-  //   }).bind(this)()
-  // }
-
 }
