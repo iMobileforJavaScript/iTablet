@@ -146,7 +146,7 @@ export default class MapView extends React.Component {
       this.workspace && await this.workspace.closeWorkspace()
 
       // this.map && await this.map.dispose()
-      // this.mapControl && await this.mapControl.dispose()
+      this.mapControl && await this.mapControl.dispose()
       // this.workspace && await this.workspace.dispose()
 
       this.map = null

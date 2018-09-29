@@ -47,7 +47,7 @@ export default class ExampleMapList extends React.Component {
 
 
   mapexist = async () => {
-    let testData 
+    let testData
     if(Platform.OS==="android"){
       testData=ExampleMapData.testData_android
     }
@@ -80,11 +80,11 @@ export default class ExampleMapList extends React.Component {
         break
       case map3D:
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)     
+        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         if(Platform.OS === 'ios'){
           fileName = "CBD_ios"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD_ios.sxwu' 
-          path = ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu' 
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD_ios.sxwu'
+          path = ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu'
         }else{
           fileName = "CBD"
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.sxwu'
