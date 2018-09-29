@@ -35,7 +35,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   cancel = async zipfile => {
-    await Utility.deleteZip(zipfile)
+    await Utility.deleteFile(zipfile)
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     downitem.downloaded(true)
   }
@@ -169,7 +169,7 @@ export default class ExampleMapList extends React.Component {
             "温馨提示",
             "文件解压完成",
             [
-              { text: "确定", onPress: () => { Utility.deleteZip(this.zipfile) } },
+              { text: "确定", onPress: () => { Utility.deleteFile(this.zipfile) } },
             ],
             { cancelable: true }
           )
