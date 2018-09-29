@@ -40,7 +40,7 @@ export default class Map3D extends React.Component {
     this.container && this.container.setLoading(true, '地图加载中')
     Platform.OS === 'android' && BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
-    if (GLOBAL.sceneControl && Platform.OS === 'android') {
+    if (GLOBAL.sceneControl) {
       this._addScene()
     }
   }

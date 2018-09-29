@@ -74,7 +74,7 @@ static Workspace* g_workspace;
   [_workspace close];
   m_30WData = nil;
   dataArr = nil;
-  [m_mapControl dispose];
+ // [m_mapControl dispose];
   _workspace = nil;
   self.navigationController.navigationBarHidden = YES;
    [self orientationToPortrait:UIInterfaceOrientationPortrait];
