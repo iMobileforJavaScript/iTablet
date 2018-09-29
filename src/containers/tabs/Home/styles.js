@@ -75,8 +75,4 @@ export default StyleSheet.create({
     // height:scaleSize(50),
     // backgroundColor:"blue",
   },
-  examplemaplist:{
-    fontSize: size.fontSize.fontSizeXl,
-    color: color.content,
-  },
 })
