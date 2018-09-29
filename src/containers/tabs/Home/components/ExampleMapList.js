@@ -6,7 +6,7 @@ import NavigationService from '../../../../containers/NavigationService'
 import Thumbnails from '../../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
-import { ConstPath,ExampleMapData } from '../../../../constains'
+import { ConstPath, ExampleMapData } from '../../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../../assets/public/mapImage0.png')
@@ -48,11 +48,11 @@ export default class ExampleMapList extends React.Component {
 
   mapexist = async () => {
     let testData
-    if(Platform.OS==="android"){
-      testData=ExampleMapData.testData_android
+    if (Platform.OS === "android") {
+      testData = ExampleMapData.testData_android.data
     }
-    if(Platform.OS==='ios'){
-      testData=ExampleMapData.testData_ios
+    if (Platform.OS === 'ios') {
+      testData = ExampleMapData.testData_ios.data
     }
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
@@ -62,87 +62,74 @@ export default class ExampleMapList extends React.Component {
     this.setState({ maplist: testData })
   }
 
-
-  _itemClick = async key => {
+  _itemClick = async item => {
     let path, exist, filePath, outPath, fileName, openPath
-    switch (key) {
+    switch (item.key) {
       case vectorMap:
-        path = ConstPath.SampleDataPath + 'hotMap/hotMap.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'hotMap.zip'
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        fileName = "hotMap"
+        path = item.path
+        filePath = item.filePath
+        outPath = item.outPath
+        fileName = item.fileName
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
-          this.alertDown(filePath, fileName, outPath, vectorMap)
+          this.alertDown(filePath, fileName, outPath, item.key)
         }
         break
       case map3D:
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        if(Platform.OS === 'ios'){
-          fileName = "CBD_ios"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD_ios.sxwu'
-          path = ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu'
-        }else{
-          fileName = "CBD"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.sxwu'
-          path = ConstPath.SampleDataPath + 'CBD/CBD.sxwu'
-        }
+        path = item.path
+        filePath = item.filePath
+        outPath = item.outPath
+        fileName = item.fileName
+        openPath=item.openPath
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, map3D)
+          this.alertDown(filePath, fileName, outPath, item.key)
         }
         break
       case ObliquePhoto:
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        if(Platform.OS === 'ios'){
-          fileName = "MaSai_ios"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai_ios/MaSai.sxwu'
-          path = ConstPath.SampleDataPath + 'MaSai_ios/MaSai.sxwu'
-        }else{
-          fileName = "MaSai"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
-          path = ConstPath.SampleDataPath + 'MaSai/MaSai.sxwu'
-        }
+        path = item.path
+        filePath = item.filePath
+        outPath = item.outPath
+        fileName = item.fileName
+        openPath=item.openPath
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, key)
+          this.alertDown(filePath, fileName, outPath, item.key)
         }
         break
       case gl:
-        path = ConstPath.SampleDataPath + 'Changchun/Changchun.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "Changchun.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'Changchun/Changchun.smwu'
-        fileName = "Changchun"
+        path = item.path
+        filePath = item.filePath
+        outPath = item.outPath
+        fileName = item.fileName
+        openPath=item.openPath
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, gl)
+          this.alertDown(filePath, fileName, outPath, item.key)
         }
         break
       case overLay:
-        path = ConstPath.SampleDataPath + 'DOM/DOM.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "DOM.zip"
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'DOM/DOM.smwu'
-        fileName = "DOM"
+        path = item.path
+        filePath = item.filePath
+        outPath = item.outPath
+        fileName = item.fileName
+        openPath=item.openPath
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
         } else {
-          this.alertDown(filePath, fileName, outPath, overLay)
+          this.alertDown(filePath, fileName, outPath, item.key)
         }
         break
     }
@@ -186,7 +173,7 @@ export default class ExampleMapList extends React.Component {
           GLOBAL.downitemname = ''
           Alert.alert(
             "温馨提示",
-            "文件解压完成",
+            "文件下载完成",
             [
               {
                 text: "确定", onPress: () => {
@@ -235,7 +222,7 @@ export default class ExampleMapList extends React.Component {
     Toast.show("开始下载")
     this.progress = null
     this.OnlineService = new OnlineService()
-    let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
+    let result = await this.OnlineService.login("imobile1234", "imobile")
     if (result) {
       this.OnlineService.download(filePath, fileName, {
         onProgress: this.downloading,
@@ -325,7 +312,7 @@ export default class ExampleMapList extends React.Component {
         break
     }
     return (
-      <Thumbnails ref={ref => this.downList(ref, key)} title={key} src={src} btnClick={() => this._itemClick(key)} backgroundcolor={backgroundcolor} opacity={opacity} />
+      <Thumbnails ref={ref => this.downList(ref, key)} title={key} src={src} btnClick={() => this._itemClick(item)} backgroundcolor={backgroundcolor} opacity={opacity} />
     )
   }
 
