@@ -4,7 +4,6 @@ import { HomeSwiper, BtnbarHome, HomeUsualMap, BtnbarLoad, OffLineList, ExampleM
 import NavigationService from '../../NavigationService'
 import { Container, UsualTitle } from '../../../components'
 import { ConstOnline } from '../../../constains'
-import { Point2D, Action } from 'imobile_for_javascript'
 import styles from './styles'
 
 export default class Home extends Component {
@@ -115,7 +114,11 @@ export default class Home extends Component {
         {this.renderSelectList()}
         <View style={styles.btnbarhome} />
         <HomeUsualMap data={this.props.latestMap} style={styles.ususalmap} />
+<<<<<<< HEAD
         <UsualTitle title='示例地图'  />
+=======
+        <UsualTitle title='示例地图' titleStyle={styles.examplemaplist} />
+>>>>>>> e2ae1f3f72f833c2798288f065e30fb0b22dbb24
         <ExampleMapList setLoading={this.setLoading} />
       </Container>
     )
