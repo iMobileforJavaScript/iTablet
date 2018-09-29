@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { BackHandler, Platform } from 'react-native'
-import { Workspace, SMSceneView, Utility, Point3D, Camera } from 'imobile_for_javascript'
+import { Workspace, SMSceneView, Point3D, Camera } from 'imobile_for_javascript'
 import { MTBtnList, Container } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
@@ -55,7 +55,7 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = () => {
-    ;(async function () {
+    (async function () {
       try {
         let workspaceModule = new Workspace()
         this.workspace = await workspaceModule.createObj()   //创建workspace实例

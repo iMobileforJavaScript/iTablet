@@ -28,7 +28,7 @@ RCT_REMAP_METHOD(unZipFile, unZipFileByPath:(NSString *)archivePath targetPath:(
   }
 }
 
-RCT_REMAP_METHOD(deleteZip, deleteZipByPath:(NSString *)Path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+RCT_REMAP_METHOD(deleteFile, deleteFileByPath:(NSString *)Path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     BOOL result = NO;
     if([[NSFileManager defaultManager] fileExistsAtPath:Path isDirectory:nil]){
