@@ -87,8 +87,8 @@ export default class ExampleMapList extends React.Component {
           path = ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu'
         }else{
           fileName = "CBD"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.sxwu'
-          path = ConstPath.SampleDataPath + 'CBD/CBD.sxwu'
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_android/CBD_android.sxwu'
+          path = ConstPath.SampleDataPath + 'CBD_android/CBD_android.sxwu'
         }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
