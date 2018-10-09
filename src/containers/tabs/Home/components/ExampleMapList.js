@@ -67,8 +67,8 @@ export default class ExampleMapList extends React.Component {
     switch (item.key) {
       case vectorMap:
         path = item.path
-        filePath = item.filePath
-        outPath = item.outPath
+        filePath = await Utility.appendingHomeDirectory(item.filePath)
+        outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
         fileName = item.fileName
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
@@ -78,11 +78,11 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case map3D:
-        path = item.path
-        filePath = item.filePath
-        outPath = item.outPath
-        fileName = item.fileName
-        openPath=item.openPath
+      path = item.path
+      filePath = await Utility.appendingHomeDirectory(item.filePath)
+      outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
+      fileName = item.fileName
+      openPath=await Utility.appendingHomeDirectory(item.openPath)
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
@@ -92,11 +92,11 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case ObliquePhoto:
-        path = item.path
-        filePath = item.filePath
-        outPath = item.outPath
-        fileName = item.fileName
-        openPath=item.openPath
+      path = item.path
+      filePath = await Utility.appendingHomeDirectory(item.filePath)
+      outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
+      fileName = item.fileName
+      openPath=await Utility.appendingHomeDirectory(item.openPath)
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
@@ -106,10 +106,10 @@ export default class ExampleMapList extends React.Component {
         break
       case gl:
         path = item.path
-        filePath = item.filePath
-        outPath = item.outPath
+        filePath = await Utility.appendingHomeDirectory(item.filePath)
+        outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
         fileName = item.fileName
-        openPath=item.openPath
+        openPath = await Utility.appendingHomeDirectory(item.openPath)
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
@@ -120,10 +120,10 @@ export default class ExampleMapList extends React.Component {
         break
       case overLay:
         path = item.path
-        filePath = item.filePath
-        outPath = item.outPath
+        filePath = await Utility.appendingHomeDirectory(item.filePath)
+        outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
         fileName = item.fileName
-        openPath=item.openPath
+        openPath = await Utility.appendingHomeDirectory(item.openPath)
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
