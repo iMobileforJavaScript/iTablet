@@ -6,7 +6,7 @@ android/keystores/
 android/app/app.iml
 android/local.properties
 android/app/build/
-android/app/src/main/assets/Trial_License.slm
+#android/app/src/main/assets/Trial_License.slm
 .DS_Store
 android/.DS_Store
 src/.DS_Store
