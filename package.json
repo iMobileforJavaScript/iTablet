@@ -11,6 +11,8 @@
     "installRelease:android": "cd android && ./gradlew installRelease",
     "installDebug:android": "cd android && ./gradlew installDebug",
     "assembleRelease": "cd android && ./gradlew assembleRelease",
+    "precommit": "lint-staged && npm test",
+    "prepush": "npm test",
     "lint": "eslint src"
   },
   "lint-staged": {
