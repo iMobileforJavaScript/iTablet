@@ -1,13 +1,8 @@
 import { TabNavigator } from 'react-navigation'
 import React from 'react'
-import {
-  Platform,
-  Image,
-  StyleSheet,
-  View,
-  Text,
-} from 'react-native'
+import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 
+import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 import Home from './Home'
 import Mine from './Mine'
@@ -24,7 +19,6 @@ import Mine from './Mine'
 // },)
 //
 // export default TabNavi
-
 
 const Tabs = TabNavigator(
   {
@@ -43,16 +37,17 @@ const Tabs = TabNavigator(
               </View>
             )
           },
-          tabBarIcon: ({ focused }: any) =>
+          tabBarIcon: ({ focused }: any) => (
             <Image
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/icon-home-selected.png')
-                  : require('../../assets/tabBar/icon-home.png')
+                  ? require('../../assets/home/icon_home_selected.png')
+                  : require('../../assets/home/icon_home_select.png')
               }
-              style={styles.icon}
-            />,
+              style={styles.icon_home}
+            />
+          ),
           header: null,
         }
       },
@@ -101,16 +96,17 @@ const Tabs = TabNavigator(
               </View>
             )
           },
-          tabBarIcon: ({ focused }: any) =>
+          tabBarIcon: ({ focused }: any) => (
             <Image
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/icon-mine-selected.png')
-                  : require('../../assets/tabBar/icon-mine.png')
+                  ? require('../../assets/home/icon_mine_select.png')
+                  : require('../../assets/home/icon_mine_select.png')
               }
-              style={styles.icon}
-            />,
+              style={styles.icon_mine}
+            />
+          ),
           header: null,
         }
       },
@@ -130,9 +126,9 @@ const Tabs = TabNavigator(
         height: 0, // 如TabBar下面显示有一条线，可以设高度为0后隐藏
       },
       style: {
-        backgroundColor: '#fff', // TabBar 背景色
+        backgroundColor: '#2D2D2F', // TabBar 背景色
         height: Platform.OS === 'android' ? 50 : 49,
-        borderTopColor: '#e2e2e2',
+        borderTopColor: '#505052',
         borderTopWidth: 1,
       },
       labelStyle: {
@@ -154,9 +150,13 @@ const styles = StyleSheet.create({
     color: color.blue2,
     fontSize: 12,
   },
-  icon: {
-    width: 36,
-    height: 36,
+  icon_home: {
+    width: scaleSize(40.5),
+    height: scaleSize(40.5),
+  },
+  icon_mine: {
+    width: scaleSize(40),
+    height: scaleSize(40.5),
   },
   postIcon: {
     width: 2,

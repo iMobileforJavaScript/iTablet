@@ -1,6 +1,5 @@
-import { StyleSheet ,Dimensions} from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { scaleSize } from '../../../utils'
-import { color, size } from '../../../styles'
 const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {
@@ -8,75 +7,41 @@ export default StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     // flexDirection: 'column',
-    backgroundColor: 'transparent',
+    backgroundColor: '#2D2D2F',
   },
-  map: {
-    flex: 1,
-    alignSelf: 'stretch',
-    backgroundColor: 'transparent',
-  },
-  invisibleMap: {
-    width: 0,
-    height: 0,
-  },
-  ususalmap:{
-    // marginTop:scaleSize(20),
-  },
-  btnbarhome:{
-    width:SCREEN_WIDTH,
-    height:scaleSize(10),
-    backgroundColor:"#f3f3f3",
-    borderBottomWidth:scaleSize(1),
-    borderColor:"#E8E8E8",
-    borderTopWidth:scaleSize(1),
-  },
-  mapbtnview:{
-    width:SCREEN_WIDTH,
+  header: {
+    width: SCREEN_WIDTH * 0.762,
+    height: scaleSize(80),
+    alignSelf: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
-    alignItems:'center',
+    justifyContent: 'space-between',
+    marginTop: scaleSize(80),
+  },
+  userimg: {
+    width: scaleSize(45),
+    height: scaleSize(45),
+  },
+  userview: {
+    width: scaleSize(65),
+    height: scaleSize(65),
+    borderRadius: 20,
+    alignItems: 'center',
     justifyContent: 'center',
-    borderColor:"#E8E8E8",
-    borderTopWidth:scaleSize(10),
-    paddingVertical: scaleSize(10),
+    backgroundColor: 'white',
   },
-  mapbtn:{
-    width:SCREEN_WIDTH *0.5-scaleSize(1),
-    height:scaleSize(60),
-    // backgroundColor:"blue",
-    alignItems:'center',
+  headtitle: {
+    width: scaleSize(500),
+    height: scaleSize(60),
+    color: '#FFFFFF',
+    textAlign: 'center',
     justifyContent: 'center',
-    borderBottomWidth:scaleSize(1),
-    borderColor:"#E8E8E8",
+    textAlignVertical: 'center',
+    fontSize: scaleSize(45),
+    // fontFamily: 'CenturyGothic',
   },
-  mapbtnselected:{
-    width:SCREEN_WIDTH *0.5-scaleSize(1),
-    height:scaleSize(60),
-    // backgroundColor:"blue",
-    alignItems:'center',
-    justifyContent: 'center',
-    borderBottomWidth:scaleSize(6),
-    borderColor:"#4BA0FF",
-  },
-  cutline:{
-    width:scaleSize(2),
-    height:scaleSize(40),
-    backgroundColor:"#E8E8E8",
-  },
-  mapselect:{
-    fontSize:scaleSize(30),
-    color:"#1296db",
-  },
-  mapunselect:{
-    fontSize:scaleSize(30),
-  },
-  selectlist:{
-    width:SCREEN_WIDTH,
-    paddingVertical: scaleSize(10),
-    // height:scaleSize(50),
-    // backgroundColor:"blue",
-  },
-  examplemaplist:{
-    fontSize: size.fontSize.fontSizeXl,
-    color: color.content,
+  elseimg: {
+    width: scaleSize(10),
+    height: scaleSize(40),
   },
 })
