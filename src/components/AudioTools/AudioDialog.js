@@ -113,7 +113,7 @@ export default class AudioDialog extends PureComponent {
     }).bind(this)()
   }
 
-  stopRecording = () => {
+  stopRecording = (a) => {
     (async function () {
       try {
         if (GLOBAL.SpeechManager) {
