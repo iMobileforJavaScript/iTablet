@@ -13,7 +13,7 @@
     "assembleRelease": "cd android && ./gradlew assembleRelease",
     "test": "jest",
     "precommit": "lint-staged",
-    "prepush": "npm test",
+    "prepush": "",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix"
   },
