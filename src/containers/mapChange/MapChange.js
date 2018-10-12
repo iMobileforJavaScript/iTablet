@@ -46,7 +46,7 @@ export default class MapChange extends React.Component {
       await map.refresh()
       // NavigationService.goBack()
       this.cb && this.cb()
-  
+
       let routes = this.props.nav.routes
       let routeKey = ''
       for (let i = 0; i < routes.length - 1; i++) {
@@ -55,7 +55,7 @@ export default class MapChange extends React.Component {
         }
       }
       NavigationService.goBack(routeKey)
-      
+
       Toast.show('地图切换成功')
     }).bind(this)()
   }

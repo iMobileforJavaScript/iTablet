@@ -1,17 +1,21 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
 import * as React from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
-import * as Util from '../../utils/constUtil'
+import { FlatList } from 'react-native'
 import { Container } from '../../components'
 
 import { Layer3DManager_item } from './components'
 
 export default class Map3DLayerManager extends React.Component {
+
+  props: {
+    navigation: any,
+  }
+
   constructor(props) {
     super(props)
     const { state } = this.props.navigation
@@ -20,7 +24,7 @@ export default class Map3DLayerManager extends React.Component {
   }
 
   componentDidMount() {
-    ;(async function () {
+    (async function () {
       let layers3ds = await this.scene.getLayer3Ds()
       let layerCount = await layers3ds.getCount()
       let layerNameArr = []
@@ -33,7 +37,7 @@ export default class Map3DLayerManager extends React.Component {
       this.setState({
         datasourceList: layerNameArr,
       })
-    }).bind(this)();
+    }).bind(this)()
   }
 
   state = {
@@ -56,7 +60,7 @@ export default class Map3DLayerManager extends React.Component {
           title: '地图管理',
           navigation: this.props.navigation,
           headerRight: [
-      
+
           ],
         }}>
         <FlatList
@@ -67,10 +71,3 @@ export default class Map3DLayerManager extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor:Util.USUAL_GREEN,
-  },
-})

@@ -1,7 +1,7 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
 import * as React from 'react'
@@ -13,6 +13,14 @@ const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR
 const DEFAULTWIDTH = 300
 
 export default class BorderInput extends React.Component {
+
+  props: {
+    password: string,
+    placeholder: string,
+    width: number,
+    textChange: () => {},
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -21,7 +29,7 @@ export default class BorderInput extends React.Component {
   }
 
   _btnClick = () => {
-    this.setState((oldState) => {
+    this.setState(oldState => {
       let newState = !oldState.secure
       return {
         secure: newState,
@@ -34,7 +42,7 @@ export default class BorderInput extends React.Component {
     const isPassword = this.props.password ? this.props.password : false
     const placeholder = this.props.placeholder ? this.props.placeholder : 'place'
     const width = this.props.width ? this.props.width : DEFAULTWIDTH
-    const textChange = this.props.textChange ? this.props.textChange : (text)=>{console.log(text)}
+    const textChange = this.props.textChange ? this.props.textChange : () => {}
     return (
       <View style={[styles.container, { width: width }]}>
         <View style={{ width: Util.USUAL_LINEWIDTH }} />
@@ -45,7 +53,7 @@ export default class BorderInput extends React.Component {
           secureTextEntry={this.state.secure}
           placeholder={placeholder}
           underlineColorAndroid='transparent'
-          onChangeText={(text)=>textChange(text)}
+          onChangeText={text=>textChange(text)}
           placeholderTextColor={BORDERCOLOR} />
         {isPassword && <TouchableHighlight underlayColor={Util.UNDERLAYCOLOR} onPress={this._btnClick}><Image style={styles.image} source={imagePath} /></TouchableHighlight>}
       </View>

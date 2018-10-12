@@ -8,5 +8,5 @@ export default StyleSheet.create({
   },
   sup: {
     margin: 7,
-  }
+  },
 })

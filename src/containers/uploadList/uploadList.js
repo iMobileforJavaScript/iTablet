@@ -21,7 +21,6 @@ export default class UpLoadList extends Component {
     title: string,
     navigation: Object,
     nav: Object,
-
   }
 
   constructor(props) {
@@ -31,7 +30,7 @@ export default class UpLoadList extends Component {
       data: [],
       backPath: '',
       showData: false,
-      uploadlist:{}
+      uploadlist:{},
     }
   }
 
@@ -80,19 +79,19 @@ export default class UpLoadList extends Component {
       }
     }).bind(this)()
   }
-  
-  refeshUpLoadList=async(item)=>{
-      let datalist=this.state.uploadlist
-      if(datalist[item.name]){
-        delete(datalist[item.name])
-      }else{
-        datalist[item.name]=item.path
-      }
-      this.setState({
-        uploadlist: datalist,
-      })
+
+  refeshUpLoadList=async item=>{
+    let datalist=this.state.uploadlist
+    if(datalist[item.name]){
+      delete(datalist[item.name])
+    }else{
+      datalist[item.name]=item.path
+    }
+    this.setState({
+      uploadlist: datalist,
+    })
   }
-  
+
   addupload=async()=>{
     JSON.stringify(this.state.uploadlist)!=="{}"? this.uploadDialog.setDialogVisible(true): Toast.show("请选择要上传的文件")
   }
@@ -163,11 +162,11 @@ export default class UpLoadList extends Component {
               />
               : <EmptyView />)
         }
-       <UploadDialog
-         ref={ref=>this.uploadDialog=ref}
-         data={this.state.uploadlist} 
-         confirmBtnTitle={"上传"}
-       />
+        <UploadDialog
+          ref={ref=>this.uploadDialog=ref}
+          data={this.state.uploadlist}
+          confirmBtnTitle={"上传"}
+        />
       </Container>
     )
   }
@@ -230,5 +229,5 @@ const styles = StyleSheet.create({
   select: {
     width: scaleSize(150),
     height: scaleSize(60),
-  }
+  },
 })

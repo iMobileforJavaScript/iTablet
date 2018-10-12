@@ -12,13 +12,16 @@ export default class UploadDialog extends PureComponent {
     confirmAction: any,
     data: any,
     cancelAction: any,
+    confirmBtnTitle: String,
   }
+
   constructor(props) {
     super(props)
     this.state = {
       dataName: '',
     }
   }
+
   setDialogVisible(visible) {
     this.dialog && this.dialog.setDialogVisible(visible)
   }
@@ -36,23 +39,21 @@ export default class UploadDialog extends PureComponent {
     for (const key in this.props.data) {
       if (this.props.data.hasOwnProperty(key)) {
         let path = await Utility.appendingHomeDirectory(this.props.data[key])
-        zipList.push(path);
+        zipList.push(path)
       }
     }
     return zipList
   }
 
-  uploading=async(progress)=>{
-      if(Platform.OS==='ios'){
-
-      }else{
-        progress===100&&this.onComplete()
-      }
+  uploading=async progress=>{
+    if (Platform.OS === 'android') {
+      progress===100 && this.onComplete()
+    }
   }
   onComplete(){
-     Utility.deleteFile(this.zipPath)
-     Toast.show("上传成功")
-     NavigationService.goBack()
+    Utility.deleteFile(this.zipPath)
+    Toast.show("上传成功")
+    NavigationService.goBack()
   }
   upLoad = async () => {
     try {
@@ -68,7 +69,7 @@ export default class UploadDialog extends PureComponent {
           this.OnlineService = new OnlineService()
           let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
           if(result){
-          await this.OnlineService.upload(toPath, this.state.dataName, {
+            await this.OnlineService.upload(toPath, this.state.dataName, {
               onProgress: this.uploading,
               onComplete: this.onComplete,
               onFailure: this.uploadFailure,

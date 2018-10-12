@@ -9,7 +9,6 @@ import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } f
 import { scaleSize, dataUtil } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Table, TableWrapper, Row, Rows, Col, Cell } from 'react-native-table-component'
-import { FieldType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 
@@ -49,7 +48,7 @@ export default class LayerAttributeTable extends React.Component {
 
   constructor(props) {
     super(props)
-    let {titleList, dataList, colHeight, widthArr} = this.dealData(props.tableTitle, props.data)
+    let {dataList, colHeight, widthArr} = this.dealData(props.tableTitle, props.data)
     let tableHead = this.props.hasIndex ? ['序号', ...props.tableHead] : props.tableHead
     this.state = {
       colHeight: colHeight,
@@ -69,7 +68,7 @@ export default class LayerAttributeTable extends React.Component {
       JSON.stringify(prevProps.tableTitle) !== JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
     ) {
-      let {titleList, dataList, colHeight, widthArr} = this.dealData(this.props.tableTitle, this.props.data)
+      let {dataList, colHeight, widthArr} = this.dealData(this.props.tableTitle, this.props.data)
 
       this.setState({
         colHeight: colHeight,

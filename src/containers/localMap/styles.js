@@ -24,5 +24,5 @@ export default StyleSheet.create({
     borderStyle: 'solid',
     borderColor: Util.USUAL_SEPARATORCOLOR,
     borderWidth: 1,
-  }
+  },
 })

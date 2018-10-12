@@ -1,18 +1,22 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
-import * as React from 'react';
-import { View, StyleSheet, TouchableHighlight, Text, FlatList } from 'react-native';
-import * as Util from '../../utils/constUtil';
+import * as React from 'react'
+import { View, StyleSheet, TouchableHighlight, Text, FlatList } from 'react-native'
+import * as Util from '../../utils/constUtil'
 
-const WIDTH = Util.WIDTH;
-const ITEMHEIGHT = 40;
-const bgColor = 'white';
+const WIDTH = Util.WIDTH
+const ITEMHEIGHT = 40
+const bgColor = 'white'
 
 export default class ListBtn extends React.Component {
+
+  props: {
+    data: any,
+  }
 
   _renderItem = ({ item }) => (
     <TouchableHighlight style={styles.btn} onPress={item.onClick} underlayColor={Util.UNDERLAYCOLOR}>
@@ -21,8 +25,8 @@ export default class ListBtn extends React.Component {
   );
 
   render() {
-    const data = this.props.data ? this.props.data : (() => { throw new Error('ListBtn: please input data!') })();
-    const itemsNum = data.length;
+    const data = this.props.data ? this.props.data : (() => { throw new Error('ListBtn: please input data!') })()
+    const itemsNum = data.length
     return (
       <View style={[styles.container, { height: 41*itemsNum+1 }]}>
         <FlatList
@@ -32,7 +36,7 @@ export default class ListBtn extends React.Component {
           ItemSeparatorComponent={Util.SEPARATOR}
         />
       </View>
-    );
+    )
   }
 }
 
@@ -57,5 +61,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     paddingLeft: 10,
-  }
-});
+  },
+})

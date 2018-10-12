@@ -328,7 +328,7 @@ export default class MT_layerManager extends React.Component {
         mapControl={this.mapControl}
         showRemoveDialog={this.showRemoveDialog}
         showRenameDialog={this.showRenameDialog}
-        setEditable={(data, sectionID, rowID) => {
+        setEditable={data => { // data, sectionID, rowID
           if (this.currentEditItemName !== data.name) {
             let item = this.itemRefs[this.currentEditItemName]
             item && item.updateEditable()
@@ -336,7 +336,7 @@ export default class MT_layerManager extends React.Component {
           this.currentEditItemName = data.name
           this.props.setEditLayer && this.props.setEditLayer(data)
         }}
-        onOpen={(data, sectionID, rowID) => {
+        onOpen={data => { // data, sectionID, rowID
           if (this.state.currentOpenItemName !== data.name) {
             let item = this.itemRefs[this.state.currentOpenItemName]
             item && item.close()

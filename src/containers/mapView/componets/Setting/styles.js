@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
-import { color, size } from '../../../../styles'
+import { color } from '../../../../styles'
 
 export default StyleSheet.create({
   bg: {

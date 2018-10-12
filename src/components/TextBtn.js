@@ -3,7 +3,6 @@ import { View, StyleSheet, Text, TouchableOpacity } from 'react-native'
 import * as Util from '../utils/constUtil'
 
 const WIDTH = 70
-const textBlue = Util.USUAL_BLUE
 
 export default class TextBtn extends React.Component {
 
@@ -17,7 +16,7 @@ export default class TextBtn extends React.Component {
 
   constructor(props) {
     super(props)
-    
+
     this.state = {
       clicked: false,
     }

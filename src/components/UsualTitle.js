@@ -27,7 +27,7 @@ export default class UsualTitle extends React.Component {
   }
 
   render() {
-    const bgColorCon = this.props.headColor ? { backgroundColor: this.props.headColor } : null
+    // const bgColorCon = this.props.headColor ? { backgroundColor: this.props.headColor } : null
     const bgColorTitle = this.props.themeColor ? { backgroundColor: this.props.themeColor } : null
     return (
       <View style={[styles.container, this.props.style]}>

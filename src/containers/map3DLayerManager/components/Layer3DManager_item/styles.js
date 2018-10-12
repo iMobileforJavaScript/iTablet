@@ -11,7 +11,7 @@ export default StyleSheet.create({
     borderLeftWidth:0,
     borderRightWidth:0,
     borderBottomWidth:1,
-    borderColor:'#bbbbbb'
+    borderColor:'#bbbbbb',
   },
   rowOne: {
     height:46,
@@ -46,6 +46,6 @@ export default StyleSheet.create({
   rowTwo: {
     height:46,
     width:Util.WIDTH,
-    backgroundColor:'white'
+    backgroundColor:'white',
   },
 })

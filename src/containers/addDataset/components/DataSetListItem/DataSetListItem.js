@@ -12,7 +12,7 @@ export default class DataSetListItem extends React.Component {
     height: PropTypes.number,
     hidden: PropTypes.bool,
   }
-  
+
   static defaultProps = {
     hidden: true,
   }

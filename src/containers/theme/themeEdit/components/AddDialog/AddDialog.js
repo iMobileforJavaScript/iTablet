@@ -21,7 +21,7 @@ export default class AddDialog extends PureComponent {
     value: string,
     defaultValue: string,
   }
-  
+
   static defaultProps = {
     label: '单值',
   }

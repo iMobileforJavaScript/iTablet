@@ -1,33 +1,11 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import { constUtil, Toast, scaleSize } from '../../../../utils'
-// import {
-//   DatasetType,
-//   GeoStyle,
-//   Size2D,
-//   BufferAnalystGeometry,
-//   BufferAnalystParameter,
-//   BufferEndType,
-//   DatasetVectorInfo,
-//   CursorType,
-// } from 'imobile_for_reactnative'
+import { Toast, scaleSize } from '../../../../utils'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
 import { Const } from '../../../../constains'
 import { facilityAnalyst, tranportationAnalyst } from '../../util'
 import PropTypes from 'prop-types'
-// import Setting from '../Setting'
-// import NavigationService from '../../../NavigationService'
 
-// const Const.NETWORK_ROUTE = 'route'
-// const Const.NETWORK_TSP = 'tsp'
-// const Const.NETWORK_FACILITY = 'facility'
-// const Const.NETWORK_TRACKING = 'tracking'
-const textstyles1={
-  fontSize: scaleSize(26),
-  backgroundColor: 'transparent',
-  width: scaleSize(120),
-  textAlign: 'center',
-}
 export default class NetworkAnalystToolBar extends React.Component {
 
   static propTypes = {
@@ -130,30 +108,27 @@ export default class NetworkAnalystToolBar extends React.Component {
   }
 
   /** 设置配送中心 **/
-  _setCenter = type => {
+  _setCenter = () => {
     tranportationAnalyst.setCenter()
   }
 
   /** 设置目的地 **/
-  _setDist = type => {
+  _setDist = () => {
     tranportationAnalyst.setDist()
   }
 
   /** 上游追踪 **/
   _traceUp = async () => {
-    // this.toDoAction()
     await facilityAnalyst.traceUp()
   }
 
   /** 下游追踪 **/
   _traceDown = async () => {
-    // this.toDoAction()
     await facilityAnalyst.traceDown()
   }
 
   /** 连通分析 **/
   _analyst = async type => {
-    // this.toDoAction()
     switch (type) {
       case Const.NETWORK_ROUTE:
         await tranportationAnalyst.findPath()

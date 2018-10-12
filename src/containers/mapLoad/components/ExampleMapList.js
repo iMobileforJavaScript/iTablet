@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { NativeModules, Platform } from 'react-native'
-import { View, StyleSheet, FlatList, Alert } from 'react-native'
+import { NativeModules, Platform, View, StyleSheet, FlatList, Alert } from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
 import Thumbnails from '../../../components/Thumbnails'
@@ -57,9 +56,8 @@ export default class ExampleMapList extends React.Component {
     this.setState({ maplist: testData })
   }
 
-
   _itemClick = async key => {
-    let path, exist, filePath, outPath, fileName, openPath, zipexist
+    let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
@@ -67,7 +65,6 @@ export default class ExampleMapList extends React.Component {
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         fileName = "hotMap"
         exist = await Utility.fileIsExistInHomeDirectory(path)
-        zipexist = await Utility.fileIsExistInHomeDirectory(filePath)
         if (exist) {
           openNativeSampleCode.open("Visual")
         } else {
@@ -152,7 +149,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  onComplete = async result => {
+  onComplete = async () => {
     // console.log("success")
     this.downloaded = true
     this.progress = null
@@ -191,7 +188,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  downloadFailure = async error => {
+  downloadFailure = async () => {
     Toast.show('下载失败')
   }
 

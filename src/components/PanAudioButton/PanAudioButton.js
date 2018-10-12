@@ -103,7 +103,7 @@ export default class PanAudioButton extends PureComponent {
       >
         <TouchableOpacity
           activeOpacity={0.8}
-          onPressOut={event => {
+          onPressOut={() => {
             this.action()
           }} >
           <Image resizeMode={'contain'} style={[styles.image, {width: this.props.width, height: this.props.height}]} source={require('../../assets/public/icon-recording2.png')} />

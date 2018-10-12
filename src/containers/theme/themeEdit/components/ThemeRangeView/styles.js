@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { constUtil, scaleSize } from '../../../../../utils/index'
+import { scaleSize } from '../../../../../utils/index'
 import { size } from '../../../../../styles/index'
 
 export default StyleSheet.create({

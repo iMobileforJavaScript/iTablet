@@ -1,23 +1,23 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
-import * as React from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import * as Util from '../../../utils/constUtil';
+import * as React from 'react'
+import { View, StyleSheet, Text } from 'react-native'
 
-import { TextBtn } from '../../../components';
-
-const BGCOLOR = Util.USUAL_GREEN;
-const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR;
-const WIDTH = 250;
+import { TextBtn } from '../../../components'
 
 export default class Tips extends React.Component {
 
-  render() {
+  props: {
+    tipText: String,
+    btnText: String,
+    btnClick: () => {},
+  }
 
+  render() {
     return (
       <View style={styles.container}>
         <View style={styles.tipsContainer}>
@@ -25,7 +25,7 @@ export default class Tips extends React.Component {
         </View>
         <TextBtn btnText={this.props.btnText} btnClick={this.props.btnClick}/>
       </View>
-    );
+    )
   }
 }
 
@@ -46,5 +46,5 @@ const styles = StyleSheet.create({
   },
   tips: {
     fontSize: 17,
-  }
-});
+  },
+})

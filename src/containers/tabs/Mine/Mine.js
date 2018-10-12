@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import { Container, BtnOne } from '../../../components'
+import { Container } from '../../../components'
 import NavigationService from '../../NavigationService'
 import Login from './Login'
 

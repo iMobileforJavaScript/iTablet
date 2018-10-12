@@ -1,9 +1,7 @@
 import * as React from 'react'
-import { View, Text, FlatList } from 'react-native'
+import { FlatList } from 'react-native'
 import { Container, LayerItem, ListSeparator } from '../../components'
 import { Action } from 'imobile_for_reactnative'
-
-import styles from './styles'
 
 export default class MT_dataCollection extends React.Component {
 

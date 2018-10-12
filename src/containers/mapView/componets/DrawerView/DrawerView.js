@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View, PanResponder, Animated, TouchableOpacity, Image } from 'react-native'
-import { scaleSize, screen } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import styles from './styles'
 
 const drawerHeight = scaleSize(300) // 默认View高度

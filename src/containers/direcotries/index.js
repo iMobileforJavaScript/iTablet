@@ -1,3 +1,3 @@
-import AddDataset from './AddDataset'
+import Directories from './Directories'
 
-export default AddDataset
+export default Directories

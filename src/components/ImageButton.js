@@ -2,7 +2,7 @@
   图片按钮
   Copyright © SuperMap. All rights reserved.
   Author: Yang Shanglong
-  E-mail: ysl19910917@qq.com 
+  E-mail: ysl19910917@qq.com
 */
 
 import * as React from 'react'
@@ -22,6 +22,7 @@ export default class ImageButton extends React.Component {
     onPress: PropTypes.func,
     icon: PropTypes.any,
     title: PropTypes.string,
+    type: PropTypes.string,
   }
 
   static defaultProps = {

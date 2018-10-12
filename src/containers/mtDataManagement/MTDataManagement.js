@@ -4,7 +4,7 @@ import { Container, ListSeparator, DataSetListSection, DataSetListItem, InputDia
 import { Toast } from '../../utils'
 import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
-import { Action, CursorType, DatasetType } from 'imobile_for_reactnative'
+import { Action, DatasetType } from 'imobile_for_reactnative'
 
 // import styles from './styles'
 

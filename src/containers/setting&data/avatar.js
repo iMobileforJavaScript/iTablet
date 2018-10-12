@@ -1,25 +1,31 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
-import * as React from 'react';
-import { View, StyleSheet, TouchableHighlight, Text, Image } from 'react-native';
-import * as Util from '../../utils/constUtil';
+import * as React from 'react'
+import { View, StyleSheet, TouchableHighlight, Text, Image } from 'react-native'
+import * as Util from '../../utils/constUtil'
 
-const WIDTH = Util.WIDTH;
-const HEIGHT = 120;
-const PADDING = 5;
-const BGCOLOR = Util.USUAL_GREEN;
+const WIDTH = Util.WIDTH
+const HEIGHT = 120
+const BGCOLOR = Util.USUAL_GREEN
 
 export default class Avatar extends React.Component {
 
+  props: {
+    image: any,
+    btnClick: () => {},
+    name: string,
+    email: string,
+  }
+
   render() {
-    const imagePath = this.props.image ? this.props.image : require('../assets/public/avatar.png');
-    const btnClick = this.props.btnClick ? this.props.btnClick : () => { console.log(22222) };
-    const name = this.props.name ? this.props.name : '用户名';
-    const email = this.props.email ? this.props.email : '绑定邮箱';
+    const imagePath = this.props.image ? this.props.image : require('../assets/public/avatar.png')
+    const btnClick = this.props.btnClick ? this.props.btnClick : () => { }
+    const name = this.props.name ? this.props.name : '用户名'
+    const email = this.props.email ? this.props.email : '绑定邮箱'
     return (
       <View style={styles.container}>
         <View style={styles.content}>
@@ -33,7 +39,7 @@ export default class Avatar extends React.Component {
           <Image style={styles.btnImage} source={require('../assets/public/arrow-right.png')} />
         </TouchableHighlight>
       </View>
-    );
+    )
   }
 }
 
@@ -78,5 +84,5 @@ const styles = StyleSheet.create({
   btnImage: {
     height: 40,
     width: 40,
-  }
-});
+  },
+})

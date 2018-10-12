@@ -28,11 +28,11 @@ export default class ThemeUniqueView extends React.Component {
     isThemeLayer: boolean,
     setLoading: () => {},
   }
-  
+
   static defaultProps = {
     isThemeLayer: false,
   }
-  
+
   constructor(props) {
     super(props)
     this.state = {
@@ -52,7 +52,7 @@ export default class ThemeUniqueView extends React.Component {
   componentDidMount() {
     this.getInitData()
   }
-  
+
   getInitData = async () => {
     let data = {
       expression: 'SMUSERID',
@@ -100,7 +100,7 @@ export default class ThemeUniqueView extends React.Component {
     })
   }
 
-  changeStyle = (data, index, cellIndex) => {
+  changeStyle = (data, index) => { // data, index, cellIndex
     // NavigationService.navigate('ThemeStyle', {
     //   layer: this.props.layer,
     //   map: this.props.map,
@@ -270,7 +270,7 @@ export default class ThemeUniqueView extends React.Component {
         NavigationService.goBack(key)
         Toast.show('设置成功')
       } catch (e) {
-        console.error(e)
+        Toast.show('设置失败')
       }
     }).bind(this)()
   }
@@ -298,7 +298,7 @@ export default class ThemeUniqueView extends React.Component {
           Toast.show('添加失败，单值已存在')
         }
       } catch (e) {
-        console.error(e)
+        Toast.show('添加失败')
       }
     }).bind(this)()
   }
@@ -321,7 +321,7 @@ export default class ThemeUniqueView extends React.Component {
           Toast.show('删除失败')
         }
       } catch (e) {
-        console.error(e)
+        Toast.show('删除失败')
       }
     }).bind(this)()
   }

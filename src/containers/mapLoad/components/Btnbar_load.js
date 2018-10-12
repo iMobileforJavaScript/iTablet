@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
-import { StackNavigator, NavigationActions } from 'react-navigation'
 import { scaleSize } from '../../../utils'
 import { BtnOne } from '../../../components'
 
@@ -17,12 +16,20 @@ const OSM = 'OSM'
 const Google = '谷歌'
 
 export default class Btnbar_mapLoad extends React.Component {
+
+  props: {
+    TD: () => {},
+    Baidu: () => {},
+    OSM: () => {},
+    Google: () => {},
+  }
+
   constructor(props) {
     super(props)
   }
 
   _addElement = (delegate, src, str) => {
-    if (typeof delegate == 'function' && typeof str == 'string') {
+    if (typeof delegate === 'function' && typeof str === 'string') {
 
       let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop} />
       return (element)
@@ -32,19 +39,15 @@ export default class Btnbar_mapLoad extends React.Component {
   }
 
   _click_TD = () => {
-    console.log(TD)
   }
 
   _click_Baidu = () => {
-    console.log(Baidu)
   }
 
   _click_OSM = () => {
-    console.log(OSM)
   }
 
   _click_Google = () => {
-    console.log(Google)
   }
 
   render() {
@@ -73,5 +76,5 @@ const styles = StyleSheet.create({
   },
   btntop: {
     marginTop: scaleSize(5),
-  }
+  },
 })

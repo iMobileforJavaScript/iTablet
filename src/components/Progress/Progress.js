@@ -24,6 +24,7 @@ export default class Progress extends Component {
     //buffer动画时长
     bufferAniDuration: PropTypes.number,
   }
+
   static defaultProps = {
     //进度条颜色
     progressColor: 'yellow',
@@ -35,7 +36,7 @@ export default class Progress extends Component {
     bufferAniDuration: 300,
   }
 
-  componentWillMount() {
+  componentWillMount() { // eslint-disable-line
     this.progress = this.props.progress || 0
     this.buffer = this.props.buffer
   }

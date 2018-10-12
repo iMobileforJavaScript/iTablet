@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, Text, View, Image, FlatList ,Dimensions} from 'react-native'
+import { StyleSheet, TouchableOpacity, Text, View, Image ,Dimensions} from 'react-native'
 import { Container, EmptyView, MTBtn } from '../../../components'
-import { Toast, scaleSize } from '../../../utils'
+import { scaleSize } from '../../../utils'
 import NavigationService from '../../NavigationService'
 // import{ Dialog} from '../../../components'
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -55,7 +55,7 @@ export default class CloudService extends Component {
       </View>)
 
   }
-  upload=async(filePath,fileName)=>{
+  upload = async () => {
     // this.OnlineService = new OnlineService()
     // let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
     // if(result){
@@ -64,15 +64,17 @@ export default class CloudService extends Component {
     //     onProgress: this.uploading,
     //     onComplete: this.onComplete,
     //     onFailure: this.uploadFailure,
-    //   })     
+    //   })
     // }
     NavigationService.navigate('UpLoadList', { })
   }
-  uploading=async progress=>{
-     if(progress===99){
-           this.uploadDialog.setDialogVisible(true)
-     }
+
+  uploading = async progress => {
+    if(progress===99){
+      this.uploadDialog.setDialogVisible(true)
+    }
   }
+
   render() {
     return (
       <Container
@@ -84,11 +86,11 @@ export default class CloudService extends Component {
           navigation: this.props.navigation,
           headerRight: [
             <MTBtn key={'upload'} image={require('../../../assets/public/icon_upload.png')} imageStyle={styles.upload}
-              BtnClick={this.upload} />
+              BtnClick={this.upload} />,
           ],
           withoutBack: true,
         }}>
-         {/* <View style={styles.search}>
+        {/* <View style={styles.search}>
 
          </View>
          <FlatList
@@ -98,8 +100,8 @@ export default class CloudService extends Component {
           renderItem={this.renderItem}
           keyExtractor={this._keyExtractor}
         /> */}
-      <EmptyView title={'待完善'} />
-      {/* <Dialog
+        <EmptyView title={'待完善'} />
+        {/* <Dialog
           ref={ref => this.uploadDialog = ref}
           type={Dialog.Type.MODAL}
           title={'提示'}
@@ -120,7 +122,7 @@ const styles = StyleSheet.create({
   upload: {
     width: scaleSize(40),
     height: scaleSize(40),
-    marginRight: scaleSize(20)
+    marginRight: scaleSize(20),
   },
   search:{
     width:SCREEN_WIDTH,
@@ -139,9 +141,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   itemImage: {
-   width:IMAGE_WIDTH,
-   height: scaleSize(250),
-   backgroundColor:"blue",
+    width:IMAGE_WIDTH,
+    height: scaleSize(250),
+    backgroundColor:"blue",
   },
   itemTitle:{
     width:IMAGE_WIDTH,
@@ -150,7 +152,7 @@ const styles = StyleSheet.create({
     color:"black",
     textAlignVertical:'center',
 
-   },
+  },
   itemBottom: {
     width:IMAGE_WIDTH,
     flexDirection: 'row',

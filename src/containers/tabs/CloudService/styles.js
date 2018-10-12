@@ -44,5 +44,5 @@ export default StyleSheet.create({
   btnImage: {
     height: 40,
     width: 40,
-  }
+  },
 })

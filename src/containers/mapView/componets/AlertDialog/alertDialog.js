@@ -9,6 +9,7 @@ export default class AlertDialog extends React.Component {
     btnTitleStyle: StyleSheet,
     childrens: any,
     Alerttitle: string,
+    backHide: any,
   }
 
   constructor(props) {
@@ -57,7 +58,7 @@ export default class AlertDialog extends React.Component {
               style={styles.container}
               data={this.props.childrens}
               renderItem={this.renderItem}
-            /> 
+            />
           </View>
         </View>
       </Modal>

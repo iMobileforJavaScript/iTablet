@@ -56,7 +56,7 @@ export default class Row extends PureComponent {
     })
     this.props.getValue && this.props.getValue({title: this.props.title, text})
   }
-  
+
   getSelected = ({title, selected, index, value}) => {
     this.props.getValue && this.props.getValue({
       labelTitle: this.props.title,
@@ -67,7 +67,7 @@ export default class Row extends PureComponent {
       index,
     })
   }
-  
+
   getValue = value => {
     this.props.getValue && this.props.getValue(value)
   }

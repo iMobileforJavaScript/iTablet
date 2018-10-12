@@ -1,5 +1,5 @@
 import React from 'react'
-import {  Image, StyleSheet, FlatList, TouchableOpacity, Text, View,} from 'react-native'
+import {  Image, StyleSheet, FlatList, TouchableOpacity, Text, View} from 'react-native'
 import { Container ,ListSeparator} from '../../components'
 import NavigationService from '../NavigationService'
 import { DatasetType } from 'imobile_for_reactnative'

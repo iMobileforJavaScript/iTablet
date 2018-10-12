@@ -5,11 +5,10 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, Text, WebView, Platform } from 'react-native'
+import { StyleSheet, WebView, Platform } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
-import BorderInput from './border_input'
-import { Container, BtnTwo, CheckBox} from '../../components'
+import { Container } from '../../components'
 
 const DEFAULTWIDTH = 300
 const BGCOLOR = constUtil.USUAL_GREEN
@@ -28,7 +27,7 @@ export default class Register extends React.Component {
     Toast.show('功能待完善')
   }
 
-  _checkBoxChange = changed => {
+  _checkBoxChange = () => {
     // Toast.show('功能待完善')
   }
 

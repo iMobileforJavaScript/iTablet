@@ -24,5 +24,5 @@ export default StyleSheet.create({
     flex: 1,
     marginTop: scaleSize(20),
     backgroundColor: 'white',
-  }
+  },
 })

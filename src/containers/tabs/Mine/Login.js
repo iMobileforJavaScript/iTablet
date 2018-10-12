@@ -5,16 +5,14 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-import { constUtil, Toast } from '../../../utils'
+import { View } from 'react-native'
+import { Toast } from '../../../utils'
 import NavigationService from '../../NavigationService'   //导航模块
 import { Container, TextBtn, BtnTwo } from '../../../components'
 import Input from './Input'
 import Tips from './Tips'
 import { OnlineService } from 'imobile_for_reactnative'
 import forge from 'node-forge'
-
-const BGCOLOR = constUtil.USUAL_GREEN
 
 export default class Login extends React.Component {
 
@@ -100,9 +98,9 @@ export default class Login extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BGCOLOR,
-  },
-})
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: BGCOLOR,
+//   },
+// })

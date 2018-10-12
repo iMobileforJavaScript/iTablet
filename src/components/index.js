@@ -1,6 +1,5 @@
 import CheckBox from './checkBox'
 import Header from './Header'
-import TabBtn from './TabBtn'
 import TextBtn from './TextBtn'
 import Thumbnails from './Thumbnails'
 import UsualTitle from './UsualTitle'
@@ -46,7 +45,6 @@ export {
   BtnTwo,
   CheckBox,
   Header,
-  TabBtn,
   TextBtn,
   Thumbnails,
   UsualTitle,

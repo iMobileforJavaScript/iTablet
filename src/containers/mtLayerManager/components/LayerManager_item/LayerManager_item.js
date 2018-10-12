@@ -11,11 +11,10 @@ import {
   DatasetType,
   ThemeType,
 } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import { Const } from '../../../../constains'
 import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
-import { scaleSize } from '../../../../utils'
 import styles from './styles'
 
 const LAYER_GROUP = 'layerGroup'
@@ -537,6 +536,7 @@ export default class LayerManager_item extends React.Component {
 
   render() {
     if (this.props.swipeEnabled) {
+
       return this.renderSwipeRow()
     } else {
       return this.renderRow()

@@ -1,7 +1,7 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
 import * as React from 'react'
@@ -11,6 +11,13 @@ import * as Util from '../../../../utils/constUtil'
 import styles from './styles'
 
 export default class Layer3DManager_item extends React.Component {
+
+  props: {
+    name: string,
+    layer: Object,
+    scene: Object,
+  }
+
   constructor(props){
     super(props)
     this.layer3D = this.props.layer
@@ -28,7 +35,7 @@ export default class Layer3DManager_item extends React.Component {
     }).bind(this)()
   }
 
-  state={
+  state = {
     editable:false,
     visable:false,
     selectable:false,
@@ -47,12 +54,12 @@ export default class Layer3DManager_item extends React.Component {
   // }
 
   _visable_change=()=>{
-    this.setState((oldstate)=>{
+    this.setState(oldstate=>{
       let oldVisable = oldstate.visable
       ;(async function (){
         await this.layer3D.setVisable(!oldVisable)
         await this.scene.refresh()
-      }).bind(this)();
+      }).bind(this)()
       return({visable:!oldVisable})
     })
   }
@@ -72,14 +79,14 @@ export default class Layer3DManager_item extends React.Component {
    * 设置图层颜色
    */
   _setObjectsColor=()=>{
-    ;(async function (){
+    (async function (){
       this.layer3D.setObjectsColor(1, 255, 0, 0, 1)
       await this.scene.refresh()
     }).bind(this)()
   }
-  
+
   _pop_row=()=>{
-    this.setState((oldstate)=>{
+    this.setState(oldstate=>{
       let oldshow = oldstate.rowShow
       return({rowShow:!oldshow})
     })
@@ -88,7 +95,7 @@ export default class Layer3DManager_item extends React.Component {
   render() {
     let name = this.props.name
     const isShow = this.state.rowShow
-    const image1 = this.state.editable ? require('../../../../assets/public/edit.png') :require('../../../../assets/public/edit-off.png')
+    // const image1 = this.state.editable ? require('../../../../assets/public/edit.png') :require('../../../../assets/public/edit-off.png')
     const image2 = this.state.visable ? require('../../../../assets/public/eye.png') :require('../../../../assets/public/eye-off.png')
     const image3 = this.state.selectable ? require('../../../../assets/public/select.png') :require('../../../../assets/public/select-off.png')
     const image4 = this.state.rowShow ? require('../../../../assets/public/show.png') :require('../../../../assets/public/show-off.png')

@@ -59,7 +59,7 @@ export default class BufferSetting extends React.Component {
     })
   }
 
-  getLayer = ({title, selectedgetSecondObj, index, value}) => {
+  getLayer = () => { // {title, selectedgetSecondObj, index, value}
     this.chooseLayer && this.chooseLayer.show()
   }
 

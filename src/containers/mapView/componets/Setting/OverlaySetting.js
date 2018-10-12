@@ -4,7 +4,6 @@ import { Row, RadioGroup, Button } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
 import { DatasetType } from 'imobile_for_reactnative'
 import ChooseLayer from './ChooseLayer'
-import { overlayAnalyst } from  '../../util'
 
 import styles from './styles'
 
@@ -87,7 +86,7 @@ export default class OverlaySetting extends React.Component {
   //   }
   // }
 
-  getOverlayType = ({title, value, index}) => {
+  getOverlayType = ({value}) => { // {title, value, index}
     let { label, firstValue } = this.getFirst(value)
     let overlayMethod = ''
     if (value === REGION_REGION) {
@@ -136,7 +135,7 @@ export default class OverlaySetting extends React.Component {
     return { label, firstValue }
   }
 
-  getOverlayMethod = ({title, selected, index, value})  => {
+  getOverlayMethod = ({value})  => { // {title, selected, index, value}
     this.setState({
       overlayMethod: value,
     })
@@ -148,7 +147,7 @@ export default class OverlaySetting extends React.Component {
     this.chooseLayer && this.chooseLayer.show(this.state.overlayType)
   }
 
-  getSecondObj = ({title, selected, index, value}) => {
+  getSecondObj = () => { // {title, selected, index, value}
     this.labelIndex = 2
     this.chooseLayer && this.chooseLayer.show(REGION_REGION)
   }

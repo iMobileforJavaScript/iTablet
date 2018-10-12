@@ -12,8 +12,6 @@ import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 import { CursorType } from 'imobile_for_reactnative'
 
-import styles from './styles'
-
 export default class LayerAttribute extends React.Component {
 
   props: {

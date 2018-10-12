@@ -1,15 +1,10 @@
 import * as React from 'react'
-import {
-  View,
-  StyleSheet,
-  Dimensions
-} from 'react-native'
 
 import {
-  UsualTitle
+  UsualTitle,
 } from '../../../../components'
 import {
-  Toast
+  Toast,
 } from '../../../../utils'
 
 export default class HomeUsualTitle extends React.Component {

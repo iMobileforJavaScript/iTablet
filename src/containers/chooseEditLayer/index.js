@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import { setEditLayer } from '../../models/layers'
 
 const mapStateToProps = state => ({
-	editLayer: state.layers.toJS().editLayer,
+  editLayer: state.layers.toJS().editLayer,
 })
 
 const mapDispatchToProps = {
-	setEditLayer,
+  setEditLayer,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChooseEditLayer)

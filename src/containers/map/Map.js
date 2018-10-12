@@ -5,7 +5,6 @@
 */
 
 import * as React from 'react'
-import { View } from 'react-native'
 import { Workspace, SMMapView, Point2D, Action } from 'imobile_for_reactnative'
 
 import { PopMeasureBar, PopBtnSectionList, MTBtnList, Container } from '../../components'

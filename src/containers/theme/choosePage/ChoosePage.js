@@ -6,8 +6,7 @@
 
 import * as React from 'react'
 import { TouchableOpacity, FlatList, Text } from 'react-native'
-import { BtnTwo, Container, UsualInput, ListSeparator } from '../../../components'
-import { constUtil, Toast } from '../../../utils'
+import { Container, ListSeparator } from '../../../components'
 import { ColorGradientType } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 

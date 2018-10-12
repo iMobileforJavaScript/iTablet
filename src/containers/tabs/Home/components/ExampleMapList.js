@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { NativeModules, Platform } from 'react-native'
-import { View, StyleSheet, FlatList, Alert } from 'react-native'
+import { NativeModules, Platform, View, StyleSheet, FlatList, Alert } from 'react-native'
 
 import NavigationService from '../../../../containers/NavigationService'
 import Thumbnails from '../../../../components/Thumbnails'
@@ -170,7 +169,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  onComplete = async result => {
+  onComplete = async () => {
     // console.log("success")
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     this.downloaded = true
@@ -227,7 +226,7 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-  downloadFailure = async error => {
+  downloadFailure = async () => {
     Toast.show('下载失败')
   }
 

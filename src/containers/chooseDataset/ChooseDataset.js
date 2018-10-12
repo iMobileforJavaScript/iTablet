@@ -218,7 +218,7 @@ export default class ChooseDataset extends React.Component {
         let newDatasource = await this.workspace.openDatasource(DSParams)
         if (newDatasource) {
           Toast.show('重命名成功')
-          let dataset = await newDatasource.getDataset(0)
+          // let dataset = await newDatasource.getDataset(0)
           let mapName = await this.workspace.getMapName(0)
           await this.map.open(mapName)
           // await this.map.addLayer(dataset, true)

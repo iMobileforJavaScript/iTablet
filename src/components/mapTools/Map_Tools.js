@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, FlatList } from 'react-native'
+import { View, StyleSheet, FlatList } from 'react-native'
 import * as Util from '../../utils/constUtil'
 import PropTypes from 'prop-types'
 import MT_Btn from './MT_Btn'
@@ -22,12 +22,12 @@ export default class Map_Tools extends React.Component {
 
     this.state = {
       data: [{ key: '新建图层', image: require('../../assets/public/add_layer.png'), btnClick: this._addLayer },
-      { key: '数据采集', image: require('../../assets/public/data_collect.png') , btnClick: ()=>{}},
-      { key: '数据编辑', image: require('../../assets/public/data_edit.png') , btnClick: ()=>{}},
-      { key: '地图管理', image: require('../../assets/public/map_manager.png') , btnClick: ()=>{}},
-      { key: '数据管理', image: require('../../assets/public/data_manager.png') , btnClick: ()=>{}},
-      { key: '数据分析', image: require('../../assets/public/analyst.png'), btnClick: this._analyst },
-      { key: '工具', image: require('../../assets/public/tools.png'), btnClick: this._tools}],
+        { key: '数据采集', image: require('../../assets/public/data_collect.png') , btnClick: ()=>{}},
+        { key: '数据编辑', image: require('../../assets/public/data_edit.png') , btnClick: ()=>{}},
+        { key: '地图管理', image: require('../../assets/public/map_manager.png') , btnClick: ()=>{}},
+        { key: '数据管理', image: require('../../assets/public/data_manager.png') , btnClick: ()=>{}},
+        { key: '数据分析', image: require('../../assets/public/analyst.png'), btnClick: this._analyst },
+        { key: '工具', image: require('../../assets/public/tools.png'), btnClick: this._tools}],
     }
   }
   _addLayer = () => {
@@ -62,7 +62,7 @@ export default class Map_Tools extends React.Component {
 
   render() {
     const data = this.state.data
-    let width = (WIDTH < ITEM_WIDTH * this.state.length) ? ITEM_WIDTH * this.state.length : WIDTH
+    // let width = (WIDTH < ITEM_WIDTH * this.state.length) ? ITEM_WIDTH * this.state.length : WIDTH
     return (
       <View style={styles.container}>
         <FlatList

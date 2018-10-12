@@ -35,7 +35,7 @@ export default class Thumbnails extends React.Component {
     this.setState({ opacity: 0 })
   }
 
-  updateprogress = async (data) => {
+  updateprogress = async data => {
     // if (data === 100) {
     //   this.setState({ opacity: 0 })
     // }
@@ -48,7 +48,7 @@ export default class Thumbnails extends React.Component {
     }
   }
 
-  downloaded = async (result) => {
+  downloaded = async result => {
     if (result) {
       this.setState({ opacity: 0.6 })
       this.updateprogress(0)

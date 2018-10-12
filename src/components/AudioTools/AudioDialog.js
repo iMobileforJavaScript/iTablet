@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { Toast, AudioAnalyst } from '../../utils'
+import { AudioAnalyst } from '../../utils'
 import { ConstPath } from '../../constains'
 import AudioTopDialog from './AudioTopDialog'
 import AudioCenterDialog from './AudioCenterDialog'
@@ -42,7 +42,7 @@ export default class AudioDialog extends PureComponent {
           await GLOBAL.SpeechManager.stopListening()
         }
       } catch (e) {
-        console.error(e)
+        () => {}
       }
     }).bind(this)()
   }
@@ -64,7 +64,7 @@ export default class AudioDialog extends PureComponent {
             await GLOBAL.SpeechManager.stopListening()
           }
         } catch (e) {
-          console.error(e)
+          () => {}
         }
       }).bind(this)()
     }
@@ -85,13 +85,10 @@ export default class AudioDialog extends PureComponent {
             this.setState({
               recording: false,
             })
-            console.log('onEndOfSpeech')
           },
           onVolumeChanged: () => {
-            console.log('onVolumeChanged')
           },
-          onError: e => {
-            // Toast.show(e)
+          onError: () => {
             this.setState({
               recording: false,
             })
@@ -111,7 +108,7 @@ export default class AudioDialog extends PureComponent {
           },
         })
       } catch (e) {
-        console.error(e)
+        () => {}
       }
     }).bind(this)()
   }
@@ -123,7 +120,7 @@ export default class AudioDialog extends PureComponent {
           await GLOBAL.SpeechManager.stopListening()
         }
       } catch (e) {
-        console.error(e)
+        () => {}
       }
     }).bind(this)()
   }

@@ -1,18 +1,23 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
 import * as React from 'react'
 import { View } from 'react-native'
 import { Workspace, SMMapView, Utility, Action } from 'imobile_for_reactnative'
-
+import NavigationService from '../NavigationService'
 import { PopMeasureBar, PopBtnSectionList, MTBtnList } from '../../components'
 
 import styles from './styles'
 
 export default class LocalMap extends React.Component {
+
+  props: {
+    navigation: any,
+  }
+
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
@@ -26,14 +31,14 @@ export default class LocalMap extends React.Component {
     measureResult: 0,
   }
 
-  _onGetInstance = (mapView) => {
+  _onGetInstance = mapView => {
     this.mapView = mapView
     this._addMap()
   }
 
   _pop_list = (show, type) => {//底部BtnBar事件点击回掉，负责底部二级pop的弹出
-    this.setState(previousState => {
-      return { popShow: show, popType: type, }
+    this.setState(() => {
+      return { popShow: show, popType: type }
     })
   }
 
@@ -50,8 +55,8 @@ export default class LocalMap extends React.Component {
   }
 
   //二级pop按钮 量算 点击函数
-  _pop_measure_click = (show) => {
-    this.setState(previousState => {
+  _pop_measure_click = show => {
+    this.setState(() => {
       return { measureShow: show }
     })
     this._add_measure_listener()// to do list:优化，不需每次都添加listener
@@ -63,7 +68,7 @@ export default class LocalMap extends React.Component {
   }
 
   //二级pop按钮 添加图层（点、线、面、文字） 点击函数
-  _pop_addLayer_click = (type) => {
+  _pop_addLayer_click = type => {
     let ws = this.workspace
     let map = this.map
     NavigationService.navigate('AddLayer', { type: type, workspace: ws, map: map })
@@ -78,7 +83,7 @@ export default class LocalMap extends React.Component {
     })
   }
 
-  _measure_callback = (e) => {
+  _measure_callback = e => {
     let result = e.curResult
     this.setState({
       measureResult: result,
@@ -124,20 +129,19 @@ export default class LocalMap extends React.Component {
     if (!this.path) return
     var workspaceModule = new Workspace()
     ;(async function () {
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
-     
-        var filePath = ''
-        var filePath = await Utility.appendingHomeDirectory(this.path)
+      this.workspace = await workspaceModule.createObj()
+      this.mapControl = await this.mapView.getMapControl()
+      this.map = await this.mapControl.getMap()
 
-        var openWk = await this.workspace.open(filePath)
-        await this.map.setWorkspace(this.workspace)
-        var mapName = await this.workspace.getMapName(0)
-        await this.map.open(mapName)
-        // await this.map.setScale(0.00001)
-        await this.map.refresh()
-    }).bind(this)();
+      var filePath = await Utility.appendingHomeDirectory(this.path)
+
+      await this.workspace.open(filePath)
+      await this.map.setWorkspace(this.workspace)
+      var mapName = await this.workspace.getMapName(0)
+      await this.map.open(mapName)
+      // await this.map.setScale(0.00001)
+      await this.map.refresh()
+    }).bind(this)()
   }
 
 }

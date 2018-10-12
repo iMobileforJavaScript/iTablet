@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, Image } from 'react-native'
+import { View, StyleSheet, Dimensions, TouchableOpacity, Image } from 'react-native'
 import PropTypes from 'prop-types'
 
-import Swiper from 'react-native-swiper'
+import Swiper from 'react-native-swiper' // eslint-disable-line
 
 const { width } = Dimensions.get('window')
 

@@ -5,11 +5,15 @@
  */
 
 import * as React from 'react'
-import { View, FlatList } from 'react-native'
-import BorderInput from '../../containers/register&getBack/border_input'
-import { BtnTwo, Container } from '../../components'
+import { FlatList } from 'react-native'
+import { Container } from '../../components'
 
 export default class Directories extends React.Component {
+
+  props: {
+    navigation: any,
+  }
+
   constructor(props) {
     super(props)
     const { state } = this.props.navigation

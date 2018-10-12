@@ -14,6 +14,12 @@ const WIDTH = 300
 
 export default class Input extends React.Component {
 
+  props: {
+    image: any,
+    password: string,
+    placeholder: string,
+  }
+
   render() {
     const imagePath = this.props.image ? this.props.image : require('../assets/public/input.png') //add path
     const isPassword = this.props.password ? this.props.password : false

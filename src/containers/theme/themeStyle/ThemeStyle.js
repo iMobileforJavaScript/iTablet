@@ -12,7 +12,6 @@ import { DatasetType, GeoStyle, Size2D } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 
 import styles from './styles'
-import TouchableItem from "react-navigation/src/views/TouchableItem";
 
 const UNIQUE = '单值专题图'
 const RANGE = '分段设色专题图'

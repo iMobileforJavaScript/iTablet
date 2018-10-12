@@ -5,7 +5,7 @@ import { BtnOne } from '../../../../components'
 import { scaleSize } from '../../../../utils'
 const icon_workspace = require('../../../../assets/MapLoad/icon-open-workspace.png')
 const icon_udb = require('../../../../assets/MapLoad/icon-opne-udb.png')
-const icon_webudb = require('../../../../assets/MapLoad/icon-open-webudb.png')
+// const icon_webudb = require('../../../../assets/MapLoad/icon-open-webudb.png')
 const icon_newudb = require('../../../../assets/MapLoad/icon-new-datasource.png')
 const width = Dimensions.get('window').width
 const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件型数据源" }, { key: "打开web型数据源" }, { key: "新建文件型数据源" }]

@@ -5,5 +5,5 @@ import BtnTwo from './BtnTwo'
 export {
   Button,
   BtnOne,
-  BtnTwo
+  BtnTwo,
 }

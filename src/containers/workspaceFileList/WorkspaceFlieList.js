@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { WorkspaceConnectionInfo, EngineType, Action, Point2D, Utility, WorkspaceType,Workspace } from 'imobile_for_reactnative'
+import { WorkspaceConnectionInfo, EngineType, Action, Utility, WorkspaceType,Workspace } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'

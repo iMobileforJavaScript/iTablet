@@ -58,7 +58,7 @@ export default class NetworkSetting extends React.Component {
     })
   }
 
-  getLayer = ({title, selectedgetSecondObj, index, value}) => {
+  getLayer = () => { // {title, selectedgetSecondObj, index, value}
     this.chooseLayer && this.chooseLayer.show()
   }
 

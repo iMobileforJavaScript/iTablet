@@ -1,11 +1,11 @@
 import React from 'react'
 import { View, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
-import { BtnOne } from '../../components'
-import { Container } from '../../components'
-import { scaleSize, Toast } from '../../utils'
+import { BtnOne, Container } from '../../components'
+import { scaleSize } from '../../utils'
 import NavigationService from '../NavigationService'
 const src = require('../../assets/map/icon-new-datasource.png')
 const Fileicon = require('../../assets/public/icon-file.png')
+
 export default class DataSourcelist extends React.Component {
   props: {
     navigation: Object,
@@ -80,14 +80,14 @@ export default class DataSourcelist extends React.Component {
 
   _todataset = (w, m, d, n) => {
 
-      NavigationService.navigate('DataSets', {
-        workspace: w,
-        map: m,
-        datasource: d,
-        name: n,
-        mapControl: this.mapControl,
-      })
-     
+    NavigationService.navigate('DataSets', {
+      workspace: w,
+      map: m,
+      datasource: d,
+      name: n,
+      mapControl: this.mapControl,
+    })
+
 
   }
 

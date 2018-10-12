@@ -34,7 +34,7 @@ function pySegSort(arr) {
 }
 
 function formatPhone(value) {
-  return value.replace(/[&\|\\\*^%$#@\-\(\)\s]/g,'')
+  return value.replace(/[&|\\*^%$#@\-()\s]/g,'')
 }
 
 function checkMobile(value){

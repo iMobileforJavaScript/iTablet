@@ -5,11 +5,10 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, WebView, Platform } from 'react-native'
+import { StyleSheet, WebView, Platform } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
-import BorderInput from './border_input'
-import { Container, BtnTwo } from '../../components'
+import { Container } from '../../components'
 
 const BGCOLOR = constUtil.USUAL_GREEN
 const DEFAULTWIDTH = 300

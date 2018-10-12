@@ -1,14 +1,11 @@
 /*
   Copyright © SuperMap. All rights reserved.
   Author: Wang zihao
-  E-mail: zihaowang5325@qq.com 
+  E-mail: zihaowang5325@qq.com
 */
 
-import * as React from 'react';
-import { View, StyleSheet, Text, TouchableHighlight, FlatList, Image,PixelRatio } from 'react-native';
-import * as Util from '../../utils/constUtil';
-
-import MT_Btn from './MT_Btn';
+import * as React from 'react'
+import { View, StyleSheet } from 'react-native'
 
 export default class LayerManager_item extends React.Component {
   constructor(props){
@@ -20,7 +17,7 @@ export default class LayerManager_item extends React.Component {
       <View style={styles.container}>
 
       </View>
-    );
+    )
   }
 }
 
@@ -34,6 +31,6 @@ const styles = StyleSheet.create({
     borderLeftWidth:0,
     borderRightWidth:0,
     borderBottomWidth:1,
-    borderColor:'#bbbbbb'
+    borderColor:'#bbbbbb',
   },
-});
+})

@@ -120,7 +120,7 @@ async function longPressHandler(event) {
 
     }
   } catch (e) {
-    console.error(e)
+    () => {}
   }
 }
 
@@ -219,7 +219,7 @@ async function startSelect() {
     await geoStyle.setLineWidth(0.4)
     await mSelection.setStyle(geoStyle)
   } catch (e) {
-    console.error(e)
+    () => {}
   }
 }
 

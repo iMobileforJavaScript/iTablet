@@ -7,7 +7,6 @@ import {
   CoordSysTranslator,
   CoordSysTransParameter,
   CoordSysTransMethod,
-  Callout,
   GeoStyle,
   Size2D,
   GeoPoint,
@@ -21,7 +20,7 @@ import { Const } from '../../../constains'
 let point2Ds = [], // 目标坐标数组
   centerPoints = [] // 配送中心坐标数组
 let analystSetting, transportationAnalyst
-let mMapView, mMapControl, mMap, mTrackingLayer, _setLoading = () => {}
+let mMapControl, mMap, mTrackingLayer, _setLoading = () => {}
 let longPressEnable = true
 let taType = '', // 设置旅行商/最佳路径 类型
   addPointType = '' // 设置旅行商 配送中心，目的地 标示   center | dist
@@ -184,7 +183,7 @@ async function loadModel(mapView, mapControl, datasetVector, type, setLoading = 
 async function loadRouteModel(mapView, mapControl, datasetVector) {
   try {
     await dispose()
-    mMapView = mapView
+    // mMapView = mapView
     mMapControl = mapControl
     mMap = await mMapControl.getMap()
     mTrackingLayer = await mMap.getTrackingLayer()
@@ -227,7 +226,7 @@ async function loadRouteModel(mapView, mapControl, datasetVector) {
 async function loadTSPPathModel(mapView, mapControl, datasetVector) {
   try {
     await clear()
-    mMapView = mapView
+    // mMapView = mapView
     mMapControl = mapControl
     mMap = await mMapControl.getMap()
     mTrackingLayer = await mMap.getTrackingLayer()

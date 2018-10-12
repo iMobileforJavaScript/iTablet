@@ -1,15 +1,14 @@
 import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
-import { constUtil, Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import {
   DatasetType,
   Action,
   GeoStyle,
   GPSElementType,
   CursorType,
-  TextStyle,
 } from 'imobile_for_reactnative'
-import { PopBtnSectionList, MTBtn } from '../../../../components'
+import { PopBtnSectionList } from '../../../../components'
 import NavigationService from '../../../NavigationService'
 import PropTypes from 'prop-types'
 
@@ -147,7 +146,7 @@ export default class CollectionToolBar extends React.Component {
     this.point2D = event.point2D
   }
 
-  _onSensorChanged = event => {
+  _onSensorChanged = () => { // event
     // Toast.show('==_onSensorChanged==' + event.azimuth)
   }
 
@@ -254,16 +253,16 @@ export default class CollectionToolBar extends React.Component {
 
         // await this.props.editLayer.layer.setEditable(true)
       } catch (e) {
-        console.error(e)
+        () => {}
       }
     }).bind(this)()
   }
 
   /** 添加点 **/
-  _addPoint = async type => {
+  _addPoint = async () => {
     let point = await this.collector.getGPSPoint()
-    let x = await point.getX()
-    let y = await point.getY()
+    // let x = await point.getX()
+    // let y = await point.getY()
     let result = await this.collector.addGPSPoint(this.props.map, point)
     if (!result) {
       Toast.show('定位失败')
@@ -271,12 +270,12 @@ export default class CollectionToolBar extends React.Component {
   }
 
   /** 记录 **/
-  _record = type => {
+  _record = () => {
     this.toDoAction()
   }
 
   /** 暂停 **/
-  _pause = type => {
+  _pause = () => {
     this.startedLoc = !this.startedLoc
     if (this.startedLoc) {
       this.openLocation()

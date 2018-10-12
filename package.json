@@ -13,10 +13,11 @@
     "assembleRelease": "cd android && ./gradlew assembleRelease",
     "precommit": "lint-staged && npm test",
     "prepush": "npm test",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix"
   },
   "lint-staged": {
-    "{src,__tests__}/**/*.{js,jsx}": [
+    "{src,__tests__}/**/*.{js}": [
       "prettier --single-quote --trailing-comma all --no-semi --write",
       "eslint src --fix",
       "git add"

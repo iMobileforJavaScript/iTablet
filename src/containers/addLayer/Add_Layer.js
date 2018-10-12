@@ -8,7 +8,6 @@ import { View } from 'react-native'
 import BorderInput from '../../containers/register&getBack/border_input'
 import { Container, BtnTwo } from '../../components'
 import { Toast } from '../../utils'
-import NavigationService from '../NavigationService'
 import styles from './styles'
 import { Action, DatasetVectorInfo } from 'imobile_for_reactnative'
 

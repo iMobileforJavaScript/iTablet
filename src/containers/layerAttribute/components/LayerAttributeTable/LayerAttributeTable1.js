@@ -46,7 +46,7 @@ export default class LayerAttributeTable extends React.Component {
 
   constructor(props) {
     super(props)
-    let {titleList, dataList, colHeight} = this.dealData(props.tableTitle, props.data)
+    let {dataList, colHeight} = this.dealData(props.tableTitle, props.data)
     this.state = {
       colHeight: colHeight,
       widthArr: props.widthArr,
@@ -66,7 +66,7 @@ export default class LayerAttributeTable extends React.Component {
     if (data instanceof Object) {
       titleList = []
       dataList = []
-      Object.keys(data).forEach((key, index) => {
+      Object.keys(data).forEach(key => {
         titleList.push(key)
         dataList.push([
           // key,

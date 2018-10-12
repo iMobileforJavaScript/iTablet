@@ -14,18 +14,18 @@ export default class Btnone extends Component{
        super(props)
        this.cb=this.props.cb
        this.state={
-         select:false
+         select:false,
        }
      }
      select=async()=>{
-        this.setState({select:!this.state.select}) 
-        this.cb&&this.cb()
+       this.setState({select:!this.state.select})
+       this.cb&&this.cb()
      }
      render(){
        return(
-        <TouchableOpacity onPress={this.select} style={styles.btn}> 
-       {this.state.select? (<Image source={require("../../../assets/public/icon_upload_selected.png")} style={styles.img}/>):(<Image source={require("../../../assets/public/icon_upload_unselected.png")} style={styles.img}/>)}
-        </TouchableOpacity>
+         <TouchableOpacity onPress={this.select} style={styles.btn}>
+           {this.state.select? (<Image source={require("../../../assets/public/icon_upload_selected.png")} style={styles.img}/>):(<Image source={require("../../../assets/public/icon_upload_unselected.png")} style={styles.img}/>)}
+         </TouchableOpacity>
        )
      }
 }

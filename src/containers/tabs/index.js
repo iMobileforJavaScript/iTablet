@@ -10,7 +10,6 @@ import {
 
 import { color } from '../../styles'
 import Home from './Home'
-import CloudService from './CloudService'
 import Mine from './Mine'
 
 // const TabNavi = TabNavigator({
@@ -31,7 +30,7 @@ const Tabs = TabNavigator(
   {
     Home: {
       screen: Home,
-      navigationOptions: props => {
+      navigationOptions: () => {
         return {
           tabBarLabel: data => {
             return (
