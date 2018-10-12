@@ -536,7 +536,6 @@ export default class LayerManager_item extends React.Component {
 
   render() {
     if (this.props.swipeEnabled) {
-
       return this.renderSwipeRow()
     } else {
       return this.renderRow()
