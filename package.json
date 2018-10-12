@@ -11,13 +11,14 @@
     "installRelease:android": "cd android && ./gradlew installRelease",
     "installDebug:android": "cd android && ./gradlew installDebug",
     "assembleRelease": "cd android && ./gradlew assembleRelease",
-    "precommit": "lint-staged && npm test",
+    "test": "jest",
+    "precommit": "lint-staged",
     "prepush": "npm test",
     "lint": "eslint src",
     "lint-fix": "eslint src --fix"
   },
   "lint-staged": {
-    "{src,__tests__}/**/*.{js}": [
+    "{src,__tests__}/**/*.js": [
       "prettier --single-quote --trailing-comma all --no-semi --write",
       "eslint src --fix",
       "git add"
@@ -51,7 +52,7 @@
     "babel-jest": "^23.6.0",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "babel-preset-react-native": "^5",
+    "babel-core": "^7.0.0-bridge.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.14.0",
@@ -60,7 +61,8 @@
     "husky": "^1.1.2",
     "jest": "23.6.0",
     "lint-staged": "^7.3.0",
-    "metro-react-native-babel-preset": "0.48.1",
+    "metro-react-native-babel-preset": "^0.48.1",
+    "prettier": "^1.14.3",
     "react-devtools-core": "3.3.4",
     "react-test-renderer": "16.5.0"
   },

@@ -11,7 +11,6 @@ import AudioCenterDialog from './AudioCenterDialog'
 import AudioBottomDialog from './AudioBottomDialog'
 
 export default class AudioDialog extends PureComponent {
-
   props: {
     confirmTitleStyle?: StyleSheet,
     cancelTitleStyle?: StyleSheet,
@@ -36,7 +35,7 @@ export default class AudioDialog extends PureComponent {
   }
 
   componentWillUnmount() {
-    (async function () {
+    (async function() {
       try {
         if (!this.state.visible && GLOBAL.SpeechManager) {
           await GLOBAL.SpeechManager.stopListening()
@@ -44,7 +43,7 @@ export default class AudioDialog extends PureComponent {
       } catch (e) {
         () => {}
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   //控制Modal框是否可以展示
@@ -56,7 +55,7 @@ export default class AudioDialog extends PureComponent {
       recording: false,
     })
     if (GLOBAL.SpeechManager) {
-      (async function () {
+      (async function() {
         try {
           if (visible) {
             this.startRecording()
@@ -66,7 +65,7 @@ export default class AudioDialog extends PureComponent {
         } catch (e) {
           () => {}
         }
-      }).bind(this)()
+      }.bind(this)())
     }
   }
 
@@ -76,7 +75,7 @@ export default class AudioDialog extends PureComponent {
       content: '',
       recording: true,
     })
-    ;(async function () {
+    ;(async function() {
       try {
         let path = this.props.audioSavePath + new Date().getTime() + '.wav'
         await GLOBAL.SpeechManager.setAudioPath(path)
@@ -86,14 +85,13 @@ export default class AudioDialog extends PureComponent {
               recording: false,
             })
           },
-          onVolumeChanged: () => {
-          },
+          onVolumeChanged: () => {},
           onError: () => {
             this.setState({
               recording: false,
             })
           },
-          onResult: ({info, isLast}) => {
+          onResult: ({ info, isLast }) => {
             if (isLast) {
               GLOBAL.SpeechManager.stopListening().then(() => {
                 AudioAnalyst.analyst(this.state.content, this.props.data)
@@ -110,11 +108,11 @@ export default class AudioDialog extends PureComponent {
       } catch (e) {
         () => {}
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
-  stopRecording = (a) => {
-    (async function () {
+  stopRecording = () => {
+    (async function() {
       try {
         if (GLOBAL.SpeechManager) {
           await GLOBAL.SpeechManager.stopListening()
@@ -122,39 +120,44 @@ export default class AudioDialog extends PureComponent {
       } catch (e) {
         () => {}
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   render() {
-
     if (!this.state.visible || !this.state.type) return null
-    let TopDialog = <AudioTopDialog
-      ref={ref => this.topDialog = ref}
-      startRecording={this.startRecording}
-      stopRecording={this.stopRecording}
-      setVisible={this.setVisible}
-      visible={true}
-      content={this.state.content}
-      recording={this.state.recording}
-    />
-    let BottomDialog = <AudioBottomDialog
-      ref={ref => this.bottomDialog = ref}
-      startRecording={this.startRecording}
-      stopRecording={this.stopRecording}
-      setVisible={this.setVisible}
-      visible={true}
-      content={this.state.content}
-      recording={this.state.recording}
-    />
-    let CenterDialog = <AudioCenterDialog
-      ref={ref => this.centerDialog = ref}
-      startRecording={this.startRecording}
-      stopRecording={this.stopRecording}
-      setVisible={this.setVisible}
-      visible={true}
-      content={this.state.content}
-      recording={this.state.recording}
-    />
+    let TopDialog = (
+      <AudioTopDialog
+        ref={ref => (this.topDialog = ref)}
+        startRecording={this.startRecording}
+        stopRecording={this.stopRecording}
+        setVisible={this.setVisible}
+        visible={true}
+        content={this.state.content}
+        recording={this.state.recording}
+      />
+    )
+    let BottomDialog = (
+      <AudioBottomDialog
+        ref={ref => (this.bottomDialog = ref)}
+        startRecording={this.startRecording}
+        stopRecording={this.stopRecording}
+        setVisible={this.setVisible}
+        visible={true}
+        content={this.state.content}
+        recording={this.state.recording}
+      />
+    )
+    let CenterDialog = (
+      <AudioCenterDialog
+        ref={ref => (this.centerDialog = ref)}
+        startRecording={this.startRecording}
+        stopRecording={this.stopRecording}
+        setVisible={this.setVisible}
+        visible={true}
+        content={this.state.content}
+        recording={this.state.recording}
+      />
+    )
     switch (this.state.type) {
       case 'top':
         return TopDialog
