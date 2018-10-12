@@ -41,7 +41,7 @@ export default StyleSheet.create({
     // fontFamily: 'CenturyGothic',
   },
   elseimg: {
-    width: scaleSize(10),
+    // width: scaleSize(10),
     height: scaleSize(40),
   },
 })

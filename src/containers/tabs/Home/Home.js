@@ -25,7 +25,11 @@ export default class Home extends Component {
         </TouchableOpacity>
         <Text style={styles.headtitle}>{title}</Text>
         <TouchableOpacity style={styles.elseimg}>
-          <Image source={elseimg} style={styles.elseimg} />
+          <Image
+            resizeMode={'contain'}
+            source={elseimg}
+            style={styles.elseimg}
+          />
         </TouchableOpacity>
       </View>
     )
