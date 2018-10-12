@@ -1,6 +1,6 @@
 rootProject.name = 'iTablet'
 include ':app'
-include ':imobile_for_javascript'
-project(':imobile_for_javascript').projectDir = new File(rootProject.projectDir, '../node_modules/imobile_for_javascript/android')
+include ':imobile_for_reactnative'
+project(':imobile_for_reactnative').projectDir = new File(rootProject.projectDir, '../node_modules/imobile_for_reactnative/android')
 
-//include ':app', ':imobile_for_javascript'
+//include ':app', ':imobile_for_reactnative'

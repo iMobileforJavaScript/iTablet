@@ -3,7 +3,7 @@ import { SectionList } from 'react-native'
 import { Container, ListSeparator, DataSetListSection, DataSetListItem, InputDialog, Dialog } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import { Action, CursorType } from 'imobile_for_javascript'
+import { Action, CursorType } from 'imobile_for_reactnative'
 
 // import styles from './styles'
 

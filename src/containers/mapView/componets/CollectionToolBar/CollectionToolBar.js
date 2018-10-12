@@ -8,7 +8,7 @@ import {
   GPSElementType,
   CursorType,
   TextStyle,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
 import NavigationService from '../../../NavigationService'
 import PropTypes from 'prop-types'

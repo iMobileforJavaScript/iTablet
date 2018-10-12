@@ -3,7 +3,7 @@ import { View, Text, TextInput, StyleSheet, Platform} from 'react-native'
 import { Dialog } from '../../../components'
 import { scaleSize,Toast } from '../../../utils'
 import { color, size } from '../../../styles'
-import { Utility, OnlineService } from 'imobile_for_javascript'
+import { Utility, OnlineService } from 'imobile_for_reactnative'
 import { ConstPath } from '../../../constains'
 import NavigationService from '../../NavigationService'
 export default class UploadDialog extends PureComponent {

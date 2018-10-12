@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { Row, RadioGroup, Button } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 import ChooseLayer from './ChooseLayer'
 import { overlayAnalyst } from  '../../util'
 

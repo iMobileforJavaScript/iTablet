@@ -4,7 +4,7 @@ import {
   Size2D,
   BufferAnalystGeometry,
   BufferAnalystParameter,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 
 async function analyst(data) {
   try {

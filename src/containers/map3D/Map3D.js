@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { BackHandler, Platform } from 'react-native'
-import { Workspace, SMSceneView, Point3D, Camera } from 'imobile_for_javascript'
+import { Workspace, SMSceneView, Point3D, Camera } from 'imobile_for_reactnative'
 import { MTBtnList, Container } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'

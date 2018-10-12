@@ -8,7 +8,7 @@ import ChooseLayer from './ChooseLayer'
 import { facilityAnalyst, tranportationAnalyst } from '../../util'
 import { Toast, dataUtil } from '../../../../utils'
 import { Const } from '../../../../constains'
-import { DatasetType, GeoStyle, Size2D } from 'imobile_for_javascript'
+import { DatasetType, GeoStyle, Size2D } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, Image, TouchableOpacity, Text } from 'react-native'
 import { PopBtnList } from '../../components'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import styles from './styles'
 

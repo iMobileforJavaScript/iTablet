@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { Row, Button } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { BufferEndType, Action, DatasetType } from 'imobile_for_javascript'
+import { BufferEndType, Action, DatasetType } from 'imobile_for_reactnative'
 import ChooseLayer from './ChooseLayer'
 import styles from './styles'
 

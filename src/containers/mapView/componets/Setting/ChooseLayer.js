@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, Text, SectionList, FlatList } from 'react-native'
 import { ListSeparator, DataSetListItem, DataSetListSection, LayerItem, EmptyView } from '../../../../components'
 import PropTypes from 'prop-types'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class ChooseLayer extends React.Component {

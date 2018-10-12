@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { TextAlignment, ThemeLabel, Action, TextStyle } from 'imobile_for_javascript'
+import { TextAlignment, ThemeLabel, Action, TextStyle } from 'imobile_for_reactnative'
 import { Button, Row } from '../../../../../components'
 import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'

@@ -9,7 +9,7 @@ import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } f
 import { scaleSize, dataUtil } from '../../../../utils'
 import { color } from '../../../../styles'
 import { Table, TableWrapper, Row, Rows, Col, Cell } from 'react-native-table-component'
-import { FieldType } from 'imobile_for_javascript'
+import { FieldType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

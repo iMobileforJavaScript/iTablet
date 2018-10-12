@@ -3,7 +3,7 @@ import { Text, View } from 'react-native'
 import { constUtil, Toast } from '../../../../utils'
 import { Row } from '../../../../components'
 import { scaleSize } from '../../../../utils'
-import { BufferEndType } from 'imobile_for_javascript'
+import { BufferEndType } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class RouteSetting extends React.Component {

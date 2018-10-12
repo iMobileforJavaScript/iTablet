@@ -12,7 +12,7 @@ import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constains'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_javascript'
+import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
 

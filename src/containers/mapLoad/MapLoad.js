@@ -6,7 +6,7 @@ import { UsualTitle, Container } from '../../components'
 import { ConstOnline } from '../../constains'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import { Point2D ,Action} from 'imobile_for_javascript'
+import { Point2D ,Action} from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class MapLoad extends Component {

@@ -5,7 +5,7 @@ import { View, StyleSheet, FlatList, Alert } from 'react-native'
 import NavigationService from '../../../../containers/NavigationService'
 import Thumbnails from '../../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../../utils'
-import { Utility, OnlineService, EngineType } from 'imobile_for_javascript'
+import { Utility, OnlineService, EngineType } from 'imobile_for_reactnative'
 import { ConstPath,ExampleMapData } from '../../../../constains'
 const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
 

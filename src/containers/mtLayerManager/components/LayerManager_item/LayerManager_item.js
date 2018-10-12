@@ -10,7 +10,7 @@ import {
   Action,
   DatasetType,
   ThemeType,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
 import { Const } from '../../../../constains'
 import NavigationService from '../../../NavigationService'

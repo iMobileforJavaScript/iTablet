@@ -10,7 +10,7 @@ import { Container, BtnTwo } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 import styles from './styles'
-import { Action, DatasetVectorInfo } from 'imobile_for_javascript'
+import { Action, DatasetVectorInfo } from 'imobile_for_reactnative'
 
 export default class Add_Layer extends React.Component {
 

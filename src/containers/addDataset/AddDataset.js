@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
 import { Toast } from '../../utils'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 import { Container, ListSeparator, TextBtn, DataSetListSection, DataSetListItem  } from '../../components'
 
 import styles from './styles'

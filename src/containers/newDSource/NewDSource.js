@@ -9,7 +9,7 @@ import { View, TextInput, Text } from 'react-native'
 import { BtnTwo, Container, Dialog } from '../../components'
 import { constUtil, Toast } from '../../utils'
 import { ConstPath } from '../../constains'
-import { EngineType, Utility, Workspace } from 'imobile_for_javascript'
+import { EngineType, Utility, Workspace } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'

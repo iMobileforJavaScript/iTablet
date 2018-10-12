@@ -3,7 +3,7 @@ import { View, Text, Image } from 'react-native'
 import { Container, Button } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import { OnlineService } from 'imobile_for_javascript'
+import { OnlineService } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

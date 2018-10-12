@@ -2,7 +2,7 @@ import {
   OverlayAnalystParameter,
   DatasetVectorInfo,
   OverlayAnalyst,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 import { Toast } from '../../../utils'
 const METHOD_CLIP = 'clip'
 const METHOD_ERASE = 'erase'

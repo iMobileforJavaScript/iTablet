@@ -11,7 +11,7 @@ import {
   ThemeLabel,
   TextStyle,
   TextAlignment,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 const {keywords, chineseNumber, themeType} = AudioKeywords
 let workspace, mapControl, map, nav = {}
 

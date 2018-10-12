@@ -9,7 +9,7 @@ import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, Row, Button } from '../../../../components'
 import { Toast, scaleSize } from '../../../../utils'
-import { FieldType } from 'imobile_for_javascript'
+import { FieldType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

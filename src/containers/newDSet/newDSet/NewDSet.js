@@ -8,7 +8,7 @@ import * as React from 'react'
 import { TextInput } from 'react-native'
 import { BtnTwo, Container } from '../../../components'
 import { constUtil, Toast, scaleSize } from '../../../utils'
-import { DatasetVectorInfo } from 'imobile_for_javascript'
+import { DatasetVectorInfo } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 
 import styles from './styles'

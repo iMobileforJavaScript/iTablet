@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, Text, FlatList } from 'react-native'
 import { Container, LayerItem, ListSeparator } from '../../components'
-import { Action } from 'imobile_for_javascript'
+import { Action } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

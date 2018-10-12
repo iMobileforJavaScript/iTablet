@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { Text, TouchableOpacity, Image, View } from 'react-native'
 import PropTypes from 'prop-types'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

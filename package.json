@@ -13,12 +13,20 @@
     "assembleRelease": "cd android && ./gradlew assembleRelease",
     "lint": "eslint src"
   },
+  "lint-staged": {
+    "{src,__tests__}/**/*.js": [
+      "prettier --single-quote --trailing-comma all --no-semi --write",
+      "eslint src --fix",
+      "git add"
+    ]
+  },
   "dependencies": {
+    "imobile_for_reactnative": "^1.6.2",
     "forge": "^2.3.0",
     "immutable": "^3.8.2",
     "node-forge": "^0.7.6",
-    "react": "16.2.0",
-    "react-native": "0.52.3",
+    "react": "16.5.0",
+    "react-native": "^0.57.2",
     "react-native-actionsheet": "^2.4.2",
     "react-native-color-picker": "^0.4.0",
     "react-native-root-toast": "^3.0.1",
@@ -36,18 +44,20 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "babel-eslint": "^8.2.5",
-    "babel-jest": "23.0.1",
+    "babel-eslint": "^10.0.1",
+    "babel-jest": "^23.6.0",
+    "jest": "23.6.0",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
-    "babel-preset-react-native": "4.0.0",
+    "babel-preset-react-native": "^5",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.10.0",
-    "jest": "23.1.0",
-    "react-test-renderer": "16.2.0"
+    "metro-react-native-babel-preset": "0.48.1",
+    "react-devtools-core": "3.3.4",
+    "react-test-renderer": "16.5.0"
   },
   "jest": {
     "preset": "react-native"

@@ -4,7 +4,7 @@ import { constUtil, scaleSize, Toast } from '../../utils'
 import { ListSeparator } from '../../components'
 import { Const } from '../../constains'
 import PropTypes from 'prop-types'
-import { Action } from 'imobile_for_javascript'
+import { Action } from 'imobile_for_reactnative'
 
 import MT_Btn from './MT_Btn'
 

@@ -1,4 +1,4 @@
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 
 const vectorType = [
   DatasetType.CAD,

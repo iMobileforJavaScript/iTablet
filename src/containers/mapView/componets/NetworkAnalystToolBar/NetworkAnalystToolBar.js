@@ -10,7 +10,7 @@ import { constUtil, Toast, scaleSize } from '../../../../utils'
 //   BufferEndType,
 //   DatasetVectorInfo,
 //   CursorType,
-// } from 'imobile_for_javascript'
+// } from 'imobile_for_reactnative'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
 import { Const } from '../../../../constains'
 import { facilityAnalyst, tranportationAnalyst } from '../../util'

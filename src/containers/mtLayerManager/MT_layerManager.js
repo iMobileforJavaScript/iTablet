@@ -10,7 +10,7 @@ import { Container, InputDialog } from '../../components'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 import NavigationService from '../NavigationService'
-import { Action, LayerGroup } from 'imobile_for_javascript'
+import { Action, LayerGroup } from 'imobile_for_reactnative'
 
 import { LayerManager_item, LayerManager_tab, SaveDialog, ModifiedDialog } from './components'
 

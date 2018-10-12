@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import { Container, EmptyView, TextBtn } from '../../components'
-import { Utility } from 'imobile_for_javascript'
+import { Utility } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constains'
 

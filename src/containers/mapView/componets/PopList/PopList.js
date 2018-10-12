@@ -4,7 +4,7 @@ import { Toast, scaleSize } from '../../../../utils'
 import {
   Action,
   DatasetType,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 import { PopBtnSectionList } from '../../../../components'
 import { Const } from '../../../../constains'
 import PropTypes from 'prop-types'

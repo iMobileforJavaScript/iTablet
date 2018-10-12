@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, FlatList, Text, Image, TouchableOpacity } from 'react-native'
 import { Container, ListSeparator } from '../../../components'
 import NavigationService from '../../NavigationService'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

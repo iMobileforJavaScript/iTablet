@@ -10,7 +10,7 @@ import NavigationService from '../../../NavigationService'
 import { Container, Button } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
-import { CursorType } from 'imobile_for_javascript'
+import { CursorType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 

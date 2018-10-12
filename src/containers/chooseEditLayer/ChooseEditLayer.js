@@ -9,7 +9,7 @@ import { FlatList } from 'react-native'
 import { ListSeparator, Container, EmptyView, Dialog } from '../../components'
 import { checkType, Toast, scaleSize } from '../../utils'
 import PropTypes from 'prop-types'
-import { Action, DatasetType } from 'imobile_for_javascript'
+import { Action, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item } from '../mtLayerManager/components'
 
 export default class ChooseEditLayer extends React.Component {

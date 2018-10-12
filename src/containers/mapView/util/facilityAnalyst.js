@@ -8,7 +8,7 @@ import {
   Size2D,
   Action,
   GeoPoint,
-} from 'imobile_for_javascript'
+} from 'imobile_for_reactnative'
 import { Toast } from '../../../utils'
 
 let mNodes = []

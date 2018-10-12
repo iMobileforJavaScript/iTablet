@@ -11,7 +11,7 @@ import NavigationService from '../../NavigationService'   //导航模块
 import { Container, TextBtn, BtnTwo } from '../../../components'
 import Input from './Input'
 import Tips from './Tips'
-import { OnlineService } from 'imobile_for_javascript'
+import { OnlineService } from 'imobile_for_reactnative'
 import forge from 'node-forge'
 
 const BGCOLOR = constUtil.USUAL_GREEN

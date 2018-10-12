@@ -10,7 +10,7 @@ import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
-import { FieldType } from 'imobile_for_javascript'
+import { FieldType } from 'imobile_for_reactnative'
 
 export default class LayerAttributeEdit extends React.Component {
 

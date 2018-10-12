@@ -4,7 +4,7 @@ import { ConstOnline } from '../../../../constains'
 import { scaleSize } from '../../../../utils'
 import { BtnOne } from '../../../../components'
 import NavigationService from '../../../NavigationService'
-import { Point2D ,Action} from 'imobile_for_javascript'
+import { Point2D ,Action} from 'imobile_for_reactnative'
 const width = Dimensions.get('window').width
 
 const TDImgSrc = require('../../../../assets/public/TD.png')

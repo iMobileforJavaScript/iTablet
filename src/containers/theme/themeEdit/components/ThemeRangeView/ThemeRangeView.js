@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { RangeMode, ColorGradientType, ThemeRange, Action } from 'imobile_for_javascript'
+import { RangeMode, ColorGradientType, ThemeRange, Action } from 'imobile_for_reactnative'
 import { Button, Row } from '../../../../../components'
 import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'

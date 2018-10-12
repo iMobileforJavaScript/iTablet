@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { Workspace, SMMapView, Action, Point2D, EngineType, DatasetType } from 'imobile_for_javascript'
+import { Workspace, SMMapView, Action, Point2D, EngineType, DatasetType } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import { PopList, Setting, AlertDialog, DrawerView } from './componets'
 import { BtnbarLoad, OffLineList } from '../tabs/Home/components'

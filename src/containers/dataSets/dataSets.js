@@ -2,7 +2,7 @@ import React from 'react'
 import {  Image, StyleSheet, FlatList, TouchableOpacity, Text, View,} from 'react-native'
 import { Container ,ListSeparator} from '../../components'
 import NavigationService from '../NavigationService'
-import { DatasetType } from 'imobile_for_javascript'
+import { DatasetType } from 'imobile_for_reactnative'
 import { scaleSize } from '../../utils'
 import {color,size} from '../../styles'
 const point = require('../../assets/map/icon-dot.png')
