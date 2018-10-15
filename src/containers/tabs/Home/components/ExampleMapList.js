@@ -86,9 +86,9 @@ export default class ExampleMapList extends React.Component {
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD_ios.sxwu'
           path = ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu'
         }else{
-          fileName = "CBD"
-          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.sxwu'
-          path = ConstPath.SampleDataPath + 'CBD/CBD.sxwu'
+          fileName = "CBD_android"
+          openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_android/CBD_android.sxwu'
+          path = ConstPath.SampleDataPath + 'CBD_android/CBD_android.sxwu'
         }
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
@@ -235,7 +235,7 @@ export default class ExampleMapList extends React.Component {
     Toast.show("开始下载")
     this.progress = null
     this.OnlineService = new OnlineService()
-    let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
+    let result = await this.OnlineService.login("imobile1234", "imobile")
     if (result) {
       this.OnlineService.download(filePath, fileName, {
         onProgress: this.downloading,
