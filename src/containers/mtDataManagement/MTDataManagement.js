@@ -1,6 +1,13 @@
 import * as React from 'react'
 import { SectionList } from 'react-native'
-import { Container, ListSeparator, DataSetListSection, DataSetListItem, InputDialog, Dialog } from '../../components'
+import {
+  Container,
+  ListSeparator,
+  DataSetListSection,
+  DataSetListItem,
+  InputDialog,
+  Dialog,
+} from '../../components'
 import { Toast } from '../../utils'
 import { DataManagerTab } from './components'
 import NavigationService from '../NavigationService'
@@ -39,16 +46,14 @@ export default class MTDataManagement extends React.Component {
     this.container.setLoading(true)
     try {
       let list = []
-      let dataSources = await this.workspace.getDatasources()
-      let count = await dataSources.getCount()
+      let count = await this.workspace.getDatasourcesCount()
       for (let i = 0; i < count; i++) {
         let dataSetList = []
-        let dataSource = await dataSources.get(i)
-        let name = await dataSource.getAlias()
-        let dataSets = await dataSource.getDatasets()
-        let dataSetCount = await dataSets.getCount()
-        for (let j = 0; j < dataSetCount; j++) {
-          let dataset = await dataSets.get(j)
+        let dataSource = await this.workspace.getDatasource(i)
+        let name = await this.workspace.getDatasourceAlias(i)
+        let datasetsCount = await dataSource.getDatasetCount()
+        for (let j = 0; j < datasetsCount; j++) {
+          let dataset = await dataSource.getDataset(j)
           let dsName = await dataset.getName()
           let dsType = await dataset.getType()
 
@@ -88,11 +93,14 @@ export default class MTDataManagement extends React.Component {
         })
       }
       await this.mapControl.setAction(Action.PAN)
-      this.setState({
-        dataSourceList: list,
-      }, () => {
-        this.container.setLoading(false)
-      })
+      this.setState(
+        {
+          dataSourceList: list,
+        },
+        () => {
+          this.container.setLoading(false)
+        },
+      )
     } catch (e) {
       this.container.setLoading(false)
     }
@@ -114,7 +122,7 @@ export default class MTDataManagement extends React.Component {
   select = data => {
     let newList = this.state.openList
     if (newList[data.section + '-' + data.name]) {
-      delete(newList[data.section + '-' + data.name])
+      delete newList[data.section + '-' + data.name]
     } else {
       newList[data.section + '-' + data.name] = data
     }
@@ -124,15 +132,24 @@ export default class MTDataManagement extends React.Component {
   }
 
   _dSource = () => {
-    NavigationService.navigate('NewDSource', {workspace: this.workspace, map: this.map, cb: this.getData})
+    NavigationService.navigate('NewDSource', {
+      workspace: this.workspace,
+      map: this.map,
+      cb: this.getData,
+    })
   }
 
   _dSet = () => {
-    NavigationService.navigate('ChooseDatasource', {workspace: this.workspace, map: this.map, data: this.state.dataSourceList, cb: this.getData})
+    NavigationService.navigate('ChooseDatasource', {
+      workspace: this.workspace,
+      map: this.map,
+      data: this.state.dataSourceList,
+      cb: this.getData,
+    })
   }
 
   addToMap = item => {
-    (async function () {
+    (async function() {
       try {
         let id = await this.map.addLayer(item.data.dataset, true)
         if (id) {
@@ -145,31 +162,37 @@ export default class MTDataManagement extends React.Component {
       }
 
       // this.props.navigation.goBack()
-    }).bind(this)()
+    }.bind(this)())
   }
 
   showRenameDialog = item => {
     let data = item.data
-    this.setState({
-      dialogTitle: data.dataset ? '数据集重命名' : '数据源重命名',
-      dialogLabel: data.dataset ? '数据集名称' : '数据源名称',
-      currentData: data,
-    }, () => {
-      this.renameDialog && this.renameDialog.setDialogVisible(true)
-    })
+    this.setState(
+      {
+        dialogTitle: data.dataset ? '数据集重命名' : '数据源重命名',
+        dialogLabel: data.dataset ? '数据集名称' : '数据源名称',
+        currentData: data,
+      },
+      () => {
+        this.renameDialog && this.renameDialog.setDialogVisible(true)
+      },
+    )
   }
 
   showDeleteDialog = item => {
     let data = item.data
-    this.setState({
-      dialogTitle: '提示',
-      dialogLabel: data.dataset
-        ? ('是否要删除数据集' + data.name + '?\n删除后不可恢复')
-        : ('是否要关闭数据源' + data.name + '?'),
-      currentData: data,
-    }, () => {
-      this.deleteDialog && this.deleteDialog.setDialogVisible(true)
-    })
+    this.setState(
+      {
+        dialogTitle: '提示',
+        dialogLabel: data.dataset
+          ? '是否要删除数据集' + data.name + '?\n删除后不可恢复'
+          : '是否要关闭数据源' + data.name + '?',
+        currentData: data,
+      },
+      () => {
+        this.deleteDialog && this.deleteDialog.setDialogVisible(true)
+      },
+    )
   }
 
   rename = text => {
@@ -181,9 +204,10 @@ export default class MTDataManagement extends React.Component {
       Toast.show('请输修改名称')
       return
     }
-    (async function () {
+    (async function() {
       try {
-        if (this.state.currentData.dataset) { // 重命名数据集
+        if (this.state.currentData.dataset) {
+          // 重命名数据集
           await this.renameDataset(text)
         } else {
           await this.renameDatasource(text)
@@ -192,7 +216,7 @@ export default class MTDataManagement extends React.Component {
         Toast.show('重命名失败')
       }
       // this.props.navigation.goBack()
-    }).bind(this)()
+    }.bind(this)())
   }
 
   /**
@@ -200,7 +224,7 @@ export default class MTDataManagement extends React.Component {
    * @param text
    */
   renameDataset = text => {
-    (async function () {
+    (async function() {
       if (await this.state.currentData.dataset.isopen()) {
         await this.state.currentData.dataset.close()
       }
@@ -209,7 +233,7 @@ export default class MTDataManagement extends React.Component {
       this.renameDialog && this.renameDialog.setDialogVisible(false)
       await this.map.refresh()
       await this.getData()
-    }).bind(this)()
+    }.bind(this)())
   }
 
   /**
@@ -217,7 +241,7 @@ export default class MTDataManagement extends React.Component {
    * @param text
    */
   renameDatasource = text => {
-    (async function () {
+    (async function() {
       try {
         let alias = await this.state.currentData.datasource.getAlias()
         await this.workspace.renameDatasource(alias, text)
@@ -228,14 +252,17 @@ export default class MTDataManagement extends React.Component {
       } catch (e) {
         Toast.show('重命名失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   delete = () => {
-    (async function () {
+    (async function() {
       try {
-        if (this.state.currentData.dataset) { // 删除数据集
-          let layers = await this.map.getLayersByType(this.state.currentData.type)
+        if (this.state.currentData.dataset) {
+          // 删除数据集
+          let layers = await this.map.getLayersByType(
+            this.state.currentData.type,
+          )
           // 先从map中移除含该数据集的图层
           for (let i = 0; i < layers.length; i++) {
             if (layers[i].datasetName === this.state.currentData.name) {
@@ -245,9 +272,12 @@ export default class MTDataManagement extends React.Component {
           // 关闭该数据集
           await this.state.currentData.dataset.close()
           // 删除该数据集
-          await this.state.currentData.datasource.deleteDataset(this.state.currentData.name)
+          await this.state.currentData.datasource.deleteDataset(
+            this.state.currentData.name,
+          )
           await this.map.refresh()
-        } else { // 关闭数据源
+        } else {
+          // 关闭数据源
           let connInfo = await this.state.currentData.datasource.getConnectionInfo()
           let alias = await connInfo.getAlias()
           if (await this.state.currentData.datasource.isOpened()) {
@@ -260,43 +290,66 @@ export default class MTDataManagement extends React.Component {
       } catch (e) {
         Toast.show('删除失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   attribute = item => {
-    (async function () {
+    (async function() {
       // let recordset = await (await item.data.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
-      NavigationService.navigate('LayerAttributeEdit',{ dataset: item.data.dataset })
-    }).bind(this)()
+      NavigationService.navigate('LayerAttributeEdit', {
+        dataset: item.data.dataset,
+      })
+    }.bind(this)())
   }
 
   attrTable = item => {
-    (async function () {
+    (async function() {
       // let recordset = await (await item.data.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
-      NavigationService.navigate('LayerAttribute',{ dataset: item.data.dataset })
-    }).bind(this)()
+      NavigationService.navigate('LayerAttribute', {
+        dataset: item.data.dataset,
+      })
+    }.bind(this)())
   }
 
   getSectionOption = item => {
-    return (
-      [
-        { key: '重命名', name: item.key, datasource: item.datasource, action: data => this.showRenameDialog(data) },
-        { key: '关闭', name: item.key, datasource: item.datasource, action: data => this.showDeleteDialog(data) },
-      ]
-    )
+    return [
+      {
+        key: '重命名',
+        name: item.key,
+        datasource: item.datasource,
+        action: data => this.showRenameDialog(data),
+      },
+      {
+        key: '关闭',
+        name: item.key,
+        datasource: item.datasource,
+        action: data => this.showDeleteDialog(data),
+      },
+    ]
   }
 
   getOption = item => {
-    let itemData = {name: item.name, dataset: item.dataset, datasource: item.datasource, type: item.type}
-    return (
-      [
-        { key: '添加到当前地图', ...itemData, action: data => this.addToMap(data) },
-        { key: '重命名', ...itemData, action: data => this.showRenameDialog(data) },
-        { key: '删除', ...itemData, action: data => this.showDeleteDialog(data) },
-        { key: '属性', ...itemData, action: data => this.attribute(data) },
-        { key: '浏览属性表', ...itemData, action: data => this.attrTable(data) },
-      ]
-    )
+    let itemData = {
+      name: item.name,
+      dataset: item.dataset,
+      datasource: item.datasource,
+      type: item.type,
+    }
+    return [
+      {
+        key: '添加到当前地图',
+        ...itemData,
+        action: data => this.addToMap(data),
+      },
+      {
+        key: '重命名',
+        ...itemData,
+        action: data => this.showRenameDialog(data),
+      },
+      { key: '删除', ...itemData, action: data => this.showDeleteDialog(data) },
+      { key: '属性', ...itemData, action: data => this.attribute(data) },
+      { key: '浏览属性表', ...itemData, action: data => this.attrTable(data) },
+    ]
   }
 
   _renderSetion = ({ section }) => {
@@ -329,17 +382,18 @@ export default class MTDataManagement extends React.Component {
     return section.isShow ? <ListSeparator /> : null
   }
 
-  _keyExtractor = item => (item.key + item.index)
+  _keyExtractor = item => item.key + item.index
 
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '数据管理',
           navigation: this.props.navigation,
-        }}>
-        <DataManagerTab dSource={this._dSource} dSet={this._dSet}/>
+        }}
+      >
+        <DataManagerTab dSource={this._dSource} dSet={this._dSet} />
         <SectionList
           renderSectionHeader={this._renderSetion}
           renderItem={this._renderItem}
@@ -349,19 +403,19 @@ export default class MTDataManagement extends React.Component {
           SectionSeparatorComponent={this._renderSectionSeparatorComponent}
         />
         <InputDialog
-          ref={ref => this.renameDialog = ref}
+          ref={ref => (this.renameDialog = ref)}
           title={this.state.dialogTitle}
           label={this.state.dialogLabel}
           value={this.state.currentData.name}
           confirmAction={this.rename}
         />
         <Dialog
-          ref={ref => this.deleteDialog = ref}
+          ref={ref => (this.deleteDialog = ref)}
           type={Dialog.Type.MODAL}
           title={this.state.dialogTitle}
           info={this.state.dialogLabel}
-          confirmAction={this.delete}/>
-
+          confirmAction={this.delete}
+        />
       </Container>
     )
   }

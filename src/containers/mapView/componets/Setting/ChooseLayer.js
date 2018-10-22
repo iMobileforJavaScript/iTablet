@@ -6,13 +6,18 @@
 
 import * as React from 'react'
 import { View, Text, SectionList, FlatList } from 'react-native'
-import { ListSeparator, DataSetListItem, DataSetListSection, LayerItem, EmptyView } from '../../../../components'
+import {
+  ListSeparator,
+  DataSetListItem,
+  DataSetListSection,
+  LayerItem,
+  EmptyView,
+} from '../../../../components'
 import PropTypes from 'prop-types'
 import { DatasetType } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class ChooseLayer extends React.Component {
-
   static propTypes = {
     workspace: PropTypes.object,
     mapControl: PropTypes.object,
@@ -66,14 +71,17 @@ export default class ChooseLayer extends React.Component {
         headerTitile = '图层选择'
         break
     }
-    this.setState({
-      isShow: true,
-      showList: false,
-      headerTitile: headerTitile,
-    }, () => {
-      this.getData(type)
-      // this.getDatasets(type)
-    })
+    this.setState(
+      {
+        isShow: true,
+        showList: false,
+        headerTitile: headerTitile,
+      },
+      () => {
+        this.getData(type)
+        // this.getDatasets(type)
+      },
+    )
   }
 
   close = () => {
@@ -99,26 +107,25 @@ export default class ChooseLayer extends React.Component {
     if (!this.state.isShow) return
     this.setLoading(true)
     let t = type || this.state.type
-    ;(async function (){
+    ;(async function() {
       try {
         let list = []
-        let dataSources = await this.props.workspace.getDatasources()
-        let count = await dataSources.getCount()
+        let count = await this.props.workspace.getDatasourcesCount()
         for (let i = 0; i < count; i++) {
           let dataSetList = []
-          let dataSource = await dataSources.get(i)
+          // let dataSource = await dataSources.get(i)
+          let dataSource = await this.props.workspace.getDatasource(i)
           let name = await dataSource.getAlias()
-          let dataSets = await dataSource.getDatasets()
-          let dataSetCount = await dataSets.getCount()
-          for (let j = 0; j < dataSetCount; j++) {
-            let dataset = await dataSets.get(j)
+          let count = await dataSource.getDatasetCount()
+          for (let j = 0; j < count; j++) {
+            let dataset = await dataSource.getDataset(j)
             let dsType = await dataset.getType()
             if (t && dsType !== t) continue // 过滤数据集类型
             let dsName = await dataset.getName()
             // TODO layerName需要处理
             dataSetList.push({
               name: dsName,
-              layerName: dsName + "@" + name,
+              layerName: dsName + '@' + name,
               type: dsType,
               // isAdd: isAdd,
               dataset: dataset,
@@ -127,24 +134,28 @@ export default class ChooseLayer extends React.Component {
             })
           }
 
-          dataSetList.length > 0 && list.push({
-            key: name,
-            isShow: true,
-            data: dataSetList,
-            index: i,
-          })
+          dataSetList.length > 0 &&
+            list.push({
+              key: name,
+              isShow: true,
+              data: dataSetList,
+              index: i,
+            })
         }
-        this.setState({
-          datasourceList: list,
-          showList: true,
-          type: t,
-        }, () => {
-          this.setLoading(false)
-        })
+        this.setState(
+          {
+            datasourceList: list,
+            showList: true,
+            type: t,
+          },
+          () => {
+            this.setLoading(false)
+          },
+        )
       } catch (e) {
         this.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   getLayers = type => {
@@ -152,21 +163,24 @@ export default class ChooseLayer extends React.Component {
       return
     }
     this.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       this.itemRefs = []
       // this.map = await this.mapControl.getMap()
       let layerNameArr = await this.props.map.getLayersByType(type)
-      for(let i = 0; i < layerNameArr.length; i++) {
+      for (let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
       }
-      this.setState({
-        datasourceList: layerNameArr.concat(),
-        showList: true,
-        type: type,
-      }, () => {
-        this.setLoading(false)
-      })
-    }).bind(this)()
+      this.setState(
+        {
+          datasourceList: layerNameArr.concat(),
+          showList: true,
+          type: type,
+        },
+        () => {
+          this.setLoading(false)
+        },
+      )
+    }.bind(this)())
   }
 
   showSection = (section, isShow?: boolean) => {
@@ -187,29 +201,41 @@ export default class ChooseLayer extends React.Component {
     !this.props.alwaysVisible && this.close()
   }
 
-  _renderLayerItem =  ({item}) => {
+  _renderLayerItem = ({ item }) => {
     return (
-      <LayerItem key={item.key} data={item} map={this.map} onPress={this.select}/>
+      <LayerItem
+        key={item.key}
+        data={item}
+        map={this.map}
+        onPress={this.select}
+      />
     )
   }
 
-  _renderSeparator = ({leadingItem}) => {
-    return (
-      <ListSeparator key={'separator_' + leadingItem.id}/>
-    )
+  _renderSeparator = ({ leadingItem }) => {
+    return <ListSeparator key={'separator_' + leadingItem.id} />
   }
 
-  _datasetKeyExtractor = (item, index) => (index + '-' + item.name)
+  _datasetKeyExtractor = (item, index) => index + '-' + item.name
 
   _renderDatasetSetion = ({ section }) => {
     return (
-      <DataSetListSection data={section} height={60} onPress={this.showSection} />
+      <DataSetListSection
+        data={section}
+        height={60}
+        onPress={this.showSection}
+      />
     )
   }
 
   _renderDatasetItem = ({ item }) => {
     return (
-      <DataSetListItem hidden={!this.state.datasourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
+      <DataSetListItem
+        hidden={!this.state.datasourceList[item.section].isShow}
+        data={item}
+        height={60}
+        onPress={this.select}
+      />
     )
   }
 
@@ -217,18 +243,21 @@ export default class ChooseLayer extends React.Component {
     return section.isShow ? <ListSeparator /> : null
   }
 
-  _layerKeyExtractor = item => (item.key + item.index)
+  _layerKeyExtractor = item => item.key + item.index
 
   renderLayerList = () => {
     let list = <View />
     if (this.state.showList) {
-      list = this.state.datasourceList.length > 0
-        ? <FlatList
-          data={this.state.datasourceList}
-          renderItem={this._renderLayerItem}
-          keyExtractor={this._layerKeyExtractor}
-        />
-        : <EmptyView />
+      list =
+        this.state.datasourceList.length > 0 ? (
+          <FlatList
+            data={this.state.datasourceList}
+            renderItem={this._renderLayerItem}
+            keyExtractor={this._layerKeyExtractor}
+          />
+        ) : (
+          <EmptyView />
+        )
     }
     return list
   }
@@ -236,16 +265,19 @@ export default class ChooseLayer extends React.Component {
   renderDatasetList = () => {
     let list = <View />
     if (this.state.showList && this.state.datasourceList.length > 0) {
-      list = this.state.datasourceList.length > 0
-        ? <SectionList
-          renderSectionHeader={this._renderDatasetSetion}
-          renderItem={this._renderDatasetItem}
-          keyExtractor={this._datasetKeyExtractor}
-          sections={this.state.datasourceList}
-          ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
-        />
-        : <EmptyView />
+      list =
+        this.state.datasourceList.length > 0 ? (
+          <SectionList
+            renderSectionHeader={this._renderDatasetSetion}
+            renderItem={this._renderDatasetItem}
+            keyExtractor={this._datasetKeyExtractor}
+            sections={this.state.datasourceList}
+            ItemSeparatorComponent={this._renderItemSeparatorComponent}
+            // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          />
+        ) : (
+          <EmptyView />
+        )
     }
     return list
   }
@@ -254,17 +286,14 @@ export default class ChooseLayer extends React.Component {
     if (!this.state.isShow) return null
     return (
       <View style={styles.chooseLayerContainer}>
-        {
-          this.state.headerTitile ?
-            <View style={styles.titleView}>
-              <Text style={styles.title}>{this.state.headerTitile}</Text>
-            </View> : null
-        }
-        {
-          this.props.listType === 'layer'
-            ? this.renderLayerList()
-            : this.renderDatasetList()
-        }
+        {this.state.headerTitile ? (
+          <View style={styles.titleView}>
+            <Text style={styles.title}>{this.state.headerTitile}</Text>
+          </View>
+        ) : null}
+        {this.props.listType === 'layer'
+          ? this.renderLayerList()
+          : this.renderDatasetList()}
       </View>
     )
   }

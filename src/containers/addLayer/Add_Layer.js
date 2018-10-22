@@ -12,7 +12,6 @@ import styles from './styles'
 import { Action, DatasetVectorInfo } from 'imobile_for_reactnative'
 
 export default class Add_Layer extends React.Component {
-
   props: {
     navigation: Object,
     nav: Object,
@@ -36,25 +35,23 @@ export default class Add_Layer extends React.Component {
   }
 
   componentDidMount() {
-    (async function () {
+    (async function() {
       try {
         this.container.setLoading(false)
       } catch (error) {
         this.container.setLoading(true)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   _test_change = text => {
     this.setState({ InputText: text })
   }
 
-
   _OK = async () => {
     if (this.state.InputText === '') {
       Toast.show('请输入图层名称')
-    }
-    else {
+    } else {
       let key = ''
       for (let index = 0; index < this.routes.length; index++) {
         if (this.routes[index].routeName === 'MapView') {
@@ -69,7 +66,7 @@ export default class Add_Layer extends React.Component {
     let datasetVectorInfoModule = new DatasetVectorInfo()
     let isReadOnly = await this.datasource.isReadOnly()
     if (isReadOnly) {
-      Toast.show("此数据源为只可读文件")
+      Toast.show('此数据源为只可读文件')
       return
     }
     try {
@@ -82,12 +79,18 @@ export default class Add_Layer extends React.Component {
           return
         }
       }
-      let datasets = await this.datasource.getDatasets()
-      let datasetname = await datasets.getAvailableDatasetName(this.state.InputText)
-      let datasetVectorInfo = await datasetVectorInfoModule.createObjByNameType(datasetname, this.type)
-      let datasetVector = await this.datasource.createDatasetVector(datasetVectorInfo)
+      let datasetname = await this.datasource.getAvailableDatasetName(
+        this.state.InputText,
+      )
+      let datasetVectorInfo = await datasetVectorInfoModule.createObjByNameType(
+        datasetname,
+        this.type,
+      )
+      let datasetVector = await this.datasource.createDatasetVector(
+        datasetVectorInfo,
+      )
       let datasetVectorname = await datasetVector.getName()
-      let dataset = await datasets.get(datasetVectorname)
+      let dataset = await this.datasource.getDataset(datasetVectorname)
       await this.map.addLayer(dataset, true)
       await (await layers.get(0)).setCaption(this.state.InputText)
       await this.mapControl.setAction(Action.SELECT)
@@ -103,18 +106,22 @@ export default class Add_Layer extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         style={styles.container}
         initWithLoading
         headerProps={{
           title: '新建图层',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <View style={styles.sup}>
-          <BorderInput placeholder='请输入图层名称' textChange={this._test_change}/>
+          <BorderInput
+            placeholder="请输入图层名称"
+            textChange={this._test_change}
+          />
         </View>
         <View style={styles.sup}>
-          <BtnTwo text='确定' btnClick={this._OK}/>
+          <BtnTwo text="确定" btnClick={this._OK} />
         </View>
       </Container>
     )

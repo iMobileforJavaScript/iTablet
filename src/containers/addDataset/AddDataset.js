@@ -8,12 +8,17 @@ import * as React from 'react'
 import { SectionList } from 'react-native'
 import { Toast } from '../../utils'
 import { DatasetType } from 'imobile_for_reactnative'
-import { Container, ListSeparator, TextBtn, DataSetListSection, DataSetListItem  } from '../../components'
+import {
+  Container,
+  ListSeparator,
+  TextBtn,
+  DataSetListSection,
+  DataSetListItem,
+} from '../../components'
 
 import styles from './styles'
 
 export default class AddDataset extends React.Component {
-
   props: {
     navigation: Object,
   }
@@ -47,10 +52,10 @@ export default class AddDataset extends React.Component {
             isExist = true
             break
           }
-          if (await ds.getType() === DatasetType.Network) {
+          if ((await ds.getType()) === DatasetType.Network) {
             let dv = await ds.toDatasetVector()
             let subDataset = await dv.getChildDataset()
-            if (subDataset && await subDataset.getName() === dsName){
+            if (subDataset && (await subDataset.getName()) === dsName) {
               isExist = true
               break
             }
@@ -65,16 +70,14 @@ export default class AddDataset extends React.Component {
 
   getDatasets = async () => {
     let list = []
-    let dataSources = await this.workspace.getDatasources()
-    let count = await dataSources.getCount()
+    let count = await this.workspace.getDatasourcesCount()
     for (let i = 0; i < count; i++) {
       let dataSetList = []
-      let dataSource = await dataSources.get(i)
+      let dataSource = await this.workspace.getDatasource(i)
       let name = await dataSource.getAlias()
-      let dataSets = await dataSource.getDatasets()
-      let dataSetCount = await dataSets.getCount()
-      for (let j = 0; j < dataSetCount; j++) {
-        let dataset = await dataSets.get(j)
+      let count = await dataSource.getDatasetCount()
+      for (let j = 0; j < count; j++) {
+        let dataset = await dataSource.getDataset(j)
         let dsType = await dataset.getType()
         if (dsType === DatasetType.TABULAR) continue
         let dsName = await dataset.getName()
@@ -117,11 +120,14 @@ export default class AddDataset extends React.Component {
         index: i,
       })
     }
-    this.setState({
-      dataSourceList: list,
-    }, () => {
-      this.container.setLoading(false)
-    })
+    this.setState(
+      {
+        dataSourceList: list,
+      },
+      () => {
+        this.container.setLoading(false)
+      },
+    )
   }
 
   showSection = (section, isShow?: boolean) => {
@@ -140,7 +146,7 @@ export default class AddDataset extends React.Component {
   select = data => {
     let newList = this.state.openList
     if (newList[data.section + '-' + data.name]) {
-      delete(newList[data.section + '-' + data.name])
+      delete newList[data.section + '-' + data.name]
     } else {
       newList[data.section + '-' + data.name] = data
     }
@@ -156,7 +162,7 @@ export default class AddDataset extends React.Component {
   addDatasets = async () => {
     if (Object.getOwnPropertyNames(this.state.openList).length <= 0) return
     let showEntireMap = false
-    for(let key in this.state.openList) {
+    for (let key in this.state.openList) {
       let item = this.state.openList[key]
       await this.map.addLayer(item.dataset, true)
       if (item.type === DatasetType.IMAGE || item.type === DatasetType.Grid) {
@@ -164,21 +170,32 @@ export default class AddDataset extends React.Component {
       }
     }
     Toast.show('添加图层成功')
-    this.map && await this.map.refresh()
-    showEntireMap && this.map && await this.map.viewEntire()
+    this.map && (await this.map.refresh())
+    showEntireMap && this.map && (await this.map.viewEntire())
     this.props.navigation.goBack()
     this.cb && this.cb()
   }
 
   _renderSetion = ({ section }) => {
     return (
-      <DataSetListSection data={section} height={60} onPress={this.showSection} />
+      <DataSetListSection
+        data={section}
+        height={60}
+        onPress={this.showSection}
+      />
     )
   }
 
   _renderItem = ({ item }) => {
     return (
-      <DataSetListItem subTitle={'已添加'} radio={true} hidden={!this.state.dataSourceList[item.section].isShow} data={item} height={60} onPress={this.select} />
+      <DataSetListItem
+        subTitle={'已添加'}
+        radio={true}
+        hidden={!this.state.dataSourceList[item.section].isShow}
+        data={item}
+        height={60}
+        onPress={this.select}
+      />
     )
   }
 
@@ -190,18 +207,25 @@ export default class AddDataset extends React.Component {
   //   return section.isShow ? <ListSeparator height={scaleSize(20)} /> : null
   // }
 
-  _keyExtractor = item => (item.key + item.index)
+  _keyExtractor = item => item.key + item.index
 
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
           title: '添加图层',
           navigation: this.props.navigation,
-          headerRight: <TextBtn btnText="添加" textStyle={styles.headerBtnTitle} btnClick={this.addDatasets} />,
-        }}>
+          headerRight: (
+            <TextBtn
+              btnText="添加"
+              textStyle={styles.headerBtnTitle}
+              btnClick={this.addDatasets}
+            />
+          ),
+        }}
+      >
         <SectionList
           renderSectionHeader={this._renderSetion}
           renderItem={this._renderItem}

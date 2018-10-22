@@ -1,10 +1,5 @@
 import { Toast } from '../../../utils'
-import {
-  GeoStyle,
-  Size2D,
-  BufferAnalystGeometry,
-  BufferAnalystParameter,
-} from 'imobile_for_reactnative'
+import { Analyst } from 'imobile_for_reactnative'
 
 async function analyst(data) {
   try {
@@ -19,63 +14,33 @@ async function analyst(data) {
       return
     }
 
-    let selection = await layer.getSelection()
-    let queryRecordset = await selection.toRecordset()
-
-    let trackLayer = await map.getTrackingLayer()
-    await trackLayer.clear()
-    let geoRegion
-    let count = await queryRecordset.getRecordCount()
-    if (count > 0) {
-      // let datasource = await workspace.getDatasource(0)
-      // let dtname = await datasource.getAvailableDatasetName('da')
-      // let datasetVectorInfo = await new DatasetVectorInfo().createObjByNameType(dtname, DatasetType.REGION)
-      // let datasetVector = await datasource.createDatasetVector(datasetVectorInfo)
-      // let recordset = await datasetVector.getRecordset(false, CursorType.DYNAMIC)
-      let isEOF = await queryRecordset.isEOF()
-      while (!isEOF) {
-        let bufferAnalystParameter = await new BufferAnalystParameter().createObj()
-        await bufferAnalystParameter.setEndType(bufferSetting.endType)
-        await bufferAnalystParameter.setLeftDistance(bufferSetting.distance)
-        await bufferAnalystParameter.setRightDistance(bufferSetting.distance)
-
-        let geoForBuffer = await queryRecordset.getGeometry()
-        let queryDataset = await queryRecordset.getDataset()
-        let prj = await queryDataset.getPrjCoordSys()
-
-        geoRegion = await BufferAnalystGeometry.createBuffer(geoForBuffer, bufferAnalystParameter, prj)
-        let geoStyle = await new GeoStyle().createObj()
-        await geoStyle.setLineColor(50, 244, 50)
-        await geoStyle.setLineWidth(0.5)
-        await geoStyle.setLineSymbolID(0)
-        await geoStyle.setMarkerSymbolID(351)
-        let size2D = await new Size2D().createObj(10, 10)
-        await geoStyle.setMarkerSize(size2D)
-        await geoStyle.setFillForeColor(244, 50, 50)
-        await geoStyle.setFillOpaqueRate(70)
-
-        await geoRegion.setStyle(geoStyle)
-        await trackLayer.add(geoRegion, '')
-        await queryRecordset.moveNext()
-        // await recordset.addNew(geoRegion)
-        // await recordset.update()
-        isEOF = await queryRecordset.isEOF()
-      }
-      // await recordset.dispose()
+    let params = {
+      parameter: {
+        endType: bufferSetting.endType,
+        leftDistance: bufferSetting.distance,
+        rightDistance: bufferSetting.distance,
+      },
+      geoStyle: {
+        lineColor: { r: 50, g: 244, b: 50 },
+        lineWidth: 0.5,
+        lineSymbolID: 0,
+        markerSymbolID: 351,
+        markerSize: { w: 10, h: 10 },
+        fillForeColor: { r: 244, g: 50, b: 50 },
+        fillOpaqueRate: 70,
+      },
     }
-    await map.refresh()
+    await Analyst.bufferAnalyst(map, layer, params)
     Toast.show('分析成功')
   } catch (e) {
     Toast.show('分析失败')
   }
 }
 
-function clear(map) {
-  (async function () {
-    let trackLayer = await map.getTrackingLayer()
-    await trackLayer.clear()
-    await map.refresh()
-  }).bind(this)()
+function clear() {
+  (async function() {
+    await Analyst.clear()
+  }.bind(this)())
 }
 
 export default {

@@ -13,7 +13,13 @@ import { Toast } from '../../../utils'
 
 let mNodes = []
 let analystSetting, facilityAnalyst
-let mMapControl, mMap, mSelection, mAnalystLayer, mNodelLayer, mTrackingLayer, _setLoading = () => {}
+let mMapControl,
+  mMap,
+  mSelection,
+  mAnalystLayer,
+  mNodelLayer,
+  mTrackingLayer,
+  _setLoading = () => {}
 function addNode(node) {
   mNodes.push(node)
 }
@@ -25,7 +31,7 @@ function getNodes() {
 async function clear() {
   mNodes = []
   // TODO 清除Selection
-  mTrackingLayer && await mTrackingLayer.clear()
+  mTrackingLayer && (await mTrackingLayer.clear())
   if (mMapControl) {
     await mMapControl.setAction(Action.PAN)
   }
@@ -117,14 +123,19 @@ async function longPressHandler(event) {
       await mTrackingLayer.add(geoPoint, '')
       // await mTrackingLayer.add(geoText, '')
       await mMap.refresh()
-
     }
   } catch (e) {
     () => {}
   }
 }
 
-async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector, setLoading = () => {}) {
+async function loadModel(
+  mapControl,
+  analystLayer,
+  nodelLayer,
+  datasetVector,
+  setLoading = () => {},
+) {
   try {
     await dispose()
     _setLoading = setLoading
@@ -163,7 +174,7 @@ async function loadModel(mapControl, analystLayer, nodelLayer, datasetVector, se
 
     let result = await facilityAnalyst.load()
 
-    mMapControl && await mMapControl.setAction(Action.SELECT)
+    mMapControl && (await mMapControl.setAction(Action.SELECT))
     return result || false
   } catch (e) {
     Toast.show('加载失败')
@@ -177,7 +188,6 @@ async function addGestureDetector() {
     // scrollHandler: scrollHandler,
   })
 }
-
 
 async function deleteGestureDetector() {
   await mMapControl.deleteGestureDetector()
@@ -196,11 +206,12 @@ async function display(selection) {
       let geometry = await recordSet.getGeometry()
       let style = await getGeoStyle(10, 10, 255, 105, 0)
       await geometry.setStyle(style)
-      mTrackingLayer && await mTrackingLayer.add(geometry, '')
+      mTrackingLayer && (await mTrackingLayer.add(geometry, ''))
       await recordSet.moveNext()
 
       isEOF = await recordSet.isEOF()
     }
+    recordSet.dispose()
     _setLoading(false)
     await (await mMapControl.getMap()).refresh()
     // await mMap.refresh()
@@ -260,13 +271,20 @@ async function getGeoStyle(w, h, r, g, b) {
  * @param isUncertainDirectionValid
  * @returns {Promise.<void>}
  */
-async function traceUp(weightName = 'length', isUncertainDirectionValid = true) {
+async function traceUp(
+  weightName = 'length',
+  isUncertainDirectionValid = true,
+) {
   try {
     if (!check()) return
     await mSelection.clear()
     _setLoading(true, '分析中')
     for (let i = 0; i < mNodes.length; i++) {
-      let { edges } = await facilityAnalyst.traceUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
+      let { edges } = await facilityAnalyst.traceUpFromNode(
+        mNodes[i],
+        weightName,
+        isUncertainDirectionValid,
+      )
       // let { edges } = await facilityAnalyst.findPathUpFromNode(mNodes[i], weightName, isUncertainDirectionValid)
 
       if (!edges || edges.length <= 0) {
@@ -275,9 +293,10 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
         return
       }
 
-      edges && edges.forEach(async edge => {
-        await mSelection.add(edge)
-      })
+      edges &&
+        edges.forEach(async edge => {
+          await mSelection.add(edge)
+        })
     }
     await display(mSelection)
     await mMapControl.setAction(Action.PAN)
@@ -287,13 +306,20 @@ async function traceUp(weightName = 'length', isUncertainDirectionValid = true) 
   }
 }
 
-async function traceDown(weightName = 'length', isUncertainDirectionValid = true) {
+async function traceDown(
+  weightName = 'length',
+  isUncertainDirectionValid = true,
+) {
   try {
     if (!check()) return
     await mSelection.clear()
     _setLoading(true, '分析中')
     for (let i = 0; i < mNodes.length; i++) {
-      let { edges } = await facilityAnalyst.traceDownFromNode(mNodes[i], weightName, isUncertainDirectionValid)
+      let { edges } = await facilityAnalyst.traceDownFromNode(
+        mNodes[i],
+        weightName,
+        isUncertainDirectionValid,
+      )
 
       if (!edges || edges.length <= 0) {
         _setLoading(false)
@@ -301,9 +327,10 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
         return
       }
 
-      edges && edges.forEach(async edge => {
-        await mSelection.add(edge)
-      })
+      edges &&
+        edges.forEach(async edge => {
+          await mSelection.add(edge)
+        })
     }
     await display(mSelection)
     await mMapControl.setAction(Action.PAN)
@@ -313,13 +340,21 @@ async function traceDown(weightName = 'length', isUncertainDirectionValid = true
   }
 }
 
-async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid = false) {
+async function connectedAnalyst(
+  weightName = 'length',
+  isUncertainDirectionValid = false,
+) {
   try {
     if (!check()) return
     await mSelection.clear()
     _setLoading(true, '分析中')
     for (let i = 0; i < mNodes.length - 1; i++) {
-      let { edges } = await facilityAnalyst.findPathFromNodes(mNodes[i], mNodes[i + 1], weightName, isUncertainDirectionValid)
+      let { edges } = await facilityAnalyst.findPathFromNodes(
+        mNodes[i],
+        mNodes[i + 1],
+        weightName,
+        isUncertainDirectionValid,
+      )
 
       if (!edges || edges.length <= 0) {
         _setLoading(false)
@@ -327,9 +362,10 @@ async function connectedAnalyst(weightName = 'length', isUncertainDirectionValid
         return
       }
 
-      edges && edges.forEach(async edge => {
-        await mSelection.add(edge)
-      })
+      edges &&
+        edges.forEach(async edge => {
+          await mSelection.add(edge)
+        })
     }
 
     await display(mSelection)
