@@ -12,7 +12,6 @@ import { BtnOne, ListSeparator } from '../../../../components'
 import styles from './styles'
 
 export default class LayerAttributeTab extends React.Component {
-
   static propTypes = {
     mapChange: PropTypes.func,
     showSaveDialog: PropTypes.func,
@@ -30,25 +29,25 @@ export default class LayerAttributeTab extends React.Component {
   }
 
   add = () => {
-    if(typeof this.props.add === 'function'){
+    if (typeof this.props.add === 'function') {
       this.props.add()
     }
   }
 
   startAudio = () => {
-    if(typeof this.props.startAudio === 'function'){
+    if (typeof this.props.startAudio === 'function') {
       this.props.startAudio()
     }
   }
 
   edit = () => {
-    if(typeof this.props.edit === 'function'){
+    if (typeof this.props.edit === 'function') {
       this.props.edit()
     }
   }
 
   delete = () => {
-    if(typeof this.props.delete === 'function'){
+    if (typeof this.props.delete === 'function') {
       this.props.delete()
     }
   }
@@ -58,23 +57,23 @@ export default class LayerAttributeTab extends React.Component {
       <View style={styles.container}>
         <BtnOne
           size={BtnOne.SIZE.SMALL}
-          BtnText='添加图片或视频'
+          title="添加图片或视频"
           image={require('../../../../assets/mapTools/icon_add_selected.png')}
-          BtnClick={this.add}
+          onPress={this.add}
         />
-        <ListSeparator mode={ListSeparator.mode.VERTICAL}/>
+        <ListSeparator mode={ListSeparator.mode.VERTICAL} />
         {/*<BtnOne*/}
         {/*size={BtnOne.SIZE.SMALL}*/}
-        {/*BtnText='输入语音'*/}
+        {/*title='输入语音'*/}
         {/*image={require('../../../../assets/map/icon-save.png')}*/}
-        {/*BtnClick={this.startAudio}*/}
+        {/*onPress={this.startAudio}*/}
         {/*/>*/}
         {/*<ListSeparator mode={ListSeparator.mode.VERTICAL}/>*/}
         <BtnOne
           size={BtnOne.SIZE.SMALL}
-          BtnText='编辑'
+          title="编辑"
           image={require('../../../../assets/mapTools/icon_edit_selected.png')}
-          BtnClick={this.edit}
+          onPress={this.edit}
         />
       </View>
     )
@@ -91,9 +90,9 @@ export default class LayerAttributeTab extends React.Component {
             key={type}
             style={styles.btn}
             size={BtnOne.SIZE.SMALL}
-            BtnText='添加'
+            title="添加"
             image={require('../../../../assets/mapTools/icon_add_selected.png')}
-            BtnClick={this.add}
+            onPress={this.add}
           />
         )
       case 'edit':
@@ -102,9 +101,9 @@ export default class LayerAttributeTab extends React.Component {
             key={type}
             style={styles.btn}
             size={BtnOne.SIZE.SMALL}
-            BtnText='编辑'
+            title="编辑"
             image={require('../../../../assets/mapTools/icon_edit_selected.png')}
-            BtnClick={this.edit}
+            onPress={this.edit}
           />
         )
       case 'delete':
@@ -113,9 +112,9 @@ export default class LayerAttributeTab extends React.Component {
             key={type}
             style={styles.btn}
             size={BtnOne.SIZE.SMALL}
-            BtnText='删除'
+            title="删除"
             image={require('../../../../assets/mapTools/icon_delete_selected.png')}
-            BtnClick={this.delete}
+            onPress={this.delete}
           />
         )
       case 'addImageVideo':
@@ -124,9 +123,9 @@ export default class LayerAttributeTab extends React.Component {
             key={type}
             style={styles.btn}
             size={BtnOne.SIZE.SMALL}
-            BtnText='添加图片或视频'
+            title="添加图片或视频"
             image={require('../../../../assets/mapTools/icon_add_selected.png')}
-            BtnClick={this.add}
+            onPress={this.add}
           />
         )
     }
@@ -137,23 +136,23 @@ export default class LayerAttributeTab extends React.Component {
       <View style={styles.container}>
         <BtnOne
           size={BtnOne.SIZE.SMALL}
-          BtnText='添加'
+          title="添加"
           image={require('../../../../assets/map/icon-add-datasets.png')}
-          BtnClick={this.add}
+          onPress={this.add}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL} />
         <BtnOne
           size={BtnOne.SIZE.SMALL}
-          BtnText='编辑'
+          title="编辑"
           image={require('../../../../assets/map/icon-save-color.png')}
-          BtnClick={this.edit}
+          onPress={this.edit}
         />
         <ListSeparator mode={ListSeparator.mode.VERTICAL} />
         <BtnOne
           size={BtnOne.SIZE.SMALL}
-          BtnText='删除'
+          title="删除"
           image={require('../../../../assets/map/icon-save-color.png')}
-          BtnClick={this.delete}
+          onPress={this.delete}
         />
       </View>
     )
@@ -165,11 +164,7 @@ export default class LayerAttributeTab extends React.Component {
       btns.push(this.addBtn(this.props.btns[i]))
     }
 
-    return (
-      <View style={styles.container}>
-        {btns}
-      </View>
-    )
+    return <View style={styles.container}>{btns}</View>
 
     // if (this.props.type === 'EDIT') {
     //   return this.renderEdit()

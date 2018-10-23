@@ -16,14 +16,14 @@ export default class ModuleList extends Component {
 
   _renderItem({ item }) {
     return (
-      <View style={styles.moduleview}>
-        <TouchableOpacity style={styles.module}>
-          <Image source={item.baseimage} style={styles.baseimage} />
-          <View style={styles.moduleitem}>
+      <View style={styles.moduleView}>
+        <TouchableOpacity onPress={item.action} style={styles.module}>
+          <Image source={item.baseImage} style={styles.baseImage} />
+          <View style={styles.moduleItem}>
             <Image
               resizeMode={'contain'}
-              source={item.moduleimage}
-              style={styles.moduleimage}
+              source={item.moduleImage}
+              style={styles.moduleImage}
             />
             <Text style={styles.title}>{item.title}</Text>
           </View>
@@ -36,7 +36,7 @@ export default class ModuleList extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          data={ConstModule.Module.data}
+          data={ConstModule}
           renderItem={this._renderItem}
           horizontal={false}
           numColumns={2}
@@ -51,13 +51,11 @@ export default class ModuleList extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingHorizontal: scaleSize(60),
     flexDirection: 'column',
-    // backgroundColor:'blue',
     marginTop: scaleSize(80),
     alignItems: 'center',
   },
-  baseimage: {
+  baseImage: {
     position: 'absolute',
     width: SCREEN_WIDTH * 0.361,
     height: SCREEN_WIDTH * 0.202,
@@ -65,22 +63,19 @@ const styles = StyleSheet.create({
   module: {
     width: SCREEN_WIDTH * 0.361,
     height: SCREEN_WIDTH * 0.202,
-    // flexDirection: 'column',
-    // alignItems: 'center',
     justifyContent: 'center',
-    // alignSelf: 'center',
   },
-  moduleimage: {
+  moduleImage: {
     width: scaleSize(100),
     height: scaleSize(80),
   },
-  moduleview: {
+  moduleView: {
     width: SCREEN_WIDTH * 0.382,
     height: SCREEN_WIDTH * 0.202,
     paddingHorizontal: SCREEN_WIDTH * 0.01,
     marginTop: scaleSize(25),
   },
-  moduleitem: {
+  moduleItem: {
     alignItems: 'center',
     justifyContent: 'center',
   },

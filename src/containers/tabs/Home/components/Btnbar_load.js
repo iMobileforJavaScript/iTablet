@@ -4,7 +4,7 @@ import { ConstOnline } from '../../../../constains'
 import { scaleSize } from '../../../../utils'
 import { BtnOne } from '../../../../components'
 import NavigationService from '../../../NavigationService'
-import { Point2D ,Action} from 'imobile_for_reactnative'
+import { Point2D, Action } from 'imobile_for_reactnative'
 const width = Dimensions.get('window').width
 
 const TDImgSrc = require('../../../../assets/public/TD.png')
@@ -18,7 +18,6 @@ const OSM = 'OSM'
 const Google = '谷歌'
 
 export default class Btnbar_mapLoad extends React.Component {
-
   props: {
     style: any,
     TD: () => {},
@@ -33,9 +32,15 @@ export default class Btnbar_mapLoad extends React.Component {
 
   _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
-
-      let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop} />
-      return (element)
+      let element = (
+        <BtnOne
+          onPress={delegate}
+          image={src}
+          title={str}
+          titleStyle={styles.btntop}
+        />
+      )
+      return element
     } else {
       throw Error('BthBar: please check type of params')
     }
@@ -58,7 +63,7 @@ export default class Btnbar_mapLoad extends React.Component {
   }
 
   goToMapView = type => {
-    (async function () {
+    (async function() {
       let exist = false
       // let routes = this.props.nav.routes
 
@@ -78,20 +83,18 @@ export default class Btnbar_mapLoad extends React.Component {
         const point2dModule = new Point2D()
 
         await this.map.setScale(0.0001)
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              // key && NavigationService.goBack(key)
-            }).bind(this)()
-          }
-        )
+        navigator.geolocation.getCurrentPosition(position => {
+          let lat = position.coords.latitude
+          let lon = position.coords.longitude
+          ;(async () => {
+            let centerPoint = await point2dModule.createObj(lon, lat)
+            await this.map.setCenter(centerPoint)
+            await this.map.viewEntire()
+            await this.mapControl.setAction(Action.PAN)
+            await this.map.refresh()
+            // key && NavigationService.goBack(key)
+          }).bind(this)()
+        })
         let DSParams = ConstOnline[type].DSParams
         let labelDSParams = ConstOnline[type].labelDSParams
         let layerIndex = ConstOnline[type].layerIndex
@@ -108,14 +111,16 @@ export default class Btnbar_mapLoad extends React.Component {
       } else {
         NavigationService.navigate('MapView', ConstOnline[type])
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   render() {
     const TDClick = this.props.TD ? this.props.TD : this._click_TD
     const BaiduClick = this.props.Baidu ? this.props.Baidu : this._click_Baidu
     const OSMClick = this.props.OSM ? this.props.OSM : this._click_OSM
-    const GoogleClick = this.props.Google ? this.props.Google : this._click_Google
+    const GoogleClick = this.props.Google
+      ? this.props.Google
+      : this._click_Google
     return (
       <View style={[styles.container, this.props.style]}>
         {this._addElement(TDClick, TDImgSrc, TD)}

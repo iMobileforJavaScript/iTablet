@@ -1,13 +1,19 @@
 import React, { Component } from 'react'
-import { StyleSheet, TouchableOpacity, Text, View, Image ,Dimensions} from 'react-native'
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  View,
+  Image,
+  Dimensions,
+} from 'react-native'
 import { Container, EmptyView, MTBtn } from '../../../components'
 import { scaleSize } from '../../../utils'
 import NavigationService from '../../NavigationService'
 // import{ Dialog} from '../../../components'
 const SCREEN_WIDTH = Dimensions.get('window').width
-const IMAGE_WIDTH=SCREEN_WIDTH*0.87
+const IMAGE_WIDTH = SCREEN_WIDTH * 0.87
 export default class CloudService extends Component {
-
   props: {
     navigation: Object,
     image: any,
@@ -19,13 +25,12 @@ export default class CloudService extends Component {
       data: [
         {
           image: '',
-          itemTitle: "世界地图",
+          itemTitle: '世界地图',
           uploadTime: '修改时间：2018-9-14',
         },
       ],
     }
   }
-
 
   componentDidMount() {
     // this.container.setLoading(false)
@@ -35,25 +40,34 @@ export default class CloudService extends Component {
   }
 
   itemSeparator() {
-    return (<View style={styles.itemSeparator}></View>)
+    return <View style={styles.itemSeparator} />
   }
 
   renderItem({ item }) {
     return (
       <View style={styles.item}>
-        <Image source={require('../../../assets/public/beijing.png')} style={styles.itemImage} />
+        <Image
+          source={require('../../../assets/public/beijing.png')}
+          style={styles.itemImage}
+        />
         <Text style={styles.itemTitle}>{item.itemTitle}</Text>
         <View style={styles.itemBottom}>
           <Text style={styles.upLoadtime}>{item.uploadTime}</Text>
           <TouchableOpacity style={styles.itmeBtn1}>
-            <Image source={require('../../../assets/public/icon_download_select.png') } style={styles.btnImage}/>
+            <Image
+              source={require('../../../assets/public/icon_download_select.png')}
+              style={styles.btnImage}
+            />
           </TouchableOpacity>
           <TouchableOpacity style={styles.itmeBtn2}>
-            <Image source={require('../../../assets/public/icon_share.png')} style={styles.btnImage}/>
+            <Image
+              source={require('../../../assets/public/icon_share.png')}
+              style={styles.btnImage}
+            />
           </TouchableOpacity>
         </View>
-      </View>)
-
+      </View>
+    )
   }
   upload = async () => {
     // this.OnlineService = new OnlineService()
@@ -66,11 +80,11 @@ export default class CloudService extends Component {
     //     onFailure: this.uploadFailure,
     //   })
     // }
-    NavigationService.navigate('UpLoadList', { })
+    NavigationService.navigate('UpLoadList', {})
   }
 
   uploading = async progress => {
-    if(progress===99){
+    if (progress === 99) {
       this.uploadDialog.setDialogVisible(true)
     }
   }
@@ -79,17 +93,22 @@ export default class CloudService extends Component {
     return (
       <Container
         style={styles.container}
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         // initWithLoading
         headerProps={{
           title: '云服务',
           navigation: this.props.navigation,
           headerRight: [
-            <MTBtn key={'upload'} image={require('../../../assets/public/icon_upload.png')} imageStyle={styles.upload}
-              BtnClick={this.upload} />,
+            <MTBtn
+              key={'upload'}
+              image={require('../../../assets/public/icon_upload.png')}
+              imageStyle={styles.upload}
+              onPress={this.upload}
+            />,
           ],
           withoutBack: true,
-        }}>
+        }}
+      >
         {/* <View style={styles.search}>
 
          </View>
@@ -110,7 +129,6 @@ export default class CloudService extends Component {
           cancelBtnTitle={'否'}
         /> */}
       </Container>
-
     )
   }
 }
@@ -124,8 +142,8 @@ const styles = StyleSheet.create({
     height: scaleSize(40),
     marginRight: scaleSize(20),
   },
-  search:{
-    width:SCREEN_WIDTH,
+  search: {
+    width: SCREEN_WIDTH,
     height: scaleSize(10),
   },
   itemSeparator: {
@@ -137,32 +155,31 @@ const styles = StyleSheet.create({
   item: {
     width: SCREEN_WIDTH,
     height: scaleSize(365),
-    backgroundColor:"white",
+    backgroundColor: 'white',
     alignItems: 'center',
   },
   itemImage: {
-    width:IMAGE_WIDTH,
+    width: IMAGE_WIDTH,
     height: scaleSize(250),
-    backgroundColor:"blue",
+    backgroundColor: 'blue',
   },
-  itemTitle:{
-    width:IMAGE_WIDTH,
+  itemTitle: {
+    width: IMAGE_WIDTH,
     height: scaleSize(60),
-    fontSize:scaleSize(40),
-    color:"black",
-    textAlignVertical:'center',
-
+    fontSize: scaleSize(40),
+    color: 'black',
+    textAlignVertical: 'center',
   },
   itemBottom: {
-    width:IMAGE_WIDTH,
+    width: IMAGE_WIDTH,
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
   upLoadtime: {
     width: scaleSize(540),
     height: scaleSize(45),
-    fontSize:scaleSize(25),
-    textAlignVertical:'center',
+    fontSize: scaleSize(25),
+    textAlignVertical: 'center',
   },
   itmeBtn1: {
     width: scaleSize(45),
@@ -171,10 +188,10 @@ const styles = StyleSheet.create({
   itmeBtn2: {
     width: scaleSize(45),
     height: scaleSize(45),
-    paddingRight:scaleSize(15),
-    marginRight:scaleSize(40),
+    paddingRight: scaleSize(15),
+    marginRight: scaleSize(40),
   },
-  btnImage:{
+  btnImage: {
     width: scaleSize(45),
     height: scaleSize(45),
   },

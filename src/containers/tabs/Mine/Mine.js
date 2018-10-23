@@ -20,11 +20,22 @@ export default class Mine extends Component {
   renderHeader = () => {
     return (
       <View style={styles.header}>
-        <TouchableOpacity onPress={this.goToPersonal} activeOpacity={1} style={styles.avatarView}>
-          <Image style={styles.avatar} source={require('../../../assets/public/icon-avatar-default.png')}/>
+        <TouchableOpacity
+          onPress={this.goToPersonal}
+          activeOpacity={1}
+          style={styles.avatarView}
+        >
+          <Image
+            style={styles.avatar}
+            source={require('../../../assets/public/icon-avatar-default.png')}
+          />
         </TouchableOpacity>
         <View style={styles.headerContent}>
-          {this.renderHeaderItem(this.props.user.currentUser && this.props.user.currentUser.userName ||'用户名')}
+          {this.renderHeaderItem(
+            (this.props.user.currentUser &&
+              this.props.user.currentUser.userName) ||
+              '用户名',
+          )}
           {this.renderHeaderItem('绑定手机号')}
           {this.renderHeaderItem('邮箱')}
         </View>
@@ -41,10 +52,14 @@ export default class Mine extends Component {
   }
 
   render() {
-    if (this.props.user && this.props.user.currentUser && this.props.user.currentUser.userName) {
+    if (
+      this.props.user &&
+      this.props.user.currentUser &&
+      this.props.user.currentUser.userName
+    ) {
       return (
         <Container
-          ref={ref => this.container = ref}
+          ref={ref => (this.container = ref)}
           headerProps={{
             title: '我的iTablet',
             withoutBack: true,
@@ -52,17 +67,16 @@ export default class Mine extends Component {
             // headerRight: (
             //   <BtnOne
             //     image={require('../../../assets/public/icon-setting-white.png')}
-            //     BtnClick={}
+            //     onPress={}
             //   />
             // ),
-          }}>
+          }}
+        >
           {this.renderHeader()}
         </Container>
       )
     } else {
-      return (
-        <Login setUser={this.props.setUser} />
-      )
+      return <Login setUser={this.props.setUser} />
     }
   }
 }

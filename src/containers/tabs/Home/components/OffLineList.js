@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
-import NavigationService from '../../../../containers/NavigationService'   //导航模块
+import NavigationService from '../../../../containers/NavigationService' //导航模块
 import { BtnOne } from '../../../../components'
 import { scaleSize } from '../../../../utils'
 const icon_workspace = require('../../../../assets/MapLoad/icon-open-workspace.png')
@@ -8,7 +8,12 @@ const icon_udb = require('../../../../assets/MapLoad/icon-opne-udb.png')
 // const icon_webudb = require('../../../../assets/MapLoad/icon-open-webudb.png')
 const icon_newudb = require('../../../../assets/MapLoad/icon-new-datasource.png')
 const width = Dimensions.get('window').width
-const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件型数据源" }, { key: "打开web型数据源" }, { key: "新建文件型数据源" }]
+const testData = [
+  { key: '打开文件型工作空间' },
+  { key: '打开文件型数据源' },
+  { key: '打开web型数据源' },
+  { key: '新建文件型数据源' },
+]
 
 // class Item extends React.Component {
 //
@@ -34,13 +39,12 @@ const testData = [{ key: '打开文件型工作空间' }, { key: "打开文件�
 // }
 
 export default class OffLineList extends React.Component {
-
   props: {
     style: any,
     Workspace: any,
     map: any,
     mapControl: any,
-    closemapMenu:any,
+    closemapMenu: any,
   }
 
   constructor(props) {
@@ -48,11 +52,11 @@ export default class OffLineList extends React.Component {
     this.workspace = this.props.Workspace
     this.map = this.props.map
     this.mapControl = this.props.mapControl
-    this.closemapMenu=this.props.closemapMenu  ?  this.props.closemapMenu : null
+    this.closemapMenu = this.props.closemapMenu ? this.props.closemapMenu : null
   }
 
   _btn_workspace_click = () => {
-    this.closemapMenu&&this.closemapMenu()
+    this.closemapMenu && this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('WorkspaceFlieList', {
         workspace: this.workspace,
@@ -61,14 +65,16 @@ export default class OffLineList extends React.Component {
         need: 'workspace',
         title: '选择工作空间',
       })
-    }
-    else {
-      NavigationService.navigate('WorkspaceFlieList', { need: 'workspace', title: '选择工作空间' })
+    } else {
+      NavigationService.navigate('WorkspaceFlieList', {
+        need: 'workspace',
+        title: '选择工作空间',
+      })
     }
   }
 
   _btn_udb_click = () => {
-    this.closemapMenu&&this.closemapMenu()
+    this.closemapMenu && this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('WorkspaceFlieList', {
         workspace: this.workspace,
@@ -77,14 +83,16 @@ export default class OffLineList extends React.Component {
         need: 'udb',
         title: '选择数据源',
       })
-    }
-    else {
-      NavigationService.navigate('WorkspaceFlieList', { need: 'udb', title: '选择数据源' })
+    } else {
+      NavigationService.navigate('WorkspaceFlieList', {
+        need: 'udb',
+        title: '选择数据源',
+      })
     }
   }
 
   _btn_web_click = () => {
-    this.closemapMenu&&this.closemapMenu()
+    this.closemapMenu && this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('webUdb', {
         workspace: this.workspace,
@@ -92,14 +100,13 @@ export default class OffLineList extends React.Component {
         mapControl: this.mapControl,
         need: 'webudb',
       })
-    }
-    else {
+    } else {
       NavigationService.navigate('webUdb', { need: 'webudb' })
     }
   }
 
   _btn_newudb_click = () => {
-    this.closemapMenu&&this.closemapMenu()
+    this.closemapMenu && this.closemapMenu()
     if (this.workspace) {
       NavigationService.navigate('NewDSource', {
         workspace: this.workspace,
@@ -108,24 +115,37 @@ export default class OffLineList extends React.Component {
         need: 'newudb',
       })
     } else {
-      NavigationService.navigate('NewDSource', { workspace: this.workspace, need: 'newudb' })
+      NavigationService.navigate('NewDSource', {
+        workspace: this.workspace,
+        need: 'newudb',
+      })
     }
   }
 
   _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
-
-      let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop}/>
-      return (element)
+      let element = (
+        <BtnOne
+          onPress={delegate}
+          image={src}
+          title={str}
+          titleStyle={styles.btntop}
+        />
+      )
+      return element
     } else {
-      return <View style={styles.item}/>
+      return <View style={styles.item} />
     }
   }
 
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        {this._addElement(this._btn_workspace_click, icon_workspace, testData[0].key)}
+        {this._addElement(
+          this._btn_workspace_click,
+          icon_workspace,
+          testData[0].key,
+        )}
         {this._addElement(this._btn_udb_click, icon_udb, testData[1].key)}
         {/*{this._addElement(this._btn_web_click, icon_webudb, testData[2].key)}*/}
         {this._addElement(this._btn_newudb_click, icon_newudb, testData[3].key)}

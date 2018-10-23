@@ -18,11 +18,11 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: scaleSize(80),
   },
-  userimg: {
+  userImg: {
     width: scaleSize(45),
     height: scaleSize(45),
   },
-  userview: {
+  userView: {
     width: scaleSize(65),
     height: scaleSize(65),
     borderRadius: 20,
@@ -30,7 +30,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: 'white',
   },
-  headtitle: {
+  headTitle: {
     width: scaleSize(500),
     height: scaleSize(60),
     color: '#FFFFFF',
@@ -40,7 +40,7 @@ export default StyleSheet.create({
     fontSize: scaleSize(45),
     // fontFamily: 'CenturyGothic',
   },
-  elseimg: {
+  moreImg: {
     // width: scaleSize(10),
     height: scaleSize(40),
   },

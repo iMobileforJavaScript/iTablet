@@ -15,17 +15,16 @@ import { size } from '../../styles'
 const BTN_UNDERCOLOR = constUtil.UNDERLAYCOLOR
 
 export default class MT_Btn extends React.Component {
-
   props: {
     image: any,
     selectedImage?: any,
-    size: string,
-    BtnText: string,
-    BtnClick: () => {},
-    textStyle: any,
-    textColor: string,
-    imageStyle: any,
-    style: any,
+    size?: string,
+    title: string,
+    onPress: () => {},
+    textStyle?: any,
+    textColor?: string,
+    imageStyle?: any,
+    style?: any,
     customStyle?: any,
     selected?: boolean,
     selectMode?: string,
@@ -48,16 +47,19 @@ export default class MT_Btn extends React.Component {
 
   action = () => {
     if (this.props.selectMode === 'flash') return
-    this.props.BtnClick && this.props.BtnClick()
+    this.props.onPress && this.props.onPress()
   }
 
   _onPressOut = () => {
     if (this.props.selectMode === 'normal') return
-    this.setState({
-      selected: false,
-    }, () => {
-      this.props.BtnClick && this.props.BtnClick()
-    })
+    this.setState(
+      {
+        selected: false,
+      },
+      () => {
+        this.props.onPress && this.props.onPress()
+      },
+    )
   }
 
   _onPressIn = () => {
@@ -100,33 +102,39 @@ export default class MT_Btn extends React.Component {
 
     return (
       <TouchableOpacity
-        ref={ref => this.mtBtn = ref}
+        ref={ref => (this.mtBtn = ref)}
         accessible={true}
         activeOpacity={this.props.activeOpacity}
-        accessibilityLabel={this.props.BtnText}
-        style={this.props.customStyle ? this.props.customStyle : [styles.container, this.props.style]}
+        accessibilityLabel={this.props.title}
+        style={
+          this.props.customStyle
+            ? this.props.customStyle
+            : [styles.container, this.props.style]
+        }
         onPress={this.action}
         underlayColor={BTN_UNDERCOLOR}
         onPressOut={() => this._onPressOut()}
         onPressIn={() => this._onPressIn()}
       >
         <View>
-          {
-            image &&
+          {image && (
             <Image
               resizeMode={'contain'}
               style={[imageStyle, this.props.imageStyle]}
               source={image}
             />
-          }
-          {
-            this.props.BtnText &&
+          )}
+          {this.props.title && (
             <Text
-              style={[textStyle, this.props.textStyle, {color: this.props.textColor}]}
+              style={[
+                textStyle,
+                this.props.textStyle,
+                { color: this.props.textColor },
+              ]}
             >
-              {this.props.BtnText}
+              {this.props.title}
             </Text>
-          }
+          )}
         </View>
       </TouchableOpacity>
     )
@@ -135,6 +143,7 @@ export default class MT_Btn extends React.Component {
 
 MT_Btn.Size = {
   LARGE: 'large',
+  NORMAL: 'normal',
   SMALL: 'small',
 }
 
@@ -152,41 +161,41 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   largeImage: {
-    height: scaleSize(70),
-    width: scaleSize(70),
+    height: scaleSize(124),
+    width: scaleSize(124),
     alignSelf: 'center',
     // borderRadius: 5,
   },
   normalImage: {
-    height: scaleSize(50),
-    width: scaleSize(50),
+    height: scaleSize(80),
+    width: scaleSize(80),
     alignSelf: 'center',
     // borderRadius: 5,
   },
   smallImage: {
-    height: scaleSize(30),
-    width: scaleSize(30),
+    height: scaleSize(60),
+    width: scaleSize(60),
     alignSelf: 'center',
     // borderRadius: 5,
   },
   largeText: {
-    fontSize: size.fontSize.fontSizeMd,
+    fontSize: size.fontSize.fontSizeLg,
     backgroundColor: 'transparent',
-    width: scaleSize(100),
+    // width: scaleSize(100),
     textAlign: 'center',
     marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: size.fontSize.fontSizeXs,
+    fontSize: size.fontSize.fontSizeMd,
     backgroundColor: 'transparent',
-    width: scaleSize(100),
+    // width: scaleSize(100),
     textAlign: 'center',
     marginTop: scaleSize(5),
   },
   smallText: {
-    fontSize: size.fontSize.fontSizeXs,
+    fontSize: size.fontSize.fontSizeSm,
     backgroundColor: 'transparent',
-    width: scaleSize(100),
+    // width: scaleSize(100),
     textAlign: 'center',
     marginTop: scaleSize(5),
   },

@@ -31,12 +31,11 @@ const styles = StyleSheet.create({
 })
 
 export default class BtnOne extends React.Component {
-
   props: {
     style: any,
-    BtnClick: () => {},
+    onPress: () => {},
     image: any,
-    BtnText: string,
+    title: string,
     imageStyle: any,
     titleStyle: any,
     size: string,
@@ -48,19 +47,34 @@ export default class BtnOne extends React.Component {
     disable: false,
   }
 
-
   action = () => {
     if (this.props.disable) return
-    this.props.BtnClick && this.props.BtnClick()
+    this.props.onPress && this.props.onPress()
   }
 
   render() {
-    let imgStyle = this.props.size ==='small'
-      ? styles.imageSm : styles.imageLg
+    let imgStyle = this.props.size === 'small' ? styles.imageSm : styles.imageLg
     return (
-      <TouchableOpacity activeOpacity={this.props.disable ? 1 : 0.8} disable={this.props.disable} accessible={true} accessibilityLabel={this.props.BtnText} style={[styles.container, this.props.style]} onPress={this.action}>
-        {this.props.image && <Image resizeMode={'contain'} style={[imgStyle, this.props.imageStyle]} source={this.props.image} />}
-        {this.props.BtnText && <Text style={[styles.text, this.props.titleStyle]}>{this.props.BtnText}</Text>}
+      <TouchableOpacity
+        activeOpacity={this.props.disable ? 1 : 0.8}
+        disable={this.props.disable}
+        accessible={true}
+        accessibilityLabel={this.props.title}
+        style={[styles.container, this.props.style]}
+        onPress={this.action}
+      >
+        {this.props.image && (
+          <Image
+            resizeMode={'contain'}
+            style={[imgStyle, this.props.imageStyle]}
+            source={this.props.image}
+          />
+        )}
+        {this.props.title && (
+          <Text style={[styles.text, this.props.titleStyle]}>
+            {this.props.title}
+          </Text>
+        )}
       </TouchableOpacity>
     )
   }

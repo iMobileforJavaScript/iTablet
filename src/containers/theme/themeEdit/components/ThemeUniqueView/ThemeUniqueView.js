@@ -6,7 +6,13 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { RangeMode, ThemeUnique, ThemeUniqueItem, ColorGradientType, Action } from 'imobile_for_reactnative'
+import {
+  RangeMode,
+  ThemeUnique,
+  ThemeUniqueItem,
+  ColorGradientType,
+  Action,
+} from 'imobile_for_reactnative'
 import { Button, Row, BtnOne, InputDialog } from '../../../../../components'
 import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
@@ -18,7 +24,6 @@ import styles from './styles'
 const CHOOSE = '请选择'
 
 export default class ThemeUniqueView extends React.Component {
-
   props: {
     title: string,
     nav: Object,
@@ -69,11 +74,14 @@ export default class ThemeUniqueView extends React.Component {
       // TODO 获取颜色方案
       this.themeUnique = await new ThemeUnique().createObjClone(theme)
     }
-    this.setState({
-      data: data,
-    }, () => {
-      this.getData(this.state.data.expression, this.state.data.colorMethod)
-    })
+    this.setState(
+      {
+        data: data,
+      },
+      () => {
+        this.getData(this.state.data.expression, this.state.data.colorMethod)
+      },
+    )
   }
 
   goToChoosePage = type => {
@@ -100,7 +108,8 @@ export default class ThemeUniqueView extends React.Component {
     })
   }
 
-  changeStyle = (data, index) => { // data, index, cellIndex
+  changeStyle = (data, index) => {
+    // data, index, cellIndex
     // NavigationService.navigate('ThemeStyle', {
     //   layer: this.props.layer,
     //   map: this.props.map,
@@ -115,14 +124,17 @@ export default class ThemeUniqueView extends React.Component {
       cb: color => {
         // json转一次, 复制一份新的数据，防止setState前把原始数据更新，导致不重新渲染
         let list = JSON.parse(JSON.stringify(this.state.themeItemList))
-        Object.assign(list[index], {color: color})
-        this.setState({
-          themeItemList: list.concat([]),
-        }, async () => {
-          let style = await data.getStyle()
-          let rgb = dataUtil.colorRgba(color)
-          style && await style.setLineColor(rgb.r, rgb.g, rgb.b)
-        })
+        Object.assign(list[index], { color: color })
+        this.setState(
+          {
+            themeItemList: list.concat([]),
+          },
+          async () => {
+            let style = await data.getStyle()
+            let rgb = dataUtil.colorRgba(color)
+            style && (await style.setLineColor(rgb.r, rgb.g, rgb.b))
+          },
+        )
         // this.getData(this.state.data.expression, this.state.data.colorMethod)
       },
     })
@@ -131,7 +143,7 @@ export default class ThemeUniqueView extends React.Component {
   /**
    * 获取表达式
    */
-  getExpression = ({key}) => {
+  getExpression = ({ key }) => {
     if (this.state.data.colorMethod.value === '') return
     this.getData(key, this.state.data.colorMethod)
   }
@@ -139,21 +151,21 @@ export default class ThemeUniqueView extends React.Component {
   /**
    * 获取颜色方案
    */
-  getColorMethod = ({key, value}) => {
+  getColorMethod = ({ key, value }) => {
     let datalist = this.state.data
     if (this.state.data.expression === '') {
-      Object.assign(datalist, { colorMethod: {key, value} })
+      Object.assign(datalist, { colorMethod: { key, value } })
       this.setState({
         data: datalist,
       })
       return
     }
-    this.getData(this.state.data.expression, {key, value})
+    this.getData(this.state.data.expression, { key, value })
   }
 
   getData = (expression, colorMethod) => {
     this.props.setLoading && this.props.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       try {
         // 获取表达式对应的所有Item
         let datalist = this.state.data
@@ -161,8 +173,16 @@ export default class ThemeUniqueView extends React.Component {
         let datasetVector = await dataset.toDatasetVector()
         // await this.themeUnique.dispose()
 
-        if (this.state.data.expression !== expression || this.state.data.colorMethod.value !== colorMethod.value || !this.themeUnique._SMThemeUniqueId) {
-          this.themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, expression, colorMethod.value)
+        if (
+          this.state.data.expression !== expression ||
+          this.state.data.colorMethod.value !== colorMethod.value ||
+          !this.themeUnique._SMThemeUniqueId
+        ) {
+          this.themeUnique = await new ThemeUnique().makeDefault(
+            datasetVector,
+            expression,
+            colorMethod.value,
+          )
         }
         // else if(this.themeUnique._SMThemeUniqueId && this.state.data.expression !== expression) {
         //   await this.themeUnique.setUniqueExpression(expression)
@@ -177,10 +197,13 @@ export default class ThemeUniqueView extends React.Component {
             expression: expression,
             colorMethod: colorMethod,
           })
-          this.setState({
-            data: datalist,
-            themeItemList: [],
-          }, () => Toast.show('字段单值项炒超过3000，专题图制作失败'))
+          this.setState(
+            {
+              data: datalist,
+              themeItemList: [],
+            },
+            () => Toast.show('字段单值项炒超过3000，专题图制作失败'),
+          )
           return
         }
         let themeItemList = []
@@ -191,7 +214,12 @@ export default class ThemeUniqueView extends React.Component {
           // let color = await style.getForeColor()
           let color = await style.getLineColor()
           let uniqueValue = await item.getUnique()
-          let data = { visible: visible, color: dataUtil.colorHex(color), value: uniqueValue, data: item }
+          let data = {
+            visible: visible,
+            color: dataUtil.colorHex(color),
+            value: uniqueValue,
+            data: item,
+          }
           themeItemList.push(data)
         }
         // await this.props.map.addThemeLayer(dataset, this.themeUnique, true)
@@ -199,14 +227,17 @@ export default class ThemeUniqueView extends React.Component {
           expression: expression,
           colorMethod: colorMethod,
         })
-        this.setState({
-          themeItemList: themeItemList,
-          data: datalist,
-        }, () => this.props.setLoading && this.props.setLoading(false))
+        this.setState(
+          {
+            themeItemList: themeItemList,
+            data: datalist,
+          },
+          () => this.props.setLoading && this.props.setLoading(false),
+        )
       } catch (e) {
         this.props.setLoading && this.props.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   getValue = obj => {
@@ -225,7 +256,7 @@ export default class ThemeUniqueView extends React.Component {
       Toast.show('请选择表达式')
       return
     }
-    (async function () {
+    (async function() {
       try {
         let listData = this.table.getModifiedData()
         let keys = Object.keys(listData)
@@ -252,7 +283,11 @@ export default class ThemeUniqueView extends React.Component {
         let dataset = await this.props.layer.getDataset()
         if (this.props.isThemeLayer) {
           await this.props.map.removeLayer(this.props.layer.index)
-          let newLayer = await this.props.map.addThemeLayer(dataset, this.themeUnique, true)
+          let newLayer = await this.props.map.addThemeLayer(
+            dataset,
+            this.themeUnique,
+            true,
+          )
           await newLayer.setCaption(this.props.layer.caption)
           await this.props.map.moveTo(0, this.props.layer.index)
         } else {
@@ -272,7 +307,7 @@ export default class ThemeUniqueView extends React.Component {
       } catch (e) {
         Toast.show('设置失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   reset = () => {
@@ -281,7 +316,7 @@ export default class ThemeUniqueView extends React.Component {
   }
 
   add = unique => {
-    (async function () {
+    (async function() {
       try {
         let item = await new ThemeUniqueItem().createObj()
         // await item.setStyle(this.defaultStyle)
@@ -289,7 +324,7 @@ export default class ThemeUniqueView extends React.Component {
         let index = await this.themeUnique.add(item)
 
         if (index >= 0) {
-          await this.getExpression({key: this.state.data.expression})
+          await this.getExpression({ key: this.state.data.expression })
           await this.props.map.refresh()
           await this.props.mapControl.setAction(Action.PAN)
           Toast.show('添加成功')
@@ -300,7 +335,7 @@ export default class ThemeUniqueView extends React.Component {
       } catch (e) {
         Toast.show('添加失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   delete = () => {
@@ -308,12 +343,14 @@ export default class ThemeUniqueView extends React.Component {
       Toast.show('请选择目标')
       return
     }
-    (async function () {
+    (async function() {
       try {
-        let result = await this.themeUnique.remove(this.state.currentItem[0].rowIndex)
+        let result = await this.themeUnique.remove(
+          this.state.currentItem[0].rowIndex,
+        )
 
         if (result) {
-          await this.getExpression({key: this.state.data.expression})
+          await this.getExpression({ key: this.state.data.expression })
           await this.props.map.refresh()
           await this.props.mapControl.setAction(Action.PAN)
           Toast.show('删除成功')
@@ -323,13 +360,13 @@ export default class ThemeUniqueView extends React.Component {
       } catch (e) {
         Toast.show('删除失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   setItemVisible = (item, visible) => {
-    (async function () {
+    (async function() {
       await item.setVisible(visible)
-    }).bind(this)()
+    }.bind(this)())
   }
 
   updageValue = (obj, index) => {
@@ -350,16 +387,16 @@ export default class ThemeUniqueView extends React.Component {
         <BtnOne
           style={styles.operationBtn}
           size={BtnOne.SIZE.SMALL}
-          BtnText='添加'
+          title="添加"
           image={require('../../../../../assets/public/icon-add.png')}
-          BtnClick={() => this.dialog && this.dialog.setDialogVisible(true)}
+          onPress={() => this.dialog && this.dialog.setDialogVisible(true)}
         />
         <BtnOne
           style={styles.operationBtn}
           size={BtnOne.SIZE.SMALL}
-          BtnText='删除'
+          title="删除"
           image={require('../../../../../assets/public/icon-delete.png')}
-          BtnClick={this.delete}
+          onPress={this.delete}
         />
       </View>
     )
@@ -380,7 +417,10 @@ export default class ThemeUniqueView extends React.Component {
         <Row
           style={styles.row}
           key={'颜色方案'}
-          value={this.state.data.colorMethod && this.state.data.colorMethod.key || CHOOSE}
+          value={
+            (this.state.data.colorMethod && this.state.data.colorMethod.key) ||
+            CHOOSE
+          }
           type={Row.Type.TEXT_BTN}
           title={'颜色方案'}
           getValue={() => this.goToChoosePage(ChoosePage.Type.COLOR)}
@@ -398,7 +438,7 @@ export default class ThemeUniqueView extends React.Component {
         {this.renderOperationBtns()}
 
         <ThemeTable
-          ref={ref => this.table = ref}
+          ref={ref => (this.table = ref)}
           data={this.state.themeItemList}
           tableHead={['可见', '风格', '单值']}
           flexArr={[1, 2, 2]}
@@ -409,7 +449,7 @@ export default class ThemeUniqueView extends React.Component {
         />
 
         <InputDialog
-          ref={ref => this.dialog = ref}
+          ref={ref => (this.dialog = ref)}
           // title={'请输入单值'}
           label={'单值'}
           confirmAction={this.add}
@@ -421,8 +461,8 @@ export default class ThemeUniqueView extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
+        <Button title={'确定'} onPress={this.confirm} />
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
       </View>
     )
   }

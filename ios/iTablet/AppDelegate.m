@@ -24,7 +24,11 @@ static NSString* g_sampleCodeName = @"#";;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
   NSURL *jsCodeLocation;
-
+  
+#if DEBUG
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"10.10.2.46"];
+  
+#endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
   NSLog(@"============== %@",NSHomeDirectory());

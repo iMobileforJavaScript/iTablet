@@ -1,5 +1,12 @@
 import React from 'react'
-import { View, Image, StyleSheet, FlatList, TouchableOpacity, Text } from 'react-native'
+import {
+  View,
+  Image,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  Text,
+} from 'react-native'
 import { BtnOne, Container } from '../../components'
 import { scaleSize } from '../../utils'
 import NavigationService from '../NavigationService'
@@ -27,14 +34,25 @@ export default class DataSourcelist extends React.Component {
   }
 
   _addElement = (delegate, src, str) => {
-    let element = <BtnOne
-      size={BtnOne.SIZE.SMALL} BtnClick={delegate} image={src} BtnText={str}
-      titleStyle={styles.title}/>
-    return (element)
+    let element = (
+      <BtnOne
+        size={BtnOne.SIZE.SMALL}
+        onPress={delegate}
+        image={src}
+        title={str}
+        titleStyle={styles.title}
+      />
+    )
+    return element
   }
 
   _click_newdatasource = () => {
-    NavigationService.navigate('NewDSource',{workspace:this.workspace,map:this.map,mapControl:this.mapControl,cb:this._adddata})
+    NavigationService.navigate('NewDSource', {
+      workspace: this.workspace,
+      map: this.map,
+      mapControl: this.mapControl,
+      cb: this._adddata,
+    })
   }
 
   _adddata = async () => {
@@ -49,7 +67,9 @@ export default class DataSourcelist extends React.Component {
       let datalist = []
       let count = await (await this.workspace.getDatasources()).getCount()
       for (let index = 0; index < count; index++) {
-        let datasource = await (await this.workspace.getDatasources()).get(index)
+        let datasource = await (await this.workspace.getDatasources()).get(
+          index,
+        )
         let datasourcename = await datasource.getAlias()
         let result = { datasource: datasource, name: datasourcename }
         datalist.push(result)
@@ -79,7 +99,6 @@ export default class DataSourcelist extends React.Component {
   }
 
   _todataset = (w, m, d, n) => {
-
     NavigationService.navigate('DataSets', {
       workspace: w,
       map: m,
@@ -87,18 +106,20 @@ export default class DataSourcelist extends React.Component {
       name: n,
       mapControl: this.mapControl,
     })
-
-
   }
 
   _renderItem = ({ item }) => {
     return (
       <TouchableOpacity
-        onPress={() => this._todataset(this.workspace, this.map, item.datasource, item.name)}
-        style={styles.itemclick}>
-        <Image source={Fileicon} style={styles.img}/>
+        onPress={() =>
+          this._todataset(this.workspace, this.map, item.datasource, item.name)
+        }
+        style={styles.itemclick}
+      >
+        <Image source={Fileicon} style={styles.img} />
         <Text style={styles.item}>{item.name}</Text>
-      </TouchableOpacity>)
+      </TouchableOpacity>
+    )
   }
 
   _keyExtractor = (item, index) => {
@@ -108,11 +129,12 @@ export default class DataSourcelist extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '选择数据源',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <View style={styles.adddata}>
           {this._addElement(this._click_newdatasource, src, '新建数据源')}
         </View>

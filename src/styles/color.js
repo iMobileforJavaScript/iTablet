@@ -1,4 +1,19 @@
+const blackTheme = {
+  theme: '#2D2D2F',
+  border: '#505052',
+}
+
+let styles
+switch (GLOBAL.themeStyle) {
+  case 'blackTheme':
+  default:
+    styles = blackTheme
+    break
+}
+
 export default {
+  ...styles,
+
   white: '#FFFFFF',
   red: '#FF0000',
   yellow: '#FFFF00',
@@ -11,10 +26,6 @@ export default {
   background3: '#F1F1F1',
   headerBackground: '#959595',
 
-  title: '#333333',
-  theme: '#fa575c',
-  theme2: '#ff4c3c',
-  theme3: '#FF647B',
   red1: '#d81e06',
   pink: '#FF9AA9',
   black1: '#222222',
@@ -27,7 +38,7 @@ export default {
   gray5: '#E9E9EF',
   grayLight: '#e2e2e2',
   grayLight2: '#BCC3CE',
-  border: '#e0e0e0',
+  // border: '#e0e0e0',
   title2: '#454545',
   content: '#555555',
   background2: '#f5f7fa',

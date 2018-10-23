@@ -14,21 +14,21 @@ export default class Home extends Component {
     super(props)
   }
 
-  headrender() {
-    let userimgsrc = require('../../../assets/home/icon_mine_select.png')
-    let elseimg = require('../../../assets/home/icon_else_selected.png')
-    const title = 'SuperMap Itablet'
+  headRender() {
+    let userImg = require('../../../assets/home/icon_mine_select.png')
+    let moreImg = require('../../../assets/home/icon_else_selected.png')
+    const title = 'SuperMap iTablet'
     return (
       <View style={styles.header}>
-        <TouchableOpacity style={styles.userview}>
-          <Image source={userimgsrc} style={styles.userimg} />
+        <TouchableOpacity style={styles.userView}>
+          <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
-        <Text style={styles.headtitle}>{title}</Text>
-        <TouchableOpacity style={styles.elseimg}>
+        <Text style={styles.headTitle}>{title}</Text>
+        <TouchableOpacity style={styles.moreImg}>
           <Image
             resizeMode={'contain'}
-            source={elseimg}
-            style={styles.elseimg}
+            source={moreImg}
+            style={styles.moreImg}
           />
         </TouchableOpacity>
       </View>
@@ -43,7 +43,7 @@ export default class Home extends Component {
         withoutHeader
         style={styles.container}
       >
-        {this.headrender()}
+        {this.headRender()}
         <ModuleList />
       </Container>
     )

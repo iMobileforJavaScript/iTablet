@@ -11,7 +11,6 @@ const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR
 let measure_show = false
 
 export default class Pop_BtnList extends React.Component {
-
   static propTypes = {
     data: PropTypes.array,
     measure: PropTypes.func,
@@ -33,16 +32,16 @@ export default class Pop_BtnList extends React.Component {
     this.props.measure(measure_show)
   }
 
-  _analyst_btn_click = () =>{
+  _analyst_btn_click = () => {
     this.props.analyst()
   }
 
-  _addLayer_btn_click =type=>{
+  _addLayer_btn_click = type => {
     this.props.addlayer(type)
   }
 
-  _edit_select_click = async() => {
-    this.props.edit && await this.props.edit()
+  _edit_select_click = async () => {
+    this.props.edit && (await this.props.edit())
   }
 
   /**
@@ -51,22 +50,24 @@ export default class Pop_BtnList extends React.Component {
    * @param index
    * @private
    */
-  _btnClick = ({item, index}) => {
-    item.action && item.action({
-      data: item,
-      callback: hasChanged => {
-        if (hasChanged) {
-          this.itemRefs[index] && this.itemRefs[index].setSelected(true)
-          this.itemRefs[this.state.lastIndex] && this.itemRefs[this.state.lastIndex].setSelected(false)
-          this.operationRefs = [] // 清空二级菜单
-          this.setState({
-            currentOperation: item,
-            currentIndex: index,
-            lastIndex: index,
-          })
-        }
-      }})
-
+  _btnClick = ({ item, index }) => {
+    item.action &&
+      item.action({
+        data: item,
+        callback: hasChanged => {
+          if (hasChanged) {
+            this.itemRefs[index] && this.itemRefs[index].setSelected(true)
+            this.itemRefs[this.state.lastIndex] &&
+              this.itemRefs[this.state.lastIndex].setSelected(false)
+            this.operationRefs = [] // 清空二级菜单
+            this.setState({
+              currentOperation: item,
+              currentIndex: index,
+              lastIndex: index,
+            })
+          }
+        },
+      })
   }
 
   setcCategoryRefs = (ref, index) => {
@@ -82,15 +83,15 @@ export default class Pop_BtnList extends React.Component {
             this.setcCategoryRefs(ref, index)
           }}
           style={styles.itemBtn}
-          BtnText={key}
+          title={key}
           selectable={item.selectable}
-          btnClick={() => this._btnClick({item, index})} />
+          btnClick={() => this._btnClick({ item, index })}
+        />
       </View>
     )
   }
 
   _keyExtractor = item => item.key
-
 
   render() {
     return (

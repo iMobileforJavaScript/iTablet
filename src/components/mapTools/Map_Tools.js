@@ -12,7 +12,6 @@ let show = false
 let type = ''
 
 export default class Map_Tools extends React.Component {
-
   static propTypes = {
     POP_List: PropTypes.func,
   }
@@ -21,13 +20,43 @@ export default class Map_Tools extends React.Component {
     super(props)
 
     this.state = {
-      data: [{ key: '新建图层', image: require('../../assets/public/add_layer.png'), btnClick: this._addLayer },
-        { key: '数据采集', image: require('../../assets/public/data_collect.png') , btnClick: ()=>{}},
-        { key: '数据编辑', image: require('../../assets/public/data_edit.png') , btnClick: ()=>{}},
-        { key: '地图管理', image: require('../../assets/public/map_manager.png') , btnClick: ()=>{}},
-        { key: '数据管理', image: require('../../assets/public/data_manager.png') , btnClick: ()=>{}},
-        { key: '数据分析', image: require('../../assets/public/analyst.png'), btnClick: this._analyst },
-        { key: '工具', image: require('../../assets/public/tools.png'), btnClick: this._tools}],
+      data: [
+        {
+          key: '新建图层',
+          image: require('../../assets/public/add_layer.png'),
+          btnClick: this._addLayer,
+        },
+        {
+          key: '数据采集',
+          image: require('../../assets/public/data_collect.png'),
+          btnClick: () => {},
+        },
+        {
+          key: '数据编辑',
+          image: require('../../assets/public/data_edit.png'),
+          btnClick: () => {},
+        },
+        {
+          key: '地图管理',
+          image: require('../../assets/public/map_manager.png'),
+          btnClick: () => {},
+        },
+        {
+          key: '数据管理',
+          image: require('../../assets/public/data_manager.png'),
+          btnClick: () => {},
+        },
+        {
+          key: '数据分析',
+          image: require('../../assets/public/analyst.png'),
+          btnClick: this._analyst,
+        },
+        {
+          key: '工具',
+          image: require('../../assets/public/tools.png'),
+          btnClick: this._tools,
+        },
+      ],
     }
   }
   _addLayer = () => {
@@ -52,10 +81,13 @@ export default class Map_Tools extends React.Component {
     let key = item.key
     let image = item.image
     let btnClick = item.btnClick
-    let width = (ITEM_WIDTH < WIDTH / this.state.data.length) ? WIDTH / this.state.data.length : ITEM_WIDTH
+    let width =
+      ITEM_WIDTH < WIDTH / this.state.data.length
+        ? WIDTH / this.state.data.length
+        : ITEM_WIDTH
     return (
       <View style={[styles.item, { width: width }]}>
-        <MT_Btn BtnText={key} image={image} btnClick={btnClick} />
+        <MT_Btn title={key} image={image} btnClick={btnClick} />
       </View>
     )
   }
@@ -65,11 +97,7 @@ export default class Map_Tools extends React.Component {
     // let width = (WIDTH < ITEM_WIDTH * this.state.length) ? ITEM_WIDTH * this.state.length : WIDTH
     return (
       <View style={styles.container}>
-        <FlatList
-          data={data}
-          renderItem={this._renderItem}
-          horizontal={true}
-        />
+        <FlatList data={data} renderItem={this._renderItem} horizontal={true} />
       </View>
     )
   }

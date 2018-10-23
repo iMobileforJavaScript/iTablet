@@ -13,7 +13,6 @@ const SEPATATOR_WIDTH = 1
 const categoryHeight = scaleSize(80)
 
 export default class Pop_BtnSectionList extends React.Component {
-
   static propTypes = {
     style: PropTypes.any,
     data: PropTypes.array,
@@ -104,24 +103,25 @@ export default class Pop_BtnSectionList extends React.Component {
    * @private
    */
   _btn_click_operation = ({ item }) => {
-    item.action && item.action({
-      data: item,
-      callback: (reset = false) => {
-        let selected = false
-        if (reset || item.key === this.state.currentSubKey) {
-          this.setState({
-            currentSubKey: '',
-          })
-          selected = false
-        } else {
-          this.setState({
-            currentSubKey: item.key,
-          })
-          selected = true
-        }
-        return selected
-      },
-    })
+    item.action &&
+      item.action({
+        data: item,
+        callback: (reset = false) => {
+          let selected = false
+          if (reset || item.key === this.state.currentSubKey) {
+            this.setState({
+              currentSubKey: '',
+            })
+            selected = false
+          } else {
+            this.setState({
+              currentSubKey: item.key,
+            })
+            selected = true
+          }
+          return selected
+        },
+      })
   }
 
   setCategoryRefs = (ref, index) => {
@@ -163,7 +163,8 @@ export default class Pop_BtnSectionList extends React.Component {
         selected={this.props.currentIndex === index}
         style={[styles.item, { width }]}
         title={key}
-        btnClick={() => this._btn_click_manager({ item, index })}/>
+        btnClick={() => this._btn_click_manager({ item, index })}
+      />
     )
   }
 
@@ -171,31 +172,33 @@ export default class Pop_BtnSectionList extends React.Component {
     let key = item.key
     const width = screen.deviceWidth / this.props.columns
     return (
-      <View style={[styles.operationView, {width}]} key={row + '_' + index}>
-        {
-          // this.props.subBtnType === 'imageBtn'
-          item.image
-            ? <MTBtn
+      <View style={[styles.operationView, { width }]} key={row + '_' + index}>
+        {// this.props.subBtnType === 'imageBtn'
+          item.image ? (
+            <MTBtn
               ref={ref => {
                 this.setOperationRefs(ref, index)
               }}
               selected={key === this.state.currentSubKey}
-              BtnText={item.title}
+              title={item.title}
               size={item.size}
               image={item.image}
               selectMode={item.selectMode}
               selectedImage={item.selectedImage}
               // textStyle={item.textStyle}
-              BtnClick={() => this._btn_click_operation({ item, index })}/>
-            : <Pop_Btn
+              onPress={() => this._btn_click_operation({ item, index })}
+            />
+          ) : (
+            <Pop_Btn
               ref={ref => {
                 this.setOperationRefs(ref, index)
               }}
               selected={key === this.state.currentSubKey}
               style={styles.operation}
-              BtnText={key}
-              btnClick={() => this._btn_click_operation({ item, index })}/>
-        }
+              title={key}
+              btnClick={() => this._btn_click_operation({ item, index })}
+            />
+          )}
       </View>
     )
   }
@@ -204,7 +207,7 @@ export default class Pop_BtnSectionList extends React.Component {
     let height = 0
     if (props && props.style && props.style.height) {
       height = props.style.height - this.categoryHeight
-      Object.assign(props.style, {height})
+      Object.assign(props.style, { height })
     }
     this.gridList && this.gridList.setNativeProps(props)
   }
@@ -214,10 +217,17 @@ export default class Pop_BtnSectionList extends React.Component {
   _keySubExtractor = item => item.key
 
   _renderItemSeparatorComponent = () => {
-    return <View style={[styles.separator, this.props.separatorWidth >= 0 && {
-      width: scaleSize(this.props.separatorWidth),
-      backgroundColor: this.props.separatorColor,
-    }]} />
+    return (
+      <View
+        style={[
+          styles.separator,
+          this.props.separatorWidth >= 0 && {
+            width: scaleSize(this.props.separatorWidth),
+            backgroundColor: this.props.separatorColor,
+          },
+        ]}
+      />
+    )
   }
 
   render() {
@@ -227,7 +237,7 @@ export default class Pop_BtnSectionList extends React.Component {
       // operations = this.dealData(this.props.currentOperation.operations)
     }
     return (
-      <View style={[styles.container, this.props.style]}{...this.props}>
+      <View style={[styles.container, this.props.style]} {...this.props}>
         <FlatList
           style={styles.categoryListView}
           data={this.props.data.concat([])}
@@ -237,11 +247,11 @@ export default class Pop_BtnSectionList extends React.Component {
           keyExtractor={this._keyExtractor}
           showsHorizontalScrollIndicator={false}
         />
-        {
-          this.props.currentOperation && this.props.subPopShow ? <View style={styles.subContainer}>
+        {this.props.currentOperation && this.props.subPopShow ? (
+          <View style={styles.subContainer}>
             {this.props.subLeft}
-            {
-              operations && operations.length > 0 &&
+            {operations &&
+              operations.length > 0 && (
               <FlatList
                 ref={ref => (this.gridList = ref)}
                 style={styles.operationsListView}
@@ -253,10 +263,10 @@ export default class Pop_BtnSectionList extends React.Component {
                 showsHorizontalScrollIndicator={false}
                 ItemSeparatorComponent={this._renderItemSeparatorComponent}
               />
-            }
+            )}
             {this.props.subRight}
-          </View> : null
-        }
+          </View>
+        ) : null}
       </View>
     )
   }

@@ -6,12 +6,11 @@
 
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Toast ,scaleSize} from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 
 import { BtnOne } from '../../../../components'
 
 export default class Btnbar_home extends React.Component {
-
   props: {
     mapLoad: () => {},
     myMap: () => {},
@@ -47,12 +46,12 @@ export default class Btnbar_home extends React.Component {
     }
   }
 
-  renderBtn = ({data, index}) => {
+  renderBtn = ({ data, index }) => {
     if (data.title) {
       return (
         <BtnOne
           key={index}
-          BtnClick={() => {
+          onPress={() => {
             if (data.action && typeof data.action === 'function') {
               data.action(data.title)
             } else {
@@ -60,37 +59,33 @@ export default class Btnbar_home extends React.Component {
             }
           }}
           image={data.image}
-          BtnText={data.title}
+          title={data.title}
         />
       )
     } else {
-      return (
-        <View key={index} style={styles.placeHolder} />
-      )
+      return <View key={index} style={styles.placeHolder} />
     }
   }
 
   renderBtns = () => {
     let btns = []
     for (let i = 0; i < this.state.data.length; i++) {
-      btns.push(this.renderBtn({
-        data: this.state.data[i],
-        index: i,
-      }))
+      btns.push(
+        this.renderBtn({
+          data: this.state.data[i],
+          index: i,
+        }),
+      )
     }
     return btns
   }
 
   _click_defalt = str => {
-    Toast.show("待做" + str || '')
+    Toast.show('待做' + str || '')
   }
 
   render() {
-    return (
-      <View style={styles.container}>
-        {this.renderBtns()}
-      </View>
-    )
+    return <View style={styles.container}>{this.renderBtns()}</View>
   }
 }
 

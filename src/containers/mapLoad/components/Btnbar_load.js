@@ -16,7 +16,6 @@ const OSM = 'OSM'
 const Google = '谷歌'
 
 export default class Btnbar_mapLoad extends React.Component {
-
   props: {
     TD: () => {},
     Baidu: () => {},
@@ -30,31 +29,35 @@ export default class Btnbar_mapLoad extends React.Component {
 
   _addElement = (delegate, src, str) => {
     if (typeof delegate === 'function' && typeof str === 'string') {
-
-      let element = <BtnOne BtnClick={delegate} image={src} BtnText={str} titleStyle={styles.btntop} />
-      return (element)
+      let element = (
+        <BtnOne
+          onPress={delegate}
+          image={src}
+          title={str}
+          titleStyle={styles.btntop}
+        />
+      )
+      return element
     } else {
       throw Error('BthBar: please check type of params')
     }
   }
 
-  _click_TD = () => {
-  }
+  _click_TD = () => {}
 
-  _click_Baidu = () => {
-  }
+  _click_Baidu = () => {}
 
-  _click_OSM = () => {
-  }
+  _click_OSM = () => {}
 
-  _click_Google = () => {
-  }
+  _click_Google = () => {}
 
   render() {
     const TDClick = this.props.TD ? this.props.TD : this._click_TD
     const BaiduClick = this.props.Baidu ? this.props.Baidu : this._click_Baidu
     const OSMClick = this.props.OSM ? this.props.OSM : this._click_OSM
-    const GoogleClick = this.props.Google ? this.props.Google : this._click_Google
+    const GoogleClick = this.props.Google
+      ? this.props.Google
+      : this._click_Google
     return (
       <View style={styles.container}>
         {this._addElement(TDClick, TDImgSrc, TD)}

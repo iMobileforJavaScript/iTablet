@@ -25,7 +25,6 @@ export const MAP_LOCAL = 'MAP_LOCAL'
 export const MAP_3D = 'MAP_3D'
 
 export default class MT_BtnList extends React.Component {
-
   static propTypes = {
     type: PropTypes.string,
     POP_List: PropTypes.func,
@@ -55,27 +54,71 @@ export default class MT_BtnList extends React.Component {
     this.type = ''
 
     this.state = {
-      data: props.type === MAP_LOCAL
-        ? [
-          { key: '新建图层', title: '新建图层', image: require('../../assets/map/icon-add-layer.png'), btnClick: this._addLayer },
-          { key: '数据采集', title: '数据采集', image: require('../../assets/map/icon-data-collection.png'), btnClick: this._dataCollection },
-          { key: '数据编辑', title: '数据编辑', image: require('../../assets/map/icon-data-edit.png'), btnClick: this._dataEdit },
-          { key: '地图管理', title: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager },
-          { key: '数据管理', title: '数据管理', image: require('../../assets/map/icon-data-manangement.png'), btnClick: this._dataManager },
-          { key: '数据分析', title: '数据分析', image: require('../../assets/map/icon-analyst.png'), btnClick: this._analyst },
-          { key: '工具', title: '工具', image: require('../../assets/map/icon-tool.png'), btnClick: this._tools },
-        ]
-        : [{ key: '地图管理', image: require('../../assets/map/icon-map-management.png'), btnClick: this._layerManager }],
+      data:
+        props.type === MAP_LOCAL
+          ? [
+            {
+              key: '新建图层',
+              title: '新建图层',
+              image: require('../../assets/map/icon-add-layer.png'),
+              btnClick: this._addLayer,
+            },
+            {
+              key: '数据采集',
+              title: '数据采集',
+              image: require('../../assets/map/icon-data-collection.png'),
+              btnClick: this._dataCollection,
+            },
+            {
+              key: '数据编辑',
+              title: '数据编辑',
+              image: require('../../assets/map/icon-data-edit.png'),
+              btnClick: this._dataEdit,
+            },
+            {
+              key: '地图管理',
+              title: '地图管理',
+              image: require('../../assets/map/icon-map-management.png'),
+              btnClick: this._layerManager,
+            },
+            {
+              key: '数据管理',
+              title: '数据管理',
+              image: require('../../assets/map/icon-data-manangement.png'),
+              btnClick: this._dataManager,
+            },
+            {
+              key: '数据分析',
+              title: '数据分析',
+              image: require('../../assets/map/icon-analyst.png'),
+              btnClick: this._analyst,
+            },
+            {
+              key: '工具',
+              title: '工具',
+              image: require('../../assets/map/icon-tool.png'),
+              btnClick: this._tools,
+            },
+          ]
+          : [
+            {
+              key: '地图管理',
+              image: require('../../assets/map/icon-map-management.png'),
+              btnClick: this._layerManager,
+            },
+          ],
     }
   }
 
   _showManager = newPress => {
     GLOBAL.toolType = newPress
-    if (this.oldPress && (this.oldPress === newPress)) {
+    if (this.oldPress && this.oldPress === newPress) {
       this.show = !this.show
     } else if (
-      (newPress === Const.ADD_LAYER || newPress === Const.MAP_MANAGER || newPress === Const.DATA_MANAGER)
-      && this.show
+      (newPress === Const.ADD_LAYER ||
+        newPress === Const.MAP_MANAGER ||
+        newPress === Const.DATA_MANAGER) &&
+      this.show
     ) {
       this.show = false
       this.type = newPress
@@ -117,42 +160,58 @@ export default class MT_BtnList extends React.Component {
   _dataCollection = async () => {
     await this.setLayerEditable(false)
     this._showManager(Const.COLLECTION)
-    if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
+    if (
+      this.props.editLayer.type !== undefined &&
+      this.props.editLayer.type >= 0
+    ) {
       this.props.POP_List && this.props.POP_List(this.show, this.type)
       let name = this.props.editLayer ? this.props.editLayer.name : ''
       this.show && name && Toast.show('当前采集图层为\n' + name)
     } else {
       this.props.POP_List && this.props.POP_List(false, null)
-      this.props.chooseLayer && this.props.chooseLayer({
-        type: -1,
-        isEdit: true,
-        title: '选择采集图层',
-      }, isShow => { // 传 -1 查询所有类型的图层
-        if (this.props.POP_List) {
-          this.props.POP_List(isShow, this.type)
-        }
-      })
+      this.props.chooseLayer &&
+        this.props.chooseLayer(
+          {
+            type: -1,
+            isEdit: true,
+            title: '选择采集图层',
+          },
+          isShow => {
+            // 传 -1 查询所有类型的图层
+            if (this.props.POP_List) {
+              this.props.POP_List(isShow, this.type)
+            }
+          },
+        )
     }
   }
 
   _dataEdit = async () => {
     await this.setLayerEditable(true)
     this._showManager(Const.DATA_EDIT)
-    if (this.props.editLayer.type !== undefined && this.props.editLayer.type >= 0) {
+    if (
+      this.props.editLayer.type !== undefined &&
+      this.props.editLayer.type >= 0
+    ) {
       let name = this.props.editLayer.name ? this.props.editLayer.name : ''
       this.show && name && Toast.show('当前可编辑的图层为\n' + name)
       this.props.POP_List && this.props.POP_List(this.show, this.type)
     } else {
       this.props.POP_List && this.props.POP_List(false, null)
-      this.props.chooseLayer && this.props.chooseLayer({
-        type: -1,
-        isEdit: true,
-        title: '选择编辑图层',
-      }, isShow => { // 传 -1 查询所有类型的图层
-        if (this.props.POP_List) {
-          this.props.POP_List(isShow, this.type)
-        }
-      })
+      this.props.chooseLayer &&
+        this.props.chooseLayer(
+          {
+            type: -1,
+            isEdit: true,
+            title: '选择编辑图层',
+          },
+          isShow => {
+            // 传 -1 查询所有类型的图层
+            if (this.props.POP_List) {
+              this.props.POP_List(isShow, this.type)
+            }
+          },
+        )
     }
   }
 
@@ -185,10 +244,10 @@ export default class MT_BtnList extends React.Component {
     let image = item.image
     let btnClick = item.btnClick
     // let width = (ITEM_WIDTH < WIDTH / this.state.data.length) ? WIDTH / this.state.data.length : ITEM_WIDTH
-    let width = (ITEM_WIDTH < WIDTH / 6) ? WIDTH / 6 : ITEM_WIDTH
+    let width = ITEM_WIDTH < WIDTH / 6 ? WIDTH / 6 : ITEM_WIDTH
     return (
       <View style={[styles.item, { width: width }]}>
-        <MT_Btn BtnText={key} image={image} BtnClick={btnClick} />
+        <MT_Btn title={key} image={image} onPress={btnClick} />
       </View>
     )
   }
@@ -203,7 +262,12 @@ export default class MT_BtnList extends React.Component {
     const data = this.state.data
     // TODO BUG 临时处理 hidden map和map3d在关闭的时候会出现部分黑屏，必须要有可渲染的其他组件在屏幕上，才能正常关闭
     return (
-      <View style={[this.props.hidden ? styles.hiddenContainer : styles.container, this.props.style]}>
+      <View
+        style={[
+          this.props.hidden ? styles.hiddenContainer : styles.container,
+          this.props.style,
+        ]}
+      >
         <FlatList
           data={data}
           renderItem={this._renderItem}
