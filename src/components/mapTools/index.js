@@ -4,7 +4,6 @@ import LayerManagerItem from '../../containers/mtLayerManager/components/LayerMa
 import LayerManagerTab from './LayerManager_tab'
 import MapTools from './Map_Tools'
 import MTBtn from './MT_Btn'
-import MTBtnList from './MT_BtnList'
 import PopBtn from './Pop_Btn'
 import PopBtnSectionList from './Pop_BtnSectionList'
 import PopBtnList from './Pop_BtnList'
@@ -17,7 +16,6 @@ export {
   LayerManagerTab,
   MapTools,
   MTBtn,
-  MTBtnList,
   PopBtn,
   PopBtnSectionList,
   PopBtnList,

@@ -47,4 +47,10 @@ export default {
   CAD_POINT: 'cad_point',
   CAD_LINE: 'cad_line',
   CAD_REGION: 'cad_region',
+
+  // =====================================
+
+  COLLECTION: 'COLLECTION',
+  MAP_EDIT: 'MAP_EDIT',
+  MAP_3D: 'MAP_3D',
 }

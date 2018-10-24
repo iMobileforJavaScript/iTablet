@@ -21,12 +21,12 @@ import {
   DrawerView,
   LeftToolbar,
   RightToolbar,
+  MTBtnList,
 } from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
 import {
   PopMeasureBar,
-  MTBtnList,
   Container,
   MTBtn,
   Dialog,
@@ -68,6 +68,7 @@ export default class MapView extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type || 'LOCAL'
+    this.operationType = params.operationType || constants.COLLECTION
     this.isExample = params.isExample || false
     this.DSParams = params.DSParams || null
     this.labelDSParams = params.labelDSParams || false
@@ -1075,7 +1076,7 @@ export default class MapView extends React.Component {
   }
 
   renderRightToolbar = () => {
-    return <RightToolbar type={'COLLECTION'} />
+    return <RightToolbar type={this.operationType} />
   }
 
   renderLeftToolbar = () => {

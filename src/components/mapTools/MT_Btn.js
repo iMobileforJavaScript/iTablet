@@ -183,20 +183,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
-    marginTop: scaleSize(5),
+    marginTop: scaleSize(10),
   },
   normalText: {
     fontSize: size.fontSize.fontSizeMd,
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
-    marginTop: scaleSize(5),
+    marginTop: scaleSize(10),
   },
   smallText: {
     fontSize: size.fontSize.fontSizeSm,
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
-    marginTop: scaleSize(5),
+    marginTop: scaleSize(10),
   },
 })

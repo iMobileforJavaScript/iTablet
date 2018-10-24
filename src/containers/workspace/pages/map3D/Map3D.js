@@ -12,7 +12,8 @@ import {
   Point3D,
   Camera,
 } from 'imobile_for_reactnative'
-import { MTBtnList, Container } from '../../../../components'
+import { Container } from '../../../../components'
+import { MTBtnList } from '../../componets'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 

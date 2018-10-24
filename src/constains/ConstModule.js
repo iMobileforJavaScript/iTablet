@@ -1,4 +1,5 @@
 import NavigationService from '../containers/NavigationService'
+import ConstOnline from './ConstOnline'
 
 export default [
   {
@@ -36,8 +37,8 @@ export default [
     title: '外业采集',
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
-    action: params => {
-      NavigationService.navigate('MapView', params)
+    action: () => {
+      NavigationService.navigate('MapView', ConstOnline['TD'])
     },
   },
   {

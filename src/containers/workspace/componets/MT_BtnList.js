@@ -1,12 +1,14 @@
 import * as React from 'react'
-import { View, StyleSheet, FlatList } from 'react-native'
-import { constUtil, scaleSize, Toast } from '../../utils'
-import { ListSeparator } from '../../components'
-import { Const } from '../../constains'
+import { View, StyleSheet } from 'react-native'
+import { constUtil, scaleSize, Toast } from '../../../utils'
+import { color } from '../../../styles'
+import { ListSeparator } from '../../../components'
+import { Const } from '../../../constains'
+import constains from '../constants'
 import PropTypes from 'prop-types'
 import { Action } from 'imobile_for_reactnative'
 
-import MT_Btn from './MT_Btn'
+import MT_Btn from '../../../components/mapTools/MT_Btn'
 
 const WIDTH = constUtil.WIDTH
 const ITEM_HEIGHT = 0.75 * 1.4 * 0.1 * WIDTH
@@ -41,7 +43,7 @@ export default class MT_BtnList extends React.Component {
   }
 
   static defaultProps = {
-    type: MAP_LOCAL,
+    type: constains.COLLECTION,
     hidden: false,
     editLayer: {},
   }
@@ -52,62 +54,55 @@ export default class MT_BtnList extends React.Component {
     this.show = false
     this.oldPress = null
     this.type = ''
+    const data = this.getToolbar(props.type)
 
     this.state = {
-      data:
-        props.type === MAP_LOCAL
-          ? [
-            {
-              key: '新建图层',
-              title: '新建图层',
-              image: require('../../assets/map/icon-add-layer.png'),
-              btnClick: this._addLayer,
-            },
-            {
-              key: '数据采集',
-              title: '数据采集',
-              image: require('../../assets/map/icon-data-collection.png'),
-              btnClick: this._dataCollection,
-            },
-            {
-              key: '数据编辑',
-              title: '数据编辑',
-              image: require('../../assets/map/icon-data-edit.png'),
-              btnClick: this._dataEdit,
-            },
-            {
-              key: '地图管理',
-              title: '地图管理',
-              image: require('../../assets/map/icon-map-management.png'),
-              btnClick: this._layerManager,
-            },
-            {
-              key: '数据管理',
-              title: '数据管理',
-              image: require('../../assets/map/icon-data-manangement.png'),
-              btnClick: this._dataManager,
-            },
-            {
-              key: '数据分析',
-              title: '数据分析',
-              image: require('../../assets/map/icon-analyst.png'),
-              btnClick: this._analyst,
-            },
-            {
-              key: '工具',
-              title: '工具',
-              image: require('../../assets/map/icon-tool.png'),
-              btnClick: this._tools,
-            },
-          ]
-          : [
-            {
-              key: '地图管理',
-              image: require('../../assets/map/icon-map-management.png'),
-              btnClick: this._layerManager,
-            },
-          ],
+      data: data,
     }
+  }
+
+  getToolbar = type => {
+    let list = []
+    switch (type) {
+      case constains.COLLECTION:
+        list = [
+          {
+            key: '地图',
+            title: '地图',
+            image: require('../../../assets/map/icon-add-layer.png'),
+            btnClick: () => {},
+          },
+          {
+            key: '符号',
+            title: '符号',
+            image: require('../../../assets/map/icon-data-collection.png'),
+            btnClick: () => {},
+          },
+          {
+            key: '图层',
+            title: '图层',
+            image: require('../../../assets/map/icon-map-management.png'),
+            btnClick: this._layerManager,
+          },
+          {
+            key: '属性',
+            title: '属性',
+            image: require('../../../assets/map/icon-data-manangement.png'),
+            btnClick: () => {},
+          },
+        ]
+        break
+      case constains.Map3D:
+        list = [
+          {
+            key: '地图管理',
+            image: require('../../../assets/map/icon-map-management.png'),
+            btnClick: this._layerManager,
+          },
+        ]
+        break
+    }
+    return list
   }
 
   _showManager = newPress => {
@@ -247,7 +242,12 @@ export default class MT_BtnList extends React.Component {
     let width = ITEM_WIDTH < WIDTH / 6 ? WIDTH / 6 : ITEM_WIDTH
     return (
       <View style={[styles.item, { width: width }]}>
-        <MT_Btn title={key} image={image} onPress={btnClick} />
+        <MT_Btn
+          title={key}
+          textColor={'white'}
+          image={image}
+          onPress={btnClick}
+        />
       </View>
     )
   }
@@ -258,9 +258,15 @@ export default class MT_BtnList extends React.Component {
 
   _keyExtractor = item => item.key
 
+  renderItems = data => {
+    let toolbar = []
+    data.forEach(item => {
+      toolbar.push(this._renderItem({ item }))
+    })
+    return toolbar
+  }
+
   render() {
-    const data = this.state.data
-    // TODO BUG 临时处理 hidden map和map3d在关闭的时候会出现部分黑屏，必须要有可渲染的其他组件在屏幕上，才能正常关闭
     return (
       <View
         style={[
@@ -268,13 +274,14 @@ export default class MT_BtnList extends React.Component {
           this.props.style,
         ]}
       >
-        <FlatList
-          data={data}
-          renderItem={this._renderItem}
-          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          keyExtractor={this._keyExtractor}
-          horizontal={true}
-        />
+        {/*<FlatList*/}
+        {/*data={this.state.data}*/}
+        {/*renderItem={this._renderItem}*/}
+        {/*// ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
+        {/*keyExtractor={this._keyExtractor}*/}
+        {/*horizontal={true}*/}
+        {/*/>*/}
+        {this.renderItems(this.state.data)}
       </View>
     )
   }
@@ -295,15 +302,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: scaleSize(100),
+    height: scaleSize(230),
     width: '100%',
   },
   container: {
     position: 'absolute',
     bottom: 0,
-    height: scaleSize(100),
+    height: scaleSize(230),
     width: '100%',
-    backgroundColor: 'white',
+    backgroundColor: color.theme,
     alignSelf: 'center',
     borderStyle: 'solid',
     borderColor: BORDERCOLOR,
@@ -312,11 +319,14 @@ const styles = StyleSheet.create({
     borderLeftWidth: 0,
     borderBottomWidth: 0,
     zIndex: 100,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
   },
   hiddenContainer: {
     position: 'absolute',
     bottom: 0,
-    height: scaleSize(100),
+    height: scaleSize(230),
     width: '100%',
     backgroundColor: 'white',
     alignSelf: 'center',
