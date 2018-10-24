@@ -4,11 +4,9 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View } from 'react-native'
 import { CollectionToolbar } from '../../componets'
 import constants from '../../constants'
 import ToolbarList from '../../componets/ToolbarList'
-import styles from './styles'
 
 const COLLECTION_LEFT = 'COLLECTION_LEFT'
 const COLLECTION_RIGHT = 'COLLECTION_RIGHT'
@@ -102,16 +100,6 @@ export default class Toolbar extends React.Component {
     if (this.props.hide) {
       return null
     }
-    return (
-      <View
-        style={[
-          styles.container,
-          { flexDirection: this.props.direction },
-          this.props.style,
-        ]}
-      >
-        {this.renderToolbar(this.state.type)}
-      </View>
-    )
+    return this.renderToolbar(this.state.type)
   }
 }

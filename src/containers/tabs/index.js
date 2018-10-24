@@ -114,7 +114,8 @@ const Tabs = TabNavigator(
       },
       style: {
         backgroundColor: color.theme, // TabBar 背景色
-        height: Platform.OS === 'android' ? 50 : 49,
+        // height: Platform.OS === 'android' ? 50 : 49,
+        height: scaleSize(96),
         borderTopColor: color.border,
         borderTopWidth: 1,
       },

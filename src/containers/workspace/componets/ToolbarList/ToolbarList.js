@@ -26,23 +26,41 @@ export default class ToolbarList extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      currentIndex: -1,
+    }
+  }
+
+  itemAction = ({ item, index }) => {
+    this.setState(
+      {
+        currentIndex: index,
+      },
+      () => {
+        item.action && item.action()
+      },
+    )
   }
 
   _renderItem = ({ item, index }) => {
     return (
       <MTBtn
         key={index}
+        style={styles.btn}
+        selected={index === this.state.currentIndex}
         title={item.title}
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
-        onPress={item.action}
+        onPress={() => {
+          this.itemAction({ item, index })
+        }}
       />
     )
   }
 
   _renderItemSeparatorComponent = () => {
-    return <View style={styles.separatorColumn} />
+    return <View style={styles.separator} />
   }
 
   _keyExtractor = item => item.key
@@ -57,13 +75,10 @@ export default class ToolbarList extends React.Component {
         data={this.props.data}
         renderItem={this._renderItem}
         ItemSeparatorComponent={this._renderItemSeparatorComponent}
+        ListFooterComponent={this._renderItemSeparatorComponent}
+        ListHeaderComponent={this._renderItemSeparatorComponent}
         keyExtractor={this._keyExtractor}
       />
     )
-    // return (
-    //   <View style={[styles.container, { flexDirection: this.props.direction }, this.props.style]}>
-    //     {this.renderItems(this.props.data)}
-    //   </View>
-    // )
   }
 }

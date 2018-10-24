@@ -77,6 +77,8 @@ export default StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
+    bottom: scaleSize(100),
+    width: scaleSize(100),
     backgroundColor: color.theme,
   },
   rightToolbar: {

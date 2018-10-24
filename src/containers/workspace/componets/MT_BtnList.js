@@ -64,6 +64,7 @@ export default class MT_BtnList extends React.Component {
   getToolbar = type => {
     let list = []
     switch (type) {
+      case constains.MAP_EDIT:
       case constains.COLLECTION:
         list = [
           {
@@ -241,7 +242,7 @@ export default class MT_BtnList extends React.Component {
     // let width = (ITEM_WIDTH < WIDTH / this.state.data.length) ? WIDTH / this.state.data.length : ITEM_WIDTH
     let width = ITEM_WIDTH < WIDTH / 6 ? WIDTH / 6 : ITEM_WIDTH
     return (
-      <View style={[styles.item, { width: width }]}>
+      <View key={key} style={[styles.item, { width: width }]}>
         <MT_Btn
           title={key}
           textColor={'white'}
@@ -302,13 +303,13 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    height: scaleSize(230),
+    height: scaleSize(100),
     width: '100%',
   },
   container: {
     position: 'absolute',
     bottom: 0,
-    height: scaleSize(230),
+    height: scaleSize(100),
     width: '100%',
     backgroundColor: color.theme,
     alignSelf: 'center',
@@ -326,7 +327,7 @@ const styles = StyleSheet.create({
   hiddenContainer: {
     position: 'absolute',
     bottom: 0,
-    height: scaleSize(230),
+    height: scaleSize(100),
     width: '100%',
     backgroundColor: 'white',
     alignSelf: 'center',

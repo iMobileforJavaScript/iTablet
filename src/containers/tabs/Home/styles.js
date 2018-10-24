@@ -23,9 +23,9 @@ export default StyleSheet.create({
     height: scaleSize(45),
   },
   userView: {
-    width: scaleSize(65),
-    height: scaleSize(65),
-    borderRadius: 20,
+    width: scaleSize(60),
+    height: scaleSize(60),
+    borderRadius: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'white',

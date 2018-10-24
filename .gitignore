@@ -72,9 +72,9 @@ ios/iPhoneSimulator.sdk
 ios/MessageQueue.sdk
 ios/iTablet-tvOS
 ios/iTablet-tvOSTests
+ios/iTablet.xcodeproj
 ios/Build
 ios/Index
-
 package-lock.json
 yarn.lock
 .vscode/

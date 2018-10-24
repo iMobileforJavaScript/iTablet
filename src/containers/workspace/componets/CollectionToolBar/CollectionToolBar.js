@@ -3,7 +3,6 @@ import { Toast } from '../../../../utils'
 import {
   DatasetType,
   Action,
-  GeoStyle,
   GPSElementType,
   CursorType,
 } from 'imobile_for_reactnative'
@@ -20,7 +19,7 @@ const TEXT = DatasetType.TEXT
 
 export default class CollectionToolbar extends React.Component {
   static propTypes = {
-    popType: PropTypes.string,
+    type: PropTypes.string,
     mapControl: PropTypes.any,
     mapView: PropTypes.any,
     workspace: PropTypes.any,
@@ -41,19 +40,15 @@ export default class CollectionToolbar extends React.Component {
 
   constructor(props) {
     super(props)
-    let data = this.getData(
-      this.props.editLayer && this.props.editLayer.type >= 0
-        ? this.props.editLayer.type
-        : DatasetType.POINT,
-    )
+    let data = this.getData(props.type)
     this.state = {
       data: data,
       currentOperation: data[0],
       currentIndex: 0, // currentOperation index
       lastIndex: 0, // currentOperation last index
-      // currentData: this.getData(props.popType || POINT),
+      // currentData: this.getData(props.type || POINT),
       subPopShow: true,
-      popType: props.popType || POINT,
+      type: props.type || POINT,
     }
     this.cbData = {}
     this.collector = null
@@ -90,27 +85,27 @@ export default class CollectionToolbar extends React.Component {
     await this.props.mapControl.setAction(Action.PAN)
     cbData.callback && (await cbData.callback(true))
     this.setState({
-      popType: type,
+      type: type,
     })
     this.props.setLoading && this.props.setLoading(false)
   }
 
   createCollector = () => {
     (async function() {
-      if (!this.props.editLayer || !this.props.editLayer.id) return
-      this.collector = await this.props.mapControl.getCollector()
-      let dataset = await this.props.editLayer.layer.getDataset()
-      await this.collector.setDataset(dataset)
+      // if (!this.props.editLayer || !this.props.editLayer.id) return
+      // this.collector = await this.props.mapControl.getCollector()
+      // let dataset = await this.props.editLayer.layer.getDataset()
+      // await this.collector.setDataset(dataset)
       // await this.collector.openGPS()
       //风格
-      let geoStyle = await new GeoStyle().createObj()
-      await geoStyle.setPointColor(0, 255, 0)
-      //线颜色
-      await geoStyle.setLineColor(0, 110, 220)
-      //面颜色
-      await geoStyle.setFillForeColor(255, 0, 0)
-      //设置绘制风格
-      await this.collector.setStyle(geoStyle)
+      // let geoStyle = new GeoStyle({ a: 1, b: 2 })
+      // await geoStyle.setPointColor(0, 255, 0)
+      // //线颜色
+      // await geoStyle.setLineColor(0, 110, 220)
+      // //面颜色
+      // await geoStyle.setFillForeColor(255, 0, 0)
+      // //设置绘制风格
+      // await this.collector.setStyle(geoStyle)
     }.bind(this)())
   }
 
@@ -173,76 +168,50 @@ export default class CollectionToolbar extends React.Component {
     (async function() {
       try {
         this.operationCallback = callback
-        if (callback && callback()) {
-          switch (type) {
-            case constants.POINT_HAND:
-              await this.collector.createElement(GPSElementType.POINT)
-              await this.collector.setSingleTapEnable(true)
-              break
-            case constants.LINE_HAND_POINT:
-              await this.collector.createElement(GPSElementType.LINE)
-              await this.collector.setSingleTapEnable(true)
-              break
-            case constants.REGION_HAND_POINT:
-              await this.collector.createElement(GPSElementType.POLYGON)
-              await this.collector.setSingleTapEnable(true)
-              break
-            case constants.LINE_HAND_PATH:
-              await this.props.mapControl.setAction(Action.FREEDRAW)
-              break
-            case constants.REGION_HAND_PATH:
-              await this.props.mapControl.setAction(Action.DRAWPLOYGON)
-              break
-            case constants.POINT_GPS:
-              await this.collector.createElement(GPSElementType.POINT)
-              await this.collector.setSingleTapEnable(false)
-              await this.openLocation()
-              break
-            case constants.LINE_GPS_PATH:
-            case constants.LINE_GPS_POINT:
-              await this.collector.createElement(GPSElementType.LINE)
-              await this.collector.setSingleTapEnable(false)
-              await this.openLocation()
-              break
-            case constants.REGION_GPS_PATH:
-            case constants.REGION_GPS_POINT:
-              await this.collector.createElement(GPSElementType.POLYGON)
-              await this.collector.setSingleTapEnable(false)
-              await this.openLocation()
-              break
-            default:
-              this.toDoAction()
-              break
-          }
-        } else {
-          this._cancel(type)
-          // switch (type) {
-          //   case POINT_HAND:
-          //   case LINE_HAND_POINT:
-          //   case REGION_HAND_POINT:
-          //     await this.collector.setSingleTapEnable(false)
-          //     break
-          //   case LINE_HAND_PATH:
-          //   case REGION_HAND_PATH:
-          //     if (this.props.mapControl) {
-          //       await this.props.mapControl.cancel()
-          //     }
-          //     break
-          //   case POINT_GPS:
-          //   case LINE_GPS_PATH:
-          //   case LINE_GPS_POINT:
-          //   case REGION_GPS_PATH:
-          //   case REGION_GPS_POINT:
-          //     await this.closeLocation()
-          //     break
-          //   default:
-          //     this.toDoAction()
-          //     break
-          // }
-          // Toast.show('取消采集')
+        // if (callback && callback()) {
+        switch (type) {
+          case constants.POINT_HAND:
+            await this.collector.createElement(GPSElementType.POINT)
+            await this.collector.setSingleTapEnable(true)
+            break
+          case constants.LINE_HAND_POINT:
+            await this.collector.createElement(GPSElementType.LINE)
+            await this.collector.setSingleTapEnable(true)
+            break
+          case constants.REGION_HAND_POINT:
+            await this.collector.createElement(GPSElementType.POLYGON)
+            await this.collector.setSingleTapEnable(true)
+            break
+          case constants.LINE_HAND_PATH:
+            await this.props.mapControl.setAction(Action.FREEDRAW)
+            break
+          case constants.REGION_HAND_PATH:
+            await this.props.mapControl.setAction(Action.DRAWPLOYGON)
+            break
+          case constants.POINT_GPS:
+            await this.collector.createElement(GPSElementType.POINT)
+            await this.collector.setSingleTapEnable(false)
+            await this.openLocation()
+            break
+          case constants.LINE_GPS_PATH:
+          case constants.LINE_GPS_POINT:
+            await this.collector.createElement(GPSElementType.LINE)
+            await this.collector.setSingleTapEnable(false)
+            await this.openLocation()
+            break
+          case constants.REGION_GPS_PATH:
+          case constants.REGION_GPS_POINT:
+            await this.collector.createElement(GPSElementType.POLYGON)
+            await this.collector.setSingleTapEnable(false)
+            await this.openLocation()
+            break
+          default:
+            this.toDoAction()
+            break
         }
-
-        // await this.props.editLayer.layer.setEditable(true)
+        // } else {
+        //   this._cancel(type)
+        // }
       } catch (e) {
         () => {}
       }
@@ -476,7 +445,7 @@ export default class CollectionToolbar extends React.Component {
     }.bind(this)())
   }
 
-  getData = (type = DatasetType.POINT) => {
+  getData = (type = constants.POINT) => {
     let data = [
       {
         key: '开始采集',
@@ -522,8 +491,8 @@ export default class CollectionToolbar extends React.Component {
         selectMode: 'flash',
       },
       {
-        key: '保存',
-        title: '保存',
+        key: '提交',
+        title: '提交',
         action: () => this._save(type),
         size: 'large',
         image: require('../../../../assets/mapTools/icon_save.png'),
@@ -531,8 +500,35 @@ export default class CollectionToolbar extends React.Component {
         selectMode: 'flash',
       },
       {
-        key: '属性',
-        title: '属性',
+        key: '拓扑',
+        title: '拓扑',
+        action: () => this._attribute(type),
+        size: 'large',
+        image: require('../../../../assets/mapTools/icon_attribute.png'),
+        selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'),
+        selectMode: 'flash',
+      },
+      {
+        key: 'GPS式',
+        title: 'GPS式',
+        action: () => this._attribute(type),
+        size: 'large',
+        image: require('../../../../assets/mapTools/icon_attribute.png'),
+        selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'),
+        selectMode: 'flash',
+      },
+      {
+        key: '手绘式',
+        title: '手绘式',
+        action: () => this._attribute(type),
+        size: 'large',
+        image: require('../../../../assets/mapTools/icon_attribute.png'),
+        selectedImage: require('../../../../assets/mapTools/icon_attribute_selected.png'),
+        selectMode: 'flash',
+      },
+      {
+        key: '打点式',
+        title: '打点式',
         action: () => this._attribute(type),
         size: 'large',
         image: require('../../../../assets/mapTools/icon_attribute.png'),
@@ -576,17 +572,14 @@ export default class CollectionToolbar extends React.Component {
   }
 
   render() {
-    let data = this.getData(
-      this.props.editLayer && this.props.editLayer.type >= 0
-        ? this.props.editLayer.type
-        : DatasetType.POINT,
-    )
+    // let data = this.getData(this.props.type)
 
     return (
       <ToolbarList
+        ref={ref => (this.toolbar = ref)}
         style={this.props.style}
         separator={this.props.separator}
-        data={data}
+        data={this.state.data}
       />
     )
   }
