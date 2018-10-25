@@ -393,13 +393,13 @@
                   symbolName = "-[JSThemeLabel addToHeadId:LabelItemId:resolver:rejecter:]"
                   moduleName = "iTablet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
-                  timestampString = "559121680.496132"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet1.0/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
+                  timestampString = "562129567.24124"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "139"
                   endingLineNumber = "139"
-                  offsetFromSymbolStart = "401">
+                  offsetFromSymbolStart = "380">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -408,13 +408,13 @@
                   symbolName = "-[JSThemeLabel addToHeadId:LabelItemId:resolver:rejecter:]"
                   moduleName = "iTablet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
-                  timestampString = "559121680.5008121"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet1.0/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
+                  timestampString = "562129567.245024"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "139"
                   endingLineNumber = "139"
-                  offsetFromSymbolStart = "466">
+                  offsetFromSymbolStart = "464">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -423,13 +423,13 @@
                   symbolName = "-[JSThemeLabel addToHeadId:LabelItemId:resolver:rejecter:]"
                   moduleName = "iTablet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
-                  timestampString = "559121680.505546"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet1.0/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
+                  timestampString = "562129567.248798"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "139"
                   endingLineNumber = "139"
-                  offsetFromSymbolStart = "604">
+                  offsetFromSymbolStart = "572">
                </Location>
             </Locations>
          </BreakpointContent>
@@ -488,13 +488,13 @@
                   symbolName = "-[JSThemeLabel setUniformStyleId:style:resolver:rejecter:]"
                   moduleName = "iTablet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
-                  timestampString = "559121680.536536"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet1.0/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
+                  timestampString = "562129567.264549"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "432">
+                  offsetFromSymbolStart = "404">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -503,13 +503,13 @@
                   symbolName = "-[JSThemeLabel setUniformStyleId:style:resolver:rejecter:]"
                   moduleName = "iTablet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
-                  timestampString = "559121680.543035"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet1.0/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
+                  timestampString = "562129567.268411"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "497">
+                  offsetFromSymbolStart = "488">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -518,13 +518,13 @@
                   symbolName = "-[JSThemeLabel setUniformStyleId:style:resolver:rejecter:]"
                   moduleName = "iTablet"
                   usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
-                  timestampString = "559121680.5485049"
+                  urlString = "file:///Users/imobile-xzy/Documents/RNWorkSpace/itablet1.0/iTablet/node_modules/imobile_for_javascript/ios/objNative/JSThemeLabel.m"
+                  timestampString = "562129567.2722861"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "258"
                   endingLineNumber = "258"
-                  offsetFromSymbolStart = "635">
+                  offsetFromSymbolStart = "596">
                </Location>
             </Locations>
          </BreakpointContent>

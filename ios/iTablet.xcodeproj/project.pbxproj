@@ -41,7 +41,6 @@
 		0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A3625B4212E3C2B0016FC64 /* VCMain.storyboard */; };
 		0A3625B8212E3C2C0016FC64 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3625B6212E3C2C0016FC64 /* VCViewController.m */; };
 		0A44223C211445060087C8FE /* libzip.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A442234211445060087C8FE /* libzip.a */; };
-		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
 		0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF521104C7100F206BB /* libflyMSC.a */; };
@@ -62,6 +61,7 @@
 		0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0721104C7100F206BB /* Security.framework */; };
 		0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */; };
 		0A8EEE2121104C7100F206BB /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */; };
+		0AA02A89218036A80064B1AF /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AA02A88218036A70064B1AF /* SuperMap.bundle */; };
 		0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC1FA172154872E00490605 /* UIKit.framework */; };
 		0AD8901F2114266E003964B6 /* SMSampleCodeBridgeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */; };
 		133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 78C398B91ACF4ADC00677621 /* libRCTLinking.a */; };
@@ -423,7 +423,6 @@
 		0A442239211445060087C8FE /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
 		0A44223A211445060087C8FE /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
 		0A44223B211445060087C8FE /* ZipArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZipArchive.h; sourceTree = "<group>"; };
-		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
 		0A8EEDF521104C7100F206BB /* libflyMSC.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libflyMSC.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libflyMSC.a; sourceTree = "<group>"; };
@@ -444,6 +443,7 @@
 		0A8EEE0721104C7100F206BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
+		0AA02A88218036A70064B1AF /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0AC1FA172154872E00490605 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SMSampleCodeBridgeModule.h; sourceTree = "<group>"; };
 		0AD8901E2114266E003964B6 /* SMSampleCodeBridgeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SMSampleCodeBridgeModule.m; sourceTree = "<group>"; };
@@ -788,11 +788,11 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0AA02A88218036A70064B1AF /* SuperMap.bundle */,
 				0AC1FA172154872E00490605 /* UIKit.framework */,
 				D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */,
 				D877B5A82133D2AC0044AE61 /* SuperMap.framework */,
 				0A0118FA2122D9CE00BC4AAB /* Contacts.framework */,
-				0A8EEDF221104C7100F206BB /* SuperMap.bundle */,
 				0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */,
 				0A8EEDF421104C7100F206BB /* libCorePlot.a */,
 				0A8EEDF521104C7100F206BB /* libflyMSC.a */,
@@ -1337,6 +1337,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0AA02A89218036A80064B1AF /* SuperMap.bundle in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0A0A2048212FA22300BEBC1C /* 热点图－选中.png in Resources */,
 				0A0A2049212FA22300BEBC1C /* 聚合图－当前.png in Resources */,
@@ -1349,7 +1350,6 @@
 				D877B55B21338D850044AE61 /* Trial_License.slm in Resources */,
 				0A0A2040212FA22300BEBC1C /* 实时数据－按下.png in Resources */,
 				0A0A2044212FA22300BEBC1C /* 时空数据－按下.png in Resources */,
-				0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */,
 				0A0A2039212FA22300BEBC1C /* 关系图－当前.png in Resources */,
 				0A3625B7212E3C2C0016FC64 /* VCMain.storyboard in Resources */,
 				0A0A203A212FA22300BEBC1C /* 关系图－选中.png in Resources */,
@@ -1382,7 +1382,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1390,7 +1390,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};

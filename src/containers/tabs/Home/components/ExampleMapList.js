@@ -20,6 +20,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   constructor(props) {
+    debugger
     super(props)
     this.islogin = false
     this.unzip = true
@@ -34,6 +35,7 @@ export default class ExampleMapList extends React.Component {
 
 
   componentDidMount() {
+    debugger
     (async function () {
       await this.mapexist()
     }).bind(this)()
@@ -67,17 +69,10 @@ export default class ExampleMapList extends React.Component {
     let path, exist, filePath, outPath, fileName, openPath
     switch (key) {
       case vectorMap:
-<<<<<<< HEAD
         path = ConstPath.SampleDataPath + 'hotMap/hotMap.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'hotMap.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         fileName = "hotMap"
-=======
-        path = item.path
-        filePath = await Utility.appendingHomeDirectory(item.filePath)
-        outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
-        fileName = item.fileName
->>>>>>> 4c8d2a48b8f7fcdec4a5ddc8cea9d67fc8967c68
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           openNativeSampleCode.open("Visual")
@@ -86,7 +81,6 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case map3D:
-<<<<<<< HEAD
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         if(Platform.OS === 'ios'){
@@ -98,13 +92,6 @@ export default class ExampleMapList extends React.Component {
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_android/CBD_android.sxwu'
           path = ConstPath.SampleDataPath + 'CBD_android/CBD_android.sxwu'
         }
-=======
-      path = item.path
-      filePath = await Utility.appendingHomeDirectory(item.filePath)
-      outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
-      fileName = item.fileName
-      openPath=await Utility.appendingHomeDirectory(item.openPath)
->>>>>>> 4c8d2a48b8f7fcdec4a5ddc8cea9d67fc8967c68
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
@@ -114,7 +101,6 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case ObliquePhoto:
-<<<<<<< HEAD
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         if(Platform.OS === 'ios'){
@@ -126,13 +112,6 @@ export default class ExampleMapList extends React.Component {
           openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
           path = ConstPath.SampleDataPath + 'MaSai/MaSai.sxwu'
         }
-=======
-      path = item.path
-      filePath = await Utility.appendingHomeDirectory(item.filePath)
-      outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
-      fileName = item.fileName
-      openPath=await Utility.appendingHomeDirectory(item.openPath)
->>>>>>> 4c8d2a48b8f7fcdec4a5ddc8cea9d67fc8967c68
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', { path: openPath, isExample: true })
@@ -141,19 +120,11 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case gl:
-<<<<<<< HEAD
         path = ConstPath.SampleDataPath + 'Changchun/Changchun.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "Changchun.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'Changchun/Changchun.smwu'
         fileName = "Changchun"
-=======
-        path = item.path
-        filePath = await Utility.appendingHomeDirectory(item.filePath)
-        outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
-        fileName = item.fileName
-        openPath = await Utility.appendingHomeDirectory(item.openPath)
->>>>>>> 4c8d2a48b8f7fcdec4a5ddc8cea9d67fc8967c68
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
@@ -163,19 +134,11 @@ export default class ExampleMapList extends React.Component {
         }
         break
       case overLay:
-<<<<<<< HEAD
         path = ConstPath.SampleDataPath + 'DOM/DOM.smwu'
         filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "DOM.zip"
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
         openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'DOM/DOM.smwu'
         fileName = "DOM"
-=======
-        path = item.path
-        filePath = await Utility.appendingHomeDirectory(item.filePath)
-        outPath = await Utility.fileIsExistInHomeDirectory(item.outPath)
-        fileName = item.fileName
-        openPath = await Utility.appendingHomeDirectory(item.openPath)
->>>>>>> 4c8d2a48b8f7fcdec4a5ddc8cea9d67fc8967c68
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
@@ -338,6 +301,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   _renderItem = ({ item }) => {
+    debugger
     let key = item.key
     let src = defalutImageSrc
     let backgroundcolor = item.backgroundcolor

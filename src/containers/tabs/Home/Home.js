@@ -61,7 +61,10 @@ export default class Home extends Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
-  _goToMapLoad = () => { this.setState({ mapviewshow: !this.state.mapviewshow, selectlist: !this.state.selectlist }) }
+  _goToMapLoad = () => { 
+    debugger
+    this.setState({ mapviewshow: !this.state.mapviewshow, selectlist: !this.state.selectlist })
+   }
   // _goToMapLoad = () => {NavigationService.navigate('MapLoad',{})}
 
   renderMapBtn() {
@@ -102,6 +105,7 @@ export default class Home extends Component {
     }
   }
   render() {
+    debugger
     return (
       <Container
         ref={ref => this.container = ref}
