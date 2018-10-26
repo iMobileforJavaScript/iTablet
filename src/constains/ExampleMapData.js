@@ -14,7 +14,7 @@ const testData_ios = {
     { key: 'GL地图瓦片', path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu', outPath: ConstPath.SampleDataPath, fileName: "Changchun", filePath: ConstPath.SampleDataPath + 'Changchun.zip', openPath: ConstPath.SampleDataPath + 'Changchun/Changchun.smwu' },
     { key: '影像叠加矢量地图', path: ConstPath.SampleDataPath + '/DOM/DOM.smwu', outPath: ConstPath.SampleDataPath, fileName: "DOM", filePath: ConstPath.SampleDataPath + 'DOM.zip', openPath: ConstPath.SampleDataPath + 'DOM/DOM.smwu' },
     { key: '三维场景', path: ConstPath.SampleDataPath + '/CBD_ios/CBD_ios.sxwu', outPath: ConstPath.SampleDataPath, fileName: "CBD_ios", filePath: ConstPath.SampleDataPath + 'CBD_ios.zip', openPath: ConstPath.SampleDataPath + 'CBD_ios/CBD_ios.sxwu' },
-    { key: '倾斜摄影', path: ConstPath.SampleDataPath + '/MaSai_ios/MaSai.sxwu', outPath: ConstPath.SampleDataPath, fileName: "MaSai_ios", filePath: ConstPath.SampleDataPath + 'MaSai_ios.zip', openPath: ConstPath.SampleDataPath + 'MaSai_ios/MaSai_ios.sxwu' }
+    { key: '倾斜摄影', path: ConstPath.SampleDataPath + '/MaSai_ios/MaSai.sxwu', outPath: ConstPath.SampleDataPath, fileName: "MaSai_ios", filePath: ConstPath.SampleDataPath + 'MaSai_ios.zip', openPath: ConstPath.SampleDataPath + 'MaSai_ios/MaSai.sxwu'}
   ]
 }
 export default {
