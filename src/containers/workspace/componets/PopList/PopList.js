@@ -7,7 +7,7 @@ import { Const } from '../../../../constains'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../NavigationService'
 import NetworkAnalystToolBar from '../NetworkAnalystToolBar'
-import CollectionToolbar from '../CollectionToolbar'
+// import CollectionToolbar from '../CollectionToolbar'
 import { bufferAnalyst, overlayAnalyst } from '../../util'
 import constants from '../../constants'
 
@@ -1168,27 +1168,28 @@ export default class PopList extends React.Component {
     let currentData = {}
     if (this.props.popType === Const.DATA_EDIT) {
       currentData = this.props.editLayer
-    } else if (this.props.popType === Const.COLLECTION) {
-      return (
-        <CollectionToolbar
-          ref={ref => (this.collectionBar = ref)}
-          popType={this.state.networkType}
-          editLayer={this.props.editLayer}
-          selection={this.props.selection}
-          mapView={this.props.mapView}
-          mapControl={this.props.mapControl}
-          workspace={this.props.workspace}
-          map={this.props.map}
-          analyst={this._analyst}
-          showSetting={this.props.showSetting}
-          chooseLayer={this.props.chooseLayer}
-          POP_List={this.props.POP_List}
-          setLoading={this.props.setLoading}
-          setSelection={this.props.setSelection}
-          columns={this.props.columns}
-        />
-      )
     }
+    // else if (this.props.popType === Const.COLLECTION) {
+    //   return (
+    //     <CollectionToolbar
+    //       ref={ref => (this.collectionBar = ref)}
+    //       popType={this.state.networkType}
+    //       editLayer={this.props.editLayer}
+    //       selection={this.props.selection}
+    //       mapView={this.props.mapView}
+    //       mapControl={this.props.mapControl}
+    //       workspace={this.props.workspace}
+    //       map={this.props.map}
+    //       analyst={this._analyst}
+    //       showSetting={this.props.showSetting}
+    //       chooseLayer={this.props.chooseLayer}
+    //       POP_List={this.props.POP_List}
+    //       setLoading={this.props.setLoading}
+    //       setSelection={this.props.setSelection}
+    //       columns={this.props.columns}
+    //     />
+    //   )
+    // }
     if (
       this.state.toolbar === 'network' &&
       this.props.popType === Const.ANALYST

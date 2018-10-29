@@ -1,6 +1,6 @@
 import PopList from './PopList'
 import NetworkAnalystToolBar from './NetworkAnalystToolBar'
-import CollectionToolbar from './CollectionToolbar'
+// import CollectionToolbar from './CollectionToolbar'
 import Setting from './Setting'
 import AlertDialog from './AlertDialog'
 import DrawerView from './DrawerView'
@@ -12,7 +12,7 @@ import MTBtnList from './MT_BtnList'
 export {
   PopList,
   NetworkAnalystToolBar,
-  CollectionToolbar,
+  // CollectionToolbar,
   Setting,
   AlertDialog,
   DrawerView,
