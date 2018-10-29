@@ -10,7 +10,7 @@
     android:paddingRight="0dp"
     android:paddingTop="0dp"
     android:background="#000"
-    tools:context="com.supermap.DataVisualization.VisualizationActivity">
+    tools:context="com.supermap.SampleCode.DataVisualization.VisualizationActivity">
 
 
     <LinearLayout

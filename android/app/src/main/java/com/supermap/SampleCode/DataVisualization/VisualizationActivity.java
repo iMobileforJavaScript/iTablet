@@ -1,4 +1,4 @@
-package com.supermap.DataVisualization;
+package com.supermap.SampleCode.DataVisualization;
 
 
 
