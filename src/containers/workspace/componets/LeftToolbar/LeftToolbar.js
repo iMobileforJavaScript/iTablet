@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View } from 'react-native'
-// import { CollectionToolbar } from '../../componets'
+import { CollectionToolbar } from '../../componets'
 import constants from '../../constants'
 import ToolbarList from '../../componets/ToolbarList'
 
@@ -72,27 +72,27 @@ export default class Toolbar extends React.Component {
       case constants.REGION_GPS_POINT:
       case constants.REGION_HAND_PATH:
       case constants.REGION_HAND_POINT:
-      // toolbar = (
-      //   <CollectionToolbar
-      //     ref={ref => (this.collectionBar = ref)}
-      //     style={this.props.style}
-      //     separator={this.props.separator}
-      //     type={type}
-      //     editLayer={this.props.editLayer}
-      //     selection={this.props.selection}
-      //     mapView={this.props.mapView}
-      //     mapControl={this.props.mapControl}
-      //     workspace={this.props.workspace}
-      //     map={this.props.map}
-      //     analyst={this._analyst}
-      //     // showSetting={this.props.showSetting}
-      //     // chooseLayer={this.props.chooseLayer}
-      //     // POP_List={this.props.POP_List}
-      //     setLoading={this.props.setLoading}
-      //     // setSelection={this.props.setSelection}
-      //     // columns={this.props.columns}
-      //   />
-      // )
+        toolbar = (
+          <CollectionToolbar
+            ref={ref => (this.collectionBar = ref)}
+            style={this.props.style}
+            separator={this.props.separator}
+            type={type}
+            editLayer={this.props.editLayer}
+            selection={this.props.selection}
+            mapView={this.props.mapView}
+            mapControl={this.props.mapControl}
+            workspace={this.props.workspace}
+            map={this.props.map}
+            analyst={this._analyst}
+            // showSetting={this.props.showSetting}
+            // chooseLayer={this.props.chooseLayer}
+            // POP_List={this.props.POP_List}
+            setLoading={this.props.setLoading}
+            // setSelection={this.props.setSelection}
+            // columns={this.props.columns}
+          />
+        )
     }
     return toolbar
   }
