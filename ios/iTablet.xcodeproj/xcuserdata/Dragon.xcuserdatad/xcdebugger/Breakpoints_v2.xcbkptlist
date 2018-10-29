@@ -10,11 +10,59 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSMap.m"
-            timestampString = "561626162.015527"
+            timestampString = "559214272.382424"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "139"
-            endingLineNumber = "139"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSAdoptMapView.m"
+            timestampString = "559879307.812747"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "191"
+            endingLineNumber = "191"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSAdoptMapView.m"
+            timestampString = "559879307.815276"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "187"
+            endingLineNumber = "187"
+            landmarkName = "JSAdoptMapView"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSAdoptMapView.m"
+            timestampString = "559879307.815521"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "189"
+            endingLineNumber = "189"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -57,8 +105,24 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSAdoptMapView.m"
+            timestampString = "559879307.815773"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "197"
+            endingLineNumber = "197"
+            landmarkName = "JSAdoptMapView"
+            landmarkType = "3">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSLayer.m"
-            timestampString = "561628898.5629849"
+            timestampString = "559194244.1616631"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "133"
@@ -74,7 +138,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSLayer.m"
-            timestampString = "561628898.5630471"
+            timestampString = "559194244.1652319"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "126"
@@ -90,7 +154,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSWorkspace.m"
-            timestampString = "559821267.972083"
+            timestampString = "562236775.341513"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "317"
@@ -106,7 +170,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSMap.m"
-            timestampString = "561626162.017238"
+            timestampString = "559214272.384601"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "409"
+            endingLineNumber = "409"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSMap.m"
+            timestampString = "559214272.384766"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "410"
@@ -122,11 +202,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSMap.m"
-            timestampString = "561626162.017334"
+            timestampString = "559214272.384864"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "411"
-            endingLineNumber = "411"
+            startingLineNumber = "412"
+            endingLineNumber = "412"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -138,27 +218,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSMap.m"
-            timestampString = "561626162.0174069"
+            timestampString = "559214272.384988"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
-            landmarkName = "RCT_REMAP_METHOD"
-            landmarkType = "9">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSMap.m"
-            timestampString = "561626162.017458"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "416"
-            endingLineNumber = "416"
+            startingLineNumber = "415"
+            endingLineNumber = "415"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -202,7 +266,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSLayer.m"
-            timestampString = "561628898.563169"
+            timestampString = "559194244.165648"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "272"
@@ -234,7 +298,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSDatasetVector.m"
-            timestampString = "561625377.4193079"
+            timestampString = "559640021.302792"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSDatasetVector.m"
+            timestampString = "559640021.3068171"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "314"
@@ -289,38 +369,6 @@
             endingLineNumber = "179"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[JSTransportationAnalyst findPath:param:hasLeastTotalCost:resolver:rejecter:]"
-                  moduleName = "iTablet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Dragon/Documents/Workspace/SuperMap/iTablet/node_modules/imobile_for_reactnative/ios/objNative/JSTransportationAnalyst.m"
-                  timestampString = "562057080.751834"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "179"
-                  endingLineNumber = "179"
-                  offsetFromSymbolStart = "364">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "-[JSTransportationAnalyst findPath:param:hasLeastTotalCost:resolver:rejecter:]"
-                  moduleName = "iTablet"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/Dragon/Documents/Workspace/SuperMap/iTablet/node_modules/imobile_for_reactnative/ios/objNative/JSTransportationAnalyst.m"
-                  timestampString = "562057080.7555259"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "179"
-                  endingLineNumber = "179"
-                  offsetFromSymbolStart = "544">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -415,6 +463,22 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "186"
             endingLineNumber = "186"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/objNative/JSDatasetVector.m"
+            timestampString = "559640021.307217"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "388"
+            endingLineNumber = "388"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>

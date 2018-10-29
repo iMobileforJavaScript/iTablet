@@ -88,10 +88,10 @@
 		D83ED3BE21704BDB00683BB3 /* VCMain.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D83ED3BB21704BDB00683BB3 /* VCMain.storyboard */; };
 		D83ED3BF21704BDB00683BB3 /* VCViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D83ED3BD21704BDB00683BB3 /* VCViewController.m */; };
 		D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D84D43F6213CC2AE001F83D9 /* MessageQueue.framework */; };
-		D854D7B7218301380075B5F8 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDE021104B4100F206BB /* libSupermap.a */; };
+		D854D76F2182FF090075B5F8 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDE021104B4100F206BB /* libSupermap.a */; };
+		D854D7702182FF450075B5F8 /* libRNViewShot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDDD21104B4100F206BB /* libRNViewShot.a */; };
 		D877B55B21338D850044AE61 /* Trial_License.slm in Resources */ = {isa = PBXBuildFile; fileRef = D877B55A21338D840044AE61 /* Trial_License.slm */; };
 		D877B5A92133D2AD0044AE61 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D877B5A82133D2AC0044AE61 /* SuperMap.framework */; };
-		E8D4F75200B5420A963B7F2B /* libRNViewShot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B6715E489CA142739903C659 /* libRNViewShot.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -479,7 +479,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D854D7B7218301380075B5F8 /* libSupermap.a in Frameworks */,
+				D854D7702182FF450075B5F8 /* libRNViewShot.a in Frameworks */,
+				D854D76F2182FF090075B5F8 /* libSupermap.a in Frameworks */,
 				0AC1FA182154872F00490605 /* UIKit.framework in Frameworks */,
 				0A0118FB2122D9CE00BC4AAB /* Contacts.framework in Frameworks */,
 				0A8EEE1A21104C7100F206BB /* AVFoundation.framework in Frameworks */,
@@ -511,7 +512,6 @@
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
-				E8D4F75200B5420A963B7F2B /* libRNViewShot.a in Frameworks */,
 				0A8EEE1521104C7100F206BB /* AudioToolbox.framework in Frameworks */,
 				0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */,
 				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
@@ -1379,7 +1379,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1387,7 +1387,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};

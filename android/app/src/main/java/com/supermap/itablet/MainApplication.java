@@ -3,7 +3,7 @@ package com.supermap.itablet;
 import android.support.multidex.MultiDexApplication;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
-import com.supermap.rnsupermap.SupermapFullPackage;
+import com.supermap.SupermapFullPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;

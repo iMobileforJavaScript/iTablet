@@ -1,4 +1,4 @@
-package com.supermp.imb.file;
+package com.supermap.file;
 
 import java.io.IOException;
 import java.io.InputStream;

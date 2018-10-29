@@ -13,8 +13,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 
-import com.supermp.imb.file.MyAssetManager;
-import com.supermp.imb.file.MySharedPreferences;
+import com.supermap.file.MyAssetManager;
+import com.supermap.file.MySharedPreferences;
 
 /**
  * 启动界面，初始化数据

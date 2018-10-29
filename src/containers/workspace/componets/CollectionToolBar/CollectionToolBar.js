@@ -500,8 +500,8 @@ export default class CollectionToolbar extends React.Component {
         selectMode: 'flash',
       },
       {
-        key: '拓扑',
-        title: '拓扑',
+        key: '编辑',
+        title: '编辑',
         action: () => this._attribute(type),
         size: 'large',
         image: require('../../../../assets/mapTools/icon_attribute.png'),

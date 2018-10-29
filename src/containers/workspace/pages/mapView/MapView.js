@@ -5,14 +5,7 @@
  */
 
 import * as React from 'react'
-import {
-  Workspace,
-  SMMapView,
-  Action,
-  Point2D,
-  EngineType,
-  DatasetType,
-} from 'imobile_for_reactnative'
+import { SMMapView, Action, DatasetType, SMap } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
   PopList,
@@ -688,24 +681,9 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
-    NavigationService.goBack()
-    // InteractionManager.runAfterInteractions(() => {
-    //   if (this.setting && this.setting.isVisible()) { // 关闭设置页面
-    //     this.setting.close()
-    //   } else if (this.state.popShow) { // 隐藏工具栏
-    //     this.setState({
-    //       popShow: false,
-    //     })
-    //   } else { // 返回
-    //     // 返回到首页Tabs，key为首页的下一个界面，从key所在的页面返回
-    //     // NavigationService.goBack(this.props.nav.routes[1].key)
-    //     if (this.type !== "ONLINE" && !this.isExample) {
-    //       this.AlertDialog.setDialogVisible(true)
-    //     } else {
-    //       this.closeWorkspace(NavigationService.goBack())
-    //     }
-    //   }
-    // })
+    SMap.closeWorkspace().then(result => {
+      result && NavigationService.goBack()
+    })
     return true
   }
 
@@ -729,58 +707,12 @@ export default class MapView extends React.Component {
     }
     (async function() {
       try {
-        let workspaceModule = new Workspace()
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
-
-        AudioAnalyst.setConfig({
-          workspace: this.workspace,
-          mapControl: this.mapControl,
-          map: this.map,
-        })
-
-        // let filePath = await Utility.appendingHomeDirectory(this.path)
-
-        await this.workspace.open(this.path)
-        await this.map.setWorkspace(this.workspace)
-
-        let maps = await this.workspace.getMaps()
-        let count = await maps.getCount()
-        if (count > 0) {
-          this.mapName = await this.workspace.getMapName(0)
-        }
-
-        if (this.mapName) {
-          await this.map.open(this.mapName)
-
-          // TODO iOS不会进入？
-          if (Platform.OS === 'ios') {
-            await this.map.viewEntire()
-            await this.mapControl.setAction(Action.PAN)
-            await this.map.refresh()
-            this.container.setLoading(false)
-          } else {
-            navigator.geolocation.getCurrentPosition(position => {
-              let lat = position.coords.latitude
-              let lon = position.coords.longitude
-              ;(async () => {
-                const point2dModule = new Point2D()
-                let centerPoint = await point2dModule.createObj(lon, lat)
-                await this.map.setCenter(centerPoint)
-                await this.map.viewEntire()
-                // await this.map.setScale(0.00005)
-                await this.mapControl.setAction(Action.PAN)
-                await this.map.refresh()
-              }).bind(this)()
-            })
-            this.container.setLoading(false)
-          }
-        } else {
-          await this.map.refresh()
+        let data = { server: this.path }
+        SMap.openWorkspace(data).then(result => {
+          result && SMap.openMap(0)
           this.container.setLoading(false)
-        }
-        await this._addGeometrySelectedListener()
+        })
+        // await this._addGeometrySelectedListener()
 
         // this.saveLatest()
       } catch (e) {
@@ -795,65 +727,11 @@ export default class MapView extends React.Component {
       return
     }
     (async function() {
-      const workspaceModule = new Workspace()
-      const point2dModule = new Point2D()
       try {
-        this.workspace = await workspaceModule.createObj()
-        this.mapControl = await this.mapView.getMapControl()
-        this.map = await this.mapControl.getMap()
-        await this.map.setWorkspace(this.workspace)
-        AudioAnalyst.setConfig({
-          workspace: this.workspace,
-          mapControl: this.mapControl,
-          map: this.map,
-        })
-        this.mapName = await this.map.getName()
-
-        let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-        if (this.type === 'ONLINE') {
-          let dataset = await dsBaseMap.getDataset(this.layerIndex)
-          await this.map.addLayer(dataset, true)
-        }
-        if (this.labelDSParams) {
-          let dsLabel = await this.workspace.openDatasource(this.labelDSParams)
-          dsLabel &&
-            (await this.map.addLayer(
-              await dsLabel.getDataset(this.layerIndex),
-              true,
-            ))
-        }
-
-        // await this.map.setScale(0.0005)
-        // 以UDB打开工作空间时，不加载数据
-        // 为防止添加图层不再可显示范围内，所以不定位当前位置
-        if (this.DSParams && this.DSParams.engineType === EngineType.UDB) {
-          await this.map.viewEntire()
-          await this.mapControl.setAction(Action.PAN)
-          await this.map.refresh()
-          this.container.setLoading(false)
-        } else {
-          if (Platform.OS === 'ios') {
-            await this.map.viewEntire()
-            // await this.map.setScale(0.00005)
-            await this.mapControl.setAction(Action.PAN)
-            await this.map.refresh()
-            this.container.setLoading(false)
-          } else {
-            navigator.geolocation.getCurrentPosition(position => {
-              let lat = position.coords.latitude
-              let lon = position.coords.longitude
-              ;(async () => {
-                let centerPoint = await point2dModule.createObj(lon, lat)
-                await this.map.setCenter(centerPoint)
-                await this.map.viewEntire()
-                await this.mapControl.setAction(Action.PAN)
-                await this.map.refresh()
-              }).bind(this)()
-            })
-            this.container.setLoading(false)
-          }
-        }
-        await this._addGeometrySelectedListener()
+        await SMap.openDatasource(this.DSParams, this.layerIndex)
+        await SMap.openDatasource(this.labelDSParams, this.layerIndex)
+        this.container.setLoading(false)
+        // await this._addGeometrySelectedListener()
       } catch (e) {
         this.container.setLoading(false)
       }

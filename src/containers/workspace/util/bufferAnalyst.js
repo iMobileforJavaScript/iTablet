@@ -1,5 +1,5 @@
 import { Toast } from '../../../utils'
-import { Analyst } from 'imobile_for_reactnative'
+import { SMAnalyst } from 'imobile_for_reactnative'
 
 async function analyst(data) {
   try {
@@ -30,7 +30,7 @@ async function analyst(data) {
         fillOpaqueRate: 70,
       },
     }
-    await Analyst.bufferAnalyst(map, layer, params)
+    await SMAnalyst.bufferAnalyst(map, layer, params)
     Toast.show('分析成功')
   } catch (e) {
     Toast.show('分析失败')
@@ -39,7 +39,7 @@ async function analyst(data) {
 
 function clear() {
   (async function() {
-    await Analyst.clear()
+    await SMAnalyst.clear()
   }.bind(this)())
 }
 

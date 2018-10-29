@@ -4,9 +4,9 @@ import java.io.File;
 import java.io.InputStream;
 
 import com.supermap.itablet.MainApplication;
-import com.supermp.imb.file.Decompressor;
-import com.supermp.imb.file.FileManager;
-import com.supermp.imb.file.MyAssetManager;
+import com.supermap.file.Decompressor;
+import com.supermap.file.FileManager;
+import com.supermap.file.MyAssetManager;
 
 public class DefaultDataConfig {
 

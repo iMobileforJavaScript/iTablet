@@ -6,8 +6,8 @@ import android.util.Log;
 
 import com.facebook.react.ReactActivity;
 import com.supermap.data.Environment;
-import com.supermp.imb.file.Decompressor;
-import com.supermp.imb.file.Utils;
+import com.supermap.file.Decompressor;
+import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
