@@ -4,10 +4,17 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from 'react-native'
 import { scaleSize } from '../../utils'
 import { size } from '../../styles'
-import { ConstPath } from '../../constains'
+import { ConstPath } from '../../constants'
 
 const styles = StyleSheet.create({
   container: {
@@ -33,7 +40,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'row',
     elevation: 20,
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 5,
@@ -75,7 +82,6 @@ const styles = StyleSheet.create({
 })
 
 export default class AudioTopDialog extends PureComponent {
-
   props: {
     startRecording: () => {},
     stopRecording: () => {},
@@ -107,7 +113,10 @@ export default class AudioTopDialog extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.content !== this.props.content || prevProps.recording !== this.props.recording) {
+    if (
+      prevProps.content !== this.props.content ||
+      prevProps.recording !== this.props.recording
+    ) {
       this.setState({
         content: this.props.content,
         recording: this.props.recording,
@@ -130,7 +139,9 @@ export default class AudioTopDialog extends PureComponent {
   }
 
   renderAudioBtn = () => {
-    let image = this.state.recording ? require('../../assets/public/icon-recording.png') : require('../../assets/public/icon-audio.png')
+    let image = this.state.recording
+      ? require('../../assets/public/icon-recording.png')
+      : require('../../assets/public/icon-audio.png')
     return (
       <TouchableOpacity
         activeOpacity={this.props.activeOpacity}
@@ -170,9 +181,13 @@ export default class AudioTopDialog extends PureComponent {
     if (!this.state.visible) return null
     return (
       <View style={styles.container}>
-        <TouchableOpacity activeOpacity={1} style={styles.overlay} onPress={() => {
-          this.setVisible(false)
-        }}/>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.overlay}
+          onPress={() => {
+            this.setVisible(false)
+          }}
+        />
         <View style={styles.dialogStyle}>
           <ScrollView style={styles.contentView}>
             <Text style={styles.content}>{this.state.content}</Text>

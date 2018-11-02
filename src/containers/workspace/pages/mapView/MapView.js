@@ -10,11 +10,10 @@ import PropTypes from 'prop-types'
 import {
   PopList,
   Setting,
-  AlertDialog,
   DrawerView,
-  LeftToolbar,
-  RightToolbar,
-  MTBtnList,
+  FunctionToolbar,
+  MapToolbar,
+  MapController,
 } from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
@@ -22,12 +21,10 @@ import {
   PopMeasureBar,
   Container,
   MTBtn,
-  Dialog,
   UsualTitle,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
-import { ConstPath, Const } from '../../../../constains'
-import { SaveDialog } from '../../../mtLayerManager/components'
+import { ConstPath, Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
@@ -540,7 +537,7 @@ export default class MapView extends React.Component {
     }
   }
 
-  toCloesMap = () => {
+  toCloseMap = () => {
     // await this.map.close()
     // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
     if (this.setting && this.setting.isVisible()) {
@@ -661,7 +658,7 @@ export default class MapView extends React.Component {
       {
         title: '关闭',
         image: require('../../../../assets/public/icon-close-white.png'),
-        action: this.toCloesMap,
+        action: this.toCloseMap,
       },
     ]
     headerBtnData.forEach(({ title, image, action }) => {
@@ -856,7 +853,7 @@ export default class MapView extends React.Component {
       )
     } else {
       return (
-        <MTBtnList
+        <MapToolbar
           hidden={this.isExample}
           POP_List={this._pop_list}
           layerManager={this._layer_manager}
@@ -953,17 +950,19 @@ export default class MapView extends React.Component {
     }
   }
 
-  renderRightToolbar = () => {
-    return <RightToolbar type={this.operationType} />
-  }
-
-  renderLeftToolbar = () => {
+  /** 地图功能工具栏（右侧） **/
+  renderFunctionToolbar = () => {
     return (
-      <LeftToolbar
-        style={styles.leftToolbar}
-        type={constants.REGION_HAND_POINT}
+      <FunctionToolbar
+        style={styles.functionToolbar}
+        type={this.operationType}
       />
     )
+  }
+
+  /** 地图控制器，放大缩小等功能 **/
+  renderMapController = () => {
+    return <MapController style={styles.mapController} />
   }
 
   render() {
@@ -977,60 +976,61 @@ export default class MapView extends React.Component {
           backAction: this.back,
         }}
       >
-        {this.renderMapMenu()}
+        {/*{this.renderMapMenu()}*/}
         <SMMapView
           ref={ref => (GLOBAL.mapView = ref)}
           style={styles.map}
           onGetInstance={this._onGetInstance}
         />
-        {this.renderLeftToolbar()}
-        {this.renderRightToolbar()}
-        {this.renderPopMeasureBar()}
-        {this.renderChangeLayerBtn()}
+        {/*{this.renderLeftToolbar()}*/}
+        {this.renderMapController()}
+        {this.renderFunctionToolbar()}
+        {/*{this.renderPopMeasureBar()}*/}
+        {/*{this.renderChangeLayerBtn()}*/}
         {this.renderToolBar()}
-        {this.renderSetting()}
-        <Dialog
-          ref={ref => (this.removeObjectDialog = ref)}
-          type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否要删除该对象吗？'}
-          confirmAction={this.removeObject}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
-        />
-        <Dialog
-          ref={ref => (this.openDialog = ref)}
-          type={Dialog.Type.MODAL}
-          title={'提示'}
-          info={'是否保存当前空间'}
-          confirmAction={() => {
-            this.saveMap(() => {
-              this.setState({ showMapMenu: true }, function() {
-                this.openDialog.setDialogVisible(false)
-              })
-            })
-          }}
-          cancelAction={() => {
-            this.setState({ showMapMenu: true }, function() {
-              this.openDialog.setDialogVisible(false)
-            })
-          }}
-          confirmBtnTitle={'是'}
-          cancelBtnTitle={'否'}
-        />
-        <SaveDialog
-          ref={ref => (this.saveDialog = ref)}
-          confirmAction={this.saveMapAndWorkspace}
-          showWsName={this.showDialogCaption}
-          mapName={this.state.mapName}
-          wsName={this.state.wsName}
-          path={this.savepath}
-        />
-        <AlertDialog
-          ref={ref => (this.AlertDialog = ref)}
-          childrens={this.closeInfo}
-          Alerttitle={'关闭当前任务?'}
-        />
+        {/*{this.renderSetting()}*/}
+        {/*<Dialog*/}
+        {/*ref={ref => (this.removeObjectDialog = ref)}*/}
+        {/*type={Dialog.Type.MODAL}*/}
+        {/*title={'提示'}*/}
+        {/*info={'是否要删除该对象吗？'}*/}
+        {/*confirmAction={this.removeObject}*/}
+        {/*confirmBtnTitle={'是'}*/}
+        {/*cancelBtnTitle={'否'}*/}
+        {/*/>*/}
+        {/*<Dialog*/}
+        {/*ref={ref => (this.openDialog = ref)}*/}
+        {/*type={Dialog.Type.MODAL}*/}
+        {/*title={'提示'}*/}
+        {/*info={'是否保存当前空间'}*/}
+        {/*confirmAction={() => {*/}
+        {/*this.saveMap(() => {*/}
+        {/*this.setState({ showMapMenu: true }, function() {*/}
+        {/*this.openDialog.setDialogVisible(false)*/}
+        {/*})*/}
+        {/*})*/}
+        {/*}}*/}
+        {/*cancelAction={() => {*/}
+        {/*this.setState({ showMapMenu: true }, function() {*/}
+        {/*this.openDialog.setDialogVisible(false)*/}
+        {/*})*/}
+        {/*}}*/}
+        {/*confirmBtnTitle={'是'}*/}
+        {/*cancelBtnTitle={'否'}*/}
+        {/*/>*/}
+        {/*<SaveDialog*/}
+        {/*ref={ref => (this.saveDialog = ref)}*/}
+        {/*confirmAction={this.saveMapAndWorkspace}*/}
+        {/*showWsName={this.showDialogCaption}*/}
+        {/*mapName={this.state.mapName}*/}
+        {/*wsName={this.state.wsName}*/}
+        {/*path={this.savepath}*/}
+        {/*/>*/}
+        {/*<AlertDialog*/}
+        {/*ref={ref => (this.AlertDialog = ref)}*/}
+        {/*childrens={this.closeInfo}*/}
+        {/*Alerttitle={'关闭当前任务?'}*/}
+        {/*/>*/}
       </Container>
     )
   }

@@ -3,9 +3,9 @@ import { View } from 'react-native'
 
 import { BtnbarLoad, ExampleMapList, OffLineList } from './components'
 import { UsualTitle, Container } from '../../components'
-import { ConstOnline } from '../../constains'
+import { ConstOnline } from '../../constants'
 import NavigationService from '../NavigationService'
-import { Point2D ,Action} from 'imobile_for_reactnative'
+import { Point2D, Action } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class MapLoad extends Component {
@@ -67,8 +67,9 @@ export default class MapLoad extends Component {
   }
 
   goToMapView = type => {
-    (async function () {
-      let key = '', exist = false
+    (async function() {
+      let key = '',
+        exist = false
       let routes = this.props.nav.routes
 
       if (routes && routes.length > 0) {
@@ -87,20 +88,18 @@ export default class MapLoad extends Component {
         const point2dModule = new Point2D()
 
         await this.map.setScale(0.0001)
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            let lat = position.coords.latitude
-            let lon = position.coords.longitude
-            ;(async () => {
-              let centerPoint = await point2dModule.createObj(lon, lat)
-              await this.map.setCenter(centerPoint)
-              await this.map.viewEntire()
-              await this.mapControl.setAction(Action.PAN)
-              await this.map.refresh()
-              key && NavigationService.goBack(key)
-            }).bind(this)()
-          }
-        )
+        navigator.geolocation.getCurrentPosition(position => {
+          let lat = position.coords.latitude
+          let lon = position.coords.longitude
+          ;(async () => {
+            let centerPoint = await point2dModule.createObj(lon, lat)
+            await this.map.setCenter(centerPoint)
+            await this.map.viewEntire()
+            await this.mapControl.setAction(Action.PAN)
+            await this.map.refresh()
+            key && NavigationService.goBack(key)
+          }).bind(this)()
+        })
         let DSParams = ConstOnline[type].DSParams
         let labelDSParams = ConstOnline[type].labelDSParams
         let layerIndex = ConstOnline[type].layerIndex
@@ -117,34 +116,39 @@ export default class MapLoad extends Component {
       } else {
         NavigationService.navigate('MapView', ConstOnline[type])
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
           title: '打开数据',
           navigation: this.props.navigation,
-          headerRight: [
-          ],
-        }}>
+          headerRight: [],
+        }}
+      >
         <View style={styles.linlist}>
-          <UsualTitle title='本地地图' />
-          <OffLineList Workspace={this.workspace} map={this.map} mapControl={this.mapControl} />
+          <UsualTitle title="本地地图" />
+          <OffLineList
+            Workspace={this.workspace}
+            map={this.map}
+            mapControl={this.mapControl}
+          />
         </View>
         <View style={styles.btnTabContainer}>
-          <UsualTitle title='在线地图' />
+          <UsualTitle title="在线地图" />
           <BtnbarLoad
             TD={this.TD}
             Baidu={this.Baidu}
             OSM={this.OSM}
-            Google={this.Google} />
+            Google={this.Google}
+          />
         </View>
         <View style={styles.examplemaplist}>
-          <UsualTitle title='示例地图' titleStyle={styles.examplemaplist} />
+          <UsualTitle title="示例地图" titleStyle={styles.examplemaplist} />
           <ExampleMapList />
         </View>
       </Container>

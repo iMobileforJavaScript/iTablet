@@ -9,7 +9,7 @@ import { setUser } from './src/models/user'
 import ConfigStore from './src/store'
 import { Loading, PanAudioButton, AudioDialog } from './src/components'
 import { scaleSize, AudioAnalyst, Toast } from './src/utils'
-import { ConstPath } from './src/constains'
+import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 
 import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_reactnative'

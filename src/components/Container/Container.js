@@ -11,7 +11,6 @@ import Loading from './Loading'
 import styles from './styles'
 
 export default class Container extends PureComponent {
-
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
@@ -43,19 +42,35 @@ export default class Container extends PureComponent {
   }
 
   render() {
-    const { style, children, header, withoutHeader, headerProps, navigation, initWithLoading, dialogInfo, scrollable } = this.props
+    const {
+      style,
+      children,
+      header,
+      withoutHeader,
+      headerProps,
+      navigation,
+      initWithLoading,
+      dialogInfo,
+      scrollable,
+    } = this.props
 
-    let SubContainer = scrollable ? ScrollView : View
+    let ContainerView = scrollable ? ScrollView : View
     return (
-      <View style={styles.container}>
-        {withoutHeader ? <View style={styles.iOSPadding} /> : (
-          header ? header : <Header navigation={navigation} {...headerProps} />
+      <ContainerView style={[styles.container, style]}>
+        {withoutHeader ? (
+          <View style={styles.iOSPadding} />
+        ) : header ? (
+          header
+        ) : (
+          <Header navigation={navigation} {...headerProps} />
         )}
-        <SubContainer style={[styles.container, style]}>
-          {children}
-          <Loading ref={ref => this.loading = ref} info={dialogInfo} initLoading={initWithLoading} />
-        </SubContainer>
-      </View>
+        {children}
+        <Loading
+          ref={ref => (this.loading = ref)}
+          info={dialogInfo}
+          initLoading={initWithLoading}
+        />
+      </ContainerView>
     )
   }
 }

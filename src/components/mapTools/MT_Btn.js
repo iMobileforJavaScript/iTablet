@@ -5,7 +5,14 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, Image, TouchableOpacity, Text, View } from 'react-native'
+import {
+  StyleSheet,
+  Image,
+  // TouchableOpacity,
+  TouchableHighlight,
+  Text,
+  View,
+} from 'react-native'
 import { constUtil, scaleSize } from '../../utils'
 import { size } from '../../styles'
 
@@ -29,6 +36,7 @@ export default class MT_Btn extends React.Component {
     selected?: boolean,
     selectMode?: string,
     activeOpacity?: number,
+    separator?: number,
   }
 
   static defaultProps = {
@@ -45,19 +53,19 @@ export default class MT_Btn extends React.Component {
     }
   }
 
-  action = () => {
+  action = e => {
     if (this.props.selectMode === 'flash') return
-    this.props.onPress && this.props.onPress()
+    this.props.onPress && this.props.onPress(e)
   }
 
-  _onPressOut = () => {
+  _onPressOut = e => {
     if (this.props.selectMode === 'normal') return
     this.setState(
       {
         selected: false,
       },
       () => {
-        this.props.onPress && this.props.onPress()
+        this.props.onPress && this.props.onPress(e)
       },
     )
   }
@@ -101,7 +109,7 @@ export default class MT_Btn extends React.Component {
     }
 
     return (
-      <TouchableOpacity
+      <TouchableHighlight
         ref={ref => (this.mtBtn = ref)}
         accessible={true}
         activeOpacity={this.props.activeOpacity}
@@ -113,8 +121,8 @@ export default class MT_Btn extends React.Component {
         }
         onPress={this.action}
         underlayColor={BTN_UNDERCOLOR}
-        onPressOut={() => this._onPressOut()}
-        onPressIn={() => this._onPressIn()}
+        onPressOut={this._onPressOut}
+        onPressIn={this._onPressIn}
       >
         <View>
           {image && (
@@ -130,13 +138,14 @@ export default class MT_Btn extends React.Component {
                 textStyle,
                 this.props.textStyle,
                 { color: this.props.textColor },
+                { marginTop: this.props.separator },
               ]}
             >
               {this.props.title}
             </Text>
           )}
         </View>
-      </TouchableOpacity>
+      </TouchableHighlight>
     )
   }
 }
@@ -183,20 +192,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
-    marginTop: scaleSize(5),
+    // marginTop: scaleSize(5),
   },
   normalText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
-    marginTop: scaleSize(5),
+    // marginTop: scaleSize(5),
   },
   smallText: {
     fontSize: size.fontSize.fontSizeXs,
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
-    marginTop: scaleSize(5),
+    // marginTop: scaleSize(5),
   },
 })

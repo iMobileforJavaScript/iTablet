@@ -5,6 +5,9 @@ import {
   Action,
   GPSElementType,
   CursorType,
+  SCollector,
+  GeoStyle,
+  SMCollectorType,
 } from 'imobile_for_reactnative'
 import NavigationService from '../../../NavigationService'
 import ToolbarList from '../ToolbarList'
@@ -51,7 +54,6 @@ export default class CollectionToolbar extends React.Component {
       type: props.type || POINT,
     }
     this.cbData = {}
-    this.collector = null
     this.map = null
     this.startedLoc = false // 是否开启gps定位采集
     this.point2D = {}
@@ -59,12 +61,12 @@ export default class CollectionToolbar extends React.Component {
   }
 
   componentDidMount() {
-    this.createCollector()
+    setTimeout(this.createCollector, 2000)
   }
 
   // componentWillUnmount() {
   //   (async function () {
-  //     await this.collector.removeListener()
+  //     await SCollector.removeListener()
   //   }).bind(this)()
   // }
 
@@ -93,19 +95,22 @@ export default class CollectionToolbar extends React.Component {
   createCollector = () => {
     (async function() {
       // if (!this.props.editLayer || !this.props.editLayer.id) return
-      // this.collector = await this.props.mapControl.getCollector()
+      // SCollector = await this.props.mapControl.getCollector()
       // let dataset = await this.props.editLayer.layer.getDataset()
-      // await this.collector.setDataset(dataset)
-      // await this.collector.openGPS()
-      //风格
-      // let geoStyle = new GeoStyle({ a: 1, b: 2 })
-      // await geoStyle.setPointColor(0, 255, 0)
-      // //线颜色
-      // await geoStyle.setLineColor(0, 110, 220)
-      // //面颜色
-      // await geoStyle.setFillForeColor(255, 0, 0)
-      // //设置绘制风格
-      // await this.collector.setStyle(geoStyle)
+      // await SCollector.setDataset(dataset)
+      // await SCollector.openGPS()
+      // 风格
+      let geoStyle = new GeoStyle()
+      geoStyle.setPointColor(0, 255, 0)
+      //线颜色
+      geoStyle.setLineColor(0, 110, 220)
+      //面颜色
+      geoStyle.setFillForeColor(255, 0, 0)
+      //设置绘制风格
+      SCollector.setStyle(geoStyle)
+      //
+      // let style = await SCollector.getStyle()
+      SCollector.setDataset()
     }.bind(this)())
   }
 
@@ -117,8 +122,8 @@ export default class CollectionToolbar extends React.Component {
     ) {
       (async function() {
         // TODO 使用 event.x, event.y 来添加点，point2D有时不准确，待修复
-        // let result = await this.collector.addGPSPoint(this.props.map, event.point2D)
-        let result = await this.collector.addGPSPoint(
+        // let result = await SCollector.addGPSPoint(this.props.map, event.point2D)
+        let result = await SCollector.addGPSPoint(
           this.props.map,
           event.x,
           event.y,
@@ -143,8 +148,8 @@ export default class CollectionToolbar extends React.Component {
   openLocation = async () => {
     try {
       this.startedLoc = true
-      this.startedLoc = await this.collector.openGPS()
-      await this.collector.setCollectionChangedListener({
+      this.startedLoc = await SCollector.openGPS()
+      await SCollector.setCollectionChangedListener({
         collectionChanged: this._collectionChanged,
         onSensorChanged: this._onSensorChanged,
       })
@@ -156,59 +161,60 @@ export default class CollectionToolbar extends React.Component {
   closeLocation = async () => {
     try {
       this.startedLoc = false
-      await this.collector.setSingleTapEnable(false)
-      await this.collector.closeGPS()
+      await SCollector.setSingleTapEnable(false)
+      await SCollector.closeGPS()
     } catch (e) {
       Toast.show('关闭定位失败')
     }
   }
 
   /** 采集 开始/结束 **/
-  _collect = (type, callback) => {
+  _collect = () => {
     (async function() {
       try {
-        this.operationCallback = callback
-        // if (callback && callback()) {
-        switch (type) {
-          case constants.POINT_HAND:
-            await this.collector.createElement(GPSElementType.POINT)
-            await this.collector.setSingleTapEnable(true)
-            break
-          case constants.LINE_HAND_POINT:
-            await this.collector.createElement(GPSElementType.LINE)
-            await this.collector.setSingleTapEnable(true)
-            break
-          case constants.REGION_HAND_POINT:
-            await this.collector.createElement(GPSElementType.POLYGON)
-            await this.collector.setSingleTapEnable(true)
-            break
-          case constants.LINE_HAND_PATH:
-            await this.props.mapControl.setAction(Action.FREEDRAW)
-            break
-          case constants.REGION_HAND_PATH:
-            await this.props.mapControl.setAction(Action.DRAWPLOYGON)
-            break
-          case constants.POINT_GPS:
-            await this.collector.createElement(GPSElementType.POINT)
-            await this.collector.setSingleTapEnable(false)
-            await this.openLocation()
-            break
-          case constants.LINE_GPS_PATH:
-          case constants.LINE_GPS_POINT:
-            await this.collector.createElement(GPSElementType.LINE)
-            await this.collector.setSingleTapEnable(false)
-            await this.openLocation()
-            break
-          case constants.REGION_GPS_PATH:
-          case constants.REGION_GPS_POINT:
-            await this.collector.createElement(GPSElementType.POLYGON)
-            await this.collector.setSingleTapEnable(false)
-            await this.openLocation()
-            break
-          default:
-            this.toDoAction()
-            break
-        }
+        await SCollector.startCollect(SMCollectorType.POINT_HAND)
+        // this.operationCallback = callback
+        // // if (callback && callback()) {
+        // switch (type) {
+        //   case constants.POINT_HAND:
+        //     await SCollector.createElement(GPSElementType.POINT)
+        //     await SCollector.setSingleTapEnable(true)
+        //     break
+        //   case constants.LINE_HAND_POINT:
+        //     await SCollector.createElement(GPSElementType.LINE)
+        //     await SCollector.setSingleTapEnable(true)
+        //     break
+        //   case constants.REGION_HAND_POINT:
+        //     await SCollector.createElement(GPSElementType.POLYGON)
+        //     await SCollector.setSingleTapEnable(true)
+        //     break
+        //   case constants.LINE_HAND_PATH:
+        //     await this.props.mapControl.setAction(Action.FREEDRAW)
+        //     break
+        //   case constants.REGION_HAND_PATH:
+        //     await this.props.mapControl.setAction(Action.DRAWPLOYGON)
+        //     break
+        //   case constants.POINT_GPS:
+        //     await SCollector.createElement(GPSElementType.POINT)
+        //     await SCollector.setSingleTapEnable(false)
+        //     await this.openLocation()
+        //     break
+        //   case constants.LINE_GPS_PATH:
+        //   case constants.LINE_GPS_POINT:
+        //     await SCollector.createElement(GPSElementType.LINE)
+        //     await SCollector.setSingleTapEnable(false)
+        //     await this.openLocation()
+        //     break
+        //   case constants.REGION_GPS_PATH:
+        //   case constants.REGION_GPS_POINT:
+        //     await SCollector.createElement(GPSElementType.POLYGON)
+        //     await SCollector.setSingleTapEnable(false)
+        //     await this.openLocation()
+        //     break
+        //   default:
+        //     this.toDoAction()
+        //     break
+        // }
         // } else {
         //   this._cancel(type)
         // }
@@ -220,10 +226,10 @@ export default class CollectionToolbar extends React.Component {
 
   /** 添加点 **/
   _addPoint = async () => {
-    let point = await this.collector.getGPSPoint()
+    let point = await SCollector.getGPSPoint()
     // let x = await point.getX()
     // let y = await point.getY()
-    let result = await this.collector.addGPSPoint(this.props.map, point)
+    let result = await SCollector.addGPSPoint(this.props.map, point)
     if (!result) {
       Toast.show('定位失败')
     }
@@ -257,7 +263,7 @@ export default class CollectionToolbar extends React.Component {
             }
             break
           default:
-            this.collector && (await this.collector.undo())
+            SCollector && (await SCollector.undo())
             break
         }
         // await this.props.editLayer.layer.setEditable(true)
@@ -279,7 +285,7 @@ export default class CollectionToolbar extends React.Component {
             }
             break
           default:
-            this.collector && (await this.collector.redo())
+            SCollector && (await SCollector.redo())
             break
         }
         // await this.props.editLayer.layer.setEditable(true)
@@ -310,16 +316,16 @@ export default class CollectionToolbar extends React.Component {
         // }
         switch (type) {
           case constants.POINT_HAND:
-            await this.collector.createElement(GPSElementType.POINT)
-            await this.collector.setSingleTapEnable(false)
+            await SCollector.createElement(GPSElementType.POINT)
+            await SCollector.setSingleTapEnable(false)
             break
           case constants.LINE_HAND_POINT:
-            await this.collector.createElement(GPSElementType.LINE)
-            await this.collector.setSingleTapEnable(false)
+            await SCollector.createElement(GPSElementType.LINE)
+            await SCollector.setSingleTapEnable(false)
             break
           case constants.REGION_HAND_POINT:
-            await this.collector.createElement(GPSElementType.POLYGON)
-            await this.collector.setSingleTapEnable(false)
+            await SCollector.createElement(GPSElementType.POLYGON)
+            await SCollector.setSingleTapEnable(false)
             break
           case constants.LINE_HAND_PATH:
           case constants.REGION_HAND_PATH:
@@ -328,20 +334,20 @@ export default class CollectionToolbar extends React.Component {
             }
             break
           case constants.POINT_GPS:
-            await this.collector.createElement(GPSElementType.POINT)
-            await this.collector.setSingleTapEnable(false)
+            await SCollector.createElement(GPSElementType.POINT)
+            await SCollector.setSingleTapEnable(false)
             await this.closeLocation()
             break
           case constants.LINE_GPS_PATH:
           case constants.LINE_GPS_POINT:
-            await this.collector.createElement(GPSElementType.LINE)
-            await this.collector.setSingleTapEnable(false)
+            await SCollector.createElement(GPSElementType.LINE)
+            await SCollector.setSingleTapEnable(false)
             await this.closeLocation()
             break
           case constants.REGION_GPS_PATH:
           case constants.REGION_GPS_POINT:
-            await this.collector.createElement(GPSElementType.POLYGON)
-            await this.collector.setSingleTapEnable(false)
+            await SCollector.createElement(GPSElementType.POLYGON)
+            await SCollector.setSingleTapEnable(false)
             await this.closeLocation()
             break
           default:
@@ -370,16 +376,16 @@ export default class CollectionToolbar extends React.Component {
             break
           case constants.REGION_HAND_POINT:
           case constants.LINE_HAND_POINT:
-            if (this.collector) {
-              result = await this.collector.submit()
+            if (SCollector) {
+              result = await SCollector.submit()
             }
             break
           default:
-            if (this.collector) {
-              result = await this.collector.submit()
+            if (SCollector) {
+              result = await SCollector.submit()
             }
             await this.closeLocation()
-            // await this.collector.closeGPS()
+            // await SCollector.closeGPS()
             break
         }
         callback && callback(true)

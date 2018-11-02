@@ -5,7 +5,7 @@
  */
 import React, { PureComponent } from 'react'
 import { AudioAnalyst } from '../../utils'
-import { ConstPath } from '../../constains'
+import { ConstPath } from '../../constants'
 import AudioTopDialog from './AudioTopDialog'
 import AudioCenterDialog from './AudioCenterDialog'
 import AudioBottomDialog from './AudioBottomDialog'

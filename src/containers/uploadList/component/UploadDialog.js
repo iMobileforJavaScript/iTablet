@@ -1,13 +1,12 @@
 import React, { PureComponent } from 'react'
-import { View, Text, TextInput, StyleSheet, Platform} from 'react-native'
+import { View, Text, TextInput, StyleSheet, Platform } from 'react-native'
 import { Dialog } from '../../../components'
-import { scaleSize,Toast } from '../../../utils'
+import { scaleSize, Toast } from '../../../utils'
 import { color, size } from '../../../styles'
 import { Utility, OnlineService } from 'imobile_for_reactnative'
-import { ConstPath } from '../../../constains'
+import { ConstPath } from '../../../constants'
 import NavigationService from '../../NavigationService'
 export default class UploadDialog extends PureComponent {
-
   props: {
     confirmAction: any,
     data: any,
@@ -45,30 +44,36 @@ export default class UploadDialog extends PureComponent {
     return zipList
   }
 
-  uploading=async progress=>{
+  uploading = async progress => {
     if (Platform.OS === 'android') {
-      progress===100 && this.onComplete()
+      progress === 100 && this.onComplete()
     }
   }
-  onComplete(){
+  onComplete() {
     Utility.deleteFile(this.zipPath)
-    Toast.show("上传成功")
+    Toast.show('上传成功')
     NavigationService.goBack()
   }
   upLoad = async () => {
     try {
-      if (this.state.dataName !== "") {
-        let toPath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath) + this.state.dataName + ".zip"
-        this.zipPath=toPath
+      if (this.state.dataName !== '') {
+        let toPath =
+          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+          this.state.dataName +
+          '.zip'
+        this.zipPath = toPath
         let zipList = await this.getZipList()
-        await Toast.show("文件压缩中")
+        await Toast.show('文件压缩中')
         let result = await Utility.zipFiles(zipList, toPath)
         if (result) {
           this.dialog.setDialogVisible(false)
-          Toast.show("文件上传中......")
+          Toast.show('文件上传中......')
           this.OnlineService = new OnlineService()
-          let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
-          if(result){
+          let result = await this.OnlineService.login(
+            'jiushuaizhao1995@163.com',
+            'z549451547',
+          )
+          if (result) {
             await this.OnlineService.upload(toPath, this.state.dataName, {
               onProgress: this.uploading,
               onComplete: this.onComplete,
@@ -77,21 +82,21 @@ export default class UploadDialog extends PureComponent {
           }
         } else {
           this.dialog.setDialogVisible(false)
-          Toast.show("文件压缩失败")
+          Toast.show('文件压缩失败')
         }
       } else {
-        Toast.show("请输入数据名称")
+        Toast.show('请输入数据名称')
       }
     } catch (error) {
       this.dialog.setDialogVisible(false)
-      Toast.show("上传失败")
+      Toast.show('上传失败')
     }
   }
 
   render() {
     return (
       <Dialog
-        ref={ref => this.dialog = ref}
+        ref={ref => (this.dialog = ref)}
         style={{ marginVertical: 15 }}
         confirmAction={this.upLoad}
         cancelAction={this.cancel}
@@ -110,7 +115,8 @@ export default class UploadDialog extends PureComponent {
             }}
             value={this.state.dataName}
             placeholder={'请输入数据名称'}
-            style={styles.textInputStyle} />
+            style={styles.textInputStyle}
+          />
         </View>
       </Dialog>
     )

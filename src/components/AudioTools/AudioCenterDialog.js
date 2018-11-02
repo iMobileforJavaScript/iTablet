@@ -4,10 +4,17 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image   } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from 'react-native'
 import { scaleSize } from '../../utils'
 import { size } from '../../styles'
-import { ConstPath } from '../../constains'
+import { ConstPath } from '../../constants'
 
 const styles = StyleSheet.create({
   container: {
@@ -18,8 +25,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   overlay: {
     flex: 1,
@@ -35,7 +42,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'column',
     elevation: 20,
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 5,
@@ -81,7 +88,6 @@ const styles = StyleSheet.create({
 })
 
 export default class AudioCenterDialog extends PureComponent {
-
   props: {
     startRecording: () => {},
     stopRecording: () => {},
@@ -114,7 +120,10 @@ export default class AudioCenterDialog extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.content !== this.props.content || prevProps.recording !== this.props.recording) {
+    if (
+      prevProps.content !== this.props.content ||
+      prevProps.recording !== this.props.recording
+    ) {
       this.setState({
         content: this.props.content,
         recording: this.props.recording,
@@ -137,7 +146,9 @@ export default class AudioCenterDialog extends PureComponent {
   }
 
   renderAudioBtn = () => {
-    let image = this.state.recording ? require('../../assets/public/icon-recording.png') : require('../../assets/public/icon-audio.png')
+    let image = this.state.recording
+      ? require('../../assets/public/icon-recording.png')
+      : require('../../assets/public/icon-audio.png')
     return (
       <TouchableOpacity
         activeOpacity={this.props.activeOpacity}
@@ -177,9 +188,13 @@ export default class AudioCenterDialog extends PureComponent {
     if (!this.state.visible) return null
     return (
       <View style={styles.container}>
-        <TouchableOpacity activeOpacity={1} style={styles.overlay} onPress={() => {
-          this.setVisible(false)
-        }}/>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.overlay}
+          onPress={() => {
+            this.setVisible(false)
+          }}
+        />
         <View style={styles.dialogStyle}>
           {this.renderCloseBtn()}
           <ScrollView style={styles.contentView}>

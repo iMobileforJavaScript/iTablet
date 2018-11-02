@@ -9,14 +9,20 @@ import {
   Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { WorkspaceConnectionInfo, EngineType, Action, Utility, WorkspaceType,Workspace } from 'imobile_for_reactnative'
+import {
+  WorkspaceConnectionInfo,
+  EngineType,
+  Action,
+  Utility,
+  WorkspaceType,
+  Workspace,
+} from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../utils'
-import { ConstPath } from '../../constains'
+import { ConstPath } from '../../constants'
 import NavigationService from '../NavigationService'
 import { color } from '../../styles'
 
 export default class WorkSpaceFileList extends Component {
-
   props: {
     title: string,
     navigation: Object,
@@ -46,23 +52,28 @@ export default class WorkSpaceFileList extends Component {
   }
 
   componentDidMount() {
-    (async function () {
+    (async function() {
       try {
         this.container.setLoading(true)
-        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.LocalDataPath)
+        let exist = await Utility.fileIsExistInHomeDirectory(
+          ConstPath.LocalDataPath,
+        )
         if (!exist) {
-          this.setState({
-            showData: true,
-          }, () => {
-            this.container.setLoading(false)
-          })
+          this.setState(
+            {
+              showData: true,
+            },
+            () => {
+              this.container.setLoading(false)
+            },
+          )
         } else {
-          this.getFileList({path: this.path})
+          this.getFileList({ path: this.path })
         }
       } catch (e) {
         this.container.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   clearData = () => {
@@ -78,15 +89,17 @@ export default class WorkSpaceFileList extends Component {
   }
 
   getFileList = item => {
-    (async function () {
+    (async function() {
       try {
         let absolutePath = await Utility.appendingHomeDirectory(item.path)
         let isDirectory = await Utility.isDirectory(absolutePath)
         if (!isDirectory) {
-          let filename = item.path.substr(item.path.lastIndexOf('.')).toLowerCase()
-          if (filename === '.sxwu' ) {
+          let filename = item.path
+            .substr(item.path.lastIndexOf('.'))
+            .toLowerCase()
+          if (filename === '.sxwu') {
             this._toLoadMapView(absolutePath, 'map3D')
-          } else if (filename === '.smwu' ) {
+          } else if (filename === '.smwu') {
             this._toLoadMapView(absolutePath, '')
           } else if (filename === '.udb') {
             this._toLoadMapView(absolutePath, EngineType.UDB)
@@ -94,7 +107,12 @@ export default class WorkSpaceFileList extends Component {
             this._offLine_More()
           }
         } else {
-          let filter = this.need === 'workspace' ? 'smwu,sxwu' : this.need === 'udb' ? 'udb' : ''
+          let filter =
+            this.need === 'workspace'
+              ? 'smwu,sxwu'
+              : this.need === 'udb'
+                ? 'udb'
+                : ''
           let fileList = await Utility.getPathListByFilter(absolutePath, {
             type: filter,
           })
@@ -109,11 +127,11 @@ export default class WorkSpaceFileList extends Component {
       } catch (e) {
         this.container.setLoading(true)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   _toLoadMapView = (path, type) => {
-    (async function () {
+    (async function() {
       if (this.workspace && this.need === 'workspace') {
         this.clearData()
         let key = ''
@@ -144,8 +162,11 @@ export default class WorkSpaceFileList extends Component {
         await this.mapControl.setAction(Action.PAN)
         await this.map.refresh()
         NavigationService.goBack(key)
-      }
-      else if(type==="map3D"&&this.workspace&&this.need === 'workspace'){
+      } else if (
+        type === 'map3D' &&
+        this.workspace &&
+        this.need === 'workspace'
+      ) {
         this.clearData()
         let key = ''
         let routes = this.props.nav.routes
@@ -155,24 +176,23 @@ export default class WorkSpaceFileList extends Component {
           }
         }
         let workspaceModule = new Workspace()
-        this.workspace = await workspaceModule.createObj()   //创建workspace实例
-        this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-        await this.scene.setWorkspace(this.workspace)        //设置工作空间
+        this.workspace = await workspaceModule.createObj() //创建workspace实例
+        this.scene = await GLOBAL.sceneControl.getScene() //获取场景对象
+        await this.scene.setWorkspace(this.workspace) //设置工作空间
         // let filePath = await Utility.appendingHomeDirectory(this.state.path)
-        let openWk = await this.workspace.open(path)     //打开工作空间
+        let openWk = await this.workspace.open(path) //打开工作空间
         if (!openWk) {
-          Toast.show(" 打开工作空间失败")
+          Toast.show(' 打开工作空间失败')
           return
         }
         this.mapName = await this.workspace.getSceneName(0) //获取场景名称
         this.setState({
           title: this.mapName,
         })
-        await this.scene.open(this.mapName)                     //根据名称打开指定场景
+        await this.scene.open(this.mapName) //根据名称打开指定场景
         await this.scene.refresh()
-        NavigationService.goBack(key)                           //刷新场景
-      }
-      else if (this.workspace && this.need === 'udb') {
+        NavigationService.goBack(key) //刷新场景
+      } else if (this.workspace && this.need === 'udb') {
         this.clearData()
         await this.map.close()
         await this.workspace.closeAllDatasource()
@@ -211,12 +231,19 @@ export default class WorkSpaceFileList extends Component {
         await this.map.refresh()
         key && NavigationService.goBack(key)
       } else {
-        if(type==="map3D"){
+        if (type === 'map3D') {
           NavigationService.navigate('Map3D', { path: path, isExample: true })
         }
-        NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
+        NavigationService.navigate('MapView', {
+          path: path,
+          type: type,
+          DSParams: type === EngineType.UDB && {
+            server: path,
+            engineType: EngineType.UDB,
+          },
+        })
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   _refresh = async item => {
@@ -227,19 +254,30 @@ export default class WorkSpaceFileList extends Component {
     // let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
     // if (this.state.backPath !== ConstPath.AppPath) {
     // if (isRootPath) {
-    let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
-    await this.getFileList({path: backPath})
+    let backPath = this.state.backPath.substr(
+      0,
+      this.state.backPath.lastIndexOf(
+        '/',
+        this.state.backPath.lastIndexOf('/'),
+      ),
+    )
+    await this.getFileList({ path: backPath })
     // }
   }
 
   headerBack = () => {
-    let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
+    let isRootPath =
+      Platform.OS === 'android'
+        ? false
+        : this.state.backPath === ConstPath.AppPath
     if (this.state.backPath === '' || isRootPath) {
       return null
-    }
-    else {
+    } else {
       return (
-        <TouchableOpacity style={styles.headerBack} onPress={() => this._toBack()}>
+        <TouchableOpacity
+          style={styles.headerBack}
+          onPress={() => this._toBack()}
+        >
           <Text style={styles.back}>返回上一层目录</Text>
           <Text style={styles.back}>{this.state.backPath}</Text>
         </TouchableOpacity>
@@ -248,19 +286,27 @@ export default class WorkSpaceFileList extends Component {
   }
 
   renderItem = ({ item }) => {
-    let image = item.isDirectory ? require('../../assets/public/icon-files.png') : require('../../assets/public/icon-file.png')
+    let image = item.isDirectory
+      ? require('../../assets/public/icon-files.png')
+      : require('../../assets/public/icon-file.png')
     return (
-      <TouchableOpacity activeOpacity={0.8} onPress={() => this._refresh(item)} style={styles.row}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => this._refresh(item)}
+        style={styles.row}
+      >
         <View style={styles.imgView}>
           <Image source={image} style={styles.img} />
         </View>
-        <Text numberOfLines={1} style={styles.item}>{item.name}</Text>
+        <Text numberOfLines={1} style={styles.item}>
+          {item.name}
+        </Text>
       </TouchableOpacity>
     )
   }
 
   itemSeparator = () => {
-    return (<View style={styles.itemSeparator} />)
+    return <View style={styles.itemSeparator} />
   }
 
   _keyExtractor = item => {
@@ -271,25 +317,26 @@ export default class WorkSpaceFileList extends Component {
     return (
       <Container
         style={styles.container}
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
           title: this.title,
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         {this.headerBack()}
-        {
-          this.state.showData && (
-            this.state.data.length > 0
-              ? <FlatList
-                ItemSeparatorComponent={this.itemSeparator}
-                style={styles.container}
-                data={this.state.data}
-                renderItem={this.renderItem}
-                keyExtractor={this._keyExtractor}
-              />
-              : <EmptyView />)
-        }
+        {this.state.showData &&
+          (this.state.data.length > 0 ? (
+            <FlatList
+              ItemSeparatorComponent={this.itemSeparator}
+              style={styles.container}
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={this._keyExtractor}
+            />
+          ) : (
+            <EmptyView />
+          ))}
       </Container>
     )
   }

@@ -13,7 +13,7 @@ import {
   Camera,
 } from 'imobile_for_reactnative'
 import { Container } from '../../../../components'
-import { MTBtnList } from '../../componets'
+import { MapToolbar } from '../../componets'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 
@@ -229,7 +229,7 @@ export default class Map3D extends React.Component {
         }}
       >
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
-        <MTBtnList
+        <MapToolbar
           hidden={this.isExample}
           type={'MAP_3D'}
           POP_List={this._pop_list}

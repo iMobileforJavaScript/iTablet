@@ -4,9 +4,16 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+} from 'react-native'
 import { scaleSize } from '../../utils'
-import { ConstPath } from '../../constains'
+import { ConstPath } from '../../constants'
 import { color, size } from '../../styles'
 
 const styles = StyleSheet.create({
@@ -27,7 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     flexDirection: 'column',
     elevation: 20,
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     shadowColor: 'black',
     shadowOpacity: 1,
     shadowRadius: 5,
@@ -105,7 +112,6 @@ const styles = StyleSheet.create({
  * 语音框，需要提前初始化SpeechManager
  */
 export default class AudioDialog extends PureComponent {
-
   props: {
     startRecording: () => {},
     stopRecording: () => {},
@@ -155,7 +161,10 @@ export default class AudioDialog extends PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.recording) !== JSON.stringify(this.props.recording)) {
+    if (
+      JSON.stringify(prevProps.recording) !==
+      JSON.stringify(this.props.recording)
+    ) {
       this.setState({
         recording: this.props.recording,
       })
@@ -198,14 +207,18 @@ export default class AudioDialog extends PureComponent {
           style={[styles.confirmBtnStyle, this.props.btnStyle]}
           onPress={this.confirm}
         >
-          <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>{this.props.confirmBtnTitle}</Text>
+          <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
+            {this.props.confirmBtnTitle}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={this.props.activeOpacity}
           style={[styles.cancelBtnStyle, this.props.btnStyle]}
           onPress={this.cancel}
         >
-          <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>{this.props.cancelBtnTitle}</Text>
+          <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>
+            {this.props.cancelBtnTitle}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -230,7 +243,9 @@ export default class AudioDialog extends PureComponent {
   }
 
   renderAudioBtn = () => {
-    let image = this.state.recording ? require('../../assets/public/icon-recording2.png') : require('../../assets/public/icon-recording.png')
+    let image = this.state.recording
+      ? require('../../assets/public/icon-recording2.png')
+      : require('../../assets/public/icon-recording.png')
     return (
       <TouchableOpacity
         activeOpacity={this.props.activeOpacity}
@@ -251,13 +266,13 @@ export default class AudioDialog extends PureComponent {
   render() {
     if (!this.state.visible) return null
     return (
-      <View
-        style={[styles.container, this.props.backgroundStyle]}
-      >
+      <View style={[styles.container, this.props.backgroundStyle]}>
         <View style={[styles.dialogStyle, this.props.style]}>
           {this.renderCloseBtn()}
           <ScrollView style={styles.contentView}>
-            <Text style={[styles.content, this.props.textStyle]}>{this.state.content}</Text>
+            <Text style={[styles.content, this.props.textStyle]}>
+              {this.state.content}
+            </Text>
           </ScrollView>
           {this.renderAudioBtn()}
           {this.renderBtns()}
@@ -265,5 +280,4 @@ export default class AudioDialog extends PureComponent {
       </View>
     )
   }
-
 }

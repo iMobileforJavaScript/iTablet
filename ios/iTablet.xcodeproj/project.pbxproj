@@ -706,7 +706,7 @@
 		0AD86AE821142103003964B6 /* SampleCode */ = {
 			isa = PBXGroup;
 			children = (
-				D83ED3BA21704BBB00683BB3 /* VC */,
+				D83ED3BA21704BBB00683BB3 /* vectorCache */,
 				0A0A2017212FA22300BEBC1C /* DataVisualizationDemo */,
 				0A442232211444D50087C8FE /* tools */,
 				0AD8901D2114266E003964B6 /* SMSampleCodeBridgeModule.h */,
@@ -898,14 +898,14 @@
 			path = Tools;
 			sourceTree = "<group>";
 		};
-		D83ED3BA21704BBB00683BB3 /* VC */ = {
+		D83ED3BA21704BBB00683BB3 /* vectorCache */ = {
 			isa = PBXGroup;
 			children = (
 				D83ED3BB21704BDB00683BB3 /* VCMain.storyboard */,
 				D83ED3BC21704BDB00683BB3 /* VCViewController.h */,
 				D83ED3BD21704BDB00683BB3 /* VCViewController.m */,
 			);
-			path = VC;
+			path = vectorCache;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

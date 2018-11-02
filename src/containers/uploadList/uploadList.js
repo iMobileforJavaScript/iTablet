@@ -11,12 +11,11 @@ import {
 import { Container, EmptyView, TextBtn } from '../../components'
 import { Utility } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../utils'
-import { ConstPath } from '../../constains'
+import { ConstPath } from '../../constants'
 
 import { color } from '../../styles'
-import {Btnone,UploadDialog} from './component'
+import { Btnone, UploadDialog } from './component'
 export default class UpLoadList extends Component {
-
   props: {
     title: string,
     navigation: Object,
@@ -30,33 +29,37 @@ export default class UpLoadList extends Component {
       data: [],
       backPath: '',
       showData: false,
-      uploadlist:{},
+      uploadlist: {},
     }
   }
 
   componentDidMount() {
-    (async function () {
+    (async function() {
       try {
         this.container.setLoading(true)
-        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.LocalDataPath)
+        let exist = await Utility.fileIsExistInHomeDirectory(
+          ConstPath.LocalDataPath,
+        )
         if (!exist) {
-          this.setState({
-            showData: true,
-          }, () => {
-            this.container.setLoading(false)
-          })
+          this.setState(
+            {
+              showData: true,
+            },
+            () => {
+              this.container.setLoading(false)
+            },
+          )
         } else {
           this.getFileList({ path: this.path })
         }
       } catch (e) {
         this.container.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
-
   getFileList = item => {
-    (async function () {
+    (async function() {
       try {
         let absolutePath = await Utility.appendingHomeDirectory(item.path)
         let isDirectory = await Utility.isDirectory(absolutePath)
@@ -77,37 +80,50 @@ export default class UpLoadList extends Component {
       } catch (e) {
         this.container.setLoading(true)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
-  refeshUpLoadList=async item=>{
-    let datalist=this.state.uploadlist
-    if(datalist[item.name]){
-      delete(datalist[item.name])
-    }else{
-      datalist[item.name]=item.path
+  refeshUpLoadList = async item => {
+    let datalist = this.state.uploadlist
+    if (datalist[item.name]) {
+      delete datalist[item.name]
+    } else {
+      datalist[item.name] = item.path
     }
     this.setState({
       uploadlist: datalist,
     })
   }
 
-  addupload=async()=>{
-    JSON.stringify(this.state.uploadlist)!=="{}"? this.uploadDialog.setDialogVisible(true): Toast.show("请选择要上传的文件")
+  addupload = async () => {
+    JSON.stringify(this.state.uploadlist) !== '{}'
+      ? this.uploadDialog.setDialogVisible(true)
+      : Toast.show('请选择要上传的文件')
   }
   _toBack = async () => {
-    let backPath = this.state.backPath.substr(0, this.state.backPath.lastIndexOf("/", this.state.backPath.lastIndexOf('/')))
+    let backPath = this.state.backPath.substr(
+      0,
+      this.state.backPath.lastIndexOf(
+        '/',
+        this.state.backPath.lastIndexOf('/'),
+      ),
+    )
     await this.getFileList({ path: backPath })
   }
 
   headerBack = () => {
-    let isRootPath = Platform.OS === 'android' ? false : this.state.backPath === ConstPath.AppPath
+    let isRootPath =
+      Platform.OS === 'android'
+        ? false
+        : this.state.backPath === ConstPath.AppPath
     if (this.state.backPath === '' || isRootPath) {
       return null
-    }
-    else {
+    } else {
       return (
-        <TouchableOpacity style={styles.headerBack} onPress={() => this._toBack()}>
+        <TouchableOpacity
+          style={styles.headerBack}
+          onPress={() => this._toBack()}
+        >
           <Text style={styles.back}>返回上一层目录</Text>
           <Text style={styles.back}>{this.state.backPath}</Text>
         </TouchableOpacity>
@@ -116,22 +132,30 @@ export default class UpLoadList extends Component {
   }
 
   renderItem = ({ item }) => {
-    let image = item.isDirectory ? require('../../assets/public/icon-files.png') : require('../../assets/public/icon-file.png')
+    let image = item.isDirectory
+      ? require('../../assets/public/icon-files.png')
+      : require('../../assets/public/icon-file.png')
     return (
       <View style={styles.row}>
-        <TouchableOpacity activeOpacity={0.8} onPress={() => this.getFileList(item)} style={styles.btn}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          onPress={() => this.getFileList(item)}
+          style={styles.btn}
+        >
           <View style={styles.imgView}>
             <Image source={image} style={styles.img} />
           </View>
-          <Text numberOfLines={1} style={styles.item}>{item.name}</Text>
+          <Text numberOfLines={1} style={styles.item}>
+            {item.name}
+          </Text>
         </TouchableOpacity>
-        <Btnone style={styles.select} cb={()=>this.refeshUpLoadList(item)}/>
+        <Btnone style={styles.select} cb={() => this.refeshUpLoadList(item)} />
       </View>
     )
   }
 
   itemSeparator = () => {
-    return (<View style={styles.itemSeparator} />)
+    return <View style={styles.itemSeparator} />
   }
 
   _keyExtractor = item => {
@@ -142,30 +166,37 @@ export default class UpLoadList extends Component {
     return (
       <Container
         style={styles.container}
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
-          title: "上传文件",
+          title: '上传文件',
           navigation: this.props.navigation,
-          headerRight: <TextBtn btnText="添加" textStyle={styles.headerBtnTitle} btnClick={this.addupload} />,
-        }}>
+          headerRight: (
+            <TextBtn
+              btnText="添加"
+              textStyle={styles.headerBtnTitle}
+              btnClick={this.addupload}
+            />
+          ),
+        }}
+      >
         {this.headerBack()}
-        {
-          this.state.showData && (
-            this.state.data.length > 0
-              ? <FlatList
-                ItemSeparatorComponent={this.itemSeparator}
-                style={styles.container}
-                data={this.state.data}
-                renderItem={this.renderItem}
-                keyExtractor={this._keyExtractor}
-              />
-              : <EmptyView />)
-        }
+        {this.state.showData &&
+          (this.state.data.length > 0 ? (
+            <FlatList
+              ItemSeparatorComponent={this.itemSeparator}
+              style={styles.container}
+              data={this.state.data}
+              renderItem={this.renderItem}
+              keyExtractor={this._keyExtractor}
+            />
+          ) : (
+            <EmptyView />
+          ))}
         <UploadDialog
-          ref={ref=>this.uploadDialog=ref}
+          ref={ref => (this.uploadDialog = ref)}
           data={this.state.uploadlist}
-          confirmBtnTitle={"上传"}
+          confirmBtnTitle={'上传'}
         />
       </Container>
     )
@@ -196,7 +227,7 @@ const styles = StyleSheet.create({
     borderWidth: scaleSize(2),
     alignItems: 'center',
   },
-  btn:{
+  btn: {
     flex: 1,
     height: scaleSize(80),
     flexDirection: 'row',

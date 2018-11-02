@@ -4,28 +4,32 @@ import NavigationService from '../../../NavigationService'
 import { Thumbnails, EmptyView } from '../../../../components'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
-import { Const } from '../../../../constains'
+import { Const } from '../../../../constants'
 // import MapView from '../../../mapView'
 
 export default class HomeUsualMap extends React.Component {
-
   props: {
     data: Object,
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
   }
 
   _btnClick = obj => {
     if (obj.type === Const.MAP_3D) {
-      NavigationService.navigate('Map3D', { data: obj, type: obj.type, path: obj.path, manageAble: true })
+      NavigationService.navigate('Map3D', {
+        data: obj,
+        type: obj.type,
+        path: obj.path,
+        manageAble: true,
+      })
     } else {
       NavigationService.navigate('MapView', obj)
     }
   }
 
-  _renderItem = ({item}) => {
+  _renderItem = ({ item }) => {
     let image
     if (item.image) {
       image = item.image
@@ -46,11 +50,12 @@ export default class HomeUsualMap extends React.Component {
         src={image}
         btnClick={() => {
           this._btnClick(item)
-        }}/>
+        }}
+      />
     )
   }
 
-  _keyExtractor = (item, index) => (index + '-' + item.name)
+  _keyExtractor = (item, index) => index + '-' + item.name
 
   render() {
     return (
@@ -58,18 +63,21 @@ export default class HomeUsualMap extends React.Component {
         <View style={styles.header}>
           <Text style={styles.headerTitile}>最近常用</Text>
         </View>
-        {
-          this.props.data && this.props.data.length > 0
-            ? <FlatList
-              style={styles.listView}
-              data={this.props.data}
-              renderItem={this._renderItem}
-              horizontal={true}
-              keyExtractor={this._keyExtractor}
-              showsHorizontalScrollIndicator={false}
-            />
-            : <EmptyView style={{backgroundColor: 'transparent'}} title={'您最近还未使用过地图'} />
-        }
+        {this.props.data && this.props.data.length > 0 ? (
+          <FlatList
+            style={styles.listView}
+            data={this.props.data}
+            renderItem={this._renderItem}
+            horizontal={true}
+            keyExtractor={this._keyExtractor}
+            showsHorizontalScrollIndicator={false}
+          />
+        ) : (
+          <EmptyView
+            style={{ backgroundColor: 'transparent' }}
+            title={'您最近还未使用过地图'}
+          />
+        )}
       </View>
     )
   }
@@ -79,10 +87,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    marginTop:scaleSize(15),
+    marginTop: scaleSize(15),
     // height:scaleSize(330),
     padding: scaleSize(5),
-    minHeight:scaleSize(330),
+    minHeight: scaleSize(330),
     backgroundColor: '#FFFFFF',
   },
   listView: {
