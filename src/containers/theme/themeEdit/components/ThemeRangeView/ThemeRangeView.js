@@ -6,7 +6,12 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { RangeMode, ColorGradientType, ThemeRange, Action } from 'imobile_for_reactnative'
+import {
+  RangeMode,
+  ColorGradientType,
+  ThemeRange,
+  Action,
+} from 'imobile_for_reactnative'
 import { Button, Row } from '../../../../../components'
 import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
@@ -18,7 +23,6 @@ import styles from './styles'
 const CHOOSE = '请选择'
 
 export default class ThemeRangeView extends React.Component {
-
   props: {
     title: string,
     nav: Object,
@@ -77,11 +81,20 @@ export default class ThemeRangeView extends React.Component {
       this.themeRange = await new ThemeRange().createObjClone(theme)
       // this.themeRange = theme
     }
-    this.setState({
-      data: data,
-    }, () => {
-      this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
-    })
+    this.setState(
+      {
+        data: data,
+      },
+      () => {
+        this.getData(
+          this.state.data.expression,
+          this.state.data.rangeMode,
+          this.state.data.rangeCount,
+          this.state.data.colorMethod,
+          this.state.data.precision,
+        )
+      },
+    )
   }
 
   goToChoosePage = type => {
@@ -102,29 +115,41 @@ export default class ThemeRangeView extends React.Component {
     })
   }
 
-  getExpression = ({key}) => {
+  getExpression = ({ key }) => {
     if (this.state.data.colorMethod.value === '') return
-    this.getData(key, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+    this.getData(
+      key,
+      this.state.data.rangeMode,
+      this.state.data.rangeCount,
+      this.state.data.colorMethod,
+      this.state.data.precision,
+    )
   }
 
   /**
    * 获取颜色方案
    */
-  getColorMethod = ({key, value}) => {
+  getColorMethod = ({ key, value }) => {
     let datalist = this.state.data
     if (this.state.data.expression === '') {
-      Object.assign(datalist, { colorMethod: {key, value} })
+      Object.assign(datalist, { colorMethod: { key, value } })
       this.setState({
         data: datalist,
       })
       return
     }
-    this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, {key, value}, this.state.data.precision)
+    this.getData(
+      this.state.data.expression,
+      this.state.data.rangeMode,
+      this.state.data.rangeCount,
+      { key, value },
+      this.state.data.precision,
+    )
   }
 
   getData = (expression, rangeMode, rangeCount, colorMethod, precision) => {
     this.props.setLoading && this.props.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       try {
         // 获取表达式对应的所有Item
         let dataset = await this.props.layer.getDataset()
@@ -137,8 +162,13 @@ export default class ThemeRangeView extends React.Component {
           this.state.data.rangeCount !== rangeCount ||
           !this.themeRange._SMThemeRangeId
         ) {
-          this.themeRange = await (new ThemeRange()).makeDefault(
-            datasetVector, expression, rangeMode, rangeCount, colorMethod.value)
+          this.themeRange = await new ThemeRange().makeDefault(
+            datasetVector,
+            expression,
+            rangeMode,
+            rangeCount,
+            colorMethod.value,
+          )
         }
         // else if(this.themeRange._SMThemeRangeId && this.state.data.expression !== expression) {
         //   await this.themeRange.setRangeExpression(expression)
@@ -157,16 +187,22 @@ export default class ThemeRangeView extends React.Component {
 
         if (count > 3000) {
           this.props.setLoading && this.props.setLoading(false)
-          this.setState({
-            data: {
-              expression: expression,
-              rangeMode: rangeMode,
-              rangeCount: rangeMode === RangeMode.CUSTOMINTERVAL ? customInterval : count,
-              precision: precision,
-              colorMethod: colorMethod,
+          this.setState(
+            {
+              data: {
+                expression: expression,
+                rangeMode: rangeMode,
+                rangeCount:
+                  rangeMode === RangeMode.CUSTOMINTERVAL
+                    ? customInterval
+                    : count,
+                precision: precision,
+                colorMethod: colorMethod,
+              },
+              themeItemList: [],
             },
-            themeItemList: [],
-          }, () => Toast.show('字段单值项炒超过3000，专题图制作失败'))
+            () => Toast.show('字段单值项炒超过3000，专题图制作失败'),
+          )
           return
         }
 
@@ -177,25 +213,35 @@ export default class ThemeRangeView extends React.Component {
           let color = await style.getFillForeColor()
           let visible = await item.isVisible()
           let caption = await item.getCaption()
-          let data = { visible: visible, color: dataUtil.colorHex(color), value: rangeValue, caption, data: item }
+          let data = {
+            visible: visible,
+            color: dataUtil.colorHex(color),
+            value: rangeValue,
+            caption,
+            data: item,
+          }
           themeRangeList.push(data)
         }
         let datalist = this.state.data
         Object.assign(datalist, {
           expression: expression,
           rangeMode: rangeMode,
-          rangeCount: rangeMode === RangeMode.CUSTOMINTERVAL ? customInterval : count,
+          rangeCount:
+            rangeMode === RangeMode.CUSTOMINTERVAL ? customInterval : count,
           precision: precision,
           colorMethod: colorMethod,
         })
-        this.setState({
-          themeRangeList: themeRangeList,
-          data: datalist,
-        }, () => this.props.setLoading && this.props.setLoading(false))
+        this.setState(
+          {
+            themeRangeList: themeRangeList,
+            data: datalist,
+          },
+          () => this.props.setLoading && this.props.setLoading(false),
+        )
       } catch (e) {
         this.props.setLoading && this.props.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   getValue = obj => {
@@ -215,19 +261,29 @@ export default class ThemeRangeView extends React.Component {
       mapControl: this.props.mapControl,
       item: data,
       cb: () => {
-        this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+        this.getData(
+          this.state.data.expression,
+          this.state.data.rangeMode,
+          this.state.data.rangeCount,
+          this.state.data.colorMethod,
+          this.state.data.precision,
+        )
       },
     })
   }
 
   confirm = () => {
-    (async function () {
+    (async function() {
       let dataset = await this.props.layer.getDataset()
       if (this.props.isThemeLayer) {
         await this.props.map.removeLayer(this.props.layer.index)
-        let newLayer = await this.props.map.addThemeLayer(dataset, this.themeRange, true)
-        newLayer && await newLayer.setCaption(this.props.layer.caption)
-        newLayer && await this.props.map.moveTo(0, this.props.layer.index)
+        let newLayer = await this.props.map.addThemeLayer(
+          dataset,
+          this.themeRange,
+          true,
+        )
+        newLayer && (await newLayer.setCaption(this.props.layer.caption))
+        newLayer && (await this.props.map.moveTo(0, this.props.layer.index))
       } else {
         await this.props.map.addThemeLayer(dataset, this.themeRange, true)
       }
@@ -243,7 +299,7 @@ export default class ThemeRangeView extends React.Component {
       }
       NavigationService.goBack(key)
       Toast.show('设置成功')
-    }).bind(this)()
+    }.bind(this)())
   }
 
   reset = () => {
@@ -271,36 +327,59 @@ export default class ThemeRangeView extends React.Component {
           defaultValue={this.state.data.rangeMode}
           radioColumn={2}
           radioArr={[
-            {title: '等距分段', value: RangeMode.EQUALINTERVAL},
-            {title: '平方根分段', value: RangeMode.SQUAREROOT},
-            {title: '标准差分段', value: RangeMode.STDDEVIATION},
-            {title: '对数分段', value: RangeMode.LOGARITHM},
-            {title: '等计数分段', value: RangeMode.QUANTILE},
-            {title: '自定义分段', value: RangeMode.CUSTOMINTERVAL},
+            { title: '等距分段', value: RangeMode.EQUALINTERVAL },
+            { title: '平方根分段', value: RangeMode.SQUAREROOT },
+            { title: '标准差分段', value: RangeMode.STDDEVIATION },
+            { title: '对数分段', value: RangeMode.LOGARITHM },
+            { title: '等计数分段', value: RangeMode.QUANTILE },
+            { title: '自定义分段', value: RangeMode.CUSTOMINTERVAL },
           ]}
           getValue={data => {
             // this.getValue({rangeMode: value})
-            this.getData(this.state.data.expression, data.value, this.state.data.rangeCount, this.state.data.colorMethod, this.state.data.precision)
+            this.getData(
+              this.state.data.expression,
+              data.value,
+              this.state.data.rangeCount,
+              this.state.data.colorMethod,
+              this.state.data.precision,
+            )
           }}
         />
 
-        {
-          this.state.data.rangeMode !== RangeMode.STDDEVIATION &&
+        {this.state.data.rangeMode !== RangeMode.STDDEVIATION && (
           <Row
             style={styles.row}
-            key={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '单段长度' : '段数'}
+            key={
+              this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL
+                ? '单段长度'
+                : '段数'
+            }
             defaultValue={this.state.data.rangeCount}
             value={this.state.data.rangeCount}
             type={Row.Type.CHOOSE_NUMBER}
-            minValue={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '' : 2}
-            maxValue={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '' : 32}
-            title={this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '单段长度' : '段数'}
+            minValue={
+              this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '' : 2
+            }
+            maxValue={
+              this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL ? '' : 32
+            }
+            title={
+              this.state.data.rangeMode === RangeMode.CUSTOMINTERVAL
+                ? '单段长度'
+                : '段数'
+            }
             getValue={value => {
               // this.getValue({rangeCount: value})
-              this.getData(this.state.data.expression, this.state.data.rangeMode, value, this.state.data.colorMethod, this.state.data.precision)
+              this.getData(
+                this.state.data.expression,
+                this.state.data.rangeMode,
+                value,
+                this.state.data.colorMethod,
+                this.state.data.precision,
+              )
             }}
           />
-        }
+        )}
 
         <Row
           style={styles.row}
@@ -314,7 +393,13 @@ export default class ThemeRangeView extends React.Component {
           title={'分段舍入精度'}
           getValue={value => {
             // this.getValue({precision: value})
-            this.getData(this.state.data.expression, this.state.data.rangeMode, this.state.data.rangeCount, this.state.data.colorMethod, value)
+            this.getData(
+              this.state.data.expression,
+              this.state.data.rangeMode,
+              this.state.data.rangeCount,
+              this.state.data.colorMethod,
+              value,
+            )
           }}
         />
 
@@ -337,7 +422,7 @@ export default class ThemeRangeView extends React.Component {
         />
 
         <ThemeTable
-          ref={ref => this.table = ref}
+          ref={ref => (this.table = ref)}
           data={this.state.themeRangeList}
           tableHead={['可见', '风格', '段值', '标题']}
           flexArr={[1, 2, 1, 2]}
@@ -350,8 +435,8 @@ export default class ThemeRangeView extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
+        <Button title={'确定'} onPress={this.confirm} />
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
       </View>
     )
   }

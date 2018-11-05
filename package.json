@@ -29,8 +29,8 @@
     "forge": "^2.3.0",
     "immutable": "^3.8.2",
     "node-forge": "^0.7.6",
-    "react": "16.5.0",
-    "react-native": "^0.57.2",
+    "react": "16.6.0-alpha.8af6728",
+    "react-native": "0.57.3",
     "react-native-actionsheet": "^2.4.2",
     "react-native-color-picker": "^0.4.0",
     "react-native-root-toast": "^3.0.1",
@@ -48,11 +48,11 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-inline-environment-variables": "^0.4.3",
+    "babel-core": "^7.0.0-bridge.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.14.0",
@@ -63,6 +63,7 @@
     "lint-staged": "^7.3.0",
     "metro-react-native-babel-preset": "^0.48.1",
     "prettier": "^1.14.3",
+    "react-devtools-core": "3.3.4",
     "react-test-renderer": "16.5.0"
   },
   "jest": {

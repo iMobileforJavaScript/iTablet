@@ -1,0 +1,2045 @@
+[33mcommit c6d6831c1693e734155baf1c9adc61f391617a59[m[33m ([m[1;36mHEAD -> [m[1;32mdev-2.0[m[33m)[m
+Merge: 5d22307 f56d09a
+Author: jiakai <873487220@qq.com>
+Date:   Mon Nov 5 18:32:07 2018 +0800
+
+    Merge branch 'dev-2.0' of https://github.com/iMobileforJavaScript/iTablet into dev-2.0
+
+[33mcommit 5d22307edefdc20b0c9e2f085390672ae68b977f[m
+Merge: d01cb3a 956b945
+Author: jiakai <873487220@qq.com>
+Date:   Mon Nov 5 18:17:47 2018 +0800
+
+    '地图制作界面'
+
+[33mcommit f56d09ac306b03ec4becbdb92c46fac8261470b0[m[33m ([m[1;31morigin/dev-2.0[m[33m)[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Mon Nov 5 11:50:07 2018 +0800
+
+    Delete Trial_License.slm
+
+[33mcommit d01cb3a6af27ca5b69fb34137d0fdc46b3108b7e[m
+Merge: 66bd71a 11c4582
+Author: jiakai <873487220@qq.com>
+Date:   Mon Nov 5 09:07:54 2018 +0800
+
+    '..'
+
+[33mcommit 956b9457453fc00c577f1387ecae877b37cb00ee[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Nov 2 17:54:30 2018 +0800
+
+    新增地图工作空间公共组件；调整工作空间界面；采集界面新增组件
+
+[33mcommit c83b53e023ae4d88fd43c727f8b6e4e049a07625[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 29 14:53:56 2018 +0800
+
+    更改Android目录
+
+[33mcommit 86b3e4e5d4fa5a285e2c8a5e8076b156f855e5da[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 29 13:59:05 2018 +0800
+
+    更改目录名
+
+[33mcommit ad054d9fe500df5b9684b6cbdc81ad511948ee59[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 29 13:39:19 2018 +0800
+
+    修改文件目录
+
+[33mcommit 87fc8341d5ebc713370bbd89a3a8b82b5dac80cc[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 29 12:47:50 2018 +0800
+
+    更改android文件目录；修改MapView打开工作空间方式；
+
+[33mcommit 66bd71acb66d4acfee16759c1d9c51e0b7c3326b[m
+Merge: 49a54a5 bbd0ead
+Author: jiakai <873487220@qq.com>
+Date:   Thu Oct 25 16:00:09 2018 +0800
+
+    '添加'
+
+[33mcommit 11c4582f37305923e7e2a5ce6f9afcb91f7f7eaf[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Oct 24 18:24:15 2018 +0800
+
+    修改样式大小，调整适配工具
+
+[33mcommit 49a54a526c2f2f3d91880b36075a0634c7a1e234[m
+Merge: 31fba24 8879526
+Author: jiakai <873487220@qq.com>
+Date:   Wed Oct 24 12:53:35 2018 +0800
+
+    'merge'
+
+[33mcommit bbd0ead1fb301719d8e3848f76a63ce3154bf653[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Oct 24 10:28:56 2018 +0800
+
+    更新mapview组件
+
+[33mcommit 887952663737389fa2e7d19da2f32dc0abf1e4bb[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Oct 23 18:10:55 2018 +0800
+
+    添加地图工具栏，更改地图界面路径
+
+[33mcommit dccefd72bca3cdae244fa520fdd927b4347f9df6[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 22 16:24:52 2018 +0800
+
+    修改首页module数据
+
+[33mcommit ddd823c01ded00d61e6d19e160fa95f65d1b1cd4[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 22 16:21:39 2018 +0800
+
+    修改屏幕适配比列
+
+[33mcommit 134ed6de56a8abb23b0cdbb26d81dfbab3742b24[m
+Merge: 3a09cc5 0b640b5
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 22 09:33:38 2018 +0800
+
+    Merge branch 'dev-2.0' of https://github.com/iMobileforJavaScript/iTablet into dev-2.0
+
+[33mcommit 3a09cc5d8c2d072a01d126b5ff47c52732f650e1[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Oct 22 09:33:10 2018 +0800
+
+    删除部分无用文件；更新Dataset，bufferAnalyst新接口
+
+[33mcommit 0b640b522e2fce5fc839b3cf9b173afae7657ecd[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Thu Oct 18 14:29:42 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit 6d838999ec2189da851b425a7d625a78fb01b33c[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Thu Oct 18 14:29:17 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit b6f79c61bc66e57666781ab19d68b4a552f4df0b[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Thu Oct 18 14:29:01 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit b4d81503f4c9ab9550d5e6847e56de0271e374cd[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Thu Oct 18 14:28:47 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit d79212bbac4775acabaf9f0dae9838662aa24e93[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Thu Oct 18 14:28:29 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit 31fba24d05017a64ea908b7f829275ad66369d9c[m[33m ([m[1;32mmaster[m[33m)[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Thu Oct 18 14:28:08 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit c5b706cbeaf1c849d11b70000b98e44049a5fbb1[m
+Merge: 9921951 4517ba6
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Oct 17 14:35:35 2018 +0800
+
+    Merge branch 'dev-2.0' of https://github.com/iMobileforJavaScript/iTablet into dev-2.0
+
+[33mcommit 992195193baaa1f68091e5d0a31c731618f638fd[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Oct 17 14:34:49 2018 +0800
+
+    更新.gitigonre
+
+[33mcommit 4517ba6baea66557bdb70b451151fd6a2eac3bc4[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:29:10 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit 1c75fe5ae97467a2815c9dc3778bccfff1a6dd29[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:29:00 2018 +0800
+
+    Delete yarn.lock
+
+[33mcommit c0101559eb4ce60b1d48dd766e7b9695ee9b875b[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:28:49 2018 +0800
+
+    Delete yarn-error.log
+
+[33mcommit 2c60392160a752e18b10142f151f56770ca0a61c[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:28:41 2018 +0800
+
+    Delete package-lock.json
+
+[33mcommit 952ae5b6a400dc7ffc5a0ba50e27cadd8162aecf[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:27:40 2018 +0800
+
+    Delete settings.json
+
+[33mcommit f95b6ef5ad69662c7bb71f204e3f82e77a02f867[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:27:31 2018 +0800
+
+    Delete launch.json
+
+[33mcommit 3ed36fbd7055795b3c76f6e02197d53e59ebe760[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:26:30 2018 +0800
+
+    Delete settings.json
+
+[33mcommit 4cdcd2049cb8b73cfa28d56c55790583b92c977a[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:26:21 2018 +0800
+
+    Delete launch.json
+
+[33mcommit ef9d4ab300816eb04c9ef923e24f4dddf2f9fbb5[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:25:19 2018 +0800
+
+    Delete .DS_Store
+
+[33mcommit 20d6177c1fbb1f021f855638e4a73a5da8615d3a[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:25:08 2018 +0800
+
+    Delete yarn.lock
+
+[33mcommit ed9da6d46294d872d727d0584d7a80d908952319[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:24:40 2018 +0800
+
+    Delete yarn-error.log
+
+[33mcommit d118647ae249cba32ec0f02bf26a975b6153574e[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Oct 17 14:23:48 2018 +0800
+
+    Delete package-lock.json
+
+[33mcommit a0146e4a40000ef612c4c1081dbbc088e9acce8c[m
+Merge: 5d152e3 4c8d2a4
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Mon Oct 15 13:58:18 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 5d152e3f06f933e966e035529b13cc9dd3472fb5[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Mon Oct 15 13:49:50 2018 +0800
+
+    三维示范数据路径修改
+    
+    三维示范数据路径修改
+
+[33mcommit fb092e7ca523e6cf656795a2a0fbe6aff0fdca01[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 17:44:22 2018 +0800
+
+    修改首页
+
+[33mcommit 342b525a0da272d05192e9294e66217f13ec6015[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 17:42:26 2018 +0800
+
+    修改首页
+
+[33mcommit 0af2705a10371d1a4f2a4a52ea2ce17eef6a2f42[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 16:34:20 2018 +0800
+
+    eslint格式化代码
+
+[33mcommit 92e964247667659240784acd79c9cdf7883e6aba[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 16:29:05 2018 +0800
+
+    eslint格式化代码
+
+[33mcommit 5501755a585319d41cf053a6f4270b3bb7485c78[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 16:25:18 2018 +0800
+
+    eslint格式化代码
+
+[33mcommit 756659cc093f293172353607a8dfa399bd8c01ee[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 16:02:46 2018 +0800
+
+    eslint格式化代码
+
+[33mcommit 5d832aa3de6c5ecf1dd060aad5f34513d3809efc[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 16:02:23 2018 +0800
+
+    eslint格式化代码
+
+[33mcommit cb3eedc485e9d0a3e6a60026814695bb55d9c998[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 16:01:47 2018 +0800
+
+    eslint格式化代码
+
+[33mcommit 4513f79ce7c532c4512fd52ff6569bff5d677bfb[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 14:48:22 2018 +0800
+
+    添加eslint配置
+
+[33mcommit 89da56972dc0a33cf8faa72ec6e81f0dd3a443e7[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 14:37:47 2018 +0800
+
+    添加eslint提交格式检测
+
+[33mcommit a2b323d5de48600603056a66accfad029cc8963b[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 14:26:02 2018 +0800
+
+    修改package.json
+
+[33mcommit 885a11010a543617d8d445bc2695030cc475ea04[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Oct 12 14:24:02 2018 +0800
+
+    修改imobile_for_javascript包名为imobile_for_reactnative；升级react-native版本为0.57.2
+
+[33mcommit 4c8d2a48b8f7fcdec4a5ddc8cea9d67fc8967c68[m
+Author: Yang Shang Long <dragonyang0917@gmail.com>
+Date:   Thu Oct 11 10:03:53 2018 +0800
+
+    Delete Trial_License.slm
+    
+    去掉许可
+
+[33mcommit 28519b8f0cbe09812365bd0a5a08a9455472b5cf[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Oct 11 09:59:27 2018 +0800
+
+    更新gitignore
+
+[33mcommit a8cac58c59d194f81a3238a53e39df341a0db755[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Oct 11 09:56:03 2018 +0800
+
+    去掉许可
+
+[33mcommit cb138e7fcc6ddd477d1aab68d9e157d1e333eb81[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Oct 9 15:02:22 2018 +0800
+
+    path
+
+[33mcommit 665f86231d318b54ee571660ca6b831b5853d0d7[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sun Sep 30 09:30:26 2018 +0800
+
+    merge
+
+[33mcommit 7557dcc420ab8ffc33281eeff69f56832ee532fc[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 16:37:29 2018 +0800
+
+    Revert "merge"
+    
+    This reverts commit 9f0f6461b248a6dbe1e29d712abdc7a08a04c6a5.
+
+[33mcommit 4990ccaebeb45c843db07b5a1f88eabaf2ad8502[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 16:37:17 2018 +0800
+
+    Revert "merge"
+    
+    This reverts commit 479699be0bc018dd4a6f40459b80c5ad2af7119e, reversing
+    changes made to 9f0f6461b248a6dbe1e29d712abdc7a08a04c6a5.
+
+[33mcommit 479699be0bc018dd4a6f40459b80c5ad2af7119e[m
+Merge: 9f0f646 6cdb115
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sat Sep 29 15:12:46 2018 +0800
+
+    merge
+
+[33mcommit 9f0f6461b248a6dbe1e29d712abdc7a08a04c6a5[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sat Sep 29 15:11:14 2018 +0800
+
+    merge
+
+[33mcommit 6cdb115babec251db2d979f55b6eff9f6bc23fe1[m
+Merge: 1dc9df1 e15ceab
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 14:22:45 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 1dc9df10c7c51e7e7b64a31a5686131ed78c1a17[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 14:22:35 2018 +0800
+
+    解决崩溃
+    
+    解决崩溃
+
+[33mcommit e15ceaba3f003e1e5b7e32ca6fb685952d3de13b[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Sat Sep 29 13:39:42 2018 +0800
+
+    merge
+
+[33mcommit 37f4dfe5c33402c7b8fa2312b95dfd7bdb0808eb[m
+Merge: c22a79a 373c2df
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 12:44:52 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit c22a79aa1ffc190c6cdd15246132fee98319a6e8[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 12:44:02 2018 +0800
+
+    bendi
+
+[33mcommit 373c2df2fc505479d26dfdb01fb57a872e52af22[m
+Merge: 603d6d9 269589f
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Sat Sep 29 10:44:56 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 603d6d99ca2b78fcb6755d8cc01c92ca5ffdccc3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Sat Sep 29 10:38:29 2018 +0800
+
+    更改示例地图路径
+
+[33mcommit 269589fd109bb5ee0786bfb1da15b9b8d2e2a603[m
+Merge: 845010e bb09aed
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 10:10:28 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 845010ed0a87411e90cef367d132d768aae1ab24[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Sat Sep 29 10:10:13 2018 +0800
+
+    IOS 打开场景优化
+    
+    IOS 打开场景优化
+
+[33mcommit 3fdfbf1a6fe79ee1b14dded96986ca2090b7f064[m
+Merge: 48f182d bb09aed
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sat Sep 29 10:07:56 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 48f182d6e3531dfd5bd6787c2e622e7c4fdb3a7d[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sat Sep 29 10:07:51 2018 +0800
+
+    merge
+
+[33mcommit bb09aedeb25326e6a15e3ce289d98edd175dc6e3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Sat Sep 29 10:05:19 2018 +0800
+
+    修复ios下载示例地图无法删除zip包；关闭工作空间dispose mapcontrol；
+
+[33mcommit 5fd2bb4f5c02611a1087c1ba5780fc962f01e2cc[m
+Merge: ea3e53c e2ae1f3
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sat Sep 29 09:19:03 2018 +0800
+
+    merge
+
+[33mcommit ea3e53c322f042a16a12e1c4312e54a113adf735[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Sat Sep 29 09:18:30 2018 +0800
+
+    merge
+
+[33mcommit e2ae1f3f72f833c2798288f065e30fb0b22dbb24[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 18:04:26 2018 +0800
+
+    merge
+
+[33mcommit e743cdf3d9a1e1bd091b684807ebc81874fdfaf1[m
+Merge: 3f88546 604fec9
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 17:54:43 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 3f88546fa382266c2715276827673cc9c7329230[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 17:54:37 2018 +0800
+
+    修改ios配置
+
+[33mcommit 604fec96e05a062250ff3e11533965ed8e3387f4[m
+Merge: 7a69252 b614b9b
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 17:52:51 2018 +0800
+
+    erge
+
+[33mcommit 7a69252f546f411214aa9c3d29927ce0ef3f5314[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 17:52:12 2018 +0800
+
+    merge
+
+[33mcommit b614b9bd6bb591b12df4143de5bb77ddabab042f[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 17:10:42 2018 +0800
+
+    调整首页和工作空间打开界面
+
+[33mcommit 2a33748140c4becd40395792242a5a26e85c0d6d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 16:41:27 2018 +0800
+
+    调整打开工作空间目录的界面
+
+[33mcommit d3f50d1322d0381a78d22ff0a833ab6a1f0906fa[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 16:29:37 2018 +0800
+
+    调整场景打开检测
+
+[33mcommit 709a8682b2278d3bf3d45ff9762be3ed84fa5ab3[m
+Merge: 3f2e9e5 dd48e9c
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 15:55:54 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 3f2e9e5e48e5c9a2754af2cf7c2b6eb6a9b0c565[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 15:55:42 2018 +0800
+
+    3D新增加载提示，添加android物理键返回事件；修改工作空间打开功能ui；调整首页界面；
+
+[33mcommit dd48e9c58954848f9b5d73329049b5592a49a277[m
+Merge: 5c904ab d68c39c
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 15:25:32 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 5c904ab785967790c48f78213d49afc5ac33aac0[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 15:25:05 2018 +0800
+
+    merge
+
+[33mcommit d68c39cdcae7020ff3261f41caaa6de8433811bc[m
+Merge: 6e0be7c 4ee073f
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 14:18:20 2018 +0800
+
+    merge
+
+[33mcommit 6e0be7cec754e4ec817f353bfc8b00413c8db967[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 28 14:12:24 2018 +0800
+
+    更改ui
+
+[33mcommit 4ee073f6dff3ce35bdb1e0f9e1855b7b510a4b08[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 13:51:44 2018 +0800
+
+    merge
+
+[33mcommit 546e8d993aec748cd465c1df1c5d425ae4a303dd[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 11:35:56 2018 +0800
+
+    examplemaplist_openpath
+
+[33mcommit cdc5df383ffdd35c66c699ea673d61f9d9c70962[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 11:07:22 2018 +0800
+
+    Tabs_index.js
+
+[33mcommit 475a8ed04809ccef4abd36c339fcad4c0a166a25[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 11:05:59 2018 +0800
+
+    exampleMap_dowloadn_iosDATA
+
+[33mcommit 42ac4a885ea3562c0b00fb700012d512934441fe[m
+Merge: 9c2ce22 546dfcf
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 08:55:54 2018 +0800
+
+    merge
+
+[33mcommit 9c2ce22954de8d69942af345064c821cec24956f[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 28 08:53:12 2018 +0800
+
+    merge
+
+[33mcommit 546dfcf1312446170c2e7839edb1ab1a484e18d7[m
+Merge: c46aa87 0576a71
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 27 20:11:36 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit c46aa878d4a5258abe2bfe246fbcab5472a20a10[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 27 20:11:25 2018 +0800
+
+    IOS 备份
+    
+    IOS 备份
+
+[33mcommit 0576a716600c8ec4457696436a96fe8247065e27[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 27 19:28:50 2018 +0800
+
+    调整工作空间，工作栏隐藏后，再次显示，工作栏有点错位
+
+[33mcommit 776acc769b9853e7b5e39e8917bd18d8e89445b5[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 27 19:22:57 2018 +0800
+
+    针对ipad pro修改尺寸
+
+[33mcommit fa11c1cf33e30c5b0f2198212eab1c4ac075400b[m
+Merge: 6677b3c e900d45
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 27 18:41:37 2018 +0800
+
+    merge
+
+[33mcommit 6677b3c3620bf19adff9d05f0e5c8c48be7e2a96[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 27 18:41:05 2018 +0800
+
+    merge
+
+[33mcommit e900d45edc11eb2e349d6fd4932861a52db3cffd[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 27 18:30:51 2018 +0800
+
+    修改首页样式
+
+[33mcommit e1a9a7d5d32029d8eb9e74d94b25d8448521f694[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 27 18:07:41 2018 +0800
+
+    工作空间-数据编辑/数据采集, 切换图层按钮
+
+[33mcommit 667559aa8c1529167cc37e19c9f04a94e6f3391b[m
+Merge: 4aaef82 0b3bf0e
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 27 17:21:50 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 4aaef82529fbde825b6b0b1fb6f05ce4cb4db365[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 27 17:21:35 2018 +0800
+
+    更改工作界面工具栏
+
+[33mcommit 0bd96acb1c0253d4f627ad172bfbce60c6ca24f9[m
+Merge: a3ac410 0b3bf0e
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 27 11:36:24 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+    
+    提交本地
+
+[33mcommit a3ac4109b1c7e27647e0db010f758512ad33948f[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 27 11:34:31 2018 +0800
+
+    IOS 本地提交
+    
+    IOS 本地提交
+
+[33mcommit 0b3bf0ea3ccafdead1a599578370ace601205ca4[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 26 18:15:47 2018 +0800
+
+    merge
+
+[33mcommit 4cc02d1f181e958511ebcae37e59e33087825756[m
+Merge: 43daa0e a0e0115
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 26 14:52:47 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 43daa0e0f7c84b61c04aee3ab3afb4c2aa77a30d[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 26 14:52:20 2018 +0800
+
+    merge
+
+[33mcommit a0e0115f0bbfe238f21a9163498e45508e91c18c[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 26 13:39:20 2018 +0800
+
+    修改网络数据集/图层图标;添加数据编辑平移功能
+
+[33mcommit 0b2ead1610dec5a8181188a1acf258de14c78c2f[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 26 09:19:36 2018 +0800
+
+    新增属性表界面；修复ios单个属性修改提示失败；修复单个对象属性未修改，点击确定崩溃；修复ios不能生成岛洞；
+
+[33mcommit 19638b917e863b86bb5df3ac633b497f2c3e64c6[m
+Merge: e4aae13 2145525
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Sep 25 08:40:01 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit e4aae13443e1a3e3ae664b15f204a13d3203275c[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Sep 25 08:39:25 2018 +0800
+
+     本地提交
+    
+     本地提交
+
+[33mcommit 2145525eec054225d140daf91afb54db2be05700[m
+Merge: 75e3faf 897c78a
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 17:41:25 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 75e3faf5222ad6dfaadb2dae3dfc177164f0135d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 17:41:18 2018 +0800
+
+    调整首页
+
+[33mcommit 897c78a331508d100d0609f59d2019aa33bff6f2[m
+Merge: 5c42424 a1b9425
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 21 17:33:42 2018 +0800
+
+    merge
+
+[33mcommit 5c42424b44aa6d6524d3c41c1fd0e47a2df790fd[m
+Merge: dadd2aa 9a649bc
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 21 17:32:23 2018 +0800
+
+    增加按钮文字、修改界面及量算
+
+[33mcommit a1b94258e8cac6182d273e313ac4a0e1645c79fb[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 17:26:23 2018 +0800
+
+    修复下载提示
+
+[33mcommit dadd2aad94899d0e396c134d0427b906db764c50[m
+Merge: 5ba12f8 06fd22b
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 21 17:07:36 2018 +0800
+
+    merge
+
+[33mcommit 9a649bc1b8f851a2b28a7c5e4f73d761225ccae0[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 16:38:53 2018 +0800
+
+    完善ios下载示例地图；修改网络分析图标；修复连通分析无法添加点
+
+[33mcommit 5ba12f84da37e00ffe14ad3e63853038756f9b3a[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 21 14:27:21 2018 +0800
+
+    merge
+
+[33mcommit f94e4ae9b9203aa4e68d95f391d45e89fa07c7af[m
+Merge: dacef18 06fd22b
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Fri Sep 21 11:51:29 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit dacef184265d71dc84ec34d2e2388a00ef063c93[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Fri Sep 21 11:51:23 2018 +0800
+
+    本地工程提交
+
+[33mcommit 06fd22ba7877469d7c35a9104037e11d0dc69d8d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 11:49:37 2018 +0800
+
+    修复缓冲分析问题
+
+[33mcommit 7c3e238c853b01e8e1c84d01ce85b9f55346fce8[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 11:12:24 2018 +0800
+
+    修复数据编辑，底部无法选择
+
+[33mcommit 943786b1a8d58dca2d2610c09f8b6f5df5b2fc5c[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 09:47:52 2018 +0800
+
+    修复添加删格/影像图层到屏幕外的缺陷
+
+[33mcommit 1bef7addc010cd67a83470fe58b74e7744688a14[m
+Merge: 7059bee c9157e1
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 08:59:06 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 7059bee6639ede1a2530dfb9485ea79f1b05e823[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 21 08:59:00 2018 +0800
+
+    调整属性和浏览属性表；完善ios网络分析缺陷
+
+[33mcommit c9157e15a34135dc987443b591e2b0ffba6613bf[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 19:43:12 2018 +0800
+
+    修改index.js删除animated
+
+[33mcommit d6f655bea93ca3025995d1fbadad595c54172a61[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 19:36:56 2018 +0800
+
+    merge
+
+[33mcommit a73f3270253d01a55615cbdcc50a577eabbff5a6[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 19:06:31 2018 +0800
+
+    merge
+
+[33mcommit a5b1297c9daa3502da770047fe69636c4bcff3d6[m
+Merge: 4dc6d46 1b559f0
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 19:05:12 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 4dc6d462f589fa956f00772a0af4ca30390f0491[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 19:04:56 2018 +0800
+
+    增加按钮文字,修改量算
+
+[33mcommit 1b559f0bb03156828710887686fc13f1157a0e04[m
+Merge: b563096 2e7929a
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 20 15:57:00 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit b5630969c14950a685864c78de7771704d6e586a[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 20 15:56:48 2018 +0800
+
+    IOS网络登陆加密
+
+[33mcommit 2e7929aa9fd3421a45247b56203617c58e5baab9[m
+Merge: 1c626a5 5d4d9db
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 15:51:55 2018 +0800
+
+    merge
+
+[33mcommit 1c626a55c2f8a9cc97c79dded7d9a33edd67633d[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 15:48:00 2018 +0800
+
+    添加叠加缓冲分析图标
+
+[33mcommit 286d66137af68b4ede94b2b3e633c122ea410057[m
+Merge: 19a3f8d 5d4d9db
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 20 10:29:16 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 19a3f8d8078bb39608246686264e4dd6537bf2d3[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Sep 20 10:29:11 2018 +0800
+
+    IOS 版本号修改
+    
+    IOS 版本号修改
+
+[33mcommit 5d4d9dbb55200c5649ec39bbe95b0bd8361fba04[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 20 10:23:38 2018 +0800
+
+    修复采集-保存，对象不立即显示
+
+[33mcommit debccf69826f70523b7d19878f220cfcf8e3d12a[m
+Merge: 0855660 aec77fe
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 20 09:51:08 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 0855660e9865ac071eee14c67eb7c069694d290a[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 20 09:51:03 2018 +0800
+
+    修复缓冲分析点面不可选择方头；ios工作空间保存问题；
+
+[33mcommit aec77fe994a0bd042958f77b96c081e3bf5d9a03[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 09:20:14 2018 +0800
+
+    修改商旅分析图标
+
+[33mcommit 980286f0f31633718a402c7095405a5e68ff1a19[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 09:17:34 2018 +0800
+
+    merge
+
+[33mcommit f244789ec9c3b5ffe6f63b0dd9d23a9e71985b41[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 20 09:15:32 2018 +0800
+
+    添加二级按钮图标
+
+[33mcommit e2147f23cc8e2977382b2ee9a196777ca1de0d8f[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 19 17:44:27 2018 +0800
+
+    还原数据分析
+
+[33mcommit 50db0864196b9e7940b75608efc1bf4b385cfcb3[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 19 17:23:51 2018 +0800
+
+    修改界面
+
+[33mcommit e097fda9b41d4cebe4233b5c8610fb55ab58d108[m
+Merge: 50536c3 bc2e03e
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 19 17:17:01 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 50536c39936d49fb094280764231080d35829160[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 19 16:59:41 2018 +0800
+
+    修改工作界面
+
+[33mcommit bc2e03e09e1322ef3f4c45512928840fc96ab7a3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 19 15:23:24 2018 +0800
+
+    修复含图层组的数据，在编辑和采集选择图层无法显示的问题
+
+[33mcommit 69fee7c3124443cb40029757430b9389b7b07ca5[m
+Merge: 797b066 034dedb
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 18 18:49:55 2018 +0800
+
+    merge1
+
+[33mcommit 797b066a0ff625317ebd8ecfb32cfea3d6d9124c[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 18 18:49:13 2018 +0800
+
+    merge
+
+[33mcommit 2b5f73721991ae3fb4225d32cedcaaba086c86d5[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 18 18:48:31 2018 +0800
+
+    merge
+
+[33mcommit 034dedbbcfa597f5bcd27b96ed27995ff6d7c2dc[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 18 18:44:56 2018 +0800
+
+    添加图片；修改数据编辑和数据采集图片
+
+[33mcommit 57aa31ba8af0e5821c489771a6d8a3d70c6c42df[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 18 14:46:52 2018 +0800
+
+    merge
+
+[33mcommit 9ef2d90106613fc2689e9af3253859374290e3a7[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 18 14:42:48 2018 +0800
+
+    merge
+
+[33mcommit 309ff4f999cf594788d155f9946813a7141c38ac[m
+Merge: dd4f84f 3a91c39
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 18 11:52:05 2018 +0800
+
+    修改app名称
+
+[33mcommit dd4f84f2ca9380163d4260cecc87cae875c99b22[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 18 11:48:05 2018 +0800
+
+    修改android app图标；ios新增ziparchive；新增ios示例地图下载；调整ios加载圈大小
+
+[33mcommit 3a91c3966e4bff729bf2ca5d01eb44dcc1c8b8b4[m
+Merge: 94b96c0 eee2b45
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 18 08:26:38 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 94b96c0fe15815df30bc217d324f79735763b563[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 18 08:25:59 2018 +0800
+
+    修改首页
+
+[33mcommit eee2b454a2cbbcf89476ff4481b50112e2815a1d[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Mon Sep 17 14:51:07 2018 +0800
+
+    IOS 工程提交
+    
+    IOS 工程提交
+
+[33mcommit 153123cfd1303089a1adb52f8a87ac07c5971bf0[m
+Merge: 4f868e9 b654cb8
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 15:56:27 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 4f868e9c590274092ac5cb3f6d92d62b2db7969c[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 15:56:15 2018 +0800
+
+    修复地图管理-添加图层，匹配是否添加过数据集时，图层组获取数据集为空的错误
+
+[33mcommit b654cb8e8383de7aee448bfe512963c0cc29d90f[m
+Merge: 0165255 564b1ea
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 14 15:30:06 2018 +0800
+
+    修改云服务界面
+
+[33mcommit 0165255918d62aa5674c12de2b6d970a4ae08332[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 14 15:22:37 2018 +0800
+
+    增加云服务界面
+
+[33mcommit 564b1eac7a0abf2b77cd13e5ed95302af883221c[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 15:21:23 2018 +0800
+
+    修改获取图层接口名
+
+[33mcommit 1ebcffea9c9b822cb7fa3c1dbe5c0d1ae8afd7f5[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 15:14:49 2018 +0800
+
+    删除android/build
+
+[33mcommit a21d158e288031cc04dc35cf7f5dcbcc60331d96[m
+Merge: 03c4e1e a22050b
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 15:07:55 2018 +0800
+
+    merge
+
+[33mcommit 03c4e1e44a462a18100673f078bd8a12a275f96d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 15:05:52 2018 +0800
+
+    完善地图管理-新建图层组
+
+[33mcommit a22050b194f60788673e077f281c837256a894eb[m
+Merge: eb8f8f9 6f89351
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Fri Sep 14 13:29:58 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit eb8f8f95ab649d5bab81f0a01b0106bf775a0a09[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Fri Sep 14 13:28:55 2018 +0800
+
+    提交本地
+    
+    提交本地
+
+[33mcommit 6f89351911c020a406ace6f57dd504ab1f4ec42e[m
+Merge: 8a6d763 069bc89
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 13:00:13 2018 +0800
+
+    merge
+
+[33mcommit 8a6d76369b729b710622da632732b70fd16c13fb[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 12:58:58 2018 +0800
+
+    图层管理添加图层组管理功能；android示例地图添加返回按钮；修复追踪分析/连通性分析两次加载才能分析的问题
+
+[33mcommit ef4fabd1ae64af1977f79fe5f0123b51260fbedb[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Sep 14 11:33:51 2018 +0800
+
+    图层管理添加图层组管理功能；android示例地图添加返回按钮；修复追踪分析/连通性分析两次加载才能分析的问题
+
+[33mcommit 069bc89467eb92a0e81bf0a321b2951ead81eb06[m
+Merge: ea5a8bc 29340d3
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 14 08:33:13 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit ea5a8bc88458a2b25c8b2f5b00fac5e0c75ea3b0[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 14 08:33:07 2018 +0800
+
+    修改下载
+
+[33mcommit 29340d3aa0a6ec357d21b87f1916a1b518c8d742[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 13 10:28:41 2018 +0800
+
+    修复打开udb保存工作空间，打开该工作空间奔溃问题
+
+[33mcommit 146f05b7fadf020da6a52ce3203d0bfd8d7c1ba4[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 13 09:58:20 2018 +0800
+
+    修复保存
+
+[33mcommit 13f8eb058b84d9e8e2e805044cd358606c090c55[m
+Merge: faa399f 5d0c74f
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 13 09:36:30 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit faa399faf3cd9b5d8ed2262d48c0411c82c79d10[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 13 09:36:18 2018 +0800
+
+    修复保存udb到工作空间，地图保存不下来的缺陷
+
+[33mcommit 5d0c74fb596f39eafc01a3be7f802bb3fd87e6ea[m
+Merge: 3d3ad78 bcc1280
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 13 08:47:40 2018 +0800
+
+    error
+
+[33mcommit 3d3ad78220d6565d8ab553d5c4c1e0b9233fd530[m
+Merge: 09c033d d0c07b5
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 13 08:40:57 2018 +0800
+
+    merge
+
+[33mcommit bcc1280f99f599e95cc1aa353c5424a67b66217c[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 12 19:54:22 2018 +0800
+
+    新增图层组；ios完善登录
+
+[33mcommit 09c033d2e943a291a613197a92893d3f23855eb3[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 12 14:06:17 2018 +0800
+
+    merge
+
+[33mcommit d0c07b56958c9118ccd1ab937d4204eddf2ccad7[m
+Merge: 436be2f 94b683e
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 12 10:21:19 2018 +0800
+
+    调整保存提示框
+
+[33mcommit 436be2fbde3922777862e535ffadbc6d29f4cab5[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 12 09:39:59 2018 +0800
+
+    修复在线地图的跳转；修复最近使用缩略图
+
+[33mcommit 94b683e1e9568cb3350bb805e8ec61070a71884d[m
+Merge: 147d531 50ddc83
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 12 09:38:28 2018 +0800
+
+    修改保存功能
+
+[33mcommit 147d5313445cf230e5d872212231c77251a80902[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 11 19:45:31 2018 +0800
+
+    修改地图界面保存
+
+[33mcommit 50ddc832a8c84672a39d9f2f658b76e79316a5d7[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 11 17:36:47 2018 +0800
+
+    修改打开数据源不设置地图中心
+
+[33mcommit 7f67729a56d511a1b2a9c967245911c8e565fca8[m
+Merge: f9c47fc b5618c6
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 11 16:20:09 2018 +0800
+
+    merge
+
+[33mcommit f9c47fcb56fee56f4f2946fc13e9137f926fc53d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 11 16:16:51 2018 +0800
+
+    修复分析缺陷
+
+[33mcommit b5618c6c36baff1caccb3408c1917f0e7f7c292e[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 11 14:12:22 2018 +0800
+
+    验证下载
+
+[33mcommit b7bc7376796c3d8ad43b2aa6c16d7cc31ca70972[m
+Merge: 0fb711f db625dc
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 11 11:21:43 2018 +0800
+
+    修改datasource.js
+
+[33mcommit 0fb711f3577a5e2a2393315a8214abe0d2fb3af5[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 11 10:47:18 2018 +0800
+
+    mapview.js
+
+[33mcommit db625dce35b42a497d508c956274640f1ca52ada[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 11 10:46:20 2018 +0800
+
+    修复工作区工具栏多次点击才能跳转；修复缓冲分析，只能分析设置图层
+
+[33mcommit b120a81e15fb962ab1da60d3031b12d7b0ef3b01[m
+Merge: 096d9bb 82248a5
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 11 09:43:57 2018 +0800
+
+    merge
+
+[33mcommit 096d9bb7039f7bd9a224a548d737f4200b970084[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Sep 11 09:28:06 2018 +0800
+
+    修复缺陷；Loading新增更改提示消息和背景颜色
+
+[33mcommit 82248a59e31aecf6fae8dbfe12a5dc6444eb28d0[m
+Merge: aa00c08 4c74e11
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 11 08:48:14 2018 +0800
+
+    修改examplemap.js
+
+[33mcommit 4c74e11948f38131a02651445e0d688e55fe8893[m
+Merge: c03ebe2 fe65b92
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Sep 10 18:37:28 2018 +0800
+
+    merge
+
+[33mcommit c03ebe284fbb106ae7801ebbf549d5cce6eb5a7e[m
+Merge: a89c93b 1ef793c
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Sep 10 18:35:57 2018 +0800
+
+    修改缺陷
+
+[33mcommit aa00c08986e3582d0ab4ba4bb8cff8a5f4557d12[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Mon Sep 10 18:33:33 2018 +0800
+
+    merge
+
+[33mcommit fe65b921838afe27e6891ee051f7edc3413f9eea[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Mon Sep 10 16:58:37 2018 +0800
+
+    在线地图切换缺陷
+
+[33mcommit a89c93b3c5994ae26dccc1279305b82d548a9e09[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Sep 10 15:22:47 2018 +0800
+
+    修复缺陷
+
+[33mcommit cf3b40aa7239d5ae2eec64198ee629b85a2062e0[m
+Merge: 1ef793c 3654e06
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Mon Sep 10 09:19:03 2018 +0800
+
+    merge
+
+[33mcommit 1ef793cb213d77bf00c3158d8fb37642fd598a53[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 7 17:39:18 2018 +0800
+
+    修改进度条
+
+[33mcommit 3654e066aaee1009ae0a1de8979b8a47020cd0f1[m
+Merge: f877620 63c4c70
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 7 14:43:34 2018 +0800
+
+    merge
+
+[33mcommit f877620e146d78a7d503787071c12e711f94e0b0[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Sep 7 14:22:18 2018 +0800
+
+    修改进度条
+
+[33mcommit 63c4c70c9ff501e72b901222c526bdfa2674c521[m
+Merge: 8f18777 ae23e28
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 6 18:58:47 2018 +0800
+
+    merge
+
+[33mcommit 8f18777e5b898148527da65f01c647facee0845a[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 6 18:27:08 2018 +0800
+
+    新增个人资料界面，退出功能；ios默认竖屏
+
+[33mcommit ae23e28139384e838576d564dd2c92457d7d078c[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 6 16:55:11 2018 +0800
+
+    修改登陆账号
+
+[33mcommit acf02dfba55e99aa49daa0e27a689a090bda5c68[m
+Merge: ee31444 19b7ff1
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 6 14:21:41 2018 +0800
+
+    完善示例地图下载
+
+[33mcommit ee314440afdda9f0dc61ed169d54c39392e416dd[m
+Merge: b0853f6 3c28aea
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Thu Sep 6 13:53:27 2018 +0800
+
+    merge
+
+[33mcommit 19b7ff11a1028be8e28db584aaae0e691a3125d2[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 6 10:50:40 2018 +0800
+
+    保留原来的生成/手绘岛洞，新增擦除/手绘擦除功能
+
+[33mcommit fc1fa22294cd0c5e920df14e6adacd02b86f4f70[m
+Merge: 80fc3b7 ab39588
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 6 10:02:28 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 80fc3b7e60a1fd1513c63d48e15f11d283265104[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Sep 6 10:02:10 2018 +0800
+
+    修复缓冲区分析图层选择，数据集改为图层；数据编辑，生成/手绘岛洞功能改为擦除
+
+[33mcommit ab39588865bed04050a187b5efe52006138e6efc[m
+Merge: d216e71 3c28aea
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Wed Sep 5 16:40:27 2018 +0800
+
+    merge
+
+[33mcommit b0853f600bc229ba3218a7db0c5ac1f5267fff5f[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 5 16:28:30 2018 +0800
+
+    merge
+
+[33mcommit 3c28aeaa20147b44e8a1cce0f8201bd8dc7c09b3[m
+Merge: 7551374 c9bdbdb
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 5 16:26:30 2018 +0800
+
+    merge
+
+[33mcommit 75513749e4e3a42d368dca0a2a40481faabbee30[m
+Merge: 7ed6ae5 bda30f2
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 5 15:24:18 2018 +0800
+
+    merge
+
+[33mcommit c9bdbdbb8bbeb42130682225943461b6ce4ebc38[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 5 15:22:21 2018 +0800
+
+    修复示例下载
+
+[33mcommit 7ed6ae5dc0fc6234962b2fa4d41472a66342ad35[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Sep 5 15:20:20 2018 +0800
+
+    修改除了数据编辑之外，其余 地图操作选择可编辑图层上的对象都是不可编辑状态；去除针对ios语音不必 要的错误提示
+
+[33mcommit bda30f29820fa0f8aa1cedd32a9cd475683a77da[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Sep 5 12:27:55 2018 +0800
+
+    修改新建图层-新建数据源缺陷
+
+[33mcommit 201a2b44139e2122e14720bfc2d55e51dfe114ae[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Sep 4 16:59:45 2018 +0800
+
+    示例地图下载
+
+[33mcommit d216e716da175436d3e7600eec90df034b2842db[m
+Merge: a390a2d 3dcabfc
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Sep 4 15:26:27 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+    
+    merge
+
+[33mcommit a390a2d68d300e0b1329f90b6b4c4bbf98bb20ee[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Sep 4 15:11:37 2018 +0800
+
+    本地提交
+    
+    本地提交
+
+[33mcommit 3dcabfcf8fbd510d12c59fb23ceb7f919da4a3a1[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Sep 3 17:29:43 2018 +0800
+
+    完善多旅行商分析
+
+[33mcommit b66b944f9f56ae5165ab46b134d7d2655d7866c9[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Sep 3 08:58:04 2018 +0800
+
+    实现路径分析功能；修复三维地图重复进入崩溃问题；实现登录功能
+
+[33mcommit e250ea9bdf470529a058688415576906c68b38ff[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 31 09:29:54 2018 +0800
+
+    添加进度条组建
+
+[33mcommit a75ce31bc666b5f0cbbc4564e59faf280381bb4f[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 28 16:03:40 2018 +0800
+
+    默认添加许可，和local中的默认地图;修改工作空间二级操作选中取消状态
+
+[33mcommit ed00d5c201886ea0bf6eaccc1e9114ceb6e57c3a[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 28 09:04:21 2018 +0800
+
+    取消启动页面js对evironment的初始化
+
+[33mcommit 079a59337b618a516f4c6c8032a21e603aee9733[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 28 08:55:58 2018 +0800
+
+    新增下载，登陆接口
+
+[33mcommit caa0f6c5f8a92d21eb0a2d9f3bf5d2f192c4dda0[m
+Author: jiushuaizhao <jiushuaizhao1995@163.com>
+Date:   Mon Aug 27 09:01:02 2018 +0800
+
+    download and zip
+
+[33mcommit 302db2589de8a2dab0134a623e3148d798f1ad66[m
+Author: jiushuaizhao <jiushuaizhao1995@163.com>
+Date:   Sun Aug 26 20:21:48 2018 +0800
+
+    '下载解压'
+
+[33mcommit 184467893146dac61c1b7f9c3474dcb751294282[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 18:15:10 2018 +0800
+
+    修复打开数据，新建文件型数据源奔溃问题
+
+[33mcommit fe695f7eb4e3e7e3aec4086a59425113376b1569[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 17:24:24 2018 +0800
+
+    文件格式化
+
+[33mcommit 40b8036ce6f68f14ffb94f6ada9c9fd2963f629e[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 17:22:46 2018 +0800
+
+    merge
+
+[33mcommit 9d2dc59bb81c414cf0000c666497877e28181ef0[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 17:21:21 2018 +0800
+
+    merge
+
+[33mcommit 49c8bbb50df784c943282b9aec977b6e046664f2[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 17:17:18 2018 +0800
+
+    merge
+
+[33mcommit 49c5b0ace130e55e1772cc0f2c0e9b3d21b060de[m
+Merge: 0e4e6a2 4076cea
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 17:16:57 2018 +0800
+
+    merge
+
+[33mcommit 0e4e6a265f790fb0fbd0dc33ac67c8342eb66749[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 17:01:03 2018 +0800
+
+    修复专题编辑缺陷
+
+[33mcommit 4076ceaa0343d4423728b8cb5fa2be93f4f42780[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Aug 24 14:04:09 2018 +0800
+
+    修改新建数据源
+
+[33mcommit 6f492bbcdacade3d1a6cf1d36cd9dc910e802bfc[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Fri Aug 24 10:30:10 2018 +0800
+
+    IOS itablet 工程资源提交
+    
+    IOS itablet 工程资源提交
+
+[33mcommit 030205e915f4a5054f6bc9f355301a0bebfe95fc[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Fri Aug 24 10:12:21 2018 +0800
+
+    IOS itablet 工程资源提交
+    
+    IOS itablet 工程资源提交
+
+[33mcommit 8aff84c898e851ef15464bf43b9676c27b3760fe[m
+Merge: 371f2d4 c717e55
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Aug 24 08:54:16 2018 +0800
+
+    恢复android文件
+
+[33mcommit 371f2d490d3f36b40ed19bbe49066b7a04faf2f5[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Aug 24 08:31:51 2018 +0800
+
+    online-download
+
+[33mcommit c717e55e68eecbc4d85dfdab893de4dfc9191feb[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 24 00:39:43 2018 +0800
+
+    修复缓冲分析默认设置缓存问题；修复专题图子项颜色不一致问题；
+
+[33mcommit 496ec67f8e45a51785f71335c74d7083e944647b[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Aug 23 15:33:53 2018 +0800
+
+    IOS itablet工程提交
+    
+    IOS itablet工程提交
+
+[33mcommit 933fcb9f59377b15d3295136d84aeef64dde832b[m
+Merge: 8ba78e3 943ff23
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Aug 23 08:56:54 2018 +0800
+
+    冲突处理
+    
+    冲突处理
+
+[33mcommit 8ba78e3e16942d339f658c19f68923c9904c64ec[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Thu Aug 23 08:54:57 2018 +0800
+
+    IOS 集成GL切片示范代码
+    
+    IOS 集成GL切片示范代码
+
+[33mcommit 943ff23f7325ff7ecf06c245c146f2a889649226[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 22 18:37:09 2018 +0800
+
+    调整界面
+
+[33mcommit 244bf94d33c4699ff9f84e25329d290c00d3f02c[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 22 18:32:27 2018 +0800
+
+    修复编辑岛洞相关错误操作
+
+[33mcommit 49f09521bf05e4e780f8a528456871e6d3f35e5f[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 22 17:04:45 2018 +0800
+
+    优化工作空间数据分析工具栏；完善文件目录文件过滤
+
+[33mcommit 1527e4180b98656e15f68de61e4a50a0e0f05a51[m
+Merge: 8358041 dffc779
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 22 16:57:36 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 8358041c62fd286bf4fb6985203cb8a2688bf320[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 22 16:57:26 2018 +0800
+
+    优化工作空间数据分析工具栏；完善文件目录文件过滤
+
+[33mcommit dffc7791701edd596c7f2c4b6afeee6af82d856a[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Aug 22 16:31:49 2018 +0800
+
+    完善新建数据源
+
+[33mcommit 6a52b1f725a90350b30afd62aa457f10383602eb[m
+Merge: a174861 75c162e
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 21 20:57:11 2018 +0800
+
+    merge
+
+[33mcommit a1748619f01ea383bf59999e1cce0b5334d71724[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 21 17:35:23 2018 +0800
+
+    完善追踪分析/连通性分析
+
+[33mcommit 75c162e43ad1ea68a523e7c688745287a1dcab43[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Aug 21 17:06:40 2018 +0800
+
+    增加数据可视化
+
+[33mcommit 5ccc73a3f04af6b649cde0708553cd393f747463[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Aug 21 16:19:25 2018 +0800
+
+    修改workspacefilelist.js
+
+[33mcommit b679ce6cee37d234da5f691a97a7b2bf273c0cc8[m
+Merge: 192656e 03d79a8
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Aug 21 10:41:27 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 192656e99193a0b7c9babfe7367596d52838249f[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Aug 21 10:39:55 2018 +0800
+
+    忽略文件
+    
+    忽略文件
+
+[33mcommit 083dc847c8ce49056ffd27c49e2eac35fdc64544[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Tue Aug 21 10:39:02 2018 +0800
+
+    italet ios 工程 提交
+    
+    italet ios 工程 提交
+
+[33mcommit 03d79a85fe446df5748095586906dd354463542d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 21 09:23:24 2018 +0800
+
+    修复样式错误
+
+[33mcommit c44b5585ad9f2033dd6fed535461a9a604279dd9[m
+Merge: f02267d 2cbcff0
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Aug 20 19:24:44 2018 +0800
+
+    merge
+
+[33mcommit f02267d8f61f296efff83264082b72c076bf51c3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Aug 20 19:20:46 2018 +0800
+
+    1.完善android网络/gps定位采集；2.修复叠加分析/数据编辑删除点崩溃问题；3.完善数据管理，数据源/数据集重命名；4.修复切换地图崩溃问题
+
+[33mcommit 2cbcff010421f1629c7f9c467562c10ccd6571a4[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Mon Aug 20 14:15:12 2018 +0800
+
+    增加数据可视化
+
+[33mcommit f673ecf46261d4a6b85a6f2090db8eb0c8a2d87d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Aug 16 09:50:02 2018 +0800
+
+    修复删除节点/叠加分析崩溃问题
+
+[33mcommit b6faa93a1f2fa06fc0d9302e542b1a8a5ea92297[m
+Merge: f1c69a0 64424fd
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 15 20:23:19 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit f1c69a0d949fa2e260560e74a1fffab06208ba6f[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 15 20:23:00 2018 +0800
+
+    修复专题图修改，新增问题
+
+[33mcommit 64424fd3236448c9f9cc29a4c85aa7c0c03439d1[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Aug 15 17:28:24 2018 +0800
+
+    完善新建图层
+
+[33mcommit 4563f9461a4283d978bda84edb68aa004fa93ea6[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 14 18:59:33 2018 +0800
+
+    修改标签专题图颜色选取
+
+[33mcommit 269b8287b1554e63a761fbd71184c5e935fee2f4[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 14 17:29:28 2018 +0800
+
+    覆盖
+
+[33mcommit 0042929edf9d897a4996d81405462088538396fd[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 14 16:03:18 2018 +0800
+
+    修复打开数据源路径问题
+
+[33mcommit 6c57c1ce33555338ea4ed4e64736e9f497472769[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Mon Aug 13 19:25:15 2018 +0800
+
+    1.完善数据管理；2.完善手绘轨迹；3.修复部 分缺陷
+
+[33mcommit 9fe06476a88e17e7bcc0aaf52961c12eb81d70a9[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Aug 9 14:25:11 2018 +0800
+
+    修改文件目录获取接口
+
+[33mcommit 28782640b124827cdfc868b3a1e251bb9909fa27[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Aug 9 11:19:35 2018 +0800
+
+    修改文件目录；添加数据管理提示框
+
+[33mcommit cb60fd5896cef259694808121828abbc29746abc[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Aug 9 00:15:14 2018 +0800
+
+    完善颜色选择
+
+[33mcommit 8592ed2fd351988a1b0e941e206f557f5905d82e[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Aug 9 00:09:40 2018 +0800
+
+    完善颜色选择
+
+[33mcommit 06be42109113ef9d68235b5570e830c2f0bbbfd3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 8 15:19:15 2018 +0800
+
+    修复创建数据源
+
+[33mcommit adfe5b725f1e03967e1db00a1e584f9200a00181[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 8 14:19:17 2018 +0800
+
+    修改创建数据源；新增colorpicker
+
+[33mcommit 377f9777856c0182b05e176af564c506a032a357[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 8 09:50:50 2018 +0800
+
+    更改createDatasource方法的路径；修复添加图层后地图刷新问题
+
+[33mcommit f62c9c7439883e6cfa2b4bd215d7d3d1097bd20d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Wed Aug 8 09:14:00 2018 +0800
+
+    去掉调试信息
+
+[33mcommit f4fd6c18d9fc2a7d4270120a71b77a8063bfc7b3[m
+Merge: 0c69f03 555dc3a
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 7 22:44:09 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 0c69f03e1035bd89684719f1d977fde8304442a2[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Aug 7 22:43:47 2018 +0800
+
+    完善风格
+
+[33mcommit 555dc3a5a494de165b693275b691d617de6ff654[m
+Merge: 44d9951 3ad6dc8
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Mon Aug 6 09:59:58 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 44d99510480b1fafb7c9a3928f0945eda82e89b7[m
+Author: xiezhiyan <xiezhiyanfighting@163.com>
+Date:   Mon Aug 6 09:49:22 2018 +0800
+
+    itable 集成 数据可视化 demo，app图标
+    
+    itable 集成 数据可视化 demo，app图标
+
+[33mcommit 3ad6dc89bad962fc3092da9208f15530b55c9a56[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Aug 3 17:27:51 2018 +0800
+
+    1.修复编辑属性问题；2.完善标签专题图；3.语音添加标签专题图；
+
+[33mcommit 5da9ec9c4389049e8bdef79e3068ebce6cbcde52[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Aug 2 20:07:19 2018 +0800
+
+    1.添加分段专题图；2.语音添加分段专题图；3.地图缩略图；4.打开地图目录优化
+
+[33mcommit d4974e7bb4b9bbcef1289f70153ca968c67fda30[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Jul 31 20:33:07 2018 +0800
+
+    跳转界面，隐藏语音框
+
+[33mcommit 350914b8195606b8e02356bc22811f0dc8b4077d[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Tue Jul 31 20:32:07 2018 +0800
+
+    添加语音界面，实现语音在线地图跳转，单值专题图设置
+
+[33mcommit 6d60bcbc1bbf193587b5ad06e81571d60783d43e[m
+Merge: abe4a7e 538b219
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Mon Jul 30 09:35:21 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit abe4a7ed8911bb7be633ab5d191c7586a710e717[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Mon Jul 30 09:35:07 2018 +0800
+
+    完善 新建图层，打开工作空间
+
+[33mcommit 538b219168e4d970ea52f68094f50dc45cfc8467[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Jul 27 18:08:47 2018 +0800
+
+    修复缓冲分析，清除没反应
+
+[33mcommit 32aa3565cae9a80e022ba1c2e2caa0b0158a1df3[m
+Merge: 489a588 41ddcb8
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Jul 27 15:06:49 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 489a5881d7c8504b9434db86e52f83b65834b1d3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Jul 27 15:02:46 2018 +0800
+
+    完善数据编辑 删除功能，新增撤销，重做功能
+
+[33mcommit 41ddcb84c68ad9e1bbc8c145f5977248c891e91d[m
+Merge: fdbbceb bb9b16b
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Jul 27 14:12:06 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit fdbbceb9782a319ecdc9bf420a40410e4789e0c5[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Fri Jul 27 14:11:45 2018 +0800
+
+    打开
+
+[33mcommit bb9b16bddc56d75b4679ad1b643084a0f12d8fc3[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Fri Jul 27 14:04:15 2018 +0800
+
+    修复地图编辑-属性，打开卡住问题
+
+[33mcommit eb741aa40b10cf1a91280989484b0e76abba777a[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Jul 26 17:52:50 2018 +0800
+
+    修复选中编辑图层后，点击数据采集地图不能移动的
+
+[33mcommit 1db57dcc759ba447f500475009579797a094cc25[m
+Author: DragonYang <dragonyang0917@gmail.com>
+Date:   Thu Jul 26 17:01:53 2018 +0800
+
+    1.去掉无用的类；2.用componentDidUpdate代替componentWillReceiveProps；3.修复保存地图的问题；4.修复切换地图，地图管理数据不更新问题；5.优 化地图管理的读取速度
+
+[33mcommit 1050e75212ac45d18ced75ac7549cd78e18172f5[m
+Merge: 927c1ef 0f0f09a
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Jul 25 18:51:12 2018 +0800
+
+    修改tab_home界面，mapload界面
+
+[33mcommit 927c1ef1ab14b4819c06ad24d8bf9136560986ec[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Wed Jul 25 18:41:30 2018 +0800
+
+    修改tab_home界面，mapload界面
+
+[33mcommit 0f0f09a6c05b2d7fc80cc923aadfda834dffd1f5[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 25 17:29:17 2018 +0800
+
+    查看示例地图，修改为不会显示工具栏，也不会记录到最近常用
+
+[33mcommit a3e41ed6e3df2bca9ce97601febc184df4738039[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 25 16:28:30 2018 +0800
+
+    提出公共Dataset Sectionlist公共组件
+
+[33mcommit ea48f0d779803ce84c87463b4ca696c982923661[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 25 15:30:56 2018 +0800
+
+    完善数据管理
+
+[33mcommit 81ca3acdf9fd7565a128a3f67a9b043c1bb93984[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 25 08:29:46 2018 +0800
+
+    修复变量声明
+
+[33mcommit 9f664aa28c61699d04a5d193b46502bd590a6919[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 25 08:23:47 2018 +0800
+
+    去掉调试信息
+
+[33mcommit 987b433dad30a1c8f079125ff6fd6c420efa20f6[m
+Merge: 5b06052 a7df558
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Tue Jul 24 18:03:13 2018 +0800
+
+    1.修复地图管理，图层编辑状态不唯一问题；2.新增地图采集-手绘打点；3.新增app图标；4.更新界面
+
+[33mcommit 5b0605245114c89cd2ba2334a0fbf666c202075e[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Tue Jul 24 16:46:13 2018 +0800
+
+    1.修复地图管理，图层编辑状态不唯一问题；2.新增地图采集-手绘打点；3.新增app图标；4.更新界面
+
+[33mcommit a7df558fce2b5510166e632e140ec95514b8e8a9[m
+Author: JiushuaiZhao <jiushuaizhao1995@163.com>
+Date:   Tue Jul 24 11:43:10 2018 +0800
+
+    增加workspacelist datasourlist datasets  修改offlinelist mapview index add_layer
+
+[33mcommit 6f5a78996522e649163c9ad6030e1abe65098d7a[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Fri Jul 20 15:02:58 2018 +0800
+
+    禁止横屏
+
+[33mcommit cde9cc2e111bc469e9bbc8f9c39cbc57b3fd9deb[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Fri Jul 20 14:39:50 2018 +0800
+
+    修复进入地图管理和数据管理后，返回地图不能移动
+
+[33mcommit ee001e81017d8ddc357a89c58f6b2b94b70072d1[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Fri Jul 20 14:30:11 2018 +0800
+
+    1.添加专题图；2.图层重命名/移除
+
+[33mcommit 852ea6c6fc723a8a77a173c87de094a8de479cab[m
+Merge: 33cd637 232fd85
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 18 16:13:14 2018 +0800
+
+    Merge branch 'master' of https://github.com/iMobileforJavaScript/iTablet
+
+[33mcommit 33cd6370db7d5080eee04f6aec839c24ad28ee86[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 18 16:12:50 2018 +0800
+
+    初始化文件
+
+[33mcommit 232fd8599baebff04369417b8153ce0bc7dd1412[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 18 15:53:53 2018 +0800
+
+    Modified ReadME.md
+
+[33mcommit 7f8015f52bbee61f6cbcec9bfaa4ca7022840a63[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 18 15:39:54 2018 +0800
+
+    first push app
+
+[33mcommit 8da5f2e03fbeb04722e8bfabd58eb5d538a0e755[m
+Author: iMobileforJS <imobile_for_JS@163.com>
+Date:   Wed Jul 18 15:37:59 2018 +0800
+
+    init

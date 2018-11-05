@@ -13,7 +13,6 @@ const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR
 const WIDTH = 300
 
 export default class Input extends React.Component {
-
   props: {
     image: any,
     password: string,
@@ -21,24 +20,31 @@ export default class Input extends React.Component {
   }
 
   render() {
-    const imagePath = this.props.image ? this.props.image : require('../assets/public/input.png') //add path
+    const imagePath = this.props.image
+      ? this.props.image
+      : require('../assets/public/input.png') //add path
     const isPassword = this.props.password ? this.props.password : false
-    const placeholder = this.props.placeholder ? this.props.placeholder : 'place'
+    const placeholder = this.props.placeholder
+      ? this.props.placeholder
+      : 'place'
 
     return (
       <View style={styles.container}>
         <View>
           <Image style={styles.image} source={imagePath} />
         </View>
-        <View style={{ width: Util.USUAL_LINEWIDTH, backgroundColor: BORDERCOLOR }} />
+        <View
+          style={{ width: Util.USUAL_LINEWIDTH, backgroundColor: BORDERCOLOR }}
+        />
         <TextInput
           accessible={true}
           accessibilityLabel={placeholder ? placeholder : '输入框'}
           style={styles.input}
           secureTextEntry={isPassword}
           placeholder={placeholder}
-          underlineColorAndroid='transparent'
-          placeholderTextColor={BORDERCOLOR} />
+          underlineColorAndroid="transparent"
+          placeholderTextColor={BORDERCOLOR}
+        />
       </View>
     )
   }

@@ -12,7 +12,6 @@ import { scaleSize } from '../utils'
 import { color } from '../styles'
 
 export default class ImageButton extends React.Component {
-
   static propTypes = {
     activeOpacity: PropTypes.number,
     containerStyle: PropTypes.any,
@@ -30,7 +29,6 @@ export default class ImageButton extends React.Component {
   }
 
   render() {
-
     if (!this.props.icon) {
       return null
     }
@@ -45,12 +43,22 @@ export default class ImageButton extends React.Component {
           this.props.onPress && this.props.onPress()
         }}
       >
-        <View style={[this.props.type === 'normal' ? styles.iconBgNormal : styles.iconBg, this.props.iconBtnStyle]}>
-          <Image style={[styles.icon, this.props.iconStyle]} source={this.props.icon} />
+        <View
+          style={[
+            this.props.type === 'normal' ? styles.iconBgNormal : styles.iconBg,
+            this.props.iconBtnStyle,
+          ]}
+        >
+          <Image
+            style={[styles.icon, this.props.iconStyle]}
+            source={this.props.icon}
+          />
         </View>
-        {
-          this.props.title && <Text style={[styles.iconTitle, this.props.titleStyle]}>{this.props.title}</Text>
-        }
+        {this.props.title && (
+          <Text style={[styles.iconTitle, this.props.titleStyle]}>
+            {this.props.title}
+          </Text>
+        )}
       </TouchableOpacity>
     )
   }

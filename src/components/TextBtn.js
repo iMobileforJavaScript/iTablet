@@ -5,7 +5,6 @@ import * as Util from '../utils/constUtil'
 const WIDTH = 70
 
 export default class TextBtn extends React.Component {
-
   props: {
     width: number,
     height: number,
@@ -35,9 +34,22 @@ export default class TextBtn extends React.Component {
     const containerWidth = this.props.width ? this.props.width : WIDTH
     const containerHeight = this.props.height ? this.props.height : null
     return (
-      <View style={[styles.container,{width:containerWidth,height:containerHeight}]}>
-        <TouchableOpacity accessible={true} accessibilityLabel={this.props.btnText} activeOpacity={0.8} style={styles.titleBtn} onPress={this._btnClick}>
-          <Text style={[styles.btnText, this.props.textStyle]}>{this.props.btnText ? this.props.btnText : '按钮'}</Text>
+      <View
+        style={[
+          styles.container,
+          { width: containerWidth, height: containerHeight },
+        ]}
+      >
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={this.props.btnText}
+          activeOpacity={0.8}
+          style={styles.titleBtn}
+          onPress={this._btnClick}
+        >
+          <Text style={[styles.btnText, this.props.textStyle]}>
+            {this.props.btnText ? this.props.btnText : '按钮'}
+          </Text>
           {/*<Text style={[styles.btnText, { color: this.state.clicked ? Util.USUAL_PURPLE : textBlue }]}>{this.props.btnText ? this.props.btnText : '按钮'}</Text>*/}
         </TouchableOpacity>
       </View>

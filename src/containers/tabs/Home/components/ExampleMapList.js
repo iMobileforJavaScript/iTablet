@@ -13,6 +13,7 @@ import Thumbnails from '../../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_reactnative'
 import { ConstPath, ExampleMapData } from '../../../../constants'
+
 const openNativeSampleCode =
   Platform.OS === 'ios'
     ? NativeModules.SMSampleCodeBridgeModule
@@ -87,7 +88,7 @@ export default class ExampleMapList extends React.Component {
         if (exist) {
           openNativeSampleCode.open('Visual')
         } else {
-          this.alertDown(filePath, fileName, outPath, vectorMap)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case map3D:
@@ -116,7 +117,7 @@ export default class ExampleMapList extends React.Component {
             isExample: true,
           })
         } else {
-          this.alertDown(filePath, fileName, outPath, map3D)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case ObliquePhoto:
@@ -167,7 +168,7 @@ export default class ExampleMapList extends React.Component {
             isExample: true,
           })
         } else {
-          this.alertDown(filePath, fileName, outPath, gl)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case overLay:
@@ -190,7 +191,7 @@ export default class ExampleMapList extends React.Component {
             isExample: true,
           })
         } else {
-          this.alertDown(filePath, fileName, outPath, overLay)
+          this.alertDown(filePath, fileName, outPath, key)
         }
         break
     }
@@ -318,7 +319,12 @@ export default class ExampleMapList extends React.Component {
       Alert.alert(
         '温馨提示',
         '下载失败，请检查网路',
-        [{ text: '确定', onPress: () => {} }],
+        [
+          {
+            text: '确定',
+            onPress: () => {},
+          },
+        ],
         { cancelable: true },
       )
     }
@@ -329,7 +335,13 @@ export default class ExampleMapList extends React.Component {
       Alert.alert(
         '温馨提示',
         '有文件正在下载中，请稍后',
-        [{ text: '确定', onPress: () => {}, style: 'cancel' }],
+        [
+          {
+            text: '确定',
+            onPress: () => {},
+            style: 'cancel',
+          },
+        ],
         { cancelable: false },
       )
     } else {
@@ -344,7 +356,11 @@ export default class ExampleMapList extends React.Component {
         '本地实例文件不存在是否下载文件',
         [
           { text: '确定', onPress: () => this.download(filePath, fileName) },
-          { text: '取消', onPress: () => {}, style: 'cancel' },
+          {
+            text: '取消',
+            onPress: () => {},
+            style: 'cancel',
+          },
         ],
         { cancelable: true },
       )

@@ -6,7 +6,12 @@
 
 import * as React from 'react'
 import { View } from 'react-native'
-import { TextAlignment, ThemeLabel, Action, TextStyle } from 'imobile_for_reactnative'
+import {
+  TextAlignment,
+  ThemeLabel,
+  Action,
+  TextStyle,
+} from 'imobile_for_reactnative'
 import { Button, Row } from '../../../../../components'
 import { Toast, dataUtil } from '../../../../../utils'
 import NavigationService from '../../../../NavigationService'
@@ -23,7 +28,6 @@ import styles from './styles'
 const CHOOSE = '请选择'
 
 export default class ThemeLabelView extends React.Component {
-
   props: {
     title: string,
     nav: Object,
@@ -65,7 +69,7 @@ export default class ThemeLabelView extends React.Component {
         data.expression = await theme.getLabelExpression()
         let textStyle = await theme.getStyle()
         data.fontName = await textStyle.getFontName()
-        data.fontSize = await textStyle.getFontWidth() || 10
+        data.fontSize = (await textStyle.getFontWidth()) || 10
         data.align = await textStyle.getAlignment()
         data.fontColor = dataUtil.colorHex(await textStyle.getForeColor())
         this.themeLabel = await new ThemeLabel().createObjClone(theme)
@@ -131,9 +135,10 @@ export default class ThemeLabelView extends React.Component {
       Toast.show('请选择对齐方式')
       return
     }
-    (async function () {
+    (async function() {
       try {
-        this.themeLabel = this.themeLabel._SMThemeId || await new ThemeLabel().createObj()
+        this.themeLabel =
+          this.themeLabel._SMThemeId || (await new ThemeLabel().createObj())
         let textStyle = await new TextStyle().createObj()
         await this.themeLabel.setLabelExpression(this.state.data.expression)
         let rgba = dataUtil.colorRgba(this.state.data.fontColor)
@@ -148,7 +153,11 @@ export default class ThemeLabelView extends React.Component {
         let dataset = await this.props.layer.getDataset()
         if (this.props.isThemeLayer) {
           await this.props.map.removeLayer(this.props.layer.index)
-          let newLayer = await this.props.map.addThemeLayer(dataset, this.themeLabel, true)
+          let newLayer = await this.props.map.addThemeLayer(
+            dataset,
+            this.themeLabel,
+            true,
+          )
           // await this.props.map.insert(this.props.layer.index, newLayer)
           await newLayer.setCaption(this.props.layer.caption)
           await this.props.map.moveTo(0, this.props.layer.index)
@@ -170,7 +179,7 @@ export default class ThemeLabelView extends React.Component {
       } catch (e) {
         Toast.show('设置失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   reset = () => {
@@ -181,84 +190,92 @@ export default class ThemeLabelView extends React.Component {
   renderContent = () => {
     return (
       <View style={styles.content}>
-        {
-          this.state.data.expression
-            ? <Row
-              style={styles.rowMarginTop}
-              key={'表达式'}
-              value={this.state.data.expression || CHOOSE}
-              type={Row.Type.TEXT_BTN}
-              title={'表达式'}
-              getValue={this.getExpression}
-              // getValue={value => this.getValue({expression: value === CHOOSE ? '' : value })}
-            />
-            : <View/>
-        }
-        {
-          this.state.data.fontName
-            ? <Row
-              style={styles.rowMarginTop}
-              key={'字体'}
-              value={this.state.data.fontName}
-              type={Row.Type.TEXT_BTN}
-              title={'字体'}
-              getValue={this.getFont}
-              // getValue={value => this.getValue({fontName: value === CHOOSE ? '' : value})}
-            />
-            : <View/>
-        }
-        {
-          this.state.data.align >= 0
-            ? <Row
-              style={styles.rowMarginTop}
-              key={'对齐方式'}
-              value={this.state.data.align >= 0 ? this.state.data.align : TextAlignment.TOPLEFT}
-              type={Row.Type.RADIO_GROUP}
-              title={'对齐方式'}
-              defaultValue={this.state.data.align >= 0 ? this.state.data.align : TextAlignment.TOPLEFT}
-              radioColumn={3}
-              radioArr={[
-                { title: '左上', value: TextAlignment.TOPLEFT },
-                { title: '中上', value: TextAlignment.TOPCENTER },
-                { title: '右上', value: TextAlignment.TOPRIGHT },
-                { title: '左中', value: TextAlignment.MIDDLELEFT },
-                { title: '中心', value: TextAlignment.MIDDLECENTER },
-                { title: '右中', value: TextAlignment.MIDDLERIGHT },
-                { title: '左下', value: TextAlignment.BOTTOMLEFT },
-                { title: '中下', value: TextAlignment.BOTTOMCENTER },
-                { title: '右下', value: TextAlignment.BOTTOMRIGHT },
-              ]}
-              getValue={data => this.getValue({ align: data.value })}
-            />
-            : <View/>
-        }
-        {
-          this.state.data.fontSize >= 0
-            ? <Row
-              style={styles.rowMarginTop}
-              key={'字号'}
-              defaultValue={10}
-              value={this.state.data.fontSize || 10}
-              type={Row.Type.CHOOSE_NUMBER}
-              minValue={8}
-              maxValue={150}
-              title={'字号'}
-              getValue={value => this.getValue({ fontSize: value })}
-            />
-            : <View/>
-        }
-        {
-          this.state.data.fontColor
-            ? <Row
-              style={styles.rowMarginTop}
-              key={'文本颜色'}
-              value={this.state.data.fontColor}
-              type={Row.Type.CHOOSE_COLOR}
-              title={'文本颜色'}
-              getValue={this.getFontColor}
-            />
-            : <View/>
-        }
+        {this.state.data.expression ? (
+          <Row
+            style={styles.rowMarginTop}
+            key={'表达式'}
+            value={this.state.data.expression || CHOOSE}
+            type={Row.Type.TEXT_BTN}
+            title={'表达式'}
+            getValue={this.getExpression}
+            // getValue={value => this.getValue({expression: value === CHOOSE ? '' : value })}
+          />
+        ) : (
+          <View />
+        )}
+        {this.state.data.fontName ? (
+          <Row
+            style={styles.rowMarginTop}
+            key={'字体'}
+            value={this.state.data.fontName}
+            type={Row.Type.TEXT_BTN}
+            title={'字体'}
+            getValue={this.getFont}
+            // getValue={value => this.getValue({fontName: value === CHOOSE ? '' : value})}
+          />
+        ) : (
+          <View />
+        )}
+        {this.state.data.align >= 0 ? (
+          <Row
+            style={styles.rowMarginTop}
+            key={'对齐方式'}
+            value={
+              this.state.data.align >= 0
+                ? this.state.data.align
+                : TextAlignment.TOPLEFT
+            }
+            type={Row.Type.RADIO_GROUP}
+            title={'对齐方式'}
+            defaultValue={
+              this.state.data.align >= 0
+                ? this.state.data.align
+                : TextAlignment.TOPLEFT
+            }
+            radioColumn={3}
+            radioArr={[
+              { title: '左上', value: TextAlignment.TOPLEFT },
+              { title: '中上', value: TextAlignment.TOPCENTER },
+              { title: '右上', value: TextAlignment.TOPRIGHT },
+              { title: '左中', value: TextAlignment.MIDDLELEFT },
+              { title: '中心', value: TextAlignment.MIDDLECENTER },
+              { title: '右中', value: TextAlignment.MIDDLERIGHT },
+              { title: '左下', value: TextAlignment.BOTTOMLEFT },
+              { title: '中下', value: TextAlignment.BOTTOMCENTER },
+              { title: '右下', value: TextAlignment.BOTTOMRIGHT },
+            ]}
+            getValue={data => this.getValue({ align: data.value })}
+          />
+        ) : (
+          <View />
+        )}
+        {this.state.data.fontSize >= 0 ? (
+          <Row
+            style={styles.rowMarginTop}
+            key={'字号'}
+            defaultValue={10}
+            value={this.state.data.fontSize || 10}
+            type={Row.Type.CHOOSE_NUMBER}
+            minValue={8}
+            maxValue={150}
+            title={'字号'}
+            getValue={value => this.getValue({ fontSize: value })}
+          />
+        ) : (
+          <View />
+        )}
+        {this.state.data.fontColor ? (
+          <Row
+            style={styles.rowMarginTop}
+            key={'文本颜色'}
+            value={this.state.data.fontColor}
+            type={Row.Type.CHOOSE_COLOR}
+            title={'文本颜色'}
+            getValue={this.getFontColor}
+          />
+        ) : (
+          <View />
+        )}
       </View>
     )
   }
@@ -266,8 +283,8 @@ export default class ThemeLabelView extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
+        <Button title={'确定'} onPress={this.confirm} />
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
       </View>
     )
   }

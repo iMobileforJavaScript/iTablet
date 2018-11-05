@@ -20,6 +20,9 @@ public class IntentModule extends ReactContextBaseJavaModule {
               case "Visual":
                   name="com.supermap.imb.appconfig.StartupActivity";
                   break;
+              case "Layer":
+                  name="com.tronzzb.sampleapp.activity.MapLayer";
+                  break;
           }
         try{
             Activity currentActivity = getCurrentActivity();

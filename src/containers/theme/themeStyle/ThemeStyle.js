@@ -22,7 +22,6 @@ const LINE_STYLE = '线风格'
 const REGION_STYLE = '填充风格'
 
 export default class ThemeStyle extends React.Component {
-
   props: {
     navigation: Object,
     nav: Object,
@@ -38,16 +37,16 @@ export default class ThemeStyle extends React.Component {
     this.layer = params && params.layer
     this.map = params && params.map
     this.mapControl = params && params.mapControl
-    this.originType = params && params.type || ''
+    this.originType = (params && params.type) || ''
     this.settingType = ''
     // 设置图层风格
     this.layerSetting = {}
     // 设置主题中子项的风格
-    this.item = params && params.item  // themeUniqueItem || themeRangeItem || themeLabelItem
-    this.cb = params && params.cb  // themeUniqueItem || themeRangeItem || themeLabelItem 回调函数
+    this.item = params && params.item // themeUniqueItem || themeRangeItem || themeLabelItem
+    this.cb = params && params.cb // themeUniqueItem || themeRangeItem || themeLabelItem 回调函数
     this.state = {
       title: '',
-      type: params && params.type || '',
+      type: (params && params.type) || '',
       data: {
         color: '#ffffff',
         lineColor: '#ffffff',
@@ -64,7 +63,7 @@ export default class ThemeStyle extends React.Component {
   }
 
   getData = () => {
-    (async function () {
+    (async function() {
       this.container.setLoading(true)
       try {
         let dataset = await this.layer.getDataset()
@@ -86,7 +85,7 @@ export default class ThemeStyle extends React.Component {
             case 'GRID':
               break
             default:
-              throw new Error("Unknown LayerSetting Type")
+              throw new Error('Unknown LayerSetting Type')
           }
         }
         this.container.setLoading(false)
@@ -94,27 +93,38 @@ export default class ThemeStyle extends React.Component {
         this.container.setLoading(false)
         Toast.show('加载失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   getStyle = (settingStyle, type) => {
-    (async function () {
-      let baseSetting = {}, title = '', data = this.state.data, size2D
+    (async function() {
+      let baseSetting = {},
+        title = '',
+        data = this.state.data,
+        size2D
       switch (type) {
         case DatasetType.POINT:
           size2D = await settingStyle.getMarkerSize()
           baseSetting.pointSize = await size2D.getWidth()
-          baseSetting.lineColor = dataUtil.colorHex(await settingStyle.getLineColor())
+          baseSetting.lineColor = dataUtil.colorHex(
+            await settingStyle.getLineColor(),
+          )
           title = '点符号库'
           break
         case DatasetType.LINE:
-          baseSetting.lineColor = dataUtil.colorHex(await settingStyle.getLineColor())
+          baseSetting.lineColor = dataUtil.colorHex(
+            await settingStyle.getLineColor(),
+          )
           baseSetting.size = await settingStyle.getLineWidth()
           title = '线符号库'
           break
         case DatasetType.REGION:
-          baseSetting.color = dataUtil.colorHex(await settingStyle.getFillForeColor())
-          baseSetting.lineColor = dataUtil.colorHex(await settingStyle.getLineColor())
+          baseSetting.color = dataUtil.colorHex(
+            await settingStyle.getFillForeColor(),
+          )
+          baseSetting.lineColor = dataUtil.colorHex(
+            await settingStyle.getLineColor(),
+          )
           baseSetting.size = await settingStyle.getLineWidth()
           title = '面符号库'
           break
@@ -126,7 +136,7 @@ export default class ThemeStyle extends React.Component {
         data,
         type,
       })
-    }).bind(this)()
+    }.bind(this)())
   }
 
   getColor = (type, defaultColor) => {
@@ -149,27 +159,45 @@ export default class ThemeStyle extends React.Component {
   }
 
   confirm = () => {
-    (async function () {
+    (async function() {
       try {
         if (this.settingType === 'VECTOR' || this.item) {
           let geoStyle = await new GeoStyle().createObj()
           if (this.state.data.color) {
             let colorRgb = dataUtil.colorRgba(this.state.data.color)
-            await geoStyle.setFillForeColor(colorRgb.r, colorRgb.g, colorRgb.b, colorRgb.a)
+            await geoStyle.setFillForeColor(
+              colorRgb.r,
+              colorRgb.g,
+              colorRgb.b,
+              colorRgb.a,
+            )
           }
           if (this.state.data.lineColor) {
             let lineColorRgb = dataUtil.colorRgba(this.state.data.lineColor)
-            await geoStyle.setLineColor(lineColorRgb.r, lineColorRgb.g, lineColorRgb.b, lineColorRgb.a)
+            await geoStyle.setLineColor(
+              lineColorRgb.r,
+              lineColorRgb.g,
+              lineColorRgb.b,
+              lineColorRgb.a,
+            )
           }
           if (this.state.data.pointColor) {
             let pointColorRgb = dataUtil.colorRgba(this.state.data.pointColor)
-            await geoStyle.setPointColor(pointColorRgb.r, pointColorRgb.g, pointColorRgb.b, pointColorRgb.a)
+            await geoStyle.setPointColor(
+              pointColorRgb.r,
+              pointColorRgb.g,
+              pointColorRgb.b,
+              pointColorRgb.a,
+            )
           }
           if (this.state.data.size > 0) {
             await geoStyle.setLineWidth(this.state.data.size)
           }
           if (this.state.data.pointSize > 0) {
-            let size2D = await new Size2D().createObj(this.state.data.pointSize, this.state.data.pointSize)
+            let size2D = await new Size2D().createObj(
+              this.state.data.pointSize,
+              this.state.data.pointSize,
+            )
             await geoStyle.setMarkerSize(size2D)
           }
           if (this.item) {
@@ -193,12 +221,10 @@ export default class ThemeStyle extends React.Component {
       } catch (e) {
         Toast.show('设置失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
-  reset = () => {
-
-  }
+  reset = () => {}
 
   renderCAD = () => {
     return (
@@ -224,7 +250,7 @@ export default class ThemeStyle extends React.Component {
   }
 
   rowAction = title => {
-    let  type = ''
+    let type = ''
     switch (title) {
       case POINT_STYLE:
         type = DatasetType.POINT
@@ -343,7 +369,7 @@ export default class ThemeStyle extends React.Component {
         <View style={styles.titleView}>
           <Text style={styles.title}>{this.state.title}</Text>
         </View>
-        <View></View>
+        <View />
       </View>
     )
   }
@@ -364,16 +390,16 @@ export default class ThemeStyle extends React.Component {
         setting = this.renderRegionSetting()
         break
       default:
-        setting = <View/>
+        setting = <View />
         break
     }
     return (
       <View>
-        {
-          this.state.type !== DatasetType.CAD && <View style={styles.titleView}>
+        {this.state.type !== DatasetType.CAD && (
+          <View style={styles.titleView}>
             <Text style={styles.title}>基本设置</Text>
           </View>
-        }
+        )}
         {setting}
       </View>
     )
@@ -382,8 +408,8 @@ export default class ThemeStyle extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
+        <Button title={'确定'} onPress={this.confirm} />
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
       </View>
     )
   }
@@ -402,12 +428,13 @@ export default class ThemeStyle extends React.Component {
     return (
       <Container
         style={styles.container}
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '图层风格',
           navigation: this.props.navigation,
           backAction: this.back,
-        }}>
+        }}
+      >
         <ScrollView style={styles.content}>
           {/*{this.state.showView && this.renderResource()}*/}
           {this.state.showView && this.renderSetting()}

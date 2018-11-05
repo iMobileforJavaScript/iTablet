@@ -9,7 +9,6 @@ import { View, TouchableOpacity } from 'react-native'
 import styles from './styles'
 
 export default class ChooseColor extends PureComponent {
-
   props: {
     title: string,
     value: any,
@@ -38,7 +37,12 @@ export default class ChooseColor extends PureComponent {
         accessibilityLabel={this.props.title}
         onPress={() => this.getValue()}
       >
-        <View style={[styles.subChooseColorContainer, {backgroundColor: this.props.value}]}/>
+        <View
+          style={[
+            styles.subChooseColorContainer,
+            { backgroundColor: this.props.value },
+          ]}
+        />
       </TouchableOpacity>
     )
   }

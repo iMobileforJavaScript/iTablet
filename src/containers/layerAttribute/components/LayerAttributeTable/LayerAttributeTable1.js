@@ -5,10 +5,23 @@
  */
 
 import * as React from 'react'
-import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import {
+  View,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from 'react-native'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { color } from '../../../../styles'
-import { Table, TableWrapper, Row, Rows, Col, Cell } from 'react-native-table-component'
+import {
+  Table,
+  TableWrapper,
+  Row,
+  Rows,
+  Col,
+  Cell,
+} from 'react-native-table-component'
 import { FieldType } from 'imobile_for_reactnative'
 
 import styles from './styles'
@@ -16,7 +29,6 @@ import styles from './styles'
 const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttributeTable extends React.Component {
-
   props: {
     mapChange: () => {},
     showSaveDialog: () => {},
@@ -46,7 +58,7 @@ export default class LayerAttributeTable extends React.Component {
 
   constructor(props) {
     super(props)
-    let {dataList, colHeight} = this.dealData(props.tableTitle, props.data)
+    let { dataList, colHeight } = this.dealData(props.tableTitle, props.data)
     this.state = {
       colHeight: colHeight,
       widthArr: props.widthArr,
@@ -61,7 +73,9 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   dealData = (title = [], data, height = COL_HEIGHT) => {
-    let titleList = title, dataList = data, colHeight = []
+    let titleList = title,
+      dataList = data,
+      colHeight = []
 
     if (data instanceof Object) {
       titleList = []
@@ -80,13 +94,13 @@ export default class LayerAttributeTable extends React.Component {
         ])
         colHeight.push(height)
       })
-      return {titleList, dataList, colHeight}
+      return { titleList, dataList, colHeight }
     }
 
     for (let i = 0; i < dataList.length; i++) {
       colHeight[i] = height
     }
-    return {titleList, dataList, colHeight}
+    return { titleList, dataList, colHeight }
   }
 
   add = () => {
@@ -107,7 +121,10 @@ export default class LayerAttributeTable extends React.Component {
 
   setData = data => {
     // this.originData = changeOrigin ? { ...data } : {}
-    let {titleList, dataList, colHeight} = this.dealData(this.props.tableTitle, data)
+    let { titleList, dataList, colHeight } = this.dealData(
+      this.props.tableTitle,
+      data,
+    )
     this.setState({
       titleData: titleList,
       tableData: dataList,
@@ -191,14 +208,21 @@ export default class LayerAttributeTable extends React.Component {
       return (
         <TableWrapper style={styles.wrapper}>
           <Col
-            data={this.state.tableTitle} style={styles.title} heightArr={this.state.colHeight}
-            textStyle={styles.text}/>
+            data={this.state.tableTitle}
+            style={styles.title}
+            heightArr={this.state.colHeight}
+            textStyle={styles.text}
+          />
           {/*<Rows data={this.state.tableData} flexArr={[1, 1]} style={styles.row} textStyle={styles.text}/>*/}
         </TableWrapper>
       )
     } else {
       return (
-        <Rows data={this.state.tableData} style={styles.row} textStyle={styles.text}/>
+        <Rows
+          data={this.state.tableData}
+          style={styles.row}
+          textStyle={styles.text}
+        />
       )
     }
   }
@@ -206,7 +230,13 @@ export default class LayerAttributeTable extends React.Component {
   renderNormalTable = () => {
     return (
       <View style={{ flex: 1 }}>
-        <Table borderStyle={{ borderColor: '#C1C0B9', flex: 1, backgroundColor: 'blue' }}>
+        <Table
+          borderStyle={{
+            borderColor: '#C1C0B9',
+            flex: 1,
+            backgroundColor: 'blue',
+          }}
+        >
           <Row
             flexArr={[1, 1]}
             // widthArr={this.state.widthArr}
@@ -217,30 +247,33 @@ export default class LayerAttributeTable extends React.Component {
         </Table>
         <ScrollView style={styles.dataWrapper}>
           <Table borderStyle={{ borderColor: '#C1C0B9' }}>
-            {
-              this.state.tableData.map((rowData, index) => {
-                return (
-                  <TableWrapper key={index} style={styles.row}>
-                    {
-                      rowData.map((cellData, cellIndex) => {
-                        let isSystemField = cellData.data && cellData.data.fieldInfo && cellData.data.fieldInfo.isSystemField
-                        return (
-                          <Cell
-                            key={cellIndex}
-                            data={
-                              cellIndex === 0
-                                ? cellData
-                                : isSystemField
-                                  ? (cellData.data.value === undefined ? '' : cellData.data.value)
-                                  : this.renderInput(cellData, index)}
-                            textStyle={styles.text}/>
-                        )
-                      })
-                    }
-                  </TableWrapper>
-                )
-              })
-            }
+            {this.state.tableData.map((rowData, index) => {
+              return (
+                <TableWrapper key={index} style={styles.row}>
+                  {rowData.map((cellData, cellIndex) => {
+                    let isSystemField =
+                      cellData.data &&
+                      cellData.data.fieldInfo &&
+                      cellData.data.fieldInfo.isSystemField
+                    return (
+                      <Cell
+                        key={cellIndex}
+                        data={
+                          cellIndex === 0
+                            ? cellData
+                            : isSystemField
+                              ? cellData.data.value === undefined
+                                ? ''
+                                : cellData.data.value
+                              : this.renderInput(cellData, index)
+                        }
+                        textStyle={styles.text}
+                      />
+                    )
+                  })}
+                </TableWrapper>
+              )
+            })}
           </Table>
         </ScrollView>
       </View>
@@ -248,7 +281,6 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   renderScrollTable = () => {
-
     return (
       <ScrollView style={{ flex: 1 }} horizontal={true}>
         <View>
@@ -262,67 +294,74 @@ export default class LayerAttributeTable extends React.Component {
             />
           </Table>
           <ScrollView style={styles.dataWrapper}>
-
             <Table borderStyle={{ borderColor: '#C1C0B9' }}>
-              {
-                this.state.tableData.map((rowData, index) => {
-                  let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
-                  let arr = this.dealEditCellData(data, index)
-                  return (
-                    <TouchableOpacity activeOpacity={0.8} key={index} onPress={() => this.selectRow(index, data)}>
-                      <TableWrapper
-                        key={index}
-                        style={[
-                          styles.row,
-                          index % 2 === 1 && {backgroundColor: color.grayLight},
-                          this.state.currentSelect === index && styles.selectRow,
-                        ]}>
-                        {
-                          arr.map((cellData, cellIndex) => {
-                            if (cellIndex === 3) {
-                              let type = ''
+              {this.state.tableData.map((rowData, index) => {
+                let data =
+                  (rowData && rowData[1].data && rowData[1].data.fieldInfo) ||
+                  {}
+                let arr = this.dealEditCellData(data, index)
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    key={index}
+                    onPress={() => this.selectRow(index, data)}
+                  >
+                    <TableWrapper
+                      key={index}
+                      style={[
+                        styles.row,
+                        index % 2 === 1 && { backgroundColor: color.grayLight },
+                        this.state.currentSelect === index && styles.selectRow,
+                      ]}
+                    >
+                      {arr.map((cellData, cellIndex) => {
+                        if (cellIndex === 3) {
+                          let type = ''
 
-                              switch (cellData) {
-                                case FieldType.WTEXT:
-                                case FieldType.CHAR:
-                                case FieldType.TEXT:
-                                  type = '文本'
-                                  break
-                                case FieldType.BYTE:
-                                case FieldType.INT16:
-                                case FieldType.INT32:
-                                case FieldType.INT64:
-                                case FieldType.LONGBINARY:
-                                case FieldType.SINGLE:
-                                case FieldType.DOUBLE:
-                                  type = '数值'
-                                  break
-                                case FieldType.BOOLEAN:
-                                  type = '布尔'
-                                  break
-                                case FieldType.DATETIME:
-                                  type = '日期'
-                                  break
-                                default:
-                                  type = '未知属性'
-                                  break
-                              }
-                              cellData = type
-                            }
-                            return (
-                              <Cell
-                                width={this.state.widthArr[cellIndex]}
-                                key={cellIndex}
-                                data={cellData}
-                                textStyle={[styles.text, this.state.currentSelect === index && styles.selectText]}/>
-                            )
-                          })
+                          switch (cellData) {
+                            case FieldType.WTEXT:
+                            case FieldType.CHAR:
+                            case FieldType.TEXT:
+                              type = '文本'
+                              break
+                            case FieldType.BYTE:
+                            case FieldType.INT16:
+                            case FieldType.INT32:
+                            case FieldType.INT64:
+                            case FieldType.LONGBINARY:
+                            case FieldType.SINGLE:
+                            case FieldType.DOUBLE:
+                              type = '数值'
+                              break
+                            case FieldType.BOOLEAN:
+                              type = '布尔'
+                              break
+                            case FieldType.DATETIME:
+                              type = '日期'
+                              break
+                            default:
+                              type = '未知属性'
+                              break
+                          }
+                          cellData = type
                         }
-                      </TableWrapper>
-                    </TouchableOpacity>
-                  )
-                })
-              }
+                        return (
+                          <Cell
+                            width={this.state.widthArr[cellIndex]}
+                            key={cellIndex}
+                            data={cellData}
+                            textStyle={[
+                              styles.text,
+                              this.state.currentSelect === index &&
+                                styles.selectText,
+                            ]}
+                          />
+                        )
+                      })}
+                    </TableWrapper>
+                  </TouchableOpacity>
+                )
+              })}
             </Table>
           </ScrollView>
         </View>
@@ -332,17 +371,16 @@ export default class LayerAttributeTable extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior={this.state.behavior} style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={this.state.behavior}
+        style={styles.container}
+      >
         <View style={styles.container}>
-
-          {
-            this.props.type === 'EDIT_ATTRIBUTE'
-              ? this.renderScrollTable()
-              : this.renderNormalTable()
-          }
+          {this.props.type === 'EDIT_ATTRIBUTE'
+            ? this.renderScrollTable()
+            : this.renderNormalTable()}
           {/*{this.renderScrollTable()}*/}
           {/*{this.renderNormalTable()}*/}
-
         </View>
       </KeyboardAvoidingView>
     )

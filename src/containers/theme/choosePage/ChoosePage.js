@@ -12,11 +12,22 @@ import NavigationService from '../../NavigationService'
 
 import styles from './styles'
 
-const fonts = [{key: '宋体'}, {key: '幼圆'}, {key: '黑体'}, {key: '华文新魏'}, {key: '微软雅黑'}]
-const fontColors = [{key: '#FF0000'}, {key: '#00FF00'}, {key: '#0000FF'}, {key: '#fa575c'}, {key: '#4BA0FF'}]
+const fonts = [
+  { key: '宋体' },
+  { key: '幼圆' },
+  { key: '黑体' },
+  { key: '华文新魏' },
+  { key: '微软雅黑' },
+]
+const fontColors = [
+  { key: '#FF0000' },
+  { key: '#00FF00' },
+  { key: '#0000FF' },
+  { key: '#fa575c' },
+  { key: '#4BA0FF' },
+]
 
 export default class ChoosePage extends React.Component {
-
   props: {
     navigation: Object,
   }
@@ -24,11 +35,11 @@ export default class ChoosePage extends React.Component {
   constructor(props) {
     super(props)
     let { params } = props.navigation.state
-    this.type =  params && params.type || 'font'
+    this.type = (params && params.type) || 'font'
     this.title = ''
     let data = []
     // this.title = this.type === 'font' ? '字体' : this.type === 'color' ? '颜色' : '表达式'
-    this.cb = params && params.cb || (() => {})
+    this.cb = (params && params.cb) || (() => {})
     this.layer = params && params.layer
     // let data = this.type === 'font' ? fonts : this.type === 'color' ? this.getColors() : []
 
@@ -77,7 +88,7 @@ export default class ChoosePage extends React.Component {
   getData = () => {
     if (!this.layer) return
     this.container.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       try {
         let dataset = await this.layer.getDataset()
         let datasetVector = await dataset.toDatasetVector()
@@ -103,7 +114,7 @@ export default class ChoosePage extends React.Component {
       } catch (e) {
         this.container.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   rowAction = row => {
@@ -124,10 +135,8 @@ export default class ChoosePage extends React.Component {
     )
   }
 
-  _renderSeparator = ({leadingItem}) => {
-    return (
-      <ListSeparator key={'separator_' + leadingItem.id}/>
-    )
+  _renderSeparator = ({ leadingItem }) => {
+    return <ListSeparator key={'separator_' + leadingItem.id} />
   }
 
   _keyExtractor = (item, index) => index
@@ -135,19 +144,19 @@ export default class ChoosePage extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
           title: this.title,
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.data}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderSeparator}
         />
-
       </Container>
     )
   }

@@ -14,7 +14,6 @@ const BGCOLOR = constUtil.USUAL_GREEN
 const DEFAULTWIDTH = 300
 
 export default class GetBack extends React.Component {
-
   props: {
     navigation: Object,
   }
@@ -34,7 +33,8 @@ export default class GetBack extends React.Component {
         headerProps={{
           title: 'iTablet注册',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         {/*<View style={styles.elementContainer}>*/}
         {/*<BorderInput placeholder='手机号' />*/}
         {/*<View style={styles.message}>*/}
@@ -49,15 +49,15 @@ export default class GetBack extends React.Component {
           scalesPageToFit={Platform.OS === 'ios'}
           // scalesPageToFit={true}
           // automaticallyAdjustContentInsets={true}
-          contentInset={{top:0,left:0,right:0,bottom:0}}
+          contentInset={{ top: 0, left: 0, right: 0, bottom: 0 }}
           style={styles.webView}
           source={{
-            uri: 'https://sso.supermap.com/password?service=https://www.supermapol.com',
+            uri:
+              'https://sso.supermap.com/password?service=https://www.supermapol.com',
           }}
           javaScriptEnabled={true}
           domStorageEnabled={true}
         />
-
       </Container>
     )
   }

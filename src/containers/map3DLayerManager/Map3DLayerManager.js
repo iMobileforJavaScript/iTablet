@@ -11,7 +11,6 @@ import { Container } from '../../components'
 import { Layer3DManager_item } from './components'
 
 export default class Map3DLayerManager extends React.Component {
-
   props: {
     navigation: any,
   }
@@ -24,7 +23,7 @@ export default class Map3DLayerManager extends React.Component {
   }
 
   componentDidMount() {
-    (async function () {
+    (async function() {
       let layers3ds = await this.scene.getLayer3Ds()
       let layerCount = await layers3ds.getCount()
       let layerNameArr = []
@@ -32,12 +31,12 @@ export default class Map3DLayerManager extends React.Component {
         let layer = await layers3ds.get(i)
         let name = await layer.getName()
         let scene = this.scene
-        layerNameArr.push({ key: name, obj: layer, scene:scene })
+        layerNameArr.push({ key: name, obj: layer, scene: scene })
       }
       this.setState({
         datasourceList: layerNameArr,
       })
-    }).bind(this)()
+    }.bind(this)())
   }
 
   state = {
@@ -48,9 +47,7 @@ export default class Map3DLayerManager extends React.Component {
     let key = item.key
     let layer = item.obj
     let scene = item.scene
-    return (
-      <Layer3DManager_item layer={layer} name={key} scene={scene}/>
-    )
+    return <Layer3DManager_item layer={layer} name={key} scene={scene} />
   }
 
   render() {
@@ -59,10 +56,9 @@ export default class Map3DLayerManager extends React.Component {
         headerProps={{
           title: '地图管理',
           navigation: this.props.navigation,
-          headerRight: [
-
-          ],
-        }}>
+          headerRight: [],
+        }}
+      >
         <FlatList
           data={this.state.datasourceList}
           renderItem={this._renderItem}

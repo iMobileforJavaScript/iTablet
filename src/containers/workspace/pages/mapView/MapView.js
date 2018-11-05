@@ -24,10 +24,11 @@ import {
   UsualTitle,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
-import { ConstPath, Const } from '../../../../constants'
+import { ConstPath, Const, layerAdd, BotMap } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
+import ToolBar from '../../../workspace/componets/ToolBar'
 
 // 数组的第一个为DrawerView的默认高度
 const LVL_0 = [scaleSize(280)]
@@ -855,6 +856,7 @@ export default class MapView extends React.Component {
       return (
         <MapToolbar
           hidden={this.isExample}
+          type={this.operationType}
           POP_List={this._pop_list}
           layerManager={this._layer_manager}
           dataCollection={this._data_collection}
@@ -954,9 +956,42 @@ export default class MapView extends React.Component {
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
+        showLayers={() => {
+          this.LayerAdd.showLayers(true)
+        }}
+        Label={() => {
+          this.LabelAdd.showLayers(true)
+        }}
+        showTool={() => {
+          this.Tool.showLayers(true)
+        }}
+        changeLayer={() => {
+          this.BotMap.showLayers(true)
+        }}
         style={styles.functionToolbar}
         type={this.operationType}
       />
+    )
+  }
+
+  renderLayers = () => {
+    return (
+      <ToolBar ref={ref => (this.LayerAdd = ref)} type="list" data={layerAdd} />
+    )
+  }
+  renderLabel = () => {
+    return <ToolBar ref={ref => (this.LabelAdd = ref)} />
+  }
+
+  renderTool = () => {
+    return <ToolBar ref={ref => (this.Tool = ref)} />
+  }
+
+  renderBotMap = () => {
+    return (
+      <ToolBar ref={ref => (this.BotMap = ref)} type="list" data={BotMap}>
+        <BotMap />
+      </ToolBar>
     )
   }
 
@@ -988,6 +1023,10 @@ export default class MapView extends React.Component {
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
         {this.renderToolBar()}
+        {this.renderLayers()}
+        {this.renderLabel()}
+        {this.renderTool()}
+        {this.renderBotMap()}
         {/*{this.renderSetting()}*/}
         {/*<Dialog*/}
         {/*ref={ref => (this.removeObjectDialog = ref)}*/}

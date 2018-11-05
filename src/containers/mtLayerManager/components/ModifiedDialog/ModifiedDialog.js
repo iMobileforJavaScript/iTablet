@@ -9,7 +9,6 @@ import { Dialog } from '../../../../components'
 import styles from './styles'
 
 export default class ModifiedDialog extends PureComponent {
-
   props: {
     confirmAction: () => {},
     cancelAction: () => {},
@@ -26,11 +25,14 @@ export default class ModifiedDialog extends PureComponent {
   //控制是否可以展示
   setDialogVisible(visible, info) {
     if (info) {
-      this.setState({
-        info: info,
-      }, () => {
-        this.dialog && this.dialog.setDialogVisible(visible)
-      })
+      this.setState(
+        {
+          info: info,
+        },
+        () => {
+          this.dialog && this.dialog.setDialogVisible(visible)
+        },
+      )
     } else {
       this.dialog && this.dialog.setDialogVisible(visible)
     }
@@ -47,8 +49,8 @@ export default class ModifiedDialog extends PureComponent {
   render() {
     return (
       <Dialog
-        ref={ref => this.dialog = ref}
-        style={{marginVertical: 15}}
+        ref={ref => (this.dialog = ref)}
+        style={{ marginVertical: 15 }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'是'}
@@ -60,5 +62,4 @@ export default class ModifiedDialog extends PureComponent {
       </Dialog>
     )
   }
-
 }

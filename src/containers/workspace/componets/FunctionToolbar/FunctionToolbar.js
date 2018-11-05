@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList } from 'react-native'
+import { View, FlatList, Platform, NativeModules } from 'react-native'
 import { MTBtn } from '../../../../components'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
@@ -12,7 +12,11 @@ import styles from './styles'
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
-
+const MAP_EDIT = 'MAP_EDIT'
+const openNativeSampleCode =
+  Platform.OS === 'ios'
+    ? NativeModules.SMSampleCodeBridgeModule
+    : NativeModules.IntentModule
 export { COLLECTION, NETWORK, EDIT }
 
 export default class FunctionToolbar extends React.Component {
@@ -30,6 +34,10 @@ export default class FunctionToolbar extends React.Component {
     selection: any,
     setLoading: () => {},
     data?: Array,
+    showLayers: () => {},
+    showTool: () => {},
+    Label: () => {},
+    changeLayer: () => {},
   }
 
   static defaultProps = {
@@ -60,10 +68,28 @@ export default class FunctionToolbar extends React.Component {
 
   showEdit = () => {}
 
-  showTool = () => {}
-
   showMore = e => {
     this.moreToolbar && this.moreToolbar.showMore(true, e)
+  }
+
+  changeLayer = () => {
+    this.props.changeLayer()
+  }
+
+  showTool = () => {
+    this.props.showTool()
+  }
+
+  add = () => {
+    this.props.showLayers()
+  }
+
+  Label = () => {
+    this.props.Label()
+  }
+
+  mapstyle = () => {
+    openNativeSampleCode.open('Layer')
   }
 
   /** 二级事件 **/
@@ -83,6 +109,64 @@ export default class FunctionToolbar extends React.Component {
   getData = type => {
     let data
     switch (type) {
+      case MAP_EDIT:
+        data = [
+          {
+            key: '底图',
+            title: '底图',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: '添加',
+            title: '添加',
+            action: this.add,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: '标注',
+            title: '标注',
+            action: this.Label,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_Tagging.png'),
+            selectMode: 'flash',
+          },
+          {
+            key: '工具',
+            title: '工具',
+            action: this.showTool,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_tool.png'),
+            selectMode: 'flash',
+          },
+          {
+            key: '风格',
+            title: '风格',
+            action: this.mapstyle,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_style.png'),
+            selectMode: 'flash',
+          },
+          {
+            key: '保存',
+            title: '保存',
+            action: this.save,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_save.png'),
+            selectMode: 'flash',
+          },
+          {
+            key: '分享',
+            title: '分享',
+            action: this.publish,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_tool.png'),
+            selectMode: 'flash',
+          },
+        ]
+        break
       case COLLECTION:
       default:
         data = [

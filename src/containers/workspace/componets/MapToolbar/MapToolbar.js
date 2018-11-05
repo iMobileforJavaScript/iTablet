@@ -7,7 +7,7 @@ import { Const } from '../../../../constants/index'
 import constants from '../../constants'
 import PropTypes from 'prop-types'
 import { Action } from 'imobile_for_reactnative'
-
+import NavigationService from '../../../../containers/NavigationService'
 import MT_Btn from '../../../../components/mapTools/MT_Btn'
 
 // const WIDTH = constUtil.WIDTH
@@ -65,6 +65,39 @@ export default class MapToolbar extends React.Component {
     let list = []
     switch (type) {
       case constants.MAP_EDIT:
+        list = [
+          {
+            key: '地图',
+            title: '地图',
+            image: require('../../../../assets/mapToolbar/icon_map.png'),
+            // selectedImage: require('../../../assets/mapToolbar/icon_map_selected.png'),
+            btnClick: () => {},
+          },
+          {
+            key: '图层',
+            title: '图层',
+            image: require('../../../../assets/mapToolbar/icon_layer.png'),
+            // selectedImage: require('../../../assets/mapToolbar/icon_layer_selected.png'),
+            btnClick: this._layerManager,
+          },
+          {
+            key: '属性',
+            title: '属性',
+            image: require('../../../../assets/mapToolbar/icon_attribute.png'),
+            // selectedImage: require('../../../assets/mapToolbar/icon_attribute_selected.png'),
+            btnClick: () => {},
+          },
+          {
+            key: '设置',
+            title: '设置',
+            image: require('../../../../assets/mapToolbar/icon_setting.png'),
+            // selectedImage: require('../../../assets/mapToolbar/icon_setting_selected.png'),
+            btnClick: () => {
+              NavigationService.navigate('MapToolbarSetting', {})
+            },
+          },
+        ]
+        break
       case constants.COLLECTION:
         list = [
           {

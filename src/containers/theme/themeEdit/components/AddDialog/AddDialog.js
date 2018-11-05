@@ -10,7 +10,6 @@ import { color } from '../../../../../styles'
 import styles from './styles'
 
 export default class AddDialog extends PureComponent {
-
   props: {
     confirmAction: () => {},
     cancelAction: () => {},
@@ -48,9 +47,9 @@ export default class AddDialog extends PureComponent {
   render() {
     return (
       <Dialog
-        ref={ref => this.dialog = ref}
+        ref={ref => (this.dialog = ref)}
         title={this.props.title}
-        style={{marginVertical: 15}}
+        style={{ marginVertical: 15 }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'是'}
@@ -61,10 +60,12 @@ export default class AddDialog extends PureComponent {
           <Text style={styles.label}>{this.props.label}</Text>
           <TextInput
             accessible={true}
-            accessibilityLabel={this.props.placeholder ? this.props.placeholder : '输入框'}
+            accessibilityLabel={
+              this.props.placeholder ? this.props.placeholder : '输入框'
+            }
             style={styles.input}
             placeholder={this.props.placeholder}
-            underlineColorAndroid='transparent'
+            underlineColorAndroid="transparent"
             placeholderTextColor={color.USUAL_SEPARATORCOLOR}
             value={this.state.value + ''}
             onChangeText={text => {
@@ -77,5 +78,4 @@ export default class AddDialog extends PureComponent {
       </Dialog>
     )
   }
-
 }

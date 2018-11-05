@@ -15,9 +15,8 @@ export default class Personal extends Component {
   }
 
   logout = () => {
-    (async function () {
+    (async function() {
       try {
-
         await new OnlineService().logout()
 
         NavigationService.goBack()
@@ -25,16 +24,28 @@ export default class Personal extends Component {
       } catch (e) {
         Toast.show('退出登录失败')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   renderHeader = () => {
     return (
       <View style={styles.header}>
-        {this.renderHeaderItem({ title: '头像', image: require('../../assets/public/icon-avatar-default.png') })}
-        {this.renderHeaderItem({ title: '用户名', value: this.props.user.currentUser.userName })}
-        {this.renderHeaderItem({ title: '手机号', value: this.props.user.currentUser.phone })}
-        {this.renderHeaderItem({ title: '邮箱', value: this.props.user.currentUser.email })}
+        {this.renderHeaderItem({
+          title: '头像',
+          image: require('../../assets/public/icon-avatar-default.png'),
+        })}
+        {this.renderHeaderItem({
+          title: '用户名',
+          value: this.props.user.currentUser.userName,
+        })}
+        {this.renderHeaderItem({
+          title: '手机号',
+          value: this.props.user.currentUser.phone,
+        })}
+        {this.renderHeaderItem({
+          title: '邮箱',
+          value: this.props.user.currentUser.email,
+        })}
       </View>
     )
   }
@@ -43,18 +54,27 @@ export default class Personal extends Component {
     return (
       <View style={styles.item}>
         <Text style={styles.title}>{item.title}</Text>
-        {
-          item.image
-            ? <Image style={styles.avatar} source={require('../../assets/public/icon-avatar-default.png')}/>
-            : <Text style={styles.value}>{item.value}</Text>
-        }
+        {item.image ? (
+          <Image
+            style={styles.avatar}
+            source={require('../../assets/public/icon-avatar-default.png')}
+          />
+        ) : (
+          <Text style={styles.value}>{item.value}</Text>
+        )}
       </View>
     )
   }
 
   renderLogout = () => {
     return (
-      <Button style={styles.logoutBtn} title="退出登录" onPress={this.logout} activeOpacity={0.8} type="RED"/>
+      <Button
+        style={styles.logoutBtn}
+        title="退出登录"
+        onPress={this.logout}
+        activeOpacity={0.8}
+        type="RED"
+      />
     )
   }
 
@@ -62,11 +82,12 @@ export default class Personal extends Component {
     return (
       <Container
         style={styles.container}
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '个人资料',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         {this.renderHeader()}
         {this.renderLogout()}
       </Container>
