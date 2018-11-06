@@ -7,19 +7,22 @@
 import * as React from 'react'
 import { TouchableOpacity, FlatList, Text } from 'react-native'
 import { Container, ListSeparator } from '../../../components'
-import { Const } from '../../../constains'
+import { Const } from '../../../constants'
 import NavigationService from '../../NavigationService'
 
 import styles from './styles'
 
 export default class ThemeEntry extends React.Component {
-
   props: {
     navigation: Object,
   }
 
   state = {
-    data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.LABEL}],
+    data: [
+      { title: Const.UNIQUE },
+      { title: Const.RANGE },
+      { title: Const.LABEL },
+    ],
   }
 
   constructor(props) {
@@ -30,11 +33,15 @@ export default class ThemeEntry extends React.Component {
     this.mapControl = params && params.mapControl
 
     this.state = {
-      data: [{title: Const.UNIQUE}, {title: Const.RANGE}, {title: Const.LABEL}],
+      data: [
+        { title: Const.UNIQUE },
+        { title: Const.RANGE },
+        { title: Const.LABEL },
+      ],
     }
   }
 
-  rowAction = ({title}) => {
+  rowAction = ({ title }) => {
     NavigationService.navigate('ThemeEdit', {
       title,
       layer: this.layer,
@@ -55,10 +62,8 @@ export default class ThemeEntry extends React.Component {
     )
   }
 
-  _renderSeparator = ({leadingItem}) => {
-    return (
-      <ListSeparator key={'separator_' + leadingItem.id}/>
-    )
+  _renderSeparator = ({ leadingItem }) => {
+    return <ListSeparator key={'separator_' + leadingItem.id} />
   }
 
   _keyExtractor = (item, index) => index
@@ -70,14 +75,14 @@ export default class ThemeEntry extends React.Component {
         headerProps={{
           title: '专题图',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.data}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderSeparator}
         />
-
       </Container>
     )
   }

@@ -9,11 +9,11 @@ import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
+import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 import { CursorType } from 'imobile_for_reactnative'
 
 export default class LayerAttribute extends React.Component {
-
   props: {
     navigation: Object,
     currentAttribute: Object,
@@ -22,11 +22,11 @@ export default class LayerAttribute extends React.Component {
 
   constructor(props) {
     super(props)
-    const { params } = this.props.navigation.state
+    // const { params } = this.props.navigation.state
     this.state = {
       dataSourceList: [],
       openList: {},
-      dataset: params.dataset,
+      // dataset: params.dataset,
       attribute: {},
       tableTitle: [],
       // tableHead: ['名称', '属性值'],
@@ -39,7 +39,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    this.getDatasets()
+    // this.getDatasets()
   }
 
   // componentDidUpdate(prevProps) {
@@ -56,9 +56,12 @@ export default class LayerAttribute extends React.Component {
 
   getDatasets = () => {
     this.container.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       try {
-        let recordset = await (await this.state.dataset.toDatasetVector()).getRecordset(false, CursorType.DYNAMIC)
+        let recordset = await (await this.state.dataset.toDatasetVector()).getRecordset(
+          false,
+          CursorType.DYNAMIC,
+        )
 
         // let recordset = this.state.recordset
         let records = await recordset.getFieldInfosArray()
@@ -80,11 +83,11 @@ export default class LayerAttribute extends React.Component {
       } catch (e) {
         this.container.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   add = () => {
-    Toast.show("待做")
+    Toast.show('待做')
   }
 
   edit = () => {
@@ -96,7 +99,13 @@ export default class LayerAttribute extends React.Component {
           break
         }
       }
-      smID >= 0 && NavigationService.navigate('LayerAttributeObj', {dataset: this.state.dataset, filter: 'SmID=' + smID, index: this.currentFieldIndex, callBack: this.getDatasets})
+      smID >= 0 &&
+        NavigationService.navigate('LayerAttributeObj', {
+          dataset: this.state.dataset,
+          filter: 'SmID=' + smID,
+          index: this.currentFieldIndex,
+          callBack: this.getDatasets,
+        })
     } else {
       Toast.show('请选择一个属性')
     }
@@ -108,14 +117,20 @@ export default class LayerAttribute extends React.Component {
     this.currentFieldIndex = index
   }
 
+  renderToolBar = () => {
+    return <MapToolbar navigation={this.props.navigation} initIndex={2} />
+  }
+
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '属性表',
           navigation: this.props.navigation,
-        }}>
+        }}
+        bottomBar={this.renderToolBar()}
+      >
         <LayerAttributeTab
           edit={this.edit}
           btns={['edit']}
@@ -123,18 +138,18 @@ export default class LayerAttribute extends React.Component {
             GLOBAL.AudioBottomDialog.setVisible(true)
           }}
         />
-        {
-          this.state.tableHead.length > 0
-            ? <LayerAttributeTable
-              ref={ref => this.table = ref}
-              data={this.state.attribute}
-              type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-              tableTitle={this.state.tableTitle}
-              tableHead={this.state.tableHead}
-              selectRow={this.selectRow}
-            />
-            : <View style={{flex: 1}} />
-        }
+        {this.state.tableHead.length > 0 ? (
+          <LayerAttributeTable
+            ref={ref => (this.table = ref)}
+            data={this.state.attribute}
+            type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
+            tableTitle={this.state.tableTitle}
+            tableHead={this.state.tableHead}
+            selectRow={this.selectRow}
+          />
+        ) : (
+          <View style={{ flex: 1 }} />
+        )}
       </Container>
     )
   }

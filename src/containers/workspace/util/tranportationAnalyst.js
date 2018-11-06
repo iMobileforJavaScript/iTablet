@@ -15,7 +15,7 @@ import {
   TransportationAnalystParameter,
 } from 'imobile_for_reactnative'
 import { Toast } from '../../../utils'
-import { Const } from '../../../constains'
+import { Const } from '../../../constants'
 
 let point2Ds = [], // 目标坐标数组
   centerPoints = [] // 配送中心坐标数组

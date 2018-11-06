@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet, Dimensions } from 'react-native'
-import { ConstOnline } from '../../../../constains'
+import { ConstOnline } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import { BtnOne } from '../../../../components'
 import NavigationService from '../../../NavigationService'

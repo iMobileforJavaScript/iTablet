@@ -2,24 +2,42 @@ import { StyleSheet, Platform } from 'react-native'
 import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 
+export const HEADER_HEIGHT = scaleSize(60) + (Platform.OS === 'ios' ? 20 : 0)
+export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
+
 export default StyleSheet.create({
   defaultHeaderView: {
     width: '100%',
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
-    height: scaleSize(80) + (Platform.OS === 'ios' ? 20 : 0),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     // borderBottomWidth: 1,
     // borderBottomColor: '#e2e2e2',
     flexDirection: 'row',
     backgroundColor: color.theme,
     alignItems: 'center',
   },
+  fixHeaderView: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 10001,
+    width: '100%',
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
+    backgroundColor: color.theme,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   floatHeaderView: {
     position: 'absolute',
     top: 0,
+    left: 0,
+    right: 0,
     zIndex: 10001,
     width: '100%',
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
-    height: scaleSize(80) + (Platform.OS === 'ios' ? 20 : 0),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     backgroundColor: '#rgba(255, 255, 255, 0)',
     flexDirection: 'row',
     alignItems: 'center',
@@ -27,10 +45,12 @@ export default StyleSheet.create({
   floatNoTitleHeaderView: {
     position: 'absolute',
     top: 0,
+    left: 0,
+    right: 0,
     zIndex: 100019,
     width: '100%',
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
-    height: scaleSize(80) + (Platform.OS === 'ios' ? 20 : 0),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#rgba(255, 255, 255, 0)',
@@ -43,7 +63,7 @@ export default StyleSheet.create({
   backBtn: {
     position: 'absolute',
     zIndex: 10001,
-    width: 80,
+    width: 60,
     padding: 5,
     marginLeft: scaleSize(10),
     justifyContent: 'center',
@@ -70,7 +90,7 @@ export default StyleSheet.create({
   headerLeftView: {
     position: 'absolute',
     zIndex: 10001,
-    width: 80,
+    width: 60,
     padding: 5,
     marginLeft: 5,
     alignItems: 'flex-start',
@@ -80,7 +100,7 @@ export default StyleSheet.create({
   headerRightView: {
     position: 'absolute',
     zIndex: 10001,
-    height: scaleSize(80),
+    height: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',

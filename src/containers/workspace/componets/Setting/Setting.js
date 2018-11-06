@@ -6,7 +6,7 @@ import RouteSetting from './RouteSetting'
 import ChooseLayer from './ChooseLayer'
 import { facilityAnalyst, tranportationAnalyst } from '../../util'
 import { Toast } from '../../../../utils'
-import { Const } from '../../../../constains'
+import { Const } from '../../../../constants'
 import { DatasetType, GeoStyle, Size2D } from 'imobile_for_reactnative'
 
 import styles from './styles'

@@ -7,9 +7,9 @@ import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
 import ConfigStore from './src/store'
-import { Loading, PanAudioButton, AudioDialog } from './src/components'
+import { Loading } from './src/components'
 import { scaleSize, AudioAnalyst, Toast } from './src/utils'
-import { ConstPath } from './src/constains'
+import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 
 import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_reactnative'
@@ -143,27 +143,27 @@ class AppRoot extends Component {
             })
           }}
         />
-        <AudioDialog
-          ref={ref => GLOBAL.AudioDialog = ref}
-          data={{
-            layer: this.props.editLayer,
-          }}
-        />
-        {
-          (
-            !this.props.nav.routes ||
-            this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName !== 'MapView'
-          ) &&
-          <PanAudioButton
-            onPress={() => {
-              if (this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName === 'MapView') {
-                GLOBAL.AudioDialog.setVisible(true, 'top')
-              } else {
-                GLOBAL.AudioDialog.setVisible(true)
-              }
-            }}
-            ref={ref => GLOBAL.PanAudioButton = ref}/>
-        }
+        {/*<AudioDialog*/}
+        {/*ref={ref => GLOBAL.AudioDialog = ref}*/}
+        {/*data={{*/}
+        {/*layer: this.props.editLayer,*/}
+        {/*}}*/}
+        {/*/>*/}
+        {/*{*/}
+        {/*(*/}
+        {/*!this.props.nav.routes ||*/}
+        {/*this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName !== 'MapView'*/}
+        {/*) &&*/}
+        {/*<PanAudioButton*/}
+        {/*onPress={() => {*/}
+        {/*if (this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName === 'MapView') {*/}
+        {/*GLOBAL.AudioDialog.setVisible(true, 'top')*/}
+        {/*} else {*/}
+        {/*GLOBAL.AudioDialog.setVisible(true)*/}
+        {/*}*/}
+        {/*}}*/}
+        {/*ref={ref => GLOBAL.PanAudioButton = ref}/>*/}
+        {/*}*/}
       </View>
     )
   }

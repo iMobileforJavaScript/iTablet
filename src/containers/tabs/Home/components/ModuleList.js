@@ -8,7 +8,7 @@ import {
   Dimensions,
   StyleSheet,
 } from 'react-native'
-import { ConstModule } from '../../../../constains'
+import { ConstModule } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 const SCREEN_WIDTH = Dimensions.get('window').width
 export default class ModuleList extends Component {

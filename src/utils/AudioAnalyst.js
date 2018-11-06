@@ -1,5 +1,5 @@
 import NavigationService from '../containers/NavigationService'
-import { ConstOnline, AudioKeywords } from '../constains'
+import { ConstOnline, AudioKeywords } from '../constants'
 import { Toast, dataUtil } from '../utils'
 import {
   Action,
@@ -12,8 +12,11 @@ import {
   TextStyle,
   TextAlignment,
 } from 'imobile_for_reactnative'
-const {keywords, chineseNumber, themeType} = AudioKeywords
-let workspace, mapControl, map, nav = {}
+const { keywords, chineseNumber, themeType } = AudioKeywords
+let workspace,
+  mapControl,
+  map,
+  nav = {}
 
 /**
  * 地图相关必须设置
@@ -36,7 +39,9 @@ function setConfig(data) {
 
 function analyst(content = '', obj = {}) {
   if (!content) return
-  let value = '', index = -1, type =''
+  let value = '',
+    index = -1,
+    type = ''
   let values = Object.values(keywords)
   for (let i = 0; i < values.length; i++) {
     if (content.indexOf(values[i]) >= 0) {
@@ -75,12 +80,13 @@ function analyst(content = '', obj = {}) {
 
 function getIndex(content) {
   let num = -1
-  let cNum = '', numStr = ''
+  let cNum = '',
+    numStr = ''
   let startKey = '第'
   let startKeyIndex = content.indexOf(startKey)
   if (startKeyIndex < 0) return -1
   for (let i = startKeyIndex + 1; i < content.length; i++) {
-    if (!isNaN(parseInt(content[i]))){
+    if (!isNaN(parseInt(content[i]))) {
       numStr += content[i]
     } else if (chineseNumber[content[i]]) {
       cNum += chineseNumber[content[i]]
@@ -111,8 +117,9 @@ function getThmeType(content) {
  * @param type
  */
 function goToMapView(type) {
-  (async function () {
-    let key = '', exist = false
+  (async function() {
+    let key = '',
+      exist = false
     let routes = nav.routes
     if (routes && routes.length > 0) {
       for (let index = 0; index < routes.length; index++) {
@@ -130,20 +137,18 @@ function goToMapView(type) {
       const point2dModule = new Point2D()
 
       await map.setScale(0.0001)
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          let lat = position.coords.latitude
-          let lon = position.coords.longitude
-          ;(async () => {
-            let centerPoint = await point2dModule.createObj(lon, lat)
-            await map.setCenter(centerPoint)
-            await map.viewEntire()
-            await mapControl.setAction(Action.PAN)
-            await map.refresh()
-            key && NavigationService.goBack(key)
-          }).bind(this)()
-        }
-      )
+      navigator.geolocation.getCurrentPosition(position => {
+        let lat = position.coords.latitude
+        let lon = position.coords.longitude
+        ;(async () => {
+          let centerPoint = await point2dModule.createObj(lon, lat)
+          await map.setCenter(centerPoint)
+          await map.viewEntire()
+          await mapControl.setAction(Action.PAN)
+          await map.refresh()
+          key && NavigationService.goBack(key)
+        }).bind(this)()
+      })
       let DSParams = ConstOnline[type].DSParams
       let labelDSParams = ConstOnline[type].labelDSParams
       let layerIndex = ConstOnline[type].layerIndex
@@ -160,7 +165,7 @@ function goToMapView(type) {
     } else {
       NavigationService.navigate('MapView', ConstOnline[type])
     }
-  }).bind(this)()
+  }.bind(this)())
 }
 
 /**
@@ -195,7 +200,7 @@ function setThemeByIndex(index, type = '') {
     Toast.show('请先打开地图工作区')
     return
   }
-  (async function () {
+  (async function() {
     let layer = await map.getLayer(index)
     switch (type) {
       case themeType.UNIQUE:
@@ -218,7 +223,7 @@ function setThemeByIndex(index, type = '') {
         GLOBAL.AudioDialog.setVisible(false)
         break
     }
-  }).bind(this)()
+  }.bind(this)())
 }
 
 /**
@@ -226,11 +231,15 @@ function setThemeByIndex(index, type = '') {
  * @param layer
  */
 function setUniqueTheme(layer) {
-  (async function () {
+  (async function() {
     try {
       let dataset = await layer.getDataset()
       let datasetVector = await dataset.toDatasetVector()
-      let themeUnique = await (new ThemeUnique()).makeDefault(datasetVector, 'SmID', ColorGradientType.YELLOWRED)
+      let themeUnique = await new ThemeUnique().makeDefault(
+        datasetVector,
+        'SmID',
+        ColorGradientType.YELLOWRED,
+      )
       await map.addThemeLayer(dataset, themeUnique, true)
       await map.refresh()
       await mapControl.setAction(Action.PAN)
@@ -238,7 +247,7 @@ function setUniqueTheme(layer) {
     } catch (e) {
       Toast.show('设置单值专题图失败')
     }
-  }).bind(this)()
+  }.bind(this)())
 }
 
 /**
@@ -246,12 +255,17 @@ function setUniqueTheme(layer) {
  * @param layer
  */
 function setRangeTheme(layer) {
-  (async function () {
+  (async function() {
     try {
       let dataset = await layer.getDataset()
       let datasetVector = await dataset.toDatasetVector()
-      let themeRange = await (new ThemeRange()).makeDefault(
-        datasetVector, 'SmID', RangeMode.EQUALINTERVAL, 5, ColorGradientType.CYANGREEN)
+      let themeRange = await new ThemeRange().makeDefault(
+        datasetVector,
+        'SmID',
+        RangeMode.EQUALINTERVAL,
+        5,
+        ColorGradientType.CYANGREEN,
+      )
       await map.addThemeLayer(dataset, themeRange, true)
       await map.refresh()
       await mapControl.setAction(Action.PAN)
@@ -259,7 +273,7 @@ function setRangeTheme(layer) {
     } catch (e) {
       Toast.show('设置分段专题图失败')
     }
-  }).bind(this)()
+  }.bind(this)())
 }
 
 /**
@@ -267,7 +281,7 @@ function setRangeTheme(layer) {
  * @param layer
  */
 function setLabelTheme(layer) {
-  (async function () {
+  (async function() {
     try {
       let dataset = await layer.getDataset()
       let themeLabel = await new ThemeLabel().createObj()
@@ -283,10 +297,8 @@ function setLabelTheme(layer) {
     } catch (e) {
       Toast.show('设置标签专题图失败')
     }
-  }).bind(this)()
+  }.bind(this)())
 }
-
-
 
 export default {
   analyst,

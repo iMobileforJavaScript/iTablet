@@ -1,16 +1,29 @@
 import * as React from 'react'
-import { NativeModules, Platform, View, StyleSheet, FlatList, Alert } from 'react-native'
+import {
+  NativeModules,
+  Platform,
+  View,
+  StyleSheet,
+  FlatList,
+  Alert,
+} from 'react-native'
 
 import NavigationService from '../../../containers/NavigationService'
 import Thumbnails from '../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../utils'
 import { Utility, OnlineService, EngineType } from 'imobile_for_reactnative'
-import { ConstPath } from '../../../constains'
-const openNativeSampleCode = Platform.OS === 'ios' ? NativeModules.SMSampleCodeBridgeModule : NativeModules.IntentModule
+import { ConstPath } from '../../../constants'
+const openNativeSampleCode =
+  Platform.OS === 'ios'
+    ? NativeModules.SMSampleCodeBridgeModule
+    : NativeModules.IntentModule
 
 const defalutImageSrc = require('../../../assets/public/mapImage0.png')
-const vectorMap = '数据可视化', map3D = '三维场景', ObliquePhoto = '倾斜摄影', gl = 'GL地图瓦片', overLay = '影像叠加矢量地图'
-
+const vectorMap = '数据可视化',
+  map3D = '三维场景',
+  ObliquePhoto = '倾斜摄影',
+  gl = 'GL地图瓦片',
+  overLay = '影像叠加矢量地图'
 
 export default class ExampleMapList extends React.Component {
   constructor(props) {
@@ -26,11 +39,10 @@ export default class ExampleMapList extends React.Component {
     }
   }
 
-
   componentDidMount() {
-    (async function () {
+    (async function() {
       await this.mapexist()
-    }).bind(this)()
+    }.bind(this)())
   }
 
   cancel = async zipfile => {
@@ -39,10 +51,12 @@ export default class ExampleMapList extends React.Component {
     downitem.downloaded(true)
   }
 
-
   mapexist = async () => {
     let testData = [
-      { key: vectorMap, path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu' },
+      {
+        key: vectorMap,
+        path: ConstPath.SampleDataPath + '/hotMap/hotMap.smwu',
+      },
       { key: gl, path: ConstPath.SampleDataPath + '/Changchun/Changchun.smwu' },
       { key: overLay, path: ConstPath.SampleDataPath + '/DOM/DOM.smwu' },
       { key: map3D, path: ConstPath.SampleDataPath + '/CBD/CBD.smwu' },
@@ -50,8 +64,10 @@ export default class ExampleMapList extends React.Component {
     ]
     for (let index = 0; index < testData.length; index++) {
       let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
-      exist ? testData[index].backgroundcolor = null : testData[index].backgroundcolor = "#A3A3A3"
-      exist ? testData[index].opacity = 0 : testData[index].opacity = 0.6
+      exist
+        ? (testData[index].backgroundcolor = null)
+        : (testData[index].backgroundcolor = '#A3A3A3')
+      exist ? (testData[index].opacity = 0) : (testData[index].opacity = 0.6)
     }
     this.setState({ maplist: testData })
   }
@@ -61,66 +77,103 @@ export default class ExampleMapList extends React.Component {
     switch (key) {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'hotMap.zip'
+        filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'hotMap.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        fileName = "hotMap"
+        fileName = 'hotMap'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          openNativeSampleCode.open("Visual")
+          openNativeSampleCode.open('Visual')
         } else {
           this.alertDown(filePath, fileName, outPath, vectorMap)
         }
         break
       case map3D:
         path = ConstPath.SampleDataPath + '/CBD/CBD.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "CBD.zip"
+        filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'CBD.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD/CBD.smwu'
-        fileName = "CBD"
+        openPath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'CBD/CBD.smwu'
+        fileName = 'CBD'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          NavigationService.navigate('MapView', {
+            path: openPath,
+            type: '',
+            DSParams: { server: path, engineType: EngineType.UDB },
+            isExample: true,
+          })
         } else {
           this.alertDown(filePath, fileName, outPath, map3D)
         }
         break
       case ObliquePhoto:
         path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "MaSai.zip"
+        filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'MaSai.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'MaSai/MaSai.sxwu'
-        fileName = "MaSai"
+        openPath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'MaSai/MaSai.sxwu'
+        fileName = 'MaSai'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
-          NavigationService.navigate('Map3D', { path: openPath, isExample: true })
+          NavigationService.navigate('Map3D', {
+            path: openPath,
+            isExample: true,
+          })
         } else {
           this.alertDown(filePath, fileName, outPath, key)
         }
         break
       case gl:
         path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "Changchun.zip"
+        filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'Changchun.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'Changchun/Changchun.smwu'
-        fileName = "Changchun"
+        openPath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'Changchun/Changchun.smwu'
+        fileName = 'Changchun'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
-          NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          NavigationService.navigate('MapView', {
+            path: openPath,
+            type: '',
+            DSParams: { server: path, engineType: EngineType.UDB },
+            isExample: true,
+          })
         } else {
           this.alertDown(filePath, fileName, outPath, gl)
         }
         break
       case overLay:
         path = ConstPath.SampleDataPath + '/DOM/DOM.smwu'
-        filePath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + "DOM.zip"
+        filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'DOM.zip'
         outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
-        openPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'DOM/DOM.smwu'
-        fileName = "DOM"
+        openPath =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'DOM/DOM.smwu'
+        fileName = 'DOM'
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
-          NavigationService.navigate('MapView', { path: openPath, type: "", DSParams: { server: path, engineType: EngineType.UDB }, isExample: true })
+          // NavigationService.navigate('MapView', {
+          NavigationService.navigate('MapTabs', {
+            path: openPath,
+            type: '',
+            DSParams: { server: path, engineType: EngineType.UDB },
+            isExample: true,
+          })
         } else {
           this.alertDown(filePath, fileName, outPath, overLay)
         }
@@ -156,19 +209,24 @@ export default class ExampleMapList extends React.Component {
     try {
       if (this.unzip) {
         this.unzip = false
-        Toast.show("文件解压中,请等待")
+        Toast.show('文件解压中,请等待')
         // console.log("zip")
         this.ziping = true
         let result = await Utility.unZipFile(this.zipfile, this.targetdir)
         if (result) {
           GLOBAL.downitemname = ''
           Alert.alert(
-            "温馨提示",
-            "文件解压完成",
+            '温馨提示',
+            '文件解压完成',
             [
-              { text: "确定", onPress: () => { Utility.deleteFile(this.zipfile) } },
+              {
+                text: '确定',
+                onPress: () => {
+                  Utility.deleteFile(this.zipfile)
+                },
+              },
             ],
-            { cancelable: true }
+            { cancelable: true },
           )
         }
       }
@@ -176,13 +234,23 @@ export default class ExampleMapList extends React.Component {
       if (this.unzip) {
         this.unzip = false
         Alert.alert(
-          "温馨提示",
-          "文件解压失败，是否重新下载",
+          '温馨提示',
+          '文件解压失败，是否重新下载',
           [
-            { text: "确定", onPress: () => { this.download(this.zipfile, this.downfilename) } },
-            { text: "取消", onPress: () => { this.cancel(this.zipfile) } },
+            {
+              text: '确定',
+              onPress: () => {
+                this.download(this.zipfile, this.downfilename)
+              },
+            },
+            {
+              text: '取消',
+              onPress: () => {
+                this.cancel(this.zipfile)
+              },
+            },
           ],
-          { cancelable: true }
+          { cancelable: true },
         )
       }
     }
@@ -193,25 +261,25 @@ export default class ExampleMapList extends React.Component {
   }
 
   download = async (filePath, fileName) => {
-    Toast.show("开始下载")
+    Toast.show('开始下载')
     this.progress = null
     this.OnlineService = new OnlineService()
-    let result = await this.OnlineService.login("jiushuaizhao1995@163.com", "z549451547")
+    let result = await this.OnlineService.login(
+      'jiushuaizhao1995@163.com',
+      'z549451547',
+    )
     if (result) {
       this.OnlineService.download(filePath, fileName, {
         onProgress: this.downloading,
         onComplete: this.onComplete,
         onFailure: this.downloadFailure,
       })
-    }
-    else {
+    } else {
       Alert.alert(
-        "温馨提示",
-        "下载失败，请检查网路",
-        [
-          { text: "确定", onPress: () => { } },
-        ],
-        { cancelable: true }
+        '温馨提示',
+        '下载失败，请检查网路',
+        [{ text: '确定', onPress: () => {} }],
+        { cancelable: true },
       )
     }
   }
@@ -219,15 +287,12 @@ export default class ExampleMapList extends React.Component {
   alertDown = async (filePath, fileName, outPath, key) => {
     if (this.progress) {
       Alert.alert(
-        "温馨提示",
-        "有文件正在下载中，请稍后",
-        [
-          { text: "确定", onPress: () => { }, style: "cancel" },
-        ],
-        { cancelable: false }
+        '温馨提示',
+        '有文件正在下载中，请稍后',
+        [{ text: '确定', onPress: () => {}, style: 'cancel' }],
+        { cancelable: false },
       )
-    }
-    else {
+    } else {
       this.targetdir = outPath
       this.zipfile = filePath
       this.downfilename = fileName
@@ -235,13 +300,13 @@ export default class ExampleMapList extends React.Component {
       this.downloaded = false
       this.unzip = true
       Alert.alert(
-        "温馨提示",
-        "本地实例文件不存在是否下载文件",
+        '温馨提示',
+        '本地实例文件不存在是否下载文件',
         [
-          { text: "确定", onPress: () => this.download(filePath, fileName) },
-          { text: "取消", onPress: () => { }, style: "cancel" },
+          { text: '确定', onPress: () => this.download(filePath, fileName) },
+          { text: '取消', onPress: () => {}, style: 'cancel' },
         ],
-        { cancelable: true }
+        { cancelable: true },
       )
     }
   }
@@ -286,7 +351,14 @@ export default class ExampleMapList extends React.Component {
         break
     }
     return (
-      <Thumbnails ref={ref => this.downList(ref, key)} title={key} src={src} btnClick={() => this._itemClick(key)} backgroundcolor={backgroundcolor} opacity={opacity} />
+      <Thumbnails
+        ref={ref => this.downList(ref, key)}
+        title={key}
+        src={src}
+        btnClick={() => this._itemClick(key)}
+        backgroundcolor={backgroundcolor}
+        opacity={opacity}
+      />
     )
   }
 

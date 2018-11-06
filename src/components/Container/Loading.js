@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
-import { View, ActivityIndicator, StyleSheet, Modal, Text, Platform } from 'react-native'
+import {
+  View,
+  ActivityIndicator,
+  StyleSheet,
+  Modal,
+  Text,
+  Platform,
+} from 'react-native'
 import { scaleSize } from '../../utils'
 export const NORMAL = 'NORMAL'
 
 const INFO = '加载中'
 
 export default class Loading extends Component {
-
   props: {
     initLoading: boolean,
     type: string,
@@ -25,7 +31,7 @@ export default class Loading extends Component {
     indicatorSize: Platform.OS === 'ios' ? 'small' : 'large',
     indicatorColor: 'white',
     displayMode: 'NORMAL',
-    indicatorMode: 'BLACK_WITH_TITLE',  // BLACK_WITH_TITLE   NORMAL
+    indicatorMode: 'BLACK_WITH_TITLE', // BLACK_WITH_TITLE   NORMAL
     info: INFO,
   }
 
@@ -41,7 +47,11 @@ export default class Loading extends Component {
   }
 
   setLoading = (loading, info, extra = {}) => {
-    if (loading !== this.state.animating || this.state.info !== info || JSON.stringify(this.state.extra) !== JSON.stringify(extra)) {
+    if (
+      loading !== this.state.animating ||
+      this.state.info !== info ||
+      JSON.stringify(this.state.extra) !== JSON.stringify(extra)
+    ) {
       if (!extra.bgColor) {
         extra.bgColor = 'transparent'
       }
@@ -83,12 +93,17 @@ export default class Loading extends Component {
     if (!this.state.animating) return null
 
     return (
-      <View style={[styles.container, this.state.extra.bgColor && {backgroundColor: this.state.extra.bgColor}]}>
-        {
-          this.props.displayMode === 'NORMAL'
-            ? this.renderIndicator()
-            : this.renderModalIndicator()
-        }
+      <View
+        style={[
+          styles.container,
+          this.state.extra.bgColor && {
+            backgroundColor: this.state.extra.bgColor,
+          },
+        ]}
+      >
+        {this.props.displayMode === 'NORMAL'
+          ? this.renderIndicator()
+          : this.renderModalIndicator()}
       </View>
     )
   }

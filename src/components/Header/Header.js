@@ -25,8 +25,7 @@ class NavigationHeader extends Component {
     headerRight?: any, // Header右端组件，可为Array
     opacity?: number, // 透明度
     activeOpacity?: number, // 返回键点击透明度
-    float?: boolean, // 浮动Header
-    floatNoTitle?: boolean, // 没有标题的浮动Header, 透明背景
+    type?: string, // default | float:浮动Header | floatNoTitle:浮动无title,透明背景 | fix:固定顶部，绝对定位
     navigation?: any, // navigation
     count?: any,
     darkBackBtn?: boolean, // 黑色透明背景，返回按钮
@@ -39,8 +38,7 @@ class NavigationHeader extends Component {
     backBtnType: 'gray',
     opacity: 1,
     activeOpacity: 0.2,
-    float: false,
-    floatNoTitle: false,
+    type: 'default',
     headerViewStyle: styles.navigationHeader,
     headerLeftStyle: styles.headerLeftView,
     headerTitleViewStyle: styles.headerTitleView,
@@ -66,7 +64,7 @@ class NavigationHeader extends Component {
       headerRight,
       withoutBack,
       activeOpacity,
-      floatNoTitle,
+      type,
       headerViewStyle,
       headerLeftStyle,
       headerTitleViewStyle,
@@ -91,11 +89,7 @@ class NavigationHeader extends Component {
           this.handleBack(navigation)
         }}
       >
-        {count
-          ? <Text style={styles.count}>
-              ({count})
-          </Text>
-          : null}
+        {count ? <Text style={styles.count}>({count})</Text> : null}
         <View
           style={[styles.iconBtnBg, darkBackBtn && styles.iconBtnBgDarkColor]}
         >
@@ -103,26 +97,34 @@ class NavigationHeader extends Component {
         </View>
       </TouchableOpacity>
     )
+    let titleView = null
+    if (type === 'floatNoTitle') {
+      titleView = (
+        <View style={headerTitleViewStyle}>
+          {headerCenter ? (
+            headerCenter
+          ) : (
+            <Text style={headerTitleStyle}>{title}</Text>
+          )}
+        </View>
+      )
+    }
 
     return (
       <View style={[styles.navigationHeader, headerViewStyle]}>
-        {headerLeft
-          ? <View style={[styles.headerLeftView, headerLeftStyle]}>
+        {headerLeft ? (
+          <View style={[styles.headerLeftView, headerLeftStyle]}>
             {headerLeft}
           </View>
-          : !withoutBack && backBtn}
-        {!floatNoTitle &&
-          <View style={headerTitleViewStyle}>
-            {headerCenter
-              ? headerCenter
-              : <Text style={headerTitleStyle}>
-                {title}
-              </Text>}
-          </View>}
-        {headerRight &&
+        ) : (
+          !withoutBack && backBtn
+        )}
+        {titleView}
+        {headerRight && (
           <View style={[styles.headerRightView, headerRightStyle]}>
             {headerRight}
-          </View>}
+          </View>
+        )}
       </View>
     )
   }
@@ -132,14 +134,25 @@ class NavigationHeader extends Component {
       header,
       // backAction,
       opacity,
-      float,
-      floatNoTitle,
+      type,
       headerStyle,
     } = this.props
 
-    let currentHeaderStyle = floatNoTitle
-      ? styles.floatNoTitleHeaderView
-      : float ? styles.floatHeaderView : styles.defaultHeaderView
+    let currentHeaderStyle
+    switch (type) {
+      case 'floatNoTitle':
+        currentHeaderStyle = styles.floatNoTitleHeaderView
+        break
+      case 'float':
+        currentHeaderStyle = styles.floatHeaderView
+        break
+      case 'fix':
+        currentHeaderStyle = styles.fixHeaderView
+        break
+      default:
+        currentHeaderStyle = styles.defaultHeaderView
+        break
+    }
 
     return (
       <View style={[currentHeaderStyle, headerStyle, { opacity: opacity }]}>

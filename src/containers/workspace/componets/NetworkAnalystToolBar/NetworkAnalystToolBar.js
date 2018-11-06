@@ -2,7 +2,7 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { Toast, scaleSize } from '../../../../utils'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
-import { Const } from '../../../../constains'
+import { Const } from '../../../../constants'
 import { facilityAnalyst, tranportationAnalyst } from '../../util'
 import PropTypes from 'prop-types'
 

@@ -13,7 +13,7 @@ import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
 import { ChooseDatasource, NewDSet } from './newDSet'
-import MTLayerManager from './mtLayerManager'
+// import MTLayerManager from './mtLayerManager'
 import Map3DLayerManager from './map3DLayerManager'
 import AnalystParams from './analystParams'
 import AddLayer from './addLayer'
@@ -33,7 +33,8 @@ import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
-import { Map3D, MapView } from './workspace'
+// import { Map3D, MapView } from './workspace'
+import MapTabs from './workspace'
 
 export default StackNavigator(
   {
@@ -49,14 +50,20 @@ export default StackNavigator(
         header: null,
       },
     },
-    MapView: {
-      screen: MapView,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    Map3D: {
-      screen: Map3D,
+    // MapView: {
+    //   screen: MapView,
+    //   navigationOptions: {
+    //     header: null,
+    //   },
+    // },
+    // Map3D: {
+    //   screen: Map3D,
+    //   navigationOptions: {
+    //     header: null,
+    //   },
+    // },
+    MapTabs: {
+      screen: MapTabs,
       navigationOptions: {
         header: null,
       },
@@ -73,12 +80,12 @@ export default StackNavigator(
         header: null,
       },
     },
-    LayerManager: {
-      screen: MTLayerManager,
-      navigationOptions: {
-        header: null,
-      },
-    },
+    // LayerManager: {
+    //   screen: MTLayerManager,
+    //   navigationOptions: {
+    //     header: null,
+    //   },
+    // },
     Map3DLayerManager: {
       screen: Map3DLayerManager,
       navigationOptions: {

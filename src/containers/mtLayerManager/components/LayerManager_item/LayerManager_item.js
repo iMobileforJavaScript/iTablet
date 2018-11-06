@@ -6,13 +6,9 @@
 
 import * as React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
-import {
-  Action,
-  DatasetType,
-  ThemeType,
-} from 'imobile_for_reactnative'
+import { Action, DatasetType, ThemeType } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../../../utils'
-import { Const } from '../../../../constains'
+import { Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
@@ -20,7 +16,6 @@ import styles from './styles'
 const LAYER_GROUP = 'layerGroup'
 
 export default class LayerManager_item extends React.Component {
-
   props: {
     layer: Object,
     map: Object,
@@ -28,8 +23,8 @@ export default class LayerManager_item extends React.Component {
     mapControl: Object,
     isClose: boolean,
     swipeEnabled: boolean,
-    hasSelected: boolean,   // 是否有选择Radio
-    selected: boolean,   // 选择Radio
+    hasSelected: boolean, // 是否有选择Radio
+    selected: boolean, // 选择Radio
     operable: boolean,
     showRenameDialog: () => {},
     showRemoveDialog: () => {},
@@ -50,11 +45,11 @@ export default class LayerManager_item extends React.Component {
     child: [],
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
     let data = this.props.data
     let options = this.getOptions(data)
-    let {showLevelOne, showLevelTwo, isVectorLayer} = this.getValidate(data)
+    let { showLevelOne, showLevelTwo, isVectorLayer } = this.getValidate(data)
     this.state = {
       selected: props.selected,
       options: options,
@@ -62,7 +57,7 @@ export default class LayerManager_item extends React.Component {
       visable: data.isVisible,
       selectable: data.isSelectable,
       snapable: data.isSnapable,
-      rowShow:false,
+      rowShow: false,
       image: this.getStyleIconByType(data),
       showLevelOne: showLevelOne,
       showLevelTwo: showLevelTwo,
@@ -84,7 +79,9 @@ export default class LayerManager_item extends React.Component {
   }
 
   getValidate = data => {
-    let isThemeLayer = false, showLevelOne = true, isVectorLayer = false
+    let isThemeLayer = false,
+      showLevelOne = true,
+      isVectorLayer = false
     switch (data.themeType) {
       case 0: // 非专题图层
         isThemeLayer = false
@@ -101,7 +98,8 @@ export default class LayerManager_item extends React.Component {
         showLevelOne = false
         break
     }
-    let showLevelTwo = data.type !== DatasetType.CAD && data.type !== LAYER_GROUP
+    let showLevelTwo =
+      data.type !== DatasetType.CAD && data.type !== LAYER_GROUP
     if (
       data.type === DatasetType.CAD ||
       data.type === DatasetType.LINE ||
@@ -116,13 +114,13 @@ export default class LayerManager_item extends React.Component {
       isVectorLayer = true
     }
 
-    return {isThemeLayer, showLevelOne, showLevelTwo, isVectorLayer}
+    return { isThemeLayer, showLevelOne, showLevelTwo, isVectorLayer }
   }
 
   getData = (data = this.props.data) => {
-    (async function () {
+    (async function() {
       let options = this.getOptions(data)
-      let {showLevelOne, isVectorLayer} = this.getValidate(data)
+      let { showLevelOne, isVectorLayer } = this.getValidate(data)
       this.setState({
         showLevelOne: !showLevelOne,
         isVectorLayer: isVectorLayer,
@@ -134,54 +132,106 @@ export default class LayerManager_item extends React.Component {
         rowShow: this.state.rowShow || false,
         image: this.getStyleIconByType(data),
       })
-    }).bind(this)()
+    }.bind(this)())
   }
 
   updateEditable = () => {
-    (async function () {
+    (async function() {
       let idEditable = await this.props.layer.getEditable()
       this.setState({
         editable: idEditable,
       })
-    }).bind(this)()
+    }.bind(this)())
   }
 
   getOptions = data => {
-    let {isThemeLayer, isVectorLayer} = this.getValidate(data)
+    let { isThemeLayer, isVectorLayer } = this.getValidate(data)
     let options = []
 
-    if (!isThemeLayer && isVectorLayer && this.props.data.type !== DatasetType.TEXT && this.props.data.type !== DatasetType.CAD) {
+    if (
+      !isThemeLayer &&
+      isVectorLayer &&
+      this.props.data.type !== DatasetType.TEXT &&
+      this.props.data.type !== DatasetType.CAD
+    ) {
       options.push({
-        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-theme-white.png')} /></View>,
+        component: (
+          <View style={styles.btnImageView}>
+            <Image
+              resizeMode={'contain'}
+              style={styles.btnImage}
+              source={require('../../../../assets/mapEdit/icon-theme-white.png')}
+            />
+          </View>
+        ),
         onPress: this._openTheme,
       })
       options.push({
-        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-style-white.png')} /></View>,
+        component: (
+          <View style={styles.btnImageView}>
+            <Image
+              resizeMode={'contain'}
+              style={styles.btnImage}
+              source={require('../../../../assets/mapEdit/icon-style-white.png')}
+            />
+          </View>
+        ),
         onPress: this._openStyle,
       })
     } else if (isThemeLayer || this.props.data.type === DatasetType.CAD) {
       options.push({
-        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-theme-white.png')} /></View>,
+        component: (
+          <View style={styles.btnImageView}>
+            <Image
+              resizeMode={'contain'}
+              style={styles.btnImage}
+              source={require('../../../../assets/mapEdit/icon-theme-white.png')}
+            />
+          </View>
+        ),
         onPress: this._openTheme,
       })
     }
     options.push({
-      component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-rename-white.png')} /></View>,
+      component: (
+        <View style={styles.btnImageView}>
+          <Image
+            resizeMode={'contain'}
+            style={styles.btnImage}
+            source={require('../../../../assets/mapEdit/icon-rename-white.png')}
+          />
+        </View>
+      ),
       onPress: this._rename,
     })
 
     if (this.props.data.type === 'layerGroup') {
       options.push({
-        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-ungroup-white.png')} /></View>,
+        component: (
+          <View style={styles.btnImageView}>
+            <Image
+              resizeMode={'contain'}
+              style={styles.btnImage}
+              source={require('../../../../assets/mapEdit/icon-ungroup-white.png')}
+            />
+          </View>
+        ),
         onPress: this._unGroup,
       })
     } else {
       options.push({
-        component: <View style={styles.btnImageView}><Image resizeMode={'contain'} style={styles.btnImage} source={require('../../../../assets/mapEdit/icon-delete-white.png')} /></View>,
+        component: (
+          <View style={styles.btnImageView}>
+            <Image
+              resizeMode={'contain'}
+              style={styles.btnImage}
+              source={require('../../../../assets/mapEdit/icon-delete-white.png')}
+            />
+          </View>
+        ),
         onPress: this._remove,
       })
     }
-
 
     return options
   }
@@ -190,58 +240,59 @@ export default class LayerManager_item extends React.Component {
     Toast.show('待做')
   }
 
-  _editable_change=()=>{
+  _editable_change = () => {
     if (!this.state.visable) return
-    this.setState(oldstate=>{
+    this.setState(oldstate => {
       let newEdit = !oldstate.editable
-      ;(async function (){
+      ;(async function() {
         await this.props.layer.setEditable(newEdit)
         await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
         this.props.setEditable && this.props.setEditable(this.props.data)
-      }).bind(this)()
-      return({editable:newEdit})
+      }.bind(this)())
+      return { editable: newEdit }
     })
   }
 
-  _visable_change=()=>{
-    this.setState(oldstate=>{
+  _visable_change = () => {
+    this.setState(oldstate => {
       let oldVisibe = oldstate.visable
-      ;(async function (){
+      ;(async function() {
         await this.props.layer.setVisible(!oldVisibe)
         await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
-      }).bind(this)()
-      return({visable:!oldVisibe})
+      }.bind(this)())
+      return { visable: !oldVisibe }
     })
   }
 
-  _selectable_change=()=>{
-    this.setState(oldstate=>{
+  _selectable_change = () => {
+    this.setState(oldstate => {
       let oldSelect = oldstate.selectable
-      ;(async function (){
+      ;(async function() {
         await this.props.layer.setSelectable(!oldSelect)
         await this.props.map.refresh()
         // await this.props.mapControl.setAction(Action.PAN)
-      }).bind(this)()
-      return({selectable:!oldSelect})
+      }.bind(this)())
+      return { selectable: !oldSelect }
     })
   }
 
-  _catchable_change=()=>{
-    this.setState(oldstate=>{
+  _catchable_change = () => {
+    this.setState(oldstate => {
       let oldCatch = oldstate.snapable
-      ;(async function (){
+      ;(async function() {
         await this.props.layer.setSnapable(!oldCatch)
         await this.props.map.refresh()
         await this.props.mapControl.setAction(Action.PAN)
-      }).bind(this)()
-      return({snapable:!oldCatch})
+      }.bind(this)())
+      return { snapable: !oldCatch }
     })
   }
 
   _openTheme = () => {
-    let title = '', themeType = ''
+    let title = '',
+      themeType = ''
     switch (this.props.data.themeType) {
       case ThemeType.LABEL:
         title = Const.LABEL
@@ -291,15 +342,18 @@ export default class LayerManager_item extends React.Component {
   }
 
   _rename = () => {
-    this.props.showRenameDialog && this.props.showRenameDialog(true, this.props.layer)
+    this.props.showRenameDialog &&
+      this.props.showRenameDialog(true, this.props.layer)
   }
 
   _remove = () => {
-    this.props.showRemoveDialog && this.props.showRemoveDialog(true, this.props.data, '是否要删除该图层？')
+    this.props.showRemoveDialog &&
+      this.props.showRemoveDialog(true, this.props.data, '是否要删除该图层？')
   }
 
   _unGroup = () => {
-    this.props.showRemoveDialog && this.props.showRemoveDialog(true, this.props.data, '是否要解散该图层组？')
+    this.props.showRemoveDialog &&
+      this.props.showRemoveDialog(true, this.props.data, '是否要解散该图层组？')
   }
 
   _pop_row = async () => {
@@ -307,11 +361,14 @@ export default class LayerManager_item extends React.Component {
     if (this.props.data.layer._SMLayerGroupId) {
       let child = []
       if (isShow) {
-        child = this.props.onPress && await this.props.onPress({
-          layer: this.props.data.layer,
-          data: this.props.data,
-          // sectionID: this.state.sectionID,
-        }) || []
+        child =
+          (this.props.onPress &&
+            (await this.props.onPress({
+              layer: this.props.data.layer,
+              data: this.props.data,
+              // sectionID: this.state.sectionID,
+            }))) ||
+          []
       }
       this.setState({
         rowShow: isShow,
@@ -319,9 +376,10 @@ export default class LayerManager_item extends React.Component {
       })
     } else {
       this.setSelected(!this.state.selected, async () => {
-        this.props.onPress && await this.props.onPress({
-          data: this.props.data,
-        })
+        this.props.onPress &&
+          (await this.props.onPress({
+            data: this.props.data,
+          }))
       })
     }
   }
@@ -336,11 +394,7 @@ export default class LayerManager_item extends React.Component {
     // return (
     //   <PopBtnList data={this.state.options} />
     // )
-    return (
-      <View style={styles.additionView}>
-        {this.state.child}
-      </View>
-    )
+    return <View style={styles.additionView}>{this.state.child}</View>
   }
 
   getStyleIconByType = item => {
@@ -420,11 +474,14 @@ export default class LayerManager_item extends React.Component {
     if (isSelect === null) {
       select = !this.state.selected
     }
-    this.setState({
-      selected: select,
-    }, () => {
-      cb && cb(this.props.data)
-    })
+    this.setState(
+      {
+        selected: select,
+      },
+      () => {
+        cb && cb(this.props.data)
+      },
+    )
   }
 
   renderRadioBtn = () => {
@@ -432,23 +489,33 @@ export default class LayerManager_item extends React.Component {
       dotStyle = styles.radioSelected
     return (
       <View style={viewStyle}>
-        {
-          this.state.selected && <View style={dotStyle} />
-        }
+        {this.state.selected && <View style={dotStyle} />}
       </View>
     )
   }
 
   renderSwipeRow = () => {
     let name = this.props.data.caption
-    const image1 = this.state.editable ? require('../../../../assets/map/icon_edit_selected.png') :require('../../../../assets/map/icon_edit.png')
-    const image2 = this.state.visable ? require('../../../../assets/map/icon_visible_selected.png') :require('../../../../assets/map/icon_visible.png')
-    const image3 = this.state.selectable ? require('../../../../assets/map/icon_choose_seleted.png') :require('../../../../assets/map/icon_choose.png')
-    const image4 = this.state.snapable ? require('../../../../assets/map/icon_catch_selected.png') :require('../../../../assets/map/icon_catch.png')
-    const image5 = this.state.rowShow ? require('../../../../assets/mapEdit/icon-arrow-down.png') :require('../../../../assets/mapEdit/icon-arrow-left.png')
-    let leftView = this.props.hasSelected
-      ? this.renderRadioBtn()
-      : this.props.data.groupName ? <View style={styles.btn}/> : null
+    const image1 = this.state.editable
+      ? require('../../../../assets/map/icon_edit_selected.png')
+      : require('../../../../assets/map/icon_edit.png')
+    const image2 = this.state.visable
+      ? require('../../../../assets/map/icon_visible_selected.png')
+      : require('../../../../assets/map/icon_visible.png')
+    const image3 = this.state.selectable
+      ? require('../../../../assets/map/icon_choose_seleted.png')
+      : require('../../../../assets/map/icon_choose.png')
+    const image4 = this.state.snapable
+      ? require('../../../../assets/map/icon_catch_selected.png')
+      : require('../../../../assets/map/icon_catch.png')
+    const image5 = this.state.rowShow
+      ? require('../../../../assets/mapEdit/icon-arrow-down.png')
+      : require('../../../../assets/mapEdit/icon-arrow-left.png')
+    let leftView = this.props.hasSelected ? (
+      this.renderRadioBtn()
+    ) : this.props.data.groupName ? (
+      <View style={styles.btn} />
+    ) : null
     return (
       <View style={styles.container}>
         <SwipeOut
@@ -460,28 +527,98 @@ export default class LayerManager_item extends React.Component {
           // sectionID={this.state.sectionID}
           autoClose={true}
           backgroundColor={'white'}
-          onOpen={() => { // 参数sectionID, rowID
+          onOpen={() => {
+            // 参数sectionID, rowID
             this.props.onOpen && this.props.onOpen(this.props.data)
           }}
           buttonWidth={scaleSize(100)}
           // onClose={() => console.log('===close') }
           // scroll={event => console.log('scroll event') }
         >
-          <TouchableOpacity activeOpacity={1} style={styles.rowOne} onPress={this._pop_row}>
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.rowOne}
+            onPress={this._pop_row}
+          >
             <View style={styles.btn_container}>
-              {
-                this.props.data.type === LAYER_GROUP
-                  ? <TouchableOpacity style={styles.btn} onPress={this._pop_row}>
-                    <Image resizeMode={'contain'} style={styles.btn_image_samll} source={image5}/>
-                  </TouchableOpacity>
-                  : leftView
-              }
-              {this.props.operable && <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>}
-              {this.props.operable && this.state.isVectorLayer && this.state.showLevelOne && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
-              {this.props.operable && this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
-              {this.props.operable && this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
+              {this.props.data.type === LAYER_GROUP ? (
+                <TouchableOpacity style={styles.btn} onPress={this._pop_row}>
+                  <Image
+                    resizeMode={'contain'}
+                    style={styles.btn_image_samll}
+                    source={image5}
+                  />
+                </TouchableOpacity>
+              ) : (
+                leftView
+              )}
+              {this.props.operable && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={this._visable_change}
+                >
+                  <Image
+                    resizeMode={'contain'}
+                    style={styles.btn_image}
+                    source={image2}
+                  />
+                </TouchableOpacity>
+              )}
+              {this.props.operable &&
+                this.state.isVectorLayer &&
+                this.state.showLevelOne && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={this._selectable_change}
+                >
+                  <Image
+                    resizeMode={'contain'}
+                    style={styles.btn_image}
+                    source={image3}
+                  />
+                </TouchableOpacity>
+              )}
+              {this.props.operable &&
+                this.state.isVectorLayer &&
+                this.state.showLevelOne &&
+                this.state.showLevelTwo && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={this._editable_change}
+                >
+                  <Image
+                    resizeMode={'contain'}
+                    style={styles.btn_image}
+                    source={image1}
+                  />
+                </TouchableOpacity>
+              )}
+              {this.props.operable &&
+                this.state.isVectorLayer &&
+                this.state.showLevelOne &&
+                this.state.showLevelTwo && (
+                <TouchableOpacity
+                  style={styles.btn}
+                  onPress={this._catchable_change}
+                >
+                  <Image
+                    resizeMode={'contain'}
+                    style={styles.btn_image}
+                    source={image4}
+                  />
+                </TouchableOpacity>
+              )}
               <View style={styles.btn}>
-                <Image resizeMode={'contain'} style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
+                <Image
+                  resizeMode={'contain'}
+                  style={[
+                    this.props.data.type === DatasetType.POINT &&
+                    this.props.data.themeType <= 0
+                      ? styles.samllImage
+                      : styles.btn_image,
+                  ]}
+                  source={this.state.image}
+                />
               </View>
             </View>
             <View style={styles.text_container}>
@@ -496,33 +633,114 @@ export default class LayerManager_item extends React.Component {
 
   renderRow = () => {
     let name = this.props.data.caption
-    const image1 = this.state.editable ? require('../../../../assets/map/icon_edit_selected.png') :require('../../../../assets/map/icon_edit.png')
-    const image2 = this.state.visable ? require('../../../../assets/map/icon_visible_selected.png') :require('../../../../assets/map/icon_visible.png')
-    const image3 = this.state.selectable ? require('../../../../assets/map/icon_choose_seleted.png') :require('../../../../assets/map/icon_choose.png')
-    const image4 = this.state.snapable ? require('../../../../assets/map/icon_catch_selected.png') :require('../../../../assets/map/icon_catch.png')
-    const image5 = this.state.rowShow ? require('../../../../assets/mapEdit/icon-arrow-down.png') :require('../../../../assets/mapEdit/icon-arrow-left.png')
+    const image1 = this.state.editable
+      ? require('../../../../assets/map/icon_edit_selected.png')
+      : require('../../../../assets/map/icon_edit.png')
+    const image2 = this.state.visable
+      ? require('../../../../assets/map/icon_visible_selected.png')
+      : require('../../../../assets/map/icon_visible.png')
+    const image3 = this.state.selectable
+      ? require('../../../../assets/map/icon_choose_seleted.png')
+      : require('../../../../assets/map/icon_choose.png')
+    const image4 = this.state.snapable
+      ? require('../../../../assets/map/icon_catch_selected.png')
+      : require('../../../../assets/map/icon_catch.png')
+    const image5 = this.state.rowShow
+      ? require('../../../../assets/mapEdit/icon-arrow-down.png')
+      : require('../../../../assets/mapEdit/icon-arrow-left.png')
 
-    let leftView = this.props.hasSelected
-      ? this.renderRadioBtn()
-      : this.props.data.groupName ? <View style={styles.btn}/> : null
+    let leftView = this.props.hasSelected ? (
+      this.renderRadioBtn()
+    ) : this.props.data.groupName ? (
+      <View style={styles.btn} />
+    ) : null
 
     return (
-      <View style={[styles.container, {backgroundColor: 'white'}]}>
-        <TouchableOpacity activeOpacity={1} style={styles.rowOne} onPress={this._pop_row}>
+      <View style={[styles.container, { backgroundColor: 'white' }]}>
+        <TouchableOpacity
+          activeOpacity={1}
+          style={styles.rowOne}
+          onPress={this._pop_row}
+        >
           <View style={styles.btn_container}>
-            {
-              this.props.data.type === LAYER_GROUP
-                ? <TouchableOpacity style={styles.btn} onPress={this._pop_row}>
-                  <Image resizeMode={'contain'} style={styles.btn_image_samll} source={image5}/>
-                </TouchableOpacity>
-                : leftView
-            }
-            {this.props.operable &&  <TouchableOpacity style={styles.btn} onPress={this._visable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image2}/></TouchableOpacity>}
-            {this.props.operable && this.state.isVectorLayer && this.state.showLevelOne && <TouchableOpacity style={styles.btn} onPress={this._selectable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image3}/></TouchableOpacity>}
-            {this.props.operable && this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._editable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image1}/></TouchableOpacity>}
-            {this.props.operable && this.state.isVectorLayer && this.state.showLevelOne && this.state.showLevelTwo && <TouchableOpacity style={styles.btn} onPress={this._catchable_change}><Image resizeMode={'contain'} style={styles.btn_image} source={image4}/></TouchableOpacity>}
+            {this.props.data.type === LAYER_GROUP ? (
+              <TouchableOpacity style={styles.btn} onPress={this._pop_row}>
+                <Image
+                  resizeMode={'contain'}
+                  style={styles.btn_image_samll}
+                  source={image5}
+                />
+              </TouchableOpacity>
+            ) : (
+              leftView
+            )}
+            {this.props.operable && (
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={this._visable_change}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={styles.btn_image}
+                  source={image2}
+                />
+              </TouchableOpacity>
+            )}
+            {this.props.operable &&
+              this.state.isVectorLayer &&
+              this.state.showLevelOne && (
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={this._selectable_change}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={styles.btn_image}
+                  source={image3}
+                />
+              </TouchableOpacity>
+            )}
+            {this.props.operable &&
+              this.state.isVectorLayer &&
+              this.state.showLevelOne &&
+              this.state.showLevelTwo && (
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={this._editable_change}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={styles.btn_image}
+                  source={image1}
+                />
+              </TouchableOpacity>
+            )}
+            {this.props.operable &&
+              this.state.isVectorLayer &&
+              this.state.showLevelOne &&
+              this.state.showLevelTwo && (
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={this._catchable_change}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={styles.btn_image}
+                  source={image4}
+                />
+              </TouchableOpacity>
+            )}
             <View style={styles.btn}>
-              <Image resizeMode={'contain'} style={[this.props.data.type === DatasetType.POINT && this.props.data.themeType <= 0 ? styles.samllImage : styles.btn_image]} source={this.state.image} />
+              <Image
+                resizeMode={'contain'}
+                style={[
+                  this.props.data.type === DatasetType.POINT &&
+                  this.props.data.themeType <= 0
+                    ? styles.samllImage
+                    : styles.btn_image,
+                ]}
+                source={this.state.image}
+              />
             </View>
           </View>
           <View style={styles.text_container}>
