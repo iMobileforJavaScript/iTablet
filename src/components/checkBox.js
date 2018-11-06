@@ -10,7 +10,6 @@ import { StyleSheet, TouchableHighlight, Image } from 'react-native'
 const bgColor = 'transparent'
 
 export default class CheckBox extends React.Component {
-
   props: {
     onChange: () => {},
     size: number,
@@ -33,15 +32,23 @@ export default class CheckBox extends React.Component {
       },
       (() => {
         this.props.onChange(this.state.checked)
-      }).bind(this)
+      }).bind(this),
     )
   }
 
   render() {
-    const size = this.props.size ? { width: this.props.size, height: this.props.size } : { width: 20, height: 20 }
-    const imagePath = this.state.checked ? require('../assets/public/checkbox-yes.png') : require('../assets/public/checkbox-no.png')
+    const size = this.props.size
+      ? { width: this.props.size, height: this.props.size }
+      : { width: 20, height: 20 }
+    const imagePath = this.state.checked
+      ? require('../assets/public/checkbox-yes.png')
+      : require('../assets/public/checkbox-no.png')
     return (
-      <TouchableHighlight style={[styles.btn, size]} onPress={this._btnPress} underlayColor={bgColor}>
+      <TouchableHighlight
+        style={[styles.btn, size]}
+        onPress={this._btnPress}
+        underlayColor={bgColor}
+      >
         <Image style={[styles.btn_image, size]} source={imagePath} />
       </TouchableHighlight>
     )

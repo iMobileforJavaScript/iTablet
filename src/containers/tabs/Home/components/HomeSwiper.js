@@ -1,5 +1,11 @@
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  Image,
+} from 'react-native'
 import PropTypes from 'prop-types'
 
 import Swiper from 'react-native-swiper' // eslint-disable-line
@@ -7,7 +13,6 @@ import Swiper from 'react-native-swiper' // eslint-disable-line
 const { width } = Dimensions.get('window')
 
 export default class HomeSwiper extends React.Component {
-
   static propTypes = {
     data: PropTypes.array,
     activeOpacity: PropTypes.number,
@@ -18,31 +23,55 @@ export default class HomeSwiper extends React.Component {
     activeOpacity: 1,
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
-      size: { width, height: width * 8 / 15 },
+      size: { width, height: (width * 8) / 15 },
     }
   }
 
   getData = () => {
     let datas = []
     if (this.props.data.length > 0) {
-      this.props.data.forEach(({obj, index}) => {
+      this.props.data.forEach(({ obj, index }) => {
         datas.push(
-          <TouchableOpacity key={'home_swiper_' + index} activeOpacity={this.props.activeOpacity} style={styles.ImageContainaer}>
-            <Image resizeMode='stretch' style={styles.scrollImage} source={{uri: obj.uri}}/>
-          </TouchableOpacity>
+          <TouchableOpacity
+            key={'home_swiper_' + index}
+            activeOpacity={this.props.activeOpacity}
+            style={styles.ImageContainaer}
+          >
+            <Image
+              resizeMode="stretch"
+              style={styles.scrollImage}
+              source={{ uri: obj.uri }}
+            />
+          </TouchableOpacity>,
         )
       })
     } else {
       datas = [
-        <TouchableOpacity key={'home_swiper_0'} activeOpacity={this.props.activeOpacity} style={styles.ImageContainaer}>
-          <Image resizeMode='stretch' style={styles.scrollImage} source={require('../../../../assets/home/home_scroll1.jpg')}/>
+        <TouchableOpacity
+          key={'home_swiper_0'}
+          activeOpacity={this.props.activeOpacity}
+          style={styles.ImageContainaer}
+        >
+          <Image
+            resizeMode="stretch"
+            style={styles.scrollImage}
+            source={require('../../../../assets/home/home_scroll1.jpg')}
+          />
         </TouchableOpacity>,
-        <TouchableOpacity key={'home_swiper_1'} activeOpacity={this.props.activeOpacity} style={styles.ImageContainaer}>
-          <Image resizeMode='stretch' style={styles.scrollImage} source={require('../../../../assets/home/home_scroll2.jpg')}/>
+        <TouchableOpacity
+          key={'home_swiper_1'}
+          activeOpacity={this.props.activeOpacity}
+          style={styles.ImageContainaer}
+        >
+          <Image
+            resizeMode="stretch"
+            style={styles.scrollImage}
+            source={require('../../../../assets/home/home_scroll2.jpg')}
+          />
         </TouchableOpacity>,
       ]
     }
@@ -59,10 +88,9 @@ export default class HomeSwiper extends React.Component {
           dot={<View style={styles.dot} />}
           activeDot={<View style={styles.activeDot} />}
           paginationStyle={styles.paginationStyle}
-          loop>
-          {
-            this.getData()
-          }
+          loop
+        >
+          {this.getData()}
         </Swiper>
       </View>
     )
@@ -71,7 +99,7 @@ export default class HomeSwiper extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: width * 8 / 15,
+    height: (width * 8) / 15,
     width: '100%',
   },
   ImageContainaer: {

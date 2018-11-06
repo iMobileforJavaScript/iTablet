@@ -10,7 +10,6 @@ import { View, StyleSheet, Text } from 'react-native'
 import { TextBtn } from '../../../components'
 
 export default class Tips extends React.Component {
-
   props: {
     tipText: String,
     btnText: String,
@@ -23,7 +22,7 @@ export default class Tips extends React.Component {
         <View style={styles.tipsContainer}>
           <Text style={styles.tips}>{this.props.tipText}</Text>
         </View>
-        <TextBtn btnText={this.props.btnText} btnClick={this.props.btnClick}/>
+        <TextBtn btnText={this.props.btnText} btnClick={this.props.btnClick} />
       </View>
     )
   }
@@ -39,7 +38,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   tipsContainer: {
-    height:40,
+    height: 40,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

@@ -6,7 +6,6 @@ import NavigationService from '../NavigationService'
 import { MapListItem } from './components'
 
 export default class MapChange extends React.Component {
-
   props: {
     navigation: Object,
     nav: Object,
@@ -18,7 +17,7 @@ export default class MapChange extends React.Component {
     this.workspace = state.params.workspace
     this.map = state.params.map
     this.cb = state.params.cb
-    ;(async function () {
+    ;(async function() {
       let maps = await this.workspace.getMaps()
       let count = await maps.getCount()
       let mapNameArr = []
@@ -27,20 +26,23 @@ export default class MapChange extends React.Component {
         let map = this.map
         mapNameArr.push({ key: name, num: i, map: map })
       }
-      this.setState({
-        dataList: mapNameArr,
-      }, () => {
-        this.container.setLoading(false)
-      })
-    }).bind(this)()
+      this.setState(
+        {
+          dataList: mapNameArr,
+        },
+        () => {
+          this.container.setLoading(false)
+        },
+      )
+    }.bind(this)())
   }
 
   state = {
     dataList: '',
   }
 
-  _map_change = ({key, map}) => {
-    (async function () {
+  _map_change = ({ key, map }) => {
+    (async function() {
       await map.close()
       await map.open(key)
       await map.refresh()
@@ -57,12 +59,17 @@ export default class MapChange extends React.Component {
       NavigationService.goBack(routeKey)
 
       Toast.show('地图切换成功')
-    }).bind(this)()
+    }.bind(this)())
   }
 
   _renderItem = ({ item }) => {
     return (
-      <MapListItem data={item} onPress={() => {this._map_change(item)}} />
+      <MapListItem
+        data={item}
+        onPress={() => {
+          this._map_change(item)
+        }}
+      />
     )
   }
 
@@ -73,12 +80,13 @@ export default class MapChange extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
           title: '地图切换',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <FlatList
           data={this.state.dataList}
           renderItem={this._renderItem}

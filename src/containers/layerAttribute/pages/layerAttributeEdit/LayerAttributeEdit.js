@@ -13,7 +13,6 @@ import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 import { FieldType } from 'imobile_for_reactnative'
 
 export default class LayerAttributeEdit extends React.Component {
-
   props: {
     navigation: Object,
     currentAttribute: Object,
@@ -51,7 +50,7 @@ export default class LayerAttributeEdit extends React.Component {
 
   getDatasets = (cb = () => {}) => {
     this.container.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       try {
         let datasetVector = await this.state.dataset.toDatasetVector()
         let fieldInfos = await datasetVector.getFieldInfos()
@@ -103,7 +102,7 @@ export default class LayerAttributeEdit extends React.Component {
       } catch (e) {
         this.container.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   checkType = data => {
@@ -142,13 +141,22 @@ export default class LayerAttributeEdit extends React.Component {
 
   add = () => {
     // NavigationService.navigate('LayerAttributeAdd', {selection: this.state.selection, callBack: this.refresh})
-    NavigationService.navigate('LayerAttributeAdd', {dataset: this.state.dataset, callBack: this.refresh})
+    NavigationService.navigate('LayerAttributeAdd', {
+      dataset: this.state.dataset,
+      callBack: this.refresh,
+    })
   }
 
   edit = () => {
-    if (this.state.currentFieldInfo && this.state.currentFieldInfo.isSystemField) {
+    if (
+      this.state.currentFieldInfo &&
+      this.state.currentFieldInfo.isSystemField
+    ) {
       Toast.show('系统属性无法编辑')
-    } else if (this.state.currentFieldInfo && Object.keys(this.state.currentFieldInfo).length > 0) {
+    } else if (
+      this.state.currentFieldInfo &&
+      Object.keys(this.state.currentFieldInfo).length > 0
+    ) {
       NavigationService.navigate('LayerAttributeAdd', {
         // selection: this.state.selection,
         dataset: this.state.dataset,
@@ -161,9 +169,15 @@ export default class LayerAttributeEdit extends React.Component {
   }
 
   delete = () => {
-    if (this.state.currentFieldInfo && this.state.currentFieldInfo.isSystemField) {
+    if (
+      this.state.currentFieldInfo &&
+      this.state.currentFieldInfo.isSystemField
+    ) {
       Toast.show('系统属性无法删除')
-    } else if (this.state.currentFieldInfo && Object.keys(this.state.currentFieldInfo).length > 0) {
+    } else if (
+      this.state.currentFieldInfo &&
+      Object.keys(this.state.currentFieldInfo).length > 0
+    ) {
       this.deleteAction()
     } else {
       Toast.show('请选择一个属性')
@@ -172,13 +186,15 @@ export default class LayerAttributeEdit extends React.Component {
 
   deleteAction = () => {
     this.container.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       try {
         // let recordset = this.state.selection.recordset
         // let recordset = this.state.recordset
         // let dataset = await recordset.getDataset()
         let datasetVector = await this.state.dataset.toDatasetVector()
-        let result = await datasetVector.removeFieldInfo(this.state.currentFieldInfo.name)
+        let result = await datasetVector.removeFieldInfo(
+          this.state.currentFieldInfo.name,
+        )
 
         this.container.setLoading(false)
         if (result) {
@@ -191,7 +207,7 @@ export default class LayerAttributeEdit extends React.Component {
         this.container.setLoading(false)
         Toast.show('删除成功')
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   selectRow = data => {
@@ -204,12 +220,13 @@ export default class LayerAttributeEdit extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
           title: '属性表',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <LayerAttributeTab
           type={LayerAttributeTab.Type.EDIT}
           btns={['add', 'edit', 'delete']}
@@ -217,18 +234,18 @@ export default class LayerAttributeEdit extends React.Component {
           edit={this.edit}
           delete={this.delete}
         />
-        {
-          this.state.tableHead.length > 0
-            ? <LayerAttributeTable
-              ref={ref => this.tableEdit = ref}
-              type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-              data={this.state.attribute}
-              tableTitle={this.state.tableTitle}
-              tableHead={this.state.tableHead}
-              selectRow={this.selectRow}
-            />
-            : <View style={{flex: 1}} />
-        }
+        {this.state.tableHead.length > 0 ? (
+          <LayerAttributeTable
+            ref={ref => (this.tableEdit = ref)}
+            type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
+            data={this.state.attribute}
+            tableTitle={this.state.tableTitle}
+            tableHead={this.state.tableHead}
+            selectRow={this.selectRow}
+          />
+        ) : (
+          <View style={{ flex: 1 }} />
+        )}
       </Container>
     )
   }

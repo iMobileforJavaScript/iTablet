@@ -1,11 +1,23 @@
 import React from 'react'
 import { scaleSize } from '../../../../utils'
 import { color, zIndexLevel } from '../../../../styles'
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  Text,
+  SectionList,
+} from 'react-native'
+
+const list = 'list'
+const tabel = 'tabel'
 
 export default class ToolBar extends React.Component {
   props: {
     children: any,
+    type: string,
+    data: Array,
   }
 
   constructor(props) {
@@ -27,11 +39,41 @@ export default class ToolBar extends React.Component {
     })
   }
 
+  renderList = () => {
+    return (
+      <SectionList
+        sections={this.props.data}
+        renderItem={({ item }) => {
+          return (
+            <TouchableOpacity onPress={item.action}>
+              <Text style={styles.item}>{item.title}</Text>
+            </TouchableOpacity>
+          )
+        }}
+        renderSectionHeader={({ section }) => (
+          <Text style={styles.sectionHeader}>{section.title}</Text>
+        )}
+        keyExtractor={(item, index) => index}
+      />
+    )
+  }
+
+  renderTabel = () => {}
+
+  renderView = () => {
+    switch (this.props.type) {
+      case list:
+        return this.renderList()
+      case tabel:
+        return this.renderTabel()
+    }
+  }
+
   render() {
     if (this.state.isShow) {
       return (
         <View style={styles.containers}>
-          {this.props.children}
+          {this.renderView()}
           <View style={styles.buttonz}>
             <TouchableOpacity
               onPress={this._onPressButton}
@@ -39,7 +81,7 @@ export default class ToolBar extends React.Component {
             >
               <Image
                 resizeMode={'stretch'}
-                source={require('../../../../assets/mapToolbar/icon_map.png')}
+                source={require('../../../../assets/mapEdit/cancle.png')}
               />
             </TouchableOpacity>
 
@@ -49,7 +91,7 @@ export default class ToolBar extends React.Component {
             >
               <Image
                 resizeMode={'stretch'}
-                source={require('../../../../assets/mapToolbar/icon_layer.png')}
+                source={require('../../../../assets/mapEdit/comit.png')}
               />
             </TouchableOpacity>
           </View>
@@ -83,5 +125,19 @@ const styles = StyleSheet.create({
   },
   button2: {
     height: scaleSize(60),
+  },
+  sectionHeader: {
+    fontSize: 23,
+    fontWeight: 'bold',
+    backgroundColor: color.theme,
+    color: 'white',
+  },
+  item: {
+    padding: 10,
+    fontSize: 18,
+    paddingLeft: 20,
+    height: 44,
+    backgroundColor: color.theme,
+    color: 'white',
   },
 })

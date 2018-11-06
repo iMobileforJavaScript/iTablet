@@ -167,8 +167,7 @@ export default class ExampleMapList extends React.Component {
         exist = await Utility.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
-          // NavigationService.navigate('MapView', {
-          NavigationService.navigate('MapTabs', {
+          NavigationService.navigate('MapView', {
             path: openPath,
             type: '',
             DSParams: { server: path, engineType: EngineType.UDB },

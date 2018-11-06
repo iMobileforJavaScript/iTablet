@@ -36,7 +36,8 @@ export default class Progress extends Component {
     bufferAniDuration: 300,
   }
 
-  componentWillMount() { // eslint-disable-line
+  // eslint-disable-next-line
+  componentWillMount() {
     this.progress = this.props.progress || 0
     this.buffer = this.props.buffer
   }
@@ -47,7 +48,11 @@ export default class Progress extends Component {
     this._bufferAni = new Animated.Value(0)
   }
 
-  _onLayout = ({nativeEvent:{layout:{width,height}}}) => {
+  _onLayout = ({
+    nativeEvent: {
+      layout: { width, height },
+    },
+  }) => {
     //防止多次调用,当第一次获取后,后面就不再去获取了
 
     if (width > 0 && this.totalWidth !== width) {
@@ -96,14 +101,13 @@ export default class Progress extends Component {
   }
 
   _getProgress = () => {
-
     if (typeof this.mProgress.refs.node !== 'undefined') {
       return this.mProgress.refs.node
     }
     return this.mProgress._component
   }
 
-  _getBuffer  = () => {
+  _getBuffer = () => {
     if (typeof this.mBuffer.refs.node !== 'undefined') {
       return this.mBuffer.refs.node
     }
@@ -117,19 +121,19 @@ export default class Progress extends Component {
         onLayout={this._onLayout}
       >
         <Animated.View
-          ref={ref => this.mProgress = ref}
+          ref={ref => (this.mProgress = ref)}
           style={{
-            position:'absolute',
-            width:this._progressAni,
-            backgroundColor:this.props.progressColor,
+            position: 'absolute',
+            width: this._progressAni,
+            backgroundColor: this.props.progressColor,
           }}
         />
         <Animated.View
-          ref={ref => this.mBuffer = ref}
+          ref={ref => (this.mBuffer = ref)}
           style={{
-            position:'absolute',
-            width:this._bufferAni,
-            backgroundColor:this.props.bufferColor,
+            position: 'absolute',
+            width: this._bufferAni,
+            backgroundColor: this.props.bufferColor,
           }}
         />
       </View>
@@ -138,7 +142,7 @@ export default class Progress extends Component {
 }
 
 Object.defineProperty(Progress.prototype, 'progress', {
-  set(value){
+  set(value) {
     if (value >= 0 && this._progress !== value) {
       this._progress = value
       this._startAniProgress(value)
@@ -151,7 +155,7 @@ Object.defineProperty(Progress.prototype, 'progress', {
 })
 
 Object.defineProperty(Progress.prototype, 'buffer', {
-  set(value){
+  set(value) {
     if (value >= 0 && this._buffer !== value) {
       this._buffer = value
       this._startAniBuffer(value)

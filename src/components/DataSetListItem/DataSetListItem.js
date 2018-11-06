@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import styles from './styles'
 
 export default class DataSetListItem extends React.Component {
-
   static propTypes = {
     onPress: PropTypes.func,
     data: PropTypes.object,
@@ -32,17 +31,17 @@ export default class DataSetListItem extends React.Component {
   }
 
   action = () => {
-    if (this.props.data && this.props.data.options || this.props.options) {
+    if ((this.props.data && this.props.data.options) || this.props.options) {
       this._pop_row()
     } else {
       this.setSelected(!this.state.selected, this.props.onPress)
     }
   }
 
-  _pop_row=()=>{
-    this.setState(oldstate=>{
+  _pop_row = () => {
+    this.setState(oldstate => {
       let oldshow = oldstate.rowShow
-      return({rowShow:!oldshow})
+      return { rowShow: !oldshow }
     })
   }
 
@@ -51,11 +50,14 @@ export default class DataSetListItem extends React.Component {
     if (isSelect === null) {
       select = !this.state.selected
     }
-    this.setState({
-      selected: select,
-    }, () => {
-      cb && cb(this.props.data)
-    })
+    this.setState(
+      {
+        selected: select,
+      },
+      () => {
+        cb && cb(this.props.data)
+      },
+    )
   }
 
   getImage = () => {
@@ -98,43 +100,55 @@ export default class DataSetListItem extends React.Component {
     // }
     return (
       <View style={viewStyle}>
-        {
-          // (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
-          this.state.selected && <View style={dotStyle} />
-        }
+        {// (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
+          this.state.selected && <View style={dotStyle} />}
       </View>
     )
   }
 
   _renderAdditionView = () => {
     let options = this.props.data.option || this.props.options
-    return (
-      <PopBtnList data={options} />
-    )
+    return <PopBtnList data={options} />
   }
 
   render() {
-    return this.props.hidden ? <View /> : (
+    return this.props.hidden ? (
+      <View />
+    ) : (
       <View style={styles.container}>
         <TouchableOpacity
           disable={this.props.data.isAdd}
           activeOpacity={0.8}
-          style={[styles.topContainer, this.props.height && {height: this.props.height}]}
+          style={[
+            styles.topContainer,
+            this.props.height && { height: this.props.height },
+          ]}
           onPress={this.action}
         >
           {this.props.radio && this.renderRadioBtn()}
           <View style={styles.contentView}>
             <View style={styles.imageView}>
-              <Image style={this.props.data.type === DatasetType.POINT ? styles.imageSmall : styles.image} source={this.getImage()} />
+              <Image
+                style={
+                  this.props.data.type === DatasetType.POINT
+                    ? styles.imageSmall
+                    : styles.image
+                }
+                source={this.getImage()}
+              />
             </View>
             <Text style={styles.title}>{this.props.data.name}</Text>
           </View>
-          {
-            this.props.subTitle && this.props.data.isAdd &&
-            <Text style={[styles.title, styles.textMarginRight]}>{this.props.subTitle}</Text>
-          }
+          {this.props.subTitle &&
+            this.props.data.isAdd && (
+            <Text style={[styles.title, styles.textMarginRight]}>
+              {this.props.subTitle}
+            </Text>
+          )}
         </TouchableOpacity>
-        {(this.props.data.option || this.props.options) && this.state.rowShow && this._renderAdditionView()}
+        {(this.props.data.option || this.props.options) &&
+          this.state.rowShow &&
+          this._renderAdditionView()}
       </View>
     )
   }

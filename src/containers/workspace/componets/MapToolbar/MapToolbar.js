@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils/index'
-import { color } from '../../../../styles/index'
-import { ListSeparator } from '../../../../components/index'
+import { scaleSize } from '../../../../utils'
+import { color } from '../../../../styles'
+import { ListSeparator } from '../../../../components'
+import { Const } from '../../../../constants'
 import constants from '../../constants'
 import PropTypes from 'prop-types'
-
+import NavigationService from '../../../../containers/NavigationService'
 import MT_Btn from '../../../../components/mapTools/MT_Btn'
 
 // export const MAP_LOCAL = 'MAP_LOCAL'
@@ -16,6 +17,8 @@ export default class MapToolbar extends React.Component {
     type: PropTypes.string,
     navigation: PropTypes.object,
     initIndex: PropTypes.number,
+    POP_List: PropTypes.func,
+    layerManager: PropTypes.func,
     style: PropTypes.any,
   }
 
@@ -87,10 +90,15 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
-      case constants.Map3D:
+      case constants.MAP_3D:
         list = [
           {
-            key: '地图管理',
+            key: '场景',
+            image: require('../../../../assets/map/icon-map-management.png'),
+            btnClick: this._map3Dchange,
+          },
+          {
+            key: '图层',
             image: require('../../../../assets/map/icon-map-management.png'),
             btnClick: this._layerManager,
           },
@@ -98,6 +106,17 @@ export default class MapToolbar extends React.Component {
         break
     }
     return list
+  }
+
+  _map3Dchange = () => {
+    NavigationService.navigate('WorkspaceFlieList', { type: constants.MAP_3D })
+  }
+
+  _layerManager = async () => {
+    await this.setLayerEditable(true)
+    this._showManager(Const.MAP_MANAGER)
+    this.props.POP_List && this.props.POP_List(false, null)
+    this.props.layerManager && this.props.layerManager()
   }
 
   _renderItem = ({ item, index }) => {

@@ -5,7 +5,14 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, TextInput, Image, Platform, TouchableHighlight } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  TextInput,
+  Image,
+  Platform,
+  TouchableHighlight,
+} from 'react-native'
 import * as Util from '../../utils/constUtil'
 
 const BGCOLOR = Util.USUAL_GREEN
@@ -13,7 +20,6 @@ const BORDERCOLOR = Util.USUAL_SEPARATORCOLOR
 const DEFAULTWIDTH = 300
 
 export default class BorderInput extends React.Component {
-
   props: {
     password: string,
     placeholder: string,
@@ -38,9 +44,13 @@ export default class BorderInput extends React.Component {
   }
 
   render() {
-    const imagePath = this.state.secure ? require('../../assets/public/eye.png') : require('../../assets/public/eye-off.png')
+    const imagePath = this.state.secure
+      ? require('../../assets/public/eye.png')
+      : require('../../assets/public/eye-off.png')
     const isPassword = this.props.password ? this.props.password : false
-    const placeholder = this.props.placeholder ? this.props.placeholder : 'place'
+    const placeholder = this.props.placeholder
+      ? this.props.placeholder
+      : 'place'
     const width = this.props.width ? this.props.width : DEFAULTWIDTH
     const textChange = this.props.textChange ? this.props.textChange : () => {}
     return (
@@ -52,10 +62,18 @@ export default class BorderInput extends React.Component {
           accessibilityLabel={placeholder}
           secureTextEntry={this.state.secure}
           placeholder={placeholder}
-          underlineColorAndroid='transparent'
-          onChangeText={text=>textChange(text)}
-          placeholderTextColor={BORDERCOLOR} />
-        {isPassword && <TouchableHighlight underlayColor={Util.UNDERLAYCOLOR} onPress={this._btnClick}><Image style={styles.image} source={imagePath} /></TouchableHighlight>}
+          underlineColorAndroid="transparent"
+          onChangeText={text => textChange(text)}
+          placeholderTextColor={BORDERCOLOR}
+        />
+        {isPassword && (
+          <TouchableHighlight
+            underlayColor={Util.UNDERLAYCOLOR}
+            onPress={this._btnClick}
+          >
+            <Image style={styles.image} source={imagePath} />
+          </TouchableHighlight>
+        )}
       </View>
     )
   }

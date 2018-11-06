@@ -7,7 +7,12 @@
 import * as React from 'react'
 import { SMMapView, Action, DatasetType, SMap } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
-import { FunctionToolbar, MapToolbar, MapController } from '../../componets'
+import {
+  FunctionToolbar,
+  MapToolbar,
+  MapController,
+  ToolBar,
+} from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
 import {
@@ -836,6 +841,10 @@ export default class MapView extends React.Component {
   //   }
   // }
 
+  renderTool = () => {
+    return <ToolBar ref={ref => (this.Tool = ref)} />
+  }
+
   /** 地图功能工具栏（右侧） **/
   renderFunctionToolbar = () => {
     return (
@@ -843,6 +852,18 @@ export default class MapView extends React.Component {
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
+        showLayers={() => {
+          this.LayerAdd.showLayers(true)
+        }}
+        Label={() => {
+          this.LabelAdd.showLayers(true)
+        }}
+        showTool={() => {
+          this.Tool.showLayers(true)
+        }}
+        changeLayer={() => {
+          this.BotMap.showLayers(true)
+        }}
       />
     )
   }
@@ -890,6 +911,7 @@ export default class MapView extends React.Component {
         {/*{this.renderLeftToolbar()}*/}
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
+        {this.renderTool()}
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}

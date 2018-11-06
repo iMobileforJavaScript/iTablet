@@ -5,8 +5,9 @@ const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
 })
 
-const mapDispatchToProps = {
+const mapDispatchToProps = {}
 
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home)

@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
-
+import { scaleSize } from '../../../../utils'
+import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -15,5 +16,15 @@ export default StyleSheet.create({
     right: 10,
     flexDirection: 'row',
   },
-  imageBtn: {},
+  mapController: {
+    position: 'absolute',
+    left: scaleSize(20),
+    bottom: scaleSize(120),
+  },
+  functionToolbar: {
+    position: 'absolute',
+    top: scaleSize(100),
+    right: scaleSize(20),
+    backgroundColor: color.white,
+  },
 })

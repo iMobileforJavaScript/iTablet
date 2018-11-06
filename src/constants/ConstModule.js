@@ -1,4 +1,5 @@
 import NavigationService from '../containers/NavigationService'
+import constants from '../containers/workspace/constants'
 import ConstOnline from './ConstOnline'
 
 export default [
@@ -7,12 +8,21 @@ export default [
     title: '地图制图',
     baseImage: require('../assets/home/icon_lefttop_free.png'),
     moduleImage: require('../assets/home/icon_cartography.png'),
+    action: () => {
+      NavigationService.navigate('MapView', {
+        operationType: constants.MAP_EDIT,
+        ...ConstOnline['TD'],
+      })
+    },
   },
   {
     key: '三维场景',
     title: '三维场景',
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
+    action: () => {
+      NavigationService.navigate('Map3D', {})
+    },
   },
   {
     key: 'AR地图',

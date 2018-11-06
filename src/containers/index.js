@@ -35,6 +35,7 @@ import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
 import MapTabs from './workspace'
+import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
 
 export default StackNavigator(
   {
@@ -238,6 +239,12 @@ export default StackNavigator(
     },
     UpLoadList: {
       screen: UpLoadList,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapToolbarSetting: {
+      screen: MapToolbarSetting,
       navigationOptions: {
         header: null,
       },

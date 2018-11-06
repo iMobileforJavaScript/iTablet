@@ -14,7 +14,6 @@ import { FieldType } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class LayerAttributeAdd extends React.Component {
-
   props: {
     navigation: Object,
     currentAttribute: Object,
@@ -29,17 +28,19 @@ export default class LayerAttributeAdd extends React.Component {
       callBack: params.callBack,
       data: params.data,
       dataset: params.dataset,
-      name: params.data && params.data.name || '',
-      caption: params.data && params.data.caption || '',
-      type: params.data && params.data.type || '',
-      maxLength: params.data && params.data.maxLength || '',
-      defaultValue: params.data && params.data.defaultValue || '',
-      isRequired: params.data && typeof params.data.isRequired === "boolean" ? params.data.isRequired : '',
+      name: (params.data && params.data.name) || '',
+      caption: (params.data && params.data.caption) || '',
+      type: (params.data && params.data.type) || '',
+      maxLength: (params.data && params.data.maxLength) || '',
+      defaultValue: (params.data && params.data.defaultValue) || '',
+      isRequired:
+        params.data && typeof params.data.isRequired === 'boolean'
+          ? params.data.isRequired
+          : '',
     }
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
 
   confirmValidate = () => {
     let isConfrim = false
@@ -60,11 +61,14 @@ export default class LayerAttributeAdd extends React.Component {
         Toast.show('请输入名称')
       } else if (!this.state.caption) {
         Toast.show('请输入别名')
-      }else if (!this.state.type) {
+      } else if (!this.state.type) {
         Toast.show('请选择类型')
       } else if (!this.state.maxLength) {
         Toast.show('请输入长度')
-      } else if (this.state.isRequired === '' || this.state.isRequired === undefined) {
+      } else if (
+        this.state.isRequired === '' ||
+        this.state.isRequired === undefined
+      ) {
         Toast.show('请选择是否必选')
       } else {
         isConfrim = true
@@ -76,7 +80,7 @@ export default class LayerAttributeAdd extends React.Component {
 
   confirm = () => {
     if (!this.confirmValidate()) return
-    ;(async function () {
+    ;(async function() {
       try {
         this.container.setLoading(true)
         let datasetVector = await this.state.dataset.toDatasetVector()
@@ -97,27 +101,27 @@ export default class LayerAttributeAdd extends React.Component {
             isRequired: this.state.isRequired,
           })
         }
-        if (index === 0 || index ) {
-          Toast.show("添加成功")
+        if (index === 0 || index) {
+          Toast.show('添加成功')
           this.state.callBack && this.state.callBack()
           NavigationService.goBack()
         } else {
-          Toast.show("添加失败")
+          Toast.show('添加失败')
         }
 
         this.container.setLoading(false)
       } catch (e) {
-        Toast.show("添加失败")
+        Toast.show('添加失败')
         this.container.setLoading(false)
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   reset = () => {
-    Toast.show("待做")
+    Toast.show('待做')
   }
 
-  getType = ({labelTitle, value}) => {
+  getType = ({ labelTitle, value }) => {
     switch (labelTitle) {
       case '类型':
         this.setState({
@@ -131,7 +135,7 @@ export default class LayerAttributeAdd extends React.Component {
     }
   }
 
-  getInputValue = ({title, text}) => {
+  getInputValue = ({ title, text }) => {
     switch (title) {
       case '名称':
         this.setState({
@@ -163,8 +167,8 @@ export default class LayerAttributeAdd extends React.Component {
   renderBtns = () => {
     return (
       <View style={styles.btns}>
-        <Button title={'确定'} onPress={this.confirm}/>
-        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset}/>
+        <Button title={'确定'} onPress={this.confirm} />
+        <Button type={Button.Type.GRAY} title={'重置'} onPress={this.reset} />
       </View>
     )
   }
@@ -173,7 +177,7 @@ export default class LayerAttributeAdd extends React.Component {
     return (
       <View style={styles.rows}>
         <Row
-          style={{marginTop: scaleSize(30)}}
+          style={{ marginTop: scaleSize(30) }}
           key={'名称'}
           disable={this.state.isEdit}
           defaultValue={this.state.name}
@@ -182,7 +186,7 @@ export default class LayerAttributeAdd extends React.Component {
           getValue={this.getInputValue}
         />
         <Row
-          style={{marginTop: scaleSize(30)}}
+          style={{ marginTop: scaleSize(30) }}
           key={'别名'}
           defaultValue={this.state.caption}
           type={Row.Type.INPUT}
@@ -190,23 +194,23 @@ export default class LayerAttributeAdd extends React.Component {
           getValue={this.getInputValue}
         />
         <Row
-          style={{marginTop: scaleSize(30)}}
+          style={{ marginTop: scaleSize(30) }}
           key={'类型'}
           type={Row.Type.RADIO_GROUP}
           title={'类型'}
           defaultValue={this.state.type}
           disable={this.state.isEdit}
           radioArr={[
-            {title: '文本', value: FieldType.TEXT},
-            {title: '数值', value: FieldType.DOUBLE},
-            {title: '布尔', value: FieldType.BOOLEAN},
-            {title: '日期', value: FieldType.DATETIME},
+            { title: '文本', value: FieldType.TEXT },
+            { title: '数值', value: FieldType.DOUBLE },
+            { title: '布尔', value: FieldType.BOOLEAN },
+            { title: '日期', value: FieldType.DATETIME },
           ]}
           radioColumn={2}
           getValue={this.getType}
         />
         <Row
-          style={{marginTop: scaleSize(30)}}
+          style={{ marginTop: scaleSize(30) }}
           key={'长度'}
           type={Row.Type.INPUT}
           title={'长度'}
@@ -216,7 +220,7 @@ export default class LayerAttributeAdd extends React.Component {
           inputType={Row.InputType.NUMERIC}
         />
         <Row
-          style={{marginTop: scaleSize(30)}}
+          style={{ marginTop: scaleSize(30) }}
           key={'缺省值'}
           type={Row.Type.INPUT}
           title={'缺省值'}
@@ -225,15 +229,15 @@ export default class LayerAttributeAdd extends React.Component {
           getValue={this.getInputValue}
         />
         <Row
-          style={{marginTop: scaleSize(30)}}
+          style={{ marginTop: scaleSize(30) }}
           key={'必填'}
           type={Row.Type.RADIO_GROUP}
           title={'必填'}
           disable={this.state.isEdit}
           defaultValue={this.state.isRequired}
           radioArr={[
-            {title: '是', value: true},
-            {title: '否', value: false},
+            { title: '是', value: true },
+            { title: '否', value: false },
           ]}
           radioColumn={2}
           getValue={this.getType}
@@ -245,14 +249,15 @@ export default class LayerAttributeAdd extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         style={styles.container}
         // scrollable
         headerProps={{
           title: '属性信息',
           navigation: this.props.navigation,
-        }}>
-        {this.renderRows( )}
+        }}
+      >
+        {this.renderRows()}
         {this.renderBtns()}
       </Container>
     )

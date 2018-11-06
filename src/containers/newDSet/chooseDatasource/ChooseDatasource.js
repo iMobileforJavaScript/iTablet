@@ -13,7 +13,6 @@ import { DatasetType } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class ChooseDatasource extends React.Component {
-
   props: {
     navigation: Object,
   }
@@ -24,16 +23,37 @@ export default class ChooseDatasource extends React.Component {
     this.data = {
       datasource: {
         title: '选择数据源',
-        data: params && params.data || [],
+        data: (params && params.data) || [],
       },
       dataset: {
         title: '选择数据集类型',
         data: [
-          { key: '点', value: DatasetType.POINT, image: require('../../../assets/map/icon-dot.png'), imageSize: 'small' },
-          { key: '线', value: DatasetType.LINE, image: require('../../../assets/map/icon-line.png') },
-          { key: '面', value: DatasetType.REGION, image: require('../../../assets/map/icon-polygon.png') },
-          { key: 'CAD', value: DatasetType.CAD, image: require('../../../assets/map/icon-cad.png') },
-          { key: '文本', value: DatasetType.TEXT, image: require('../../../assets/map/icon-text.png') },
+          {
+            key: '点',
+            value: DatasetType.POINT,
+            image: require('../../../assets/map/icon-dot.png'),
+            imageSize: 'small',
+          },
+          {
+            key: '线',
+            value: DatasetType.LINE,
+            image: require('../../../assets/map/icon-line.png'),
+          },
+          {
+            key: '面',
+            value: DatasetType.REGION,
+            image: require('../../../assets/map/icon-polygon.png'),
+          },
+          {
+            key: 'CAD',
+            value: DatasetType.CAD,
+            image: require('../../../assets/map/icon-cad.png'),
+          },
+          {
+            key: '文本',
+            value: DatasetType.TEXT,
+            image: require('../../../assets/map/icon-text.png'),
+          },
         ],
       },
     }
@@ -48,7 +68,8 @@ export default class ChooseDatasource extends React.Component {
   }
 
   rowAction = item => {
-    if (item.image) { // 选择dataset的类型
+    if (item.image) {
+      // 选择dataset的类型
       NavigationService.navigate('NewDSet', {
         workspace: this.workspace,
         map: this.map,
@@ -56,7 +77,8 @@ export default class ChooseDatasource extends React.Component {
         type: item.value,
         datasource: this.state.currentDatasource.datasource,
       })
-    } else { // 选择数据源
+    } else {
+      // 选择数据源
       this.setState({
         currentDatasource: item,
         listData: this.data.dataset.data,
@@ -66,7 +88,8 @@ export default class ChooseDatasource extends React.Component {
   }
 
   back = () => {
-    if (this.state.currentDatasource.key) { // 此时已选择了数据源，正在选择数据集类型
+    if (this.state.currentDatasource.key) {
+      // 此时已选择了数据源，正在选择数据集类型
       this.setState({
         currentDatasource: {},
         listData: this.data.datasource.data,
@@ -79,13 +102,21 @@ export default class ChooseDatasource extends React.Component {
 
   _renderItem = ({ item }) => {
     return (
-      <TouchableOpacity activeOpacity={0.8} style={styles.row} onPress={() => this.rowAction(item)}>
-        {
-          item.image &&
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.row}
+        onPress={() => this.rowAction(item)}
+      >
+        {item.image && (
           <View style={styles.imageView}>
-            <Image style={item.imageSize === 'small' ? styles.imageSmall : styles.image} source={item.image}/>
+            <Image
+              style={
+                item.imageSize === 'small' ? styles.imageSmall : styles.image
+              }
+              source={item.image}
+            />
           </View>
-        }
+        )}
         <Text style={styles.rowTitle}>{item.key}</Text>
       </TouchableOpacity>
     )

@@ -10,4 +10,7 @@ const mapDispatchToProps = {
   setEditLayer,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ChooseEditLayer)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ChooseEditLayer)
