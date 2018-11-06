@@ -7,11 +7,10 @@
 import * as React from 'react'
 import { FlatList } from 'react-native'
 import { Container } from '../../components'
-
+import { SScene } from 'imobile_for_reactnative'
 import { Layer3DManager_item } from './components'
 
 export default class Map3DLayerManager extends React.Component {
-
   props: {
     navigation: any,
   }
@@ -24,20 +23,12 @@ export default class Map3DLayerManager extends React.Component {
   }
 
   componentDidMount() {
-    (async function () {
-      let layers3ds = await this.scene.getLayer3Ds()
-      let layerCount = await layers3ds.getCount()
-      let layerNameArr = []
-      for (let i = 0; i < layerCount; i++) {
-        let layer = await layers3ds.get(i)
-        let name = await layer.getName()
-        let scene = this.scene
-        layerNameArr.push({ key: name, obj: layer, scene:scene })
-      }
+    (async function() {
+      let layerList = await SScene.getLayerList()
       this.setState({
-        datasourceList: layerNameArr,
+        datasourceList: layerList,
       })
-    }).bind(this)()
+    }.bind(this)())
   }
 
   state = {
@@ -45,24 +36,20 @@ export default class Map3DLayerManager extends React.Component {
   }
 
   _renderItem = ({ item }) => {
-    let key = item.key
-    let layer = item.obj
-    let scene = item.scene
-    return (
-      <Layer3DManager_item layer={layer} name={key} scene={scene}/>
-    )
+    let name = item.name
+    let visible = item.visible
+    return <Layer3DManager_item name={name} visible={visible} />
   }
 
   render() {
     return (
       <Container
         headerProps={{
-          title: '地图管理',
+          title: '图层管理',
           navigation: this.props.navigation,
-          headerRight: [
-
-          ],
-        }}>
+          headerRight: [],
+        }}
+      >
         <FlatList
           data={this.state.datasourceList}
           renderItem={this._renderItem}

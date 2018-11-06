@@ -13,6 +13,9 @@ export default [
     title: '三维场景',
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
+    action: () => {
+      NavigationService.navigate('Map3D', {})
+    },
   },
   {
     key: 'AR地图',

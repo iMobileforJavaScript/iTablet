@@ -7,7 +7,7 @@ import { Const } from '../../../../constants/index'
 import constants from '../../constants'
 import PropTypes from 'prop-types'
 import { Action } from 'imobile_for_reactnative'
-
+import NavigationService from '../../../NavigationService'
 import MT_Btn from '../../../../components/mapTools/MT_Btn'
 
 // const WIDTH = constUtil.WIDTH
@@ -97,10 +97,15 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
-      case constants.Map3D:
+      case constants.MAP_3D:
         list = [
           {
-            key: '地图管理',
+            key: '场景',
+            image: require('../../../../assets/map/icon-map-management.png'),
+            btnClick: this._map3Dchange,
+          },
+          {
+            key: '图层',
             image: require('../../../../assets/map/icon-map-management.png'),
             btnClick: this._layerManager,
           },
@@ -155,6 +160,9 @@ export default class MapToolbar extends React.Component {
     this._showManager(Const.ADD_LAYER)
     this.props.POP_List && this.props.POP_List(false, null)
     this.props.addLayer && this.props.addLayer()
+  }
+  _map3Dchange = () => {
+    NavigationService.navigate('WorkspaceFlieList', { type: constants.MAP_3D })
   }
 
   _dataCollection = async () => {

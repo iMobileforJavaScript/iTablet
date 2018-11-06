@@ -12,6 +12,7 @@ import styles from './styles'
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
+const MAP_3D = 'MAP_3D'
 
 export { COLLECTION, NETWORK, EDIT }
 
@@ -84,6 +85,35 @@ export default class FunctionToolbar extends React.Component {
     let data
     switch (type) {
       case COLLECTION:
+      case MAP_3D:
+        data = [
+          {
+            title: '底图',
+            action: this.changeBaseLayer,
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '添加',
+            action: this.showAddLayer,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '标注',
+            action: this.showSymbel,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '工具',
+            action: this.showCollection,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '更多',
+            action: this.showMore,
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
       default:
         data = [
           {
@@ -122,6 +152,7 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
+        break
     }
     return data
   }
