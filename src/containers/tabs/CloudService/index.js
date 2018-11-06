@@ -1,12 +1,11 @@
 import { connect } from 'react-redux'
 import CloudService from './CloudService'
 
-const mapStateToProps = () => ({
+const mapStateToProps = () => ({})
 
-})
+const mapDispatchToProps = {}
 
-const mapDispatchToProps = {
-
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(CloudService)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(CloudService)

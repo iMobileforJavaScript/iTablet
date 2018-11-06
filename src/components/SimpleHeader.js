@@ -11,7 +11,6 @@ import * as Util from '../utils/constUtil'
 const WIDTH = Util.WIDTH
 
 export default class SimpleHeader extends React.Component {
-
   props: {
     title: any,
   }

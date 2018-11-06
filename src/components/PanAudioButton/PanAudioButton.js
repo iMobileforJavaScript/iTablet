@@ -4,7 +4,13 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Image, StyleSheet, PanResponder, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Image,
+  StyleSheet,
+  PanResponder,
+  TouchableOpacity,
+} from 'react-native'
 import { screen } from '../../utils'
 
 import styles from './styles'
@@ -16,13 +22,12 @@ const positionTop = screen.deviceHeight - positionBorder // 默认相对顶部�
  * 可移动的按钮
  */
 export default class PanAudioButton extends PureComponent {
-
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
     title: string,
     activeOpacity: number,
-    type: string ,
+    type: string,
     onPress: () => {},
     fixed?: boolean,
     width?: number,
@@ -62,27 +67,49 @@ export default class PanAudioButton extends PureComponent {
     this._updateNativeStyles(this._panBtnStyles)
   }
 
-  _handleStartShouldSetPanResponder = () => { // evt, gestureState
+  _handleStartShouldSetPanResponder = () => {
+    // evt, gestureState
     return true
   }
 
-  _handleMoveShouldSetPanResponder = () => { // evt, gestureState
+  _handleMoveShouldSetPanResponder = () => {
+    // evt, gestureState
     return true
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
     let x = this._previousLeft + gestureState.dx
     let y = this._previousTop + gestureState.dy
-    this._panBtnStyles.style.left = x > (positionLeft - this.props.width) ? (positionLeft - this.props.width) : x < positionBorder ? positionBorder : x
-    this._panBtnStyles.style.top = y > (positionTop - this.props.height) ? (positionTop - this.props.height) : y < positionBorder ? positionBorder : y
+    this._panBtnStyles.style.left =
+      x > positionLeft - this.props.width
+        ? positionLeft - this.props.width
+        : x < positionBorder
+          ? positionBorder
+          : x
+    this._panBtnStyles.style.top =
+      y > positionTop - this.props.height
+        ? positionTop - this.props.height
+        : y < positionBorder
+          ? positionBorder
+          : y
     this._updateNativeStyles()
   }
 
   _handlePanResponderEnd = (evt, gestureState) => {
     let x = this._previousLeft + gestureState.dx
     let y = this._previousTop + gestureState.dy
-    this._previousLeft = x > (positionLeft - this.props.width) ? (positionLeft - this.props.width) : x < positionBorder ? positionBorder : x
-    this._previousTop = y > (positionTop - this.props.height) ? (positionTop - this.props.height): y < positionBorder ? positionBorder : y
+    this._previousLeft =
+      x > positionLeft - this.props.width
+        ? positionLeft - this.props.width
+        : x < positionBorder
+          ? positionBorder
+          : x
+    this._previousTop =
+      y > positionTop - this.props.height
+        ? positionTop - this.props.height
+        : y < positionBorder
+          ? positionBorder
+          : y
     this._updateNativeStyles()
   }
 
@@ -97,16 +124,31 @@ export default class PanAudioButton extends PureComponent {
   render() {
     return (
       <View
-        ref={ref => this.panBtn = ref}
-        style={[styles.container, {width: this.props.width, height: this.props.height, borderRadius: this.props.borderRadius}]}
+        ref={ref => (this.panBtn = ref)}
+        style={[
+          styles.container,
+          {
+            width: this.props.width,
+            height: this.props.height,
+            borderRadius: this.props.borderRadius,
+          },
+        ]}
         {...this._panResponder.panHandlers}
       >
         <TouchableOpacity
           activeOpacity={0.8}
           onPressOut={() => {
             this.action()
-          }} >
-          <Image resizeMode={'contain'} style={[styles.image, {width: this.props.width, height: this.props.height}]} source={require('../../assets/public/icon-recording2.png')} />
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            style={[
+              styles.image,
+              { width: this.props.width, height: this.props.height },
+            ]}
+            source={require('../../assets/public/icon-recording2.png')}
+          />
         </TouchableOpacity>
       </View>
     )

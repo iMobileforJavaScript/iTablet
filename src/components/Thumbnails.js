@@ -1,5 +1,12 @@
 import * as React from 'react'
-import { View, StyleSheet, Dimensions, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  TouchableOpacity,
+  Image,
+} from 'react-native'
 import { scaleSize } from '../utils'
 import { size } from '../styles'
 import { Progress } from '../components'
@@ -8,7 +15,6 @@ const ITEM_WIDTH = SCREEN_WIDTH * 0.5 - 10
 const IMAGE_WIDTH = ITEM_WIDTH - 20
 const imageBrokenPath = require('../assets/public/default-map.png')
 export default class Thumbnails extends React.Component {
-
   props: {
     src: any,
     imageStyle: any,
@@ -42,8 +48,7 @@ export default class Thumbnails extends React.Component {
     // else
     if (data !== null && this.mProgress) {
       this.mProgress.progress = data / 100
-    }
-    else {
+    } else {
       return
     }
   }
@@ -69,11 +74,33 @@ export default class Thumbnails extends React.Component {
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity accessible={true} accessibilityLabel={this.props.title ? this.props.title : '默认标题'} activeOpacity={0.8} style={styles.subContainer} onPress={this.props.btnClick} underlayColor={'rgba(34,26,38,0.1)'}>
-          <Progress ref={ref => this.mProgress = ref} style={[styles.animatedView, { opacity: this.state.opacity }, { backgroundColor: this.backgroundcolor }]} progressAniDuration={0} progressColor={"#1296db"} />
-          <Image resizeMode={this.props.resizeMode} style={[styles.image, this.props.imageStyle]} source={image} />
+        <TouchableOpacity
+          accessible={true}
+          accessibilityLabel={this.props.title ? this.props.title : '默认标题'}
+          activeOpacity={0.8}
+          style={styles.subContainer}
+          onPress={this.props.btnClick}
+          underlayColor={'rgba(34,26,38,0.1)'}
+        >
+          <Progress
+            ref={ref => (this.mProgress = ref)}
+            style={[
+              styles.animatedView,
+              { opacity: this.state.opacity },
+              { backgroundColor: this.backgroundcolor },
+            ]}
+            progressAniDuration={0}
+            progressColor={'#1296db'}
+          />
+          <Image
+            resizeMode={this.props.resizeMode}
+            style={[styles.image, this.props.imageStyle]}
+            source={image}
+          />
           <View style={styles.textView}>
-            <Text numberOfLines={1} style={styles.title}>{this.props.title ? this.props.title : '默认标题'}</Text>
+            <Text numberOfLines={1} style={styles.title}>
+              {this.props.title ? this.props.title : '默认标题'}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>

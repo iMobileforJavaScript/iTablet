@@ -12,7 +12,6 @@ import { DatasetType } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class LayerItem extends React.Component {
-
   static propTypes = {
     layer: PropTypes.any,
     map: PropTypes.any,
@@ -23,7 +22,7 @@ export default class LayerItem extends React.Component {
     style: PropTypes.any,
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
   }
 
@@ -70,14 +69,24 @@ export default class LayerItem extends React.Component {
 
   render() {
     return (
-      <TouchableOpacity key={this.props.data.id} style={[styles.container, this.props.style]} onPress={this._onPress}>
+      <TouchableOpacity
+        key={this.props.data.id}
+        style={[styles.container, this.props.style]}
+        onPress={this._onPress}
+      >
         <View style={styles.imageView}>
-          <Image style={[
-            styles.image,
-            this.props.data.type === DatasetType.POINT && styles.samllImage,
-            this.props.imageStyle]} source={this.getIconByType(this.props.data.type)} />
+          <Image
+            style={[
+              styles.image,
+              this.props.data.type === DatasetType.POINT && styles.samllImage,
+              this.props.imageStyle,
+            ]}
+            source={this.getIconByType(this.props.data.type)}
+          />
         </View>
-        <Text style={[styles.title, this.props.titleStyle]}>{this.props.data.name}</Text>
+        <Text style={[styles.title, this.props.titleStyle]}>
+          {this.props.data.name}
+        </Text>
       </TouchableOpacity>
     )
   }

@@ -13,7 +13,6 @@ import ChooseColor from './ChooseColor'
 import styles from './styles'
 
 export default class Row extends PureComponent {
-
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
@@ -54,18 +53,20 @@ export default class Row extends PureComponent {
     this.setState({
       value: text,
     })
-    this.props.getValue && this.props.getValue({title: this.props.title, text})
+    this.props.getValue &&
+      this.props.getValue({ title: this.props.title, text })
   }
 
-  getSelected = ({title, selected, index, value}) => {
-    this.props.getValue && this.props.getValue({
-      labelTitle: this.props.title,
-      // value: title,
-      title,
-      value,
-      selected,
-      index,
-    })
+  getSelected = ({ title, selected, index, value }) => {
+    this.props.getValue &&
+      this.props.getValue({
+        labelTitle: this.props.title,
+        // value: title,
+        title,
+        value,
+        selected,
+        index,
+      })
   }
 
   getValue = value => {
@@ -73,26 +74,26 @@ export default class Row extends PureComponent {
   }
 
   renderRight = () => {
-    let right = <View/>
+    let right = <View />
     if (this.props.customRgihtView) {
       right = this.props.customRgihtView
     } else if (this.props.type === 'input') {
       right = (
         <View style={styles.inputView}>
           <TextInput
-            keyboardType={this.props.inputType === 'numeric' ? 'numeric' : 'default'}
+            keyboardType={
+              this.props.inputType === 'numeric' ? 'numeric' : 'default'
+            }
             style={styles.input}
             accessible={true}
             value={this.state.value + ''}
             defaultValue={this.props.defaultValue + ''}
             disable={this.props.disable}
             accessibilityLabel={this.props.title}
-            underlineColorAndroid='transparent'
+            underlineColorAndroid="transparent"
             onChangeText={this.labelChange}
           />
-          {
-            this.props.disable && <View style={styles.inputOverLayer} />
-          }
+          {this.props.disable && <View style={styles.inputOverLayer} />}
         </View>
       )
     } else if (this.props.type === 'radio_group') {
@@ -122,17 +123,24 @@ export default class Row extends PureComponent {
       )
     } else if (this.props.type === 'text_btn') {
       right = (
-        <LabelBtn title={this.props.title} value={this.props.value} getValue={this.getValue}/>
+        <LabelBtn
+          title={this.props.title}
+          value={this.props.value}
+          getValue={this.getValue}
+        />
       )
     } else if (this.props.type === 'choose_color') {
       right = (
-        <ChooseColor disable={this.props.disable} title={this.props.title} value={this.props.value} getValue={this.getValue}/>
+        <ChooseColor
+          disable={this.props.disable}
+          title={this.props.title}
+          value={this.props.value}
+          getValue={this.getValue}
+        />
       )
     } else if (this.props.type === 'radio') {
       // TODO 完善单选
-      right = (
-        <Radio title={this.props.title}/>
-      )
+      right = <Radio title={this.props.title} />
     }
     return right
   }

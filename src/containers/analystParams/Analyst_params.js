@@ -9,10 +9,11 @@ import { View, Text } from 'react-native'
 import styles from './styles'
 
 export default class Analyst_params extends React.Component {
-
   render() {
     return (
-      <View style={styles.container}><Text>analyst</Text></View>
+      <View style={styles.container}>
+        <Text>analyst</Text>
+      </View>
     )
   }
 }

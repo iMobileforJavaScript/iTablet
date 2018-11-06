@@ -13,7 +13,6 @@ import { Action, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item } from '../mtLayerManager/components'
 
 export default class ChooseEditLayer extends React.Component {
-
   static propTypes = {
     editLayer: PropTypes.object,
     navigation: PropTypes.object,
@@ -68,29 +67,39 @@ export default class ChooseEditLayer extends React.Component {
       this.map = await this.mapControl.getMap()
       let layerNameArr = await this.map.getLayersByType(this.type)
       let arr = []
-      for(let i = 0; i < layerNameArr.length; i++) {
+      for (let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
-        if (layerNameArr[i].type === DatasetType.TEXT || layerNameArr[i].themeType > 0) continue
-        if (layerNameArr[i].type === 'layerGroup' || checkType.isVectorDataset(layerNameArr[i].type)) {
+        if (
+          layerNameArr[i].type === DatasetType.TEXT ||
+          layerNameArr[i].themeType > 0
+        )
+          continue
+        if (
+          layerNameArr[i].type === 'layerGroup' ||
+          checkType.isVectorDataset(layerNameArr[i].type)
+        ) {
           arr.push(layerNameArr[i])
         }
       }
       let mapName = await this.map.getName()
-      this.setState({
-        datasourceList: arr,
-        mapName: mapName,
-        showList: true,
-      }, () => {
-        this.container.setLoading(false)
-      })
+      this.setState(
+        {
+          datasourceList: arr,
+          mapName: mapName,
+          showList: true,
+        },
+        () => {
+          this.container.setLoading(false)
+        },
+      )
     } catch (e) {
       this.container.setLoading(false)
     }
   }
 
-  select = ({data}) => {
+  select = ({ data }) => {
     if (data.type === 'layerGroup') {
-      return this.getChildList({data})
+      return this.getChildList({ data })
     } else {
       // let newList = this.state.layerList
       // if (newList[data.section + '-' + data.name]) {
@@ -105,7 +114,7 @@ export default class ChooseEditLayer extends React.Component {
     }
   }
 
-  getChildList = async ({data}) => {
+  getChildList = async ({ data }) => {
     try {
       if (data.type !== 'layerGroup') return
       let layer = data.layer
@@ -116,9 +125,20 @@ export default class ChooseEditLayer extends React.Component {
       for (let i = 0; i < count; i++) {
         let item = await layerGroup.getLayer(i)
         // 排除文本图层和专题图
-        if (item.type === DatasetType.TEXT || item.themeType > 0 || item.type !== this.type && !checkType.isVectorDataset(item.type) && item.type !== 'layerGroup') continue
-        if (item.type === 'layerGroup' || item.type === this.type || this.type === -1) {
-          child.push(this._renderItem({item}))
+        if (
+          item.type === DatasetType.TEXT ||
+          item.themeType > 0 ||
+          (item.type !== this.type &&
+            !checkType.isVectorDataset(item.type) &&
+            item.type !== 'layerGroup')
+        )
+          continue
+        if (
+          item.type === 'layerGroup' ||
+          item.type === this.type ||
+          this.type === -1
+        ) {
+          child.push(this._renderItem({ item }))
         }
       }
       this.container.setLoading(false)
@@ -130,8 +150,8 @@ export default class ChooseEditLayer extends React.Component {
     }
   }
 
-  _chooseEditLayer = item =>{
-    (async function (){
+  _chooseEditLayer = item => {
+    (async function() {
       // this.container.setLoading(true)
       let layer = item.layer
       this.currentItem = item
@@ -146,7 +166,7 @@ export default class ChooseEditLayer extends React.Component {
       } else {
         await this.selectLayer()
       }
-    }).bind(this)()
+    }.bind(this)())
   }
 
   selectLayer = async () => {
@@ -199,13 +219,11 @@ export default class ChooseEditLayer extends React.Component {
     )
   }
 
-  _renderSeparator = ({leadingItem}) => {
-    return (
-      <ListSeparator key={'separator_' + leadingItem.id}/>
-    )
+  _renderSeparator = ({ leadingItem }) => {
+    return <ListSeparator key={'separator_' + leadingItem.id} />
   }
 
-  _keyExtractor = (item, index) => (index + '-' + item.name)
+  _keyExtractor = (item, index) => index + '-' + item.name
 
   getItemLayout = (data, index) => {
     return {
@@ -218,35 +236,36 @@ export default class ChooseEditLayer extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
           title: this.title,
           navigation: this.props.navigation,
-        }}>
-        {
-          this.state.showList && (
-            this.state.datasourceList.length > 0
-              ? <FlatList
-                ref={ref => this.listView = ref}
-                keyExtractor={this._keyExtractor}
-                data={this.state.datasourceList}
-                renderItem={this._renderItem}
-                ItemSeparatorComponent={this._renderSeparator}
-                getItemLayout={this.getItemLayout}
-              />
-              : <EmptyView />
-          )
-        }
+        }}
+      >
+        {this.state.showList &&
+          (this.state.datasourceList.length > 0 ? (
+            <FlatList
+              ref={ref => (this.listView = ref)}
+              keyExtractor={this._keyExtractor}
+              data={this.state.datasourceList}
+              renderItem={this._renderItem}
+              ItemSeparatorComponent={this._renderSeparator}
+              getItemLayout={this.getItemLayout}
+            />
+          ) : (
+            <EmptyView />
+          ))}
         <Dialog
-          ref={ref => this.dialog = ref}
+          ref={ref => (this.dialog = ref)}
           type={Dialog.Type.MODAL}
           title={'提示'}
           info={'该图层为只读图层，是否设置为可编辑图层?'}
           confirmAction={async () => {
             await (await this.currentItem.getDataset()).setReadOnly(false) // 设置数据集为独占
             this.selectLayer()
-          }}/>
+          }}
+        />
       </Container>
     )
   }

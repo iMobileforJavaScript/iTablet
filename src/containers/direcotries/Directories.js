@@ -9,7 +9,6 @@ import { FlatList } from 'react-native'
 import { Container } from '../../components'
 
 export default class Directories extends React.Component {
-
   props: {
     navigation: any,
   }
@@ -49,20 +48,20 @@ export default class Directories extends React.Component {
   //   return <View style={{height:1 / PixelRatio.get(),backgroundColor: '#bbbbbb',marginLeft: 60}}/>
   // }
 
-
   render() {
     return (
       <Container
         headerProps={{
           title: '添加数据集',
           navigation: this.props.navigation,
-          headerRight: [
-
-          ],
-        }}>
-        <FlatList data={this.state.data}
+          headerRight: [],
+        }}
+      >
+        <FlatList
+          data={this.state.data}
           renderItem={this._renderItem}
-          ItemSeparatorComponent={this._separator}/>
+          ItemSeparatorComponent={this._separator}
+        />
       </Container>
     )
   }

@@ -13,7 +13,6 @@ const HEIGHT = 120
 const BGCOLOR = Util.USUAL_GREEN
 
 export default class Avatar extends React.Component {
-
   props: {
     image: any,
     btnClick: () => {},
@@ -22,21 +21,41 @@ export default class Avatar extends React.Component {
   }
 
   render() {
-    const imagePath = this.props.image ? this.props.image : require('../assets/public/avatar.png')
-    const btnClick = this.props.btnClick ? this.props.btnClick : () => { }
+    const imagePath = this.props.image
+      ? this.props.image
+      : require('../assets/public/avatar.png')
+    const btnClick = this.props.btnClick ? this.props.btnClick : () => {}
     const name = this.props.name ? this.props.name : '用户名'
     const email = this.props.email ? this.props.email : '绑定邮箱'
     return (
       <View style={styles.container}>
         <View style={styles.content}>
           <Image style={styles.avatarImage} source={imagePath} />
-          <View style={{ flex: 1, justifyContent: 'space-between', alignItems: 'flex-start',paddingLeft:10 }}>
-            <View style={styles.textContainer}><Text style={styles.text}>{name}</Text></View>
-            <View style={styles.textContainer}><Text style={styles.text}>{email}</Text></View>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              paddingLeft: 10,
+            }}
+          >
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>{name}</Text>
+            </View>
+            <View style={styles.textContainer}>
+              <Text style={styles.text}>{email}</Text>
+            </View>
           </View>
         </View>
-        <TouchableHighlight style={styles.btnImage} onPress={btnClick} underlayColor={Util.UNDERLAYCOLOR}>
-          <Image style={styles.btnImage} source={require('../assets/public/arrow-right.png')} />
+        <TouchableHighlight
+          style={styles.btnImage}
+          onPress={btnClick}
+          underlayColor={Util.UNDERLAYCOLOR}
+        >
+          <Image
+            style={styles.btnImage}
+            source={require('../assets/public/arrow-right.png')}
+          />
         </TouchableHighlight>
       </View>
     )

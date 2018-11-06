@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import styles from './styles'
 
 export default class DataSetListItem extends React.Component {
-
   static propTypes = {
     onPress: PropTypes.func,
     data: PropTypes.object,
@@ -33,11 +32,14 @@ export default class DataSetListItem extends React.Component {
     if (isSelect === null) {
       select = !this.state.selected
     }
-    this.setState({
-      selected: select,
-    }, () => {
-      cb && cb(this.props.data)
-    })
+    this.setState(
+      {
+        selected: select,
+      },
+      () => {
+        cb && cb(this.props.data)
+      },
+    )
   }
 
   getImage = () => {
@@ -74,19 +76,24 @@ export default class DataSetListItem extends React.Component {
     }
     return (
       <View style={viewStyle}>
-        {
-          (this.state.selected || this.props.data.isAdd) && <View style={dotStyle} />
-        }
+        {(this.state.selected || this.props.data.isAdd) && (
+          <View style={dotStyle} />
+        )}
       </View>
     )
   }
 
   render() {
-    return this.props.hidden ? <View /> : (
+    return this.props.hidden ? (
+      <View />
+    ) : (
       <TouchableOpacity
         disable={this.props.data.isAdd}
         activeOpacity={0.8}
-        style={[styles.container, this.props.height && {height: this.props.height}]}
+        style={[
+          styles.container,
+          this.props.height && { height: this.props.height },
+        ]}
         onPress={this.action}
       >
         {this.renderRadioBtn()}

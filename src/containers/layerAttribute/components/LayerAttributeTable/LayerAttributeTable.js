@@ -5,17 +5,29 @@
  */
 
 import * as React from 'react'
-import { View, ScrollView, TextInput, KeyboardAvoidingView, TouchableOpacity } from 'react-native'
+import {
+  View,
+  ScrollView,
+  TextInput,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+} from 'react-native'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { color } from '../../../../styles'
-import { Table, TableWrapper, Row, Rows, Col, Cell } from 'react-native-table-component'
+import {
+  Table,
+  TableWrapper,
+  Row,
+  Rows,
+  Col,
+  Cell,
+} from 'react-native-table-component'
 
 import styles from './styles'
 
 const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttributeTable extends React.Component {
-
   props: {
     mapChange: () => {},
     showSaveDialog: () => {},
@@ -48,8 +60,13 @@ export default class LayerAttributeTable extends React.Component {
 
   constructor(props) {
     super(props)
-    let {dataList, colHeight, widthArr} = this.dealData(props.tableTitle, props.data)
-    let tableHead = this.props.hasIndex ? ['序号', ...props.tableHead] : props.tableHead
+    let { dataList, colHeight, widthArr } = this.dealData(
+      props.tableTitle,
+      props.data,
+    )
+    let tableHead = this.props.hasIndex
+      ? ['序号', ...props.tableHead]
+      : props.tableHead
     this.state = {
       colHeight: colHeight,
       widthArr: props.widthArr.length > 0 ? props.widthArr : widthArr,
@@ -65,21 +82,29 @@ export default class LayerAttributeTable extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
-      JSON.stringify(prevProps.tableTitle) !== JSON.stringify(this.props.tableTitle) ||
+      JSON.stringify(prevProps.tableTitle) !==
+        JSON.stringify(this.props.tableTitle) ||
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
     ) {
-      let {dataList, colHeight, widthArr} = this.dealData(this.props.tableTitle, this.props.data)
+      let { dataList, colHeight, widthArr } = this.dealData(
+        this.props.tableTitle,
+        this.props.data,
+      )
 
       this.setState({
         colHeight: colHeight,
-        widthArr: this.props.widthArr.length > 0 ? this.props.widthArr : widthArr,
+        widthArr:
+          this.props.widthArr.length > 0 ? this.props.widthArr : widthArr,
         tableData: dataList,
       })
     }
   }
 
   dealData = (title = [], data, height = COL_HEIGHT) => {
-    let titleList = title, dataList = data, colHeight = [], widthArr = []
+    let titleList = title,
+      dataList = data,
+      colHeight = [],
+      widthArr = []
     if (data instanceof Object) {
       titleList = []
       dataList = []
@@ -98,15 +123,16 @@ export default class LayerAttributeTable extends React.Component {
       //   colHeight.push(height)
       // })
 
-      for(let i = 0; i < data.length; i++) {
-        let arr = [], rowData = {}
+      for (let i = 0; i < data.length; i++) {
+        let arr = [],
+          rowData = {}
         if (this.props.hasIndex) {
           arr.push(i + 1) // 序号
           i === 0 && widthArr.push(100)
         }
         let item = data[i]
         if (item instanceof Array) {
-          for(let j = 0; j < item.length; j++) {
+          for (let j = 0; j < item.length; j++) {
             // arr.push(item[j].name)
             arr.push(item[j].value)
             i === 0 && widthArr.push(100)
@@ -138,16 +164,15 @@ export default class LayerAttributeTable extends React.Component {
           // }
         }
 
-
         colHeight.push(height)
       }
-      return {titleList, dataList, colHeight, widthArr}
+      return { titleList, dataList, colHeight, widthArr }
     }
 
     for (let i = 0; i < dataList.length; i++) {
       colHeight[i] = height
     }
-    return {titleList, dataList, colHeight}
+    return { titleList, dataList, colHeight }
   }
 
   add = () => {
@@ -168,7 +193,10 @@ export default class LayerAttributeTable extends React.Component {
 
   setData = data => {
     // this.originData = changeOrigin ? { ...data } : {}
-    let {titleList, dataList, colHeight} = this.dealData(this.props.tableTitle, data)
+    let { titleList, dataList, colHeight } = this.dealData(
+      this.props.tableTitle,
+      data,
+    )
     this.setState({
       titleData: titleList,
       tableData: dataList,
@@ -252,14 +280,21 @@ export default class LayerAttributeTable extends React.Component {
       return (
         <TableWrapper style={styles.wrapper}>
           <Col
-            data={this.state.tableTitle} style={styles.title} heightArr={this.state.colHeight}
-            textStyle={styles.text}/>
+            data={this.state.tableTitle}
+            style={styles.title}
+            heightArr={this.state.colHeight}
+            textStyle={styles.text}
+          />
           {/*<Rows data={this.state.tableData} flexArr={[1, 1]} style={styles.row} textStyle={styles.text}/>*/}
         </TableWrapper>
       )
     } else {
       return (
-        <Rows data={this.state.tableData} style={styles.row} textStyle={styles.text}/>
+        <Rows
+          data={this.state.tableData}
+          style={styles.row}
+          textStyle={styles.text}
+        />
       )
     }
   }
@@ -267,7 +302,13 @@ export default class LayerAttributeTable extends React.Component {
   renderNormalTable = () => {
     return (
       <View style={{ flex: 1 }}>
-        <Table borderStyle={{ borderColor: '#C1C0B9', flex: 1, backgroundColor: 'blue' }}>
+        <Table
+          borderStyle={{
+            borderColor: '#C1C0B9',
+            flex: 1,
+            backgroundColor: 'blue',
+          }}
+        >
           <Row
             flexArr={[1, 1]}
             // widthArr={this.state.widthArr}
@@ -278,30 +319,32 @@ export default class LayerAttributeTable extends React.Component {
         </Table>
         <ScrollView style={styles.dataWrapper}>
           <Table borderStyle={{ borderColor: '#C1C0B9' }}>
-            {
-              this.state.tableData.map((rowData, index) => {
-                return (
-                  <TableWrapper key={index} style={styles.row}>
-                    {
-                      rowData.map((cellData, cellIndex) => {
-                        let isSystemField = cellIndex !== 0 && cellData.key.toLowerCase().indexOf('sm') === 0
-                        return (
-                          <Cell
-                            key={cellIndex}
-                            data={
-                              cellIndex === 0
-                                ? cellData
-                                : isSystemField
-                                  ? (cellData.data.value === undefined ? '' : cellData.data.value)
-                                  : this.renderInput(cellData, index)}
-                            textStyle={styles.text}/>
-                        )
-                      })
-                    }
-                  </TableWrapper>
-                )
-              })
-            }
+            {this.state.tableData.map((rowData, index) => {
+              return (
+                <TableWrapper key={index} style={styles.row}>
+                  {rowData.map((cellData, cellIndex) => {
+                    let isSystemField =
+                      cellIndex !== 0 &&
+                      cellData.key.toLowerCase().indexOf('sm') === 0
+                    return (
+                      <Cell
+                        key={cellIndex}
+                        data={
+                          cellIndex === 0
+                            ? cellData
+                            : isSystemField
+                              ? cellData.data.value === undefined
+                                ? ''
+                                : cellData.data.value
+                              : this.renderInput(cellData, index)
+                        }
+                        textStyle={styles.text}
+                      />
+                    )
+                  })}
+                </TableWrapper>
+              )
+            })}
           </Table>
         </ScrollView>
       </View>
@@ -309,7 +352,6 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   renderScrollTable = () => {
-
     return (
       <ScrollView style={{ flex: 1 }} horizontal={true}>
         <View>
@@ -323,39 +365,44 @@ export default class LayerAttributeTable extends React.Component {
             />
           </Table>
           <ScrollView style={styles.dataWrapper}>
-
             <Table borderStyle={{ borderColor: '#C1C0B9' }}>
-              {
-                this.state.tableData.map((rowData, index) => {
-                  // let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
-                  let data = rowData.data
-                  let arr = rowData.arr
-                  // let arr = this.dealEditCellData(data, index)
-                  return (
-                    <TouchableOpacity activeOpacity={0.8} key={index} onPress={() => this.selectRow(index, data)}>
-                      <TableWrapper
-                        key={index}
-                        style={[
-                          styles.row,
-                          index % 2 === 1 && {backgroundColor: color.grayLight},
-                          this.state.currentSelect === index && styles.selectRow,
-                        ]}>
-                        {
-                          arr.map((cellData, cellIndex) => {
-                            return (
-                              <Cell
-                                width={this.state.widthArr[cellIndex]}
-                                key={cellIndex}
-                                data={cellData}
-                                textStyle={[styles.text, this.state.currentSelect === index && styles.selectText]}/>
-                            )
-                          })
-                        }
-                      </TableWrapper>
-                    </TouchableOpacity>
-                  )
-                })
-              }
+              {this.state.tableData.map((rowData, index) => {
+                // let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
+                let data = rowData.data
+                let arr = rowData.arr
+                // let arr = this.dealEditCellData(data, index)
+                return (
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    key={index}
+                    onPress={() => this.selectRow(index, data)}
+                  >
+                    <TableWrapper
+                      key={index}
+                      style={[
+                        styles.row,
+                        index % 2 === 1 && { backgroundColor: color.grayLight },
+                        this.state.currentSelect === index && styles.selectRow,
+                      ]}
+                    >
+                      {arr.map((cellData, cellIndex) => {
+                        return (
+                          <Cell
+                            width={this.state.widthArr[cellIndex]}
+                            key={cellIndex}
+                            data={cellData}
+                            textStyle={[
+                              styles.text,
+                              this.state.currentSelect === index &&
+                                styles.selectText,
+                            ]}
+                          />
+                        )
+                      })}
+                    </TableWrapper>
+                  </TouchableOpacity>
+                )
+              })}
             </Table>
           </ScrollView>
         </View>
@@ -365,19 +412,22 @@ export default class LayerAttributeTable extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingView behavior={this.state.behavior} style={styles.container}>
+      <KeyboardAvoidingView
+        behavior={this.state.behavior}
+        style={styles.container}
+      >
         <View style={styles.container}>
-
-          {
-            this.state.widthArr.length > 0 ?
-              this.props.type === 'EDIT_ATTRIBUTE'
-                ? this.renderScrollTable()
-                : this.renderNormalTable()
-              : <View style={{flex: 1}} />
-          }
+          {this.state.widthArr.length > 0 ? (
+            this.props.type === 'EDIT_ATTRIBUTE' ? (
+              this.renderScrollTable()
+            ) : (
+              this.renderNormalTable()
+            )
+          ) : (
+            <View style={{ flex: 1 }} />
+          )}
           {/*{this.renderScrollTable()}*/}
           {/*{this.renderNormalTable()}*/}
-
         </View>
       </KeyboardAvoidingView>
     )

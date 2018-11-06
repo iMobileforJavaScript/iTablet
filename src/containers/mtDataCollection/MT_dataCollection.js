@@ -4,7 +4,6 @@ import { Container, LayerItem, ListSeparator } from '../../components'
 import { Action } from 'imobile_for_reactnative'
 
 export default class MT_dataCollection extends React.Component {
-
   props: {
     navigation: Object,
   }
@@ -29,7 +28,7 @@ export default class MT_dataCollection extends React.Component {
 
   getData() {
     this.container.setLoading(true)
-    ;(async function () {
+    ;(async function() {
       let layerCount = await this.map.getLayersCount()
       let layerNameArr = []
 
@@ -42,30 +41,43 @@ export default class MT_dataCollection extends React.Component {
         let caption = await layer.getCaption()
         let type = await (await layer.getDataset()).getType()
         let map = this.map
-        layerNameArr.push({ key: name, name: name, type: type, caption: caption, obj: layer, map:map })
+        layerNameArr.push({
+          key: name,
+          name: name,
+          type: type,
+          caption: caption,
+          obj: layer,
+          map: map,
+        })
       }
       await this.mapControl.setAction(Action.PAN)
-      this.setState({
-        data: layerNameArr,
-        // mapName: mapName,
-        // wsName: workspace,
-      }, () => {
-        this.container.setLoading(false)
-      })
-    }).bind(this)()
+      this.setState(
+        {
+          data: layerNameArr,
+          // mapName: mapName,
+          // wsName: workspace,
+        },
+        () => {
+          this.container.setLoading(false)
+        },
+      )
+    }.bind(this)())
   }
 
-  _renderItem =  ({item}) => {
+  _renderItem = ({ item }) => {
     let key = item.id
     return (
-      <LayerItem key={key} data={item} map={this.map} onPress={this._chooseEditLayer}/>
+      <LayerItem
+        key={key}
+        data={item}
+        map={this.map}
+        onPress={this._chooseEditLayer}
+      />
     )
   }
 
-  _renderSeparator = ({leadingItem}) => {
-    return (
-      <ListSeparator key={'separator_' + leadingItem.id}/>
-    )
+  _renderSeparator = ({ leadingItem }) => {
+    return <ListSeparator key={'separator_' + leadingItem.id} />
   }
 
   _keyExtractor = (item, index) => index
@@ -73,11 +85,12 @@ export default class MT_dataCollection extends React.Component {
   render() {
     return (
       <Container
-        ref={ref => this.container = ref}
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '数据采集',
           navigation: this.props.navigation,
-        }}>
+        }}
+      >
         <FlatList
           keyExtractor={this._keyExtractor}
           data={this.state.data}

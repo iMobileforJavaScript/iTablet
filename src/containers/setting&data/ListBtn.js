@@ -5,7 +5,13 @@
 */
 
 import * as React from 'react'
-import { View, StyleSheet, TouchableHighlight, Text, FlatList } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  TouchableHighlight,
+  Text,
+  FlatList,
+} from 'react-native'
 import * as Util from '../../utils/constUtil'
 
 const WIDTH = Util.WIDTH
@@ -13,22 +19,31 @@ const ITEMHEIGHT = 40
 const bgColor = 'white'
 
 export default class ListBtn extends React.Component {
-
   props: {
     data: any,
   }
 
   _renderItem = ({ item }) => (
-    <TouchableHighlight style={styles.btn} onPress={item.onClick} underlayColor={Util.UNDERLAYCOLOR}>
-      <View style={styles.containerView}><Text>{item.key}</Text></View>
+    <TouchableHighlight
+      style={styles.btn}
+      onPress={item.onClick}
+      underlayColor={Util.UNDERLAYCOLOR}
+    >
+      <View style={styles.containerView}>
+        <Text>{item.key}</Text>
+      </View>
     </TouchableHighlight>
-  );
+  )
 
   render() {
-    const data = this.props.data ? this.props.data : (() => { throw new Error('ListBtn: please input data!') })()
+    const data = this.props.data
+      ? this.props.data
+      : (() => {
+        throw new Error('ListBtn: please input data!')
+      })()
     const itemsNum = data.length
     return (
-      <View style={[styles.container, { height: 41*itemsNum+1 }]}>
+      <View style={[styles.container, { height: 41 * itemsNum + 1 }]}>
         <FlatList
           style={styles.list}
           data={data}

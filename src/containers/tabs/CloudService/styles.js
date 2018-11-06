@@ -1,5 +1,9 @@
 import { StyleSheet } from 'react-native'
-import { WIDTH, USUAL_GREEN, USUAL_SEPARATORCOLOR } from '../../../utils/constUtil'
+import {
+  WIDTH,
+  USUAL_GREEN,
+  USUAL_SEPARATORCOLOR,
+} from '../../../utils/constUtil'
 
 const HEIGHT = 120
 

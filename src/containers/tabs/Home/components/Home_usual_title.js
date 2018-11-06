@@ -1,11 +1,7 @@
 import * as React from 'react'
 
-import {
-  UsualTitle,
-} from '../../../../components'
-import {
-  Toast,
-} from '../../../../utils'
+import { UsualTitle } from '../../../../components'
+import { Toast } from '../../../../utils'
 
 export default class HomeUsualTitle extends React.Component {
   constructor(props) {
@@ -17,16 +13,13 @@ export default class HomeUsualTitle extends React.Component {
   }
 
   render() {
-    return (<
-      UsualTitle title='最近常用'
-      isRightBtn={
-        true
-      }
-      btnText='更多'
-      btnClick={
-        this._moreUsualMap
-      }
-    />
+    return (
+      <UsualTitle
+        title="最近常用"
+        isRightBtn={true}
+        btnText="更多"
+        btnClick={this._moreUsualMap}
+      />
     )
   }
 }
