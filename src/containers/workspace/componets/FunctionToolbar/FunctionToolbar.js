@@ -8,7 +8,8 @@ import { View, FlatList, Platform, NativeModules } from 'react-native'
 import { MTBtn } from '../../../../components'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
-
+import { SAnalyst } from 'imobile_for_reactnative'
+import Toast from 'react-native-root-toast'
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
@@ -59,9 +60,31 @@ export default class FunctionToolbar extends React.Component {
 
   /** 一级事件 **/
 
-  changeBaseLayer = () => {}
+  changeBaseLayer = async () => {}
 
-  showAddLayer = () => {}
+  setMeasureLineAnalyst = async () => {
+    await SAnalyst.setMeasureLineAnalyst({
+      callback: result => {
+        // console.log(result + '米')
+        Toast.show(result + '米')
+      },
+    })
+  }
+
+  setMeasureSquareAnalyst = async () => {
+    await SAnalyst.setMeasureSquareAnalyst({
+      callback: result => {
+        // console.log(result + '平方米')
+        Toast.show(result + '平方米')
+      },
+    })
+  }
+
+  closeAnalysis = async () => {
+    // let result = await SAnalyst.closeAnalysis()
+    // console.log(result)
+  }
+  showAddLayer = async () => {}
 
   showSymbel = () => {}
 
@@ -69,7 +92,7 @@ export default class FunctionToolbar extends React.Component {
 
   showEdit = () => {}
 
-  showMore = e => {
+  showMore = async e => {
     this.moreToolbar && this.moreToolbar.showMore(true, e)
   }
 
@@ -172,12 +195,12 @@ export default class FunctionToolbar extends React.Component {
       case MAP_3D:
         data = [
           {
-            title: '底图',
+            title: '量算',
             action: this.changeBaseLayer,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
-            title: '添加',
+            title: '面积',
             action: this.showAddLayer,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
@@ -192,7 +215,7 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {
-            title: '更多',
+            title: '关闭',
             action: this.showMore,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
