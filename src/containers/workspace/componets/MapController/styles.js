@@ -3,6 +3,9 @@ import { scaleSize } from '../../../../utils'
 
 export default StyleSheet.create({
   container: {
+    position: 'absolute',
+    left: scaleSize(20),
+    bottom: scaleSize(120),
     flexDirection: 'column',
     backgroundColor: 'transparent',
     // padding: scaleSize(20),

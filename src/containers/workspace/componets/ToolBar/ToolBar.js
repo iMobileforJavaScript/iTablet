@@ -1,7 +1,6 @@
 import React from 'react'
 import { scaleSize } from '../../../../utils'
-import zindexLevel from '../../../../styles/zIndexLevel'
-import color from '../../../../styles/color'
+import { color, zIndexLevel } from '../../../../styles'
 import {
   View,
   StyleSheet,
@@ -113,7 +112,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     height: scaleSize(600),
     backgroundColor: color.theme,
-    zIndex: zindexLevel.TWO,
+    zIndex: zIndexLevel.TWO,
   },
   buttonz: {
     flexDirection: 'row',

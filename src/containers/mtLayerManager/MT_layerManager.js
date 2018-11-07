@@ -9,6 +9,7 @@ import { FlatList } from 'react-native'
 import { Container, InputDialog } from '../../components'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constants'
+import { MapToolbar } from '../workspace/componets'
 import NavigationService from '../NavigationService'
 import { Action, LayerGroup } from 'imobile_for_reactnative'
 
@@ -28,28 +29,28 @@ export default class MT_layerManager extends React.Component {
 
   constructor(props) {
     super(props)
-    const { params } = this.props.navigation.state
-    this.workspace = params.workspace
-    this.mapControl = params.mapControl
-    this.map = params.map
-    this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
-    let path = params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
-    wsName =
-      wsName.lastIndexOf('.') > 0 &&
-      wsName.substring(0, wsName.lastIndexOf('.'))
+    // const { params } = this.props.navigation.state
+    // this.workspace = params.workspace
+    // this.mapControl = params.mapControl
+    // this.map = params.map
+    // this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
+    // let path = params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    // let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
+    // wsName =
+    //   wsName.lastIndexOf('.') > 0 &&
+    //   wsName.substring(0, wsName.lastIndexOf('.'))
     this.state = {
-      datasourceList: '',
+      datasourceList: [],
       mapName: '',
-      wsName: wsName,
-      path: path,
+      // wsName: wsName,
+      // path: path,
       currentOpenItemName: '', // 记录左滑的图层的名称
     }
-    this.currentEditItemName = '' // 记录当前可编辑的图层的名称
+    // this.currentEditItemName = '' // 记录当前可编辑的图层的名称
   }
 
   componentDidMount() {
-    this.getData()
+    // this.getData()
   }
 
   getData = async () => {
@@ -377,6 +378,10 @@ export default class MT_layerManager extends React.Component {
     )
   }
 
+  renderToolBar = () => {
+    return <MapToolbar navigation={this.props.navigation} initIndex={1} />
+  }
+
   render() {
     return (
       <Container
@@ -385,6 +390,7 @@ export default class MT_layerManager extends React.Component {
           title: '地图管理',
           navigation: this.props.navigation,
         }}
+        bottomBar={this.renderToolBar()}
       >
         <LayerManager_tab
           mapChange={this._map_change}

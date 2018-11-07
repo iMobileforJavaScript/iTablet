@@ -1,3 +1,6 @@
+import { SMap } from 'imobile_for_reactnative'
+import ConstOnline from './ConstOnline'
+
 const layerAdd = [
   {
     title: 'Google',
@@ -19,7 +22,15 @@ const BotMap = [
     data: [
       {
         title: 'Google roadmap',
-        action: () => {},
+        action: () => {
+          (async function() {
+            await SMap.removeLayer(1)
+            await SMap.removeLayer(0)
+            await SMap.addLayer(ConstOnline['Google'].DSParams, 0)
+          }.bind(this)())
+          // SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0)
+          // AudioAnalyst.goToMapView('Baidu')
+        },
       },
       {
         title: 'Google satellite',

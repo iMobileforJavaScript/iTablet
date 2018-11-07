@@ -4,8 +4,9 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
+import { scaleSize } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 
 import styles from './styles'
@@ -17,6 +18,23 @@ export default class MapController extends React.Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      left: new Animated.Value(scaleSize(20)),
+    }
+  }
+
+  setVisible = visible => {
+    if (visible) {
+      Animated.timing(this.state.left, {
+        toValue: scaleSize(20),
+        duration: 300,
+      }).start()
+    } else {
+      Animated.timing(this.state.left, {
+        toValue: scaleSize(-200),
+        duration: 300,
+      }).start()
+    }
   }
 
   plus = () => {
@@ -33,7 +51,9 @@ export default class MapController extends React.Component {
 
   render() {
     return (
-      <View style={[styles.container, this.props.style]}>
+      <Animated.View
+        style={[styles.container, this.props.style, { left: this.state.left }]}
+      >
         <View style={[styles.topView, styles.shadow]}>
           <MTBtn
             style={styles.btn}
@@ -60,7 +80,7 @@ export default class MapController extends React.Component {
           image={require('../../../../assets/mapTool/icon_location.png')}
           onPress={this.location}
         />
-      </View>
+      </Animated.View>
     )
   }
 }

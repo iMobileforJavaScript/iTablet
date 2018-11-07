@@ -9,6 +9,7 @@ import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
+import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTab, LayerAttributeTable } from '../../components'
 import { CursorType } from 'imobile_for_reactnative'
 
@@ -21,11 +22,11 @@ export default class LayerAttribute extends React.Component {
 
   constructor(props) {
     super(props)
-    const { params } = this.props.navigation.state
+    // const { params } = this.props.navigation.state
     this.state = {
       dataSourceList: [],
       openList: {},
-      dataset: params.dataset,
+      // dataset: params.dataset,
       attribute: {},
       tableTitle: [],
       // tableHead: ['名称', '属性值'],
@@ -38,7 +39,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    this.getDatasets()
+    // this.getDatasets()
   }
 
   // componentDidUpdate(prevProps) {
@@ -116,6 +117,10 @@ export default class LayerAttribute extends React.Component {
     this.currentFieldIndex = index
   }
 
+  renderToolBar = () => {
+    return <MapToolbar navigation={this.props.navigation} initIndex={2} />
+  }
+
   render() {
     return (
       <Container
@@ -124,6 +129,7 @@ export default class LayerAttribute extends React.Component {
           title: '属性表',
           navigation: this.props.navigation,
         }}
+        bottomBar={this.renderToolBar()}
       >
         <LayerAttributeTab
           edit={this.edit}

@@ -9,6 +9,7 @@ import FunctionToolbar from './FunctionToolbar'
 import constants from '../constants'
 import MapToolbar from './MapToolbar'
 import MapController from './MapController'
+import ToolBar from './ToolBar'
 
 export {
   PopList,
@@ -21,5 +22,6 @@ export {
   FunctionToolbar,
   MapToolbar,
   MapController,
+  ToolBar,
   constants,
 }

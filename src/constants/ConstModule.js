@@ -48,7 +48,7 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: () => {
-      NavigationService.navigate('MapView', ConstOnline['TD'])
+      NavigationService.navigate('MapView', ConstOnline['Baidu'])
     },
   },
   {

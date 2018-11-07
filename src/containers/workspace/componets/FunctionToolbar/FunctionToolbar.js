@@ -4,8 +4,9 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Platform, NativeModules } from 'react-native'
+import { View, FlatList, Animated, Platform, NativeModules } from 'react-native'
 import { MTBtn } from '../../../../components'
+import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import { SAnalyst } from 'imobile_for_reactnative'
@@ -55,6 +56,21 @@ export default class FunctionToolbar extends React.Component {
     this.state = {
       type: props.type,
       data: data,
+      right: new Animated.Value(scaleSize(20)),
+    }
+  }
+
+  setVisible = visible => {
+    if (visible) {
+      Animated.timing(this.state.right, {
+        toValue: scaleSize(20),
+        duration: 300,
+      }).start()
+    } else {
+      Animated.timing(this.state.right, {
+        toValue: scaleSize(-200),
+        duration: 300,
+      }).start()
     }
   }
 
@@ -191,7 +207,6 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case COLLECTION:
       case MAP_3D:
         data = [
           {
@@ -221,6 +236,7 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
+      case COLLECTION:
       default:
         data = [
           {
@@ -268,10 +284,9 @@ export default class FunctionToolbar extends React.Component {
   getMoreData = type => {
     let data
     switch (type) {
-      case COLLECTION:
-        break
       case MAP_3D:
         break
+      case COLLECTION:
       default:
         data = [
           {
@@ -334,7 +349,13 @@ export default class FunctionToolbar extends React.Component {
       return null
     }
     return (
-      <View style={[styles.container, this.props.style]}>
+      <Animated.View
+        style={[
+          styles.container,
+          this.props.style,
+          { right: this.state.right },
+        ]}
+      >
         <FlatList
           data={this.state.data}
           renderItem={this._renderItem}
@@ -345,7 +366,7 @@ export default class FunctionToolbar extends React.Component {
           ref={ref => (this.moreToolbar = ref)}
           data={this.getMoreData(this.props.type)}
         />
-      </View>
+      </Animated.View>
     )
   }
 }
