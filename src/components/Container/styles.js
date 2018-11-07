@@ -26,10 +26,10 @@ export default StyleSheet.create({
   },
   fixHeader: {
     position: 'absolute',
-    top: 0,
+    bottom: 80,
     left: 0,
     right: 0,
-    zIndex: zIndexLevel.FOUR,
+    zIndex: zIndexLevel.THREE,
   },
   fixBottomBar: {
     position: 'absolute',
@@ -39,7 +39,7 @@ export default StyleSheet.create({
     height: scaleSize(80),
     backgroundColor: color.theme,
     alignSelf: 'center',
-    zIndex: 100,
+    zIndex: zIndexLevel.TWO,
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',

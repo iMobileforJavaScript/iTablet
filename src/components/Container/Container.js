@@ -44,34 +44,30 @@ export default class Container extends PureComponent {
       top: new Animated.Value(0),
       bottom: new Animated.Value(0),
     }
+    this.headerVisible = true
+    this.bottomVisible = true
   }
 
   setHeaderVisible = visible => {
-    if (visible) {
+    if (this.props.header) {
+      if (this.headerVisible === visible) return
       Animated.timing(this.state.top, {
-        toValue: 0,
+        toValue: visible ? 0 : scaleSize(-200),
         duration: 300,
       }).start()
+      this.headerVisible = visible
     } else {
-      Animated.timing(this.state.top, {
-        toValue: scaleSize(-200),
-        duration: 300,
-      }).start()
+      this.containerHeader && this.containerHeader.setVisible(visible)
     }
   }
 
   setBottomVisible = visible => {
-    if (visible) {
-      Animated.timing(this.state.bottom, {
-        toValue: 0,
-        duration: 300,
-      }).start()
-    } else {
-      Animated.timing(this.state.bottom, {
-        toValue: scaleSize(-200),
-        duration: 300,
-      }).start()
-    }
+    if (this.bottomVisible === visible) return
+    Animated.timing(this.state.bottom, {
+      toValue: visible ? 0 : scaleSize(-200),
+      duration: 300,
+    }).start()
+    this.bottomVisible = visible
   }
 
   componentDidMount() {
@@ -85,19 +81,18 @@ export default class Container extends PureComponent {
   renderHeader = fixHeader => {
     return this.props.withoutHeader ? (
       <View style={styles.iOSPadding} />
-    ) : (
+    ) : this.props.header ? (
       <AnimatedView
         style={[fixHeader && styles.fixHeader, { top: this.state.top }]}
       >
-        {this.props.header ? (
-          this.props.header
-        ) : (
-          <Header
-            navigation={this.props.navigation}
-            {...this.props.headerProps}
-          />
-        )}
+        this.props.header
       </AnimatedView>
+    ) : (
+      <Header
+        ref={ref => (this.containerHeader = ref)}
+        navigation={this.props.navigation}
+        {...this.props.headerProps}
+      />
     )
   }
 

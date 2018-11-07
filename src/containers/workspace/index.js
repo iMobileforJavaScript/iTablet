@@ -13,123 +13,15 @@ const MapTabs = TabNavigator(
   {
     MapView: {
       screen: MapView,
-      // navigationOptions: () => {
-      //   return {
-      //     tabBarLabel: data => {
-      //       return (
-      //         <View style={styles.labelView}>
-      //           <Text
-      //             style={data.focused ? styles.selectedTabText : styles.tabText}
-      //           >
-      //             地图
-      //           </Text>
-      //         </View>
-      //       )
-      //     },
-      //     tabBarIcon: ({ focused }: any) => (
-      //       <Image
-      //         resizeMode="contain"
-      //         source={
-      //           focused
-      //             ? require('../../assets/mapToolbar/icon_map_selected.png')
-      //             : require('../../assets/mapToolbar/icon_map.png')
-      //         }
-      //         style={styles.icon}
-      //       />
-      //     ),
-      //     header: null,
-      //   }
-      // },
     },
     LayerManager: {
       screen: LayerManager,
-      // navigationOptions: () => {
-      //   return {
-      //     tabBarLabel: data => {
-      //       return (
-      //         <View style={styles.labelView}>
-      //           <Text
-      //             style={data.focused ? styles.selectedTabText : styles.tabText}
-      //           >
-      //             图层
-      //           </Text>
-      //         </View>
-      //       )
-      //     },
-      //     tabBarIcon: ({ focused }: any) => (
-      //       <Image
-      //         resizeMode="contain"
-      //         source={
-      //           focused
-      //             ? require('../../assets/mapToolbar/icon_layer_selected.png')
-      //             : require('../../assets/mapToolbar/icon_layer.png')
-      //         }
-      //         style={styles.icon}
-      //       />
-      //     ),
-      //     header: null,
-      //   }
-      // },
     },
     LayerAttribute: {
       screen: LayerAttribute,
-      // navigationOptions: () => {
-      //   return {
-      //     tabBarLabel: data => {
-      //       return (
-      //         <View style={styles.labelView}>
-      //           <Text
-      //             style={data.focused ? styles.selectedTabText : styles.tabText}
-      //           >
-      //             属性
-      //           </Text>
-      //         </View>
-      //       )
-      //     },
-      //     tabBarIcon: ({ focused }: any) => (
-      //       <Image
-      //         resizeMode="contain"
-      //         source={
-      //           focused
-      //             ? require('../../assets/mapToolbar/icon_attribute_selected.png')
-      //             : require('../../assets/mapToolbar/icon_attribute.png')
-      //         }
-      //         style={styles.icon}
-      //       />
-      //     ),
-      //     header: null,
-      //   }
-      // },
     },
     LayerManager1: {
       screen: LayerManager,
-      // navigationOptions: () => {
-      //   return {
-      //     tabBarLabel: data => {
-      //       return (
-      //         <View style={styles.labelView}>
-      //           <Text
-      //             style={data.focused ? styles.selectedTabText : styles.tabText}
-      //           >
-      //             设置
-      //           </Text>
-      //         </View>
-      //       )
-      //     },
-      //     tabBarIcon: ({ focused }: any) => (
-      //       <Image
-      //         resizeMode="contain"
-      //         source={
-      //           focused
-      //             ? require('../../assets/mapToolbar/icon_setting_selected.png')
-      //             : require('../../assets/mapToolbar/icon_setting.png')
-      //         }
-      //         style={styles.icon}
-      //       />
-      //     ),
-      //     header: null,
-      //   }
-      // },
     },
   },
   {

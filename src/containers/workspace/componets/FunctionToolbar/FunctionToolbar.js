@@ -57,20 +57,16 @@ export default class FunctionToolbar extends React.Component {
       data: data,
       right: new Animated.Value(scaleSize(20)),
     }
+    this.visible = true
   }
 
   setVisible = visible => {
-    if (visible) {
-      Animated.timing(this.state.right, {
-        toValue: scaleSize(20),
-        duration: 300,
-      }).start()
-    } else {
-      Animated.timing(this.state.right, {
-        toValue: scaleSize(-200),
-        duration: 300,
-      }).start()
-    }
+    if (this.visible === visible) return
+    Animated.timing(this.state.right, {
+      toValue: visible ? scaleSize(20) : scaleSize(-200),
+      duration: 300,
+    }).start()
+    this.visible = visible
   }
 
   /** 一级事件 **/
