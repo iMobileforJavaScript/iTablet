@@ -9,7 +9,8 @@ import { MTBtn } from '../../../../components'
 import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
-
+import { SAnalyst } from 'imobile_for_reactnative'
+import Toast from 'react-native-root-toast'
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
@@ -57,27 +58,46 @@ export default class FunctionToolbar extends React.Component {
       data: data,
       right: new Animated.Value(scaleSize(20)),
     }
+    this.visible = true
   }
 
   setVisible = visible => {
-    if (visible) {
-      Animated.timing(this.state.right, {
-        toValue: scaleSize(20),
-        duration: 300,
-      }).start()
-    } else {
-      Animated.timing(this.state.right, {
-        toValue: scaleSize(-200),
-        duration: 300,
-      }).start()
-    }
+    if (this.visible === visible) return
+    Animated.timing(this.state.right, {
+      toValue: visible ? scaleSize(20) : scaleSize(-200),
+      duration: 300,
+    }).start()
+    this.visible = visible
   }
 
   /** 一级事件 **/
 
-  changeBaseLayer = () => {}
+  changeBaseLayer = async () => {}
 
-  showAddLayer = () => {}
+  setMeasureLineAnalyst = async () => {
+    await SAnalyst.setMeasureLineAnalyst({
+      callback: result => {
+        // console.log(result + '米')
+        Toast.show(result + '米')
+      },
+    })
+  }
+
+  setMeasureSquareAnalyst = async () => {
+    await SAnalyst.setMeasureSquareAnalyst({
+      callback: result => {
+        // console.log(result + '平方米')
+        Toast.show(result + '平方米')
+      },
+    })
+  }
+
+  closeAnalysis = async () => {
+    let result = await SAnalyst.closeAnalysis()
+    // console.log(result)
+    Toast.show(result)
+  }
+  showAddLayer = async () => {}
 
   showSymbel = () => {}
 
@@ -85,7 +105,7 @@ export default class FunctionToolbar extends React.Component {
 
   showEdit = () => {}
 
-  showMore = e => {
+  showMore = async e => {
     this.moreToolbar && this.moreToolbar.showMore(true, e)
   }
 
@@ -187,12 +207,12 @@ export default class FunctionToolbar extends React.Component {
       case MAP_3D:
         data = [
           {
-            title: '底图',
+            title: '量算',
             action: this.changeBaseLayer,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
-            title: '添加',
+            title: '面积',
             action: this.showAddLayer,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
@@ -207,8 +227,8 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {
-            title: '更多',
-            action: this.showMore,
+            title: '关闭',
+            action: this.closeAnalysis,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]

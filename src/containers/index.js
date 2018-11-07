@@ -34,7 +34,7 @@ import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
-import MapTabs from './workspace'
+import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
 
 export default StackNavigator(
@@ -51,20 +51,14 @@ export default StackNavigator(
         header: null,
       },
     },
-    // MapView: {
-    //   screen: MapView,
-    //   navigationOptions: {
-    //     header: null,
-    //   },
-    // },
-    // Map3D: {
-    //   screen: Map3D,
-    //   navigationOptions: {
-    //     header: null,
-    //   },
-    // },
     MapTabs: {
       screen: MapTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Map3DTabs: {
+      screen: Map3DTabs,
       navigationOptions: {
         header: null,
       },

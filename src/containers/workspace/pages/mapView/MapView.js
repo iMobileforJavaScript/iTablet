@@ -634,12 +634,16 @@ export default class MapView extends React.Component {
       {
         key: 'search',
         image: require('../../../../assets/header/icon_search.png'),
-        action: this.showAudio,
+        action: () => {
+          this.Tool.setVisible(true, 'list')
+        },
       },
       {
         key: 'audio',
         image: require('../../../../assets/header/icon_audio.png'),
-        action: this.toOpen,
+        action: () => {
+          this.Tool.setVisible(true, 'table')
+        },
       },
     ]
     headerBtnData.forEach(({ key, image, action }) => {
@@ -814,35 +818,13 @@ export default class MapView extends React.Component {
     )
   }
 
-  /**
-   * 切换图层的按钮
-   * @returns {XML}
-   */
-  // renderChangeLayerBtn = () => {
-  //   if (
-  //     this.state.popShow &&
-  //     (this.state.popType === Const.DATA_EDIT ||
-  //       this.state.popType === Const.COLLECTION)
-  //   ) {
-  //     return (
-  //       <MTBtn
-  //         ref={ref => (this.changeLayerBtn = ref)}
-  //         customStyle={[
-  //           styles.changeLayerBtn,
-  //           {
-  //             bottom: this.state.toolbarThreshold[0] + scaleSize(20),
-  //           },
-  //         ]}
-  //         imageStyle={styles.changeLayerImage}
-  //         image={require('../../../../assets/map/icon-layer-change.png')}
-  //         onPress={() => this._changeLayer(this.state.popType)}
-  //       />
-  //     )
-  //   }
-  // }
-
   renderTool = () => {
-    return <ToolBar ref={ref => (this.Tool = ref)} />
+    return (
+      <ToolBar
+        ref={ref => (this.Tool = ref)}
+        existFullMap={() => this.showFullMap(false)}
+      />
+    )
   }
 
   /** 地图功能工具栏（右侧） **/
@@ -859,7 +841,8 @@ export default class MapView extends React.Component {
           this.LabelAdd.showLayers(true)
         }}
         showTool={() => {
-          this.Tool.showLayers(true)
+          this.showFullMap(true)
+          this.Tool.showToolbar(true)
         }}
         changeLayer={() => {
           this.BotMap.showLayers(true)
@@ -870,12 +853,13 @@ export default class MapView extends React.Component {
 
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
-    return <MapController />
+    return <MapController ref={ref => (this.mapController = ref)} />
   }
 
   /** 显示全屏 **/
   showFullMap = isFull => {
-    let full = isFull === undefined ? !this.fullMap : isFull
+    if (isFull === this.fullmap) return
+    let full = isFull === undefined ? !this.fullMap : !isFull
     this.container && this.container.setHeaderVisible(full)
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)

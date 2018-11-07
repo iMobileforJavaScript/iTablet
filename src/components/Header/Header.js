@@ -4,12 +4,18 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { Component } from 'react'
-import { Text, View, Image, TouchableOpacity, StyleSheet } from 'react-native'
-import styles from './styles'
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  Animated,
+} from 'react-native'
+import styles, * as stylesConst from './styles'
 
 class NavigationHeader extends Component {
   props: {
-    nav?: any,
     header?: any, // 自定义Header
     headerStyle?: StyleSheet, // 自定义Header Style
     withoutBack?: boolean, // 是否有返回按钮
@@ -46,6 +52,23 @@ class NavigationHeader extends Component {
     count: 0,
     darkBackBtn: false,
     headerCenter: null,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      headerTop: new Animated.Value(0),
+    }
+    this.visible = true
+  }
+
+  setVisible = visible => {
+    if (this.visible === visible) return
+    Animated.timing(this.state.headerTop, {
+      toValue: visible ? 0 : -stylesConst.HEADER_HEIGHT,
+      duration: 300,
+    }).start()
+    this.visible = visible
   }
 
   handleBack = navigation => {
@@ -155,9 +178,15 @@ class NavigationHeader extends Component {
     }
 
     return (
-      <View style={[currentHeaderStyle, headerStyle, { opacity: opacity }]}>
+      <Animated.View
+        style={[
+          currentHeaderStyle,
+          headerStyle,
+          { opacity: opacity, top: this.state.headerTop },
+        ]}
+      >
         {header ? header : this.renderDefaultHeader()}
-      </View>
+      </Animated.View>
     )
   }
 }
