@@ -127,7 +127,9 @@ export default class MapToolbar extends React.Component {
             title: '设置',
             image: require('../../../../assets/mapToolbar/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
-            btnClick: () => {},
+            btnClick: () => {
+              this._map3Dchange()
+            },
           },
         ]
         break

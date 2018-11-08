@@ -198,7 +198,7 @@ export default class Map3D extends React.Component {
     return <FunctionToolbar style={styles.functionToolbar} type={this.type} />
   }
   renderMapController = () => {
-    return <MapController style={styles.mapController} />
+    return <MapController style={styles.mapController} type={'MAP_3D'} />
   }
 
   renderToolBar = () => {

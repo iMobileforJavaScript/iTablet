@@ -37,6 +37,8 @@ export default class MT_Btn extends React.Component {
     selectMode?: string,
     activeOpacity?: number,
     separator?: number,
+    onPressIn?: () => {},
+    onPressOut?: () => {},
   }
 
   static defaultProps = {
@@ -59,6 +61,10 @@ export default class MT_Btn extends React.Component {
   }
 
   _onPressOut = e => {
+    if (this.props.onPressOut) {
+      this.props.onPressOut()
+      return
+    }
     if (this.props.selectMode === 'normal') return
     this.setState(
       {
@@ -71,6 +77,10 @@ export default class MT_Btn extends React.Component {
   }
 
   _onPressIn = () => {
+    if (this.props.onPressIn) {
+      this.props.onPressIn()
+      return
+    }
     if (this.props.selectMode === 'normal') return
     this.setState({
       selected: true,
