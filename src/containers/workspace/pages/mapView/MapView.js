@@ -635,14 +635,14 @@ export default class MapView extends React.Component {
         key: 'search',
         image: require('../../../../assets/header/icon_search.png'),
         action: () => {
-          this.Tool.setVisible(true, 'list')
+          this.toolBox.setVisible(true, 'list')
         },
       },
       {
         key: 'audio',
         image: require('../../../../assets/header/icon_audio.png'),
         action: () => {
-          this.Tool.setVisible(true, 'table')
+          this.toolBox.setVisible(true, 'table')
         },
       },
     ]
@@ -818,15 +818,6 @@ export default class MapView extends React.Component {
     )
   }
 
-  renderTool = () => {
-    return (
-      <ToolBar
-        ref={ref => (this.Tool = ref)}
-        existFullMap={() => this.showFullMap(false)}
-      />
-    )
-  }
-
   /** 地图功能工具栏（右侧） **/
   renderFunctionToolbar = () => {
     return (
@@ -834,19 +825,23 @@ export default class MapView extends React.Component {
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
-        showLayers={() => {
-          this.LayerAdd.showLayers(true)
+        getToolRef={() => {
+          return this.toolBox
         }}
-        Label={() => {
-          this.LabelAdd.showLayers(true)
-        }}
-        showTool={() => {
-          this.showFullMap(true)
-          this.Tool.showToolbar(true)
-        }}
-        changeLayer={() => {
-          this.BotMap.showLayers(true)
-        }}
+        showFullMap={this.showFullMap}
+        // showLayers={() => {
+        //   this.LayerAdd.showLayers(true)
+        // }}
+        // Label={() => {
+        //   this.LabelAdd.showLayers(true)
+        // }}
+        // showTool={() => {
+        //   this.showFullMap(true)
+        //   this.toolBox.setVisible(true)
+        // }}
+        // changeLayer={() => {
+        //   this.BotMap.showLayers(true)
+        // }}
       />
     )
   }
@@ -858,13 +853,22 @@ export default class MapView extends React.Component {
 
   /** 显示全屏 **/
   showFullMap = isFull => {
-    if (isFull === this.fullmap) return
+    if (isFull === this.fullMap) return
     let full = isFull === undefined ? !this.fullMap : !isFull
     this.container && this.container.setHeaderVisible(full)
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
-    this.fullMap = full
+    this.fullMap = isFull
+  }
+
+  renderTool = () => {
+    return (
+      <ToolBar
+        ref={ref => (this.toolBox = ref)}
+        existFullMap={() => this.showFullMap(false)}
+      />
+    )
   }
 
   // /** 下方弹出的工具栏 **/
@@ -886,16 +890,28 @@ export default class MapView extends React.Component {
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {/*{this.renderMapMenu()}*/}
         <SMMapView
           ref={ref => (GLOBAL.mapView = ref)}
           style={styles.map}
           onGetInstance={this._onGetInstance}
         />
-        {/*{this.renderLeftToolbar()}*/}
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderTool()}
+        {/*<TouchableOpacity*/}
+        {/*onPress={() => {*/}
+        {/*this.showFullMap(false)*/}
+        {/*}}*/}
+        {/*style={{*/}
+        {/*position: 'absolute',*/}
+        {/*width: 80,*/}
+        {/*height: 80,*/}
+        {/*left: 20,*/}
+        {/*top: 120,*/}
+        {/*backgroundColor: 'red',*/}
+        {/*zIndex: 10000,*/}
+        {/*}}*/}
+        {/*/>*/}
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
