@@ -10,7 +10,7 @@ import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
-import { SAnalyst } from 'imobile_for_reactnative'
+import { SAnalyst, SScene } from 'imobile_for_reactnative'
 import Toast from 'react-native-root-toast'
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -86,6 +86,11 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  getFlyRouteNames = async () => {
+    this.list = await SScene.getFlyRouteNames()
+    await SScene.setPosition(this.list[0].index)
+  }
+
   setMeasureLineAnalyst = async () => {
     await SAnalyst.setMeasureLineAnalyst({
       callback: result => {
@@ -105,10 +110,30 @@ export default class FunctionToolbar extends React.Component {
   }
 
   closeAnalysis = async () => {
-    let result = await SAnalyst.closeAnalysis()
-    // console.log(result)
-    Toast.show(result)
+    await SAnalyst.closeAnalysis()
   }
+
+  getFlyProgress = async () => {
+    await SScene.getFlyProgress({
+      callback: result => {
+        Toast.show(result)
+      },
+    })
+  }
+
+  flyPauseOrStart = async () => {
+    await SScene.flyPauseOrStart()
+  }
+
+  flyPause = async () => {
+    await SScene.flyPause()
+  }
+
+  flyStop = async () => {
+    await SScene.flyStop()
+  }
+
+  showAddLayer = async () => {}
 
   showSymbol = () => {
     // const toolRef = this.props.getToolRef()
@@ -270,13 +295,13 @@ export default class FunctionToolbar extends React.Component {
       case MAP_3D:
         data = [
           {
-            title: '量算',
+            title: '底图',
             action: this.changeBaseLayer,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
-            title: '面积',
-            action: this.add,
+            title: '添加',
+            action: this.showAddLayer,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
@@ -290,7 +315,7 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {
-            title: '关闭',
+            title: '更多',
             action: this.closeAnalysis,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
