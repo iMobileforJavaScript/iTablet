@@ -6,6 +6,7 @@
 import * as React from 'react'
 import { View, FlatList, Animated, Platform, NativeModules } from 'react-native'
 import { MTBtn } from '../../../../components'
+import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
@@ -37,9 +38,12 @@ export default class FunctionToolbar extends React.Component {
     setLoading: () => {},
     data?: Array,
     showLayers: () => {},
-    showTool: () => {},
+    // showTool: () => {},
     Label: () => {},
     changeLayer: () => {},
+
+    getToolRef: () => {},
+    showFullMap: () => {},
   }
 
   static defaultProps = {
@@ -71,37 +75,74 @@ export default class FunctionToolbar extends React.Component {
 
   /** 一级事件 **/
 
-  changeBaseLayer = () => {}
+  changeBaseLayer = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+        containerType: 'list',
+      })
+    }
+  }
 
-  showAddLayer = () => {}
+  showSymbol = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+        isFullScreen: false,
+      })
+    }
+  }
 
-  showSymbel = () => {}
+  showCollection = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION)
+    }
+  }
 
-  showCollection = () => {}
-
-  showEdit = () => {}
+  showEdit = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_EDIT_REGION, {
+        isFullScreen: false,
+        column: 3,
+      })
+    }
+  }
 
   showMore = e => {
     this.moreToolbar && this.moreToolbar.showMore(true, e)
   }
 
-  changeLayer = () => {
-    this.props.changeLayer()
-  }
-
   showTool = () => {
-    this.props.showTool()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+        isFullScreen: false,
+      })
+    }
   }
 
   add = () => {
-    this.props.showLayers()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
+        containerType: 'list',
+      })
+    }
   }
 
   Label = () => {
     this.props.Label()
   }
 
-  mapstyle = () => {
+  mapStyle = () => {
     openNativeSampleCode.open('Layer')
   }
 
@@ -127,7 +168,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '底图',
             title: '底图',
-            action: this.changeLayer,
+            action: this.changeBaseLayer(),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -157,7 +198,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '风格',
             title: '风格',
-            action: this.mapstyle,
+            action: this.mapStyle,
             size: 'large',
             image: require('../../../../assets/function/icon_function_style.png'),
             selectMode: 'flash',
@@ -189,17 +230,17 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '添加',
-            action: this.showAddLayer,
+            action: this.add,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             title: '标注',
-            action: this.showSymbel,
+            action: this.showSymbol,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             title: '工具',
-            action: this.showCollection,
+            action: this.showTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {
@@ -219,12 +260,12 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '添加',
-            action: this.showAddLayer,
+            action: this.add,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             title: '符号',
-            action: this.showSymbel,
+            action: this.showSymbol,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
