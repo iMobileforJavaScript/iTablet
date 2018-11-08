@@ -22,14 +22,13 @@ const style = 'style' // 样式
 const commit = 'commit' // 提交
 const placeholder = 'placeholder' // 占位
 
-// /** 地图功能列表类型 **/
-// const MAP_COLLECTION = 'MAP_COLLECTION'
-// const MAP_EDIT = 'MAP_EDIT'
-// const MAP_3D = 'MAP_3D'
-
-const HEIGHT = [scaleSize(280), scaleSize(410), scaleSize(560)]
+// 工具视图高度级别
+const HEIGHT = [scaleSize(100), scaleSize(200), scaleSize(600)]
+// 工具表格默认高度
 const DEFAULT_COLUMN = 4
+// 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
+// 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
 
 export default class ToolBar extends React.Component {
@@ -45,7 +44,7 @@ export default class ToolBar extends React.Component {
     containerProps: {
       data: [],
       containerType: table,
-      height: HEIGHT[0],
+      // height: HEIGHT[1],
       isFullScreen: DEFAULT_FULL_SCREEN,
       column: DEFAULT_COLUMN, // 只有table可以设置
     },
@@ -53,28 +52,38 @@ export default class ToolBar extends React.Component {
 
   constructor(props) {
     super(props)
+    this.height =
+      props.containerProps.height >= 0
+        ? props.containerProps.height
+        : props.containerProps.containerType === list
+          ? HEIGHT[2]
+          : HEIGHT[1]
     this.state = {
       // isShow: false,
       type: props.type,
       containerType: props.containerProps.containerType,
       isFullScreen: props.containerProps.isFullScreen,
-      height: props.containerProps.height,
+      // height: props.containerProps.height,
       column: props.containerProps.column,
       // data: this.getData(props.type),
       data: [],
       buttons: [],
       bottom: new Animated.Value(-screen.deviceHeight),
-      boxHeight: new Animated.Value(
-        props.containerProps.height - BUTTON_HEIGHT,
-      ),
+      boxHeight: new Animated.Value(this.height),
     }
     this.isShow = false
     this.isBoxShow = true
   }
 
   getData = type => {
-    let data = [],
-      buttons = []
+    let data, buttons
+
+    let { collectionData, collectionButtons } = this.getCollectionData(type)
+    data = collectionData
+    buttons = collectionButtons
+
+    if (data.length > 0) return { data, buttons }
+
     switch (type) {
       case ConstToolType.MAP_BASE:
         buttons = [cancel]
@@ -85,46 +94,63 @@ export default class ToolBar extends React.Component {
       case ConstToolType.MAP_SYMBOL:
         buttons = [cancel]
         break
-      case ConstToolType.MAP_COLLECTION:
-        data = [
-          {
-            key: 'gpsPoint',
-            title: 'GPS打点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
+      // 第一级采集选项
+      case ConstToolType.MAP_COLLECTION_POINT:
+      case ConstToolType.MAP_COLLECTION_LINE:
+      case ConstToolType.MAP_COLLECTION_REGION:
+        data.push({
+          key: 'gpsPoint',
+          title: 'GPS打点',
+          action: () => this.showCollection(type + '_POINT'),
+          size: 'large',
+          image: require('../../../../assets/function/icon_function_base_map.png'),
+        })
+        if (type !== ConstToolType.MAP_COLLECTION_POINT) {
+          data.push({
             key: 'gpsPath',
             title: 'GPS轨迹',
-            action: this.changeLayer,
+            action: () => this.showCollection(type + '_PATH'),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'pointDraw',
-            title: '点绘式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
+          })
+        }
+        data.push({
+          key: 'pointDraw',
+          title: '点绘式',
+          action: () => this.showCollection(type + '_PATH'),
+          size: 'large',
+          image: require('../../../../assets/function/icon_function_base_map.png'),
+        })
+        if (type !== ConstToolType.MAP_COLLECTION_POINT) {
+          data.push({
             key: 'freeDraw',
             title: '自由式',
-            action: this.changeLayer,
+            action: () => this.showCollection(type + '_FREE_DRAW'),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
+          })
+        } else {
+          data.push({
             key: 'takePhoto',
             title: '拍照',
-            action: this.changeLayer,
+            action: () => this.showCollection(type),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-        ]
-        buttons = [cancel, flex]
+          })
+        }
+        buttons = [cancel, flex, placeholder]
         break
+      // 第二级采集选项
+      // case ConstToolType.MAP_COLLECTION_POINT_POINT:
+      // case ConstToolType.MAP_COLLECTION_POINT_GPS:
+      // case ConstToolType.MAP_COLLECTION_LINE_POINT:
+      // case ConstToolType.MAP_COLLECTION_LINE_GPS_POINT:
+      // case ConstToolType.MAP_COLLECTION_LINE_GPS_PATH:
+      // case ConstToolType.MAP_COLLECTION_LINE_FREE_DRAW:
+      // case ConstToolType.MAP_COLLECTION_REGION_POINT:
+      // case ConstToolType.MAP_COLLECTION_REGION_GPS_POINT:
+      // case ConstToolType.MAP_COLLECTION_REGION_GPS_PATH:
+      // case ConstToolType.MAP_COLLECTION_REGION_FREE_DRAW:
       case ConstToolType.MAP_EDIT_REGION:
         data = [
           {
@@ -253,6 +279,107 @@ export default class ToolBar extends React.Component {
   }
 
   /**
+   * 获取采集二级操作选项
+   * @param type
+   * @returns {{collectionData: Array, collectionButtons: Array}}
+   */
+  getCollectionData = type => {
+    let data = [],
+      buttons = []
+
+    if (
+      type.indexOf('MAP_COLLECTION_POINT_') < 0 &&
+      type.indexOf('MAP_COLLECTION_LINE_') < 0 &&
+      type.indexOf('MAP_COLLECTION_REGION_') < 0
+    )
+      return { collectionData: data, collectionButtons: buttons }
+    if (
+      type.indexOf('_POINT_GPS') > 0 ||
+      type.indexOf('_LINE_GPS_POINT') > 0 ||
+      type.indexOf('_REGION_GPS_POINT') > 0
+    ) {
+      data.push({
+        key: 'addGPSPoint',
+        title: '打点',
+        action: () => {},
+        size: 'large',
+        image: require('../../../../assets/function/icon_function_base_map.png'),
+      })
+    }
+    if (
+      type.indexOf('_LINE_GPS_PATH') > 0 ||
+      type.indexOf('_REGION_GPS_PATH') > 0
+    ) {
+      data.push({
+        key: 'start',
+        title: '开始',
+        action: () => {},
+        size: 'large',
+        image: require('../../../../assets/function/icon_function_base_map.png'),
+      })
+      data.push({
+        key: 'stop',
+        title: '停止',
+        action: () => {},
+        size: 'large',
+        image: require('../../../../assets/function/icon_function_base_map.png'),
+      })
+    }
+    data.push({
+      key: 'undo',
+      title: '撤销',
+      action: () => {},
+      size: 'large',
+      image: require('../../../../assets/function/icon_function_base_map.png'),
+    })
+    data.push({
+      key: 'redo',
+      title: '重做',
+      action: () => {},
+      size: 'large',
+      image: require('../../../../assets/function/icon_function_base_map.png'),
+    })
+    data.push({
+      key: 'cancel',
+      title: '取消',
+      action: () => {},
+      size: 'large',
+      image: require('../../../../assets/function/icon_function_base_map.png'),
+    })
+    data.push({
+      key: 'submit',
+      title: '提交',
+      action: () => {},
+      size: 'large',
+      image: require('../../../../assets/function/icon_function_base_map.png'),
+    })
+    buttons = [cancel, flex, placeholder]
+
+    return { collectionData: data, collectionButtons: buttons }
+  }
+
+  /** 采集分类点击事件 **/
+  showCollection = type => {
+    let { data, buttons } = this.getData(type)
+    this.setState(
+      {
+        type: type,
+        data: data,
+        buttons: buttons,
+        // height: HEIGHT[0],
+        column: data.length,
+      },
+      () => {
+        this.height = HEIGHT[0]
+        this.showToolbar()
+      },
+    )
+  }
+
+  /** 拍照 **/
+  takePhoto = () => {}
+
+  /**
    * 设置是否显示
    * isShow: 是否显示
    * type:   显示数据类型
@@ -284,7 +411,7 @@ export default class ToolBar extends React.Component {
           height:
             params && typeof params.height === 'number'
               ? params.height
-              : HEIGHT[0],
+              : HEIGHT[1],
           column:
             params && typeof params.column === 'number'
               ? params.column
@@ -308,14 +435,15 @@ export default class ToolBar extends React.Component {
 
   showToolbar = isShow => {
     if (this.isShow === isShow) return
+    isShow = isShow === undefined ? true : isShow
     Animated.timing(this.state.bottom, {
       toValue: isShow ? 0 : -screen.deviceHeight,
       duration: 300,
     }).start()
     setTimeout(() => {
       Animated.timing(this.state.boxHeight, {
-        toValue: this.state.height - BUTTON_HEIGHT,
-        duration: 0,
+        toValue: this.height,
+        duration: 300,
       }).start()
     }, 300)
     this.isShow = isShow
@@ -333,7 +461,7 @@ export default class ToolBar extends React.Component {
 
   showBox = () => {
     Animated.timing(this.state.boxHeight, {
-      toValue: this.isBoxShow ? 0 : this.state.height - BUTTON_HEIGHT,
+      toValue: this.isBoxShow ? 0 : this.state.height,
       duration: 300,
     }).start()
     this.isBoxShow = !this.isBoxShow
@@ -461,7 +589,7 @@ export default class ToolBar extends React.Component {
           )
           break
         case placeholder:
-          btns.push(<View key={type + '-' + index} />)
+          btns.push(<View style={{ flex: 1 }} key={type + '-' + index} />)
           break
       }
     })
@@ -530,8 +658,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
+    flex: 1,
     height: scaleSize(60),
-    width: scaleSize(60),
+    // width: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: color.theme,
