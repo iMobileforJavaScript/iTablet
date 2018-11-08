@@ -9,7 +9,7 @@ import { FlatList } from 'react-native'
 import { Container } from '../../components'
 import { SScene } from 'imobile_for_reactnative'
 import { Layer3DManager_item } from './components'
-
+import { MapToolbar } from '../../containers/workspace/componets'
 export default class Map3DLayerManager extends React.Component {
   props: {
     navigation: any,
@@ -40,6 +40,15 @@ export default class Map3DLayerManager extends React.Component {
     let visible = item.visible
     return <Layer3DManager_item name={name} visible={visible} />
   }
+  renderToolBar = () => {
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={1}
+        type={'MAP_3D'}
+      />
+    )
+  }
 
   render() {
     return (
@@ -49,6 +58,8 @@ export default class Map3DLayerManager extends React.Component {
           navigation: this.props.navigation,
           headerRight: [],
         }}
+        bottomBar={this.renderToolBar()}
+        bottomProps={{ type: 'fix' }}
       >
         <FlatList
           data={this.state.datasourceList}
