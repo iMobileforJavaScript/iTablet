@@ -53,12 +53,14 @@ export default class MapController extends React.Component {
   }
 
   map3Dplus = async () => {
+    clearInterval(this.timer)
     this.timer = setInterval(async () => {
       await SScene.zoom(0.025)
     }, 4)
   }
 
   map3Dminus = async () => {
+    clearInterval(this.timer)
     this.timer = setInterval(async () => {
       await SScene.zoom(-0.025)
     }, 4)
