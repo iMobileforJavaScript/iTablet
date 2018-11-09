@@ -136,10 +136,19 @@ export default class FunctionToolbar extends React.Component {
   showAddLayer = async () => {}
 
   showSymbol = () => {
+    // const toolRef = this.props.getToolRef()
+    // if (toolRef) {
+    //   this.props.showFullMap && this.props.showFullMap(true)
+    //   toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+    //     isFullScreen: false,
+    //   })
+    // }
+
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION_POINT, {
         isFullScreen: false,
       })
     }
@@ -149,17 +158,29 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION_REGION, {
+        isFullScreen: false,
+      })
     }
   }
 
   showEdit = () => {
+    // const toolRef = this.props.getToolRef()
+    // if (toolRef) {
+    //   this.props.showFullMap && this.props.showFullMap(true)
+    //   // TODO 根据符号类型改变ToolBox 编辑内容
+    //   toolRef.setVisible(true, ConstToolType.MAP_EDIT_REGION, {
+    //     isFullScreen: false,
+    //     column: 3,
+    //   })
+    // }
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_REGION, {
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION_LINE, {
         isFullScreen: false,
-        column: 3,
       })
     }
   }
