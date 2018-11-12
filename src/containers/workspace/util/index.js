@@ -1,6 +1,6 @@
 import bufferAnalyst from './bufferAnalyst'
 import overlayAnalyst from './overlayAnalyst'
 import facilityAnalyst from './facilityAnalyst'
-import tranportationAnalyst from './tranportationAnalyst'
+import transportationAnalyst from './transportationAnalyst'
 
-export { bufferAnalyst, overlayAnalyst, facilityAnalyst, tranportationAnalyst }
+export { bufferAnalyst, overlayAnalyst, facilityAnalyst, transportationAnalyst }
