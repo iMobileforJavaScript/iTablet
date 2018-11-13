@@ -48,7 +48,9 @@ export default class Map3D extends React.Component {
     this._addScene()
     SScene.getAttribute()
     this.listenevent = SScene.addListener({
-      callback: () => {},
+      callback: result => {
+        this.result = result
+      },
     })
   }
 

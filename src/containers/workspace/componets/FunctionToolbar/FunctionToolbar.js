@@ -316,7 +316,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.closeAnalysis,
+            action: this.showMore,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
@@ -370,6 +370,38 @@ export default class FunctionToolbar extends React.Component {
     let data
     switch (type) {
       case MAP_3D:
+        data = [
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
         break
       case COLLECTION:
       default:
