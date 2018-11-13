@@ -37,6 +37,7 @@ export default class Map3D extends React.Component {
     this.path = params.path
     this.type = params.type || 'MAP_3D'
     // this._addScene2(params.path)
+    // this.listenevent=this.addListen()
   }
 
   componentDidMount() {
@@ -45,12 +46,34 @@ export default class Map3D extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     this._addScene()
+    SScene.getAttribute()
+    this.listenevent = SScene.addListener({
+      callback: () => {},
+    })
   }
+
+  //  addListen=()=>{
+  //    let listenevent
+  //   if (Platform.OS === 'ios') {
+  //       listenevent= nativeEvt.addListener("com.supermap.RN.SMSceneControl.Scene_attribute", function (result) {
+  //         console.log(result)
+  //       })
+  //   } else if (Platform.OS === 'android') {
+  //       listenevent= DeviceEventEmitter.addListener("com.supermap.RN.SMSceneControl.Scene_attribute",function (result) {
+  //           console.log(result)
+  //      });
+  //   }
+  //   return listenevent
+  //  }
 
   componentWillUnmount() {
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
-
+    this.listenevent && this.listenevent.remove()
+    // SScene.removeOnTouchListener()
+    // DeviceEventEmitter.removeListener("com.supermap.RN.SMSceneControl.Scene_attribute",this.callback)
+    // console.log(DeviceEventEmitter.listeners());
+    // DeviceEventEmitter.removeAllListeners()
     // (async function(){
     //   this.scene && await this.scene.close()
     //   this.workspace && await this.workspace.closeWorkspace()
@@ -198,7 +221,7 @@ export default class Map3D extends React.Component {
     return <FunctionToolbar style={styles.functionToolbar} type={this.type} />
   }
   renderMapController = () => {
-    return <MapController style={styles.mapController} />
+    return <MapController style={styles.mapController} type={'MAP_3D'} />
   }
 
   renderToolBar = () => {

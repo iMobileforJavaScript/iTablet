@@ -5,6 +5,7 @@ import { MTBtn, TableList } from '../../../../components'
 import { ConstToolType, BotMap, layerAdd } from '../../../../constants'
 import NavigationService from '../../../../containers/NavigationService'
 import { SMap } from 'imobile_for_reactnative'
+import ToolbarData from './ToolbarData'
 import {
   View,
   StyleSheet,
@@ -14,6 +15,12 @@ import {
   SectionList,
   Animated,
 } from 'react-native'
+import {
+  DatasetType,
+  SCollector,
+  GeoStyle,
+  SMCollectorType,
+} from 'imobile_for_reactnative'
 
 const list = 'list'
 const table = 'table'
@@ -24,14 +31,13 @@ const style = 'style' // 样式
 const commit = 'commit' // 提交
 const placeholder = 'placeholder' // 占位
 
-// /** 地图功能列表类型 **/
-// const MAP_COLLECTION = 'MAP_COLLECTION'
-// const MAP_EDIT = 'MAP_EDIT'
-// const MAP_3D = 'MAP_3D'
-
-const HEIGHT = [scaleSize(280), scaleSize(410), scaleSize(560)]
+// 工具视图高度级别
+// const HEIGHT = [scaleSize(100), scaleSize(200), scaleSize(600)]
+// 工具表格默认高度
 const DEFAULT_COLUMN = 4
+// 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
+// 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
 
 export default class ToolBar extends React.Component {
@@ -47,7 +53,7 @@ export default class ToolBar extends React.Component {
     containerProps: {
       data: [],
       containerType: table,
-      height: HEIGHT[0],
+      // height: HEIGHT[1],
       isFullScreen: DEFAULT_FULL_SCREEN,
       column: DEFAULT_COLUMN, // 只有table可以设置
     },
@@ -55,29 +61,48 @@ export default class ToolBar extends React.Component {
 
   constructor(props) {
     super(props)
-    this.path
+    this.height =
+      props.containerProps.height >= 0
+        ? props.containerProps.height
+        : props.containerProps.containerType === list
+          ? ConstToolType.HEIGHT[2]
+          : ConstToolType.HEIGHT[1]
+    this.originType = props.type // 初次传入的类型
     this.state = {
       // isShow: false,
-      type: props.type,
+      type: props.type, // 当前传入的类型
       containerType: props.containerProps.containerType,
       isFullScreen: props.containerProps.isFullScreen,
-      height: props.containerProps.height,
+      // height: props.containerProps.height,
       column: props.containerProps.column,
       // data: this.getData(props.type),
       data: [],
       buttons: [],
       bottom: new Animated.Value(-screen.deviceHeight),
-      boxHeight: new Animated.Value(
-        props.containerProps.height - BUTTON_HEIGHT,
-      ),
+      boxHeight: new Animated.Value(this.height),
     }
     this.isShow = false
     this.isBoxShow = true
   }
 
+  getOriginType = () => {
+    return this.originType
+  }
+
+  getType = () => {
+    return this.type
+  }
+
   getData = type => {
-    let data = [],
-      buttons = []
+    let data, buttons, toolbarData
+
+    // toolbarData = this.getCollectionData(type)
+    toolbarData = ToolbarData.getTabBarData(type)
+    data = toolbarData.data
+    buttons = toolbarData.buttons
+
+    if (data.length > 0) return { data, buttons }
+
     switch (type) {
       case ConstToolType.MAP_BASE:
         data = BotMap
@@ -90,46 +115,73 @@ export default class ToolBar extends React.Component {
       case ConstToolType.MAP_SYMBOL:
         buttons = [cancel]
         break
-      case ConstToolType.MAP_COLLECTION:
-        data = [
-          {
-            key: 'gpsPoint',
-            title: 'GPS打点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
+      // 第一级采集选项
+      case ConstToolType.MAP_COLLECTION_POINT:
+      case ConstToolType.MAP_COLLECTION_LINE:
+      case ConstToolType.MAP_COLLECTION_REGION: {
+        let gpsPointType =
+          type === ConstToolType.MAP_COLLECTION_POINT
+            ? SMCollectorType.POINT_GPS
+            : type === ConstToolType.MAP_COLLECTION_LINE
+              ? SMCollectorType.LINE_GPS_POINT
+              : SMCollectorType.REGION_GPS_POINT
+        data.push({
+          key: 'gpsPoint',
+          title: 'GPS打点',
+          action: () => this.showCollection(gpsPointType),
+          size: 'large',
+          image: require('../../../../assets/function/icon_function_base_map.png'),
+        })
+        if (type !== ConstToolType.MAP_COLLECTION_POINT) {
+          let gpsPathType =
+            type === ConstToolType.MAP_COLLECTION_LINE
+              ? SMCollectorType.LINE_GPS_PATH
+              : SMCollectorType.REGION_GPS_PATH
+          data.push({
             key: 'gpsPath',
             title: 'GPS轨迹',
-            action: this.changeLayer,
+            action: () => this.showCollection(gpsPathType),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'pointDraw',
-            title: '点绘式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
+          })
+        }
+        let pointDrawType =
+          type === ConstToolType.MAP_COLLECTION_POINT
+            ? SMCollectorType.POINT_HAND
+            : type === ConstToolType.MAP_COLLECTION_LINE
+              ? SMCollectorType.LINE_HAND_POINT
+              : SMCollectorType.REGION_HAND_POINT
+        data.push({
+          key: 'pointDraw',
+          title: '点绘式',
+          action: () => this.showCollection(pointDrawType),
+          size: 'large',
+          image: require('../../../../assets/function/icon_function_base_map.png'),
+        })
+        if (type !== ConstToolType.MAP_COLLECTION_POINT) {
+          let freeDrawType =
+            type === ConstToolType.MAP_COLLECTION_LINE
+              ? SMCollectorType.LINE_HAND_PATH
+              : SMCollectorType.REGION_HAND_PATH
+          data.push({
             key: 'freeDraw',
             title: '自由式',
-            action: this.changeLayer,
+            action: () => this.showCollection(freeDrawType),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
+          })
+        } else {
+          data.push({
             key: 'takePhoto',
             title: '拍照',
-            action: this.changeLayer,
+            action: () => this.showCollection(type),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-        ]
-        buttons = [cancel, flex]
+          })
+        }
+        buttons = [cancel, flex, placeholder]
         break
+      }
       case ConstToolType.MAP_EDIT_REGION:
         data = [
           {
@@ -257,6 +309,66 @@ export default class ToolBar extends React.Component {
     return { data, buttons }
   }
 
+  /** 创建采集 **/
+  createCollector = type => {
+    // 风格
+    let geoStyle = new GeoStyle()
+    geoStyle.setPointColor(0, 255, 0)
+    //线颜色
+    geoStyle.setLineColor(0, 110, 220)
+    //面颜色
+    geoStyle.setFillForeColor(255, 0, 0)
+    //设置绘制风格
+    SCollector.setStyle(geoStyle)
+    //
+    // let style = await SCollector.getStyle()
+    let mType
+    switch (type) {
+      case SMCollectorType.POINT_GPS:
+      case SMCollectorType.POINT_HAND:
+        mType = DatasetType.POINT
+        break
+      case SMCollectorType.LINE_GPS_POINT:
+      case SMCollectorType.LINE_GPS_PATH:
+      case SMCollectorType.LINE_HAND_POINT:
+      case SMCollectorType.LINE_HAND_PATH:
+        mType = DatasetType.LINE
+        break
+      case SMCollectorType.REGION_GPS_POINT:
+      case SMCollectorType.REGION_GPS_PATH:
+      case SMCollectorType.REGION_HAND_POINT:
+      case SMCollectorType.REGION_HAND_PATH:
+        mType = DatasetType.REGION
+        break
+    }
+
+    SCollector.setDataset('', mType).then(result => {
+      result && SCollector.startCollect(type)
+    })
+  }
+
+  /** 采集分类点击事件 **/
+  showCollection = type => {
+    let { data, buttons } = this.getData(type)
+    this.setState(
+      {
+        type: type,
+        data: data,
+        buttons: buttons,
+        // height: ConstToolType.HEIGHT[0],
+        column: data.length,
+      },
+      () => {
+        this.height = ConstToolType.HEIGHT[0]
+        this.createCollector(type)
+        this.showToolbar()
+      },
+    )
+  }
+
+  /** 拍照 **/
+  takePhoto = () => {}
+
   /**
    * 设置是否显示
    * isShow: 是否显示
@@ -273,10 +385,15 @@ export default class ToolBar extends React.Component {
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
-      params.height !== this.state.height ||
+      params.height !== this.height ||
       params.column !== this.state.column
     ) {
       let { data, buttons } = this.getData(type)
+      this.originType = type
+      this.height =
+        params && typeof params.height === 'number'
+          ? params.height
+          : ConstToolType.HEIGHT[1]
       this.setState(
         {
           type: type,
@@ -286,10 +403,6 @@ export default class ToolBar extends React.Component {
             params && params.isFullScreen !== undefined
               ? params.isFullScreen
               : DEFAULT_FULL_SCREEN,
-          height:
-            params && typeof params.height === 'number'
-              ? params.height
-              : HEIGHT[0],
           column:
             params && typeof params.column === 'number'
               ? params.column
@@ -313,20 +426,26 @@ export default class ToolBar extends React.Component {
 
   showToolbar = isShow => {
     if (this.isShow === isShow) return
+    isShow = isShow === undefined ? true : isShow
     Animated.timing(this.state.bottom, {
       toValue: isShow ? 0 : -screen.deviceHeight,
       duration: 300,
     }).start()
     setTimeout(() => {
       Animated.timing(this.state.boxHeight, {
-        toValue: this.state.height - BUTTON_HEIGHT,
-        duration: 0,
+        toValue: this.height,
+        duration: 300,
       }).start()
     }, 300)
     this.isShow = isShow
   }
 
-  close = () => {
+  close = (type = this.originType) => {
+    // 关闭采集
+    if (type.indexOf('MAP_COLLECTION_') >= 0) {
+      SCollector.stopCollect()
+    }
+
     this.showToolbar(false)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -338,7 +457,7 @@ export default class ToolBar extends React.Component {
 
   showBox = () => {
     Animated.timing(this.state.boxHeight, {
-      toValue: this.isBoxShow ? 0 : this.state.height - BUTTON_HEIGHT,
+      toValue: this.isBoxShow ? 0 : this.height,
       duration: 300,
     }).start()
     this.isBoxShow = !this.isBoxShow
@@ -454,7 +573,7 @@ export default class ToolBar extends React.Component {
             this.renderBottomBtn(
               {
                 image: require('../../../../assets/mapEdit/cancel.png'),
-                action: this.close,
+                action: () => this.close(),
               },
               index,
             ),
@@ -494,7 +613,7 @@ export default class ToolBar extends React.Component {
           )
           break
         case placeholder:
-          btns.push(<View key={type + '-' + index} />)
+          btns.push(<View style={{ flex: 1 }} key={type + '-' + index} />)
           break
       }
     })
@@ -563,8 +682,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   button: {
+    flex: 1,
     height: scaleSize(60),
-    width: scaleSize(60),
+    // width: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: color.theme,

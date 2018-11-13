@@ -141,6 +141,7 @@ export default class WorkSpaceFileList extends Component {
             NavigationService.goBack() && this.container.setLoading(false)
           } catch (error) {
             Toast.show('打开失败')
+            this.container.setLoading(false)
           }
           break
 
@@ -154,6 +155,7 @@ export default class WorkSpaceFileList extends Component {
             NavigationService.goBack() && this.container.setLoading(false)
           } catch (error) {
             Toast.show('打开失败')
+            this.container.setLoading(false)
           }
           break
       }

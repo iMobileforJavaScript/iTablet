@@ -395,43 +395,48 @@ export default class MapView extends React.Component {
     this._remove_measure_listener()
   }
 
-  /** 选择事件监听 **/
-  _addGeometrySelectedListener = async () => {
-    await this.mapControl.addGeometrySelectedListener({
-      geometrySelected: this.geometrySelected,
-      geometryMultiSelected: this.geometryMultiSelected,
-    })
-  }
-
-  _removeGeometrySelectedListener = async () => {
-    this.mapControl && (await this.mapControl.removeGeometrySelectedListener())
-  }
-
-  geometrySelected = event => {
-    let layerSelectable = true
-    if (this.props.selection && this.props.selection.layer) {
-      layerSelectable =
-        this.props.selection.layer._SMLayerId !== event.layer._SMLayerId ||
-        this.props.selection.id !== event.id
-    }
-    event.layer.getName().then(async name => {
-      let editable = await event.layer.getEditable()
-      Toast.show('选中 ' + name)
-      Object.assign(event, { name: name, editable, geoID: event.id })
-      layerSelectable && this.props.setSelection(event)
-      // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
-      // if (
-      //   this.mapControl && this.props.selection
-      //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
-      // ) {
-      //   let action = await this.mapControl.getAction()
-      //   action === 'SELECT'
-      //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
-      //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
-      //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
-      // }
-    })
-  }
+  // /** 选择事件监听 **/
+  // _addGeometrySelectedListener = async () => {
+  //   await SMap.addGeometrySelectedListener({
+  //     geometrySelected: this.geometrySelected,
+  //     geometryMultiSelected: this.geometryMultiSelected,
+  //   })
+  // }
+  //
+  // _removeGeometrySelectedListener = async () => {
+  //   await SMap.removeGeometrySelectedListener()
+  // }
+  //
+  // geometrySelected = event => {
+  //   // let layerSelectable = true
+  //   // if (this.props.selection && this.props.selection.layer) {
+  //   //   layerSelectable =
+  //   //     this.props.selection.layer._SMLayerId !== event.layer._SMLayerId ||
+  //   //     this.props.selection.id !== event.id
+  //   // }
+  //   // event.layer.getName().then(async name => {
+  //   //   let editable = await event.layer.getEditable()
+  //   //   Toast.show('选中 ' + name)
+  //   //   Object.assign(event, { name: name, editable, geoID: event.id })
+  //   //   layerSelectable && this.props.setSelection(event)
+  //   //   // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
+  //   //   // if (
+  //   //   //   this.mapControl && this.props.selection
+  //   //   //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
+  //   //   // ) {
+  //   //   //   let action = await this.mapControl.getAction()
+  //   //   //   action === 'SELECT'
+  //   //   //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
+  //   //   //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
+  //   //   //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
+  //   //   // }
+  //   // })
+  // }
+  //
+  // geometryMultiSelected = events => {
+  //   // TODO 处理多选
+  //   this.props.setSelection(events)
+  // }
 
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, '正在保存')
@@ -505,11 +510,6 @@ export default class MapView extends React.Component {
         Toast.show('保存失败')
       }
     }.bind(this)())
-  }
-
-  geometryMultiSelected = events => {
-    // TODO 处理多选
-    this.props.setSelection(events)
   }
 
   showAudio = () => {
@@ -898,6 +898,22 @@ export default class MapView extends React.Component {
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderTool()}
+        {/*<TouchableOpacity*/}
+        {/*onPress={() => {*/}
+        {/*SMap.getLayers()*/}
+        {/*}}*/}
+        {/*style={{*/}
+        {/*position: 'absolute',*/}
+        {/*width: 80,*/}
+        {/*height: 80,*/}
+        {/*left: 20,*/}
+        {/*top: 120,*/}
+        {/*backgroundColor: 'red',*/}
+        {/*zIndex: 10000,*/}
+        {/*}}*/}
+        {/*/>*/}
+        {/*{this.renderPopMeasureBar()}*/}
+        {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
         {/*{this.renderSetting()}*/}
         {/*<Dialog*/}

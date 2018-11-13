@@ -38,7 +38,23 @@ export default class Map3DLayerManager extends React.Component {
   _renderItem = ({ item }) => {
     let name = item.name
     let visible = item.visible
-    return <Layer3DManager_item name={name} visible={visible} />
+    let selectable = item.selectable
+    return (
+      <Layer3DManager_item
+        name={name}
+        visible={visible}
+        selectable={selectable}
+      />
+    )
+  }
+  renderToolBar = () => {
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={1}
+        type={'MAP_3D'}
+      />
+    )
   }
   renderToolBar = () => {
     return (

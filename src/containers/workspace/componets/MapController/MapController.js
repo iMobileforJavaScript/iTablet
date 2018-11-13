@@ -8,12 +8,13 @@ import { View, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { scaleSize } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
-
+import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class MapController extends React.Component {
   props: {
     style?: any,
+    type?: any,
   }
 
   constructor(props) {
@@ -38,11 +39,35 @@ export default class MapController extends React.Component {
   }
 
   plus = () => {
+    if (this.props.type === 'MAP_3D') {
+      return
+    }
     SMap.zoom(2)
   }
 
   minus = () => {
+    if (this.props.type === 'MAP_3D') {
+      return
+    }
     SMap.zoom(0.5)
+  }
+
+  map3Dplus = async () => {
+    clearInterval(this.timer)
+    this.timer = setInterval(async () => {
+      await SScene.zoom(0.025)
+    }, 4)
+  }
+
+  map3Dminus = async () => {
+    clearInterval(this.timer)
+    this.timer = setInterval(async () => {
+      await SScene.zoom(-0.025)
+    }, 4)
+  }
+
+  cloestimer = async () => {
+    clearInterval(this.timer)
   }
 
   location = () => {
@@ -62,6 +87,8 @@ export default class MapController extends React.Component {
             size={MTBtn.Size.NORMAL}
             image={require('../../../../assets/mapTool/icon_plus.png')}
             onPress={this.plus}
+            onPressIn={this.map3Dplus}
+            onPressOut={this.cloestimer}
           />
           <MTBtn
             style={styles.btn}
@@ -70,6 +97,8 @@ export default class MapController extends React.Component {
             size={MTBtn.Size.NORMAL}
             image={require('../../../../assets/mapTool/icon_minus.png')}
             onPress={this.minus}
+            onPressIn={this.map3Dminus}
+            onPressOut={this.cloestimer}
           />
         </View>
         <MTBtn
