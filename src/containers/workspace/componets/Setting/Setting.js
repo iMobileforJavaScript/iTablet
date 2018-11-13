@@ -4,7 +4,7 @@ import BufferSetting from './BufferSetting'
 import OverlaySetting from './OverlaySetting'
 import RouteSetting from './RouteSetting'
 import ChooseLayer from './ChooseLayer'
-import { facilityAnalyst, tranportationAnalyst } from '../../util'
+import { facilityAnalyst, transportationAnalyst } from '../../util'
 import { Toast } from '../../../../utils'
 import { Const } from '../../../../constants'
 import { DatasetType, GeoStyle, Size2D } from 'imobile_for_reactnative'
@@ -183,7 +183,7 @@ export default class Setting extends React.Component {
           case Const.NETWORK_ROUTE:
           case Const.NETWORK_TSP:
             await analystLayer.setSelectable(false)
-            result = await tranportationAnalyst.loadModel(
+            result = await transportationAnalyst.loadModel(
               this.props.mapView,
               this.props.mapControl,
               datasetVector,

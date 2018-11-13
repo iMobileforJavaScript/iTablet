@@ -8,7 +8,12 @@ import * as React from 'react'
 import { BackHandler, Platform } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
 import { Container } from '../../../../components'
-import { FunctionToolbar, MapToolbar, MapController } from '../../componets'
+import {
+  FunctionToolbar,
+  MapToolbar,
+  MapController,
+  ToolBar,
+} from '../../componets'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
@@ -220,10 +225,32 @@ export default class Map3D extends React.Component {
   }
 
   renderFunctionToolbar = () => {
-    return <FunctionToolbar style={styles.functionToolbar} type={this.type} />
+    return (
+      <FunctionToolbar
+        style={styles.functionToolbar}
+        ref={ref => (this.functionToolbar = ref)}
+        getToolRef={() => {
+          return this.toolBox
+        }}
+        type={this.type}
+        showFullMap={this.showFullMap}
+      />
+    )
   }
   renderMapController = () => {
-    return <MapController style={styles.mapController} type={'MAP_3D'} />
+    return (
+      <MapController ref={ref => (this.mapController = ref)} type={'MAP_3D'} />
+    )
+  }
+
+  showFullMap = isFull => {
+    if (isFull === this.fullMap) return
+    let full = isFull === undefined ? !this.fullMap : !isFull
+    this.container && this.container.setHeaderVisible(full)
+    this.container && this.container.setBottomVisible(full)
+    this.functionToolbar && this.functionToolbar.setVisible(full)
+    this.mapController && this.mapController.setVisible(full)
+    this.fullMap = isFull
   }
 
   renderToolBar = () => {
@@ -233,6 +260,15 @@ export default class Map3D extends React.Component {
         initIndex={0}
         type={this.operationType}
         layerManager={this._layer_manager}
+      />
+    )
+  }
+
+  renderTool = () => {
+    return (
+      <ToolBar
+        ref={ref => (this.toolBox = ref)}
+        existFullMap={() => this.showFullMap(false)}
       />
     )
   }
@@ -253,6 +289,7 @@ export default class Map3D extends React.Component {
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
+        {this.renderTool()}
       </Container>
     )
   }
