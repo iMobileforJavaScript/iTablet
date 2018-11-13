@@ -22,7 +22,7 @@ import {
   UsualTitle,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
-import { ConstPath, Const, layerAdd, BotMap } from '../../../../constants'
+import { ConstPath, Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
@@ -634,12 +634,16 @@ export default class MapView extends React.Component {
       {
         key: 'search',
         image: require('../../../../assets/header/icon_search.png'),
-        action: this.showAudio,
+        action: () => {
+          this.toolBox.setVisible(true, 'list')
+        },
       },
       {
         key: 'audio',
         image: require('../../../../assets/header/icon_audio.png'),
-        action: this.toOpen,
+        action: () => {
+          this.toolBox.setVisible(true, 'table')
+        },
       },
     ]
     headerBtnData.forEach(({ key, image, action }) => {
@@ -814,33 +818,6 @@ export default class MapView extends React.Component {
     )
   }
 
-  /**
-   * 切换图层的按钮
-   * @returns {XML}
-   */
-  // renderChangeLayerBtn = () => {
-  //   if (
-  //     this.state.popShow &&
-  //     (this.state.popType === Const.DATA_EDIT ||
-  //       this.state.popType === Const.COLLECTION)
-  //   ) {
-  //     return (
-  //       <MTBtn
-  //         ref={ref => (this.changeLayerBtn = ref)}
-  //         customStyle={[
-  //           styles.changeLayerBtn,
-  //           {
-  //             bottom: this.state.toolbarThreshold[0] + scaleSize(20),
-  //           },
-  //         ]}
-  //         imageStyle={styles.changeLayerImage}
-  //         image={require('../../../../assets/map/icon-layer-change.png')}
-  //         onPress={() => this._changeLayer(this.state.popType)}
-  //       />
-  //     )
-  //   }
-  // }
-
   /** 地图功能工具栏（右侧） **/
   renderFunctionToolbar = () => {
     return (
@@ -848,57 +825,50 @@ export default class MapView extends React.Component {
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
-        showLayers={() => {
-          this.showFullMap(false)
-          this.LayerAdd.showLayers(true)
+        getToolRef={() => {
+          return this.toolBox
         }}
-        Label={() => {
-          this.LabelAdd.showLayers(true)
-        }}
-        showTool={() => {
-          this.Tool.showLayers(true)
-        }}
-        changeLayer={() => {
-          this.BotMap.showLayers(true)
-        }}
+        showFullMap={this.showFullMap}
+        // showLayers={() => {
+        //   this.LayerAdd.showLayers(true)
+        // }}
+        // Label={() => {
+        //   this.LabelAdd.showLayers(true)
+        // }}
+        // showTool={() => {
+        //   this.showFullMap(true)
+        //   this.toolBox.setVisible(true)
+        // }}
+        // changeLayer={() => {
+        //   this.BotMap.showLayers(true)
+        // }}
       />
-    )
-  }
-
-  renderLayers = () => {
-    return (
-      <ToolBar ref={ref => (this.LayerAdd = ref)} type="list" data={layerAdd} />
-    )
-  }
-  renderLabel = () => {
-    return <ToolBar ref={ref => (this.LabelAdd = ref)} />
-  }
-
-  renderTool = () => {
-    return <ToolBar ref={ref => (this.Tool = ref)} />
-  }
-
-  renderBotMap = () => {
-    return (
-      <ToolBar ref={ref => (this.BotMap = ref)} type="list" data={BotMap}>
-        <BotMap />
-      </ToolBar>
     )
   }
 
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
-    return <MapController />
+    return <MapController ref={ref => (this.mapController = ref)} />
   }
 
   /** 显示全屏 **/
   showFullMap = isFull => {
-    let full = isFull === undefined ? !this.fullMap : isFull
+    if (isFull === this.fullMap) return
+    let full = isFull === undefined ? !this.fullMap : !isFull
     this.container && this.container.setHeaderVisible(full)
     this.container && this.container.setBottomVisible(full)
     this.functionToolbar && this.functionToolbar.setVisible(full)
     this.mapController && this.mapController.setVisible(full)
-    this.fullMap = full
+    this.fullMap = isFull
+  }
+
+  renderTool = () => {
+    return (
+      <ToolBar
+        ref={ref => (this.toolBox = ref)}
+        existFullMap={() => this.showFullMap(false)}
+      />
+    )
   }
 
   // /** 下方弹出的工具栏 **/
@@ -920,22 +890,15 @@ export default class MapView extends React.Component {
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {/*{this.renderMapMenu()}*/}
         <SMMapView
           ref={ref => (GLOBAL.mapView = ref)}
           style={styles.map}
           onGetInstance={this._onGetInstance}
         />
-        {/*{this.renderLeftToolbar()}*/}
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
-        {/*{this.renderPopMeasureBar()}*/}
-        {/*{this.renderChangeLayerBtn()}*/}
-        {this.renderToolBar()}
-        {this.renderLayers()}
-        {this.renderLabel()}
         {this.renderTool()}
-        {this.renderBotMap()}
+        {/*{this.renderToolBar()}*/}
         {/*{this.renderSetting()}*/}
         {/*<Dialog*/}
         {/*ref={ref => (this.removeObjectDialog = ref)}*/}

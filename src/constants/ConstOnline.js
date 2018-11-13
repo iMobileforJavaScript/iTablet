@@ -18,21 +18,33 @@ export default {
   },
   Baidu: {
     type: 'ONLINE',
-    DSParams: { server: 'http://www.baidu.com', engineType: 227 },
+    DSParams: {
+      server: 'http://www.baidu.com',
+      engineType: 227,
+      alias: 'baseMap',
+    },
     labelDSParams: false,
     layerIndex: 0,
     mapName: '百度地图',
   },
   Google: {
     type: 'ONLINE',
-    DSParams: { server: 'http://www.google.cn/maps', engineType: 223 },
+    DSParams: {
+      server: 'http://www.google.cn/maps',
+      engineType: 223,
+      alias: 'baseMap',
+    },
     labelDSParams: false,
-    layerIndex: 'roadmap',
+    layerIndex: 0,
     mapName: 'GOOGLE地图',
   },
   OSM: {
     type: 'ONLINE',
-    DSParams: { server: 'http://openstreetmap.org', engineType: 228 },
+    DSParams: {
+      server: 'http://openstreetmap.org',
+      engineType: 228,
+      alias: 'baseMap',
+    },
     labelDSParams: false,
     layerIndex: 0,
     mapName: 'OSM',

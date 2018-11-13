@@ -3,15 +3,10 @@ import ConstOnline from './ConstOnline'
 
 const layerAdd = [
   {
-    title: 'Google',
+    title: '选择数据源',
     data: [
       {
-        title: 'Google roadmap',
-        action: () => {},
-      },
-      {
-        title: 'Google satellite',
-        action: () => {},
+        title: '选择目录',
       },
     ],
   },
@@ -21,57 +16,58 @@ const BotMap = [
     title: 'Google',
     data: [
       {
-        title: 'Google roadmap',
+        title: 'Google Map',
         action: () => {
           (async function() {
-            await SMap.removeLayer(1)
-            await SMap.removeLayer(0)
-            await SMap.addLayer(ConstOnline['Google'].DSParams, 0)
+            await SMap.closeMap()
+            await SMap.openDatasource(ConstOnline['Google'].DSParams, 0)
           }.bind(this)())
-          // SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0)
-          // AudioAnalyst.goToMapView('Baidu')
         },
       },
+    ],
+  },
+  {
+    title: '天地图',
+    data: [
       {
-        title: 'Google satellite',
-        action: () => {},
-      },
-      {
-        title: 'Google hybrid',
-        action: () => {},
-      },
-      {
-        title: 'Google terrain',
-        action: () => {},
+        title: 'TD Map',
+        action: () => {
+          (async function() {
+            await SMap.closeMap()
+            await SMap.openDatasource(ConstOnline['TD'].DSParams, 0)
+            await SMap.openDatasource(ConstOnline['TD'].labelDSParams, 0)
+          }.bind(this)())
+        },
       },
     ],
   },
   {
-    title: 'SuperMapCloud',
+    title: 'Baidu',
     data: [
       {
-        title: 'quanguo',
-        action: () => {},
+        title: 'Baidu Map',
+        action: () => {
+          (async function() {
+            await SMap.closeMap()
+            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0)
+          }.bind(this)())
+        },
       },
     ],
   },
   {
-    title: 'MapWorld',
+    title: 'OSM',
     data: [
       {
-        title: '全球矢量地图',
-        action: () => {},
-      },
-      {
-        title: '全球矢量中文注记服务',
-        action: () => {},
-      },
-      {
-        title: '全球影像地图服务',
-        action: () => {},
+        title: 'OSM Map',
+        action: () => {
+          (async function() {
+            await SMap.closeMap()
+            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0)
+          }.bind(this)())
+        },
       },
     ],
   },
 ]
-
 export { layerAdd, BotMap }

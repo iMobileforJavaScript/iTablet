@@ -5,18 +5,12 @@
 */
 
 import * as React from 'react'
-import { BackHandler, Platform, View } from 'react-native'
+import { BackHandler, Platform } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
 import { Container } from '../../../../components'
-import {
-  DrawerView,
-  FunctionToolbar,
-  MapToolbar,
-  MapController,
-} from '../../componets'
-import { Toast, scaleSize } from '../../../../utils'
+import { FunctionToolbar, MapToolbar, MapController } from '../../componets'
+import { Toast } from '../../../../utils'
 import constants from '../../constants'
-import { Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
@@ -136,10 +130,10 @@ export default class Map3D extends React.Component {
   }
 
   //一级pop按钮 图层管理 点击函数
-  _layer_manager = () => {
-    NavigationService.navigate('Map3DLayerManager', { type: 'MAP_3D' })
-    // Toast.show("待做")
-  }
+  // _layer_manager = () => {
+  //   NavigationService.navigate('Map3DLayerManager', { type: 'MAP_3D' })
+  //   // Toast.show("待做")
+  // }
 
   //一级pop按钮 数据采集 点击函数
   _data_collection = () => {
@@ -206,54 +200,18 @@ export default class Map3D extends React.Component {
   renderMapController = () => {
     return <MapController style={styles.mapController} />
   }
+
   renderToolBar = () => {
-    if (this.state.popShow) {
-      if (
-        this.state.popType === Const.ANALYST ||
-        this.state.popType === Const.TOOLS
-      ) {
-        return <View style={styles.popView}>{this.renderPopList()}</View>
-      }
-      return (
-        <DrawerView
-          thresholds={this.state.toolbarThreshold}
-          heightChangeListener={({ childrenHeight, drawerHeight }) => {
-            this.changeLayerBtn &&
-              this.changeLayerBtn.setNativeProps({
-                style: [
-                  styles.changeLayerBtn, //// eslint-disable-next-line
-                  { bottom: drawerHeight + scaleSize(20) },
-                ],
-              })
-            this.popList &&
-              this.popList.setGridListProps({
-                style: {
-                  height: childrenHeight,
-                },
-              })
-          }}
-        >
-          {this.renderPopList()}
-        </DrawerView>
-      )
-    } else {
-      return (
-        <MapToolbar
-          hidden={this.isExample}
-          type={'MAP_3D'}
-          POP_List={this._pop_list}
-          layerManager={this._layer_manager}
-          dataCollection={this._data_collection}
-          dataManager={this._data_manager}
-          addLayer={this._addLayer}
-          chooseLayer={this._chooseLayer}
-          editLayer={this.props.editLayer}
-          setEditLayer={this.props.setEditLayer}
-          mapControl={this.mapControl}
-        />
-      )
-    }
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={0}
+        type={this.operationType}
+        layerManager={this._layer_manager}
+      />
+    )
   }
+
   render() {
     return (
       <Container
@@ -261,14 +219,15 @@ export default class Map3D extends React.Component {
         headerProps={{
           title: this.isExample ? '三维场景' : this.state.title,
           navigation: this.props.navigation,
-          headerRight: [],
           backAction: this.back,
+          type: 'fix',
         }}
+        bottomBar={this.renderToolBar()}
+        bottomProps={{ type: 'fix' }}
       >
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
-        {this.renderToolBar()}
       </Container>
     )
   }

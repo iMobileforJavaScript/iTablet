@@ -3,14 +3,13 @@ import { View, StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 import { ListSeparator } from '../../../../components'
-import { Const } from '../../../../constants'
 import constants from '../../constants'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../../containers/NavigationService'
 import MT_Btn from '../../../../components/mapTools/MT_Btn'
 
 // export const MAP_LOCAL = 'MAP_LOCAL'
-export const MAP_3D = 'MAP_3D'
+// export const MAP_3D = 'MAP_3D'
 
 export default class MapToolbar extends React.Component {
   static propTypes = {
@@ -93,14 +92,42 @@ export default class MapToolbar extends React.Component {
       case constants.MAP_3D:
         list = [
           {
-            key: '场景',
-            image: require('../../../../assets/map/icon-map-management.png'),
-            btnClick: this._map3Dchange,
+            key: 'scene',
+            title: '场景',
+            image: require('../../../../assets/mapToolbar/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('Map3D', {
+                  type: 'MAP_3D',
+                })
+            },
           },
           {
-            key: '图层',
-            image: require('../../../../assets/map/icon-map-management.png'),
-            btnClick: this._layerManager,
+            key: 'Layer3DManager',
+            title: '图层',
+            image: require('../../../../assets/mapToolbar/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('Map3DLayerManager', {
+                  type: 'MAP_3D',
+                })
+            },
+          },
+          {
+            key: 'LayerAttribute',
+            title: '属性',
+            image: require('../../../../assets/mapToolbar/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
+            btnClick: () => {},
+          },
+          {
+            key: 'Setting',
+            title: '设置',
+            image: require('../../../../assets/mapToolbar/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
+            btnClick: () => {},
           },
         ]
         break
@@ -110,13 +137,6 @@ export default class MapToolbar extends React.Component {
 
   _map3Dchange = () => {
     NavigationService.navigate('WorkspaceFlieList', { type: constants.MAP_3D })
-  }
-
-  _layerManager = async () => {
-    await this.setLayerEditable(true)
-    this._showManager(Const.MAP_MANAGER)
-    this.props.POP_List && this.props.POP_List(false, null)
-    this.props.layerManager && this.props.layerManager()
   }
 
   _renderItem = ({ item, index }) => {

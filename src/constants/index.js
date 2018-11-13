@@ -5,6 +5,7 @@ import AudioKeywords from './AudioKeywords'
 import EventConst from './EventConst'
 import ExampleMapData from './ExampleMapData'
 import ConstModule from './ConstModule'
+import ConstToolType from './ConstToolType'
 import { layerAdd, BotMap } from './FunctionToolbarModule'
 
 export {
@@ -17,4 +18,5 @@ export {
   ConstModule,
   layerAdd,
   BotMap,
+  ConstToolType,
 }
