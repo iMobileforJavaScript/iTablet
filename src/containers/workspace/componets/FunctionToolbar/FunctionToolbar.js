@@ -10,8 +10,10 @@ import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
+
 import { SAnalyst, SScene, SMap, Action } from 'imobile_for_reactnative'
 import Toast from 'react-native-root-toast'
+
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
@@ -258,7 +260,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '标注',
             title: '标注',
-            action: this.Label,
+            action: this.showSymbol,
             size: 'large',
             image: require('../../../../assets/function/icon_function_Tagging.png'),
             selectMode: 'flash',
@@ -288,12 +290,9 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
-            key: '分享',
-            title: '分享',
-            action: this.publish,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_tool.png'),
-            selectMode: 'flash',
+            title: '更多',
+            action: this.showMore,
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -374,6 +373,40 @@ export default class FunctionToolbar extends React.Component {
   getMoreData = type => {
     let data
     switch (type) {
+      case MAP_EDIT:
+        data = [
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
+        break
       case MAP_3D:
         data = [
           {

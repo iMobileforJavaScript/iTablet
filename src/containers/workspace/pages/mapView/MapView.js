@@ -898,20 +898,20 @@ export default class MapView extends React.Component {
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderTool()}
-        <TouchableOpacity
-          onPress={() => {
-            SMap.getLayers()
-          }}
-          style={{
-            position: 'absolute',
-            width: 80,
-            height: 80,
-            left: 20,
-            top: 120,
-            backgroundColor: 'red',
-            zIndex: 10000,
-          }}
-        />
+        {/*<TouchableOpacity*/}
+        {/*onPress={() => {*/}
+        {/*SMap.getLayers()*/}
+        {/*}}*/}
+        {/*style={{*/}
+        {/*position: 'absolute',*/}
+        {/*width: 80,*/}
+        {/*height: 80,*/}
+        {/*left: 20,*/}
+        {/*top: 120,*/}
+        {/*backgroundColor: 'red',*/}
+        {/*zIndex: 10000,*/}
+        {/*}}*/}
+        {/*/>*/}
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}

@@ -2,7 +2,14 @@ import React from 'react'
 import { scaleSize, screen } from '../../../../utils'
 import { color, zIndexLevel } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
-import { ConstToolType, Map3DBaseMapList } from '../../../../constants'
+import {
+  ConstToolType,
+  BotMap,
+  layerAdd,
+  Map3DBaseMapList,
+} from '../../../../constants'
+import NavigationService from '../../../../containers/NavigationService'
+import { SMap } from 'imobile_for_reactnative'
 import ToolbarData from './ToolbarData'
 import {
   View,
@@ -103,6 +110,7 @@ export default class ToolBar extends React.Component {
 
     switch (type) {
       case ConstToolType.MAP_BASE:
+        data = BotMap
         buttons = [cancel]
         break
       case ConstToolType.MAP3D_BASE:
@@ -110,6 +118,7 @@ export default class ToolBar extends React.Component {
         buttons = [cancel]
         break
       case ConstToolType.MAP_ADD_LAYER:
+        data = layerAdd
         buttons = [cancel, placeholder, commit]
         break
       case ConstToolType.MAP_SYMBOL:
@@ -463,10 +472,14 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = !this.isBoxShow
   }
 
-  renderListItem = ({ item }) => {
+  renderListItem = ({ item, index }) => {
     if (item.show) {
       return (
-        <TouchableOpacity onPress={item.action}>
+        <TouchableOpacity
+          onPress={() => {
+            this.listAction({ item, index })
+          }}
+        >
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
@@ -498,6 +511,34 @@ export default class ToolBar extends React.Component {
     })
   }
 
+  listAction = ({ item, index }) => {
+    if (this.state.type === 'MAP3D_BASE') return
+    if (item.action) {
+      item.action && item.action()
+    } else if (this.state.type === ConstToolType.MAP_ADD_LAYER) {
+      NavigationService.navigate('WorkspaceFlieList', {
+        cb: async path => {
+          this.path = path
+          let list = await SMap.getUDBName(path)
+          let datalist = [
+            {
+              title: '数据集',
+              data: list,
+            },
+          ]
+          this.setState({ data: datalist, type: ConstToolType.MAP_ADD_DATASET })
+        },
+      })
+    } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
+      (async function() {
+        let udbpath = {
+          server: this.path,
+          alias: item.title,
+        }
+        await SMap.openUDBDatasource(udbpath, index)
+      }.bind(this)())
+    }
+  }
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
