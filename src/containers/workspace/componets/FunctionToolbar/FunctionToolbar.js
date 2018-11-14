@@ -146,7 +146,26 @@ export default class FunctionToolbar extends React.Component {
     await SScene.flyStop()
   }
 
-  showAddLayer = async () => {}
+  showAddLayer = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+            containerType: 'list',
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+          })
+          break
+      }
+    }
+  }
 
   showSymbol = () => {
     // const toolRef = this.props.getToolRef()
@@ -162,6 +181,20 @@ export default class FunctionToolbar extends React.Component {
       // TODO 根据符号类型改变ToolBox内容
       toolRef.setVisible(true, ConstToolType.MAP_COLLECTION_POINT, {
         isFullScreen: false,
+      })
+    }
+  }
+
+  showMap3DSymbol = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+        containerType: 'table',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[1],
       })
     }
   }
@@ -198,11 +231,24 @@ export default class FunctionToolbar extends React.Component {
 
   showTool = () => {
     const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-        isFullScreen: false,
-      })
+    switch (this.props.type) {
+      case 'MAP_3D':
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
+
+      default:
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
     }
   }
 
@@ -310,7 +356,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '标注',
-            action: this.showSymbol,
+            action: this.showMap3DSymbol,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {

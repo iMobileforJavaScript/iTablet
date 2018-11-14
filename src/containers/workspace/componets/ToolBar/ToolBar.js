@@ -8,6 +8,7 @@ import {
   layerAdd,
   Map3DBaseMapList,
 } from '../../../../constants'
+import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
 import { SMap } from 'imobile_for_reactnative'
 import ToolbarData from './ToolbarData'
@@ -105,7 +106,6 @@ export default class ToolBar extends React.Component {
     toolbarData = ToolbarData.getTabBarData(type)
     data = toolbarData.data
     buttons = toolbarData.buttons
-
     if (data.length > 0) return { data, buttons }
 
     switch (type) {
@@ -114,8 +114,12 @@ export default class ToolBar extends React.Component {
         buttons = [cancel]
         break
       case ConstToolType.MAP3D_BASE:
-        data = Map3DBaseMapList.data
+        data = Map3DBaseMapList.baseListData
         buttons = [cancel]
+        break
+      case ConstToolType.MAP3D_ADD_LAYER:
+        data = Map3DBaseMapList.layerListdata
+        buttons = [cancel, commit]
         break
       case ConstToolType.MAP_ADD_LAYER:
         data = layerAdd
@@ -314,6 +318,174 @@ export default class ToolBar extends React.Component {
       case ConstToolType.MAP_TOOL:
         buttons = [cancel, flex]
         break
+      case ConstToolType.MAP3D_SYMBOL:
+        data = [
+          {
+            key: 'map3DPoint',
+            title: '打点',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DText',
+            title: '文字',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DPiontLine',
+            title: '点绘线',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DFreeLine',
+            title: '自由线',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DPointSurface',
+            title: '点绘面',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DFreeSurface',
+            title: '自由面',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DtrajectoryOne',
+            title: '普通模式轨迹',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DtrajectoryTwo',
+            title: '抓路模式轨迹',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DtrajectoryThree',
+            title: '等距模式轨迹',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DtrajectoryFour',
+            title: '等时模式轨迹',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'map3DtrajectoryFive',
+            title: '智能模式轨迹',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+        ]
+        buttons = [cancel, flex]
+        break
+      case ConstToolType.MAP3D_TOOL:
+        data = [
+          {
+            key: 'distanceMeasure',
+            title: '距离量算',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'suerfaceMeasure',
+            title: '面积量算',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'heightMeasure',
+            title: '高度量算',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_HEIGHTMEASURE)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'selection',
+            title: '选择',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_SELECTION)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'Boxtailor',
+            title: 'Box裁剪',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_BOXTAILOR)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'PStailor',
+            title: '平面裁剪',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_PSTAILOR)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'Crosstailor',
+            title: 'Cross裁剪',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_CROSSTAILOR)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'fly',
+            title: '飞行轨迹',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            key: 'level',
+            title: '拉平',
+            action: () => {
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_LEVEL)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+        ]
+        buttons = [cancel, flex]
+        break
     }
     return { data, buttons }
   }
@@ -370,6 +542,25 @@ export default class ToolBar extends React.Component {
       () => {
         this.height = ConstToolType.HEIGHT[0]
         this.createCollector(type)
+        this.showToolbar()
+      },
+    )
+  }
+
+  /** 三维分类点击事件*/
+  showMap3DTool = type => {
+    let { data, buttons } = this.getData(type)
+    this.setState(
+      {
+        type: type,
+        data: data,
+        buttons: buttons,
+        // height: ConstToolType.HEIGHT[0],
+        column: data.length,
+      },
+      () => {
+        this.height = ConstToolType.HEIGHT[0]
+        // this.createCollector(type)
         this.showToolbar()
       },
     )
@@ -473,42 +664,19 @@ export default class ToolBar extends React.Component {
   }
 
   renderListItem = ({ item, index }) => {
-    if (item.show) {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            this.listAction({ item, index })
-          }}
-        >
-          <Text style={styles.item}>{item.title}</Text>
-        </TouchableOpacity>
-      )
-    } else {
-      return <View />
-    }
-  }
-
-  renderListSectionHeader = ({ section }) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.refreshList(section)
+          this.listAction({ item, index })
         }}
       >
-        <Text style={styles.sectionHeader}>{section.title}</Text>
+        <Text style={styles.item}>{item.title}</Text>
       </TouchableOpacity>
     )
   }
 
-  refreshList = section => {
-    let newData = this.state.data
-    for (let index = 0; index < section.data.length; index++) {
-      section.data[index].show = !section.data[index].show
-    }
-    newData[section.index] = section
-    this.setState({
-      data: newData.concat(),
-    })
+  renderListSectionHeader = ({ section }) => {
+    return <Text style={styles.sectionHeader}>{section.title}</Text>
   }
 
   listAction = ({ item, index }) => {
@@ -575,11 +743,23 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  renderMap3DList = () => {
+    return <Map3DToolBar data={this.state.data} type={this.state.type} />
+  }
+
   renderView = () => {
     let box
     switch (this.state.containerType) {
       case list:
-        box = this.renderList()
+        switch (this.state.type) {
+          case 'MAP3D_BASE':
+            box = this.renderMap3DList()
+            break
+
+          default:
+            box = this.renderList()
+            break
+        }
         break
       case table:
       default:

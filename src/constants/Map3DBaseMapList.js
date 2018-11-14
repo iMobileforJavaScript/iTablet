@@ -1,5 +1,5 @@
 export default {
-  data: [
+  baseListData: [
     {
       title: 'Google',
       index: 0,
@@ -9,101 +9,138 @@ export default {
           title: 'Google roadmap',
           index: 0,
           show: true,
+          type: 'baseData',
         },
         {
           title: 'Google statellite',
           index: 0,
           show: true,
+          type: 'baseData',
         },
         {
           title: 'Google terrain',
           index: 0,
           show: true,
+          type: 'baseData',
         },
       ],
     },
     {
       title: 'SuperMapCloud',
       index: 1,
-      show: true,
       data: [
         {
           title: 'quanguo',
           index: 1,
           show: true,
+          type: 'baseData',
         },
       ],
     },
     {
       title: 'MapWorld',
       index: 2,
-      show: true,
       data: [
         {
           title: '全球矢量地图(经纬度)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
         {
           title: '全球矢量地图(墨卡托)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
         {
           title: '全球矢量中文注记服务(经纬度)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
         {
           title: '全球矢量中文注记服务(墨卡托)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
         {
           title: '全球影像地图服务(经纬度)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
         {
           title: '全球影像地图服务(墨卡托)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
         {
           title: '全球地形晕渲地图服务(经纬度)',
           index: 2,
           show: true,
+          type: 'baseData',
         },
       ],
     },
   ],
-  // title:
-  // data = [{
-  //     key: 'gpsPoint',
-  //     title: 'GPS打点',
-  //     action: () => this.showCollection(gpsPointType),
-  //     size: 'large',
-  //     image: require('../../../../assets/function/icon_function_base_map.png'),
-  // },
-  // {
-  //     key: 'gpsPoint',
-  //     title: 'GPS打点',
-  //     action: () => this.showCollection(gpsPointType),
-  //     size: 'large',
-  //     image: require('../../../../assets/function/icon_function_base_map.png'),
-  // },
-  // {
-  //     key: 'gpsPoint',
-  //     title: 'GPS打点',
-  //     action: () => this.showCollection(gpsPointType),
-  //     size: 'large',
-  //     image: require('../../../../assets/function/icon_function_base_map.png'),
-  // },
-  // {
-  //     key: 'gpsPoint',
-  //     title: 'GPS打点',
-  //     action: () => this.showCollection(gpsPointType),
-  //     size: 'large',
-  //     image: require('../../../../assets/function/icon_function_base_map.png'),
-  // }]
+  layerListdata: [
+    {
+      index: 1,
+      data: [
+        {
+          title: '影像缓存图层',
+          type: 'layerData',
+        },
+        {
+          title: '三维切片缓存图层',
+          type: 'layerData',
+        },
+        {
+          title: '矢量缓存图层',
+          type: 'layerData',
+        },
+        {
+          title: '地图缓存图层',
+          type: 'layerData',
+        },
+        {
+          title: '栅格体数据缓存图层',
+          type: 'layerData',
+        },
+        {
+          title: '地形缓存图层',
+          type: 'layerData',
+        },
+      ],
+    },
+    {
+      index: 2,
+      data: [
+        {
+          title: 'KML图层',
+          type: 'layerData',
+        },
+      ],
+    },
+    {
+      index: 3,
+      data: [
+        {
+          title: 'iServer图层服务',
+          type: 'layerData',
+        },
+        {
+          title: 'OGC服务图层',
+          type: 'layerData',
+        },
+        {
+          title: '天地图服务图层',
+          type: 'layerData',
+        },
+      ],
+    },
+  ],
 }
