@@ -10,8 +10,10 @@ import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
+
 import { SAnalyst, SScene, SMap, Action } from 'imobile_for_reactnative'
 import Toast from 'react-native-root-toast'
+
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
@@ -80,9 +82,20 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_BASE, {
-        containerType: 'list',
-      })
+
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_BASE, {
+            containerType: 'list',
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+          })
+          break
+      }
     }
   }
 
@@ -133,7 +146,26 @@ export default class FunctionToolbar extends React.Component {
     await SScene.flyStop()
   }
 
-  showAddLayer = async () => {}
+  showAddLayer = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+            containerType: 'list',
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+          })
+          break
+      }
+    }
+  }
 
   showSymbol = () => {
     const toolRef = this.props.getToolRef()
@@ -142,6 +174,20 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
         isFullScreen: true,
         height: ConstToolType.HEIGHT[2],
+      })
+    }
+  }
+
+  showMap3DSymbol = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+        containerType: 'table',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[1],
       })
     }
   }
@@ -178,11 +224,24 @@ export default class FunctionToolbar extends React.Component {
 
   showTool = () => {
     const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-        isFullScreen: false,
-      })
+    switch (this.props.type) {
+      case 'MAP_3D':
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
+
+      default:
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
     }
   }
 
@@ -240,7 +299,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '标注',
             title: '标注',
-            action: this.Label,
+            action: this.showSymbol,
             size: 'large',
             image: require('../../../../assets/function/icon_function_Tagging.png'),
             selectMode: 'flash',
@@ -270,12 +329,9 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
-            key: '分享',
-            title: '分享',
-            action: this.publish,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_tool.png'),
-            selectMode: 'flash',
+            title: '更多',
+            action: this.showMore,
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -293,7 +349,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '标注',
-            action: this.showSymbol,
+            action: this.showMap3DSymbol,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
@@ -303,7 +359,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.closeAnalysis,
+            action: this.showMore,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
@@ -356,7 +412,73 @@ export default class FunctionToolbar extends React.Component {
   getMoreData = type => {
     let data
     switch (type) {
+      case MAP_EDIT:
+        data = [
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
+        break
       case MAP_3D:
+        data = [
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
         break
       case COLLECTION:
       default:

@@ -56,6 +56,15 @@ export default class Map3DLayerManager extends React.Component {
       />
     )
   }
+  renderToolBar = () => {
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={1}
+        type={'MAP_3D'}
+      />
+    )
+  }
 
   render() {
     return (
