@@ -19,9 +19,12 @@ import {
   GeoStyle,
   SMCollectorType,
 } from 'imobile_for_reactnative'
+import SymbolTabs from '../SymbolTabs'
 
+/** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
+const tabs = 'tabs'
 /** 地图按钮类型 **/
 const cancel = 'cancel' // 取消
 const flex = 'flex' // 伸缩
@@ -404,9 +407,11 @@ export default class ToolBar extends React.Component {
               ? params.column
               : DEFAULT_COLUMN,
           containerType:
-            params && typeof params.containerType
+            params && params.containerType
               ? params.containerType
-              : table,
+              : type === ConstToolType.MAP_SYMBOL
+                ? tabs
+                : table,
         },
         () => {
           this.showToolbar(isShow)
@@ -427,12 +432,12 @@ export default class ToolBar extends React.Component {
       toValue: isShow ? 0 : -screen.deviceHeight,
       duration: 300,
     }).start()
-    setTimeout(() => {
-      Animated.timing(this.state.boxHeight, {
-        toValue: this.height,
-        duration: 300,
-      }).start()
-    }, 300)
+    // setTimeout(() => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: this.height,
+      duration: 300,
+    }).start()
+    // }, 300)
     this.isShow = isShow
   }
 
@@ -489,6 +494,10 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  renderTabs = () => {
+    return <SymbolTabs style={styles.tabsView} />
+  }
+
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     return (
       <MTBtn
@@ -508,6 +517,9 @@ export default class ToolBar extends React.Component {
     switch (this.state.containerType) {
       case list:
         box = this.renderList()
+        break
+      case tabs:
+        box = this.renderTabs()
         break
       case table:
       default:
@@ -636,7 +648,7 @@ const styles = StyleSheet.create({
   containers: {
     flexDirection: 'column',
     width: '100%',
-    maxHeight: scaleSize(600),
+    maxHeight: ConstToolType.HEIGHT[2] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
     backgroundColor: color.theme,
     // zIndex: zIndexLevel.FOUR,
@@ -679,5 +691,8 @@ const styles = StyleSheet.create({
   },
   cell: {
     // flex: 1,
+  },
+  tabsView: {
+    height: ConstToolType.HEIGHT[2] - BUTTON_HEIGHT,
   },
 })

@@ -19,7 +19,7 @@ function getTabBarData(type) {
 
   if (isCollection) {
     tabBarData = getCollectionData(type)
-  } else if (type.indexOf('MAP_EDIT_') >= -1) {
+  } else if (type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = getEditData(type)
   }
 

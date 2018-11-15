@@ -176,7 +176,7 @@ export default class AddDataset extends React.Component {
     this.cb && this.cb()
   }
 
-  _renderSetion = ({ section }) => {
+  _renderSection = ({ section }) => {
     return (
       <DataSetListSection
         data={section}
@@ -227,7 +227,7 @@ export default class AddDataset extends React.Component {
         }}
       >
         <SectionList
-          renderSectionHeader={this._renderSetion}
+          renderSectionHeader={this._renderSection}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}
           sections={this.state.dataSourceList}

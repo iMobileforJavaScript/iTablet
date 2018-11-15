@@ -29,5 +29,5 @@ export default {
   MAP_TOOL: 'MAP_TOOL',
 
   // 工具视图高度级别
-  HEIGHT: [scaleSize(100), scaleSize(250), scaleSize(500)],
+  HEIGHT: [scaleSize(100), scaleSize(250), scaleSize(720)],
 }
