@@ -5,13 +5,13 @@
 */
 
 import * as React from 'react'
-import { FlatList } from 'react-native'
+import { FlatList,Platform, StyleSheet,View, Text,TouchableHighlight, TouchableNativeFeedback, Alert, Image } from 'react-native'
 import { Container, InputDialog } from '../../components'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constants'
 import { MapToolbar } from '../workspace/componets'
 import NavigationService from '../NavigationService'
-import { Action, LayerGroup } from 'imobile_for_reactnative'
+import { Action, LayerGroup, SMap } from 'imobile_for_reactnative'
 
 import {
   LayerManager_item,
@@ -40,6 +40,7 @@ export default class MT_layerManager extends React.Component {
     //   wsName.lastIndexOf('.') > 0 &&
     //   wsName.substring(0, wsName.lastIndexOf('.'))
     this.state = {
+      layersNamesList: [], //数据集数组
       datasourceList: [],
       mapName: '',
       // wsName: wsName,
@@ -49,8 +50,37 @@ export default class MT_layerManager extends React.Component {
     // this.currentEditItemName = '' // 记录当前可编辑的图层的名称
   }
 
+  //组件生命周期方法
   componentDidMount() {
     // this.getData()
+    this.getlayersNamesList()
+  }
+
+  /**
+   * 获取所有图层标题及图层类型
+   */
+  getlayersNamesList = async () => {
+    try {
+      let list = await SMap.getLayersNames()
+      let layersNames = []
+      for (var i = 0; i < list.length; i++) {
+        let ob = {
+          key: list[i].title,
+          type: list[i].datasetType,
+        }
+        layersNames[i] = ob
+      }
+      this.setState(
+        {
+          layersNamesList: layersNames,
+          nextpage: 0,
+        },
+      )
+    } catch (error) {
+      this.setState({
+        nextpage: 1,
+      })
+    }
   }
 
   getData = async () => {
@@ -144,8 +174,8 @@ export default class MT_layerManager extends React.Component {
 
   // 保存
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
-    this.container.setLoading(true)
-    ;(async function() {
+    this.container.setLoading(true);
+    (async function() {
       try {
         let saveWs
         let info = {}
@@ -382,6 +412,40 @@ export default class MT_layerManager extends React.Component {
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
   }
 
+  _onRefresh() {
+    this.setState({
+      nextpage: 1,
+    })
+    this.getlayersNamesList()
+  }
+
+  _onPressButton() {
+    //图层点击
+    NavigationService.goBack()
+  }
+
+  _onLongPressButton() {
+    //图层长按
+  }
+
+  _getLayerType = (item) => {
+    if (item.type == 'POINT') {
+      return require('../../assets/map/layertype_point.png')
+    } else if (item.type == 'LINE') {
+      return require('../../assets/map/layertype_line.png')
+    } else if (item.type == 'REGION') {
+      return require('../../assets/map/layertype_georegion.png')
+    } else if (item.type == 'GRID') {
+      return require('../../assets/map/layertype_grid.png')
+    } else if (item.type == 'TEXT') {
+      return require('../../assets/map/layertype_text.png')
+    } else if (item.type == 'IMAGE') {
+      return require('../../assets/map/layertype_image.png')
+    } else {
+      return require('../../assets/map/layertype_grid.png')
+    }
+  }
+
   render() {
     return (
       <Container
@@ -392,19 +456,52 @@ export default class MT_layerManager extends React.Component {
         }}
         bottomBar={this.renderToolBar()}
       >
-        <LayerManager_tab
+        {/* <LayerManager_tab
           mapChange={this._map_change}
           showSaveDialog={this.showSaveDialog}
           addDataset={this._add_dataset}
           addLayerGroup={this._add_layer_group}
-        />
-        <FlatList
+        /> */}
+        {/* <FlatList
           ref={ref => (this.listView = ref)}
           data={this.state.datasourceList}
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
+        /> */}
+        <FlatList
+          style={styles.flatlist}
+          ref={ref => (this.listView = ref)}
+          data={this.state.layersNamesList}
+          // renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
+          renderItem={({item, index}) => <TouchableHighlight
+            onPress={this._onPressButton}
+            onLongPress={this._onLongPressButton}
+            background = {
+              Platform.OS === "android" ? TouchableNativeFeedback.SelectableBackground() : ''}>
+            <View style={styles.container}>
+              <View style={styles.viewbg}>
+                <Image
+                  style={styles.image}
+                  source={require('../../assets/map/layer_visible.png')}
+                />
+              </View>
+              <View style={styles.viewbg}>
+                <Image
+                  style={styles.image}
+                  source={this._getLayerType(item)}
+                />
+              </View>
+              <Text style={styles.itemText}>{item.key}</Text>
+            </View>
+          < /TouchableHighlight >}
+          onRefresh = {
+            () => this._onRefresh()
+          }
+          refreshing = {
+            this.state.nextpage==1?true:false
+          }
         />
-        <SaveDialog
+        {/* <SaveDialog
           ref={ref => (this.saveDialog = ref)}
           confirmAction={this.saveMapAndWorkspace}
           showWsName={this.showDialogCaption}
@@ -428,8 +525,49 @@ export default class MT_layerManager extends React.Component {
           title={'图层重命名'}
           label={'图层名称'}
           confirmAction={this._renameLayer}
-        />
+        /> */}
       </Container>
     )
   }
 }
+
+const styles = StyleSheet.create({
+  flatlist: {
+    flex: 1,
+    backgroundColor: '#363638',
+  },
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  viewbg: {
+    height: 46,
+    paddingLeft: 10,
+    justifyContent: 'center',
+    backgroundColor: '#363638',
+  },
+  image: {
+    width: 30,
+    height: 30,
+    resizeMode: 'center',
+  },
+  button: {
+    marginBottom: 30,
+    width: 260,
+    alignItems: 'center',
+    backgroundColor: '#2196F3',
+  },
+  buttonText: {
+    padding: 20,
+    color: 'white',
+  },
+  itemText: {
+    flex: 1,
+    padding: 10,
+    fontSize: 20,
+    color: 'white',
+    height: 46,
+    backgroundColor: '#363638',
+  },
+})
+
