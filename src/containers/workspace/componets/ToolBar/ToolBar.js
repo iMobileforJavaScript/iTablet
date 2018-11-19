@@ -1,5 +1,5 @@
 import React from 'react'
-import { scaleSize, screen } from '../../../../utils'
+import { scaleSize, screen, Toast } from '../../../../utils'
 import { color, zIndexLevel } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
 import {
@@ -10,7 +10,7 @@ import {
 } from '../../../../constants'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SAnalyst, SScene } from 'imobile_for_reactnative'
 import ToolbarData from './ToolbarData'
 import {
   View,
@@ -36,7 +36,12 @@ const flex = 'flex' // 伸缩
 const style = 'style' // 样式
 const commit = 'commit' // 提交
 const placeholder = 'placeholder' // 占位
-
+const closeAnalyst = 'closeAnalyst'
+const clear = 'clear'
+const endfly = 'endfly'
+const back = 'back'
+const save = 'save'
+const clearsymbol = 'clearsymbol'
 // 工具视图高度级别
 // const HEIGHT = [scaleSize(100), scaleSize(200), scaleSize(600)]
 // 工具表格默认高度
@@ -91,6 +96,24 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
   }
 
+  componentDidMount() {
+    SScene.getAttribute()
+    this.attributeListen()
+  }
+
+  componentWillUnmount() {
+    this.listenevent && this.listenevent.remove()
+  }
+
+  /**建筑单体触控监听 */
+  attributeListen() {
+    this.listenevent = SScene.addListener({
+      callback: result => {
+        this.showMap3DAttribute(result)
+      },
+    })
+  }
+
   getOriginType = () => {
     return this.originType
   }
@@ -101,7 +124,6 @@ export default class ToolBar extends React.Component {
 
   getData = type => {
     let data, buttons, toolbarData
-
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type)
     data = toolbarData.data
@@ -323,21 +345,33 @@ export default class ToolBar extends React.Component {
           {
             key: 'map3DPoint',
             title: '打点',
-            action: this.changeLayer,
+            action: () => {
+              try {
+                this.listenevent.remove()
+                SScene.startDrawPoint()
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
+              } catch (error) {
+                Toast.show('打点失败')
+              }
+            },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
             key: 'map3DText',
             title: '文字',
-            action: this.changeLayer,
+            action: () => {
+              // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
+            },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
             key: 'map3DPiontLine',
             title: '点绘线',
-            action: this.changeLayer,
+            action: () => {
+              // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
+            },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -351,7 +385,9 @@ export default class ToolBar extends React.Component {
           {
             key: 'map3DPointSurface',
             title: '点绘面',
-            action: this.changeLayer,
+            action: () => {
+              // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+            },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -398,7 +434,7 @@ export default class ToolBar extends React.Component {
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
         ]
-        buttons = [cancel, flex]
+        buttons = [clearsymbol, flex]
         break
       case ConstToolType.MAP3D_TOOL:
         data = [
@@ -469,7 +505,13 @@ export default class ToolBar extends React.Component {
             key: 'fly',
             title: '飞行轨迹',
             action: () => {
-              this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
+              // this.isShow=!this.isShow
+              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
+              //   containerType: 'list',
+              //   isFullScreen:true,
+              this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
+              // })
+              // this.getflylist()
             },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
@@ -488,6 +530,17 @@ export default class ToolBar extends React.Component {
         break
     }
     return { data, buttons }
+  }
+
+  getflylist = async () => {
+    try {
+      let flydata = await SScene.getFlyRouteNames()
+      let data = [{ title: '飞行轨迹列表', data: flydata }]
+      let buttons = [cancel, flex]
+      return { data, buttons }
+    } catch (error) {
+      Toast.show('当前场景无飞行轨迹')
+    }
   }
 
   /** 创建采集 **/
@@ -547,23 +600,87 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  /** 三维单体触控属性事件 */
+
+  showMap3DAttribute = async data => {
+    let list = []
+    Object.keys(data).forEach(key => {
+      list.push({
+        name: key,
+        value: data[key],
+      })
+    })
+    JSON.stringify(data) !== '{}' &&
+      this.setState(
+        {
+          type: ConstToolType.MAP3D_ATTRIBUTE,
+          data: list,
+          buttons: [],
+          // height: ConstToolType.HEIGHT[0],
+          // column: data.length,
+          containerType: 'list',
+        },
+        () => {
+          // this.createCollector(type)
+          this.height = ConstToolType.HEIGHT[1]
+          this.showToolbar()
+        },
+      )
+  }
+
   /** 三维分类点击事件*/
-  showMap3DTool = type => {
-    let { data, buttons } = this.getData(type)
-    this.setState(
-      {
-        type: type,
-        data: data,
-        buttons: buttons,
-        // height: ConstToolType.HEIGHT[0],
-        column: data.length,
-      },
-      () => {
-        this.height = ConstToolType.HEIGHT[0]
-        // this.createCollector(type)
-        this.showToolbar()
-      },
-    )
+  showMap3DTool = async type => {
+    if (type === ConstToolType.MAP3D_TOOL_FLYLIST) {
+      let { data, buttons } = await this.getflylist()
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          // height: ConstToolType.HEIGHT[0],
+          // column: data.length,
+          containerType: 'list',
+        },
+        () => {
+          // this.createCollector(type)
+          this.height = ConstToolType.HEIGHT[1]
+          this.showToolbar()
+        },
+      )
+    } else {
+      let { data, buttons } = this.getData(type)
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          // height: ConstToolType.HEIGHT[0],
+          column: data.length,
+          containerType: 'table',
+        },
+        () => {
+          // this.createCollector(type)
+          switch (type) {
+            case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
+              this.height = ConstToolType.HEIGHT[0]
+              this.showToolbar()
+              break
+            case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
+              this.height = ConstToolType.HEIGHT[0]
+              this.showToolbar()
+              break
+            case ConstToolType.MAP3D_TOOL_FLY:
+              this.height = ConstToolType.HEIGHT[0]
+              this.showToolbar()
+              break
+            default:
+              this.height = 0
+              this.showToolbar()
+              break
+          }
+        },
+      )
+    }
   }
 
   /** 拍照 **/
@@ -614,6 +731,7 @@ export default class ToolBar extends React.Component {
         },
         () => {
           this.showToolbar(isShow)
+          this.listenevent && SScene.clearSelection()
           !isShow && this.props.existFullMap && this.props.existFullMap()
         },
       )
@@ -650,6 +768,26 @@ export default class ToolBar extends React.Component {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  clearsymbol = () => {
+    this.attributeListen()
+    SScene.clearAllLabel()
+    this.showToolbar(false)
+    this.props.existFullMap && this.props.existFullMap()
+  }
+
+  symbolsave = () => {
+    try {
+      SScene.save()
+      Toast.show('保存成功')
+    } catch (error) {
+      Toast.show('保存失败')
+    }
+  }
+
+  symbolback = () => {
+    SScene.back()
+  }
+
   commit = () => {
     this.showToolbar(false)
     this.props.existFullMap && this.props.existFullMap()
@@ -663,6 +801,37 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = !this.isBoxShow
   }
 
+  closeAnalyst = () => {
+    // console.log(this.addlistener)
+    // this.addlistener&&this.addlistener.remove()
+    this.MeasureListener && this.MeasureListener.remove()
+    SAnalyst.closeAnalysis()
+    this.showToolbar(false)
+    this.props.existFullMap && this.props.existFullMap()
+  }
+
+  clear = () => {
+    switch (this.state.type) {
+      case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
+        SAnalyst.clearSquareAnalyst()
+        break
+      case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
+        SAnalyst.clearLineAnalyst()
+        break
+      default:
+        SAnalyst.clear()
+        break
+    }
+  }
+
+  endfly = () => {
+    SScene.flyStop()
+  }
+
+  setfly = index => {
+    SScene.setPosition(index)
+    this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
+  }
   renderListItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -729,6 +898,30 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  itemaction = async item => {
+    switch (item.key) {
+      case 'psDistance':
+        item.action({
+          callback: (result, listener) => {
+            Toast.show(result + '米')
+            this.MeasureListener = listener
+          },
+        })
+        break
+      case 'spaceSuerface':
+        item.action({
+          callback: (result, listener) => {
+            Toast.show(result + '平方米')
+            this.MeasureListener = listener
+          },
+        })
+        break
+      default:
+        item.action()
+        break
+    }
+  }
+
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     return (
       <MTBtn
@@ -738,13 +931,21 @@ export default class ToolBar extends React.Component {
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
-        onPress={item.action}
+        onPress={() => {
+          this.itemaction(item)
+        }}
       />
     )
   }
 
   renderMap3DList = () => {
-    return <Map3DToolBar data={this.state.data} type={this.state.type} />
+    return (
+      <Map3DToolBar
+        data={this.state.data}
+        type={this.state.type}
+        setfly={this.setfly}
+      />
+    )
   }
 
   renderView = () => {
@@ -755,7 +956,12 @@ export default class ToolBar extends React.Component {
           case 'MAP3D_BASE':
             box = this.renderMap3DList()
             break
-
+          case 'MAP3D_TOOL_FLYLIST':
+            box = this.renderMap3DList()
+            break
+          case 'MAP3D_ATTRIBUTE':
+            box = this.renderMap3DList()
+            break
           default:
             box = this.renderList()
             break
@@ -832,8 +1038,80 @@ export default class ToolBar extends React.Component {
             ),
           )
           break
+        case closeAnalyst:
+          {
+            btns.push(
+              this.renderBottomBtn(
+                {
+                  image: require('../../../../assets/mapEdit/cancel.png'),
+                  action: this.closeAnalyst,
+                },
+                index,
+              ),
+            )
+          }
+          break
+        case clear:
+          {
+            btns.push(
+              this.renderBottomBtn(
+                {
+                  image: require('../../../../assets/mapEdit/cancel.png'),
+                  action: this.clear,
+                },
+                index,
+              ),
+            )
+          }
+          break
+        case endfly:
+          {
+            btns.push(
+              this.renderBottomBtn(
+                {
+                  image: require('../../../../assets/mapEdit/cancel.png'),
+                  action: this.endfly,
+                },
+                index,
+              ),
+            )
+          }
+          break
         case placeholder:
           btns.push(<View style={{ flex: 1 }} key={type + '-' + index} />)
+          break
+        case back:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/commit.png'),
+                action: this.symbolback,
+              },
+              index,
+            ),
+          )
+          break
+        case save:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/commit.png'),
+                action: this.symbolsave,
+              },
+              index,
+            ),
+          )
+          break
+        case clearsymbol:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/commit.png'),
+                action: this.clearsymbol,
+              },
+              index,
+            ),
+          )
           break
       }
     })

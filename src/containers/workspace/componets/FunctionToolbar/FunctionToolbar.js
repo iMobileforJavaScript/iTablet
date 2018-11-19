@@ -186,17 +186,24 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DSymbol = () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox内容
-      toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
-        containerType: 'table',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.HEIGHT[1],
-      })
-    }
+    SScene.initsymbol().then(
+      () => {
+        const toolRef = this.props.getToolRef()
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox内容
+          toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+            containerType: 'table',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.HEIGHT[1],
+          })
+        }
+      },
+      () => {
+        Toast.show('请打开工作场景')
+      },
+    )
   }
 
   showCollection = () => {
