@@ -98,12 +98,12 @@ android {
         release_config {
             keyAlias 'supermap'
             keyPassword 'supermap321'
-            storeFile file('/Users/jiushuaizhao/Desktop/iTablet-master/android/keystores/release.keystore')
+            storeFile file('../keystores/release.keystore')
             storePassword 'supermap123'
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '28.0.2'
+    buildToolsVersion "23.0.1"
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16

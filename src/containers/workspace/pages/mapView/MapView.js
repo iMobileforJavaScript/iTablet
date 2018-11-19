@@ -663,7 +663,9 @@ export default class MapView extends React.Component {
 
   back = () => {
     // this.mapToolbar.setCurrent(0)
+    this.setLoading(true, '正在关闭')
     SMap.closeWorkspace().then(result => {
+      this.setLoading(false)
       result && NavigationService.goBack()
     })
     return true

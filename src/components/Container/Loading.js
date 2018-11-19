@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  View,
-  ActivityIndicator,
-  StyleSheet,
-  Modal,
-  Text,
-  Platform,
-} from 'react-native'
+import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
 import { scaleSize } from '../../utils'
 export const NORMAL = 'NORMAL'
 
@@ -29,7 +22,8 @@ export default class Loading extends Component {
   static defaultProps = {
     initLoading: true,
     bgColor: 'transparent',
-    indicatorSize: Platform.OS === 'ios' ? 'small' : 'large',
+    // indicatorSize: Platform.OS === 'ios' ? 'small' : 'large',
+    indicatorSize: 'large',
     indicatorColor: 'white',
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE', // BLACK_WITH_TITLE   NORMAL
