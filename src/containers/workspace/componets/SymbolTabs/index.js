@@ -2,6 +2,7 @@ import * as React from 'react'
 import { StyleSheet, View } from 'react-native'
 import { color, size } from '../../../../styles'
 import DefaultTabBar from './DefaultTabBar'
+// eslint-disable-next-line
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import GroupTab from './GroupTab'
 import TemplateTab from './TemplateTab'

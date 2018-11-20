@@ -51,12 +51,6 @@ export default class Map3D extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     this._addScene()
-    SScene.getAttribute()
-    this.listenevent = SScene.addListener({
-      callback: result => {
-        this.result = result
-      },
-    })
   }
 
   //  addListen=()=>{

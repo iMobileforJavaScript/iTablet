@@ -1,10 +1,17 @@
 import * as React from 'react'
 import styles from './styles'
-import { View, TouchableOpacity, Text, SectionList } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  SectionList,
+  FlatList,
+} from 'react-native'
 export default class Map3DToolBar extends React.Component {
   props: {
-    type: String,
+    type: string,
     data: Array,
+    setfly: () => {},
   }
   constructor(props) {
     super(props)
@@ -13,8 +20,16 @@ export default class Map3DToolBar extends React.Component {
       type: props.type,
     }
   }
+  // eslint-disable-next-line
+  componentWillReceiveProps(nextProps) {
+    if (JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data)) {
+      this.setState({
+        data: nextProps.data,
+      })
+    }
+  }
 
-  renderListItem = ({ item }) => {
+  renderListItem = ({ item, index }) => {
     if (this.props.type === 'MAP3D_BASE') {
       if (item.show) {
         return (
@@ -29,6 +44,17 @@ export default class Map3DToolBar extends React.Component {
     if (this.props.type === 'MAP3D_ADD_LAYER') {
       return (
         <TouchableOpacity>
+          <Text style={styles.item}>{item.title}</Text>
+        </TouchableOpacity>
+      )
+    }
+    if (this.props.type === 'MAP3D_TOOL_FLYLIST') {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.props.setfly(index)
+          }}
+        >
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
@@ -51,6 +77,9 @@ export default class Map3DToolBar extends React.Component {
     if (this.props.type === 'MAP3D_ADD_LAYER') {
       return <View />
     }
+    if (this.props.type === 'MAP3D_TOOL_FLYLIST') {
+      return <Text style={styles.sectionHeader}>{section.title}</Text>
+    }
   }
 
   renderItemSeparatorComponent = () => {
@@ -67,15 +96,52 @@ export default class Map3DToolBar extends React.Component {
     })
   }
 
-  render() {
+  renderItem = ({ item }) => {
+    // Object.keys(this.state.data).forEach(key=>{
+    // attribute.push(
+    // <View style={styles.row}>
+    // <Text style={styles.name}>{item.name}</Text>
+    // <Text style={styles.value}>{item.value}</Text>
+    // </View>
     return (
-      <SectionList
-        sections={this.state.data}
-        renderItem={this.renderListItem}
-        renderSectionHeader={this.renderListSectionHeader}
-        SectionSeparatorComponent={this.renderItemSeparatorComponent}
-        keyExtractor={(item, index) => index}
-      />
+      <View style={styles.row}>
+        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.value}>{item.value}</Text>
+      </View>
     )
+    //   )
+    // })
+    // this.state.data.forEach(element => {
+    //   attribute.push(
+    //     <View>
+    //     <Text>{element}</Text>
+    //     <Text>{this.state.data[element]}</Text>
+    //     </View>
+    //   )
+    // });
+    // return attribute
+    //  return (<View style={styles.container}></View>)
+  }
+
+  render() {
+    if (this.props.type === 'MAP3D_ATTRIBUTE') {
+      return (
+        <FlatList
+          data={this.state.data}
+          renderItem={this.renderItem}
+          keyExtractor={(item, index) => index}
+        />
+      )
+    } else {
+      return (
+        <SectionList
+          sections={this.state.data}
+          renderItem={this.renderListItem}
+          renderSectionHeader={this.renderListSectionHeader}
+          SectionSeparatorComponent={this.renderItemSeparatorComponent}
+          keyExtractor={(item, index) => index}
+        />
+      )
+    }
   }
 }

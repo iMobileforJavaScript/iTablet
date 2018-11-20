@@ -18,6 +18,24 @@ export default StyleSheet.create({
   },
   Separator: {
     flex: 1,
-    height: scaleSize(10),
+    height: scaleSize(15),
+  },
+  name: {
+    width: scaleSize(150),
+    height: scaleSize(50),
+    fontSize: scaleSize(22),
+    color: 'white',
+  },
+  value: {
+    width: scaleSize(150),
+    height: scaleSize(50),
+    fontSize: scaleSize(22),
+    color: 'white',
+  },
+  row: {
+    flexDirection: 'row',
+  },
+  container: {
+    flex: 1,
   },
 })
