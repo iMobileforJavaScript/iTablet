@@ -358,7 +358,7 @@ public class GridStyleFragment extends Fragment implements ScrollerMenu.Scroller
             if (layer.getAdditionalSetting() != null && layer.getAdditionalSetting() instanceof LayerSettingGrid) {
                 LayerSettingGrid layerSettingGrid = (LayerSettingGrid) layer.getAdditionalSetting();
                 if (layerSettingGrid != null) {
-                    layerSettingGrid.setOpaqueRate(100 - gridOpaqueRate);
+//                    layerSettingGrid.setOpaqueRate(100 - gridOpaqueRate);
                     mapView.getMapControl().getMap().refresh();
 
                     this.gridOpaqueRate = gridOpaqueRate;
@@ -387,7 +387,7 @@ public class GridStyleFragment extends Fragment implements ScrollerMenu.Scroller
             if (layer.getAdditionalSetting() != null && layer.getAdditionalSetting() instanceof LayerSettingGrid) {
                 LayerSettingGrid layerSettingGrid = (LayerSettingGrid) layer.getAdditionalSetting();
                 if (layerSettingGrid != null) {
-                    layerSettingGrid.setBrightness(gridBrightness);
+//                    layerSettingGrid.setBrightness(gridBrightness);
                     mapView.getMapControl().getMap().refresh();
 
                     this.gridBrightness = gridBrightness;
@@ -416,7 +416,7 @@ public class GridStyleFragment extends Fragment implements ScrollerMenu.Scroller
             if (layer.getAdditionalSetting() != null && layer.getAdditionalSetting() instanceof LayerSettingGrid) {
                 LayerSettingGrid layerSettingGrid = (LayerSettingGrid) layer.getAdditionalSetting();
                 if (layerSettingGrid != null) {
-                    layerSettingGrid.setContrast(progress);
+//                    layerSettingGrid.setContrast(progress);
                     mapView.getMapControl().getMap().refresh();
 
                     this.gridContrast = gridContrast;
