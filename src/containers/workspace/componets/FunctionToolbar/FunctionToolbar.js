@@ -79,10 +79,21 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_BASE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-      })
+
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_BASE, {
+            containerType: 'list',
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+            height: ConstToolType.HEIGHT[3],
+          })
+          break
+      }
     }
   }
 
@@ -133,24 +144,57 @@ export default class FunctionToolbar extends React.Component {
     await SScene.flyStop()
   }
 
-  showAddLayer = async () => {}
-
-  showSymbol = () => {
-    // const toolRef = this.props.getToolRef()
-    // if (toolRef) {
-    //   this.props.showFullMap && this.props.showFullMap(true)
-    //   toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
-    //     isFullScreen: false,
-    //   })
-    // }
+  showAddLayer = async () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox内容
-      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION_POINT, {
-        isFullScreen: false,
+
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+            containerType: 'list',
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+          })
+          break
+      }
+    }
+  }
+
+  showSymbol = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+        isFullScreen: true,
+        height: ConstToolType.HEIGHT[3],
       })
     }
+  }
+
+  showMap3DSymbol = () => {
+    SScene.initsymbol().then(
+      () => {
+        const toolRef = this.props.getToolRef()
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox内容
+          toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+            containerType: 'table',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.HEIGHT[1],
+          })
+        }
+      },
+      () => {
+        Toast.show('请打开工作场景')
+      },
+    )
   }
 
   showCollection = () => {
@@ -201,14 +245,36 @@ export default class FunctionToolbar extends React.Component {
 
   Tagging = async () => {
     const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.HEIGHT[2],
-      })
+    switch (this.props.type) {
+      case 'MAP_3D':
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
+
+      case 'MAP_EDIT':
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox 编辑内容
+          toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.HEIGHT[2],
+          })
+        }
+        break
+
+      default:
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
     }
   }
 
@@ -299,18 +365,18 @@ export default class FunctionToolbar extends React.Component {
       case MAP_3D:
         data = [
           {
-            title: '量算',
+            title: '底图',
             action: this.changeBaseLayer,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
-            title: '面积',
-            action: this.add,
+            title: '添加',
+            action: this.showAddLayer,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             title: '标注',
-            action: this.showSymbol,
+            action: this.showMap3DSymbol,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
@@ -320,7 +386,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.closeAnalysis,
+            action: this.showMore,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
@@ -408,6 +474,38 @@ export default class FunctionToolbar extends React.Component {
         ]
         break
       case MAP_3D:
+        data = [
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
         break
       case COLLECTION:
       default:

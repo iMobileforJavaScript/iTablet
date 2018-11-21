@@ -11,46 +11,46 @@ export default StyleSheet.create({
     flex: 1,
     // alignItems: 'center',
     justifyContent: 'center',
-    borderStyle:'solid',
-    borderTopWidth:0,
-    borderLeftWidth:0,
-    borderRightWidth:0,
-    borderBottomWidth:1,
-    borderColor:'#bbbbbb',
+    borderStyle: 'solid',
+    borderTopWidth: 0,
+    borderLeftWidth: 0,
+    borderRightWidth: 0,
+    borderBottomWidth: 1,
+    borderColor: '#bbbbbb',
     height: scaleSize(80),
   },
   rowOne: {
     // flex: 1,
     height: scaleSize(80),
     padding: scaleSize(6),
-    flexDirection:'row',
-    alignItems:'center',
+    flexDirection: 'row',
+    alignItems: 'center',
     // justifyContent:'space-between',
   },
-  btn_container:{
+  btn_container: {
     // height: scaleSize(80),
     // width:46*3,
     alignItems: 'center',
-    flexDirection:'row',
+    flexDirection: 'row',
     // justifyContent:'space-between',
   },
-  btn:{
-    height: scaleSize(60),
-    width: scaleSize(60),
+  btn: {
+    height: scaleSize(50),
+    width: scaleSize(50),
     marginLeft: scaleSize(6),
     marginRight: scaleSize(6),
     justifyContent: 'center',
     alignItems: 'center',
   },
-  btn_image:{
+  btn_image: {
     height: scaleSize(40),
     width: scaleSize(40),
   },
-  btn_image_samll:{
+  btn_image_samll: {
     height: scaleSize(30),
     width: scaleSize(30),
   },
-  btnImage:{
+  btnImage: {
     // height: scaleSize(40),
     width: scaleSize(40),
   },
@@ -62,19 +62,19 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  text_container:{
+  text_container: {
     // height:40,
     // width: scaleSize(),
     marginLeft: scaleSize(30),
   },
   text: {
-    fontSize: size.fontSize.fontSizeMd,
+    fontSize: size.fontSize.fontSizeSm,
     backgroundColor: 'transparent',
   },
   rowTwo: {
     height: scaleSize(90),
-    width:constUtil.WIDTH,
-    backgroundColor:'white',
+    width: constUtil.WIDTH,
+    backgroundColor: 'white',
   },
   samllImage: {
     width: scaleSize(20),

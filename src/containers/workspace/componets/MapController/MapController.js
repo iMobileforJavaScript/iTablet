@@ -71,6 +71,10 @@ export default class MapController extends React.Component {
   }
 
   location = () => {
+    if (this.props.type === 'MAP_3D') {
+      SScene.setHeading()
+      return
+    }
     SMap.moveToCurrent()
   }
 
