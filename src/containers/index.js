@@ -36,6 +36,7 @@ import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
 import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
+import TouchProgress from './workspace/componets/TouchProgress'
 
 export default StackNavigator(
   {
@@ -239,6 +240,12 @@ export default StackNavigator(
     },
     MapToolbarSetting: {
       screen: MapToolbarSetting,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    TouchProgress: {
+      screen: TouchProgress,
       navigationOptions: {
         header: null,
       },

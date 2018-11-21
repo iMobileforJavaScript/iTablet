@@ -34,6 +34,98 @@ function getEditData(type) {
     buttons = []
   if (type.indexOf('MAP_EDIT_') === -1) return { data, buttons }
   switch (type) {
+    case ConstToolType.MAP_EDIT_TAGGING:
+      data = [
+        {
+          key: constants.POINT,
+          title: constants.POINT,
+          action: point,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: constants.WORDS,
+          title: constants.WORDS,
+          size: 'large',
+          action: words,
+          image: require('../../../../assets/mapTools/icon_words.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        },
+        {
+          key: constants.POINTLINE,
+          title: constants.POINTLINE,
+          size: 'large',
+          action: pointline,
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
+        {
+          key: constants.FREELINE,
+          title: constants.FREELINE,
+          size: 'large',
+          action: freeline,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+        {
+          key: constants.POINTCOVER,
+          title: constants.POINTCOVER,
+          size: 'large',
+          action: pointcover,
+          image: require('../../../../assets/mapTools/icon_point_cover.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_cover.png'),
+        },
+        {
+          key: constants.FREECOVER,
+          title: constants.FREECOVER,
+          size: 'large',
+          action: freecover,
+          image: require('../../../../assets/mapTools/icon_free_cover.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_cover.png'),
+        },
+        {
+          key: constants.COMMONTRACK,
+          title: constants.COMMONTRACK,
+          size: 'large',
+          action: addNode,
+          image: require('../../../../assets/mapTools/icon_common_track.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_common_track.png'),
+        },
+        {
+          key: constants.ROADTRACK,
+          title: constants.ROADTRACK,
+          size: 'large',
+          action: eraseRegion,
+          image: require('../../../../assets/mapTools/icon_road_track.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_road_track.png'),
+        },
+        {
+          key: constants.EQUALTRACK,
+          title: constants.EQUALTRACK,
+          size: 'large',
+          action: splitRegion,
+          image: require('../../../../assets/mapTools/icon_equal_track.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_equal_track.png'),
+        },
+        {
+          key: constants.TIMETRACK,
+          title: constants.TIMETRACK,
+          size: 'large',
+          action: merge,
+          image: require('../../../../assets/mapTools/icon_time_track.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_time_track.png'),
+        },
+        {
+          key: constants.INTELLIGENCETRACK,
+          title: constants.INTELLIGENCETRACK,
+          size: 'large',
+          action: drawRegionEraseRegion,
+          image: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+        },
+      ]
+      break
     case ConstToolType.MAP_EDIT_POINT:
       data = [
         // { key: '选择', action: select },
@@ -283,7 +375,7 @@ function getEditData(type) {
       ]
       break
   }
-  buttons = ['cancel', 'flex', 'placeholder']
+  buttons = ['cancel', 'flex', 'commit']
   return { data, buttons }
 }
 
@@ -373,6 +465,30 @@ async function mapSubmit() {
 
 function collectionSubmit(type) {
   return SCollector.submit(type)
+}
+
+function point() {
+  return SMap.setAction(Action.CREATEPOINT)
+}
+
+function words() {
+  return SMap.setAction(Action.CREATEPLOT)
+}
+
+function pointline() {
+  return SMap.setAction(Action.CREATEPOLYLINE)
+}
+
+function freeline() {
+  return SMap.setAction(Action.DRAWLINE)
+}
+
+function pointcover() {
+  return SMap.setAction(Action.CREATEPOLYGON)
+}
+
+function freecover() {
+  return SMap.setAction(Action.DRAWPLOYGON)
 }
 
 function move() {

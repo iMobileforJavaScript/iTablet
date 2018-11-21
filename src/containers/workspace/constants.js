@@ -28,6 +28,17 @@ export default {
   TRACK: '追踪分析',
   DISTANCECALCULATE: '距离量算',
   ACREAGECALCULATE: '面积量算',
+  POINT: '打点',
+  WORDS: '文字',
+  POINTLINE: '点绘线',
+  FREELINE: '自由线',
+  POINTCOVER: '点绘面',
+  FREECOVER: '自由面',
+  COMMONTRACK: '普通模式轨迹',
+  ROADTRACK: '抓路模式轨迹',
+  EQUALTRACK: '等距模式轨迹',
+  TIMETRACK: '等时模式轨迹',
+  INTELLIGENCETRACK: '智能模式轨迹',
 
   // =====================================
 

@@ -27,8 +27,10 @@ export default {
   MAP_EDIT_POINT: 'MAP_EDIT_POINT',
   MAP_EDIT_LINE: 'MAP_EDIT_LINE',
   MAP_EDIT_REGION: 'MAP_EDIT_REGION',
+  MAP_EDIT_TAGGING: 'MAP_EDIT_TAGGING',
   MAP_TOOL: 'MAP_TOOL',
+  MAP_STYLE: 'MAP_STYLE',
 
   // 工具视图高度级别
-  HEIGHT: [scaleSize(100), scaleSize(250), scaleSize(500)],
+  HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(500)],
 }

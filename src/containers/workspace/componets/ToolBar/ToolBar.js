@@ -4,7 +4,7 @@ import { color, zIndexLevel } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
 import { ConstToolType, BotMap, layerAdd } from '../../../../constants'
 import NavigationService from '../../../../containers/NavigationService'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, Action } from 'imobile_for_reactnative'
 import ToolbarData from './ToolbarData'
 import {
   View,
@@ -21,6 +21,7 @@ import {
   GeoStyle,
   SMCollectorType,
 } from 'imobile_for_reactnative'
+import TouchProgress from '../TouchProgress/TouchProgress'
 
 const list = 'list'
 const table = 'table'
@@ -110,7 +111,7 @@ export default class ToolBar extends React.Component {
         break
       case ConstToolType.MAP_ADD_LAYER:
         data = layerAdd
-        buttons = [cancel, placeholder, commit]
+        buttons = [cancel]
         break
       case ConstToolType.MAP_SYMBOL:
         buttons = [cancel]
@@ -303,7 +304,119 @@ export default class ToolBar extends React.Component {
         buttons = [cancel, flex]
         break
       case ConstToolType.MAP_TOOL:
-        buttons = [cancel, flex]
+        data = [
+          {
+            key: 'distanceComput',
+            title: '距离量算',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_point.png'),
+          },
+          {
+            key: 'coverComput',
+            title: '面积量算',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_words.png'),
+          },
+          {
+            key: 'azimuthComput',
+            title: '方位角量算',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_point_line.png'),
+          },
+          {
+            key: 'pointSelect',
+            title: '点选',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_free_line.png'),
+          },
+          {
+            key: 'boxSelect',
+            title: '框选',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_point_cover.png'),
+          },
+          {
+            key: 'roundSelect',
+            title: '圆选',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_free_cover.png'),
+          },
+          {
+            key: 'rectangularCut',
+            title: '矩形裁剪',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_common_track.png'),
+          },
+          {
+            key: 'roundCut',
+            title: '圆形裁剪',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_road_track.png'),
+          },
+          {
+            key: 'polygonCut',
+            title: '多边形裁剪',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_equal_track.png'),
+          },
+          {
+            key: 'selectCut',
+            title: '选中对象裁剪',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_time_track.png'),
+          },
+          {
+            key: 'magnifier',
+            title: '放大镜',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_intelligence_track.png'),
+          },
+          {
+            key: 'eagleChart',
+            title: '鹰眼图',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_eagle_chart.png'),
+          },
+          {
+            key: 'play',
+            title: '播放',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_play.png'),
+          },
+          {
+            key: 'fullAmplitude',
+            title: '全幅',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
+          },
+        ]
+        buttons = [cancel, flex, placeholder]
+        break
+      case ConstToolType.MAP_STYLE:
+        data = [
+          {
+            key: 'style',
+            title: '符号线1',
+            action: this.changeLayer,
+            size: 'large',
+            image: require('../../../../assets/mapTools/icon_point.png'),
+          },
+        ]
+        buttons = [cancel, flex, placeholder]
         break
     }
     return { data, buttons }
@@ -446,12 +559,20 @@ export default class ToolBar extends React.Component {
       SCollector.stopCollect()
     }
 
+    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+      SMap.setAction(Action.PAN)
+    }
+
     this.showToolbar(false)
     this.props.existFullMap && this.props.existFullMap()
   }
 
-  commit = () => {
+  commit = (type = this.originType) => {
     this.showToolbar(false)
+    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+      SMap.submit()
+      SMap.setAction(Action.PAN)
+    }
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -485,8 +606,9 @@ export default class ToolBar extends React.Component {
         let udbpath = {
           server: this.path,
           alias: item.title,
+          engineType: 219,
         }
-        await SMap.openUDBDatasource(udbpath, index)
+        await SMap.openDatasource(udbpath, index)
       }.bind(this)())
     }
   }
@@ -606,7 +728,7 @@ export default class ToolBar extends React.Component {
             this.renderBottomBtn(
               {
                 image: require('../../../../assets/mapEdit/commit.png'),
-                action: this.commit,
+                action: () => this.commit(),
               },
               index,
             ),
@@ -633,6 +755,9 @@ export default class ToolBar extends React.Component {
             style={styles.overlay}
           />
         )}
+        <View style={{ flex: 1 }}>
+          <TouchProgress />
+        </View>
         <View style={styles.containers}>
           {this.renderView()}
           {this.renderBottomBtns()}

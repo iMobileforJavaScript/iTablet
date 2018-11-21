@@ -14,7 +14,60 @@ export default {
       alias: 'label',
     },
     layerIndex: 0,
-    mapName: '天地图',
+    mapName: '天地图(墨卡托)',
+  },
+  TDJWD: {
+    type: 'ONLINE',
+    DSParams: {
+      server: 'http://t0.tianditu.com/vec_c/wmts',
+      engineType: 23,
+      driver: 'WMTS',
+      alias: 'baseMap',
+    },
+    labelDSParams: {
+      server: 'http://t0.tianditu.com/cva_c/wmts',
+      engineType: 23,
+      driver: 'WMTS',
+      alias: 'label',
+    },
+    layerIndex: 0,
+    mapName: '天地图（经纬度）',
+  },
+  TDYX: {
+    type: 'ONLINE',
+    DSParams: {
+      server: 'http://t0.tianditu.com/img_c/wmts',
+      engineType: 23,
+      driver: 'WMTS',
+      alias: 'baseMap',
+    },
+    labelDSParams: false,
+    layerIndex: 0,
+    mapName: '天地图（影像经纬度）',
+  },
+  TDYXM: {
+    type: 'ONLINE',
+    DSParams: {
+      server: 'http://t0.tianditu.com/img_w/wmts',
+      engineType: 23,
+      driver: 'WMTS',
+      alias: 'baseMap',
+    },
+    labelDSParams: false,
+    layerIndex: 0,
+    mapName: '天地图（影像墨卡托）',
+  },
+  TDQ: {
+    type: 'ONLINE',
+    DSParams: {
+      server: 'http://t0.tianditu.com/ter_c/wmts',
+      engineType: 23,
+      driver: 'WMTS',
+      alias: 'baseMap',
+    },
+    labelDSParams: false,
+    layerIndex: 0,
+    mapName: '天地图（全球地形）',
   },
   Baidu: {
     type: 'ONLINE',
@@ -48,5 +101,16 @@ export default {
     labelDSParams: false,
     layerIndex: 0,
     mapName: 'OSM',
+  },
+  SuperMapCloud: {
+    type: 'ONLINE',
+    DSParams: {
+      server: 'http://t2.supermapcloud.com',
+      engineType: 224,
+      alias: 'baseMap',
+    },
+    labelDSParams: false,
+    layerIndex: 0,
+    mapName: 'SuperMapCloud',
   },
 }
