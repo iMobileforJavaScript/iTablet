@@ -4,13 +4,14 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Animated, Platform, NativeModules } from 'react-native'
+import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
+import NavigationService from '../../../NavigationService'
 import { SAnalyst, SScene, SMap, Action } from 'imobile_for_reactnative'
 import Toast from 'react-native-root-toast'
 
@@ -19,10 +20,6 @@ const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
 const MAP_3D = 'MAP_3D'
 const MAP_EDIT = 'MAP_EDIT'
-const openNativeSampleCode =
-  Platform.OS === 'ios'
-    ? NativeModules.SMSampleCodeBridgeModule
-    : NativeModules.IntentModule
 export { COLLECTION, NETWORK, EDIT }
 
 export default class FunctionToolbar extends React.Component {
@@ -93,6 +90,7 @@ export default class FunctionToolbar extends React.Component {
         default:
           toolRef.setVisible(true, ConstToolType.MAP_BASE, {
             containerType: 'list',
+            height: ConstToolType.HEIGHT[3],
           })
           break
       }
@@ -127,7 +125,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
         isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.HEIGHT[3],
       })
     }
   }
@@ -191,7 +189,23 @@ export default class FunctionToolbar extends React.Component {
     this.moreToolbar && this.moreToolbar.showMore(true, e)
   }
 
-  showTool = () => {
+  showTool = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[2],
+      })
+    }
+  }
+
+  mapStyle = () => {
+    NavigationService.navigate('TouchProgress')
+  }
+
+  Tagging = async () => {
     const toolRef = this.props.getToolRef()
     switch (this.props.type) {
       case 'MAP_3D':
@@ -206,6 +220,18 @@ export default class FunctionToolbar extends React.Component {
           this.props.showFullMap && this.props.showFullMap(true)
           toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
             isFullScreen: false,
+          })
+        }
+        break
+
+      case 'MAP_EDIT':
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox 编辑内容
+          toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.HEIGHT[2],
           })
         }
         break
@@ -233,10 +259,6 @@ export default class FunctionToolbar extends React.Component {
 
   Label = () => {
     this.props.Label()
-  }
-
-  mapStyle = () => {
-    openNativeSampleCode.open('Layer')
   }
 
   /** 二级事件 **/
@@ -275,7 +297,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '标注',
             title: '标注',
-            action: this.showSymbol,
+            action: this.Tagging,
             size: 'large',
             image: require('../../../../assets/function/icon_function_Tagging.png'),
             selectMode: 'flash',
