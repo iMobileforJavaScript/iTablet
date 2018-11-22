@@ -11,7 +11,7 @@ import NavigationService from '../../NavigationService' //导航模块
 import { Container, TextBtn, BtnTwo } from '../../../components'
 import Input from './Input'
 import Tips from './Tips'
-import { OnlineService } from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 import forge from 'node-forge'
 
 export default class Login extends React.Component {
@@ -43,7 +43,7 @@ export default class Login extends React.Component {
     }
     this.container.setLoading(true, '登录中')
     try {
-      let result = await new OnlineService().login(userName, password)
+      let result = await new SOnlineService().login(userName, password)
       this.container.setLoading(false)
       if (typeof result === 'boolean' && result) {
         Toast.show('登录成功')
