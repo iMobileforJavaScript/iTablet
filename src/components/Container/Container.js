@@ -85,7 +85,7 @@ export default class Container extends PureComponent {
       <AnimatedView
         style={[fixHeader && styles.fixHeader, { top: this.state.top }]}
       >
-        this.props.header
+        {this.props.header}
       </AnimatedView>
     ) : (
       <Header

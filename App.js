@@ -83,13 +83,11 @@ class AppRoot extends Component {
   // 初始化文件目录
   initDirectories = async () => {
     try {
-      let paths = [
-        ConstPath.AppPath, ConstPath.LicensePath, ConstPath.LocalDataPath,
-        ConstPath.SampleDataPath, ConstPath.UserPath, ConstPath.Audio,
-      ]
+      let paths = Object.keys(ConstPath)
       let isCreate = false, absolutePath = ''
       for (let i = 0; i < paths.length; i++) {
-        absolutePath = await Utility.appendingHomeDirectory(paths[i])
+        let path = ConstPath[paths[i]]
+        absolutePath = await Utility.appendingHomeDirectory(path)
         isCreate = await Utility.createDirectory(absolutePath)
       }
       if (!isCreate) {

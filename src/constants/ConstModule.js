@@ -1,8 +1,10 @@
 import NavigationService from '../containers/NavigationService'
 import constants from '../containers/workspace/constants'
 import ConstOnline from './ConstOnline'
-import { Utility } from 'imobile_for_reactnative'
+import { Utility, SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
+
+let count = 0
 
 export default [
   {
@@ -37,6 +39,18 @@ export default [
     title: '导航地图',
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_navigation.png'),
+    action: () => {
+      Utility.appendingHomeDirectory(ConstPath.CustomerPath).then(path => {
+        SMap.saveWorkspace({
+          caption: 'Customer',
+          type: WorkspaceType.SMWU,
+          // version: 1.0,
+          server: path,
+          user: '321',
+          password: '123',
+        })
+      })
+    },
   },
   {
     key: '专题地图',
@@ -51,10 +65,12 @@ export default [
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async () => {
       // NavigationService.navigate('MapView', ConstOnline['Baidu'])
-      let path = ConstPath.LocalDataPath + 'beijing_new/beijing.smwu'
+      // let path = ConstPath.LocalDataPath + 'beijing_new/beijing.smwu'
+      let path = ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
       let filePath = await Utility.appendingHomeDirectory(path)
       let exist = await Utility.fileIsExistInHomeDirectory(path)
-      if (exist) {
+      count++
+      if (exist && count % 2 === 1) {
         // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
         NavigationService.navigate('MapView', {
           path: filePath,

@@ -16,7 +16,7 @@ import com.android.build.OutputFile
  *   bundleAssetName: "index.android.bundle",
  *
  *   // the entry file for bundle generation
- *   entryFile: "index.android.js",
+ *   entryFile: "index.android.js",keystores
  *
  *   // whether to bundle JS and assets in debug mode
  *   bundleInDebug: false,
@@ -103,7 +103,7 @@ android {
         }
     }
     compileSdkVersion 27
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
@@ -161,6 +161,7 @@ dependencies {
     compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'io.reactivex.rxjava2:rxjava:2.0.5'
     compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.3@aar'
+
 }
 
 // Run this once to be able to run the application with BUCK
