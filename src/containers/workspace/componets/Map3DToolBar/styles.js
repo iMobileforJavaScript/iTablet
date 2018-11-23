@@ -21,7 +21,7 @@ export default StyleSheet.create({
     height: scaleSize(15),
   },
   name: {
-    width: scaleSize(150),
+    width: scaleSize(200),
     height: scaleSize(50),
     fontSize: scaleSize(22),
     color: 'white',
