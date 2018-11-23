@@ -32,21 +32,12 @@ export default class FunctionToolbar extends React.Component {
     direction?: string,
     separator?: number,
     type: string,
-    mapControl: any,
-    mapView: any,
-    workspace: any,
-    map: any,
-    editLayer: any,
-    selection: any,
-    setLoading: () => {},
     data?: Array,
-    showLayers: () => {},
-    // showTool: () => {},
     Label: () => {},
-    changeLayer: () => {},
 
     getToolRef: () => {},
     showFullMap: () => {},
+    symbol: Object,
   }
 
   static defaultProps = {
@@ -203,10 +194,27 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox内容
-      toolRef.setVisible(true, ConstToolType.MAP_COLLECTION_REGION, {
-        isFullScreen: false,
-      })
+      let type = ''
+      switch (this.props.symbol.currentSymbol.type) {
+        case 'marker':
+          type = ConstToolType.MAP_COLLECTION_POINT
+          break
+        case 'line':
+          type = ConstToolType.MAP_COLLECTION_LINE
+          break
+        case 'fill':
+          type = ConstToolType.MAP_COLLECTION_REGION
+          break
+      }
+      // 选中符号后打开对应的采集界面
+      // 没有选择符号则打开符号选择界面
+      if (type) {
+        toolRef.setVisible(true, type, {
+          isFullScreen: false,
+        })
+      } else {
+        this.showSymbol()
+      }
     }
   }
 
@@ -384,14 +392,14 @@ export default class FunctionToolbar extends React.Component {
             action: this.add,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
-          {
-            title: '符号',
-            action: this.showSymbol,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   title: '符号',
+          //   action: this.showSymbol,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             title: '采集',
-            action: this.showCollection,
+            action: this.showSymbol,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {

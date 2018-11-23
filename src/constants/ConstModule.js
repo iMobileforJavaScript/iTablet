@@ -4,8 +4,6 @@ import ConstOnline from './ConstOnline'
 import { Utility, SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
 
-let count = 0
-
 export default [
   {
     key: '地图制图',
@@ -69,8 +67,7 @@ export default [
       let path = ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
       let filePath = await Utility.appendingHomeDirectory(path)
       let exist = await Utility.fileIsExistInHomeDirectory(path)
-      count++
-      if (exist && count % 2 === 1) {
+      if (exist) {
         // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
         NavigationService.navigate('MapView', {
           path: filePath,

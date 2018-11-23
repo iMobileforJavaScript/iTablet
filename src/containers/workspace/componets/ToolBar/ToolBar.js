@@ -61,6 +61,7 @@ export default class ToolBar extends React.Component {
     containerProps?: Object,
     data: Array,
     existFullMap: () => {},
+    symbol?: Object,
   }
 
   static defaultProps = {
@@ -550,36 +551,57 @@ export default class ToolBar extends React.Component {
   createCollector = type => {
     // 风格
     let geoStyle = new GeoStyle()
-    geoStyle.setPointColor(0, 255, 0)
-    //线颜色
-    geoStyle.setLineColor(0, 110, 220)
-    //面颜色
-    geoStyle.setFillForeColor(255, 0, 0)
-    //设置绘制风格
-    SCollector.setStyle(geoStyle)
+    // geoStyle.setPointColor(0, 255, 0)
+    // //线颜色
+    // geoStyle.setLineColor(0, 110, 220)
+    // //面颜色
+    // geoStyle.setFillForeColor(255, 0, 0)
     //
     // let style = await SCollector.getStyle()
     let mType
     switch (type) {
       case SMCollectorType.POINT_GPS:
-      case SMCollectorType.POINT_HAND:
+      case SMCollectorType.POINT_HAND: {
+        if (this.props.symbol.currentSymbol.type === 'marker') {
+          geoStyle.setMarkerStyle(this.props.symbol.currentSymbol.id)
+        }
         mType = DatasetType.POINT
         break
+      }
       case SMCollectorType.LINE_GPS_POINT:
       case SMCollectorType.LINE_GPS_PATH:
       case SMCollectorType.LINE_HAND_POINT:
-      case SMCollectorType.LINE_HAND_PATH:
+      case SMCollectorType.LINE_HAND_PATH: {
+        if (this.props.symbol.currentSymbol.type === 'line') {
+          geoStyle.setLineStyle(this.props.symbol.currentSymbol.id)
+        }
         mType = DatasetType.LINE
         break
+      }
       case SMCollectorType.REGION_GPS_POINT:
       case SMCollectorType.REGION_GPS_PATH:
       case SMCollectorType.REGION_HAND_POINT:
-      case SMCollectorType.REGION_HAND_PATH:
+      case SMCollectorType.REGION_HAND_PATH: {
+        if (this.props.symbol.currentSymbol.type === 'fill') {
+          geoStyle.setFillStyle(this.props.symbol.currentSymbol.id)
+        }
         mType = DatasetType.REGION
         break
+      }
     }
+    //设置绘制风格
+    SCollector.setStyle(geoStyle)
 
-    SCollector.setDataset('', mType).then(result => {
+    let datasetName = this.props.symbol.currentSymbol.type
+      ? this.props.symbol.currentSymbol.type +
+        '_' +
+        this.props.symbol.currentSymbol.id
+      : ''
+    SCollector.setDataset({
+      datasetName,
+      datasetType: mType,
+      style: geoStyle,
+    }).then(result => {
       result && SCollector.startCollect(type)
     })
   }
@@ -701,7 +723,7 @@ export default class ToolBar extends React.Component {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
-    if (this.isShow === isShow) return
+    if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
@@ -748,19 +770,22 @@ export default class ToolBar extends React.Component {
   }
 
   showToolbar = isShow => {
-    if (this.isShow === isShow) return
-    isShow = isShow === undefined ? true : isShow
-    Animated.timing(this.state.bottom, {
-      toValue: isShow ? 0 : -screen.deviceHeight,
-      duration: 300,
-    }).start()
-    // setTimeout(() => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: this.height,
-      duration: 300,
-    }).start()
-    // }, 300)
-    this.isShow = isShow
+    // Toolbar的显示和隐藏
+    if (this.isShow !== isShow) {
+      isShow = isShow === undefined ? true : isShow
+      Animated.timing(this.state.bottom, {
+        toValue: isShow ? 0 : -screen.deviceHeight,
+        duration: 300,
+      }).start()
+      this.isShow = isShow
+    }
+    // Box内容框的显示和隐藏
+    if (JSON.stringify(this.state.boxHeight) !== this.height.toString()) {
+      Animated.timing(this.state.boxHeight, {
+        toValue: this.height,
+        duration: 300,
+      }).start()
+    }
   }
 
   close = (type = this.originType) => {
@@ -928,7 +953,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderTabs = () => {
-    return <SymbolTabs style={styles.tabsView} />
+    return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
