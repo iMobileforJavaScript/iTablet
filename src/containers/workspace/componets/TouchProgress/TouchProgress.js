@@ -73,12 +73,10 @@ export default class TouchProgress extends Component {
 const styles = StyleSheet.create({
   box: {
     backgroundColor: '#rgba(0, 0, 0, 0)',
-    height: '100%',
-    width: '100%',
+    flex: 1,
   },
   container: {
-    // backgroundColor: '#rgba(0, 0, 0, 0)',
-    backgroundColor: 'white',
+    backgroundColor: '#rgba(0, 0, 0, 0)',
     flexDirection: 'column',
     height: scaleSize(40),
     justifyContent: 'center',
@@ -92,10 +90,10 @@ const styles = StyleSheet.create({
   },
   line: {
     position: 'absolute',
-    left: 0,
     height: scaleSize(10),
-    width: '100%',
+    width: '95%',
     backgroundColor: 'black',
+    marginLeft: 20,
   },
   image: {
     height: scaleSize(50),

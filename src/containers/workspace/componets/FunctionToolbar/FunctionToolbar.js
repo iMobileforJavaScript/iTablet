@@ -11,7 +11,6 @@ import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
-import NavigationService from '../../../NavigationService'
 import { SAnalyst, SScene, SMap, Action } from 'imobile_for_reactnative'
 import Toast from 'react-native-root-toast'
 
@@ -90,7 +89,7 @@ export default class FunctionToolbar extends React.Component {
         default:
           toolRef.setVisible(true, ConstToolType.MAP_BASE, {
             containerType: 'list',
-            height: ConstToolType.HEIGHT[3],
+            height: ConstToolType.HEIGHT[2],
           })
           break
       }
@@ -240,7 +239,15 @@ export default class FunctionToolbar extends React.Component {
   }
 
   mapStyle = () => {
-    NavigationService.navigate('TouchProgress')
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[2],
+      })
+    }
   }
 
   Tagging = async () => {
