@@ -97,6 +97,52 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  getFlyRouteNames = async () => {
+    this.list = await SScene.getFlyRouteNames()
+    await SScene.setPosition(this.list[0].index)
+  }
+
+  setMeasureLineAnalyst = async () => {
+    await SAnalyst.setMeasureLineAnalyst({
+      callback: result => {
+        // console.log(result + '米')
+        Toast.show(result + '米')
+      },
+    })
+  }
+
+  setMeasureSquareAnalyst = async () => {
+    await SAnalyst.setMeasureSquareAnalyst({
+      callback: result => {
+        // console.log(result + '平方米')
+        Toast.show(result + '平方米')
+      },
+    })
+  }
+
+  closeAnalysis = async () => {
+    await SAnalyst.closeAnalysis()
+  }
+
+  getFlyProgress = async () => {
+    await SScene.getFlyProgress({
+      callback: result => {
+        Toast.show(result)
+      },
+    })
+  }
+
+  flyPauseOrStart = async () => {
+    await SScene.flyPauseOrStart()
+  }
+
+  flyPause = async () => {
+    await SScene.flyPause()
+  }
+
+  flyStop = async () => {
+    await SScene.flyStop()
+  }
 
   showAddLayer = async () => {
     const toolRef = this.props.getToolRef()
@@ -130,14 +176,7 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  showMap3DSymbol = async () => {
-    SScene.getLayerList().then((layerList) => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        toolRef.getOldLayerList(layerList)
-        SScene.setAllLayersSelection(false)
-      }
-    })
+  showMap3DSymbol = () => {
     SScene.initsymbol().then(
       () => {
         const toolRef = this.props.getToolRef()
@@ -151,31 +190,11 @@ export default class FunctionToolbar extends React.Component {
             height: ConstToolType.HEIGHT[1],
           })
         }
-
       },
       () => {
         Toast.show('请打开工作场景')
       },
     )
-  }
-
-  showMap3DTool=async()=>{
-    SScene.getLayerList().then((layerList) => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-          containerType: 'table',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.HEIGHT[1],
-        })
-        toolRef.getOldLayerList(layerList)
-        SScene.setAllLayersSelection(false)
-      }
-
-    })
   }
 
   showCollection = () => {
@@ -228,13 +247,6 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     switch (this.props.type) {
       case 'MAP_3D':
-        SScene.getLayerList().then((layerList) => {
-          const toolRef = this.props.getToolRef()
-          if (toolRef) {
-            toolRef.getOldLayerList(layerList)
-            SScene.setAllLayersSelection(false)
-          }
-        })
         if (toolRef) {
           this.props.showFullMap && this.props.showFullMap(true)
           toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
@@ -281,17 +293,15 @@ export default class FunctionToolbar extends React.Component {
   }
 
   /** 二级事件 **/
-  openMap = () => { }
+  openMap = () => {}
 
-  closeMap = () => { }
+  closeMap = () => {}
 
-  save = () => { }
+  save = () => {}
 
-  saveAs = () => { }
+  saveAs = () => {}
 
-  recent = () => { }
-
-  share = () => { }
+  recent = () => {}
 
   /** 获取一级数据 **/
   getData = type => {
@@ -371,7 +381,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '工具',
-            action: this.showMap3DTool,
+            action: this.showTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {
@@ -465,16 +475,16 @@ export default class FunctionToolbar extends React.Component {
         break
       case MAP_3D:
         data = [
-          // {
-          //   title: '打开',
-          //   action: this.openMap(),
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   title: '关闭',
-          //   action: this.closeMap(),
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
           {
             title: '保存',
             action: this.save,

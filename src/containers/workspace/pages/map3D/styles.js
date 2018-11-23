@@ -27,28 +27,4 @@ export default StyleSheet.create({
     right: scaleSize(20),
     backgroundColor: color.white,
   },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: scaleSize(30),
-    height: scaleSize(80),
-  },
-  title: {
-    fontSize: scaleSize(20),
-    color: 'black',
-    width: scaleSize(160),
-  },
-  placeholder:{
-    marginLeft:scaleSize(160),
-    fontSize: scaleSize(18),
-    color: 'red',
-    width: scaleSize(160),
-  },
-  textInputStyle: {
-    flex: 1,
-    borderRadius: scaleSize(8),
-    borderWidth: scaleSize(1),
-    borderColor: 'white',
-  },
 })

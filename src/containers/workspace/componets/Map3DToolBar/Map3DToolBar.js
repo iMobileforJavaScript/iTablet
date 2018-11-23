@@ -7,8 +7,6 @@ import {
   SectionList,
   FlatList,
 } from 'react-native'
-import { SScene } from 'imobile_for_reactnative';
-import { Toast } from '../../../../utils';
 export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
@@ -31,28 +29,11 @@ export default class Map3DToolBar extends React.Component {
     }
   }
 
-  changeBaseMap=(url,type,name)=>{
-    switch (type) {
-      case "terrainLayer":
-        SScene.addTerrainLayer(url,name)
-        break;
-      case "WMTS":
-        SScene.changeBaseMap(null,url,type,name,"JPG_PNG",96.0,true)
-      break
-      case "l3dBingMaps":
-        SScene.changeBaseMap(null,url,type,name,"JPG_PNG",96.0,true)
-      break
-      default:
-        Toast.show("底图不存在")
-        break;
-    }
-  }
-
   renderListItem = ({ item, index }) => {
     if (this.props.type === 'MAP3D_BASE') {
       if (item.show) {
         return (
-          <TouchableOpacity onPress={()=>this.changeBaseMap(item.url,item.type,item.name)}>
+          <TouchableOpacity>
             <Text style={styles.item}>{item.title}</Text>
           </TouchableOpacity>
         )

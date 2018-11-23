@@ -106,7 +106,7 @@ export default class WorkSpaceFileList extends Component {
           let filter
           switch (this.type) {
             case 'MAP_3D':
-              filter = 'sxwu,smwu'
+              filter = 'sxwu'
               break
             default:
               filter = 'smwu,sxwu,udb'
