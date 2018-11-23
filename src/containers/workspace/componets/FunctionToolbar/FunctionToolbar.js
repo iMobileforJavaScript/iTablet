@@ -159,6 +159,25 @@ export default class FunctionToolbar extends React.Component {
     )
   }
 
+  showMap3DTool=async()=>{
+    SScene.getLayerList().then((layerList) => {
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox内容
+        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+          containerType: 'table',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.HEIGHT[1],
+        })
+        toolRef.getOldLayerList(layerList)
+        SScene.setAllLayersSelection(false)
+      }
+
+    })
+  }
+
   showCollection = () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
@@ -352,7 +371,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '工具',
-            action: this.showTool,
+            action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {

@@ -468,13 +468,13 @@ export default class ToolBar extends React.Component {
             title: '兴趣点',
             action: () => {
               try {
-                // SScene.startDrawFavorite({
-                //   callback:result=>{
-                //     console.log(result)
-                //   }
-                // })
-                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
-                Toast.show("谢哥别点")
+                SScene.startDrawFavorite({
+                  callback:result=>{
+                    console.log(result)
+                  }
+                })
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
+                // Toast.show("谢哥别点")
               } catch (error) {
                 Toast.show('打点失败')
               }
@@ -1358,9 +1358,9 @@ export default class ToolBar extends React.Component {
             style={styles.overlay}
           />
         )}
-        <View style={{ flex: 1 }}>
+        {/* <View style={{ flex: 1 }}>
           <TouchProgress />
-        </View>
+        </View> */}
         <View style={styles.containers}>
           {this.renderView()}
           {this.renderBottomBtns()}
