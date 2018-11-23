@@ -3,9 +3,7 @@ import constants from '../containers/workspace/constants'
 import ConstOnline from './ConstOnline'
 import { Utility, SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
-
-let count = 0
-
+import { Platform} from 'react-native'
 export default [
   {
     key: '地图制图',
@@ -24,8 +22,14 @@ export default [
     title: '三维场景',
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
-    action: () => {
-      NavigationService.navigate('Map3D', {})
+    action: async() => {
+      let path ,type="MAP_3D"
+      if(Platform.OS==="android"){
+         path=await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)+"CBD_android/CBD_android.sxwu"
+      }else{
+        path=await Utility.appendingHomeDirectory(ConstPath.SampleDataPath) + 'CBD_ios/CBD_ios.sxwu'
+      }
+      NavigationService.navigate('Map3D', {path:path,type:type})
     },
   },
   {
