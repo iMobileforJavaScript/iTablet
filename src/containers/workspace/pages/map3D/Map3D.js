@@ -5,9 +5,9 @@
 */
 
 import * as React from 'react'
-import { BackHandler, Platform } from 'react-native'
+import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container } from '../../../../components'
+import { Container, Dialog } from '../../../../components'
 import {
   FunctionToolbar,
   MapToolbar,
@@ -38,6 +38,8 @@ export default class Map3D extends React.Component {
       path: params.path,
       title: '',
       popShow: false,
+      inputText: '',
+      placeholder: false,
     }
     this.path = params.path
     this.type = params.type || 'MAP_3D'
@@ -53,51 +55,27 @@ export default class Map3D extends React.Component {
     this._addScene()
   }
 
-  //  addListen=()=>{
-  //    let listenevent
-  //   if (Platform.OS === 'ios') {
-  //       listenevent= nativeEvt.addListener("com.supermap.RN.SMSceneControl.Scene_attribute", function (result) {
-  //         console.log(result)
-  //       })
-  //   } else if (Platform.OS === 'android') {
-  //       listenevent= DeviceEventEmitter.addListener("com.supermap.RN.SMSceneControl.Scene_attribute",function (result) {
-  //           console.log(result)
-  //      });
-  //   }
-  //   return listenevent
-  //  }
-
   componentWillUnmount() {
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.listenevent && this.listenevent.remove()
-    // SScene.removeOnTouchListener()
-    // DeviceEventEmitter.removeListener("com.supermap.RN.SMSceneControl.Scene_attribute",this.callback)
-    // console.log(DeviceEventEmitter.listeners());
-    // DeviceEventEmitter.removeAllListeners()
-    // (async function(){
-    //   this.scene && await this.scene.close()
-    //   this.workspace && await this.workspace.closeWorkspace()
-    // }).bind(this)()
   }
 
-  _addScene = () => {
+  _addScene = async () => {
     if (!this.path) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
       return
     }
-    (async function() {
-      try {
-        let data = { server: this.path }
-        SScene.openWorkspace(data).then(result => {
-          result && SScene.openMap(this.mapName)
-          this.container.setLoading(false)
-        })
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }.bind(this))
+    try {
+      let data = { server: this.path }
+      let result = await SScene.openWorkspace(data)
+      let mapList = await SScene.getMapList()
+      result && (await SScene.openMap(mapList[0].name))
+      this.container.setLoading(false)
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
   // _addScene2 = (path = '') => {
@@ -143,6 +121,7 @@ export default class Map3D extends React.Component {
     GLOBAL.sceneControl = sceneControl
     // GLOBAL.sceneControlId = sceneControlId
     this._addScene()
+    SScene.getAttribute()
     // this.container.setLoading(false)
   }
 
@@ -247,6 +226,40 @@ export default class Map3D extends React.Component {
     this.fullMap = isFull
   }
 
+  confirm = async () => {
+    // console.log(this)
+    if (
+      this.state.inputText.indexOf('') > -1 ||
+      this.state.inputText === '' ||
+      this.state.inputText == null
+    ) {
+      // Toast.show('请输入文本内容')
+      this.setState({
+        placeholder: true,
+      })
+      return
+    }
+    let point = this.toolBox.getPoint()
+    SScene.addGeoText(point.pointX, point.pointY, this.state.inputText)
+    // this.toolBox.showToolbar(!this.toolBox.isShow)
+    this.toolBox.showToolbar()
+    this.dialog.setDialogVisible(false)
+  }
+
+  cancel = async () => {
+    // console.log(this)
+    // this.toolBox.showToolbar(!this.toolBox.isShow)
+    this.setState({
+      placeholder: false,
+    })
+    this.toolBox.showToolbar()
+    this.dialog.setDialogVisible(false)
+  }
+
+  showDialog = value => {
+    this.dialog.setDialogVisible(value)
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -263,7 +276,41 @@ export default class Map3D extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
+        confirmDialog={this.confirm}
+        showDialog={this.showDialog}
       />
+    )
+  }
+
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        style={{ marginVertical: 15 }}
+        type={'modal'}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+      >
+        <View style={styles.item}>
+          <Text style={styles.title}>文本内容</Text>
+          <TextInput
+            underlineColorAndroid={'transparent'}
+            accessible={true}
+            accessibilityLabel={'文本内容'}
+            onChangeText={text => {
+              this.setState({
+                inputText: text,
+              })
+            }}
+            value={this.state.inputText}
+            placeholder={'请输入文本内容'}
+            style={styles.textInputStyle}
+          />
+        </View>
+        {this.state.placeholder && (
+          <Text style={styles.placeholder}>文本内容不能为空</Text>
+        )}
+      </Dialog>
     )
   }
 
@@ -284,6 +331,7 @@ export default class Map3D extends React.Component {
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderTool()}
+        {this.renderDialog()}
       </Container>
     )
   }

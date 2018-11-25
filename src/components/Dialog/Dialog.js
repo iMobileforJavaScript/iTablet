@@ -4,12 +4,11 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native'
+import { View, Text, Modal, TouchableOpacity } from 'react-native'
 
 import styles from './styles'
 
 export default class Dialog extends PureComponent {
-
   props: {
     type?: string,
     style?: StyleSheet,
@@ -20,7 +19,7 @@ export default class Dialog extends PureComponent {
     title?: string,
     info?: string,
     backHide?: boolean,
-    activeOpacity?: number ,
+    activeOpacity?: number,
     cancelBtnTitle?: string,
     confirmBtnTitle?: string,
     cancelBtnStyle?: string,
@@ -71,14 +70,18 @@ export default class Dialog extends PureComponent {
           style={[styles.confirmBtnStyle, this.props.style]}
           onPress={this.confirm}
         >
-          <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>{this.props.confirmBtnTitle}</Text>
+          <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
+            {this.props.confirmBtnTitle}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={this.props.activeOpacity}
           style={[styles.cancelBtnStyle, this.props.style]}
           onPress={this.cancel}
         >
-          <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>{this.props.cancelBtnTitle}</Text>
+          <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>
+            {this.props.cancelBtnTitle}
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -99,14 +102,16 @@ export default class Dialog extends PureComponent {
       >
         <View style={[styles.container, this.props.backgroundStyle]}>
           <View style={[styles.dialogStyle, this.props.style]}>
-            {
-              this.props.title &&
-              <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
-            }
-            {
-              this.props.info &&
-              <Text style={[styles.info, this.props.infoStyle]}>{this.props.info}</Text>
-            }
+            {this.props.title && (
+              <Text style={[styles.title, this.props.titleStyle]}>
+                {this.props.title}
+              </Text>
+            )}
+            {this.props.info && (
+              <Text style={[styles.info, this.props.infoStyle]}>
+                {this.props.info}
+              </Text>
+            )}
             {this.props.children}
             {this.renderBtns()}
           </View>
@@ -120,14 +125,16 @@ export default class Dialog extends PureComponent {
       return (
         <View style={[styles.nonModalContainer, this.props.backgroundStyle]}>
           <View style={[styles.dialogStyle, this.props.style]}>
-            {
-              this.props.title &&
-              <Text style={[styles.title, this.props.titleStyle]}>{this.props.title}</Text>
-            }
-            {
-              this.props.info &&
-              <Text style={[styles.info, this.props.infoStyle]}>{this.props.info}</Text>
-            }
+            {this.props.title && (
+              <Text style={[styles.title, this.props.titleStyle]}>
+                {this.props.title}
+              </Text>
+            )}
+            {this.props.info && (
+              <Text style={[styles.info, this.props.infoStyle]}>
+                {this.props.info}
+              </Text>
+            )}
             {this.props.children}
             {this.renderBtns()}
           </View>

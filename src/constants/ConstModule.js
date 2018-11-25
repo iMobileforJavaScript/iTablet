@@ -3,6 +3,9 @@ import constants from '../containers/workspace/constants'
 import ConstOnline from './ConstOnline'
 import { Utility, SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
+import { Platform } from 'react-native'
+
+let count = 0
 
 export default [
   {
@@ -22,8 +25,19 @@ export default [
     title: '三维场景',
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
-    action: () => {
-      NavigationService.navigate('Map3D', {})
+    action: async () => {
+      let path,
+        type = 'MAP_3D'
+      if (Platform.OS === 'android') {
+        path =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'CBD_android/CBD_android.sxwu'
+      } else {
+        path =
+          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          'CBD_ios/CBD_ios.sxwu'
+      }
+      NavigationService.navigate('Map3D', { path: path, type: type })
     },
   },
   {
@@ -67,7 +81,7 @@ export default [
       let path = ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
       let filePath = await Utility.appendingHomeDirectory(path)
       let exist = await Utility.fileIsExistInHomeDirectory(path)
-      if (exist) {
+      if (exist && count % 2 === 0) {
         // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
         NavigationService.navigate('MapView', {
           path: filePath,
@@ -77,6 +91,7 @@ export default [
       } else {
         NavigationService.navigate('MapView', ConstOnline['Baidu'])
       }
+      count++
     },
   },
   {
