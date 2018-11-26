@@ -65,7 +65,7 @@ export default class ToolBar extends React.Component {
     data: Array,
     existFullMap: () => {},
     confirm:()=>{},
-    showDialog:()=>{},
+    dialog:Object,
   }
 
   static defaultProps = {
@@ -468,13 +468,13 @@ export default class ToolBar extends React.Component {
             title: '兴趣点',
             action: () => {
               try {
-                SScene.startDrawFavorite({
-                  callback:result=>{
-                    console.log(result)
-                  }
-                })
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
-                // Toast.show("谢哥别点")
+                // SScene.startDrawFavorite({
+                //   callback:result=>{
+                //     // console.log(result)
+                //   }
+                // })
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
+                Toast.show("谢哥别点")
               } catch (error) {
                 Toast.show('打点失败')
               }
@@ -489,8 +489,9 @@ export default class ToolBar extends React.Component {
               try {
                 SScene.startDrawText({
                   callback:result=>{
+                    console.log(result)
                     this.showToolbar()
-                    this.props.showDialog(true)      
+                    this.props.dialog.setDialogVisible(true)   
                     this.point=result
                   }
                 })
@@ -593,10 +594,11 @@ export default class ToolBar extends React.Component {
             action: () => {
               SAnalyst.setMeasureLineAnalyst({
                 callback:result=>{
-                  Toast.show(result)
+                  // Toast.show(result)
+                  this.Map3DToolBar.setAnalystResult(result)
                 }
               })
-              this.showMap3DTool(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
+              this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
             },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
@@ -607,10 +609,10 @@ export default class ToolBar extends React.Component {
             action: () => {
               SAnalyst.setMeasureSquareAnalyst({
                 callback:result=>{
-                  Toast.show(result)
+                  this.Map3DToolBar.setAnalystResult(result)
                 }
               })
-              this.showMap3DTool(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
+              this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
             },
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
@@ -790,6 +792,26 @@ export default class ToolBar extends React.Component {
 
   }
 
+  /** 三维分析结果显示 */
+   showAnalystResult=(type)=>{
+    this.setState(
+      {
+        type: type,
+        data: [],
+        buttons: [closeAnalyst, clear,flex],
+        // height: ConstToolType.HEIGHT[0],
+        // column: data.length,
+        containerType: 'list',
+      },
+      () => {
+        // this.createCollector(type)
+        this.height = ConstToolType.HEIGHT[0]
+        this.showToolbar()
+      },
+    )
+   }
+
+
   /** 三维分类点击事件*/
   showMap3DTool = async type => {
     if (type === ConstToolType.MAP3D_TOOL_FLYLIST) {
@@ -925,7 +947,7 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
 
-    this.showToolbar(false)
+    this.showToolbar()
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -941,7 +963,7 @@ export default class ToolBar extends React.Component {
     }
     // SScene.getLayerList().then((data)=>{console.log(data)})
     SScene.clearAllLabel()
-    this.showToolbar(false)
+    this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -950,7 +972,7 @@ export default class ToolBar extends React.Component {
     for (let index = 0; index < this.oldLayerList.length; index++) {
       SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
    }
-   this.showToolbar(false)
+   this.showToolbar(!this.isShow)
    this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -976,7 +998,7 @@ export default class ToolBar extends React.Component {
   }
 
   commit = (type = this.originType) => {
-    this.showToolbar(false)
+    this.showToolbar()
     if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
@@ -994,15 +1016,19 @@ export default class ToolBar extends React.Component {
 
   clearattribute=()=>{
     this.listenevent && SScene.clearSelection()
-    this.showToolbar(false)
+    this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
 
   closeAnalyst = () => {
     // console.log(this.addlistener)
     // this.addlistener&&this.addlistener.remove()
+    this.attributeListen()
+    for (let index = 0; index < this.oldLayerList.length; index++) {
+      SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
+   }
     SAnalyst.closeAnalysis()
-    this.showToolbar(false)
+    this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -1010,9 +1036,11 @@ export default class ToolBar extends React.Component {
     switch (this.state.type) {
       case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
         SAnalyst.clearSquareAnalyst()
+        this.Map3DToolBar.setAnalystResult(0)
         break
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
         SAnalyst.clearLineAnalyst()
+        this.Map3DToolBar.setAnalystResult(0)
         break
       default:
         SAnalyst.clear()
@@ -1021,8 +1049,12 @@ export default class ToolBar extends React.Component {
   }
 
   endfly = () => {
+    this.attributeListen()
+    for (let index = 0; index < this.oldLayerList.length; index++) {
+      SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
+   }
     SScene.flyStop()
-    this.showToolbar(false)
+    this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -1144,6 +1176,7 @@ export default class ToolBar extends React.Component {
   renderMap3DList = () => {
     return (
       <Map3DToolBar
+        ref={ref=>this.Map3DToolBar=ref}
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
@@ -1165,6 +1198,12 @@ export default class ToolBar extends React.Component {
           case 'MAP3D_ATTRIBUTE':
             box = this.renderMap3DList()
             break
+          case "MAP3D_TOOL_SUERFACEMEASURE":
+          box = this.renderMap3DList()
+          break
+          case "MAP3D_TOOL_DISTANCEMEASURE":
+          box = this.renderMap3DList()
+          break
           default:
             box = this.renderList()
             break

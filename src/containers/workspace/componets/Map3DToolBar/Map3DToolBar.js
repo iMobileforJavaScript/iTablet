@@ -20,6 +20,7 @@ export default class Map3DToolBar extends React.Component {
     this.state = {
       data: props.data,
       type: props.type,
+      analystresult:0,
     }
   }
   // eslint-disable-next-line
@@ -46,6 +47,12 @@ export default class Map3DToolBar extends React.Component {
         Toast.show("底图不存在")
         break;
     }
+  }
+
+  setAnalystResult=(data)=>{
+    this.setState({
+      analystresult:data,
+    })
   }
 
   renderListItem = ({ item, index }) => {
@@ -77,6 +84,7 @@ export default class Map3DToolBar extends React.Component {
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
+      // return null
     }
     return <View />
   }
@@ -124,7 +132,7 @@ export default class Map3DToolBar extends React.Component {
     // </View>
     return (
       <View style={styles.row}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.key}>{item.name}</Text>
         <Text style={styles.value}>{item.value}</Text>
       </View>
     )
@@ -151,7 +159,23 @@ export default class Map3DToolBar extends React.Component {
           keyExtractor={(item, index) => index}
         />
       )
-    } else {
+    }else if(this.props.type==="MAP3D_TOOL_DISTANCEMEASURE"){
+      return(
+        <View style={styles.analystView}>
+        <Text style={styles.name}>总距离:</Text>
+        <Text style={styles.result}>{this.state.analystresult+" 米"}</Text>
+        </View>
+      )
+    } 
+    else if(this.props.type==="MAP3D_TOOL_SUERFACEMEASURE"){
+      return(
+        <View style={styles.analystView}>
+        <Text style={styles.name}>总面积:</Text>
+        <Text style={styles.result}>{this.state.analystresult+ " 平方米"}</Text>
+        </View>
+      )
+    } 
+    else {
       return (
         <SectionList
           sections={this.state.data}

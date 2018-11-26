@@ -12,7 +12,7 @@ import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
 import NavigationService from '../../../NavigationService'
-import { SAnalyst, SScene, SMap, Action } from 'imobile_for_reactnative'
+import { SScene, SMap, Action } from 'imobile_for_reactnative'
 import Toast from 'react-native-root-toast'
 
 const COLLECTION = 'COLLECTION'
@@ -281,7 +281,9 @@ export default class FunctionToolbar extends React.Component {
   }
 
   /** 二级事件 **/
-  openMap = () => { }
+  openMap = () => {
+    // NavigationService.navigate('WorkspaceFlieList', { type: "MAP_3D" })
+   }
 
   closeMap = () => { }
 
@@ -465,11 +467,11 @@ export default class FunctionToolbar extends React.Component {
         break
       case MAP_3D:
         data = [
-          // {
-          //   title: '打开',
-          //   action: this.openMap(),
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
           // {
           //   title: '关闭',
           //   action: this.closeMap(),

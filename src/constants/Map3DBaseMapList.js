@@ -104,10 +104,10 @@ export default {
           title: '三维切片缓存图层',
           type: 'layerData',
         },
-        {
-          title: '矢量缓存图层',
-          type: 'layerData',
-        },
+        // {
+        //   title: '矢量缓存图层',
+        //   type: 'layerData',
+        // },
         {
           title: '地图缓存图层',
           type: 'layerData',
