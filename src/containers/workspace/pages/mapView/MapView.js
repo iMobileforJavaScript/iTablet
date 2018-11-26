@@ -43,6 +43,7 @@ export default class MapView extends React.Component {
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
+    symbol: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -831,19 +832,7 @@ export default class MapView extends React.Component {
           return this.toolBox
         }}
         showFullMap={this.showFullMap}
-        // showLayers={() => {
-        //   this.LayerAdd.showLayers(true)
-        // }}
-        // Label={() => {
-        //   this.LabelAdd.showLayers(true)
-        // }}
-        // showTool={() => {
-        //   this.showFullMap(true)
-        //   this.toolBox.setVisible(true)
-        // }}
-        // changeLayer={() => {
-        //   this.BotMap.showLayers(true)
-        // }}
+        symbol={this.props.symbol}
       />
     )
   }
@@ -869,6 +858,7 @@ export default class MapView extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
+        symbol={this.props.symbol}
       />
     )
   }

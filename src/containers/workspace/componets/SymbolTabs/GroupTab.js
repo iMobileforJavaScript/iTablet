@@ -2,12 +2,14 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { TreeList } from '../../../../components'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 
 export default class GroupTab extends React.Component {
   props: {
     data?: Array,
+    goToPage?: () => {},
+    setCurrentSymbols?: () => {},
   }
 
   static defaultProps = {
@@ -29,10 +31,14 @@ export default class GroupTab extends React.Component {
     })
   }
 
-  _onPress = ({ data, index }) => {
-    Toast.show(index + '---' + data.path)
+  _onPress = ({ data }) => {
     SMap.findSymbolsByGroups(data.type, data.path).then(result => {
-      Toast.show(JSON.stringify(result))
+      let symbols = []
+      result.forEach(item => {
+        symbols.push(item.id)
+      })
+      this.props.setCurrentSymbols && this.props.setCurrentSymbols(symbols)
+      this.props.goToPage && this.props.goToPage(1)
     })
   }
 

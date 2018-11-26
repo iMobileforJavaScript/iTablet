@@ -2,7 +2,7 @@ const blackTheme = {
   theme: '#2D2D2F',
   border: '#505052',
   blackBg: '#48484b',
-  themeText: 'white',
+  themeText: '#FFFFFF',
 }
 
 let styles
