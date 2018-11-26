@@ -3,7 +3,6 @@ import {
   Action,
   SCollector,
   SMCollectorType,
-  SAnalyst,
   SScene,
 } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
@@ -467,32 +466,32 @@ function getMap3DData(type) {
   switch (type) {
     case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
       // data = [
-        // {
-        //   key: 'spaceDistance',
-        //   title: '空间距离',
-        //   action: move,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_move.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        // },
-        // {
-        //   key: 'psDistance',
-        //   title: '水平距离',
-        //   action: handlers => {
-        //     SAnalyst.setMeasureLineAnalyst(handlers)
-        //   },
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_move.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        // },
-        // {
-        //   key: 'groundDistance',
-        //   title: '依地距离',
-        //   action: move,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_move.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        // },
+      // {
+      //   key: 'spaceDistance',
+      //   title: '空间距离',
+      //   action: move,
+      //   size: 'large',
+      //   image: require('../../../../assets/mapTools/icon_move.png'),
+      //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+      // },
+      // {
+      //   key: 'psDistance',
+      //   title: '水平距离',
+      //   action: handlers => {
+      //     SAnalyst.setMeasureLineAnalyst(handlers)
+      //   },
+      //   size: 'large',
+      //   image: require('../../../../assets/mapTools/icon_move.png'),
+      //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+      // },
+      // {
+      //   key: 'groundDistance',
+      //   title: '依地距离',
+      //   action: move,
+      //   size: 'large',
+      //   image: require('../../../../assets/mapTools/icon_move.png'),
+      //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+      // },
       // ]
       buttons = ['closeAnalyst', 'clear']
       break
@@ -549,7 +548,7 @@ function getMap3DData(type) {
         {
           key: 'stopOrstart',
           title: '播放/暂停',
-          action: ()=>{
+          action: () => {
             SScene.flyPauseOrStart()
           },
           size: 'large',
@@ -583,7 +582,7 @@ function getMap3DData(type) {
         //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
         // },
       ]
-      buttons = [ 'endfly', 'flex']
+      buttons = ['endfly', 'flex']
       break
     case ConstToolType.MAP3D_TOOL_LEVEL:
       buttons = ['cancel', 'flex']

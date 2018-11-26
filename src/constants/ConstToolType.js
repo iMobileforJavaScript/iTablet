@@ -52,5 +52,5 @@ export default {
   MAP3D_TOOL_FLYLIST: 'MAP3D_TOOL_FLYLIST',
   MAP3D_ATTRIBUTE: 'MAP3D_ATTRIBUTE',
   // 工具视图高度级别
-  HEIGHT: [scaleSize(100),scaleSize(150),  scaleSize(250), scaleSize(720)],
+  HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(720)],
 }
