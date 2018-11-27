@@ -8,8 +8,10 @@ import {
   layerAdd,
   Map3DBaseMapList,
 } from '../../../../constants'
+import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
+import {SMap, SAnalyst, SScene, Action} from 'imobile_for_reactnative'
 import ToolbarData from './ToolbarData'
 import {
   View,
@@ -19,28 +21,29 @@ import {
   Text,
   SectionList,
   Animated,
+  FlatList,
 } from 'react-native'
 import {
   DatasetType,
   SCollector,
   GeoStyle,
   SMCollectorType,
-  SMap,
-  SAnalyst,
-  SScene,
-  Action,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
+import SymbolList from "../SymbolList/SymbolList"
 
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
 const tabs = 'tabs'
+const symbol = 'symbol'
 /** 地图按钮类型 **/
 const cancel = 'cancel' // 取消
 const flex = 'flex' // 伸缩
 const style = 'style' // 样式
 const commit = 'commit' // 提交
+const menu = 'menu' //菜单
+const menus = 'menus'//菜单
 const placeholder = 'placeholder' // 占位
 const closeAnalyst = 'closeAnalyst'
 const clear = 'clear'
@@ -105,6 +108,9 @@ export default class ToolBar extends React.Component {
       buttons: [],
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
+      isSelectlist: false,
+      isTouch: true,
+      isTouchProgress: false,
     }
     this.isShow = false
     this.isBoxShow = true
@@ -142,7 +148,7 @@ export default class ToolBar extends React.Component {
     toolbarData = ToolbarData.getTabBarData(type)
     data = toolbarData.data
     buttons = toolbarData.buttons
-    if (data.length > 0) return { data, buttons }
+    if (data.length > 0) return {data, buttons}
 
     switch (type) {
       case ConstToolType.MAP_BASE:
@@ -464,7 +470,7 @@ export default class ToolBar extends React.Component {
             image: require('../../../../assets/mapTools/icon_point.png'),
           },
         ]
-        buttons = [cancel, flex, placeholder]
+        buttons = [cancel, menu, flex, commit]
         break
       case ConstToolType.MAP3D_SYMBOL:
         this.listenevent.remove()
@@ -695,15 +701,15 @@ export default class ToolBar extends React.Component {
       default:
         buttons = [cancel, flex]
     }
-    return { data, buttons }
+    return {data, buttons}
   }
 
   getflylist = async () => {
     try {
       let flydata = await SScene.getFlyRouteNames()
-      let data = [{ title: '飞行轨迹列表', data: flydata }]
+      let data = [{title: '飞行轨迹列表', data: flydata}]
       let buttons = [cancel, flex]
-      return { data, buttons }
+      return {data, buttons}
     } catch (error) {
       Toast.show('当前场景无飞行轨迹')
     }
@@ -770,7 +776,7 @@ export default class ToolBar extends React.Component {
 
   /** 采集分类点击事件 **/
   showCollection = type => {
-    let { data, buttons } = this.getData(type)
+    let {data, buttons} = this.getData(type)
     this.setState(
       {
         type: type,
@@ -842,7 +848,7 @@ export default class ToolBar extends React.Component {
   /** 三维分类点击事件*/
   showMap3DTool = async type => {
     if (type === ConstToolType.MAP3D_TOOL_FLYLIST) {
-      let { data, buttons } = await this.getflylist()
+      let {data, buttons} = await this.getflylist()
       this.setState(
         {
           type: type,
@@ -859,7 +865,7 @@ export default class ToolBar extends React.Component {
         },
       )
     } else {
-      let { data, buttons } = this.getData(type)
+      let {data, buttons} = this.getData(type)
       this.setState(
         {
           type: type,
@@ -887,7 +893,8 @@ export default class ToolBar extends React.Component {
   }
 
   /** 拍照 **/
-  takePhoto = () => {}
+  takePhoto = () => {
+  }
 
   /**
    * 设置是否显示
@@ -901,6 +908,9 @@ export default class ToolBar extends React.Component {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
+    if (this.state.isSelectlist === true)
+      this.setState({isSelectlist: false})
+    // this.listenevent && SScene.clearSelection()
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
@@ -908,7 +918,7 @@ export default class ToolBar extends React.Component {
       params.height !== this.height ||
       params.column !== this.state.column
     ) {
-      let { data, buttons } = this.getData(type)
+      let {data, buttons} = this.getData(type)
       this.originType = type
       this.height =
         params && typeof params.height === 'number'
@@ -979,6 +989,7 @@ export default class ToolBar extends React.Component {
 
     this.showToolbar(false)
     this.props.existFullMap && this.props.existFullMap()
+    this.setState({isSelectlist: false})
   }
 
   clearsymbol = () => {
@@ -1034,12 +1045,36 @@ export default class ToolBar extends React.Component {
   }
 
   commit = (type = this.originType) => {
-    this.showToolbar()
+    this.showToolbar(false)
     if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
     this.props.existFullMap && this.props.existFullMap()
+    this.setState({isSelectlist: false})
+  }
+
+  menu = () => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: this.isBoxShow ? 0 : this.height,
+      duration: 300,
+    }).start()
+    this.isBoxShow = !this.isBoxShow
+
+    if (this.state.isSelectlist === false) {
+      this.setState({isFullScreen: true, isSelectlist: true})
+    } else {
+      this.setState({isFullScreen: false, isSelectlist: false})
+    }
+    this.setState({isTouchProgress: false})
+  }
+
+  menus = () => {
+    if (this.state.isSelectlist === false) {
+      this.setState({isSelectlist: true})
+    } else {
+      this.setState({isSelectlist: false})
+    }
   }
 
   showBox = () => {
@@ -1104,11 +1139,11 @@ export default class ToolBar extends React.Component {
     SScene.setPosition(index)
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
   }
-  renderListItem = ({ item, index }) => {
+  renderListItem = ({item, index}) => {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.listAction({ item, index })
+          this.listAction({item, index})
         }}
       >
         <Text style={styles.item}>{item.title}</Text>
@@ -1116,11 +1151,11 @@ export default class ToolBar extends React.Component {
     )
   }
 
-  renderListSectionHeader = ({ section }) => {
+  renderListSectionHeader = ({section}) => {
     return <Text style={styles.sectionHeader}>{section.title}</Text>
   }
 
-  listAction = ({ item, index }) => {
+  listAction = ({item, index}) => {
     if (this.state.type === 'MAP3D_BASE') return
     if (item.action) {
       item.action && item.action()
@@ -1135,11 +1170,11 @@ export default class ToolBar extends React.Component {
               data: list,
             },
           ]
-          this.setState({ data: datalist, type: ConstToolType.MAP_ADD_DATASET })
+          this.setState({data: datalist, type: ConstToolType.MAP_ADD_DATASET})
         },
       })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
-      (async function() {
+      (async function () {
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1149,6 +1184,7 @@ export default class ToolBar extends React.Component {
       }.bind(this)())
     }
   }
+
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -1199,10 +1235,14 @@ export default class ToolBar extends React.Component {
     return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} />
   }
 
-  _renderItem = ({ item, rowIndex, cellIndex }) => {
+  renderSymbol = () => {
+    return  (<SymbolList/>)
+  }
+
+  _renderItem = ({item, rowIndex, cellIndex}) => {
     return (
       <MTBtn
-        style={[styles.cell, { width: screen.deviceWidth / this.state.column }]}
+        style={[styles.cell, {width: screen.deviceWidth / this.state.column}]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
@@ -1222,6 +1262,35 @@ export default class ToolBar extends React.Component {
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
+      />
+    )
+  }
+
+  renderSelectList = () => {
+    return (
+      <FlatList
+        data={[
+          {
+            key: '符号线', action: () => {
+              this.menu()
+              this.setState({buttons: ['cancel', 'menu', 'flex', 'commit']})
+            },
+          },
+          {
+            key: '线宽', action: () => {
+              this.setState({isTouchProgress: true, isSelectlist: false, buttons: ['cancel', 'menus', 'commit']})
+            },
+          },
+          {
+            key: '颜色', action: () => {
+            },
+          },
+        ]}
+        renderItem={({item}) =>
+          <TouchableOpacity onPress={() => item.action(item)}>
+            <Text style={styles.item}>{item.key}</Text>
+          </TouchableOpacity>
+        }
       />
     )
   }
@@ -1254,12 +1323,15 @@ export default class ToolBar extends React.Component {
       case tabs:
         box = this.renderTabs()
         break
+      case symbol:
+        box = this.renderSymbol()
+        break
       case table:
       default:
         box = this.renderTable()
     }
     return (
-      <Animated.View style={{ height: this.state.boxHeight }}>
+      <Animated.View style={{height: this.state.boxHeight}}>
         {box}
       </Animated.View>
     )
@@ -1272,7 +1344,7 @@ export default class ToolBar extends React.Component {
         onPress={() => item.action(item)}
         style={styles.button}
       >
-        <Image style={styles.img} resizeMode={'contain'} source={item.image} />
+        <Image style={styles.img} resizeMode={'contain'} source={item.image}/>
       </TouchableOpacity>
     )
   }
@@ -1296,7 +1368,7 @@ export default class ToolBar extends React.Component {
           btns.push(
             this.renderBottomBtn(
               {
-                image: require('../../../../assets/mapEdit/cancel.png'),
+                image: require('../../../../assets/mapEdit/flex.png'),
                 action: this.showBox,
               },
               index,
@@ -1325,47 +1397,66 @@ export default class ToolBar extends React.Component {
             ),
           )
           break
-        case closeAnalyst:
-          {
-            btns.push(
-              this.renderBottomBtn(
-                {
-                  image: require('../../../../assets/mapEdit/cancel.png'),
-                  action: this.closeAnalyst,
-                },
-                index,
-              ),
-            )
-          }
+        case menu:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/menu.png'),
+                action: () => this.menu(),
+              },
+              index,
+            ),
+          )
           break
-        case clear:
-          {
-            btns.push(
-              this.renderBottomBtn(
-                {
-                  image: require('../../../../assets/mapEdit/cancel.png'),
-                  action: this.clear,
-                },
-                index,
-              ),
-            )
-          }
+        case menus:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/menu.png'),
+                action: () => this.menus(),
+              },
+              index,
+            ),
+          )
           break
-        case endfly:
-          {
-            btns.push(
-              this.renderBottomBtn(
-                {
-                  image: require('../../../../assets/mapEdit/cancel.png'),
-                  action: this.endfly,
-                },
-                index,
-              ),
-            )
-          }
+        case closeAnalyst: {
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/cancel.png'),
+                action: this.closeAnalyst,
+              },
+              index,
+            ),
+          )
+        }
+          break
+        case clear: {
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/cancel.png'),
+                action: this.clear,
+              },
+              index,
+            ),
+          )
+        }
+          break
+        case endfly: {
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/cancel.png'),
+                action: this.endfly,
+              },
+              index,
+            ),
+          )
+        }
           break
         case placeholder:
-          btns.push(<View style={{ flex: 1 }} key={type + '-' + index} />)
+          btns.push(<View style={{flex: 1}} key={type + '-' + index}/>)
           break
         case back:
           btns.push(
@@ -1431,17 +1522,22 @@ export default class ToolBar extends React.Component {
       ? styles.fullContainer
       : styles.wrapContainer
     return (
-      <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen && (
+      <Animated.View style={[containerStyle, {bottom: this.state.bottom}]}>
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {/* <View style={{ flex: 1 }}>
-          <TouchProgress />
-        </View> */}
+        {this.state.isTouchProgress && this.state.isFullScreen && (
+          <TouchProgress/>
+        )}
+        {this.state.isSelectlist && (
+          <View style={{position: 'absolute', top: '30%', left: '45%'}}>
+            {this.renderSelectList()}
+          </View>
+        )}
         <View style={styles.containers}>
           {this.renderView()}
           {this.renderBottomBtns()}
@@ -1523,5 +1619,11 @@ const styles = StyleSheet.create({
   },
   tabsView: {
     height: ConstToolType.HEIGHT[3] - BUTTON_HEIGHT,
+  },
+  table: {
+    flex: 1,
+    paddingHorizontal: scaleSize(30),
+    alignItems: 'center',
+    backgroundColor: color.blackBg,
   },
 })
