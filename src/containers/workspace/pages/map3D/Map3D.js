@@ -5,9 +5,9 @@
 */
 
 import * as React from 'react'
-import { BackHandler, Platform ,View,Text,TextInput} from 'react-native'
+import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container,Dialog } from '../../../../components'
+import { Container, Dialog } from '../../../../components'
 import {
   FunctionToolbar,
   MapToolbar,
@@ -38,8 +38,8 @@ export default class Map3D extends React.Component {
       path: params.path,
       title: '',
       popShow: false,
-      inputText:'',
-      placeholder:false,
+      inputText: '',
+      placeholder: false,
     }
     this.path = params.path
     this.type = params.type || 'MAP_3D'
@@ -53,7 +53,13 @@ export default class Map3D extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     this._addScene()
-  }
+    // SScene.getcompass({
+    //   callback:result=>{
+    //     Toast.show(result)
+    //   }
+    // })
+    this.getcompass()
+ }
 
 
   componentWillUnmount() {
@@ -62,61 +68,29 @@ export default class Map3D extends React.Component {
     this.listenevent && this.listenevent.remove()
   }
 
+  getcompass=async()=>{
+    setInterval(async()=>{
+      let heading= await SScene.getcompass()
+    },400)
+  }
+
   _addScene = async() => {
     if (!this.path) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
       return
     }
-      try {
-        let data = { server: this.path }
-        let result = await SScene.openWorkspace(data)
-        let mapList = await SScene.getMapList()
-        result && (await SScene.openMap(mapList[0].name))
-        this.container.setLoading(false)
-      } catch (e) {
-        this.container.setLoading(false)
-      }
+    try {
+      let data = { server: this.path }
+      let result = await SScene.openWorkspace(data)
+      let mapList = await SScene.getMapList()
+      result && (await SScene.openMap(mapList[0].name))
+      this.container.setLoading(false)
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
-  // _addScene2 = (path = '') => {
-  //   let workspaceModule = new Workspace()
-  //   console.log(0)
-  //   ;(async function () {
-  //     this.workspace = await workspaceModule.createObj()   //创建workspace实例
-  //
-  //     console.log(1)
-  //     if (!GLOBAL.sceneControl) {
-  //       console.log(2)
-  //       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-  //     }
-  //     console.log(3)
-  //     await this.scene.setWorkspace(this.workspace)        //设置工作空间
-  //     let filePath = await Utility.appendingHomeDirectory(path)
-  //     let openWk = await this.workspace.open(filePath)     //打开工作空间
-  //
-  //     console.log(4)
-  //     if (!openWk) {
-  //       Toast.show(" 打开工作空间失败")
-  //       return
-  //     }
-  //     this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-  //     await this.scene.open(this.mapName)                     //根据名称打开指定场景
-  //     await this.scene.refresh()                           //刷新场景
-  //
-  //     this.saveLatest()
-  //   }).bind(this)()
-  // }
-
-  // saveLatest = () => {
-  //   if (this.isExample) return
-  //   this.props.setLatestMap({
-  //     path: this.path,
-  //     type: this.type,
-  //     name: this.mapName,
-  //     // image: uri,
-  //   })
-  // }
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
@@ -227,35 +201,32 @@ export default class Map3D extends React.Component {
     this.fullMap = isFull
   }
 
-  confirm=async()=>{
+  confirm = async () => {
     // console.log(this)
-    if(this.state.inputText.indexOf('')>-1||this.state.inputText===''||this.state.inputText==null){
+    if(this.state.inputText.indexOf(' ')>-1||this.state.inputText===''||this.state.inputText==null){
       // Toast.show('请输入文本内容')
       this.setState({
-        placeholder:true
+        placeholder: true,
       })
       return
     }
-    let point=this.toolBox.getPoint()
-    SScene.addGeoText(point.pointX,point.pointY,this.state.inputText)
+    let point = this.toolBox.getPoint()
+    SScene.addGeoText(point.pointX, point.pointY, this.state.inputText)
     // this.toolBox.showToolbar(!this.toolBox.isShow)
     this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
   }
 
-  cancel=async()=>{
+  cancel = async () => {
     // console.log(this)
     // this.toolBox.showToolbar(!this.toolBox.isShow)
     this.setState({
-      placeholder:false
+      placeholder: false,
     })
     this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
   }
 
-  showDialog=(value)=>{
-    this.dialog.setDialogVisible(value)
-  }
 
   renderToolBar = () => {
     return (
@@ -274,40 +245,41 @@ export default class Map3D extends React.Component {
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
-        showDialog={this.showDialog}
+        dialog={this.dialog}
       />
     )
   }
 
-  renderDialog=()=>{
-    return(
+  renderDialog = () => {
+    return (
       <Dialog
-      ref={ref => (this.dialog = ref)}
-      style={{ marginVertical: 15 }}
-      type={"modal"}
-      confirmAction={this.confirm}
-      cancelAction={this.cancel}
-     >
-      <View style={styles.item}>
-        <Text style={styles.title}>文本内容</Text>
-        <TextInput
-          underlineColorAndroid={'transparent'}
-          accessible={true}
-          accessibilityLabel={'文本内容'}
-          onChangeText={text => {
-                this.setState({
-                  inputText: text,
-                })
-
-          }}
-          value={this.state.inputText}
-          placeholder={'请输入文本内容'}
-          style={styles.textInputStyle}
-        />
-      </View>
-      {this.state.placeholder&&<Text style={styles.placeholder}>文本内容不能为空</Text>}
-    </Dialog>
-  )
+        ref={ref => (this.dialog = ref)}
+        style={{ marginVertical: 15 }}
+        type={'modal'}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+      >
+        <View style={styles.item}>
+          <Text style={styles.title}>文本内容</Text>
+          <TextInput
+            underlineColorAndroid={'transparent'}
+            accessible={true}
+            accessibilityLabel={'文本内容'}
+            onChangeText={text => {
+              this.setState({
+                inputText: text,
+              })
+            }}
+            value={this.state.inputText}
+            placeholder={'请输入文本内容'}
+            style={styles.textInputStyle}
+          />
+        </View>
+        {this.state.placeholder && (
+          <Text style={styles.placeholder}>文本内容不能为空</Text>
+        )}
+      </Dialog>
+    )
   }
 
   render() {

@@ -39,8 +39,8 @@ export default StyleSheet.create({
     color: 'black',
     width: scaleSize(160),
   },
-  placeholder:{
-    marginLeft:scaleSize(160),
+  placeholder: {
+    marginLeft: scaleSize(160),
     fontSize: scaleSize(18),
     color: 'red',
     width: scaleSize(160),

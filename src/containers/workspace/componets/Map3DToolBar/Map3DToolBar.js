@@ -7,8 +7,8 @@ import {
   SectionList,
   FlatList,
 } from 'react-native'
-import { SScene } from 'imobile_for_reactnative';
-import { Toast } from '../../../../utils';
+import { SScene } from 'imobile_for_reactnative'
+import { Toast } from '../../../../utils'
 export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
@@ -20,6 +20,7 @@ export default class Map3DToolBar extends React.Component {
     this.state = {
       data: props.data,
       type: props.type,
+      analystresult:0,
     }
   }
   // eslint-disable-next-line
@@ -31,28 +32,36 @@ export default class Map3DToolBar extends React.Component {
     }
   }
 
-  changeBaseMap=(url,type,name)=>{
+  changeBaseMap = (url, type, name) => {
     switch (type) {
-      case "terrainLayer":
-        SScene.addTerrainLayer(url,name)
-        break;
-      case "WMTS":
-        SScene.changeBaseMap(null,url,type,name,"JPG_PNG",96.0,true)
-      break
-      case "l3dBingMaps":
-        SScene.changeBaseMap(null,url,type,name,"JPG_PNG",96.0,true)
-      break
+      case 'terrainLayer':
+        SScene.addTerrainLayer(url, name)
+        break
+      case 'WMTS':
+        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true)
+        break
+      case 'l3dBingMaps':
+        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true)
+        break
       default:
-        Toast.show("底图不存在")
-        break;
+        Toast.show('底图不存在')
+        break
     }
+  }
+
+  setAnalystResult=(data)=>{
+    this.setState({
+      analystresult:data,
+    })
   }
 
   renderListItem = ({ item, index }) => {
     if (this.props.type === 'MAP3D_BASE') {
       if (item.show) {
         return (
-          <TouchableOpacity onPress={()=>this.changeBaseMap(item.url,item.type,item.name)}>
+          <TouchableOpacity
+            onPress={() => this.changeBaseMap(item.url, item.type, item.name)}
+          >
             <Text style={styles.item}>{item.title}</Text>
           </TouchableOpacity>
         )
@@ -77,6 +86,7 @@ export default class Map3DToolBar extends React.Component {
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
+      // return null
     }
     return <View />
   }
@@ -124,7 +134,7 @@ export default class Map3DToolBar extends React.Component {
     // </View>
     return (
       <View style={styles.row}>
-        <Text style={styles.name}>{item.name}</Text>
+        <Text style={styles.key}>{item.name}</Text>
         <Text style={styles.value}>{item.value}</Text>
       </View>
     )
@@ -151,7 +161,23 @@ export default class Map3DToolBar extends React.Component {
           keyExtractor={(item, index) => index}
         />
       )
-    } else {
+    }else if(this.props.type==="MAP3D_TOOL_DISTANCEMEASURE"){
+      return(
+        <View style={styles.analystView}>
+        <Text style={styles.name}>总距离:</Text>
+        <Text style={styles.result}>{this.state.analystresult+" 米"}</Text>
+        </View>
+      )
+    } 
+    else if(this.props.type==="MAP3D_TOOL_SUERFACEMEASURE"){
+      return(
+        <View style={styles.analystView}>
+        <Text style={styles.name}>总面积:</Text>
+        <Text style={styles.result}>{this.state.analystresult+ " 平方米"}</Text>
+        </View>
+      )
+    } 
+    else {
       return (
         <SectionList
           sections={this.state.data}
