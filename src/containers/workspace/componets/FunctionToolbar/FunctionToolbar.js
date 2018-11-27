@@ -294,7 +294,9 @@ export default class FunctionToolbar extends React.Component {
   }
 
   /** 二级事件 **/
-  openMap = () => {}
+  openMap = () => {
+    // NavigationService.navigate('WorkspaceFlieList', { type: "MAP_3D" })
+  }
 
   closeMap = () => {}
 
@@ -478,11 +480,11 @@ export default class FunctionToolbar extends React.Component {
         break
       case MAP_3D:
         data = [
-          // {
-          //   title: '打开',
-          //   action: this.openMap(),
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
           // {
           //   title: '关闭',
           //   action: this.closeMap(),

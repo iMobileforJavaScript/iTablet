@@ -53,12 +53,24 @@ export default class Map3D extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     this._addScene()
+    // SScene.getcompass({
+    //   callback:result=>{
+    //     Toast.show(result)
+    //   }
+    // })
+    this.getcompass()
   }
 
   componentWillUnmount() {
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.listenevent && this.listenevent.remove()
+  }
+
+  getcompass = async () => {
+    setInterval(async () => {
+      await SScene.getcompass()
+    }, 400)
   }
 
   _addScene = async () => {
@@ -77,45 +89,6 @@ export default class Map3D extends React.Component {
       this.container.setLoading(false)
     }
   }
-
-  // _addScene2 = (path = '') => {
-  //   let workspaceModule = new Workspace()
-  //   console.log(0)
-  //   ;(async function () {
-  //     this.workspace = await workspaceModule.createObj()   //创建workspace实例
-  //
-  //     console.log(1)
-  //     if (!GLOBAL.sceneControl) {
-  //       console.log(2)
-  //       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-  //     }
-  //     console.log(3)
-  //     await this.scene.setWorkspace(this.workspace)        //设置工作空间
-  //     let filePath = await Utility.appendingHomeDirectory(path)
-  //     let openWk = await this.workspace.open(filePath)     //打开工作空间
-  //
-  //     console.log(4)
-  //     if (!openWk) {
-  //       Toast.show(" 打开工作空间失败")
-  //       return
-  //     }
-  //     this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-  //     await this.scene.open(this.mapName)                     //根据名称打开指定场景
-  //     await this.scene.refresh()                           //刷新场景
-  //
-  //     this.saveLatest()
-  //   }).bind(this)()
-  // }
-
-  // saveLatest = () => {
-  //   if (this.isExample) return
-  //   this.props.setLatestMap({
-  //     path: this.path,
-  //     type: this.type,
-  //     name: this.mapName,
-  //     // image: uri,
-  //   })
-  // }
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
@@ -229,7 +202,7 @@ export default class Map3D extends React.Component {
   confirm = async () => {
     // console.log(this)
     if (
-      this.state.inputText.indexOf('') > -1 ||
+      this.state.inputText.indexOf(' ') > -1 ||
       this.state.inputText === '' ||
       this.state.inputText == null
     ) {
@@ -256,10 +229,6 @@ export default class Map3D extends React.Component {
     this.dialog.setDialogVisible(false)
   }
 
-  showDialog = value => {
-    this.dialog.setDialogVisible(value)
-  }
-
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -277,7 +246,7 @@ export default class Map3D extends React.Component {
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
-        showDialog={this.showDialog}
+        dialog={this.dialog}
       />
     )
   }
