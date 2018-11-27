@@ -20,51 +20,50 @@ export default StyleSheet.create({
     flex: 1,
     height: scaleSize(15),
   },
-  key:{
+  key: {
     // flex:1
-    width:scaleSize(200),
+    width: scaleSize(200),
     height: scaleSize(60),
     fontSize: scaleSize(22),
-    textAlign:"center",
+    textAlign: 'center',
     color: 'white',
   },
-  value:{
-    flex:1,
+  value: {
+    flex: 1,
     height: scaleSize(60),
     fontSize: scaleSize(22),
     color: 'white',
-    textAlign:"center",
+    textAlign: 'center',
   },
   name: {
     width: scaleSize(200),
     height: scaleSize(40),
     fontSize: scaleSize(24),
     color: 'white',
-    textAlign:"center",
+    textAlign: 'center',
     // backgroundColor:"blue",
-    alignItems:"center",
+    alignItems: 'center',
   },
   result: {
     // width: scaleSize(300),
-    flex:1,
+    flex: 1,
     height: scaleSize(40),
     fontSize: scaleSize(24),
     color: 'white',
-    textAlign:"center",
+    textAlign: 'center',
     // backgroundColor:"white",
-    
   },
   row: {
-    flex:1,
+    flex: 1,
     flexDirection: 'row',
   },
-  analystView:{
-    flex:1,
+  analystView: {
+    flex: 1,
     flexDirection: 'row',
-    justifyContent:"center",
+    justifyContent: 'center',
     // backgroundColor:"red",
     // alignItems:"center",
-    marginTop:scaleSize(20)
+    marginTop: scaleSize(20),
   },
   container: {
     flex: 1,

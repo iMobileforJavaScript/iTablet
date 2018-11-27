@@ -8,6 +8,7 @@ export default class Home extends Component {
   props: {
     nav: Object,
     latestMap: Array,
+    currentUser: Object,
   }
 
   constructor(props) {
@@ -44,7 +45,7 @@ export default class Home extends Component {
         style={styles.container}
       >
         {this.headRender()}
-        <ModuleList />
+        <ModuleList currentUser={this.props.currentUser} />
       </Container>
     )
   }

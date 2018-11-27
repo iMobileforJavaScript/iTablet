@@ -41,6 +41,13 @@ public class MainActivity extends ReactActivity {
     }
 
     private void initDefaultData() {
+        // 拷贝默认的工作空间
+        String customerWs = SDCARD + "/iTablet/User/Customer/";
+        String customerWsName = "Customer.smwu";
+        if (!Utils.fileIsExit(customerWs + customerWsName)) {
+            Utils.copyAssetFileToSDcard(this, customerWs, customerWsName);
+        }
+        // 拷贝默认数据
         String localPath = SDCARD + "/iTablet/data/local/";
         String defaultZipData = "defaultData.zip";
         Utils.copyAssetFileToSDcard(this, localPath, defaultZipData);

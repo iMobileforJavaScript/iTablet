@@ -59,9 +59,10 @@ export default class MapView extends React.Component {
     this.type = params.type || 'LOCAL'
     this.operationType = params.operationType || constants.COLLECTION
     this.isExample = params.isExample || false
-    this.DSParams = params.DSParams || null
-    this.labelDSParams = params.labelDSParams || false
-    this.layerIndex = params.layerIndex || 0
+    // this.DSParams = params.DSParams || null
+    // this.labelDSParams = params.labelDSParams || false
+    // this.layerIndex = params.layerIndex || 0
+    this.wsData = params.wsData
     this.mapName = params.mapName || ''
     this.path = params.path || ''
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
@@ -396,48 +397,26 @@ export default class MapView extends React.Component {
     this._remove_measure_listener()
   }
 
-  // /** 选择事件监听 **/
-  // _addGeometrySelectedListener = async () => {
-  //   await SMap.addGeometrySelectedListener({
-  //     geometrySelected: this.geometrySelected,
-  //     geometryMultiSelected: this.geometryMultiSelected,
-  //   })
-  // }
-  //
-  // _removeGeometrySelectedListener = async () => {
-  //   await SMap.removeGeometrySelectedListener()
-  // }
-  //
-  // geometrySelected = event => {
-  //   // let layerSelectable = true
-  //   // if (this.props.selection && this.props.selection.layer) {
-  //   //   layerSelectable =
-  //   //     this.props.selection.layer._SMLayerId !== event.layer._SMLayerId ||
-  //   //     this.props.selection.id !== event.id
-  //   // }
-  //   // event.layer.getName().then(async name => {
-  //   //   let editable = await event.layer.getEditable()
-  //   //   Toast.show('选中 ' + name)
-  //   //   Object.assign(event, { name: name, editable, geoID: event.id })
-  //   //   layerSelectable && this.props.setSelection(event)
-  //   //   // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
-  //   //   // if (
-  //   //   //   this.mapControl && this.props.selection
-  //   //   //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
-  //   //   // ) {
-  //   //   //   let action = await this.mapControl.getAction()
-  //   //   //   action === 'SELECT'
-  //   //   //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
-  //   //   //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
-  //   //   //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
-  //   //   // }
-  //   // })
-  // }
-  //
-  // geometryMultiSelected = events => {
-  //   // TODO 处理多选
-  //   this.props.setSelection(events)
-  // }
+  /** 设置监听 **/
+  /** 选择事件监听 **/
+  _addGeometrySelectedListener = async () => {
+    await SMap.addGeometrySelectedListener({
+      geometrySelected: this.geometrySelected,
+      geometryMultiSelected: this.geometryMultiSelected,
+    })
+  }
+
+  _removeGeometrySelectedListener = async () => {
+    await SMap.removeGeometrySelectedListener()
+  }
+
+  geometrySelected = event => {
+    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+  }
+
+  geometryMultiSelected = () => {
+    // TODO 处理多选
+  }
 
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, '正在保存')
@@ -677,52 +656,75 @@ export default class MapView extends React.Component {
   }
 
   _addMap = () => {
-    if (this.type === 'LOCAL') {
-      this._addLocalMap()
-    } else {
-      this._addRemoteMap()
-    }
+    (async function() {
+      try {
+        if (this.wsData === null) return
+        if (this.wsData instanceof Array) {
+          for (let i = 0; i < this.wsData.length; i++) {
+            let item = this.wsData[i]
+            if (item === null) continue
+            if (item.type === 'Workspace') {
+              await this._openWorkspace(
+                this.wsData[i],
+                this.wsData[i].layerIndex,
+              )
+            } else {
+              await this._openDatasource(
+                this.wsData[i],
+                this.wsData[i].layerIndex,
+              )
+            }
+          }
+        } else {
+          if (this.wsData.type === 'Workspace') {
+            await this._openWorkspace(this.wsData, this.wsData.layerIndex)
+          } else {
+            await this._openDatasource(this.wsData, this.wsData.layerIndex)
+          }
+        }
+        this.container.setLoading(false)
+      } catch (e) {
+        this.container.setLoading(false)
+      }
+    }.bind(this)())
   }
 
-  _addLocalMap = () => {
-    if (!this.path) {
+  _openWorkspace = async (wsData, index = -1) => {
+    if (!wsData.DSParams || !wsData.DSParams.server) {
       this.container.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
-    (async function() {
-      try {
-        let data = { server: this.path }
-        SMap.openWorkspace(data).then(result => {
-          result && SMap.openMap(0)
-          this.container.setLoading(false)
-        })
-        // await this._addGeometrySelectedListener()
+    try {
+      // let data = { server: wsData.DSParams.path }
+      let result = await SMap.openWorkspace(wsData.DSParams)
+      result && SMap.openMap(index)
+      // this.container.setLoading(false)
+      // await this._addGeometrySelectedListener()
 
-        // this.saveLatest()
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }.bind(this)())
+      // this.saveLatest()
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
-  _addRemoteMap = () => {
-    if (!this.DSParams) {
+  _openDatasource = async (wsData, index = -1) => {
+    if (!wsData.DSParams || !wsData.DSParams.server) {
+      this.container.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
-    (async function() {
-      try {
-        this.DSParams &&
-          (await SMap.openDatasource(this.DSParams, this.layerIndex))
-        this.labelDSParams &&
-          (await SMap.openDatasource(this.labelDSParams, this.layerIndex))
-        this.container.setLoading(false)
-        // await this._addGeometrySelectedListener()
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }.bind(this)())
+    try {
+      await SMap.openDatasource(wsData.DSParams, index)
+      // this.DSParams &&
+      //   (await SMap.openDatasource(this.DSParams, this.layerIndex))
+      // this.labelDSParams &&
+      //   (await SMap.openDatasource(this.labelDSParams, this.layerIndex))
+      // this.container.setLoading(false)
+      // await this._addGeometrySelectedListener()
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
   TD = () => {
@@ -833,6 +835,8 @@ export default class MapView extends React.Component {
         }}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
+        addGeometrySelectedListener={this._addGeometrySelectedListener}
+        removeGeometrySelectedListener={this._removeGeometrySelectedListener}
       />
     )
   }
@@ -859,6 +863,8 @@ export default class MapView extends React.Component {
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
         symbol={this.props.symbol}
+        addGeometrySelectedListener={this._addGeometrySelectedListener}
+        removeGeometrySelectedListener={this._removeGeometrySelectedListener}
       />
     )
   }
@@ -873,7 +879,7 @@ export default class MapView extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.isExample ? '示例地图' : '',
+          title: this.isExample ? '示例地图' : this.mapName,
           navigation: this.props.navigation,
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,

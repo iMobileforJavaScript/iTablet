@@ -30,11 +30,13 @@ import {
   SMCollectorType,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
+import SymbolList from "../SymbolList/SymbolList"
 
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
 const tabs = 'tabs'
+const symbol = 'symbol'
 /** 地图按钮类型 **/
 const cancel = 'cancel' // 取消
 const flex = 'flex' // 伸缩
@@ -67,8 +69,12 @@ export default class ToolBar extends React.Component {
     containerProps?: Object,
     data: Array,
     existFullMap: () => {},
-    confirm:()=>{},
-    dialog:Object,
+    symbol?: Object,
+    confirm: () => {},
+    showDialog: () => {},
+    addGeometrySelectedListener: () => {},
+    removeGeometrySelectedListener: () => {},
+    dialog: Object,
   }
 
   static defaultProps = {
@@ -480,7 +486,7 @@ export default class ToolBar extends React.Component {
                 //   }
                 // })
                 // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
-                Toast.show("谢哥别点")
+                Toast.show('谢哥别点')
               } catch (error) {
                 Toast.show('打点失败')
               }
@@ -497,7 +503,7 @@ export default class ToolBar extends React.Component {
                   callback: result => {
                     this.showToolbar()
                     this.props.dialog.setDialogVisible(true)
-                    this.point=result
+                    this.point = result
                   },
                 })
                 this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
@@ -596,7 +602,7 @@ export default class ToolBar extends React.Component {
             title: '距离量算',
             action: () => {
               SAnalyst.setMeasureLineAnalyst({
-                callback:result=>{
+                callback: result => {
                   // Toast.show(result)
                   this.Map3DToolBar.setAnalystResult(result)
                 },
@@ -611,7 +617,7 @@ export default class ToolBar extends React.Component {
             title: '面积量算',
             action: () => {
               SAnalyst.setMeasureSquareAnalyst({
-                callback:result=>{
+                callback: result => {
                   this.Map3DToolBar.setAnalystResult(result)
                 },
               })
@@ -812,31 +818,30 @@ export default class ToolBar extends React.Component {
           this.showToolbar()
         },
       )
-    JSON.stringify(data) == '{}' &&
+    JSON.stringify(data) === '{}' &&
       this.showToolbar(false) &&
       this.props.existFullMap &&
       this.props.existFullMap()
   }
 
   /** 三维分析结果显示 */
-   showAnalystResult=type=>{
-     this.setState(
-       {
-         type: type,
-         data: [],
-         buttons: [closeAnalyst, clear,flex],
-         // height: ConstToolType.HEIGHT[0],
-         // column: data.length,
-         containerType: 'list',
-       },
-       () => {
-         // this.createCollector(type)
-         this.height = ConstToolType.HEIGHT[0]
-         this.showToolbar()
-       },
-     )
-   }
-
+  showAnalystResult = type => {
+    this.setState(
+      {
+        type: type,
+        data: [],
+        buttons: [closeAnalyst, clear, flex],
+        // height: ConstToolType.HEIGHT[0],
+        // column: data.length,
+        containerType: 'list',
+      },
+      () => {
+        // this.createCollector(type)
+        this.height = ConstToolType.HEIGHT[0]
+        this.showToolbar()
+      },
+    )
+  }
 
   /** 三维分类点击事件*/
   showMap3DTool = async type => {
@@ -974,8 +979,10 @@ export default class ToolBar extends React.Component {
       SCollector.stopCollect()
     }
 
-    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+    if (type.indexOf('MAP_EDIT_') >= 0) {
       SMap.setAction(Action.PAN)
+      this.props.removeGeometrySelectedListener &&
+        this.props.removeGeometrySelectedListener()
     }
 
     this.showToolbar(false)
@@ -1005,7 +1012,10 @@ export default class ToolBar extends React.Component {
   closetool = () => {
     this.attributeListen()
     for (let index = 0; index < this.oldLayerList.length; index++) {
-      SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
+      SScene.setSelectable(
+        this.oldLayerList[index].name,
+        this.oldLayerList[index].selectable,
+      )
     }
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -1084,7 +1094,10 @@ export default class ToolBar extends React.Component {
     // this.addlistener&&this.addlistener.remove()
     this.attributeListen()
     for (let index = 0; index < this.oldLayerList.length; index++) {
-      SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
+      SScene.setSelectable(
+        this.oldLayerList[index].name,
+        this.oldLayerList[index].selectable,
+      )
     }
     SAnalyst.closeAnalysis()
     this.showToolbar(!this.isShow)
@@ -1110,7 +1123,10 @@ export default class ToolBar extends React.Component {
   endfly = () => {
     this.attributeListen()
     for (let index = 0; index < this.oldLayerList.length; index++) {
-      SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
+      SScene.setSelectable(
+        this.oldLayerList[index].name,
+        this.oldLayerList[index].selectable,
+      )
     }
     SScene.flyStop()
     this.showToolbar(!this.isShow)
@@ -1217,6 +1233,10 @@ export default class ToolBar extends React.Component {
     return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} />
   }
 
+  renderSymbol = () => {
+    return  (<SymbolList/>)
+  }
+
   _renderItem = ({item, rowIndex, cellIndex}) => {
     return (
       <MTBtn
@@ -1236,7 +1256,7 @@ export default class ToolBar extends React.Component {
   renderMap3DList = () => {
     return (
       <Map3DToolBar
-        ref={ref=>this.Map3DToolBar=ref}
+        ref={ref => (this.Map3DToolBar = ref)}
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
@@ -1287,10 +1307,10 @@ export default class ToolBar extends React.Component {
           case 'MAP3D_ATTRIBUTE':
             box = this.renderMap3DList()
             break
-          case "MAP3D_TOOL_SUERFACEMEASURE":
+          case 'MAP3D_TOOL_SUERFACEMEASURE':
             box = this.renderMap3DList()
             break
-          case "MAP3D_TOOL_DISTANCEMEASURE":
+          case 'MAP3D_TOOL_DISTANCEMEASURE':
             box = this.renderMap3DList()
             break
           default:
@@ -1300,6 +1320,9 @@ export default class ToolBar extends React.Component {
         break
       case tabs:
         box = this.renderTabs()
+        break
+      case symbol:
+        box = this.renderSymbol()
         break
       case table:
       default:
@@ -1594,5 +1617,11 @@ const styles = StyleSheet.create({
   },
   tabsView: {
     height: ConstToolType.HEIGHT[3] - BUTTON_HEIGHT,
+  },
+  table: {
+    flex: 1,
+    paddingHorizontal: scaleSize(30),
+    alignItems: 'center',
+    backgroundColor: color.blackBg,
   },
 })

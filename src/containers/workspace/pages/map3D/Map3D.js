@@ -59,8 +59,7 @@ export default class Map3D extends React.Component {
     //   }
     // })
     this.getcompass()
- }
-
+  }
 
   componentWillUnmount() {
     Platform.OS === 'android' &&
@@ -68,13 +67,13 @@ export default class Map3D extends React.Component {
     this.listenevent && this.listenevent.remove()
   }
 
-  getcompass=async()=>{
-    setInterval(async()=>{
-      let heading= await SScene.getcompass()
-    },400)
+  getcompass = async () => {
+    setInterval(async () => {
+      await SScene.getcompass()
+    }, 400)
   }
 
-  _addScene = async() => {
+  _addScene = async () => {
     if (!this.path) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
@@ -90,7 +89,6 @@ export default class Map3D extends React.Component {
       this.container.setLoading(false)
     }
   }
-
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
@@ -203,7 +201,11 @@ export default class Map3D extends React.Component {
 
   confirm = async () => {
     // console.log(this)
-    if(this.state.inputText.indexOf(' ')>-1||this.state.inputText===''||this.state.inputText==null){
+    if (
+      this.state.inputText.indexOf(' ') > -1 ||
+      this.state.inputText === '' ||
+      this.state.inputText == null
+    ) {
       // Toast.show('请输入文本内容')
       this.setState({
         placeholder: true,
@@ -226,7 +228,6 @@ export default class Map3D extends React.Component {
     this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
   }
-
 
   renderToolBar = () => {
     return (

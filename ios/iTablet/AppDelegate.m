@@ -51,17 +51,40 @@ static NSString* g_sampleCodeName = @"#";;
   self.window.rootViewController = _nav;
   [self.window makeKeyAndVisible];
   
-  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@""]];
-  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
-  NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
-  if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-    if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-      NSLog(@"拷贝数据失败");
-  }
+  [self initEnvironment];
+  [self initDefaultData];
+  
   self.allowRotation = NO;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   return YES;
 }
+
+#pragma mark - 初始化license
+- (void)initEnvironment {
+  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@""]];
+  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
+  if (srclic) {
+    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+        NSLog(@"拷贝数据失败");
+    }
+  }
+}
+
+#pragma mark - 初始化默认数据
+- (void)initDefaultData {
+  // 初始化游客工作空间
+  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
+  if (srclic) {
+    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/user/Customer/%@",@"Customer.smwu"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+        NSLog(@"拷贝数据失败");
+    }
+  }
+}
+
 -(void)doSampleCodeNotification:(NSNotification *)notification
 {
   NSLog(@"成功收到===>通知");
