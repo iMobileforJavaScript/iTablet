@@ -69,6 +69,8 @@ export default class ToolBar extends React.Component {
     symbol?: Object,
     confirm: () => {},
     showDialog: () => {},
+    addGeometrySelectedListener: () => {},
+    removeGeometrySelectedListener: () => {},
   }
 
   static defaultProps = {
@@ -806,7 +808,7 @@ export default class ToolBar extends React.Component {
           this.showToolbar()
         },
       )
-    JSON.stringify(data) == '{}' &&
+    JSON.stringify(data) === '{}' &&
       this.showToolbar(false) &&
       this.props.existFullMap &&
       this.props.existFullMap()
@@ -944,8 +946,10 @@ export default class ToolBar extends React.Component {
       SCollector.stopCollect()
     }
 
-    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+    if (type.indexOf('MAP_EDIT_') >= 0) {
       SMap.setAction(Action.PAN)
+      this.props.removeGeometrySelectedListener &&
+        this.props.removeGeometrySelectedListener()
     }
 
     this.showToolbar(false)

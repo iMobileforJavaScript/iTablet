@@ -34,6 +34,8 @@ export default class FunctionToolbar extends React.Component {
 
     getToolRef: () => {},
     showFullMap: () => {},
+    addGeometrySelectedListener: () => {},
+    removeGeometrySelectedListener: () => {},
     symbol: Object,
   }
 
@@ -88,7 +90,7 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  showAddLayer = async () => {
+  add = async () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -200,15 +202,27 @@ export default class FunctionToolbar extends React.Component {
 
   showEdit = async () => {
     await SMap.setAction(Action.SELECT)
-    await this._addGeometrySelectedListener()
+    this.props.addGeometrySelectedListener &&
+      (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_REGION, {
+      let type = ''
+      switch (this.props.symbol.currentSymbol.type) {
+        case 'marker':
+          type = ConstToolType.MAP_EDIT_POINT
+          break
+        case 'line':
+          type = ConstToolType.MAP_EDIT_LINE
+          break
+        case 'fill':
+          type = ConstToolType.MAP_EDIT_REGION
+          break
+      }
+      toolRef.setVisible(true, type, {
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[1],
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
@@ -272,16 +286,6 @@ export default class FunctionToolbar extends React.Component {
           })
         }
         break
-    }
-  }
-
-  add = () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
-        containerType: 'list',
-      })
     }
   }
 
@@ -370,7 +374,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '添加',
-            action: this.showAddLayer,
+            action: this.add,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
@@ -542,27 +546,6 @@ export default class FunctionToolbar extends React.Component {
         ]
     }
     return data
-  }
-
-  /** 设置监听 **/
-  /** 选择事件监听 **/
-  _addGeometrySelectedListener = async () => {
-    await SMap.addGeometrySelectedListener({
-      geometrySelected: this.geometrySelected,
-      geometryMultiSelected: this.geometryMultiSelected,
-    })
-  }
-
-  _removeGeometrySelectedListener = async () => {
-    await SMap.removeGeometrySelectedListener()
-  }
-
-  geometrySelected = event => {
-    SMap.appointEditGeometry(event.id, event.layerInfo.name)
-  }
-
-  geometryMultiSelected = () => {
-    // TODO 处理多选
   }
 
   _renderItem = ({ item, index }) => {
