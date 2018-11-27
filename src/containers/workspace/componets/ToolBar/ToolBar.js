@@ -692,6 +692,8 @@ export default class ToolBar extends React.Component {
         ]
         buttons = [closetool, flex]
         break
+      default:
+        buttons = [cancel, flex]
     }
     return { data, buttons }
   }
@@ -975,7 +977,7 @@ export default class ToolBar extends React.Component {
         this.props.removeGeometrySelectedListener()
     }
 
-    this.showToolbar()
+    this.showToolbar(false)
     this.props.existFullMap && this.props.existFullMap()
   }
 

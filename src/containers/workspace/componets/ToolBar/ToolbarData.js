@@ -655,7 +655,7 @@ function redo(type) {
 
 function remove() {
   // TODO remove
-  // return SCollector.redo(type)
+  GLOBAL.removeObjectDialog && GLOBAL.removeObjectDialog.setDialogVisible(true)
 }
 
 function addNode() {

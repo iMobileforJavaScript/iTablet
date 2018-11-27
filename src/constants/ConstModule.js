@@ -68,19 +68,25 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async user => {
+      // const customerPath =
+      //   ConstPath.CustomerPath + ConstPath.RelativePath.CustomerWorkspace
+      // let wsPath = await Utility.appendingHomeDirectory(customerPath)
+      // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
       const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativePath.CustomerWorkspace
+        ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
       let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+
       if (exist && !user.userName) {
         NavigationService.navigate('MapView', {
           // 若未登录，则打开游客工作空间
           wsData: [
             {
               DSParams: { server: wsPath },
+              layerIndex: 0,
               type: 'Workspace',
             },
-            ConstOnline['Baidu'],
+            // ConstOnline['Baidu'],
           ],
           mapName: ConstOnline['Baidu'].mapName,
           isExample: false,

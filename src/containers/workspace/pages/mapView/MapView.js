@@ -20,6 +20,7 @@ import {
   Container,
   MTBtn,
   UsualTitle,
+  Dialog,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
 import { ConstPath, Const } from '../../../../constants'
@@ -411,6 +412,7 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
+    this.props.setSelection && this.props.setSelection(event)
     SMap.appointEditGeometry(event.id, event.layerInfo.name)
   }
 
@@ -585,8 +587,7 @@ export default class MapView extends React.Component {
   removeObject = () => {
     (async function() {
       try {
-        if (!this.map || !this.props.selection || !this.props.selection.id)
-          return
+        if (!this.props.selection || !this.props.selection.id) return
         let selection = await this.props.selection.layer.getSelection()
         let result = await selection.recordset.deleteById(
           this.props.selection.id,
@@ -914,15 +915,15 @@ export default class MapView extends React.Component {
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
         {/*{this.renderSetting()}*/}
-        {/*<Dialog*/}
-        {/*ref={ref => (this.removeObjectDialog = ref)}*/}
-        {/*type={Dialog.Type.MODAL}*/}
-        {/*title={'提示'}*/}
-        {/*info={'是否要删除该对象吗？'}*/}
-        {/*confirmAction={this.removeObject}*/}
-        {/*confirmBtnTitle={'是'}*/}
-        {/*cancelBtnTitle={'否'}*/}
-        {/*/>*/}
+        <Dialog
+          ref={ref => (GLOBAL.removeObjectDialog = ref)}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'是否要删除该对象吗？'}
+          confirmAction={this.removeObject}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
         {/*<Dialog*/}
         {/*ref={ref => (this.openDialog = ref)}*/}
         {/*type={Dialog.Type.MODAL}*/}
