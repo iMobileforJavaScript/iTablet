@@ -121,7 +121,7 @@ class NavigationHeader extends Component {
       </TouchableOpacity>
     )
     let titleView = null
-    if (type === 'floatNoTitle') {
+    if (type !== 'floatNoTitle') {
       titleView = (
         <View style={headerTitleViewStyle}>
           {headerCenter ? (
