@@ -32,7 +32,9 @@ export default [
         })
       } else {
         // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', { wsData: ConstOnline['SuperMapCloud'] })
+        NavigationService.navigate('MapView', {
+          wsData: ConstOnline['SuperMapCloud'],
+        })
       }
     },
   },
@@ -86,14 +88,14 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async user => {
-      // const customerPath =
-      //   ConstPath.CustomerPath + ConstPath.RelativePath.CustomerWorkspace
-      // let wsPath = await Utility.appendingHomeDirectory(customerPath)
-      // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
       const customerPath =
-        ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
+        ConstPath.CustomerPath + ConstPath.RelativePath.CustomerWorkspace
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
       let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      // const customerPath =
+      //   ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
+      // let wsPath = await Utility.appendingHomeDirectory(customerPath)
+      // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
 
       if (exist && !user.userName) {
         NavigationService.navigate('MapView', {

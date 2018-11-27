@@ -5,7 +5,13 @@
  */
 
 import * as React from 'react'
-import { SMMapView, Action, DatasetType, SMap } from 'imobile_for_reactnative'
+import {
+  SMMapView,
+  Action,
+  DatasetType,
+  SMap,
+  SCollector,
+} from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
   FunctionToolbar,
@@ -588,20 +594,15 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         if (!this.props.selection || !this.props.selection.id) return
-        let selection = await this.props.selection.layer.getSelection()
-        let result = await selection.recordset.deleteById(
-          this.props.selection.id,
-        )
+        let result = await SCollector.remove(this.props.selection.id)
         if (result) {
           Toast.show('删除成功')
-          this.props.setSelection()
-          await this.map.refresh()
-          await this.mapControl.setAction(Action.SELECT)
+          this.props.setSelection && this.props.setSelection()
         } else {
           Toast.show('删除失败')
         }
-        this.removeObjectDialog &&
-          this.removeObjectDialog.setDialogVisible(false)
+        GLOBAL.removeObjectDialog &&
+          GLOBAL.removeObjectDialog.setDialogVisible(false)
       } catch (e) {
         Toast.show('删除失败')
       }
