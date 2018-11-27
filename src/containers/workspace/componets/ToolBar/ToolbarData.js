@@ -466,58 +466,58 @@ function getMap3DData(type) {
   if (type.indexOf('MAP3D_') === -1) return { data, buttons }
   switch (type) {
     case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
-      data = [
-        {
-          key: 'spaceDistance',
-          title: '空间距离',
-          action: move,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        },
-        {
-          key: 'psDistance',
-          title: '水平距离',
-          action: handlers => {
-            SAnalyst.setMeasureLineAnalyst(handlers)
-          },
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        },
-        {
-          key: 'groundDistance',
-          title: '依地距离',
-          action: move,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        },
-      ]
-      buttons = ['closeAnalyst', 'clear', 'flex', 'placeholder']
+      // data = [
+        // {
+        //   key: 'spaceDistance',
+        //   title: '空间距离',
+        //   action: move,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_move.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+        // },
+        // {
+        //   key: 'psDistance',
+        //   title: '水平距离',
+        //   action: handlers => {
+        //     SAnalyst.setMeasureLineAnalyst(handlers)
+        //   },
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_move.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+        // },
+        // {
+        //   key: 'groundDistance',
+        //   title: '依地距离',
+        //   action: move,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_move.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+        // },
+      // ]
+      buttons = ['closeAnalyst', 'clear']
       break
     case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
-      data = [
-        {
-          key: 'spaceSuerface',
-          title: '空间面积',
-          action: handlers => {
-            SAnalyst.setMeasureSquareAnalyst(handlers)
-          },
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        },
-        {
-          key: 'groundSuerface',
-          title: '依地面积',
-          action: move,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        },
-      ]
-      buttons = ['closeAnalyst', 'clear', 'flex', 'placeholder']
+      // data = [
+      //   {
+      //     key: 'spaceSuerface',
+      //     title: '空间面积',
+      //     action: handlers => {
+      //       SAnalyst.setMeasureSquareAnalyst(handlers)
+      //     },
+      //     size: 'large',
+      //     image: require('../../../../assets/mapTools/icon_move.png'),
+      //     selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+      //   },
+      //   {
+      //     key: 'groundSuerface',
+      //     title: '依地面积',
+      //     action: move,
+      //     size: 'large',
+      //     image: require('../../../../assets/mapTools/icon_move.png'),
+      //     selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+      //   },
+      // ]
+      buttons = ['closeAnalyst', 'clear']
       break
     case ConstToolType.MAP3D_TOOL_HEIGHTMEASURE:
       buttons = ['cancel', 'flex']
@@ -538,7 +538,7 @@ function getMap3DData(type) {
       data = [
         {
           key: 'startFly',
-          title: '播放轨迹',
+          title: '开始轨迹',
           action: () => {
             SScene.flyStart()
           },
@@ -547,38 +547,58 @@ function getMap3DData(type) {
           selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
         },
         {
-          key: 'addstation',
-          title: '添加站点',
-          action: move,
+          key: 'stopOrstart',
+          title: '播放/暂停',
+          action: ()=>{
+            SScene.flyPauseOrStart()
+          },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_move.png'),
           selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
         },
-        {
-          key: 'stationmanager',
-          title: '站点管理',
-          action: move,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        },
+        // {
+        //   key: 'endfly',
+        //   title: '结束飞行',
+        //   action: ()=>{
+        //     SScene.flyStop()
+        //   },
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_move.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+        // },
+        // {
+        //   key: 'addstation',
+        //   title: '添加站点',
+        //   action: move,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_move.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+        // },
+        // {
+        //   key: 'stationmanager',
+        //   title: '站点管理',
+        //   action: move,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_move.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+        // },
       ]
-      buttons = ['cancel', 'endfly', 'flex', 'placeholder']
+      buttons = [ 'endfly', 'flex']
       break
     case ConstToolType.MAP3D_TOOL_LEVEL:
       buttons = ['cancel', 'flex']
       break
     case ConstToolType.MAP3D_SYMBOL_POINT:
-      buttons = ['clearsymbol', 'flex', 'back', 'save']
+      buttons = ['closesymbol', 'back', 'save']
       break
     case ConstToolType.MAP3D_SYMBOL_POINTLINE:
-      buttons = ['clearsymbol', 'flex', 'back', 'save']
+      buttons = ['closesymbol', 'back', 'save']
       break
     case ConstToolType.MAP3D_SYMBOL_POINTSURFACE:
-      buttons = ['clearsymbol', 'flex', 'back', 'save']
+      buttons = ['closesymbol', 'back', 'save']
       break
     case ConstToolType.MAP3D_SYMBOL_TEXT:
-      buttons = ['clearsymbol', 'flex', 'back', 'save']
+      buttons = ['closesymbol', 'back', 'save']
       break
   }
   return { data, buttons }

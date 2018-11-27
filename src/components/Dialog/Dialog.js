@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, StyleSheet, Modal, TouchableOpacity } from 'react-native'
+import { View, Text, Modal, TouchableOpacity } from 'react-native'
 
 import styles from './styles'
 
