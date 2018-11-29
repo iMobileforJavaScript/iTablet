@@ -163,7 +163,7 @@ function goToMapView(type) {
         await map.addLayer(await dsLabel.getDataset(layerIndex), true)
       }
     } else {
-      NavigationService.navigate('MapView', ConstOnline[type])
+      NavigationService.navigate('MapView', { wsData: ConstOnline[type] })
     }
   }.bind(this)())
 }

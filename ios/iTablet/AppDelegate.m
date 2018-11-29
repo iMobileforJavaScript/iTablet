@@ -26,7 +26,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.31.146"];  //   10.10.2.46
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.123"];  //   10.10.2.46
   
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
@@ -51,17 +51,41 @@ static NSString* g_sampleCodeName = @"#";;
   self.window.rootViewController = _nav;
   [self.window makeKeyAndVisible];
   
-  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@""]];
-  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
-  NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
-  if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-    if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-      NSLog(@"拷贝数据失败");
-  }
+  [self initEnvironment];
+  [self initDefaultData];
+  
   self.allowRotation = NO;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   return YES;
 }
+
+#pragma mark - 初始化license
+- (void)initEnvironment {
+  [Environment setLicensePath:[NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@""]];
+  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
+  if (srclic) {
+    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+        NSLog(@"拷贝数据失败");
+    }
+  }
+}
+
+#pragma mark - 初始化默认数据
+- (void)initDefaultData {
+  // 初始化游客工作空间
+  NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
+  [AppDelegate createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/User/Customer/%@",@""]];
+  if (srclic) {
+    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/User/Customer/%@",@"Customer.smwu"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+        NSLog(@"拷贝数据失败");
+    }
+  }
+}
+
 -(void)doSampleCodeNotification:(NSNotification *)notification
 {
   NSLog(@"成功收到===>通知");
@@ -87,5 +111,33 @@ static NSString* g_sampleCodeName = @"#";;
     //竖屏
     return UIInterfaceOrientationMaskPortrait;
   }
+}
+
++(BOOL)createFileDirectories:(NSString*)path
+{
+  
+  // 判断存放音频、视频的文件夹是否存在，不存在则创建对应文件夹
+  NSString* DOCUMENTS_FOLDER_AUDIO = path;
+  NSFileManager *fileManager = [NSFileManager defaultManager];
+  
+  BOOL isDir = FALSE;
+  BOOL isDirExist = [fileManager fileExistsAtPath:DOCUMENTS_FOLDER_AUDIO isDirectory:&isDir];
+  
+  
+  if(!(isDirExist && isDir)){
+    BOOL bCreateDir = [fileManager createDirectoryAtPath:DOCUMENTS_FOLDER_AUDIO withIntermediateDirectories:YES attributes:nil error:nil];
+    
+    if(!bCreateDir){
+      
+      NSLog(@"Create Directory Failed.");
+      return NO;
+    }else
+    {
+      //  NSLog(@"%@",DOCUMENTS_FOLDER_AUDIO);
+      return YES;
+    }
+  }
+  
+  return YES;
 }
 @end

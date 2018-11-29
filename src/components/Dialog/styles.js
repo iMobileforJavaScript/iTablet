@@ -53,7 +53,7 @@ export default StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     borderRadius: scaleSize(30),
     backgroundColor: color.blue2,
-    minWidth: scaleSize(100),
+    minWidth: scaleSize(120),
   },
   cancelBtnStyle: {
     justifyContent: 'center',

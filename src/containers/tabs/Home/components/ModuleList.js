@@ -12,12 +12,21 @@ import { ConstModule } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 const SCREEN_WIDTH = Dimensions.get('window').width
 export default class ModuleList extends Component {
-  props: {}
+  props: {
+    currentUser: Object,
+  }
 
-  _renderItem({ item }) {
+  itemAction = item => {
+    item.action && item.action(this.props.currentUser)
+  }
+
+  _renderItem = ({ item }) => {
     return (
       <View style={styles.moduleView}>
-        <TouchableOpacity onPress={item.action} style={styles.module}>
+        <TouchableOpacity
+          onPress={() => this.itemAction(item)}
+          style={styles.module}
+        >
           <Image source={item.baseImage} style={styles.baseImage} />
           <View style={styles.moduleItem}>
             <Image

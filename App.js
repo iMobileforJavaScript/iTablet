@@ -12,7 +12,7 @@ import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_reactnative'
+import { SpeechManager, Utility, OnlineService, SMap, WorkspaceType } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
 
@@ -57,6 +57,7 @@ class AppRoot extends Component {
       await this.initDirectories()
       // await this.initEnvironment()
       await this.initSpeechManager()
+      await this.initCustomerWorkspace()
     }).bind(this)()
   }
 
@@ -83,13 +84,12 @@ class AppRoot extends Component {
   // 初始化文件目录
   initDirectories = async () => {
     try {
-      let paths = [
-        ConstPath.AppPath, ConstPath.LicensePath, ConstPath.LocalDataPath,
-        ConstPath.SampleDataPath, ConstPath.UserPath, ConstPath.Audio,
-      ]
+      let paths = Object.keys(ConstPath)
       let isCreate = false, absolutePath = ''
       for (let i = 0; i < paths.length; i++) {
-        absolutePath = await Utility.appendingHomeDirectory(paths[i])
+        let path = ConstPath[paths[i]]
+        if (typeof path !== 'string') continue
+        absolutePath = await Utility.appendingHomeDirectory(path)
         isCreate = await Utility.createDirectory(absolutePath)
       }
       if (!isCreate) {
@@ -100,25 +100,6 @@ class AppRoot extends Component {
     }
   }
 
-  // 初始化环境
-  initEnvironment = async () => {
-    try {
-      let licensePath = await Utility.appendingHomeDirectory(ConstPath.LicensePath)
-      let en = new Environment()
-      let isSet = await en.setLicensePath(licensePath)
-      if (!isSet) {
-        Toast.show('许可文件设置失败')
-        return
-      }
-      let isInit = await en.initialization()
-      if (!isInit) {
-        Toast.show('环境初始化失败')
-      }
-    } catch (e) {
-      Toast.show('环境初始化失败')
-    }
-  }
-
   // 初始化录音
   initSpeechManager = async () => {
     try {
@@ -126,6 +107,23 @@ class AppRoot extends Component {
       await GLOBAL.SpeechManager.init()
     } catch (e) {
       Toast.show('语音初始化失败')
+    }
+  }
+
+  // 初始化游客工作空间
+  initCustomerWorkspace = async () => {
+    try {
+      const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.CustomerWorkspace
+      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      !exist && Utility.appendingHomeDirectory(customerPath).then(path => {
+        SMap.saveWorkspace({
+          caption: 'Customer',
+          type: WorkspaceType.SMWU,
+          server: path,
+        })
+      })
+    } catch (e) {
+      Toast.show('游客工作空间初始化失败')
     }
   }
 
@@ -143,27 +141,6 @@ class AppRoot extends Component {
             })
           }}
         />
-        {/*<AudioDialog*/}
-        {/*ref={ref => GLOBAL.AudioDialog = ref}*/}
-        {/*data={{*/}
-        {/*layer: this.props.editLayer,*/}
-        {/*}}*/}
-        {/*/>*/}
-        {/*{*/}
-        {/*(*/}
-        {/*!this.props.nav.routes ||*/}
-        {/*this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName !== 'MapView'*/}
-        {/*) &&*/}
-        {/*<PanAudioButton*/}
-        {/*onPress={() => {*/}
-        {/*if (this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName === 'MapView') {*/}
-        {/*GLOBAL.AudioDialog.setVisible(true, 'top')*/}
-        {/*} else {*/}
-        {/*GLOBAL.AudioDialog.setVisible(true)*/}
-        {/*}*/}
-        {/*}}*/}
-        {/*ref={ref => GLOBAL.PanAudioButton = ref}/>*/}
-        {/*}*/}
       </View>
     )
   }

@@ -109,6 +109,7 @@ export default class Map3D extends React.Component {
     GLOBAL.sceneControl = sceneControl
     // GLOBAL.sceneControlId = sceneControlId
     this._addScene()
+    SScene.getAttribute()
     // this.container.setLoading(false)
   }
 

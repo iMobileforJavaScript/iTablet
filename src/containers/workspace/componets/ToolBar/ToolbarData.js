@@ -5,12 +5,15 @@ import {
   SMCollectorType,
   SScene,
 } from 'imobile_for_reactnative'
-import { ConstToolType } from '../../../../constants'
+import { Toast } from '../../../../utils'
+import { ConstToolType, ConstInfo } from '../../../../constants'
 import constants from '../../constants'
 
-function getTabBarData(type) {
-  let tabBarData = { data: [], buttons: [] }
+let _params = {}
 
+function getTabBarData(type, params = {}) {
+  _params = params
+  let tabBarData = { data: [], buttons: [] }
   let isCollection = false
   Object.keys(SMCollectorType).forEach(key => {
     if (SMCollectorType[key] === type) {
@@ -24,6 +27,10 @@ function getTabBarData(type) {
     tabBarData = getEditData(type)
   } else if (type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
+  } else if (type === ConstToolType.MAP_MORE) {
+    tabBarData = getMapMore(type)
+  } else if (type === ConstToolType.MAP_START) {
+    tabBarData = getStart(type)
   }
   return {
     data: tabBarData.data,
@@ -416,45 +423,50 @@ function getCollectionData(type) {
       title: '开始',
       action: () => SCollector.startCollect(type),
       size: 'large',
-      image: require('../../../../assets/function/icon_function_base_map.png'),
+      image: require('../../../../assets/mapTools/icon_play.png'),
     })
     data.push({
       key: 'stop',
       title: '停止',
       action: () => {},
       size: 'large',
-      image: require('../../../../assets/function/icon_function_base_map.png'),
+      image: require('../../../../assets/mapTools/icon_pause.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_pause_selected.png'),
     })
   }
   data.push({
-    key: 'undo',
-    title: '撤销',
+    key: constants.UNDO,
+    title: constants.UNDO,
     action: () => undo(type),
     size: 'large',
-    image: require('../../../../assets/function/icon_function_base_map.png'),
+    image: require('../../../../assets/mapTools/icon_undo.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'),
   })
   data.push({
-    key: 'redo',
-    title: '重做',
+    key: constants.REDO,
+    title: constants.REDO,
     action: () => redo(type),
     size: 'large',
-    image: require('../../../../assets/function/icon_function_base_map.png'),
+    image: require('../../../../assets/mapTools/icon_redo.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_redo_selected.png'),
   })
   data.push({
-    key: 'cancel',
-    title: '取消',
+    key: constants.CANCEL,
+    title: constants.CANCEL,
     action: () => cancel(type),
     size: 'large',
-    image: require('../../../../assets/function/icon_function_base_map.png'),
+    image: require('../../../../assets/mapTools/icon_cancel.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_cancel_selected.png'),
   })
   data.push({
-    key: 'submit',
-    title: '提交',
+    key: constants.SUBMIT,
+    title: constants.SUBMIT,
     action: () => collectionSubmit(type),
     size: 'large',
-    image: require('../../../../assets/function/icon_function_base_map.png'),
+    image: require('../../../../assets/mapTools/icon_submit.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'),
   })
-  buttons = ['cancel', 'flex', 'placeholder']
+  buttons = ['cancel', 'changeCollection', 'mapSymbol']
 
   return { data, buttons }
 }
@@ -618,9 +630,100 @@ function getMap3DData(type) {
   return { data, buttons }
 }
 
-async function mapSubmit() {
+function getMapMore(type) {
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_MORE) return { data, buttons }
+  data = [
+    {
+      key: constants.CLOSE,
+      title: constants.CLOSE,
+      action: closeMap,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
+      key: constants.SAVE,
+      title: constants.SAVE,
+      size: 'large',
+      // TODO 保存地图
+      action: () => saveMap('TempMap'),
+      image: require('../../../../assets/mapTools/icon_words.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+    },
+    {
+      key: constants.SAVE_AS,
+      title: constants.SAVE_AS,
+      size: 'large',
+      action: saveMapAs,
+      image: require('../../../../assets/mapTools/icon_point_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+    },
+    {
+      key: constants.SHARE,
+      title: constants.SHARE,
+      size: 'large',
+      action: shareMap,
+      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+    },
+  ]
+  return { data, buttons }
+}
+
+function getStart(type) {
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_START) return { data, buttons }
+  data = [
+    {
+      key: constants.OPEN,
+      title: constants.OPEN,
+      action: openMap,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
+      key: constants.CREATE,
+      title: constants.CREATE,
+      size: 'large',
+      action: createMap,
+      image: require('../../../../assets/mapTools/icon_words.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+    },
+    {
+      key: constants.HISTORY,
+      title: constants.HISTORY,
+      size: 'large',
+      action: showHistory,
+      image: require('../../../../assets/mapTools/icon_point_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+    },
+    {
+      key: constants.BASE_MAP,
+      title: constants.BASE_MAP,
+      size: 'large',
+      action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+    },
+    {
+      key: constants.ADD,
+      title: constants.ADD,
+      size: 'large',
+      action: add,
+      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+    },
+  ]
+  return { data, buttons }
+}
+
+function mapSubmit() {
   let result = SMap.submit()
-  await SMap.setAction(Action.SELECT)
+  SMap.setAction(Action.SELECT)
   return result
 }
 
@@ -670,7 +773,7 @@ function redo(type) {
 
 function remove() {
   // TODO remove
-  // return SCollector.redo(type)
+  GLOBAL.removeObjectDialog && GLOBAL.removeObjectDialog.setDialogVisible(true)
 }
 
 function addNode() {
@@ -723,6 +826,91 @@ function fillHollowRegion() {
 /** 补充岛洞 **/
 function patchHollowRegion() {
   return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 关闭地图 **/
+function closeMap() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 保存地图 **/
+function saveMap(name = '') {
+  SMap.saveMap(name).then(result => {
+    Toast.show(
+      result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+    )
+  })
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 另存地图 **/
+function saveMapAs() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 分享 **/
+function shareMap() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 打开地图 **/
+function openMap() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 新建地图 **/
+function createMap() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 历史 **/
+function showHistory() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+}
+
+/** 切换底图 **/
+function changeBaseLayer() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  switch (_params.type) {
+    case 'MAP_3D':
+      _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
+        containerType: 'list',
+      })
+      break
+
+    default:
+      _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
+        containerType: 'list',
+        height: ConstToolType.HEIGHT[3],
+      })
+      break
+  }
+}
+
+/** 添加 **/
+function add() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  switch (_params.type) {
+    case 'MAP_3D':
+      _params.setToolbarVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+        containerType: 'list',
+        isFullScreen: true,
+        height: ConstToolType.HEIGHT[3],
+      })
+      break
+
+    default:
+      _params.setToolbarVisible(true, ConstToolType.MAP_ADD_LAYER, {
+        containerType: 'list',
+        isFullScreen: true,
+        height: ConstToolType.HEIGHT[2],
+      })
+      break
+  }
 }
 
 export default {

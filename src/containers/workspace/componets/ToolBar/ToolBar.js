@@ -8,9 +8,11 @@ import {
   layerAdd,
   Map3DBaseMapList,
 } from '../../../../constants'
+import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
 import ToolbarData from './ToolbarData'
+import EditControlBar from './EditControlBar'
 import {
   View,
   StyleSheet,
@@ -19,28 +21,33 @@ import {
   Text,
   SectionList,
   Animated,
+  FlatList,
 } from 'react-native'
 import {
-  DatasetType,
-  SCollector,
-  GeoStyle,
-  SMCollectorType,
   SMap,
   SAnalyst,
   SScene,
   Action,
+  DatasetType,
+  SCollector,
+  GeoStyle,
+  SMCollectorType,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
+import SymbolList from '../SymbolList/SymbolList'
 
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
 const tabs = 'tabs'
+const symbol = 'symbol'
 /** 地图按钮类型 **/
 const cancel = 'cancel' // 取消
 const flex = 'flex' // 伸缩
 const style = 'style' // 样式
 const commit = 'commit' // 提交
+const menu = 'menu' //菜单
+const menus = 'menus' //菜单
 const placeholder = 'placeholder' // 占位
 const closeAnalyst = 'closeAnalyst'
 const clear = 'clear'
@@ -52,6 +59,7 @@ const clearcurrentLabel = 'clearcurrentLabel'
 const closetool = 'closetool'
 const clearattribute = 'clearattribute'
 const closeCircle = 'closeCircle'
+const changeCollection = 'changeCollection'
 // 工具视图高度级别
 // const HEIGHT = [scaleSize(100), scaleSize(200), scaleSize(600)]
 // 工具表格默认高度
@@ -68,9 +76,13 @@ export default class ToolBar extends React.Component {
     containerProps?: Object,
     data: Array,
     existFullMap: () => {},
+    symbol?: Object,
     confirm: () => {},
+    showDialog: () => {},
+    addGeometrySelectedListener: () => {},
+    removeGeometrySelectedListener: () => {},
+    showFullMap: () => {},
     dialog: Object,
-    symbol: any,
   }
 
   static defaultProps = {
@@ -92,6 +104,7 @@ export default class ToolBar extends React.Component {
           ? ConstToolType.HEIGHT[3]
           : ConstToolType.HEIGHT[1]
     this.originType = props.type // 初次传入的类型
+    this.lastType = ''
     this.state = {
       // isShow: false,
       type: props.type, // 当前传入的类型
@@ -104,6 +117,9 @@ export default class ToolBar extends React.Component {
       buttons: [],
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
+      isSelectlist: false,
+      isTouch: true,
+      isTouchProgress: false,
     }
     this.isShow = false
     this.isBoxShow = true
@@ -693,6 +709,30 @@ export default class ToolBar extends React.Component {
     } catch (error) {
       Toast.show('当前场景无飞行轨迹')
     }
+    this.isShow = false
+    this.isBoxShow = true
+  }
+
+  componentDidMount() {
+    this.attributeListen()
+  }
+
+  componentWillUnmount() {
+    this.listenevent && this.listenevent.remove()
+  }
+
+  /**建筑单体触控监听 */
+  attributeListen() {
+    this.listenevent = SScene.addListener({
+      callback: result => {
+        //  console.log(result)
+        this.showMap3DAttribute(result)
+      },
+    })
+  }
+
+  getOriginType = () => {
+    return this.originType
   }
 
   /** 创建采集 **/
@@ -757,6 +797,7 @@ export default class ToolBar extends React.Component {
   /** 采集分类点击事件 **/
   showCollection = type => {
     let { data, buttons } = this.getData(type)
+    this.lastType = this.state.type
     this.setState(
       {
         type: type,
@@ -1199,8 +1240,17 @@ export default class ToolBar extends React.Component {
     }
   }
 
+  /** 编辑操作控制栏（撤销/重做/取消/提交） **/
+  renderEditControlBar = () => {
+    return <EditControlBar type={this.props.type} />
+  }
+
   renderTabs = () => {
     return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} />
+  }
+
+  renderSymbol = () => {
+    return <SymbolList />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1226,6 +1276,41 @@ export default class ToolBar extends React.Component {
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
+      />
+    )
+  }
+
+  renderSelectList = () => {
+    return (
+      <FlatList
+        data={[
+          {
+            key: '符号线',
+            action: () => {
+              this.menu()
+              this.setState({ buttons: ['cancel', 'menu', 'flex', 'commit'] })
+            },
+          },
+          {
+            key: '线宽',
+            action: () => {
+              this.setState({
+                isTouchProgress: true,
+                isSelectlist: false,
+                buttons: ['cancel', 'menus', 'commit'],
+              })
+            },
+          },
+          {
+            key: '颜色',
+            action: () => {},
+          },
+        ]}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => item.action(item)}>
+            <Text style={styles.item}>{item.key}</Text>
+          </TouchableOpacity>
+        )}
       />
     )
   }
@@ -1258,6 +1343,9 @@ export default class ToolBar extends React.Component {
       case tabs:
         box = this.renderTabs()
         break
+      case symbol:
+        box = this.renderSymbol()
+        break
       case table:
       default:
         box = this.renderTable()
@@ -1283,6 +1371,7 @@ export default class ToolBar extends React.Component {
 
   renderBottomBtns = () => {
     let btns = []
+    if (this.state.buttons.length === 0) return null
     this.state.buttons.forEach((type, index) => {
       switch (type) {
         case cancel:
@@ -1300,7 +1389,7 @@ export default class ToolBar extends React.Component {
           btns.push(
             this.renderBottomBtn(
               {
-                image: require('../../../../assets/mapEdit/icon_flex.png'),
+                image: require('../../../../assets/mapEdit/flex.png'),
                 action: this.showBox,
               },
               index,
@@ -1324,6 +1413,28 @@ export default class ToolBar extends React.Component {
               {
                 image: require('../../../../assets/mapEdit/commit.png'),
                 action: () => this.commit(),
+              },
+              index,
+            ),
+          )
+          break
+        case menu:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/menu.png'),
+                action: () => this.menu(),
+              },
+              index,
+            ),
+          )
+          break
+        case menus:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/menu.png'),
+                action: () => this.menus(),
               },
               index,
             ),
@@ -1369,7 +1480,7 @@ export default class ToolBar extends React.Component {
           }
           break
         case placeholder:
-          btns.push(<View style={{ flex: 1 }} key={type + '-' + index} />)
+          btns.push(<View style={styles.button} key={type + '-' + index} />)
           break
         case back:
           btns.push(
@@ -1448,6 +1559,21 @@ export default class ToolBar extends React.Component {
             ),
           )
           break
+        case changeCollection:
+          btns.push(
+            this.renderBottomBtn(
+              {
+                image: require('../../../../assets/mapEdit/icon-rename-white.png'),
+                action: () =>
+                  this.setVisible(true, this.lastType, {
+                    isFullScreen: false,
+                    // height: ConstToolType.HEIGHT[0],
+                  }),
+              },
+              index,
+            ),
+          )
+          break
       }
     })
     return <View style={styles.buttonz}>{btns}</View>
@@ -1459,16 +1585,21 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen && (
+        {this.state.isFullScreen &&
+          !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {/* <View style={{ flex: 1 }}>
-          <TouchProgress />
-        </View> */}
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && <TouchProgress />}
+        {this.state.isSelectlist && (
+          <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
+            {this.renderSelectList()}
+          </View>
+        )}
         <View style={styles.containers}>
           {this.renderView()}
           {this.renderBottomBtns()}
@@ -1550,5 +1681,11 @@ const styles = StyleSheet.create({
   },
   tabsView: {
     height: ConstToolType.HEIGHT[3] - BUTTON_HEIGHT,
+  },
+  table: {
+    flex: 1,
+    paddingHorizontal: scaleSize(30),
+    alignItems: 'center',
+    backgroundColor: color.blackBg,
   },
 })

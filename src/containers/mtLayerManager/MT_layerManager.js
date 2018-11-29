@@ -35,19 +35,26 @@ export default class MT_layerManager extends React.Component {
     this.state = {
       datasourceList: [],
       mapName: '',
-      // wsName: wsName,
-      // path: path,
+      refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
     }
     // this.currentEditItemName = '' // 记录当前可编辑的图层的名称
   }
 
   componentDidMount() {
+    this.setRefreshing(true)
     this.getData()
   }
 
+  setRefreshing = refreshing => {
+    if (refreshing === this.state.refreshing) return
+    this.setState({
+      refreshing: refreshing,
+    })
+  }
+
   getData = async () => {
-    this.container.setLoading(true)
+    // this.container.setLoading(true)
     try {
       this.itemRefs = {}
       // this.map = await this.mapControl.getMap()
@@ -62,17 +69,12 @@ export default class MT_layerManager extends React.Component {
       }
       await SMap.setAction(Action.SELECT)
       // let mapName = await this.map.getName()
-      this.setState(
-        {
-          datasourceList: layerNameArr.concat(),
-          // mapName: mapName,
-        },
-        () => {
-          this.container.setLoading(false)
-        },
-      )
+      this.setState({
+        datasourceList: layerNameArr.concat(),
+        refreshing: false,
+      })
     } catch (e) {
-      this.container.setLoading(false)
+      this.setRefreshing(false)
     }
   }
 
@@ -380,6 +382,11 @@ export default class MT_layerManager extends React.Component {
         {/*addLayerGroup={this._add_layer_group}*/}
         {/*/>*/}
         <FlatList
+          refreshing={this.state.refreshing}
+          onRefresh={() => {
+            this.setRefreshing(true)
+            this.getData()
+          }}
           ref={ref => (this.listView = ref)}
           data={this.state.datasourceList}
           renderItem={this._renderItem}
