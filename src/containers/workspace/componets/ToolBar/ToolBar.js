@@ -511,7 +511,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_text.png'),
           },
           {
             key: 'map3DPiontLine',
@@ -525,7 +525,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_pointLine.png'),
           },
           {
             key: 'map3DPointSurface',
@@ -539,7 +539,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_pointSuerface.png'),
           },
         ]
         buttons = [closesymbol, flex]
@@ -559,7 +559,7 @@ export default class ToolBar extends React.Component {
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_analystLien.png'),
           },
           {
             key: 'suerfaceMeasure',
@@ -573,7 +573,7 @@ export default class ToolBar extends React.Component {
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
           {
             key: 'fly',
@@ -588,7 +588,7 @@ export default class ToolBar extends React.Component {
               // this.getflylist()
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_symbolFly.png'),
           },
         ]
         buttons = [closetool, flex]

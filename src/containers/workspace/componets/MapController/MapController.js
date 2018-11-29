@@ -28,11 +28,12 @@ export default class MapController extends React.Component {
   }
 
   componentDidMount() {
-    setInterval(async () => {
-      let deg = await SScene.getcompass()
-      this.setCompass(deg)
-      //  console.warn('----------------' + deg)
-    }, 600)
+    if (this.props.type === 'MAP_3D') {
+      setInterval(async () => {
+        let deg = await SScene.getcompass()
+        this.setCompass(deg)
+      }, 600)
+    }
   }
 
   setVisible = visible => {
