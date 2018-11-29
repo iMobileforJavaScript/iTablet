@@ -34,6 +34,7 @@ export default class WorkSpaceFileList extends Component {
     this.type = params.type
     this.path = ConstPath.LocalDataPath
     this.title = params.title
+    this.cb = params.cb
     this.state = {
       data: [],
       backPath: ConstPath.AppPath + '/data/local',
@@ -92,7 +93,12 @@ export default class WorkSpaceFileList extends Component {
           } else if (filename === '.smwu') {
             this._toLoadMapView(absolutePath, '.smwu')
           } else if (filename === '.udb') {
-            this._toLoadMapView(absolutePath, EngineType.UDB)
+            if (this.cb) {
+              this.cb(absolutePath)
+              NavigationService.goBack() && this.container.setLoading(false)
+            } else {
+              this._toLoadMapView(absolutePath, EngineType.UDB)
+            }
           } else {
             this._offLine_More()
           }
@@ -100,7 +106,7 @@ export default class WorkSpaceFileList extends Component {
           let filter
           switch (this.type) {
             case 'MAP_3D':
-              filter = 'sxwu'
+              filter = 'sxwu,smwu'
               break
             default:
               filter = 'smwu,sxwu,udb'
@@ -135,6 +141,7 @@ export default class WorkSpaceFileList extends Component {
             NavigationService.goBack() && this.container.setLoading(false)
           } catch (error) {
             Toast.show('打开失败')
+            this.container.setLoading(false)
           }
           break
 
@@ -148,6 +155,7 @@ export default class WorkSpaceFileList extends Component {
             NavigationService.goBack() && this.container.setLoading(false)
           } catch (error) {
             Toast.show('打开失败')
+            this.container.setLoading(false)
           }
           break
       }

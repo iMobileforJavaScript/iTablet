@@ -5,6 +5,8 @@ import AudioKeywords from './AudioKeywords'
 import EventConst from './EventConst'
 import ExampleMapData from './ExampleMapData'
 import ConstModule from './ConstModule'
+import ConstToolType from './ConstToolType'
+import Map3DBaseMapList from './Map3DBaseMapList'
 import { layerAdd, BotMap } from './FunctionToolbarModule'
 
 export {
@@ -17,4 +19,6 @@ export {
   ConstModule,
   layerAdd,
   BotMap,
+  ConstToolType,
+  Map3DBaseMapList,
 }

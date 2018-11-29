@@ -17,6 +17,7 @@ export default class Layer3DManager_item extends React.Component {
     layer: Object,
     scene: Object,
     visible: Boolean,
+    selectable: Boolean,
   }
 
   constructor(props) {
@@ -24,6 +25,7 @@ export default class Layer3DManager_item extends React.Component {
     this.name = this.props.name
     this.state = {
       visible: this.props.visible,
+      selectable: this.props.selectable,
       editable: false,
     }
   }
@@ -43,8 +45,10 @@ export default class Layer3DManager_item extends React.Component {
   _visable_change = () => {
     this.setState(oldstate => {
       let oldVisible = oldstate.visible
+      // let oldSelectable = oldstate.selectable
       ;(async function() {
         await SScene.setVisible(this.name, !oldVisible)
+        // await SScene.setSelectable(this.name,!oldSelectable)
       }.bind(this)())
       return { visible: !oldVisible }
     })

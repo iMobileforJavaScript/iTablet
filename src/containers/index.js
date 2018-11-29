@@ -13,7 +13,7 @@ import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
 import { ChooseDatasource, NewDSet } from './newDSet'
-import MTLayerManager from './mtLayerManager'
+// import MTLayerManager from './mtLayerManager'
 import Map3DLayerManager from './map3DLayerManager'
 import AnalystParams from './analystParams'
 import AddLayer from './addLayer'
@@ -33,8 +33,10 @@ import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
-import { Map3D, MapView } from './workspace'
+// import { Map3D, MapView } from './workspace'
+import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
+import TouchProgress from './workspace/componets/TouchProgress'
 
 export default StackNavigator(
   {
@@ -50,14 +52,14 @@ export default StackNavigator(
         header: null,
       },
     },
-    MapView: {
-      screen: MapView,
+    MapTabs: {
+      screen: MapTabs,
       navigationOptions: {
         header: null,
       },
     },
-    Map3D: {
-      screen: Map3D,
+    Map3DTabs: {
+      screen: Map3DTabs,
       navigationOptions: {
         header: null,
       },
@@ -74,12 +76,12 @@ export default StackNavigator(
         header: null,
       },
     },
-    LayerManager: {
-      screen: MTLayerManager,
-      navigationOptions: {
-        header: null,
-      },
-    },
+    // LayerManager: {
+    //   screen: MTLayerManager,
+    //   navigationOptions: {
+    //     header: null,
+    //   },
+    // },
     Map3DLayerManager: {
       screen: Map3DLayerManager,
       navigationOptions: {
@@ -238,6 +240,12 @@ export default StackNavigator(
     },
     MapToolbarSetting: {
       screen: MapToolbarSetting,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    TouchProgress: {
+      screen: TouchProgress,
       navigationOptions: {
         header: null,
       },

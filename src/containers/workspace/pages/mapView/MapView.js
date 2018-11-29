@@ -8,12 +8,10 @@ import * as React from 'react'
 import { SMMapView, Action, DatasetType, SMap } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
-  PopList,
-  Setting,
-  DrawerView,
   FunctionToolbar,
   MapToolbar,
   MapController,
+  ToolBar,
 } from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
@@ -24,11 +22,10 @@ import {
   UsualTitle,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
-import { ConstPath, Const, layerAdd, BotMap } from '../../../../constants'
+import { ConstPath, Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
-import ToolBar from '../../../workspace/componets/ToolBar'
 
 // 数组的第一个为DrawerView的默认高度
 const LVL_0 = [scaleSize(280)]
@@ -46,6 +43,7 @@ export default class MapView extends React.Component {
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
+    symbol: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -119,6 +117,8 @@ export default class MapView extends React.Component {
         },
       },
     ]
+
+    this.fullMap = false
   }
 
   componentDidMount() {
@@ -396,43 +396,48 @@ export default class MapView extends React.Component {
     this._remove_measure_listener()
   }
 
-  /** 选择事件监听 **/
-  _addGeometrySelectedListener = async () => {
-    await this.mapControl.addGeometrySelectedListener({
-      geometrySelected: this.geometrySelected,
-      geometryMultiSelected: this.geometryMultiSelected,
-    })
-  }
-
-  _removeGeometrySelectedListener = async () => {
-    this.mapControl && (await this.mapControl.removeGeometrySelectedListener())
-  }
-
-  geometrySelected = event => {
-    let layerSelectable = true
-    if (this.props.selection && this.props.selection.layer) {
-      layerSelectable =
-        this.props.selection.layer._SMLayerId !== event.layer._SMLayerId ||
-        this.props.selection.id !== event.id
-    }
-    event.layer.getName().then(async name => {
-      let editable = await event.layer.getEditable()
-      Toast.show('选中 ' + name)
-      Object.assign(event, { name: name, editable, geoID: event.id })
-      layerSelectable && this.props.setSelection(event)
-      // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
-      // if (
-      //   this.mapControl && this.props.selection
-      //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
-      // ) {
-      //   let action = await this.mapControl.getAction()
-      //   action === 'SELECT'
-      //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
-      //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
-      //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
-      // }
-    })
-  }
+  // /** 选择事件监听 **/
+  // _addGeometrySelectedListener = async () => {
+  //   await SMap.addGeometrySelectedListener({
+  //     geometrySelected: this.geometrySelected,
+  //     geometryMultiSelected: this.geometryMultiSelected,
+  //   })
+  // }
+  //
+  // _removeGeometrySelectedListener = async () => {
+  //   await SMap.removeGeometrySelectedListener()
+  // }
+  //
+  // geometrySelected = event => {
+  //   // let layerSelectable = true
+  //   // if (this.props.selection && this.props.selection.layer) {
+  //   //   layerSelectable =
+  //   //     this.props.selection.layer._SMLayerId !== event.layer._SMLayerId ||
+  //   //     this.props.selection.id !== event.id
+  //   // }
+  //   // event.layer.getName().then(async name => {
+  //   //   let editable = await event.layer.getEditable()
+  //   //   Toast.show('选中 ' + name)
+  //   //   Object.assign(event, { name: name, editable, geoID: event.id })
+  //   //   layerSelectable && this.props.setSelection(event)
+  //   //   // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
+  //   //   // if (
+  //   //   //   this.mapControl && this.props.selection
+  //   //   //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
+  //   //   // ) {
+  //   //   //   let action = await this.mapControl.getAction()
+  //   //   //   action === 'SELECT'
+  //   //   //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
+  //   //   //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
+  //   //   //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
+  //   //   // }
+  //   // })
+  // }
+  //
+  // geometryMultiSelected = events => {
+  //   // TODO 处理多选
+  //   this.props.setSelection(events)
+  // }
 
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, '正在保存')
@@ -506,11 +511,6 @@ export default class MapView extends React.Component {
         Toast.show('保存失败')
       }
     }.bind(this)())
-  }
-
-  geometryMultiSelected = events => {
-    // TODO 处理多选
-    this.props.setSelection(events)
   }
 
   showAudio = () => {
@@ -632,42 +632,26 @@ export default class MapView extends React.Component {
     if (this.isExample) return null
     let arr = []
     let headerBtnData = [
-      // {
-      //   title: '上传',
-      //   image: require('../../../assets/public/icon-upload.png'),
-      //   action: this.toUpLoad,
-      // }, {
-      //   title: '下载',
-      //   image: require('../../../assets/public/icon-download.png'),
-      //   action: this.toDownLoad,
-      // },
       {
-        title: '语音',
-        image: require('../../../../assets/public/icon-audio-white.png'),
-        action: this.showAudio,
+        key: 'search',
+        image: require('../../../../assets/header/icon_search.png'),
+        action: () => {
+          this.toolBox.setVisible(true, 'list')
+        },
       },
       {
-        title: '打开',
-        image: require('../../../../assets/public/icon-open-white.png'),
-        action: this.toOpen,
-      },
-      {
-        title: '保存',
-        image: require('../../../../assets/public/icon-save-white.png'),
-        action: this.saveMap,
-      },
-      {
-        title: '关闭',
-        image: require('../../../../assets/public/icon-close-white.png'),
-        action: this.toCloseMap,
+        key: 'audio',
+        image: require('../../../../assets/header/icon_audio.png'),
+        action: () => {
+          this.toolBox.setVisible(true, 'table')
+        },
       },
     ]
-    headerBtnData.forEach(({ title, image, action }) => {
+    headerBtnData.forEach(({ key, image, action }) => {
       arr.push(
         <MTBtn
           style={styles.headerBtnSeparator}
-          key={title}
-          title={title}
+          key={key}
           textColor={'white'}
           size={MTBtn.Size.SMALL}
           image={image}
@@ -679,7 +663,10 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
+    // this.mapToolbar.setCurrent(0)
+    this.setLoading(true, '正在关闭')
     SMap.closeWorkspace().then(result => {
+      this.setLoading(false)
       result && NavigationService.goBack()
     })
     return true
@@ -726,8 +713,10 @@ export default class MapView extends React.Component {
     }
     (async function() {
       try {
-        await SMap.openDatasource(this.DSParams, this.layerIndex)
-        await SMap.openDatasource(this.labelDSParams, this.layerIndex)
+        this.DSParams &&
+          (await SMap.openDatasource(this.DSParams, this.layerIndex))
+        this.labelDSParams &&
+          (await SMap.openDatasource(this.labelDSParams, this.layerIndex))
         this.container.setLoading(false)
         // await this._addGeometrySelectedListener()
       } catch (e) {
@@ -823,182 +812,61 @@ export default class MapView extends React.Component {
    * @returns {XML}
    */
   renderToolBar = () => {
-    if (this.state.popShow) {
-      if (
-        this.state.popType === Const.ANALYST ||
-        this.state.popType === Const.TOOLS
-      ) {
-        return <View style={styles.popView}>{this.renderPopList()}</View>
-      }
-      return (
-        <DrawerView
-          thresholds={this.state.toolbarThreshold}
-          heightChangeListener={({ childrenHeight, drawerHeight }) => {
-            this.changeLayerBtn &&
-              this.changeLayerBtn.setNativeProps({
-                style: [
-                  styles.changeLayerBtn,
-                  { bottom: drawerHeight + scaleSize(20) },
-                ],
-              })
-            this.popList &&
-              this.popList.setGridListProps({
-                style: {
-                  height: childrenHeight,
-                },
-              })
-          }}
-        >
-          {this.renderPopList()}
-        </DrawerView>
-      )
-    } else {
-      return (
-        <MapToolbar
-          hidden={this.isExample}
-          type={this.operationType}
-          POP_List={this._pop_list}
-          layerManager={this._layer_manager}
-          dataCollection={this._data_collection}
-          dataManager={this._data_manager}
-          addLayer={this._addLayer}
-          chooseLayer={this._chooseLayer}
-          editLayer={this.props.editLayer}
-          setEditLayer={this.props.setEditLayer}
-          mapControl={this.mapControl}
-        />
-      )
-    }
-  }
-
-  renderPopList = () => {
     return (
-      <PopList
-        ref={ref => (this.popList = ref)}
-        measureLine={this._measure_line}
-        measureSquare={this._measure_square}
-        measurePause={this._measure_pause}
-        popType={this.state.popType}
-        editLayer={this.props.editLayer}
-        selection={this.props.selection}
-        mapView={this.mapView}
-        mapControl={this.mapControl}
-        workspace={this.workspace}
-        map={this.map}
-        setLoading={this.setLoading}
-        chooseLayer={this._chooseLayer}
-        POP_List={this._pop_list}
-        showSetting={this._showSetting}
-        bufferSetting={this.props.bufferSetting}
-        overlaySetting={this.props.overlaySetting}
-        setOverlaySetting={this.props.setOverlaySetting}
-        showMeasure={this._pop_measure_click}
-        showRemoveObjectDialog={this.showRemoveObjectDialog}
-        setSelection={this.props.setSelection}
-        columns={6}
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={0}
+        type={this.operationType}
       />
     )
-  }
-
-  /**
-   * 切换图层的按钮
-   * @returns {XML}
-   */
-  renderChangeLayerBtn = () => {
-    if (
-      this.state.popShow &&
-      (this.state.popType === Const.DATA_EDIT ||
-        this.state.popType === Const.COLLECTION)
-    ) {
-      return (
-        <MTBtn
-          ref={ref => (this.changeLayerBtn = ref)}
-          customStyle={[
-            styles.changeLayerBtn,
-            {
-              bottom: this.state.toolbarThreshold[0] + scaleSize(20),
-            },
-          ]}
-          imageStyle={styles.changeLayerImage}
-          image={require('../../../../assets/map/icon-layer-change.png')}
-          onPress={() => this._changeLayer(this.state.popType)}
-        />
-      )
-    }
-  }
-
-  /**
-   * 设置界面
-   * @returns {XML}
-   */
-  renderSetting = () => {
-    if (!this.isExample) {
-      return (
-        <Setting
-          ref={ref => (this.setting = ref)}
-          selection={this.props.selection}
-          mapControl={this.mapControl}
-          workspace={this.workspace}
-          mapView={this.mapView}
-          map={this.map}
-          setLoading={this.setLoading}
-          setBufferSetting={this.props.setBufferSetting}
-          setOverlaySetting={this.props.setOverlaySetting}
-          bufferSetting={this.props.bufferSetting}
-          overlaySetting={this.props.overlaySetting}
-          setAnalystLayer={this.props.setAnalystLayer}
-        />
-      )
-    }
   }
 
   /** 地图功能工具栏（右侧） **/
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
-        showLayers={() => {
-          this.LayerAdd.showLayers(true)
-        }}
-        Label={() => {
-          this.LabelAdd.showLayers(true)
-        }}
-        showTool={() => {
-          this.Tool.showLayers(true)
-        }}
-        changeLayer={() => {
-          this.BotMap.showLayers(true)
-        }}
+        ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
+        getToolRef={() => {
+          return this.toolBox
+        }}
+        showFullMap={this.showFullMap}
+        symbol={this.props.symbol}
       />
-    )
-  }
-
-  renderLayers = () => {
-    return (
-      <ToolBar ref={ref => (this.LayerAdd = ref)} type="list" data={layerAdd} />
-    )
-  }
-  renderLabel = () => {
-    return <ToolBar ref={ref => (this.LabelAdd = ref)} />
-  }
-
-  renderTool = () => {
-    return <ToolBar ref={ref => (this.Tool = ref)} />
-  }
-
-  renderBotMap = () => {
-    return (
-      <ToolBar ref={ref => (this.BotMap = ref)} type="list" data={BotMap}>
-        <BotMap />
-      </ToolBar>
     )
   }
 
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
-    return <MapController style={styles.mapController} />
+    return <MapController ref={ref => (this.mapController = ref)} />
   }
+
+  /** 显示全屏 **/
+  showFullMap = isFull => {
+    if (isFull === this.fullMap) return
+    let full = isFull === undefined ? !this.fullMap : !isFull
+    this.container && this.container.setHeaderVisible(full)
+    this.container && this.container.setBottomVisible(full)
+    this.functionToolbar && this.functionToolbar.setVisible(full)
+    this.mapController && this.mapController.setVisible(full)
+    this.fullMap = isFull
+  }
+
+  renderTool = () => {
+    return (
+      <ToolBar
+        ref={ref => (this.toolBox = ref)}
+        existFullMap={() => this.showFullMap(false)}
+        symbol={this.props.symbol}
+      />
+    )
+  }
+
+  // /** 下方弹出的工具栏 **/
+  // renderToolBar = () => {
+  //   return <ToolBar style={styles.mapController} />
+  // }
 
   render() {
     return (
@@ -1009,24 +877,36 @@ export default class MapView extends React.Component {
           navigation: this.props.navigation,
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,
+          type: 'fix',
         }}
+        bottomBar={this.renderToolBar()}
+        bottomProps={{ type: 'fix' }}
       >
-        {/*{this.renderMapMenu()}*/}
         <SMMapView
           ref={ref => (GLOBAL.mapView = ref)}
           style={styles.map}
           onGetInstance={this._onGetInstance}
         />
-        {/*{this.renderLeftToolbar()}*/}
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
+        {this.renderTool()}
+        {/*<TouchableOpacity*/}
+        {/*onPress={() => {*/}
+        {/*SMap.getLayers()*/}
+        {/*}}*/}
+        {/*style={{*/}
+        {/*position: 'absolute',*/}
+        {/*width: 80,*/}
+        {/*height: 80,*/}
+        {/*left: 20,*/}
+        {/*top: 120,*/}
+        {/*backgroundColor: 'red',*/}
+        {/*zIndex: 10000,*/}
+        {/*}}*/}
+        {/*/>*/}
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
-        {this.renderToolBar()}
-        {this.renderLayers()}
-        {this.renderLabel()}
-        {this.renderTool()}
-        {this.renderBotMap()}
+        {/*{this.renderToolBar()}*/}
         {/*{this.renderSetting()}*/}
         {/*<Dialog*/}
         {/*ref={ref => (this.removeObjectDialog = ref)}*/}

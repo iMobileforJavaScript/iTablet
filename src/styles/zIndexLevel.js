@@ -5,6 +5,6 @@ export default {
   TWO: 1e2,
   THREE: 1e3,
   FOUR: 1e4,
-
+  FIVE: 1e5,
   SYSTEM: 1e5,
 }

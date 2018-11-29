@@ -5,18 +5,17 @@
 */
 
 import * as React from 'react'
-import { BackHandler, Platform, View } from 'react-native'
+import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container } from '../../../../components'
+import { Container, Dialog } from '../../../../components'
 import {
-  DrawerView,
   FunctionToolbar,
   MapToolbar,
   MapController,
+  ToolBar,
 } from '../../componets'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast } from '../../../../utils'
 import constants from '../../constants'
-import { Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
@@ -39,10 +38,13 @@ export default class Map3D extends React.Component {
       path: params.path,
       title: '',
       popShow: false,
+      inputText: '',
+      placeholder: false,
     }
     this.path = params.path
     this.type = params.type || 'MAP_3D'
     // this._addScene2(params.path)
+    // this.listenevent=this.addListen()
   }
 
   componentDidMount() {
@@ -51,75 +53,57 @@ export default class Map3D extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     this._addScene()
+    this.addAttributeListener()
+    this.addCircleFlyListen()
   }
 
   componentWillUnmount() {
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
-
-    // (async function(){
-    //   this.scene && await this.scene.close()
-    //   this.workspace && await this.workspace.closeWorkspace()
-    // }).bind(this)()
+    this.attributeListener && this.attributeListener.remove()
+    this.circleFlyListen && this.circleFlyListen.remove()
   }
 
-  _addScene = () => {
+  initListener = async () => {
+    SScene.setListener().then(() => {
+      SScene.getAttribute()
+      SScene.setCircleFly()
+    })
+  }
+
+  addAttributeListener = async () => {
+    this.attributeListener = await SScene.addAttributeListener({
+      callback: result => {
+        this.toolBox.showMap3DAttribute(result)
+      },
+    })
+  }
+
+  addCircleFlyListen = async () => {
+    this.circleFlyListen = await SScene.addCircleFlyListen({
+      callback: () => {
+        this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
+      },
+    })
+  }
+
+  _addScene = async () => {
     if (!this.path) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
       return
     }
-    (async function() {
-      try {
-        let data = { server: this.path }
-        SScene.openWorkspace(data).then(result => {
-          result && SScene.openMap(this.mapName)
-          this.container.setLoading(false)
-        })
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }.bind(this))
+    try {
+      let data = { server: this.path }
+      let result = await SScene.openWorkspace(data)
+      let mapList = await SScene.getMapList()
+      result && (await SScene.openMap(mapList[0].name))
+      this.container.setLoading(false)
+      await this.initListener()
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
-
-  // _addScene2 = (path = '') => {
-  //   let workspaceModule = new Workspace()
-  //   console.log(0)
-  //   ;(async function () {
-  //     this.workspace = await workspaceModule.createObj()   //创建workspace实例
-  //
-  //     console.log(1)
-  //     if (!GLOBAL.sceneControl) {
-  //       console.log(2)
-  //       this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-  //     }
-  //     console.log(3)
-  //     await this.scene.setWorkspace(this.workspace)        //设置工作空间
-  //     let filePath = await Utility.appendingHomeDirectory(path)
-  //     let openWk = await this.workspace.open(filePath)     //打开工作空间
-  //
-  //     console.log(4)
-  //     if (!openWk) {
-  //       Toast.show(" 打开工作空间失败")
-  //       return
-  //     }
-  //     this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-  //     await this.scene.open(this.mapName)                     //根据名称打开指定场景
-  //     await this.scene.refresh()                           //刷新场景
-  //
-  //     this.saveLatest()
-  //   }).bind(this)()
-  // }
-
-  // saveLatest = () => {
-  //   if (this.isExample) return
-  //   this.props.setLatestMap({
-  //     path: this.path,
-  //     type: this.type,
-  //     name: this.mapName,
-  //     // image: uri,
-  //   })
-  // }
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
@@ -136,10 +120,10 @@ export default class Map3D extends React.Component {
   }
 
   //一级pop按钮 图层管理 点击函数
-  _layer_manager = () => {
-    NavigationService.navigate('Map3DLayerManager', { type: 'MAP_3D' })
-    // Toast.show("待做")
-  }
+  // _layer_manager = () => {
+  //   NavigationService.navigate('Map3DLayerManager', { type: 'MAP_3D' })
+  //   // Toast.show("待做")
+  // }
 
   //一级pop按钮 数据采集 点击函数
   _data_collection = () => {
@@ -201,59 +185,129 @@ export default class Map3D extends React.Component {
   }
 
   renderFunctionToolbar = () => {
-    return <FunctionToolbar style={styles.functionToolbar} type={this.type} />
+    return (
+      <FunctionToolbar
+        style={styles.functionToolbar}
+        ref={ref => (this.functionToolbar = ref)}
+        getToolRef={() => {
+          return this.toolBox
+        }}
+        type={this.type}
+        showFullMap={this.showFullMap}
+      />
+    )
   }
   renderMapController = () => {
-    return <MapController style={styles.mapController} />
+    return (
+      <MapController ref={ref => (this.mapController = ref)} type={'MAP_3D'} />
+    )
   }
-  renderToolBar = () => {
-    if (this.state.popShow) {
-      if (
-        this.state.popType === Const.ANALYST ||
-        this.state.popType === Const.TOOLS
-      ) {
-        return <View style={styles.popView}>{this.renderPopList()}</View>
-      }
-      return (
-        <DrawerView
-          thresholds={this.state.toolbarThreshold}
-          heightChangeListener={({ childrenHeight, drawerHeight }) => {
-            this.changeLayerBtn &&
-              this.changeLayerBtn.setNativeProps({
-                style: [
-                  styles.changeLayerBtn, //// eslint-disable-next-line
-                  { bottom: drawerHeight + scaleSize(20) },
-                ],
-              })
-            this.popList &&
-              this.popList.setGridListProps({
-                style: {
-                  height: childrenHeight,
-                },
-              })
-          }}
-        >
-          {this.renderPopList()}
-        </DrawerView>
-      )
+
+  showFullMap = isFull => {
+    if (isFull === this.fullMap) return
+    let full = isFull === undefined ? !this.fullMap : !isFull
+    this.container && this.container.setHeaderVisible(full)
+    this.container && this.container.setBottomVisible(full)
+    this.functionToolbar && this.functionToolbar.setVisible(full)
+    this.mapController && this.mapController.setVisible(full)
+    this.fullMap = isFull
+  }
+
+  confirm = async () => {
+    // console.log(this)
+    if (
+      this.state.inputText.indexOf(' ') > -1 ||
+      this.state.inputText === '' ||
+      this.state.inputText == null
+    ) {
+      // Toast.show('请输入文本内容')
+      this.setState({
+        placeholder: true,
+      })
+      return
+    }
+    let type = this.toolBox.getType()
+    if (type === 'favorite') {
+      SScene.setFavoriteText(this.state.inputText)
+      SScene.save()
     } else {
-      return (
-        <MapToolbar
-          hidden={this.isExample}
-          type={'MAP_3D'}
-          POP_List={this._pop_list}
-          layerManager={this._layer_manager}
-          dataCollection={this._data_collection}
-          dataManager={this._data_manager}
-          addLayer={this._addLayer}
-          chooseLayer={this._chooseLayer}
-          editLayer={this.props.editLayer}
-          setEditLayer={this.props.setEditLayer}
-          mapControl={this.mapControl}
-        />
+      let point = this.toolBox.getPoint()
+      SScene.addGeoText(
+        point.pointX,
+        point.pointY,
+        point.pointZ,
+        this.state.inputText,
       )
     }
+    // this.toolBox.showToolbar(!this.toolBox.isShow)
+    this.toolBox.showToolbar()
+    this.dialog.setDialogVisible(false)
   }
+
+  cancel = async () => {
+    // console.log(this)
+    // this.toolBox.showToolbar(!this.toolBox.isShow)
+    this.setState({
+      placeholder: false,
+    })
+    this.toolBox.showToolbar()
+    this.dialog.setDialogVisible(false)
+  }
+
+  renderToolBar = () => {
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={0}
+        type={this.operationType}
+        layerManager={this._layer_manager}
+      />
+    )
+  }
+
+  renderTool = () => {
+    return (
+      <ToolBar
+        ref={ref => (this.toolBox = ref)}
+        existFullMap={() => this.showFullMap(false)}
+        confirmDialog={this.confirm}
+        dialog={this.dialog}
+      />
+    )
+  }
+
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        style={{ marginVertical: 15 }}
+        type={'modal'}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+      >
+        <View style={styles.item}>
+          <Text style={styles.title}>文本内容</Text>
+          <TextInput
+            underlineColorAndroid={'transparent'}
+            accessible={true}
+            accessibilityLabel={'文本内容'}
+            onChangeText={text => {
+              this.setState({
+                inputText: text,
+              })
+            }}
+            value={this.state.inputText}
+            placeholder={'请输入文本内容'}
+            style={styles.textInputStyle}
+          />
+        </View>
+        {this.state.placeholder && (
+          <Text style={styles.placeholder}>文本内容不能为空</Text>
+        )}
+      </Dialog>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -261,14 +315,17 @@ export default class Map3D extends React.Component {
         headerProps={{
           title: this.isExample ? '三维场景' : this.state.title,
           navigation: this.props.navigation,
-          headerRight: [],
           backAction: this.back,
+          type: 'fix',
         }}
+        bottomBar={this.renderToolBar()}
+        bottomProps={{ type: 'fix' }}
       >
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
-        {this.renderToolBar()}
+        {this.renderTool()}
+        {this.renderDialog()}
       </Container>
     )
   }

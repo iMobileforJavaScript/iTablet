@@ -1,17 +1,16 @@
 export default {
-  COLLECTION_CHANGE: 'com.supermap.RN.JSMapcontrol.collection_change',
+  COLLECTION_CHANGE: 'com.supermap.RN.Mapcontrol.collection_change',
   COLLECTION_SENSER_CHANGE:
-    'com.supermap.RN.JSMapcontrol.collection_sensor_change',
+    'com.supermap.RN.Mapcontrol.collection_sensor_change',
   ONLINE_SERVICE_DOWNLOADING:
-    'com.supermap.RN.JSMapcontrol.online_service_downloading',
+    'com.supermap.RN.Mapcontrol.online_service_downloading',
   ONLINE_SERVICE_DOWNLOADED:
-    'com.supermap.RN.JSMapcontrol.online_service_downloaded',
-  ONLINE_SERVICE_LOGIN: 'com.supermap.RN.JSMapcontrol.online_service_login',
-  ONLINE_SERVICE_LOGOUT: 'com.supermap.RN.JSMapcontrol.online_service_logout',
+    'com.supermap.RN.Mapcontrol.online_service_downloaded',
+  ONLINE_SERVICE_LOGIN: 'com.supermap.RN.Mapcontrol.online_service_login',
+  ONLINE_SERVICE_LOGOUT: 'com.supermap.RN.Mapcontrol.online_service_logout',
   ONLINE_SERVICE_DOWNLOADFAILURE:
-    'com.supermap.RN.JSMapcontrol.online_service_downloadfailure',
-  ONLINE_SERVICE_UPLOADED:
-    'com.supermap.RN.JSMapcontrol.online_service_uploaded',
+    'com.supermap.RN.Mapcontrol.online_service_downloadfailure',
+  ONLINE_SERVICE_UPLOADED: 'com.supermap.RN.Mapcontrol.online_service_uploaded',
   ONLINE_SERVICE_UPLOADFAILURE:
-    'com.supermap.RN.JSMapcontrol.online_service_uploadfailure',
+    'com.supermap.RN.Mapcontrol.online_service_uploadfailure',
 }

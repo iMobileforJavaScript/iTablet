@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  View,
-  ActivityIndicator,
-  StyleSheet,
-  Modal,
-  Text,
-  Platform,
-} from 'react-native'
+import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
 import { scaleSize } from '../../utils'
 export const NORMAL = 'NORMAL'
 
@@ -23,16 +16,19 @@ export default class Loading extends Component {
     indicatorStyle: any,
     displayMode: string,
     info: string,
+    timeout: number,
   }
 
   static defaultProps = {
     initLoading: true,
     bgColor: 'transparent',
-    indicatorSize: Platform.OS === 'ios' ? 'small' : 'large',
+    // indicatorSize: Platform.OS === 'ios' ? 'small' : 'large',
+    indicatorSize: 'large',
     indicatorColor: 'white',
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE', // BLACK_WITH_TITLE   NORMAL
     info: INFO,
+    timeout: 6000,
   }
 
   constructor(props) {
@@ -42,6 +38,7 @@ export default class Loading extends Component {
       info: props.info,
       extra: {
         bgColor: props.bgColor,
+        timeout: props.timeout,
       },
     }
   }
@@ -55,11 +52,24 @@ export default class Loading extends Component {
       if (!extra.bgColor) {
         extra.bgColor = 'transparent'
       }
+
       this.setState({
         animating: loading,
         info: info || INFO,
         extra,
       })
+
+      let timeout =
+        extra.timeout >= 0 ? extra.timeout : this.state.extra.timeout
+      if (loading && timeout) {
+        setTimeout(() => {
+          this.setState({
+            animating: false,
+            info: info || INFO,
+            extra,
+          })
+        }, timeout)
+      }
     }
   }
 

@@ -4,21 +4,21 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Platform, NativeModules } from 'react-native'
+import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
+import { ConstToolType } from '../../../../constants'
+import { scaleSize } from '../../../../utils'
 import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
-import { SAnalyst } from 'imobile_for_reactnative'
-import Toast from 'react-native-root-toast'
+
+import NavigationService from '../../../NavigationService'
+import { SScene, SMap, Action } from 'imobile_for_reactnative'
+
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
 const MAP_3D = 'MAP_3D'
 const MAP_EDIT = 'MAP_EDIT'
-const openNativeSampleCode =
-  Platform.OS === 'ios'
-    ? NativeModules.SMSampleCodeBridgeModule
-    : NativeModules.IntentModule
 export { COLLECTION, NETWORK, EDIT }
 
 export default class FunctionToolbar extends React.Component {
@@ -28,18 +28,12 @@ export default class FunctionToolbar extends React.Component {
     direction?: string,
     separator?: number,
     type: string,
-    mapControl: any,
-    mapView: any,
-    workspace: any,
-    map: any,
-    editLayer: any,
-    selection: any,
-    setLoading: () => {},
     data?: Array,
-    showLayers: () => {},
-    showTool: () => {},
     Label: () => {},
-    changeLayer: () => {},
+
+    getToolRef: () => {},
+    showFullMap: () => {},
+    symbol: Object,
   }
 
   static defaultProps = {
@@ -55,70 +49,242 @@ export default class FunctionToolbar extends React.Component {
     this.state = {
       type: props.type,
       data: data,
+      right: new Animated.Value(scaleSize(20)),
     }
+    this.visible = true
+  }
+
+  setVisible = visible => {
+    if (this.visible === visible) return
+    Animated.timing(this.state.right, {
+      toValue: visible ? scaleSize(20) : scaleSize(-200),
+      duration: 300,
+    }).start()
+    this.visible = visible
   }
 
   /** 一级事件 **/
 
-  changeBaseLayer = async () => {}
+  changeBaseLayer = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
 
-  setMeasureLineAnalyst = async () => {
-    await SAnalyst.setMeasureLineAnalyst({
-      callback: result => {
-        // console.log(result + '米')
-        Toast.show(result + '米')
-      },
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_BASE, {
+            containerType: 'list',
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+            height: ConstToolType.HEIGHT[3],
+          })
+          break
+      }
+    }
+  }
+
+  showAddLayer = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+            containerType: 'list',
+            isFullScreen: true,
+            height: ConstToolType.HEIGHT[3],
+          })
+          break
+
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_BASE, {
+            containerType: 'list',
+            isFullScreen: true,
+            height: ConstToolType.HEIGHT[3],
+          })
+          break
+      }
+    }
+  }
+
+  showSymbol = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+        isFullScreen: true,
+        height: ConstToolType.HEIGHT[3],
+      })
+    }
+  }
+
+  showMap3DSymbol = async () => {
+    SScene.checkoutListener('startLabelOperate')
+    SScene.getLayerList().then(layerList => {
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        toolRef.getOldLayerList(layerList)
+        // SScene.setAllLayersSelection(false)
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox内容
+        toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+          containerType: 'table',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.HEIGHT[1],
+        })
+      }
     })
   }
 
-  setMeasureSquareAnalyst = async () => {
-    await SAnalyst.setMeasureSquareAnalyst({
-      callback: result => {
-        // console.log(result + '平方米')
-        Toast.show(result + '平方米')
-      },
+  showMap3DTool = async () => {
+    SScene.checkoutListener('startMeasure')
+    SScene.getLayerList().then(layerList => {
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox内容
+        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+          containerType: 'table',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.HEIGHT[1],
+        })
+        toolRef.getOldLayerList(layerList)
+        // SScene.setAllLayersSelection(false)
+      }
     })
   }
 
-  closeAnalysis = async () => {
-    // let result = await SAnalyst.closeAnalysis()
-    // console.log(result)
+  showCollection = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      let type = ''
+      switch (this.props.symbol.currentSymbol.type) {
+        case 'marker':
+          type = ConstToolType.MAP_COLLECTION_POINT
+          break
+        case 'line':
+          type = ConstToolType.MAP_COLLECTION_LINE
+          break
+        case 'fill':
+          type = ConstToolType.MAP_COLLECTION_REGION
+          break
+      }
+      // 选中符号后打开对应的采集界面
+      // 没有选择符号则打开符号选择界面
+      if (type) {
+        toolRef.setVisible(true, type, {
+          isFullScreen: false,
+        })
+      } else {
+        this.showSymbol()
+      }
+    }
   }
-  showAddLayer = async () => {}
 
-  showSymbel = () => {}
-
-  showCollection = () => {}
-
-  showEdit = () => {}
+  showEdit = async () => {
+    await SMap.setAction(Action.SELECT)
+    await this._addGeometrySelectedListener()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox 编辑内容
+      toolRef.setVisible(true, ConstToolType.MAP_EDIT_REGION, {
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[1],
+      })
+    }
+  }
 
   showMore = async e => {
     this.moreToolbar && this.moreToolbar.showMore(true, e)
   }
 
-  changeLayer = () => {
-    this.props.changeLayer()
+  showTool = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[2],
+      })
+    }
   }
 
-  showTool = () => {
-    this.props.showTool()
+  mapStyle = () => {
+    NavigationService.navigate('TouchProgress')
+  }
+
+  Tagging = async () => {
+    const toolRef = this.props.getToolRef()
+    switch (this.props.type) {
+      case 'MAP_3D':
+        SScene.getLayerList().then(layerList => {
+          const toolRef = this.props.getToolRef()
+          if (toolRef) {
+            toolRef.getOldLayerList(layerList)
+            SScene.setAllLayersSelection(false)
+          }
+        })
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
+
+      case 'MAP_EDIT':
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox 编辑内容
+          toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.HEIGHT[2],
+          })
+        }
+        break
+
+      default:
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+            isFullScreen: false,
+          })
+        }
+        break
+    }
   }
 
   add = () => {
-    this.props.showLayers()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
+        containerType: 'list',
+      })
+    }
   }
 
   Label = () => {
     this.props.Label()
   }
 
-  mapstyle = () => {
-    openNativeSampleCode.open('Layer')
-  }
-
   /** 二级事件 **/
   openMap = () => {}
-
+  open3DMap = () => {
+    NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+  }
   closeMap = () => {}
 
   save = () => {}
@@ -138,7 +304,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '底图',
             title: '底图',
-            action: this.changeLayer,
+            action: this.changeBaseLayer,
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -152,7 +318,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '标注',
             title: '标注',
-            action: this.Label,
+            action: this.Tagging,
             size: 'large',
             image: require('../../../../assets/function/icon_function_Tagging.png'),
             selectMode: 'flash',
@@ -168,7 +334,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '风格',
             title: '风格',
-            action: this.mapstyle,
+            action: this.mapStyle,
             size: 'large',
             image: require('../../../../assets/function/icon_function_style.png'),
             selectMode: 'flash',
@@ -182,46 +348,13 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
-            key: '分享',
-            title: '分享',
-            action: this.publish,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_tool.png'),
-            selectMode: 'flash',
-          },
-        ]
-        break
-      case COLLECTION:
-      case MAP_3D:
-        data = [
-          {
-            title: '量算',
-            action: this.changeBaseLayer,
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            title: '面积',
-            action: this.showAddLayer,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
-          {
-            title: '标注',
-            action: this.showSymbel,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
-          {
-            title: '工具',
-            action: this.showCollection,
-            image: require('../../../../assets/function/icon_function_hand_draw.png'),
-          },
-          {
-            title: '关闭',
+            title: '更多',
             action: this.showMore,
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
-      default:
+      case MAP_3D:
         data = [
           {
             title: '底图',
@@ -234,13 +367,43 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
-            title: '符号',
-            action: this.showSymbel,
+            title: '标注',
+            action: this.showMap3DSymbol,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
+            title: '工具',
+            action: this.showMap3DTool,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '更多',
+            action: this.showMore,
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
+      case COLLECTION:
+      default:
+        data = [
+          {
+            title: '底图',
+            action: this.changeBaseLayer,
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '添加',
+            action: this.add,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          // {
+          //   title: '符号',
+          //   action: this.showSymbol,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
+          {
             title: '采集',
-            action: this.showCollection,
+            action: this.showSymbol,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
           },
           {
@@ -268,10 +431,75 @@ export default class FunctionToolbar extends React.Component {
   getMoreData = type => {
     let data
     switch (type) {
-      case COLLECTION:
+      case MAP_EDIT:
+        data = [
+          {
+            title: '打开',
+            action: this.openMap(),
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
+            title: '关闭',
+            action: this.closeMap(),
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
         break
       case MAP_3D:
+        data = [
+          {
+            title: '打开',
+            action: this.open3DMap,
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          // {
+          //   title: '关闭',
+          //   action: this.closeMap(),
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
+          {
+            title: '保存',
+            action: this.save,
+            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '另存',
+            action: this.saveAs,
+            image: require('../../../../assets/function/icon_function_edit.png'),
+          },
+          {
+            title: '历史',
+            action: this.recent,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            title: '分享',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+        ]
         break
+      case COLLECTION:
       default:
         data = [
           {
@@ -309,6 +537,27 @@ export default class FunctionToolbar extends React.Component {
     return data
   }
 
+  /** 设置监听 **/
+  /** 选择事件监听 **/
+  _addGeometrySelectedListener = async () => {
+    await SMap.addGeometrySelectedListener({
+      geometrySelected: this.geometrySelected,
+      geometryMultiSelected: this.geometryMultiSelected,
+    })
+  }
+
+  _removeGeometrySelectedListener = async () => {
+    await SMap.removeGeometrySelectedListener()
+  }
+
+  geometrySelected = event => {
+    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+  }
+
+  geometryMultiSelected = () => {
+    // TODO 处理多选
+  }
+
   _renderItem = ({ item, index }) => {
     return (
       <MTBtn
@@ -334,7 +583,13 @@ export default class FunctionToolbar extends React.Component {
       return null
     }
     return (
-      <View style={[styles.container, this.props.style]}>
+      <Animated.View
+        style={[
+          styles.container,
+          this.props.style,
+          { right: this.state.right },
+        ]}
+      >
         <FlatList
           data={this.state.data}
           renderItem={this._renderItem}
@@ -345,7 +600,7 @@ export default class FunctionToolbar extends React.Component {
           ref={ref => (this.moreToolbar = ref)}
           data={this.getMoreData(this.props.type)}
         />
-      </View>
+      </Animated.View>
     )
   }
 }

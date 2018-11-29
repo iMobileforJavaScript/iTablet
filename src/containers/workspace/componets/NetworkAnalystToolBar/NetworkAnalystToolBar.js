@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import { Toast, scaleSize } from '../../../../utils'
 import { PopBtnSectionList, MTBtn } from '../../../../components'
 import { Const } from '../../../../constants'
-import { facilityAnalyst, tranportationAnalyst } from '../../util'
+import { facilityAnalyst, transportationAnalyst } from '../../util'
 import PropTypes from 'prop-types'
 
 export default class NetworkAnalystToolBar extends React.Component {
@@ -95,7 +95,7 @@ export default class NetworkAnalystToolBar extends React.Component {
         // let dataset = await datasource.getDataset('RoadNet')
         // let datasetv = await dataset.toDatasetVector()
         //
-        // let result = await tranportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
+        // let result = await transportationAnalyst.loadModel(this.props.mapView, this.props.mapControl, datasetv)
         // this.props.setLoading && this.props.setLoading(false)
         // if (result) {
         //   Toast.show('加载数据成功')
@@ -110,12 +110,12 @@ export default class NetworkAnalystToolBar extends React.Component {
 
   /** 设置配送中心 **/
   _setCenter = () => {
-    tranportationAnalyst.setCenter()
+    transportationAnalyst.setCenter()
   }
 
   /** 设置目的地 **/
   _setDist = () => {
-    tranportationAnalyst.setDist()
+    transportationAnalyst.setDist()
   }
 
   /** 上游追踪 **/
@@ -132,13 +132,13 @@ export default class NetworkAnalystToolBar extends React.Component {
   _analyst = async type => {
     switch (type) {
       case Const.NETWORK_ROUTE:
-        await tranportationAnalyst.findPath()
+        await transportationAnalyst.findPath()
         break
       case Const.NETWORK_FACILITY:
         await facilityAnalyst.connectedAnalyst()
         break
       case Const.NETWORK_TSP:
-        await tranportationAnalyst.findMTSPPath()
+        await transportationAnalyst.findMTSPPath()
         break
       case Const.NETWORK_TRACKING:
         break
@@ -151,7 +151,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     switch (type) {
       case Const.NETWORK_TSP:
       case Const.NETWORK_ROUTE:
-        await tranportationAnalyst.clear()
+        await transportationAnalyst.clear()
         break
       case Const.NETWORK_FACILITY:
       case Const.NETWORK_TRACKING:
@@ -166,7 +166,7 @@ export default class NetworkAnalystToolBar extends React.Component {
     switch (type) {
       case Const.NETWORK_TSP:
       case Const.NETWORK_ROUTE:
-        await tranportationAnalyst.dispose()
+        await transportationAnalyst.dispose()
         break
       case Const.NETWORK_FACILITY:
       case Const.NETWORK_TRACKING:

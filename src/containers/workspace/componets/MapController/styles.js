@@ -3,6 +3,9 @@ import { scaleSize } from '../../../../utils'
 
 export default StyleSheet.create({
   container: {
+    position: 'absolute',
+    left: scaleSize(20),
+    bottom: scaleSize(120),
     flexDirection: 'column',
     backgroundColor: 'transparent',
     // padding: scaleSize(20),
@@ -16,8 +19,27 @@ export default StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: scaleSize(4),
   },
+  compass: {
+    borderRadius: scaleSize(4),
+  },
   separator: {
     marginTop: scaleSize(20),
+    // backgroundColor:"red",
+    // top:scaleSize(-80),
+    // position:'absolute',
+    // width:scaleSize(50),
+    // height:scaleSize(50),
+    // borderRadius: scaleSize(4),
+    // backgroundColor: 'white',
+  },
+  compassView: {
+    // top:scaleSize(-80),
+    // position:'absolute',
+    width: scaleSize(50),
+    height: scaleSize(50),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
+    marginBottom: scaleSize(20),
   },
   shadow: {
     elevation: 20,
