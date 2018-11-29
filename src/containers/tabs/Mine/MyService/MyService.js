@@ -7,20 +7,23 @@ import {
 import { Toast } from '../../../../utils'
 import Container from "../../../../components/Container";
 import RenderServiceItem from './RenderServiceItem'
-
-let serviceList;
-let dataList;
+/**
+ * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
+ * */
+let _strServiceList;
+let _strDataList;
 let _objOnlineService;
-let _serviceNameAndFileName;
-let _mapTitleAndRestTitle;
-let mapArr = [];
+let _objServiceNameAndFileName;
+let _objMapTitleAndRestTitle;
+let _arrMaps = [];
+let _arrPublishMaps=[];
 export default class MyService extends Component{
 
   constructor(props){
     super(props);
-    if(dataList !== undefined && serviceList !== undefined){
+    if(_strDataList !== undefined && _strServiceList !== undefined){
       this.state={
-        mapArr:mapArr,
+        mapArr:_arrMaps,
       }
     }else{
       this.state={
@@ -33,13 +36,13 @@ export default class MyService extends Component{
 
 
   loadOnlineDataAndService =async (currentPage, pageSize) =>{
-    if(dataList !== undefined && serviceList !== undefined){
+    if(_strDataList !== undefined && _strServiceList !== undefined){
       return;
     }
-    dataList =await _objOnlineService.getDataList(currentPage,pageSize);
-    serviceList =await _objOnlineService.getServiceList(currentPage,pageSize);
+    _strDataList =await _objOnlineService.getDataList(currentPage,pageSize);
+    _strServiceList =await _objOnlineService.getServiceList(currentPage,pageSize);
 // 构建{serviceName:fileName}字符串,可通过服务名找到对应的数据名称
-    let dataContent = JSON.parse(dataList).content;
+    let dataContent = JSON.parse(_strDataList).content;
     let serviceNameAndFileName = '{';
     for(let i = 0;i<dataContent.length;i++){
       let fileName = dataContent[i].fileName;
@@ -57,18 +60,19 @@ export default class MyService extends Component{
       }
     }
     serviceNameAndFileName = serviceNameAndFileName + "}";
-    _serviceNameAndFileName = JSON.parse(serviceNameAndFileName);
-
+    _objServiceNameAndFileName = JSON.parse(serviceNameAndFileName);
+    let arrPublishMaps=[];
     // 1.存入地图数据
     // 2.构建{mapTile:restTile}字符串，可通过地图名称找到对应的服务名称
     let mapTileAndRestTitle = '{';
-    let serviceContent = JSON.parse(serviceList).content;
+    let serviceContent = JSON.parse(_strServiceList).content;
     for(let i = 0;i<serviceContent.length;i++){
       let restTile = serviceContent[i].resTitle;
+      arrPublishMaps.push(restTile);
       let mapInfos = serviceContent[i].mapInfos;
       for(let j =0;j<mapInfos.length;j++){
         let mapInfo = mapInfos[j];
-        mapArr.push(mapInfo);
+        _arrMaps.push(mapInfo);
 
         let mapTitle = mapInfos[j].mapTitle;
         if(i+1 === serviceContent.length && j+1 === mapInfos.length){
@@ -82,16 +86,27 @@ export default class MyService extends Component{
       }
     }
     mapTileAndRestTitle = mapTileAndRestTitle + '}';
-    _mapTitleAndRestTitle = JSON.parse(mapTileAndRestTitle);
+    _objMapTitleAndRestTitle = JSON.parse(mapTileAndRestTitle);
 
-    this.setState({mapArr:mapArr});
+    this.setState({mapArr:_arrMaps});
+    // this._publishMaps(arrPublishMaps);
+  }
+
+  _publishMaps = async (arrPublishMaps) => {
+    for(let i=0;i<arrPublishMaps.length;i++){
+      let restTitle = arrPublishMaps[i];
+      let result = await _objOnlineService.changeServiceVisibility(restTitle,true);
+      if(typeof result === 'boolean' && result === true){
+        _arrPublishMaps.push(restTitle);
+      }
+    }
   }
 
   render(){
-    if(dataList === undefined || serviceList === undefined){
+    if(_strDataList === undefined || _strServiceList === undefined){
       return <Container
         headerProps={{
-          title: '我的iTablet',
+          title: '我的服务',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
@@ -103,7 +118,7 @@ export default class MyService extends Component{
     }else{
       return <Container
         headerProps={{
-          title: '我的iTablet',
+          title: '我的服务',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
@@ -116,8 +131,8 @@ export default class MyService extends Component{
               imageUrl={item.mapThumbnail}
               sharedMapUrl={item.mapUrl}
               objOnlineService={_objOnlineService}
-              serviceNameAndFileName={_serviceNameAndFileName}
-              mapTileAndRestTitle={_mapTitleAndRestTitle}
+              serviceNameAndFileName={_objServiceNameAndFileName}
+              mapTileAndRestTitle={_objMapTitleAndRestTitle}
               isDownloading={false}
             />
             }

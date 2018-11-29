@@ -881,7 +881,7 @@ export default class MapView extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.isExample ? '示例地图' : this.mapName,
+          title: this.mapName,
           navigation: this.props.navigation,
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,

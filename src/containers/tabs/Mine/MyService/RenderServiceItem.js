@@ -62,10 +62,6 @@ export default class RenderServiceItem extends Component{
   }
 
   _downloadMapFile = async (mapTitle) => {
-    if(this.state.isDownloading){
-      Toast.show('正在下载其他地图中...');
-      return;
-    }
     let restTitle = this.props.mapTileAndRestTitle[mapTitle];
     let onlineFileName = this.props.serviceNameAndFileName[restTitle];
 
@@ -90,27 +86,27 @@ export default class RenderServiceItem extends Component{
   }
 
   _navigator = async (mapUrl,restTitle) =>{
+    NavigationService.navigate('MapView',{
+      wsData: {
+        DSParams: {
+          server: mapUrl,
+          engineType: 225,
+          driver: 'REST',
+          alias: mapUrl,
+        },
+        layerIndex: 0,
+        type: 'Datasource',
+      },
+      mapName:this.props.mapName,
+      isExample: true,
+
+    });
     if(publishMap.indexOf(restTitle) === -1){
       let publish =await this.props.objOnlineService.changeServiceVisibility(restTitle,true);
       if(typeof publish === 'boolean' && publish === true){
         publishMap.push(restTitle);
       }
     }
-
-    NavigationService.navigate('MapView',{
-      type: 'ONLINE',
-      DSParams: {
-        server: mapUrl,
-        engineType: 225,
-        driver: 'REST',
-        alias: mapUrl,
-      },
-      labelDSParams: false,
-      layerIndex: 0,
-      mapName: this.props.mapName,
-      isExample: true,
-
-    })
   }
 
   render(){
@@ -126,16 +122,7 @@ export default class RenderServiceItem extends Component{
               this._navigator(mapUrl,restTitle);
             }}>
             <Image style={styles.itemTopInternalImageStyle}
-                   source={{ url: this.props.imageUrl }}
-                   onPress={() => {
-                     let mapUrl = this.props.sharedMapUrl;
-                     console.log(mapUrl);
-                     NavigationService.navigate("MapView", {
-                       path: mapUrl,
-                       type: "ONLINE",
-                       isExample: false
-                     });
-                   }}/>
+                   source={{ url: this.props.imageUrl }}/>
           </TouchableOpacity>
 
           <View style = {styles.itemTopInternalRightContainerStyle}>
