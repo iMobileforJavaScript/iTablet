@@ -227,19 +227,17 @@ export default class Map3D extends React.Component {
       })
       return
     }
-    let type = this.toolBox.getType()
-    if (type === 'favorite') {
-      SScene.setFavoriteText(this.state.inputText)
-      SScene.save()
-    } else {
-      let point = this.toolBox.getPoint()
-      SScene.addGeoText(
-        point.pointX,
-        point.pointY,
-        point.pointZ,
-        this.state.inputText,
-      )
-    }
+    let point = this.toolBox.getPoint()
+    SScene.addGeoText(
+      point.pointX,
+      point.pointY,
+      point.pointZ,
+      this.state.inputText,
+    ).then(() => {
+      this.setState({
+        inputText: '',
+      })
+    })
     // this.toolBox.showToolbar(!this.toolBox.isShow)
     this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)

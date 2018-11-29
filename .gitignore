@@ -60,6 +60,7 @@ android/keystores/
 android/app/app.iml
 android/local.properties
 android/app/build/
+android/build.gradle
 android/app/src/main/assets/Trial_License.slm
 android/.DS_Store
 src/.DS_Store

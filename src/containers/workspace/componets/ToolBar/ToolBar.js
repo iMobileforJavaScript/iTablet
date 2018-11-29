@@ -527,13 +527,6 @@ export default class ToolBar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   key: 'map3DFreeLine',
-          //   title: '自由线',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
           {
             key: 'map3DPointSurface',
             title: '点绘面',
@@ -548,48 +541,6 @@ export default class ToolBar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   key: 'map3DFreeSurface',
-          //   title: '自由面',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'map3DtrajectoryOne',
-          //   title: '普通模式轨迹',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'map3DtrajectoryTwo',
-          //   title: '抓路模式轨迹',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'map3DtrajectoryThree',
-          //   title: '等距模式轨迹',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'map3DtrajectoryFour',
-          //   title: '等时模式轨迹',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'map3DtrajectoryFive',
-          //   title: '智能模式轨迹',
-          //   action: this.changeLayer,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
         ]
         buttons = [closesymbol, flex]
         break
@@ -624,51 +575,6 @@ export default class ToolBar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   key: 'heightMeasure',
-          //   title: '高度量算',
-          //   action: () => {
-          //     this.showMap3DTool(ConstToolType.MAP3D_TOOL_HEIGHTMEASURE)
-          //   },
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'selection',
-          //   title: '选择',
-          //   action: () => {
-          //     this.showMap3DTool(ConstToolType.MAP3D_TOOL_SELECTION)
-          //   },
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'Boxtailor',
-          //   title: 'Box裁剪',
-          //   action: () => {
-          //     this.showMap3DTool(ConstToolType.MAP3D_TOOL_BOXTAILOR)
-          //   },
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'PStailor',
-          //   title: '平面裁剪',
-          //   action: () => {
-          //     this.showMap3DTool(ConstToolType.MAP3D_TOOL_PSTAILOR)
-          //   },
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   key: 'Crosstailor',
-          //   title: 'Cross裁剪',
-          //   action: () => {
-          //     this.showMap3DTool(ConstToolType.MAP3D_TOOL_CROSSTAILOR)
-          //   },
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
           {
             key: 'fly',
             title: '飞行轨迹',
@@ -684,15 +590,6 @@ export default class ToolBar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   key: 'level',
-          //   title: '拉平',
-          //   action: () => {
-          //     this.showMap3DTool(ConstToolType.MAP3D_TOOL_LEVEL)
-          //   },
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
         ]
         buttons = [closetool, flex]
         break
@@ -711,28 +608,6 @@ export default class ToolBar extends React.Component {
     }
     this.isShow = false
     this.isBoxShow = true
-  }
-
-  componentDidMount() {
-    this.attributeListen()
-  }
-
-  componentWillUnmount() {
-    this.listenevent && this.listenevent.remove()
-  }
-
-  /**建筑单体触控监听 */
-  attributeListen() {
-    this.listenevent = SScene.addListener({
-      callback: result => {
-        //  console.log(result)
-        this.showMap3DAttribute(result)
-      },
-    })
-  }
-
-  getOriginType = () => {
-    return this.originType
   }
 
   /** 创建采集 **/
@@ -830,8 +705,6 @@ export default class ToolBar extends React.Component {
           type: ConstToolType.MAP3D_ATTRIBUTE,
           data: list,
           buttons: [clearattribute],
-          // height: ConstToolType.HEIGHT[0],
-          // column: data.length,
           isFullScreen: false,
           containerType: 'list',
         },
@@ -841,8 +714,6 @@ export default class ToolBar extends React.Component {
           } else {
             this.height = ConstToolType.HEIGHT[1]
           }
-          // this.createCollector(type)
-
           this.showToolbar()
         },
       )
@@ -859,8 +730,6 @@ export default class ToolBar extends React.Component {
         type: type,
         data: [],
         buttons: [closeAnalyst, clear, flex],
-        // height: ConstToolType.HEIGHT[0],
-        // column: data.length,
         containerType: 'list',
       },
       () => {
@@ -880,12 +749,9 @@ export default class ToolBar extends React.Component {
           type: type,
           data: data,
           buttons: buttons,
-          // height: ConstToolType.HEIGHT[0],
-          // column: data.length,
           containerType: 'list',
         },
         () => {
-          // this.createCollector(type)
           this.height = ConstToolType.HEIGHT[1]
           this.showToolbar()
         },
@@ -897,12 +763,10 @@ export default class ToolBar extends React.Component {
           type: type,
           data: data,
           buttons: buttons,
-          // height: ConstToolType.HEIGHT[0],
           column: data.length,
           containerType: 'table',
         },
         () => {
-          // this.createCollector(type)
           switch (type) {
             case ConstToolType.MAP3D_TOOL_FLY:
               this.height = ConstToolType.HEIGHT[0]
@@ -1027,14 +891,6 @@ export default class ToolBar extends React.Component {
   clear
 
   closesymbol = () => {
-    // SScene.closeAllLabel()
-    // for (let index = 0; index < this.oldLayerList.length; index++) {
-    //   SScene.setSelectable(
-    //     this.oldLayerList[index].name,
-    //     this.oldLayerList[index].selectable,
-    //   )
-    // }
-    // SScene.getLayerList().then((data)=>{console.log(data)})
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
@@ -1042,9 +898,6 @@ export default class ToolBar extends React.Component {
   }
 
   closetool = () => {
-    //   for (let index = 0; index < this.oldLayerList.length; index++) {
-    //     SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
-    //  }
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -1061,7 +914,6 @@ export default class ToolBar extends React.Component {
 
   symbolback = () => {
     SScene.symbolback()
-    // SScene.clearcurrentLabel()
   }
 
   getPoint = () => {
@@ -1106,11 +958,6 @@ export default class ToolBar extends React.Component {
   }
 
   closeAnalyst = () => {
-    // console.log(this.addlistener)
-    // this.addlistener&&this.addlistener.remove()
-    //   for (let index = 0; index < this.oldLayerList.length; index++) {
-    //     SScene.setSelectable(this.oldLayerList[index].name,this.oldLayerList[index].selectable)
-    //  }
     SAnalyst.closeAnalysis()
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
