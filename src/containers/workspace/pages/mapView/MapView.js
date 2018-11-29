@@ -598,6 +598,7 @@ export default class MapView extends React.Component {
         if (result) {
           Toast.show('删除成功')
           this.props.setSelection && this.props.setSelection()
+          SMap.setAction(Action.SELECT)
         } else {
           Toast.show('删除失败')
         }
@@ -832,9 +833,7 @@ export default class MapView extends React.Component {
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
-        getToolRef={() => {
-          return this.toolBox
-        }}
+        getToolRef={() => this.toolBox}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -867,6 +866,7 @@ export default class MapView extends React.Component {
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
+        showFullMap={this.showFullMap}
       />
     )
   }

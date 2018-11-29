@@ -103,12 +103,12 @@ export default [
           wsData: [
             {
               DSParams: { server: wsPath },
-              layerIndex: 0,
+              // layerIndex: 0,
               type: 'Workspace',
             },
             // ConstOnline['Baidu'],
           ],
-          mapName: ConstOnline['Baidu'].mapName,
+          mapName: '外业采集',
           isExample: false,
         })
       } else {
