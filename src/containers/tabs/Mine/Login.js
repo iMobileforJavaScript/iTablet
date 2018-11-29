@@ -11,13 +11,18 @@ import NavigationService from '../../NavigationService' //导航模块
 import { Container, TextBtn, BtnTwo } from '../../../components'
 import Input from './Input'
 import Tips from './Tips'
-import { SOnlineService } from 'imobile_for_reactnative'
 import forge from 'node-forge'
 
 export default class Login extends React.Component {
+
   props: {
     navigation: Object,
     setUser: () => {},
+    onlineServiceObject:Object,
+  }
+
+  constructor(props) {
+    super(props);
   }
 
   _forgetPassword = () => {
@@ -29,9 +34,11 @@ export default class Login extends React.Component {
   }
 
   _login = async () => {
-    let userName = this.phone.getValue()
-    let password = this.password.getValue()
+    // let userName = this.phone.getValue()
+    // let password = this.password.getValue()
 
+    let userName = 'imobile1234';
+    let password = 'imobile'
     if (!userName) {
       Toast.show('请输入用户名')
       return
@@ -43,9 +50,10 @@ export default class Login extends React.Component {
     }
     this.container.setLoading(true, '登录中')
     try {
-      let result = await new SOnlineService().login(userName, password)
+      let result = await this.props.onlineServiceObject.login(userName, password)
       this.container.setLoading(false)
       if (typeof result === 'boolean' && result) {
+
         Toast.show('登录成功')
         let md = forge.md.md5.create()
         md.update(password)
@@ -53,21 +61,25 @@ export default class Login extends React.Component {
           userName: userName,
           // password: md.digest().toHex(),
           password: password,
+
         })
       } else {
         this.props.setUser({
           userName: '',
           password: '',
+
         })
         Toast.show('登录失败')
       }
     } catch (e) {
       this.container.setLoading(false)
+      Toast.show('登录失败')
       this.props.setUser({
         userName: '',
         password: '',
+
       })
-      Toast.show('登录失败')
+
     }
   }
 
@@ -88,7 +100,7 @@ export default class Login extends React.Component {
             {/*<Input ref={ref => this.phone = ref} placeholder='账号/手机号' />*/}
             <Input
               ref={ref => (this.phone = ref)}
-              placeholder="账号(暂不支持手机号)"
+              placeholder="账号"
             />
             <Input
               ref={ref => (this.password = ref)}

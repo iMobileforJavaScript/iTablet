@@ -3,7 +3,6 @@ import { View, Text, Image } from 'react-native'
 import { Container, Button } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import { OnlineService } from 'imobile_for_reactnative'
 
 import styles from './styles'
 
@@ -14,10 +13,15 @@ export default class Personal extends Component {
     setUser: () => {},
   }
 
+  constructor(props){
+    super(props);
+    this._objOnlineService = this.props.navigation.getParam("objOnlineService",{});
+  }
+
   logout = () => {
     (async function() {
       try {
-        await new OnlineService().logout()
+        await this._objOnlineService.logout()
 
         NavigationService.goBack()
         this.props.setUser()

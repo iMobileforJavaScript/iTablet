@@ -7,6 +7,11 @@ import MapLoad from './mapLoad'
 import Register from './register&getBack/register'
 import GetBack from './register&getBack/GetBack'
 import Personal from './personal'
+//我的数据
+import {MyData} from './tabs/Mine/MyData'
+//我的服务
+import {MyService} from './tabs/Mine/MyService'
+
 
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
@@ -246,6 +251,18 @@ export default StackNavigator(
     },
     TouchProgress: {
       screen: TouchProgress,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MyData: {
+      screen: MyData,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MyService: {
+      screen: MyService,
       navigationOptions: {
         header: null,
       },

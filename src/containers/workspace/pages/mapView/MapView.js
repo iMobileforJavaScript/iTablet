@@ -879,7 +879,7 @@ export default class MapView extends React.Component {
           backAction: this.back,
           type: 'fix',
         }}
-        bottomBar={this.renderToolBar()}
+        bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         <SMMapView
@@ -888,8 +888,8 @@ export default class MapView extends React.Component {
           onGetInstance={this._onGetInstance}
         />
         {this.renderMapController()}
-        {this.renderFunctionToolbar()}
-        {this.renderTool()}
+        {!this.isExample && this.renderFunctionToolbar()}
+        {!this.isExample && this.renderTool()}
         {/*<TouchableOpacity*/}
         {/*onPress={() => {*/}
         {/*SMap.getLayers()*/}
