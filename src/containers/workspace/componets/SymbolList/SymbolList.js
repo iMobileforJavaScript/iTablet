@@ -2,56 +2,45 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
-import { ConstToolType } from '../../../../constants'
-import { SMSymbolTable } from 'imobile_for_reactnative'
+import { SMSymbolTable, SMap, SCartography } from 'imobile_for_reactnative'
 
-export default class SymbolTab extends React.Component {
+export default class SymbolList extends React.Component {
   props: {
-    data?: Array,
     setCurrentSymbol?: () => {},
-    showToolbar?: () => {},
   }
 
-  static defaultProps = {
-    data: [],
+  constructor(props) {
+    super(props)
+    this.state = {
+      data: [],
+    }
   }
 
   _onSymbolClick = data => {
-    // Toast.show(JSON.stringify(data))
-    this.props.setCurrentSymbol && this.props.setCurrentSymbol(data)
-    this.showToolbar(data)
+    SCartography.setLineSymbolID(data.id, 1)
+    SCartography.setLineSymbolID(data.id, 2)
+    SCartography.setLineSymbolID(data.id, 3)
   }
 
-  showToolbar = data => {
-    if (!this.props.showToolbar) return
-    let type = ''
-    switch (data.type) {
-      case 'marker':
-        type = ConstToolType.MAP_COLLECTION_POINT
-        break
-      case 'line':
-        type = ConstToolType.MAP_COLLECTION_LINE
-        break
-      case 'fill':
-        type = ConstToolType.MAP_COLLECTION_REGION
-        break
-    }
-    this.props.showToolbar(true, type, {
-      isFullScreen: false,
-      // height: ConstToolType.HEIGHT[0],
+  componentDidMount() {
+    SMap.findSymbolsByGroups('line', '').then(result => {
+      let symbols = []
+      result.forEach(item => {
+        symbols.push(item.id)
+      })
+      this.setState({ data: symbols })
     })
   }
 
   render() {
     return (
       <View style={styles.container}>
+        <View style={{ backgroundColor: '#rgba(0, 0, 0, 0)', height: 1 }} />
         <SMSymbolTable
           style={styles.table}
-          data={this.props.data}
+          data={this.state.data}
           tableStyle={{
             orientation: 1,
-            // height: 1024,
-            // width: 600,
             imageSize: 50,
             count: 5,
             legendBackgroundColor: dataUtil.colorRgba(color.blackBg),

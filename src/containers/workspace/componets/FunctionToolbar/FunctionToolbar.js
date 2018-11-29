@@ -8,12 +8,11 @@ import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
-import MoreToolbar from '../MoreToolbar'
+// import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
 import NavigationService from '../../../NavigationService'
 import { SScene, SMap, Action } from 'imobile_for_reactnative'
-import Toast from 'react-native-root-toast'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -34,6 +33,8 @@ export default class FunctionToolbar extends React.Component {
 
     getToolRef: () => {},
     showFullMap: () => {},
+    addGeometrySelectedListener: () => {},
+    removeGeometrySelectedListener: () => {},
     symbol: Object,
   }
 
@@ -64,7 +65,15 @@ export default class FunctionToolbar extends React.Component {
     this.visible = visible
   }
 
-  /** 一级事件 **/
+  start = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_START, {
+        containerType: 'table',
+      })
+    }
+  }
 
   changeBaseLayer = () => {
     const toolRef = this.props.getToolRef()
@@ -112,7 +121,6 @@ export default class FunctionToolbar extends React.Component {
       }
     }
   }
-
   showSymbol = () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
@@ -125,34 +133,26 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DSymbol = async () => {
+    SScene.checkoutListener('startLabelOperate')
     SScene.getLayerList().then(layerList => {
       const toolRef = this.props.getToolRef()
       if (toolRef) {
         toolRef.getOldLayerList(layerList)
-        SScene.setAllLayersSelection(false)
+        // SScene.setAllLayersSelection(false)
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox内容
+        toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+          containerType: 'table',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.HEIGHT[1],
+        })
       }
     })
-    SScene.initsymbol().then(
-      () => {
-        const toolRef = this.props.getToolRef()
-        if (toolRef) {
-          this.props.showFullMap && this.props.showFullMap(true)
-          // TODO 根据符号类型改变ToolBox内容
-          toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
-            containerType: 'table',
-            isFullScreen: false,
-            column: 4,
-            height: ConstToolType.HEIGHT[1],
-          })
-        }
-      },
-      () => {
-        Toast.show('请打开工作场景')
-      },
-    )
   }
 
   showMap3DTool = async () => {
+    SScene.checkoutListener('startMeasure')
     SScene.getLayerList().then(layerList => {
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -165,7 +165,7 @@ export default class FunctionToolbar extends React.Component {
           height: ConstToolType.HEIGHT[1],
         })
         toolRef.getOldLayerList(layerList)
-        SScene.setAllLayersSelection(false)
+        // SScene.setAllLayersSelection(false)
       }
     })
   }
@@ -200,21 +200,48 @@ export default class FunctionToolbar extends React.Component {
 
   showEdit = async () => {
     await SMap.setAction(Action.SELECT)
-    await this._addGeometrySelectedListener()
+    this.props.addGeometrySelectedListener &&
+      (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
+    let height = ConstToolType.HEIGHT[3]
+    let column = 4
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_REGION, {
+      let type = ''
+      switch (this.props.symbol.currentSymbol.type) {
+        case 'marker':
+          type = ConstToolType.MAP_EDIT_POINT
+          height = ConstToolType.HEIGHT[0]
+          column = 5
+          break
+        case 'line':
+          type = ConstToolType.MAP_EDIT_LINE
+          height = ConstToolType.HEIGHT[2]
+          break
+        case 'fill':
+          type = ConstToolType.MAP_EDIT_REGION
+          height = ConstToolType.HEIGHT[3]
+          break
+      }
+      toolRef.setVisible(true, type, {
         isFullScreen: false,
-        column: 4,
-        height: ConstToolType.HEIGHT[1],
+        column: column,
+        height: height,
       })
     }
   }
 
-  showMore = async e => {
-    this.moreToolbar && this.moreToolbar.showMore(true, e)
+  showMore = async () => {
+    // this.moreToolbar && this.moreToolbar.showMore(true, e)
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_MORE, {
+        isFullScreen: true,
+        column: 4,
+        height: ConstToolType.HEIGHT[0],
+      })
+    }
   }
 
   showTool = async () => {
@@ -222,15 +249,24 @@ export default class FunctionToolbar extends React.Component {
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-        isFullScreen: false,
+        isFullScreen: true,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.HEIGHT[3],
       })
     }
   }
 
   mapStyle = () => {
-    NavigationService.navigate('TouchProgress')
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[3],
+      })
+    }
   }
 
   Tagging = async () => {
@@ -259,7 +295,7 @@ export default class FunctionToolbar extends React.Component {
           toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
             isFullScreen: false,
             column: 4,
-            height: ConstToolType.HEIGHT[2],
+            height: ConstToolType.HEIGHT[3],
           })
         }
         break
@@ -275,25 +311,15 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  add = () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
-        containerType: 'list',
-      })
-    }
-  }
-
   Label = () => {
     this.props.Label()
   }
 
   /** 二级事件 **/
-  openMap = () => {
-    // NavigationService.navigate('WorkspaceFlieList', { type: "MAP_3D" })
-   }
-
+  openMap = () => {}
+  open3DMap = () => {
+    NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+  }
   closeMap = () => {}
 
   save = () => {}
@@ -310,19 +336,26 @@ export default class FunctionToolbar extends React.Component {
     switch (type) {
       case MAP_EDIT:
         data = [
+          // {
+          //   key: '底图',
+          //   title: '底图',
+          //   action: this.changeBaseLayer,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_base_map.png'),
+          // },
+          // {
+          //   key: '添加',
+          //   title: '添加',
+          //   action: this.add,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
-            key: '底图',
-            title: '底图',
-            action: this.changeBaseLayer,
+            key: '开始',
+            title: '开始',
+            action: this.start,
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: '添加',
-            title: '添加',
-            action: this.add,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             key: '标注',
@@ -365,6 +398,16 @@ export default class FunctionToolbar extends React.Component {
         break
       case MAP_3D:
         data = [
+          // {
+          //   title: '底图',
+          //   action: this.changeBaseLayer,
+          //   image: require('../../../../assets/function/icon_function_base_map.png'),
+          // },
+          // {
+          //   title: '添加',
+          //   action: this.add,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             title: '底图',
             action: this.changeBaseLayer,
@@ -395,15 +438,21 @@ export default class FunctionToolbar extends React.Component {
       case COLLECTION:
       default:
         data = [
+          // {
+          //   title: '底图',
+          //   action: this.changeBaseLayer,
+          //   image: require('../../../../assets/function/icon_function_base_map.png'),
+          // },
+          // {
+          //   title: '添加',
+          //   action: this.add,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
-            title: '底图',
-            action: this.changeBaseLayer,
+            key: '开始',
+            title: '开始',
+            action: this.start,
             image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            title: '添加',
-            action: this.add,
-            image: require('../../../../assets/function/icon_function_add.png'),
           },
           // {
           //   title: '符号',
@@ -478,7 +527,7 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             title: '打开',
-            action: this.openMap(),
+            action: this.open3DMap,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           // {
@@ -605,10 +654,10 @@ export default class FunctionToolbar extends React.Component {
           // ItemSeparatorComponent={this._renderItemSeparatorComponent}
           keyExtractor={this._keyExtractor}
         />
-        <MoreToolbar
-          ref={ref => (this.moreToolbar = ref)}
-          data={this.getMoreData(this.props.type)}
-        />
+        {/*<MoreToolbar*/}
+        {/*ref={ref => (this.moreToolbar = ref)}*/}
+        {/*data={this.getMoreData(this.props.type)}*/}
+        {/*/>*/}
       </Animated.View>
     )
   }

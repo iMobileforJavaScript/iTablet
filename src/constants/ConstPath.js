@@ -1,5 +1,16 @@
 const AppPath = '/iTablet'
 
+const RelativePath = {
+  // 对应用户中的相对路径
+  Environment: 'Environment/',
+  License: 'License/',
+  Log: 'Log/',
+  Data: 'Data/',
+
+  CustomerWorkspace: 'Customer.smwu', // 游客工作空间
+}
+
+// 默认创建的目录
 export default {
   AppPath,
   SampleDataPath: AppPath + '/data/sample/', // 存放示例数据
@@ -11,5 +22,8 @@ export default {
   CachePath: AppPath + '/Cache/',
   // SampleDataPath: AppPath + '/SampleData/', // 存放示例数据
   UserPath: AppPath + '/User/', // 存放用户数据
-  CustomerPath: AppPath + '/User/Customer', // 存放游客数据
+
+  // 游客目录
+  CustomerPath: AppPath + '/User/Customer/', // 存放游客数据
+  RelativePath,
 }

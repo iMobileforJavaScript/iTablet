@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, PanResponder, Image } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
+import { SCartography } from 'imobile_for_reactnative'
 
 const positionLeft = screen.deviceWidth
 
@@ -55,6 +56,18 @@ export default class TouchProgress extends Component {
 
   _handlePanResponderMove = (evt, gestureState) => {
     let x = this._previousLeft + gestureState.dx
+    if (gestureState.dx > 0) {
+      SCartography.setLineWidth(10, 0)
+      SCartography.setLineWidth(10, 1)
+      SCartography.setLineWidth(10, 2)
+      SCartography.setLineWidth(10, 3)
+    }
+    if (gestureState.dx < 0) {
+      SCartography.setLineWidth(0, 0)
+      SCartography.setLineWidth(0, 1)
+      SCartography.setLineWidth(0, 2)
+      SCartography.setLineWidth(0, 3)
+    }
     this._panBtnStyles.style.left = x
     if (this._panBtnStyles.style.left <= 0) this._panBtnStyles.style.left = 0
     if (this._panBtnStyles.style.left >= positionLeft - scaleSize(50))
@@ -73,12 +86,10 @@ export default class TouchProgress extends Component {
 const styles = StyleSheet.create({
   box: {
     backgroundColor: '#rgba(0, 0, 0, 0)',
-    height: '100%',
-    width: '100%',
+    flex: 1,
   },
   container: {
-    // backgroundColor: '#rgba(0, 0, 0, 0)',
-    backgroundColor: 'white',
+    backgroundColor: '#rgba(0, 0, 0, 0)',
     flexDirection: 'column',
     height: scaleSize(40),
     justifyContent: 'center',
@@ -92,10 +103,10 @@ const styles = StyleSheet.create({
   },
   line: {
     position: 'absolute',
-    left: 0,
     height: scaleSize(10),
-    width: '100%',
+    width: '95%',
     backgroundColor: 'black',
+    marginLeft: 20,
   },
   image: {
     height: scaleSize(50),

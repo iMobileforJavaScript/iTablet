@@ -6,7 +6,7 @@ import DefaultTabBar from './DefaultTabBar'
 // eslint-disable-next-line
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import GroupTab from './GroupTab'
-import TemplateTab from './TemplateTab'
+// import TemplateTab from './TemplateTab'
 import SymbolTab from './SymbolTab'
 import { setCurrentSymbol, setCurrentSymbols } from '../../../../models/symbol'
 
@@ -87,7 +87,7 @@ class SymbolTabs extends React.Component {
           goToPage={this.goToPage}
           setCurrentSymbols={this.props.setCurrentSymbols}
         />
-        <TemplateTab tabLabel="模板" />
+        {/*<TemplateTab tabLabel="模板" />*/}
       </ScrollableTabView>
     )
   }
