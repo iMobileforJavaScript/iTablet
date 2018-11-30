@@ -6,7 +6,7 @@ import { handleActions } from 'redux-actions'
 export const USER_SET = 'USER_SET'
 
 // Actions
-// --------------------------------------------------
+// ---------------------------------.3-----------------
 export const setUser = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: USER_SET,
@@ -34,7 +34,8 @@ export default handleActions(
       if (!userExist && payload.userName) {
         users.push(payload)
       }
-      return state.setIn(['currentUser'], fromJS(payload))
+      return state
+        .setIn(['currentUser'], fromJS(payload))
         .setIn(['users'], fromJS(users))
     },
     [REHYDRATE]: (state, { payload }) => {

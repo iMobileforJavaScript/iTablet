@@ -25,9 +25,9 @@ export default [
               DSParams: { server: wsPath },
               type: 'Workspace',
             },
-            ConstOnline['SuperMapCloud'],
+            ConstOnline['Baidu'],
           ],
-          mapName: ConstOnline['SuperMapCloud'].mapName,
+          mapName: ConstOnline['Baidu'].mapName,
           isExample: false,
         })
       } else {

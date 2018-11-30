@@ -837,6 +837,29 @@ export default class ToolBar extends React.Component {
     this.oldLayerList = data
   }
 
+  menu = () => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: this.isBoxShow ? 0 : this.height,
+      duration: 300,
+    }).start()
+    this.isBoxShow = !this.isBoxShow
+
+    if (this.state.isSelectlist === false) {
+      this.setState({ isFullScreen: true, isSelectlist: true })
+    } else {
+      this.setState({ isFullScreen: false, isSelectlist: false })
+    }
+    this.setState({ isTouchProgress: false })
+  }
+
+  menus = () => {
+    if (this.state.isSelectlist === false) {
+      this.setState({ isSelectlist: true })
+    } else {
+      this.setState({ isSelectlist: false })
+    }
+  }
+
   commit = (type = this.originType) => {
     this.showToolbar()
     if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
