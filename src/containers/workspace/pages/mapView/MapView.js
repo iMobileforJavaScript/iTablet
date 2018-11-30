@@ -883,13 +883,13 @@ export default class MapView extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.isExample ? '示例地图' : this.mapName,
+          title: this.mapName,
           navigation: this.props.navigation,
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
         }}
-        bottomBar={this.renderToolBar()}
+        bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         <SMMapView
@@ -898,8 +898,8 @@ export default class MapView extends React.Component {
           onGetInstance={this._onGetInstance}
         />
         {this.renderMapController()}
-        {this.renderFunctionToolbar()}
-        {this.renderTool()}
+        {!this.isExample && this.renderFunctionToolbar()}
+        {!this.isExample && this.renderTool()}
         {/*<TouchableOpacity*/}
         {/*onPress={() => {*/}
         {/*SMap.getLayers()*/}

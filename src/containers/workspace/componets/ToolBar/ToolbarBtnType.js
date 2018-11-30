@@ -18,4 +18,6 @@ export default {
   MAP_SYMBOL: 'mapSymbol',
   CHANGE_COLLECTION: 'changeCollection',
   SHOW_ATTRIBUTE: 'showAttribute', // 显示属性
+  CLEAR_CURRENT_LABEL: 'clearCurrentLabel',
+  CLOSE_CIRCLE: 'closeCircle',
 }

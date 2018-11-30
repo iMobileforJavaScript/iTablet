@@ -5,8 +5,8 @@ import {
   SMCollectorType,
   SScene,
 } from 'imobile_for_reactnative'
-import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
+import { ConstToolType, ConstInfo } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
@@ -567,18 +567,19 @@ function getMap3DData(type) {
             SScene.flyStart()
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+          image: require('../../../../assets/mapEdit/icon_play.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_play.png'),
         },
         {
-          key: 'stopOrstart',
-          title: '播放/暂停',
+          key: 'stop',
+          title: '暂停',
           action: () => {
-            SScene.flyPauseOrStart()
+            SScene.flyPause()
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
+          image: require('../../../../assets/mapEdit/icon_stop.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_stop.png'),
+          // selectMode:"flash"
         },
         // {
         //   key: ToolbarBtnType.END_FLY,
@@ -630,6 +631,7 @@ function getMap3DData(type) {
       buttons = [
         ToolbarBtnType.CLOSE_SYMBOL,
         ToolbarBtnType.BACK,
+        ToolbarBtnType.CLEAR_CURRENT_LABEL,
         ToolbarBtnType.SAVE,
       ]
       break
@@ -637,9 +639,24 @@ function getMap3DData(type) {
       buttons = [
         ToolbarBtnType.CLOSE_SYMBOL,
         ToolbarBtnType.BACK,
+        ToolbarBtnType.CLEAR_CURRENT_LABEL,
         ToolbarBtnType.SAVE,
       ]
       break
+    case ConstToolType.MAP3D_CIRCLEFLY:
+      data = [
+        {
+          key: 'startFly',
+          title: '绕点飞行',
+          action: () => {
+            SScene.startCircleFly()
+          },
+          size: 'large',
+          image: require('../../../../assets/mapEdit/icon_play.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_play.png'),
+        },
+      ]
+      buttons = ['closeCircle', 'flex']
   }
   return { data, buttons }
 }

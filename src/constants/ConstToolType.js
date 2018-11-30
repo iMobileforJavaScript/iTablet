@@ -57,6 +57,7 @@ export default {
   MAP3D_TOOL_LEVEL: 'MAP3D_TOOL_LEVEL',
   MAP3D_TOOL_FLYLIST: 'MAP3D_TOOL_FLYLIST',
   MAP3D_ATTRIBUTE: 'MAP3D_ATTRIBUTE',
+  MAP3D_CIRCLEFLY: 'MAP3D_CIRCLEFLY',
   // 工具视图高度级别
   HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(720)],
 }
