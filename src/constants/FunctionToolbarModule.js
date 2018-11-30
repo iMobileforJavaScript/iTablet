@@ -148,4 +148,14 @@ const BotMap = [
     ],
   },
 ]
-export { layerAdd, BotMap }
+const openData = [
+  {
+    title: '地图',
+    data: [
+      {
+        title: '选择目录',
+      },
+    ],
+  },
+]
+export { layerAdd, BotMap ,openData}

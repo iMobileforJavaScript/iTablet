@@ -32,7 +32,7 @@ export default class WorkSpaceFileList extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type
-    this.path = ConstPath.LocalDataPath
+    this.path = ConstPath.CustomerPath
     this.title = params.title
     this.cb = params.cb
     this.state = {
@@ -99,7 +99,13 @@ export default class WorkSpaceFileList extends Component {
             } else {
               this._toLoadMapView(absolutePath, EngineType.UDB)
             }
-          } else {
+          } else if(filename === '.xml'){
+            if (this.cb) {
+              this.cb(absolutePath)
+              NavigationService.goBack() && this.container.setLoading(false)
+            }
+          }
+          else{
             this._offLine_More()
           }
         } else {
@@ -109,7 +115,7 @@ export default class WorkSpaceFileList extends Component {
               filter = 'sxwu,smwu'
               break
             default:
-              filter = 'smwu,sxwu,udb'
+              filter = 'xml,udb'
               break
           }
           let fileList = await Utility.getPathListByFilter(absolutePath, {

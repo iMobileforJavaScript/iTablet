@@ -85,7 +85,7 @@ export default {
     DSParams: {
       server: 'http://www.baidu.com',
       engineType: 227,
-      alias: 'baseMap',
+      alias: 'BaiduMap',
     },
     layerIndex: 0,
     mapName: '百度地图',
@@ -95,7 +95,7 @@ export default {
     DSParams: {
       server: 'http://www.google.cn/maps',
       engineType: 223,
-      alias: 'baseMap',
+      alias: 'GoogleMaps',
     },
     layerIndex: 0,
     mapName: 'GOOGLE地图',
@@ -105,7 +105,7 @@ export default {
     DSParams: {
       server: 'http://openstreetmap.org',
       engineType: 228,
-      alias: 'baseMap',
+      alias: 'OpenStreetMaps',
     },
     layerIndex: 0,
     mapName: 'OSM',
@@ -115,7 +115,7 @@ export default {
     DSParams: {
       server: 'http://t2.supermapcloud.com',
       engineType: 224,
-      alias: 'baseMap',
+      alias: 'SuperMapCloud',
     },
     layerIndex: 0,
     mapName: 'SuperMapCloud',
