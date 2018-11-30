@@ -5,7 +5,13 @@
  */
 
 import * as React from 'react'
-import { SMMapView, Action, DatasetType, SMap } from 'imobile_for_reactnative'
+import {
+  SMMapView,
+  Action,
+  DatasetType,
+  SMap,
+  SCollector,
+} from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
   FunctionToolbar,
@@ -20,6 +26,7 @@ import {
   Container,
   MTBtn,
   UsualTitle,
+  Dialog,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
 import { ConstPath, Const } from '../../../../constants'
@@ -35,6 +42,7 @@ const LVL_2 = [scaleSize(410), scaleSize(280), scaleSize(560)]
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
+    user: PropTypes.object,
     editLayer: PropTypes.object,
     analystLayer: PropTypes.object,
     selection: PropTypes.object,
@@ -43,6 +51,7 @@ export default class MapView extends React.Component {
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
+    symbol: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -58,9 +67,10 @@ export default class MapView extends React.Component {
     this.type = params.type || 'LOCAL'
     this.operationType = params.operationType || constants.COLLECTION
     this.isExample = params.isExample || false
-    this.DSParams = params.DSParams || null
-    this.labelDSParams = params.labelDSParams || false
-    this.layerIndex = params.layerIndex || 0
+    // this.DSParams = params.DSParams || null
+    // this.labelDSParams = params.labelDSParams || false
+    // this.layerIndex = params.layerIndex || 0
+    this.wsData = params.wsData
     this.mapName = params.mapName || ''
     this.path = params.path || ''
     this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
@@ -395,48 +405,27 @@ export default class MapView extends React.Component {
     this._remove_measure_listener()
   }
 
-  // /** 选择事件监听 **/
-  // _addGeometrySelectedListener = async () => {
-  //   await SMap.addGeometrySelectedListener({
-  //     geometrySelected: this.geometrySelected,
-  //     geometryMultiSelected: this.geometryMultiSelected,
-  //   })
-  // }
-  //
-  // _removeGeometrySelectedListener = async () => {
-  //   await SMap.removeGeometrySelectedListener()
-  // }
-  //
-  // geometrySelected = event => {
-  //   // let layerSelectable = true
-  //   // if (this.props.selection && this.props.selection.layer) {
-  //   //   layerSelectable =
-  //   //     this.props.selection.layer._SMLayerId !== event.layer._SMLayerId ||
-  //   //     this.props.selection.id !== event.id
-  //   // }
-  //   // event.layer.getName().then(async name => {
-  //   //   let editable = await event.layer.getEditable()
-  //   //   Toast.show('选中 ' + name)
-  //   //   Object.assign(event, { name: name, editable, geoID: event.id })
-  //   //   layerSelectable && this.props.setSelection(event)
-  //   //   // 如果是数据编辑状态，选中目标后，直接为编辑节点状态
-  //   //   // if (
-  //   //   //   this.mapControl && this.props.selection
-  //   //   //   && this.props.editLayer && GLOBAL.toolType === Const.DATA_EDIT
-  //   //   // ) {
-  //   //   //   let action = await this.mapControl.getAction()
-  //   //   //   action === 'SELECT'
-  //   //   //   && this.props.editLayer.layer._SMLayerId === this.props.selection.layerId
-  //   //   //   && await this.mapControl.appointEditGeometry(event.id, event.layer)
-  //   //   //   // && await this.mapControl.setAction(Action.VERTEXEDIT)
-  //   //   // }
-  //   // })
-  // }
-  //
-  // geometryMultiSelected = events => {
-  //   // TODO 处理多选
-  //   this.props.setSelection(events)
-  // }
+  /** 设置监听 **/
+  /** 选择事件监听 **/
+  _addGeometrySelectedListener = async () => {
+    await SMap.addGeometrySelectedListener({
+      geometrySelected: this.geometrySelected,
+      geometryMultiSelected: this.geometryMultiSelected,
+    })
+  }
+
+  _removeGeometrySelectedListener = async () => {
+    await SMap.removeGeometrySelectedListener()
+  }
+
+  geometrySelected = event => {
+    this.props.setSelection && this.props.setSelection(event)
+    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+  }
+
+  geometryMultiSelected = () => {
+    // TODO 处理多选
+  }
 
   saveMapAndWorkspace = ({ mapName, wsName, path }) => {
     this.container.setLoading(true, '正在保存')
@@ -605,22 +594,17 @@ export default class MapView extends React.Component {
   removeObject = () => {
     (async function() {
       try {
-        if (!this.map || !this.props.selection || !this.props.selection.id)
-          return
-        let selection = await this.props.selection.layer.getSelection()
-        let result = await selection.recordset.deleteById(
-          this.props.selection.id,
-        )
+        if (!this.props.selection || !this.props.selection.id) return
+        let result = await SCollector.remove(this.props.selection.id)
         if (result) {
           Toast.show('删除成功')
-          this.props.setSelection()
-          await this.map.refresh()
-          await this.mapControl.setAction(Action.SELECT)
+          this.props.setSelection && this.props.setSelection()
+          SMap.setAction(Action.SELECT)
         } else {
           Toast.show('删除失败')
         }
-        this.removeObjectDialog &&
-          this.removeObjectDialog.setDialogVisible(false)
+        GLOBAL.removeObjectDialog &&
+          GLOBAL.removeObjectDialog.setDialogVisible(false)
       } catch (e) {
         Toast.show('删除失败')
       }
@@ -676,52 +660,75 @@ export default class MapView extends React.Component {
   }
 
   _addMap = () => {
-    if (this.type === 'LOCAL') {
-      this._addLocalMap()
-    } else {
-      this._addRemoteMap()
-    }
+    (async function() {
+      try {
+        if (this.wsData === null) return
+        if (this.wsData instanceof Array) {
+          for (let i = 0; i < this.wsData.length; i++) {
+            let item = this.wsData[i]
+            if (item === null) continue
+            if (item.type === 'Workspace') {
+              await this._openWorkspace(
+                this.wsData[i],
+                this.wsData[i].layerIndex,
+              )
+            } else {
+              await this._openDatasource(
+                this.wsData[i],
+                this.wsData[i].layerIndex,
+              )
+            }
+          }
+        } else {
+          if (this.wsData.type === 'Workspace') {
+            await this._openWorkspace(this.wsData, this.wsData.layerIndex)
+          } else {
+            await this._openDatasource(this.wsData, this.wsData.layerIndex)
+          }
+        }
+        this.container.setLoading(false)
+      } catch (e) {
+        this.container.setLoading(false)
+      }
+    }.bind(this)())
   }
 
-  _addLocalMap = () => {
-    if (!this.path) {
+  _openWorkspace = async (wsData, index = -1) => {
+    if (!wsData.DSParams || !wsData.DSParams.server) {
       this.container.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
-    (async function() {
-      try {
-        let data = { server: this.path }
-        SMap.openWorkspace(data).then(result => {
-          result && SMap.openMap(0)
-          this.container.setLoading(false)
-        })
-        // await this._addGeometrySelectedListener()
+    try {
+      // let data = { server: wsData.DSParams.path }
+      let result = await SMap.openWorkspace(wsData.DSParams)
+      result && SMap.openMap(index)
+      // this.container.setLoading(false)
+      // await this._addGeometrySelectedListener()
 
-        // this.saveLatest()
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }.bind(this)())
+      // this.saveLatest()
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
-  _addRemoteMap = () => {
-    if (!this.DSParams) {
+  _openDatasource = async (wsData, index = -1) => {
+    if (!wsData.DSParams || !wsData.DSParams.server) {
+      this.container.setLoading(false)
       Toast.show('没有找到地图')
       return
     }
-    (async function() {
-      try {
-        this.DSParams &&
-          (await SMap.openDatasource(this.DSParams, this.layerIndex))
-        this.labelDSParams &&
-          (await SMap.openDatasource(this.labelDSParams, this.layerIndex))
-        this.container.setLoading(false)
-        // await this._addGeometrySelectedListener()
-      } catch (e) {
-        this.container.setLoading(false)
-      }
-    }.bind(this)())
+    try {
+      await SMap.openDatasource(wsData.DSParams, index)
+      // this.DSParams &&
+      //   (await SMap.openDatasource(this.DSParams, this.layerIndex))
+      // this.labelDSParams &&
+      //   (await SMap.openDatasource(this.labelDSParams, this.layerIndex))
+      // this.container.setLoading(false)
+      // await this._addGeometrySelectedListener()
+    } catch (e) {
+      this.container.setLoading(false)
+    }
   }
 
   TD = () => {
@@ -827,23 +834,11 @@ export default class MapView extends React.Component {
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
-        getToolRef={() => {
-          return this.toolBox
-        }}
+        getToolRef={() => this.toolBox}
         showFullMap={this.showFullMap}
-        // showLayers={() => {
-        //   this.LayerAdd.showLayers(true)
-        // }}
-        // Label={() => {
-        //   this.LabelAdd.showLayers(true)
-        // }}
-        // showTool={() => {
-        //   this.showFullMap(true)
-        //   this.toolBox.setVisible(true)
-        // }}
-        // changeLayer={() => {
-        //   this.BotMap.showLayers(true)
-        // }}
+        symbol={this.props.symbol}
+        addGeometrySelectedListener={this._addGeometrySelectedListener}
+        removeGeometrySelectedListener={this._removeGeometrySelectedListener}
       />
     )
   }
@@ -869,6 +864,11 @@ export default class MapView extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
+        user={this.props.user}
+        symbol={this.props.symbol}
+        addGeometrySelectedListener={this._addGeometrySelectedListener}
+        removeGeometrySelectedListener={this._removeGeometrySelectedListener}
+        showFullMap={this.showFullMap}
       />
     )
   }
@@ -883,13 +883,13 @@ export default class MapView extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.isExample ? '示例地图' : '',
+          title: this.mapName,
           navigation: this.props.navigation,
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
         }}
-        bottomBar={this.renderToolBar()}
+        bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         <SMMapView
@@ -898,8 +898,8 @@ export default class MapView extends React.Component {
           onGetInstance={this._onGetInstance}
         />
         {this.renderMapController()}
-        {this.renderFunctionToolbar()}
-        {this.renderTool()}
+        {!this.isExample && this.renderFunctionToolbar()}
+        {!this.isExample && this.renderTool()}
         {/*<TouchableOpacity*/}
         {/*onPress={() => {*/}
         {/*SMap.getLayers()*/}
@@ -918,15 +918,15 @@ export default class MapView extends React.Component {
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
         {/*{this.renderSetting()}*/}
-        {/*<Dialog*/}
-        {/*ref={ref => (this.removeObjectDialog = ref)}*/}
-        {/*type={Dialog.Type.MODAL}*/}
-        {/*title={'提示'}*/}
-        {/*info={'是否要删除该对象吗？'}*/}
-        {/*confirmAction={this.removeObject}*/}
-        {/*confirmBtnTitle={'是'}*/}
-        {/*cancelBtnTitle={'否'}*/}
-        {/*/>*/}
+        <Dialog
+          ref={ref => (GLOBAL.removeObjectDialog = ref)}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'是否要删除该对象吗？'}
+          confirmAction={this.removeObject}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
         {/*<Dialog*/}
         {/*ref={ref => (this.openDialog = ref)}*/}
         {/*type={Dialog.Type.MODAL}*/}

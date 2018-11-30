@@ -5,6 +5,7 @@ export default {
   EDIT_NODE: '编辑节点',
   DELETE_NODE: '删除节点',
   REDO: '重做',
+  CANCEL: '取消',
   CREATE_POLYLINE: '绘制直线',
   CREATE_POLYGON: '绘制多边形',
   DELETE: '删除',
@@ -39,6 +40,19 @@ export default {
   EQUALTRACK: '等距模式轨迹',
   TIMETRACK: '等时模式轨迹',
   INTELLIGENCETRACK: '智能模式轨迹',
+  SELECT_ALL: '全选',
+  SELECT_INVERSE: '反选',
+
+  CLOSE: '关闭',
+  SAVE: '保存',
+  SAVE_AS: '另存',
+  SHARE: '分享',
+  START: '开始',
+  OPEN: '打开',
+  CREATE: '新建',
+  HISTORY: '历史',
+  BASE_MAP: '底图',
+  ADD: '添加',
 
   // =====================================
 

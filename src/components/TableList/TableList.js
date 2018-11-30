@@ -14,15 +14,20 @@ export default class TableList extends React.Component {
   props: {
     data: Array,
     numColumns?: number,
+    lineSeparator?: number,
     style?: Object,
     cellStyle?: Object,
     rowStyle?: Object,
     renderCell: () => {},
+
+    type?: string,
   }
 
   static defaultProps = {
     data: [],
     numColumns: 2,
+    type: 'normal', // normal | scroll
+    lineSeparator: 10,
   }
 
   renderRows = () => {
@@ -44,7 +49,16 @@ export default class TableList extends React.Component {
 
   renderRow = (row, rowIndex) => {
     return (
-      <View key={'row-' + rowIndex} style={[styles.row]}>
+      <View
+        key={'row-' + rowIndex}
+        style={[
+          styles.row,
+          rowIndex &&
+            this.props.lineSeparator >= 0 && {
+            marginTop: this.props.lineSeparator,
+          },
+        ]}
+      >
         {row}
       </View>
     )
@@ -63,10 +77,18 @@ export default class TableList extends React.Component {
   }
 
   render() {
-    return (
-      <ScrollView style={[styles.container, this.props.style]}>
-        {this.renderRows()}
-      </ScrollView>
-    )
+    if (this.props.type === 'scroll') {
+      return (
+        <ScrollView style={[styles.scrollContainer, this.props.style]}>
+          {this.renderRows()}
+        </ScrollView>
+      )
+    } else {
+      return (
+        <View style={[styles.normalContainer, this.props.style]}>
+          {this.renderRows()}
+        </View>
+      )
+    }
   }
 }

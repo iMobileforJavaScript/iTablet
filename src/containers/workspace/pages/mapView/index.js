@@ -19,6 +19,8 @@ const mapStateToProps = state => ({
   mapControl: state.map.toJS().mapControl,
   bufferSetting: state.setting.toJS().buffer,
   overlaySetting: state.setting.toJS().overlay,
+  symbol: state.symbol.toJS(),
+  user: state.user.toJS(),
 })
 
 const mapDispatchToProps = {

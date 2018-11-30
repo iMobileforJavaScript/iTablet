@@ -10,8 +10,8 @@ export default {
           index: 0,
           show: true,
           type: 'terrainLayer',
-          name:"stk",
-          url:"https://assets.agi.com/stk-terrain/world",
+          name: 'stk',
+          url: 'https://assets.agi.com/stk-terrain/world',
         },
         // {
         //   title: 'Google statellite',
@@ -26,8 +26,8 @@ export default {
           index: 0,
           show: true,
           type: 'l3dBingMaps',
-          name:"bingmap",
-          url:"http://t0.tianditu.com/img_c/wmts",
+          name: 'bingmap',
+          url: 'http://t0.tianditu.com/img_c/wmts',
         },
       ],
     },
@@ -104,10 +104,10 @@ export default {
           title: '三维切片缓存图层',
           type: 'layerData',
         },
-        {
-          title: '矢量缓存图层',
-          type: 'layerData',
-        },
+        // {
+        //   title: '矢量缓存图层',
+        //   type: 'layerData',
+        // },
         {
           title: '地图缓存图层',
           type: 'layerData',

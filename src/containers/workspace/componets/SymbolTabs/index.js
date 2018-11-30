@@ -1,15 +1,31 @@
+import { connect } from 'react-redux'
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { color, size } from '../../../../styles'
 import DefaultTabBar from './DefaultTabBar'
 // eslint-disable-next-line
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import GroupTab from './GroupTab'
-import TemplateTab from './TemplateTab'
+// import TemplateTab from './TemplateTab'
+import SymbolTab from './SymbolTab'
+import { setCurrentSymbol, setCurrentSymbols } from '../../../../models/symbol'
 
-export default class SymbolTabs extends React.Component {
+const mapStateToProps = state => ({
+  symbol: state.symbol.toJS(),
+})
+
+const mapDispatchToProps = {
+  setCurrentSymbol,
+  setCurrentSymbols,
+}
+
+class SymbolTabs extends React.Component {
   props: {
     style: Object,
+    symbol: Object,
+    setCurrentSymbol: () => {},
+    setCurrentSymbols: () => {},
+    showToolbar: () => {},
   }
 
   static defaultProps = {}
@@ -20,10 +36,16 @@ export default class SymbolTabs extends React.Component {
     this.currentTab = 0
   }
 
+  goToPage = index => {
+    this.scrollTab.goToPage(index)
+  }
+
   render() {
     return (
       <ScrollableTabView
+        ref={ref => (this.scrollTab = ref)}
         style={[styles.container, this.props.style]}
+        // page={this.currentTab}
         renderTabBar={() => (
           <DefaultTabBar
             // backgroundColor={color.theme}
@@ -48,10 +70,24 @@ export default class SymbolTabs extends React.Component {
           // backgroundColor: '#rgba(0, 0, 0, 0.3)',
         }}
       >
-        <View tabLabel="最近" />
-        <View tabLabel="符号" />
-        <GroupTab tabLabel="分组" />
-        <TemplateTab tabLabel="模板" />
+        <SymbolTab
+          tabLabel="最近"
+          data={this.props.symbol.latestSymbols}
+          setCurrentSymbol={this.props.setCurrentSymbol}
+          showToolbar={this.props.showToolbar}
+        />
+        <SymbolTab
+          tabLabel="符号"
+          data={this.props.symbol.currentSymbols}
+          setCurrentSymbol={this.props.setCurrentSymbol}
+          showToolbar={this.props.showToolbar}
+        />
+        <GroupTab
+          tabLabel="分组"
+          goToPage={this.goToPage}
+          setCurrentSymbols={this.props.setCurrentSymbols}
+        />
+        {/*<TemplateTab tabLabel="模板" />*/}
       </ScrollableTabView>
     )
   }
@@ -63,3 +99,8 @@ const styles = StyleSheet.create({
     // backgroundColor: color.blackBg,
   },
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(SymbolTabs)

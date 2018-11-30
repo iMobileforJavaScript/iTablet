@@ -19,7 +19,7 @@ const DURATION = {
 const POSITION = {
   CENTER: Toast.positions.CENTER,
   // TOP: Toast.positions.TOP,
-  TOP: 60,
+  TOP: 100,
   BOTTOM: Toast.positions.BOTTOM,
 }
 

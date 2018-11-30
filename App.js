@@ -12,7 +12,7 @@ import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager, Utility, Environment, OnlineService } from 'imobile_for_reactnative'
+import { SpeechManager, Utility, OnlineService, SMap, WorkspaceType } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
 
@@ -57,6 +57,7 @@ class AppRoot extends Component {
       await this.initDirectories()
       // await this.initEnvironment()
       await this.initSpeechManager()
+      // await this.initCustomerWorkspace()
     }).bind(this)()
   }
 
@@ -84,12 +85,16 @@ class AppRoot extends Component {
   initDirectories = async () => {
     try {
       let paths = Object.keys(ConstPath)
-      let isCreate = false, absolutePath = ''
+      let isCreate = true, absolutePath = ''
       for (let i = 0; i < paths.length; i++) {
         let path = ConstPath[paths[i]]
+        if (typeof path !== 'string') continue
         absolutePath = await Utility.appendingHomeDirectory(path)
-        isCreate = await Utility.createDirectory(absolutePath)
+        let exist = await Utility.fileIsExistInHomeDirectory(path)
+        let fileCreated = exist || await Utility.createDirectory(absolutePath)
+        isCreate = fileCreated && isCreate
       }
+      isCreate = this.initCustomerDirectories() && isCreate
       if (!isCreate) {
         Toast.show('创建文件目录失败')
       }
@@ -98,22 +103,22 @@ class AppRoot extends Component {
     }
   }
 
-  // 初始化环境
-  initEnvironment = async () => {
+  // 初始化游客用户文件目录
+  initCustomerDirectories = async () => {
     try {
-      let licensePath = await Utility.appendingHomeDirectory(ConstPath.LicensePath)
-      let en = new Environment()
-      let isSet = await en.setLicensePath(licensePath)
-      if (!isSet) {
-        Toast.show('许可文件设置失败')
-        return
+      let paths = Object.keys(ConstPath.RelativePath)
+      let isCreate = true, absolutePath = ''
+      for (let i = 0; i < paths.length; i++) {
+        let path = ConstPath.RelativePath[paths[i]]
+        if (typeof path !== 'string') continue
+        absolutePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath + path)
+        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.CustomerPath + path)
+        let fileCreated = exist || await Utility.createDirectory(absolutePath)
+        isCreate = fileCreated && isCreate
       }
-      let isInit = await en.initialization()
-      if (!isInit) {
-        Toast.show('环境初始化失败')
-      }
+      return isCreate
     } catch (e) {
-      Toast.show('环境初始化失败')
+      return false
     }
   }
 
@@ -124,6 +129,23 @@ class AppRoot extends Component {
       await GLOBAL.SpeechManager.init()
     } catch (e) {
       Toast.show('语音初始化失败')
+    }
+  }
+
+  // 初始化游客工作空间
+  initCustomerWorkspace = async () => {
+    try {
+      const customerPath = ConstPath.CustomerPath
+      let exist = await Utility.fileIsExistInHomeDirectory(customerPath + ConstPath.RelativePath.CustomerWorkspace)
+      !exist && Utility.appendingHomeDirectory(customerPath).then(path => {
+        SMap.saveWorkspace({
+          caption: 'Customer',
+          type: WorkspaceType.SMWU,
+          server: path,
+        })
+      })
+    } catch (e) {
+      Toast.show('游客工作空间初始化失败')
     }
   }
 
@@ -141,27 +163,6 @@ class AppRoot extends Component {
             })
           }}
         />
-        {/*<AudioDialog*/}
-        {/*ref={ref => GLOBAL.AudioDialog = ref}*/}
-        {/*data={{*/}
-        {/*layer: this.props.editLayer,*/}
-        {/*}}*/}
-        {/*/>*/}
-        {/*{*/}
-        {/*(*/}
-        {/*!this.props.nav.routes ||*/}
-        {/*this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName !== 'MapView'*/}
-        {/*) &&*/}
-        {/*<PanAudioButton*/}
-        {/*onPress={() => {*/}
-        {/*if (this.props.nav.routes && this.props.nav.routes[this.props.nav.index].routeName === 'MapView') {*/}
-        {/*GLOBAL.AudioDialog.setVisible(true, 'top')*/}
-        {/*} else {*/}
-        {/*GLOBAL.AudioDialog.setVisible(true)*/}
-        {/*}*/}
-        {/*}}*/}
-        {/*ref={ref => GLOBAL.PanAudioButton = ref}/>*/}
-        {/*}*/}
       </View>
     )
   }
