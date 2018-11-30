@@ -40,6 +40,8 @@ export default {
   EQUALTRACK: '等距模式轨迹',
   TIMETRACK: '等时模式轨迹',
   INTELLIGENCETRACK: '智能模式轨迹',
+  SELECT_ALL: '全选',
+  SELECT_INVERSE: '反选',
 
   CLOSE: '关闭',
   SAVE: '保存',

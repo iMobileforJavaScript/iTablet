@@ -8,6 +8,8 @@ import {
 import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
+import ToolbarBtnType from './ToolbarBtnType'
+import MapToolData from './MapToolData'
 
 let _params = {}
 
@@ -20,7 +22,6 @@ function getTabBarData(type, params = {}) {
       isCollection = true
     }
   })
-
   if (isCollection) {
     tabBarData = getCollectionData(type)
   } else if (type.indexOf('MAP_EDIT_') > -1) {
@@ -31,6 +32,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = getMapMore(type)
   } else if (type === ConstToolType.MAP_START) {
     tabBarData = getStart(type)
+  } else if (type.indexOf(ConstToolType.MAP_TOOL) > -1) {
+    tabBarData = MapToolData.getMapTool(type, params)
   }
   return {
     data: tabBarData.data,
@@ -38,6 +41,11 @@ function getTabBarData(type, params = {}) {
   }
 }
 
+/**
+ * 获取编辑操作
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
 function getEditData(type) {
   let data = [],
     buttons = []
@@ -384,10 +392,15 @@ function getEditData(type) {
       ]
       break
   }
-  buttons = ['cancel', 'flex', 'commit']
+  buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX, ToolbarBtnType.COMMIT]
   return { data, buttons }
 }
 
+/**
+ * 获取采集操作
+ * @param type
+ * @returns {*}
+ */
 function getCollectionData(type) {
   let data = [],
     buttons = []
@@ -466,7 +479,7 @@ function getCollectionData(type) {
     image: require('../../../../assets/mapTools/icon_submit.png'),
     selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'),
   })
-  buttons = ['cancel', 'changeCollection', 'mapSymbol']
+  buttons = [ToolbarBtnType.CANCEL, 'changeCollection', 'mapSymbol']
 
   return { data, buttons }
 }
@@ -505,7 +518,7 @@ function getMap3DData(type) {
       //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
       // },
       // ]
-      buttons = ['closeAnalyst', 'clear']
+      buttons = [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR]
       break
     case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
       // data = [
@@ -528,22 +541,22 @@ function getMap3DData(type) {
       //     selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
       //   },
       // ]
-      buttons = ['closeAnalyst', 'clear']
+      buttons = [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR]
       break
     case ConstToolType.MAP3D_TOOL_HEIGHTMEASURE:
-      buttons = ['cancel', 'flex']
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_TOOL_SELECTION:
-      buttons = ['cancel', 'flex']
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_TOOL_BOXTAILOR:
-      buttons = ['cancel', 'flex']
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_TOOL_PSTAILOR:
-      buttons = ['cancel', 'flex']
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_TOOL_CROSSTAILOR:
-      buttons = ['cancel', 'flex']
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_TOOL_FLY:
       data = [
@@ -568,7 +581,7 @@ function getMap3DData(type) {
           selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
         },
         // {
-        //   key: 'endfly',
+        //   key: ToolbarBtnType.END_FLY,
         //   title: '结束飞行',
         //   action: ()=>{
         //     SScene.flyStop()
@@ -594,22 +607,38 @@ function getMap3DData(type) {
         //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
         // },
       ]
-      buttons = ['endfly', 'flex']
+      buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_TOOL_LEVEL:
-      buttons = ['cancel', 'flex']
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       break
     case ConstToolType.MAP3D_SYMBOL_POINT:
-      buttons = ['closesymbol', 'back', 'save']
+      buttons = [
+        ToolbarBtnType.CLOSE_SYMBOL,
+        ToolbarBtnType.BACK,
+        ToolbarBtnType.SAVE,
+      ]
       break
     case ConstToolType.MAP3D_SYMBOL_POINTLINE:
-      buttons = ['closesymbol', 'back', 'save']
+      buttons = [
+        ToolbarBtnType.CLOSE_SYMBOL,
+        ToolbarBtnType.BACK,
+        ToolbarBtnType.SAVE,
+      ]
       break
     case ConstToolType.MAP3D_SYMBOL_POINTSURFACE:
-      buttons = ['closesymbol', 'back', 'save']
+      buttons = [
+        ToolbarBtnType.CLOSE_SYMBOL,
+        ToolbarBtnType.BACK,
+        ToolbarBtnType.SAVE,
+      ]
       break
     case ConstToolType.MAP3D_SYMBOL_TEXT:
-      buttons = ['closesymbol', 'back', 'save']
+      buttons = [
+        ToolbarBtnType.CLOSE_SYMBOL,
+        ToolbarBtnType.BACK,
+        ToolbarBtnType.SAVE,
+      ]
       break
   }
   return { data, buttons }
@@ -657,6 +686,11 @@ function getMapMore(type) {
   return { data, buttons }
 }
 
+/**
+ * 获取开始操作
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
 function getStart(type) {
   let data = [],
     buttons = []
@@ -705,6 +739,8 @@ function getStart(type) {
   ]
   return { data, buttons }
 }
+
+/*******************************************操作分割线*********************************************/
 
 function mapSubmit() {
   let result = SMap.submit()
