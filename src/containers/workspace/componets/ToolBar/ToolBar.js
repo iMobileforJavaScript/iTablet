@@ -25,7 +25,6 @@ import {
 } from 'react-native'
 import {
   SMap,
-  SAnalyst,
   SScene,
   Action,
   DatasetType,
@@ -550,7 +549,7 @@ export default class ToolBar extends React.Component {
             key: 'distanceMeasure',
             title: '距离量算',
             action: () => {
-              SAnalyst.setMeasureLineAnalyst({
+              SScene.setMeasureLineAnalyst({
                 callback: result => {
                   // Toast.show(result)
                   this.Map3DToolBar.setAnalystResult(result)
@@ -565,7 +564,7 @@ export default class ToolBar extends React.Component {
             key: 'suerfaceMeasure',
             title: '面积量算',
             action: () => {
-              SAnalyst.setMeasureSquareAnalyst({
+              SScene.setMeasureSquareAnalyst({
                 callback: result => {
                   this.Map3DToolBar.setAnalystResult(result)
                 },
@@ -889,8 +888,6 @@ export default class ToolBar extends React.Component {
     SScene.clearcurrentLabel()
   }
 
-  clear
-
   closesymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
@@ -959,7 +956,7 @@ export default class ToolBar extends React.Component {
   }
 
   closeAnalyst = () => {
-    SAnalyst.closeAnalysis()
+    SScene.closeAnalysis()
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -968,15 +965,15 @@ export default class ToolBar extends React.Component {
   clear = () => {
     switch (this.state.type) {
       case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
-        SAnalyst.clearSquareAnalyst()
+        SScene.clearSquareAnalyst()
         this.Map3DToolBar.setAnalystResult(0)
         break
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
-        SAnalyst.clearLineAnalyst()
+        SScene.clearLineAnalyst()
         this.Map3DToolBar.setAnalystResult(0)
         break
       default:
-        SAnalyst.clear()
+        SScene.clear()
         break
     }
   }
