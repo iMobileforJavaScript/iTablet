@@ -57,7 +57,7 @@ class AppRoot extends Component {
       await this.initDirectories()
       // await this.initEnvironment()
       await this.initSpeechManager()
-      await this.initCustomerWorkspace()
+      // await this.initCustomerWorkspace()
     }).bind(this)()
   }
 
@@ -85,18 +85,40 @@ class AppRoot extends Component {
   initDirectories = async () => {
     try {
       let paths = Object.keys(ConstPath)
-      let isCreate = false, absolutePath = ''
+      let isCreate = true, absolutePath = ''
       for (let i = 0; i < paths.length; i++) {
         let path = ConstPath[paths[i]]
         if (typeof path !== 'string') continue
         absolutePath = await Utility.appendingHomeDirectory(path)
-        isCreate = await Utility.createDirectory(absolutePath)
+        let exist = await Utility.fileIsExistInHomeDirectory(path)
+        let fileCreated = exist || await Utility.createDirectory(absolutePath)
+        isCreate = fileCreated && isCreate
       }
+      isCreate = this.initCustomerDirectories() && isCreate
       if (!isCreate) {
         Toast.show('创建文件目录失败')
       }
     } catch (e) {
       Toast.show('创建文件目录失败')
+    }
+  }
+
+  // 初始化游客用户文件目录
+  initCustomerDirectories = async () => {
+    try {
+      let paths = Object.keys(ConstPath.RelativePath)
+      let isCreate = true, absolutePath = ''
+      for (let i = 0; i < paths.length; i++) {
+        let path = ConstPath.RelativePath[paths[i]]
+        if (typeof path !== 'string') continue
+        absolutePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath + path)
+        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.CustomerPath + path)
+        let fileCreated = exist || await Utility.createDirectory(absolutePath)
+        isCreate = fileCreated && isCreate
+      }
+      return isCreate
+    } catch (e) {
+      return false
     }
   }
 
@@ -113,8 +135,8 @@ class AppRoot extends Component {
   // 初始化游客工作空间
   initCustomerWorkspace = async () => {
     try {
-      const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.CustomerWorkspace
-      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      const customerPath = ConstPath.CustomerPath
+      let exist = await Utility.fileIsExistInHomeDirectory(customerPath + ConstPath.RelativePath.CustomerWorkspace)
       !exist && Utility.appendingHomeDirectory(customerPath).then(path => {
         SMap.saveWorkspace({
           caption: 'Customer',

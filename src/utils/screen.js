@@ -1,5 +1,7 @@
 import { Dimensions, PixelRatio } from 'react-native'
 const defaultPixel = PixelRatio.get() //iphone6的像素密度
+const dp2px = dp => PixelRatio.getPixelSizeForLayoutSize(dp) // DP to PX
+const px2dp = px => PixelRatio.roundToNearestPixel(px) // PX to DP
 const deviceWidth = Dimensions.get('window').width //设备的宽度
 const deviceHeight = Dimensions.get('window').height //设备的高度
 
@@ -21,4 +23,6 @@ export function scaleSize(size) {
 export default {
   deviceWidth,
   deviceHeight,
+  px2dp,
+  dp2px,
 }

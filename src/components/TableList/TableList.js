@@ -27,6 +27,7 @@ export default class TableList extends React.Component {
     data: [],
     numColumns: 2,
     type: 'normal', // normal | scroll
+    lineSeparator: 10,
   }
 
   renderRows = () => {

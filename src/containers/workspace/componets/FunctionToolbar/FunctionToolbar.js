@@ -7,7 +7,7 @@ import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
@@ -199,6 +199,10 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showEdit = async () => {
+    if (!this.props.symbol.currentSymbol.type) {
+      Toast.show('请选择图层')
+      return
+    }
     await SMap.setAction(Action.SELECT)
     this.props.addGeometrySelectedListener &&
       (await this.props.addGeometrySelectedListener())
@@ -207,7 +211,8 @@ export default class FunctionToolbar extends React.Component {
     let column = 4
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      let type = ''
+      let type = '',
+        tableType = 'normal'
       switch (this.props.symbol.currentSymbol.type) {
         case 'marker':
           type = ConstToolType.MAP_EDIT_POINT
@@ -220,13 +225,15 @@ export default class FunctionToolbar extends React.Component {
           break
         case 'fill':
           type = ConstToolType.MAP_EDIT_REGION
-          height = ConstToolType.HEIGHT[3]
+          height = ConstToolType.HEIGHT[2]
+          tableType = 'scroll'
           break
       }
       toolRef.setVisible(true, type, {
         isFullScreen: false,
-        column: column,
-        height: height,
+        column,
+        height,
+        tableType,
       })
     }
   }

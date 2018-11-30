@@ -1,5 +1,5 @@
 /**
- * 地图功能列表（右侧）对应的标识符
+ * 地图功能列表/工具栏 对应的标识符
  */
 import { scaleSize } from '../utils'
 export default {
@@ -30,7 +30,10 @@ export default {
   MAP_EDIT_LINE: 'MAP_EDIT_LINE',
   MAP_EDIT_REGION: 'MAP_EDIT_REGION',
   MAP_EDIT_TAGGING: 'MAP_EDIT_TAGGING',
+
   MAP_TOOL: 'MAP_TOOL',
+  MAP_TOOL_POINT_SELECT: 'MAP_TOOL_POINT_SELECT',
+
   MAP_STYLE: 'MAP_STYLE',
   MAP_START: 'MAP_START',
 

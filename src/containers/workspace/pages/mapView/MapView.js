@@ -42,6 +42,7 @@ const LVL_2 = [scaleSize(410), scaleSize(280), scaleSize(560)]
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
+    user: PropTypes.object,
     editLayer: PropTypes.object,
     analystLayer: PropTypes.object,
     selection: PropTypes.object,
@@ -863,6 +864,7 @@ export default class MapView extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
+        user={this.props.user}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
