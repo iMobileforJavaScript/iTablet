@@ -11,18 +11,39 @@
 @implementation JSZipArchive
 RCT_EXPORT_MODULE();
 
-RCT_REMAP_METHOD(unZipFile, unZipFileByPath:(NSString *)archivePath targetPath:(NSString *)targetPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+RCT_REMAP_METHOD(zipFile, zipFileByPath:(NSString *)archivePath targetPath:(NSString *)targetPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
-    BOOL isZip = NO;
-
-    ZipArchive *za = [[ZipArchive alloc] init];
-    BOOL isOpen = [za UnzipOpenFile: archivePath];
-    if (isOpen){
-      isZip = [za UnzipFileTo: targetPath overWrite: YES];
-      [za UnzipCloseFile];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    BOOL exist = [fileManager fileExistsAtPath:archivePath isDirectory:&isDir];
+    BOOL result = NO;
+    if (exist) {
+      if (isDir) {
+        result = [SSZipArchive createZipFileAtPath:targetPath withContentsOfDirectory:archivePath];
+      } else {
+        NSArray* filePaths = [NSArray arrayWithObjects:archivePath, nil];
+        result = [SSZipArchive createZipFileAtPath:targetPath withFilesAtPaths:filePaths];
+      }
     }
     
-    resolve([NSNumber numberWithBool:isZip]);
+    resolve([NSNumber numberWithBool:result]);
+  } @catch (NSException *exception) {
+    reject(@"zipFile", exception.reason, nil);
+  }
+}
+
+RCT_REMAP_METHOD(unZipFile, unZipFileByPath:(NSString *)archivePath targetPath:(NSString *)targetPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    BOOL result = NO;
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    BOOL isDir = NO;
+    BOOL exist = [fileManager fileExistsAtPath:archivePath isDirectory:&isDir];
+    
+    if (exist){
+      result = [SSZipArchive unzipFileAtPath:archivePath toDestination:targetPath];
+    }
+    
+    resolve([NSNumber numberWithBool:result]);
   } @catch (NSException *exception) {
     reject(@"unZipFile", exception.reason, nil);
   }

@@ -663,6 +663,7 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         if (this.wsData === null) return
+
         if (this.wsData instanceof Array) {
           for (let i = 0; i < this.wsData.length; i++) {
             let item = this.wsData[i]

@@ -113,7 +113,18 @@ export default [
         })
       } else {
         // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', { wsData: ConstOnline['Google'] })
+        NavigationService.navigate('MapView', {
+          wsData: [
+            {
+              DSParams: { server: wsPath },
+              // layerIndex: 0,
+              type: 'Workspace',
+            },
+            ConstOnline['Google'],
+          ],
+          mapName: '外业采集',
+          isExample: false,
+        })
       }
     },
   },

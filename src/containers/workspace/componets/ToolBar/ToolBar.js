@@ -133,6 +133,7 @@ export default class ToolBar extends React.Component {
     let data, buttons, toolbarData
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type, {
+      user: this.props.user,
       setToolbarVisible: this.setVisible,
       showFullMap: this.props.showFullMap,
       addGeometrySelectedListener: this.props.addGeometrySelectedListener,
@@ -853,6 +854,14 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = !this.isBoxShow
   }
 
+  showSymbol = () => {
+    this.props.showFullMap && this.props.showFullMap(true)
+    this.setVisible(true, ConstToolType.MAP_SYMBOL, {
+      isFullScreen: true,
+      height: ConstToolType.HEIGHT[3],
+    })
+  }
+
   clearattribute = () => {
     SScene.clearSelection()
     this.showToolbar(!this.isShow)
@@ -905,6 +914,7 @@ export default class ToolBar extends React.Component {
     SScene.setPosition(index)
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
   }
+
   renderListItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -950,6 +960,7 @@ export default class ToolBar extends React.Component {
       }.bind(this)())
     }
   }
+
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -1214,7 +1225,7 @@ export default class ToolBar extends React.Component {
             SCollector.stopCollect()
             this.setVisible(true, this.lastType, {
               isFullScreen: false,
-              // height: ConstToolType.HEIGHT[0],
+              height: ConstToolType.HEIGHT[0],
             })
           }
           break

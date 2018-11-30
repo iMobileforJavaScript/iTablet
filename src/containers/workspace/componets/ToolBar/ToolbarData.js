@@ -5,11 +5,12 @@ import {
   SMCollectorType,
   SScene,
 } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
-import { ConstToolType, ConstInfo } from '../../../../constants'
+import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
+import MoreData from './MoreData'
+import ShareData from './ShareData'
 
 let _params = {}
 
@@ -29,11 +30,13 @@ function getTabBarData(type, params = {}) {
   } else if (type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
   } else if (type === ConstToolType.MAP_MORE) {
-    tabBarData = getMapMore(type)
+    tabBarData = MoreData.getMapMore(type, params)
   } else if (type === ConstToolType.MAP_START) {
     tabBarData = getStart(type)
   } else if (type.indexOf(ConstToolType.MAP_TOOL) > -1) {
     tabBarData = MapToolData.getMapTool(type, params)
+  } else if (type === ConstToolType.MAP_SHARE) {
+    tabBarData = ShareData.getShareData(type, params)
   }
   return {
     data: tabBarData.data,
@@ -479,7 +482,11 @@ function getCollectionData(type) {
     image: require('../../../../assets/mapTools/icon_submit.png'),
     selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'),
   })
-  buttons = [ToolbarBtnType.CANCEL, 'changeCollection', 'mapSymbol']
+  buttons = [
+    ToolbarBtnType.CANCEL,
+    ToolbarBtnType.CHANGE_COLLECTION,
+    ToolbarBtnType.MAP_SYMBOL,
+  ]
 
   return { data, buttons }
 }
@@ -661,48 +668,6 @@ function getMap3DData(type) {
   return { data, buttons }
 }
 
-function getMapMore(type) {
-  let data = [],
-    buttons = []
-  if (type !== ConstToolType.MAP_MORE) return { data, buttons }
-  data = [
-    {
-      key: constants.CLOSE,
-      title: constants.CLOSE,
-      action: closeMap,
-      size: 'large',
-      image: require('../../../../assets/mapTools/icon_point.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-    },
-    {
-      key: constants.SAVE,
-      title: constants.SAVE,
-      size: 'large',
-      // TODO 保存地图
-      action: () => saveMap('TempMap'),
-      image: require('../../../../assets/mapTools/icon_words.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-    },
-    {
-      key: constants.SAVE_AS,
-      title: constants.SAVE_AS,
-      size: 'large',
-      action: saveMapAs,
-      image: require('../../../../assets/mapTools/icon_point_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-    },
-    {
-      key: constants.SHARE,
-      title: constants.SHARE,
-      size: 'large',
-      action: shareMap,
-      image: require('../../../../assets/mapTools/icon_free_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-    },
-  ]
-  return { data, buttons }
-}
-
 /**
  * 获取开始操作
  * @param type
@@ -864,31 +829,6 @@ function fillHollowRegion() {
 /** 补充岛洞 **/
 function patchHollowRegion() {
   return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 关闭地图 **/
-function closeMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 保存地图 **/
-function saveMap(name = '') {
-  SMap.saveMap(name).then(result => {
-    Toast.show(
-      result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-    )
-  })
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 另存地图 **/
-function saveMapAs() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 分享 **/
-function shareMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
 }
 
 /** 打开地图 **/

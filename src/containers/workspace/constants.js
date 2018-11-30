@@ -78,4 +78,13 @@ export default {
   COLLECTION: 'COLLECTION',
   MAP_EDIT: 'MAP_EDIT',
   MAP_3D: 'MAP_3D',
+
+  // ==================分享===================
+  QQ: 'QQ',
+  WECHAT: '微信',
+  WEIBO: '微博',
+  SUPERMAP_ONLINE: 'SuperMap Online',
+  FRIEND: '好友',
+  DISCOVERY: '发现',
+  SAVE_AS_IMAGE: '保存为图片',
 }
