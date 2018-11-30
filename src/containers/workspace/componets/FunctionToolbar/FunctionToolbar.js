@@ -11,11 +11,7 @@ import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
-import NavigationService from '../../../NavigationService'
 import { SScene, SMap, Action } from 'imobile_for_reactnative'
-import Toast from 'react-native-root-toast'
-import * as Utility from "imobile_for_reactnative/NativeModule/utility/utility"
-import ConstPath from "../../../../constants/ConstPath"
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
