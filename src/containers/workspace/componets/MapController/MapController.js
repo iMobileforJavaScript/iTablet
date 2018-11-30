@@ -32,7 +32,6 @@ export default class MapController extends React.Component {
       setInterval(async () => {
         let deg = await SScene.getcompass()
         this.setCompass(deg)
-        //  console.warn('----------------' + deg)
       }, 600)
     }
   }

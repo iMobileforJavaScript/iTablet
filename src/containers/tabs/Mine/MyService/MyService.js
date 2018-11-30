@@ -16,7 +16,6 @@ export default class MyService extends Component {
   props: {
     navigation: Object,
   }
-
   constructor(props) {
     super(props)
     if (_strDataList !== undefined && _strServiceList !== undefined) {

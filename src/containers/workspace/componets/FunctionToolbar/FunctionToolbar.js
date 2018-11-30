@@ -11,7 +11,6 @@ import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
-import NavigationService from '../../../NavigationService'
 import { SScene, SMap, Action } from 'imobile_for_reactnative'
 
 const COLLECTION = 'COLLECTION'
@@ -33,6 +32,11 @@ export default class FunctionToolbar extends React.Component {
 
     getToolRef: () => {},
     showFullMap: () => {},
+    setMapType: () => {},
+
+    save: () => {},
+    saveAs: () => {},
+    closeOneMap: () => {},
     addGeometrySelectedListener: () => {},
     removeGeometrySelectedListener: () => {},
     symbol: Object,
@@ -97,6 +101,15 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  showDataLists = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_OPEN, {
+        containerType: 'list',
+      })
+    }
+  }
   showAddLayer = async () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
@@ -271,7 +284,7 @@ export default class FunctionToolbar extends React.Component {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[3],
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
@@ -323,15 +336,27 @@ export default class FunctionToolbar extends React.Component {
   }
 
   /** 二级事件 **/
-  openMap = () => {}
-  open3DMap = () => {
-    NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+  openOneMap = async e => {
+    this.showDataLists()
+
+    this.moreToolbar.showMore(false, e)
+    this.props.setMapType('LOAD')
   }
-  closeMap = () => {}
 
-  save = () => {}
+  closeOneMap = async e => {
+    this.props.closeOneMap()
+    this.moreToolbar.showMore(false, e)
+  }
 
-  saveAs = () => {}
+  save = async e => {
+    this.props.save()
+    this.moreToolbar.showMore(false, e)
+  }
+
+  saveAs = async e => {
+    this.props.saveAs()
+    this.moreToolbar.showMore(false, e)
+  }
 
   recent = () => {}
 
@@ -500,12 +525,12 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             title: '打开',
-            action: this.openMap(),
+            action: this.openOneMap,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
             title: '关闭',
-            action: this.closeMap(),
+            action: this.closeOneMap,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
@@ -569,12 +594,12 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             title: '打开',
-            action: this.openMap(),
+            action: this.openOneMap,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           {
             title: '关闭',
-            action: this.closeMap(),
+            action: this.closeOneMap,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           {

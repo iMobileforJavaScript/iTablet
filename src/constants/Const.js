@@ -40,4 +40,9 @@ export default {
   ONLINE: 'ONLINE',
   LOCAL: 'LOCAL',
   MAP_3D: 'MAP_3D',
+
+  //打开时地图状态
+  DEFAULT: 'DEFAULT',
+  CREATE: 'CREATE',
+  LOAD: 'LOAD',
 }
