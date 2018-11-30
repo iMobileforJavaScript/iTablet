@@ -32,6 +32,7 @@ export default class MT_layerManager extends React.Component {
     // wsName =
     //   wsName.lastIndexOf('.') > 0 &&
     //   wsName.substring(0, wsName.lastIndexOf('.'))
+    this.index
     this.state = {
       datasourceList: [],
       mapName: '',
@@ -302,6 +303,11 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
+  getLayerIndex = async ({ data }) =>{
+    this.index = await SMap.getLayerIndexByName(data.caption)
+    console.warn(JSON.stringify(this.index))
+  }
+
   getChildList = async ({ data }) => {
     try {
       if (data.type !== 'layerGroup') return
@@ -354,12 +360,14 @@ export default class MT_layerManager extends React.Component {
             currentOpenItemName: data.name,
           })
         }}
-        onPress={this.getChildList}
+        onPress={this.getLayerIndex}
+        onArrowPress={this.getChildList}
       />
     )
   }
 
   renderToolBar = () => {
+    // this.props.navigation.navigate()
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
   }
 

@@ -25,14 +25,14 @@ export default [
               DSParams: { server: wsPath },
               type: 'Workspace',
             },
-            ConstOnline['SuperMapCloud'],
+            ConstOnline['Baidu'],
           ],
-          mapName: ConstOnline['SuperMapCloud'].mapName,
+          mapName: ConstOnline['Baidu'].mapName,
           isExample: false,
         })
       } else {
         // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', { wsData: ConstOnline['SuperMapCloud'] })
+        NavigationService.navigate('MapView', { wsData: ConstOnline['Baidu'] })
       }
     },
   },

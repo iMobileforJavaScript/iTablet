@@ -6,7 +6,7 @@ import { handleActions } from 'redux-actions'
 export const USER_SET = 'USER_SET'
 
 // Actions
-// --------------------------------------------------
+// ---------------------------------.3-----------------
 export const setUser = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: USER_SET,
