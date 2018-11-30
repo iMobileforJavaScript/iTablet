@@ -765,6 +765,7 @@ export default class ToolBar extends React.Component {
           buttons: buttons,
           column: data.length,
           containerType: 'table',
+          isFullScreen: false,
         },
         () => {
           switch (type) {
@@ -803,7 +804,7 @@ export default class ToolBar extends React.Component {
   setVisible = (isShow, type = this.state.type, params = {}) => {
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       SScene.stopCircleFly()
-      SScene.clearCirclePoint()
+      // SScene.clearCirclePoint()
     }
     if (this.isShow === isShow && type === this.state.type) return
     if (
