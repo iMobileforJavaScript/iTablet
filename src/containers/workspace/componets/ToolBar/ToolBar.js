@@ -26,7 +26,6 @@ import {
 } from 'react-native'
 import {
   SMap,
-  SAnalyst,
   SScene,
   Action,
   DatasetType,
@@ -351,20 +350,10 @@ export default class ToolBar extends React.Component {
         ]
         break
       case ConstToolType.MAP_STYLE:
-        data = [
-          {
-            key: 'style',
-            title: '符号线1',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/mapTools/icon_point.png'),
-          },
-        ]
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
           ToolbarBtnType.FLEX,
-          ToolbarBtnType.COMMIT,
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
@@ -385,7 +374,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_favorite.png'),
           },
           {
             key: 'map3DText',
@@ -405,7 +394,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_text.png'),
           },
           {
             key: 'map3DPiontLine',
@@ -419,7 +408,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_pointLine.png'),
           },
           {
             key: 'map3DPointSurface',
@@ -433,7 +422,7 @@ export default class ToolBar extends React.Component {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_pointSuerface.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
@@ -444,30 +433,31 @@ export default class ToolBar extends React.Component {
             key: 'distanceMeasure',
             title: '距离量算',
             action: () => {
-              SAnalyst.setMeasureLineAnalyst({
+              SScene.setMeasureLineAnalyst({
                 callback: result => {
-                  // Toast.show(result)
-                  this.Map3DToolBar.setAnalystResult(result)
+                  this.Map3DToolBar &&
+                    this.Map3DToolBar.setAnalystResult(result)
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_analystLien.png'),
           },
           {
             key: 'suerfaceMeasure',
             title: '面积量算',
             action: () => {
-              SAnalyst.setMeasureSquareAnalyst({
+              SScene.setMeasureSquareAnalyst({
                 callback: result => {
-                  this.Map3DToolBar.setAnalystResult(result)
+                  this.Map3DToolBar &&
+                    this.Map3DToolBar.setAnalystResult(result)
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
           {
             key: 'fly',
@@ -482,7 +472,7 @@ export default class ToolBar extends React.Component {
               // this.getflylist()
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_symbolFly.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -678,6 +668,7 @@ export default class ToolBar extends React.Component {
           buttons: buttons,
           column: data.length,
           containerType: 'table',
+          isFullScreen: false,
         },
         () => {
           switch (type) {
@@ -716,7 +707,7 @@ export default class ToolBar extends React.Component {
   setVisible = (isShow, type = this.state.type, params = {}) => {
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       SScene.stopCircleFly()
-      SScene.clearCirclePoint()
+      // SScene.clearCirclePoint()
     }
     if (this.isShow === isShow && type === this.state.type) return
     if (
@@ -792,27 +783,28 @@ export default class ToolBar extends React.Component {
     }
 
     this.showToolbar(false)
+    this.setState({ isTouchProgress: false })
     this.props.existFullMap && this.props.existFullMap()
   }
 
-  clearcurrentLabel = () => {
+  clearCurrentLabel = () => {
     SScene.clearcurrentLabel()
   }
 
-  closesymbol = () => {
+  closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
 
-  closetool = () => {
+  closeTool = () => {
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
 
-  symbolsave = () => {
+  symbolSave = () => {
     try {
       SScene.save()
       Toast.show('保存成功')
@@ -821,7 +813,7 @@ export default class ToolBar extends React.Component {
     }
   }
 
-  symbolback = () => {
+  symbolBack = () => {
     SScene.symbolback()
   }
 
@@ -834,6 +826,29 @@ export default class ToolBar extends React.Component {
 
   getOldLayerList = data => {
     this.oldLayerList = data
+  }
+
+  menu = () => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: this.isBoxShow ? 0 : this.height,
+      duration: 300,
+    }).start()
+    this.isBoxShow = !this.isBoxShow
+
+    if (this.state.isSelectlist === false) {
+      this.setState({ isFullScreen: true, isSelectlist: true })
+    } else {
+      this.setState({ isFullScreen: false, isSelectlist: false })
+    }
+    this.setState({ isTouchProgress: false })
+  }
+
+  menus = () => {
+    if (this.state.isSelectlist === false) {
+      this.setState({ isSelectlist: true })
+    } else {
+      this.setState({ isSelectlist: false })
+    }
   }
 
   commit = (type = this.originType) => {
@@ -853,7 +868,7 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = !this.isBoxShow
   }
 
-  clearattribute = () => {
+  clearAttribute = () => {
     SScene.clearSelection()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -867,7 +882,7 @@ export default class ToolBar extends React.Component {
   }
 
   closeAnalyst = () => {
-    SAnalyst.closeAnalysis()
+    SScene.closeAnalysis()
     SScene.checkoutListener('startTouchAttribute')
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -876,20 +891,20 @@ export default class ToolBar extends React.Component {
   clear = () => {
     switch (this.state.type) {
       case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
-        SAnalyst.clearSquareAnalyst()
+        SScene.clearSquareAnalyst()
         this.Map3DToolBar.setAnalystResult(0)
         break
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
-        SAnalyst.clearLineAnalyst()
+        SScene.clearLineAnalyst()
         this.Map3DToolBar.setAnalystResult(0)
         break
       default:
-        SAnalyst.clear()
+        SScene.clear()
         break
     }
   }
 
-  endfly = () => {
+  endFly = () => {
     for (let index = 0; index < this.oldLayerList.length; index++) {
       SScene.setSelectable(
         this.oldLayerList[index].name,
@@ -1050,7 +1065,6 @@ export default class ToolBar extends React.Component {
                   ToolbarBtnType.CANCEL,
                   ToolbarBtnType.MENU,
                   ToolbarBtnType.FLEX,
-                  ToolbarBtnType.COMMIT,
                 ],
               })
             },
@@ -1064,7 +1078,7 @@ export default class ToolBar extends React.Component {
                 buttons: [
                   ToolbarBtnType.CANCEL,
                   ToolbarBtnType.MENUS,
-                  ToolbarBtnType.COMMIT,
+                  ToolbarBtnType.PLACEHOLDER,
                 ],
               })
             },
@@ -1173,36 +1187,36 @@ export default class ToolBar extends React.Component {
           action = this.closeAnalyst
           break
         case ToolbarBtnType.CLEAR:
-          image = require('../../../../assets/mapEdit/cancel.png')
+          image = require('../../../../assets/mapEdit/icon_clear.png')
           action = this.clear
           break
         case ToolbarBtnType.END_FLY:
           image = require('../../../../assets/mapEdit/cancel.png')
-          action = this.endfly
+          action = this.endFly
           break
         case ToolbarBtnType.BACK:
-          image = require('../../../../assets/mapEdit/commit.png')
-          action = this.symbolback
+          image = require('../../../../assets/mapEdit/icon_back.png')
+          action = this.symbolBack
           break
         case ToolbarBtnType.SAVE:
           image = require('../../../../assets/mapEdit/commit.png')
-          action = this.symbolsave
+          action = this.symbolSave
           break
         case ToolbarBtnType.CLOSE_SYMBOL:
-          image = require('../../../../assets/mapEdit/commit.png')
-          action = this.closesymbol
+          image = require('../../../../assets/mapEdit/cancel.png')
+          action = this.closeSymbol
           break
         case ToolbarBtnType.CLOSE_TOOL:
           image = require('../../../../assets/mapEdit/cancel.png')
-          action = this.closetool
+          action = this.closeTool
           break
         case ToolbarBtnType.CLEAR_ATTRIBUTE:
           image = require('../../../../assets/mapEdit/cancel.png')
-          action = this.clearattribute
+          action = this.clearAttribute
           break
         case ToolbarBtnType.CLEAR_CURRENT_LABEL:
           image = require('../../../../assets/mapEdit/icon_clear.png')
-          action = this.clearcurrentLabel
+          action = this.clearCurrentLabel
           break
         case ToolbarBtnType.MAP_SYMBOL:
           image = require('../../../../assets/mapEdit/icon-theme-white.png')

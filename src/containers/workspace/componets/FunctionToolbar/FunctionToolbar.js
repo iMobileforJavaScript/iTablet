@@ -11,11 +11,7 @@ import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
-import NavigationService from '../../../NavigationService'
 import { SScene, SMap, Action } from 'imobile_for_reactnative'
-import Toast from 'react-native-root-toast'
-import * as Utility from "imobile_for_reactnative/NativeModule/utility/utility"
-import ConstPath from "../../../../constants/ConstPath"
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -36,11 +32,11 @@ export default class FunctionToolbar extends React.Component {
 
     getToolRef: () => {},
     showFullMap: () => {},
-    setMapType: ()=> {},
+    setMapType: () => {},
 
     save: () => {},
     saveAs: () => {},
-    closeOneMap:() => {},
+    closeOneMap: () => {},
     addGeometrySelectedListener: () => {},
     removeGeometrySelectedListener: () => {},
     symbol: Object,
@@ -288,7 +284,7 @@ export default class FunctionToolbar extends React.Component {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[3],
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
@@ -341,28 +337,25 @@ export default class FunctionToolbar extends React.Component {
 
   /** 二级事件 **/
   openOneMap = async e => {
-
     this.showDataLists()
 
-    this.moreToolbar.showMore(false,e)
+    this.moreToolbar.showMore(false, e)
     this.props.setMapType('LOAD')
   }
 
   closeOneMap = async e => {
     this.props.closeOneMap()
-    this.moreToolbar.showMore(false,e)
+    this.moreToolbar.showMore(false, e)
   }
 
   save = async e => {
     this.props.save()
-    this.moreToolbar.showMore(false,e)
+    this.moreToolbar.showMore(false, e)
   }
 
   saveAs = async e => {
-
     this.props.saveAs()
-    this.moreToolbar.showMore(false,e)
-
+    this.moreToolbar.showMore(false, e)
   }
 
   recent = () => {}

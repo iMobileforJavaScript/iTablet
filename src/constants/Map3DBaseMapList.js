@@ -6,7 +6,7 @@ export default {
       show: true,
       data: [
         {
-          title: 'Google roadmap',
+          title: 'STK',
           index: 0,
           show: true,
           type: 'terrainLayer',
@@ -22,7 +22,7 @@ export default {
         //   url:"http://t0.tianditu.com/img_c/wmts"
         // },
         {
-          title: 'Google terrain',
+          title: 'BingMap',
           index: 0,
           show: true,
           type: 'l3dBingMaps',

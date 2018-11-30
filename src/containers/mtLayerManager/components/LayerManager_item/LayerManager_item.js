@@ -29,6 +29,7 @@ export default class LayerManager_item extends React.Component {
     showRenameDialog: () => {},
     showRemoveDialog: () => {},
     setEditable: () => {},
+    onArrowPress: () => {},
     onPress: () => {},
     onOpen: () => {},
     child: Array,
@@ -319,13 +320,21 @@ export default class LayerManager_item extends React.Component {
   }
 
   _pop_row = async () => {
+    if (this.props.onPress) {
+      await this.props.onPress({
+        data: this.props.data,
+      })
+    } else return
+  }
+
+  _arrow_pop_row = async () => {
     let isShow = !this.state.rowShow
     if (this.props.data.type === 'layerGroup') {
       let child = []
       if (isShow) {
         child =
-          (this.props.onPress &&
-            (await this.props.onPress({
+          (this.props.onArrowPress &&
+            (await this.props.onArrowPress({
               layer: this.props.data.layer,
               data: this.props.data,
               // sectionID: this.state.sectionID,
@@ -474,7 +483,7 @@ export default class LayerManager_item extends React.Component {
       >
         <View style={styles.btn_container}>
           {this.props.data.type === LAYER_GROUP ? (
-            <TouchableOpacity style={styles.btn} onPress={this._pop_row}>
+            <TouchableOpacity style={styles.btn} onPress={this._arrow_pop_row}>
               <Image
                 resizeMode={'contain'}
                 style={styles.btn_image_samll}

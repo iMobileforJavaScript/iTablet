@@ -1,6 +1,4 @@
-import screen, {
-  scaleSize,
-} from './screen'
+import screen, { scaleSize } from './screen'
 import dataUtil from './dataUtil'
 import Toast from './Toast'
 import * as constUtil from './constUtil'
