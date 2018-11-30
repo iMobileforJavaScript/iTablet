@@ -9,10 +9,10 @@ const screen = {
 }
 
 const fontSize = {
-  fontSizeXl: scaleSize(28),
-  fontSizeLg: scaleSize(26),
-  fontSizeMd: scaleSize(24),
-  fontSizeSm: scaleSize(22),
+  fontSizeXl: scaleSize(26),
+  fontSizeLg: scaleSize(24),
+  fontSizeMd: scaleSize(22),
+  fontSizeSm: scaleSize(20),
   fontSizeXs: scaleSize(18),
 }
 

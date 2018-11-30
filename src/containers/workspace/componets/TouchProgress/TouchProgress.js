@@ -56,17 +56,17 @@ export default class TouchProgress extends Component {
 
   _handlePanResponderMove = (evt, gestureState) => {
     let x = this._previousLeft + gestureState.dx
-    if(gestureState.dx>0) {
-      SCartography.setLineWidth(10,1)
-      SCartography.setLineWidth(10,2)
-      SCartography.setLineWidth(10,3)
-      SCartography.setLineWidth(10,4)
+    if (gestureState.dx > 0) {
+      SCartography.setLineWidthByIndex(10, 0)
+      SCartography.setLineWidthByIndex(10, 1)
+      SCartography.setLineWidthByIndex(10, 2)
+      SCartography.setLineWidthByIndex(10, 3)
     }
-    if(gestureState.dx<0) {
-      SCartography.setLineWidth(0,1)
-      SCartography.setLineWidth(0,2)
-      SCartography.setLineWidth(0,3)
-      SCartography.setLineWidth(0,4)
+    if (gestureState.dx < 0) {
+      SCartography.setLineWidthByIndex(0, 0)
+      SCartography.setLineWidthByIndex(0, 1)
+      SCartography.setLineWidthByIndex(0, 2)
+      SCartography.setLineWidthByIndex(0, 3)
     }
     this._panBtnStyles.style.left = x
     if (this._panBtnStyles.style.left <= 0) this._panBtnStyles.style.left = 0

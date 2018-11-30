@@ -5,7 +5,13 @@
  */
 
 import * as React from 'react'
-import { SMMapView, Action, DatasetType, SMap } from 'imobile_for_reactnative'
+import {
+  SMMapView,
+  Action,
+  DatasetType,
+  SMap,
+  SCollector,
+} from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
   FunctionToolbar,
@@ -20,6 +26,7 @@ import {
   Container,
   MTBtn,
   UsualTitle,
+  Dialog,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
 import { ConstPath, Const } from '../../../../constants'
@@ -35,6 +42,7 @@ const LVL_2 = [scaleSize(410), scaleSize(280), scaleSize(560)]
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
+    user: PropTypes.object,
     editLayer: PropTypes.object,
     analystLayer: PropTypes.object,
     selection: PropTypes.object,
@@ -411,6 +419,7 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
+    this.props.setSelection && this.props.setSelection(event)
     SMap.appointEditGeometry(event.id, event.layerInfo.name)
   }
 
@@ -585,22 +594,17 @@ export default class MapView extends React.Component {
   removeObject = () => {
     (async function() {
       try {
-        if (!this.map || !this.props.selection || !this.props.selection.id)
-          return
-        let selection = await this.props.selection.layer.getSelection()
-        let result = await selection.recordset.deleteById(
-          this.props.selection.id,
-        )
+        if (!this.props.selection || !this.props.selection.id) return
+        let result = await SCollector.remove(this.props.selection.id)
         if (result) {
           Toast.show('删除成功')
-          this.props.setSelection()
-          await this.map.refresh()
-          await this.mapControl.setAction(Action.SELECT)
+          this.props.setSelection && this.props.setSelection()
+          SMap.setAction(Action.SELECT)
         } else {
           Toast.show('删除失败')
         }
-        this.removeObjectDialog &&
-          this.removeObjectDialog.setDialogVisible(false)
+        GLOBAL.removeObjectDialog &&
+          GLOBAL.removeObjectDialog.setDialogVisible(false)
       } catch (e) {
         Toast.show('删除失败')
       }
@@ -830,9 +834,7 @@ export default class MapView extends React.Component {
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
         type={this.operationType}
-        getToolRef={() => {
-          return this.toolBox
-        }}
+        getToolRef={() => this.toolBox}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -862,9 +864,11 @@ export default class MapView extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
+        user={this.props.user}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
+        showFullMap={this.showFullMap}
       />
     )
   }
@@ -879,13 +883,13 @@ export default class MapView extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.isExample ? '示例地图' : this.mapName,
+          title: this.mapName,
           navigation: this.props.navigation,
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
         }}
-        bottomBar={this.renderToolBar()}
+        bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         <SMMapView
@@ -894,8 +898,8 @@ export default class MapView extends React.Component {
           onGetInstance={this._onGetInstance}
         />
         {this.renderMapController()}
-        {this.renderFunctionToolbar()}
-        {this.renderTool()}
+        {!this.isExample && this.renderFunctionToolbar()}
+        {!this.isExample && this.renderTool()}
         {/*<TouchableOpacity*/}
         {/*onPress={() => {*/}
         {/*SMap.getLayers()*/}
@@ -914,15 +918,15 @@ export default class MapView extends React.Component {
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
         {/*{this.renderSetting()}*/}
-        {/*<Dialog*/}
-        {/*ref={ref => (this.removeObjectDialog = ref)}*/}
-        {/*type={Dialog.Type.MODAL}*/}
-        {/*title={'提示'}*/}
-        {/*info={'是否要删除该对象吗？'}*/}
-        {/*confirmAction={this.removeObject}*/}
-        {/*confirmBtnTitle={'是'}*/}
-        {/*cancelBtnTitle={'否'}*/}
-        {/*/>*/}
+        <Dialog
+          ref={ref => (GLOBAL.removeObjectDialog = ref)}
+          type={Dialog.Type.MODAL}
+          title={'提示'}
+          info={'是否要删除该对象吗？'}
+          confirmAction={this.removeObject}
+          confirmBtnTitle={'是'}
+          cancelBtnTitle={'否'}
+        />
         {/*<Dialog*/}
         {/*ref={ref => (this.openDialog = ref)}*/}
         {/*type={Dialog.Type.MODAL}*/}

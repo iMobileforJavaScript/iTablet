@@ -134,8 +134,12 @@ export default class Map3DToolBar extends React.Component {
     // </View>
     return (
       <View style={styles.row}>
-        <Text style={styles.key}>{item.name}</Text>
-        <Text style={styles.value}>{item.value}</Text>
+        <View style={styles.key}>
+          <Text style={styles.text}>{item.name}</Text>
+        </View>
+        <View style={styles.value}>
+          <Text style={styles.text}>{item.value}</Text>
+        </View>
       </View>
     )
     //   )

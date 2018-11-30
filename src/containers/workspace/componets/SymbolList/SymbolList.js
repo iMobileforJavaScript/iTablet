@@ -2,7 +2,7 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
-import { SMSymbolTable ,SMap  ,SCartography} from 'imobile_for_reactnative'
+import { SMSymbolTable, SMap, SCartography } from 'imobile_for_reactnative'
 
 export default class SymbolList extends React.Component {
   props: {
@@ -17,9 +17,9 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
-    SCartography.setLineSymbolID(data.id,1)
-    SCartography.setLineSymbolID(data.id,2)
-    SCartography.setLineSymbolID(data.id,3)
+    SCartography.setLineSymbolIDByIndex(data.id, 1)
+    SCartography.setLineSymbolIDByIndex(data.id, 2)
+    SCartography.setLineSymbolIDByIndex(data.id, 3)
   }
 
   componentDidMount() {
@@ -28,14 +28,14 @@ export default class SymbolList extends React.Component {
       result.forEach(item => {
         symbols.push(item.id)
       })
-      this.setState({data:symbols})
+      this.setState({ data: symbols })
     })
   }
 
   render() {
     return (
       <View style={styles.container}>
-        <View style={{backgroundColor: '#rgba(0, 0, 0, 0)',height:1}}/>
+        <View style={{ backgroundColor: '#rgba(0, 0, 0, 0)', height: 1 }} />
         <SMSymbolTable
           style={styles.table}
           data={this.state.data}

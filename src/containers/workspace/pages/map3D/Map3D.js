@@ -53,24 +53,38 @@ export default class Map3D extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
     this._addScene()
-    // SScene.getcompass({
-    //   callback:result=>{
-    //     Toast.show(result)
-    //   }
-    // })
-    this.getcompass()
+    this.addAttributeListener()
+    this.addCircleFlyListen()
   }
 
   componentWillUnmount() {
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
-    this.listenevent && this.listenevent.remove()
+    this.attributeListener && this.attributeListener.remove()
+    this.circleFlyListen && this.circleFlyListen.remove()
   }
 
-  getcompass = async () => {
-    setInterval(async () => {
-      await SScene.getcompass()
-    }, 400)
+  initListener = async () => {
+    SScene.setListener().then(() => {
+      SScene.getAttribute()
+      SScene.setCircleFly()
+    })
+  }
+
+  addAttributeListener = async () => {
+    this.attributeListener = await SScene.addAttributeListener({
+      callback: result => {
+        this.toolBox.showMap3DAttribute(result)
+      },
+    })
+  }
+
+  addCircleFlyListen = async () => {
+    this.circleFlyListen = await SScene.addCircleFlyListen({
+      callback: () => {
+        this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
+      },
+    })
   }
 
   _addScene = async () => {
@@ -85,6 +99,7 @@ export default class Map3D extends React.Component {
       let mapList = await SScene.getMapList()
       result && (await SScene.openMap(mapList[0].name))
       this.container.setLoading(false)
+      await this.initListener()
     } catch (e) {
       this.container.setLoading(false)
     }
@@ -213,7 +228,16 @@ export default class Map3D extends React.Component {
       return
     }
     let point = this.toolBox.getPoint()
-    SScene.addGeoText(point.pointX, point.pointY, this.state.inputText)
+    SScene.addGeoText(
+      point.pointX,
+      point.pointY,
+      point.pointZ,
+      this.state.inputText,
+    ).then(() => {
+      this.setState({
+        inputText: '',
+      })
+    })
     // this.toolBox.showToolbar(!this.toolBox.isShow)
     this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
