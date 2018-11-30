@@ -351,20 +351,10 @@ export default class ToolBar extends React.Component {
         ]
         break
       case ConstToolType.MAP_STYLE:
-        data = [
-          {
-            key: 'style',
-            title: '符号线1',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/mapTools/icon_point.png'),
-          },
-        ]
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
           ToolbarBtnType.FLEX,
-          ToolbarBtnType.COMMIT,
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
@@ -792,6 +782,7 @@ export default class ToolBar extends React.Component {
     }
 
     this.showToolbar(false)
+    this.setState({isTouchProgress: false})
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -1073,7 +1064,6 @@ export default class ToolBar extends React.Component {
                   ToolbarBtnType.CANCEL,
                   ToolbarBtnType.MENU,
                   ToolbarBtnType.FLEX,
-                  ToolbarBtnType.COMMIT,
                 ],
               })
             },
@@ -1087,7 +1077,7 @@ export default class ToolBar extends React.Component {
                 buttons: [
                   ToolbarBtnType.CANCEL,
                   ToolbarBtnType.MENUS,
-                  ToolbarBtnType.COMMIT,
+                  ToolbarBtnType.PLACEHOLDER,
                 ],
               })
             },
