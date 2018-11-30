@@ -631,6 +631,7 @@ function getMap3DData(type) {
       buttons = [
         ToolbarBtnType.CLOSE_SYMBOL,
         ToolbarBtnType.BACK,
+        ToolbarBtnType.CLEAR_CURRENT_LABEL,
         ToolbarBtnType.SAVE,
       ]
       break
