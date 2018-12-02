@@ -81,6 +81,32 @@ export default [
     title: '专题地图',
     baseImage: require('../assets/home/icon_lefttop_vip.png'),
     moduleImage: require('../assets/home/icon_thematicmap.png'),
+    action: async user => {
+      const customerPath =
+        ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
+      let wsPath = await Utility.appendingHomeDirectory(customerPath)
+      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      if (exist && !user.userName) {
+        NavigationService.navigate('MapView', {
+          // 若未登录，则打开游客工作空间
+          operationType: constants.MAP_THEME,
+          wsData: [
+            {
+              DSParams: { server: wsPath },
+              type: 'Workspace',
+            },
+            ConstOnline['Baidu'],
+          ],
+          mapName: '专题制图',
+          isExample: false,
+        })
+      } else {
+        // TODO 打开对应user的工作空间
+        NavigationService.navigate('MapView', {
+          wsData: ConstOnline['SuperMapCloud'],
+        })
+      }
+    },
   },
   {
     key: '外业采集',
