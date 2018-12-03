@@ -32,7 +32,7 @@ export default class WorkSpaceFileList extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type
-    this.path = ConstPath.CustomerPath
+    this.path = ConstPath.LocalDataPath
     this.title = params.title
     this.cb = params.cb
     this.state = {
