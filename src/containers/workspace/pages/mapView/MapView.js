@@ -660,7 +660,7 @@ export default class MapView extends React.Component {
             })
         } catch (e) {
             Toast.show('保存失败')
-            this.saveDialog.setDialogVisible(false)
+            this.saveXMLDialog.setDialogVisible(false)
             // this.container.setLoading(false)
 
         }
@@ -1030,27 +1030,27 @@ export default class MapView extends React.Component {
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
-	setMapType={this.setMapType}
+		setMapType={this.setMapType}
         save={() => {
 
-          this.saveMapWhitNoWorkspace()
+          //this.saveMapWithNoWorkspace()
         }}
         saveAs={() => {
           //弹出保存框
-          this.saveDialog.setDialogVisible(true)
+          //this.saveXMLDialog.setDialogVisible(true)
         }}
 
         closeOneMap={() => {
           //弹出关闭选项
-          SMap.isModified().then(result =>{
-            if(result){
-              if(this.mapType === 'LOAD')
-                this.AlertDialog.setDialogVisible(true)
-              else
-                this.saveMapDialog.setDialogVisible(true)
-            }
+          //SMap.isModified().then(result =>{
+          //  if(result){
+          //    if(this.mapType === 'LOAD')
+          //      this.AlertDialog.setDialogVisible(true)
+          //    else
+          //      this.saveMapDialog.setDialogVisible(true)
+          //  }
 
-          })
+          //})
         }}
       />
     )
