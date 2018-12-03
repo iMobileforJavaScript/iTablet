@@ -7,6 +7,7 @@ import {
   ConstPath,
   BotMap,
   layerAdd,
+  openData,
   Map3DBaseMapList,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -36,8 +37,10 @@ import {
   Utility,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
-import SymbolList from '../SymbolList/SymbolList'
+import SymbolList from "../SymbolList/SymbolList"
 import ToolbarBtnType from './ToolbarBtnType'
+
+import jsonUtil from "../../../../utils/jsonUtil"
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -156,6 +159,23 @@ export default class ToolBar extends React.Component {
         break
       case ConstToolType.MAP_ADD_LAYER:
         data = layerAdd
+        buttons = [ToolbarBtnType.CANCEL]
+	break
+      case ConstToolType.MAP_OPEN:
+        //读取目录下UDB文件名和MAP文件名
+        //
+        // (async function() {
+        //   //获取目录下的xml文件
+        //   let absolutePath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)
+        //   let fileList = await Utility.getPathListByFilter(absolutePath, {
+        //     type: 'xml',
+        //   })
+        //   this.setState({
+        //     data: fileList,
+        //     showData: true,
+        //   })
+        // }.bind(this))
+        data=openData
         buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP_SYMBOL:
@@ -948,6 +968,49 @@ export default class ToolBar extends React.Component {
         }
         await SMap.openDatasource(udbpath, index)
       }.bind(this)())
+    } else if(this.state.type == ConstToolType.MAP_OPEN) {
+      NavigationService.navigate('WorkspaceFlieList', {
+        cb: async path => {
+          //提示是否保存
+
+          this.path = path
+          let filename = this.path
+            .substr(this.path.lastIndexOf('.'))
+            .toLowerCase()
+
+          if (filename === '.xml') {
+            //获取数据源
+            let udbfile = this.path
+              .substr(this.path.lastIndexOf('/')+1)
+
+            let udbfilepath = this.path
+              .substr(0,this.path.lastIndexOf('/')+1)
+              .toLowerCase()
+
+            let udbdata ={}
+            let data = await jsonUtil.getMapDatasource(udbfile)
+            for (let i = 0; i < data.length; i++) {
+              if(data[i].mapName === udbfile){
+                udbdata = data[i].UDBName
+              }
+
+            }
+            for(let j = 0;j <udbdata.length;j++){
+              let udbpath = {
+                server: udbfilepath + udbdata[j],
+                alias:  udbdata[j]
+                  .substr(0,udbdata[j].lastIndexOf('.')),
+                engineType: 219,
+              }
+              await SMap.openDatasource(udbpath,-1)
+            }
+
+            await SMap.closeMap()
+            await SMap.openMapFromXML(path)
+
+          }
+        },
+      })
     }
   }
   renderList = () => {
