@@ -110,16 +110,20 @@ export default class MapView extends React.Component {
             {
                 btntitle: '是',
                 action: () => {
-                    this.saveMapAndClose()
-                    this.mapType = 'DEFAULT'
+		            this.saveMap(NavigationService.goBack(this.props.nav.routes[1].key))
+                    //this.saveMapAndClose()
+                    //this.mapType = 'DEFAULT'
                     this.AlertDialog.setDialogVisible(false)
                 },
             },
             {
                 btntitle: '否',
                 action: () => {
-                    SMap.closeMap()
-                    this.mapType = 'DEFAULT'
+		            this.closeWorkspace(() =>
+            	    NavigationService.goBack(this.props.nav.routes[1].key),
+          	        )
+                   // SMap.closeMap()
+                    //this.mapType = 'DEFAULT'
                     this.AlertDialog.setDialogVisible(false)
                 },
             },
@@ -553,93 +557,122 @@ export default class MapView extends React.Component {
   toDownLoad = () => {
     Toast.show('功能待完善')
   }
-
-    // 地图保存为xml(fileName, cb)
+ // 地图保存
+  saveMap = async (cb = () => {}) => {
+      if (this.setting && this.setting.isVisible()) {
+          this.setting.close()
+      } else {
+          // if (this.map.isModified() && this.type !== "ONLINE" ) {
+          if (this.map.isModified() && this.type !== 'ONLINE') {
+              if (this.type && this.type === 'LOCAL') {
+                  try {
+                      let saveMap = await this.map.save()
+                      let saveWs = await this.workspace.saveWorkspace()
+                      if (!saveMap || !saveWs) {
+                          Toast.show('保存失败')
+                      } else {
+                          Toast.show('保存成功')
+                          cb && cb()
+                      }
+                  } catch (e) {
+                      Toast.show('保存失败')
+                  }
+              } else {
+                  await this.saveDialog.setDialogVisible(true)
+              }
+          } else {
+              this.closeWorkspace(() =>
+                  NavigationService.goBack(this.props.nav.routes[1].key),
+              )
+          }
+      }
+  }
+// 地图保存为xml(fileName, cb)
     saveMapToXML = mapName => {
-        this.container.setLoading(true, '正在保存')
-        ;(async function () {
-            try {
-                const filePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath) + mapName + ".xml"
-                let config = await jsonUtil.readConfig()
-                SMap.saveMapToXML(filePath).then(result => {
-                    if (!result) {
-                        Toast.show('保存失败')
-                        this.container.setLoading(false)
-                    } else {
-                        Toast.show('保存成功')
-                        this.container.setLoading(false)
-                        //获取数据源
-                        //修改数据
-                        SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
-                            let data = []
-                            for (let i = 0; i < dataSourceAlias.length; i++) {
-                                data[i] = dataSourceAlias[i].title
-                            }
+    this.container.setLoading(true, '正在保存')
+    ;(async function () {
+        try {
+            const filePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath) + mapName + ".xml"
+            let config = await jsonUtil.readConfig()
+            SMap.saveMapToXML(filePath).then(result => {
+                if (!result) {
+                    Toast.show('保存失败')
+                    this.container.setLoading(false)
+                } else {
+                    Toast.show('保存成功')
+                    this.container.setLoading(false)
+                    //获取数据源
+                    //修改数据
+                    SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
+                        let data = []
+                        for (let i = 0; i < dataSourceAlias.length; i++) {
+                            data[i] = dataSourceAlias[i].title
+                        }
 
-                            for (let i = 0; i < config.data[0].maps.length; i++) {
-                                if (config.data[0].maps[i].mapName === mapName + '.xml') {
-                                    config.data[0].maps[i].UDBName = data
-                                    break
-                                }
+                        for (let i = 0; i < config.data[0].maps.length; i++) {
+                            if (config.data[0].maps[i].mapName === mapName + '.xml') {
+                                config.data[0].maps[i].UDBName = data
+                                break
                             }
-                            (async function () {
-                                await jsonUtil.updateMapInfo(config)
-                            }.bind(this)())
-                        })
-                    }
-                })
-            } catch (e) {
-                Toast.show('保存失败')
-                this.saveDialog.setDialogVisible(false)
-                this.container.setLoading(false)
+                        }
+                        (async function () {
+                            await jsonUtil.updateMapInfo(config)
+                        }.bind(this)())
+                    })
+                }
+            })
+        } catch (e) {
+            Toast.show('保存失败')
+            this.saveXMLDialog.setDialogVisible(false)
+            this.container.setLoading(false)
 
-            }
-        }.bind(this)())
+        }
+    }.bind(this)())
     }
 
-    // 地图保存为xml(fileName, cb)
+// 地图保存为xml(fileName, cb)
     saveMapToXMLWithDialog = ({mapName}) => {
-        // this.container.setLoading(true, '正在保存')
-        (async function () {
-            try {
-                const filePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath) + mapName + ".xml"
-                let config = await jsonUtil.readConfig()
-                SMap.saveMapToXML(filePath).then(result => {
-                    if (!result) {
-                        Toast.show('保存失败')
-                        this.saveDialog.setDialogVisible(false)
-                        // this.container.setLoading(false)
-                    } else {
-                        Toast.show('保存成功')
-                        this.saveDialog.setDialogVisible(false)
-                        // this.container.setLoading(false)
-                        this.mapType = 'LOAD'
-                        //获取数据源
-                        SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
-                            let data = []
-                            for (let i = 0; i < dataSourceAlias.length; i++) {
-                                data[i] = dataSourceAlias[i].title
-                            }
+    // this.container.setLoading(true, '正在保存')
+    (async function () {
+        try {
+            const filePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath) + mapName + ".xml"
+            let config = await jsonUtil.readConfig()
+            SMap.saveMapToXML(filePath).then(result => {
+                if (!result) {
+                    Toast.show('保存失败')
+                    this.saveXMLDialog.setDialogVisible(false)
+                    // this.container.setLoading(false)
+                } else {
+                    Toast.show('保存成功')
+                    this.saveXMLDialog.setDialogVisible(false)
+                    // this.container.setLoading(false)
+                    this.mapType = 'LOAD'
+                    //获取数据源
+                    SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
+                        let data = []
+                        for (let i = 0; i < dataSourceAlias.length; i++) {
+                            data[i] = dataSourceAlias[i].title
+                        }
 
-                            jsonUtil.saveMapInfo(config, mapName, data)
-                        })
-                    }
-                })
-            } catch (e) {
-                Toast.show('保存失败')
-                this.saveDialog.setDialogVisible(false)
-                // this.container.setLoading(false)
+                        jsonUtil.saveMapInfo(config, mapName, data)
+                    })
+                }
+            })
+        } catch (e) {
+            Toast.show('保存失败')
+            this.saveDialog.setDialogVisible(false)
+            // this.container.setLoading(false)
 
-            }
+        }
         }.bind(this)())
     }
   // 地图保存
-  saveMap = async (cb = () => {}) => {
+  saveMapWithNoWorkspace = async (cb = () => {}) => {
     SMap.isModified().then(result => {
       if(result){//有修改
         if(this.mapType === 'DEFAULT' || this.mapType === 'CREATE'){//默认地图和创建地图
           //输入地图名字，弹出保存框
-          this.saveDialog.setDialogVisible(true)
+          this.saveXMLDialog.setDialogVisible(true)
         }else{
           try {
             (async function(){
@@ -820,6 +853,7 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         if (this.wsData === null) return
+
         if (this.wsData instanceof Array) {
           for (let i = 0; i < this.wsData.length; i++) {
             let item = this.wsData[i]
@@ -996,10 +1030,10 @@ export default class MapView extends React.Component {
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
-	      setMapType={this.setMapType}
+	setMapType={this.setMapType}
         save={() => {
 
-          this.saveMap()
+          this.saveMapWhitNoWorkspace()
         }}
         saveAs={() => {
           //弹出保存框
@@ -1111,7 +1145,7 @@ export default class MapView extends React.Component {
           cancelBtnTitle={'否'}
         />
         <SaveMapNameDialog
-          ref={ref => (this.saveDialog = ref)}
+          ref={ref => (this.saveXMLDialog = ref)}
           confirmAction={this.saveMapToXMLWithDialog}
           showWsName={this.showDialogCaption}
           mapName={this.state.mapName}

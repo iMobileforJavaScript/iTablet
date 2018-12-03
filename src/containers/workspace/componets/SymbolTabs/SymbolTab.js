@@ -38,7 +38,7 @@ export default class SymbolTab extends React.Component {
     }
     this.props.showToolbar(true, type, {
       isFullScreen: false,
-      // height: ConstToolType.HEIGHT[0],
+      height: ConstToolType.HEIGHT[0],
     })
   }
 

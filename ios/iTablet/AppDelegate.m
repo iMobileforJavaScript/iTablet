@@ -26,7 +26,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.123"];  //   10.10.2.46
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.111"];  //   10.10.2.46
   
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
@@ -76,9 +76,10 @@ static NSString* g_sampleCodeName = @"#";;
 - (void)initDefaultData {
   // 初始化游客工作空间
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
-  [AppDelegate createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/User/Customer/%@",@""]];
+  NSString* dataPath = @"/Documents/iTablet/User/Customer/Data/";
+  [AppDelegate createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   if (srclic) {
-    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Documents/iTablet/User/Customer/%@",@"Customer.smwu"];
+    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Customer.smwu"];
     if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
       if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
         NSLog(@"拷贝数据失败");

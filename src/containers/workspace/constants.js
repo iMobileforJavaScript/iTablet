@@ -54,6 +54,15 @@ export default {
   BASE_MAP: '底图',
   ADD: '添加',
 
+  THEME_UNIFY_STYLE: '统一风格',
+  THEME_UNIQUE_STYLE: '单值风格',
+  THEME_RANGE_STYLE: '分段风格',
+  THEME_CUSTOME_STYLE: '自定义风格',
+  THEME_CUSTOME_LABEL: '自定义标签',
+  THEME_UNIFY_LABEL: '统一标签',
+  THEME_UNIQUE_LABEL: '单值标签',
+  THEME_RANGE_LABEL: '分段标签',
+
   // =====================================
 
   POINT_GPS: 'point_gps',
@@ -78,4 +87,14 @@ export default {
   COLLECTION: 'COLLECTION',
   MAP_EDIT: 'MAP_EDIT',
   MAP_3D: 'MAP_3D',
+  MAP_THEME: 'MAP_THEME',
+
+  // ==================分享===================
+  QQ: 'QQ',
+  WECHAT: '微信',
+  WEIBO: '微博',
+  SUPERMAP_ONLINE: 'SuperMap Online',
+  FRIEND: '好友',
+  DISCOVERY: '发现',
+  SAVE_AS_IMAGE: '保存为图片',
 }

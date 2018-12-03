@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container } from '../../../components'
 import NavigationService from '../../NavigationService'
 import Login from './Login'
-import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Mine extends Component {
@@ -15,15 +14,12 @@ export default class Mine extends Component {
 
   constructor(props) {
     super(props)
-    this._onlineService = new SOnlineService()
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyData = this.goToMyData.bind(this)
   }
 
   goToPersonal = () => {
-    NavigationService.navigate('Personal', {
-      objOnlineService: this._onlineService,
-    })
+    NavigationService.navigate('Personal')
   }
 
   goToMyData = () => {
@@ -31,9 +27,7 @@ export default class Mine extends Component {
   }
 
   goToMyService = () => {
-    NavigationService.navigate('MyService', {
-      objOnlineService: this._onlineService,
-    })
+    NavigationService.navigate('MyService')
   }
 
   renderHeader = () => {
@@ -116,12 +110,7 @@ export default class Mine extends Component {
         </Container>
       )
     } else {
-      return (
-        <Login
-          setUser={this.props.setUser}
-          onlineServiceObject={this._onlineService}
-        />
-      )
+      return <Login setUser={this.props.setUser} />
     }
   }
 }

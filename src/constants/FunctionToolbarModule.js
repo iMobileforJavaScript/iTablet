@@ -158,4 +158,4 @@ const openData = [
     ],
   },
 ]
-export { layerAdd, BotMap ,openData}
+export { layerAdd, BotMap, openData }

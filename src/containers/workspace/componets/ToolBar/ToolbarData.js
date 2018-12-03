@@ -4,12 +4,14 @@ import {
   SCollector,
   SMCollectorType,
   SScene,
+  SThemeCartography,
 } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
-import { ConstToolType, ConstInfo } from '../../../../constants'
+import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
+import MoreData from './MoreData'
+import ShareData from './ShareData'
 
 let _params = {}
 
@@ -29,11 +31,17 @@ function getTabBarData(type, params = {}) {
   } else if (type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
   } else if (type === ConstToolType.MAP_MORE) {
-    tabBarData = getMapMore(type)
+    tabBarData = MoreData.getMapMore(type, params)
   } else if (type === ConstToolType.MAP_START) {
     tabBarData = getStart(type)
   } else if (type.indexOf(ConstToolType.MAP_TOOL) > -1) {
     tabBarData = MapToolData.getMapTool(type, params)
+  } else if (type === ConstToolType.MAP_SHARE) {
+    tabBarData = ShareData.getShareData(type, params)
+  } else if (type === ConstToolType.MAP_THEME_START) {
+    tabBarData = getThemeStart(type)
+  } else if (type === ConstToolType.MAP_THEME_CREATE) {
+    tabBarData = getThemeMapCreate(type)
   }
   return {
     data: tabBarData.data,
@@ -479,7 +487,11 @@ function getCollectionData(type) {
     image: require('../../../../assets/mapTools/icon_submit.png'),
     selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'),
   })
-  buttons = [ToolbarBtnType.CANCEL, 'changeCollection', 'mapSymbol']
+  buttons = [
+    ToolbarBtnType.CANCEL,
+    ToolbarBtnType.CHANGE_COLLECTION,
+    ToolbarBtnType.MAP_SYMBOL,
+  ]
 
   return { data, buttons }
 }
@@ -624,6 +636,7 @@ function getMap3DData(type) {
       buttons = [
         ToolbarBtnType.CLOSE_SYMBOL,
         ToolbarBtnType.BACK,
+        ToolbarBtnType.CLEAR_CURRENT_LABEL,
         ToolbarBtnType.SAVE,
       ]
       break
@@ -661,41 +674,131 @@ function getMap3DData(type) {
   return { data, buttons }
 }
 
-function getMapMore(type) {
+/**
+ * 创建专题图
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeMapCreate(type) {
   let data = [],
     buttons = []
-  if (type !== ConstToolType.MAP_MORE) return { data, buttons }
+  if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
   data = [
     {
-      key: constants.CLOSE,
-      title: constants.CLOSE,
-      action: closeMap,
+      //统一风格
+      key: constants.THEME_UNIFY_STYLE,
+      title: constants.THEME_UNIFY_STYLE,
+      // action: openMap,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+    },
+    {
+      //单值风格
+      key: constants.THEME_UNIQUE_STYLE,
+      title: constants.THEME_UNIQUE_STYLE,
+      size: 'large',
+      action: createThemeUniqueMap,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+    },
+    {
+      //分段风格
+      key: constants.THEME_RANGE_STYLE,
+      title: constants.THEME_RANGE_STYLE,
+      size: 'large',
+      // action: showHistory,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+    },
+    {
+      //自定义风格
+      key: constants.THEME_CUSTOME_STYLE,
+      title: constants.THEME_CUSTOME_STYLE,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+    },
+    {
+      //自定义标签
+      key: constants.THEME_CUSTOME_LABEL,
+      title: constants.THEME_CUSTOME_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+    },
+    {
+      //统一标签
+      key: constants.THEME_UNIFY_LABEL,
+      title: constants.THEME_UNIFY_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+    },
+    {
+      //单值标签
+      key: constants.THEME_UNIQUE_LABEL,
+      title: constants.THEME_UNIQUE_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+    },
+    {
+      //分段标签
+      key: constants.THEME_RANGE_LABEL,
+      title: constants.THEME_RANGE_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+    },
+  ]
+  return { data, buttons }
+}
+
+/**
+ * 专题图开始操作
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeStart(type) {
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_START) return { data, buttons }
+  data = [
+    {
+      key: constants.OPEN,
+      title: constants.OPEN,
+      action: add,
       size: 'large',
       image: require('../../../../assets/mapTools/icon_point.png'),
       selectedImage: require('../../../../assets/mapTools/icon_point.png'),
     },
     {
-      key: constants.SAVE,
-      title: constants.SAVE,
+      key: constants.CREATE,
+      title: constants.CREATE,
       size: 'large',
-      // TODO 保存地图
-      action: () => saveMap('TempMap'),
+      action: createMap,
       image: require('../../../../assets/mapTools/icon_words.png'),
       selectedImage: require('../../../../assets/mapTools/icon_words.png'),
     },
     {
-      key: constants.SAVE_AS,
-      title: constants.SAVE_AS,
+      key: constants.HISTORY,
+      title: constants.HISTORY,
       size: 'large',
-      action: saveMapAs,
+      action: showHistory,
       image: require('../../../../assets/mapTools/icon_point_line.png'),
       selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
     },
     {
-      key: constants.SHARE,
-      title: constants.SHARE,
+      key: constants.BASE_MAP,
+      title: constants.BASE_MAP,
       size: 'large',
-      action: shareMap,
+      action: changeBaseLayer,
       image: require('../../../../assets/mapTools/icon_free_line.png'),
       selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
     },
@@ -866,31 +969,6 @@ function patchHollowRegion() {
   return SMap.setAction(Action.PATCH_HOLLOW_REGION)
 }
 
-/** 关闭地图 **/
-function closeMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 保存地图 **/
-function saveMap(name = '') {
-  SMap.saveMap(name).then(result => {
-    Toast.show(
-      result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-    )
-  })
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 另存地图 **/
-function saveMapAs() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
-/** 分享 **/
-function shareMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
-}
-
 /** 打开地图 **/
 function openMap() {
   // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
@@ -949,6 +1027,17 @@ function add() {
       })
       break
   }
+}
+
+/** 新建单值风格专题图 **/
+function createThemeUniqueMap() {
+  let Params = {
+    DatasourceAlias: 'Countries',
+    DatasetName: 'Countries',
+    UniqueExpression: 'Country',
+    ColorGradientType: 'GREEANWHITE',
+  }
+  return SThemeCartography.createThemeUniqueMap(Params)
 }
 
 export default {

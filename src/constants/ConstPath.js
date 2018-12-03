@@ -14,7 +14,7 @@ const RelativePath = {
 }
 
 const RelativeFilePath = {
-  CustomerWorkspace: 'Customer.smwu', // 游客工作空间
+  CustomerWorkspace: Data + 'Customer.smwu', // 游客工作空间
 }
 
 // 默认创建的目录

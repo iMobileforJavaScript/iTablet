@@ -17,9 +17,9 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
-    SCartography.setLineSymbolID(data.id, 1)
-    SCartography.setLineSymbolID(data.id, 2)
-    SCartography.setLineSymbolID(data.id, 3)
+    SCartography.setLineSymbolIDByIndex(data.id, 1)
+    SCartography.setLineSymbolIDByIndex(data.id, 2)
+    SCartography.setLineSymbolIDByIndex(data.id, 3)
   }
 
   componentDidMount() {

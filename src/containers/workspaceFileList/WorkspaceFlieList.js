@@ -99,13 +99,12 @@ export default class WorkSpaceFileList extends Component {
             } else {
               this._toLoadMapView(absolutePath, EngineType.UDB)
             }
-          } else if(filename === '.xml'){
+          } else if (filename === '.xml') {
             if (this.cb) {
               this.cb(absolutePath)
               NavigationService.goBack() && this.container.setLoading(false)
             }
-          }
-          else{
+          } else {
             this._offLine_More()
           }
         } else {

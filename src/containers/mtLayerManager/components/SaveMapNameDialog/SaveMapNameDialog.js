@@ -7,10 +7,9 @@ import React, { PureComponent } from 'react'
 import { View, Text, TextInput } from 'react-native'
 import { Dialog } from '../../../../components'
 import styles from './styles'
-import ConstPath from "../../../../constants/ConstPath"
+import ConstPath from '../../../../constants/ConstPath'
 
 export default class SaveMapNameDialog extends PureComponent {
-
   props: {
     confirmAction: () => {},
     cancelAction: () => {},
@@ -50,15 +49,21 @@ export default class SaveMapNameDialog extends PureComponent {
   // }
 
   componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.mapName) !== JSON.stringify(this.props.mapName)) {
+    if (
+      JSON.stringify(prevProps.mapName) !== JSON.stringify(this.props.mapName)
+    ) {
       this.setState({
         mapName: this.props.mapName,
       })
-    } else if (JSON.stringify(prevProps.wsName) !== JSON.stringify(this.props.wsName)) {
+    } else if (
+      JSON.stringify(prevProps.wsName) !== JSON.stringify(this.props.wsName)
+    ) {
       this.setState({
         wsName: this.props.wsName,
       })
-    } else if (JSON.stringify(prevProps.path) !== JSON.stringify(this.props.path)) {
+    } else if (
+      JSON.stringify(prevProps.path) !== JSON.stringify(this.props.path)
+    ) {
       this.setState({
         path: this.props.path,
       })
@@ -71,11 +76,12 @@ export default class SaveMapNameDialog extends PureComponent {
   }
 
   confirm = () => {
-    this.props.confirmAction && this.props.confirmAction({
-      mapName: this.state.mapName,
-      wsName: this.state.wsName,
-      path: this.state.path,
-    })
+    this.props.confirmAction &&
+      this.props.confirmAction({
+        mapName: this.state.mapName,
+        wsName: this.state.wsName,
+        path: this.state.path,
+      })
   }
 
   cancel = () => {
@@ -85,10 +91,7 @@ export default class SaveMapNameDialog extends PureComponent {
   renderBtns = (title, placeholder, value) => {
     return (
       <View style={styles.item}>
-        {
-          title ? <Text style={styles.title}>{title}</Text>
-            : <View/>
-        }
+        {title ? <Text style={styles.title}>{title}</Text> : <View />}
         <TextInput
           underlineColorAndroid={'transparent'}
           accessible={true}
@@ -96,7 +99,8 @@ export default class SaveMapNameDialog extends PureComponent {
           defaultValue={value}
           // editable={!!value}
           placeholder={placeholder}
-          style={styles.textInputStyle} />
+          style={styles.textInputStyle}
+        />
       </View>
     )
   }
@@ -104,10 +108,11 @@ export default class SaveMapNameDialog extends PureComponent {
   render() {
     return (
       <Dialog
-        ref={ref => this.dialog = ref}
-        style={{marginVertical: 15}}
+        ref={ref => (this.dialog = ref)}
+        style={{ marginVertical: 15 }}
         confirmAction={this.confirm}
-        cancelAction={this.cancel}>
+        cancelAction={this.cancel}
+      >
         <View style={styles.item}>
           <Text style={styles.title}>地图名称</Text>
           <TextInput
@@ -124,10 +129,10 @@ export default class SaveMapNameDialog extends PureComponent {
             // editable={!!value}
             placeholder={'请输入地图名称'}
             maxLength={20}
-            style={styles.textInputStyle} />
+            style={styles.textInputStyle}
+          />
         </View>
       </Dialog>
     )
   }
-
 }

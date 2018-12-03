@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Image, Text, View, TouchableOpacity } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Utility } from 'imobile_for_reactnative'
+import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
+import { ConstPath } from '../../../../constants'
 let publishMap = []
 
 export default class RenderServiceItem extends Component {
@@ -10,10 +11,10 @@ export default class RenderServiceItem extends Component {
     imageUrl: string,
     mapName: string,
     sharedMapUrl: string,
-    objOnlineService: Object,
     serviceNameAndFileName: Object,
     mapTileAndRestTitle: Object,
     isDownloading: boolean,
+    downloadProgress: string,
   }
 
   defaultProps: {
@@ -53,14 +54,16 @@ export default class RenderServiceItem extends Component {
     let restTitle = this.props.mapTileAndRestTitle[mapTitle]
     let onlineFileName = this.props.serviceNameAndFileName[restTitle]
 
-    let savePath = await Utility.appendingHomeDirectory('/' + onlineFileName)
+    let savePath = await Utility.appendingHomeDirectory(
+      ConstPath.UserPath + onlineFileName,
+    )
     let isFileExist = await Utility.fileIsExist(savePath)
     if (isFileExist) {
       this._changeProgress('下载完成')
       return
     }
     let fileName = onlineFileName.substring(0, onlineFileName.length - 4)
-    this.props.objOnlineService.downloadFile(savePath, fileName, this.download)
+    SOnlineService.downloadFile(savePath, fileName, this.download)
   }
 
   _changeProgress = result => {
@@ -88,7 +91,7 @@ export default class RenderServiceItem extends Component {
       isExample: true,
     })
     if (publishMap.indexOf(restTitle) === -1) {
-      let publish = await this.props.objOnlineService.changeServiceVisibility(
+      let publish = await SOnlineService.changeServiceVisibility(
         restTitle,
         true,
       )
@@ -113,7 +116,10 @@ export default class RenderServiceItem extends Component {
           >
             <Image
               style={styles.itemTopInternalImageStyle}
-              source={{ url: this.props.imageUrl }}
+              source={{
+                url: this.props.imageUrl,
+                credentials: 'include',
+              }}
             />
           </TouchableOpacity>
 
