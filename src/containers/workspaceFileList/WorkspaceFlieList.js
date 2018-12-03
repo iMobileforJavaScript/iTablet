@@ -114,7 +114,8 @@ export default class WorkSpaceFileList extends Component {
               filter = 'sxwu,smwu'
               break
             default:
-              filter = 'xml,udb'
+              //filter = 'xml,udb'
+			  filter = 'sxwu,smwu,udb'
               break
           }
           let fileList = await Utility.getPathListByFilter(absolutePath, {
