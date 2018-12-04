@@ -9,13 +9,12 @@ import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import styles from './styles'
 
 export default class Button extends PureComponent {
-
   props: {
     style?: StyleSheet,
     titleStyle?: StyleSheet,
     title: string,
-    activeOpacity: number,
-    type: string ,
+    activeOpacity?: number,
+    type?: string,
     onPress: () => {},
   }
 
@@ -57,7 +56,15 @@ export default class Button extends PureComponent {
         style={[styles.baseStyle, color, this.props.style]}
         onPress={this.action}
       >
-        <Text style={[styles.btnTitle, textColor && {color: textColor}, this.props.titleStyle]}>{this.props.title}</Text>
+        <Text
+          style={[
+            styles.btnTitle,
+            textColor && { color: textColor },
+            this.props.titleStyle,
+          ]}
+        >
+          {this.props.title}
+        </Text>
       </TouchableOpacity>
     )
   }

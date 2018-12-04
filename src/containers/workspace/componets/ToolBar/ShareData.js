@@ -81,13 +81,14 @@ async function shareToSuperMapOnline() {
       Toast.show('分享中，请稍后')
       return
     }
+    Toast.show('开始分享')
     const dataName = 'Customer'
     const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.Data
     const targetPath = await Utility.appendingHomeDirectory(
       ConstPath.CustomerPath + 'Customer.zip',
     )
     let dataPath = await Utility.appendingHomeDirectory(customerPath)
-    let zipResult = await Utility.zipFile(dataPath, targetPath)
+    let zipResult = await Utility.zipFiles([dataPath], targetPath)
     let uploadResult = false
     if (zipResult) {
       isSharing = true

@@ -1,9 +1,7 @@
 /**
  * 获取地图更多
  */
-import { SMap } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
-import { ConstToolType, ConstInfo } from '../../../../constants'
+import { ConstToolType } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 
@@ -106,18 +104,15 @@ function closeMap() {
 }
 
 /** 保存地图 **/
-function saveMap(name = '') {
-  SMap.saveMap(name).then(result => {
-    Toast.show(
-      result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-    )
-  })
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+function saveMap() {
+  if (!_params.setSaveViewVisible) return
+  _params.setSaveViewVisible(true)
 }
 
 /** 另存地图 **/
 function saveMapAs() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  if (!_params.setSaveMapDialogVisible) return
+  _params.setSaveMapDialogVisible(true)
 }
 
 /** 分享 **/
