@@ -25,8 +25,8 @@ export default class TouchProgress extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      layerData:Object,
-      selectName:'',
+      layerData: Object,
+      selectName: '',
     }
     this._previousLeft = 0
     this._panBtnStyles = {
@@ -59,8 +59,8 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
-    console.warn(JSON.stringify(this.state.selectName))
-    console.warn(JSON.stringify(this.state.layerData.type))
+    // console.warn(JSON.stringify(this.state.selectName))
+    // console.warn(JSON.stringify(this.state.layerData.type))
     let x = this._previousLeft + gestureState.dx
     if (gestureState.dx > 0) {
       SCartography.setLineWidthByIndex(10, 0)

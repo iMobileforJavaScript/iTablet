@@ -2,7 +2,6 @@ import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 
-
 export const ATTRIBUTE_SET = 'ATTRIBUTE_SET'
 
 // Actions
@@ -34,7 +33,8 @@ export default handleActions(
       if (!userExist && payload.userName) {
         users.push(payload)
       }
-      return state.setIn(['currentUser'], fromJS(payload))
+      return state
+        .setIn(['currentUser'], fromJS(payload))
         .setIn(['users'], fromJS(users))
     },
     [REHYDRATE]: (state, { payload }) => {

@@ -160,7 +160,7 @@ const openData = [
   },
 ]
 
-const line=[
+const line = [
   {
     key: '符号线',
     action: () => {
@@ -180,7 +180,7 @@ const line=[
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
         isSelectlist: false,
-        selectName:'线宽',
+        selectName: '线宽',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -195,7 +195,7 @@ const line=[
   },
 ]
 
-const point=[
+const point = [
   {
     key: '点符号',
     action: () => {
@@ -257,7 +257,7 @@ const point=[
   },
 ]
 
-const region=[
+const region = [
   {
     key: '面符号',
     action: () => {
@@ -273,8 +273,7 @@ const region=[
   },
   {
     key: '前景色',
-    action: () => {
-    },
+    action: () => {},
   },
   {
     key: '背景色',
@@ -309,4 +308,4 @@ const region=[
     },
   },
 ]
-export { layerAdd, BotMap ,openData ,line,point,region}
+export { layerAdd, BotMap, openData, line, point, region }

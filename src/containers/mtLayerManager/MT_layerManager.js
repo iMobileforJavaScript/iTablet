@@ -306,14 +306,13 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-
   onPressRow = async ({ data }) => {
     this.index = await SMap.getLayerIndexByName(data.caption)
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
         Toast.show('当前图层为' + data.caption)
       })
-    if(GLOBAL.Type === ConstToolType.MAP_EDIT){
+    if (GLOBAL.Type === ConstToolType.MAP_EDIT) {
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
         isFullScreen: false,
@@ -387,7 +386,6 @@ export default class MT_layerManager extends React.Component {
   renderToolBar = () => {
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
   }
-
 
   render() {
     return (

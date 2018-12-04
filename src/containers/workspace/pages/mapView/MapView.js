@@ -143,8 +143,8 @@ export default class MapView extends React.Component {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
-    if(this.toolBox){
-      GLOBAL.toolBox =this.toolBox
+    if (this.toolBox) {
+      GLOBAL.toolBox = this.toolBox
     }
   }
 
