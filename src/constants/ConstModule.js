@@ -4,6 +4,7 @@ import ConstOnline from './ConstOnline'
 import { Utility } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
 import { Platform } from 'react-native'
+import ConstToolType from "./ConstToolType";
 
 export default [
   {
@@ -12,6 +13,7 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_free.png'),
     moduleImage: require('../assets/home/icon_cartography.png'),
     action: async user => {
+      GLOBAL.Type = ConstToolType.MAP_EDIT
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
@@ -44,6 +46,7 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
     action: async () => {
+      GLOBAL.Type = ConstToolType.MAP_3D
       let path,
         type = 'MAP_3D'
       if (Platform.OS === 'android') {
@@ -81,6 +84,33 @@ export default [
     title: '专题地图',
     baseImage: require('../assets/home/icon_lefttop_vip.png'),
     moduleImage: require('../assets/home/icon_thematicmap.png'),
+    action: async user => {
+      GLOBAL.Type = ConstToolType.MAP_THEMATIC
+      const customerPath =
+        ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
+      let wsPath = await Utility.appendingHomeDirectory(customerPath)
+      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      if (exist && !user.userName) {
+        NavigationService.navigate('MapView', {
+          // 若未登录，则打开游客工作空间
+          operationType: constants.MAP_THEME,
+          wsData: [
+            {
+              DSParams: { server: wsPath },
+              type: 'Workspace',
+            },
+            ConstOnline['Baidu'],
+          ],
+          mapName: '专题制图',
+          isExample: false,
+        })
+      } else {
+        // TODO 打开对应user的工作空间
+        NavigationService.navigate('MapView', {
+          wsData: ConstOnline['SuperMapCloud'],
+        })
+      }
+    },
   },
   {
     key: '外业采集',
@@ -88,6 +118,7 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async user => {
+      GLOBAL.Type = ConstToolType.MAP_COLLECT
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
@@ -113,7 +144,18 @@ export default [
         })
       } else {
         // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', { wsData: ConstOnline['Google'] })
+        NavigationService.navigate('MapView', {
+          wsData: [
+            {
+              DSParams: { server: wsPath },
+              // layerIndex: 0,
+              type: 'Workspace',
+            },
+            ConstOnline['Google'],
+          ],
+          mapName: '外业采集',
+          isExample: false,
+        })
       }
     },
   },

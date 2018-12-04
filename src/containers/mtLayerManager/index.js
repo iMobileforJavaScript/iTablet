@@ -1,6 +1,6 @@
 import MT_layerManager from './MT_layerManager'
 import { connect } from 'react-redux'
-import { setEditLayer } from '../../models/layers'
+import { setEditLayer, setCurrentLayer } from '../../models/layers'
 
 const mapStateToProps = state => ({
   editLayer: state.layers.toJS().editLayer,
@@ -8,7 +8,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setEditLayer,
+  setCurrentLayer,
 }
 
-
-export default connect(mapStateToProps, mapDispatchToProps)(MT_layerManager)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MT_layerManager)

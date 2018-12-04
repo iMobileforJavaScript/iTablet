@@ -10,19 +10,24 @@ import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { MapToolbar } from '../../../workspace/componets'
-import { LayerAttributeTab, LayerAttributeTable } from '../../components'
-import { CursorType } from 'imobile_for_reactnative'
+import { LayerAttributeTable } from '../../components'
+import { SMap } from 'imobile_for_reactnative'
+
+const SINGLE_ATTRIBUTE = 'singleAttribute'
 
 export default class LayerAttribute extends React.Component {
   props: {
     navigation: Object,
     currentAttribute: Object,
+    currentLayer: Object,
+    selection: Object,
     setCurrentAttribute: () => {},
   }
 
   constructor(props) {
     super(props)
-    // const { params } = this.props.navigation.state
+    const { params } = this.props.navigation.state
+    this.type = params && params.type
     this.state = {
       dataSourceList: [],
       openList: {},
@@ -39,42 +44,49 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    // this.getDatasets()
+    this.getAttribute()
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (JSON.stringify(prevProps.currentAttribute) !== JSON.stringify(this.props.currentAttribute)) {
-  //     this.setState({
-  //       attribute: this.props.currentAttribute,
-  //     })
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.currentLayer) !==
+      JSON.stringify(this.props.currentLayer)
+    ) {
+      this.getAttribute()
+    } else if (
+      JSON.stringify(prevProps.currentAttribute) !==
+      JSON.stringify(this.props.currentAttribute)
+    ) {
+      this.setState({
+        attribute: this.props.currentAttribute,
+      })
+    }
+  }
 
   componentWillUnmount() {
     this.props.setCurrentAttribute({})
   }
 
-  getDatasets = () => {
+  getAttribute = () => {
+    if (!this.props.currentLayer.path) return
     this.container.setLoading(true)
     ;(async function() {
       try {
-        let recordset = await (await this.state.dataset.toDatasetVector()).getRecordset(
-          false,
-          CursorType.DYNAMIC,
+        let attribute = await SMap.getLayerAttribute(
+          this.props.currentLayer.path,
         )
-
-        // let recordset = this.state.recordset
-        let records = await recordset.getFieldInfosArray()
-        let attribute = []
-        if (records && records.length > 0) {
-          attribute = records[0]
-          this.props.setCurrentAttribute(attribute)
+        if (attribute && attribute.length > 0) {
+          this.props.setCurrentAttribute(attribute[0])
           let tableHead = []
-          records[0].forEach(item => {
-            tableHead.push(item.fieldInfo.caption)
+          attribute[0].forEach(item => {
+            if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+              tableHead.unshift(item.fieldInfo.caption)
+            } else {
+              tableHead.push(item.fieldInfo.caption)
+            }
           })
           this.setState({
-            attribute: records,
+            attribute: attribute,
             // attribute: attribute,
             tableHead: tableHead,
           })
@@ -129,15 +141,15 @@ export default class LayerAttribute extends React.Component {
           title: '属性表',
           navigation: this.props.navigation,
         }}
-        bottomBar={this.renderToolBar()}
+        bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
       >
-        <LayerAttributeTab
-          edit={this.edit}
-          btns={['edit']}
-          startAudio={() => {
-            GLOBAL.AudioBottomDialog.setVisible(true)
-          }}
-        />
+        {/*<LayerAttributeTab*/}
+        {/*edit={this.edit}*/}
+        {/*btns={['edit']}*/}
+        {/*startAudio={() => {*/}
+        {/*GLOBAL.AudioBottomDialog.setVisible(true)*/}
+        {/*}}*/}
+        {/*/>*/}
         {this.state.tableHead.length > 0 ? (
           <LayerAttributeTable
             ref={ref => (this.table = ref)}

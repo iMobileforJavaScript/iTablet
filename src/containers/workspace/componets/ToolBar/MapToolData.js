@@ -164,6 +164,7 @@ function pointSelect() {
   select()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_POINT_SELECT, {
     containerType: 'table',

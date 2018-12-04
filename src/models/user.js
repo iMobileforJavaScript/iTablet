@@ -34,7 +34,8 @@ export default handleActions(
       if (!userExist && payload.userName) {
         users.push(payload)
       }
-      return state.setIn(['currentUser'], fromJS(payload))
+      return state
+        .setIn(['currentUser'], fromJS(payload))
         .setIn(['users'], fromJS(users))
     },
     [REHYDRATE]: (state, { payload }) => {

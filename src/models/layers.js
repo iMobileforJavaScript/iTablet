@@ -29,7 +29,10 @@ export const setSelection = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
-export const setCurrentAttribute = (params, cb = () => {}) => async dispatch => {
+export const setCurrentAttribute = (
+  params,
+  cb = () => {},
+) => async dispatch => {
   await dispatch({
     type: SET_CURRENT_ATTRIBUTE,
     payload: params || {},

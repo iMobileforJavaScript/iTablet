@@ -32,7 +32,6 @@ export default class MapController extends React.Component {
       setInterval(async () => {
         let deg = await SScene.getcompass()
         this.setCompass(deg)
-        //  console.warn('----------------' + deg)
       }, 600)
     }
   }
@@ -117,7 +116,7 @@ export default class MapController extends React.Component {
               key={'controller_minus'}
               textColor={'black'}
               size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/function/icon_compass.png')}
+              image={require('../../../../assets/mapEdit/icon_compass.png')}
               onPress={this.location}
             />
           </Animated.View>

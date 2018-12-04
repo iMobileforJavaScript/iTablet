@@ -45,6 +45,9 @@ export default class LayerAttributeTable extends React.Component {
     colHeight: number,
     type: string,
     data: Object,
+    headStyle?: Object,
+    rowStyle?: Object,
+    selectRowStyle?: Object,
   }
 
   static defaultProps = {
@@ -55,7 +58,7 @@ export default class LayerAttributeTable extends React.Component {
     // widthArr: [40, 200, 200, 100, 100, 100, 80],
     widthArr: [],
     selectable: true,
-    hasIndex: true,
+    hasIndex: false,
   }
 
   constructor(props) {
@@ -360,7 +363,7 @@ export default class LayerAttributeTable extends React.Component {
               // flexArr={[1, 1]}
               data={this.state.tableHead}
               widthArr={this.state.widthArr}
-              style={styles.head}
+              style={[styles.head, this.props.headStyle]}
               textStyle={styles.headerText}
             />
           </Table>
@@ -371,6 +374,9 @@ export default class LayerAttributeTable extends React.Component {
                 let data = rowData.data
                 let arr = rowData.arr
                 // let arr = this.dealEditCellData(data, index)
+                const selectStyle = this.props.rowStyle || styles.row
+                const selectRowStyle =
+                  this.props.selectRowStyle || styles.selectRow
                 return (
                   <TouchableOpacity
                     activeOpacity={0.8}
@@ -380,9 +386,9 @@ export default class LayerAttributeTable extends React.Component {
                     <TableWrapper
                       key={index}
                       style={[
-                        styles.row,
+                        selectStyle,
                         index % 2 === 1 && { backgroundColor: color.grayLight },
-                        this.state.currentSelect === index && styles.selectRow,
+                        this.state.currentSelect === index && selectRowStyle,
                       ]}
                     >
                       {arr.map((cellData, cellIndex) => {

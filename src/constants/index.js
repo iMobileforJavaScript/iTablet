@@ -8,7 +8,9 @@ import ConstModule from './ConstModule'
 import ConstToolType from './ConstToolType'
 import Map3DBaseMapList from './Map3DBaseMapList'
 import ConstInfo from './ConstInfo'
+
 import { layerAdd, BotMap ,openData,line,point,region} from './FunctionToolbarModule'
+
 
 export {
   ConstPath,

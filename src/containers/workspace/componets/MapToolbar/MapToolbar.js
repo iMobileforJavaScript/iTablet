@@ -46,6 +46,7 @@ export default class MapToolbar extends React.Component {
     let list = []
     switch (type) {
       case constants.MAP_EDIT:
+      case constants.MAP_THEME:
       case constants.COLLECTION:
         list = [
           {

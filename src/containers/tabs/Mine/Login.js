@@ -12,12 +12,11 @@ import { Container, TextBtn, BtnTwo } from '../../../components'
 import Input from './Input'
 import Tips from './Tips'
 import forge from 'node-forge'
-
+import { SOnlineService } from 'imobile_for_reactnative'
 export default class Login extends React.Component {
   props: {
     navigation: Object,
     setUser: () => {},
-    onlineServiceObject: Object,
   }
 
   constructor(props) {
@@ -33,8 +32,10 @@ export default class Login extends React.Component {
   }
 
   _login = async () => {
-    let userName = this.phone.getValue()
-    let password = this.password.getValue()
+    // let userName = this.phone.getValue()
+    // let password = this.password.getValue()
+    let userName = 'imobile1234'
+    let password = 'imobile'
     if (!userName) {
       Toast.show('请输入用户名')
       return
@@ -46,10 +47,7 @@ export default class Login extends React.Component {
     }
     this.container.setLoading(true, '登录中')
     try {
-      let result = await this.props.onlineServiceObject.login(
-        userName,
-        password,
-      )
+      let result = await SOnlineService.login(userName, password)
       this.container.setLoading(false)
       if (typeof result === 'boolean' && result) {
         Toast.show('登录成功')
@@ -119,10 +117,3 @@ export default class Login extends React.Component {
     )
   }
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: BGCOLOR,
-//   },
-// })

@@ -320,12 +320,11 @@ export default class LayerManager_item extends React.Component {
   }
 
   _pop_row = async () => {
-    if(this.props.onPress){
+    if (this.props.onPress) {
       await this.props.onPress({
         data: this.props.data,
       })
-    }
-    else return
+    } else return
   }
 
   _arrow_pop_row = async () => {
