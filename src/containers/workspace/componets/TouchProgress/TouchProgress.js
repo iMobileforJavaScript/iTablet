@@ -22,12 +22,32 @@ export default class TouchProgress extends Component {
     )
   }
 
+  props: {
+    currentLayer: Object,
+    selectName:'',
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.currentLayer) !==
+      JSON.stringify(this.props.currentLayer)
+    ) {
+      this.setState({
+        currentLayer: this.props.currentLayer,
+      })
+    }
+    if(JSON.stringify(prevProps.selectName) !==
+      JSON.stringify(this.props.selectName)
+    ){
+      this.setState({
+        selectName: this.props.selectName,
+      })
+    }
+  }
+
+
   constructor(props) {
     super(props)
-    this.state = {
-      layerData:Object,
-      selectName:'',
-    }
     this._previousLeft = 0
     this._panBtnStyles = {
       style: {
@@ -59,8 +79,8 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
-    console.warn(JSON.stringify(this.state.selectName))
-    console.warn(JSON.stringify(this.state.layerData.type))
+    console.warn(JSON.stringify(this.props.selectName))
+    console.warn(JSON.stringify(this.props.currentLayer.type))
     let x = this._previousLeft + gestureState.dx
     if (gestureState.dx > 0) {
       SCartography.setLineWidthByIndex(10, 0)

@@ -1345,7 +1345,7 @@ export default class ToolBar extends React.Component {
           />
         )}
         {this.state.isTouchProgress && this.state.isFullScreen && (
-          <TouchProgress layerData={this.state.layerData} selectName={this.state.selectName}/>
+          <TouchProgress selectName={this.state.selectName}/>
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
