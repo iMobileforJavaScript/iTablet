@@ -4,6 +4,7 @@ import {
   SCollector,
   SMCollectorType,
   SScene,
+  SThemeCartography,
 } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
@@ -37,6 +38,10 @@ function getTabBarData(type, params = {}) {
     tabBarData = MapToolData.getMapTool(type, params)
   } else if (type === ConstToolType.MAP_SHARE) {
     tabBarData = ShareData.getShareData(type, params)
+  } else if (type === ConstToolType.MAP_THEME_START) {
+    tabBarData = getThemeStart(type)
+  } else if (type === ConstToolType.MAP_THEME_CREATE) {
+    tabBarData = getThemeMapCreate(type)
   }
   return {
     data: tabBarData.data,
@@ -670,6 +675,138 @@ function getMap3DData(type) {
 }
 
 /**
+ * 创建专题图
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeMapCreate(type) {
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
+  data = [
+    {
+      //统一风格
+      key: constants.THEME_UNIFY_STYLE,
+      title: constants.THEME_UNIFY_STYLE,
+      // action: openMap,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+    },
+    {
+      //单值风格
+      key: constants.THEME_UNIQUE_STYLE,
+      title: constants.THEME_UNIQUE_STYLE,
+      size: 'large',
+      action: createThemeUniqueMap,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+    },
+    {
+      //分段风格
+      key: constants.THEME_RANGE_STYLE,
+      title: constants.THEME_RANGE_STYLE,
+      size: 'large',
+      // action: showHistory,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+    },
+    {
+      //自定义风格
+      key: constants.THEME_CUSTOME_STYLE,
+      title: constants.THEME_CUSTOME_STYLE,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+    },
+    {
+      //自定义标签
+      key: constants.THEME_CUSTOME_LABEL,
+      title: constants.THEME_CUSTOME_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+    },
+    {
+      //统一标签
+      key: constants.THEME_UNIFY_LABEL,
+      title: constants.THEME_UNIFY_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+    },
+    {
+      //单值标签
+      key: constants.THEME_UNIQUE_LABEL,
+      title: constants.THEME_UNIQUE_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+    },
+    {
+      //分段标签
+      key: constants.THEME_RANGE_LABEL,
+      title: constants.THEME_RANGE_LABEL,
+      size: 'large',
+      // action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+    },
+  ]
+  return { data, buttons }
+}
+
+/**
+ * 专题图开始操作
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeStart(type) {
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_START) return { data, buttons }
+  data = [
+    {
+      key: constants.OPEN,
+      title: constants.OPEN,
+      action: add,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
+      key: constants.CREATE,
+      title: constants.CREATE,
+      size: 'large',
+      action: createMap,
+      image: require('../../../../assets/mapTools/icon_words.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+    },
+    {
+      key: constants.HISTORY,
+      title: constants.HISTORY,
+      size: 'large',
+      action: showHistory,
+      image: require('../../../../assets/mapTools/icon_point_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+    },
+    {
+      key: constants.BASE_MAP,
+      title: constants.BASE_MAP,
+      size: 'large',
+      action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+    },
+  ]
+  return { data, buttons }
+}
+
+/**
  * 获取开始操作
  * @param type
  * @returns {{data: Array, buttons: Array}}
@@ -890,6 +1027,17 @@ function add() {
       })
       break
   }
+}
+
+/** 新建单值风格专题图 **/
+function createThemeUniqueMap() {
+  let Params = {
+    DatasourceAlias: 'Countries',
+    DatasetName: 'Countries',
+    UniqueExpression: 'Country',
+    ColorGradientType: 'GREEANWHITE',
+  }
+  return SThemeCartography.createThemeUniqueMap(Params)
 }
 
 export default {

@@ -47,11 +47,11 @@ public class MainActivity extends ReactActivity {
         if (!Utils.fileIsExit(customerWs + customerWsName)) {
             Utils.copyAssetFileToSDcard(this, customerWs, customerWsName);
         }
-        // 拷贝默认的配置
-        String configName = "mapinfo.txt";
-        if (!Utils.fileIsExit(customerWs + configName)) {
-            Utils.copyAssetFileToSDcard(this, customerWs, configName);
-        }
+//        // 拷贝默认的配置
+//        String configName = "mapinfo.txt";
+//        if (!Utils.fileIsExit(customerWs + configName)) {
+//            Utils.copyAssetFileToSDcard(this, customerWs, configName);
+//        }
         // 拷贝默认数据
         String localPath = SDCARD + "/iTablet/data/local/";
         String defaultZipData = "defaultData.zip";

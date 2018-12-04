@@ -305,9 +305,12 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  getLayerIndex = async ({ data }) => {
+  onPressRow = async ({ data }) => {
     this.index = await SMap.getLayerIndexByName(data.caption)
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data)
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        Toast.show('当前图层为' + data.caption)
+      })
   }
 
   getChildList = async ({ data }) => {
@@ -362,7 +365,7 @@ export default class MT_layerManager extends React.Component {
             currentOpenItemName: data.name,
           })
         }}
-        onPress={this.getLayerIndex}
+        onPress={this.onPressRow}
         onArrowPress={this.getChildList}
       />
     )
