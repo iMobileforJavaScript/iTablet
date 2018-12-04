@@ -11,6 +11,7 @@ export const SET_ANALYST_LAYER = 'SET_ANALYST_LAYER'
 
 // Actions
 // --------------------------------------------------
+
 export const setEditLayer = (params, cb = () => {}) => async dispatch => {
   await dispatch({
     type: SET_EDIT_LAYER,

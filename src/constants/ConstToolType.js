@@ -69,4 +69,9 @@ export default {
   MAP_MORE_MAP3D: 'MAP_MORE_MAP3D',
   // 工具视图高度级别
   HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(720)],
+  //功能标识
+  MAP_EDIT: 'MAP_EDIT',
+  MAP_3D: 'MAP_3D',
+  MAP_THEMATIC: 'MAP_THEMATIC',
+  MAP_COLLECT: 'MAP_COLLECT',
 }
