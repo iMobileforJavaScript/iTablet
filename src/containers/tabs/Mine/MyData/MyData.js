@@ -1,14 +1,14 @@
-import React, { Component } from 'react'
-import { View, Text } from 'react-native'
-import Container from '../../../../components/Container'
+import React,{Component} from 'react'
+import {
+  View,
+  Text,
+  Image,
+} from 'react-native'
+import Container from "../../../../components/Container";
 
-export default class MyData extends Component {
-  props: {
-    navigation: Object,
-  }
-  render() {
-    return (
-      <Container
+export default class MyData extends Component{
+  render(){
+    return <Container
         ref={ref => (this.container = ref)}
         headerProps={{
           title: '我的iTablet',
@@ -22,10 +22,12 @@ export default class MyData extends Component {
           // ),
         }}
       >
-        <View style={{ flex: 1, backgroundColor: '#fff' }}>
-          <Text>我的数据</Text>
-        </View>
+      <View style={{flex:1,backgroundColor:'#fff'}}>
+        <Text>我的数据</Text>
+      </View>
       </Container>
-    )
+
+
+
   }
 }

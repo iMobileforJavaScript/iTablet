@@ -1,7 +1,14 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../utils'
-import { size } from '../../../styles'
+import { scaleSize,screen } from '../../../utils'
+import {
+  size,
+  color,
+} from '../../../styles'
+export {
+  screen,
+  color,
 
+}
 export default StyleSheet.create({
   container: {
     flex: 1,
