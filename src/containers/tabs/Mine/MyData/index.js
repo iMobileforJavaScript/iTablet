@@ -1,2 +1,4 @@
 import MyData from './MyData'
-export { MyData }
+export {
+  MyData,
+}
