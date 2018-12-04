@@ -13,9 +13,7 @@ import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTable } from '../../components'
 import { SMap } from 'imobile_for_reactnative'
 
-const SINGLE_ATTRIBUTE = 'singleAttribute'
-
-export default class LayerAttribute extends React.Component {
+export default class layerSelectionAttribute extends React.Component {
   props: {
     navigation: Object,
     currentAttribute: Object,
@@ -26,17 +24,15 @@ export default class LayerAttribute extends React.Component {
 
   constructor(props) {
     super(props)
-    const { params } = this.props.navigation.state
-    this.type = params && params.type
     this.state = {
       dataSourceList: [],
       openList: {},
-      // dataset: params.dataset,
       attribute: {},
       tableTitle: [],
       // tableHead: ['名称', '属性值'],
       tableHead: [],
       tableData: [],
+      // type: params && params.type || '',
     }
 
     this.currentFieldInfo = []
@@ -49,17 +45,10 @@ export default class LayerAttribute extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
-      JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
+      JSON.stringify(prevProps.selection) !==
+      JSON.stringify(this.props.selection)
     ) {
       this.getAttribute()
-    } else if (
-      JSON.stringify(prevProps.currentAttribute) !==
-      JSON.stringify(this.props.currentAttribute)
-    ) {
-      this.setState({
-        attribute: this.props.currentAttribute,
-      })
     }
   }
 
@@ -68,12 +57,12 @@ export default class LayerAttribute extends React.Component {
   }
 
   getAttribute = () => {
-    if (!this.props.currentLayer.path) return
+    if (!this.props.selection.layerInfo.path) return
     this.container.setLoading(true)
     ;(async function() {
       try {
-        let attribute = await SMap.getLayerAttribute(
-          this.props.currentLayer.path,
+        let attribute = await SMap.getSelectionAttributeByLayer(
+          this.props.selection.layerInfo.path,
         )
         if (attribute && attribute.length > 0) {
           this.props.setCurrentAttribute(attribute[0])
@@ -141,7 +130,6 @@ export default class LayerAttribute extends React.Component {
           title: '属性表',
           navigation: this.props.navigation,
         }}
-        bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
       >
         {/*<LayerAttributeTab*/}
         {/*edit={this.edit}*/}

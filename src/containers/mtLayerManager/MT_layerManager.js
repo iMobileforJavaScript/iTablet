@@ -18,6 +18,7 @@ export default class MT_layerManager extends React.Component {
     navigation: Object,
     editLayer: Object,
     setEditLayer: () => {},
+    setCurrentLayer: () => {},
   }
 
   constructor(props) {
@@ -32,7 +33,6 @@ export default class MT_layerManager extends React.Component {
     // wsName =
     //   wsName.lastIndexOf('.') > 0 &&
     //   wsName.substring(0, wsName.lastIndexOf('.'))
-    this.index
     this.state = {
       datasourceList: [],
       mapName: '',
@@ -64,12 +64,12 @@ export default class MT_layerManager extends React.Component {
       for (let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
         if (layerNameArr[i].isEditable) {
-          this.currentEditItemName = layerNameArr[i].name
           this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
         }
       }
       await SMap.setAction(Action.SELECT)
       // let mapName = await this.map.getName()
+
       this.setState({
         datasourceList: layerNameArr.concat(),
         refreshing: false,
@@ -307,7 +307,7 @@ export default class MT_layerManager extends React.Component {
 
   getLayerIndex = async ({ data }) => {
     this.index = await SMap.getLayerIndexByName(data.caption)
-    // console.warn(JSON.stringify(this.index))
+    this.props.setCurrentLayer && this.props.setCurrentLayer(data)
   }
 
   getChildList = async ({ data }) => {

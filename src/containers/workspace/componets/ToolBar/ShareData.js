@@ -7,6 +7,7 @@ import { Toast } from '../../../../utils'
 import constants from '../../constants'
 
 let _params = {}
+let isSharing = false
 
 function getShareData(type, params) {
   let data = [],
@@ -71,34 +72,41 @@ function getShareData(type, params) {
  * 分享到SuperMap Online
  */
 async function shareToSuperMapOnline() {
-  if (!_params.user.currentUser.userName) {
-    Toast.show('请登陆后再分享')
-    return
+  try {
+    if (!_params.user.currentUser.userName) {
+      Toast.show('请登陆后再分享')
+      return
+    }
+    if (isSharing) {
+      Toast.show('分享中，请稍后')
+      return
+    }
+    const dataName = 'Customer'
+    const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.Data
+    const targetPath = await Utility.appendingHomeDirectory(
+      ConstPath.CustomerPath + 'Customer.zip',
+    )
+    let dataPath = await Utility.appendingHomeDirectory(customerPath)
+    let zipResult = await Utility.zipFile(dataPath, targetPath)
+    let uploadResult = false
+    if (zipResult) {
+      isSharing = true
+      uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
+        // onProgress: progress => {
+        //   console.warn(progress)
+        // },
+        onResult: async () => {
+          let result = await SOnlineService.publishService(dataName)
+          isSharing = false
+          Toast.show(result ? '分享成功' : '分享成功')
+        },
+      })
+    }
+    return uploadResult
+  } catch (e) {
+    isSharing = false
+    return false
   }
-  const dataName = 'Customer'
-  const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.Data
-  const targetPath = await Utility.appendingHomeDirectory(
-    ConstPath.CustomerPath + 'Customer.zip',
-  )
-  let dataPath = await Utility.appendingHomeDirectory(customerPath)
-  let zipResult = await Utility.zipFile(dataPath, targetPath)
-  let uploadResult = false
-  if (zipResult) {
-    uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
-      onProgress: progress => {
-        if (progress === 100) {
-          Toast.show('分享成功')
-
-          SOnlineService.publishService(dataName)
-        }
-      },
-      onResult: () => {
-        // Toast.show('分享成功')
-        // SOnlineService.publishService(dataName)
-      },
-    })
-  }
-  return uploadResult
 }
 
 export default {

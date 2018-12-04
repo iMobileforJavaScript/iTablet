@@ -159,7 +159,7 @@ export default class ToolBar extends React.Component {
         buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP_SYMBOL:
-        buttons = [ToolbarBtnType.CANCEL]
+        // buttons = [ToolbarBtnType.CANCEL]
         break
       // 第一级采集选项
       case ConstToolType.MAP_COLLECTION_POINT:
@@ -779,9 +779,12 @@ export default class ToolBar extends React.Component {
     // 关闭采集, type 为number时为采集类型，若有冲突再更改
     if (typeof type === 'number' || type.indexOf('MAP_COLLECTION_') >= 0) {
       SCollector.stopCollect()
-    } else if (type.indexOf('MAP_EDIT_') >= 0) {
-      SMap.setAction(Action.PAN)
     }
+    // else if (type.indexOf('MAP_EDIT_') >= 0) {
+    //   SMap.setAction(Action.PAN)
+    // }
+    SMap.setAction(Action.PAN)
+    GLOBAL.currentToolbarType = ''
 
     this.showToolbar(false)
     this.setState({ isTouchProgress: false })
@@ -1246,11 +1249,8 @@ export default class ToolBar extends React.Component {
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapEdit/icon-rename-white.png')
           action = () => {
-            SCollector.stopCollect()
-            this.setVisible(true, this.lastType, {
-              isFullScreen: true,
-              column: 4,
-              height: ConstToolType.HEIGHT[3],
+            NavigationService.navigate('layerSelectionAttribute', {
+              type: 'singleAttribute',
             })
           }
           break

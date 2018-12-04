@@ -1,5 +1,5 @@
 import { connect } from 'react-redux'
-import LayerAttribute from './LayerAttribute'
+import layerSelectionAttribute from './layerSelectionAttribute'
 import { setCurrentAttribute } from '../../../../models/layers'
 
 const mapStateToProps = state => ({
@@ -15,4 +15,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(LayerAttribute)
+)(layerSelectionAttribute)

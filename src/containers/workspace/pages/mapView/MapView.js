@@ -29,7 +29,7 @@ import {
   Dialog,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
-import { ConstPath, Const } from '../../../../constants'
+import { ConstPath, Const, ConstToolType } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
@@ -182,21 +182,23 @@ export default class MapView extends React.Component {
         this.clearData()
         // await this._remove_measure_listener()
         // await this._removeGeometrySelectedListener()
-        this.mapControl && (await this.mapControl.removeMeasureListener())
-        this.mapControl &&
-          (await this.mapControl.removeGeometrySelectedListener())
+        // this.mapControl && (await this.mapControl.removeMeasureListener())
+        // this.mapControl &&
+        //   (await this.mapControl.removeGeometrySelectedListener())
 
-        this.map && (await this.map.close())
-        await this.workspace.closeAllDatasource()
-        this.workspace && (await this.workspace.closeWorkspace())
+        // this.map && (await this.map.close())
+        // await this.workspace.closeAllDatasource()
+        // this.workspace && (await this.workspace.closeWorkspace())
 
         // this.map && await this.map.dispose()
-        this.mapControl && (await this.mapControl.dispose())
+        // this.mapControl && (await this.mapControl.dispose())
         // this.workspace && await this.workspace.dispose()
 
-        this.map = null
-        this.mapControl = null
-        this.workspace = null
+        this._removeGeometrySelectedListener()
+
+        // this.map = null
+        // this.mapControl = null
+        // this.workspace = null
         this.container && this.container.setLoading(false)
         cb && cb()
       }.bind(this),
@@ -420,7 +422,15 @@ export default class MapView extends React.Component {
 
   geometrySelected = event => {
     this.props.setSelection && this.props.setSelection(event)
-    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+    switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_POINT_SELECT:
+        break
+      case ConstToolType.MAP_EDIT_POINT:
+      case ConstToolType.MAP_EDIT_LINE:
+      case ConstToolType.MAP_EDIT_REGION:
+        SMap.appointEditGeometry(event.id, event.layerInfo.name)
+        break
+    }
   }
 
   geometryMultiSelected = () => {
@@ -687,6 +697,7 @@ export default class MapView extends React.Component {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
           }
         }
+        this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)

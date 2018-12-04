@@ -217,8 +217,8 @@ export default class FunctionToolbar extends React.Component {
       return
     }
     await SMap.setAction(Action.SELECT)
-    this.props.addGeometrySelectedListener &&
-      (await this.props.addGeometrySelectedListener())
+    // this.props.addGeometrySelectedListener &&
+    //   (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
     let height = ConstToolType.HEIGHT[3]
     let column = 4
@@ -242,6 +242,7 @@ export default class FunctionToolbar extends React.Component {
           tableType = 'scroll'
           break
       }
+      GLOBAL.currentToolbarType = type
       toolRef.setVisible(true, type, {
         isFullScreen: false,
         column,
