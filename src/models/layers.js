@@ -6,10 +6,13 @@ import { handleActions } from 'redux-actions'
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
 export const SET_SELECTION = 'SET_SELECTION'
 export const SET_CURRENT_ATTRIBUTE = 'SET_CURRENT_ATTRIBUTE'
+export const SET_CURRENT_LAYER = 'SET_CURRENT_LAYER'
 export const SET_ANALYST_LAYER = 'SET_ANALYST_LAYER'
 
 // Actions
 // --------------------------------------------------
+
+
 export const setEditLayer = (params, cb = () => {}) => async dispatch => {
   await dispatch({
     type: SET_EDIT_LAYER,
@@ -34,6 +37,14 @@ export const setCurrentAttribute = (params, cb = () => {}) => async dispatch => 
   cb && cb()
 }
 
+export const setCurrentLayer = (params, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_CURRENT_LAYER,
+    payload: params || {},
+  })
+  cb && cb()
+}
+
 export const setAnalystLayer = (params, cb = () => {}) => async dispatch => {
   await dispatch({
     type: SET_ANALYST_LAYER,
@@ -47,6 +58,7 @@ const initialState = fromJS({
   editLayer: {},
   selection: {},
   currentAttribute: {},
+  currentLayer: {},
   analystLayer: {},
 })
 
@@ -60,6 +72,9 @@ export default handleActions(
     },
     [`${SET_CURRENT_ATTRIBUTE}`]: (state, { payload }) => {
       return state.setIn(['currentAttribute'], fromJS(payload))
+    },
+    [`${SET_CURRENT_LAYER}`]: (state, { payload }) => {
+      return state.setIn(['currentLayer'], fromJS(payload))
     },
     [`${SET_ANALYST_LAYER}`]: (state, { payload }) => {
       return state.setIn(['analystLayer'], fromJS(payload))

@@ -6,6 +6,9 @@ import {
   ConstToolType,
   ConstPath,
   BotMap,
+  line,
+  point,
+  region,
   layerAdd,
   Map3DBaseMapList,
 } from '../../../../constants'
@@ -106,6 +109,8 @@ export default class ToolBar extends React.Component {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
+      layerData : Object,
+      selectName : '',
     }
     this.isShow = false
     this.isBoxShow = true
@@ -127,6 +132,10 @@ export default class ToolBar extends React.Component {
 
   getType = () => {
     return this.type
+  }
+
+  showFullMap = () => {
+    this.props.showFullMap && this.props.showFullMap(true)
   }
 
   getData = type => {
@@ -708,12 +717,14 @@ export default class ToolBar extends React.Component {
       SScene.stopCircleFly()
       SScene.clearCirclePoint()
     }
+    if(!params.layerData)params.layerData=[]
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column
+      params.column !== this.state.column ||
+        params.layerData !==this.state.layerData
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
@@ -723,9 +734,11 @@ export default class ToolBar extends React.Component {
           : ConstToolType.HEIGHT[1]
       this.setState(
         {
+          isSelectlist:false,
           type: type,
           tableType: params.tableType || 'normal',
           data: data,
+          layerData: params.layerData,
           buttons: buttons,
           isFullScreen:
             params && params.isFullScreen !== undefined
@@ -782,7 +795,7 @@ export default class ToolBar extends React.Component {
     }
 
     this.showToolbar(false)
-    this.setState({isTouchProgress: false})
+    this.setState({isTouchProgress: false,isSelectlist:false})
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -851,7 +864,7 @@ export default class ToolBar extends React.Component {
   }
 
   commit = (type = this.originType) => {
-    this.showToolbar()
+    this.showToolbar(false)
     if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
@@ -1021,7 +1034,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderSymbol = () => {
-    return <SymbolList />
+    return <SymbolList layerData={this.state.layerData}/>
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1052,41 +1065,21 @@ export default class ToolBar extends React.Component {
   }
 
   renderSelectList = () => {
+    let list
+    switch (this.state.layerData.type){
+      case 1:
+        list = point
+        break
+      case 3:
+        list = line
+        break
+      case 5:
+        list = region
+        break
+    }
     return (
       <FlatList
-        data={[
-          {
-            key: '符号线',
-            action: () => {
-              this.menu()
-              this.setState({
-                buttons: [
-                  ToolbarBtnType.CANCEL,
-                  ToolbarBtnType.MENU,
-                  ToolbarBtnType.FLEX,
-                ],
-              })
-            },
-          },
-          {
-            key: '线宽',
-            action: () => {
-              this.setState({
-                isTouchProgress: true,
-                isSelectlist: false,
-                buttons: [
-                  ToolbarBtnType.CANCEL,
-                  ToolbarBtnType.MENUS,
-                  ToolbarBtnType.PLACEHOLDER,
-                ],
-              })
-            },
-          },
-          {
-            key: '颜色',
-            action: () => {},
-          },
-        ]}
+        data={list}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => item.action(item)}>
             <Text style={styles.item}>{item.key}</Text>
@@ -1279,8 +1272,9 @@ export default class ToolBar extends React.Component {
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && <TouchProgress />}
+        {this.state.isTouchProgress && this.state.isFullScreen && (
+          <TouchProgress layerData={this.state.layerData} selectName={this.state.selectName}/>
+        )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
             {this.renderSelectList()}

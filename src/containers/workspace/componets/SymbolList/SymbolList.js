@@ -7,6 +7,7 @@ import { SMSymbolTable, SMap, SCartography } from 'imobile_for_reactnative'
 export default class SymbolList extends React.Component {
   props: {
     setCurrentSymbol?: () => {},
+    layerData:Object,
   }
 
   constructor(props) {
@@ -17,19 +18,56 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
-    SCartography.setLineSymbolIDByIndex(data.id, 1)
-    SCartography.setLineSymbolIDByIndex(data.id, 2)
-    SCartography.setLineSymbolIDByIndex(data.id, 3)
+    if(this.props.layerData.type===3){
+      SCartography.setLineSymbolID(data.id, this.props.layerData.caption)}
+    if(this.props.layerData.type===1){
+      SCartography.setMakerSymbolID(data.id, this.props.layerData.caption)
+    }
+    if(this.props.layerData.type===5){
+      SCartography.setFillSymbolID(data.id, this.props.layerData.caption)
+    }
+  }
+
+  componentDidUpdate(prevProps){
+    if (JSON.stringify(prevProps.layerData.type) !== JSON.stringify(this.props.layerData.type)) {
+      this.renderLibrary()
+    }
   }
 
   componentDidMount() {
-    SMap.findSymbolsByGroups('line', '').then(result => {
-      let symbols = []
-      result.forEach(item => {
-        symbols.push(item.id)
-      })
-      this.setState({ data: symbols })
-    })
+    this.renderLibrary()
+  }
+
+  renderLibrary  = () =>{
+    switch (this.props.layerData.type){
+      case 3:
+        SMap.findSymbolsByGroups('line', '').then(result => {
+          let symbols = []
+          result.forEach(item => {
+            symbols.push(item.id)
+          })
+          this.setState({ layerData: this.props.layerData,data: symbols })
+        })
+        break
+      case 1:
+        SMap.findSymbolsByGroups('point', '').then(result => {
+          let symbols = []
+          result.forEach(item => {
+            symbols.push(item.id)
+          })
+          this.setState({ layerData: this.props.layerData,data: symbols })
+        })
+        break
+      case 5:
+        SMap.findSymbolsByGroups('fill', '').then(result => {
+          let symbols = []
+          result.forEach(item => {
+            symbols.push(item.id)
+          })
+          this.setState({ layerData: this.props.layerData,data: symbols })
+        })
+        break
+    }
   }
 
   render() {
