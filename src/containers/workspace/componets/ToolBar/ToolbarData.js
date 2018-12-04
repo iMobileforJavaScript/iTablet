@@ -30,7 +30,7 @@ function getTabBarData(type, params = {}) {
     tabBarData = getEditData(type)
   } else if (type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
-  } else if (type === ConstToolType.MAP_MORE) {
+  } else if (type.indexOf('MAP_MORE') > -1) {
     tabBarData = MoreData.getMapMore(type, params)
   } else if (type === ConstToolType.MAP_START) {
     tabBarData = getStart(type)

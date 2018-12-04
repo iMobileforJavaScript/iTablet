@@ -141,9 +141,14 @@ export default class WorkSpaceFileList extends Component {
           try {
             this.container && this.container.setLoading(true, '正在打开地图')
             let data = { server: path }
+            await SScene.removeKMLOfWorkcspace()
             let result = await SScene.openWorkspace(data)
             let mapList = await SScene.getMapList()
             result && (await SScene.openMap(mapList[0].name))
+            SScene.setListener().then(() => {
+              SScene.getAttribute()
+              SScene.setCircleFly()
+            })
             NavigationService.goBack() && this.container.setLoading(false)
           } catch (error) {
             Toast.show('打开失败')
@@ -152,122 +157,19 @@ export default class WorkSpaceFileList extends Component {
           break
 
         default:
-          try {
-            this.container && this.container.setLoading(true, '正在打开地图')
-            let data = { server: path }
-            let result = await SScene.openWorkspace(data)
-            let mapList = await SScene.getMapList()
-            result && (await SScene.openMap(mapList[0].name))
-            NavigationService.goBack() && this.container.setLoading(false)
-          } catch (error) {
-            Toast.show('打开失败')
-            this.container.setLoading(false)
-          }
+          // try {
+          //   this.container && this.container.setLoading(true, '正在打开地图')
+          //   let data = { server: path }
+          //   let result = await SScene.openWorkspace(data)
+          //   let mapList = await SScene.getMapList()
+          //   result && (await SScene.openMap(mapList[0].name))
+          //   NavigationService.goBack() && this.container.setLoading(false)
+          // } catch (error) {
+          //   Toast.show('打开失败')
+          //   this.container.setLoading(false)
+          // }
           break
       }
-
-      // if (this.workspace && this.need === 'workspace') {
-      //   this.clearData()
-      //   let key = ''
-      //   let routes = this.props.nav.routes
-      //   for (let index = 0; index < routes.length; index++) {
-      //     if (routes[index].routeName === 'MapView') {
-      //       key = index === routes.length - 1 ? '' : routes[index + 1].key
-      //     }
-      //   }
-      //   await this.map.close()
-      //   await this.workspace.closeAllDatasource()
-      //   let WorkspaceConnectionInfoModule = new WorkspaceConnectionInfo()
-      //   let workspaceCOnnectionInfo = await WorkspaceConnectionInfoModule.createJSObj()
-      //   // let openpath = await Utility.appendingHomeDirectory(path)
-      //   await workspaceCOnnectionInfo.setServer(path)
-      //   await workspaceCOnnectionInfo.setType(WorkspaceType.SMWU)
-      //   await this.workspace.open(workspaceCOnnectionInfo)
-      //   await this.map.setWorkspace(this.workspace)
-
-      //   let maps = await this.workspace.getMaps()
-      //   let count = await maps.getCount()
-      //   if (count > 0) {
-      //     this.mapName = await this.workspace.getMapName(0)
-      //     await this.map.open(this.mapName)
-      //     await this.map.viewEntire()
-      //   }
-      //   // await this.mapControl.setAction(Action.SELECT)
-      //   await this.mapControl.setAction(Action.PAN)
-      //   await this.map.refresh()
-      //   NavigationService.goBack(key)
-      // }
-      // else if(type==="map3D"&&this.workspace&&this.need === 'workspace'){
-      //   this.clearData()
-      //   let key = ''
-      //   let routes = this.props.nav.routes
-      //   for (let index = 0; index < routes.length; index++) {
-      //     if (routes[index].routeName === 'Map3D') {
-      //       key = index === routes.length - 1 ? '' : routes[index + 1].key
-      //     }
-      //   }
-      //   let workspaceModule = new Workspace()
-      //   this.workspace = await workspaceModule.createObj()   //创建workspace实例
-      //   this.scene = await GLOBAL.sceneControl.getScene()      //获取场景对象
-      //   await this.scene.setWorkspace(this.workspace)        //设置工作空间
-      //   // let filePath = await Utility.appendingHomeDirectory(this.state.path)
-      //   let openWk = await this.workspace.open(path)     //打开工作空间
-      //   if (!openWk) {
-      //     Toast.show(" 打开工作空间失败")
-      //     return
-      //   }
-      //   this.mapName = await this.workspace.getSceneName(0) //获取场景名称
-      //   this.setState({
-      //     title: this.mapName,
-      //   })
-      //   await this.scene.open(this.mapName)                     //根据名称打开指定场景
-      //   await this.scene.refresh()
-      //   NavigationService.goBack(key)                           //刷新场景
-      // }
-      // else if (this.workspace && this.need === 'udb') {
-      //   this.clearData()
-      //   await this.map.close()
-      //   await this.workspace.closeAllDatasource()
-      //   let key = ''
-      //   let routes = this.props.nav.routes
-      //   for (let index = 0; index < routes.length; index++) {
-      //     if (routes[index].routeName === 'MapView') {
-      //       key = index === routes.length - 1 ? '' : routes[index + 1].key
-      //     }
-      //   }
-
-      // const point2dModule = new Point2D()
-      // navigator.geolocation.getCurrentPosition(
-      //   position => {
-      //     let lat = position.coords.latitude
-      //     let lon = position.coords.longitude
-      //     ;(async () => {
-      //       let centerPoint = await point2dModule.createObj(lon, lat)
-      //       await this.map.setCenter(centerPoint)
-      //       await this.map.viewEntire()
-      //       await this.mapControl.setAction(Action.PAN)
-      //       await this.map.refresh()
-      //       key && NavigationService.goBack(key)
-      //     }).bind(this)()
-      //   }
-      // )
-
-      // this.DSParams = { server: path, engineType: EngineType.UDB }
-      // let layerIndex = 0
-      // let dsBaseMap = await this.workspace.openDatasource(this.DSParams)
-      // let dataset = await dsBaseMap.getDataset(layerIndex)
-      // await this.map.addLayer(dataset, true)
-      //   await this.workspace.openDatasource(this.DSParams)
-      //   await this.map.viewEntire()
-      //   await this.mapControl.setAction(Action.PAN)
-      //   await this.map.refresh()
-      //   key && NavigationService.goBack(key)
-      // } else {
-      //   if(type==="map3D"){
-      //     NavigationService.navigate('Map3D', { path: path, isExample: true })
-      //   }
-      //   NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
-      // }
     }.bind(this)())
   }
 

@@ -4,6 +4,7 @@
 import { SMap } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
 import { ConstToolType, ConstInfo } from '../../../../constants'
+import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 
 let _params = {}
@@ -12,42 +13,88 @@ function getMapMore(type, params) {
   let data = [],
     buttons = []
   _params = params
-  if (type !== ConstToolType.MAP_MORE) return { data, buttons }
-  data = [
-    {
-      key: constants.CLOSE,
-      title: constants.CLOSE,
-      action: closeMap,
-      size: 'large',
-      image: require('../../../../assets/mapTools/icon_point.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-    },
-    {
-      key: constants.SAVE,
-      title: constants.SAVE,
-      size: 'large',
-      // TODO 保存地图
-      action: () => saveMap('TempMap'),
-      image: require('../../../../assets/mapTools/icon_words.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-    },
-    {
-      key: constants.SAVE_AS,
-      title: constants.SAVE_AS,
-      size: 'large',
-      action: saveMapAs,
-      image: require('../../../../assets/mapTools/icon_point_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-    },
-    {
-      key: constants.SHARE,
-      title: constants.SHARE,
-      size: 'large',
-      action: shareMap,
-      image: require('../../../../assets/mapTools/icon_free_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-    },
-  ]
+  switch (type) {
+    case 'MAP_MORE_MAP3D':
+      data = [
+        {
+          key: constants.OPEN,
+          title: constants.OPEN,
+          action: () => {
+            if (!_params.setToolbarVisible) return
+            _params.setToolbarVisible(false)
+            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+          },
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: constants.SAVE,
+          title: constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => {},
+          image: require('../../../../assets/mapTools/icon_words.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        },
+        {
+          key: constants.SHARE,
+          title: constants.SHARE,
+          size: 'large',
+          action: () => {},
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+        {
+          key: constants.CLOSE,
+          title: constants.CLOSE,
+          action: closeMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+      ]
+      break
+
+    default:
+      data = [
+        {
+          key: constants.CLOSE,
+          title: constants.CLOSE,
+          action: closeMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: constants.SAVE,
+          title: constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => saveMap('TempMap'),
+          image: require('../../../../assets/mapTools/icon_words.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        },
+        {
+          key: constants.SAVE_AS,
+          title: constants.SAVE_AS,
+          size: 'large',
+          action: saveMapAs,
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
+        {
+          key: constants.SHARE,
+          title: constants.SHARE,
+          size: 'large',
+          action: shareMap,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+      ]
+      break
+  }
+
   return { data, buttons }
 }
 

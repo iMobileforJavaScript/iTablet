@@ -803,9 +803,10 @@ export default class ToolBar extends React.Component {
     // else if (type.indexOf('MAP_EDIT_') >= 0) {
     //   SMap.setAction(Action.PAN)
     // }
-    SMap.setAction(Action.PAN)
+    if (type.indexOf('MAP_') >= -1) {
+      SMap.setAction(Action.PAN)
+    }
     GLOBAL.currentToolbarType = ''
-
     this.showToolbar(false)
     this.setState({ isTouchProgress: false })
     this.props.existFullMap && this.props.existFullMap()
@@ -900,7 +901,7 @@ export default class ToolBar extends React.Component {
     })
   }
 
-  clearattribute = () => {
+  clearAttribute = () => {
     SScene.clearSelection()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
