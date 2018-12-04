@@ -2,12 +2,12 @@ import React, { Component } from 'react'
 import { View, FlatList, Text } from 'react-native'
 import Container from '../../../../components/Container'
 import RenderServiceItem from './RenderServiceItem'
+import { SOnlineService } from 'imobile_for_reactnative'
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
  * */
 let _strServiceList
 let _strDataList
-let _objOnlineService
 let _objServiceNameAndFileName
 let _objMapTitleAndRestTitle
 let _arrMaps = []
@@ -27,7 +27,9 @@ export default class MyService extends Component {
         mapArr: [],
       }
     }
-    _objOnlineService = this.props.navigation.getParam('objOnlineService', {})
+    this._arrIsDownloadings = []
+    this._arrDownloadingProgresses = []
+    this.downloadListener = {}
     this.loadOnlineDataAndService(1, 20)
   }
 
@@ -35,11 +37,8 @@ export default class MyService extends Component {
     if (_strDataList !== undefined && _strServiceList !== undefined) {
       return
     }
-    _strDataList = await _objOnlineService.getDataList(currentPage, pageSize)
-    _strServiceList = await _objOnlineService.getServiceList(
-      currentPage,
-      pageSize,
-    )
+    _strDataList = await SOnlineService.getDataList(currentPage, pageSize)
+    _strServiceList = await SOnlineService.getServiceList(currentPage, pageSize)
     // 构建{serviceName:fileName}字符串,可通过服务名找到对应的数据名称
     let dataContent = JSON.parse(_strDataList).content
     let serviceNameAndFileName = '{'
@@ -68,6 +67,7 @@ export default class MyService extends Component {
     }
     serviceNameAndFileName = serviceNameAndFileName + '}'
     _objServiceNameAndFileName = JSON.parse(serviceNameAndFileName)
+
     let arrPublishMaps = []
     // 1.存入地图数据
     // 2.构建{mapTile:restTile}字符串，可通过地图名称找到对应的服务名称
@@ -103,17 +103,36 @@ export default class MyService extends Component {
     mapTileAndRestTitle = mapTileAndRestTitle + '}'
     _objMapTitleAndRestTitle = JSON.parse(mapTileAndRestTitle)
 
+    for (let i = 0; i < _arrMaps.length; i++) {
+      this._arrIsDownloadings.push(false)
+      this._arrDownloadingProgresses.push('')
+    }
+
+    // if (Platform.OS === 'ios') {
+    //   let callBackIos = SOnlineService.objCallBack()
+    //   this.downloadListener = callBackIos.addListener('com.supermap.RN.Mapcontrol.online_service_downloading', obj => {
+    //     // let index = _arrMaps.indexOf(obj.id);
+    //     let index = 1
+    //     this._arrIsDownloadings[index] = true
+    //     let result = ''
+    //     let progress = obj.progress
+    //     result = '下载' + progress.toFixed(0) + "%"
+    //     this._arrDownloadingProgresses[index] = result
+    //
+    //   })
+    // }
     this.setState({ mapArr: _arrMaps })
     // this._publishMaps(arrPublishMaps);
+  }
+
+  componentWillUnmount() {
+    // this.downloadListener.romove()
   }
 
   _publishMaps = async arrPublishMaps => {
     for (let i = 0; i < arrPublishMaps.length; i++) {
       let restTitle = arrPublishMaps[i]
-      let result = await _objOnlineService.changeServiceVisibility(
-        restTitle,
-        true,
-      )
+      let result = await SOnlineService.changeServiceVisibility(restTitle, true)
       if (typeof result === 'boolean' && result === true) {
         _arrPublishMaps.push(restTitle)
       }
@@ -149,15 +168,15 @@ export default class MyService extends Component {
           <View style={{ flex: 1 }}>
             <FlatList
               data={this.state.mapArr}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <RenderServiceItem
                   mapName={item.mapTitle}
                   imageUrl={item.mapThumbnail}
                   sharedMapUrl={item.mapUrl}
-                  objOnlineService={_objOnlineService}
                   serviceNameAndFileName={_objServiceNameAndFileName}
                   mapTileAndRestTitle={_objMapTitleAndRestTitle}
-                  isDownloading={false}
+                  isDownloading={this._arrIsDownloadings[index]}
+                  downloadProgress={this._arrDownloadingProgresses[index]}
                 />
               )}
             />

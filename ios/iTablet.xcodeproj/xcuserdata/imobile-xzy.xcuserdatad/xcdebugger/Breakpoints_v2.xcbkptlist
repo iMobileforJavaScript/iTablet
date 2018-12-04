@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ccba07882131152f23f600ba80e1dafd7f696bac
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
    type = "1"
@@ -386,6 +389,7 @@
             endingLineNumber = "139"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
+<<<<<<< HEAD
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -433,6 +437,8 @@
                   offsetFromSymbolStart = "572">
                </Location>
             </Locations>
+=======
+>>>>>>> ccba07882131152f23f600ba80e1dafd7f696bac
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -481,6 +487,7 @@
             endingLineNumber = "258"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
+<<<<<<< HEAD
             <Locations>
                <Location
                   shouldBeEnabled = "Yes"
@@ -528,6 +535,8 @@
                   offsetFromSymbolStart = "596">
                </Location>
             </Locations>
+=======
+>>>>>>> ccba07882131152f23f600ba80e1dafd7f696bac
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -770,6 +779,7 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+<<<<<<< HEAD
    </Breakpoints>
 </Bucket>
 =======
@@ -1547,3 +1557,71 @@
    </Breakpoints>
 </Bucket>
 >>>>>>> ed79e201494325a01eaa270547a31e63c591d8b4
+=======
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
+            timestampString = "565263583.62657"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "430"
+            endingLineNumber = "430"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
+            timestampString = "565263583.626999"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "477"
+            endingLineNumber = "477"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
+            timestampString = "565263583.627275"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "469"
+            endingLineNumber = "469"
+            landmarkName = "RCT_REMAP_METHOD"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../../../../sourceCode/UGC/Src/Scene/UGLayer3Ds.cpp"
+            timestampString = "565263223.66536"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1945"
+            endingLineNumber = "1945"
+            landmarkName = "UGLayer3Ds::AddLayer(UGLayerURLParameter&amp; urlParam)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
+>>>>>>> ccba07882131152f23f600ba80e1dafd7f696bac

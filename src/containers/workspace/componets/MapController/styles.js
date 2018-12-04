@@ -38,7 +38,7 @@ export default StyleSheet.create({
     width: scaleSize(50),
     height: scaleSize(50),
     borderRadius: scaleSize(4),
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
     marginBottom: scaleSize(20),
   },
   shadow: {

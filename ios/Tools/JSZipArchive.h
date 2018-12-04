@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "React/RCTBridgeModule.h"
-#import "ZipArchive.h"
+#import <ZipArchive/ZipArchive.h>
 
 @interface JSZipArchive : NSObject<RCTBridgeModule>
 

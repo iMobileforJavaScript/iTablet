@@ -15,7 +15,6 @@
 #import "SuperMap/ChartLegend.h"
 #import "SuperMap/ChartData.h"
 #import "SuperMap/Color.h"
-#import "ZipArchive.h"
 #import "SuperMap/Toast.h"
 #import <objc/runtime.h>
 

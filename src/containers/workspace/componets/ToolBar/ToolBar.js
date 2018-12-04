@@ -6,7 +6,11 @@ import {
   ConstToolType,
   ConstPath,
   BotMap,
+  line,
+  point,
+  region,
   layerAdd,
+  openData,
   Map3DBaseMapList,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -37,6 +41,8 @@ import {
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
+
+import jsonUtil from '../../../../utils/jsonUtil'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -105,6 +111,8 @@ export default class ToolBar extends React.Component {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
+      layerData: Object,
+      selectName: '',
     }
     this.isShow = false
     this.isBoxShow = true
@@ -128,10 +136,15 @@ export default class ToolBar extends React.Component {
     return this.type
   }
 
+  showFullMap = () => {
+    this.props.showFullMap && this.props.showFullMap(true)
+  }
+
   getData = type => {
     let data, buttons, toolbarData
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type, {
+      user: this.props.user,
       setToolbarVisible: this.setVisible,
       showFullMap: this.props.showFullMap,
       addGeometrySelectedListener: this.props.addGeometrySelectedListener,
@@ -157,8 +170,25 @@ export default class ToolBar extends React.Component {
         data = layerAdd
         buttons = [ToolbarBtnType.CANCEL]
         break
-      case ConstToolType.MAP_SYMBOL:
+      case ConstToolType.MAP_OPEN:
+        //读取目录下UDB文件名和MAP文件名
+        //
+        // (async function() {
+        //   //获取目录下的xml文件
+        //   let absolutePath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)
+        //   let fileList = await Utility.getPathListByFilter(absolutePath, {
+        //     type: 'xml',
+        //   })
+        //   this.setState({
+        //     data: fileList,
+        //     showData: true,
+        //   })
+        // }.bind(this))
+        data = openData
         buttons = [ToolbarBtnType.CANCEL]
+        break
+      case ConstToolType.MAP_SYMBOL:
+        // buttons = [ToolbarBtnType.CANCEL]
         break
       // 第一级采集选项
       case ConstToolType.MAP_COLLECTION_POINT:
@@ -709,12 +739,14 @@ export default class ToolBar extends React.Component {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
     }
+    if (!params.layerData) params.layerData = []
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column
+      params.column !== this.state.column ||
+      params.layerData !== this.state.layerData
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
@@ -724,9 +756,11 @@ export default class ToolBar extends React.Component {
           : ConstToolType.HEIGHT[1]
       this.setState(
         {
+          isSelectlist: false,
           type: type,
           tableType: params.tableType || 'normal',
           data: data,
+          layerData: params.layerData,
           buttons: buttons,
           isFullScreen:
             params && params.isFullScreen !== undefined
@@ -778,12 +812,16 @@ export default class ToolBar extends React.Component {
     // 关闭采集, type 为number时为采集类型，若有冲突再更改
     if (typeof type === 'number' || type.indexOf('MAP_COLLECTION_') >= 0) {
       SCollector.stopCollect()
-    } else if (type.indexOf('MAP_EDIT_') >= 0) {
+    }
+    // else if (type.indexOf('MAP_EDIT_') >= 0) {
+    //   SMap.setAction(Action.PAN)
+    // }
+    if (type.indexOf('MAP_') >= -1) {
       SMap.setAction(Action.PAN)
     }
-
+    GLOBAL.currentToolbarType = ''
     this.showToolbar(false)
-    this.setState({ isTouchProgress: false })
+    this.setState({ isTouchProgress: false, isSelectlist: false })
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -852,7 +890,7 @@ export default class ToolBar extends React.Component {
   }
 
   commit = (type = this.originType) => {
-    this.showToolbar()
+    this.showToolbar(false)
     if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
@@ -866,6 +904,14 @@ export default class ToolBar extends React.Component {
       duration: 300,
     }).start()
     this.isBoxShow = !this.isBoxShow
+  }
+
+  showSymbol = () => {
+    this.props.showFullMap && this.props.showFullMap(true)
+    this.setVisible(true, ConstToolType.MAP_SYMBOL, {
+      isFullScreen: true,
+      height: ConstToolType.HEIGHT[3],
+    })
   }
 
   clearAttribute = () => {
@@ -920,6 +966,7 @@ export default class ToolBar extends React.Component {
     SScene.setPosition(index)
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
   }
+
   renderListItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -963,8 +1010,48 @@ export default class ToolBar extends React.Component {
         }
         await SMap.openDatasource(udbpath, index)
       }.bind(this)())
+    } else if (this.state.type == ConstToolType.MAP_OPEN) {
+      NavigationService.navigate('WorkspaceFlieList', {
+        cb: async path => {
+          //提示是否保存
+
+          this.path = path
+          let filename = this.path
+            .substr(this.path.lastIndexOf('.'))
+            .toLowerCase()
+
+          if (filename === '.xml') {
+            //获取数据源
+            let udbfile = this.path.substr(this.path.lastIndexOf('/') + 1)
+
+            let udbfilepath = this.path
+              .substr(0, this.path.lastIndexOf('/') + 1)
+              .toLowerCase()
+
+            let udbdata = {}
+            let data = await jsonUtil.getMapDatasource(udbfile)
+            for (let i = 0; i < data.length; i++) {
+              if (data[i].mapName === udbfile) {
+                udbdata = data[i].UDBName
+              }
+            }
+            for (let j = 0; j < udbdata.length; j++) {
+              let udbpath = {
+                server: udbfilepath + udbdata[j],
+                alias: udbdata[j].substr(0, udbdata[j].lastIndexOf('.')),
+                engineType: 219,
+              }
+              await SMap.openDatasource(udbpath, -1)
+            }
+
+            await SMap.closeMap()
+            await SMap.openMapFromXML(path)
+          }
+        },
+      })
     }
   }
+
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -1022,7 +1109,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderSymbol = () => {
-    return <SymbolList />
+    return <SymbolList layerData={this.state.layerData} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1053,41 +1140,21 @@ export default class ToolBar extends React.Component {
   }
 
   renderSelectList = () => {
+    let list
+    switch (this.state.layerData.type) {
+      case 1:
+        list = point
+        break
+      case 3:
+        list = line
+        break
+      case 5:
+        list = region
+        break
+    }
     return (
       <FlatList
-        data={[
-          {
-            key: '符号线',
-            action: () => {
-              this.menu()
-              this.setState({
-                buttons: [
-                  ToolbarBtnType.CANCEL,
-                  ToolbarBtnType.MENU,
-                  ToolbarBtnType.FLEX,
-                ],
-              })
-            },
-          },
-          {
-            key: '线宽',
-            action: () => {
-              this.setState({
-                isTouchProgress: true,
-                isSelectlist: false,
-                buttons: [
-                  ToolbarBtnType.CANCEL,
-                  ToolbarBtnType.MENUS,
-                  ToolbarBtnType.PLACEHOLDER,
-                ],
-              })
-            },
-          },
-          {
-            key: '颜色',
-            action: () => {},
-          },
-        ]}
+        data={list}
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => item.action(item)}>
             <Text style={styles.item}>{item.key}</Text>
@@ -1228,18 +1295,15 @@ export default class ToolBar extends React.Component {
             SCollector.stopCollect()
             this.setVisible(true, this.lastType, {
               isFullScreen: false,
-              // height: ConstToolType.HEIGHT[0],
+              height: ConstToolType.HEIGHT[0],
             })
           }
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapEdit/icon-rename-white.png')
           action = () => {
-            SCollector.stopCollect()
-            this.setVisible(true, this.lastType, {
-              isFullScreen: true,
-              column: 4,
-              height: ConstToolType.HEIGHT[3],
+            NavigationService.navigate('layerSelectionAttribute', {
+              type: 'singleAttribute',
             })
           }
           break
@@ -1281,7 +1345,12 @@ export default class ToolBar extends React.Component {
           />
         )}
         {this.state.isTouchProgress &&
-          this.state.isFullScreen && <TouchProgress />}
+          this.state.isFullScreen && (
+          <TouchProgress
+            layerData={this.state.layerData}
+            selectName={this.state.selectName}
+          />
+        )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
             {this.renderSelectList()}
