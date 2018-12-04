@@ -3,9 +3,7 @@ import { View, Text, Image } from 'react-native'
 import { Container, Button } from '../../components'
 import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import {
-  SOnlineService,
-} from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Personal extends Component {
@@ -15,8 +13,8 @@ export default class Personal extends Component {
     setUser: () => {},
   }
 
-  constructor(props){
-    super(props);
+  constructor(props) {
+    super(props)
   }
 
   logout = () => {
