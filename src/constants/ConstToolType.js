@@ -44,6 +44,7 @@ export default {
 
   MAP_STYLE: 'MAP_STYLE',
   MAP_START: 'MAP_START',
+  MAP_CHANGE: 'MAP_CHANGE',
 
   //Map3D
   MAP3D_BASE: 'MAP3D_BASE',

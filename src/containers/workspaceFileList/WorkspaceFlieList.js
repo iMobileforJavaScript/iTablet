@@ -110,6 +110,7 @@ export default class WorkSpaceFileList extends Component {
         } else {
           let filter
           switch (this.type) {
+            case 'WORKSPACE':
             case 'MAP_3D':
               filter = 'sxwu,smwu'
               break
@@ -137,33 +138,11 @@ export default class WorkSpaceFileList extends Component {
   _toLoadMapView = (path, type) => {
     (async function() {
       switch (type) {
-        case 'sxwu':
-          try {
-            this.container && this.container.setLoading(true, '正在打开地图')
-            let data = { server: path }
-            let result = await SScene.openWorkspace(data)
-            let mapList = await SScene.getMapList()
-            result && (await SScene.openMap(mapList[0].name))
-            NavigationService.goBack() && this.container.setLoading(false)
-          } catch (error) {
-            Toast.show('打开失败')
-            this.container.setLoading(false)
-          }
+        case 'MAP_3D':
+          this._loadMap3D(path, type)
           break
-
         default:
-          try {
-            this.container && this.container.setLoading(true, '正在打开地图')
-            let data = { server: path }
-            let result = await SScene.openWorkspace(data)
-            let mapList = await SScene.getMapList()
-            result && (await SScene.openMap(mapList[0].name))
-            NavigationService.goBack() && this.container.setLoading(false)
-          } catch (error) {
-            Toast.show('打开失败')
-            this.container.setLoading(false)
-          }
-          break
+          this.cb && this.cb(path)
       }
 
       // if (this.workspace && this.need === 'workspace') {
@@ -269,6 +248,37 @@ export default class WorkSpaceFileList extends Component {
       //   NavigationService.navigate('MapView', { path: path, type: type, DSParams: type === EngineType.UDB && { server: path, engineType: EngineType.UDB } })
       // }
     }.bind(this)())
+  }
+
+  _loadMap3D = async (path, type) => {
+    switch (type) {
+      case 'sxwu':
+        try {
+          this.container && this.container.setLoading(true, '正在打开地图')
+          let data = { server: path }
+          let result = await SScene.openWorkspace(data)
+          let mapList = await SScene.getMapList()
+          result && (await SScene.openMap(mapList[0].name))
+          NavigationService.goBack() && this.container.setLoading(false)
+        } catch (error) {
+          Toast.show('打开失败')
+          this.container.setLoading(false)
+        }
+        break
+      default:
+        try {
+          this.container && this.container.setLoading(true, '正在打开地图')
+          let data = { server: path }
+          let result = await SScene.openWorkspace(data)
+          let mapList = await SScene.getMapList()
+          result && (await SScene.openMap(mapList[0].name))
+          NavigationService.goBack() && this.container.setLoading(false)
+        } catch (error) {
+          Toast.show('打开失败')
+          this.container.setLoading(false)
+        }
+        break
+    }
   }
 
   _refresh = async item => {

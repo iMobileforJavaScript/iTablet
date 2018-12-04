@@ -19,6 +19,8 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
+  SaveView,
+  AlertDialog,
 } from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
@@ -28,14 +30,19 @@ import {
   MTBtn,
   UsualTitle,
   Dialog,
+  SaveMapNameDialog,
+  SaveDialog,
 } from '../../../../components'
 import { Toast, AudioAnalyst, scaleSize, jsonUtil } from '../../../../utils'
-import { ConstPath, Const, ConstToolType } from '../../../../constants'
+import {
+  ConstPath,
+  Const,
+  ConstToolType,
+  ConstInfo,
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
-import AlertDialog from '../../componets/AlertDialog/alertDialog'
-import SaveMapNameDialog from '../../../mtLayerManager/components/SaveMapNameDialog/SaveMapNameDialog'
 
 // 数组的第一个为DrawerView的默认高度
 const LVL_0 = [scaleSize(280)]
@@ -93,6 +100,7 @@ export default class MapView extends React.Component {
           wsName.substring(0, wsName.lastIndexOf('.'))
 
     this.state = {
+      showMap: false, // 控制地图初始化显示
       data: params.data,
       popShow: false, //  一级popView显示控制
       popType: '',
@@ -140,6 +148,9 @@ export default class MapView extends React.Component {
 
   componentDidMount() {
     this.container && this.container.setLoading(true, '地图加载中')
+    this.setState({
+      showMap: true,
+    })
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
@@ -568,34 +579,39 @@ export default class MapView extends React.Component {
     Toast.show('功能待完善')
   }
   // 地图保存
-  saveMap = async (cb = () => {}) => {
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      // if (this.map.isModified() && this.type !== "ONLINE" ) {
-      if (this.map.isModified() && this.type !== 'ONLINE') {
-        if (this.type && this.type === 'LOCAL') {
-          try {
-            let saveMap = await this.map.save()
-            let saveWs = await this.workspace.saveWorkspace()
-            if (!saveMap || !saveWs) {
-              Toast.show('保存失败')
-            } else {
-              Toast.show('保存成功')
-              cb && cb()
-            }
-          } catch (e) {
-            Toast.show('保存失败')
-          }
-        } else {
-          await this.saveDialog.setDialogVisible(true)
-        }
-      } else {
-        this.closeWorkspace(() =>
-          NavigationService.goBack(this.props.nav.routes[1].key),
-        )
-      }
-    }
+  saveMap = (name = '') => {
+    SMap.saveMap(name).then(result => {
+      Toast.show(
+        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      )
+    })
+    // if (this.setting && this.setting.isVisible()) {
+    //   this.setting.close()
+    // } else {
+    //   // if (this.map.isModified() && this.type !== "ONLINE" ) {
+    //   if (this.map.isModified() && this.type !== 'ONLINE') {
+    //     if (this.type && this.type === 'LOCAL') {
+    //       try {
+    //         let saveMap = await this.map.save()
+    //         let saveWs = await this.workspace.saveWorkspace()
+    //         if (!saveMap || !saveWs) {
+    //           Toast.show('保存失败')
+    //         } else {
+    //           Toast.show('保存成功')
+    //           cb && cb()
+    //         }
+    //       } catch (e) {
+    //         Toast.show('保存失败')
+    //       }
+    //     } else {
+    //       await this.saveDialog.setDialogVisible(true)
+    //     }
+    //   } else {
+    //     this.closeWorkspace(() =>
+    //       NavigationService.goBack(this.props.nav.routes[1].key),
+    //     )
+    //   }
+    // }
   }
   // 地图保存为xml(fileName, cb)
   saveMapToXML = mapName => {
@@ -975,6 +991,22 @@ export default class MapView extends React.Component {
   }
 
   /**
+   * 下方的保存地图提示组建
+   * @param visible
+   */
+  setSaveViewVisible = visible => {
+    this.SaveMapView && this.SaveMapView.setVisible(visible)
+  }
+
+  /**
+   * 中间弹出的保存地图组建
+   * @param visible
+   */
+  setSaveMapDialogVisible = visible => {
+    this.SaveMapDialog && this.SaveMapDialog.setDialogVisible(visible)
+  }
+
+  /**
    * 点击顶部打开展示的地图加载
    * @returns {XML}
    */
@@ -1107,6 +1139,9 @@ export default class MapView extends React.Component {
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         showFullMap={this.showFullMap}
+        setSaveViewVisible={this.setSaveViewVisible}
+        setSaveMapDialogVisible={this.setSaveMapDialogVisible}
+        setContainerLoading={this.setLoading}
       />
     )
   }
@@ -1130,28 +1165,16 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        <SMMapView
-          ref={ref => (GLOBAL.mapView = ref)}
-          style={styles.map}
-          onGetInstance={this._onGetInstance}
-        />
+        {this.state.showMap && (
+          <SMMapView
+            ref={ref => (GLOBAL.mapView = ref)}
+            style={styles.map}
+            onGetInstance={this._onGetInstance}
+          />
+        )}
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
-        {/*<TouchableOpacity*/}
-        {/*onPress={() => {*/}
-        {/*SMap.getLayers()*/}
-        {/*}}*/}
-        {/*style={{*/}
-        {/*position: 'absolute',*/}
-        {/*width: 80,*/}
-        {/*height: 80,*/}
-        {/*left: 20,*/}
-        {/*top: 120,*/}
-        {/*backgroundColor: 'red',*/}
-        {/*zIndex: 10000,*/}
-        {/*}}*/}
-        {/*/>*/}
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
@@ -1181,6 +1204,16 @@ export default class MapView extends React.Component {
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
           Alerttitle={'是否保存当前地图'}
+        />
+        <SaveView
+          ref={ref => (this.SaveMapView = ref)}
+          save={this.saveMap}
+          action={() => {}}
+        />
+        <SaveDialog
+          ref={ref => (this.SaveMapDialog = ref)}
+          confirmAction={data => this.saveMap(data.mapName)}
+          type="normal"
         />
         {/*<Dialog*/}
         {/*ref={ref => (this.openDialog = ref)}*/}

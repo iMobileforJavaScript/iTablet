@@ -87,7 +87,7 @@ async function shareToSuperMapOnline() {
       ConstPath.CustomerPath + 'Customer.zip',
     )
     let dataPath = await Utility.appendingHomeDirectory(customerPath)
-    let zipResult = await Utility.zipFile(dataPath, targetPath)
+    let zipResult = await Utility.zipFiles([dataPath], targetPath)
     let uploadResult = false
     if (zipResult) {
       isSharing = true
