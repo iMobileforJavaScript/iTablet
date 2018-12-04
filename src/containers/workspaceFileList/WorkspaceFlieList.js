@@ -137,7 +137,7 @@ export default class WorkSpaceFileList extends Component {
 
   _toLoadMapView = (path, type) => {
     (async function() {
-      switch (type) {
+      switch (this.type) {
         case 'MAP_3D':
           this._loadMap3D(path, type)
           break
