@@ -92,15 +92,17 @@ async function shareToSuperMapOnline() {
     let uploadResult = false
     if (zipResult) {
       isSharing = true
-      uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
-        // onProgress: progress => {
-        //   console.warn(progress)
-        // },
-        onResult: async () => {
-          let result = await SOnlineService.publishService(dataName)
-          isSharing = false
-          Toast.show(result ? '分享成功' : '分享成功')
-        },
+      await SOnlineService.deleteData(dataName).then(async () => {
+        uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
+          // onProgress: progress => {
+          //   console.warn(progress)
+          // },
+          onResult: async () => {
+            let result = await SOnlineService.publishService(dataName)
+            isSharing = false
+            Toast.show(result ? '分享成功' : '分享成功')
+          },
+        })
       })
     }
     return uploadResult

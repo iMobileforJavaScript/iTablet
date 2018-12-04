@@ -817,13 +817,19 @@ export default class ToolBar extends React.Component {
 
   close = (type = this.state.type) => {
     // 关闭采集, type 为number时为采集类型，若有冲突再更改
-    if (typeof type === 'number' || type.indexOf('MAP_COLLECTION_') >= 0) {
+    if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
+    ) {
       SCollector.stopCollect()
     }
     // else if (type.indexOf('MAP_EDIT_') >= 0) {
     //   SMap.setAction(Action.PAN)
     // }
-    if (type.indexOf('MAP_') >= -1) {
+    if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_') >= -1)
+    ) {
       SMap.setAction(Action.PAN)
     }
     GLOBAL.currentToolbarType = ''
