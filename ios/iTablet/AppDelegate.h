@@ -8,6 +8,7 @@
  */
 
 #import <UIKit/UIKit.h>
+#import "FileTools.h"
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 

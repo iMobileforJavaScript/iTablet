@@ -96,11 +96,13 @@ export default class Map3D extends React.Component {
     }
     try {
       let data = { server: this.path }
-      let result = await SScene.openWorkspace(data)
+      let result = await SScene.openWorkspace(data).then
       let mapList = await SScene.getMapList()
-      result && (await SScene.openMap(mapList[0].name))
+      result &&
+        SScene.openMap(mapList[0].name).then(() => {
+          this.initListener()
+        })
       this.container.setLoading(false)
-      await this.initListener()
     } catch (e) {
       this.container.setLoading(false)
     }

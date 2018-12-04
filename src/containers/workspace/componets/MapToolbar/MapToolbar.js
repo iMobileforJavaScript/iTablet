@@ -7,7 +7,7 @@ import constants from '../../constants'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../../containers/NavigationService'
 import MT_Btn from '../../../../components/mapTools/MT_Btn'
-
+// import { SScene, Utility } from 'imobile_for_reactnative'
 // export const MAP_LOCAL = 'MAP_LOCAL'
 // export const MAP_3D = 'MAP_3D'
 
@@ -121,7 +121,10 @@ export default class MapToolbar extends React.Component {
             title: '属性',
             image: require('../../../../assets/mapToolbar/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
-            btnClick: () => {},
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAttribute')
+            },
           },
           {
             key: 'Setting',
@@ -130,6 +133,11 @@ export default class MapToolbar extends React.Component {
             selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
             btnClick: () => {
               // this._map3Dchange()
+              // let file=["/storage/emulated/0/iTablet/data/local/Changchun"]
+              // let toPath="/storage/emulated/0/iTablet/data/local/Changchun.zip"
+              // let path="/storage/emulated/0/iTablet/data"
+              // SScene.doZipFiles(file,toPath)
+              // Utility.unZipFile(toPath,path)
             },
           },
         ]

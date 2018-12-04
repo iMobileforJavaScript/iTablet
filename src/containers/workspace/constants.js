@@ -49,6 +49,7 @@ export default {
   SHARE: '分享',
   START: '开始',
   OPEN: '打开',
+  WORKSPACE: '工作空间',
   CREATE: '新建',
   HISTORY: '历史',
   BASE_MAP: '底图',

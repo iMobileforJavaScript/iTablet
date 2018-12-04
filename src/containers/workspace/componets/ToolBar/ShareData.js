@@ -81,25 +81,28 @@ async function shareToSuperMapOnline() {
       Toast.show('分享中，请稍后')
       return
     }
+    Toast.show('开始分享')
     const dataName = 'Customer'
     const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.Data
     const targetPath = await Utility.appendingHomeDirectory(
       ConstPath.CustomerPath + 'Customer.zip',
     )
     let dataPath = await Utility.appendingHomeDirectory(customerPath)
-    let zipResult = await Utility.zipFile(dataPath, targetPath)
+    let zipResult = await Utility.zipFiles([dataPath], targetPath)
     let uploadResult = false
     if (zipResult) {
       isSharing = true
-      uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
-        // onProgress: progress => {
-        //   console.warn(progress)
-        // },
-        onResult: async () => {
-          let result = await SOnlineService.publishService(dataName)
-          isSharing = false
-          Toast.show(result ? '分享成功' : '分享成功')
-        },
+      await SOnlineService.deleteData(dataName).then(async () => {
+        uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
+          // onProgress: progress => {
+          //   console.warn(progress)
+          // },
+          onResult: async () => {
+            let result = await SOnlineService.publishService(dataName)
+            isSharing = false
+            Toast.show(result ? '分享成功' : '分享成功')
+          },
+        })
       })
     }
     return uploadResult
