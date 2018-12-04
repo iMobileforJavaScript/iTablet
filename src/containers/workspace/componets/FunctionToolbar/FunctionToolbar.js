@@ -267,12 +267,12 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  showMore = async () => {
+  showMore = async type => {
     // this.moreToolbar && this.moreToolbar.showMore(true, e)
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_MORE, {
+      toolRef.setVisible(true, type, {
         isFullScreen: true,
         column: 4,
         height: ConstToolType.HEIGHT[0],
@@ -492,7 +492,9 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.showMore,
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
@@ -590,7 +592,9 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.showMore,
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE)
+            },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]

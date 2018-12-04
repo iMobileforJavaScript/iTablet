@@ -10,8 +10,9 @@ import { Container } from '../../components'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/componets'
 import { Action, SMap } from 'imobile_for_reactnative'
-
 import { LayerManager_item } from './components'
+import { ConstToolType } from '../../constants'
+import NavigationService from '../NavigationService'
 
 export default class MT_layerManager extends React.Component {
   props: {
@@ -311,6 +312,17 @@ export default class MT_layerManager extends React.Component {
       this.props.setCurrentLayer(data, () => {
         Toast.show('当前图层为' + data.caption)
       })
+    if (GLOBAL.Type === ConstToolType.MAP_EDIT) {
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        layerData: data,
+        height: ConstToolType.HEIGHT[2],
+      })
+      GLOBAL.toolBox.showFullMap()
+      NavigationService.goBack()
+    }
   }
 
   getChildList = async ({ data }) => {
@@ -372,7 +384,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderToolBar = () => {
-    // this.props.navigation.navigate()
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
   }
 

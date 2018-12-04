@@ -81,6 +81,7 @@ async function shareToSuperMapOnline() {
       Toast.show('分享中，请稍后')
       return
     }
+    Toast.show('开始分享')
     const dataName = 'Customer'
     const customerPath = ConstPath.CustomerPath + ConstPath.RelativePath.Data
     const targetPath = await Utility.appendingHomeDirectory(

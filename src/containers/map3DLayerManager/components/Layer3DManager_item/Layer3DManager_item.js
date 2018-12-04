@@ -8,7 +8,6 @@ import * as React from 'react'
 import { View, Text, TouchableOpacity, Image } from 'react-native'
 import * as Util from '../../../../utils/constUtil'
 import { SScene } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
 import styles from './styles'
 
 export default class Layer3DManager_item extends React.Component {
@@ -26,20 +25,20 @@ export default class Layer3DManager_item extends React.Component {
     this.state = {
       visible: this.props.visible,
       selectable: this.props.selectable,
-      editable: false,
     }
   }
 
   _editable_change = () => {
-    // this.setState((oldstate)=>{
-    //   let oldEdit = oldstate.editable
-    //   ;(async function (){
-    //     await this.layer3D.setEditable(!oldEdit)
-    //     await this.scene.refresh()
-    //   }).bind(this)()
-    //   return({editable:!oldEdit})
-    // })
-    Toast.show('图层不可编辑')
+    this.setState(oldstate => {
+      let selectable = oldstate.selectable
+      ;(async function() {
+        // await this.layer3D.setEditable(!oldEdit)
+        // await this.scene.refresh()
+        await SScene.setSelectable(this.name, !selectable)
+      }.bind(this)())
+      return { selectable: !selectable }
+    })
+    // Toast.show('图层不可编辑')
   }
 
   _visable_change = () => {
@@ -84,7 +83,7 @@ export default class Layer3DManager_item extends React.Component {
 
   render() {
     let name = this.props.name
-    const image1 = this.state.editable
+    const image1 = this.state.selectable
       ? require('../../../../assets/public/edit.png')
       : require('../../../../assets/public/edit-off.png')
     const image2 = this.state.visible

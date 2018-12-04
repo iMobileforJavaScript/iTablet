@@ -1,5 +1,6 @@
 import { SMap } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
+import ToolbarBtnType from '../containers/workspace/componets/ToolBar/ToolbarBtnType'
 
 const layerAdd = [
   {
@@ -158,4 +159,153 @@ const openData = [
     ],
   },
 ]
-export { layerAdd, BotMap, openData }
+
+const line = [
+  {
+    key: '符号线',
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ],
+      })
+    },
+  },
+  {
+    key: '线宽',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        selectName: '线宽',
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+  {
+    key: '颜色',
+    action: () => {},
+  },
+]
+
+const point = [
+  {
+    key: '点符号',
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ],
+      })
+    },
+  },
+  {
+    key: '大小',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+  {
+    key: '颜色',
+    action: () => {},
+  },
+  {
+    key: '旋转角度',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+  {
+    key: '透明度',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+]
+
+const region = [
+  {
+    key: '面符号',
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ],
+      })
+    },
+  },
+  {
+    key: '前景色',
+    action: () => {},
+  },
+  {
+    key: '背景色',
+    action: () => {},
+  },
+  {
+    key: '透明度',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+  {
+    key: '渐变',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+]
+export { layerAdd, BotMap, openData, line, point, region }
