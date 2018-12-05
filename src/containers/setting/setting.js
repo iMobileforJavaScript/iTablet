@@ -14,9 +14,26 @@ import styles from './styles'
 export default class setting extends Component {
   props: {
     navigation: Object,
+    data: Array,
   }
   constructor(props) {
     super(props)
+    const { params } = this.props.navigation.state
+    this.type = params.type
+    let data = props.data || this.getData(this.type)
+    this.state = {
+      data: data,
+    }
+  }
+
+  getData = type => {
+    switch (type) {
+      case 'value':
+        break
+
+      default:
+        break
+    }
   }
 
   renderListSectionHeader = ({ section }) => {
@@ -46,8 +63,8 @@ export default class setting extends Component {
     } else {
       return (
         <View style={styles.row}>
-          <Text>{item.name}</Text>
-          <Text>{item.value}</Text>
+          <Text style={styles.itemName}>{item.name}</Text>
+          <Text style={styles.itemValue}>{item.value}</Text>
         </View>
       )
     }

@@ -138,6 +138,7 @@ export default class MapToolbar extends React.Component {
               // let path="/storage/emulated/0/iTablet/data"
               // SScene.doZipFiles(file,toPath)
               // Utility.unZipFile(toPath,path)
+              this.props.navigation && this.props.navigation.navigate('Setting')
             },
           },
         ]
