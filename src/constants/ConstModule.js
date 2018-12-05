@@ -61,7 +61,6 @@ export default [
           'OlympicGreen_ios/OlympicGreen_ios.sxwu'
       }
       NavigationService.navigate('Map3D', { path: path, type: type })
-      // NavigationService.navigate('Map3D', { })
     },
   },
   {
