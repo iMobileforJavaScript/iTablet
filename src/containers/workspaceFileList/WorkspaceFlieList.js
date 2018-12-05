@@ -156,6 +156,7 @@ export default class WorkSpaceFileList extends Component {
           let result = await SScene.openWorkspace(data)
           let mapList = await SScene.getMapList()
           result && (await SScene.openMap(mapList[0].name))
+          GLOBAL.openWorkspace = true
           SScene.setListener().then(() => {
             SScene.getAttribute()
             SScene.setCircleFly()
