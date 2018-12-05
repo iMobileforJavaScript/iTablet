@@ -450,7 +450,35 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
+      case ConstToolType.MAP_EDIT_DEFAULT:
         SMap.appointEditGeometry(event.id, event.layerInfo.name)
+        if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
+          let column = 4,
+            height = ConstToolType.HEIGHT[3],
+            tableType = 'normal',
+            type = ''
+          switch (event.layerInfo.type) {
+            case DatasetType.POINT:
+              type = ConstToolType.MAP_EDIT_POINT
+              height = ConstToolType.HEIGHT[0]
+              column = 5
+              break
+            case DatasetType.LINE:
+              type = ConstToolType.MAP_EDIT_LINE
+              height = ConstToolType.HEIGHT[2]
+              break
+            case DatasetType.REGION:
+              type = ConstToolType.MAP_EDIT_REGION
+              height = ConstToolType.HEIGHT[2]
+              break
+          }
+          this.toolBox.setVisible(true, type, {
+            isFullScreen: false,
+            column,
+            height,
+            tableType,
+          })
+        }
         break
     }
   }
@@ -827,11 +855,19 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         if (!this.props.selection || !this.props.selection.id) return
-        let result = await SCollector.remove(this.props.selection.id)
+        let result = await SCollector.remove(
+          this.props.selection.id,
+          this.props.selection.layerInfo.path,
+        )
         if (result) {
           Toast.show('删除成功')
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
+          // 删除对象后，编辑设为为选择状态
+          this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+            isFullScreen: false,
+            height: 0,
+          })
         } else {
           Toast.show('删除失败')
         }

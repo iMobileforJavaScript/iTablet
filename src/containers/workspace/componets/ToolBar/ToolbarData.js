@@ -402,7 +402,19 @@ function getEditData(type) {
       ]
       break
   }
-  buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX, ToolbarBtnType.COMMIT]
+  if (type === ConstToolType.MAP_EDIT_DEFAULT) {
+    buttons = [
+      ToolbarBtnType.CANCEL,
+      ToolbarBtnType.PLACEHOLDER,
+      ToolbarBtnType.COMMIT,
+    ]
+  } else {
+    buttons = [
+      ToolbarBtnType.CANCEL,
+      ToolbarBtnType.FLEX,
+      ToolbarBtnType.COMMIT,
+    ]
+  }
   return { data, buttons }
 }
 
