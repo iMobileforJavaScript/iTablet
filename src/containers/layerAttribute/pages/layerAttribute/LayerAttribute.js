@@ -75,9 +75,9 @@ export default class LayerAttribute extends React.Component {
         let attribute = await SMap.getLayerAttribute(
           this.props.currentLayer.path,
         )
+        let tableHead = []
         if (attribute && attribute.length > 0) {
           this.props.setCurrentAttribute(attribute[0])
-          let tableHead = []
           attribute[0].forEach(item => {
             if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
               tableHead.unshift(item.fieldInfo.caption)
@@ -85,12 +85,11 @@ export default class LayerAttribute extends React.Component {
               tableHead.push(item.fieldInfo.caption)
             }
           })
-          this.setState({
-            attribute: attribute,
-            // attribute: attribute,
-            tableHead: tableHead,
-          })
         }
+        this.setState({
+          attribute: attribute,
+          tableHead: tableHead,
+        })
         this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)

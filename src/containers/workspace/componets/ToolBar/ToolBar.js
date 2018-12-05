@@ -69,6 +69,9 @@ export default class ToolBar extends React.Component {
     showDialog: () => {},
     addGeometrySelectedListener: () => {},
     removeGeometrySelectedListener: () => {},
+    setSaveViewVisible?: () => {},
+    setSaveMapDialogVisible?: () => {},
+    setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
@@ -148,6 +151,9 @@ export default class ToolBar extends React.Component {
       setToolbarVisible: this.setVisible,
       showFullMap: this.props.showFullMap,
       addGeometrySelectedListener: this.props.addGeometrySelectedListener,
+      setSaveViewVisible: this.props.setSaveViewVisible,
+      setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
+      setContainerLoading: this.props.setContainerLoading,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -644,7 +650,7 @@ export default class ToolBar extends React.Component {
           this.showToolbar()
         },
       )
-    JSON.stringify(data) == '{}' &&
+    JSON.stringify(data) === '{}' &&
       this.showToolbar(false) &&
       this.props.existFullMap &&
       this.props.existFullMap()
@@ -754,6 +760,7 @@ export default class ToolBar extends React.Component {
         params && typeof params.height === 'number'
           ? params.height
           : ConstToolType.HEIGHT[1]
+      data = params.data || data
       this.setState(
         {
           isSelectlist: false,
@@ -810,13 +817,19 @@ export default class ToolBar extends React.Component {
 
   close = (type = this.state.type) => {
     // 关闭采集, type 为number时为采集类型，若有冲突再更改
-    if (typeof type === 'number' || type.indexOf('MAP_COLLECTION_') >= 0) {
+    if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
+    ) {
       SCollector.stopCollect()
     }
     // else if (type.indexOf('MAP_EDIT_') >= 0) {
     //   SMap.setAction(Action.PAN)
     // }
-    if (type.indexOf('MAP_') >= -1) {
+    if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_') >= -1)
+    ) {
       SMap.setAction(Action.PAN)
     }
     GLOBAL.currentToolbarType = ''
@@ -858,6 +871,7 @@ export default class ToolBar extends React.Component {
   getPoint = () => {
     return this.point
   }
+
   getType = () => {
     return this.type
   }
@@ -1010,7 +1024,7 @@ export default class ToolBar extends React.Component {
         }
         await SMap.openDatasource(udbpath, index)
       }.bind(this)())
-    } else if (this.state.type == ConstToolType.MAP_OPEN) {
+    } else if (this.state.type === ConstToolType.MAP_OPEN) {
       NavigationService.navigate('WorkspaceFlieList', {
         cb: async path => {
           //提示是否保存
@@ -1049,6 +1063,9 @@ export default class ToolBar extends React.Component {
           }
         },
       })
+    } else if (this.state.type === ConstToolType.MAP_CHANGE) {
+      // 打开地图
+      SMap.openMap(item.title)
     }
   }
 

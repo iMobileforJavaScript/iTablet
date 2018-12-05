@@ -32,10 +32,8 @@ export default class Login extends React.Component {
   }
 
   _login = async () => {
-    // let userName = this.phone.getValue()
-    // let password = this.password.getValue()
-    let userName = 'imobile1234'
-    let password = 'imobile'
+    let userName = this.phone.getValue()
+    let password = this.password.getValue()
     if (!userName) {
       Toast.show('请输入用户名')
       return
@@ -75,6 +73,44 @@ export default class Login extends React.Component {
     }
   }
 
+  oldRenderLogin = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#505052',
+        }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          {/*<Input ref={ref => this.phone = ref} placeholder='账号/手机号' />*/}
+          <Input ref={ref => (this.phone = ref)} placeholder="账号" />
+          <Input
+            ref={ref => (this.password = ref)}
+            placeholder="密码"
+            password={true}
+            image={require('../../../assets/public/lock.png')}
+          />
+          <Tips
+            tipText="地图慧账户可直接登录"
+            btnText="忘记密码"
+            btnClick={this._forgetPassword}
+          />
+          <View style={{ marginTop: 50, marginBottom: 70 }}>
+            <BtnTwo text="确定" btnClick={this._login} />
+          </View>
+          <TextBtn
+            width={150}
+            height={40}
+            btnText="没有账户立即注册"
+            btnClick={this._register}
+          />
+        </View>
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -85,34 +121,8 @@ export default class Login extends React.Component {
           withoutBack: true,
         }}
       >
-        <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
-          <View style={{ alignItems: 'center' }}>
-            {/*<Input ref={ref => this.phone = ref} placeholder='账号/手机号' />*/}
-            <Input ref={ref => (this.phone = ref)} placeholder="账号" />
-            <Input
-              ref={ref => (this.password = ref)}
-              placeholder="密码"
-              password={true}
-              image={require('../../../assets/public/lock.png')}
-            />
-            <Tips
-              tipText="地图慧账户可直接登录"
-              btnText="忘记密码"
-              btnClick={this._forgetPassword}
-            />
-            <View style={{ marginTop: 50, marginBottom: 70 }}>
-              <BtnTwo text="确定" btnClick={this._login} />
-            </View>
-            <TextBtn
-              width={150}
-              height={40}
-              btnText="没有账户立即注册"
-              btnClick={this._register}
-            />
-          </View>
-        </View>
+        {this.oldRenderLogin()}
+        <View style={{}} />
       </Container>
     )
   }

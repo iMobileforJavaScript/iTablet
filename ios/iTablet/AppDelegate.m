@@ -26,8 +26,13 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.111"];  //   10.10.2.46
+<<<<<<< HEAD
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"10.10.3.101"];  //   10.10.2.46
   
+=======
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.109"];  //   10.10.2.46
+
+>>>>>>> edfb99ce9cabe6033f87a847ce5f40f341659d16
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -74,15 +79,43 @@ static NSString* g_sampleCodeName = @"#";;
 
 #pragma mark - 初始化默认数据
 - (void)initDefaultData {
-  // 初始化游客工作空间
+  [self initCustomWorkspace];
+//  [self initDefaultWorkspace];
+}
+
+#pragma mark - 初始化游客工作空间
+- (void)initCustomWorkspace {
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
   NSString* dataPath = @"/Documents/iTablet/User/Customer/Data/";
-  [AppDelegate createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Customer.smwu"];
     if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
       if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
         NSLog(@"拷贝数据失败");
+    }
+  }
+}
+
+#pragma mark - 初始化默认工作空间数据
+-(void)initDefaultWorkspace {
+  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
+  NSString* commonPath = @"/Documents/iTablet/Common/";
+  NSString* dataPath = @"/Documents/iTablet/User/Customer/Data/";
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
+  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Workspace.zip"];
+  NSString* workspacePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"];
+  
+  if (![[NSFileManager defaultManager] fileExistsAtPath:workspacePath isDirectory:nil]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
+      BOOL isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
+      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+    } else {
+      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
+          BOOL isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
+          NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+        }
     }
   }
 }
@@ -112,33 +145,5 @@ static NSString* g_sampleCodeName = @"#";;
     //竖屏
     return UIInterfaceOrientationMaskPortrait;
   }
-}
-
-+(BOOL)createFileDirectories:(NSString*)path
-{
-  
-  // 判断存放音频、视频的文件夹是否存在，不存在则创建对应文件夹
-  NSString* DOCUMENTS_FOLDER_AUDIO = path;
-  NSFileManager *fileManager = [NSFileManager defaultManager];
-  
-  BOOL isDir = FALSE;
-  BOOL isDirExist = [fileManager fileExistsAtPath:DOCUMENTS_FOLDER_AUDIO isDirectory:&isDir];
-  
-  
-  if(!(isDirExist && isDir)){
-    BOOL bCreateDir = [fileManager createDirectoryAtPath:DOCUMENTS_FOLDER_AUDIO withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    if(!bCreateDir){
-      
-      NSLog(@"Create Directory Failed.");
-      return NO;
-    }else
-    {
-      //  NSLog(@"%@",DOCUMENTS_FOLDER_AUDIO);
-      return YES;
-    }
-  }
-  
-  return YES;
 }
 @end

@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native'
-import { color, size } from '../../styles'
+import { color, size, zIndexLevel } from '../../styles'
 import { scaleSize } from '../../utils'
 
 export default StyleSheet.create({
@@ -7,15 +7,16 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   nonModalContainer: {
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(0,0,0,0.3)',
     width: '100%',
     height: '100%',
+    zIndex: zIndexLevel.FOUR,
   },
   dialogStyle: {
     width: '70%',
@@ -39,7 +40,7 @@ export default StyleSheet.create({
     color: color.content,
   },
   btns: {
-    marginTop: scaleSize(60),
+    marginTop: scaleSize(30),
     marginHorizontal: scaleSize(60),
     height: scaleSize(80),
     flexDirection: 'row',

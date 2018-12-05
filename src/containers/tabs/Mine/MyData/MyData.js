@@ -6,6 +6,7 @@ export default class MyData extends Component {
   props: {
     navigation: Object,
   }
+
   render() {
     return (
       <Container

@@ -76,6 +76,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_START, {
         containerType: 'table',
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }

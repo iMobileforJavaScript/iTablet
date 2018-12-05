@@ -7,6 +7,8 @@ import {
   SThemeCartography,
 } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
+import { Toast } from '../../../../utils'
+import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
@@ -817,6 +819,14 @@ function getStart(type) {
   if (type !== ConstToolType.MAP_START) return { data, buttons }
   data = [
     {
+      key: constants.WORKSPACE,
+      title: constants.WORKSPACE,
+      action: openWorkspace,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
       key: constants.OPEN,
       title: constants.OPEN,
       action: openMap,
@@ -969,9 +979,47 @@ function patchHollowRegion() {
   return SMap.setAction(Action.PATCH_HOLLOW_REGION)
 }
 
+/** 切换工作空间 **/
+function openWorkspace() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  NavigationService.navigate('WorkspaceFlieList', {
+    type: 'WORKSPACE',
+    title: '选择工作空间',
+    cb: path => {
+      SMap.closeWorkspace().then(async () => {
+        try {
+          _params.setContainerLoading &&
+            _params.setContainerLoading(true, '正在打开地图')
+          let data = { server: path }
+          let result = await SMap.openWorkspace(data)
+          Toast.show(result ? '已为您切换工作空间' : '切换工作空间失败')
+          NavigationService.goBack()
+          _params.setContainerLoading && _params.setContainerLoading(false)
+        } catch (error) {
+          Toast.show('打开失败')
+          _params.setContainerLoading && _params.setContainerLoading(false)
+        }
+      })
+    },
+  })
+}
+
 /** 打开地图 **/
 function openMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  SMap.getMaps().then(list => {
+    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      containerType: 'list',
+      height: ConstToolType.HEIGHT[3],
+      data: [
+        {
+          title: '地图',
+          data: list,
+        },
+      ],
+    })
+  })
 }
 
 /** 新建地图 **/
