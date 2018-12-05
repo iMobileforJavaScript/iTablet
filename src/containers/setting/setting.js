@@ -23,22 +23,34 @@ export default class setting extends Component {
     let data = props.data || this.getData(this.type)
     this.state = {
       data: data,
+      visible: false,
     }
   }
 
   getData = type => {
+    let data = []
     switch (type) {
-      case 'value':
+      case 'MAP_3D':
+        //  data=[
+        //    {
+        //      titile:"基本设置",
+        //      data:,
+        //    },
+        //    {}
+        //  ]
         break
 
       default:
         break
     }
+    return data
   }
 
   renderListSectionHeader = ({ section }) => {
     let image
-    //    this.state.first? image=require("") :image=require("")
+    this.state.visible
+      ? (image = require('../../assets/mapEdit/icon_spread.png'))
+      : (image = require('../../assets/mapEdit/icon_packUP.png'))
     return (
       <TouchableOpacity>
         <Image source={image} style={styles.section} />

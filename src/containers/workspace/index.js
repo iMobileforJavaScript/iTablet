@@ -66,6 +66,12 @@ const Map3DTabs = TabNavigator(
     Map3DLayerManager: {
       screen: Map3DLayerManager,
     },
+    LayerAttribute: {
+      screen: LayerAttribute,
+    },
+    Setting: {
+      screen: Setting,
+    },
   },
   {
     animationEnabled: false, // 切换页面时是否有动画效果
