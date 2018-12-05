@@ -18,6 +18,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
+  MenuAlertDialog,
 } from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
@@ -836,6 +837,7 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.operationType}
         getToolRef={() => this.toolBox}
+        getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -860,6 +862,18 @@ export default class MapView extends React.Component {
     this.fullMap = isFull
   }
 
+  renderMenuDialog = () => {
+    return (
+      <MenuAlertDialog
+        ref={ref => (this.MenuAlertDialog = ref)}
+        backHide='true'
+        existFullMap={() => this.showFullMap(false)}
+        showFullMap={this.showFullMap}
+        getToolBarRef={() => this.toolBox}
+      />
+    )
+  }
+
   renderTool = () => {
     return (
       <ToolBar
@@ -867,6 +881,7 @@ export default class MapView extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         user={this.props.user}
         symbol={this.props.symbol}
+        getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         showFullMap={this.showFullMap}
@@ -901,6 +916,7 @@ export default class MapView extends React.Component {
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
+        {!this.isExample && this.renderMenuDialog()}
         {/*<TouchableOpacity*/}
         {/*onPress={() => {*/}
         {/*SMap.getLayers()*/}

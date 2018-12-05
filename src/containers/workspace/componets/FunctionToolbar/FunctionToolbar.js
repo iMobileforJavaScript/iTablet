@@ -32,6 +32,7 @@ export default class FunctionToolbar extends React.Component {
     Label: () => {},
 
     getToolRef: () => {},
+    getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
     setMapType: () => {},
 
@@ -76,6 +77,23 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_START, {
         containerType: 'table',
+      })
+    }
+  }
+
+  showMenuAlertDialog = () => {
+    const menuRef = this.props.getMenuAlertDialogRef()
+    if (menuRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      menuRef.showMenuDialog('unique')
+    }
+
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+        isFullScreen: false,
+        containerType: 'list',
+        height: ConstToolType.THEME_HEIGHT[0],
       })
     }
   }
@@ -516,6 +534,7 @@ export default class FunctionToolbar extends React.Component {
             key: '参数',
             title: '参数',
             size: 'large',
+            action: this.showMenuAlertDialog,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
             selectMode: 'flash',
           },
