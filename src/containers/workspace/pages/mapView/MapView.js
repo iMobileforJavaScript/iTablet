@@ -19,6 +19,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
+  MenuAlertDialog,
   SaveView,
   AlertDialog,
 } from '../../componets'
@@ -1087,6 +1088,7 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.operationType}
         getToolRef={() => this.toolBox}
+        getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -1130,6 +1132,18 @@ export default class MapView extends React.Component {
     this.fullMap = isFull
   }
 
+  renderMenuDialog = () => {
+    return (
+      <MenuAlertDialog
+        ref={ref => (this.MenuAlertDialog = ref)}
+        backHide='true'
+        existFullMap={() => this.showFullMap(false)}
+        showFullMap={this.showFullMap}
+        getToolBarRef={() => this.toolBox}
+      />
+    )
+  }
+
   /** 改变地图存储类型 是否有本地XML文件 **/
   setMapType = mapType => {
     this.mapType = mapType
@@ -1142,6 +1156,7 @@ export default class MapView extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         user={this.props.user}
         symbol={this.props.symbol}
+        getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         showFullMap={this.showFullMap}
@@ -1176,6 +1191,7 @@ export default class MapView extends React.Component {
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
+        {!this.isExample && this.renderMenuDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
