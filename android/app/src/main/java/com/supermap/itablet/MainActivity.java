@@ -59,7 +59,7 @@ public class MainActivity extends ReactActivity {
         Decompressor.UnZipFolder(localPath + defaultZipData, localPath);
         Utils.deleteFile(localPath + defaultZipData);
         String localPath2 = SDCARD + "/iTablet/data/local/";
-        String defaultZipData2 = "defaultData.zip";
+        String defaultZipData2 = "OlympicGreen_android.zip";
         Utils.copyAssetFileToSDcard(this, localPath2, defaultZipData2);
         Decompressor.UnZipFolder(localPath2 + defaultZipData2, localPath2);
         Utils.deleteFile(localPath2 + defaultZipData2);
