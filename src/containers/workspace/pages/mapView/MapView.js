@@ -453,12 +453,13 @@ export default class MapView extends React.Component {
               height = ConstToolType.HEIGHT[2]
               break
           }
-          this.toolBox.setVisible(true, type, {
-            isFullScreen: false,
-            column,
-            height,
-            tableType,
-          })
+          this.toolBox &&
+            this.toolBox.setVisible(true, type, {
+              isFullScreen: false,
+              column,
+              height,
+              tableType,
+            })
         }
         break
     }
@@ -1133,6 +1134,7 @@ export default class MapView extends React.Component {
   setMapType = mapType => {
     this.mapType = mapType
   }
+
   renderTool = () => {
     return (
       <ToolBar

@@ -43,7 +43,10 @@ RCT_REMAP_METHOD(unZipFile, unZipFileByPath:(NSString *)archivePath targetPath:(
 
 RCT_REMAP_METHOD(deleteFile, deleteFileByPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
-    BOOL result = [FileTools deleteFile:path];
+    BOOL result = NO;
+    if (path != nil && ![path isEqualToString:@""]) {
+      result = [FileTools deleteFile:path];
+    }
     
     resolve([NSNumber numberWithBool:result]);
   } @catch (NSException *exception) {
