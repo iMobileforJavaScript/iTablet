@@ -471,6 +471,15 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_function_add.png'),
           // },
           {
+            key: '开始',
+            title: '开始',
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
             title: '底图',
             action: this.changeBaseLayer,
             image: require('../../../../assets/function/icon_function_base_map.png'),
@@ -489,13 +498,6 @@ export default class FunctionToolbar extends React.Component {
             title: '工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
-          },
-          {
-            title: '更多',
-            action: () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
-            },
-            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
