@@ -31,13 +31,33 @@ export default class setting extends Component {
     let data = []
     switch (type) {
       case 'MAP_3D':
-        //  data=[
-        //    {
-        //      titile:"基本设置",
-        //      data:,
-        //    },
-        //    {}
-        //  ]
+        data = [
+          {
+            titile: '基本设置',
+            data: [
+              {
+                name: '场景名称',
+                value: 0,
+              },
+            ],
+          },
+          {
+            titile: '立体设置',
+            data: [],
+          },
+          {
+            titile: '其他设置',
+            data: [],
+          },
+          {
+            titile: '地球多边形偏移',
+            data: [],
+          },
+          {
+            titile: '场景颜色',
+            data: [],
+          },
+        ]
         break
 
       default:

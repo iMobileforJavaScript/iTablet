@@ -189,6 +189,7 @@ export default class Map3D extends React.Component {
       // })
     } catch (e) {
       this.container && this.container.setLoading(false)
+      NavigationService.goBack()
     }
     return true
   }
