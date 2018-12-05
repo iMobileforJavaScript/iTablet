@@ -69,6 +69,9 @@ export default class ToolBar extends React.Component {
     showDialog: () => {},
     addGeometrySelectedListener: () => {},
     removeGeometrySelectedListener: () => {},
+    setSaveViewVisible?: () => {},
+    setSaveMapDialogVisible?: () => {},
+    setContainerLoading?: () => {},
     showFullMap: () => {},
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
@@ -111,8 +114,8 @@ export default class ToolBar extends React.Component {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
-      layerData : Object,
-      selectName : '',
+      layerData: Object,
+      selectName: '',
     }
     this.isShow = false
     this.isBoxShow = true
@@ -148,6 +151,9 @@ export default class ToolBar extends React.Component {
       setToolbarVisible: this.setVisible,
       showFullMap: this.props.showFullMap,
       addGeometrySelectedListener: this.props.addGeometrySelectedListener,
+      setSaveViewVisible: this.props.setSaveViewVisible,
+      setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
+      setContainerLoading: this.props.setContainerLoading,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -644,7 +650,7 @@ export default class ToolBar extends React.Component {
           this.showToolbar()
         },
       )
-    JSON.stringify(data) == '{}' &&
+    JSON.stringify(data) === '{}' &&
       this.showToolbar(false) &&
       this.props.existFullMap &&
       this.props.existFullMap()
@@ -739,14 +745,14 @@ export default class ToolBar extends React.Component {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
     }
-    if(!params.layerData)params.layerData=[]
+    if (!params.layerData) params.layerData = []
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
       params.column !== this.state.column ||
-        params.layerData !==this.state.layerData
+      params.layerData !== this.state.layerData
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
@@ -754,9 +760,10 @@ export default class ToolBar extends React.Component {
         params && typeof params.height === 'number'
           ? params.height
           : ConstToolType.HEIGHT[1]
+      data = params.data || data
       this.setState(
         {
-          isSelectlist:false,
+          isSelectlist: false,
           type: type,
           tableType: params.tableType || 'normal',
           data: data,
@@ -821,7 +828,9 @@ export default class ToolBar extends React.Component {
     }
     GLOBAL.currentToolbarType = ''
     this.showToolbar(false)
-    this.setState({isTouchProgress: false,isSelectlist:false})
+    if(this.state.isTouchProgress===true||this.state.isSelectlist===true) {
+      this.setState({isTouchProgress: false, isSelectlist: false})
+    }
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -858,6 +867,7 @@ export default class ToolBar extends React.Component {
   getPoint = () => {
     return this.point
   }
+
   getType = () => {
     return this.type
   }
@@ -1010,7 +1020,7 @@ export default class ToolBar extends React.Component {
         }
         await SMap.openDatasource(udbpath, index)
       }.bind(this)())
-    } else if (this.state.type == ConstToolType.MAP_OPEN) {
+    } else if (this.state.type === ConstToolType.MAP_OPEN) {
       NavigationService.navigate('WorkspaceFlieList', {
         cb: async path => {
           //提示是否保存
@@ -1049,6 +1059,9 @@ export default class ToolBar extends React.Component {
           }
         },
       })
+    } else if (this.state.type === ConstToolType.MAP_CHANGE) {
+      // 打开地图
+      SMap.openMap(item.title)
     }
   }
 
@@ -1109,7 +1122,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.state.layerData}/>
+    return <SymbolList layerData={this.state.layerData} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1141,7 +1154,7 @@ export default class ToolBar extends React.Component {
 
   renderSelectList = () => {
     let list
-    switch (this.state.layerData.type){
+    switch (this.state.layerData.type) {
       case 1:
         list = point
         break
@@ -1344,8 +1357,11 @@ export default class ToolBar extends React.Component {
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
-          <TouchProgress selectName={this.state.selectName}/>
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
+          <TouchProgress
+            selectName={this.state.selectName}
+          />
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>

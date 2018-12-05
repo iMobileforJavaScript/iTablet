@@ -148,8 +148,9 @@ export default class Map3DToolBar extends React.Component {
     // <Text style={styles.name}>{item.name}</Text>
     // <Text style={styles.value}>{item.value}</Text>
     // </View>
+    item.name = item.name.toUpperCase()
     if (
-      item.name === 'SmUserID' ||
+      item.name === 'SMUSERID' ||
       item.name === 'MODELNAME' ||
       item.name === 'LONGITUDE' ||
       item.name === 'LATITUDE' ||

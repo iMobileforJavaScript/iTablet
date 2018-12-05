@@ -7,7 +7,7 @@ import { SMSymbolTable, SMap, SCartography } from 'imobile_for_reactnative'
 export default class SymbolList extends React.Component {
   props: {
     setCurrentSymbol?: () => {},
-    layerData:Object,
+    layerData: Object,
   }
 
   constructor(props) {
@@ -18,18 +18,22 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
-    if(this.props.layerData.type===3){
-      SCartography.setLineSymbolID(data.id, this.props.layerData.caption)}
-    if(this.props.layerData.type===1){
+    if (this.props.layerData.type === 3) {
+      SCartography.setLineSymbolID(data.id, this.props.layerData.caption)
+    }
+    if (this.props.layerData.type === 1) {
       SCartography.setMakerSymbolID(data.id, this.props.layerData.caption)
     }
-    if(this.props.layerData.type===5){
+    if (this.props.layerData.type === 5) {
       SCartography.setFillSymbolID(data.id, this.props.layerData.caption)
     }
   }
 
-  componentDidUpdate(prevProps){
-    if (JSON.stringify(prevProps.layerData.type) !== JSON.stringify(this.props.layerData.type)) {
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.layerData.type) !==
+      JSON.stringify(this.props.layerData.type)
+    ) {
       this.renderLibrary()
     }
   }
@@ -38,15 +42,16 @@ export default class SymbolList extends React.Component {
     this.renderLibrary()
   }
 
-  renderLibrary  = () =>{
-    switch (this.props.layerData.type){
+  renderLibrary = () => {
+    console.warn(JSON.stringify(this.props.layerData.type))
+    switch (this.props.layerData.type) {
       case 3:
         SMap.findSymbolsByGroups('line', '').then(result => {
           let symbols = []
           result.forEach(item => {
             symbols.push(item.id)
           })
-          this.setState({ layerData: this.props.layerData,data: symbols })
+          this.setState({ layerData: this.props.layerData, data: symbols })
         })
         break
       case 1:
@@ -55,7 +60,7 @@ export default class SymbolList extends React.Component {
           result.forEach(item => {
             symbols.push(item.id)
           })
-          this.setState({ layerData: this.props.layerData,data: symbols })
+          this.setState({ layerData: this.props.layerData, data: symbols })
         })
         break
       case 5:
@@ -64,7 +69,7 @@ export default class SymbolList extends React.Component {
           result.forEach(item => {
             symbols.push(item.id)
           })
-          this.setState({ layerData: this.props.layerData,data: symbols })
+          this.setState({ layerData: this.props.layerData, data: symbols })
         })
         break
     }

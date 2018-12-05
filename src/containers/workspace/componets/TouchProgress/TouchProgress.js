@@ -3,7 +3,8 @@ import { StyleSheet, View, PanResponder, Image } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import { SCartography } from 'imobile_for_reactnative'
 
-const positionLeft = screen.deviceWidth
+const positionWidth = screen.deviceWidth//设备的宽度
+
 
 export default class TouchProgress extends Component {
   render() {
@@ -79,33 +80,49 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
-    console.warn(JSON.stringify(this.props.selectName))
-    console.warn(JSON.stringify(this.props.currentLayer.type))
+    // console.warn(JSON.stringify(this.props.selectName))
+    // console.warn(JSON.stringify(this.props.currentLayer.type))
     let x = this._previousLeft + gestureState.dx
-    if (gestureState.dx > 0) {
-      SCartography.setLineWidthByIndex(10, 0)
-      SCartography.setLineWidthByIndex(10, 1)
-      SCartography.setLineWidthByIndex(10, 2)
-      SCartography.setLineWidthByIndex(10, 3)
-    }
-    if (gestureState.dx < 0) {
-      SCartography.setLineWidthByIndex(0, 0)
-      SCartography.setLineWidthByIndex(0, 1)
-      SCartography.setLineWidthByIndex(0, 2)
-      SCartography.setLineWidthByIndex(0, 3)
-    }
     this._panBtnStyles.style.left = x
     if (this._panBtnStyles.style.left <= 0) this._panBtnStyles.style.left = 0
-    if (this._panBtnStyles.style.left >= positionLeft - scaleSize(50))
-      this._panBtnStyles.style.left = positionLeft - scaleSize(50)
+    if (this._panBtnStyles.style.left >= positionWidth - scaleSize(45))
+      this._panBtnStyles.style.left = positionWidth - scaleSize(45)
     this._updateNativeStyles()
   }
 
   _handlePanResponderEnd = (evt, gestureState) => {
     let x = this._previousLeft + gestureState.dx
     if (x <= 0) x = 0
-    if (x >= positionLeft - scaleSize(50)) x = positionLeft - scaleSize(50)
+    if (x >= positionWidth - scaleSize(45)) x = positionWidth - scaleSize(45)
     this._previousLeft = x
+
+
+    let layerType = this.props.currentLayer.type
+    let lineWidth = x/(positionWidth - scaleSize(60))*10
+    let pointSize = x/(positionWidth - scaleSize(60))*100
+    let pointAlpha = x/(positionWidth - scaleSize(60))*100
+    let pointAngle = x/(positionWidth - scaleSize(60))*360
+    let fillOpaqueRate = x/(positionWidth - scaleSize(60))*100
+    switch (layerType){
+      case 1:
+        if(this.props.selectName==='大小'){
+          if (pointSize<=1){pointSize=1}
+          console.warn(JSON.stringify(pointSize))
+          SCartography.setMarkerSize(pointSize,this.props.currentLayer.caption)
+        }else if(this.props.selectName==='透明度'){
+          SCartography.setMarkerAlpha(pointAlpha,this.props.currentLayer.caption)
+        }else if(this.props.selectName==='旋转角度'){
+          SCartography.setMarkerAngle(pointAngle,this.props.currentLayer.caption)
+        }
+        break
+      case 3:
+        if (lineWidth<=1){lineWidth=1}
+        SCartography.setLineWidth(lineWidth,this.props.currentLayer.caption)
+        break
+      case 5:
+        SCartography.setFillOpaqueRate(fillOpaqueRate,this.props.currentLayer.caption)
+        break
+    }
   }
 }
 
@@ -132,7 +149,7 @@ const styles = StyleSheet.create({
     height: scaleSize(10),
     width: '95%',
     backgroundColor: 'black',
-    marginLeft: 20,
+    marginLeft: scaleSize(20),
   },
   image: {
     height: scaleSize(50),

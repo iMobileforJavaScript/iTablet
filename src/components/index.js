@@ -34,6 +34,8 @@ import LayerItem from './LayerItem'
 import Progress from './Progress'
 import TableList from './TableList'
 import TreeList from './TreeList'
+import SaveDialog from './SaveDialog'
+import SaveMapNameDialog from './SaveMapNameDialog'
 
 export {
   Container,
@@ -76,4 +78,6 @@ export {
   Progress,
   TableList,
   TreeList,
+  SaveDialog,
+  SaveMapNameDialog,
 }

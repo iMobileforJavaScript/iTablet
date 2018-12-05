@@ -29,6 +29,7 @@ export default class Dialog extends PureComponent {
     confirmTitleStyle?: StyleSheet,
     cancelTitleStyle?: StyleSheet,
     showBtns?: boolean,
+    header?: any,
   }
 
   static defaultProps = {
@@ -101,6 +102,7 @@ export default class Dialog extends PureComponent {
         }}
       >
         <View style={[styles.container, this.props.backgroundStyle]}>
+          {this.props.header}
           <View style={[styles.dialogStyle, this.props.style]}>
             {this.props.title && (
               <Text style={[styles.title, this.props.titleStyle]}>
@@ -123,7 +125,12 @@ export default class Dialog extends PureComponent {
   renderNonModal = () => {
     if (this.state.visible) {
       return (
-        <View style={[styles.nonModalContainer, this.props.backgroundStyle]}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={this.cancel}
+          style={[styles.nonModalContainer, this.props.backgroundStyle]}
+        >
+          {this.props.header}
           <View style={[styles.dialogStyle, this.props.style]}>
             {this.props.title && (
               <Text style={[styles.title, this.props.titleStyle]}>
@@ -138,7 +145,7 @@ export default class Dialog extends PureComponent {
             {this.props.children}
             {this.renderBtns()}
           </View>
-        </View>
+        </TouchableOpacity>
       )
     } else {
       return null

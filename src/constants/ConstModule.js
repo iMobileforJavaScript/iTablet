@@ -4,7 +4,7 @@ import ConstOnline from './ConstOnline'
 import { Utility } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
 import { Platform } from 'react-native'
-import ConstToolType from "./ConstToolType";
+import ConstToolType from './ConstToolType'
 
 export default [
   {
@@ -35,6 +35,7 @@ export default [
       } else {
         // TODO 打开对应user的工作空间
         NavigationService.navigate('MapView', {
+          operationType: constants.MAP_EDIT,
           wsData: ConstOnline['SuperMapCloud'],
         })
       }
@@ -51,12 +52,12 @@ export default [
         type = 'MAP_3D'
       if (Platform.OS === 'android') {
         path =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
-          'CBD_android/CBD_android.sxwu'
+          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+          'OlympicGreen_android/OlympicGreen_android.sxwu'
       } else {
         path =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
-          'CBD_ios/CBD_ios.sxwu'
+          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+          'OlympicGreen_ios/OlympicGreen_ios.sxwu'
       }
       NavigationService.navigate('Map3D', { path: path, type: type })
     },
