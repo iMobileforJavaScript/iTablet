@@ -26,8 +26,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.111"];  //   10.10.2.46
-  
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.111"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -74,10 +73,15 @@ static NSString* g_sampleCodeName = @"#";;
 
 #pragma mark - 初始化默认数据
 - (void)initDefaultData {
-  // 初始化游客工作空间
+//  [self initCustomWorkspace];
+  [self initDefaultWorkspace];
+}
+
+#pragma mark - 初始化游客工作空间
+- (void)initCustomWorkspace {
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
   NSString* dataPath = @"/Documents/iTablet/User/Customer/Data/";
-  [AppDelegate createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Customer.smwu"];
     if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
@@ -85,6 +89,11 @@ static NSString* g_sampleCodeName = @"#";;
         NSLog(@"拷贝数据失败");
     }
   }
+}
+
+#pragma mark - 初始化默认工作空间数据
+-(void)initDefaultWorkspace {
+  [FileTools initUserDefaultData:@"Customer"];
 }
 
 -(void)doSampleCodeNotification:(NSNotification *)notification
@@ -112,33 +121,5 @@ static NSString* g_sampleCodeName = @"#";;
     //竖屏
     return UIInterfaceOrientationMaskPortrait;
   }
-}
-
-+(BOOL)createFileDirectories:(NSString*)path
-{
-  
-  // 判断存放音频、视频的文件夹是否存在，不存在则创建对应文件夹
-  NSString* DOCUMENTS_FOLDER_AUDIO = path;
-  NSFileManager *fileManager = [NSFileManager defaultManager];
-  
-  BOOL isDir = FALSE;
-  BOOL isDirExist = [fileManager fileExistsAtPath:DOCUMENTS_FOLDER_AUDIO isDirectory:&isDir];
-  
-  
-  if(!(isDirExist && isDir)){
-    BOOL bCreateDir = [fileManager createDirectoryAtPath:DOCUMENTS_FOLDER_AUDIO withIntermediateDirectories:YES attributes:nil error:nil];
-    
-    if(!bCreateDir){
-      
-      NSLog(@"Create Directory Failed.");
-      return NO;
-    }else
-    {
-      //  NSLog(@"%@",DOCUMENTS_FOLDER_AUDIO);
-      return YES;
-    }
-  }
-  
-  return YES;
 }
 @end

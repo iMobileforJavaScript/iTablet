@@ -4,6 +4,7 @@ import ConstOnline from './ConstOnline'
 import { Utility } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
 import { Platform } from 'react-native'
+import ConstToolType from './ConstToolType'
 
 export default [
   {
@@ -12,30 +13,33 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_free.png'),
     moduleImage: require('../assets/home/icon_cartography.png'),
     action: async user => {
+      GLOBAL.Type = ConstToolType.MAP_EDIT
       const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
-      let wsPath = await Utility.appendingHomeDirectory(customerPath)
-      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
-      if (exist && !user.userName) {
-        NavigationService.navigate('MapView', {
-          // 若未登录，则打开游客工作空间
-          operationType: constants.MAP_EDIT,
-          wsData: [
-            {
-              DSParams: { server: wsPath },
-              type: 'Workspace',
-            },
-            ConstOnline['Baidu'],
-          ],
-          mapName: ConstOnline['Baidu'].mapName,
-          isExample: false,
-        })
+        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      let wsPath
+      if (user.userName) {
+        const userWSPath =
+          ConstPath.UserPath +
+          user.userName +
+          '/' +
+          ConstPath.RelativeFilePath.Workspace
+        wsPath = await Utility.appendingHomeDirectory(userWSPath)
       } else {
-        // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', {
-          wsData: ConstOnline['SuperMapCloud'],
-        })
+        wsPath = await Utility.appendingHomeDirectory(customerPath)
       }
+      NavigationService.navigate('MapView', {
+        operationType: constants.MAP_EDIT,
+        wsData: [
+          {
+            DSParams: { server: wsPath },
+            type: 'Workspace',
+          },
+          ConstOnline['Google'],
+        ],
+        mapName: '地图制图',
+        isExample: false,
+      })
     },
   },
   {
@@ -44,16 +48,17 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
     action: async () => {
+      GLOBAL.Type = ConstToolType.MAP_3D
       let path,
         type = 'MAP_3D'
       if (Platform.OS === 'android') {
         path =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
-          'CBD_android/CBD_android.sxwu'
+          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+          'OlympicGreen_android/OlympicGreen_android.sxwu'
       } else {
         path =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
-          'CBD_ios/CBD_ios.sxwu'
+          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+          'OlympicGreen_ios/OlympicGreen_ios.sxwu'
       }
       NavigationService.navigate('Map3D', { path: path, type: type })
     },
@@ -82,8 +87,9 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_vip.png'),
     moduleImage: require('../assets/home/icon_thematicmap.png'),
     action: async user => {
+      GLOBAL.Type = ConstToolType.MAP_THEMATIC
       const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
+        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
       let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
       if (exist && !user.userName) {
@@ -103,6 +109,7 @@ export default [
       } else {
         // TODO 打开对应user的工作空间
         NavigationService.navigate('MapView', {
+          operationType: constants.MAP_THEME,
           wsData: ConstOnline['SuperMapCloud'],
         })
       }
@@ -114,44 +121,38 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async user => {
+      GLOBAL.Type = ConstToolType.MAP_COLLECT
       const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.CustomerWorkspace
-      let wsPath = await Utility.appendingHomeDirectory(customerPath)
-      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      let wsPath
       // const customerPath =
       //   ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
       // let wsPath = await Utility.appendingHomeDirectory(customerPath)
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
-
-      if (exist && !user.userName) {
-        NavigationService.navigate('MapView', {
-          // 若未登录，则打开游客工作空间
-          wsData: [
-            {
-              DSParams: { server: wsPath },
-              // layerIndex: 0,
-              type: 'Workspace',
-            },
-            ConstOnline['Google'],
-          ],
-          mapName: '外业采集',
-          isExample: false,
-        })
+      if (user.userName) {
+        const userWSPath =
+          ConstPath.UserPath +
+          user.userName +
+          '/' +
+          ConstPath.RelativeFilePath.Workspace
+        wsPath = await Utility.appendingHomeDirectory(userWSPath)
       } else {
-        // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', {
-          wsData: [
-            {
-              DSParams: { server: wsPath },
-              // layerIndex: 0,
-              type: 'Workspace',
-            },
-            ConstOnline['Google'],
-          ],
-          mapName: '外业采集',
-          isExample: false,
-        })
+        wsPath = await Utility.appendingHomeDirectory(customerPath)
       }
+      NavigationService.navigate('MapView', {
+        // 若未登录，则打开游客工作空间
+        wsData: [
+          {
+            DSParams: { server: wsPath },
+            // layerIndex: 0,
+            type: 'Workspace',
+          },
+          ConstOnline['Google'],
+        ],
+        mapName: '外业采集',
+        isExample: false,
+      })
     },
   },
   {

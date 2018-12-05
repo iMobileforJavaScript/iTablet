@@ -48,7 +48,7 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
-    this.container && this.container.setLoading(true, '地图加载中')
+    // this.container && this.container.setLoading(true, '地图加载中')
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
@@ -88,6 +88,7 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
+    // await this.initListener()
     if (!this.path) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
@@ -97,9 +98,12 @@ export default class Map3D extends React.Component {
       let data = { server: this.path }
       let result = await SScene.openWorkspace(data)
       let mapList = await SScene.getMapList()
-      result && (await SScene.openMap(mapList[0].name))
+      result &&
+        SScene.openMap(mapList[0].name).then(() => {
+          this.initListener()
+          GLOBAL.openWorkspace = true
+        })
       this.container.setLoading(false)
-      await this.initListener()
     } catch (e) {
       this.container.setLoading(false)
     }
@@ -109,8 +113,9 @@ export default class Map3D extends React.Component {
     GLOBAL.sceneControl = sceneControl
     // GLOBAL.sceneControlId = sceneControlId
     this._addScene()
-    SScene.getAttribute()
+    // SScene.getAttribute()
     // this.container.setLoading(false)
+    // this.initListener()
   }
 
   _pop_list = (show, type) => {
@@ -174,13 +179,19 @@ export default class Map3D extends React.Component {
   back = () => {
     try {
       this.container && this.container.setLoading(true, '正在关闭')
-      ;(async function() {
-        await SScene.closeWorkspace()
+      if (GLOBAL.openWorkspace) {
+        (async function() {
+          await SScene.closeWorkspace()
+          this.container && this.container.setLoading(false)
+          NavigationService.goBack()
+        }.bind(this)())
+      } else {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
-      }.bind(this)())
+      }
     } catch (e) {
       this.container && this.container.setLoading(false)
+      NavigationService.goBack()
     }
     return true
   }

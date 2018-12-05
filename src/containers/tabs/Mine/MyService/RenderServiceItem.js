@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
-import { Image, Text, View, TouchableOpacity } from 'react-native'
+import React, { PureComponent } from 'react'
+import { Image, Text, View, TouchableOpacity, Platform } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
 import { ConstPath } from '../../../../constants'
+import { Toast } from '../../../../utils'
 let publishMap = []
 
-export default class RenderServiceItem extends Component {
+export default class RenderServiceItem extends PureComponent {
   props: {
     imageUrl: string,
     mapName: string,
@@ -15,6 +16,8 @@ export default class RenderServiceItem extends Component {
     mapTileAndRestTitle: Object,
     isDownloading: boolean,
     downloadProgress: string,
+    index: number,
+    itemOnPressCallBack: () => {},
   }
 
   defaultProps: {
@@ -30,24 +33,10 @@ export default class RenderServiceItem extends Component {
       progress: '',
       isDownloading: this.props.isDownloading,
     }
-    this.download = {
-      onProgress: this.downloadProgress,
-      onResult: this.downloadResult,
-    }
   }
 
-  downloadProgress = progress => {
-    if (typeof progress === 'number') {
-      this._changeProgress(progress)
-    }
-  }
-
-  downloadResult = result => {
-    if (typeof result === 'boolean') {
-      this._changeProgress('下载完成')
-    } else {
-      this._changeProgress('下载失败')
-    }
+  setDownloadProgress = progress => {
+    this.setState({ progress: progress })
   }
 
   _downloadMapFile = async mapTitle => {
@@ -59,20 +48,13 @@ export default class RenderServiceItem extends Component {
     )
     let isFileExist = await Utility.fileIsExist(savePath)
     if (isFileExist) {
-      this._changeProgress('下载完成')
+      this.setState({ progress: '下载完成' })
       return
     }
+    this.props.itemOnPressCallBack &&
+      this.props.itemOnPressCallBack(this.props.index)
     let fileName = onlineFileName.substring(0, onlineFileName.length - 4)
-    SOnlineService.downloadFile(savePath, fileName, this.download)
-  }
-
-  _changeProgress = result => {
-    if (typeof result === 'number') {
-      let progress = '下载' + result.toFixed(0) + '%'
-      this.setState({ progress: progress })
-    } else {
-      this.setState({ progress: result, isDownloading: false })
-    }
+    SOnlineService.downloadFile(savePath, fileName)
   }
 
   _navigator = async (mapUrl, restTitle) => {
@@ -90,13 +72,15 @@ export default class RenderServiceItem extends Component {
       mapName: this.props.mapName,
       isExample: true,
     })
-    if (publishMap.indexOf(restTitle) === -1) {
-      let publish = await SOnlineService.changeServiceVisibility(
-        restTitle,
-        true,
-      )
-      if (typeof publish === 'boolean' && publish === true) {
-        publishMap.push(restTitle)
+    if (Platform.OS === 'ios') {
+      if (publishMap.indexOf(restTitle) === -1) {
+        let publish = await SOnlineService.changeServiceVisibility(
+          restTitle,
+          true,
+        )
+        if (typeof publish === 'boolean' && publish === true) {
+          publishMap.push(restTitle)
+        }
       }
     }
   }
@@ -118,7 +102,7 @@ export default class RenderServiceItem extends Component {
               style={styles.itemTopInternalImageStyle}
               source={{
                 url: this.props.imageUrl,
-                credentials: 'include',
+                // credentials:'include',
               }}
             />
           </TouchableOpacity>
@@ -147,8 +131,11 @@ export default class RenderServiceItem extends Component {
                 <TouchableOpacity
                   style={{ width: 80, height: textHeight }}
                   onPress={() => {
-                    this._changeProgress('下载中...')
-                    this._downloadMapFile(mapTitle)
+                    if (this.props.isDownloading) {
+                      this._downloadMapFile(mapTitle)
+                    } else {
+                      Toast.show('有地图正在下载')
+                    }
                   }}
                 >
                   <Text style={styles.textStyle}>下载地图</Text>

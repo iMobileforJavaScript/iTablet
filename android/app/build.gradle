@@ -98,12 +98,12 @@ android {
         release_config {
             keyAlias 'supermap'
             keyPassword 'supermap321'
-            storeFile file('../keystores/release.keystore')
+            storeFile file('keystores/release.jks')
             storePassword 'supermap123'
         }
     }
     compileSdkVersion 27
-    buildToolsVersion "23.0.1"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
@@ -116,6 +116,12 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g"
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
     splits {
         abi {

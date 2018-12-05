@@ -7,7 +7,7 @@ import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
@@ -77,6 +77,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_START, {
         containerType: 'table',
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
@@ -244,13 +245,13 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showEdit = async () => {
-    if (!this.props.symbol.currentSymbol.type) {
-      Toast.show('请选择图层')
-      return
-    }
+    // if (!this.props.symbol.currentSymbol.type) {
+    //   Toast.show('请选择图层')
+    //   return
+    // }
     await SMap.setAction(Action.SELECT)
-    this.props.addGeometrySelectedListener &&
-      (await this.props.addGeometrySelectedListener())
+    // this.props.addGeometrySelectedListener &&
+    //   (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
     let height = ConstToolType.HEIGHT[3]
     let column = 4
@@ -259,21 +260,25 @@ export default class FunctionToolbar extends React.Component {
       let type = '',
         tableType = 'normal'
       switch (this.props.symbol.currentSymbol.type) {
-        case 'marker':
-          type = ConstToolType.MAP_EDIT_POINT
-          height = ConstToolType.HEIGHT[0]
-          column = 5
-          break
-        case 'line':
-          type = ConstToolType.MAP_EDIT_LINE
-          height = ConstToolType.HEIGHT[2]
-          break
-        case 'fill':
-          type = ConstToolType.MAP_EDIT_REGION
-          height = ConstToolType.HEIGHT[2]
-          tableType = 'scroll'
-          break
+        // case 'marker':
+        //   type = ConstToolType.MAP_EDIT_POINT
+        //   height = ConstToolType.HEIGHT[0]
+        //   column = 5
+        //   break
+        // case 'line':
+        //   type = ConstToolType.MAP_EDIT_LINE
+        //   height = ConstToolType.HEIGHT[2]
+        //   break
+        // case 'fill':
+        //   type = ConstToolType.MAP_EDIT_REGION
+        //   height = ConstToolType.HEIGHT[2]
+        //   tableType = 'scroll'
+        //   break
+        default:
+          type = ConstToolType.MAP_EDIT_DEFAULT
+          height = 0
       }
+      GLOBAL.currentToolbarType = type
       toolRef.setVisible(true, type, {
         isFullScreen: false,
         column,
@@ -283,12 +288,12 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  showMore = async () => {
+  showMore = async type => {
     // this.moreToolbar && this.moreToolbar.showMore(true, e)
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_MORE, {
+      toolRef.setVisible(true, type, {
         isFullScreen: true,
         column: 4,
         height: ConstToolType.HEIGHT[0],
@@ -487,6 +492,15 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_function_add.png'),
           // },
           {
+            key: '开始',
+            title: '开始',
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_base_map.png'),
+          },
+          {
             title: '底图',
             action: this.changeBaseLayer,
             image: require('../../../../assets/function/icon_function_base_map.png'),
@@ -505,11 +519,6 @@ export default class FunctionToolbar extends React.Component {
             title: '工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
-          },
-          {
-            title: '更多',
-            action: this.showMore,
-            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -548,7 +557,6 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '工具',
             title: '工具',
-            action: this.showTool,
             size: 'large',
             image: require('../../../../assets/function/icon_function_theme_tools.png'),
             selectMode: 'flash',
@@ -561,7 +569,6 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '更多',
             title: '更多',
-            action: this.showMore,
             image: require('../../../../assets/function/icon_function_theme_more.png'),
           },
         ]
@@ -607,7 +614,9 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.showMore,
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE)
+            },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]

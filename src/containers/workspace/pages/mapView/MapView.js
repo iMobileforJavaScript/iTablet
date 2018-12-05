@@ -11,6 +11,7 @@ import {
   DatasetType,
   SMap,
   SCollector,
+  Utility,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -19,6 +20,8 @@ import {
   MapController,
   ToolBar,
   MenuAlertDialog,
+  SaveView,
+  AlertDialog,
 } from '../../componets'
 import constants from '../../constants'
 import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
@@ -28,9 +31,16 @@ import {
   MTBtn,
   UsualTitle,
   Dialog,
+  SaveMapNameDialog,
+  SaveDialog,
 } from '../../../../components'
-import { Toast, AudioAnalyst, scaleSize } from '../../../../utils'
-import { ConstPath, Const } from '../../../../constants'
+import { Toast, AudioAnalyst, scaleSize, jsonUtil } from '../../../../utils'
+import {
+  ConstPath,
+  Const,
+  ConstToolType,
+  ConstInfo,
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
 import styles from './styles'
@@ -66,6 +76,7 @@ export default class MapView extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type || 'LOCAL'
+    this.mapType = params.mapType || 'DEFAULT'
     this.operationType = params.operationType || constants.COLLECTION
     this.isExample = params.isExample || false
     // this.DSParams = params.DSParams || null
@@ -90,6 +101,7 @@ export default class MapView extends React.Component {
           wsName.substring(0, wsName.lastIndexOf('.'))
 
     this.state = {
+      showMap: false, // 控制地图初始化显示
       data: params.data,
       popShow: false, //  一级popView显示控制
       popType: '',
@@ -105,18 +117,22 @@ export default class MapView extends React.Component {
 
     this.closeInfo = [
       {
-        btntitle: '关闭并保存',
+        btntitle: '是',
         action: () => {
           this.saveMap(NavigationService.goBack(this.props.nav.routes[1].key))
+          //this.saveMapAndClose()
+          //this.mapType = 'DEFAULT'
           this.AlertDialog.setDialogVisible(false)
         },
       },
       {
-        btntitle: '关闭不保存',
+        btntitle: '否',
         action: () => {
           this.closeWorkspace(() =>
             NavigationService.goBack(this.props.nav.routes[1].key),
           )
+          // SMap.closeMap()
+          //this.mapType = 'DEFAULT'
           this.AlertDialog.setDialogVisible(false)
         },
       },
@@ -133,9 +149,15 @@ export default class MapView extends React.Component {
 
   componentDidMount() {
     this.container && this.container.setLoading(true, '地图加载中')
+    this.setState({
+      showMap: true,
+    })
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
+    if (this.toolBox) {
+      GLOBAL.toolBox = this.toolBox
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -183,21 +205,23 @@ export default class MapView extends React.Component {
         this.clearData()
         // await this._remove_measure_listener()
         // await this._removeGeometrySelectedListener()
-        this.mapControl && (await this.mapControl.removeMeasureListener())
-        this.mapControl &&
-          (await this.mapControl.removeGeometrySelectedListener())
+        // this.mapControl && (await this.mapControl.removeMeasureListener())
+        // this.mapControl &&
+        //   (await this.mapControl.removeGeometrySelectedListener())
 
-        this.map && (await this.map.close())
-        await this.workspace.closeAllDatasource()
-        this.workspace && (await this.workspace.closeWorkspace())
+        // this.map && (await this.map.close())
+        // await this.workspace.closeAllDatasource()
+        // this.workspace && (await this.workspace.closeWorkspace())
 
         // this.map && await this.map.dispose()
-        this.mapControl && (await this.mapControl.dispose())
+        // this.mapControl && (await this.mapControl.dispose())
         // this.workspace && await this.workspace.dispose()
 
-        this.map = null
-        this.mapControl = null
-        this.workspace = null
+        this._removeGeometrySelectedListener()
+
+        // this.map = null
+        // this.mapControl = null
+        // this.workspace = null
         this.container && this.container.setLoading(false)
         cb && cb()
       }.bind(this),
@@ -421,7 +445,43 @@ export default class MapView extends React.Component {
 
   geometrySelected = event => {
     this.props.setSelection && this.props.setSelection(event)
-    SMap.appointEditGeometry(event.id, event.layerInfo.name)
+    switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_POINT_SELECT:
+        break
+      case ConstToolType.MAP_EDIT_POINT:
+      case ConstToolType.MAP_EDIT_LINE:
+      case ConstToolType.MAP_EDIT_REGION:
+      case ConstToolType.MAP_EDIT_DEFAULT:
+        SMap.appointEditGeometry(event.id, event.layerInfo.name)
+        if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
+          let column = 4,
+            height = ConstToolType.HEIGHT[3],
+            tableType = 'normal',
+            type = ''
+          switch (event.layerInfo.type) {
+            case DatasetType.POINT:
+              type = ConstToolType.MAP_EDIT_POINT
+              height = ConstToolType.HEIGHT[0]
+              column = 5
+              break
+            case DatasetType.LINE:
+              type = ConstToolType.MAP_EDIT_LINE
+              height = ConstToolType.HEIGHT[2]
+              break
+            case DatasetType.REGION:
+              type = ConstToolType.MAP_EDIT_REGION
+              height = ConstToolType.HEIGHT[2]
+              break
+          }
+          this.toolBox.setVisible(true, type, {
+            isFullScreen: false,
+            column,
+            height,
+            tableType,
+          })
+        }
+        break
+    }
   }
 
   geometryMultiSelected = () => {
@@ -550,36 +610,236 @@ export default class MapView extends React.Component {
   toDownLoad = () => {
     Toast.show('功能待完善')
   }
+  // 地图保存
+  saveMap = (name = '') => {
+    SMap.saveMap(name).then(result => {
+      Toast.show(
+        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      )
+    })
+    // if (this.setting && this.setting.isVisible()) {
+    //   this.setting.close()
+    // } else {
+    //   // if (this.map.isModified() && this.type !== "ONLINE" ) {
+    //   if (this.map.isModified() && this.type !== 'ONLINE') {
+    //     if (this.type && this.type === 'LOCAL') {
+    //       try {
+    //         let saveMap = await this.map.save()
+    //         let saveWs = await this.workspace.saveWorkspace()
+    //         if (!saveMap || !saveWs) {
+    //           Toast.show('保存失败')
+    //         } else {
+    //           Toast.show('保存成功')
+    //           cb && cb()
+    //         }
+    //       } catch (e) {
+    //         Toast.show('保存失败')
+    //       }
+    //     } else {
+    //       await this.saveDialog.setDialogVisible(true)
+    //     }
+    //   } else {
+    //     this.closeWorkspace(() =>
+    //       NavigationService.goBack(this.props.nav.routes[1].key),
+    //     )
+    //   }
+    // }
+  }
+  // 地图保存为xml(fileName, cb)
+  saveMapToXML = mapName => {
+    this.container.setLoading(true, '正在保存')
+    ;(async function() {
+      try {
+        const filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          mapName +
+          '.xml'
+        let config = await jsonUtil.readConfig()
+        SMap.saveMapToXML(filePath).then(result => {
+          if (!result) {
+            Toast.show('保存失败')
+            this.container.setLoading(false)
+          } else {
+            Toast.show('保存成功')
+            this.container.setLoading(false)
+            //获取数据源
+            //修改数据
+            SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
+              let data = []
+              for (let i = 0; i < dataSourceAlias.length; i++) {
+                data[i] = dataSourceAlias[i].title
+              }
+
+              for (let i = 0; i < config.data[0].maps.length; i++) {
+                if (config.data[0].maps[i].mapName === mapName + '.xml') {
+                  config.data[0].maps[i].UDBName = data
+                  break
+                }
+              }
+              (async function() {
+                await jsonUtil.updateMapInfo(config)
+              }.bind(this)())
+            })
+          }
+        })
+      } catch (e) {
+        Toast.show('保存失败')
+        this.saveXMLDialog.setDialogVisible(false)
+        this.container.setLoading(false)
+      }
+    }.bind(this)())
+  }
+
+  // 地图保存为xml(fileName, cb)
+  saveMapToXMLWithDialog = ({ mapName }) => {
+    // this.container.setLoading(true, '正在保存')
+    (async function() {
+      try {
+        const filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          mapName +
+          '.xml'
+        let config = await jsonUtil.readConfig()
+        SMap.saveMapToXML(filePath).then(result => {
+          if (!result) {
+            Toast.show('保存失败')
+            this.saveXMLDialog.setDialogVisible(false)
+            // this.container.setLoading(false)
+          } else {
+            Toast.show('保存成功')
+            this.saveXMLDialog.setDialogVisible(false)
+            // this.container.setLoading(false)
+            this.mapType = 'LOAD'
+            //获取数据源
+            SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
+              let data = []
+              for (let i = 0; i < dataSourceAlias.length; i++) {
+                data[i] = dataSourceAlias[i].title
+              }
+
+              jsonUtil.saveMapInfo(config, mapName, data)
+            })
+          }
+        })
+      } catch (e) {
+        Toast.show('保存失败')
+        this.saveXMLDialog.setDialogVisible(false)
+        // this.container.setLoading(false)
+      }
+    }.bind(this)())
+  }
 
   // 地图保存
-  saveMap = async (cb = () => {}) => {
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      // if (this.map.isModified() && this.type !== "ONLINE" ) {
-      if (this.map.isModified() && this.type !== 'ONLINE') {
-        if (this.type && this.type === 'LOCAL') {
+  saveMapWithNoWorkspace = async () => {
+    SMap.isModified().then(result => {
+      if (result) {
+        //有修改
+        if (this.mapType === 'DEFAULT' || this.mapType === 'CREATE') {
+          //默认地图和创建地图
+          //输入地图名字，弹出保存框
+          this.saveXMLDialog.setDialogVisible(true)
+        } else {
           try {
-            let saveMap = await this.map.save()
-            let saveWs = await this.workspace.saveWorkspace()
-            if (!saveMap || !saveWs) {
-              Toast.show('保存失败')
-            } else {
-              Toast.show('保存成功')
-              cb && cb()
-            }
+            (async function() {
+              let mapName = await SMap.getMapName()
+              await this.saveMapToXML(mapName)
+            }.bind(this)())
           } catch (e) {
             Toast.show('保存失败')
           }
-        } else {
-          await this.saveDialog.setDialogVisible(true)
         }
-      } else {
-        this.closeWorkspace(() =>
-          NavigationService.goBack(this.props.nav.routes[1].key),
-        )
       }
-    }
+    })
+  }
+
+  // 地图保存为xml 同时 关闭地图
+  saveMapToXMLAndClose = () => {
+    // this.container.setLoading(true, '正在保存')
+    (async function() {
+      try {
+        let mapName = await SMap.getMapName()
+        const filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          mapName +
+          '.xml'
+        let config = await jsonUtil.readConfig()
+
+        SMap.saveMapToXML(filePath).then(result => {
+          if (!result) {
+            Toast.show('保存失败')
+            this.saveMapDialog.setDialogVisible(false)
+            this.container.setLoading(false)
+          } else {
+            Toast.show('保存成功')
+            this.container.setLoading(false)
+            this.saveMapDialog.setDialogVisible(false)
+            //获取数据源
+            //修改数据
+            SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
+              let data = []
+              for (let i = 0; i < dataSourceAlias.length; i++) {
+                data[i] = dataSourceAlias[i].title
+              }
+
+              jsonUtil.saveMapInfo(config, mapName, data)
+            })
+          }
+        })
+      } catch (e) {
+        Toast.show('保存失败')
+        this.saveMapDialog.setDialogVisible(false)
+        this.container.setLoading(false)
+      }
+    }.bind(this)())
+  }
+  // 地图保存 同时 关闭地图
+  saveMapAndClose = () => {
+    this.container.setLoading(true, '正在保存')
+    ;(async function() {
+      try {
+        let mapName = await SMap.getMapName()
+        const filePath =
+          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          mapName +
+          '.xml'
+        let config = await jsonUtil.readConfig()
+
+        SMap.saveMapToXML(filePath).then(result => {
+          if (!result) {
+            Toast.show('保存失败')
+            this.AlertDialog.setDialogVisible(false)
+            this.container.setLoading(false)
+          } else {
+            Toast.show('保存成功')
+            this.container.setLoading(false)
+            this.AlertDialog.setDialogVisible(false)
+            //获取数据源
+            //修改数据
+            SMap.getMapDatasourcesAlias().then(dataSourceAlias => {
+              let data = []
+              for (let i = 0; i < dataSourceAlias.length; i++) {
+                data[i] = dataSourceAlias[i].title
+              }
+
+              for (let i = 0; i < config.data[0].maps.length; i++) {
+                if (config.data[0].maps[i].mapName === mapName + '.xml') {
+                  config.data[0].maps[i].UDBName = data
+                  break
+                }
+              }
+              SMap.closeMap()
+              ;(async function() {
+                await jsonUtil.updateMapInfo(config)
+              }.bind(this)())
+            })
+          }
+        })
+      } catch (e) {
+        Toast.show('保存失败')
+        this.AlertDialog.setDialogVisible(false)
+        this.container.setLoading(false)
+      }
+    }.bind(this)())
   }
 
   // 显示删除图层Dialog
@@ -596,11 +856,19 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         if (!this.props.selection || !this.props.selection.id) return
-        let result = await SCollector.remove(this.props.selection.id)
+        let result = await SCollector.remove(
+          this.props.selection.id,
+          this.props.selection.layerInfo.path,
+        )
         if (result) {
           Toast.show('删除成功')
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
+          // 删除对象后，编辑设为为选择状态
+          this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+            isFullScreen: false,
+            height: 0,
+          })
         } else {
           Toast.show('删除失败')
         }
@@ -688,6 +956,7 @@ export default class MapView extends React.Component {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
           }
         }
+        this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)
@@ -759,6 +1028,22 @@ export default class MapView extends React.Component {
         showMapMenu: isShow,
       })
     }
+  }
+
+  /**
+   * 下方的保存地图提示组建
+   * @param visible
+   */
+  setSaveViewVisible = visible => {
+    this.SaveMapView && this.SaveMapView.setVisible(visible)
+  }
+
+  /**
+   * 中间弹出的保存地图组建
+   * @param visible
+   */
+  setSaveMapDialogVisible = visible => {
+    this.SaveDialog && this.SaveDialog.setDialogVisible(visible)
   }
 
   /**
@@ -842,6 +1127,25 @@ export default class MapView extends React.Component {
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
+        setMapType={this.setMapType}
+        save={() => {
+          //this.saveMapWithNoWorkspace()
+        }}
+        saveAs={() => {
+          //弹出保存框
+          //this.saveXMLDialog.setDialogVisible(true)
+        }}
+        closeOneMap={() => {
+          //弹出关闭选项
+          //SMap.isModified().then(result =>{
+          //  if(result){
+          //    if(this.mapType === 'LOAD')
+          //      this.AlertDialog.setDialogVisible(true)
+          //    else
+          //      this.saveMapDialog.setDialogVisible(true)
+          //  }
+          //})
+        }}
       />
     )
   }
@@ -874,6 +1178,11 @@ export default class MapView extends React.Component {
     )
   }
 
+  /** 改变地图存储类型 是否有本地XML文件 **/
+  setMapType = mapType => {
+    this.mapType = mapType
+  }
+
   renderTool = () => {
     return (
       <ToolBar
@@ -885,6 +1194,9 @@ export default class MapView extends React.Component {
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         showFullMap={this.showFullMap}
+        setSaveViewVisible={this.setSaveViewVisible}
+        setSaveMapDialogVisible={this.setSaveMapDialogVisible}
+        setContainerLoading={this.setLoading}
       />
     )
   }
@@ -908,29 +1220,17 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        <SMMapView
-          ref={ref => (GLOBAL.mapView = ref)}
-          style={styles.map}
-          onGetInstance={this._onGetInstance}
-        />
+        {this.state.showMap && (
+          <SMMapView
+            ref={ref => (GLOBAL.mapView = ref)}
+            style={styles.map}
+            onGetInstance={this._onGetInstance}
+          />
+        )}
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
-        {/*<TouchableOpacity*/}
-        {/*onPress={() => {*/}
-        {/*SMap.getLayers()*/}
-        {/*}}*/}
-        {/*style={{*/}
-        {/*position: 'absolute',*/}
-        {/*width: 80,*/}
-        {/*height: 80,*/}
-        {/*left: 20,*/}
-        {/*top: 120,*/}
-        {/*backgroundColor: 'red',*/}
-        {/*zIndex: 10000,*/}
-        {/*}}*/}
-        {/*/>*/}
         {/*{this.renderPopMeasureBar()}*/}
         {/*{this.renderChangeLayerBtn()}*/}
         {/*{this.renderToolBar()}*/}
@@ -943,6 +1243,33 @@ export default class MapView extends React.Component {
           confirmAction={this.removeObject}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}
+        />
+        <SaveMapNameDialog
+          ref={ref => (this.saveXMLDialog = ref)}
+          confirmAction={this.saveMapToXMLWithDialog}
+          showWsName={this.showDialogCaption}
+          mapName={this.state.mapName}
+        />
+        <SaveMapNameDialog
+          ref={ref => (this.saveMapDialog = ref)}
+          confirmAction={this.saveMapToXMLAndClose}
+          showWsName={this.showDialogCaption}
+          mapName={this.state.mapName}
+        />
+        <AlertDialog
+          ref={ref => (this.AlertDialog = ref)}
+          childrens={this.closeInfo}
+          Alerttitle={'是否保存当前地图'}
+        />
+        <SaveView
+          ref={ref => (this.SaveMapView = ref)}
+          save={this.saveMap}
+          action={() => {}}
+        />
+        <SaveDialog
+          ref={ref => (this.SaveDialog = ref)}
+          confirmAction={data => this.saveMap(data.mapName)}
+          type="normal"
         />
         {/*<Dialog*/}
         {/*ref={ref => (this.openDialog = ref)}*/}

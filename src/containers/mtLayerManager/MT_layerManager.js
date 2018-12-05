@@ -10,14 +10,16 @@ import { Container } from '../../components'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/componets'
 import { Action, SMap } from 'imobile_for_reactnative'
-
 import { LayerManager_item } from './components'
+import { ConstToolType } from '../../constants'
+import NavigationService from '../NavigationService'
 
 export default class MT_layerManager extends React.Component {
   props: {
     navigation: Object,
     editLayer: Object,
     setEditLayer: () => {},
+    setCurrentLayer: () => {},
   }
 
   constructor(props) {
@@ -32,7 +34,6 @@ export default class MT_layerManager extends React.Component {
     // wsName =
     //   wsName.lastIndexOf('.') > 0 &&
     //   wsName.substring(0, wsName.lastIndexOf('.'))
-    this.index
     this.state = {
       datasourceList: [],
       mapName: '',
@@ -64,12 +65,12 @@ export default class MT_layerManager extends React.Component {
       for (let i = 0; i < layerNameArr.length; i++) {
         layerNameArr[i].key = layerNameArr[i].name
         if (layerNameArr[i].isEditable) {
-          this.currentEditItemName = layerNameArr[i].name
           this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
         }
       }
       await SMap.setAction(Action.SELECT)
       // let mapName = await this.map.getName()
+
       this.setState({
         datasourceList: layerNameArr.concat(),
         refreshing: false,
@@ -305,9 +306,23 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  getLayerIndex = async ({ data }) => {
+  onPressRow = async ({ data }) => {
     this.index = await SMap.getLayerIndexByName(data.caption)
-    // console.warn(JSON.stringify(this.index))
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        Toast.show('当前图层为' + data.caption)
+      })
+    if (GLOBAL.Type === ConstToolType.MAP_EDIT) {
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        layerData: data,
+        height: ConstToolType.HEIGHT[2],
+      })
+      GLOBAL.toolBox.showFullMap()
+      NavigationService.goBack()
+    }
   }
 
   getChildList = async ({ data }) => {
@@ -362,14 +377,13 @@ export default class MT_layerManager extends React.Component {
             currentOpenItemName: data.name,
           })
         }}
-        onPress={this.getLayerIndex}
+        onPress={this.onPressRow}
         onArrowPress={this.getChildList}
       />
     )
   }
 
   renderToolBar = () => {
-    // this.props.navigation.navigate()
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
   }
 

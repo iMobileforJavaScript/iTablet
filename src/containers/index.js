@@ -26,7 +26,7 @@ import AddDataset from './addDataset'
 import AddLayerGroup from './addLayerGroup'
 import MapChange from './mapChange'
 import {
-  LayerAttribute,
+  layerSelectionAttribute,
   LayerAttributeEdit,
   LayerAttributeAdd,
   LayerAttributeObj,
@@ -158,8 +158,8 @@ export default StackNavigator(
         header: null,
       },
     },
-    LayerAttribute: {
-      screen: LayerAttribute,
+    layerSelectionAttribute: {
+      screen: layerSelectionAttribute,
       navigationOptions: {
         header: null,
       },

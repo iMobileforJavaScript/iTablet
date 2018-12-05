@@ -7,6 +7,8 @@ import {
   SThemeCartography,
 } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
+import { Toast } from '../../../../utils'
+import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
@@ -31,7 +33,7 @@ function getTabBarData(type, params = {}) {
     tabBarData = getEditData(type)
   } else if (type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
-  } else if (type === ConstToolType.MAP_MORE) {
+  } else if (type.indexOf('MAP_MORE') > -1) {
     tabBarData = MoreData.getMapMore(type, params)
   } else if (type === ConstToolType.MAP_START) {
     tabBarData = getStart(type)
@@ -403,7 +405,19 @@ function getEditData(type) {
       ]
       break
   }
-  buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX, ToolbarBtnType.COMMIT]
+  if (type === ConstToolType.MAP_EDIT_DEFAULT) {
+    buttons = [
+      ToolbarBtnType.CANCEL,
+      ToolbarBtnType.PLACEHOLDER,
+      ToolbarBtnType.COMMIT,
+    ]
+  } else {
+    buttons = [
+      ToolbarBtnType.CANCEL,
+      ToolbarBtnType.FLEX,
+      ToolbarBtnType.COMMIT,
+    ]
+  }
   return { data, buttons }
 }
 
@@ -860,6 +874,14 @@ function getStart(type) {
   if (type !== ConstToolType.MAP_START) return { data, buttons }
   data = [
     {
+      key: constants.WORKSPACE,
+      title: constants.WORKSPACE,
+      action: openWorkspace,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
       key: constants.OPEN,
       title: constants.OPEN,
       action: openMap,
@@ -1012,9 +1034,47 @@ function patchHollowRegion() {
   return SMap.setAction(Action.PATCH_HOLLOW_REGION)
 }
 
+/** 切换工作空间 **/
+function openWorkspace() {
+  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  NavigationService.navigate('WorkspaceFlieList', {
+    type: 'WORKSPACE',
+    title: '选择工作空间',
+    cb: path => {
+      SMap.closeWorkspace().then(async () => {
+        try {
+          _params.setContainerLoading &&
+            _params.setContainerLoading(true, '正在打开地图')
+          let data = { server: path }
+          let result = await SMap.openWorkspace(data)
+          Toast.show(result ? '已为您切换工作空间' : '切换工作空间失败')
+          NavigationService.goBack()
+          _params.setContainerLoading && _params.setContainerLoading(false)
+        } catch (error) {
+          Toast.show('打开失败')
+          _params.setContainerLoading && _params.setContainerLoading(false)
+        }
+      })
+    },
+  })
+}
+
 /** 打开地图 **/
 function openMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  SMap.getMaps().then(list => {
+    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      containerType: 'list',
+      height: ConstToolType.HEIGHT[3],
+      data: [
+        {
+          title: '地图',
+          data: list,
+        },
+      ],
+    })
+  })
 }
 
 /** 新建地图 **/

@@ -12,6 +12,7 @@ import MapController from './MapController'
 import ToolBar from './ToolBar'
 import SymbolTabs from './SymbolTabs'
 import MenuAlertDialog from './MenuAlertDialog'
+import SaveView from './SaveView'
 
 export {
   PopList,
@@ -26,6 +27,7 @@ export {
   MapController,
   ToolBar,
   SymbolTabs,
+  SaveView,
   constants,
   MenuAlertDialog,
 }

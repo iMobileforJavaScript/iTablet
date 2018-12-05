@@ -682,11 +682,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
-            timestampString = "565263583.62657"
+            timestampString = "565611207.194531"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "430"
-            endingLineNumber = "430"
+            startingLineNumber = "442"
+            endingLineNumber = "442"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -698,11 +698,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
-            timestampString = "565263583.626999"
+            timestampString = "565611207.1946191"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "477"
-            endingLineNumber = "477"
+            startingLineNumber = "489"
+            endingLineNumber = "489"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -714,11 +714,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
-            timestampString = "565263583.627275"
+            timestampString = "565611207.194688"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "469"
-            endingLineNumber = "469"
+            startingLineNumber = "481"
+            endingLineNumber = "481"
             landmarkName = "RCT_REMAP_METHOD"
             landmarkType = "9">
          </BreakpointContent>
@@ -736,6 +736,22 @@
             startingLineNumber = "1945"
             endingLineNumber = "1945"
             landmarkName = "UGLayer3Ds::AddLayer(UGLayerURLParameter&amp; urlParam)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "../node_modules/imobile_for_reactnative/ios/interfaces/SScene.m"
+            timestampString = "565611207.19479"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "879"
+            endingLineNumber = "879"
+            landmarkName = "-getSelectedAttribute:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

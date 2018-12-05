@@ -9,7 +9,7 @@ export default StyleSheet.create({
   },
   head: {
     height: scaleSize(60),
-    backgroundColor: color.blue2,
+    backgroundColor: color.theme,
   },
   wrapper: {
     flexDirection: 'row',

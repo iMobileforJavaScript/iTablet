@@ -38,10 +38,26 @@ export default class Map3DToolBar extends React.Component {
         SScene.addTerrainLayer(url, name)
         break
       case 'WMTS':
-        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true)
+        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true).then(
+          result => {
+            if (result) {
+              Toast.show('添加成功')
+            } else {
+              Toast.show('添加失败，请检查网络')
+            }
+          },
+        )
         break
       case 'l3dBingMaps':
-        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true)
+        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true).then(
+          result => {
+            if (result) {
+              Toast.show('添加成功')
+            } else {
+              Toast.show('添加失败，请检查网络')
+            }
+          },
+        )
         break
       default:
         Toast.show('底图不存在')
@@ -71,7 +87,7 @@ export default class Map3DToolBar extends React.Component {
     }
     if (this.props.type === 'MAP3D_ADD_LAYER') {
       return (
-        <TouchableOpacity>
+        <TouchableOpacity onPress={item.action()}>
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
@@ -86,7 +102,6 @@ export default class Map3DToolBar extends React.Component {
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
-      // return null
     }
     return <View />
   }
@@ -126,34 +141,41 @@ export default class Map3DToolBar extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    // Object.keys(this.state.data).forEach(key=>{
-    // attribute.push(
-    // <View style={styles.row}>
-    // <Text style={styles.name}>{item.name}</Text>
-    // <Text style={styles.value}>{item.value}</Text>
-    // </View>
-    return (
-      <View style={styles.row}>
-        <View style={styles.key}>
-          <Text style={styles.text}>{item.name}</Text>
-        </View>
-        <View style={styles.value}>
-          <Text style={styles.text}>{item.value}</Text>
-        </View>
-      </View>
-    )
-    //   )
-    // })
-    // this.state.data.forEach(element => {
-    //   attribute.push(
-    //     <View>
-    //     <Text>{element}</Text>
-    //     <Text>{this.state.data[element]}</Text>
-    //     </View>
-    //   )
-    // });
-    // return attribute
-    //  return (<View style={styles.container}></View>)
+    item.name = item.name.toUpperCase()
+    if (
+      item.name === 'SMUSERID' ||
+      item.name === 'MODELNAME' ||
+      item.name === 'LONGITUDE' ||
+      item.name === 'LATITUDE' ||
+      item.name === 'ALTITUDE'
+    ) {
+      return (
+        <TouchableOpacity style={styles.row}>
+          <View style={styles.key}>
+            <Text style={styles.text}>{item.name}</Text>
+          </View>
+          <View style={styles.value}>
+            <Text style={styles.text}>{item.value}</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else if (
+      (item.name === 'description' && item.value !== '') ||
+      item.name === 'name'
+    ) {
+      return (
+        <TouchableOpacity style={styles.row}>
+          <View style={styles.key}>
+            <Text style={styles.text}>{item.name}</Text>
+          </View>
+          <View style={styles.value}>
+            <Text style={styles.text}>{item.value}</Text>
+          </View>
+        </TouchableOpacity>
+      )
+    } else {
+      return <View />
+    }
   }
 
   render() {
