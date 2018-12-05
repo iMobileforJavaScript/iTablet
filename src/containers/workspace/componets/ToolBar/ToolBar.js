@@ -816,6 +816,7 @@ export default class ToolBar extends React.Component {
   }
 
   close = (type = this.state.type) => {
+    GLOBAL.currentToolbarType = ''
     // 关闭采集, type 为number时为采集类型，若有冲突再更改
     if (
       typeof type === 'number' ||
@@ -823,16 +824,25 @@ export default class ToolBar extends React.Component {
     ) {
       SCollector.stopCollect()
     }
-    // else if (type.indexOf('MAP_EDIT_') >= 0) {
-    //   SMap.setAction(Action.PAN)
-    // }
     if (
+      typeof type === 'string' &&
+      type.indexOf('MAP_EDIT_') >= 0 &&
+      type !== ConstToolType.MAP_EDIT_DEFAULT
+    ) {
+      GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
+      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+      this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+        isFullScreen: false,
+        height: 0,
+      })
+      SMap.setAction(Action.SELECT)
+    } else if (
       typeof type === 'number' ||
       (typeof type === 'string' && type.indexOf('MAP_') >= -1)
     ) {
+      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
       SMap.setAction(Action.PAN)
     }
-    GLOBAL.currentToolbarType = ''
     this.showToolbar(false)
     this.setState({ isTouchProgress: false, isSelectlist: false })
     this.props.existFullMap && this.props.existFullMap()

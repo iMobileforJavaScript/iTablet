@@ -7,7 +7,7 @@ import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 
@@ -227,10 +227,10 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showEdit = async () => {
-    if (!this.props.symbol.currentSymbol.type) {
-      Toast.show('请选择图层')
-      return
-    }
+    // if (!this.props.symbol.currentSymbol.type) {
+    //   Toast.show('请选择图层')
+    //   return
+    // }
     await SMap.setAction(Action.SELECT)
     // this.props.addGeometrySelectedListener &&
     //   (await this.props.addGeometrySelectedListener())
@@ -242,20 +242,23 @@ export default class FunctionToolbar extends React.Component {
       let type = '',
         tableType = 'normal'
       switch (this.props.symbol.currentSymbol.type) {
-        case 'marker':
-          type = ConstToolType.MAP_EDIT_POINT
-          height = ConstToolType.HEIGHT[0]
-          column = 5
-          break
-        case 'line':
-          type = ConstToolType.MAP_EDIT_LINE
-          height = ConstToolType.HEIGHT[2]
-          break
-        case 'fill':
-          type = ConstToolType.MAP_EDIT_REGION
-          height = ConstToolType.HEIGHT[2]
-          tableType = 'scroll'
-          break
+        // case 'marker':
+        //   type = ConstToolType.MAP_EDIT_POINT
+        //   height = ConstToolType.HEIGHT[0]
+        //   column = 5
+        //   break
+        // case 'line':
+        //   type = ConstToolType.MAP_EDIT_LINE
+        //   height = ConstToolType.HEIGHT[2]
+        //   break
+        // case 'fill':
+        //   type = ConstToolType.MAP_EDIT_REGION
+        //   height = ConstToolType.HEIGHT[2]
+        //   tableType = 'scroll'
+        //   break
+        default:
+          type = ConstToolType.MAP_EDIT_DEFAULT
+          height = 0
       }
       GLOBAL.currentToolbarType = type
       toolRef.setVisible(true, type, {
