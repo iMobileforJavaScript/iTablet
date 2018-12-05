@@ -197,7 +197,7 @@ export default class Mine extends Component {
         </Container>
       )
     } else {
-      return <Login setUser={this.props.setUser} />
+      return <Login setUser={this.props.setUser} user={this.props.user} />
     }
   }
 }

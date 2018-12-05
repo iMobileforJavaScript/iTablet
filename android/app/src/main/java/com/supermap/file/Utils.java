@@ -30,6 +30,28 @@ public class Utils {
         }
     }
 
+    public static void copyAssetFileToSDcard(Context context, String filePath, String fileName, String targetName) {
+        InputStream inputStream;
+        try {
+            inputStream = context.getResources().getAssets().open(fileName);// assets文件夹下的文件
+            File file = new File(filePath);
+            if (!file.exists()) {
+                file.mkdirs();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(filePath + "/" + targetName);// 保存到本地的文件夹下的文件
+            byte[] buffer = new byte[1024];
+            int count = 0;
+            while ((count = inputStream.read(buffer)) > 0) {
+                fileOutputStream.write(buffer, 0, count);
+            }
+            fileOutputStream.flush();
+            fileOutputStream.close();
+            inputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static boolean fileIsExit(String filePath) {
         File file = new File(filePath);
         return file.exists();

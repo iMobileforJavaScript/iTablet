@@ -7,6 +7,7 @@ import android.util.Log;
 import com.facebook.react.ReactActivity;
 import com.supermap.data.Environment;
 import com.supermap.file.Decompressor;
+import com.supermap.file.FileTools;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -35,34 +36,44 @@ public class MainActivity extends ReactActivity {
     }
 
     private void initEnvironment() {
-        Utils.copyAssetFileToSDcard(this, SDCARD + "/iTablet/license", "Trial_License.slm");
-        Environment.setLicensePath(SDCARD + "/iTablet/license");
-        Environment.initialization(this);
+        String licensePath = SDCARD + "/iTablet/license/";
+        String licenseName = "Trial_License.slm";
+        if (!Utils.fileIsExit(licensePath + licenseName)) {
+            Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
+            Environment.setLicensePath(SDCARD + "/iTablet/license");
+            Environment.initialization(this);
+        }
     }
 
     private void initDefaultData() {
+        FileTools.initUserDefaultData("Customer", this);
         // 拷贝默认的工作空间
-        String customerWs = SDCARD + "/iTablet/User/Customer/Data";
-        String customerWsName = "Customer.smwu";
-        if (!Utils.fileIsExit(customerWs + customerWsName)) {
-            Utils.copyAssetFileToSDcard(this, customerWs, customerWsName);
-        }
+//        String customerWs = SDCARD + "/iTablet/User/Customer/Data";
+//        String customerWsName = "Customer.smwu";
+//        if (!Utils.fileIsExit(customerWs + customerWsName)) {
+//            Utils.copyAssetFileToSDcard(this, customerWs, customerWsName);
+//        }
 //        // 拷贝默认的配置
 //        String configName = "mapinfo.txt";
 //        if (!Utils.fileIsExit(customerWs + configName)) {
 //            Utils.copyAssetFileToSDcard(this, customerWs, configName);
 //        }
         // 拷贝默认数据
-        String localPath = SDCARD + "/iTablet/data/local/";
-        String defaultZipData = "defaultData.zip";
-        Utils.copyAssetFileToSDcard(this, localPath, defaultZipData);
-        Decompressor.UnZipFolder(localPath + defaultZipData, localPath);
-        Utils.deleteFile(localPath + defaultZipData);
-        String localPath2 = SDCARD + "/iTablet/data/local/";
-        String defaultZipData2 = "OlympicGreen_android.zip";
-        Utils.copyAssetFileToSDcard(this, localPath2, defaultZipData2);
-        Decompressor.UnZipFolder(localPath2 + defaultZipData2, localPath2);
-        Utils.deleteFile(localPath2 + defaultZipData2);
+//        String localPath = SDCARD + "/iTablet/data/local/";
+//        String defaultZipData = "defaultData.zip";
+//        if (!Utils.fileIsExit(localPath + "Changchun")) {
+//            Utils.copyAssetFileToSDcard(this, localPath, defaultZipData);
+//            Decompressor.UnZipFolder(localPath + defaultZipData, localPath);
+//            Utils.deleteFile(localPath + defaultZipData);
+//        }
+
+//        String localPath2 = SDCARD + "/iTablet/data/local/";
+//        String defaultZipData2 = "OlympicGreen_android.zip";
+//        if (!Utils.fileIsExit(localPath2 + "OlympicGreen_android")) {
+//            Utils.copyAssetFileToSDcard(this, localPath2, defaultZipData2);
+//            Decompressor.UnZipFolder(localPath2 + defaultZipData2, localPath2);
+//            Utils.deleteFile(localPath2 + defaultZipData2);
+//        }
     }
 
     private void requestPermissions() {

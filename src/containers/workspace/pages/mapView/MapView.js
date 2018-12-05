@@ -1042,7 +1042,7 @@ export default class MapView extends React.Component {
    * @param visible
    */
   setSaveMapDialogVisible = visible => {
-    this.SaveMapDialog && this.SaveMapDialog.setDialogVisible(visible)
+    this.SaveDialog && this.SaveDialog.setDialogVisible(visible)
   }
 
   /**
@@ -1250,7 +1250,7 @@ export default class MapView extends React.Component {
           action={() => {}}
         />
         <SaveDialog
-          ref={ref => (this.SaveMapDialog = ref)}
+          ref={ref => (this.SaveDialog = ref)}
           confirmAction={data => this.saveMap(data.mapName)}
           type="normal"
         />

@@ -13,6 +13,7 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
+#import "SMFileUtil.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -73,8 +74,8 @@ static NSString* g_sampleCodeName = @"#";;
 
 #pragma mark - 初始化默认数据
 - (void)initDefaultData {
-  [self initCustomWorkspace];
-//  [self initDefaultWorkspace];
+//  [self initCustomWorkspace];
+  [self initDefaultWorkspace];
 }
 
 #pragma mark - 初始化游客工作空间
@@ -93,25 +94,7 @@ static NSString* g_sampleCodeName = @"#";;
 
 #pragma mark - 初始化默认工作空间数据
 -(void)initDefaultWorkspace {
-  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
-  NSString* commonPath = @"/Documents/iTablet/Common/";
-  NSString* dataPath = @"/Documents/iTablet/User/Customer/Data/";
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
-  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Workspace.zip"];
-  NSString* workspacePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"];
-  
-  if (![[NSFileManager defaultManager] fileExistsAtPath:workspacePath isDirectory:nil]) {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
-      BOOL isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
-      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-    } else {
-      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
-          BOOL isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
-          NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-        }
-    }
-  }
+  [FileTools initUserDefaultData:@"Customer"];
 }
 
 -(void)doSampleCodeNotification:(NSNotification *)notification
