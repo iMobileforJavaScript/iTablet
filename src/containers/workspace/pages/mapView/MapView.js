@@ -201,27 +201,8 @@ export default class MapView extends React.Component {
       async function() {
         this.container &&
           this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
-        // this.container && this.container.setLoading(true, '正在关闭')
         this.clearData()
-        // await this._remove_measure_listener()
-        // await this._removeGeometrySelectedListener()
-        // this.mapControl && (await this.mapControl.removeMeasureListener())
-        // this.mapControl &&
-        //   (await this.mapControl.removeGeometrySelectedListener())
-
-        // this.map && (await this.map.close())
-        // await this.workspace.closeAllDatasource()
-        // this.workspace && (await this.workspace.closeWorkspace())
-
-        // this.map && await this.map.dispose()
-        // this.mapControl && (await this.mapControl.dispose())
-        // this.workspace && await this.workspace.dispose()
-
         this._removeGeometrySelectedListener()
-
-        // this.map = null
-        // this.mapControl = null
-        // this.workspace = null
         this.container && this.container.setLoading(false)
         cb && cb()
       }.bind(this),
@@ -610,6 +591,7 @@ export default class MapView extends React.Component {
   toDownLoad = () => {
     Toast.show('功能待完善')
   }
+
   // 地图保存
   saveMap = (name = '') => {
     SMap.saveMap(name).then(result => {
@@ -617,34 +599,17 @@ export default class MapView extends React.Component {
         result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
       )
     })
-    // if (this.setting && this.setting.isVisible()) {
-    //   this.setting.close()
-    // } else {
-    //   // if (this.map.isModified() && this.type !== "ONLINE" ) {
-    //   if (this.map.isModified() && this.type !== 'ONLINE') {
-    //     if (this.type && this.type === 'LOCAL') {
-    //       try {
-    //         let saveMap = await this.map.save()
-    //         let saveWs = await this.workspace.saveWorkspace()
-    //         if (!saveMap || !saveWs) {
-    //           Toast.show('保存失败')
-    //         } else {
-    //           Toast.show('保存成功')
-    //           cb && cb()
-    //         }
-    //       } catch (e) {
-    //         Toast.show('保存失败')
-    //       }
-    //     } else {
-    //       await this.saveDialog.setDialogVisible(true)
-    //     }
-    //   } else {
-    //     this.closeWorkspace(() =>
-    //       NavigationService.goBack(this.props.nav.routes[1].key),
-    //     )
-    //   }
-    // }
   }
+
+  // 地图另存为
+  saveAsMap = (name = '') => {
+    SMap.saveAsMap(name).then(result => {
+      Toast.show(
+        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      )
+    })
+  }
+
   // 地图保存为xml(fileName, cb)
   saveMapToXML = mapName => {
     this.container.setLoading(true, '正在保存')
@@ -1201,11 +1166,6 @@ export default class MapView extends React.Component {
     )
   }
 
-  // /** 下方弹出的工具栏 **/
-  // renderToolBar = () => {
-  //   return <ToolBar style={styles.mapController} />
-  // }
-
   render() {
     return (
       <Container
@@ -1231,10 +1191,6 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
-        {/*{this.renderPopMeasureBar()}*/}
-        {/*{this.renderChangeLayerBtn()}*/}
-        {/*{this.renderToolBar()}*/}
-        {/*{this.renderSetting()}*/}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
@@ -1268,7 +1224,7 @@ export default class MapView extends React.Component {
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}
-          confirmAction={data => this.saveMap(data.mapName)}
+          confirmAction={data => this.saveAsMap(data.mapName)}
           type="normal"
         />
         {/*<Dialog*/}
