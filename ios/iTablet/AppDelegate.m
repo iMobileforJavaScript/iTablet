@@ -13,7 +13,6 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
-#import "SMFileUtil.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
