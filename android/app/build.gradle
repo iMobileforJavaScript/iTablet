@@ -102,6 +102,7 @@ android {
             storePassword 'supermap123'
         }
     }
+
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
@@ -116,6 +117,12 @@ android {
     }
     dexOptions {
         javaMaxHeapSize "4g"
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
     splits {
         abi {
