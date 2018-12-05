@@ -96,11 +96,12 @@ export default class Map3D extends React.Component {
     }
     try {
       let data = { server: this.path }
-      let result = await SScene.openWorkspace(data).then
+      let result = await SScene.openWorkspace(data)
       let mapList = await SScene.getMapList()
       result &&
         SScene.openMap(mapList[0].name).then(() => {
           this.initListener()
+          GLOBAL.openWorkspace = true
         })
       this.container.setLoading(false)
     } catch (e) {
@@ -178,15 +179,16 @@ export default class Map3D extends React.Component {
   back = () => {
     try {
       this.container && this.container.setLoading(true, '正在关闭')
-      ;(async function() {
-        await SScene.closeWorkspace()
+      if (GLOBAL.openWorkspace) {
+        (async function() {
+          await SScene.closeWorkspace()
+          this.container && this.container.setLoading(false)
+          NavigationService.goBack()
+        }.bind(this)())
+      } else {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
-      }.bind(this)())
-      // SScene.closeWorkspace().then(()=>{
-      //   this.container && this.container.setLoading(false)
-      //   NavigationService.goBack()
-      // })
+      }
     } catch (e) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()

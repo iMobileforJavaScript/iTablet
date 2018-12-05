@@ -102,7 +102,6 @@ export default class Map3DToolBar extends React.Component {
           <Text style={styles.item}>{item.title}</Text>
         </TouchableOpacity>
       )
-      // return null
     }
     return <View />
   }
@@ -142,12 +141,6 @@ export default class Map3DToolBar extends React.Component {
   }
 
   renderItem = ({ item }) => {
-    // Object.keys(this.state.data).forEach(key=>{
-    // attribute.push(
-    // <View style={styles.row}>
-    // <Text style={styles.name}>{item.name}</Text>
-    // <Text style={styles.value}>{item.value}</Text>
-    // </View>
     item.name = item.name.toUpperCase()
     if (
       item.name === 'SMUSERID' ||
@@ -184,18 +177,6 @@ export default class Map3DToolBar extends React.Component {
       return <View />
     }
   }
-  //   )
-  // })
-  // this.state.data.forEach(element => {
-  //   attribute.push(
-  //     <View>
-  //     <Text>{element}</Text>
-  //     <Text>{this.state.data[element]}</Text>
-  //     </View>
-  //   )
-  // });
-  // return attribute
-  //  return (<View style={styles.container}></View>)
 
   render() {
     if (this.props.type === 'MAP3D_ATTRIBUTE') {
