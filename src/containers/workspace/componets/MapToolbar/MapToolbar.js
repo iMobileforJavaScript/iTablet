@@ -122,8 +122,8 @@ export default class MapToolbar extends React.Component {
             image: require('../../../../assets/mapToolbar/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
             btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute')
+              // this.props.navigation &&
+              //   this.props.navigation.navigate('LayerAttribute')
             },
           },
           {
