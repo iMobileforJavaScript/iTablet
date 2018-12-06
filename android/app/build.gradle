@@ -102,6 +102,7 @@ android {
             storePassword 'supermap123'
         }
     }
+
     compileSdkVersion 27
     buildToolsVersion '26.0.2'
     defaultConfig {
