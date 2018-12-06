@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Image } from 'react-native'
 import { Container, Button } from '../../components'
-import { Toast } from '../../utils'
+// import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
@@ -25,7 +25,8 @@ export default class Personal extends Component {
         NavigationService.goBack()
         this.props.setUser()
       } catch (e) {
-        Toast.show('退出登录失败')
+        // Toast.show('退出登录失败')
+        this.props.setUser()
       }
     }.bind(this)())
   }

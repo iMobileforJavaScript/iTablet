@@ -11,6 +11,7 @@ import MapToolbar from './MapToolbar'
 import MapController from './MapController'
 import ToolBar from './ToolBar'
 import SymbolTabs from './SymbolTabs'
+import MenuAlertDialog from './MenuAlertDialog'
 import SaveView from './SaveView'
 
 export {
@@ -28,4 +29,5 @@ export {
   SymbolTabs,
   SaveView,
   constants,
+  MenuAlertDialog,
 }

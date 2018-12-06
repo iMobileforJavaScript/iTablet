@@ -5,17 +5,21 @@
 */
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, NativeModules } from 'react-native'
 import { Toast } from '../../../utils'
 import NavigationService from '../../NavigationService' //导航模块
 import { Container, TextBtn, BtnTwo } from '../../../components'
+import { ConstPath } from '../../../constants'
 import Input from './Input'
 import Tips from './Tips'
 import forge from 'node-forge'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, Utility } from 'imobile_for_reactnative'
+const NativeFileTool = NativeModules.FileTools
+
 export default class Login extends React.Component {
   props: {
     navigation: Object,
+    user: Object,
     setUser: () => {},
   }
 
@@ -56,6 +60,7 @@ export default class Login extends React.Component {
           // password: md.digest().toHex(),
           password: password,
         })
+        this.initUserDirectories(userName)
       } else {
         this.props.setUser({
           userName: '',
@@ -70,6 +75,31 @@ export default class Login extends React.Component {
         userName: '',
         password: '',
       })
+    }
+  }
+
+  // 初始用户化文件目录
+  initUserDirectories = async userName => {
+    try {
+      let paths = Object.keys(ConstPath.RelativePath)
+      let isCreate = true,
+        absolutePath = ''
+      for (let i = 0; i < paths.length; i++) {
+        let path =
+          ConstPath.UserPath + userName + '/' + ConstPath.RelativePath[paths[i]]
+        absolutePath = await Utility.appendingHomeDirectory(path)
+        let exist = await Utility.fileIsExistInHomeDirectory(path)
+        let fileCreated = exist || (await Utility.createDirectory(absolutePath))
+        isCreate = fileCreated && isCreate
+      }
+      if (isCreate) {
+        let initDataResult = await NativeFileTool.initUserDefaultData(userName)
+        !initDataResult && Toast.show('初始化用户数据失败')
+      } else {
+        Toast.show('创建用户目录失败')
+      }
+    } catch (e) {
+      Toast.show('创建用户目录失败')
     }
   }
 

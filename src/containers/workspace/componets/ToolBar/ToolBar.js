@@ -37,10 +37,12 @@ import {
   GeoStyle,
   SMCollectorType,
   Utility,
+  SThemeCartography,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
+import ThemeColorGradientType from './ThemeColorGradientType'
 
 import jsonUtil from '../../../../utils/jsonUtil'
 
@@ -75,6 +77,7 @@ export default class ToolBar extends React.Component {
     showFullMap: () => {},
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
+    getMenuAlertDialogRef: () => {},
   }
 
   static defaultProps = {
@@ -114,8 +117,14 @@ export default class ToolBar extends React.Component {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
+      themeUdbPath: '',
+      themeDatasourceAlias: '',
+      themeDatasetName: '',
+      themeExpress: 'SMID',
+      themeColor: 'TERRAIN',
       layerData: Object,
       selectName: '',
+
     }
     this.isShow = false
     this.isBoxShow = true
@@ -517,6 +526,44 @@ export default class ToolBar extends React.Component {
     return { data, buttons }
   }
 
+  getThemeExpress = async () => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: this.height,
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    // let path = '/storage/emulated/0/SampleData/World/World.udb'
+    // let DatasetName = 'Countries'
+    let list = await SThemeCartography.getThemeExpressByUdb(this.state.themeUdbPath, this.state.themeDatasetName)
+    let datalist = [{
+      title: '数据集字段',
+      data: list,
+    }]
+    this.setState({
+      data: datalist,
+      type: ConstToolType.MAP_THEME_PARAM_EXPRESSION,
+    })
+  }
+
+  getColorGradientType = async () => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: this.height,
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let list = await ThemeColorGradientType.getColorGradientType()
+    let datalist = [{
+      title: '颜色方案',
+      data: list,
+    }]
+    this.setState({
+      data: datalist,
+      type: ConstToolType.MAP_THEME_PARAM_COLOR,
+    })
+  }
+
   getflylist = async () => {
     try {
       let flydata = await SScene.getFlyRouteNames()
@@ -785,15 +832,42 @@ export default class ToolBar extends React.Component {
                 : table,
         },
         () => {
-          this.showToolbar(isShow)
+          this.showToolbarAndBox(isShow)
           !isShow && this.props.existFullMap && this.props.existFullMap()
         },
       )
     } else {
-      this.showToolbar(isShow)
+      this.showToolbarAndBox(isShow)
       !isShow && this.props.existFullMap && this.props.existFullMap()
     }
-    this.isBoxShow = true
+  }
+
+  showToolbarAndBox = isShow => {
+    // Toolbar的显示和隐藏
+    if (this.isShow !== isShow) {
+      isShow = isShow === undefined ? true : isShow
+      Animated.timing(this.state.bottom, {
+        toValue: isShow ? 0 : -screen.deviceHeight,
+        duration: 300,
+      }).start()
+      this.isShow = isShow
+    }
+    // Box内容框的显示和隐藏
+    if (this.state.type === ConstToolType.MAP_THEME_PARAM) {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: 300,
+      }).start()
+      this.isBoxShow = false
+    } else {
+      if (JSON.stringify(this.state.boxHeight) !== this.height.toString()) {
+        Animated.timing(this.state.boxHeight, {
+          toValue: this.height,
+          duration: 300,
+        }).start()
+      }
+      this.isBoxShow = true
+    }
   }
 
   showToolbar = isShow => {
@@ -815,7 +889,21 @@ export default class ToolBar extends React.Component {
     }
   }
 
+  showAlertDialog = () => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: 0,
+      duration: 200,
+    }).start()
+    this.isBoxShow = false
+
+    const menutoolRef = this.props.getMenuAlertDialogRef()
+    if (menutoolRef) {
+      menutoolRef.setDialogVisible(true)
+    }
+  }
+
   close = (type = this.state.type) => {
+    GLOBAL.currentToolbarType = ''
     // 关闭采集, type 为number时为采集类型，若有冲突再更改
     if (
       typeof type === 'number' ||
@@ -823,16 +911,25 @@ export default class ToolBar extends React.Component {
     ) {
       SCollector.stopCollect()
     }
-    // else if (type.indexOf('MAP_EDIT_') >= 0) {
-    //   SMap.setAction(Action.PAN)
-    // }
     if (
+      typeof type === 'string' &&
+      type.indexOf('MAP_EDIT_') >= 0 &&
+      type !== ConstToolType.MAP_EDIT_DEFAULT
+    ) {
+      GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
+      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+      this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+        isFullScreen: false,
+        height: 0,
+      })
+      SMap.setAction(Action.SELECT)
+    } else if (
       typeof type === 'number' ||
       (typeof type === 'string' && type.indexOf('MAP_') >= -1)
     ) {
+      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
       SMap.setAction(Action.PAN)
     }
-    GLOBAL.currentToolbarType = ''
     this.showToolbar(false)
     this.setState({ isTouchProgress: false, isSelectlist: false })
     this.props.existFullMap && this.props.existFullMap()
@@ -981,6 +1078,18 @@ export default class ToolBar extends React.Component {
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
   }
 
+  renderThemeListItem = ({ item, index }) => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.listAction({ item, index })
+        }}
+      >
+        <Text style={styles.themeitem}>{item.title}</Text>
+      </TouchableOpacity>
+    )
+  }
+
   renderListItem = ({ item, index }) => {
     return (
       <TouchableOpacity
@@ -1012,11 +1121,20 @@ export default class ToolBar extends React.Component {
               data: list,
             },
           ]
-          this.setState({ data: datalist, type: ConstToolType.MAP_ADD_DATASET })
+          this.setState({
+            data: datalist,
+            type: ConstToolType.MAP_ADD_DATASET,
+            themeUdbPath: path,
+          })
         },
       })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
+        this.setState({
+          themeDatasourceAlias: item.title,
+          themeDatasetName: item.title,
+        })
+        ToolbarData.setThemeParams(item.title, item.title, this.state.themeExpress)
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1066,7 +1184,59 @@ export default class ToolBar extends React.Component {
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 打开地图
       SMap.openMap(item.title)
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
+      //专题图表达式
+      this.setState ({
+        themeExpress: item.title,
+      }),
+      (async function () {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          UniqueExpression: item.title,
+          ColorGradientType: this.state.themeColor,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        // await SThemeCartography.setUniqueExpression(Params)
+        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_COLOR) {
+      //专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      }),
+      (async function () {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+      }.bind(this)())
     }
+  }
+
+  renderThemeList = () => {
+    if (this.state.data.length === 0) return
+    return (
+      <SectionList
+        sections={this.state.data}
+        renderItem={this.renderThemeListItem}
+        renderSectionHeader={({ section: { title } }) => (
+          <Text style={{
+            fontWeight: "bold",
+            fontSize: 28,
+            padding: 10,
+            backgroundColor: 'rgb(80,80,80)',
+            color: 'white'}}>{title}</Text>
+        )}
+        keyExtractor={(item, index) => index}
+      />
+    )
   }
 
   renderList = () => {
@@ -1201,6 +1371,12 @@ export default class ToolBar extends React.Component {
           case 'MAP3D_TOOL_DISTANCEMEASURE':
             box = this.renderMap3DList()
             break
+          case ConstToolType.MAP_THEME_PARAM_EXPRESSION:
+            box = this.renderThemeList()
+            break
+          case ConstToolType.MAP_THEME_PARAM_COLOR:
+            box = this.renderThemeList()
+            break
           default:
             box = this.renderList()
             break
@@ -1328,6 +1504,26 @@ export default class ToolBar extends React.Component {
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.closeCircle
           break
+        case ToolbarBtnType.THEME_CANCEL:
+          //专题图-取消
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_close.png')
+          action = this.close
+          break
+        case ToolbarBtnType.THEME_MENU:
+          //专题图-菜单
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
+          action = this.showAlertDialog
+          break
+        case ToolbarBtnType.THEME_FLEX:
+          //专题图-显示与隐藏
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
+          action = this.showBox
+          break
+        case ToolbarBtnType.THEME_COMMIT:
+          //专题图-提交
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.close
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -1446,6 +1642,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     paddingLeft: 20,
     height: 44,
+    backgroundColor: color.theme,
+    color: 'white',
+  },
+  themeitem: {
+    padding: 10,
+    fontSize: 25,
+    paddingLeft: 20,
+    height: 60,
     backgroundColor: color.theme,
     color: 'white',
   },

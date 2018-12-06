@@ -125,9 +125,9 @@ export default class Dialog extends PureComponent {
   renderNonModal = () => {
     if (this.state.visible) {
       return (
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={this.cancel}
+        <View
+          // activeOpacity={1}
+          // onPress={this.cancel}
           style={[styles.nonModalContainer, this.props.backgroundStyle]}
         >
           {this.props.header}
@@ -145,7 +145,7 @@ export default class Dialog extends PureComponent {
             {this.props.children}
             {this.renderBtns()}
           </View>
-        </TouchableOpacity>
+        </View>
       )
     } else {
       return null
