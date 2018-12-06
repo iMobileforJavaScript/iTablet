@@ -24,31 +24,18 @@ import {
   AlertDialog,
 } from '../../componets'
 import constants from '../../constants'
-import { BtnbarLoad, OffLineList } from '../../../tabs/Home/components'
 import {
-  PopMeasureBar,
   Container,
   MTBtn,
-  UsualTitle,
   Dialog,
   SaveMapNameDialog,
   SaveDialog,
 } from '../../../../components'
-import { Toast, AudioAnalyst, scaleSize, jsonUtil } from '../../../../utils'
-import {
-  ConstPath,
-  Const,
-  ConstToolType,
-  ConstInfo,
-} from '../../../../constants'
+import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
-import { Platform, View, BackHandler, TouchableOpacity } from 'react-native'
+import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
-
-// 数组的第一个为DrawerView的默认高度
-const LVL_0 = [scaleSize(280)]
-const LVL_1 = [scaleSize(280), scaleSize(410)]
-const LVL_2 = [scaleSize(410), scaleSize(280), scaleSize(560)]
 
 export default class MapView extends React.Component {
   static propTypes = {
@@ -79,9 +66,6 @@ export default class MapView extends React.Component {
     this.mapType = params.mapType || 'DEFAULT'
     this.operationType = params.operationType || constants.COLLECTION
     this.isExample = params.isExample || false
-    // this.DSParams = params.DSParams || null
-    // this.labelDSParams = params.labelDSParams || false
-    // this.layerIndex = params.layerIndex || 0
     this.wsData = params.wsData
     this.mapName = params.mapName || ''
     this.path = params.path || ''
@@ -112,7 +96,6 @@ export default class MapView extends React.Component {
       editLayer: {},
       showMapMenu: false,
       changeLayerBtnBottom: scaleSize(200),
-      toolbarThreshold: LVL_2,
     }
 
     this.closeInfo = [
@@ -245,172 +228,6 @@ export default class MapView extends React.Component {
     this._addMap()
   }
 
-  getToolbarThreshold = type => {
-    switch (type) {
-      case Const.TOOLS:
-      case Const.ANALYST:
-        return LVL_0
-      case Const.COLLECTION:
-      case DatasetType.POINT:
-        return LVL_1
-      case Const.DATA_EDIT:
-        return LVL_2
-      default:
-        return []
-    }
-  }
-
-  _pop_list = (show, type) => {
-    //底部BtnBar事件点击回掉，负责底部二级pop的弹出
-    let toolbarThreshold = this.getToolbarThreshold(type)
-    this.setState({
-      popShow: show,
-      popType: type,
-      measureShow: false,
-      toolbarThreshold: toolbarThreshold,
-    })
-    this.mapControl &&
-      async function() {
-        await this._remove_measure_listener()
-        await this.mapControl.setAction(show ? Action.SELECT : Action.PAN)
-      }.bind(this)()
-  }
-
-  _chooseLayer = (data, cb? = () => {}) => {
-    NavigationService.navigate('ChooseEditLayer', {
-      workspace: this.workspace,
-      map: this.map,
-      mapControl: this.mapControl,
-      ...data,
-      cb,
-    })
-  }
-
-  _changeLayer = type => {
-    let toolbarThreshold = this.getToolbarThreshold(type)
-    this._chooseLayer(
-      {
-        type: -1,
-        isEdit: true,
-        toolbarThreshold: toolbarThreshold,
-        title: type === Const.DATA_EDIT ? '选择编辑图层' : '选择采集图层',
-      },
-      (isShow, dsType) => {
-        // 传 -1 查询所有类型的图层
-        this.popList && this.popList.setCurrentOption(type, dsType)
-      },
-    )
-  }
-
-  _showSetting = type => {
-    this.setting.showSetting(type)
-  }
-
-  //一级pop按钮 新增图层
-  _addLayer = () => {
-    let ws = this.workspace
-    let map = this.map
-    NavigationService.navigate('DataSourcelist', {
-      workspace: ws,
-      map: map,
-      mapControl: this.mapControl,
-    })
-  }
-
-  //一级pop按钮 图层管理 点击函数
-  _layer_manager = () => {
-    let ws = this.workspace
-    let map = this.map
-    NavigationService.navigate('LayerManager', {
-      workspace: ws,
-      map: map,
-      path: this.path,
-      mapControl: this.mapControl,
-    })
-  }
-
-  //一级pop按钮 数据采集 点击函数
-  _data_collection = () => {
-    NavigationService.navigate('DataCollection', {
-      workspace: this.workspace,
-      map: this.map,
-      mapControl: this.mapControl,
-    })
-  }
-
-  //一级pop按钮 数据管理 点击函数
-  _data_manager = () => {
-    NavigationService.navigate('DataManagement', {
-      workspace: this.workspace,
-      map: this.map,
-      mapControl: this.mapControl,
-    })
-  }
-
-  //二级pop按钮 量算 点击函数
-  _pop_measure_click = () => {
-    this.setState({
-      measureShow: !this.state.measureShow,
-    })
-    // TODO list:优化，不需每次都添加listener
-    this._add_measure_listener()
-  }
-
-  /*测量功能模块*/
-
-  _add_measure_listener = async () => {
-    await this.mapControl.addMeasureListener({
-      lengthMeasured: this._measure_callback,
-      areaMeasured: this._measure_callback,
-    })
-  }
-
-  _measure_callback = e => {
-    let result = e.curResult
-    this.setState({
-      measureResult: result,
-    })
-  }
-
-  _remove_measure_listener = async () => {
-    this.mapControl && (await this.mapControl.removeMeasureListener())
-  }
-
-  _measure_line = async () => {
-    let maps = await this.workspace.getMaps()
-    let count = await maps.getCount()
-    if (count > 0) {
-      this.PopMeasureBar._showtext(false)
-      await this.mapControl.setAction(Action.MEASURELENGTH)
-    } else {
-      Toast.show('请添加地图')
-    }
-  }
-
-  _measure_square = async () => {
-    let maps = await this.workspace.getMaps()
-    let count = await maps.getCount()
-    if (count > 0) {
-      this.PopMeasureBar._showtext(true)
-      await this.mapControl.setAction(Action.MEASUREAREA)
-    } else {
-      Toast.show('请添加地图')
-    }
-  }
-
-  _measure_pause = async (isResetAction = true) => {
-    this.PopMeasureBar._showtext(false)
-    isResetAction && (await this.mapControl.setAction(Action.PAN))
-    this.setState({
-      measureResult: 0,
-    })
-  }
-
-  _closeMeasureMode = async () => {
-    await this.mapControl.setAction(Action.PAN)
-    this._remove_measure_listener()
-  }
-
   /** 设置监听 **/
   /** 选择事件监听 **/
   _addGeometrySelectedListener = async () => {
@@ -470,135 +287,15 @@ export default class MapView extends React.Component {
     // TODO 处理多选
   }
 
-  saveMapAndWorkspace = ({ mapName, wsName, path }) => {
-    this.container.setLoading(true, '正在保存')
-    ;(async function() {
-      try {
-        let saveWs
-        let info = {}
-        if (!wsName) {
-          Toast.show('请输入工作空间名称')
-          return
-        }
-        if (this.state.path !== path || path === ConstPath.LocalDataPath) {
-          info.path = path
-        }
-        if (wsName && this.showDialogCaption) {
-          info.path = path
-          info.caption = wsName
-        }
-        await this.map.setWorkspace(this.workspace)
-        // 若名称相同，则不另存为
-        // let saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-        // let saveMap = false
-        // saveWs = await this.workspace.saveWorkspace(info)
-        this.container.setLoading(false)
-        let index = -1
-        if (this.showDialogCaption && mapName) {
-          index = await this.workspace.addMap(mapName, await this.map.toXML())
-          if (index < 0) {
-            Toast.show('该名称地图已存在')
-            return
-          }
-        }
-        // 新建工作空间，新建地图 | 新建工作空间，不新建地图 | 保存工作空间
-        if (
-          (mapName && index >= 0) ||
-          (!mapName && this.showDialogCaption) ||
-          !this.showDialogCaption
-        ) {
-          saveWs = await this.workspace.saveWorkspace(info)
-          // saveMap = await this.map.save(mapName !== this.state.mapName ? mapName : '')
-          // if (saveMap) {
-          if (saveWs) {
-            this.saveDialog.setDialogVisible(false)
-            Toast.show('保存成功')
-            NavigationService.navigate('MapLoad', {
-              workspace: this.workspace,
-              map: this.map,
-              mapControl: this.mapControl,
-            })
-          } else {
-            Toast.show('工作空间已存在')
-          }
-        } else if (saveWs === undefined) {
-          Toast.show('工作空间已存在')
-        } else {
-          Toast.show('保存失败')
-        }
-
-        // if (!saveMap) {
-        //   Toast.show('该名称地图已存在')
-        // } else if (saveWs || !this.showDialogCaption) {
-        //   this.showSaveDialog(false)
-        //   Toast.show('保存成功')
-        // } else if (saveWs === undefined) {
-        //   Toast.show('工作空间已存在')
-        // } else {
-        //   Toast.show('保存失败')
-        // }
-      } catch (e) {
-        this.container.setLoading(false)
-        Toast.show('保存失败')
-      }
-    }.bind(this)())
-  }
-
-  showAudio = () => {
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      GLOBAL.AudioDialog.setVisible(true, 'top')
-    }
-  }
-
-  toOpen = async () => {
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      if (this.type !== 'ONLINE' && !this.isExample) {
-        if (this.state.showMapMenu) {
-          this.setState({ showMapMenu: !this.state.showMapMenu })
-          return
-        }
-        this.openDialog.setDialogVisible(true)
-      } else {
-        this.openDialog.setDialogVisible(false)
-        this.setMapMenuStatus()
-      }
-    }
-  }
-
-  toCloseMap = () => {
-    // await this.map.close()
-    // await this.workspace.closeWorkspace()  //关闭空间  程序奔溃
-    if (this.setting && this.setting.isVisible()) {
-      this.setting.close()
-    } else {
-      if (this.type !== 'ONLINE' && !this.isExample) {
-        this.AlertDialog.setDialogVisible(true)
-      } else {
-        this.closeWorkspace(() =>
-          NavigationService.goBack(this.props.nav.routes[1].key),
-        )
-      }
-    }
-  }
-
-  toUpLoad = () => {
-    Toast.show('功能待完善')
-  }
-
-  toDownLoad = () => {
-    Toast.show('功能待完善')
-  }
-
   // 地图保存
-  saveMap = (name = '') => {
+  saveMap = (name = '', cb = () => {}) => {
+    this.setLoading(true, '正在保存地图')
     SMap.saveMap(name).then(result => {
+      this.setLoading(false)
       Toast.show(
         result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
       )
+      cb && cb()
     })
   }
 
@@ -758,6 +455,7 @@ export default class MapView extends React.Component {
       }
     }.bind(this)())
   }
+
   // 地图保存 同时 关闭地图
   saveMapAndClose = () => {
     this.container.setLoading(true, '正在保存')
@@ -806,15 +504,6 @@ export default class MapView extends React.Component {
         this.container.setLoading(false)
       }
     }.bind(this)())
-  }
-
-  // 显示删除图层Dialog
-  showRemoveObjectDialog = () => {
-    if (!this.map || !this.props.selection || !this.props.selection.name) {
-      Toast.show('请选择目标')
-      return
-    }
-    this.removeObjectDialog && this.removeObjectDialog.setDialogVisible(true)
   }
 
   // 删除图层
@@ -882,11 +571,13 @@ export default class MapView extends React.Component {
 
   back = () => {
     // this.mapToolbar.setCurrent(0)
-    this.setLoading(true, '正在关闭')
-    SMap.closeWorkspace().then(result => {
-      this.setLoading(false)
-      result && NavigationService.goBack()
-    })
+    // this.setLoading(true, '正在关闭')
+    // SMap.closeWorkspace().then(result => {
+    //   this.setLoading(false)
+    //   result && NavigationService.goBack()
+    // })
+    this.setSaveViewVisible(true)
+    this.backAction = NavigationService.goBack
     return true
   }
 
@@ -937,13 +628,8 @@ export default class MapView extends React.Component {
       return
     }
     try {
-      // let data = { server: wsData.DSParams.path }
       let result = await SMap.openWorkspace(wsData.DSParams)
       result && SMap.openMap(index)
-      // this.container.setLoading(false)
-      // await this._addGeometrySelectedListener()
-
-      // this.saveLatest()
     } catch (e) {
       this.container.setLoading(false)
     }
@@ -957,42 +643,8 @@ export default class MapView extends React.Component {
     }
     try {
       await SMap.openDatasource(wsData.DSParams, index)
-      // this.DSParams &&
-      //   (await SMap.openDatasource(this.DSParams, this.layerIndex))
-      // this.labelDSParams &&
-      //   (await SMap.openDatasource(this.labelDSParams, this.layerIndex))
-      // this.container.setLoading(false)
-      // await this._addGeometrySelectedListener()
     } catch (e) {
       this.container.setLoading(false)
-    }
-  }
-
-  TD = () => {
-    this.setMapMenuStatus()
-    AudioAnalyst.goToMapView('TD')
-  }
-
-  Baidu = () => {
-    this.setMapMenuStatus()
-    AudioAnalyst.goToMapView('Baidu')
-  }
-
-  OSM = () => {
-    this.setMapMenuStatus()
-    AudioAnalyst.goToMapView('OSM')
-  }
-
-  Google = () => {
-    this.setMapMenuStatus()
-    AudioAnalyst.goToMapView('Google')
-  }
-
-  setMapMenuStatus = (isShow = false) => {
-    if (isShow !== this.state.showMapMenu) {
-      this.setState({
-        showMapMenu: isShow,
-      })
     }
   }
 
@@ -1010,60 +662,6 @@ export default class MapView extends React.Component {
    */
   setSaveMapDialogVisible = visible => {
     this.SaveDialog && this.SaveDialog.setDialogVisible(visible)
-  }
-
-  /**
-   * 点击顶部打开展示的地图加载
-   * @returns {XML}
-   */
-  renderMapMenu = () => {
-    if (this.state.showMapMenu) {
-      return (
-        <TouchableOpacity
-          activeOpacity={1}
-          style={styles.mapMenuOverlay}
-          onPress={() => this.setMapMenuStatus(false)}
-        >
-          <View style={styles.mapMenu}>
-            <UsualTitle title="本地地图" />
-            <OffLineList
-              Workspace={this.workspace}
-              map={this.map}
-              mapControl={this.mapControl}
-              closemapMenu={this.setMapMenuStatus}
-            />
-            <View style={styles.cutline} />
-            <UsualTitle title="在线地图" />
-            <BtnbarLoad
-              style={{ marginVertical: scaleSize(10) }}
-              TD={this.TD}
-              Baidu={this.Baidu}
-              OSM={this.OSM}
-              Google={this.Google}
-            />
-          </View>
-        </TouchableOpacity>
-      )
-    }
-  }
-
-  /**
-   * 测量
-   * @returns {XML}
-   */
-  renderPopMeasureBar = () => {
-    if (this.state.measureShow) {
-      return (
-        <PopMeasureBar
-          ref={ref => (this.PopMeasureBar = ref)}
-          measureLine={this._measure_line}
-          measureSquare={this._measure_square}
-          measurePause={this._measure_pause}
-          style={styles.measure}
-          result={this.state.measureResult}
-        />
-      )
-    }
   }
 
   /**
@@ -1136,7 +734,7 @@ export default class MapView extends React.Component {
     return (
       <MenuAlertDialog
         ref={ref => (this.MenuAlertDialog = ref)}
-        backHide='true'
+        backHide="true"
         existFullMap={() => this.showFullMap(false)}
         showFullMap={this.showFullMap}
         getToolBarRef={() => this.toolBox}
@@ -1220,47 +818,26 @@ export default class MapView extends React.Component {
         />
         <SaveView
           ref={ref => (this.SaveMapView = ref)}
-          save={this.saveMap}
-          action={() => {}}
+          save={() => {
+            this.saveMap('', () => {
+              if (this.backAction) {
+                this.backAction()
+                this.backAction = null
+              }
+            })
+          }}
+          notSave={() => {
+            if (this.backAction) {
+              this.backAction()
+              this.backAction = null
+            }
+          }}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}
           confirmAction={data => this.saveAsMap(data.mapName)}
           type="normal"
         />
-        {/*<Dialog*/}
-        {/*ref={ref => (this.openDialog = ref)}*/}
-        {/*type={Dialog.Type.MODAL}*/}
-        {/*title={'提示'}*/}
-        {/*info={'是否保存当前空间'}*/}
-        {/*confirmAction={() => {*/}
-        {/*this.saveMap(() => {*/}
-        {/*this.setState({ showMapMenu: true }, function() {*/}
-        {/*this.openDialog.setDialogVisible(false)*/}
-        {/*})*/}
-        {/*})*/}
-        {/*}}*/}
-        {/*cancelAction={() => {*/}
-        {/*this.setState({ showMapMenu: true }, function() {*/}
-        {/*this.openDialog.setDialogVisible(false)*/}
-        {/*})*/}
-        {/*}}*/}
-        {/*confirmBtnTitle={'是'}*/}
-        {/*cancelBtnTitle={'否'}*/}
-        {/*/>*/}
-        {/*<SaveDialog*/}
-        {/*ref={ref => (this.saveDialog = ref)}*/}
-        {/*confirmAction={this.saveMapAndWorkspace}*/}
-        {/*showWsName={this.showDialogCaption}*/}
-        {/*mapName={this.state.mapName}*/}
-        {/*wsName={this.state.wsName}*/}
-        {/*path={this.savepath}*/}
-        {/*/>*/}
-        {/*<AlertDialog*/}
-        {/*ref={ref => (this.AlertDialog = ref)}*/}
-        {/*childrens={this.closeInfo}*/}
-        {/*Alerttitle={'关闭当前任务?'}*/}
-        {/*/>*/}
       </Container>
     )
   }
