@@ -63,11 +63,18 @@ export default class Loading extends Component {
         extra.timeout >= 0 ? extra.timeout : this.state.extra.timeout
       if (loading && timeout) {
         setTimeout(() => {
-          this.setState({
-            animating: false,
-            info: info || INFO,
-            extra,
-          })
+          if (this.state.animating) {
+            this.setState(
+              {
+                animating: false,
+                info: info || INFO,
+                extra,
+              },
+              () => {
+                // Toast.show('请求超时')
+              },
+            )
+          }
         }, timeout)
       }
     }

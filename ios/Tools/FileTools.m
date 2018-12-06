@@ -43,7 +43,10 @@ RCT_REMAP_METHOD(unZipFile, unZipFileByPath:(NSString *)archivePath targetPath:(
 
 RCT_REMAP_METHOD(deleteFile, deleteFileByPath:(NSString *)path resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
-    BOOL result = [FileTools deleteFile:path];
+    BOOL result = NO;
+    if (path != nil && ![path isEqualToString:@""]) {
+      result = [FileTools deleteFile:path];
+    }
     
     resolve([NSNumber numberWithBool:result]);
   } @catch (NSException *exception) {
@@ -54,6 +57,15 @@ RCT_REMAP_METHOD(deleteFile, deleteFileByPath:(NSString *)path resolver:(RCTProm
 RCT_REMAP_METHOD(copyFile, copyFileByPath:(NSString *)fromPath targetPath:(NSString *)toPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     BOOL result = [FileTools copyFile:fromPath targetPath:toPath];
+    resolve([NSNumber numberWithBool:result]);
+  } @catch (NSException *exception) {
+    reject(@"unZipFile", exception.reason, nil);
+  }
+}
+
+RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)userName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    BOOL result = [FileTools initUserDefaultData:userName];
     resolve([NSNumber numberWithBool:result]);
   } @catch (NSException *exception) {
     reject(@"unZipFile", exception.reason, nil);
@@ -135,5 +147,45 @@ RCT_REMAP_METHOD(copyFile, copyFileByPath:(NSString *)fromPath targetPath:(NSStr
     result = [[NSFileManager defaultManager] copyItemAtPath:fromPath toPath:toPath error:nil];
   }
   return result;
+}
+
++(BOOL)initUserDefaultData:(NSString *)userName {
+  userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
+  
+  // 初始化用户工作空间
+  NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
+  NSString* wsPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/" ];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", wsPath, @""]];
+  if (srclic) {
+    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
+    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+        NSLog(@"拷贝数据失败");
+    }
+  }
+  
+  // 初始化用户数据
+  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
+  NSString* commonPath = @"/Documents/iTablet/Common/";
+  NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
+  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Workspace.zip"];
+  NSString* workspacePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"];
+  BOOL isUnZip = NO;
+  if (![[NSFileManager defaultManager] fileExistsAtPath:workspacePath isDirectory:nil]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
+      isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
+      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+    } else {
+      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
+        isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
+        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+      }
+    }
+  } else {
+    isUnZip = YES;
+  }
+  return isUnZip;
 }
 @end

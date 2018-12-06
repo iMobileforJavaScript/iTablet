@@ -12,7 +12,7 @@ import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 
-import { SpeechManager, Utility, OnlineService, SMap, WorkspaceType, SOnlineService } from 'imobile_for_reactnative'
+import { SpeechManager, Utility, SOnlineService, SMap, WorkspaceType } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
 
@@ -55,7 +55,7 @@ class AppRoot extends Component {
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
-      SOnlineService.init() // 初始化OnlineService
+      SOnlineService.init();
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()

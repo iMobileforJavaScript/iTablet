@@ -535,11 +535,16 @@ export default class ToolBar extends React.Component {
 
     // let path = '/storage/emulated/0/SampleData/World/World.udb'
     // let DatasetName = 'Countries'
-    let list = await SThemeCartography.getThemeExpressByUdb(this.state.themeUdbPath, this.state.themeDatasetName)
-    let datalist = [{
-      title: '数据集字段',
-      data: list,
-    }]
+    let list = await SThemeCartography.getThemeExpressByUdb(
+      this.state.themeUdbPath,
+      this.state.themeDatasetName,
+    )
+    let datalist = [
+      {
+        title: '数据集字段',
+        data: list,
+      },
+    ]
     this.setState({
       data: datalist,
       type: ConstToolType.MAP_THEME_PARAM_EXPRESSION,
@@ -554,10 +559,12 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let list = await ThemeColorGradientType.getColorGradientType()
-    let datalist = [{
-      title: '颜色方案',
-      data: list,
-    }]
+    let datalist = [
+      {
+        title: '颜色方案',
+        data: list,
+      },
+    ]
     this.setState({
       data: datalist,
       type: ConstToolType.MAP_THEME_PARAM_COLOR,
@@ -1020,6 +1027,7 @@ export default class ToolBar extends React.Component {
   }
 
   showSymbol = () => {
+    SCollector.stopCollect()
     this.props.showFullMap && this.props.showFullMap(true)
     this.setVisible(true, ConstToolType.MAP_SYMBOL, {
       isFullScreen: true,
@@ -1136,7 +1144,11 @@ export default class ToolBar extends React.Component {
           themeDatasourceAlias: item.title,
           themeDatasetName: item.title,
         })
-        ToolbarData.setThemeParams(item.title, item.title, this.state.themeExpress)
+        ToolbarData.setThemeParams(
+          item.title,
+          item.title,
+          this.state.themeExpress,
+        )
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1185,13 +1197,20 @@ export default class ToolBar extends React.Component {
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 打开地图
-      SMap.openMap(item.title)
+      SMap.openMap(item.title).then(isOpen => {
+        if (isOpen) {
+          this.setVisible(false)
+          Toast.show('已为您切换到' + item.title)
+        } else {
+          Toast.show('该地图为当前地图')
+        }
+      })
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
       //专题图表达式
-      this.setState ({
+      this.setState({
         themeExpress: item.title,
-      }),
-      (async function () {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1207,8 +1226,8 @@ export default class ToolBar extends React.Component {
       //专题图颜色表
       this.setState({
         themeColor: item.key,
-      }),
-      (async function () {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1229,12 +1248,17 @@ export default class ToolBar extends React.Component {
         sections={this.state.data}
         renderItem={this.renderThemeListItem}
         renderSectionHeader={({ section: { title } }) => (
-          <Text style={{
-            fontWeight: "bold",
-            fontSize: 28,
-            padding: 10,
-            backgroundColor: 'rgb(80,80,80)',
-            color: 'white'}}>{title}</Text>
+          <Text
+            style={{
+              fontWeight: 'bold',
+              fontSize: 28,
+              padding: 10,
+              backgroundColor: 'rgb(80,80,80)',
+              color: 'white',
+            }}
+          >
+            {title}
+          </Text>
         )}
         keyExtractor={(item, index) => index}
       />

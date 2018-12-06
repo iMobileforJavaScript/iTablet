@@ -101,13 +101,13 @@ export default class FunctionToolbar extends React.Component {
 
   startTheme = () => {
     const toolRef = this.props.getToolRef()
+
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[0],
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
@@ -465,16 +465,10 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
-            key: '保存',
-            title: '保存',
-            action: this.save,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_save.png'),
-            selectMode: 'flash',
-          },
-          {
             title: '更多',
-            action: this.showMore,
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE)
+            },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]

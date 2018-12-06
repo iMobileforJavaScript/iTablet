@@ -17,4 +17,5 @@
 +(BOOL)deleteFile:(NSString *)path;
 +(BOOL)createFileDirectories:(NSString*)path;
 +(BOOL)copyFile:(NSString *)fromPath targetPath:(NSString *)toPath;
++(BOOL)initUserDefaultData:(NSString *)userName;
 @end
