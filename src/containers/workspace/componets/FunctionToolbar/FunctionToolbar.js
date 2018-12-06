@@ -32,6 +32,7 @@ export default class FunctionToolbar extends React.Component {
     Label: () => {},
 
     getToolRef: () => {},
+    getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
     setMapType: () => {},
 
@@ -94,13 +95,13 @@ export default class FunctionToolbar extends React.Component {
 
   startTheme = () => {
     const toolRef = this.props.getToolRef()
+
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[0],
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
@@ -541,6 +542,7 @@ export default class FunctionToolbar extends React.Component {
             key: '参数',
             title: '参数',
             size: 'large',
+            action: this.showMenuAlertDialog,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
             selectMode: 'flash',
           },
@@ -554,7 +556,6 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '工具',
             title: '工具',
-            action: this.showTool,
             size: 'large',
             image: require('../../../../assets/function/icon_function_theme_tools.png'),
             selectMode: 'flash',
@@ -567,7 +568,6 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '更多',
             title: '更多',
-            action: this.showMore,
             image: require('../../../../assets/function/icon_function_theme_more.png'),
           },
         ]

@@ -110,6 +110,7 @@ async function shareToSuperMapOnline(type) {
             let result = await SOnlineService.publishService(dataName)
             isSharing = false
             Toast.show(result ? '分享成功' : '分享成功')
+            Utility.deleteFile(targetPath)
           },
         })
       })

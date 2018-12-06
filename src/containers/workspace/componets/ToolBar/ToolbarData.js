@@ -14,6 +14,7 @@ import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
 import MoreData from './MoreData'
 import ShareData from './ShareData'
+import { Alert } from 'react-native'
 
 let _params = {}
 
@@ -46,6 +47,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = getThemeStart(type)
   } else if (type === ConstToolType.MAP_THEME_CREATE) {
     tabBarData = getThemeMapCreate(type)
+  } else if (type === ConstToolType.MAP_THEME_PARAM) {
+    tabBarData = getThemeMapParam(type)
   }
   return {
     data: tabBarData.data,
@@ -691,7 +694,50 @@ function getMap3DData(type) {
 }
 
 /**
- * 创建专题图
+ * 专题图参数设置
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeMapParam(type) {
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
+  buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.THEME_COMMIT,
+  ]
+  return { data, buttons }
+}
+
+let DatasourceAlias = '',
+  DatasetName = '',
+  UniqueExpression = ''
+
+function setThemeParams(datasourceAlias, datasetName, uniqueExpression) {
+  DatasourceAlias = datasourceAlias
+  DatasetName = datasetName
+  UniqueExpression = uniqueExpression
+}
+
+/** 新建单值风格专题图 **/
+function createThemeUniqueMap() {
+  let Params = {
+    DatasourceAlias: DatasourceAlias,
+    DatasetName: DatasetName,
+    UniqueExpression: UniqueExpression,
+    ColorGradientType: 'TERRAIN',
+  }
+  return SThemeCartography.createThemeUniqueMap(Params)
+}
+
+function showTips() {
+  Alert.alert('功能暂未开放。')
+}
+
+/**
+ * 获取创建专题图菜单
  * @param type
  * @returns {{data: Array, buttons: Array}}
  */
@@ -704,7 +750,7 @@ function getThemeMapCreate(type) {
       //统一风格
       key: constants.THEME_UNIFY_STYLE,
       title: constants.THEME_UNIFY_STYLE,
-      // action: openMap,
+      action: showTips,
       size: 'large',
       image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
@@ -723,7 +769,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_RANGE_STYLE,
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
-      // action: showHistory,
+      action: showTips,
       image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
     },
@@ -732,7 +778,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_CUSTOME_STYLE,
       title: constants.THEME_CUSTOME_STYLE,
       size: 'large',
-      // action: changeBaseLayer,
+      action: showTips,
       image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
     },
@@ -741,7 +787,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_CUSTOME_LABEL,
       title: constants.THEME_CUSTOME_LABEL,
       size: 'large',
-      // action: changeBaseLayer,
+      action: showTips,
       image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
     },
@@ -750,7 +796,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_UNIFY_LABEL,
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
-      // action: changeBaseLayer,
+      action: showTips,
       image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
     },
@@ -759,7 +805,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_UNIQUE_LABEL,
       title: constants.THEME_UNIQUE_LABEL,
       size: 'large',
-      // action: changeBaseLayer,
+      action: showTips,
       image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
     },
@@ -768,7 +814,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_RANGE_LABEL,
       title: constants.THEME_RANGE_LABEL,
       size: 'large',
-      // action: changeBaseLayer,
+      action: showTips,
       image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
     },
@@ -777,7 +823,7 @@ function getThemeMapCreate(type) {
 }
 
 /**
- * 专题图开始操作
+ * 获取专题图开始
  * @param type
  * @returns {{data: Array, buttons: Array}}
  */
@@ -787,9 +833,17 @@ function getThemeStart(type) {
   if (type !== ConstToolType.MAP_THEME_START) return { data, buttons }
   data = [
     {
+      key: constants.WORKSPACE,
+      title: constants.WORKSPACE,
+      action: openWorkspace,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
       key: constants.OPEN,
       title: constants.OPEN,
-      action: add,
+      action: openMap,
       size: 'large',
       image: require('../../../../assets/mapTools/icon_point.png'),
       selectedImage: require('../../../../assets/mapTools/icon_point.png'),
@@ -815,6 +869,14 @@ function getThemeStart(type) {
       title: constants.BASE_MAP,
       size: 'large',
       action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+    },
+    {
+      key: constants.ADD,
+      title: constants.ADD,
+      size: 'large',
+      action: add,
       image: require('../../../../assets/mapTools/icon_free_line.png'),
       selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
     },
@@ -1142,17 +1204,7 @@ function add() {
   }
 }
 
-/** 新建单值风格专题图 **/
-function createThemeUniqueMap() {
-  let Params = {
-    DatasourceAlias: 'Countries',
-    DatasetName: 'Countries',
-    UniqueExpression: 'Country',
-    ColorGradientType: 'GREEANWHITE',
-  }
-  return SThemeCartography.createThemeUniqueMap(Params)
-}
-
 export default {
   getTabBarData,
+  setThemeParams,
 }
