@@ -486,16 +486,16 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          {
-            title: '底图',
-            action: this.changeBaseLayer,
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            title: '添加',
-            action: this.showAddLayer,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   title: '底图',
+          //   action: this.changeBaseLayer,
+          //   image: require('../../../../assets/function/icon_function_base_map.png'),
+          // },
+          // {
+          //   title: '添加',
+          //   action: this.showAddLayer,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             title: '标注',
             action: this.showMap3DSymbol,

@@ -979,7 +979,9 @@ function getStart(type) {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
           size: 'large',
-          action: changeBaseLayer,
+          action: () => {
+            changeBaseLayer('MAP_3D')
+          },
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         },
@@ -987,7 +989,9 @@ function getStart(type) {
           key: constants.ADD,
           title: constants.ADD,
           size: 'large',
-          action: () => {},
+          action: () => {
+            add('MAP_3D')
+          },
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         },
@@ -1162,17 +1166,16 @@ function showHistory() {
 }
 
 /** 切换底图 **/
-function changeBaseLayer() {
+function changeBaseLayer(type) {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  switch (_params.type) {
+  switch (type) {
     case 'MAP_3D':
       _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
         containerType: 'list',
       })
       break
-
     default:
       _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
         containerType: 'list',
@@ -1183,11 +1186,11 @@ function changeBaseLayer() {
 }
 
 /** 添加 **/
-function add() {
+function add(type) {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
 
-  switch (_params.type) {
+  switch (type) {
     case 'MAP_3D':
       _params.setToolbarVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
         containerType: 'list',
