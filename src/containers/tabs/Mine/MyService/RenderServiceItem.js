@@ -17,7 +17,7 @@ export default class RenderServiceItem extends PureComponent {
     isDownloading: boolean,
     index: number,
     itemOnPressCallBack: () => {},
-    isScenes:boolean,
+    isScenes: boolean,
   }
 
   defaultProps: {
@@ -32,44 +32,42 @@ export default class RenderServiceItem extends PureComponent {
     this.state = {
       progress: '',
       isDownloading: this.props.isDownloading,
-      disabled:false,
+      disabled: false,
     }
   }
 
   setDownloadProgress = progress => {
-    if(progress === '下载完成' || progress === '下载失败'){
-      this.setState({ progress: progress,disabled:false })
-    }else{
-      this.setState({ progress: progress,disabled:true })
+    if (progress === '下载完成' || progress === '下载失败') {
+      this.setState({ progress: progress, disabled: false })
+    } else {
+      this.setState({ progress: progress, disabled: true })
     }
-
   }
 
   _downloadMapFile = async mapTitle => {
-    let restTitle = this.props.mapTileAndRestTitle[mapTitle];
-    let onlineFileName = this.props.serviceNameAndFileName[restTitle];
-    if(onlineFileName !== undefined){
+    let restTitle = this.props.mapTileAndRestTitle[mapTitle]
+    let onlineFileName = this.props.serviceNameAndFileName[restTitle]
+    if (onlineFileName !== undefined) {
       let savePath = await Utility.appendingHomeDirectory(
         ConstPath.UserPath + onlineFileName,
       )
-      let isFileExist = await Utility.fileIsExist(savePath);
+      let isFileExist = await Utility.fileIsExist(savePath)
       if (isFileExist) {
-        this.setState({ progress: '下载完成' });
-        return;
+        this.setState({ progress: '下载完成' })
+        return
       }
-      this.props.itemOnPressCallBack && this.props.itemOnPressCallBack(this.props.index);
-      let fileName = onlineFileName.substring(0, onlineFileName.length - 4);
-      SOnlineService.downloadFile(savePath, fileName);
-      this.setState({disabled:false});
-    }else{
-      this.setState({disabled:false,progress: '下载失败'});
+      this.props.itemOnPressCallBack &&
+        this.props.itemOnPressCallBack(this.props.index)
+      let fileName = onlineFileName.substring(0, onlineFileName.length - 4)
+      SOnlineService.downloadFile(savePath, fileName)
+      this.setState({ disabled: false })
+    } else {
+      this.setState({ disabled: false, progress: '下载失败' })
     }
-
-
   }
 
   _navigator = async (mapUrl, restTitle) => {
-    if(mapUrl === 'null'){
+    if (mapUrl === 'null') {
       Toast.show('无法浏览地图')
       return
     }
@@ -83,6 +81,32 @@ export default class RenderServiceItem extends PureComponent {
           publishMap.push(restTitle)
         }
       }
+    }
+    if (!this.props.isScenes) {
+      NavigationService.navigate('MapView', {
+        wsData: {
+          DSParams: {
+            server: mapUrl,
+            engineType: 225,
+            driver: 'REST',
+            alias: mapUrl,
+          },
+          layerIndex: 0,
+          type: 'Datasource',
+        },
+        mapName: this.props.mapName,
+        isExample: true,
+      })
+    } else {
+      Toast.show('无法浏览地图')
+    }
+  }
+
+  _loadImage = () => {
+    if (this.props.imageUrl === 'null') {
+      return require('../../../../assets/home/icon-map-share.png')
+    } else {
+      return { url: this.props.imageUrl }
     }
     if(!this.props.isScenes){
       NavigationService.navigate('MapView', {
@@ -158,16 +182,15 @@ export default class RenderServiceItem extends PureComponent {
                   /*disabled={this.state.disabled}*/
                   style={{ width: 80, height: textHeight }}
                   onPress={() => {
-                    if(this.state.disabled){
+                    if (this.state.disabled) {
                       Toast.show('当前地图正在下载...')
-                    }else {
+                    } else {
                       if (this.props.isDownloading) {
                         this._downloadMapFile(mapTitle)
                       } else {
                         Toast.show('有地图正在下载...')
                       }
                     }
-
                   }}
                 >
                   <Text style={styles.textStyle}>下载地图</Text>

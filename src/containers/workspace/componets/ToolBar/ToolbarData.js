@@ -828,9 +828,17 @@ function getThemeStart(type) {
   if (type !== ConstToolType.MAP_THEME_START) return { data, buttons }
   data = [
     {
+      key: constants.WORKSPACE,
+      title: constants.WORKSPACE,
+      action: openWorkspace,
+      size: 'large',
+      image: require('../../../../assets/mapTools/icon_point.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+    },
+    {
       key: constants.OPEN,
       title: constants.OPEN,
-      action: add,
+      action: openMap,
       size: 'large',
       image: require('../../../../assets/mapTools/icon_point.png'),
       selectedImage: require('../../../../assets/mapTools/icon_point.png'),
@@ -856,6 +864,14 @@ function getThemeStart(type) {
       title: constants.BASE_MAP,
       size: 'large',
       action: changeBaseLayer,
+      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+    },
+    {
+      key: constants.ADD,
+      title: constants.ADD,
+      size: 'large',
+      action: add,
       image: require('../../../../assets/mapTools/icon_free_line.png'),
       selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
     },

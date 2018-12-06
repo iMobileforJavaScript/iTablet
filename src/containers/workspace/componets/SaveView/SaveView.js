@@ -43,8 +43,8 @@ const styles = StyleSheet.create({
 
 export default class MT_layerManager extends React.Component {
   props: {
-    action?: () => {},
     save?: () => {},
+    notSave?: () => {},
     cancel?: () => {},
     backHide?: boolean,
     animated?: boolean,
@@ -62,15 +62,13 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  save = async () => {
-    if (this.props.save && (await this.props.save())) {
-      this.props.action && this.props.action()
-    }
+  save = () => {
+    this.props.save && this.props.save()
     this.setVisible(false)
   }
 
   notSave = () => {
-    this.props.action && this.props.action()
+    this.props.notSave && this.props.notSave()
     this.setVisible(false)
   }
 
