@@ -180,7 +180,6 @@ const line = [
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
         isSelectlist: false,
-        selectName: '线宽',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -215,6 +214,7 @@ const point = [
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
         isSelectlist: false,
+        selectName: '大小',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -233,6 +233,7 @@ const point = [
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
         isSelectlist: false,
+        selectName: '旋转角度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -247,6 +248,7 @@ const point = [
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
         isSelectlist: false,
+        selectName: '透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,

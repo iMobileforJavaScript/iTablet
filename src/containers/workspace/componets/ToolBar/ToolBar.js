@@ -124,6 +124,7 @@ export default class ToolBar extends React.Component {
       themeColor: 'TERRAIN',
       layerData: Object,
       selectName: '',
+
     }
     this.isShow = false
     this.isBoxShow = true
@@ -937,7 +938,9 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
     this.showToolbar(false)
-    this.setState({ isTouchProgress: false, isSelectlist: false })
+    if(this.state.isTouchProgress===true||this.state.isSelectlist===true) {
+      this.setState({isTouchProgress: false, isSelectlist: false})
+    }
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -1583,7 +1586,6 @@ export default class ToolBar extends React.Component {
         {this.state.isTouchProgress &&
           this.state.isFullScreen && (
           <TouchProgress
-            layerData={this.state.layerData}
             selectName={this.state.selectName}
           />
         )}

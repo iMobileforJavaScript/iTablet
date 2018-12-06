@@ -108,6 +108,33 @@ export default class RenderServiceItem extends PureComponent {
     } else {
       return { url: this.props.imageUrl }
     }
+    if(!this.props.isScenes){
+      NavigationService.navigate('MapView', {
+        wsData: {
+          DSParams: {
+            server: mapUrl,
+            engineType: 225,
+            driver: 'REST',
+            alias: mapUrl,
+          },
+          layerIndex: 0,
+          type: 'Datasource',
+        },
+        mapName: this.props.mapName,
+        isExample: true,
+      })
+    }else{
+      Toast.show('无法浏览地图')
+    }
+
+  }
+
+  _loadImage = () =>{
+    if(this.props.imageUrl === 'null'){
+     return require('../../../../assets/home/icon-map-share.png')
+    }else{
+      return {url: this.props.imageUrl}
+    }
   }
 
   render() {
