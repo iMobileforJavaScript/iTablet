@@ -98,7 +98,7 @@ android {
         release_config {
             keyAlias 'supermap'
             keyPassword 'supermap321'
-            storeFile file('../keystores/release.keystore')
+            storeFile file('keystores/release.jks')
             storePassword 'supermap123'
         }
     }

@@ -101,13 +101,13 @@ export default class FunctionToolbar extends React.Component {
 
   startTheme = () => {
     const toolRef = this.props.getToolRef()
+
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[0],
+        height: ConstToolType.HEIGHT[2],
       })
     }
   }
