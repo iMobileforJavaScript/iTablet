@@ -474,7 +474,9 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: this.showMore,
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE)
+            },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
