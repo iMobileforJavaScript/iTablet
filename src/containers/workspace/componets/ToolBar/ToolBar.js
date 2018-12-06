@@ -124,7 +124,6 @@ export default class ToolBar extends React.Component {
       themeColor: 'TERRAIN',
       layerData: Object,
       selectName: '',
-
     }
     this.isShow = false
     this.isBoxShow = true
@@ -938,8 +937,11 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
     this.showToolbar(false)
-    if(this.state.isTouchProgress===true||this.state.isSelectlist===true) {
-      this.setState({isTouchProgress: false, isSelectlist: false})
+    if (
+      this.state.isTouchProgress === true ||
+      this.state.isSelectlist === true
+    ) {
+      this.setState({ isTouchProgress: false, isSelectlist: false })
     }
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1011,7 +1013,7 @@ export default class ToolBar extends React.Component {
 
   commit = (type = this.originType) => {
     this.showToolbar(false)
-    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+    if (type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
@@ -1585,9 +1587,7 @@ export default class ToolBar extends React.Component {
         )}
         {this.state.isTouchProgress &&
           this.state.isFullScreen && (
-          <TouchProgress
-            selectName={this.state.selectName}
-          />
+          <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
