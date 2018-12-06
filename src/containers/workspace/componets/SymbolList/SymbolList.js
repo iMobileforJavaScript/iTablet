@@ -43,7 +43,6 @@ export default class SymbolList extends React.Component {
   }
 
   renderLibrary = () => {
-    console.warn(JSON.stringify(this.props.layerData.type))
     switch (this.props.layerData.type) {
       case 3:
         SMap.findSymbolsByGroups('line', '').then(result => {
