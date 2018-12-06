@@ -38,6 +38,8 @@ export default class Login extends React.Component {
   _login = async () => {
     let userName = this.phone.getValue()
     let password = this.password.getValue()
+    // let userName = "imobile1234"
+    // let password = 'imobile'
     if (!userName) {
       Toast.show('请输入用户名')
       return

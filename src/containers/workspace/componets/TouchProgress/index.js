@@ -9,8 +9,7 @@ const mapDispatchToProps = {
   setCurrentAttribute,
 }
 
-
-export default  connect(
+export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(TouchProgress)

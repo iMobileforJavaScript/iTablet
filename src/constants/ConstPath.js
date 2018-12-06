@@ -15,6 +15,7 @@ const RelativePath = {
 
 const RelativeFilePath = {
   Workspace: Data + 'Workspace.smwu', // 工作空间
+  Scene: Data + 'Scene/',
 }
 
 // 默认创建的目录
@@ -30,7 +31,6 @@ export default {
   SampleDataPath: AppPath + '/SampleData/', // 存放示例数据
   UserPath: AppPath + 'User/', // 存放用户数据
   Common: AppPath + 'Common/', // 公共数据
-
   // 游客目录
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据
   RelativePath,

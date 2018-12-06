@@ -1223,7 +1223,7 @@ export default class ToolBar extends React.Component {
         }
         // await SThemeCartography.setUniqueExpression(Params)
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)())
+      }.bind(this))
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_COLOR) {
       //专题图颜色表
       this.setState({
@@ -1239,7 +1239,7 @@ export default class ToolBar extends React.Component {
           LayerIndex: '0',
         }
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)())
+      }.bind(this))
     }
   }
 

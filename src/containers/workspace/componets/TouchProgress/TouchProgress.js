@@ -3,8 +3,7 @@ import { StyleSheet, View, PanResponder, Image } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import { SCartography } from 'imobile_for_reactnative'
 
-const positionWidth = screen.deviceWidth//设备的宽度
-
+const positionWidth = screen.deviceWidth //设备的宽度
 
 export default class TouchProgress extends Component {
   render() {
@@ -25,7 +24,7 @@ export default class TouchProgress extends Component {
 
   props: {
     currentLayer: Object,
-    selectName:'',
+    selectName: '',
   }
 
   componentDidUpdate(prevProps) {
@@ -37,15 +36,15 @@ export default class TouchProgress extends Component {
         currentLayer: this.props.currentLayer,
       })
     }
-    if(JSON.stringify(prevProps.selectName) !==
+    if (
+      JSON.stringify(prevProps.selectName) !==
       JSON.stringify(this.props.selectName)
-    ){
+    ) {
       this.setState({
         selectName: this.props.selectName,
       })
     }
   }
-
 
   constructor(props) {
     super(props)
@@ -96,30 +95,42 @@ export default class TouchProgress extends Component {
     if (x >= positionWidth - scaleSize(45)) x = positionWidth - scaleSize(45)
     this._previousLeft = x
 
-
     let layerType = this.props.currentLayer.type
-    let lineWidth = x/(positionWidth - scaleSize(60))*20
-    let pointSize = x/(positionWidth - scaleSize(60))*100
-    let pointAlpha = x/(positionWidth - scaleSize(60))*100
-    let pointAngle = x/(positionWidth - scaleSize(60))*360
-    let fillOpaqueRate = x/(positionWidth - scaleSize(60))*100
-    switch (layerType){
+    let lineWidth = (x / (positionWidth - scaleSize(60))) * 20
+    let pointSize = (x / (positionWidth - scaleSize(60))) * 100
+    let pointAlpha = (x / (positionWidth - scaleSize(60))) * 100
+    let pointAngle = (x / (positionWidth - scaleSize(60))) * 360
+    let fillOpaqueRate = (x / (positionWidth - scaleSize(60))) * 100
+    switch (layerType) {
       case 1:
-        if(this.props.selectName==='大小'){
-          if (pointSize<=1){pointSize=1}
-          SCartography.setMarkerSize(pointSize,this.props.currentLayer.caption)
-        }else if(this.props.selectName==='透明度'){
-          SCartography.setMarkerAlpha(pointAlpha,this.props.currentLayer.caption)
-        }else if(this.props.selectName==='旋转角度'){
-          SCartography.setMarkerAngle(pointAngle,this.props.currentLayer.caption)
+        if (this.props.selectName === '大小') {
+          if (pointSize <= 1) {
+            pointSize = 1
+          }
+          SCartography.setMarkerSize(pointSize, this.props.currentLayer.caption)
+        } else if (this.props.selectName === '透明度') {
+          SCartography.setMarkerAlpha(
+            pointAlpha,
+            this.props.currentLayer.caption,
+          )
+        } else if (this.props.selectName === '旋转角度') {
+          SCartography.setMarkerAngle(
+            pointAngle,
+            this.props.currentLayer.caption,
+          )
         }
         break
       case 3:
-        if (lineWidth<=1){lineWidth=1}
-        SCartography.setLineWidth(lineWidth,this.props.currentLayer.caption)
+        if (lineWidth <= 1) {
+          lineWidth = 1
+        }
+        SCartography.setLineWidth(lineWidth, this.props.currentLayer.caption)
         break
       case 5:
-        SCartography.setFillOpaqueRate(fillOpaqueRate,this.props.currentLayer.caption)
+        SCartography.setFillOpaqueRate(
+          fillOpaqueRate,
+          this.props.currentLayer.caption,
+        )
         break
     }
   }
