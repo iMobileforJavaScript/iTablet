@@ -1,7 +1,7 @@
 /**
  * 获取地图分享数据
  */
-import { Utility, SOnlineService } from 'imobile_for_reactnative'
+import { Utility, SOnlineService, SScene } from 'imobile_for_reactnative'
 import { ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
@@ -94,8 +94,16 @@ async function shareToSuperMapOnline(type) {
       )
       dataPath = await Utility.appendingHomeDirectory(customerPath)
     } else {
-      // let path = await SScene.getWorkspacePath()
-      // console.log(path)
+      let path = await SScene.getWorkspacePath()
+      dataPath = path.substr(0, path.lastIndexOf('/'))
+      dataName = _params.user.currentUser.userName
+      let fileName = dataPath.substr(dataPath.lastIndexOf('/') + 1)
+      targetPath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath + dataName + '/Scene/' + fileName + '.zip',
+      )
+      // targetPath = await Utility.appendingHomeDirectory(
+      //   ConstPath.UserPath + dataName+ '/Scen/'+ '.zip',
+      // )
     }
     let zipResult = await Utility.zipFiles([dataPath], targetPath)
     let uploadResult = false
@@ -118,7 +126,6 @@ async function shareToSuperMapOnline(type) {
     return uploadResult
   } catch (e) {
     isSharing = false
-    // console.log(e, _params)
     return false
   }
 }

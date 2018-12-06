@@ -67,7 +67,8 @@ export default [
           ConstPath.UserPath +
           user.userName +
           '/' +
-          ConstPath.RelativeFilePath.Scene
+          ConstPath.RelativeFilePath.Scene +
+          'OlympicGreen_android/OlympicGreen_android.sxwu'
         ssPath = await Utility.appendingHomeDirectory(userWSPath)
       } else {
         ssPath = await Utility.appendingHomeDirectory(customerPath)

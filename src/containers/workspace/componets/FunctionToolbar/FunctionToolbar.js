@@ -514,7 +514,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             title: '更多',
-            action: () => {
+            action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
             image: require('../../../../assets/function/icon_function_share.png'),
