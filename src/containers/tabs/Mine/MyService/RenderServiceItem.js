@@ -110,6 +110,14 @@ export default class RenderServiceItem extends PureComponent {
     }
   }
 
+  _loadImage = () => {
+    if (this.props.imageUrl === 'null') {
+      return require('../../../../assets/home/icon-map-share.png')
+    } else {
+      return { url: this.props.imageUrl }
+    }
+  }
+
   render() {
     let mapUrl = this.props.sharedMapUrl
     let mapTitle = this.props.mapName

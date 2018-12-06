@@ -1151,7 +1151,9 @@ function openMap() {
 
 /** 新建地图 **/
 function createMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  if (GLOBAL.Type === constants.COLLECTION) {
+    openWorkspace()
+  }
 }
 
 /** 历史 **/

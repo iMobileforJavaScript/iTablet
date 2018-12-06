@@ -937,7 +937,12 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
     this.showToolbar(false)
-    this.setState({ isTouchProgress: false, isSelectlist: false })
+    if (
+      this.state.isTouchProgress === true ||
+      this.state.isSelectlist === true
+    ) {
+      this.setState({ isTouchProgress: false, isSelectlist: false })
+    }
     this.props.existFullMap && this.props.existFullMap()
   }
 
@@ -1024,6 +1029,7 @@ export default class ToolBar extends React.Component {
   }
 
   showSymbol = () => {
+    SCollector.stopCollect()
     this.props.showFullMap && this.props.showFullMap(true)
     this.setVisible(true, ConstToolType.MAP_SYMBOL, {
       isFullScreen: true,
@@ -1193,13 +1199,20 @@ export default class ToolBar extends React.Component {
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 打开地图
-      SMap.openMap(item.title)
+      SMap.openMap(item.title).then(isOpen => {
+        if (isOpen) {
+          this.setVisible(false)
+          Toast.show('已为您切换到' + item.title)
+        } else {
+          Toast.show('该地图为当前地图')
+        }
+      })
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
       //专题图表达式
       this.setState({
         themeExpress: item.title,
-      }),
-      async function() {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1210,13 +1223,13 @@ export default class ToolBar extends React.Component {
         }
         // await SThemeCartography.setUniqueExpression(Params)
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)()
+      }.bind(this))
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_COLOR) {
       //专题图颜色表
       this.setState({
         themeColor: item.key,
-      }),
-      async function() {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1226,7 +1239,7 @@ export default class ToolBar extends React.Component {
           LayerIndex: '0',
         }
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)()
+      }.bind(this))
     }
   }
 
@@ -1574,10 +1587,7 @@ export default class ToolBar extends React.Component {
         )}
         {this.state.isTouchProgress &&
           this.state.isFullScreen && (
-          <TouchProgress
-            layerData={this.state.layerData}
-            selectName={this.state.selectName}
-          />
+          <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
