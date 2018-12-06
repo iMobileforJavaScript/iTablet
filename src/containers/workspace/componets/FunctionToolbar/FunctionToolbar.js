@@ -81,6 +81,17 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  map3Dstart = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP3D_START, {
+        containerType: 'table',
+        height: ConstToolType.HEIGHT[2],
+      })
+    }
+  }
+
   startTheme = () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
@@ -476,9 +487,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
-            },
+            action: this.map3Dstart,
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -501,6 +510,13 @@ export default class FunctionToolbar extends React.Component {
             title: '工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '更多',
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break

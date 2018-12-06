@@ -5,22 +5,22 @@ export default {
       index: 0,
       show: true,
       data: [
-        {
-          title: 'STK',
-          index: 0,
-          show: true,
-          type: 'terrainLayer',
-          name: 'stk',
-          url: 'https://assets.agi.com/stk-terrain/world',
-        },
         // {
-        //   title: 'Google statellite',
+        //   title: 'STK',
         //   index: 0,
         //   show: true,
-        //   type: 'WMTS',
-        //   name:"tiandidu",
-        //   url:"http://t0.tianditu.com/img_c/wmts"
+        //   type: 'terrainLayer',
+        //   name: 'stk',
+        //   url: 'https://assets.agi.com/stk-terrain/world',
         // },
+        {
+          title: 'Google statellite',
+          index: 0,
+          show: true,
+          type: 'WMTS',
+          name: 'tiandidu',
+          url: 'http://t0.tianditu.com/img_c/wmts',
+        },
         {
           title: 'BingMap',
           index: 0,

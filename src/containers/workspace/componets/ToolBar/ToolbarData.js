@@ -30,6 +30,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = getCollectionData(type)
   } else if (type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = getEditData(type)
+  } else if (type === ConstToolType.MAP3D_START) {
+    tabBarData = getStart(type)
   } else if (type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
   } else if (type.indexOf('MAP_MORE') > -1) {
@@ -38,7 +40,7 @@ function getTabBarData(type, params = {}) {
     tabBarData = getStart(type)
   } else if (type.indexOf(ConstToolType.MAP_TOOL) > -1) {
     tabBarData = MapToolData.getMapTool(type, params)
-  } else if (type === ConstToolType.MAP_SHARE) {
+  } else if (type.indexOf('MAP_SHARE') > -1) {
     tabBarData = ShareData.getShareData(type, params)
   } else if (type === ConstToolType.MAP_THEME_START) {
     tabBarData = getThemeStart(type)
@@ -828,57 +830,108 @@ function getThemeStart(type) {
 function getStart(type) {
   let data = [],
     buttons = []
-  if (type !== ConstToolType.MAP_START) return { data, buttons }
-  data = [
-    {
-      key: constants.WORKSPACE,
-      title: constants.WORKSPACE,
-      action: openWorkspace,
-      size: 'large',
-      image: require('../../../../assets/mapTools/icon_point.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-    },
-    {
-      key: constants.OPEN,
-      title: constants.OPEN,
-      action: openMap,
-      size: 'large',
-      image: require('../../../../assets/mapTools/icon_point.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-    },
-    {
-      key: constants.CREATE,
-      title: constants.CREATE,
-      size: 'large',
-      action: createMap,
-      image: require('../../../../assets/mapTools/icon_words.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-    },
-    {
-      key: constants.HISTORY,
-      title: constants.HISTORY,
-      size: 'large',
-      action: showHistory,
-      image: require('../../../../assets/mapTools/icon_point_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-    },
-    {
-      key: constants.BASE_MAP,
-      title: constants.BASE_MAP,
-      size: 'large',
-      action: changeBaseLayer,
-      image: require('../../../../assets/mapTools/icon_free_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-    },
-    {
-      key: constants.ADD,
-      title: constants.ADD,
-      size: 'large',
-      action: add,
-      image: require('../../../../assets/mapTools/icon_free_line.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-    },
-  ]
+  switch (type) {
+    case ConstToolType.MAP_START:
+      data = [
+        {
+          key: constants.WORKSPACE,
+          title: constants.WORKSPACE,
+          action: openWorkspace,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: constants.OPEN,
+          title: constants.OPEN,
+          action: openMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: constants.CREATE,
+          title: constants.CREATE,
+          size: 'large',
+          action: createMap,
+          image: require('../../../../assets/mapTools/icon_words.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        },
+        {
+          key: constants.HISTORY,
+          title: constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
+        {
+          key: constants.BASE_MAP,
+          title: constants.BASE_MAP,
+          size: 'large',
+          action: changeBaseLayer,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+        {
+          key: constants.ADD,
+          title: constants.ADD,
+          size: 'large',
+          action: add,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+      ]
+      break
+    case ConstToolType.MAP3D_START:
+      data = [
+        {
+          key: constants.OPEN,
+          title: constants.OPEN,
+          action: () => {
+            if (!_params.setToolbarVisible) return
+            _params.setToolbarVisible(false)
+            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+          },
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: constants.CREATE,
+          title: constants.CREATE,
+          size: 'large',
+          action: () => {},
+          image: require('../../../../assets/mapTools/icon_words.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        },
+        {
+          key: constants.HISTORY,
+          title: constants.HISTORY,
+          size: 'large',
+          action: () => {},
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
+        {
+          key: constants.BASE_MAP,
+          title: constants.BASE_MAP,
+          size: 'large',
+          action: changeBaseLayer,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+        {
+          key: constants.ADD,
+          title: constants.ADD,
+          size: 'large',
+          action: () => {},
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+      ]
+      break
+  }
   return { data, buttons }
 }
 
