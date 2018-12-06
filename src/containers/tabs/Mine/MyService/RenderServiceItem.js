@@ -1,12 +1,13 @@
-import React, { Component } from 'react'
-import { Image, Text, View, TouchableOpacity } from 'react-native'
+import React, { PureComponent } from 'react'
+import { Image, Text, View, TouchableOpacity, Platform } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
 import { ConstPath } from '../../../../constants'
+import { Toast } from '../../../../utils'
 let publishMap = []
 
-export default class RenderServiceItem extends Component {
+export default class RenderServiceItem extends PureComponent {
   props: {
     imageUrl: string,
     mapName: string,
@@ -14,7 +15,9 @@ export default class RenderServiceItem extends Component {
     serviceNameAndFileName: Object,
     mapTileAndRestTitle: Object,
     isDownloading: boolean,
-    downloadProgress: string,
+    index: number,
+    itemOnPressCallBack: () => {},
+    isScenes:boolean,
   }
 
   defaultProps: {
@@ -29,75 +32,84 @@ export default class RenderServiceItem extends Component {
     this.state = {
       progress: '',
       isDownloading: this.props.isDownloading,
-    }
-    this.download = {
-      onProgress: this.downloadProgress,
-      onResult: this.downloadResult,
+      disabled:false,
     }
   }
 
-  downloadProgress = progress => {
-    if (typeof progress === 'number') {
-      this._changeProgress(progress)
+  setDownloadProgress = progress => {
+    if(progress === '下载完成' || progress === '下载失败'){
+      this.setState({ progress: progress,disabled:false })
+    }else{
+      this.setState({ progress: progress,disabled:true })
     }
-  }
 
-  downloadResult = result => {
-    if (typeof result === 'boolean') {
-      this._changeProgress('下载完成')
-    } else {
-      this._changeProgress('下载失败')
-    }
   }
 
   _downloadMapFile = async mapTitle => {
-    let restTitle = this.props.mapTileAndRestTitle[mapTitle]
-    let onlineFileName = this.props.serviceNameAndFileName[restTitle]
-
-    let savePath = await Utility.appendingHomeDirectory(
-      ConstPath.UserPath + onlineFileName,
-    )
-    let isFileExist = await Utility.fileIsExist(savePath)
-    if (isFileExist) {
-      this._changeProgress('下载完成')
-      return
+    let restTitle = this.props.mapTileAndRestTitle[mapTitle];
+    let onlineFileName = this.props.serviceNameAndFileName[restTitle];
+    if(onlineFileName !== undefined){
+      let savePath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath + onlineFileName,
+      )
+      let isFileExist = await Utility.fileIsExist(savePath);
+      if (isFileExist) {
+        this.setState({ progress: '下载完成' });
+        return;
+      }
+      this.props.itemOnPressCallBack && this.props.itemOnPressCallBack(this.props.index);
+      let fileName = onlineFileName.substring(0, onlineFileName.length - 4);
+      SOnlineService.downloadFile(savePath, fileName);
+      this.setState({disabled:false});
+    }else{
+      this.setState({disabled:false,progress: '下载失败'});
     }
-    let fileName = onlineFileName.substring(0, onlineFileName.length - 4)
-    SOnlineService.downloadFile(savePath, fileName, this.download)
-  }
 
-  _changeProgress = result => {
-    if (typeof result === 'number') {
-      let progress = '下载' + result.toFixed(0) + '%'
-      this.setState({ progress: progress })
-    } else {
-      this.setState({ progress: result, isDownloading: false })
-    }
+
   }
 
   _navigator = async (mapUrl, restTitle) => {
-    NavigationService.navigate('MapView', {
-      wsData: {
-        DSParams: {
-          server: mapUrl,
-          engineType: 225,
-          driver: 'REST',
-          alias: mapUrl,
-        },
-        layerIndex: 0,
-        type: 'Datasource',
-      },
-      mapName: this.props.mapName,
-      isExample: true,
-    })
-    if (publishMap.indexOf(restTitle) === -1) {
-      let publish = await SOnlineService.changeServiceVisibility(
-        restTitle,
-        true,
-      )
-      if (typeof publish === 'boolean' && publish === true) {
-        publishMap.push(restTitle)
+    if(mapUrl === 'null'){
+      Toast.show('无法浏览地图')
+      return
+    }
+    if (Platform.OS === 'ios') {
+      if (publishMap.indexOf(restTitle) === -1) {
+        let publish = await SOnlineService.changeServiceVisibility(
+          restTitle,
+          true,
+        )
+        if (typeof publish === 'boolean' && publish === true) {
+          publishMap.push(restTitle)
+        }
       }
+    }
+    if(!this.props.isScenes){
+      NavigationService.navigate('MapView', {
+        wsData: {
+          DSParams: {
+            server: mapUrl,
+            engineType: 225,
+            driver: 'REST',
+            alias: mapUrl,
+          },
+          layerIndex: 0,
+          type: 'Datasource',
+        },
+        mapName: this.props.mapName,
+        isExample: true,
+      })
+    }else{
+      Toast.show('无法浏览地图')
+    }
+
+  }
+
+  _loadImage = () =>{
+    if(this.props.imageUrl === 'null'){
+     return require('../../../../assets/home/icon-map-share.png')
+    }else{
+      return {url: this.props.imageUrl}
     }
   }
 
@@ -105,6 +117,7 @@ export default class RenderServiceItem extends Component {
     let mapUrl = this.props.sharedMapUrl
     let mapTitle = this.props.mapName
     let restTitle = this.props.mapTileAndRestTitle[mapTitle]
+    let imagePicture = this._loadImage()
     return (
       <View style={{ flex: 1 }}>
         <View style={styles.itemTopContainer}>
@@ -116,10 +129,7 @@ export default class RenderServiceItem extends Component {
           >
             <Image
               style={styles.itemTopInternalImageStyle}
-              source={{
-                url: this.props.imageUrl,
-                credentials: 'include',
-              }}
+              source={imagePicture}
             />
           </TouchableOpacity>
 
@@ -145,10 +155,19 @@ export default class RenderServiceItem extends Component {
 
               <View style={styles.itemTopInternalRightBottomBottomViewStyle}>
                 <TouchableOpacity
+                  /*disabled={this.state.disabled}*/
                   style={{ width: 80, height: textHeight }}
                   onPress={() => {
-                    this._changeProgress('下载中...')
-                    this._downloadMapFile(mapTitle)
+                    if(this.state.disabled){
+                      Toast.show('当前地图正在下载...')
+                    }else {
+                      if (this.props.isDownloading) {
+                        this._downloadMapFile(mapTitle)
+                      } else {
+                        Toast.show('有地图正在下载...')
+                      }
+                    }
+
                   }}
                 >
                   <Text style={styles.textStyle}>下载地图</Text>

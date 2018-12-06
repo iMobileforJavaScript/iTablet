@@ -19,6 +19,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
+  MenuAlertDialog,
   SaveView,
   AlertDialog,
 } from '../../componets'
@@ -200,27 +201,8 @@ export default class MapView extends React.Component {
       async function() {
         this.container &&
           this.container.setLoading(true, '正在关闭', { bgColor: 'white' })
-        // this.container && this.container.setLoading(true, '正在关闭')
         this.clearData()
-        // await this._remove_measure_listener()
-        // await this._removeGeometrySelectedListener()
-        // this.mapControl && (await this.mapControl.removeMeasureListener())
-        // this.mapControl &&
-        //   (await this.mapControl.removeGeometrySelectedListener())
-
-        // this.map && (await this.map.close())
-        // await this.workspace.closeAllDatasource()
-        // this.workspace && (await this.workspace.closeWorkspace())
-
-        // this.map && await this.map.dispose()
-        // this.mapControl && (await this.mapControl.dispose())
-        // this.workspace && await this.workspace.dispose()
-
         this._removeGeometrySelectedListener()
-
-        // this.map = null
-        // this.mapControl = null
-        // this.workspace = null
         this.container && this.container.setLoading(false)
         cb && cb()
       }.bind(this),
@@ -450,7 +432,36 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
+      case ConstToolType.MAP_EDIT_DEFAULT:
         SMap.appointEditGeometry(event.id, event.layerInfo.name)
+        if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
+          let column = 4,
+            height = ConstToolType.HEIGHT[3],
+            tableType = 'normal',
+            type = ''
+          switch (event.layerInfo.type) {
+            case DatasetType.POINT:
+              type = ConstToolType.MAP_EDIT_POINT
+              height = ConstToolType.HEIGHT[0]
+              column = 5
+              break
+            case DatasetType.LINE:
+              type = ConstToolType.MAP_EDIT_LINE
+              height = ConstToolType.HEIGHT[2]
+              break
+            case DatasetType.REGION:
+              type = ConstToolType.MAP_EDIT_REGION
+              height = ConstToolType.HEIGHT[2]
+              break
+          }
+          this.toolBox &&
+            this.toolBox.setVisible(true, type, {
+              isFullScreen: false,
+              column,
+              height,
+              tableType,
+            })
+        }
         break
     }
   }
@@ -581,6 +592,7 @@ export default class MapView extends React.Component {
   toDownLoad = () => {
     Toast.show('功能待完善')
   }
+
   // 地图保存
   saveMap = (name = '') => {
     SMap.saveMap(name).then(result => {
@@ -588,34 +600,17 @@ export default class MapView extends React.Component {
         result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
       )
     })
-    // if (this.setting && this.setting.isVisible()) {
-    //   this.setting.close()
-    // } else {
-    //   // if (this.map.isModified() && this.type !== "ONLINE" ) {
-    //   if (this.map.isModified() && this.type !== 'ONLINE') {
-    //     if (this.type && this.type === 'LOCAL') {
-    //       try {
-    //         let saveMap = await this.map.save()
-    //         let saveWs = await this.workspace.saveWorkspace()
-    //         if (!saveMap || !saveWs) {
-    //           Toast.show('保存失败')
-    //         } else {
-    //           Toast.show('保存成功')
-    //           cb && cb()
-    //         }
-    //       } catch (e) {
-    //         Toast.show('保存失败')
-    //       }
-    //     } else {
-    //       await this.saveDialog.setDialogVisible(true)
-    //     }
-    //   } else {
-    //     this.closeWorkspace(() =>
-    //       NavigationService.goBack(this.props.nav.routes[1].key),
-    //     )
-    //   }
-    // }
   }
+
+  // 地图另存为
+  saveAsMap = (name = '') => {
+    SMap.saveAsMap(name).then(result => {
+      Toast.show(
+        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      )
+    })
+  }
+
   // 地图保存为xml(fileName, cb)
   saveMapToXML = mapName => {
     this.container.setLoading(true, '正在保存')
@@ -827,11 +822,19 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         if (!this.props.selection || !this.props.selection.id) return
-        let result = await SCollector.remove(this.props.selection.id)
+        let result = await SCollector.remove(
+          this.props.selection.id,
+          this.props.selection.layerInfo.path,
+        )
         if (result) {
           Toast.show('删除成功')
           this.props.setSelection && this.props.setSelection()
           SMap.setAction(Action.SELECT)
+          // 删除对象后，编辑设为为选择状态
+          this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+            isFullScreen: false,
+            height: 0,
+          })
         } else {
           Toast.show('删除失败')
         }
@@ -1006,7 +1009,7 @@ export default class MapView extends React.Component {
    * @param visible
    */
   setSaveMapDialogVisible = visible => {
-    this.SaveMapDialog && this.SaveMapDialog.setDialogVisible(visible)
+    this.SaveDialog && this.SaveDialog.setDialogVisible(visible)
   }
 
   /**
@@ -1085,6 +1088,7 @@ export default class MapView extends React.Component {
         style={styles.functionToolbar}
         type={this.operationType}
         getToolRef={() => this.toolBox}
+        getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -1128,10 +1132,23 @@ export default class MapView extends React.Component {
     this.fullMap = isFull
   }
 
+  renderMenuDialog = () => {
+    return (
+      <MenuAlertDialog
+        ref={ref => (this.MenuAlertDialog = ref)}
+        backHide='true'
+        existFullMap={() => this.showFullMap(false)}
+        showFullMap={this.showFullMap}
+        getToolBarRef={() => this.toolBox}
+      />
+    )
+  }
+
   /** 改变地图存储类型 是否有本地XML文件 **/
   setMapType = mapType => {
     this.mapType = mapType
   }
+
   renderTool = () => {
     return (
       <ToolBar
@@ -1139,6 +1156,7 @@ export default class MapView extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         user={this.props.user}
         symbol={this.props.symbol}
+        getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         showFullMap={this.showFullMap}
@@ -1148,11 +1166,6 @@ export default class MapView extends React.Component {
       />
     )
   }
-
-  // /** 下方弹出的工具栏 **/
-  // renderToolBar = () => {
-  //   return <ToolBar style={styles.mapController} />
-  // }
 
   render() {
     return (
@@ -1178,10 +1191,7 @@ export default class MapView extends React.Component {
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
-        {/*{this.renderPopMeasureBar()}*/}
-        {/*{this.renderChangeLayerBtn()}*/}
-        {/*{this.renderToolBar()}*/}
-        {/*{this.renderSetting()}*/}
+        {!this.isExample && this.renderMenuDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
@@ -1214,8 +1224,8 @@ export default class MapView extends React.Component {
           action={() => {}}
         />
         <SaveDialog
-          ref={ref => (this.SaveMapDialog = ref)}
-          confirmAction={data => this.saveMap(data.mapName)}
+          ref={ref => (this.SaveDialog = ref)}
+          confirmAction={data => this.saveAsMap(data.mapName)}
           type="normal"
         />
         {/*<Dialog*/}

@@ -5,17 +5,21 @@
 */
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, NativeModules } from 'react-native'
 import { Toast } from '../../../utils'
 import NavigationService from '../../NavigationService' //导航模块
 import { Container, TextBtn, BtnTwo } from '../../../components'
+import { ConstPath } from '../../../constants'
 import Input from './Input'
 import Tips from './Tips'
 import forge from 'node-forge'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, Utility } from 'imobile_for_reactnative'
+const NativeFileTool = NativeModules.FileTools
+
 export default class Login extends React.Component {
   props: {
     navigation: Object,
+    user: Object,
     setUser: () => {},
   }
 
@@ -32,10 +36,8 @@ export default class Login extends React.Component {
   }
 
   _login = async () => {
-    // let userName = this.phone.getValue()
-    // let password = this.password.getValue()
-    let userName = 'imobile1234'
-    let password = 'imobile'
+    let userName = this.phone.getValue()
+    let password = this.password.getValue()
     if (!userName) {
       Toast.show('请输入用户名')
       return
@@ -58,6 +60,7 @@ export default class Login extends React.Component {
           // password: md.digest().toHex(),
           password: password,
         })
+        this.initUserDirectories(userName)
       } else {
         this.props.setUser({
           userName: '',
@@ -75,6 +78,69 @@ export default class Login extends React.Component {
     }
   }
 
+  // 初始用户化文件目录
+  initUserDirectories = async userName => {
+    try {
+      let paths = Object.keys(ConstPath.RelativePath)
+      let isCreate = true,
+        absolutePath = ''
+      for (let i = 0; i < paths.length; i++) {
+        let path =
+          ConstPath.UserPath + userName + '/' + ConstPath.RelativePath[paths[i]]
+        absolutePath = await Utility.appendingHomeDirectory(path)
+        let exist = await Utility.fileIsExistInHomeDirectory(path)
+        let fileCreated = exist || (await Utility.createDirectory(absolutePath))
+        isCreate = fileCreated && isCreate
+      }
+      if (isCreate) {
+        let initDataResult = await NativeFileTool.initUserDefaultData(userName)
+        !initDataResult && Toast.show('初始化用户数据失败')
+      } else {
+        Toast.show('创建用户目录失败')
+      }
+    } catch (e) {
+      Toast.show('创建用户目录失败')
+    }
+  }
+
+  oldRenderLogin = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#505052',
+        }}
+      >
+        <View style={{ alignItems: 'center' }}>
+          {/*<Input ref={ref => this.phone = ref} placeholder='账号/手机号' />*/}
+          <Input ref={ref => (this.phone = ref)} placeholder="账号" />
+          <Input
+            ref={ref => (this.password = ref)}
+            placeholder="密码"
+            password={true}
+            image={require('../../../assets/public/lock.png')}
+          />
+          <Tips
+            tipText="地图慧账户可直接登录"
+            btnText="忘记密码"
+            btnClick={this._forgetPassword}
+          />
+          <View style={{ marginTop: 50, marginBottom: 70 }}>
+            <BtnTwo text="确定" btnClick={this._login} />
+          </View>
+          <TextBtn
+            width={150}
+            height={40}
+            btnText="没有账户立即注册"
+            btnClick={this._register}
+          />
+        </View>
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -85,34 +151,8 @@ export default class Login extends React.Component {
           withoutBack: true,
         }}
       >
-        <View
-          style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-        >
-          <View style={{ alignItems: 'center' }}>
-            {/*<Input ref={ref => this.phone = ref} placeholder='账号/手机号' />*/}
-            <Input ref={ref => (this.phone = ref)} placeholder="账号" />
-            <Input
-              ref={ref => (this.password = ref)}
-              placeholder="密码"
-              password={true}
-              image={require('../../../assets/public/lock.png')}
-            />
-            <Tips
-              tipText="地图慧账户可直接登录"
-              btnText="忘记密码"
-              btnClick={this._forgetPassword}
-            />
-            <View style={{ marginTop: 50, marginBottom: 70 }}>
-              <BtnTwo text="确定" btnClick={this._login} />
-            </View>
-            <TextBtn
-              width={150}
-              height={40}
-              btnText="没有账户立即注册"
-              btnClick={this._register}
-            />
-          </View>
-        </View>
+        {this.oldRenderLogin()}
+        <View style={{}} />
       </Container>
     )
   }

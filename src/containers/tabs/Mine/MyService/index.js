@@ -1,2 +1,4 @@
 import MyService from './MyService'
-export { MyService }
+export {
+  MyService,
+}

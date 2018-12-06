@@ -37,7 +37,7 @@ export default class WorkSpaceFileList extends Component {
     this.cb = params.cb
     this.state = {
       data: [],
-      backPath: ConstPath.AppPath + '/data/local',
+      backPath: ConstPath.AppPath,
       showData: false,
     }
   }
@@ -137,7 +137,7 @@ export default class WorkSpaceFileList extends Component {
 
   _toLoadMapView = (path, type) => {
     (async function() {
-      switch (type) {
+      switch (this.type) {
         case 'MAP_3D':
           this._loadMap3D(path, type)
           break
@@ -156,19 +156,11 @@ export default class WorkSpaceFileList extends Component {
           let result = await SScene.openWorkspace(data)
           let mapList = await SScene.getMapList()
           result && (await SScene.openMap(mapList[0].name))
-          NavigationService.goBack() && this.container.setLoading(false)
-        } catch (error) {
-          Toast.show('打开失败')
-          this.container.setLoading(false)
-        }
-        break
-      default:
-        try {
-          this.container && this.container.setLoading(true, '正在打开地图')
-          let data = { server: path }
-          let result = await SScene.openWorkspace(data)
-          let mapList = await SScene.getMapList()
-          result && (await SScene.openMap(mapList[0].name))
+          GLOBAL.openWorkspace = true
+          SScene.setListener().then(() => {
+            SScene.getAttribute()
+            SScene.setCircleFly()
+          })
           NavigationService.goBack() && this.container.setLoading(false)
         } catch (error) {
           Toast.show('打开失败')

@@ -98,7 +98,7 @@ export default class TouchProgress extends Component {
 
 
     let layerType = this.props.currentLayer.type
-    let lineWidth = x/(positionWidth - scaleSize(60))*10
+    let lineWidth = x/(positionWidth - scaleSize(60))*20
     let pointSize = x/(positionWidth - scaleSize(60))*100
     let pointAlpha = x/(positionWidth - scaleSize(60))*100
     let pointAngle = x/(positionWidth - scaleSize(60))*360
@@ -107,7 +107,6 @@ export default class TouchProgress extends Component {
       case 1:
         if(this.props.selectName==='大小'){
           if (pointSize<=1){pointSize=1}
-          console.warn(JSON.stringify(pointSize))
           SCartography.setMarkerSize(pointSize,this.props.currentLayer.caption)
         }else if(this.props.selectName==='透明度'){
           SCartography.setMarkerAlpha(pointAlpha,this.props.currentLayer.caption)
