@@ -1,10 +1,15 @@
 import WorkspaceFlieList from './WorkspaceFlieList'
 import { connect } from 'react-redux'
-import { setEditLayer, setSelection, setAnalystLayer } from '../../models/layers'
+import {
+  setEditLayer,
+  setSelection,
+  setAnalystLayer,
+} from '../../models/layers'
 import { setBufferSetting, setOverlaySetting } from '../../models/setting'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
+  user: state.user.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -14,4 +19,7 @@ const mapDispatchToProps = {
   setOverlaySetting,
   setAnalystLayer,
 }
-export default connect(mapStateToProps, mapDispatchToProps)(WorkspaceFlieList)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(WorkspaceFlieList)

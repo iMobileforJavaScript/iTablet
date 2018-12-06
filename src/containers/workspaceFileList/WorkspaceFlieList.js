@@ -20,6 +20,7 @@ export default class WorkSpaceFileList extends Component {
     title: string,
     navigation: Object,
     nav: Object,
+    user: Object,
 
     setEditLayer: () => {},
     setSelection: () => {},
@@ -32,7 +33,9 @@ export default class WorkSpaceFileList extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type
-    this.path = ConstPath.LocalDataPath
+    this.path = props.user.currentUser.userName
+      ? ConstPath.UserPath + props.user.currentUser.userName
+      : ConstPath.CustomerPath
     this.title = params.title
     this.cb = params.cb
     this.state = {

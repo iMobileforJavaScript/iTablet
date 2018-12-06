@@ -4,7 +4,6 @@ import ConstOnline from './ConstOnline'
 import { Utility } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
 import { Platform } from 'react-native'
-import ConstToolType from './ConstToolType'
 
 export default [
   {
@@ -13,7 +12,7 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_free.png'),
     moduleImage: require('../assets/home/icon_cartography.png'),
     action: async user => {
-      GLOBAL.Type = ConstToolType.MAP_EDIT
+      GLOBAL.Type = constants.MAP_EDIT
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
@@ -48,7 +47,7 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
     action: async () => {
-      GLOBAL.Type = ConstToolType.MAP_3D
+      GLOBAL.Type = constants.MAP_3D
       let path,
         type = 'MAP_3D'
       if (Platform.OS === 'android') {
@@ -87,7 +86,7 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_vip.png'),
     moduleImage: require('../assets/home/icon_thematicmap.png'),
     action: async user => {
-      GLOBAL.Type = ConstToolType.MAP_THEMATIC
+      GLOBAL.Type = constants.MAP_THEME
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
@@ -121,7 +120,7 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async user => {
-      GLOBAL.Type = ConstToolType.MAP_COLLECT
+      GLOBAL.Type = constants.COLLECTION
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)

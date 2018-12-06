@@ -697,7 +697,8 @@ function getMap3DData(type) {
  * @returns {{data: Array, buttons: Array}}
  */
 function getThemeMapParam(type) {
-  let data = [], buttons = []
+  let data = [],
+    buttons = []
   if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
   buttons = [
     ToolbarBtnType.THEME_CANCEL,
@@ -708,8 +709,9 @@ function getThemeMapParam(type) {
   return { data, buttons }
 }
 
-
-let DatasourceAlias = '', DatasetName = '', UniqueExpression = ''
+let DatasourceAlias = '',
+  DatasetName = '',
+  UniqueExpression = ''
 
 function setThemeParams(datasourceAlias, datasetName, uniqueExpression) {
   DatasourceAlias = datasourceAlias
@@ -738,7 +740,8 @@ function showTips() {
  * @returns {{data: Array, buttons: Array}}
  */
 function getThemeMapCreate(type) {
-  let data = [], buttons = []
+  let data = [],
+    buttons = []
   if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
   data = [
     {
@@ -1095,7 +1098,9 @@ function openMap() {
 
 /** 新建地图 **/
 function createMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  if (GLOBAL.Type === constants.COLLECTION) {
+    openWorkspace()
+  }
 }
 
 /** 历史 **/

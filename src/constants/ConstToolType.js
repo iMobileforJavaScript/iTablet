@@ -75,9 +75,4 @@ export default {
   // 工具视图高度级别
   HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(720)],
   THEME_HEIGHT: [scaleSize(500)],
-  //功能标识
-  MAP_EDIT: 'MAP_EDIT',
-  MAP_3D: 'MAP_3D',
-  MAP_THEMATIC: 'MAP_THEMATIC',
-  MAP_COLLECT: 'MAP_COLLECT',
 }

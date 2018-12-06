@@ -289,14 +289,18 @@ export default class MapView extends React.Component {
 
   // 地图保存
   saveMap = (name = '', cb = () => {}) => {
-    this.setLoading(true, '正在保存地图')
-    SMap.saveMap(name).then(result => {
+    try {
+      this.setLoading(true, '正在保存地图')
+      SMap.saveMap(name).then(result => {
+        this.setLoading(false)
+        Toast.show(
+          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+        )
+        cb && cb()
+      })
+    } catch (e) {
       this.setLoading(false)
-      Toast.show(
-        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-      )
-      cb && cb()
-    })
+    }
   }
 
   // 地图另存为
@@ -576,8 +580,25 @@ export default class MapView extends React.Component {
     //   this.setLoading(false)
     //   result && NavigationService.goBack()
     // })
-    this.setSaveViewVisible(true)
-    this.backAction = NavigationService.goBack
+    this.backAction = async () => {
+      try {
+        this.setLoading(true, '正在关闭地图')
+        await SMap.closeMap()
+        await SMap.closeDatasource()
+        this.setLoading(false)
+        NavigationService.goBack()
+      } catch (e) {
+        this.setLoading(false)
+      }
+    }
+    SMap.workspaceIsModified().then(result => {
+      if (result) {
+        this.setSaveViewVisible(true)
+      } else {
+        this.backAction()
+        this.backAction = null
+      }
+    })
     return true
   }
 
