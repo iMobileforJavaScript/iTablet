@@ -38,8 +38,9 @@ export default handleActions(
         .setIn(['currentUser'], fromJS(payload))
         .setIn(['users'], fromJS(users))
     },
-    [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.user ? fromJS(payload.user) : state
+    [REHYDRATE]: () => {
+      // return payload && payload.user ? fromJS(payload.user) : state
+      return initialState
     },
   },
   initialState,

@@ -78,6 +78,7 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
+    getLayers: () => {}, // 更新数据（包括其他界面）
   }
 
   static defaultProps = {
@@ -162,6 +163,7 @@ export default class ToolBar extends React.Component {
       setSaveViewVisible: this.props.setSaveViewVisible,
       setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
       setContainerLoading: this.props.setContainerLoading,
+      getLayers: this.props.getLayers,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -1207,6 +1209,7 @@ export default class ToolBar extends React.Component {
           Toast.show('该地图为当前地图')
         }
       })
+      this.props.getLayers()
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
       //专题图表达式
       this.setState({

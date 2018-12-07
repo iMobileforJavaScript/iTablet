@@ -5,14 +5,13 @@
  */
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTable } from '../../components'
-import { SMap } from 'imobile_for_reactnative'
-
+import styles from './styles'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 
 export default class LayerAttribute extends React.Component {
@@ -21,7 +20,9 @@ export default class LayerAttribute extends React.Component {
     currentAttribute: Object,
     currentLayer: Object,
     selection: Object,
+    attributes: Object,
     setCurrentAttribute: () => {},
+    getAttributes: () => {},
   }
 
   constructor(props) {
@@ -37,6 +38,7 @@ export default class LayerAttribute extends React.Component {
       // tableHead: ['名称', '属性值'],
       tableHead: [],
       tableData: [],
+      showTable: false,
     }
 
     this.currentFieldInfo = []
@@ -72,23 +74,25 @@ export default class LayerAttribute extends React.Component {
     this.container.setLoading(true)
     ;(async function() {
       try {
-        let attribute = await SMap.getLayerAttribute(
-          this.props.currentLayer.path,
-        )
-        let tableHead = []
-        if (attribute && attribute.length > 0) {
-          this.props.setCurrentAttribute(attribute[0])
-          attribute[0].forEach(item => {
-            if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-              tableHead.unshift(item.fieldInfo.caption)
-            } else {
-              tableHead.push(item.fieldInfo.caption)
-            }
-          })
-        }
+        this.props.getAttributes(this.props.currentLayer.path)
+        // let attribute = await SMap.getLayerAttribute(
+        //   this.props.currentLayer.path,
+        // )
+        // let tableHead = []
+        // if (attribute && attribute.length > 0) {
+        //   this.props.setCurrentAttribute(attribute[0])
+        //   attribute[0].forEach(item => {
+        //     if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+        //       tableHead.unshift(item.fieldInfo.caption)
+        //     } else {
+        //       tableHead.push(item.fieldInfo.caption)
+        //     }
+        //   })
+        // }
         this.setState({
-          attribute: attribute,
-          tableHead: tableHead,
+          // attribute: attribute,
+          // tableHead: tableHead,
+          showTable: true,
         })
         this.container.setLoading(false)
       } catch (e) {
@@ -141,6 +145,7 @@ export default class LayerAttribute extends React.Component {
           navigation: this.props.navigation,
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+        style={styles.container}
       >
         {/*<LayerAttributeTab*/}
         {/*edit={this.edit}*/}
@@ -149,17 +154,25 @@ export default class LayerAttribute extends React.Component {
         {/*GLOBAL.AudioBottomDialog.setVisible(true)*/}
         {/*}}*/}
         {/*/>*/}
-        {this.state.tableHead.length > 0 ? (
-          <LayerAttributeTable
-            ref={ref => (this.table = ref)}
-            data={this.state.attribute}
-            type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-            tableTitle={this.state.tableTitle}
-            tableHead={this.state.tableHead}
-            selectRow={this.selectRow}
-          />
+        {this.state.showTable ? (
+          this.props.attributes.head.length > 0 ? (
+            <LayerAttributeTable
+              ref={ref => (this.table = ref)}
+              data={this.props.attributes.data}
+              tableHead={this.props.attributes.head}
+              // data={this.state.attribute}
+              // tableHead={this.state.tableHead}
+              // tableTitle={this.state.tableTitle}
+              type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
+              selectRow={this.selectRow}
+            />
+          ) : (
+            <View style={styles.infoView}>
+              <Text style={styles.info}>当前图层属性不可见</Text>
+            </View>
+          )
         ) : (
-          <View style={{ flex: 1 }} />
+          <View style={styles.infoView} />
         )}
       </Container>
     )

@@ -1,6 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
+import { SMap } from 'imobile_for_reactnative'
 // Constants
 // --------------------------------------------------
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
@@ -8,6 +9,8 @@ export const SET_SELECTION = 'SET_SELECTION'
 export const SET_CURRENT_ATTRIBUTE = 'SET_CURRENT_ATTRIBUTE'
 export const SET_CURRENT_LAYER = 'SET_CURRENT_LAYER'
 export const SET_ANALYST_LAYER = 'SET_ANALYST_LAYER'
+export const GET_LAYERS = 'GET_LAYERS'
+export const GET_ATTRIBUTES = 'GET_ATTRIBUTES'
 
 // Actions
 // --------------------------------------------------
@@ -55,11 +58,36 @@ export const setAnalystLayer = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
+export const getLayers = (type = -1, cb = () => {}) => async dispatch => {
+  let layers = await SMap.getLayersByType(type)
+  await dispatch({
+    type: GET_LAYERS,
+    payload: layers || {},
+  })
+  cb && cb(layers)
+}
+
+export const getAttributes = (
+  layerPath = '',
+  cb = () => {},
+) => async dispatch => {
+  let attribute = await SMap.getLayerAttribute(layerPath)
+  await dispatch({
+    type: GET_ATTRIBUTES,
+    payload: attribute || {},
+  })
+  cb && cb(attribute)
+}
+
 const initialState = fromJS({
-  layers: {},
+  layers: [],
   editLayer: {},
   selection: {},
   currentAttribute: {},
+  attributes: {
+    head: [],
+    data: [],
+  },
   currentLayer: {},
   analystLayer: {},
 })
@@ -81,8 +109,46 @@ export default handleActions(
     [`${SET_ANALYST_LAYER}`]: (state, { payload }) => {
       return state.setIn(['analystLayer'], fromJS(payload))
     },
-    [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.layers ? fromJS(payload.layers) : state
+    [`${GET_LAYERS}`]: (state, { payload }) => {
+      let currentLayer = {}
+      if (
+        JSON.stringify(state.toJS().currentLayer) === '{}' &&
+        payload.length > 0
+      ) {
+        currentLayer = payload[0]
+      }
+      return state
+        .setIn(['layers'], fromJS(payload))
+        .setIn(['currentLayer'], fromJS(currentLayer))
+    },
+    [`${GET_ATTRIBUTES}`]: (state, { payload }) => {
+      let currentAttribute = {},
+        attributes = state.toJS().attributes
+      if (
+        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+        payload.length > 0
+      ) {
+        currentAttribute = payload[0]
+      }
+      let tableHead = []
+      if (payload && payload.length > 0) {
+        payload[0].forEach(item => {
+          if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+            tableHead.unshift(item.fieldInfo.caption)
+          } else {
+            tableHead.push(item.fieldInfo.caption)
+          }
+        })
+      }
+      attributes.head = tableHead
+      attributes.data = payload
+      return state
+        .setIn(['attributes'], fromJS(attributes))
+        .setIn(['currentAttribute'], fromJS(currentAttribute))
+    },
+    [REHYDRATE]: () => {
+      // return payload && payload.layers ? fromJS(payload.layers) : state
+      return initialState
     },
   },
   initialState,
