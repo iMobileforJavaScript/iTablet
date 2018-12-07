@@ -1295,6 +1295,7 @@ export default class ToolBar extends React.Component {
           Toast.show('该地图为当前地图')
         }
       })
+      this.props.getLayers()
     }
   }
 
