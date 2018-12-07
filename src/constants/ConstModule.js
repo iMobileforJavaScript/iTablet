@@ -1,10 +1,10 @@
 import NavigationService from '../containers/NavigationService'
 import constants from '../containers/workspace/constants'
+import ConstToolType from './ConstToolType'
 import ConstOnline from './ConstOnline'
 import { Utility } from 'imobile_for_reactnative'
 import { ConstPath } from '../constants'
 import { Platform } from 'react-native'
-import ConstToolType from './ConstToolType'
 
 export default [
   {
@@ -13,7 +13,7 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_free.png'),
     moduleImage: require('../assets/home/icon_cartography.png'),
     action: async user => {
-      GLOBAL.Type = ConstToolType.MAP_EDIT
+      GLOBAL.Type = constants.MAP_EDIT
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
@@ -47,20 +47,36 @@ export default [
     title: '三维场景',
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
-    action: async () => {
+    action: async user => {
       GLOBAL.Type = ConstToolType.MAP_3D
-      let path,
-        type = 'MAP_3D'
+      let customerPath
       if (Platform.OS === 'android') {
-        path =
-          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+        customerPath =
+          ConstPath.CustomerPath +
+          ConstPath.RelativeFilePath.Scene +
           'OlympicGreen_android/OlympicGreen_android.sxwu'
       } else {
-        path =
-          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
-          'OlympicGreen_ios/OlympicGreen_ios.sxwu'
+        customerPath =
+          ConstPath.CustomerPath +
+          ConstPath.RelativeFilePath.Scene +
+          'OlympicGreen_android/OlympicGreen_android.sxwu'
       }
-      NavigationService.navigate('Map3D', { path: path, type: type })
+      let ssPath = await Utility.appendingHomeDirectory(customerPath)
+      if (user.userName) {
+        const userWSPath =
+          ConstPath.UserPath +
+          user.userName +
+          '/' +
+          ConstPath.RelativeFilePath.Scene +
+          'OlympicGreen_android/OlympicGreen_android.sxwu'
+        ssPath = await Utility.appendingHomeDirectory(userWSPath)
+      } else {
+        ssPath = await Utility.appendingHomeDirectory(customerPath)
+      }
+      NavigationService.navigate('Map3D', {
+        path: ssPath,
+        type: ConstToolType.MAP_3D,
+      })
     },
   },
   {
@@ -87,7 +103,7 @@ export default [
     baseImage: require('../assets/home/icon_lefttop_vip.png'),
     moduleImage: require('../assets/home/icon_thematicmap.png'),
     action: async user => {
-      GLOBAL.Type = ConstToolType.MAP_THEMATIC
+      GLOBAL.Type = constants.MAP_THEME
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let wsPath = await Utility.appendingHomeDirectory(customerPath)
@@ -121,7 +137,7 @@ export default [
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
     action: async user => {
-      GLOBAL.Type = ConstToolType.MAP_COLLECT
+      GLOBAL.Type = constants.COLLECTION
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)

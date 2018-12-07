@@ -1,8 +1,8 @@
 /**
  * 获取地图分享数据
  */
-import { Utility, SOnlineService } from 'imobile_for_reactnative'
-import { ConstToolType, ConstPath } from '../../../../constants'
+import { Utility, SOnlineService, SScene } from 'imobile_for_reactnative'
+import { ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 
@@ -13,7 +13,7 @@ function getShareData(type, params) {
   let data = [],
     buttons = []
   _params = params
-  if (type !== ConstToolType.MAP_SHARE) return { data, buttons }
+  if (type.indexOf('MAP_SHARE') <= -1) return { data, buttons }
   data = [
     // {
     //   key: constants.QQ,
@@ -39,7 +39,9 @@ function getShareData(type, params) {
     {
       key: constants.SUPERMAP_ONLINE,
       title: constants.SUPERMAP_ONLINE,
-      action: shareToSuperMapOnline,
+      action: () => {
+        shareToSuperMapOnline(type)
+      },
       size: 'large',
       image: require('../../../../assets/mapTools/icon_free_line.png'),
     },
@@ -71,7 +73,7 @@ function getShareData(type, params) {
 /**
  * 分享到SuperMap Online
  */
-async function shareToSuperMapOnline() {
+async function shareToSuperMapOnline(type) {
   try {
     if (!_params.user.currentUser.userName) {
       Toast.show('请登陆后再分享')
@@ -82,13 +84,27 @@ async function shareToSuperMapOnline() {
       return
     }
     Toast.show('开始分享')
-    const dataName = _params.user.currentUser.userName
-    const customerPath =
-      ConstPath.UserPath + dataName + '/' + ConstPath.RelativePath.Data
-    const targetPath = await Utility.appendingHomeDirectory(
-      ConstPath.UserPath + dataName + '.zip',
-    )
-    let dataPath = await Utility.appendingHomeDirectory(customerPath)
+    let dataName, customerPath, targetPath, dataPath
+    if (type === 'MAP_SHARE') {
+      dataName = _params.user.currentUser.userName
+      customerPath =
+        ConstPath.UserPath + dataName + '/' + ConstPath.RelativePath.Data
+      targetPath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath + dataName + '.zip',
+      )
+      dataPath = await Utility.appendingHomeDirectory(customerPath)
+    } else {
+      let path = await SScene.getWorkspacePath()
+      dataPath = path.substr(0, path.lastIndexOf('/'))
+      dataName = _params.user.currentUser.userName
+      let fileName = dataPath.substr(dataPath.lastIndexOf('/') + 1)
+      targetPath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath + dataName + '/Scene/' + fileName + '.zip',
+      )
+      // targetPath = await Utility.appendingHomeDirectory(
+      //   ConstPath.UserPath + dataName+ '/Scen/'+ '.zip',
+      // )
+    }
     let zipResult = await Utility.zipFiles([dataPath], targetPath)
     let uploadResult = false
     if (zipResult) {

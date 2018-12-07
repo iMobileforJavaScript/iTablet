@@ -45,12 +45,13 @@ export default {
   MAP_THEME_PARAM_RANGE_COLOR: 'MAP_THEME_PARAM_UNIQUE_COLOR',
 
   MAP_SHARE: 'MAP_SHARE',
-
+  MAP_SHARE_MAP3D: 'MAP_SHARE_MAP3D',
   MAP_TOOL: 'MAP_TOOL',
   MAP_TOOL_POINT_SELECT: 'MAP_TOOL_POINT_SELECT',
 
   MAP_STYLE: 'MAP_STYLE',
   MAP_START: 'MAP_START',
+  MAP3D_START: 'MAP3D_START',
   MAP_CHANGE: 'MAP_CHANGE',
 
   //Map3D
@@ -78,9 +79,4 @@ export default {
   // 工具视图高度级别
   HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(720)],
   THEME_HEIGHT: [scaleSize(500)],
-  //功能标识
-  MAP_EDIT: 'MAP_EDIT',
-  MAP_3D: 'MAP_3D',
-  MAP_THEMATIC: 'MAP_THEMATIC',
-  MAP_COLLECT: 'MAP_COLLECT',
 }

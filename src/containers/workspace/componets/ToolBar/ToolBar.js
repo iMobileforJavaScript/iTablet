@@ -79,6 +79,7 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
+    getLayers: () => {}, // 更新数据（包括其他界面）
   }
 
   static defaultProps = {
@@ -125,7 +126,6 @@ export default class ToolBar extends React.Component {
       themeColor: 'TERRAIN',
       layerData: Object,
       selectName: '',
-
     }
     this.isShow = false
     this.isBoxShow = true
@@ -164,6 +164,7 @@ export default class ToolBar extends React.Component {
       setSaveViewVisible: this.props.setSaveViewVisible,
       setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
       setContainerLoading: this.props.setContainerLoading,
+      getLayers: this.props.getLayers,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -469,6 +470,20 @@ export default class ToolBar extends React.Component {
             },
             size: 'large',
             image: require('../../../../assets/function/icon_pointSuerface.png'),
+          },
+          {
+            key: 'closeAllLable',
+            title: '清除标注',
+            action: () => {
+              try {
+                SScene.closeAllLabel()
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('清除失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
@@ -939,8 +954,11 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
     this.showToolbar(false)
-    if(this.state.isTouchProgress===true||this.state.isSelectlist===true) {
-      this.setState({isTouchProgress: false, isSelectlist: false})
+    if (
+      this.state.isTouchProgress === true ||
+      this.state.isSelectlist === true
+    ) {
+      this.setState({ isTouchProgress: false, isSelectlist: false })
     }
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1012,7 +1030,7 @@ export default class ToolBar extends React.Component {
 
   commit = (type = this.originType) => {
     this.showToolbar(false)
-    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+    if (type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
@@ -1651,9 +1669,7 @@ export default class ToolBar extends React.Component {
         )}
         {this.state.isTouchProgress &&
           this.state.isFullScreen && (
-          <TouchProgress
-            selectName={this.state.selectName}
-          />
+          <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>

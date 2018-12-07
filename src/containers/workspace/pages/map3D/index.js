@@ -6,6 +6,7 @@ import { setLatestMap } from '../../../../models/map'
 const mapStateToProps = state => ({
   editLayer: state.layers.toJS().editLayer,
   latestMap: state.map.toJS().latestMap,
+  user: state.user.toJS(),
 })
 
 const mapDispatchToProps = {
