@@ -185,7 +185,7 @@ export default class FunctionToolbar extends React.Component {
           containerType: 'table',
           isFullScreen: false,
           column: 4,
-          height: ConstToolType.HEIGHT[1],
+          height: ConstToolType.HEIGHT[2],
         })
       }
     })

@@ -468,6 +468,20 @@ export default class ToolBar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_pointSuerface.png'),
           },
+          {
+            key: 'closeAllLable',
+            title: '清除标注',
+            action: () => {
+              try {
+                SScene.closeAllLabel()
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('清除失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_clear.png'),
+          },
         ]
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
         break
