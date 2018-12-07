@@ -19,29 +19,20 @@ export default class MT_layerManager extends React.Component {
   props: {
     navigation: Object,
     editLayer: Object,
+    layers: Object,
     setEditLayer: () => {},
     setCurrentLayer: () => {},
+    getLayers: () => {},
   }
 
   constructor(props) {
     super(props)
-    // const { params } = this.props.navigation.state
-    // this.workspace = params.workspace
-    // this.mapControl = params.mapControl
-    // this.map = params.map
-    // this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
-    // let path = params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    // let wsName = params.path.substring(params.path.lastIndexOf('/') + 1)
-    // wsName =
-    //   wsName.lastIndexOf('.') > 0 &&
-    //   wsName.substring(0, wsName.lastIndexOf('.'))
     this.state = {
       datasourceList: [],
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
     }
-    // this.currentEditItemName = '' // 记录当前可编辑的图层的名称
   }
 
   componentDidMount() {
@@ -60,20 +51,21 @@ export default class MT_layerManager extends React.Component {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
+      await this.props.getLayers()
       // this.map = await this.mapControl.getMap()
       // let layerNameArr = await this.map.getLayersByType()
-      let layerNameArr = await SMap.getLayersByType()
-      for (let i = 0; i < layerNameArr.length; i++) {
-        layerNameArr[i].key = layerNameArr[i].name
-        if (layerNameArr[i].isEditable) {
-          this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
-        }
-      }
+      // let layerNameArr = await SMap.getLayersByType()
+      // for (let i = 0; i < layerNameArr.length; i++) {
+      //   layerNameArr[i].key = layerNameArr[i].name
+      //   if (layerNameArr[i].isEditable) {
+      //     this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
+      //   }
+      // }
       await SMap.setAction(Action.SELECT)
       // let mapName = await this.map.getName()
 
       this.setState({
-        datasourceList: layerNameArr.concat(),
+        // datasourceList: layerNameArr.concat(),
         refreshing: false,
       })
     } catch (e) {
@@ -411,7 +403,7 @@ export default class MT_layerManager extends React.Component {
             this.getData()
           }}
           ref={ref => (this.listView = ref)}
-          data={this.state.datasourceList}
+          data={this.props.layers}
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
         />

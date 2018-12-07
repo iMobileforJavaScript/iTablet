@@ -119,7 +119,7 @@ export default StyleSheet.create({
     // fontSize: 18,
     // color: '#222222',
     color: 'white',
-    fontSize: size.fontSize.fontSizeMd,
+    fontSize: size.fontSize.fontSizeXXl,
     // fontWeight: 'bold',
     backgroundColor: 'rgba(255, 255, 255, 0)',
   },
