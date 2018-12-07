@@ -709,12 +709,12 @@ function getThemeMapParam(type) {
 }
 
 
-let DatasourceAlias = '', DatasetName = '', UniqueExpression = ''
+let DatasourceAlias = '', DatasetName = '', Expression = ''
 
 function setThemeParams(datasourceAlias, datasetName, uniqueExpression) {
   DatasourceAlias = datasourceAlias
   DatasetName = datasetName
-  UniqueExpression = uniqueExpression
+  Expression = uniqueExpression
 }
 
 /** 新建单值风格专题图 **/
@@ -722,7 +722,7 @@ function createThemeUniqueMap() {
   let Params = {
     DatasourceAlias: DatasourceAlias,
     DatasetName: DatasetName,
-    UniqueExpression: UniqueExpression,
+    UniqueExpression: Expression,
     ColorGradientType: 'TERRAIN',
   }
   return SThemeCartography.createThemeUniqueMap(Params)
@@ -730,6 +730,19 @@ function createThemeUniqueMap() {
 
 function showTips() {
   Alert.alert('功能暂未开放。')
+}
+
+/** 新建分段风格专题图 **/
+function createThemeRangeMap() {
+  let Params = {
+    DatasourceAlias: DatasourceAlias,
+    DatasetName: DatasetName,
+    RangeExpression: Expression,
+    RangeMode: 'EQUALINTERVAL',
+    RangeParameter: '32.0',
+    ColorGradientType: 'TERRAIN',
+  }
+  return SThemeCartography.createThemeRangeMap(Params)
 }
 
 /**
@@ -764,7 +777,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_RANGE_STYLE,
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
-      action: showTips,
+      action: createThemeRangeMap,
       image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
     },

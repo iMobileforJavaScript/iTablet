@@ -86,7 +86,7 @@ export default class FunctionToolbar extends React.Component {
     const menuRef = this.props.getMenuAlertDialogRef()
     if (menuRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      menuRef.showMenuDialog('unique')
+      menuRef.showMenuDialog()
     }
 
     const toolRef = this.props.getToolRef()
