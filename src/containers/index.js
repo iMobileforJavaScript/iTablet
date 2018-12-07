@@ -10,7 +10,7 @@ import Personal from './personal'
 //我的数据
 import { MyData } from './tabs/Mine/MyData'
 //我的服务
-import { MyService } from './tabs/Mine/MyService'
+import MyService from './tabs/Mine/MyService'
 
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
