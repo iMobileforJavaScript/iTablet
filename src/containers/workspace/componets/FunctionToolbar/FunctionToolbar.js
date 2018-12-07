@@ -82,6 +82,23 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  showMenuAlertDialog = () => {
+    const menuRef = this.props.getMenuAlertDialogRef()
+    if (menuRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      menuRef.showMenuDialog()
+    }
+
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+        isFullScreen: false,
+        containerType: 'list',
+        height: ConstToolType.THEME_HEIGHT[0],
+      })
+    }
+  }
+
   map3Dstart = () => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {

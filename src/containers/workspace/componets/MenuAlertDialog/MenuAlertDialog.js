@@ -10,12 +10,8 @@ import {
 } from 'react-native'
 import { size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
-
-/** 新建专题图的类型 **/
-const unique = 'unique'
-const range = 'range'
-const label = 'label'
+import constants from '../../constants'
+import { ConstToolType } from '../../../../constants'
 
 export default class MenuAlertDialog extends React.Component {
   props: {
@@ -35,11 +31,10 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
 
-        const toolRef = this.props.getToolBarRef()
-        if (toolRef) {
-          toolRef.getThemeExpress()
-        }
-      },
+      const toolRef = this.props.getToolBarRef()
+      if (toolRef) {
+        toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION)
+      }
     },
     {
       key: '颜色方案',
@@ -47,11 +42,10 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
 
-        const toolRef = this.props.getToolBarRef()
-        if (toolRef) {
-          toolRef.getColorGradientType()
-        }
-      },
+      const toolRef = this.props.getToolBarRef()
+      if (toolRef) {
+        toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR)
+      }
     },
   ]
 
@@ -63,6 +57,11 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
       },
+
+      const toolRef = this.props.getToolBarRef()
+      if (toolRef) {
+        toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION)
+      }
     },
     {
       key: '分段方法',
@@ -77,6 +76,11 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
       },
+
+      const toolRef = this.props.getToolBarRef()
+      if (toolRef) {
+        toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_RANGE_COLOR)
+      }
     },
   ]
 
@@ -129,32 +133,42 @@ export default class MenuAlertDialog extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      type: '',
       childrens: [],
       visible: false,
     }
   }
 
-  getData = type => {
+  getData = () => {
     let data
-    switch (type) {
-      case unique:
+    switch (this.state.type) {
+      case constants.THEME_UNIQUE_STYLE:
         data = this.uniqueMenuInfo
         break
-      case range:
+      case constants.THEME_RANGE_STYLE:
         data = this.rangeMenuInfo
         break
-      case label:
+      case constants.THEME_UNIQUE_LABEL:
         data = this.labelMenuInfo
+        break
+      default:
+        data = this.uniqueMenuInfo
         break
     }
     return data
   }
 
-  showMenuDialog = type => {
-    let data = this.getData(type)
+  showMenuDialog = () => {
+    let data = this.getData()
     this.setState({
       visible: true,
       childrens: data,
+    })
+  }
+
+  setMenuType = menuType => {
+    this.setState({
+      type: menuType,
     })
   }
 
