@@ -269,6 +269,7 @@ export default class MapView extends React.Component {
             case DatasetType.REGION:
               type = ConstToolType.MAP_EDIT_REGION
               height = ConstToolType.HEIGHT[2]
+              tableType = 'scroll'
               break
           }
           this.toolBox &&
