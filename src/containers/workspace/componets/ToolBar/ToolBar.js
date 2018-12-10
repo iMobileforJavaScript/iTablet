@@ -36,7 +36,7 @@ import {
   SCollector,
   GeoStyle,
   SMCollectorType,
-  Utility,
+  EngineType,
   SThemeCartography,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
@@ -67,6 +67,8 @@ export default class ToolBar extends React.Component {
     existFullMap: () => {},
     symbol?: Object,
     user?: Object,
+    map?: Object,
+    collection?: Object,
     confirm: () => {},
     showDialog: () => {},
     addGeometrySelectedListener: () => {},
@@ -78,7 +80,10 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
-    getLayers: () => {}, // 更新数据（包括其他界面）
+    getLayers?: () => {}, // 更新数据（包括其他界面）
+    setCurrentMap?: () => {}, // 设置当前地图
+    setCollectionInfo?: () => {}, // 设置当前采集数据源信息
+    setCurrentLayer?: () => {}, // 设置当前图层
   }
 
   static defaultProps = {
@@ -657,15 +662,19 @@ export default class ToolBar extends React.Component {
           this.props.user.currentUser.name +
           ConstPath.RelativePath.Datasource
         : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
-    let datasourceName = 'Collection'
+    let datasourceName = (this.props.map && this.props.map.currentMap) || ''
     SCollector.setDataset({
-      datasourcePath: (await Utility.appendingHomeDirectory()) + datasourcePath,
-      datasourceName,
+      datasourcePath:
+        this.props.collection.datasourceParentPath || datasourcePath,
+      datasourceName: this.props.collection.datasourceName || datasourceName,
       datasetName,
       datasetType: mType,
       style: geoStyle,
-    }).then(result => {
-      result && SCollector.startCollect(type)
+    }).then(() => {
+      SCollector.startCollect(type)
+      this.props.getLayers(-1, layers => {
+        this.props.setCurrentLayer(layers.length > 0 && layers[0])
+      })
     })
   }
 
@@ -1215,15 +1224,46 @@ export default class ToolBar extends React.Component {
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 打开地图
-      SMap.openMap(item.title).then(isOpen => {
-        if (isOpen) {
-          this.setVisible(false)
-          Toast.show('已为您切换到' + item.title)
-        } else {
-          Toast.show('该地图为当前地图')
-        }
+      // this.props.collection.datasourceName && SMap.closeDatasource(this.props.collection.datasourceName).then(result => {
+      //   this.props.setCollectionInfo && this.props.setCollectionInfo()
+      //   if (GLOBAL.Type === constants.COLLECTION && mapIndex < 0 && this.props.collection.datasourceParentPath && this.props.collection.datasourceName) {
+      //     SMap.deleteDatasource(this.props.collection.datasourceParentPath + this.props.collection.datasourceName + '.udb')
+      //     SMap.deleteDatasource(this.props.collection.datasourceParentPath + this.props.collection.datasourceName + '.udd')
+      //   }
+      // })
+      let datasourceName = item.title.substr(
+        item.title.lastIndexOf('@') + 1,
+        item.title.length - 1,
+      )
+      let server =
+        this.props.collection.datasourceParentPath + datasourceName + '.udb'
+      let DSParams = {
+        server: server,
+        engineType: EngineType.UDB,
+        alias: datasourceName,
+      }
+      SMap.openDatasource(DSParams).then(result => {
+        result &&
+          SMap.openMap(item.title).then(isOpen => {
+            if (isOpen) {
+              this.setVisible(false)
+              Toast.show('已为您切换到' + item.title)
+              this.props.setCurrentMap(item.title)
+              this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+              this.props.setCollectionInfo({
+                datasourceName: datasourceName,
+                datasourceParentPath: this.props.collection
+                  .datasourceParentPath,
+                datasourceServer: server,
+                datasourceType: EngineType.UDB,
+              })
+            } else {
+              Toast.show('该地图为当前地图')
+            }
+          })
       })
-      this.props.getLayers()
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
       //专题图表达式
       this.setState({
@@ -1640,7 +1680,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    backgroundColor: '#rgba(0, 0, 0, 0)',
+    backgroundColor: '#rgba(0, 0, 0, 0.3)',
     // zIndex: zIndexLevel.FOUR,
   },
   containers: {
