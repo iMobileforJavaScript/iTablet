@@ -10,6 +10,7 @@ import {
   Switch,
 } from 'react-native'
 import styles from './styles'
+import { SScene } from 'imobile_for_reactnative'
 
 export default class setting extends Component {
   props: {
@@ -20,88 +21,52 @@ export default class setting extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type || 'MAP_3D'
-    let data = props.data || this.getData(this.type)
     this.state = {
-      data: data,
+      data: [],
     }
   }
 
-  getData = type => {
-    let data = []
-    switch (type) {
-      case 'MAP_3D':
-        // data = [
-        //   {
-        //     titile: '基本设置',
-        //     visible: false,
-        //     index: 0,
-        //     data: [
-        //       {
-        //         name: '场景名称',
-        //         value: 0,
-        //         isShow: false,
-        //         index: 0,
-        //       },
-        //     ],
-        //   },
-        //   {
-        //     titile: '立体设置',
-        //     visible: false,
-        //     index: 1,
-        //     data: [
-        //       {
-        //         name: "立体模式",
-        //         value: "四缓存式立体",
-        //         isShow: false,
-        //         index: 1,
-        //       }
-        //     ],
-        //   },
-        //   {
-        //     titile: '其他设置',
-        //     visible: false,
-        //     index: 2,
-        //     data: [
-        //       {
-        //         name: "显示压盖对象",
-        //         value: false,
-        //         isShow: false,
-        //         index: 2,
-        //       }
-        //     ],
-        //   },
-        //   {
-        //     titile: '地球多边形偏移',
-        //     visible: false,
-        //     index: 3,
-        //     data: [
-        //       {
-        //         name: "偏移常量",
-        //         value: 0,
-        //         isShow: false,
-        //         index: 3,
-        //       }
-        //     ],
-        //   },
-        //   {
-        //     titile: '场景颜色',
-        //     visible: false,
-        //     index: 4,
-        //     data: [
-        //       {
-        //         name: "亮度",
-        //         value: 1,
-        //         isShow: false,
-        //         index: 4,
-        //       }
-        //     ],
-        //   },
-        // ]
-        break
-      default:
-        break
+  componentDidMount() {
+    if (this.type === 'MAP_3D') {
+      this.getMap3DSettings()
     }
-    return data
+  }
+  getMap3DSettings = async () => {
+    let item = await SScene.getSetting()
+    let data = [
+      {
+        titile: '基本设置',
+        visible: true,
+        index: 0,
+        data: [
+          {
+            name: '场景名称',
+            value: item.sceneNmae,
+            isShow: false,
+            index: 0,
+          },
+          {
+            name: '相机角度',
+            value: item.heading,
+            isShow: false,
+            index: 0,
+          },
+          {
+            name: '视图模式',
+            value: '球面',
+            isShow: false,
+            index: 0,
+          },
+          {
+            name: '地形缩放比例',
+            value: 1,
+            isShow: false,
+            index: 0,
+          },
+        ],
+      },
+    ]
+    this.setState({ data: data })
   }
 
   refreshList = section => {

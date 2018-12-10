@@ -998,16 +998,16 @@ function getStart(type) {
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: () => {
-            add('MAP_3D')
-          },
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: () => {
+        //     add('MAP_3D')
+        //   },
+        //   image: require('../../../../assets/mapTools/icon_free_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        // },
       ]
       break
   }
