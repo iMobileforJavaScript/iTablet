@@ -26,6 +26,7 @@ const mapStateToProps = state => ({
   overlaySetting: state.setting.toJS().overlay,
   symbol: state.symbol.toJS(),
   user: state.user.toJS(),
+  currentLayer: state.layers.toJS().currentLayer,
   layers: state.layers.toJS(),
   collection: state.collection.toJS(),
 })

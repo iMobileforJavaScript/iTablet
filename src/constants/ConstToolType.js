@@ -53,6 +53,10 @@ export default {
   MAP_START: 'MAP_START',
   MAP3D_START: 'MAP3D_START',
   MAP_CHANGE: 'MAP_CHANGE',
+  LINECOLOR_SET: 'LINECOLOR_SET',
+  POINTCOLOR_SET: 'POINTCOLOR_SET',
+  REGIONBEFORECOLOR_SET: 'REGIONBEFORECOLOR_SET',
+  REGIONAFTERCOLOR_SET: 'REGIONAFTERCOLOR_SET',
 
   //Map3D
   MAP3D_BASE: 'MAP3D_BASE',
@@ -77,6 +81,12 @@ export default {
   MAP3D_CIRCLEFLY: 'MAP3D_CIRCLEFLY',
   MAP_MORE_MAP3D: 'MAP_MORE_MAP3D',
   // 工具视图高度级别
-  HEIGHT: [scaleSize(100), scaleSize(150), scaleSize(250), scaleSize(720)],
+  HEIGHT: [
+    scaleSize(100),
+    scaleSize(150),
+    scaleSize(250),
+    scaleSize(720),
+    scaleSize(0),
+  ],
   THEME_HEIGHT: [scaleSize(500)],
 }
