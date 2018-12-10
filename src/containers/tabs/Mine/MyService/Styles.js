@@ -1,19 +1,19 @@
 import { Dimensions, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-export const screenWidth = Dimensions.get('window').width
-export const screenHeight = Dimensions.get('window').height
+export const itemWidth = Dimensions.get('window').width
+export const itemHeight = Dimensions.get('window').height
 export const imageWidth = 140
 export const textHeight = 40
 
 const styles = StyleSheet.create({
   itemBottomContainerStyle: {
     backgroundColor: color.theme,
-    width: screenWidth,
+    width: itemWidth,
     height: 2,
   },
   itemTopContainer: {
     flexDirection: 'row',
-    width: screenWidth,
+    width: itemWidth,
     height: imageWidth,
   },
   itemTopInternalImageStyle: {
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   },
 
   itemTopInternalRightContainerStyle: {
-    width: screenWidth - imageWidth,
+    width: itemWidth - imageWidth,
     height: imageWidth,
     backgroundColor: color.border,
     justifyContent: 'space-between',
@@ -31,22 +31,22 @@ const styles = StyleSheet.create({
   },
   itemTopInternalRightBottomViewStyle: {
     height: textHeight * 2,
-    width: screenWidth - imageWidth - 5,
+    width: itemWidth - imageWidth - 5,
   },
   itemTopInternalRightTextStyle: {
     lineHeight: textHeight,
-    width: screenWidth - imageWidth,
+    width: itemWidth - imageWidth,
     fontSize: 16,
     color: 'white',
   },
   itemTopInternalItemContainerStyle: {
     height: textHeight,
-    width: screenWidth - imageWidth,
+    width: itemWidth - imageWidth,
   },
   itemTopInternalRightBottomBottomViewStyle: {
     flexDirection: 'row',
     height: textHeight,
-    width: screenWidth - imageWidth,
+    width: itemWidth - imageWidth,
   },
   textStyle: {
     textAlign: 'left',

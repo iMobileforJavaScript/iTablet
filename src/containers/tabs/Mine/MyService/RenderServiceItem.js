@@ -5,6 +5,7 @@ import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
 import { ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
+import { color } from '../../../../styles'
 let publishMap = []
 
 export default class RenderServiceItem extends PureComponent {
@@ -34,6 +35,16 @@ export default class RenderServiceItem extends PureComponent {
       isDownloading: this.props.isDownloading,
       disabled: false,
     }
+    this.filePath = ''
+    this.fileName = 'error.zip'
+  }
+
+  getDownloadFilePath = () => {
+    return this.filePath
+  }
+
+  getDownloadFileName = () => {
+    return this.fileName
   }
 
   setDownloadProgress = progress => {
@@ -46,20 +57,26 @@ export default class RenderServiceItem extends PureComponent {
 
   _downloadMapFile = async mapTitle => {
     let restTitle = this.props.mapTileAndRestTitle[mapTitle]
-    let onlineFileName = this.props.serviceNameAndFileName[restTitle]
+    let onlineFileName = this.props.serviceNameAndFileName[
+      restTitle
+    ] /* 在线文件名为: xxx.zip**/
     if (onlineFileName !== undefined) {
       let savePath = await Utility.appendingHomeDirectory(
-        ConstPath.UserPath + onlineFileName,
+        ConstPath.UserPath + 'tmp/' + onlineFileName,
       )
       let isFileExist = await Utility.fileIsExist(savePath)
       if (isFileExist) {
         this.setState({ progress: '下载完成' })
         return
       }
+      /** 回调到MyService*/
       this.props.itemOnPressCallBack &&
         this.props.itemOnPressCallBack(this.props.index)
+
       let fileName = onlineFileName.substring(0, onlineFileName.length - 4)
       SOnlineService.downloadFile(savePath, fileName)
+      this.filePath = savePath
+      this.fileName = fileName
       this.setState({ disabled: false })
     } else {
       this.setState({ disabled: false, progress: '下载失败' })
@@ -71,15 +88,16 @@ export default class RenderServiceItem extends PureComponent {
       Toast.show('无法浏览地图')
       return
     }
-    if (Platform.OS === 'ios') {
-      if (publishMap.indexOf(restTitle) === -1) {
-        let publish = await SOnlineService.changeServiceVisibility(
-          restTitle,
-          true,
-        )
-        if (typeof publish === 'boolean' && publish === true) {
-          publishMap.push(restTitle)
-        }
+    // if (Platform.OS === 'ios') {
+    //
+    // }
+    if (publishMap.indexOf(restTitle) === -1) {
+      let publish = await SOnlineService.changeServiceVisibility(
+        restTitle,
+        true,
+      )
+      if (typeof publish === 'boolean' && publish === true) {
+        publishMap.push(restTitle)
       }
     }
     if (!this.props.isScenes) {
@@ -101,30 +119,46 @@ export default class RenderServiceItem extends PureComponent {
       Toast.show('无法浏览地图')
     }
   }
-
+  /*
+   uri: this.props.imageUrl,
+          method: 'GET',
+          headers:{
+            'Host':'www.supermapol.com',
+            'Cookie':'JSESSIONID='+sessionId,
+          },
+          credentials:'include',
+          cache: 'force-cache'
+  */
   _loadImage = () => {
+    // console.log(
+    //   '++++mapName' + this.props.mapName + '  url' + this.props.imageUrl,
+    // )
     if (this.props.imageUrl === 'null') {
       return require('../../../../assets/home/icon-map-share.png')
     } else {
-      return { url: this.props.imageUrl }
+      if (Platform.OS === 'ios') {
+        return {
+          uri: this.props.imageUrl,
+        }
+      } else {
+        // let sessionId = SOnlineService.getAndroidSessionID()
+        return {
+          uri: this.props.imageUrl,
+        }
+      }
     }
   }
 
-  _loadImage = () => {
-    if (this.props.imageUrl === 'null') {
-      return require('../../../../assets/home/icon-map-share.png')
-    } else {
-      return { url: this.props.imageUrl }
-    }
+  _onLoadStart = () => {
+    // let imagePath =await SOnlineService.cacheImage(this.props.imageUrl,this.props.index)
   }
-
   render() {
     let mapUrl = this.props.sharedMapUrl
     let mapTitle = this.props.mapName
     let restTitle = this.props.mapTileAndRestTitle[mapTitle]
     let imagePicture = this._loadImage()
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: color.border }}>
         <View style={styles.itemTopContainer}>
           <TouchableOpacity
             style={styles.itemTopInternalImageStyle}
@@ -135,6 +169,7 @@ export default class RenderServiceItem extends PureComponent {
             <Image
               style={styles.itemTopInternalImageStyle}
               source={imagePicture}
+              /* onLoadStart={this._onLoadStart}*/
             />
           </TouchableOpacity>
 
