@@ -39,11 +39,11 @@ export default class RenderServiceItem extends PureComponent {
     this.fileName = 'error.zip'
   }
 
-  getDownloadFilePath = () =>{
+  getDownloadFilePath = () => {
     return this.filePath
   }
 
-  getDownloadFileName =() =>{
+  getDownloadFileName = () => {
     return this.fileName
   }
 
@@ -57,10 +57,12 @@ export default class RenderServiceItem extends PureComponent {
 
   _downloadMapFile = async mapTitle => {
     let restTitle = this.props.mapTileAndRestTitle[mapTitle]
-    let onlineFileName = this.props.serviceNameAndFileName[restTitle]/* 在线文件名为: xxx.zip**/
+    let onlineFileName = this.props.serviceNameAndFileName[
+      restTitle
+    ] /* 在线文件名为: xxx.zip**/
     if (onlineFileName !== undefined) {
       let savePath = await Utility.appendingHomeDirectory(
-        ConstPath.UserPath +'tmp/'+onlineFileName,
+        ConstPath.UserPath + 'tmp/' + onlineFileName,
       )
       let isFileExist = await Utility.fileIsExist(savePath)
       if (isFileExist) {
@@ -117,7 +119,7 @@ export default class RenderServiceItem extends PureComponent {
       Toast.show('无法浏览地图')
     }
   }
-/*
+  /*
    uri: this.props.imageUrl,
           method: 'GET',
           headers:{
@@ -127,26 +129,27 @@ export default class RenderServiceItem extends PureComponent {
           credentials:'include',
           cache: 'force-cache'
   */
-  _loadImage =() => {
-    console.log("++++mapName"+this.props.mapName+"  url"+this.props.imageUrl)
+  _loadImage = () => {
+    // console.log(
+    //   '++++mapName' + this.props.mapName + '  url' + this.props.imageUrl,
+    // )
     if (this.props.imageUrl === 'null') {
       return require('../../../../assets/home/icon-map-share.png')
     } else {
-      if(Platform.OS === 'ios'){
-        return { uri: this.props.imageUrl,
-          }
-      }else{
+      if (Platform.OS === 'ios') {
+        return {
+          uri: this.props.imageUrl,
+        }
+      } else {
         // let sessionId = SOnlineService.getAndroidSessionID()
         return {
           uri: this.props.imageUrl,
-
         }
       }
-
     }
   }
 
-  _onLoadStart =() =>{
+  _onLoadStart = () => {
     // let imagePath =await SOnlineService.cacheImage(this.props.imageUrl,this.props.index)
   }
   render() {
@@ -155,7 +158,7 @@ export default class RenderServiceItem extends PureComponent {
     let restTitle = this.props.mapTileAndRestTitle[mapTitle]
     let imagePicture = this._loadImage()
     return (
-      <View style={{ flex: 1,backgroundColor:color.border}}>
+      <View style={{ flex: 1, backgroundColor: color.border }}>
         <View style={styles.itemTopContainer}>
           <TouchableOpacity
             style={styles.itemTopInternalImageStyle}
@@ -166,7 +169,7 @@ export default class RenderServiceItem extends PureComponent {
             <Image
               style={styles.itemTopInternalImageStyle}
               source={imagePicture}
-             /* onLoadStart={this._onLoadStart}*/
+              /* onLoadStart={this._onLoadStart}*/
             />
           </TouchableOpacity>
 

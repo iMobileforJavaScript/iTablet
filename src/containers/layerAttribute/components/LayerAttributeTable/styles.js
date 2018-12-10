@@ -30,6 +30,7 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   text: {
+    // flex:1,
     textAlign: 'center',
     color: color.themeText,
   },

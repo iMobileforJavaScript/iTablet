@@ -47,6 +47,7 @@ export default class LayerAttributeTable extends React.Component {
     data: Object,
     headStyle?: Object,
     rowStyle?: Object,
+    NormalrowStyle: Object,
     selectRowStyle?: Object,
     style?: Object,
   }
@@ -321,26 +322,29 @@ export default class LayerAttributeTable extends React.Component {
               return (
                 <TableWrapper
                   key={index}
-                  style={styles.row}
+                  style={[styles.row, this.props.NormalrowStyle]}
                   borderColor={color.borderLight}
                 >
-                  {rowData.map((cellData, cellIndex) => {
-                    let isSystemField =
-                      cellIndex !== 0 &&
-                      cellData.key.toLowerCase().indexOf('sm') === 0
+                  {rowData.arr.map((cellData, cellIndex) => {
+                    // let isSystemField =
+                    //   cellIndex !== 0 &&
+                    //   cellData.key.toLowerCase().indexOf('id') === 0
+
+                    // data={
+                    //   cellIndex === 0
+                    //     ? cellData
+                    //     : isSystemField
+                    //       ? cellData.data.value === undefined
+                    //         ? ''
+                    //         : cellData
+                    //       : this.renderInput(cellData, index)
+                    // }
+
                     return (
                       <Cell
                         key={cellIndex}
                         borderColor={color.borderLight}
-                        data={
-                          cellIndex === 0
-                            ? cellData
-                            : isSystemField
-                              ? cellData.data.value === undefined
-                                ? ''
-                                : cellData.data.value
-                              : this.renderInput(cellData, index)
-                        }
+                        data={cellData}
                         textStyle={styles.text}
                       />
                     )
@@ -445,4 +449,5 @@ export default class LayerAttributeTable extends React.Component {
 LayerAttributeTable.Type = {
   ATTRIBUTE: 'ATTRIBUTE',
   EDIT_ATTRIBUTE: 'EDIT_ATTRIBUTE',
+  MAP3D_ATTRIBUTE: 'MAP3D_ATTRIBUTE',
 }

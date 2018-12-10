@@ -22,7 +22,7 @@ export default class Mine extends Component {
     NavigationService.navigate('Personal')
   }
 
-  goToMyData =async () => {
+  goToMyData = async () => {
     // let sessionId = await SOnlineService.getAndroidSessionID()
     // let headers = {
     //   method: 'GET',
@@ -47,7 +47,6 @@ export default class Mine extends Component {
     let fontSize = 16
     return (
       <View style={{ flex: 1, backgroundColor: color.border }}>
-
         <View
           style={{
             flexDirection: 'row',

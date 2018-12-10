@@ -7,12 +7,12 @@ import {
   DeviceEventEmitter,
   RefreshControl,
   ActivityIndicator,
-  NativeModules
+  NativeModules,
 } from 'react-native'
 import Container from '../../../../components/Container'
 import RenderServiceItem from './RenderServiceItem'
-import { SOnlineService,Utility } from 'imobile_for_reactnative'
-import ConstPath from "../../../../constants/ConstPath";
+import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import ConstPath from '../../../../constants/ConstPath'
 const nativeFileTools = NativeModules.FileTools
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -57,7 +57,7 @@ export default class MyService extends Component {
       loadCount: 0,
       isDead: false,
     }
-    this. _arrDownloadProgressRefs=[]
+    this._arrDownloadProgressRefs = []
     this.downloadingListener = {}
     this.downloadedListener = {}
     this.downloadFailureListener = {}
@@ -67,10 +67,7 @@ export default class MyService extends Component {
       _objServiceNameAndFileName === undefined &&
       _objMapTitleAndRestTitle === undefined
     ) {
-      this._configureServiceNameAndFileName(
-        1,
-        _iDataPageSize,
-      )
+      this._configureServiceNameAndFileName(1, _iDataPageSize)
       this._loadOnlineDataAndService(1, _iServicePageSize)
     }
   }
@@ -87,7 +84,10 @@ export default class MyService extends Component {
         this.setState({ isLoadingData: false })
         return _objServiceNameAndFileName
       }
-      currentPage = _iDataListTotal%realPageSize ? _iDataListTotal/realPageSize : _iDataListTotal/realPageSize+1
+      currentPage =
+        _iDataListTotal % realPageSize
+          ? _iDataListTotal / realPageSize
+          : _iDataListTotal / realPageSize + 1
     }
 
     let serviceNameAndFileName = '{'
@@ -151,8 +151,9 @@ export default class MyService extends Component {
               mapUrl +
               '","mapThumbnail":"null","isScenes":' +
               true +
-              ',"id":"'+
-              mapTitle+mapUrl+
+              ',"id":"' +
+              mapTitle +
+              mapUrl +
               '"}'
             _arrMaps.push(JSON.parse(mapInfo))
             mapTitleAndRestTitle =
@@ -172,8 +173,9 @@ export default class MyService extends Component {
               mapTitle +
               '","mapUrl":"null","mapThumbnail":"null","isScenes":' +
               false +
-              ',"id":"'+
-              mapTitle+"null"+
+              ',"id":"' +
+              mapTitle +
+              'null' +
               '"}'
             _arrMaps.push(JSON.parse(mapInfo))
           }
@@ -192,8 +194,9 @@ export default class MyService extends Component {
               mapThumbnail +
               '","isScenes":' +
               false +
-              ',"id":"'+
-              mapTitle+mapUrl+
+              ',"id":"' +
+              mapTitle +
+              mapUrl +
               '"}'
             _arrMaps.push(JSON.parse(strMapInfo))
             mapTitleAndRestTitle =
@@ -203,25 +206,28 @@ export default class MyService extends Component {
       }
     }
     mapTitleAndRestTitle = mapTitleAndRestTitle + '"finally":"null"}'
-    _objMapTitleAndRestTitle= JSON.parse(mapTitleAndRestTitle)
+    _objMapTitleAndRestTitle = JSON.parse(mapTitleAndRestTitle)
     return _objMapTitleAndRestTitle
   }
 
-  _unZipFile =async (index)=>{
+  _unZipFile = async index => {
     let savePath
     let userDir = this.props.user.currentUser.userName
     let fileName = this._arrDownloadProgressRefs[index].getDownloadFileName()
-    if(_arrMaps[index].isScenes){
+    if (_arrMaps[index].isScenes) {
       savePath = await Utility.appendingHomeDirectory(
-        ConstPath.UserPath +userDir+'/Scenes/'+fileName,
+        ConstPath.UserPath + userDir + '/Scenes/' + fileName,
       )
-    }else{
+    } else {
       savePath = await Utility.appendingHomeDirectory(
-        ConstPath.UserPath +userDir+'/Data/'+fileName,
+        ConstPath.UserPath + userDir + '/Data/' + fileName,
       )
     }
-    let result = await nativeFileTools.unZipFile(this._arrDownloadProgressRefs[index].getDownloadFilePath(),savePath)
-    if(result){
+    let result = await nativeFileTools.unZipFile(
+      this._arrDownloadProgressRefs[index].getDownloadFilePath(),
+      savePath,
+    )
+    if (result) {
       // nativeFileTools.deleteFile(this._arrDownloadProgressRefs[index].getDownloadFilePath())
     }
   }
@@ -229,9 +235,9 @@ export default class MyService extends Component {
   _changeDownloadingProgressState = progress => {
     if (!this.state.isDead) {
       let index = _index
-      if(this._arrDownloadProgressRefs.length >= index){
+      if (this._arrDownloadProgressRefs.length >= index) {
         this._arrDownloadProgressRefs[index].setDownloadProgress(progress)
-        if(progress === '下载完成'){
+        if (progress === '下载完成') {
           this._unZipFile(index)
         }
       }
@@ -266,7 +272,6 @@ export default class MyService extends Component {
       this.downloadedListener = callBackIos.addListener(downloadedType, () => {
         this._changeIsDownloadingState(this.state.arrIsDownloadings.length + 1)
         this._changeDownloadingProgressState('下载完成')
-
       })
     }
     if (Platform.OS === 'android') {
@@ -281,21 +286,25 @@ export default class MyService extends Component {
       this.downloadedListener = DeviceEventEmitter.addListener(
         downloadedType,
         () => {
-          this._changeIsDownloadingState(this.state.arrIsDownloadings.length + 1)
+          this._changeIsDownloadingState(
+            this.state.arrIsDownloadings.length + 1,
+          )
           this._changeDownloadingProgressState('下载完成')
         },
       )
       this.downloadFailureListener = DeviceEventEmitter.addListener(
         downloadFailureType,
         () => {
-          this._changeIsDownloadingState(this.state.arrIsDownloadings.length + 1)
+          this._changeIsDownloadingState(
+            this.state.arrIsDownloadings.length + 1,
+          )
           this._changeDownloadingProgressState('下载失败')
         },
       )
     }
   }
 
-/** 用于初始化加载*/
+  /** 用于初始化加载*/
   _loadOnlineDataAndService = async () => {
     _objMapTitleAndRestTitle = await this._configureMapTitleAndRestTile(
       1,
@@ -350,24 +359,18 @@ export default class MyService extends Component {
   _onRefresh = async () => {
     if (!this.state.isRefreshing) {
       let _downloadingID = 'null'
-      if(_index < 99999){
-         _downloadingID = _arrMaps[_index].id
+      if (_index < 99999) {
+        _downloadingID = _arrMaps[_index].id
       }
-      this._arrDownloadProgressRefs=[]
+      this._arrDownloadProgressRefs = []
       this.setState({ isRefreshing: true, loadCount: 1 })
-      this._configureServiceNameAndFileName(
-        1,
-        _iDataPageSize,
-      )
-      await this._configureMapTitleAndRestTile(
-        1,
-        _iServicePageSize,
-      )
+      this._configureServiceNameAndFileName(1, _iDataPageSize)
+      await this._configureMapTitleAndRestTile(1, _iServicePageSize)
 
       /** 有数据下载时*/
-      if(_downloadingID !== 'null'){
-        for(let i = 0;i <_arrMaps.length;i++ ){
-          if(_arrMaps[_index].id === _downloadingID){
+      if (_downloadingID !== 'null') {
+        for (let i = 0; i < _arrMaps.length; i++) {
+          if (_arrMaps[_index].id === _downloadingID) {
             _index = i
             break
           }
@@ -376,7 +379,6 @@ export default class MyService extends Component {
       }
       /** 没数据下载时候*/
       this.setState({ isRefreshing: false, mapArr: _arrMaps, loadCount: 1 })
-
     }
   }
 
@@ -386,16 +388,13 @@ export default class MyService extends Component {
       !this.state.isLoadingData
     ) {
       let _downloadingID = 'null'
-      if(_index < 99999){
+      if (_index < 99999) {
         _downloadingID = _arrMaps[_index].id
       }
-      this._arrDownloadProgressRefs=[]
+      this._arrDownloadProgressRefs = []
       let loadCount = this.state.loadCount + 1
       this.setState({ isLoadingData: true })
-      this._configureServiceNameAndFileName(
-        loadCount,
-        _iServicePageSize,
-      )
+      this._configureServiceNameAndFileName(loadCount, _iServicePageSize)
       _objMapTitleAndRestTitle = await this._configureMapTitleAndRestTile(
         loadCount,
         _iServicePageSize,
@@ -405,19 +404,27 @@ export default class MyService extends Component {
       let arrIsDownloadingLength = _arrIsDownloadings.length
       let concatIsDownloading = []
       let isItemDownloading = false
-      for(let startLength = 0;startLength < arrIsDownloadingLength;startLength++){
-         if(!_arrIsDownloadings[startLength]){
-           isItemDownloading = true
-           break
-         }
+      for (
+        let startLength = 0;
+        startLength < arrIsDownloadingLength;
+        startLength++
+      ) {
+        if (!_arrIsDownloadings[startLength]) {
+          isItemDownloading = true
+          break
+        }
       }
-      for(let startLength = arrIsDownloadingLength;startLength < arrMapLength;startLength++){
+      for (
+        let startLength = arrIsDownloadingLength;
+        startLength < arrMapLength;
+        startLength++
+      ) {
         concatIsDownloading.push(!isItemDownloading)
       }
       _arrIsDownloadings = _arrIsDownloadings.concat(concatIsDownloading)
-      if(_downloadingID !== 'null'){
-        for(let i = 0;i <_arrMaps.length;i++ ){
-          if(_arrMaps[_index].id === _downloadingID){
+      if (_downloadingID !== 'null') {
+        for (let i = 0; i < _arrMaps.length; i++) {
+          if (_arrMaps[_index].id === _downloadingID) {
             _index = i
             break
           }
@@ -428,7 +435,7 @@ export default class MyService extends Component {
         mapArr: _arrMaps,
         loadCount: loadCount,
         isLoadingData: false,
-        arrIsDownloadings:_arrIsDownloadings
+        arrIsDownloadings: _arrIsDownloadings,
       })
     }
   }
@@ -454,7 +461,7 @@ export default class MyService extends Component {
   }
 
   _itemOnPressCallBack = index => {
-    _index=index
+    _index = index
     this._arrDownloadProgressRefs[index].setDownloadProgress('下载中...')
     this._changeIsDownloadingState(index)
   }
@@ -464,17 +471,22 @@ export default class MyService extends Component {
       return (
         <View
           style={{
-            flex:1,
-            height:50,
+            flex: 1,
+            height: 50,
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#fff',
           }}
         >
           <ActivityIndicator
-            style={{flex:1,height:30,justifyContent:'center',alignItems:'center'}}
-              color={'red'}
-              animating ={true}
+            style={{
+              flex: 1,
+              height: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+            color={'red'}
+            animating={true}
           />
           <Text
             style={{
@@ -489,7 +501,8 @@ export default class MyService extends Component {
         </View>
       )
     } else {
-      return <View>
+      return (
+        <View>
           <Text
             style={{
               flex: 1,
@@ -500,11 +513,12 @@ export default class MyService extends Component {
           >
             -----这是底线-----
           </Text>
-      </View>
+        </View>
+      )
     }
   }
   /** 以便在刷新时能够确定其变化的位置，减少重新渲染的开销*/
-  _keyExtractor = (item, index) => item.id
+  _keyExtractor = item => item.id
 
   render() {
     if (_objMapTitleAndRestTitle === undefined) {

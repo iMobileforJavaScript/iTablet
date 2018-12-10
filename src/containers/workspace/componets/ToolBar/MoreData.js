@@ -14,31 +14,31 @@ function getMapMore(type, params) {
   switch (type) {
     case 'MAP_MORE_MAP3D':
       data = [
-        {
-          key: constants.CLOSE,
-          title: constants.CLOSE,
-          action: () => {},
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-        },
-        {
-          key: constants.SAVE,
-          title: constants.SAVE,
-          size: 'large',
-          // TODO 保存地图
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_words.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-        },
-        {
-          key: constants.SAVE_AS,
-          title: constants.SAVE_AS,
-          size: 'large',
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-        },
+        // {
+        //   key: constants.CLOSE,
+        //   title: constants.CLOSE,
+        //   action: () => {},
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        // },
+        // {
+        //   key: constants.SAVE,
+        //   title: constants.SAVE,
+        //   size: 'large',
+        //   // TODO 保存地图
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_words.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        // },
+        // {
+        //   key: constants.SAVE_AS,
+        //   title: constants.SAVE_AS,
+        //   size: 'large',
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        // },
         {
           key: constants.SHARE,
           title: constants.SHARE,

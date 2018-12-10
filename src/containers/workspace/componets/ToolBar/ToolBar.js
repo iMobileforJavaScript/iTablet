@@ -1135,13 +1135,13 @@ export default class ToolBar extends React.Component {
     return <Text style={styles.sectionHeader}>{section.title}</Text>
   }
 
-  listThemeAction = ({item}) => {
+  listThemeAction = ({ item }) => {
     if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
       //单值专题图表达式
       this.setState({
         themeExpress: item.title,
-      });
-      (async function () {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1157,8 +1157,8 @@ export default class ToolBar extends React.Component {
       //单值专题图颜色表
       this.setState({
         themeColor: item.key,
-      });
-      (async function () {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1169,12 +1169,14 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
       }.bind(this)())
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
+    ) {
       //分段专题图表达式
       this.setState({
         themeColor: item.key,
-      });
-      (async function () {
+      })
+      ;(async function() {
         let Params = {
           // DatasourceAlias: this.state.themeDatasourceAlias,
           // DatasetName: this.state.themeDatasetName,
@@ -1189,8 +1191,8 @@ export default class ToolBar extends React.Component {
       //分段专题图颜色表
       this.setState({
         themeColor: item.key,
-      });
-      (async function () {
+      })
+      ;(async function() {
         let Params = {
           DatasourceAlias: this.state.themeDatasourceAlias,
           DatasetName: this.state.themeDatasetName,
@@ -1378,7 +1380,9 @@ export default class ToolBar extends React.Component {
               type = constants.THEME_UNIQUE_LABEL
               break
           }
-          let menutoolRef = this.props.getMenuAlertDialogRef()
+          let menutoolRef =
+            this.props.getMenuAlertDialogRef &&
+            this.props.getMenuAlertDialogRef()
           if (menutoolRef) {
             menutoolRef.setMenuType(type)
           }
