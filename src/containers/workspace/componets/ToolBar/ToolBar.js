@@ -9,8 +9,13 @@ import {
   line,
   point,
   region,
+  grid,
   layerAdd,
   openData,
+  lineColorSet,
+  pointColorSet,
+  regionBeforeColorSet,
+  regionAfterColorSet,
   Map3DBaseMapList,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -79,6 +84,7 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
+    layerData: Object,
     getLayers: () => {}, // 更新数据（包括其他界面）
   }
 
@@ -124,7 +130,6 @@ export default class ToolBar extends React.Component {
       themeDatasetName: '',
       themeExpress: 'SMID',
       themeColor: 'TERRAIN',
-      layerData: Object,
       selectName: '',
     }
     this.isShow = false
@@ -397,6 +402,38 @@ export default class ToolBar extends React.Component {
         ]
         break
       case ConstToolType.MAP_STYLE:
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ]
+        break
+      case ConstToolType.LINECOLOR_SET:
+        data = lineColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.POINTCOLOR_SET:
+        data = pointColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.REGIONBEFORECOLOR_SET:
+        data = regionBeforeColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.REGIONAFTERCOLOR_SET:
+        data = regionAfterColorSet
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
@@ -815,14 +852,12 @@ export default class ToolBar extends React.Component {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
     }
-    if (!params.layerData) params.layerData = []
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column ||
-      params.layerData !== this.state.layerData
+      params.column !== this.state.column
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
@@ -837,7 +872,6 @@ export default class ToolBar extends React.Component {
           type: type,
           tableType: params.tableType || 'normal',
           data: data,
-          layerData: params.layerData,
           buttons: buttons,
           isFullScreen:
             params && params.isFullScreen !== undefined
@@ -1026,6 +1060,7 @@ export default class ToolBar extends React.Component {
     } else {
       this.setState({ isSelectlist: false })
     }
+    this.setState({ isTouchProgress: false })
   }
 
   commit = (type = this.originType) => {
@@ -1402,7 +1437,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.state.layerData} />
+    return <SymbolList layerData={this.props.layerData} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1434,7 +1469,7 @@ export default class ToolBar extends React.Component {
 
   renderSelectList = () => {
     let list
-    switch (this.state.layerData.type) {
+    switch (this.props.layerData.type) {
       case 1:
         list = point
         break
@@ -1443,6 +1478,9 @@ export default class ToolBar extends React.Component {
         break
       case 5:
         list = region
+        break
+      case 83:
+        list = grid
         break
     }
     return (

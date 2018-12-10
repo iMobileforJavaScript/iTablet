@@ -46,6 +46,7 @@ export default class MapView extends React.Component {
     selection: PropTypes.object,
     latestMap: PropTypes.array,
     navigation: PropTypes.object,
+    currentLayer: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -155,6 +156,15 @@ export default class MapView extends React.Component {
     ) {
       let name = this.props.editLayer ? this.props.editLayer.name : ''
       name && Toast.show('当前可编辑的图层为\n' + name)
+    }
+    if (
+      JSON.stringify(prevProps.currentLayer) !==
+      JSON.stringify(this.props.currentLayer)
+    ) {
+      GLOBAL.currentLayer = this.props.currentLayer
+      this.setState({
+        currentLayer: this.props.currentLayer,
+      })
     }
     // 显示切换图层按钮
     if (this.props.editLayer.name && this.popList) {
@@ -807,6 +817,7 @@ export default class MapView extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         user={this.props.user}
         symbol={this.props.symbol}
+        layerData={this.props.currentLayer}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}

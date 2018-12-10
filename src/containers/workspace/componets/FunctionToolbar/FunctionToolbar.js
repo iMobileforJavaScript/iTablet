@@ -346,7 +346,7 @@ export default class FunctionToolbar extends React.Component {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.HEIGHT[4],
       })
     }
   }
