@@ -1126,12 +1126,6 @@ export default class ToolBar extends React.Component {
   }
 
   endFly = () => {
-    for (let index = 0; index < this.oldLayerList.length; index++) {
-      SScene.setSelectable(
-        this.oldLayerList[index].name,
-        this.oldLayerList[index].selectable,
-      )
-    }
     SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
