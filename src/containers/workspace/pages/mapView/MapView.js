@@ -65,6 +65,8 @@ export default class MapView extends React.Component {
     getLayers: PropTypes.func,
     setCollectionInfo: PropTypes.func,
     setCurrentLayer: PropTypes.func,
+    setCurrentAttribute: PropTypes.func,
+    getAttributes: PropTypes.func,
   }
 
   constructor(props) {
@@ -634,6 +636,8 @@ export default class MapView extends React.Component {
         this.backAction = null
       }
     })
+    this.props.setCurrentAttribute({})
+    // this.props.getAttributes({})
     return true
   }
 

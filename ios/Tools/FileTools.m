@@ -170,8 +170,20 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
+  
+  //创建用户目录
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Attribute"]];
+   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Datasource"]];
+   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Scene"]];
+   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Symbol"]];
+   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
+   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
+  
+  
   NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Workspace.zip"];
   NSString* workspacePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"];
+  
+  
   BOOL isUnZip = NO;
   if (![[NSFileManager defaultManager] fileExistsAtPath:workspacePath isDirectory:nil]) {
     if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
@@ -186,6 +198,20 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   } else {
     isUnZip = YES;
   }
+  
+   NSString* sceneData = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios.zip"];
+   NSString* sceneDir = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/"];
+   NSString* srcSceneData = [[NSBundle mainBundle] pathForResource:@"OlympicGreen_ios" ofType:@"zip"];
+  if (![[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios"] isDirectory:nil]) {
+      if ([FileTools copyFile:srcSceneData targetPath:sceneData]) {
+        isUnZip = [FileTools unZipFile:sceneData targetPath:sceneDir];
+        [FileTools deleteFile:sceneData];
+        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+      }
+  } else {
+    isUnZip = YES;
+  }
+  
   return isUnZip;
 }
 @end

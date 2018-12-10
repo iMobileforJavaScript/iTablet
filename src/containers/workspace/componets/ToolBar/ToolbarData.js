@@ -713,12 +713,12 @@ function getThemeMapParam(type) {
 
 let DatasourceAlias = '',
   DatasetName = '',
-  UniqueExpression = ''
+  Expression = ''
 
 function setThemeParams(datasourceAlias, datasetName, uniqueExpression) {
   DatasourceAlias = datasourceAlias
   DatasetName = datasetName
-  UniqueExpression = uniqueExpression
+  Expression = uniqueExpression
 }
 
 /** 新建单值风格专题图 **/
@@ -726,7 +726,7 @@ function createThemeUniqueMap() {
   let Params = {
     DatasourceAlias: DatasourceAlias,
     DatasetName: DatasetName,
-    UniqueExpression: UniqueExpression,
+    UniqueExpression: Expression,
     ColorGradientType: 'TERRAIN',
   }
   return SThemeCartography.createThemeUniqueMap(Params)
@@ -734,6 +734,19 @@ function createThemeUniqueMap() {
 
 function showTips() {
   Alert.alert('功能暂未开放。')
+}
+
+/** 新建分段风格专题图 **/
+function createThemeRangeMap() {
+  let Params = {
+    DatasourceAlias: DatasourceAlias,
+    DatasetName: DatasetName,
+    RangeExpression: Expression,
+    RangeMode: 'EQUALINTERVAL',
+    RangeParameter: '32.0',
+    ColorGradientType: 'TERRAIN',
+  }
+  return SThemeCartography.createThemeRangeMap(Params)
 }
 
 /**
@@ -769,7 +782,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_RANGE_STYLE,
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
-      action: showTips,
+      action: createThemeRangeMap,
       image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
     },
@@ -959,22 +972,22 @@ function getStart(type) {
           image: require('../../../../assets/mapTools/icon_point.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point.png'),
         },
-        {
-          key: constants.CREATE,
-          title: constants.CREATE,
-          size: 'large',
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_words.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-        },
-        {
-          key: constants.HISTORY,
-          title: constants.HISTORY,
-          size: 'large',
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-        },
+        // {
+        //   key: constants.CREATE,
+        //   title: constants.CREATE,
+        //   size: 'large',
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_words.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        // },
+        // {
+        //   key: constants.HISTORY,
+        //   title: constants.HISTORY,
+        //   size: 'large',
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,

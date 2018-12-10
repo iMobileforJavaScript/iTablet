@@ -5,11 +5,13 @@ import {
   setSelection,
   setAnalystLayer,
   getLayers,
+  setCurrentAttribute,
+  getAttributes,
+  setCurrentLayer,
 } from '../../../../models/layers'
 import { setLatestMap, setCurrentMap } from '../../../../models/map'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
 import { setCollectionInfo } from '../../../../models/collection'
-import { setCurrentLayer } from '../../../../models/layers'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
@@ -39,6 +41,8 @@ const mapDispatchToProps = {
   getLayers,
   setCollectionInfo,
   setCurrentLayer,
+  setCurrentAttribute,
+  getAttributes,
 }
 
 export default connect(

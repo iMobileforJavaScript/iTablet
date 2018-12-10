@@ -8,6 +8,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: color.blackBg,
+    width: '100%',
   },
   headerBtnTitle: {
     color: 'white',
