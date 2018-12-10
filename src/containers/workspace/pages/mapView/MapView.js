@@ -59,6 +59,8 @@ export default class MapView extends React.Component {
     setOverlaySetting: PropTypes.func,
     setAnalystLayer: PropTypes.func,
     getLayers: PropTypes.func,
+    setCurrentAttribute: PropTypes.func,
+    getAttributes: PropTypes.func,
   }
 
   constructor(props) {
@@ -602,6 +604,8 @@ export default class MapView extends React.Component {
         this.backAction = null
       }
     })
+    this.props.setCurrentAttribute({})
+    // this.props.getAttributes({})
     return true
   }
 

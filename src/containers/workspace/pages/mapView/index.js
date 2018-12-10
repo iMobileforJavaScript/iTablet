@@ -5,6 +5,8 @@ import {
   setSelection,
   setAnalystLayer,
   getLayers,
+  setCurrentAttribute,
+  getAttributes,
 } from '../../../../models/layers'
 import { setLatestMap, setMapView } from '../../../../models/map'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
@@ -34,6 +36,8 @@ const mapDispatchToProps = {
   setAnalystLayer,
   setMapView,
   getLayers,
+  setCurrentAttribute,
+  getAttributes,
 }
 
 export default connect(

@@ -11,6 +11,7 @@ export const SET_CURRENT_LAYER = 'SET_CURRENT_LAYER'
 export const SET_ANALYST_LAYER = 'SET_ANALYST_LAYER'
 export const GET_LAYERS = 'GET_LAYERS'
 export const GET_ATTRIBUTES = 'GET_ATTRIBUTES'
+export const SET_ATTRIBUTES = 'SET_ATTRIBUTES'
 
 // Actions
 // --------------------------------------------------
@@ -79,6 +80,14 @@ export const getAttributes = (
   cb && cb(attribute)
 }
 
+export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_ATTRIBUTES,
+    payload: data || {},
+  })
+  cb && cb(data)
+}
+
 const initialState = fromJS({
   layers: [],
   editLayer: {},
@@ -134,6 +143,31 @@ export default handleActions(
       if (payload && payload.length > 0) {
         payload[0].forEach(item => {
           if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+            tableHead.unshift(item.fieldInfo.caption)
+          } else {
+            tableHead.push(item.fieldInfo.caption)
+          }
+        })
+      }
+      attributes.head = tableHead
+      attributes.data = payload
+      return state
+        .setIn(['attributes'], fromJS(attributes))
+        .setIn(['currentAttribute'], fromJS(currentAttribute))
+    },
+    [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
+      let currentAttribute = {},
+        attributes = state.toJS().attributes
+      if (
+        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+        payload.length > 0
+      ) {
+        currentAttribute = payload[0]
+      }
+      let tableHead = []
+      if (payload && payload.length > 0) {
+        payload[0].forEach(item => {
+          if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
             tableHead.unshift(item.fieldInfo.caption)
           } else {
             tableHead.push(item.fieldInfo.caption)

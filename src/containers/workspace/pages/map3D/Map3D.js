@@ -26,6 +26,8 @@ export default class Map3D extends React.Component {
     navigation: Object,
     setEditLayer: () => {},
     setLatestMap: () => {},
+    setCurrentAttribute: () => {},
+    setAttributes: () => {},
     user: Object,
   }
 
@@ -190,6 +192,8 @@ export default class Map3D extends React.Component {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
       }
+      this.props.setCurrentAttribute({})
+      this.props.setAttributes({})
     } catch (e) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
