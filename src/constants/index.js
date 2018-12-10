@@ -16,7 +16,10 @@ import {
   line,
   point,
   region,
+  grid,
 } from './FunctionToolbarModule'
+
+import { lineColorSet ,pointColorSet ,regionBeforeColorSet ,regionAfterColorSet} from './ColorList'
 
 export {
   ConstPath,
@@ -31,8 +34,13 @@ export {
   line,
   point,
   region,
+  grid,
   ConstToolType,
   Map3DBaseMapList,
   ConstInfo,
   openData,
+  lineColorSet,
+  pointColorSet,
+  regionBeforeColorSet,
+  regionAfterColorSet,
 }

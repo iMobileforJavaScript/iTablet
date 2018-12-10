@@ -7,6 +7,7 @@
 import * as React from 'react'
 import { FlatList } from 'react-native'
 import { Container } from '../../components'
+import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/componets'
 import { Action, SMap } from 'imobile_for_reactnative'
@@ -312,14 +313,20 @@ export default class MT_layerManager extends React.Component {
       this.props.setCurrentLayer(data, () => {
         Toast.show('当前图层为' + data.caption)
       })
-    if (GLOBAL.Type === ConstToolType.MAP_EDIT) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        layerData: data,
-        height: ConstToolType.HEIGHT[2],
-      })
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      if(data.type === 83){
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'list',
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[4],
+        })
+      }else {
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.HEIGHT[2],
+        })}
       GLOBAL.toolBox.showFullMap()
       NavigationService.goBack()
     }

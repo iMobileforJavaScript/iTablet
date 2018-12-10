@@ -9,8 +9,13 @@ import {
   line,
   point,
   region,
+  grid,
   layerAdd,
   openData,
+  lineColorSet,
+  pointColorSet,
+  regionBeforeColorSet,
+  regionAfterColorSet,
   Map3DBaseMapList,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -78,6 +83,7 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
+    layerData: Object,
   }
 
   static defaultProps = {
@@ -122,9 +128,7 @@ export default class ToolBar extends React.Component {
       themeDatasetName: '',
       themeExpress: 'SMID',
       themeColor: 'TERRAIN',
-      layerData: Object,
       selectName: '',
-
     }
     this.isShow = false
     this.isBoxShow = true
@@ -398,6 +402,38 @@ export default class ToolBar extends React.Component {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ]
+        break
+      case ConstToolType.LINECOLOR_SET:
+        data = lineColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.POINTCOLOR_SET:
+        data = pointColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.REGIONBEFORECOLOR_SET:
+        data = regionBeforeColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.REGIONAFTERCOLOR_SET:
+        data = regionAfterColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.FLEX,
         ]
         break
@@ -468,6 +504,20 @@ export default class ToolBar extends React.Component {
             },
             size: 'large',
             image: require('../../../../assets/function/icon_pointSuerface.png'),
+          },
+          {
+            key: 'closeAllLable',
+            title: '清除标注',
+            action: () => {
+              try {
+                SScene.closeAllLabel()
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('清除失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
@@ -799,14 +849,12 @@ export default class ToolBar extends React.Component {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
     }
-    if (!params.layerData) params.layerData = []
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column ||
-      params.layerData !== this.state.layerData
+      params.column !== this.state.column
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
@@ -821,7 +869,6 @@ export default class ToolBar extends React.Component {
           type: type,
           tableType: params.tableType || 'normal',
           data: data,
-          layerData: params.layerData,
           buttons: buttons,
           isFullScreen:
             params && params.isFullScreen !== undefined
@@ -938,8 +985,11 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
     this.showToolbar(false)
-    if(this.state.isTouchProgress===true||this.state.isSelectlist===true) {
-      this.setState({isTouchProgress: false, isSelectlist: false})
+    if (
+      this.state.isTouchProgress === true ||
+      this.state.isSelectlist === true
+    ) {
+      this.setState({ isTouchProgress: false, isSelectlist: false })
     }
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1007,11 +1057,12 @@ export default class ToolBar extends React.Component {
     } else {
       this.setState({ isSelectlist: false })
     }
+    this.setState({ isTouchProgress: false })
   }
 
   commit = (type = this.originType) => {
     this.showToolbar(false)
-    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+    if (type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
@@ -1221,7 +1272,7 @@ export default class ToolBar extends React.Component {
         }
         // await SThemeCartography.setUniqueExpression(Params)
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)())
+      }.bind(this))
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_COLOR) {
       //专题图颜色表
       this.setState({
@@ -1237,7 +1288,7 @@ export default class ToolBar extends React.Component {
           LayerIndex: '0',
         }
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)())
+      }.bind(this))
     }
   }
 
@@ -1322,7 +1373,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.state.layerData} />
+    return <SymbolList layerData={this.props.layerData} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1354,7 +1405,7 @@ export default class ToolBar extends React.Component {
 
   renderSelectList = () => {
     let list
-    switch (this.state.layerData.type) {
+    switch (this.props.layerData.type) {
       case 1:
         list = point
         break
@@ -1363,6 +1414,9 @@ export default class ToolBar extends React.Component {
         break
       case 5:
         list = region
+        break
+      case 83:
+        list = grid
         break
     }
     return (
@@ -1585,9 +1639,7 @@ export default class ToolBar extends React.Component {
         )}
         {this.state.isTouchProgress &&
           this.state.isFullScreen && (
-          <TouchProgress
-            selectName={this.state.selectName}
-          />
+          <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>

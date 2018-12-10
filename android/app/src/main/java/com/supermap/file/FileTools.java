@@ -550,17 +550,26 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         // 初始化用户工作空间
         String dataPath = SDCARD + "/iTablet/User/" + userName + "/Data/";
+        String dataPath2 = SDCARD + "/iTablet/User/" + userName + "/Data/Scene/";
         String originName = "Customer.smwu";
+        String originName2 = "OlympicGreen_android.zip";
         String wsName = "Workspace.smwu";
+        String ssName = "OlympicGreen_android.zip";
         if (!Utils.fileIsExit(dataPath + wsName)) {
             Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath, originName, wsName);
         }
-
+        if (!Utils.fileIsExit(dataPath2 + ssName)) {
+            Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath2, originName2, ssName);
+            Decompressor.UnZipFolder(dataPath2 + originName2, dataPath2);
+            Utils.deleteFile(dataPath2 + originName2);
+        }
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
         String commonZipPath = commonPath + "Workspace.zip";
         String defaultZipData = "Workspace.zip";
         String workspacePath = dataPath + "Workspace";
+
+
         Boolean isUnZip;
         if (!Utils.fileIsExit(workspacePath)) {
             if (Utils.fileIsExit(commonZipPath)) {
@@ -573,14 +582,6 @@ public class FileTools extends ReactContextBaseJavaModule {
             }
         } else {
             isUnZip = true;
-        }
-
-        String localPath2 = SDCARD + "/iTablet/data/local/";
-        String defaultZipData2 = "OlympicGreen_android.zip";
-        if (!Utils.fileIsExit(localPath2 + "OlympicGreen_android")) {
-            Utils.copyAssetFileToSDcard(context.getApplicationContext(), localPath2, defaultZipData2);
-            Decompressor.UnZipFolder(localPath2 + defaultZipData2, localPath2);
-            Utils.deleteFile(localPath2 + defaultZipData2);
         }
 
         return isUnZip;

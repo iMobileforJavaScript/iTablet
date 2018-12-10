@@ -1,6 +1,7 @@
-import { SMap } from 'imobile_for_reactnative'
+import { SMap , SCartography } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/componets/ToolBar/ToolbarBtnType'
+import { ConstToolType } from '../constants'
 
 const layerAdd = [
   {
@@ -169,8 +170,14 @@ const line = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          ToolbarBtnType.PLACEHOLDER,
         ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE,{
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[2],
       })
     },
   },
@@ -190,7 +197,21 @@ const line = [
   },
   {
     key: '颜色',
-    action: () => {},
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET,{
+        containerType: 'list',
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[2],
+      })
+    },
   },
 ]
 
@@ -203,8 +224,14 @@ const point = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          ToolbarBtnType.PLACEHOLDER,
         ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE,{
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[2],
       })
     },
   },
@@ -225,7 +252,21 @@ const point = [
   },
   {
     key: '颜色',
-    action: () => {},
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET,{
+        containerType: 'list',
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[2],
+      })
+    },
   },
   {
     key: '旋转角度',
@@ -268,18 +309,52 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          ToolbarBtnType.PLACEHOLDER,
         ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE,{
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.HEIGHT[2],
       })
     },
   },
   {
     key: '前景色',
-    action: () => {},
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET,{
+        containerType: 'list',
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[2],
+      })
+    },
   },
   {
     key: '背景色',
-    action: () => {},
+    action: () => {
+      GLOBAL.toolBox.menu()
+      GLOBAL.toolBox.setState({
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET,{
+        containerType: 'list',
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[2],
+      })
+    },
   },
   {
     key: '透明度',
@@ -310,4 +385,52 @@ const region = [
     },
   },
 ]
-export { layerAdd, BotMap, openData, line, point, region }
+
+const grid = [
+  {
+    key: '透明度',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        selectName: '透明度',
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+  {
+    key: '对比度',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        selectName: '对比度',
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+  {
+    key: '亮度',
+    action: () => {
+      GLOBAL.toolBox.setState({
+        isTouchProgress: true,
+        isSelectlist: false,
+        selectName: '亮度',
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENUS,
+          ToolbarBtnType.PLACEHOLDER,
+        ],
+      })
+    },
+  },
+]
+export { layerAdd, BotMap, openData, line, point, region ,grid }

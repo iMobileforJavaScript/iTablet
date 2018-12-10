@@ -46,6 +46,7 @@ export default class MapView extends React.Component {
     selection: PropTypes.object,
     latestMap: PropTypes.array,
     navigation: PropTypes.object,
+    currentLayer:PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -151,6 +152,15 @@ export default class MapView extends React.Component {
     ) {
       let name = this.props.editLayer ? this.props.editLayer.name : ''
       name && Toast.show('当前可编辑的图层为\n' + name)
+    }
+    if (
+      JSON.stringify(prevProps.currentLayer) !==
+      JSON.stringify(this.props.currentLayer)
+    ) {
+      GLOBAL.currentLayer = this.props.currentLayer
+      this.setState({
+        currentLayer: this.props.currentLayer,
+      })
     }
     // 显示切换图层按钮
     if (this.props.editLayer.name && this.popList) {
@@ -269,6 +279,7 @@ export default class MapView extends React.Component {
             case DatasetType.REGION:
               type = ConstToolType.MAP_EDIT_REGION
               height = ConstToolType.HEIGHT[2]
+              tableType = 'scroll'
               break
           }
           this.toolBox &&
@@ -289,14 +300,18 @@ export default class MapView extends React.Component {
 
   // 地图保存
   saveMap = (name = '', cb = () => {}) => {
-    this.setLoading(true, '正在保存地图')
-    SMap.saveMap(name).then(result => {
+    try {
+      this.setLoading(true, '正在保存地图')
+      SMap.saveMap(name).then(result => {
+        this.setLoading(false)
+        Toast.show(
+          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+        )
+        cb && cb()
+      })
+    } catch (e) {
       this.setLoading(false)
-      Toast.show(
-        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-      )
-      cb && cb()
-    })
+    }
   }
 
   // 地图另存为
@@ -576,8 +591,25 @@ export default class MapView extends React.Component {
     //   this.setLoading(false)
     //   result && NavigationService.goBack()
     // })
-    this.setSaveViewVisible(true)
-    this.backAction = NavigationService.goBack
+    this.backAction = async () => {
+      try {
+        this.setLoading(true, '正在关闭地图')
+        await SMap.closeMap()
+        await SMap.closeDatasource()
+        this.setLoading(false)
+        NavigationService.goBack()
+      } catch (e) {
+        this.setLoading(false)
+      }
+    }
+    SMap.workspaceIsModified().then(result => {
+      if (result) {
+        this.setSaveViewVisible(true)
+      } else {
+        this.backAction()
+        this.backAction = null
+      }
+    })
     return true
   }
 
@@ -754,6 +786,7 @@ export default class MapView extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         user={this.props.user}
         symbol={this.props.symbol}
+        layerData={this.props.currentLayer}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
