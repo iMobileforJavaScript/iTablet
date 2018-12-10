@@ -48,6 +48,7 @@ import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
 import ThemeColorGradientType from './ThemeColorGradientType'
+import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
 
@@ -84,6 +85,7 @@ export default class ToolBar extends React.Component {
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
     layerData: Object,
+    getLayers: () => {}, // 更新数据（包括其他界面）
   }
 
   static defaultProps = {
@@ -167,6 +169,7 @@ export default class ToolBar extends React.Component {
       setSaveViewVisible: this.props.setSaveViewVisible,
       setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
       setContainerLoading: this.props.setContainerLoading,
+      getLayers: this.props.getLayers,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -576,7 +579,7 @@ export default class ToolBar extends React.Component {
     return { data, buttons }
   }
 
-  getThemeExpress = async () => {
+  getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.height,
       duration: 300,
@@ -597,11 +600,11 @@ export default class ToolBar extends React.Component {
     ]
     this.setState({
       data: datalist,
-      type: ConstToolType.MAP_THEME_PARAM_EXPRESSION,
+      type: type,
     })
   }
 
-  getColorGradientType = async () => {
+  getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.height,
       duration: 300,
@@ -617,7 +620,7 @@ export default class ToolBar extends React.Component {
     ]
     this.setState({
       data: datalist,
-      type: ConstToolType.MAP_THEME_PARAM_COLOR,
+      type: type,
     })
   }
 
@@ -1143,7 +1146,7 @@ export default class ToolBar extends React.Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.listAction({ item, index })
+          this.listThemeAction({ item, index })
         }}
       >
         <Text style={styles.themeitem}>{item.title}</Text>
@@ -1165,6 +1168,79 @@ export default class ToolBar extends React.Component {
 
   renderListSectionHeader = ({ section }) => {
     return <Text style={styles.sectionHeader}>{section.title}</Text>
+  }
+
+  listThemeAction = ({ item }) => {
+    if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
+      //单值专题图表达式
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          UniqueExpression: item.title,
+          ColorGradientType: this.state.themeColor,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        // await SThemeCartography.setUniqueExpression(Params)
+        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR) {
+      //单值专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
+    ) {
+      //分段专题图表达式
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          // DatasourceAlias: this.state.themeDatasourceAlias,
+          // DatasetName: this.state.themeDatasetName,
+          RangeExpression: this.state.themeExpress,
+          // ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.setRangeExpression(Params)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
+      //分段专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          RangeExpression: this.state.themeExpress,
+          ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
+        }
+        await SThemeCartography.createThemeRangeMap(Params)
+      }.bind(this)())
+    }
   }
 
   listAction = ({ item, index }) => {
@@ -1256,39 +1332,7 @@ export default class ToolBar extends React.Component {
           Toast.show('该地图为当前地图')
         }
       })
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
-      //专题图表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
-        let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
-          UniqueExpression: item.title,
-          ColorGradientType: this.state.themeColor,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
-        }
-        // await SThemeCartography.setUniqueExpression(Params)
-        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this))
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_COLOR) {
-      //专题图颜色表
-      this.setState({
-        themeColor: item.key,
-      })
-      ;(async function() {
-        let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
-          UniqueExpression: this.state.themeExpress,
-          ColorGradientType: item.key,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
-        }
-        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this))
+      this.props.getLayers()
     }
   }
 
@@ -1358,6 +1402,26 @@ export default class ToolBar extends React.Component {
         })
         break
       default:
+        {
+          let type = ''
+          switch (item.key) {
+            case constants.THEME_UNIQUE_STYLE:
+              type = constants.THEME_UNIQUE_STYLE
+              break
+            case constants.THEME_RANGE_STYLE:
+              type = constants.THEME_RANGE_STYLE
+              break
+            case constants.THEME_UNIQUE_LABEL:
+              type = constants.THEME_UNIQUE_LABEL
+              break
+          }
+          let menutoolRef =
+            this.props.getMenuAlertDialogRef &&
+            this.props.getMenuAlertDialogRef()
+          if (menutoolRef) {
+            menutoolRef.setMenuType(type)
+          }
+        }
         item.action()
         break
     }
@@ -1451,10 +1515,19 @@ export default class ToolBar extends React.Component {
           case 'MAP3D_TOOL_DISTANCEMEASURE':
             box = this.renderMap3DList()
             break
-          case ConstToolType.MAP_THEME_PARAM_EXPRESSION:
+          case ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION:
             box = this.renderThemeList()
             break
-          case ConstToolType.MAP_THEME_PARAM_COLOR:
+          case ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR:
+            box = this.renderThemeList()
+            break
+          case ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION:
+            box = this.renderThemeList()
+            break
+          case ConstToolType.MAP_THEME_PARAM_RANGE_MODE:
+            box = this.renderThemeList()
+            break
+          case ConstToolType.MAP_THEME_PARAM_RANGE_COLOR:
             box = this.renderThemeList()
             break
           default:

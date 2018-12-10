@@ -51,6 +51,7 @@ export default class MapView extends React.Component {
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
     symbol: PropTypes.object,
+    layers: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -58,6 +59,9 @@ export default class MapView extends React.Component {
     setBufferSetting: PropTypes.func,
     setOverlaySetting: PropTypes.func,
     setAnalystLayer: PropTypes.func,
+    getLayers: PropTypes.func,
+    setCurrentAttribute: PropTypes.func,
+    getAttributes: PropTypes.func,
   }
 
   constructor(props) {
@@ -84,7 +88,7 @@ export default class MapView extends React.Component {
         ? null
         : wsName.lastIndexOf('.') > 0 &&
           wsName.substring(0, wsName.lastIndexOf('.'))
-
+    this.backAction = null
     this.state = {
       showMap: false, // 控制地图初始化显示
       data: params.data,
@@ -610,6 +614,8 @@ export default class MapView extends React.Component {
         this.backAction = null
       }
     })
+    this.props.setCurrentAttribute({})
+    // this.props.getAttributes({})
     return true
   }
 
@@ -645,6 +651,31 @@ export default class MapView extends React.Component {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
           }
         }
+
+        // 获取图层列表
+        this.props.getLayers(-1, async layers => {
+          // 若数据源已经打开，图层未加载，则去默认加载一个图层
+          if (layers.length === 0) {
+            let result = false
+            if (this.wsData instanceof Array) {
+              for (let i = 0; i < this.wsData.length; i++) {
+                let item = this.wsData[i]
+                if (item === null) continue
+                if (item.type === 'Datasource') {
+                  result = await SMap.addLayer(item.DSParams.alias, 0)
+                }
+              }
+            } else if (this.wsData.type === 'Datasource') {
+              result = await SMap.addLayer(this.wsData.DSParams.alias, 0)
+            }
+            result && this.props.getLayers()
+          }
+          if (layers.length === 0 && this.wsData.DSParams) {
+            SMap.addLayer(this.wsData.DSParams.alias, 0).then(result => {
+              result && this.props.getLayers()
+            })
+          }
+        })
         this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {
@@ -794,6 +825,7 @@ export default class MapView extends React.Component {
         setSaveViewVisible={this.setSaveViewVisible}
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setContainerLoading={this.setLoading}
+        getLayers={this.props.getLayers}
       />
     )
   }

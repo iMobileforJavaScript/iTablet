@@ -47,7 +47,9 @@ export default class LayerAttributeTable extends React.Component {
     data: Object,
     headStyle?: Object,
     rowStyle?: Object,
+    NormalrowStyle: Object,
     selectRowStyle?: Object,
+    style?: Object,
   }
 
   static defaultProps = {
@@ -305,13 +307,7 @@ export default class LayerAttributeTable extends React.Component {
   renderNormalTable = () => {
     return (
       <View style={{ flex: 1 }}>
-        <Table
-          borderStyle={{
-            borderColor: '#C1C0B9',
-            flex: 1,
-            backgroundColor: 'blue',
-          }}
-        >
+        <Table borderStyle={styles.border}>
           <Row
             flexArr={[1, 1]}
             // widthArr={this.state.widthArr}
@@ -321,26 +317,34 @@ export default class LayerAttributeTable extends React.Component {
           />
         </Table>
         <ScrollView style={styles.dataWrapper}>
-          <Table borderStyle={{ borderColor: '#C1C0B9' }}>
+          <Table borderStyle={styles.border}>
             {this.state.tableData.map((rowData, index) => {
               return (
-                <TableWrapper key={index} style={styles.row}>
-                  {rowData.map((cellData, cellIndex) => {
-                    let isSystemField =
-                      cellIndex !== 0 &&
-                      cellData.key.toLowerCase().indexOf('sm') === 0
+                <TableWrapper
+                  key={index}
+                  style={[styles.row, this.props.NormalrowStyle]}
+                  borderColor={color.borderLight}
+                >
+                  {rowData.arr.map((cellData, cellIndex) => {
+                    // let isSystemField =
+                    //   cellIndex !== 0 &&
+                    //   cellData.key.toLowerCase().indexOf('id') === 0
+
+                    // data={
+                    //   cellIndex === 0
+                    //     ? cellData
+                    //     : isSystemField
+                    //       ? cellData.data.value === undefined
+                    //         ? ''
+                    //         : cellData
+                    //       : this.renderInput(cellData, index)
+                    // }
+
                     return (
                       <Cell
                         key={cellIndex}
-                        data={
-                          cellIndex === 0
-                            ? cellData
-                            : isSystemField
-                              ? cellData.data.value === undefined
-                                ? ''
-                                : cellData.data.value
-                              : this.renderInput(cellData, index)
-                        }
+                        borderColor={color.borderLight}
+                        data={cellData}
                         textStyle={styles.text}
                       />
                     )
@@ -358,7 +362,7 @@ export default class LayerAttributeTable extends React.Component {
     return (
       <ScrollView style={{ flex: 1 }} horizontal={true}>
         <View>
-          <Table borderStyle={{ borderColor: '#C1C0B9', flex: 1 }}>
+          <Table borderStyle={styles.border}>
             <Row
               // flexArr={[1, 1]}
               data={this.state.tableHead}
@@ -368,7 +372,7 @@ export default class LayerAttributeTable extends React.Component {
             />
           </Table>
           <ScrollView style={styles.dataWrapper}>
-            <Table borderStyle={{ borderColor: '#C1C0B9' }}>
+            <Table borderStyle={styles.border}>
               {this.state.tableData.map((rowData, index) => {
                 // let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
                 let data = rowData.data
@@ -385,9 +389,10 @@ export default class LayerAttributeTable extends React.Component {
                   >
                     <TableWrapper
                       key={index}
+                      borderColor={color.borderLight}
                       style={[
                         selectStyle,
-                        index % 2 === 1 && { backgroundColor: color.grayLight },
+                        // index % 2 === 1 && { backgroundColor: color.grayLight },
                         this.state.currentSelect === index && selectRowStyle,
                       ]}
                     >
@@ -397,6 +402,7 @@ export default class LayerAttributeTable extends React.Component {
                             width={this.state.widthArr[cellIndex]}
                             key={cellIndex}
                             data={cellData}
+                            borderColor={color.borderLight}
                             textStyle={[
                               styles.text,
                               this.state.currentSelect === index &&
@@ -422,7 +428,7 @@ export default class LayerAttributeTable extends React.Component {
         behavior={this.state.behavior}
         style={styles.container}
       >
-        <View style={styles.container}>
+        <View style={[styles.container, this.props.style]}>
           {this.state.widthArr.length > 0 ? (
             this.props.type === 'EDIT_ATTRIBUTE' ? (
               this.renderScrollTable()
@@ -443,4 +449,5 @@ export default class LayerAttributeTable extends React.Component {
 LayerAttributeTable.Type = {
   ATTRIBUTE: 'ATTRIBUTE',
   EDIT_ATTRIBUTE: 'EDIT_ATTRIBUTE',
+  MAP3D_ATTRIBUTE: 'MAP3D_ATTRIBUTE',
 }

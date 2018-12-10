@@ -22,7 +22,18 @@ export default class Mine extends Component {
     NavigationService.navigate('Personal')
   }
 
-  goToMyData = () => {
+  goToMyData = async () => {
+    // let sessionId = await SOnlineService.getAndroidSessionID()
+    // let headers = {
+    //   method: 'GET',
+    //   headers:{
+    //     'Host':'www.supermapol.com',
+    //     'Cookie':'JSESSIONID='+sessionId,
+    //   },
+    //   credentials:'include',
+    // }
+    //
+    // let getImage = fetch('https://www.supermapol.com/proxy/iserver/services/map_beijing_new/rest/maps/beijing/entireImage.png',headers)
     NavigationService.navigate('MyData')
   }
 
@@ -31,34 +42,11 @@ export default class Mine extends Component {
   }
 
   renderHeader = () => {
-    let headerHeight = 60
+    let headerHeight = 80
     let imageWidth = 40
     let fontSize = 16
     return (
       <View style={{ flex: 1, backgroundColor: color.border }}>
-        {/*    <View style={styles.header}>
-          <TouchableOpacity
-            onPress={this.goToPersonal}
-            activeOpacity={1}
-            style={styles.avatarView}
-          >
-            <Image
-              style={styles.avatar}
-              source={require('../../../assets/public/icon-avatar-default.png')}
-            />
-          </TouchableOpacity>
-          <View style={styles.headerContent}>
-            {this.renderHeaderItem(
-              (this.props.user.currentUser &&
-                this.props.user.currentUser.userName) ||
-                '用户名',
-            )}
-            {this.renderHeaderItem('绑定手机号')}
-            {this.renderHeaderItem('邮箱')}
-          </View>
-
-        </View>*/}
-
         <View
           style={{
             flexDirection: 'row',
@@ -85,7 +73,7 @@ export default class Mine extends Component {
           <Text
             style={{ flex: 1, lineHeight: headerHeight, fontSize: fontSize }}
           >
-            用户昵称
+            {this.props.user.currentUser.userName}
           </Text>
         </View>
         <ScrollView style={{ flex: 1 }}>
@@ -185,12 +173,6 @@ export default class Mine extends Component {
             title: '我的iTablet',
             withoutBack: true,
             navigation: this.props.navigation,
-            // headerRight: (
-            //   <BtnOne
-            //     image={require('../../../assets/public/icon-setting-white.png')}
-            //     onPress={}
-            //   />
-            // ),
           }}
         >
           {this.renderHeader()}

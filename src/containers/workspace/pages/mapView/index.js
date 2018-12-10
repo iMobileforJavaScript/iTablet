@@ -4,7 +4,9 @@ import {
   setEditLayer,
   setSelection,
   setAnalystLayer,
+  getLayers,
   setCurrentAttribute,
+  getAttributes,
 } from '../../../../models/layers'
 import { setLatestMap, setMapView } from '../../../../models/map'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
@@ -23,6 +25,7 @@ const mapStateToProps = state => ({
   symbol: state.symbol.toJS(),
   user: state.user.toJS(),
   currentLayer: state.layers.toJS().currentLayer,
+  layers: state.layers.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -33,7 +36,9 @@ const mapDispatchToProps = {
   setOverlaySetting,
   setAnalystLayer,
   setMapView,
+  getLayers,
   setCurrentAttribute,
+  getAttributes,
 }
 
 export default connect(

@@ -5,14 +5,15 @@
  */
 
 import * as React from 'react'
-import { View } from 'react-native'
+import { View, Text } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTable } from '../../components'
-import { SMap } from 'imobile_for_reactnative'
-
+import styles from './styles'
+import { scaleSize } from '../../../../utils'
+import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 
 export default class LayerAttribute extends React.Component {
@@ -21,7 +22,10 @@ export default class LayerAttribute extends React.Component {
     currentAttribute: Object,
     currentLayer: Object,
     selection: Object,
+    attributes: Object,
+    setAttributes: () => {},
     setCurrentAttribute: () => {},
+    getAttributes: () => {},
   }
 
   constructor(props) {
@@ -37,6 +41,7 @@ export default class LayerAttribute extends React.Component {
       // tableHead: ['名称', '属性值'],
       tableHead: [],
       tableData: [],
+      showTable: false,
     }
 
     this.currentFieldInfo = []
@@ -44,7 +49,11 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    this.getAttribute()
+    if (this.type === 'MAP_3D') {
+      this.getMap3DAttribute()
+    } else {
+      this.getAttribute()
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -67,28 +76,61 @@ export default class LayerAttribute extends React.Component {
     this.props.setCurrentAttribute({})
   }
 
+  getMap3DAttribute = async () => {
+    let data = await SScene.getLableAttributeList()
+    let list = []
+    for (let index = 0; index < data.length; index++) {
+      let item = [
+        {
+          fieldInfo: { caption: 'id' },
+          name: 'id',
+          value: data[index].id,
+        },
+        {
+          fieldInfo: { caption: 'name' },
+          name: 'name',
+          value: data[index].name,
+        },
+        {
+          fieldInfo: { caption: 'description' },
+          name: 'description',
+          value: data[index].description,
+        },
+      ]
+      list.push(item)
+    }
+    this.props.setAttributes(list)
+    this.setState({
+      showTable: true,
+    })
+    // console.log(list,data)
+    return
+  }
+
   getAttribute = () => {
     if (!this.props.currentLayer.path) return
     this.container.setLoading(true)
     ;(async function() {
       try {
-        let attribute = await SMap.getLayerAttribute(
-          this.props.currentLayer.path,
-        )
-        let tableHead = []
-        if (attribute && attribute.length > 0) {
-          this.props.setCurrentAttribute(attribute[0])
-          attribute[0].forEach(item => {
-            if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-              tableHead.unshift(item.fieldInfo.caption)
-            } else {
-              tableHead.push(item.fieldInfo.caption)
-            }
-          })
-        }
+        this.props.getAttributes(this.props.currentLayer.path)
+        // let attribute = await SMap.getLayerAttribute(
+        //   this.props.currentLayer.path,
+        // )
+        // let tableHead = []
+        // if (attribute && attribute.length > 0) {
+        //   this.props.setCurrentAttribute(attribute[0])
+        //   attribute[0].forEach(item => {
+        //     if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+        //       tableHead.unshift(item.fieldInfo.caption)
+        //     } else {
+        //       tableHead.push(item.fieldInfo.caption)
+        //     }
+        //   })
+        // }
         this.setState({
-          attribute: attribute,
-          tableHead: tableHead,
+          // attribute: attribute,
+          // tableHead: tableHead,
+          showTable: true,
         })
         this.container.setLoading(false)
       } catch (e) {
@@ -141,6 +183,7 @@ export default class LayerAttribute extends React.Component {
           navigation: this.props.navigation,
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+        style={styles.container}
       >
         {/*<LayerAttributeTab*/}
         {/*edit={this.edit}*/}
@@ -149,17 +192,40 @@ export default class LayerAttribute extends React.Component {
         {/*GLOBAL.AudioBottomDialog.setVisible(true)*/}
         {/*}}*/}
         {/*/>*/}
-        {this.state.tableHead.length > 0 ? (
-          <LayerAttributeTable
-            ref={ref => (this.table = ref)}
-            data={this.state.attribute}
-            type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-            tableTitle={this.state.tableTitle}
-            tableHead={this.state.tableHead}
-            selectRow={this.selectRow}
-          />
+        {this.state.showTable ? (
+          this.props.attributes.head.length > 0 ? (
+            this.type === 'MAP_3D' ? (
+              <LayerAttributeTable
+                ref={ref => (this.table = ref)}
+                data={this.props.attributes.data}
+                tableHead={this.props.attributes.head}
+                // data={this.state.attribute}
+                // tableHead={this.state.tableHead}
+                // tableTitle={this.state.tableTitle}
+                NormalrowStyle={{ width: scaleSize(720) }}
+                type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
+                selectRow={this.selectRow}
+              />
+            ) : (
+              <LayerAttributeTable
+                ref={ref => (this.table = ref)}
+                data={this.props.attributes.data}
+                tableHead={this.props.attributes.head}
+                // data={this.state.attribute}
+                // tableHead={this.state.tableHead}
+                // tableTitle={this.state.tableTitle}
+                // NormalrowStyle={{width:scaleSize(720)}}
+                type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
+                selectRow={this.selectRow}
+              />
+            )
+          ) : (
+            <View style={styles.infoView}>
+              <Text style={styles.info}>当前图层属性不可见</Text>
+            </View>
+          )
         ) : (
-          <View style={{ flex: 1 }} />
+          <View style={styles.infoView} />
         )}
       </Container>
     )
