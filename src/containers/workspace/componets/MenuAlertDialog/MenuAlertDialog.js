@@ -31,10 +31,11 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
 
-      const toolRef = this.props.getToolBarRef()
-      if (toolRef) {
-        toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION)
-      }
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION)
+        }
+      },
     },
     {
       key: '颜色方案',
@@ -42,10 +43,11 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
 
-      const toolRef = this.props.getToolBarRef()
-      if (toolRef) {
-        toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR)
-      }
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR)
+        }
+      },
     },
   ]
 
@@ -56,12 +58,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '表达式',
       action: () => {
         this.setDialogVisible(false)
-      },
 
-      const toolRef = this.props.getToolBarRef()
-      if (toolRef) {
-        toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION)
-      }
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION)
+        }
+      },
     },
     {
       key: '分段方法',
@@ -75,12 +78,12 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '颜色方案',
       action: () => {
         this.setDialogVisible(false)
-      },
 
-      const toolRef = this.props.getToolBarRef()
-      if (toolRef) {
-        toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_RANGE_COLOR)
-      }
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_RANGE_COLOR)
+        }
+      },
     },
   ]
 

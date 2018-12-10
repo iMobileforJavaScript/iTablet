@@ -6,10 +6,14 @@ import {
   Platform,
   DeviceEventEmitter,
   RefreshControl,
+  ActivityIndicator,
+  NativeModules
 } from 'react-native'
 import Container from '../../../../components/Container'
 import RenderServiceItem from './RenderServiceItem'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService,Utility } from 'imobile_for_reactnative'
+import ConstPath from "../../../../constants/ConstPath";
+const nativeFileTools = NativeModules.FileTools
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
  * */
@@ -25,32 +29,26 @@ let _arrPublishMaps = []
 /** 记录是否可以下载*/
 let _arrIsDownloadings = []
 /** 记录下载的item*/
-let _arrIndexes = []
+let _index = 99999999
+/** 当前页加载多少条服务数据*/
+let _iServicePageSize = 6
 /** 当前页加载多少条数据*/
-let _iPageSize = 10
+let _iDataPageSize = 20
 /** 记录服务有多少个*/
 let _iServiceListTotal
 /** 记录数据有多少个*/
 let _iDataListTotal
+/** */
+
 export default class MyService extends Component {
   props: {
     navigation: Object,
+    user: Object,
+    setUser: () => {},
   }
 
   constructor(props) {
     super(props)
-    // if (_objServiceNameAndFileName !== undefined && _objMapTitleAndRestTitle !== undefined) {
-    //
-    // } else {
-    //   this.state = {
-    //     mapArr: [],
-    //     arrIsDownloadings: [],
-    //     isRefreshing: false,
-    //     isLoadingData:false,
-    //     loadCount:0,
-    //     isDead:false,
-    //   }
-    // }
     this.state = {
       mapArr: _arrMaps,
       arrIsDownloadings: _arrIsDownloadings,
@@ -59,21 +57,26 @@ export default class MyService extends Component {
       loadCount: 0,
       isDead: false,
     }
+    this. _arrDownloadProgressRefs=[]
     this.downloadingListener = {}
     this.downloadedListener = {}
     this.downloadFailureListener = {}
-    this.arrDownloadProgressRefs = []
     this._addListener()
+
     if (
       _objServiceNameAndFileName === undefined &&
       _objMapTitleAndRestTitle === undefined
     ) {
-      this._loadOnlineDataAndService(1, _iPageSize)
+      this._configureServiceNameAndFileName(
+        1,
+        _iDataPageSize,
+      )
+      this._loadOnlineDataAndService(1, _iServicePageSize)
     }
   }
   /** 服务名称对应数据名称 */
   _configureServiceNameAndFileName = async (currentPage, pageSize) => {
-    let realPageSize = pageSize * 2
+    let realPageSize = pageSize
     let strDataList = await SOnlineService.getDataList(1, realPageSize)
     // 构建{serviceName:fileName}字符串,可通过服务名找到对应的数据名称
     let objDataList = JSON.parse(strDataList)
@@ -84,6 +87,7 @@ export default class MyService extends Component {
         this.setState({ isLoadingData: false })
         return _objServiceNameAndFileName
       }
+      currentPage = _iDataListTotal%realPageSize ? _iDataListTotal/realPageSize : _iDataListTotal/realPageSize+1
     }
 
     let serviceNameAndFileName = '{'
@@ -104,7 +108,7 @@ export default class MyService extends Component {
       }
     }
     serviceNameAndFileName = serviceNameAndFileName + '"finally":"null"}'
-    return JSON.parse(serviceNameAndFileName)
+    _objServiceNameAndFileName = JSON.parse(serviceNameAndFileName)
   }
   /** 地图名称对应服务名称 */
   _configureMapTitleAndRestTile = async (currentPage, pageSize) => {
@@ -122,7 +126,7 @@ export default class MyService extends Component {
     _arrPublishMaps = []
     // 1.存入地图数据
     // 2.构建{mapTile:restTile}字符串，可通过地图名称找到对应的服务名称
-    let mapTileAndRestTitle = '{'
+    let mapTitleAndRestTitle = '{'
     for (let page = 1; page <= currentPage; page++) {
       if (page > 1) {
         strServiceList = await SOnlineService.getServiceList(page, pageSize)
@@ -137,9 +141,9 @@ export default class MyService extends Component {
         let scenes = serviceContent[i].scenes
         let scenesCount = scenes.length
         if (scenesCount > 0) {
-          for (let i = 0; i < scenesCount; i++) {
-            let mapTitle = scenes[i].sceneName
-            let mapUrl = scenes[i].sceneUrl
+          for (let j = 0; j < scenesCount; j++) {
+            let mapTitle = scenes[j].sceneName
+            let mapUrl = scenes[j].sceneUrl
             let mapInfo =
               '{"mapTitle":"' +
               mapTitle +
@@ -147,10 +151,12 @@ export default class MyService extends Component {
               mapUrl +
               '","mapThumbnail":"null","isScenes":' +
               true +
-              '}'
+              ',"id":"'+
+              mapTitle+mapUrl+
+              '"}'
             _arrMaps.push(JSON.parse(mapInfo))
-            mapTileAndRestTitle =
-              mapTileAndRestTitle + '"' + mapTitle + '":"' + restTile + '",'
+            mapTitleAndRestTitle =
+              mapTitleAndRestTitle + '"' + mapTitle + '":"' + restTile + '",'
           }
         }
         /**  二维地图*/
@@ -158,15 +164,17 @@ export default class MyService extends Component {
         /** 针对mapInfos没有元素时*/
         if (mapInfos.length <= 0) {
           let mapTitle = '无地图_' + page + i
-          mapTileAndRestTitle =
-            mapTileAndRestTitle + '"' + mapTitle + '":"' + restTile + '",'
+          mapTitleAndRestTitle =
+            mapTitleAndRestTitle + '"' + mapTitle + '":"' + restTile + '",'
           if (scenesCount <= 0) {
             let mapInfo =
               '{"mapTitle":"' +
               mapTitle +
               '","mapUrl":"null","mapThumbnail":"null","isScenes":' +
               false +
-              '}'
+              ',"id":"'+
+              mapTitle+"null"+
+              '"}'
             _arrMaps.push(JSON.parse(mapInfo))
           }
         } else {
@@ -184,22 +192,49 @@ export default class MyService extends Component {
               mapThumbnail +
               '","isScenes":' +
               false +
-              '}'
+              ',"id":"'+
+              mapTitle+mapUrl+
+              '"}'
             _arrMaps.push(JSON.parse(strMapInfo))
-            mapTileAndRestTitle =
-              mapTileAndRestTitle + '"' + mapTitle + '":"' + restTile + '",'
+            mapTitleAndRestTitle =
+              mapTitleAndRestTitle + '"' + mapTitle + '":"' + restTile + '",'
           }
         }
       }
     }
-    mapTileAndRestTitle = mapTileAndRestTitle + '"finally":"null"}'
-    return JSON.parse(mapTileAndRestTitle)
+    mapTitleAndRestTitle = mapTitleAndRestTitle + '"finally":"null"}'
+    _objMapTitleAndRestTitle= JSON.parse(mapTitleAndRestTitle)
+    return _objMapTitleAndRestTitle
+  }
+
+  _unZipFile =async (index)=>{
+    let savePath
+    let userDir = this.props.user.currentUser.userName
+    let fileName = this._arrDownloadProgressRefs[index].getDownloadFileName()
+    if(_arrMaps[index].isScenes){
+      savePath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath +userDir+'/Scenes/'+fileName,
+      )
+    }else{
+      savePath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath +userDir+'/Data/'+fileName,
+      )
+    }
+    let result = await nativeFileTools.unZipFile(this._arrDownloadProgressRefs[index].getDownloadFilePath(),savePath)
+    if(result){
+      // nativeFileTools.deleteFile(this._arrDownloadProgressRefs[index].getDownloadFilePath())
+    }
   }
 
   _changeDownloadingProgressState = progress => {
     if (!this.state.isDead) {
-      let index = _arrIndexes[_arrIndexes.length - 1]
-      this.arrDownloadProgressRefs[index].setDownloadProgress(progress)
+      let index = _index
+      if(this._arrDownloadProgressRefs.length >= index){
+        this._arrDownloadProgressRefs[index].setDownloadProgress(progress)
+        if(progress === '下载完成'){
+          this._unZipFile(index)
+        }
+      }
     }
   }
 
@@ -231,61 +266,45 @@ export default class MyService extends Component {
       this.downloadedListener = callBackIos.addListener(downloadedType, () => {
         this._changeIsDownloadingState(this.state.arrIsDownloadings.length + 1)
         this._changeDownloadingProgressState('下载完成')
+
       })
     }
     if (Platform.OS === 'android') {
       this.downloadingListener = DeviceEventEmitter.addListener(
         downloadingEventType,
         obj => {
-          let index = _arrIndexes[_arrIndexes.length - 1]
-          let result = '下载' + obj.toFixed(2) + '%'
-          this.arrDownloadProgressRefs[index].setDownloadProgress(result)
+          let index = _index
+          let result = '下载' + obj.toFixed(0) + '%'
+          this._arrDownloadProgressRefs[index].setDownloadProgress(result)
         },
       )
       this.downloadedListener = DeviceEventEmitter.addListener(
         downloadedType,
         () => {
-          this._changeIsDownloadingState(
-            this.state.arrIsDownloadings.length + 1,
-          )
+          this._changeIsDownloadingState(this.state.arrIsDownloadings.length + 1)
           this._changeDownloadingProgressState('下载完成')
         },
       )
       this.downloadFailureListener = DeviceEventEmitter.addListener(
         downloadFailureType,
         () => {
-          this._changeIsDownloadingState(
-            this.state.arrIsDownloadings.length + 1,
-          )
+          this._changeIsDownloadingState(this.state.arrIsDownloadings.length + 1)
           this._changeDownloadingProgressState('下载失败')
         },
       )
     }
   }
 
-  /*  _getDataList = async (currentPage, pageSize) => {
-    let strDataList = await SOnlineService.getDataList(currentPage, pageSize)
-    return strDataList
-  }
-
-  _getServiceList = async (currentPage, pageSize) => {
-    let strServiceList = await SOnlineService.getServiceList(currentPage, pageSize)
-    return strServiceList
-  }*/
-
+/** 用于初始化加载*/
   _loadOnlineDataAndService = async () => {
-    _objServiceNameAndFileName = await this._configureServiceNameAndFileName(
-      1,
-      _iPageSize,
-    )
     _objMapTitleAndRestTitle = await this._configureMapTitleAndRestTile(
       1,
-      _iPageSize,
+      _iServicePageSize,
     )
-
-    if (Platform.OS === 'android') {
-      await this._publishMaps()
-    }
+    //
+    // if (Platform.OS === 'android') {
+    //   await this._publishMaps()
+    // }
     for (let i = 0; i < _arrMaps.length; i++) {
       _arrIsDownloadings.push(true)
     }
@@ -323,45 +342,93 @@ export default class MyService extends Component {
 
   _setDownloadProgressRef = ref => {
     // 判断是否有着
-    if (this.arrDownloadProgressRefs.indexOf(ref) === -1) {
-      this.arrDownloadProgressRefs.push(ref)
+    if (this._arrDownloadProgressRefs.indexOf(ref) === -1) {
+      this._arrDownloadProgressRefs.push(ref)
     }
   }
 
   _onRefresh = async () => {
     if (!this.state.isRefreshing) {
+      let _downloadingID = 'null'
+      if(_index < 99999){
+         _downloadingID = _arrMaps[_index].id
+      }
+      this._arrDownloadProgressRefs=[]
       this.setState({ isRefreshing: true, loadCount: 1 })
-      _objServiceNameAndFileName = await this._configureServiceNameAndFileName(
+      this._configureServiceNameAndFileName(
         1,
-        _iPageSize,
+        _iDataPageSize,
       )
-      _objMapTitleAndRestTitle = await this._configureMapTitleAndRestTile(
+      await this._configureMapTitleAndRestTile(
         1,
-        _iPageSize,
+        _iServicePageSize,
       )
+
+      /** 有数据下载时*/
+      if(_downloadingID !== 'null'){
+        for(let i = 0;i <_arrMaps.length;i++ ){
+          if(_arrMaps[_index].id === _downloadingID){
+            _index = i
+            break
+          }
+        }
+        this._changeIsDownloadingState(_index)
+      }
+      /** 没数据下载时候*/
       this.setState({ isRefreshing: false, mapArr: _arrMaps, loadCount: 1 })
+
     }
   }
 
   _loadData = async () => {
     if (
-      this.state.loadCount * _iPageSize < _iServiceListTotal &&
+      this.state.loadCount * _iServicePageSize < _iServiceListTotal &&
       !this.state.isLoadingData
     ) {
+      let _downloadingID = 'null'
+      if(_index < 99999){
+        _downloadingID = _arrMaps[_index].id
+      }
+      this._arrDownloadProgressRefs=[]
       let loadCount = this.state.loadCount + 1
       this.setState({ isLoadingData: true })
-      _objServiceNameAndFileName = await this._configureServiceNameAndFileName(
+      this._configureServiceNameAndFileName(
         loadCount,
-        _iPageSize,
+        _iServicePageSize,
       )
       _objMapTitleAndRestTitle = await this._configureMapTitleAndRestTile(
         loadCount,
-        _iPageSize,
+        _iServicePageSize,
       )
+      /* 加载后，判断是否有item在下载数据*/
+      let arrMapLength = _arrMaps.length
+      let arrIsDownloadingLength = _arrIsDownloadings.length
+      let concatIsDownloading = []
+      let isItemDownloading = false
+      for(let startLength = 0;startLength < arrIsDownloadingLength;startLength++){
+         if(!_arrIsDownloadings[startLength]){
+           isItemDownloading = true
+           break
+         }
+      }
+      for(let startLength = arrIsDownloadingLength;startLength < arrMapLength;startLength++){
+        concatIsDownloading.push(!isItemDownloading)
+      }
+      _arrIsDownloadings = _arrIsDownloadings.concat(concatIsDownloading)
+      if(_downloadingID !== 'null'){
+        for(let i = 0;i <_arrMaps.length;i++ ){
+          if(_arrMaps[_index].id === _downloadingID){
+            _index = i
+            break
+          }
+        }
+        this._changeIsDownloadingState(_index)
+      }
       this.setState({
         mapArr: _arrMaps,
         loadCount: loadCount,
         isLoadingData: false,
+        arrIsDownloadings:_arrIsDownloadings
       })
     }
   }
@@ -387,8 +454,8 @@ export default class MyService extends Component {
   }
 
   _itemOnPressCallBack = index => {
-    _arrIndexes.push(index)
-    this.arrDownloadProgressRefs[index].setDownloadProgress('下载中...')
+    _index=index
+    this._arrDownloadProgressRefs[index].setDownloadProgress('下载中...')
     this._changeIsDownloadingState(index)
   }
 
@@ -397,11 +464,18 @@ export default class MyService extends Component {
       return (
         <View
           style={{
+            flex:1,
+            height:50,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#505052',
+            backgroundColor: '#fff',
           }}
         >
+          <ActivityIndicator
+            style={{flex:1,height:30,justifyContent:'center',alignItems:'center'}}
+              color={'red'}
+              animating ={true}
+          />
           <Text
             style={{
               flex: 1,
@@ -415,17 +489,25 @@ export default class MyService extends Component {
         </View>
       )
     } else {
-      return <View />
+      return <View>
+          <Text
+            style={{
+              flex: 1,
+              lineHeight: 30,
+              fontSize: 12,
+              textAlign: 'center',
+            }}
+          >
+            -----这是底线-----
+          </Text>
+      </View>
     }
   }
   /** 以便在刷新时能够确定其变化的位置，减少重新渲染的开销*/
-  _keyExtractor = (item, index) => index * index
+  _keyExtractor = (item, index) => item.id
 
   render() {
-    if (
-      _objServiceNameAndFileName === undefined ||
-      _objMapTitleAndRestTitle === undefined
-    ) {
+    if (_objMapTitleAndRestTitle === undefined) {
       return (
         <Container
           headerProps={{
@@ -485,7 +567,7 @@ export default class MyService extends Component {
                   enabled={true}
                 />
               }
-              onEndReachedThreshold={0.2}
+              onEndReachedThreshold={0.1}
               onEndReached={this._loadData}
               ListFooterComponent={this._footView()}
             />
