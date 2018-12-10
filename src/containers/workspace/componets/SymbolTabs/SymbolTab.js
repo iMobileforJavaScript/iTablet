@@ -54,7 +54,7 @@ export default class SymbolTab extends React.Component {
             // width: 600,
             imageSize: 50,
             count: 5,
-            legendBackgroundColor: dataUtil.colorRgba(color.blackBg),
+            legendBackgroundColor: dataUtil.colorRgba(color.theme),
             textColor: dataUtil.colorRgba(color.themeText),
           }}
           onSymbolClick={this._onSymbolClick}
@@ -68,12 +68,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.theme,
   },
   table: {
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.theme,
   },
 })

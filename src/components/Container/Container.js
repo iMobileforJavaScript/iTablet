@@ -127,7 +127,6 @@ export default class Container extends PureComponent {
 
     return (
       <ContainerView style={[styles.container, this.props.style]}>
-        <View style={{ height: 0, width: '100%' }} />
         {!fixHeader && this.renderHeader(fixHeader)}
         {this.props.children}
         {fixHeader && this.renderHeader(fixHeader)}

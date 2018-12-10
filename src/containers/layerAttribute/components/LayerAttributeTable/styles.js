@@ -5,7 +5,7 @@ import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
   head: {
     height: scaleSize(60),
