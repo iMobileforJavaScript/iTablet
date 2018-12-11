@@ -288,6 +288,7 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={this.dialog}
+        setAttributes={this.props.setAttributes}
       />
     )
   }

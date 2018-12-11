@@ -91,6 +91,7 @@ export default class ToolBar extends React.Component {
     setCurrentMap?: () => {}, // 设置当前地图
     setCollectionInfo?: () => {}, // 设置当前采集数据源信息
     setCurrentLayer?: () => {}, // 设置当前图层
+    setAttributes?: () => {},
   }
 
   static defaultProps = {
@@ -1024,9 +1025,36 @@ export default class ToolBar extends React.Component {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  getMap3DAttribute = async () => {
+    let data = await SScene.getLableAttributeList()
+    let list = []
+    for (let index = 0; index < data.length; index++) {
+      let item = [
+        {
+          fieldInfo: { caption: 'id' },
+          name: 'id',
+          value: data[index].id,
+        },
+        {
+          fieldInfo: { caption: 'name' },
+          name: 'name',
+          value: data[index].name,
+        },
+        {
+          fieldInfo: { caption: 'description' },
+          name: 'description',
+          value: data[index].description,
+        },
+      ]
+      list.push(item)
+    }
+    this.props.setAttributes && this.props.setAttributes(list)
+  }
+
   symbolSave = () => {
     try {
       SScene.save()
+      this.getMap3DAttribute()
       Toast.show('保存成功')
     } catch (error) {
       Toast.show('保存失败')
