@@ -173,6 +173,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
 })

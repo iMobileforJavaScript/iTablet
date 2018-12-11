@@ -6,14 +6,14 @@ export default {
       index: 0,
       show: true,
       data: [
-        {
-          title: 'STK',
-          index: 0,
-          show: true,
-          type: 'terrainLayer',
-          name: 'stk',
-          url: 'https://assets.agi.com/stk-terrain/world',
-        },
+        // {
+        //   title: 'STK',
+        //   index: 0,
+        //   show: true,
+        //   type: 'terrainLayer',
+        //   name: 'stk',
+        //   url: 'https://assets.agi.com/stk-terrain/world',
+        // },
         {
           title: 'BingMap',
           index: 0,

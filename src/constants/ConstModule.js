@@ -59,7 +59,7 @@ export default [
         customerPath =
           ConstPath.CustomerPath +
           ConstPath.RelativeFilePath.Scene +
-          'OlympicGreen_android/OlympicGreen_android.sxwu'
+          'OlympicGreen_ios/OlympicGreen_ios.sxwu'
       }
       let ssPath = await Utility.appendingHomeDirectory(customerPath)
       if (user.userName) {

@@ -5,7 +5,7 @@ import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
   head: {
     height: scaleSize(60),
@@ -30,6 +30,7 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   text: {
+    // flex:1,
     textAlign: 'center',
     color: color.themeText,
   },

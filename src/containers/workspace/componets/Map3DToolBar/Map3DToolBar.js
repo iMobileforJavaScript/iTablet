@@ -38,23 +38,23 @@ export default class Map3DToolBar extends React.Component {
         SScene.addTerrainLayer(url, name)
         break
       case 'WMTS':
-        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true).then(
+        SScene.addLayer3D(url, type, name, 'JPG_PNG', 96.0, true).then(
           result => {
             if (result) {
               Toast.show('添加成功')
             } else {
-              Toast.show('添加失败，请检查网络')
+              Toast.show('添加失败')
             }
           },
         )
         break
       case 'l3dBingMaps':
-        SScene.changeBaseMap(null, url, type, name, 'JPG_PNG', 96.0, true).then(
+        SScene.addLayer3D(url, type, name, 'JPG_PNG', 96.0, true).then(
           result => {
             if (result) {
               Toast.show('添加成功')
             } else {
-              Toast.show('添加失败，请检查网络')
+              Toast.show('添加失败')
             }
           },
         )
@@ -64,7 +64,15 @@ export default class Map3DToolBar extends React.Component {
         break
     }
   }
-
+  // .then(
+  //   result => {
+  //     if (result) {
+  //       Toast.show('添加成功')
+  //     } else {
+  //       Toast.show('添加失败，请检查网络')
+  //     }
+  //   },
+  // )
   setAnalystResult = data => {
     this.setState({
       analystresult: data,
@@ -160,8 +168,8 @@ export default class Map3DToolBar extends React.Component {
         </TouchableOpacity>
       )
     } else if (
-      (item.name === 'description' && item.value !== '') ||
-      item.name === 'name'
+      (item.name === 'DESCRIPTION' && item.value !== '') ||
+      item.name === 'NAME'
     ) {
       return (
         <TouchableOpacity style={styles.row}>
