@@ -192,6 +192,9 @@ export default class Map3D extends React.Component {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
       }
+      if (GLOBAL.Map3DSymbol) {
+        SScene.clearAllLabel()
+      }
       this.props.setCurrentAttribute({})
       this.props.setAttributes({})
     } catch (e) {

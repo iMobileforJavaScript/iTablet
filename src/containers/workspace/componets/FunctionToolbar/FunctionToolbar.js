@@ -191,6 +191,7 @@ export default class FunctionToolbar extends React.Component {
 
   showMap3DSymbol = async () => {
     SScene.checkoutListener('startLabelOperate')
+    GLOBAL.Map3DSymbol = true
     SScene.getLayerList().then(() => {
       const toolRef = this.props.getToolRef()
       if (toolRef) {

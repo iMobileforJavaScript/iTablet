@@ -1017,6 +1017,7 @@ export default class ToolBar extends React.Component {
   closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.Map3DSymbol = false
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
