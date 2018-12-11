@@ -12,6 +12,7 @@ import {
   SMap,
   SCollector,
   Utility,
+  EngineType,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import {
@@ -52,14 +53,19 @@ export default class MapView extends React.Component {
     overlaySetting: PropTypes.object,
     symbol: PropTypes.object,
     layers: PropTypes.object,
+    map: PropTypes.object,
+    collection: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
     setLatestMap: PropTypes.func,
+    setCurrentMap: PropTypes.func,
     setBufferSetting: PropTypes.func,
     setOverlaySetting: PropTypes.func,
     setAnalystLayer: PropTypes.func,
     getLayers: PropTypes.func,
+    setCollectionInfo: PropTypes.func,
+    setCurrentLayer: PropTypes.func,
     setCurrentAttribute: PropTypes.func,
     getAttributes: PropTypes.func,
   }
@@ -67,7 +73,7 @@ export default class MapView extends React.Component {
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.type = params.type || 'LOCAL'
+    this.type = params.type || GLOBAL.Type || 'LOCAL'
     this.mapType = params.mapType || 'DEFAULT'
     this.operationType = params.operationType || constants.COLLECTION
     this.isExample = params.isExample || false
@@ -320,11 +326,17 @@ export default class MapView extends React.Component {
 
   // 地图另存为
   saveAsMap = (name = '') => {
-    SMap.saveAsMap(name).then(result => {
-      Toast.show(
-        result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-      )
-    })
+    try {
+      this.setLoading(true, '正在保存地图')
+      SMap.saveAsMap(name).then(result => {
+        this.setLoading(false)
+        Toast.show(
+          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+        )
+      })
+    } catch (e) {
+      this.setLoading(false)
+    }
   }
 
   // 地图保存为xml(fileName, cb)
@@ -598,8 +610,28 @@ export default class MapView extends React.Component {
     this.backAction = async () => {
       try {
         this.setLoading(true, '正在关闭地图')
+        let mapIndex = await SMap.getMapIndex() // 获取地图index，若临时地图没有保存，则为-1
         await SMap.closeMap()
         await SMap.closeDatasource()
+        // 采集 - 若临时地图未保存，则删除采集数据源
+        if (
+          GLOBAL.Type === constants.COLLECTION &&
+          mapIndex < 0 &&
+          this.props.collection.datasourceParentPath &&
+          this.props.collection.datasourceName
+        ) {
+          await SMap.deleteDatasource(
+            this.props.collection.datasourceParentPath +
+              this.props.collection.datasourceName +
+              '.udb',
+          )
+          await SMap.deleteDatasource(
+            this.props.collection.datasourceParentPath +
+              this.props.collection.datasourceName +
+              '.udd',
+          )
+        }
+        this.props.setCollectionInfo() // 置空Redux中Collection中的数据
         this.setLoading(false)
         NavigationService.goBack()
       } catch (e) {
@@ -651,6 +683,8 @@ export default class MapView extends React.Component {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
           }
         }
+
+        GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
         // 获取图层列表
         this.props.getLayers(-1, async layers => {
@@ -709,6 +743,42 @@ export default class MapView extends React.Component {
     } catch (e) {
       this.container.setLoading(false)
     }
+  }
+
+  /**
+   * 初始化采集数据集
+   * @returns {Promise.<void>}
+   */
+  initCollectorDatasource = async () => {
+    let collectorDSPath = ''
+    let collectorDSName = 'Collection-' + new Date().getTime()
+    let initResult = false
+    if (this.props.user.currentUser.userName) {
+      collectorDSPath = await Utility.appendingHomeDirectory(
+        ConstPath.UserPath +
+          this.props.user.currentUser.userName +
+          '/' +
+          ConstPath.RelativePath.Datasource,
+      )
+    } else {
+      collectorDSPath = await Utility.appendingHomeDirectory(
+        ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+      )
+    }
+    while (!initResult) {
+      initResult = await SMap.createDatasource({
+        alias: collectorDSName,
+        engineType: EngineType.UDB,
+        server: collectorDSPath + collectorDSName + '.udb',
+      })
+      if (!initResult) collectorDSName = 'Collection-' + new Date().getTime()
+    }
+    this.props.setCollectionInfo({
+      datasourceName: collectorDSName,
+      datasourceParentPath: collectorDSPath,
+      datasourceServer: collectorDSPath + collectorDSName + '.udb',
+      datasourceType: EngineType.UDB,
+    })
   }
 
   /**
@@ -816,6 +886,7 @@ export default class MapView extends React.Component {
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
         user={this.props.user}
+        map={this.props.map}
         symbol={this.props.symbol}
         layerData={this.props.currentLayer}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
@@ -824,8 +895,12 @@ export default class MapView extends React.Component {
         showFullMap={this.showFullMap}
         setSaveViewVisible={this.setSaveViewVisible}
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
+        setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
+        setCollectionInfo={this.props.setCollectionInfo}
         getLayers={this.props.getLayers}
+        setCurrentMap={this.props.setCurrentMap}
+        collection={this.props.collection}
       />
     )
   }
@@ -884,7 +959,14 @@ export default class MapView extends React.Component {
         <SaveView
           ref={ref => (this.SaveMapView = ref)}
           save={() => {
-            this.saveMap('', () => {
+            let mapName =
+              (this.props.layers.layers.length > 0 &&
+                this.props.layers.layers[this.props.layers.layers.length - 1]
+                  .name) ||
+              ''
+            if (this.props.collection.datasourceName)
+              mapName += '@' + this.props.collection.datasourceName
+            this.saveMap(mapName, () => {
               if (this.backAction) {
                 this.backAction()
                 this.backAction = null

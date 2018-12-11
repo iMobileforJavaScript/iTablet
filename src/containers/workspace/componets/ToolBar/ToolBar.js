@@ -29,7 +29,6 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  SectionList,
   Animated,
   FlatList,
 } from 'react-native'
@@ -41,13 +40,14 @@ import {
   SCollector,
   GeoStyle,
   SMCollectorType,
-  Utility,
+  EngineType,
   SThemeCartography,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
 import ThemeColorGradientType from './ThemeColorGradientType'
+import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
@@ -73,6 +73,9 @@ export default class ToolBar extends React.Component {
     existFullMap: () => {},
     symbol?: Object,
     user?: Object,
+    map?: Object,
+    collection?: Object,
+    layerData: Object,
     confirm: () => {},
     showDialog: () => {},
     addGeometrySelectedListener: () => {},
@@ -84,8 +87,10 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
-    layerData: Object,
-    getLayers: () => {}, // 更新数据（包括其他界面）
+    getLayers?: () => {}, // 更新数据（包括其他界面）
+    setCurrentMap?: () => {}, // 设置当前地图
+    setCollectionInfo?: () => {}, // 设置当前采集数据源信息
+    setCurrentLayer?: () => {}, // 设置当前图层
   }
 
   static defaultProps = {
@@ -695,15 +700,20 @@ export default class ToolBar extends React.Component {
           this.props.user.currentUser.name +
           ConstPath.RelativePath.Datasource
         : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
-    let datasourceName = 'Collection'
+    let datasourceName = (this.props.map && this.props.map.currentMap) || ''
+
     SCollector.setDataset({
-      datasourcePath: (await Utility.appendingHomeDirectory()) + datasourcePath,
-      datasourceName,
+      datasourcePath:
+        this.props.collection.datasourceParentPath || datasourcePath,
+      datasourceName: this.props.collection.datasourceName || datasourceName,
       datasetName,
       datasetType: mType,
       style: geoStyle,
-    }).then(result => {
-      result && SCollector.startCollect(type)
+    }).then(() => {
+      SCollector.startCollect(type)
+      this.props.getLayers(-1, layers => {
+        this.props.setCurrentLayer(layers.length > 0 && layers[0])
+      })
     })
   }
 
@@ -1131,34 +1141,6 @@ export default class ToolBar extends React.Component {
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
   }
 
-  renderThemeListItem = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.listThemeAction({ item, index })
-        }}
-      >
-        <Text style={styles.themeitem}>{item.title}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderListItem = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.listAction({ item, index })
-        }}
-      >
-        <Text style={styles.item}>{item.title}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderListSectionHeader = ({ section }) => {
-    return <Text style={styles.sectionHeader}>{section.title}</Text>
-  }
-
   listThemeAction = ({ item }) => {
     if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
       //单值专题图表达式
@@ -1313,49 +1295,54 @@ export default class ToolBar extends React.Component {
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 打开地图
-      SMap.openMap(item.title).then(isOpen => {
-        if (isOpen) {
-          this.setVisible(false)
-          Toast.show('已为您切换到' + item.title)
-        } else {
-          Toast.show('该地图为当前地图')
-        }
+      let datasourceName = item.title.substr(
+        item.title.lastIndexOf('@') + 1,
+        item.title.length - 1,
+      )
+      let server =
+        this.props.collection.datasourceParentPath + datasourceName + '.udb'
+      let DSParams = {
+        server: server,
+        engineType: EngineType.UDB,
+        alias: datasourceName,
+      }
+      SMap.openDatasource(DSParams).then(result => {
+        result &&
+          SMap.openMap(item.title).then(isOpen => {
+            if (isOpen) {
+              Toast.show('已为您切换到' + item.title)
+              this.props.setCurrentMap(item.title)
+              this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+              this.props.setCollectionInfo({
+                datasourceName: datasourceName,
+                datasourceParentPath: this.props.collection
+                  .datasourceParentPath,
+                datasourceServer: server,
+                datasourceType: EngineType.UDB,
+              })
+              this.setVisible(false)
+            } else {
+              Toast.show('该地图为当前地图')
+            }
+          })
       })
-      this.props.getLayers()
     }
-  }
-
-  renderThemeList = () => {
-    if (this.state.data.length === 0) return
-    return (
-      <SectionList
-        sections={this.state.data}
-        renderItem={this.renderThemeListItem}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 28,
-              padding: 10,
-              backgroundColor: 'rgb(80,80,80)',
-              color: 'white',
-            }}
-          >
-            {title}
-          </Text>
-        )}
-        keyExtractor={(item, index) => index}
-      />
-    )
   }
 
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
-      <SectionList
+      <ToolBarSectionList
         sections={this.state.data}
-        renderItem={this.renderListItem}
-        renderSectionHeader={this.renderListSectionHeader}
+        itemAction={({ item, index }) => {
+          if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
+            this.listThemeAction({ item, index })
+          } else {
+            this.listAction({ item, index })
+          }
+        }}
         keyExtractor={(item, index) => index}
       />
     )
@@ -1489,35 +1476,12 @@ export default class ToolBar extends React.Component {
     switch (this.state.containerType) {
       case list:
         switch (this.state.type) {
-          case 'MAP3D_BASE':
+          case ConstToolType.MAP3D_BASE:
+          case ConstToolType.MAP3D_TOOL_FLYLIST:
+          case ConstToolType.MAP3D_ATTRIBUTE:
+          case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
+          case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
             box = this.renderMap3DList()
-            break
-          case 'MAP3D_TOOL_FLYLIST':
-            box = this.renderMap3DList()
-            break
-          case 'MAP3D_ATTRIBUTE':
-            box = this.renderMap3DList()
-            break
-          case 'MAP3D_TOOL_SUERFACEMEASURE':
-            box = this.renderMap3DList()
-            break
-          case 'MAP3D_TOOL_DISTANCEMEASURE':
-            box = this.renderMap3DList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION:
-            box = this.renderThemeList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR:
-            box = this.renderThemeList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION:
-            box = this.renderThemeList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_RANGE_MODE:
-            box = this.renderThemeList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_RANGE_COLOR:
-            box = this.renderThemeList()
             break
           default:
             box = this.renderList()
@@ -1802,6 +1766,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
 })
