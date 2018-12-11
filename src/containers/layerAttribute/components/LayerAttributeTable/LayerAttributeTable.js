@@ -11,6 +11,7 @@ import {
   TextInput,
   KeyboardAvoidingView,
   TouchableOpacity,
+  RefreshControl,
 } from 'react-native'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { color } from '../../../../styles'
@@ -22,7 +23,8 @@ import {
   Col,
   Cell,
 } from 'react-native-table-component'
-
+// import { SScene } from 'imobile_for_reactnative'
+// import NavigationService from '../../../NavigationService'
 import styles from './styles'
 
 const COL_HEIGHT = scaleSize(80)
@@ -34,6 +36,7 @@ export default class LayerAttributeTable extends React.Component {
     add: () => {},
     edit: () => {},
     selectRow: () => {},
+    refresh: () => {},
 
     selectable: boolean,
     hasIndex: boolean,
@@ -82,6 +85,7 @@ export default class LayerAttributeTable extends React.Component {
       // tableTitle: titleList,
       tableData: dataList,
       currentSelect: -1,
+      refreshing: false,
     }
   }
 
@@ -316,40 +320,65 @@ export default class LayerAttributeTable extends React.Component {
             textStyle={styles.headerText}
           />
         </Table>
-        <ScrollView style={styles.dataWrapper}>
+        <ScrollView
+          style={styles.dataWrapper}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={() => {
+                this.setState({ refreshing: true }, () => {
+                  this.props.refresh &&
+                    this.props.refresh(() => {
+                      this.setState({ refreshing: false })
+                    })
+                })
+              }}
+            />
+          }
+        >
           <Table borderStyle={styles.border}>
             {this.state.tableData.map((rowData, index) => {
               return (
-                <TableWrapper
+                <TouchableOpacity
+                  activeOpacity={0.8}
                   key={index}
-                  style={[styles.row, this.props.NormalrowStyle]}
-                  borderColor={color.borderLight}
+                  onPress={() => {
+                    // console.log(index)
+                    // SScene.flyToFeatureById(index)
+                    // NavigationService.goBack()
+                  }}
                 >
-                  {rowData.arr.map((cellData, cellIndex) => {
-                    // let isSystemField =
-                    //   cellIndex !== 0 &&
-                    //   cellData.key.toLowerCase().indexOf('id') === 0
+                  <TableWrapper
+                    key={index}
+                    style={[styles.row, this.props.NormalrowStyle]}
+                    borderColor={color.borderLight}
+                  >
+                    {rowData.arr.map((cellData, cellIndex) => {
+                      // let isSystemField =
+                      //   cellIndex !== 0 &&
+                      //   cellData.key.toLowerCase().indexOf('id') === 0
 
-                    // data={
-                    //   cellIndex === 0
-                    //     ? cellData
-                    //     : isSystemField
-                    //       ? cellData.data.value === undefined
-                    //         ? ''
-                    //         : cellData
-                    //       : this.renderInput(cellData, index)
-                    // }
+                      // data={
+                      //   cellIndex === 0
+                      //     ? cellData
+                      //     : isSystemField
+                      //       ? cellData.data.value === undefined
+                      //         ? ''
+                      //         : cellData
+                      //       : this.renderInput(cellData, index)
+                      // }
 
-                    return (
-                      <Cell
-                        key={cellIndex}
-                        borderColor={color.borderLight}
-                        data={cellData}
-                        textStyle={styles.text}
-                      />
-                    )
-                  })}
-                </TableWrapper>
+                      return (
+                        <Cell
+                          key={cellIndex}
+                          borderColor={color.borderLight}
+                          data={cellData}
+                          textStyle={styles.text}
+                        />
+                      )
+                    })}
+                  </TableWrapper>
+                </TouchableOpacity>
               )
             })}
           </Table>

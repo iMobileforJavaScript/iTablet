@@ -154,12 +154,21 @@ export default class WorkSpaceFileList extends Component {
     switch (type) {
       case 'sxwu':
         try {
+          if (GLOBAL.openWorkspace) {
+            await SScene.removeKMLOfWorkcspace()
+          }
           this.container && this.container.setLoading(true, '正在打开地图')
           let data = { server: path }
           let result = await SScene.openWorkspace(data)
           let mapList = await SScene.getMapList()
-          result && (await SScene.openMap(mapList[0].name))
-          GLOBAL.openWorkspace = true
+          result &&
+            SScene.openMap(mapList[0].name).then(result => {
+              if (result) {
+                GLOBAL.openWorkspace = true
+              } else {
+                GLOBAL.openWorkspace = false
+              }
+            })
           SScene.setListener().then(() => {
             SScene.getAttribute()
             SScene.setCircleFly()

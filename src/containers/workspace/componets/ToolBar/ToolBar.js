@@ -1034,11 +1034,6 @@ export default class ToolBar extends React.Component {
   getType = () => {
     return this.type
   }
-
-  getOldLayerList = data => {
-    this.oldLayerList = data
-  }
-
   menu = () => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.isBoxShow ? 0 : this.height,
