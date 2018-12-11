@@ -979,7 +979,9 @@ export default class ToolBar extends React.Component {
     ) {
       SCollector.stopCollect()
     }
-    if (
+    if (type === ConstToolType.MAP_EDIT_TAGGING) {
+      SMap.setAction(Action.PAN)
+    } else if (
       typeof type === 'string' &&
       type.indexOf('MAP_EDIT_') >= 0 &&
       type !== ConstToolType.MAP_EDIT_DEFAULT
@@ -1553,11 +1555,11 @@ export default class ToolBar extends React.Component {
         action = () => {}
       switch (type) {
         case ToolbarBtnType.CANCEL:
-          image = require('../../../../assets/mapEdit/cancel.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_close.png')
           action = this.close
           break
         case ToolbarBtnType.FLEX:
-          image = require('../../../../assets/mapEdit/flex.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
           action = this.showBox
           break
         case ToolbarBtnType.STYLE:
@@ -1565,15 +1567,15 @@ export default class ToolBar extends React.Component {
           action = this.showBox
           break
         case ToolbarBtnType.COMMIT:
-          image = require('../../../../assets/mapEdit/commit.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.commit
           break
         case ToolbarBtnType.MENU:
-          image = require('../../../../assets/mapEdit/menu.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menu
           break
         case ToolbarBtnType.MENUS:
-          image = require('../../../../assets/mapEdit/menu.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menus
           break
         case ToolbarBtnType.CLOSE_ANALYST:
