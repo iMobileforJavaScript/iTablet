@@ -10,12 +10,8 @@ import {
 } from 'react-native'
 import { size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
-
-/** 新建专题图的类型 **/
-const unique = 'unique'
-const range = 'range'
-const label = 'label'
+import constants from '../../constants'
+import { ConstToolType } from '../../../../constants'
 
 export default class MenuAlertDialog extends React.Component {
   props: {
@@ -28,130 +24,161 @@ export default class MenuAlertDialog extends React.Component {
   }
 
   //单值
-  uniqueMenuInfo = [{
-    key: '表达式',
-    btntitle: '表达式',
-    action: () => {
-      this.setDialogVisible(false)
+  uniqueMenuInfo = [
+    {
+      key: '表达式',
+      btntitle: '表达式',
+      action: () => {
+        this.setDialogVisible(false)
 
-      const toolRef = this.props.getToolBarRef()
-      if (toolRef) {
-        toolRef.getThemeExpress()
-      }
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getThemeExpress(
+            ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION,
+          )
+        }
+      },
     },
-  },
-  {
-    key: '颜色方案',
-    btntitle: '颜色方案',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '颜色方案',
+      btntitle: '颜色方案',
+      action: () => {
+        this.setDialogVisible(false)
 
-      const toolRef = this.props.getToolBarRef()
-      if (toolRef) {
-        toolRef.getColorGradientType()
-      }
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getColorGradientType(
+            ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
+          )
+        }
+      },
     },
-  },
   ]
 
   //分段
-  rangeMenuInfo = [{
-    key: '表达式',
-    btntitle: '表达式',
-    action: () => {
-      this.setDialogVisible(false)
+  rangeMenuInfo = [
+    {
+      key: '表达式',
+      btntitle: '表达式',
+      action: () => {
+        this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getThemeExpress(
+            ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION,
+          )
+        }
+      },
     },
-  },
-  {
-    key: '分段方法',
-    btntitle: '分段方法',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '分段方法',
+      btntitle: '分段方法',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
-  {
-    key: '颜色方案',
-    btntitle: '颜色方案',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '颜色方案',
+      btntitle: '颜色方案',
+      action: () => {
+        this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getColorGradientType(
+            ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
+          )
+        }
+      },
     },
-  },
   ]
 
   //标签
-  labelMenuInfo = [{
-    key: '表达式',
-    btntitle: '表达式',
-    action: () => {
-      this.setDialogVisible(false)
+  labelMenuInfo = [
+    {
+      key: '表达式',
+      btntitle: '表达式',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
-  {
-    key: '背景形状',
-    btntitle: '背景形状',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '背景形状',
+      btntitle: '背景形状',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
-  {
-    key: '字体',
-    btntitle: '字体',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '字体',
+      btntitle: '字体',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
-  {
-    key: '字号',
-    btntitle: '字号',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '字号',
+      btntitle: '字号',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
-  {
-    key: '旋转角度',
-    btntitle: '旋转角度',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '旋转角度',
+      btntitle: '旋转角度',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
-  {
-    key: '颜色',
-    btntitle: '颜色',
-    action: () => {
-      this.setDialogVisible(false)
+    {
+      key: '颜色',
+      btntitle: '颜色',
+      action: () => {
+        this.setDialogVisible(false)
+      },
     },
-  },
   ]
 
   constructor(props) {
     super(props)
     this.state = {
+      type: '',
       childrens: [],
       visible: false,
     }
   }
 
-  getData = type => {
+  getData = () => {
     let data
-    switch (type) {
-      case unique:
+    switch (this.state.type) {
+      case constants.THEME_UNIQUE_STYLE:
         data = this.uniqueMenuInfo
         break
-      case range:
+      case constants.THEME_RANGE_STYLE:
         data = this.rangeMenuInfo
         break
-      case label:
+      case constants.THEME_UNIQUE_LABEL:
         data = this.labelMenuInfo
+        break
+      default:
+        data = this.uniqueMenuInfo
         break
     }
     return data
   }
 
-  showMenuDialog = type => {
-    let data = this.getData(type)
+  showMenuDialog = () => {
+    let data = this.getData()
     this.setState({
       visible: true,
       childrens: data,
+    })
+  }
+
+  setMenuType = menuType => {
+    this.setState({
+      type: menuType,
     })
   }
 
@@ -173,7 +200,7 @@ export default class MenuAlertDialog extends React.Component {
     return (
       <TouchableHighlight
         activeOpacity={0.9}
-        underlayColor='#4680DF'
+        underlayColor="#4680DF"
         style={styles.btn}
         onPress={item.action}
       >
@@ -198,7 +225,11 @@ export default class MenuAlertDialog extends React.Component {
           }
         }}
       >
-        <TouchableOpacity activeOpacity = {0.8} style={{flex:1}} onPress={this._onClose}>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{ flex: 1 }}
+          onPress={this._onClose}
+        >
           <View style={styles.mainTitle}>
             <View style={styles.dialogStyle}>
               <FlatList
@@ -207,7 +238,7 @@ export default class MenuAlertDialog extends React.Component {
               />
             </View>
           </View>
-        < /TouchableOpacity>
+        </TouchableOpacity>
       </Modal>
     )
   }

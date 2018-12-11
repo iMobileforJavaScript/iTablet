@@ -1,7 +1,8 @@
 const blackTheme = {
   theme: '#2D2D2F',
+  borderLight: '#C1C0B9',
   border: '#505052',
-  blackBg: '#48484b',
+  subTheme: '#48484b',
   themeText: '#FFFFFF',
 }
 

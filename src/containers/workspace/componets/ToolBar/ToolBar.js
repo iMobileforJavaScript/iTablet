@@ -9,8 +9,13 @@ import {
   line,
   point,
   region,
+  grid,
   layerAdd,
   openData,
+  lineColorSet,
+  pointColorSet,
+  regionBeforeColorSet,
+  regionAfterColorSet,
   Map3DBaseMapList,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -24,7 +29,6 @@ import {
   TouchableOpacity,
   Image,
   Text,
-  SectionList,
   Animated,
   FlatList,
 } from 'react-native'
@@ -36,13 +40,15 @@ import {
   SCollector,
   GeoStyle,
   SMCollectorType,
-  Utility,
+  EngineType,
   SThemeCartography,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
 import ThemeColorGradientType from './ThemeColorGradientType'
+import ToolBarSectionList from './ToolBarSectionList'
+import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
 
@@ -67,6 +73,9 @@ export default class ToolBar extends React.Component {
     existFullMap: () => {},
     symbol?: Object,
     user?: Object,
+    map?: Object,
+    collection?: Object,
+    layerData: Object,
     confirm: () => {},
     showDialog: () => {},
     addGeometrySelectedListener: () => {},
@@ -78,6 +87,10 @@ export default class ToolBar extends React.Component {
     dialog: Object,
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
+    getLayers?: () => {}, // 更新数据（包括其他界面）
+    setCurrentMap?: () => {}, // 设置当前地图
+    setCollectionInfo?: () => {}, // 设置当前采集数据源信息
+    setCurrentLayer?: () => {}, // 设置当前图层
   }
 
   static defaultProps = {
@@ -122,9 +135,7 @@ export default class ToolBar extends React.Component {
       themeDatasetName: '',
       themeExpress: 'SMID',
       themeColor: 'TERRAIN',
-      layerData: Object,
       selectName: '',
-
     }
     this.isShow = false
     this.isBoxShow = true
@@ -163,6 +174,7 @@ export default class ToolBar extends React.Component {
       setSaveViewVisible: this.props.setSaveViewVisible,
       setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
       setContainerLoading: this.props.setContainerLoading,
+      getLayers: this.props.getLayers,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -398,6 +410,38 @@ export default class ToolBar extends React.Component {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ]
+        break
+      case ConstToolType.LINECOLOR_SET:
+        data = lineColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.POINTCOLOR_SET:
+        data = pointColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.REGIONBEFORECOLOR_SET:
+        data = regionBeforeColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.FLEX,
+        ]
+        break
+      case ConstToolType.REGIONAFTERCOLOR_SET:
+        data = regionAfterColorSet
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.FLEX,
         ]
         break
@@ -469,6 +513,20 @@ export default class ToolBar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_pointSuerface.png'),
           },
+          {
+            key: 'closeAllLable',
+            title: '清除标注',
+            action: () => {
+              try {
+                SScene.closeAllLabel()
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('清除失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_clear.png'),
+          },
         ]
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
         break
@@ -526,7 +584,7 @@ export default class ToolBar extends React.Component {
     return { data, buttons }
   }
 
-  getThemeExpress = async () => {
+  getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.height,
       duration: 300,
@@ -547,11 +605,11 @@ export default class ToolBar extends React.Component {
     ]
     this.setState({
       data: datalist,
-      type: ConstToolType.MAP_THEME_PARAM_EXPRESSION,
+      type: type,
     })
   }
 
-  getColorGradientType = async () => {
+  getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.height,
       duration: 300,
@@ -567,7 +625,7 @@ export default class ToolBar extends React.Component {
     ]
     this.setState({
       data: datalist,
-      type: ConstToolType.MAP_THEME_PARAM_COLOR,
+      type: type,
     })
   }
 
@@ -642,15 +700,20 @@ export default class ToolBar extends React.Component {
           this.props.user.currentUser.name +
           ConstPath.RelativePath.Datasource
         : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
-    let datasourceName = 'Collection'
+    let datasourceName = (this.props.map && this.props.map.currentMap) || ''
+
     SCollector.setDataset({
-      datasourcePath: (await Utility.appendingHomeDirectory()) + datasourcePath,
-      datasourceName,
+      datasourcePath:
+        this.props.collection.datasourceParentPath || datasourcePath,
+      datasourceName: this.props.collection.datasourceName || datasourceName,
       datasetName,
       datasetType: mType,
       style: geoStyle,
-    }).then(result => {
-      result && SCollector.startCollect(type)
+    }).then(() => {
+      SCollector.startCollect(type)
+      this.props.getLayers(-1, layers => {
+        this.props.setCurrentLayer(layers.length > 0 && layers[0])
+      })
     })
   }
 
@@ -799,14 +862,12 @@ export default class ToolBar extends React.Component {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
     }
-    if (!params.layerData) params.layerData = []
     if (this.isShow === isShow && type === this.state.type) return
     if (
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column ||
-      params.layerData !== this.state.layerData
+      params.column !== this.state.column
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
@@ -821,7 +882,6 @@ export default class ToolBar extends React.Component {
           type: type,
           tableType: params.tableType || 'normal',
           data: data,
-          layerData: params.layerData,
           buttons: buttons,
           isFullScreen:
             params && params.isFullScreen !== undefined
@@ -938,8 +998,11 @@ export default class ToolBar extends React.Component {
       SMap.setAction(Action.PAN)
     }
     this.showToolbar(false)
-    if(this.state.isTouchProgress===true||this.state.isSelectlist===true) {
-      this.setState({isTouchProgress: false, isSelectlist: false})
+    if (
+      this.state.isTouchProgress === true ||
+      this.state.isSelectlist === true
+    ) {
+      this.setState({ isTouchProgress: false, isSelectlist: false })
     }
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1007,11 +1070,12 @@ export default class ToolBar extends React.Component {
     } else {
       this.setState({ isSelectlist: false })
     }
+    this.setState({ isTouchProgress: false })
   }
 
   commit = (type = this.originType) => {
     this.showToolbar(false)
-    if (type.indexOf('MAP_EDIT_TAGGING') >= 0) {
+    if (type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
@@ -1072,12 +1136,6 @@ export default class ToolBar extends React.Component {
   }
 
   endFly = () => {
-    for (let index = 0; index < this.oldLayerList.length; index++) {
-      SScene.setSelectable(
-        this.oldLayerList[index].name,
-        this.oldLayerList[index].selectable,
-      )
-    }
     SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -1088,32 +1146,77 @@ export default class ToolBar extends React.Component {
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
   }
 
-  renderThemeListItem = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.listAction({ item, index })
-        }}
-      >
-        <Text style={styles.themeitem}>{item.title}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderListItem = ({ item, index }) => {
-    return (
-      <TouchableOpacity
-        onPress={() => {
-          this.listAction({ item, index })
-        }}
-      >
-        <Text style={styles.item}>{item.title}</Text>
-      </TouchableOpacity>
-    )
-  }
-
-  renderListSectionHeader = ({ section }) => {
-    return <Text style={styles.sectionHeader}>{section.title}</Text>
+  listThemeAction = ({ item }) => {
+    if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
+      //单值专题图表达式
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          UniqueExpression: item.title,
+          ColorGradientType: this.state.themeColor,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        // await SThemeCartography.setUniqueExpression(Params)
+        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR) {
+      //单值专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
+    ) {
+      //分段专题图表达式
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          // DatasourceAlias: this.state.themeDatasourceAlias,
+          // DatasetName: this.state.themeDatasetName,
+          RangeExpression: this.state.themeExpress,
+          // ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.setRangeExpression(Params)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
+      //分段专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          RangeExpression: this.state.themeExpress,
+          ColorGradientType: item.key,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
+        }
+        await SThemeCartography.createThemeRangeMap(Params)
+      }.bind(this)())
+    }
   }
 
   listAction = ({ item, index }) => {
@@ -1197,81 +1300,54 @@ export default class ToolBar extends React.Component {
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 打开地图
-      SMap.openMap(item.title).then(isOpen => {
-        if (isOpen) {
-          this.setVisible(false)
-          Toast.show('已为您切换到' + item.title)
-        } else {
-          Toast.show('该地图为当前地图')
-        }
+      let datasourceName = item.title.substr(
+        item.title.lastIndexOf('@') + 1,
+        item.title.length - 1,
+      )
+      let server =
+        this.props.collection.datasourceParentPath + datasourceName + '.udb'
+      let DSParams = {
+        server: server,
+        engineType: EngineType.UDB,
+        alias: datasourceName,
+      }
+      SMap.openDatasource(DSParams).then(result => {
+        result &&
+          SMap.openMap(item.title).then(isOpen => {
+            if (isOpen) {
+              Toast.show('已为您切换到' + item.title)
+              this.props.setCurrentMap(item.title)
+              this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+              this.props.setCollectionInfo({
+                datasourceName: datasourceName,
+                datasourceParentPath: this.props.collection
+                  .datasourceParentPath,
+                datasourceServer: server,
+                datasourceType: EngineType.UDB,
+              })
+              this.setVisible(false)
+            } else {
+              Toast.show('该地图为当前地图')
+            }
+          })
       })
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_EXPRESSION) {
-      //专题图表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
-        let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
-          UniqueExpression: item.title,
-          ColorGradientType: this.state.themeColor,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
-        }
-        // await SThemeCartography.setUniqueExpression(Params)
-        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)())
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_COLOR) {
-      //专题图颜色表
-      this.setState({
-        themeColor: item.key,
-      })
-      ;(async function() {
-        let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
-          UniqueExpression: this.state.themeExpress,
-          ColorGradientType: item.key,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
-        }
-        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
-      }.bind(this)())
     }
-  }
-
-  renderThemeList = () => {
-    if (this.state.data.length === 0) return
-    return (
-      <SectionList
-        sections={this.state.data}
-        renderItem={this.renderThemeListItem}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text
-            style={{
-              fontWeight: 'bold',
-              fontSize: 28,
-              padding: 10,
-              backgroundColor: 'rgb(80,80,80)',
-              color: 'white',
-            }}
-          >
-            {title}
-          </Text>
-        )}
-        keyExtractor={(item, index) => index}
-      />
-    )
   }
 
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
-      <SectionList
+      <ToolBarSectionList
         sections={this.state.data}
-        renderItem={this.renderListItem}
-        renderSectionHeader={this.renderListSectionHeader}
+        itemAction={({ item, index }) => {
+          if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
+            this.listThemeAction({ item, index })
+          } else {
+            this.listAction({ item, index })
+          }
+        }}
         keyExtractor={(item, index) => index}
       />
     )
@@ -1307,6 +1383,26 @@ export default class ToolBar extends React.Component {
         })
         break
       default:
+        {
+          let type = ''
+          switch (item.key) {
+            case constants.THEME_UNIQUE_STYLE:
+              type = constants.THEME_UNIQUE_STYLE
+              break
+            case constants.THEME_RANGE_STYLE:
+              type = constants.THEME_RANGE_STYLE
+              break
+            case constants.THEME_UNIQUE_LABEL:
+              type = constants.THEME_UNIQUE_LABEL
+              break
+          }
+          let menutoolRef =
+            this.props.getMenuAlertDialogRef &&
+            this.props.getMenuAlertDialogRef()
+          if (menutoolRef) {
+            menutoolRef.setMenuType(type)
+          }
+        }
         item.action()
         break
     }
@@ -1322,7 +1418,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.state.layerData} />
+    return <SymbolList layerData={this.props.layerData} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -1354,7 +1450,7 @@ export default class ToolBar extends React.Component {
 
   renderSelectList = () => {
     let list
-    switch (this.state.layerData.type) {
+    switch (this.props.layerData.type) {
       case 1:
         list = point
         break
@@ -1363,6 +1459,9 @@ export default class ToolBar extends React.Component {
         break
       case 5:
         list = region
+        break
+      case 83:
+        list = grid
         break
     }
     return (
@@ -1382,26 +1481,12 @@ export default class ToolBar extends React.Component {
     switch (this.state.containerType) {
       case list:
         switch (this.state.type) {
-          case 'MAP3D_BASE':
+          case ConstToolType.MAP3D_BASE:
+          case ConstToolType.MAP3D_TOOL_FLYLIST:
+          case ConstToolType.MAP3D_ATTRIBUTE:
+          case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
+          case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
             box = this.renderMap3DList()
-            break
-          case 'MAP3D_TOOL_FLYLIST':
-            box = this.renderMap3DList()
-            break
-          case 'MAP3D_ATTRIBUTE':
-            box = this.renderMap3DList()
-            break
-          case 'MAP3D_TOOL_SUERFACEMEASURE':
-            box = this.renderMap3DList()
-            break
-          case 'MAP3D_TOOL_DISTANCEMEASURE':
-            box = this.renderMap3DList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_EXPRESSION:
-            box = this.renderThemeList()
-            break
-          case ConstToolType.MAP_THEME_PARAM_COLOR:
-            box = this.renderThemeList()
             break
           default:
             box = this.renderList()
@@ -1585,9 +1670,7 @@ export default class ToolBar extends React.Component {
         )}
         {this.state.isTouchProgress &&
           this.state.isFullScreen && (
-          <TouchProgress
-            selectName={this.state.selectName}
-          />
+          <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
           <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
@@ -1688,6 +1771,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
 })

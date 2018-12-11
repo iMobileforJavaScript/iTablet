@@ -26,6 +26,9 @@ export default class Map3D extends React.Component {
     navigation: Object,
     setEditLayer: () => {},
     setLatestMap: () => {},
+    setCurrentAttribute: () => {},
+    setAttributes: () => {},
+    user: Object,
   }
 
   constructor(props) {
@@ -189,6 +192,8 @@ export default class Map3D extends React.Component {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
       }
+      this.props.setCurrentAttribute({})
+      this.props.setAttributes({})
     } catch (e) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
@@ -279,6 +284,7 @@ export default class Map3D extends React.Component {
     return (
       <ToolBar
         ref={ref => (this.toolBox = ref)}
+        user={this.props.user}
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={this.dialog}

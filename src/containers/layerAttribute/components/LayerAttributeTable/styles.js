@@ -5,7 +5,7 @@ import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: color.subTheme,
   },
   head: {
     height: scaleSize(60),
@@ -16,7 +16,7 @@ export default StyleSheet.create({
   },
   title: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: color.themeText,
   },
   row: {
     height: scaleSize(80),
@@ -26,14 +26,16 @@ export default StyleSheet.create({
     backgroundColor: color.USUAL_BLUE,
   },
   headerText: {
-    color: 'white',
+    color: color.themeText,
     textAlign: 'center',
   },
   text: {
+    // flex:1,
     textAlign: 'center',
+    color: color.themeText,
   },
   selectText: {
-    color: 'white',
+    color: color.themeText,
   },
   dataWrapper: {
     flex: 1,
@@ -41,5 +43,9 @@ export default StyleSheet.create({
   },
   textInput: {
     textAlign: 'center',
+  },
+  border: {
+    flex: 1,
+    borderColor: color.borderLight,
   },
 })

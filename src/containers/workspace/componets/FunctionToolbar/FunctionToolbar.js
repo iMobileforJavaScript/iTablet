@@ -86,7 +86,7 @@ export default class FunctionToolbar extends React.Component {
     const menuRef = this.props.getMenuAlertDialogRef()
     if (menuRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      menuRef.showMenuDialog('unique')
+      menuRef.showMenuDialog()
     }
 
     const toolRef = this.props.getToolRef()
@@ -95,6 +95,17 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: false,
         containerType: 'list',
         height: ConstToolType.THEME_HEIGHT[0],
+      })
+    }
+  }
+
+  map3Dstart = () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP3D_START, {
+        containerType: 'table',
+        height: ConstToolType.HEIGHT[1],
       })
     }
   }
@@ -191,7 +202,7 @@ export default class FunctionToolbar extends React.Component {
           containerType: 'table',
           isFullScreen: false,
           column: 4,
-          height: ConstToolType.HEIGHT[1],
+          height: ConstToolType.HEIGHT[2],
         })
       }
     })
@@ -488,22 +499,20 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
-            },
+            action: this.map3Dstart,
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          {
-            title: '底图',
-            action: this.changeBaseLayer,
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            title: '添加',
-            action: this.showAddLayer,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   title: '底图',
+          //   action: this.changeBaseLayer,
+          //   image: require('../../../../assets/function/icon_function_base_map.png'),
+          // },
+          // {
+          //   title: '添加',
+          //   action: this.showAddLayer,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             title: '标注',
             action: this.showMap3DSymbol,
@@ -513,6 +522,13 @@ export default class FunctionToolbar extends React.Component {
             title: '工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_hand_draw.png'),
+          },
+          {
+            title: '更多',
+            action: async () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break

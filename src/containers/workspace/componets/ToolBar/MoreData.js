@@ -2,7 +2,7 @@
  * 获取地图更多
  */
 import { ConstToolType } from '../../../../constants'
-import NavigationService from '../../../NavigationService'
+// import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 
 let _params = {}
@@ -14,42 +14,38 @@ function getMapMore(type, params) {
   switch (type) {
     case 'MAP_MORE_MAP3D':
       data = [
-        {
-          key: constants.OPEN,
-          title: constants.OPEN,
-          action: () => {
-            if (!_params.setToolbarVisible) return
-            _params.setToolbarVisible(false)
-            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
-          },
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-        },
-        {
-          key: constants.SAVE,
-          title: constants.SAVE,
-          size: 'large',
-          // TODO 保存地图
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_words.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-        },
+        // {
+        //   key: constants.CLOSE,
+        //   title: constants.CLOSE,
+        //   action: () => {},
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        // },
+        // {
+        //   key: constants.SAVE,
+        //   title: constants.SAVE,
+        //   size: 'large',
+        //   // TODO 保存地图
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_words.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        // },
+        // {
+        //   key: constants.SAVE_AS,
+        //   title: constants.SAVE_AS,
+        //   size: 'large',
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        // },
         {
           key: constants.SHARE,
           title: constants.SHARE,
           size: 'large',
-          action: () => {},
+          action: shareMap3D,
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        },
-        {
-          key: constants.CLOSE,
-          title: constants.CLOSE,
-          action: closeMap,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
         },
       ]
       break
@@ -121,6 +117,18 @@ function shareMap() {
   _params.showFullMap && _params.showFullMap(true)
 
   _params.setToolbarVisible(true, ConstToolType.MAP_SHARE, {
+    containerType: 'table',
+    column: 4,
+    isFullScreen: true,
+    height: ConstToolType.HEIGHT[0],
+  })
+}
+
+function shareMap3D() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  _params.setToolbarVisible(true, ConstToolType.MAP_SHARE_MAP3D, {
     containerType: 'table',
     column: 4,
     isFullScreen: true,

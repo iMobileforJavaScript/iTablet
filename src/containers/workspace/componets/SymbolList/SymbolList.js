@@ -43,7 +43,6 @@ export default class SymbolList extends React.Component {
   }
 
   renderLibrary = () => {
-    console.warn(JSON.stringify(this.props.layerData.type))
     switch (this.props.layerData.type) {
       case 3:
         SMap.findSymbolsByGroups('line', '').then(result => {
@@ -86,7 +85,7 @@ export default class SymbolList extends React.Component {
             orientation: 1,
             imageSize: 50,
             count: 5,
-            legendBackgroundColor: dataUtil.colorRgba(color.blackBg),
+            legendBackgroundColor: dataUtil.colorRgba(color.subTheme),
             textColor: dataUtil.colorRgba(color.themeText),
           }}
           onSymbolClick={this._onSymbolClick}
@@ -100,12 +99,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
   table: {
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
 })
