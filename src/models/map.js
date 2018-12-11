@@ -5,6 +5,7 @@ import { handleActions } from 'redux-actions'
 // --------------------------------------------------
 export const SET_LATEST_MAP = 'SET_LATEST_MAP'
 export const SET_MAP_VIEW = 'SET_MAP_VIEW'
+export const SET_CURRENT_MAP = 'SET_CURRENT_MAP'
 
 // Actions
 // --------------------------------------------------
@@ -24,9 +25,18 @@ export const setMapView = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
+export const setCurrentMap = (params, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_CURRENT_MAP,
+    payload: params || {},
+  })
+  cb && cb()
+}
+
 const initialState = fromJS({
   latestMap: [],
   map: {},
+  currentMap: '',
   workspace: {},
   mapControl: {},
 })
@@ -63,8 +73,17 @@ export default handleActions(
       }
       return state
     },
+    [`${SET_CURRENT_MAP}`]: (state, { payload }) => {
+      return state.setIn(['currentMap'], fromJS(payload))
+    },
     [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.map ? fromJS(payload.map) : state
+      let data = {}
+      if (payload && payload.map) {
+        data = Object.assign({}, payload.map, { currentMap: '' })
+      } else {
+        data = Object.assign({}, state.toJS(), { currentMap: '' })
+      }
+      return fromJS(data)
     },
   },
   initialState,

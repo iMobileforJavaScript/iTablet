@@ -1,4 +1,4 @@
-import { SMap , SCartography } from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/componets/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
@@ -173,7 +173,7 @@ const line = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
@@ -206,7 +206,7 @@ const line = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET, {
         containerType: 'list',
         isFullScreen: false,
         height: ConstToolType.HEIGHT[2],
@@ -227,7 +227,7 @@ const point = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
@@ -261,7 +261,7 @@ const point = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET, {
         containerType: 'list',
         isFullScreen: false,
         height: ConstToolType.HEIGHT[2],
@@ -312,7 +312,7 @@ const region = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
@@ -331,7 +331,7 @@ const region = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET, {
         containerType: 'list',
         isFullScreen: false,
         height: ConstToolType.HEIGHT[2],
@@ -349,7 +349,7 @@ const region = [
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
-      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET,{
+      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
         containerType: 'list',
         isFullScreen: false,
         height: ConstToolType.HEIGHT[2],
@@ -433,4 +433,4 @@ const grid = [
     },
   },
 ]
-export { layerAdd, BotMap, openData, line, point, region ,grid }
+export { layerAdd, BotMap, openData, line, point, region, grid }

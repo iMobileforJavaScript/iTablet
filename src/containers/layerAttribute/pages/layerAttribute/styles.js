@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
     width: '100%',
   },
   headerBtnTitle: {
@@ -26,7 +26,7 @@ export default StyleSheet.create({
   infoView: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
   },
   info: {
     fontSize: size.fontSize.fontSizeLg,

@@ -19,7 +19,12 @@ import {
   grid,
 } from './FunctionToolbarModule'
 
-import { lineColorSet ,pointColorSet ,regionBeforeColorSet ,regionAfterColorSet} from './ColorList'
+import {
+  lineColorSet,
+  pointColorSet,
+  regionBeforeColorSet,
+  regionAfterColorSet,
+} from './ColorList'
 
 export {
   ConstPath,
