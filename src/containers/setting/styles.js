@@ -35,5 +35,6 @@ export default StyleSheet.create({
   },
   itemValue: {
     color: '#C4C4C4',
+    marginRight: scaleSize(15),
   },
 })

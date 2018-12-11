@@ -43,7 +43,7 @@ export default class Map3DToolBar extends React.Component {
             if (result) {
               Toast.show('添加成功')
             } else {
-              Toast.show('添加失败，请检查网络')
+              Toast.show('添加失败')
             }
           },
         )
@@ -54,7 +54,7 @@ export default class Map3DToolBar extends React.Component {
             if (result) {
               Toast.show('添加成功')
             } else {
-              Toast.show('添加失败，请检查网络')
+              Toast.show('添加失败')
             }
           },
         )
@@ -64,7 +64,15 @@ export default class Map3DToolBar extends React.Component {
         break
     }
   }
-
+  // .then(
+  //   result => {
+  //     if (result) {
+  //       Toast.show('添加成功')
+  //     } else {
+  //       Toast.show('添加失败，请检查网络')
+  //     }
+  //   },
+  // )
   setAnalystResult = data => {
     this.setState({
       analystresult: data,

@@ -306,19 +306,20 @@ export default class MT_layerManager extends React.Component {
         Toast.show('当前图层为' + data.caption)
       })
     if (GLOBAL.Type === constants.MAP_EDIT) {
-      if(data.type === 83){
+      if (data.type === 83) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'list',
           isFullScreen: false,
           height: ConstToolType.HEIGHT[4],
         })
-      }else {
+      } else {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
           isFullScreen: false,
           column: 4,
           height: ConstToolType.HEIGHT[2],
-        })}
+        })
+      }
       GLOBAL.toolBox.showFullMap()
       NavigationService.goBack()
     }

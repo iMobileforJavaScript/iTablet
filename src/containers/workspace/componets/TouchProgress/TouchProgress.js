@@ -134,7 +134,7 @@ export default class TouchProgress extends Component {
         )
         break
       case 83:
-        if(this.props.selectName === '透明度'){
+        if (this.props.selectName === '透明度') {
           SCartography.setGridOpaqueRate(
             fillOpaqueRate,
             this.props.currentLayer.caption,

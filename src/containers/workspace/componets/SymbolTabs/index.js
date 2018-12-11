@@ -49,7 +49,7 @@ class SymbolTabs extends React.Component {
         renderTabBar={() => (
           <DefaultTabBar
             // backgroundColor={color.theme}
-            activeBackgroundColor={color.blackBg}
+            activeBackgroundColor={color.theme}
             activeTextColor={'white'}
             inactiveTextColor={'white'}
             textStyle={{
@@ -57,7 +57,7 @@ class SymbolTabs extends React.Component {
               backgroundColor: 'transparent',
             }}
             tabStyle={{
-              backgroundColor: color.theme,
+              backgroundColor: color.subTheme,
             }}
           />
         )}
@@ -96,7 +96,7 @@ class SymbolTabs extends React.Component {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 0,
-    // backgroundColor: color.blackBg,
+    // backgroundColor: color.subTheme,
   },
 })
 
