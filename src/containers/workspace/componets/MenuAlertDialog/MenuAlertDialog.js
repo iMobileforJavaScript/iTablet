@@ -87,7 +87,7 @@ export default class MenuAlertDialog extends React.Component {
     },
   ]
 
-  //标签
+  //统一标签
   labelMenuInfo = [
     {
       key: '表达式',
@@ -151,7 +151,7 @@ export default class MenuAlertDialog extends React.Component {
       case constants.THEME_RANGE_STYLE:
         data = this.rangeMenuInfo
         break
-      case constants.THEME_UNIQUE_LABEL:
+      case constants.THEME_UNIFY_LABEL:
         data = this.labelMenuInfo
         break
       default:

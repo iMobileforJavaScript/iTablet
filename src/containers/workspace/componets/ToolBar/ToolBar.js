@@ -1374,8 +1374,8 @@ export default class ToolBar extends React.Component {
             case constants.THEME_RANGE_STYLE:
               type = constants.THEME_RANGE_STYLE
               break
-            case constants.THEME_UNIQUE_LABEL:
-              type = constants.THEME_UNIQUE_LABEL
+            case constants.THEME_UNIFY_LABEL:
+              type = constants.THEME_UNIFY_LABEL
               break
           }
           let menutoolRef = this.props.getMenuAlertDialogRef()
@@ -1504,7 +1504,12 @@ export default class ToolBar extends React.Component {
         box = this.renderTable()
     }
     return (
-      <Animated.View style={{ height: this.state.boxHeight }}>
+      < Animated.View style = {
+        {
+          height: this.state.boxHeight,
+          backgroundColor: 'rgb(80,80,80)',
+        }
+      } >
         {box}
       </Animated.View>
     )
