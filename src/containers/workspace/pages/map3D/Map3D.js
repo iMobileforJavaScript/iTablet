@@ -44,7 +44,7 @@ export default class Map3D extends React.Component {
       inputText: '',
       placeholder: false,
     }
-    this.path = params.path
+    this.path = params.path || ''
     this.type = params.type || 'MAP_3D'
     // this._addScene2(params.path)
     // this.listenevent=this.addListen()
