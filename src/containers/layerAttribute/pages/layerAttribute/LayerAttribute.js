@@ -5,17 +5,16 @@
  */
 
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Dimensions } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-import { scaleSize } from '../../../../utils'
+// import { scaleSize } from '../../../../utils'
 import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
-
 export default class LayerAttribute extends React.Component {
   props: {
     navigation: Object,
@@ -76,7 +75,7 @@ export default class LayerAttribute extends React.Component {
     this.props.setCurrentAttribute({})
   }
 
-  getMap3DAttribute = async () => {
+  getMap3DAttribute = async cb => {
     let data = await SScene.getLableAttributeList()
     let list = []
     for (let index = 0; index < data.length; index++) {
@@ -100,11 +99,14 @@ export default class LayerAttribute extends React.Component {
       list.push(item)
     }
     this.props.setAttributes(list)
-    this.setState({
-      showTable: true,
-    })
-    // console.log(list,data)
-    return
+    this.setState(
+      {
+        showTable: true,
+      },
+      () => {
+        cb && cb()
+      },
+    )
   }
 
   getAttribute = () => {
@@ -171,7 +173,13 @@ export default class LayerAttribute extends React.Component {
   }
 
   renderToolBar = () => {
-    return <MapToolbar navigation={this.props.navigation} initIndex={2} />
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={2}
+        type={this.type}
+      />
+    )
   }
 
   render() {
@@ -202,7 +210,8 @@ export default class LayerAttribute extends React.Component {
                 // data={this.state.attribute}
                 // tableHead={this.state.tableHead}
                 // tableTitle={this.state.tableTitle}
-                NormalrowStyle={{ width: scaleSize(720) }}
+                refresh={this.getMap3DAttribute}
+                NormalrowStyle={{ width: Dimensions.get('window').width }}
                 type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
                 selectRow={this.selectRow}
               />

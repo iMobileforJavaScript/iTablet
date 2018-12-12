@@ -141,7 +141,7 @@ export default class MapToolbar extends React.Component {
               // SScene.doZipFiles(file,toPath)
               // Utility.unZipFile(toPath,path)
               this.props.navigation &&
-                this.props.navigation.navigate('Setting', {})
+                this.props.navigation.navigate('Map3DSetting', {})
             },
           },
         ]
