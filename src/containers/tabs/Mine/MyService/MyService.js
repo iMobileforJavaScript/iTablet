@@ -130,7 +130,7 @@ export default class MyService extends Component{
       />
     }
     return <View>
-      <Text style={[styles.titleTextStyle,{backgroundColor:'#505052',textAlign:'center'}]}>没有服务</Text>
+      <Text style={[styles.titleTextStyle,{backgroundColor:'#353537',textAlign:'center'}]}>没有服务</Text>
     </View>
   }
 
@@ -257,7 +257,6 @@ export default class MyService extends Component{
             height:50,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#fff',
           }}
         >
           <ActivityIndicator

@@ -202,10 +202,10 @@ export default class Login extends React.Component {
     }
   }
   _onSelectTitle =()=>{
-    this.txtEmailPassword=''
-    this.txtEmail=''
-    this.txtPhoneNumber=''
-    this.txtPhonePassword=''
+    // this.txtEmailPassword=''
+    // this.txtEmail=''
+    // this.txtPhoneNumber=''
+    // this.txtPhonePassword=''
     if(this.state.onEmailTitleFocus){
       return this._renderEmail()
     }else {
