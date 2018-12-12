@@ -34,7 +34,7 @@ export default class Mine extends Component {
     // }
     //
     // let getImage = fetch('https://www.supermapol.com/proxy/iserver/services/map_beijing_new/rest/maps/beijing/entireImage.png',headers)
-    NavigationService.navigate('MyData')
+    NavigationService.navigate('MyOnlineData')
   }
 
   goToMyService = () => {

@@ -77,7 +77,7 @@ export default class Personal extends Component {
         title="退出登录"
         onPress={this.logout}
         activeOpacity={0.8}
-        type="RED"
+        type="GRAY"
       />
     )
   }

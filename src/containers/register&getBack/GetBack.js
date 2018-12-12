@@ -31,7 +31,7 @@ export default class GetBack extends React.Component {
       <Container
         style={styles.container}
         headerProps={{
-          title: 'iTablet注册',
+          title: 'iTablet找回密码',
           navigation: this.props.navigation,
         }}
       >
