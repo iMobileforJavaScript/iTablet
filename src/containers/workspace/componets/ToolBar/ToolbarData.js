@@ -711,7 +711,9 @@ function getThemeMapParam(type) {
   return { data, buttons }
 }
 
-let DatasourceAlias = '', DatasetName = '', Expression = ''
+let DatasourceAlias = '',
+  DatasetName = '',
+  Expression = ''
 
 function setThemeParams(datasourceAlias, datasetName, uniqueExpression) {
   DatasourceAlias = datasourceAlias
@@ -970,22 +972,22 @@ function getStart(type) {
           image: require('../../../../assets/mapTools/icon_point.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point.png'),
         },
-        {
-          key: constants.CREATE,
-          title: constants.CREATE,
-          size: 'large',
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_words.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-        },
-        {
-          key: constants.HISTORY,
-          title: constants.HISTORY,
-          size: 'large',
-          action: () => {},
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-        },
+        // {
+        //   key: constants.CREATE,
+        //   title: constants.CREATE,
+        //   size: 'large',
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_words.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+        // },
+        // {
+        //   key: constants.HISTORY,
+        //   title: constants.HISTORY,
+        //   size: 'large',
+        //   action: () => {},
+        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
@@ -996,16 +998,16 @@ function getStart(type) {
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: () => {
-            add('MAP_3D')
-          },
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: () => {
+        //     add('MAP_3D')
+        //   },
+        //   image: require('../../../../assets/mapTools/icon_free_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        // },
       ]
       break
   }

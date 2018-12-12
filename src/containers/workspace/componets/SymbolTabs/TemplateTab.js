@@ -120,13 +120,13 @@ const styles = StyleSheet.create({
   sectionHeader: {
     height: scaleSize(60),
     justifyContent: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
     paddingHorizontal: scaleSize(30),
   },
   listItem: {
     height: scaleSize(60),
     justifyContent: 'center',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.subTheme,
     paddingHorizontal: scaleSize(30),
   },
   listItemTitle: {

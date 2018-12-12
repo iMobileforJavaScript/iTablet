@@ -5,15 +5,16 @@
  */
 
 import * as React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, Dimensions } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
+// import { scaleSize } from '../../../../utils'
+import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
-
 export default class LayerAttribute extends React.Component {
   props: {
     navigation: Object,
@@ -21,6 +22,7 @@ export default class LayerAttribute extends React.Component {
     currentLayer: Object,
     selection: Object,
     attributes: Object,
+    setAttributes: () => {},
     setCurrentAttribute: () => {},
     getAttributes: () => {},
   }
@@ -46,7 +48,11 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
-    this.getAttribute()
+    if (this.type === 'MAP_3D') {
+      this.getMap3DAttribute()
+    } else {
+      this.getAttribute()
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -67,6 +73,40 @@ export default class LayerAttribute extends React.Component {
 
   componentWillUnmount() {
     this.props.setCurrentAttribute({})
+  }
+
+  getMap3DAttribute = async cb => {
+    let data = await SScene.getLableAttributeList()
+    let list = []
+    for (let index = 0; index < data.length; index++) {
+      let item = [
+        {
+          fieldInfo: { caption: 'id' },
+          name: 'id',
+          value: data[index].id,
+        },
+        {
+          fieldInfo: { caption: 'name' },
+          name: 'name',
+          value: data[index].name,
+        },
+        {
+          fieldInfo: { caption: 'description' },
+          name: 'description',
+          value: data[index].description,
+        },
+      ]
+      list.push(item)
+    }
+    this.props.setAttributes(list)
+    this.setState(
+      {
+        showTable: true,
+      },
+      () => {
+        cb && cb()
+      },
+    )
   }
 
   getAttribute = () => {
@@ -133,7 +173,13 @@ export default class LayerAttribute extends React.Component {
   }
 
   renderToolBar = () => {
-    return <MapToolbar navigation={this.props.navigation} initIndex={2} />
+    return (
+      <MapToolbar
+        navigation={this.props.navigation}
+        initIndex={2}
+        type={this.type}
+      />
+    )
   }
 
   render() {
@@ -156,16 +202,32 @@ export default class LayerAttribute extends React.Component {
         {/*/>*/}
         {this.state.showTable ? (
           this.props.attributes.head.length > 0 ? (
-            <LayerAttributeTable
-              ref={ref => (this.table = ref)}
-              data={this.props.attributes.data}
-              tableHead={this.props.attributes.head}
-              // data={this.state.attribute}
-              // tableHead={this.state.tableHead}
-              // tableTitle={this.state.tableTitle}
-              type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-              selectRow={this.selectRow}
-            />
+            this.type === 'MAP_3D' ? (
+              <LayerAttributeTable
+                ref={ref => (this.table = ref)}
+                data={this.props.attributes.data}
+                tableHead={this.props.attributes.head}
+                // data={this.state.attribute}
+                // tableHead={this.state.tableHead}
+                // tableTitle={this.state.tableTitle}
+                refresh={this.getMap3DAttribute}
+                NormalrowStyle={{ width: Dimensions.get('window').width }}
+                type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
+                selectRow={this.selectRow}
+              />
+            ) : (
+              <LayerAttributeTable
+                ref={ref => (this.table = ref)}
+                data={this.props.attributes.data}
+                tableHead={this.props.attributes.head}
+                // data={this.state.attribute}
+                // tableHead={this.state.tableHead}
+                // tableTitle={this.state.tableTitle}
+                // NormalrowStyle={{width:scaleSize(720)}}
+                type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
+                selectRow={this.selectRow}
+              />
+            )
           ) : (
             <View style={styles.infoView}>
               <Text style={styles.info}>当前图层属性不可见</Text>

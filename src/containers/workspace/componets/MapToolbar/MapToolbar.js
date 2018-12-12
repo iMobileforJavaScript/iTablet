@@ -122,8 +122,10 @@ export default class MapToolbar extends React.Component {
             image: require('../../../../assets/mapToolbar/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
             btnClick: () => {
-              // this.props.navigation &&
-              //   this.props.navigation.navigate('LayerAttribute')
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAttribute', {
+                  type: 'MAP_3D',
+                })
             },
           },
           {
@@ -139,7 +141,7 @@ export default class MapToolbar extends React.Component {
               // SScene.doZipFiles(file,toPath)
               // Utility.unZipFile(toPath,path)
               this.props.navigation &&
-                this.props.navigation.navigate('Setting', {})
+                this.props.navigation.navigate('Map3DSetting', {})
             },
           },
         ]

@@ -26,6 +26,8 @@ export default class Map3D extends React.Component {
     navigation: Object,
     setEditLayer: () => {},
     setLatestMap: () => {},
+    setCurrentAttribute: () => {},
+    setAttributes: () => {},
     user: Object,
   }
 
@@ -42,7 +44,7 @@ export default class Map3D extends React.Component {
       inputText: '',
       placeholder: false,
     }
-    this.path = params.path
+    this.path = params.path || ''
     this.type = params.type || 'MAP_3D'
     // this._addScene2(params.path)
     // this.listenevent=this.addListen()
@@ -190,6 +192,11 @@ export default class Map3D extends React.Component {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
       }
+      if (GLOBAL.Map3DSymbol) {
+        SScene.clearAllLabel()
+      }
+      this.props.setCurrentAttribute({})
+      this.props.setAttributes({})
     } catch (e) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
@@ -284,6 +291,7 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={this.dialog}
+        setAttributes={this.props.setAttributes}
       />
     )
   }

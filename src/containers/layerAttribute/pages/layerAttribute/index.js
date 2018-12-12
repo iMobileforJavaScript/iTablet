@@ -1,6 +1,10 @@
 import { connect } from 'react-redux'
 import LayerAttribute from './LayerAttribute'
-import { setCurrentAttribute, getAttributes } from '../../../../models/layers'
+import {
+  setCurrentAttribute,
+  getAttributes,
+  setAttributes,
+} from '../../../../models/layers'
 
 const mapStateToProps = state => ({
   currentAttribute: state.layers.toJS().currentAttribute,
@@ -12,6 +16,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   setCurrentAttribute,
   getAttributes,
+  setAttributes,
 }
 
 export default connect(

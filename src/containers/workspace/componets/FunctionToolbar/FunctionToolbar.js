@@ -94,7 +94,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
         isFullScreen: false,
         containerType: 'list',
-        height: ConstToolType.THEME_HEIGHT[0],
+        height: ConstToolType.THEME_HEIGHT[1],
       })
     }
   }
@@ -105,7 +105,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP3D_START, {
         containerType: 'table',
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.HEIGHT[1],
       })
     }
   }
@@ -191,10 +191,10 @@ export default class FunctionToolbar extends React.Component {
 
   showMap3DSymbol = async () => {
     SScene.checkoutListener('startLabelOperate')
-    SScene.getLayerList().then(layerList => {
+    GLOBAL.Map3DSymbol = true
+    SScene.getLayerList().then(() => {
       const toolRef = this.props.getToolRef()
       if (toolRef) {
-        toolRef.getOldLayerList(layerList)
         // SScene.setAllLayersSelection(false)
         this.props.showFullMap && this.props.showFullMap(true)
         // TODO 根据符号类型改变ToolBox内容
@@ -539,47 +539,59 @@ export default class FunctionToolbar extends React.Component {
             title: '开始',
             action: this.startTheme,
             size: 'large',
+            selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_theme_start.png'),
+            selectedImage: require('../../../../assets/function/icon_function_theme_start.png'),
           },
           {
             key: '专题图',
             title: '专题图',
             action: this.showThemeCreate,
             size: 'large',
-            image: require('../../../../assets/function/icon_function_theme_create.png'),
             selectMode: 'flash',
+            image: require('../../../../assets/function/icon_function_theme_create.png'),
+            selectedImage: require('../../../../assets/function/icon_function_theme_create.png'),
           },
           {
             key: '参数',
             title: '参数',
             size: 'large',
+            selectMode: 'flash',
             action: this.showMenuAlertDialog,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
-            selectMode: 'flash',
+            selectedImage: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
             key: '标注',
             title: '标注',
             size: 'large',
-            image: require('../../../../assets/function/icon_function_theme_label.png'),
             selectMode: 'flash',
+            image: require('../../../../assets/function/icon_function_theme_label.png'),
+            selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
           },
           {
             key: '工具',
             title: '工具',
             size: 'large',
-            image: require('../../../../assets/function/icon_function_theme_tools.png'),
             selectMode: 'flash',
+            image: require('../../../../assets/function/icon_function_theme_tools.png'),
+            selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
           },
           {
             key: '撤销',
             title: '撤销',
+            size: 'large',
+            selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_theme_revert.png'),
+            selectedImage: require('../../../../assets/function/icon_function_theme_revert.png'),
           },
           {
             key: '更多',
             title: '更多',
+            size: 'large',
+            selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_theme_more.png'),
+            selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),
           },
         ]
         break

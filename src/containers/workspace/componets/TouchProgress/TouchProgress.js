@@ -101,6 +101,7 @@ export default class TouchProgress extends Component {
     let pointAlpha = (x / (positionWidth - scaleSize(60))) * 100
     let pointAngle = (x / (positionWidth - scaleSize(60))) * 360
     let fillOpaqueRate = (x / (positionWidth - scaleSize(60))) * 100
+    let gridStyle = (x / (positionWidth - scaleSize(60))) * 200
     switch (layerType) {
       case 1:
         if (this.props.selectName === '大小') {
@@ -131,6 +132,42 @@ export default class TouchProgress extends Component {
           fillOpaqueRate,
           this.props.currentLayer.caption,
         )
+        break
+      case 83:
+        if (this.props.selectName === '透明度') {
+          SCartography.setGridOpaqueRate(
+            fillOpaqueRate,
+            this.props.currentLayer.caption,
+          )
+        } else if (this.props.selectName === '对比度') {
+          if (gridStyle <= 100) {
+            let gridBrigh = -(100 - gridStyle)
+            SCartography.setGridBrightness(
+              gridBrigh,
+              this.props.currentLayer.caption,
+            )
+          } else if (gridStyle > 100) {
+            let gridBrigh = gridStyle - 100
+            SCartography.setGridBrightness(
+              gridBrigh,
+              this.props.currentLayer.caption,
+            )
+          }
+        } else if (this.props.selectName === '亮度') {
+          if (gridStyle <= 100) {
+            let gridContrast = -(100 - gridStyle)
+            SCartography.setGridContrast(
+              gridContrast,
+              this.props.currentLayer.caption,
+            )
+          } else if (gridStyle > 100) {
+            let gridContrast = gridStyle - 100
+            SCartography.setGridContrast(
+              gridContrast,
+              this.props.currentLayer.caption,
+            )
+          }
+        }
         break
     }
   }

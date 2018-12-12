@@ -33,7 +33,9 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION)
+          toolRef.getThemeExpress(
+            ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION,
+          )
         }
       },
     },
@@ -45,7 +47,9 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR)
+          toolRef.getColorGradientType(
+            ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
+          )
         }
       },
     },
@@ -59,10 +63,11 @@ export default class MenuAlertDialog extends React.Component {
       action: () => {
         this.setDialogVisible(false)
 
-
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getThemeExpress(ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION)
+          toolRef.getThemeExpress(
+            ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION,
+          )
         }
       },
     },
@@ -71,6 +76,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '分段方法',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getRangeMode(
+            ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
+          )
+        }
       },
     },
     {
@@ -81,13 +93,15 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getColorGradientType(ConstToolType.MAP_THEME_PARAM_RANGE_COLOR)
+          toolRef.getColorGradientType(
+            ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
+          )
         }
       },
     },
   ]
 
-  //标签
+  //统一标签
   labelMenuInfo = [
     {
       key: '表达式',
@@ -151,7 +165,7 @@ export default class MenuAlertDialog extends React.Component {
       case constants.THEME_RANGE_STYLE:
         data = this.rangeMenuInfo
         break
-      case constants.THEME_UNIQUE_LABEL:
+      case constants.THEME_UNIFY_LABEL:
         data = this.labelMenuInfo
         break
       default:

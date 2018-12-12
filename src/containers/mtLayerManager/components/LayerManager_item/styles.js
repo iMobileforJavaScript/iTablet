@@ -36,7 +36,7 @@ export default StyleSheet.create({
   },
   btn: {
     height: scaleSize(50),
-    width: scaleSize(50),
+    width: scaleSize(100),
     marginLeft: scaleSize(6),
     marginRight: scaleSize(6),
     justifyContent: 'center',
