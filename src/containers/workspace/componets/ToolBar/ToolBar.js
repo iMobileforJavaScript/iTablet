@@ -91,6 +91,7 @@ export default class ToolBar extends React.Component {
     setCurrentMap?: () => {}, // 设置当前地图
     setCollectionInfo?: () => {}, // 设置当前采集数据源信息
     setCurrentLayer?: () => {}, // 设置当前图层
+    setAttributes?: () => {},
   }
 
   static defaultProps = {
@@ -1004,7 +1005,9 @@ export default class ToolBar extends React.Component {
     ) {
       SCollector.stopCollect()
     }
-    if (
+    if (type === ConstToolType.MAP_EDIT_TAGGING) {
+      SMap.setAction(Action.PAN)
+    } else if (
       typeof type === 'string' &&
       type.indexOf('MAP_EDIT_') >= 0 &&
       type !== ConstToolType.MAP_EDIT_DEFAULT
@@ -1040,6 +1043,7 @@ export default class ToolBar extends React.Component {
   closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.Map3DSymbol = false
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1050,9 +1054,36 @@ export default class ToolBar extends React.Component {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  getMap3DAttribute = async () => {
+    let data = await SScene.getLableAttributeList()
+    let list = []
+    for (let index = 0; index < data.length; index++) {
+      let item = [
+        {
+          fieldInfo: { caption: 'id' },
+          name: 'id',
+          value: data[index].id,
+        },
+        {
+          fieldInfo: { caption: 'name' },
+          name: 'name',
+          value: data[index].name,
+        },
+        {
+          fieldInfo: { caption: 'description' },
+          name: 'description',
+          value: data[index].description,
+        },
+      ]
+      list.push(item)
+    }
+    this.props.setAttributes && this.props.setAttributes(list)
+  }
+
   symbolSave = () => {
     try {
       SScene.save()
+      this.getMap3DAttribute()
       Toast.show('保存成功')
     } catch (error) {
       Toast.show('保存失败')
@@ -1070,11 +1101,6 @@ export default class ToolBar extends React.Component {
   getType = () => {
     return this.type
   }
-
-  getOldLayerList = data => {
-    this.oldLayerList = data
-  }
-
   menu = () => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.isBoxShow ? 0 : this.height,
@@ -1572,11 +1598,11 @@ export default class ToolBar extends React.Component {
         action = () => {}
       switch (type) {
         case ToolbarBtnType.CANCEL:
-          image = require('../../../../assets/mapEdit/cancel.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_close.png')
           action = this.close
           break
         case ToolbarBtnType.FLEX:
-          image = require('../../../../assets/mapEdit/flex.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
           action = this.showBox
           break
         case ToolbarBtnType.STYLE:
@@ -1584,15 +1610,15 @@ export default class ToolBar extends React.Component {
           action = this.showBox
           break
         case ToolbarBtnType.COMMIT:
-          image = require('../../../../assets/mapEdit/commit.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.commit
           break
         case ToolbarBtnType.MENU:
-          image = require('../../../../assets/mapEdit/menu.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menu
           break
         case ToolbarBtnType.MENUS:
-          image = require('../../../../assets/mapEdit/menu.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menus
           break
         case ToolbarBtnType.CLOSE_ANALYST:

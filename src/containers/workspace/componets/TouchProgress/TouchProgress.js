@@ -138,29 +138,30 @@ export default class TouchProgress extends Component {
           SCartography.setGridOpaqueRate(
             fillOpaqueRate,
             this.props.currentLayer.caption,
-          )}else if(this.props.selectName === '对比度'){
-          if(gridStyle<=100){
-            let gridBrigh = -(100-gridStyle)
+          )
+        } else if (this.props.selectName === '对比度') {
+          if (gridStyle <= 100) {
+            let gridBrigh = -(100 - gridStyle)
             SCartography.setGridBrightness(
               gridBrigh,
               this.props.currentLayer.caption,
             )
-          }else if(gridStyle>100){
-            let gridBrigh = gridStyle-100
+          } else if (gridStyle > 100) {
+            let gridBrigh = gridStyle - 100
             SCartography.setGridBrightness(
               gridBrigh,
               this.props.currentLayer.caption,
             )
           }
-        }else if(this.props.selectName === '亮度'){
-          if(gridStyle<=100){
-            let gridContrast = -(100-gridStyle)
+        } else if (this.props.selectName === '亮度') {
+          if (gridStyle <= 100) {
+            let gridContrast = -(100 - gridStyle)
             SCartography.setGridContrast(
               gridContrast,
               this.props.currentLayer.caption,
             )
-          }else if(gridStyle>100){
-            let gridContrast = gridStyle-100
+          } else if (gridStyle > 100) {
+            let gridContrast = gridStyle - 100
             SCartography.setGridContrast(
               gridContrast,
               this.props.currentLayer.caption,

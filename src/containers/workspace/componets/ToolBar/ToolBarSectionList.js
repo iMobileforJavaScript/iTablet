@@ -49,10 +49,10 @@ export default class ToolBarSectionList extends React.Component {
     }
     return (
       <TouchableOpacity
-        style={[styles.item, this.props.itemStyle]}
+        style={[styles.item, this.props.itemStyle,item.backgroundColor&&{backgroundColor:item.backgroundColor}]}
         onPress={() => this.itemAction({ item, index })}
       >
-        <Text style={styles.itemTitle}>{item.title}</Text>
+        {item.title&&<Text style={styles.itemTitle}>{item.title}</Text>}
       </TouchableOpacity>
     )
   }
