@@ -98,7 +98,7 @@ export default class Login extends React.Component {
         }
         this.container.setLoading(true, '登录中...')
         userName = this.txtPhoneNumber
-        password = this.txtPhonePassword
+        password = this.txtPhoneNumberPassword
         result =await SOnlineService.loginWithPhoneNumber(userName,password)
       }
 
@@ -110,7 +110,6 @@ export default class Login extends React.Component {
           userName: userName,
           password: password,
         })
-        return
       }else {
         this.props.setUser({
           userName: '',
@@ -134,7 +133,9 @@ export default class Login extends React.Component {
     return <View >
       <TextInput
         clearButtonMode={'while-editing'}
+        keyboardType={'email-address'}
         placeholder={'请输入邮箱或昵称'}
+        defaultValue={''}
         style={styles.textInputStyle}
         onChangeText = {
           text => {
@@ -145,6 +146,7 @@ export default class Login extends React.Component {
       <TextInput
         clearButtonMode={'while-editing'}
         secureTextEntry={true}
+        defaultValue={''}
         placeholder={'请输入密码'}
         style={styles.textInputStyle}
         onChangeText = {
@@ -162,6 +164,8 @@ export default class Login extends React.Component {
       <TextInput
         clearButtonMode={'while-editing'}
         placeholder={'请输入手机号'}
+        defaultValue={''}
+        keyboardType = {'number-pad'}
         style={styles.textInputStyle}
         onChangeText = {
           text => {
@@ -173,10 +177,11 @@ export default class Login extends React.Component {
         clearButtonMode={'while-editing'}
         secureTextEntry={true}
         placeholder={'请输入密码'}
+        defaultValue={''}
         style={styles.textInputStyle}
         onChangeText = {
           text => {
-            this.txtPhonePassword=text
+            this.txtPhoneNumberPassword=text
           }
         }
       />
@@ -202,10 +207,6 @@ export default class Login extends React.Component {
     }
   }
   _onSelectTitle =()=>{
-    // this.txtEmailPassword=''
-    // this.txtEmail=''
-    // this.txtPhoneNumber=''
-    // this.txtPhonePassword=''
     if(this.state.onEmailTitleFocus){
       return this._renderEmail()
     }else {
