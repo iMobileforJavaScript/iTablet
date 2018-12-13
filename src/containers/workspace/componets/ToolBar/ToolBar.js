@@ -51,6 +51,7 @@ import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
+import ColorTableList from '../../../../components/ColorTableList'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -587,7 +588,7 @@ export default class ToolBar extends React.Component {
 
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[1],
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -607,14 +608,14 @@ export default class ToolBar extends React.Component {
       data: datalist,
       type: type,
     }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[1]
+      this.height = ConstToolType.THEME_HEIGHT[4]
     },
     )
   }
 
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[1],
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -631,14 +632,14 @@ export default class ToolBar extends React.Component {
       data: datalist,
       type: type,
     }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[1]
+      this.height = ConstToolType.THEME_HEIGHT[4]
     },
     )
   }
 
   getRangeMode = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[0],
+      toValue: ConstToolType.THEME_HEIGHT[2],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -647,18 +648,20 @@ export default class ToolBar extends React.Component {
     this.setState(
       {
         containerType: 'table',
+        column: 4,
+        tableType: 'normal',
         data: date,
         type: type,
       }
       ,() => {
-        this.height = ConstToolType.THEME_HEIGHT[0]
+        this.height = ConstToolType.THEME_HEIGHT[2]
       },
     )
   }
 
   getLabelBackShape = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[0],
+      toValue: ConstToolType.THEME_HEIGHT[2],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -666,10 +669,69 @@ export default class ToolBar extends React.Component {
     let date = await ThemeMenuData.getLabelBackShape()
     this.setState({
       containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[2]
+    }, )
+  }
+
+  getLabelFontName = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontName()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[3]
+    }, )
+  }
+
+  getLabelFontRotation = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[0],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontRotation()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
       data: date,
       type: type,
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[0]
+    }, )
+  }
+
+  getLabelFontColor = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[2],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontColor()
+    this.setState({
+      containerType: 'colortable',
+      column: 8,
+      tableType: 'scroll',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[2]
     }, )
   }
 
@@ -1469,6 +1531,17 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  renderColorTable = () => {
+    return (
+      <ColorTableList
+        data={this.state.data}
+        type={this.state.tableType}
+        numColumns={this.state.column}
+        renderCell={this._renderItem}
+      />
+    )
+  }
+
   itemaction = async item => {
     switch (item.key) {
       case 'psDistance':
@@ -1550,6 +1623,7 @@ export default class ToolBar extends React.Component {
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
+        background={item.background}
         onPress={() => {
           this.itemaction(item)
         }}
@@ -1618,6 +1692,9 @@ export default class ToolBar extends React.Component {
         break
       case symbol:
         box = this.renderSymbol()
+        break
+      case 'colortable':
+        box = this.renderColorTable()
         break
       case table:
       default:

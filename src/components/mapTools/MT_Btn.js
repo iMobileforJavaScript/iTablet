@@ -39,6 +39,7 @@ export default class MT_Btn extends React.Component {
     separator?: number,
     onPressIn?: () => {},
     onPressOut?: () => {},
+    background: string,
   }
 
   static defaultProps = {
@@ -152,6 +153,18 @@ export default class MT_Btn extends React.Component {
               ]}
             >
               {this.props.title}
+            </Text>
+          )}
+          {!image && !this.props.title && this.props.background && (
+            <Text
+              style={[
+                { height: scaleSize(80) },
+                { width: scaleSize(80) },
+                { backgroundColor: this.props.background },
+                // { marginTop: scaleSize(20) },
+                // { marginBottom: scaleSize(20) },
+              ]}
+            >
             </Text>
           )}
         </View>

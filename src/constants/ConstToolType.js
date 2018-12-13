@@ -95,5 +95,13 @@ export default {
     scaleSize(720),
     scaleSize(0),
   ],
-  THEME_HEIGHT: [scaleSize(250), scaleSize(500)],
+  THEME_HEIGHT: [
+    scaleSize(100),
+    scaleSize(150),
+    scaleSize(250),
+    scaleSize(400),
+    scaleSize(500),
+    scaleSize(600),
+    scaleSize(700),
+  ],
 }

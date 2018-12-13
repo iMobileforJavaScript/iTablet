@@ -136,6 +136,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '字体',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontName(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+          )
+        }
       },
     },
     {
@@ -150,6 +157,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '旋转角度',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontRotation(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+          )
+        }
       },
     },
     {
@@ -157,6 +171,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '颜色',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontColor(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR,
+          )
+        }
       },
     },
   ]
