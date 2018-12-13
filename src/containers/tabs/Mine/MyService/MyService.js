@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
-import { SOnlineService,Utility } from 'imobile_for_reactnative'
+import { SOnlineService, } from 'imobile_for_reactnative'
 import styles from './Styles'
 import PopupModal from "./PopupModal";
 import Toast from "../../../../utils/Toast";
@@ -37,8 +37,8 @@ export default class MyService extends Component{
         {title:'共有服务',data:_arrPublishServiceList}],
       modalIsVisible:false,
       isRefreshing:false,
-      isLoadingData:false,
     }
+    this.serviceListTotal= -1
     this._initSectionsData(1,_iServicePageSize)
     this._renderItem = this._renderItem.bind(this)
     this._renderSectionHeader=this._renderSectionHeader.bind(this)
@@ -112,6 +112,7 @@ export default class MyService extends Component{
   _renderItem (info){
     let restTitle = info.item.restTitle
     if(restTitle!== undefined){
+      let index = info.index
       let imageUri = info.item.thumbnail
       let isPublish = info.item.isPublish
       let itemId = info.item.id
@@ -121,6 +122,7 @@ export default class MyService extends Component{
         restTitle={restTitle}
         isPublish={isPublish}
         itemId={ itemId}
+        index = {index}
       />
     }
     return <View>
@@ -135,10 +137,11 @@ export default class MyService extends Component{
     return item.id
   }
 
-  _onItemPress=(isPublish,itemId,restTitle)=>{
+  _onItemPress=(isPublish,itemId,restTitle,index)=>{
     this.onClickItemId = itemId
     this.onClickItemRestTitle = restTitle
     this.onClickItemIsPublish = isPublish
+    this.onClickItemIndex = index
     this.setState({modalIsVisible:true})
   }
 
@@ -149,12 +152,14 @@ export default class MyService extends Component{
   _renderModal= ()=>{
     if(this.state.modalIsVisible){
       return <PopupModal
-        onRefresh={this._onModalRefresh}
+        onRefresh={this._onModalRefresh2}
         onModalClick={this._onModalClick}
         modalVisible={(this.state.modalIsVisible)}
         title = {this.onClickItemRestTitle}
         isPublish={this.onClickItemIsPublish}
-        itemId ={this.onClickItemId}/>
+        itemId ={this.onClickItemId}
+        index={this.onClickItemIndex}
+      />
     }
   }
 
@@ -166,59 +171,45 @@ export default class MyService extends Component{
     }
   }
 
-  _onModalRefresh2 = async (itemId,isPublish,isDelete)=>{
-
-    let index = 99999
-    if(isPublish){
-      let length = _arrPublishServiceList.length
-
-      if(_arrPrivateServiceList.length >0 && _arrPrivateServiceList[0].restTitle === undefined){
-        _arrPrivateServiceList.splice(0,1)
-      }
-
-      for(let i = 0;i < length;i++){
-
-        let objService = _arrPublishServiceList[i]
-        let id = objService.id
-        if(id === itemId){
-          index = i
-          break
+  _onModalRefresh2 = async (itemId,isPublish,isDelete,index)=>{
+    if(index !== undefined){
+      if(isPublish){
+        let objPublishList = _arrPublishServiceList[index]
+        let strRestTitle=objPublishList.restTitle
+        let strThumbnail=objPublishList.thumbnail
+        let strID=objPublishList.id
+        let bIsPublish = false
+        let strSectionsData = '{"restTitle":"'+ strRestTitle+
+          '","thumbnail":"'+strThumbnail+
+          '","id":"'+strID+
+          '","isPublish":'+bIsPublish
+          +'}'
+        let objPrivateList= JSON.parse(strSectionsData)
+        _arrPrivateServiceList.push(objPrivateList)
+        _arrPublishServiceList.splice(index,1)
+        if(_arrPublishServiceList.length === 0){
+          _arrPublishServiceList.push({})
         }
-      }
-      if(index  !== 99999){
-        if(typeof isDelete === 'boolean' && isDelete){
-          _arrPublishServiceList.splice(index,1)
-        }else{
-          _arrPrivateServiceList.push(_arrPublishServiceList[index])
-          _arrPublishServiceList.splice(index,1)
+      }else{
+        let objPrivateList = _arrPrivateServiceList[index]
+        let strRestTitle=objPrivateList.restTitle
+        let strThumbnail=objPrivateList.thumbnail
+        let strID=objPrivateList.id
+        let bIsPublish = true
+        let strSectionsData = '{"restTitle":"'+ strRestTitle+
+          '","thumbnail":"'+strThumbnail+
+          '","id":"'+strID+
+          '","isPublish":'+bIsPublish
+          +'}'
+        let objPublishList= JSON.parse(strSectionsData)
+        _arrPublishServiceList.push(objPublishList)
+        _arrPrivateServiceList.splice(index,1)
+        if(_arrPrivateServiceList.length === 0){
+          _arrPrivateServiceList.push({})
         }
-
-      }
-
-    }else{
-      let length = _arrPrivateServiceList.length
-      if(_arrPublishServiceList.length >0 && _arrPublishServiceList[0].restTitle === undefined){
-        _arrPublishServiceList.splice(0,1)
-      }
-      for(let i = 0;i < length;i++){
-        let objService = _arrPrivateServiceList[i]
-        let id = objService.id
-        if(id === itemId){
-          index = i
-          break
-        }
-      }
-      if(index  !== 99999){
-        if(typeof isDelete === 'boolean' && isDelete){
-          _arrPrivateServiceList.splice(index,1)
-        }else{
-          _arrPublishServiceList.push(_arrPrivateServiceList[index])
-          _arrPrivateServiceList.splice(index,1)
-        }
-
-
       }
     }
+
     this.setState({arrPrivateServiceList:_arrPrivateServiceList,arrPublishServiceList:_arrPublishServiceList})
   }
 
@@ -234,16 +225,16 @@ export default class MyService extends Component{
     let publishLength = _arrPublishServiceList.length
     let privateLength = _arrPrivateServiceList.length
     let loadServiceCount = publishLength + privateLength
-    if(!this.state.isLoadingData && this.serviceListTotal > _loadCount*_iServicePageSize && this.serviceListTotal > loadServiceCount){
-      this.setState({isLoadingData:true})
+    if( this.serviceListTotal > _loadCount*_iServicePageSize && this.serviceListTotal > loadServiceCount){
       _loadCount = ++_loadCount
       await this._initSectionsData(_loadCount,_iServicePageSize)
-
-      this.setState({isLoadingData:false})
     }
   }
   _footView() {
-    if (this.state.isLoadingData) {
+    let publishLength = _arrPublishServiceList.length
+    let privateLength = _arrPrivateServiceList.length
+    let loadServiceCount = publishLength + privateLength
+    if (this.serviceListTotal > loadServiceCount) {
       return (
         <View
           style={{

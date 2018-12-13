@@ -24,7 +24,7 @@ export default class PopupModal extends PureComponent{
     modalVisible:boolean,
     title:string,
     itemId:string,
-
+    index:number,
   }
 
   constructor(props){
@@ -37,7 +37,7 @@ export default class PopupModal extends PureComponent{
   }
 
   _onRefresh(){
-    this.props.onRefresh(this.props.itemId,this.props.isPublish,this.deleteService)
+    this.props.onRefresh(this.props.itemId,this.props.isPublish,this.deleteService,this.props.index)
   }
 
   _onRequestClose (){
