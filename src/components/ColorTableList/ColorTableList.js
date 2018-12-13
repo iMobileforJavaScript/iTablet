@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { screen, scaleSize } from '../../utils'
+import { screen } from '../../utils'
 
 import styles from './styles'
 
@@ -57,10 +57,10 @@ export default class ColorTableList extends React.Component {
           //   this.props.lineSeparator >= 0 && {
           //   marginTop: this.props.lineSeparator,
           // },
-          {
-            marginLeft: (screen.deviceWidth - scaleSize(80) * this.props.numColumns) / 2,
-            marginRight: (screen.deviceWidth - scaleSize(80) * this.props.numColumns) / 2,
-          },
+          // {
+          //   marginLeft: (screen.deviceWidth - scaleSize(80) * this.props.numColumns) / 2,
+          //   marginRight: (screen.deviceWidth - scaleSize(80) * this.props.numColumns) / 2,
+          // },
         ]}
       >
         {row}
@@ -72,9 +72,9 @@ export default class ColorTableList extends React.Component {
     if (!this.props.renderCell) throw new Error('Please render cell')
     return (
       <View
-        // style={{ width: screen.deviceWidth / this.props.numColumns }}
+        style={{ width: screen.deviceWidth / this.props.numColumns }}
         // style={{ width: (screen.deviceWidth - scaleSize(80) * this.props.numColumns) / this.props.numColumns }}
-        style={{ width: scaleSize(80) }}
+        // style={{ width: scaleSize(80) }}
         key={rowIndex + '-' + cellIndex}
       >
         {this.props.renderCell({ item, rowIndex, cellIndex })}

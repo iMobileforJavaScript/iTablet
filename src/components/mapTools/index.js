@@ -8,6 +8,7 @@ import PopBtn from './Pop_Btn'
 import PopBtnSectionList from './Pop_BtnSectionList'
 import PopBtnList from './Pop_BtnList'
 import PopMeasureBar from './Pop_MeasureBar'
+import ColorBtn from './Color_Btn'
 
 export {
   AddLayer,
@@ -20,4 +21,5 @@ export {
   PopBtnSectionList,
   PopBtnList,
   PopMeasureBar,
+  ColorBtn,
 }

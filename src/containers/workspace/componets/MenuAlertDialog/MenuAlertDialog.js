@@ -242,6 +242,7 @@ export default class MenuAlertDialog extends React.Component {
         style={styles.btn}
         activeOpacity={0.9}
         underlayColor="#4680DF"
+        // underlayColor = {'rgba(70,128,223,0.9)'}
         onPress={item.action}
       >
         <Text style={styles.btnTitle}>{item.btntitle}</Text>

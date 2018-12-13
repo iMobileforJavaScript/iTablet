@@ -21,8 +21,8 @@ function getRangeMode() {
       title: '等距分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      image: require('../../../../assets/mapTools/range_mode_equalinterval.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_equalinterval.png'),
     },
     {
       // 平方根分段
@@ -30,8 +30,8 @@ function getRangeMode() {
       title: '平方根分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
     },
     {
       // 标准差分段
@@ -39,8 +39,8 @@ function getRangeMode() {
       title: '标准差分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      image: require('../../../../assets/mapTools/range_mode_stddeviation.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation.png'),
     },
     {
       // 对数分段
@@ -48,8 +48,8 @@ function getRangeMode() {
       title: '对数分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      image: require('../../../../assets/mapTools/range_mode_logarithm.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_logarithm.png'),
     },
     {
       // 等计数分段
@@ -57,8 +57,8 @@ function getRangeMode() {
       title: '等计数分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      image: require('../../../../assets/mapTools/range_mode_quantile.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_quantile.png'),
     },
     {
       // 自定义分段
@@ -66,8 +66,8 @@ function getRangeMode() {
       title: '自定义分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+      image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
     },
   ]
   return data

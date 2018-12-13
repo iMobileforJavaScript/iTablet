@@ -52,6 +52,7 @@ import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
 import ColorTableList from '../../../../components/ColorTableList'
+import { ColorBtn } from '../../../../components/mapTools'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -718,7 +719,7 @@ export default class ToolBar extends React.Component {
 
   getLabelFontColor = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[2],
+      toValue: ConstToolType.THEME_HEIGHT[3],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -731,7 +732,7 @@ export default class ToolBar extends React.Component {
       data: date,
       type: type,
     }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[2]
+      this.height = ConstToolType.THEME_HEIGHT[3]
     }, )
   }
 
@@ -1534,7 +1535,7 @@ export default class ToolBar extends React.Component {
         data={this.state.data}
         type={this.state.tableType}
         numColumns={this.state.column}
-        renderCell={this._renderItem}
+        renderCell={this._renderColorItem}
       />
     )
   }
@@ -1619,6 +1620,18 @@ export default class ToolBar extends React.Component {
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
+        background={item.background}
+        onPress={() => {
+          this.itemaction(item)
+        }}
+      />
+    )
+  }
+
+  _renderColorItem = ({ item, rowIndex, cellIndex }) => {
+    return (
+      <ColorBtn
+        key={rowIndex + '-' + cellIndex}
         background={item.background}
         onPress={() => {
           this.itemaction(item)
