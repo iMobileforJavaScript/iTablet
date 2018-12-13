@@ -2,6 +2,7 @@ import constants from '../../constants'
 import {
   SThemeCartography,
 } from 'imobile_for_reactnative'
+import { Toast } from '../../../../utils'
 
 let _params = {}
 
@@ -68,6 +69,134 @@ function getRangeMode() {
     size: 'large',
     image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
     selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+  },
+  ]
+  return data
+}
+
+function showToast() {
+  Toast.show('功能暂未开放')
+}
+
+/**设置统一标签背景形状 */
+function getLabelBackShape() {
+  let data = [{
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_NONE,
+    title: '空背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_DIAMOND,
+    title: '菱形背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ROUNDRECT,
+    title: '圆角矩形背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_RECT,
+    title: '矩形背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ELLIPSE,
+    title: '椭圆形背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_TRIANGLE,
+    title: '三角形背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
+    title: '符号背景',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+  },
+  ]
+  return data
+}
+
+/**设置统一标签字体 */
+function getLabelFontName() {
+  let data = [{
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_NONE,
+    title: '字体一',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_DIAMOND,
+    title: '字体二',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ROUNDRECT,
+    title: '字体三',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_RECT,
+    title: '字体四',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ELLIPSE,
+    title: '字体五',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_TRIANGLE,
+    title: '字体六',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
+  },
+  {
+    key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
+    title: '字体七',
+    action: showToast,
+    size: 'large',
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
   },
   ]
   return data
@@ -195,4 +324,6 @@ export default {
   getRangeMode,
   getColorGradientType,
   setRangeThemeParams,
+  getLabelBackShape,
+  getLabelFontName,
 }

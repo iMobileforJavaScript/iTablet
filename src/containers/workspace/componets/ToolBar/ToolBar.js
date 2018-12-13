@@ -656,6 +656,23 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  getLabelBackShape = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[0],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelBackShape()
+    this.setState({
+      containerType: 'table',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[0]
+    }, )
+  }
+
   getflylist = async () => {
     try {
       let flydata = await SScene.getFlyRouteNames()
@@ -1267,6 +1284,19 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.createAndRemoveThemeRangeMap(Params)
       }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION) {
+      //统一标签表达式
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let Params = {
+          LabelExpression: item.title,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.setUniformLabelExpression(Params)
+      }.bind(this)())
     }
   }
 
@@ -1298,10 +1328,34 @@ export default class ToolBar extends React.Component {
           themeDatasourceAlias: item.title,
           themeDatasetName: item.title,
         })
-        ToolbarData.setThemeParams(
-          item.title,
-          item.title,
-          this.state.themeExpress,
+        ToolbarData.setUniqueThemeParams(
+          {
+            DatasourceAlias: item.title,
+            DatasetName: item.title,
+            UniqueExpression: this.state.themeExpress,
+            ColorGradientType: 'TERRAIN',
+          }
+        )
+        ToolbarData.setRangeThemeParams(
+          {
+            DatasourceAlias: item.title,
+            DatasetName: item.title,
+            RangeExpression: this.state.themeExpress,
+            RangeMode: 'EQUALINTERVAL',
+            RangeParameter: '32.0',
+            ColorGradientType: 'TERRAIN',
+          }
+        )
+        ToolbarData.setUniformLabelParams(
+          {
+            DatasourceAlias: item.title,
+            DatasetName: item.title,
+            LabelExpression: '国家',
+            LabelBackShape: 'NONE',
+            FontName: '宋体',
+            // FontSize: '15.0',
+            ForeColor: '#40E0D0',
+          }
         )
         let udbpath = {
           server: this.path,
