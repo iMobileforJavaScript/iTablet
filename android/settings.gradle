@@ -1,5 +1,5 @@
 rootProject.name = 'iTablet'
-include ':app'
+include ':app', ':orientation'
 include ':imobile_for_reactnative'
 project(':imobile_for_reactnative').projectDir = new File(rootProject.projectDir, '../node_modules/imobile_for_reactnative/android')
 

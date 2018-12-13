@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-
+// import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
     nav: Object,
@@ -21,6 +21,7 @@ export default class Home extends Component {
     const title = 'SuperMap iTablet'
     return (
       <View style={styles.header}>
+        <View style={{ flex: 1.5 }} />
         <TouchableOpacity style={styles.userView}>
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
@@ -32,6 +33,7 @@ export default class Home extends Component {
             style={styles.moreImg}
           />
         </TouchableOpacity>
+        <View style={{ flex: 1.5 }} />
       </View>
     )
   }
@@ -45,7 +47,10 @@ export default class Home extends Component {
         style={styles.container}
       >
         {this.headRender()}
-        <ModuleList currentUser={this.props.currentUser} />
+        <ModuleList
+          currentUser={this.props.currentUser}
+          styles={styles.modulelist}
+        />
       </Container>
     )
   }

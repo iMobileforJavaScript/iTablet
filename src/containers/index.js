@@ -1,16 +1,15 @@
 import { StackNavigator } from 'react-navigation'
-import Tabs from './tabs'
+
 //主页
 import MapLoad from './mapLoad'
 
 //我的
-import Register from './register&getBack/register'
+import Tabs, { MyService, MyOnlineData, Register } from './tabs'
+
+//我的
+// import Register from './register&getBack/register'
 import GetBack from './register&getBack/GetBack'
 import Personal from './personal'
-//我的数据
-import { MyData } from './tabs/Mine/MyData'
-//我的服务
-import MyService from './tabs/Mine/MyService'
 
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
@@ -68,18 +67,7 @@ export default StackNavigator(
         header: null,
       },
     },
-    Register: {
-      screen: Register,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    GetBack: {
-      screen: GetBack,
-      navigationOptions: {
-        header: null,
-      },
-    },
+
     // LayerManager: {
     //   screen: MTLayerManager,
     //   navigationOptions: {
@@ -230,12 +218,7 @@ export default StackNavigator(
         header: null,
       },
     },
-    Personal: {
-      screen: Personal,
-      navigationOptions: {
-        header: null,
-      },
-    },
+
     UpLoadList: {
       screen: UpLoadList,
       navigationOptions: {
@@ -254,14 +237,32 @@ export default StackNavigator(
         header: null,
       },
     },
-    MyData: {
-      screen: MyData,
+    Register: {
+      screen: Register,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    GetBack: {
+      screen: GetBack,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MyOnlineData: {
+      screen: MyOnlineData,
       navigationOptions: {
         header: null,
       },
     },
     MyService: {
       screen: MyService,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Personal: {
+      screen: Personal,
       navigationOptions: {
         header: null,
       },

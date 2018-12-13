@@ -5,12 +5,12 @@ import {
   TouchableOpacity,
   Image,
   FlatList,
-  Dimensions,
+  // Dimensions,
   StyleSheet,
 } from 'react-native'
 import { ConstModule } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
-const SCREEN_WIDTH = Dimensions.get('window').width
+// const SCREEN_WIDTH = Dimensions.get('window').width
 export default class ModuleList extends Component {
   props: {
     currentUser: Object,
@@ -19,7 +19,6 @@ export default class ModuleList extends Component {
   itemAction = item => {
     item.action && item.action(this.props.currentUser)
   }
-
   _renderItem = ({ item }) => {
     return (
       <View style={styles.moduleView}>
@@ -66,12 +65,12 @@ const styles = StyleSheet.create({
   },
   baseImage: {
     position: 'absolute',
-    width: SCREEN_WIDTH * 0.361,
-    height: SCREEN_WIDTH * 0.202,
+    width: scaleSize(260),
+    height: scaleSize(150),
   },
   module: {
-    width: SCREEN_WIDTH * 0.361,
-    height: SCREEN_WIDTH * 0.202,
+    width: scaleSize(260),
+    height: scaleSize(150),
     justifyContent: 'center',
   },
   moduleImage: {
@@ -79,9 +78,9 @@ const styles = StyleSheet.create({
     height: scaleSize(80),
   },
   moduleView: {
-    width: SCREEN_WIDTH * 0.382,
-    height: SCREEN_WIDTH * 0.202,
-    paddingHorizontal: SCREEN_WIDTH * 0.01,
+    width: scaleSize(275),
+    height: scaleSize(150),
+    paddingHorizontal: scaleSize(7),
     marginTop: scaleSize(25),
   },
   moduleItem: {

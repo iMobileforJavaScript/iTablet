@@ -1,6 +1,8 @@
 package com.supermap.itablet;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -33,6 +35,14 @@ public class MainActivity extends ReactActivity {
         requestPermissions();
         initEnvironment();
         initDefaultData();
+
+    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Intent intent = new Intent("onConfigurationChanged");
+        intent.putExtra("newConfig", newConfig);
+        this.sendBroadcast(intent);
     }
 
     private void initEnvironment() {
