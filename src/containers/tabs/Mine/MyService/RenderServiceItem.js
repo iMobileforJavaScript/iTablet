@@ -13,11 +13,11 @@ export default class RenderServiceItem extends PureComponent{
     isPublish:boolean,
     index:number,
   }
-  defaultProps: {
-    imageUrl: '',
-    restTitle: '地图',
+  defaultProps:{
+    imageUrl:'',
+    restTitle:'地图'
   }
-  constructor(props) {
+  constructor(props){
     super(props)
   }
 
@@ -47,8 +47,8 @@ export default class RenderServiceItem extends PureComponent{
             numberOfLines={1}
             style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>
         </View>
-        <View style={styles.separateViewStyle} />
       </View>
-    )
+      <View style={styles.separateViewStyle}/>
+    </View>
   }
 }
