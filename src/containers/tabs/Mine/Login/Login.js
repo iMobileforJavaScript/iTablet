@@ -25,7 +25,7 @@ import styles, {
 } from './Styles'
 import ConstPath from '../../../../constants/ConstPath'
 import NavigationService from '../../../NavigationService'
-const NativeFileTool = NativeModules.FileTools
+const nativeFileTools = NativeModules.FileTools
 export default class Login extends React.Component {
   props: {
     navigation: Object,
@@ -59,7 +59,7 @@ export default class Login extends React.Component {
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {
-        let initDataResult = await NativeFileTool.initUserDefaultData(userName)
+        let initDataResult = await nativeFileTools.initUserDefaultData(userName)
         !initDataResult && Toast.show('初始化用户数据失败')
       } else {
         Toast.show('创建用户目录失败')
@@ -99,7 +99,7 @@ export default class Login extends React.Component {
         }
         this.container.setLoading(true, '登录中...')
         userName = this.txtPhoneNumber
-        password = this.txtPhonePassword
+        password = this.txtPhoneNumberPassword
         result = await SOnlineService.loginWithPhoneNumber(userName, password)
       }
 
@@ -111,7 +111,6 @@ export default class Login extends React.Component {
           userName: userName,
           password: password,
         })
-        return
       } else {
         this.props.setUser({
           userName: '',
@@ -134,7 +133,9 @@ export default class Login extends React.Component {
       <View>
         <TextInput
           clearButtonMode={'while-editing'}
+          keyboardType={'email-address'}
           placeholder={'请输入邮箱或昵称'}
+          defaultValue={''}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmail = text
@@ -143,6 +144,7 @@ export default class Login extends React.Component {
         <TextInput
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
+          defaultValue={''}
           placeholder={'请输入密码'}
           style={styles.textInputStyle}
           onChangeText={text => {
@@ -158,6 +160,8 @@ export default class Login extends React.Component {
         <TextInput
           clearButtonMode={'while-editing'}
           placeholder={'请输入手机号'}
+          defaultValue={''}
+          keyboardType={'number-pad'}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtPhoneNumber = text
@@ -167,9 +171,10 @@ export default class Login extends React.Component {
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           placeholder={'请输入密码'}
+          defaultValue={''}
           style={styles.textInputStyle}
           onChangeText={text => {
-            this.txtPhonePassword = text
+            this.txtPhoneNumberPassword = text
           }}
         />
       </View>
@@ -196,10 +201,6 @@ export default class Login extends React.Component {
     }
   }
   _onSelectTitle = () => {
-    this.txtEmailPassword = ''
-    this.txtEmail = ''
-    this.txtPhoneNumber = ''
-    this.txtPhonePassword = ''
     if (this.state.onEmailTitleFocus) {
       return this._renderEmail()
     } else {

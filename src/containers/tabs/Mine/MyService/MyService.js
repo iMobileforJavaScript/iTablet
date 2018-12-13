@@ -12,6 +12,7 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './Styles'
 import PopupModal from './PopupModal'
 import Toast from '../../../../utils/Toast'
+
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
  * */
@@ -140,7 +141,7 @@ export default class MyService extends Component {
         <Text
           style={[
             styles.titleTextStyle,
-            { backgroundColor: '#505052', textAlign: 'center' },
+            { backgroundColor: '#353537', textAlign: 'center' },
           ]}
         >
           没有服务
@@ -282,7 +283,6 @@ export default class MyService extends Component {
             height: 50,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: '#fff',
           }}
         >
           <ActivityIndicator
