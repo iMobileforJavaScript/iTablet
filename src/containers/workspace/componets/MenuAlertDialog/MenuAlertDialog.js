@@ -79,9 +79,7 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getRangeMode(
-            ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
-          )
+          toolRef.getRangeMode(ConstToolType.MAP_THEME_PARAM_RANGE_MODE)
         }
       },
     },
@@ -108,6 +106,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '表达式',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getThemeExpress(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
+          )
+        }
       },
     },
     {
@@ -115,6 +120,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '背景形状',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelBackShape(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE,
+          )
+        }
       },
     },
     {
@@ -206,9 +218,9 @@ export default class MenuAlertDialog extends React.Component {
   renderItem({ item }) {
     return (
       <TouchableHighlight
+        style={styles.btn}
         activeOpacity={0.9}
         underlayColor="#4680DF"
-        style={styles.btn}
         onPress={item.action}
       >
         <Text style={styles.btnTitle}>{item.btntitle}</Text>
