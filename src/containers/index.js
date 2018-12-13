@@ -4,18 +4,12 @@ import { StackNavigator } from 'react-navigation'
 import MapLoad from './mapLoad'
 
 //我的
-import Tabs,{
-  MyService,
-  MyOnlineData,
-  Register,
-  MyLocalData,
-} from './tabs'
+import Tabs, { MyService, MyOnlineData, Register } from './tabs'
 
 //我的
 // import Register from './register&getBack/register'
 import GetBack from './register&getBack/GetBack'
 import Personal from './personal'
-
 
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
@@ -273,7 +267,6 @@ export default StackNavigator(
         header: null,
       },
     },
-
   },
   {
     navigationOptions: {

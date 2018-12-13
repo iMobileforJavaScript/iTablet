@@ -63,12 +63,23 @@ export default [
       }
       let ssPath = await Utility.appendingHomeDirectory(customerPath)
       if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Scene +
-          'OlympicGreen_android/OlympicGreen_android.sxwu'
+        let userWSPath
+        if (Platform.OS === 'android') {
+          userWSPath =
+            ConstPath.UserPath +
+            user.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Scene +
+            'OlympicGreen_android/OlympicGreen_android.sxwu'
+        } else {
+          userWSPath =
+            ConstPath.UserPath +
+            user.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Scene +
+            'OlympicGreen_ios/OlympicGreen_ios.sxwu'
+        }
+
         ssPath = await Utility.appendingHomeDirectory(userWSPath)
       } else {
         ssPath = await Utility.appendingHomeDirectory(customerPath)

@@ -602,13 +602,15 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      containerType: 'list',
-      data: datalist,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[1]
-    },
+    this.setState(
+      {
+        containerType: 'list',
+        data: datalist,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[1]
+      },
     )
   }
 
@@ -626,13 +628,15 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      containerType: 'list',
-      data: datalist,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[1]
-    },
+    this.setState(
+      {
+        containerType: 'list',
+        data: datalist,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[1]
+      },
     )
   }
 
@@ -649,8 +653,8 @@ export default class ToolBar extends React.Component {
         containerType: 'table',
         data: date,
         type: type,
-      }
-      ,() => {
+      },
+      () => {
         this.height = ConstToolType.THEME_HEIGHT[0]
       },
     )
@@ -664,13 +668,16 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelBackShape()
-    this.setState({
-      containerType: 'table',
-      data: date,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[0]
-    }, )
+    this.setState(
+      {
+        containerType: 'table',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[0]
+      },
+    )
   }
 
   getflylist = async () => {
@@ -1250,7 +1257,8 @@ export default class ToolBar extends React.Component {
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
       }.bind(this)())
     } else if (
-      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
+    ) {
       //分段专题图表达式
       this.setState({
         themeExpress: item.title,
@@ -1284,7 +1292,9 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.createAndRemoveThemeRangeMap(Params)
       }.bind(this)())
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION) {
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+    ) {
       //统一标签表达式
       this.setState({
         themeExpress: item.title,
@@ -1328,35 +1338,29 @@ export default class ToolBar extends React.Component {
           themeDatasourceAlias: item.title,
           themeDatasetName: item.title,
         })
-        ToolbarData.setUniqueThemeParams(
-          {
-            DatasourceAlias: item.title,
-            DatasetName: item.title,
-            UniqueExpression: this.state.themeExpress,
-            ColorGradientType: 'TERRAIN',
-          }
-        )
-        ToolbarData.setRangeThemeParams(
-          {
-            DatasourceAlias: item.title,
-            DatasetName: item.title,
-            RangeExpression: this.state.themeExpress,
-            RangeMode: 'EQUALINTERVAL',
-            RangeParameter: '32.0',
-            ColorGradientType: 'TERRAIN',
-          }
-        )
-        ToolbarData.setUniformLabelParams(
-          {
-            DatasourceAlias: item.title,
-            DatasetName: item.title,
-            LabelExpression: '国家',
-            LabelBackShape: 'NONE',
-            FontName: '宋体',
-            // FontSize: '15.0',
-            ForeColor: '#40E0D0',
-          }
-        )
+        ToolbarData.setUniqueThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setRangeThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          RangeExpression: this.state.themeExpress,
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setUniformLabelParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          LabelExpression: '国家',
+          LabelBackShape: 'NONE',
+          FontName: '宋体',
+          // FontSize: '15.0',
+          ForeColor: '#40E0D0',
+        })
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1508,8 +1512,7 @@ export default class ToolBar extends React.Component {
             menutoolRef.setMenuType(type)
           }
 
-          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE)
-          {
+          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             let Params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
@@ -1624,9 +1627,7 @@ export default class ToolBar extends React.Component {
         box = this.renderTable()
     }
     return (
-      < Animated.View style = {
-        {height: this.state.boxHeight}
-      } >
+      <Animated.View style={{ height: this.state.boxHeight }}>
         {box}
       </Animated.View>
     )
