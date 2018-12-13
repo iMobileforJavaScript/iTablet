@@ -51,6 +51,8 @@ import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
+import ColorTableList from '../../../../components/ColorTableList'
+import { ColorBtn } from '../../../../components/mapTools'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -587,7 +589,7 @@ export default class ToolBar extends React.Component {
 
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[1],
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -607,14 +609,14 @@ export default class ToolBar extends React.Component {
       data: datalist,
       type: type,
     }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[1]
+      this.height = ConstToolType.THEME_HEIGHT[4]
     },
     )
   }
 
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[1],
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -631,14 +633,14 @@ export default class ToolBar extends React.Component {
       data: datalist,
       type: type,
     }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[1]
+      this.height = ConstToolType.THEME_HEIGHT[4]
     },
     )
   }
 
   getRangeMode = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[0],
+      toValue: ConstToolType.THEME_HEIGHT[2],
       duration: 300,
     }).start()
     this.isBoxShow = true
@@ -647,13 +649,91 @@ export default class ToolBar extends React.Component {
     this.setState(
       {
         containerType: 'table',
+        column: 4,
+        tableType: 'normal',
         data: date,
         type: type,
-      }
-      ,() => {
-        this.height = ConstToolType.THEME_HEIGHT[0]
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[2]
       },
     )
+  }
+
+  getLabelBackShape = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[2],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelBackShape()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[2]
+    }, )
+  }
+
+  getLabelFontName = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontName()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[3]
+    }, )
+  }
+
+  getLabelFontRotation = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[0],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontRotation()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[0]
+    }, )
+  }
+
+  getLabelFontColor = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontColor()
+    this.setState({
+      containerType: 'colortable',
+      column: 8,
+      tableType: 'scroll',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[3]
+    }, )
   }
 
   getflylist = async () => {
@@ -1233,7 +1313,8 @@ export default class ToolBar extends React.Component {
         await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
       }.bind(this)())
     } else if (
-      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
+    ) {
       //分段专题图表达式
       this.setState({
         themeExpress: item.title,
@@ -1267,6 +1348,21 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.createAndRemoveThemeRangeMap(Params)
       }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+    ) {
+      //统一标签表达式
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let Params = {
+          LabelExpression: item.title,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.setUniformLabelExpression(Params)
+      }.bind(this)())
     }
   }
 
@@ -1298,11 +1394,29 @@ export default class ToolBar extends React.Component {
           themeDatasourceAlias: item.title,
           themeDatasetName: item.title,
         })
-        ToolbarData.setThemeParams(
-          item.title,
-          item.title,
-          this.state.themeExpress,
-        )
+        ToolbarData.setUniqueThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setRangeThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          RangeExpression: this.state.themeExpress,
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setUniformLabelParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          LabelExpression: '国家',
+          LabelBackShape: 'NONE',
+          FontName: '宋体',
+          // FontSize: '15.0',
+          ForeColor: '#40E0D0',
+        })
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1415,6 +1529,17 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  renderColorTable = () => {
+    return (
+      <ColorTableList
+        data={this.state.data}
+        type={this.state.tableType}
+        numColumns={this.state.column}
+        renderCell={this._renderColorItem}
+      />
+    )
+  }
+
   itemaction = async item => {
     switch (item.key) {
       case 'psDistance':
@@ -1454,8 +1579,7 @@ export default class ToolBar extends React.Component {
             menutoolRef.setMenuType(type)
           }
 
-          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE)
-          {
+          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             let Params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
@@ -1496,6 +1620,19 @@ export default class ToolBar extends React.Component {
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
+        background={item.background}
+        onPress={() => {
+          this.itemaction(item)
+        }}
+      />
+    )
+  }
+
+  _renderColorItem = ({ item, rowIndex, cellIndex }) => {
+    return (
+      <ColorBtn
+        key={rowIndex + '-' + cellIndex}
+        background={item.background}
         onPress={() => {
           this.itemaction(item)
         }}
@@ -1565,14 +1702,15 @@ export default class ToolBar extends React.Component {
       case symbol:
         box = this.renderSymbol()
         break
+      case 'colortable':
+        box = this.renderColorTable()
+        break
       case table:
       default:
         box = this.renderTable()
     }
     return (
-      < Animated.View style = {
-        {height: this.state.boxHeight}
-      } >
+      <Animated.View style={{ height: this.state.boxHeight }}>
         {box}
       </Animated.View>
     )

@@ -711,42 +711,44 @@ function getThemeMapParam(type) {
   return { data, buttons }
 }
 
-let DatasourceAlias = '',
-  DatasetName = '',
-  Expression = ''
-
-function setThemeParams(datasourceAlias, datasetName, uniqueExpression) {
-  DatasourceAlias = datasourceAlias
-  DatasetName = datasetName
-  Expression = uniqueExpression
-}
-
-/** 新建单值风格专题图 **/
-function createThemeUniqueMap() {
-  let Params = {
-    DatasourceAlias: DatasourceAlias,
-    DatasetName: DatasetName,
-    UniqueExpression: Expression,
-    ColorGradientType: 'TERRAIN',
-  }
-  return SThemeCartography.createThemeUniqueMap(Params)
-}
-
 function showTips() {
   Alert.alert('功能暂未开放。')
 }
 
+//单值专题图参数
+let _paramsUniqueTheme = {}
+
+function setUniqueThemeParams(params) {
+  _paramsUniqueTheme = params
+}
+
+/** 新建单值风格专题图 **/
+function createThemeUniqueMap() {
+  return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
+}
+
+//分段专题图参数
+let _paramsRangeTheme = {}
+
+function setRangeThemeParams(params) {
+  _paramsRangeTheme = params
+}
+
 /** 新建分段风格专题图 **/
 function createThemeRangeMap() {
-  let Params = {
-    DatasourceAlias: DatasourceAlias,
-    DatasetName: DatasetName,
-    RangeExpression: Expression,
-    RangeMode: 'EQUALINTERVAL',
-    RangeParameter: '32.0',
-    ColorGradientType: 'TERRAIN',
-  }
-  return SThemeCartography.createThemeRangeMap(Params)
+  return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
+}
+
+//统一标签专题图参数
+let _paramsUniformLabel = {}
+
+function setUniformLabelParams(params) {
+  _paramsUniformLabel = params
+}
+
+/** 新建统一标签专题图 **/
+function createUniformLabelMap() {
+  return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
 }
 
 /**
@@ -809,7 +811,7 @@ function getThemeMapCreate(type) {
       key: constants.THEME_UNIFY_LABEL,
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
-      action: showTips,
+      action: createUniformLabelMap,
       image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
     },
@@ -1224,5 +1226,7 @@ function add(type) {
 
 export default {
   getTabBarData,
-  setThemeParams,
+  setUniqueThemeParams,
+  setRangeThemeParams,
+  setUniformLabelParams,
 }

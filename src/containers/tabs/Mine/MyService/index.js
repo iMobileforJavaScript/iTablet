@@ -10,4 +10,7 @@ const mapDispatchToProps = {
   setUser,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyService)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MyService)

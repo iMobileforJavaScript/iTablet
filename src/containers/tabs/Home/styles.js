@@ -1,6 +1,6 @@
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../utils'
-const SCREEN_WIDTH = Dimensions.get('window').width
+// const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -10,20 +10,24 @@ export default StyleSheet.create({
     backgroundColor: '#2D2D2F',
   },
   header: {
-    width: SCREEN_WIDTH * 0.762,
+    // width: SCREEN_WIDTH * 0.762,
+    flex: 1,
+    // backgroundColor:"red",
     height: scaleSize(80),
     alignSelf: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     marginTop: scaleSize(80),
   },
   userImg: {
     width: scaleSize(45),
+    // flex:1,
     height: scaleSize(45),
   },
   userView: {
     width: scaleSize(60),
+    // flex:6,
     height: scaleSize(60),
     borderRadius: scaleSize(30),
     alignItems: 'center',
@@ -31,7 +35,8 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   headTitle: {
-    width: scaleSize(500),
+    flex: 6.5,
+    // width: scaleSize(500),
     height: scaleSize(60),
     color: '#FFFFFF',
     textAlign: 'center',
@@ -43,5 +48,8 @@ export default StyleSheet.create({
   moreImg: {
     // width: scaleSize(10),
     height: scaleSize(40),
+  },
+  modulelist: {
+    flex: 1,
   },
 })
