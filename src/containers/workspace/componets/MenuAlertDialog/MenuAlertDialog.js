@@ -79,9 +79,7 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getRangeMode(
-            ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
-          )
+          toolRef.getRangeMode(ConstToolType.MAP_THEME_PARAM_RANGE_MODE)
         }
       },
     },

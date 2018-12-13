@@ -8,7 +8,7 @@ const deviceHeight = Dimensions.get('window').height //设备的高度
 //px转换成dp
 const w2 = 720 / defaultPixel
 const h2 = 1080 / defaultPixel
-const scale = Math.min(deviceHeight / h2, deviceWidth / w2) //获取缩放比例
+let scale = Math.min(deviceHeight / h2, deviceWidth / w2) //获取缩放比例
 
 /**
  * 设置尺寸的大小
@@ -19,7 +19,9 @@ export function scaleSize(size) {
   size = Math.round(size * scale + 0.5)
   return size / defaultPixel
 }
-
+export function setscaleSize() {
+  scale = Math.min(deviceHeight / w2, deviceWidth / h2)
+}
 export default {
   deviceWidth,
   deviceHeight,

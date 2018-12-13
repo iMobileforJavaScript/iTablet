@@ -8,52 +8,49 @@ export const textHeight = 40
 const smallFontSize = 16
 const largeFontSize = 18
 const styles = StyleSheet.create({
-
-  haveDataViewStyle:{
-    flex:1,
-    backgroundColor:color.blackBg
+  haveDataViewStyle: {
+    flex: 1,
+    backgroundColor: color.blackBg,
   },
-  noDataViewStyle:{
-    flex:1,
-    justifyContent:'center',
-    alignItems:'center',
-    backgroundColor:color.blackBg
+  noDataViewStyle: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: color.blackBg,
   },
-  titleTextStyle:{
-    width:itemWidth,
-    lineHeight:textHeight,
-    fontSize:smallFontSize,
-    color:'#c0c0c0',
+  titleTextStyle: {
+    width: itemWidth,
+    lineHeight: textHeight,
+    fontSize: smallFontSize,
+    color: '#c0c0c0',
     paddingLeft: 10,
     textAlign: 'left',
-    backgroundColor:color.theme
+    backgroundColor: color.theme,
   },
-  itemViewStyle:{
-    width:itemWidth,
-    height:itemHeight,
-    flexDirection:'row',
-    padding:15,
-
+  itemViewStyle: {
+    width: itemWidth,
+    height: itemHeight,
+    flexDirection: 'row',
+    padding: 15,
   },
-  imageStyle:{
-    width:imageWidth,
-    height:imageHeight,
-    backgroundColor:'#c0c0c0'
+  imageStyle: {
+    width: imageWidth,
+    height: imageHeight,
+    backgroundColor: '#c0c0c0',
   },
-  restTitleTextStyle:{
-    flex:1,
-    width:itemWidth-30-imageWidth,
-    fontSize:largeFontSize,
+  restTitleTextStyle: {
+    flex: 1,
+    width: itemWidth - 30 - imageWidth,
+    fontSize: largeFontSize,
     fontWeight: 'bold',
-    color:'white',
+    color: 'white',
     paddingLeft: 10,
     textAlign: 'left',
   },
-  separateViewStyle:{
-    width:itemWidth,
-    height:8,
-    backgroundColor:color.theme
+  separateViewStyle: {
+    width: itemWidth,
+    height: 8,
+    backgroundColor: color.theme,
   },
-
 })
 export default styles
