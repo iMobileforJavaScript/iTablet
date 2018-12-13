@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   ScrollView,
   TouchableOpacity,
+  NativeModules
 } from "react-native";
 import {  Toast } from '../../../../utils/index'
 
@@ -24,7 +25,7 @@ import {
 import styles,{titleOnFocusBackgroundColor,titleOnBlurBackgroundColor} from './Styles'
 import ConstPath from "../../../../constants/ConstPath";
 import NavigationService from '../../../NavigationService'
-
+const nativeFileTools = NativeModules.FileTools
 export default class Login extends React.Component {
   props: {
     navigation: Object,
@@ -58,7 +59,7 @@ export default class Login extends React.Component {
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {
-        let initDataResult = await NativeFileTool.initUserDefaultData(userName)
+        let initDataResult = await nativeFileTools.initUserDefaultData(userName)
         !initDataResult && Toast.show('初始化用户数据失败')
       } else {
         Toast.show('创建用户目录失败')

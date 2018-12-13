@@ -1,11 +1,7 @@
 import React, { PureComponent } from 'react'
-import { Image, Text, View, TouchableOpacity, Platform } from 'react-native'
-import NavigationService from '../../../NavigationService'
+import { Image, Text, View,} from 'react-native'
 import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
-import { ConstPath } from '../../../../constants'
-import { Toast } from '../../../../utils'
-import { color } from '../../../../styles'
 
 export default class RenderServiceItem extends PureComponent{
 

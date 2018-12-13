@@ -1,24 +1,18 @@
 import React, { Component } from 'react'
 import {
   View,
-  FlatList,
   Text,
-  Platform,
-  DeviceEventEmitter,
   RefreshControl,
   ActivityIndicator,
-  NativeModules,
   SectionList,
-  Image,
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
 import { SOnlineService,Utility } from 'imobile_for_reactnative'
 import styles from './Styles'
-import ConstPath from "../../../../constants/ConstPath";
 import PopupModal from "./PopupModal";
 import Toast from "../../../../utils/Toast";
-const nativeFileTools = NativeModules.FileTools
+
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
  * */
@@ -286,9 +280,7 @@ export default class MyService extends Component{
             fontSize: 12,
             textAlign: 'center',
           }}
-        >
-          -----这是底线-----
-        </Text>
+        >-----这是底线-----</Text>
       </View>
     }
   }
