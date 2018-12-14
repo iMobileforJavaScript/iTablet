@@ -1,4 +1,4 @@
-package com.supermap.file;
+package com.supermap.RN;
 
 import android.content.Context;
 import android.util.Log;
@@ -12,6 +12,9 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.supermap.file.Decompressor;
+import com.supermap.file.FileManager;
+import com.supermap.file.Utils;
 
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -135,15 +138,7 @@ public class FileTools extends ReactContextBaseJavaModule {
     @ReactMethod
     public void createDirectory(String path, Promise promise) {
         try {
-            boolean result = false;
-            File file = new File(path);
-
-            if (!file.exists()) {
-                result = file.mkdirs();
-            } else {
-                result = true;
-            }
-
+            boolean result = createDirectory(path);
             promise.resolve(result);
         } catch (Exception e) {
             promise.reject(e);
@@ -351,6 +346,21 @@ public class FileTools extends ReactContextBaseJavaModule {
 
     }
 
+    @ReactMethod
+    public static void copyFile(String fromPath, String toPath, Boolean override, Promise promise) {
+        try {
+            File toFile = new File(toPath);
+            boolean result = toFile.exists();
+            if (override || !result) {
+                result = FileManager.getInstance().copy(fromPath, toPath);
+            }
+            promise.resolve(result);
+        }catch (Exception e){
+            promise.reject(e);
+        }
+
+    }
+
     //读文件
     @ReactMethod
     public static String readFile(String filePath, Promise promise){
@@ -545,6 +555,18 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    public static Boolean createDirectory(String path) {
+        boolean result = false;
+        File file = new File(path);
+
+        if (!file.exists()) {
+            result = file.mkdirs();
+        } else {
+            result = true;
+        }
+        return result;
+    }
+
     public static Boolean initUserDefaultData(String userName, Context context) {
         userName = userName == null || userName.equals("") ? "Customer" : userName;
 
@@ -563,21 +585,30 @@ public class FileTools extends ReactContextBaseJavaModule {
             Decompressor.UnZipFolder(dataPath2 + originName2, dataPath2);
             Utils.deleteFile(dataPath2 + originName2);
         }
+
+        //创建用户目录
+        createDirectory(dataPath + "Attribute");
+        createDirectory(dataPath + "Datasource");
+        createDirectory(dataPath + "Scene");
+        createDirectory(dataPath + "Symbol");
+        createDirectory(dataPath + "Template");
+        createDirectory(dataPath + "Workspace");
+
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
-        String commonZipPath = commonPath + "Workspace.zip";
-        String defaultZipData = "Workspace.zip";
-        String workspacePath = dataPath + "Workspace";
-
+        String commonZipPath = commonPath + "Template.zip";
+        String defaultZipData = "Template.zip";
+        String templatePath = dataPath + "Template/";
+        String templateFilePath = templatePath + "地理国情普查";
 
         Boolean isUnZip;
-        if (!Utils.fileIsExit(workspacePath)) {
+        if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
             if (Utils.fileIsExit(commonZipPath)) {
-                isUnZip = FileTools.unZipFile(commonZipPath, workspacePath);
+                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
                 System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
             } else {
                 Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, defaultZipData);
-                isUnZip = FileTools.unZipFile(commonZipPath, workspacePath);
+                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
                 System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
             }
         } else {

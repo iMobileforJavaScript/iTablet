@@ -74,6 +74,7 @@ export default class ToolBar extends React.Component {
     symbol?: Object,
     user?: Object,
     map?: Object,
+    layers?: Object,
     collection?: Object,
     layerData: Object,
     confirm: () => {},
@@ -91,6 +92,8 @@ export default class ToolBar extends React.Component {
     setCurrentMap?: () => {}, // 设置当前地图
     setCollectionInfo?: () => {}, // 设置当前采集数据源信息
     setCurrentLayer?: () => {}, // 设置当前图层
+    importTemplate?: () => {}, // 导入模板
+    openTemplate?: () => {}, // 打开模板
   }
 
   static defaultProps = {
@@ -113,7 +116,8 @@ export default class ToolBar extends React.Component {
           ? ConstToolType.HEIGHT[3]
           : ConstToolType.HEIGHT[1]
     this.originType = props.type // 初次传入的类型
-    this.lastType = ''
+    // this.lastType = ''
+    this.lastState = {}
     this.state = {
       // isShow: false,
       type: props.type, // 当前传入的类型
@@ -139,6 +143,25 @@ export default class ToolBar extends React.Component {
     }
     this.isShow = false
     this.isBoxShow = true
+  }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
+      // 实时更新params
+      ToolbarData.setParams({
+        user: this.props.user,
+        layers: this.props.layers,
+        setToolbarVisible: this.setVisible,
+        showFullMap: this.props.showFullMap,
+        addGeometrySelectedListener: this.props.addGeometrySelectedListener,
+        setSaveViewVisible: this.props.setSaveViewVisible,
+        setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
+        setContainerLoading: this.props.setContainerLoading,
+        importTemplate: this.props.importTemplate,
+        getLayers: this.props.getLayers,
+        map: this.props.map,
+      })
+    }
   }
 
   // /**建筑单体触控监听 */
@@ -168,13 +191,16 @@ export default class ToolBar extends React.Component {
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type, {
       user: this.props.user,
+      layers: this.props.layers,
       setToolbarVisible: this.setVisible,
       showFullMap: this.props.showFullMap,
       addGeometrySelectedListener: this.props.addGeometrySelectedListener,
       setSaveViewVisible: this.props.setSaveViewVisible,
       setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
       setContainerLoading: this.props.setContainerLoading,
+      importTemplate: this.props.importTemplate,
       getLayers: this.props.getLayers,
+      map: this.props.map,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -215,6 +241,9 @@ export default class ToolBar extends React.Component {
         buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP_SYMBOL:
+        // if (this.props.map.template && this.props.map.template.path) {
+        //   buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX_FULL, ToolbarBtnType.COMMIT]
+        // }
         // buttons = [ToolbarBtnType.CANCEL]
         break
       // 第一级采集选项
@@ -720,7 +749,8 @@ export default class ToolBar extends React.Component {
   /** 采集分类点击事件 **/
   showCollection = type => {
     let { data, buttons } = this.getData(type)
-    this.lastType = this.state.type
+    // this.lastType = this.state.type
+    Object.assign(this.lastState, this.state, {height: this.height})
     this.setState(
       {
         type: type,
@@ -1075,19 +1105,31 @@ export default class ToolBar extends React.Component {
 
   commit = (type = this.originType) => {
     this.showToolbar(false)
-    if (type.indexOf('MAP_EDIT_') >= 0) {
+    if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
     this.props.existFullMap && this.props.existFullMap()
   }
 
-  showBox = () => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: this.isBoxShow ? 0 : this.height,
-      duration: 300,
-    }).start()
-    this.isBoxShow = !this.isBoxShow
+  showBox = (autoFullScreen = false) => {
+    if (autoFullScreen) {
+      this.setState({
+        isFullScreen: !this.isBoxShow,
+      }, () => {
+        Animated.timing(this.state.boxHeight, {
+          toValue: this.isBoxShow ? 0 : this.height,
+          duration: 300,
+        }).start()
+        this.isBoxShow = !this.isBoxShow
+      })
+    } else {
+      Animated.timing(this.state.boxHeight, {
+        toValue: this.isBoxShow ? 0 : this.height,
+        duration: 300,
+      }).start()
+      this.isBoxShow = !this.isBoxShow
+    }
   }
 
   showSymbol = () => {
@@ -1299,6 +1341,50 @@ export default class ToolBar extends React.Component {
         },
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
+      if (item.path) {
+        // 打开模板工作空间
+        this.openTemplate(item)
+      } else {
+        // 切换地图
+        this.changeMap(item)
+      }
+    }
+  }
+
+  /** 打开模板工作空间 **/
+  openTemplate = async item => {
+    try {
+      this.props.setContainerLoading &&
+      this.props.setContainerLoading(true, '正在打开模板')
+
+      // 打开模板工作空间
+      this.props.openTemplate(item, ({copyResult, openResult}) => {
+        if (openResult) {
+          // 重新加载图层
+          this.props.getLayers({
+            type: -1,
+            isResetCurrentLayer: true,
+          })
+          this.setVisible(false)
+          Toast.show('已为您切换模板')
+        } else if (!copyResult) {
+          Toast.show('拷贝模板失败')
+        } else {
+          Toast.show('切换模板失败')
+        }
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      })
+    } catch (error) {
+      Toast.show('切换模板失败')
+      this.props.setContainerLoading && this.props.setContainerLoading(false)
+    }
+  }
+
+  /** 切换地图 **/
+  changeMap = async item => {
+    try {
+      // 获取地图信息
+      let mapInfo = await SMap.getMapInfo()
       // 打开地图
       let datasourceName = item.title.substr(
         item.title.lastIndexOf('@') + 1,
@@ -1313,26 +1399,28 @@ export default class ToolBar extends React.Component {
       }
       SMap.openDatasource(DSParams).then(result => {
         result &&
-          SMap.openMap(item.title).then(isOpen => {
-            if (isOpen) {
-              Toast.show('已为您切换到' + item.title)
-              this.props.setCurrentMap(item.title)
-              this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              this.props.setCollectionInfo({
-                datasourceName: datasourceName,
-                datasourceParentPath: this.props.collection
-                  .datasourceParentPath,
-                datasourceServer: server,
-                datasourceType: EngineType.UDB,
-              })
-              this.setVisible(false)
-            } else {
-              Toast.show('该地图为当前地图')
-            }
-          })
+        SMap.openMap(item.title).then(isOpen => {
+          if (isOpen) {
+            Toast.show('已为您切换到' + item.title)
+            this.props.setCurrentMap(item)
+            this.props.getLayers(-1, layers => {
+              this.props.setCurrentLayer(layers.length > 0 && layers[0])
+            })
+            this.props.setCollectionInfo({
+              datasourceName: datasourceName,
+              datasourceParentPath: this.props.collection
+                .datasourceParentPath,
+              datasourceServer: server,
+              datasourceType: EngineType.UDB,
+            })
+            this.setVisible(false)
+          } else {
+            Toast.show('该地图为当前地图')
+          }
+        })
       })
+    } catch (e) {
+      Toast.show('切换地图失败')
     }
   }
 
@@ -1414,7 +1502,7 @@ export default class ToolBar extends React.Component {
   }
 
   renderTabs = () => {
-    return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} />
+    return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} showBox={this.showBox} />
   }
 
   renderSymbol = () => {
@@ -1537,6 +1625,10 @@ export default class ToolBar extends React.Component {
           image = require('../../../../assets/mapEdit/flex.png')
           action = this.showBox
           break
+        case ToolbarBtnType.FLEX_FULL:
+          image = require('../../../../assets/mapEdit/flex.png')
+          action = () => this.showBox(true)
+          break
         case ToolbarBtnType.STYLE:
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.showBox
@@ -1597,9 +1689,9 @@ export default class ToolBar extends React.Component {
           image = require('../../../../assets/mapEdit/icon-rename-white.png')
           action = () => {
             SCollector.stopCollect()
-            this.setVisible(true, this.lastType, {
-              isFullScreen: false,
-              height: ConstToolType.HEIGHT[0],
+            this.setVisible(true, this.lastState.type, {
+              isFullScreen: this.lastState.isFullScreen,
+              height: this.lastState.height,
             })
           }
           break

@@ -2,7 +2,6 @@ package com.supermap.file;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 
@@ -62,21 +61,31 @@ public class FileManager {
 	{
 		File fromFile = new File(from);
 		File toFile = new File(to);
-		if(fromFile.isFile() && fromFile.exists())
-		{
-			try {
-				FileInputStream fis = new FileInputStream(fromFile);
-				return copyFile(fis, toFile, true);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
-			}
-		}
+		if (!fromFile.exists()) return false;
+		Boolean result = true;
+        try {
+		    if(fromFile.isFile()) {
+				return copyFile(fromFile, toFile, true);
+            } else {
+                File[] fileList = fromFile.listFiles();
+                for (File file : fileList) {
+                    if (file.isFile()) {
+                        File desFile = new File(to + "/" + file.getName());
+                        result = copyFile(file, desFile, true) && result;
+                    } else {
+                        result = copy(file.getAbsolutePath(), to + "/" + file.getName()) && result;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
 		
-		return false;
+		return result;
 	}
-	
+
 	public boolean copy(InputStream from ,String to)
 	{
 		File toFile = new File(to);
@@ -140,7 +149,7 @@ public class FileManager {
 		return false;
 	}
 	
-	private boolean copyFile(InputStream src,File des,boolean rewrite){
+	private boolean copyFile(File from, File des,boolean rewrite){
     	//目标路径不存在的话就创建一个
     	if(!des.getParentFile().exists()){
     		des.getParentFile().mkdirs();
@@ -154,7 +163,38 @@ public class FileManager {
     	}
     	
     	try{
-    		InputStream fis = src;
+    		InputStream fis = new FileInputStream(from);
+    		FileOutputStream fos = new FileOutputStream(des);
+    		//1kb
+    		byte[] bytes = new byte[1024];
+    		int readlength = -1;
+    		while((readlength = fis.read(bytes))>0){
+    			fos.write(bytes, 0, readlength);
+    		}
+    		fos.flush();
+    		fos.close();
+    		fis.close();
+    	}catch(Exception e){
+    		return false;
+    	}
+    	return true;
+    }
+
+	private boolean copyFile(InputStream from, File des,boolean rewrite){
+    	//目标路径不存在的话就创建一个
+    	if(!des.getParentFile().exists()){
+    		des.getParentFile().mkdirs();
+    	}
+    	if(des.exists()){
+    		if(rewrite){
+    			des.delete();
+    		}else{
+    			return false;
+    		}
+    	}
+
+    	try{
+    		InputStream fis = from;
     		FileOutputStream fos = new FileOutputStream(des);
     		//1kb
     		byte[] bytes = new byte[1024];
