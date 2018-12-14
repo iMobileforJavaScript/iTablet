@@ -78,7 +78,7 @@ export default class Find extends Component {
   }
 
   _footView() {
-    if (this.userDataCount >= 0) {
+    if (this.userDataCount >= this.state.data.length) {
       return (
         <View
           style={{

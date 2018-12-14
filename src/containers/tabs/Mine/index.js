@@ -2,10 +2,14 @@ import { connect } from 'react-redux'
 import Mine from './Mine'
 import { setUser } from '../../../models/user'
 import Register from './Register'
+
 import MyService from './MyService'
+import MyOnlineMap,{ScanOnlineMap} from './MyService/MyOnlineMap'
+
+
 import MyLocalData from './MyLocalData'
 import MyOnlineData from './MyOnlineData'
-import Login from './Login'
+
 const mapStateToProps = state => ({
   user: state.user.toJS(),
 })
@@ -19,4 +23,11 @@ export default connect(
   mapDispatchToProps,
 )(Mine)
 
-export { Register, MyOnlineData, MyLocalData, MyService, Login }
+export {
+  Register,
+  MyOnlineData,
+  MyLocalData,
+  MyService,
+  MyOnlineMap,
+  ScanOnlineMap,
+}

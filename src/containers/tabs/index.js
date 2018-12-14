@@ -5,7 +5,14 @@ import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 import Home from './Home'
-import Mine, { MyService, MyLocalData, MyOnlineData, Register } from './Mine'
+import Mine,{
+  MyService,
+  MyLocalData,
+  MyOnlineData,
+  Register,
+  MyOnlineMap,
+  ScanOnlineMap,
+} from './Mine'
 import Find from './Find'
 const Tabs = TabNavigator(
   {
@@ -185,4 +192,11 @@ const styles = StyleSheet.create({
 
 export default Tabs
 
-export { MyService, MyLocalData, MyOnlineData, Register }
+export {
+  MyService,
+  MyLocalData,
+  MyOnlineData,
+  Register,
+  MyOnlineMap,
+  ScanOnlineMap,
+}

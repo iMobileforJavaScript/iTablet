@@ -1,7 +1,6 @@
-import React from 'react'
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
-import styles, { textHeight } from './Styles'
+import styles from './Styles'
 
 import { Toast } from '../../../utils/index'
 
@@ -34,7 +33,7 @@ export default class RenderFindItem extends Component {
         <TouchableOpacity
           style={styles.itemViewStyle}
           onPress={() => {
-            Toast.show('服务没有地图2')
+            Toast.show('数据无法浏览')
           }}
         >
           <Image
@@ -53,7 +52,9 @@ export default class RenderFindItem extends Component {
                 resizeMode={'contain'}
                 source={require('../../../assets/tabBar/tab-我的-当前.png')}
               />
-              <Text style={styles.textStyle2}>{this.props.nickname}</Text>
+              <Text style={styles.textStyle2} numberOfLines={1}>
+                {this.props.nickname}
+              </Text>
             </View>
             <View style={[styles.viewStyle2, { marginTop: 5 }]}>
               <Image
@@ -61,21 +62,12 @@ export default class RenderFindItem extends Component {
                 resizeMode={'contain'}
                 source={require('../../../assets/tabBar/tmp-time-icon.png')}
               />
-              <Text style={styles.textStyle2}>{time}</Text>
+              <Text style={styles.textStyle2} numberOfLines={1}>
+                {time}
+              </Text>
             </View>
-            <View style={{ flex: 1 }} />
-            <Text
-              style={[
-                styles.restTitleTextStyle,
-                {
-                  lineHeight: textHeight,
-                  textAlign: 'right',
-                  paddingRight: 25,
-                },
-              ]}
-            >
-              ...
-            </Text>
+            {/*<View style={{flex:1}}/>*/}
+            {/*<Text style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>*/}
           </View>
         </TouchableOpacity>
         <View style={styles.separateViewStyle} />
