@@ -50,17 +50,17 @@ export default [
     action: async user => {
       GLOBAL.Type = ConstToolType.MAP_3D
       let customerPath
+      let default3DDataPath
       if (Platform.OS === 'android') {
-        customerPath =
-          ConstPath.CustomerPath +
-          ConstPath.RelativeFilePath.Scene +
-          'OlympicGreen_android/OlympicGreen_android.sxwu'
+        default3DDataPath = 'OlympicGreen_android/OlympicGreen_android.sxwu'
       } else {
-        customerPath =
-          ConstPath.CustomerPath +
-          ConstPath.RelativeFilePath.Scene +
-          'OlympicGreen_ios/OlympicGreen_ios.sxwu'
+        default3DDataPath = 'OlympicGreen_ios/OlympicGreen_ios.sxwu'
       }
+      customerPath =
+        ConstPath.CustomerPath +
+        ConstPath.RelativeFilePath.Scene +
+        default3DDataPath
+
       let ssPath = await Utility.appendingHomeDirectory(customerPath)
       if (user.userName) {
         const userWSPath =
@@ -68,7 +68,7 @@ export default [
           user.userName +
           '/' +
           ConstPath.RelativeFilePath.Scene +
-          'OlympicGreen_android/OlympicGreen_android.sxwu'
+          default3DDataPath
         ssPath = await Utility.appendingHomeDirectory(userWSPath)
       } else {
         ssPath = await Utility.appendingHomeDirectory(customerPath)

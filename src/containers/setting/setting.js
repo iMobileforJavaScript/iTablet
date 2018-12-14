@@ -153,7 +153,7 @@ export default class setting extends Component {
       <MapToolbar
         navigation={this.props.navigation}
         initIndex={3}
-        type={'MAP_3D'}
+        type={this.type}
       />
     )
   }

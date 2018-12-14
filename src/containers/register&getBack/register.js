@@ -13,7 +13,7 @@ import { Container } from '../../components'
 const DEFAULTWIDTH = 300
 const BGCOLOR = constUtil.USUAL_GREEN
 
-export default class Register extends React.Component {
+export default class OldRegister extends React.Component {
   props: {
     navigation: Object,
   }

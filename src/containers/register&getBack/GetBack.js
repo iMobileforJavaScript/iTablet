@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, WebView, Platform } from 'react-native'
+import { StyleSheet, WebView } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
 import { Container } from '../../components'
@@ -31,7 +31,7 @@ export default class GetBack extends React.Component {
       <Container
         style={styles.container}
         headerProps={{
-          title: 'iTablet注册',
+          title: 'iTablet找回密码',
           navigation: this.props.navigation,
         }}
       >
@@ -45,18 +45,20 @@ export default class GetBack extends React.Component {
         {/*<BorderInput password={true} placeholder='确认密码' />*/}
         {/*<BtnTwo text='找回密码' width={90} btnClick={this._register} />*/}
         {/*</View>*/}
+        {/*let uri ='https://sso.supermap.com/password?service=https://www.supermapol.com' */}
         <WebView
-          scalesPageToFit={Platform.OS === 'ios'}
+          scalesPageToFit={true}
           // scalesPageToFit={true}
           // automaticallyAdjustContentInsets={true}
           contentInset={{ top: 0, left: 0, right: 0, bottom: 0 }}
           style={styles.webView}
           source={{
             uri:
-              'https://sso.supermap.com/password?service=https://www.supermapol.com',
+              'http://www.supermapol.com/proxy/iserver/services/map_world--4/rest/maps/%E4%B8%96%E7%95%8C%E5%9C%B0%E5%9B%BE_Day.leaflet',
           }}
           javaScriptEnabled={true}
           domStorageEnabled={true}
+          startInLoadingState={true}
         />
       </Container>
     )

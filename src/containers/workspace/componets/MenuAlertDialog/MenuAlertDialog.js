@@ -76,6 +76,11 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '分段方法',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getRangeMode(ConstToolType.MAP_THEME_PARAM_RANGE_MODE)
+        }
       },
     },
     {
@@ -94,13 +99,20 @@ export default class MenuAlertDialog extends React.Component {
     },
   ]
 
-  //标签
+  //统一标签
   labelMenuInfo = [
     {
       key: '表达式',
       btntitle: '表达式',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getThemeExpress(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
+          )
+        }
       },
     },
     {
@@ -108,6 +120,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '背景形状',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelBackShape(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE,
+          )
+        }
       },
     },
     {
@@ -115,6 +134,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '字体',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontName(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+          )
+        }
       },
     },
     {
@@ -129,6 +155,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '旋转角度',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontRotation(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+          )
+        }
       },
     },
     {
@@ -136,6 +169,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '颜色',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontColor(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR,
+          )
+        }
       },
     },
   ]
@@ -158,7 +198,7 @@ export default class MenuAlertDialog extends React.Component {
       case constants.THEME_RANGE_STYLE:
         data = this.rangeMenuInfo
         break
-      case constants.THEME_UNIQUE_LABEL:
+      case constants.THEME_UNIFY_LABEL:
         data = this.labelMenuInfo
         break
       default:
@@ -199,9 +239,10 @@ export default class MenuAlertDialog extends React.Component {
   renderItem({ item }) {
     return (
       <TouchableHighlight
+        style={styles.btn}
         activeOpacity={0.9}
         underlayColor="#4680DF"
-        style={styles.btn}
+        // underlayColor = {'rgba(70,128,223,0.9)'}
         onPress={item.action}
       >
         <Text style={styles.btnTitle}>{item.btntitle}</Text>

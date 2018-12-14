@@ -46,11 +46,13 @@ import {
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
-import ThemeColorGradientType from './ThemeColorGradientType'
+import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
+import ColorTableList from '../../../../components/ColorTableList'
+import { ColorBtn } from '../../../../components/mapTools'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -94,6 +96,7 @@ export default class ToolBar extends React.Component {
     setCurrentLayer?: () => {}, // 设置当前图层
     importTemplate?: () => {}, // 导入模板
     openTemplate?: () => {}, // 打开模板
+    setAttributes?: () => {},
   }
 
   static defaultProps = {
@@ -615,13 +618,11 @@ export default class ToolBar extends React.Component {
 
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: this.height,
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
 
-    // let path = '/storage/emulated/0/SampleData/World/World.udb'
-    // let DatasetName = 'Countries'
     let list = await SThemeCartography.getThemeExpressByUdb(
       this.state.themeUdbPath,
       this.state.themeDatasetName,
@@ -632,30 +633,152 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      data: datalist,
-      type: type,
-    })
+    this.setState(
+      {
+        containerType: 'list',
+        data: datalist,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+      },
+    )
   }
 
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: this.height,
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
 
-    let list = await ThemeColorGradientType.getColorGradientType()
+    let list = await ThemeMenuData.getColorGradientType()
     let datalist = [
       {
         title: '颜色方案',
         data: list,
       },
     ]
-    this.setState({
-      data: datalist,
-      type: type,
-    })
+    this.setState(
+      {
+        containerType: 'list',
+        data: datalist,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+      },
+    )
+  }
+
+  getRangeMode = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[2],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getRangeMode()
+    this.setState(
+      {
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[2]
+      },
+    )
+  }
+
+  getLabelBackShape = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[2],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelBackShape()
+    this.setState(
+      {
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[2]
+      },
+    )
+  }
+
+  getLabelFontName = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontName()
+    this.setState(
+      {
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
+  }
+
+  getLabelFontRotation = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[0],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontRotation()
+    this.setState(
+      {
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[0]
+      },
+    )
+  }
+
+  getLabelFontColor = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontColor()
+    this.setState(
+      {
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
   }
 
   getflylist = async () => {
@@ -1008,7 +1131,9 @@ export default class ToolBar extends React.Component {
     ) {
       SCollector.stopCollect()
     }
-    if (
+    if (type === ConstToolType.MAP_EDIT_TAGGING) {
+      SMap.setAction(Action.PAN)
+    } else if (
       typeof type === 'string' &&
       type.indexOf('MAP_EDIT_') >= 0 &&
       type !== ConstToolType.MAP_EDIT_DEFAULT
@@ -1044,6 +1169,7 @@ export default class ToolBar extends React.Component {
   closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.Map3DSymbol = false
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1054,9 +1180,36 @@ export default class ToolBar extends React.Component {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  getMap3DAttribute = async () => {
+    let data = await SScene.getLableAttributeList()
+    let list = []
+    for (let index = 0; index < data.length; index++) {
+      let item = [
+        {
+          fieldInfo: { caption: 'id' },
+          name: 'id',
+          value: data[index].id,
+        },
+        {
+          fieldInfo: { caption: 'name' },
+          name: 'name',
+          value: data[index].name,
+        },
+        {
+          fieldInfo: { caption: 'description' },
+          name: 'description',
+          value: data[index].description,
+        },
+      ]
+      list.push(item)
+    }
+    this.props.setAttributes && this.props.setAttributes(list)
+  }
+
   symbolSave = () => {
     try {
       SScene.save()
+      this.getMap3DAttribute()
       Toast.show('保存成功')
     } catch (error) {
       Toast.show('保存失败')
@@ -1074,11 +1227,6 @@ export default class ToolBar extends React.Component {
   getType = () => {
     return this.type
   }
-
-  getOldLayerList = data => {
-    this.oldLayerList = data
-  }
-
   menu = () => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.isBoxShow ? 0 : this.height,
@@ -1230,14 +1378,14 @@ export default class ToolBar extends React.Component {
     ) {
       //分段专题图表达式
       this.setState({
-        themeColor: item.key,
+        themeExpress: item.title,
       })
       ;(async function() {
         let Params = {
           // DatasourceAlias: this.state.themeDatasourceAlias,
           // DatasetName: this.state.themeDatasetName,
-          RangeExpression: this.state.themeExpress,
-          // ColorGradientType: item.key,
+          RangeExpression: item.title,
+          // ColorGradientType: this.state.themeColor,
           // LayerName: 'Countries@Countries#1',
           LayerIndex: '0',
         }
@@ -1259,7 +1407,22 @@ export default class ToolBar extends React.Component {
           RangeMode: 'EQUALINTERVAL',
           RangeParameter: '32.0',
         }
-        await SThemeCartography.createThemeRangeMap(Params)
+        await SThemeCartography.createAndRemoveThemeRangeMap(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+    ) {
+      //统一标签表达式
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let Params = {
+          LabelExpression: item.title,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.setUniformLabelExpression(Params)
       }.bind(this)())
     }
   }
@@ -1292,11 +1455,29 @@ export default class ToolBar extends React.Component {
           themeDatasourceAlias: item.title,
           themeDatasetName: item.title,
         })
-        ToolbarData.setThemeParams(
-          item.title,
-          item.title,
-          this.state.themeExpress,
-        )
+        ToolbarData.setUniqueThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setRangeThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          RangeExpression: this.state.themeExpress,
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setUniformLabelParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          LabelExpression: '国家',
+          LabelBackShape: 'NONE',
+          FontName: '宋体',
+          // FontSize: '15.0',
+          ForeColor: '#40E0D0',
+        })
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1455,6 +1636,17 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  renderColorTable = () => {
+    return (
+      <ColorTableList
+        data={this.state.data}
+        type={this.state.tableType}
+        numColumns={this.state.column}
+        renderCell={this._renderColorItem}
+      />
+    )
+  }
+
   itemaction = async item => {
     switch (item.key) {
       case 'psDistance':
@@ -1483,15 +1675,29 @@ export default class ToolBar extends React.Component {
             case constants.THEME_RANGE_STYLE:
               type = constants.THEME_RANGE_STYLE
               break
-            case constants.THEME_UNIQUE_LABEL:
-              type = constants.THEME_UNIQUE_LABEL
+            case constants.THEME_UNIFY_LABEL:
+              type = constants.THEME_UNIFY_LABEL
               break
           }
           let menutoolRef =
             this.props.getMenuAlertDialogRef &&
             this.props.getMenuAlertDialogRef()
-          if (menutoolRef) {
+          if (menutoolRef && type !== '') {
             menutoolRef.setMenuType(type)
+          }
+
+          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+            let Params = {
+              DatasourceAlias: this.state.themeDatasourceAlias,
+              DatasetName: this.state.themeDatasetName,
+              RangeExpression: this.state.themeExpress,
+              ColorGradientType: this.state.themeColor,
+              // LayerName: 'Countries@Countries#1',
+              LayerIndex: '0',
+              RangeMode: item.key,
+              RangeParameter: '32.0',
+            }
+            ThemeMenuData.setRangeThemeParams(Params)
           }
         }
         item.action()
@@ -1527,6 +1733,19 @@ export default class ToolBar extends React.Component {
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
+        background={item.background}
+        onPress={() => {
+          this.itemaction(item)
+        }}
+      />
+    )
+  }
+
+  _renderColorItem = ({ item, rowIndex, cellIndex }) => {
+    return (
+      <ColorBtn
+        key={rowIndex + '-' + cellIndex}
+        background={item.background}
         onPress={() => {
           this.itemaction(item)
         }}
@@ -1596,6 +1815,9 @@ export default class ToolBar extends React.Component {
       case symbol:
         box = this.renderSymbol()
         break
+      case 'colortable':
+        box = this.renderColorTable()
+        break
       case table:
       default:
         box = this.renderTable()
@@ -1627,11 +1849,11 @@ export default class ToolBar extends React.Component {
         action = () => {}
       switch (type) {
         case ToolbarBtnType.CANCEL:
-          image = require('../../../../assets/mapEdit/cancel.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_close.png')
           action = this.close
           break
         case ToolbarBtnType.FLEX:
-          image = require('../../../../assets/mapEdit/flex.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
           action = this.showBox
           break
         case ToolbarBtnType.FLEX_FULL:
@@ -1643,15 +1865,15 @@ export default class ToolBar extends React.Component {
           action = this.showBox
           break
         case ToolbarBtnType.COMMIT:
-          image = require('../../../../assets/mapEdit/commit.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.commit
           break
         case ToolbarBtnType.MENU:
-          image = require('../../../../assets/mapEdit/menu.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menu
           break
         case ToolbarBtnType.MENUS:
-          image = require('../../../../assets/mapEdit/menu.png')
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menus
           break
         case ToolbarBtnType.CLOSE_ANALYST:

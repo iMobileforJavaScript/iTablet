@@ -34,7 +34,7 @@ export default class Mine extends Component {
     // }
     //
     // let getImage = fetch('https://www.supermapol.com/proxy/iserver/services/map_beijing_new/rest/maps/beijing/entireImage.png',headers)
-    NavigationService.navigate('MyData')
+    NavigationService.navigate('MyOnlineData')
   }
 
   goToMyService = () => {
@@ -71,7 +71,12 @@ export default class Mine extends Component {
             />
           </TouchableOpacity>
           <Text
-            style={{ flex: 1, lineHeight: headerHeight, fontSize: fontSize }}
+            style={{
+              flex: 1,
+              lineHeight: headerHeight,
+              fontSize: fontSize,
+              color: 'white',
+            }}
           >
             {this.props.user.currentUser.userName}
           </Text>
@@ -86,8 +91,11 @@ export default class Mine extends Component {
                 textAlign: 'left',
                 fontSize: fontSize,
                 paddingLeft: 10,
+                color: 'white',
               }}
-              onPress={() => {}}
+              onPress={() => {
+                NavigationService.navigate('GetBack')
+              }}
             >
               本地数据
             </Text>
@@ -99,6 +107,7 @@ export default class Mine extends Component {
                 textAlign: 'left',
                 fontSize: fontSize,
                 paddingLeft: 10,
+                color: 'white',
               }}
               onPress={() => {
                 this.goToMyService()

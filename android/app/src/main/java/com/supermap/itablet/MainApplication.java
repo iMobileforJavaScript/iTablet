@@ -2,8 +2,11 @@ package com.supermap.itablet;
 
 import android.support.multidex.MultiDexApplication;
 
+import com.github.yamill.orientation.OrientationPackage;
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import com.rnfs.RNFSPackage;
+import com.github.yamill.orientation.OrientationPackage;
 import com.rnfs.RNFSPackage;
 import com.supermap.SupermapFullPackage;
 import com.facebook.react.ReactNativeHost;
@@ -27,7 +30,8 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-                    new RNFSPackage(),
+            new RNFSPackage(),
+            new OrientationPackage(),
                     new SupermapFullPackage(),
                     new MyReactpackge()
 
@@ -47,6 +51,15 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
 
     public static MainApplication getInstance() {
         return sInstance;
+    }
+
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+            new SupermapFullPackage(),
+              new MyReactpackge(),
+              new OrientationPackage()
+      );
     }
 
     @Override

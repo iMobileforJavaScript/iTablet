@@ -5,8 +5,8 @@ import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 import Home from './Home'
-import Mine from './Mine'
-
+import Mine, { MyService, MyLocalData, MyOnlineData, Register } from './Mine'
+import Find from './Find'
 const Tabs = TabNavigator(
   {
     Home: {
@@ -29,8 +29,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/home/icon_home_selected.png')
-                  : require('../../assets/home/icon_home_select.png')
+                  ? require('../../assets/tabBar/tab-首页-选中.png')
+                  : require('../../assets/tabBar/tab-首页-当前.png')
               }
               style={styles.icon}
             />
@@ -68,6 +68,36 @@ const Tabs = TabNavigator(
     //     }
     //   },
     // },
+    Find: {
+      screen: Find,
+      navigationOptions: () => {
+        return {
+          tabBarLabel: data => {
+            return (
+              <View style={styles.labelView}>
+                <Text
+                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                >
+                  发现
+                </Text>
+              </View>
+            )
+          },
+          tabBarIcon: ({ focused }: any) => (
+            <Image
+              resizeMode="contain"
+              source={
+                focused
+                  ? require('../../assets/tabBar/tab-发现-选中.png')
+                  : require('../../assets/tabBar/tab-发现-当前.png')
+              }
+              style={styles.icon}
+            />
+          ),
+          header: null,
+        }
+      },
+    },
     Mine: {
       screen: Mine,
       navigationOptions: () => {
@@ -88,8 +118,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/home/icon_mine_select.png')
-                  : require('../../assets/home/icon_mine_select.png')
+                  ? require('../../assets/tabBar/tab-我的-选中.png')
+                  : require('../../assets/tabBar/tab-我的-当前.png')
               }
               style={styles.icon}
             />
@@ -154,3 +184,5 @@ const styles = StyleSheet.create({
 })
 
 export default Tabs
+
+export { MyService, MyLocalData, MyOnlineData, Register }
