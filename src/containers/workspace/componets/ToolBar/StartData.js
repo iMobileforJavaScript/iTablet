@@ -194,30 +194,31 @@ function openWorkspace(cb) {
 }
 
 /** 打开地图 **/
-function openMap() {
+function openMap(isOpenTemplate = GLOBAL.Type === constants.COLLECTION) {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   let data = []
-  SMap.getMaps().then(list => {
+  _params.getMaps(list => {
     data = [
       {
         title: '地图',
         data: list,
       },
     ]
-    NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-      templateList => {
-        data.push({
-          title: '模板',
-          data: templateList,
-        })
-        _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-          containerType: 'list',
-          height: ConstToolType.HEIGHT[3],
-          data,
-        })
-      },
-    )
+    isOpenTemplate &&
+      NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+        templateList => {
+          data.push({
+            title: '模板',
+            data: templateList,
+          })
+          _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+            containerType: 'list',
+            height: ConstToolType.HEIGHT[3],
+            data,
+          })
+        },
+      )
   })
 }
 

@@ -593,6 +593,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Symbol");
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
+        createDirectory(dataPath + "Temp");
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";

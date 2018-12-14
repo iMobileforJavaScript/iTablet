@@ -22,6 +22,7 @@ export default {
   SHOW_ATTRIBUTE: 'showAttribute', // 显示属性
   CLEAR_CURRENT_LABEL: 'clearCurrentLabel',
   CLOSE_CIRCLE: 'closeCircle',
+  SHARE: 'SHARE',
   //专题制图
   THEME_CANCEL: 'theme_cancel',
   THEME_MENU: 'theme_menu',

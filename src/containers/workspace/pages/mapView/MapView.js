@@ -72,6 +72,9 @@ export default class MapView extends React.Component {
     openTemplate: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
     setTemplate: PropTypes.func,
+    getMaps: PropTypes.func,
+    exportWorkspace: PropTypes.func,
+    openWorkspace: PropTypes.func,
   }
 
   constructor(props) {
@@ -735,7 +738,8 @@ export default class MapView extends React.Component {
       return
     }
     try {
-      let result = await SMap.openWorkspace(wsData.DSParams)
+      // let result = await SMap.openWorkspace(wsData.DSParams)
+      let result = await this.props.openWorkspace(wsData.DSParams)
       result && SMap.openMap(index)
     } catch (e) {
       this.container.setLoading(false)
@@ -914,6 +918,8 @@ export default class MapView extends React.Component {
         collection={this.props.collection}
         importTemplate={this.props.importTemplate}
         openTemplate={this.props.openTemplate}
+        getMaps={this.props.getMaps}
+        exportWorkspace={this.props.exportWorkspace}
       />
     )
   }

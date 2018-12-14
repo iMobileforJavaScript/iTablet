@@ -3,12 +3,15 @@ import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, Utility } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
+import { Toast } from '../utils'
 import { ConstPath } from '../constants'
 import fs from 'react-native-fs'
 import xml2js from 'react-native-xml2js'
 let parser = new xml2js.Parser()
 // Constants
 // --------------------------------------------------
+export const OPEN_WORKSPACE = 'OPEN_WORKSPACE'
+export const GET_MAPS = 'GET_MAPS'
 export const SET_LATEST_MAP = 'SET_LATEST_MAP'
 export const SET_MAP_VIEW = 'SET_MAP_VIEW'
 export const SET_CURRENT_MAP = 'SET_CURRENT_MAP'
@@ -17,8 +20,66 @@ export const SET_TEMPLATE = 'SET_TEMPLATE'
 export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
 
+let isExporting = false
+
 // Actions
 // --------------------------------------------------
+// 打开工作空间
+export const openWorkspace = (params, cb = () => {}) => async dispatch => {
+  try {
+    let result = await SMap.openWorkspace(params)
+    await dispatch({
+      type: OPEN_WORKSPACE,
+      payload: params || {},
+    })
+    cb && cb(result)
+    return result
+  } catch (e) {
+    await dispatch({
+      type: OPEN_WORKSPACE,
+      payload: {},
+    })
+    cb && cb(false)
+    return false
+  }
+}
+
+// 关闭工作空间
+export const closeWorkspace = (params, cb = () => {}) => async dispatch => {
+  try {
+    let result = await SMap.closeWorkspace(params)
+    await dispatch({
+      type: OPEN_WORKSPACE,
+      payload: params || {},
+    })
+    cb && cb(result)
+  } catch (e) {
+    await dispatch({
+      type: OPEN_WORKSPACE,
+      payload: {},
+    })
+    cb && cb(false)
+  }
+}
+
+// 获取当前工作空间的地图列表
+export const getMaps = (cb = () => {}) => async dispatch => {
+  try {
+    let maps = await SMap.getMaps()
+    await dispatch({
+      type: GET_MAPS,
+      payload: maps || [],
+    })
+    cb && cb(maps)
+  } catch (e) {
+    await dispatch({
+      type: GET_MAPS,
+      payload: [],
+    })
+    cb && cb(false)
+  }
+}
+
 export const setLatestMap = (params, cb = () => {}) => async dispatch => {
   await dispatch({
     type: SET_LATEST_MAP,
@@ -112,6 +173,51 @@ export const importTemplate = (params, cb = () => {}) => async dispatch => {
   cb && cb(result)
 }
 
+// 导出模版
+export const exportWorkspace = (params, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  if (isExporting) {
+    Toast.show('请稍后再试')
+    return false
+  }
+  let userName = getState().user.toJS().currentUser.userName || 'Customer'
+  let workspace = getState().map.toJS().workspace
+  let path = params.outPath,
+    fileName = '',
+    zipPath = ''
+  let result = false
+  if (!path) {
+    fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
+    path =
+      ConstPath.UserPath +
+      userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      fileName
+    path = await Utility.appendingHomeDirectory(path)
+  }
+  // 导出工作空间
+  if (params.maps && params.maps.length > 0) {
+    let fileReplace =
+      params.fileReplace === undefined ? true : params.fileReplace
+    result = await SMap.exportWorkspace(params.maps, path, fileReplace)
+  }
+  // 压缩工作空间
+  if (result) {
+    zipPath =
+      path.substr(0, path.lastIndexOf('/') + 1) +
+      fileName.substr(0, fileName.lastIndexOf('.')) +
+      '.zip'
+    result = await FileTools.zipFile(path, zipPath)
+  }
+  // 删除导出的工作空间
+  await FileTools.deleteFile(path)
+  isExporting = true
+  cb && cb(result, zipPath)
+}
+
 // 设置模版
 export const setTemplate = (params, cb = () => {}) => async dispatch => {
   await dispatch({
@@ -199,6 +305,7 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
 const initialState = fromJS({
   latestMap: [],
   map: {},
+  maps: [],
   currentMap: {},
   template: {},
   symbolTemplates: {
@@ -206,12 +313,15 @@ const initialState = fromJS({
     path: '',
   },
   currentTemplateInfo: {},
-  // workspace: {},
+  workspace: {},
   // mapControl: {},
 })
 
 export default handleActions(
   {
+    [`${OPEN_WORKSPACE}`]: (state, { payload }) => {
+      return state.setIn(['workspace'], fromJS(payload))
+    },
     [`${SET_LATEST_MAP}`]: (state, { payload }) => {
       let newData = state.toJS().latestMap || []
       let isExist = false
@@ -242,6 +352,9 @@ export default handleActions(
       }
       return state
     },
+    [`${GET_MAPS}`]: (state, { payload }) => {
+      return state.setIn(['maps'], fromJS(payload))
+    },
     [`${SET_CURRENT_MAP}`]: (state, { payload }) => {
       return state.setIn(['currentMap'], fromJS(payload))
     },
@@ -265,6 +378,7 @@ export default handleActions(
       data = Object.assign({}, payloadData, {
         currentMap: {},
         template: {},
+        maps: [],
         currentTemplateInfo: {},
         symbolTemplates: {
           symbols: [],
