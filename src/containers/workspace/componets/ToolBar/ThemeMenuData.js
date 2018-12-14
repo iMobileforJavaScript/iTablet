@@ -1,11 +1,16 @@
 import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
+import ToolbarBtnType from './ToolbarBtnType'
 
 let _params = {}
 
-function setRangeThemeParams(params) {
+function setThemeParams(params) {
   _params = params
+}
+
+function showToast() {
+  Toast.show('功能暂未开放')
 }
 
 /** 设置分段模式 **/
@@ -73,17 +78,17 @@ function getRangeMode() {
   return data
 }
 
-function showToast() {
-  Toast.show('功能暂未开放')
+/**设置统一标签背景形状 */
+function setLabelBackShape() {
+  return SThemeCartography.setUniformLabelBackShape(_params)
 }
 
-/**设置统一标签背景形状 */
 function getLabelBackShape() {
   let data = [
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_NONE,
       title: '空背景',
-      action: showToast,
+      action: setLabelBackShape,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
@@ -91,7 +96,7 @@ function getLabelBackShape() {
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_DIAMOND,
       title: '菱形背景',
-      action: showToast,
+      action: setLabelBackShape,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
@@ -99,7 +104,7 @@ function getLabelBackShape() {
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ROUNDRECT,
       title: '圆角矩形背景',
-      action: showToast,
+      action: setLabelBackShape,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
@@ -107,7 +112,7 @@ function getLabelBackShape() {
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_RECT,
       title: '矩形背景',
-      action: showToast,
+      action: setLabelBackShape,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
@@ -115,7 +120,7 @@ function getLabelBackShape() {
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ELLIPSE,
       title: '椭圆形背景',
-      action: showToast,
+      action: setLabelBackShape,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
@@ -123,7 +128,7 @@ function getLabelBackShape() {
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_TRIANGLE,
       title: '三角形背景',
-      action: showToast,
+      action: setLabelBackShape,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
@@ -141,11 +146,15 @@ function getLabelBackShape() {
 }
 
 /**设置统一标签字体 */
+function setLabelFontName() {
+  return SThemeCartography.setUniformLabelFontName(_params)
+}
+
 function getLabelFontName() {
   let data = [{
     key: '微软雅黑',
     title: '微软雅黑',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
     image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
     selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
@@ -153,125 +162,129 @@ function getLabelFontName() {
   {
     key: '宋体',
     title: '宋体',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '楷体',
     title: '楷体',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '黑体',
     title: '黑体',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '隶书',
     title: '隶书',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '幼圆',
     title: '幼圆',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '华文行楷',
     title: '华文行楷',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '华文琥珀',
     title: '华文琥珀',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '华文楷体',
     title: '华文楷体',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '方正舒体',
     title: '方正舒体',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '方正姚体',
     title: '方正姚体',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   {
     key: '华文新魏',
     title: '华文新魏',
-    action: showToast,
+    action: setLabelFontName,
     size: 'large',
-    image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+    selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
   },
   ]
   return data
 }
 
 /**设置统一标签旋转角度 */
+function setLabelFontRotation() {
+  return SThemeCartography.setUniformLabelRotaion(_params)
+}
+
 function getLabelFontRotation() {
   let data = [{
-    key: '左旋转90°',
+    key: '90',
     title: '左旋转90°',
-    action: showToast,
+    action: setLabelFontRotation,
     size: 'large',
     image: require('../../../../assets/mapTools/uniformlabel_rotation_left.png'),
     selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_left.png'),
   },
   {
-    key: '右旋转90°',
+    key: '-90',
     title: '右旋转90°',
-    action: showToast,
+    action: setLabelFontRotation,
     size: 'large',
     image: require('../../../../assets/mapTools/uniformlabel_rotation_right.png'),
     selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_right.png'),
   },
   {
-    key: '上下翻转',
+    key: '180',
     title: '上下翻转',
-    action: showToast,
+    action: setLabelFontRotation,
     size: 'large',
     image: require('../../../../assets/mapTools/uniformlabel_rotation_updown.png'),
     selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_updown.png'),
   },
   {
-    key: '左右翻转',
+    key: '-180',
     title: '左右翻转',
-    action: showToast,
+    action: setLabelFontRotation,
     size: 'large',
     image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright.png'),
     selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_leftright.png'),
@@ -281,297 +294,320 @@ function getLabelFontRotation() {
 }
 
 /**设置统一标签字体颜色 */
+function setLabelFontColor() {
+  return SThemeCartography.setUniformLabelColor(_params)
+}
+
 function getLabelFontColor() {
   let data = [{
     key: '#000000',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#000000',
   },
   {
     key: '#424242',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#424242',
   },
   {
     key: '#757575',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#757575',
   },
   {
     key: '#BDBDBD',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#BDBDBD',
   },
   {
     key: '#EEEEEE',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#EEEEEE',
   },
   {
     key: '#FFFFFF',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FFFFFF',
   },
   {
     key: '#3E2723',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#3E2723',
   },
   {
     key: '#5D4037',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#5D4037',
   },
   {
     key: '#A1887F',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#A1887F',
   },
   {
     key: '#D7CCC8',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#D7CCC8',
   },
   {
     key: '#263238',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#263238',
   },
   {
     key: '#546E7A',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#546E7A',
   },
   {
     key: '#90A4AE',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#90A4AE',
   },
   {
     key: '#CFD8DC',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#CFD8DC',
   },
   {
     key: '#FFECB3',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FFECB3',
   },
   {
     key: '#FFF9C4',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FFF9C4',
   },
   {
     key: '#F1F8E9',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#F1F8E9',
   },
   {
     key: '#E3F2FD',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#E3F2FD',
   },
   {
     key: '#EDE7F6',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#EDE7F6',
   },
   {
     key: '#FCE4EC',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FCE4EC',
   },
   {
     key: '#FBE9E7',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FBE9E7',
   },
   {
     key: '#004D40',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#004D40',
   },
   {
     key: '#006064',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#006064',
   },
   {
     key: '#009688',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#009688',
   },
   {
     key: '#8BC34A',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#8BC34A',
   },
   {
     key: '#A5D6A7',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#A5D6A7',
   },
   {
     key: '#80CBC4',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#80CBC4',
   },
   {
     key: '#80DEEA',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#80DEEA',
   },
   {
     key: '#A1C2FA',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#A1C2FA',
   },
   {
     key: '#9FA8DA',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#9FA8DA',
   },
   {
     key: '#01579B',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#01579B',
   },
   {
     key: '#1A237E',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#1A237E',
   },
   {
     key: '#3F51B5',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#3F51B5',
   },
   {
     key: '#03A9F4',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#03A9F4',
   },
   {
     key: '#4A148C',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#4A148C',
   },
   {
     key: '#673AB7',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#673AB7',
   },
   {
     key: '#9C27B0',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#9C27B0',
   },
   {
     key: '#880E4F',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#880E4F',
   },
   {
     key: '#E91E63',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#E91E63',
   },
   {
     key: '#F44336',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#F44336',
   },
   {
     key: '#F48FB1',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#F48FB1',
   },
   {
     key: '#EF9A9A',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#EF9A9A',
   },
   {
     key: '#F57F17',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#F57F17',
   },
   {
     key: '#F4B400',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#F4B400',
   },
   {
     key: '#FADA80',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FADA80',
   },
   {
     key: '#FFF59D',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FFF59D',
   },
   {
     key: '#FFEB3B',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FFEB3B',
   },
   {
     key: '#FFD700',
-    action: showToast,
+    action: setLabelFontColor,
     size: 'large',
     background: '#FFD700',
   },
   ]
   return data
+}
+
+function getThemeFourMenu() {
+  let buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.THEME_COMMIT,
+  ]
+  return buttons
+}
+
+function getThemeThreeMenu() {
+  let buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.THEME_COMMIT,
+  ]
+  return buttons
 }
 
 /**
@@ -695,9 +731,11 @@ function getColorGradientType() {
 export default {
   getRangeMode,
   getColorGradientType,
-  setRangeThemeParams,
+  setThemeParams,
   getLabelBackShape,
   getLabelFontName,
   getLabelFontRotation,
   getLabelFontColor,
+  getThemeFourMenu,
+  getThemeThreeMenu,
 }

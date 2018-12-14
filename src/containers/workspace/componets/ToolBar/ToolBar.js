@@ -605,9 +605,13 @@ export default class ToolBar extends React.Component {
       },
     ]
     this.setState({
+      isFullScreen: false,
+      isTouchProgress: false,
+      isSelectlist: false,
       containerType: 'list',
       data: datalist,
       type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[4]
     },
@@ -629,9 +633,13 @@ export default class ToolBar extends React.Component {
       },
     ]
     this.setState({
+      isFullScreen: false,
+      isTouchProgress: false,
+      isSelectlist: false,
       containerType: 'list',
       data: datalist,
       type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[4]
     },
@@ -648,11 +656,15 @@ export default class ToolBar extends React.Component {
     let date = await ThemeMenuData.getRangeMode()
     this.setState(
       {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
         containerType: 'table',
         column: 4,
         tableType: 'normal',
         data: date,
         type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
         this.height = ConstToolType.THEME_HEIGHT[2]
@@ -669,11 +681,15 @@ export default class ToolBar extends React.Component {
 
     let date = await ThemeMenuData.getLabelBackShape()
     this.setState({
+      isFullScreen: false,
+      isTouchProgress: false,
+      isSelectlist: false,
       containerType: 'table',
       column: 4,
       tableType: 'normal',
       data: date,
       type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[2]
     }, )
@@ -688,11 +704,15 @@ export default class ToolBar extends React.Component {
 
     let date = await ThemeMenuData.getLabelFontName()
     this.setState({
+      isFullScreen: false,
+      isTouchProgress: false,
+      isSelectlist: false,
       containerType: 'table',
       column: 4,
       tableType: 'normal',
       data: date,
       type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[3]
     }, )
@@ -707,14 +727,37 @@ export default class ToolBar extends React.Component {
 
     let date = await ThemeMenuData.getLabelFontRotation()
     this.setState({
+      isFullScreen: false,
+      isTouchProgress: false,
+      isSelectlist: false,
       containerType: 'table',
       column: 4,
       tableType: 'normal',
       data: date,
       type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[0]
     }, )
+  }
+
+  getLabelFontSize = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: 0,
+      duration: 300,
+    }).start()
+    this.isBoxShow = false
+
+    this.setState({
+      isFullScreen: true,
+      selectName: 'fontsize',
+      isTouchProgress: true,
+      isSelectlist: false,
+      type: type,
+      buttons: ThemeMenuData.getThemeThreeMenu(),
+    }, () => {
+      this.height = 0
+    })
   }
 
   getLabelFontColor = async type => {
@@ -726,11 +769,15 @@ export default class ToolBar extends React.Component {
 
     let date = await ThemeMenuData.getLabelFontColor()
     this.setState({
+      isFullScreen: false,
+      isTouchProgress: false,
+      isSelectlist: false,
       containerType: 'colortable',
       column: 8,
       tableType: 'scroll',
       data: date,
       type: type,
+      buttons: ThemeMenuData.getThemeFourMenu(),
     }, () => {
       this.height = ConstToolType.THEME_HEIGHT[3]
     }, )
@@ -1590,7 +1637,31 @@ export default class ToolBar extends React.Component {
               RangeMode: item.key,
               RangeParameter: '32.0',
             }
-            ThemeMenuData.setRangeThemeParams(Params)
+            ThemeMenuData.setThemeParams(Params)
+          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE) {
+            let Params = {
+              LayerIndex: '0',
+              LabelBackShape: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME) {
+            let Params = {
+              LayerIndex: '0',
+              FontName: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION) {
+            let Params = {
+              LayerIndex: '0',
+              Rotaion: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR) {
+            let Params = {
+              LayerIndex: '0',
+              Color: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
           }
         }
         item.action()

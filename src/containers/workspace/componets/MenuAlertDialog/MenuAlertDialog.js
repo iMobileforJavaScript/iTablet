@@ -148,6 +148,13 @@ export default class MenuAlertDialog extends React.Component {
       btntitle: '字号',
       action: () => {
         this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getLabelFontSize(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+          )
+        }
       },
     },
     {
