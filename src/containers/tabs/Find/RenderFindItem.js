@@ -40,7 +40,7 @@ export default class RenderFindItem extends Component{
     return  <View>
       <TouchableOpacity style={styles.itemViewStyle}
             onPress={()=>{
-              Toast.show('服务没有地图2')
+              Toast.show('数据无法浏览')
             }
             }
       >
@@ -56,17 +56,17 @@ export default class RenderFindItem extends Component{
              resizeMode={'contain'}
                    source={require('../../../assets/tabBar/tab-我的-当前.png')}
             />
-            <Text style={styles.textStyle2}>{this.props.nickname}</Text>
+            <Text style={styles.textStyle2} numberOfLines={1}>{this.props.nickname}</Text>
           </View>
           <View style={[styles.viewStyle2,{marginTop:5,}]}>
             <Image style={styles.imageStyle2}
                    resizeMode={'contain'}
                    source={require('../../../assets/tabBar/tmp-time-icon.png')}
             />
-            <Text style={styles.textStyle2}>{time}</Text>
+            <Text style={styles.textStyle2} numberOfLines={1}>{time}</Text>
           </View>
-          <View style={{flex:1}}/>
-          <Text style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>
+          {/*<View style={{flex:1}}/>*/}
+          {/*<Text style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>*/}
         </View>
       </TouchableOpacity>
       <View style={styles.separateViewStyle}/>

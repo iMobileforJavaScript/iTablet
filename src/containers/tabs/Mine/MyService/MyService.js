@@ -10,8 +10,8 @@ import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
 import { SOnlineService, } from 'imobile_for_reactnative'
 import styles from './Styles'
-import PopupModal from "./PopupModal";
-import Toast from "../../../../utils/Toast";
+import PopupModal from "./PopupModal"
+import Toast from "../../../../utils/Toast"
 
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -62,6 +62,8 @@ export default class MyService extends Component{
         let objArrServiceContent = objServiceList.content
         for (let i = 0; i < objArrServiceContent.length; i++){
           let objContent = objArrServiceContent[i]
+          let arrScenes = objContent.scenes
+          let arrMapInfos = objContent.mapInfos
           let strThumbnail = objContent.thumbnail
           let strRestTitle = objContent.resTitle
           let strID = objContent.id
@@ -74,7 +76,13 @@ export default class MyService extends Component{
               break
             }
           }
-          let strSectionsData = '{"restTitle":"'+strRestTitle+'","thumbnail":"'+strThumbnail+'","id":"'+strID+'","isPublish":'+bIsPublish+'}'
+          let strSectionsData = '{"restTitle":"'+strRestTitle+
+            '","thumbnail":"'+strThumbnail+
+            '","id":"'+strID+
+            '","scenes":'+JSON.stringify(arrScenes)+
+            ',"mapInfos":'+JSON.stringify(arrMapInfos)+
+            ',"isPublish":'+bIsPublish+
+            '}'
           let objSectionsData = JSON.parse(strSectionsData)
           if(bIsPublish){
             arrPublishServiceList.push(objSectionsData)
@@ -116,6 +124,8 @@ export default class MyService extends Component{
       let imageUri = info.item.thumbnail
       let isPublish = info.item.isPublish
       let itemId = info.item.id
+      let scenes = info.item.scenes
+      let mapInfos = info.item.mapInfos
       return <RenderServiceItem
         onItemPress={this._onItemPress}
         imageUrl={imageUri}
@@ -123,6 +133,8 @@ export default class MyService extends Component{
         isPublish={isPublish}
         itemId={ itemId}
         index = {index}
+        scenes = {scenes}
+        mapInfos = {mapInfos}
       />
     }
     return <View>
@@ -174,39 +186,66 @@ export default class MyService extends Component{
   _onModalRefresh2 = async (itemId,isPublish,isDelete,index)=>{
     if(index !== undefined){
       if(isPublish){
-        let objPublishList = _arrPublishServiceList[index]
-        let strRestTitle=objPublishList.restTitle
-        let strThumbnail=objPublishList.thumbnail
-        let strID=objPublishList.id
-        let bIsPublish = false
-        let strSectionsData = '{"restTitle":"'+ strRestTitle+
-          '","thumbnail":"'+strThumbnail+
-          '","id":"'+strID+
-          '","isPublish":'+bIsPublish
-          +'}'
-        let objPrivateList= JSON.parse(strSectionsData)
-        _arrPrivateServiceList.push(objPrivateList)
-        _arrPublishServiceList.splice(index,1)
-        if(_arrPublishServiceList.length === 0){
-          _arrPublishServiceList.push({})
+        if(isDelete){
+          _arrPublishServiceList.splice(index,1)
+          let total = this.serviceListTotal-1
+          this.serviceListTotal = total
+        }else{
+          let objPublishList = _arrPublishServiceList[index]
+          let strRestTitle=objPublishList.restTitle
+          let strThumbnail=objPublishList.thumbnail
+          let strID=objPublishList.id
+          let arrScenes = objPublishList.scenes
+          let arrMapInfos = objPublishList.mapInfos
+          let bIsPublish = false
+          let strSectionsData = '{"restTitle":"'+ strRestTitle+
+            '","thumbnail":"'+strThumbnail+
+            '","id":"'+strID+
+            '","scenes":'+JSON.stringify(arrScenes)+
+            ',"mapInfos":'+JSON.stringify(arrMapInfos)+
+            ',"isPublish":'+bIsPublish
+            +'}'
+          let objPrivateList= JSON.parse(strSectionsData)
+          if(_arrPrivateServiceList.length === 1 && _arrPrivateServiceList[0].id === undefined){
+            _arrPrivateServiceList.splice(0,1)
+          }
+
+          _arrPrivateServiceList.push(objPrivateList)
+          _arrPublishServiceList.splice(index,1)
         }
       }else{
-        let objPrivateList = _arrPrivateServiceList[index]
-        let strRestTitle=objPrivateList.restTitle
-        let strThumbnail=objPrivateList.thumbnail
-        let strID=objPrivateList.id
-        let bIsPublish = true
-        let strSectionsData = '{"restTitle":"'+ strRestTitle+
-          '","thumbnail":"'+strThumbnail+
-          '","id":"'+strID+
-          '","isPublish":'+bIsPublish
-          +'}'
-        let objPublishList= JSON.parse(strSectionsData)
-        _arrPublishServiceList.push(objPublishList)
-        _arrPrivateServiceList.splice(index,1)
-        if(_arrPrivateServiceList.length === 0){
-          _arrPrivateServiceList.push({})
+        if(isDelete){
+          _arrPrivateServiceList.splice(index,1)
+          let total = this.serviceListTotal-1
+          this.serviceListTotal = total
+        }else{
+          let objPrivateList = _arrPrivateServiceList[index]
+          let strRestTitle=objPrivateList.restTitle
+          let strThumbnail=objPrivateList.thumbnail
+          let strID=objPrivateList.id
+          let arrScenes = objPrivateList.scenes
+          let arrMapInfos = objPrivateList.mapInfos
+          let bIsPublish = true
+          let strSectionsData = '{"restTitle":"'+ strRestTitle+
+            '","thumbnail":"'+strThumbnail+
+            '","id":"'+strID+
+            '","scenes":'+JSON.stringify(arrScenes)+
+            ',"mapInfos":'+JSON.stringify(arrMapInfos)+
+            ',"isPublish":'+bIsPublish
+            +'}'
+          let objPublishList= JSON.parse(strSectionsData)
+          if(_arrPublishServiceList.length === 1 && _arrPublishServiceList[0].id === undefined){
+            _arrPublishServiceList.splice(0,1)
+          }
+          _arrPublishServiceList.push(objPublishList)
+          _arrPrivateServiceList.splice(index,1)
         }
+      }
+      if(_arrPrivateServiceList.length === 0){
+        _arrPrivateServiceList.push({})
+      }
+      if(_arrPublishServiceList.length === 0){
+        _arrPublishServiceList.push({})
       }
     }
 

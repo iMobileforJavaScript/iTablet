@@ -90,7 +90,7 @@ export default class Mine extends Component {
                 color:'white',
               }}
               onPress={() => {
-                NavigationService.navigate('GetBack')
+                // NavigationService.navigate('GetBack')
               }}
             >
               本地数据

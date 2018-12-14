@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import { Image, Text, View,TouchableOpacity} from 'react-native'
-import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
-
+import NavigationService from "../../../NavigationService"
+import Toast from "../../../../utils/Toast"
 export default class RenderServiceItem extends PureComponent{
 
   props:{
@@ -12,6 +12,8 @@ export default class RenderServiceItem extends PureComponent{
     itemId:string,
     isPublish:boolean,
     index:number,
+    scenes:Object,
+    mapInfos:Object,
   }
   defaultProps:{
     imageUrl:'',
@@ -21,12 +23,20 @@ export default class RenderServiceItem extends PureComponent{
     super(props)
   }
 
+  _navigator = ()=>{
+    if(this.props.mapInfos.length > 0 || this.props.scenes.length > 0){
+      NavigationService.navigate('MyOnlineMap',{scenes:this.props.scenes,mapInfos:this.props.mapInfos})
+    }else{
+      Toast.show('服务没有地图可展示')
+    }
+  }
+
   render(){
     return  <View>
       <View style={styles.itemViewStyle}>
         <TouchableOpacity
           onPress={()=>{
-            Toast.show('服务没有地图')
+            this._navigator()
           }
           }
         >
@@ -37,7 +47,7 @@ export default class RenderServiceItem extends PureComponent{
         </TouchableOpacity>
 
         <View >
-          <Text style={[styles.restTitleTextStyle,]} numberOfLines={1}>{this.props.restTitle}</Text>
+          <Text style={[styles.restTitleTextStyle,]} numberOfLines={2}>{this.props.restTitle}</Text>
           <Text
             onPress={() => {
               if(this.props.onItemPress){

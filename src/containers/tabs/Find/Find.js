@@ -7,13 +7,14 @@ import {
   ActivityIndicator,
   RefreshControl,
 } from "react-native";
-import { SOnlineService,Utility } from 'imobile_for_reactnative'
+import {
+  SOnlineService,
+} from 'imobile_for_reactnative'
 import RenderFindItem from "./RenderFindItem"
 import {  Toast } from '../../../utils/index'
 import styles from './Styles'
 
 export default class Find extends Component{
-
 
   constructor(props){
     super(props)
@@ -78,7 +79,7 @@ export default class Find extends Component{
   }
 
   _footView() {
-    if (this.userDataCount >= 0) {
+    if (this.userDataCount >= this.state.data.length) {
       return (
         <View
           style={{

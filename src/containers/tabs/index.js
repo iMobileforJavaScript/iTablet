@@ -10,6 +10,8 @@ import Mine,{
   MyLocalData,
   MyOnlineData,
   Register,
+  MyOnlineMap,
+  ScanOnlineMap,
 } from './Mine'
 import Find from './Find'
 const Tabs = TabNavigator(
@@ -195,4 +197,6 @@ export {
   MyLocalData,
   MyOnlineData,
   Register,
+  MyOnlineMap,
+  ScanOnlineMap,
 }
