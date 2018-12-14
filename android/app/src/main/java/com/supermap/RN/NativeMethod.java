@@ -50,8 +50,9 @@ public class NativeMethod extends ReactContextBaseJavaModule {
                             String tempFileName = tempArray[j].getName();
                             String suffix = tempFileName.substring(tempFileName.lastIndexOf(".") + 1).toLowerCase();
                             if (suffix.equals("smw") || suffix.equals("sxwu") || suffix.equals("sxw") || suffix.equals("smwu")) {
+                                String tempName = tempFileName.substring(0, tempFileName.lastIndexOf("."));
                                 WritableMap tempInfo = Arguments.createMap();
-                                tempInfo.putString("name", tempFileName);
+                                tempInfo.putString("name", tempName);
                                 tempInfo.putString("path", tempArray[j].getAbsolutePath());
 
                                 templateList.pushMap(tempInfo);
@@ -62,7 +63,7 @@ public class NativeMethod extends ReactContextBaseJavaModule {
                         String suffix = tempFileName.substring(tempFileName.lastIndexOf(".") + 1).toLowerCase();
                         if (suffix.equals("smw") || suffix.equals("sxwu") || suffix.equals("sxw") || suffix.equals("smwu")) {
                             WritableMap tempInfo = Arguments.createMap();
-                            String fileName = tempFileName.substring(0, tempFileName.lastIndexOf(".")).toLowerCase();
+                            String fileName = tempFileName.substring(0, tempFileName.lastIndexOf("."));
 
                             tempInfo.putString("name", fileName);
                             tempInfo.putString("path", tempsArray[i].getAbsolutePath());

@@ -1,24 +1,22 @@
 import * as React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { TreeList } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { ConstToolType } from '../../../../constants'
 
-import fs from 'react-native-fs'
-import xml2js from 'react-native-xml2js'
-let parser = new xml2js.Parser()
-import { Utility, SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import { SMap, Action, ThemeType } from 'imobile_for_reactnative'
 
 export default class Temple extends React.Component {
   props: {
     user: Object,
     template: Object,
+    symbolTemplates: Object,
     layers: Object,
     style?: Object,
-    showBox: () => {},
     showToolbar: () => {},
     setCurrentTemplateInfo: () => {},
     setEditLayer: () => {},
+    getSymbolTemplates: () => {},
   }
 
   static defaultProps = {
@@ -38,35 +36,14 @@ export default class Temple extends React.Component {
   }
 
   getData = () => {
-    try {
-      setTimeout(() => {
-        let tempPath = this.props.template.path.substr(0, this.props.template.path.lastIndexOf('/') + 1)
-        Utility.getPathListByFilter(tempPath, {
-          type: 'xml',
-        }).then(xmlList => {
-          if (xmlList && xmlList.length > 0) {
-            let xmlInfo = xmlList[0]
-            Utility.appendingHomeDirectory(xmlInfo.path).then(xmlPath => {
-              fs.readFile(xmlPath).then(data => {
-                parser.parseString(data, (err, result) => {
-                  this.setState({
-                    data: result.featureSymbol.template[0].feature,
-                    showList: true,
-                  })
-                })
-              })
-            })
-          }
-        })
-      }, 300)
-    } catch (e) {
-      console.warn('e:' + e)
-    }
+    // 防止读取数据卡屏，先滑动，再加载
+    setTimeout(() => {
+      this.props.getSymbolTemplates()
+    }, 300)
   }
 
-  action = ({data}) => {
-    Toast.show('当前选择为:' + data.$.code + " " + data.$.name)
-    // this.props.showBox && this.props.showBox(true)
+  action = ({ data }) => {
+    Toast.show('当前选择为:' + data.$.code + ' ' + data.$.name)
     this.props.setCurrentTemplateInfo(data)
 
     // 找到对应的图层
@@ -111,11 +88,10 @@ export default class Temple extends React.Component {
   }
 
   render() {
-    if (!this.state.showList) return <View/>
     return (
       <TreeList
         style={[styles.container, this.props.style]}
-        data={this.state.data}
+        data={this.props.symbolTemplates.symbols}
         onPress={this.action}
       />
     )
@@ -125,6 +101,5 @@ export default class Temple extends React.Component {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 0,
-    // backgroundColor: color.subTheme,
   },
 })

@@ -750,7 +750,7 @@ export default class ToolBar extends React.Component {
   showCollection = type => {
     let { data, buttons } = this.getData(type)
     // this.lastType = this.state.type
-    Object.assign(this.lastState, this.state, {height: this.height})
+    Object.assign(this.lastState, this.state, { height: this.height })
     this.setState(
       {
         type: type,
@@ -1114,15 +1114,18 @@ export default class ToolBar extends React.Component {
 
   showBox = (autoFullScreen = false) => {
     if (autoFullScreen) {
-      this.setState({
-        isFullScreen: !this.isBoxShow,
-      }, () => {
-        Animated.timing(this.state.boxHeight, {
-          toValue: this.isBoxShow ? 0 : this.height,
-          duration: 300,
-        }).start()
-        this.isBoxShow = !this.isBoxShow
-      })
+      this.setState(
+        {
+          isFullScreen: !this.isBoxShow,
+        },
+        () => {
+          Animated.timing(this.state.boxHeight, {
+            toValue: this.isBoxShow ? 0 : this.height,
+            duration: 300,
+          }).start()
+          this.isBoxShow = !this.isBoxShow
+        },
+      )
     } else {
       Animated.timing(this.state.boxHeight, {
         toValue: this.isBoxShow ? 0 : this.height,
@@ -1355,10 +1358,10 @@ export default class ToolBar extends React.Component {
   openTemplate = async item => {
     try {
       this.props.setContainerLoading &&
-      this.props.setContainerLoading(true, '正在打开模板')
+        this.props.setContainerLoading(true, '正在打开模板')
 
       // 打开模板工作空间
-      this.props.openTemplate(item, ({copyResult, openResult}) => {
+      this.props.openTemplate(item, ({ copyResult, openResult }) => {
         if (openResult) {
           // 重新加载图层
           this.props.getLayers({
@@ -1384,7 +1387,7 @@ export default class ToolBar extends React.Component {
   changeMap = async item => {
     try {
       // 获取地图信息
-      let mapInfo = await SMap.getMapInfo()
+      // let mapInfo = await SMap.getMapInfo()
       // 打开地图
       let datasourceName = item.title.substr(
         item.title.lastIndexOf('@') + 1,
@@ -1399,25 +1402,25 @@ export default class ToolBar extends React.Component {
       }
       SMap.openDatasource(DSParams).then(result => {
         result &&
-        SMap.openMap(item.title).then(isOpen => {
-          if (isOpen) {
-            Toast.show('已为您切换到' + item.title)
-            this.props.setCurrentMap(item)
-            this.props.getLayers(-1, layers => {
-              this.props.setCurrentLayer(layers.length > 0 && layers[0])
-            })
-            this.props.setCollectionInfo({
-              datasourceName: datasourceName,
-              datasourceParentPath: this.props.collection
-                .datasourceParentPath,
-              datasourceServer: server,
-              datasourceType: EngineType.UDB,
-            })
-            this.setVisible(false)
-          } else {
-            Toast.show('该地图为当前地图')
-          }
-        })
+          SMap.openMap(item.title).then(isOpen => {
+            if (isOpen) {
+              Toast.show('已为您切换到' + item.title)
+              this.props.setCurrentMap(item)
+              this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+              this.props.setCollectionInfo({
+                datasourceName: datasourceName,
+                datasourceParentPath: this.props.collection
+                  .datasourceParentPath,
+                datasourceServer: server,
+                datasourceType: EngineType.UDB,
+              })
+              this.setVisible(false)
+            } else {
+              Toast.show('该地图为当前地图')
+            }
+          })
       })
     } catch (e) {
       Toast.show('切换地图失败')
@@ -1502,7 +1505,13 @@ export default class ToolBar extends React.Component {
   }
 
   renderTabs = () => {
-    return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} showBox={this.showBox} />
+    return (
+      <SymbolTabs
+        style={styles.tabsView}
+        showToolbar={this.setVisible}
+        showBox={this.showBox}
+      />
+    )
   }
 
   renderSymbol = () => {
@@ -1752,16 +1761,14 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

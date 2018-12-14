@@ -32,7 +32,7 @@ RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName resol
             if ([extension isEqualToString:@"smw"] || [extension isEqualToString:@"sxwu"] ||
                 [extension isEqualToString:@"sxw"] || [extension isEqualToString:@"smwu"]) {
               NSMutableDictionary* templateInfo = [[NSMutableDictionary alloc] init];
-              [templateInfo setObject:fileName forKey:@"title"];
+              [templateInfo setObject:fileName forKey:@"name"];
               [templateInfo setObject:[NSString stringWithFormat:@"%@/%@", tempPath, tempFileName] forKey:@"path"];
               
               [templateList addObject:templateInfo];
@@ -44,7 +44,7 @@ RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName resol
           if ([extension isEqualToString:@"smw"] || [extension isEqualToString:@"sxwu"] ||
               [extension isEqualToString:@"sxw"] || [extension isEqualToString:@"smwu"]) {
             NSMutableDictionary* templateInfo = [[NSMutableDictionary alloc] init];
-            [templateInfo setObject:fileName forKey:@"title"];
+            [templateInfo setObject:fileName forKey:@"name"];
             [templateInfo setObject:[NSString stringWithFormat:@"%@/%@", tempPath, fileName] forKey:@"path"];
             
             [templateList addObject:templateInfo];

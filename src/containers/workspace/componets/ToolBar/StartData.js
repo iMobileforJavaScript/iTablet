@@ -1,7 +1,4 @@
-import {
-  SMap,
-  WorkspaceType,
-} from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
 import { NativeMethod } from '../../../../native'
 import { ConstToolType } from '../../../../constants'
 import { Toast } from '../../../../utils'
@@ -180,8 +177,8 @@ function openWorkspace(cb) {
         SMap.closeWorkspace().then(async () => {
           try {
             _params.setContainerLoading &&
-            _params.setContainerLoading(true, '正在打开工作空间')
-            let data = {server: path}
+              _params.setContainerLoading(true, '正在打开工作空间')
+            let data = { server: path }
             let result = await SMap.openWorkspace(data)
             Toast.show(result ? '已为您切换工作空间' : '切换工作空间失败')
             NavigationService.goBack()
@@ -208,61 +205,63 @@ function openMap() {
         data: list,
       },
     ]
-    NativeMethod.getTemplates(_params.user.currentUser.userName).then(templateList => {
-      data.push({
-        title: '模板',
-        data: templateList,
-      })
-      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-        data,
-      })
-    })
+    NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+      templateList => {
+        data.push({
+          title: '模板',
+          data: templateList,
+        })
+        _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+          containerType: 'list',
+          height: ConstToolType.HEIGHT[3],
+          data,
+        })
+      },
+    )
   })
 }
 
 /** 导入 **/
-function importWorkspace() {
-  if (GLOBAL.Type === constants.COLLECTION) {
-    openWorkspace(async path => {
-      try {
-        _params.setContainerLoading &&
-        _params.setContainerLoading(true, '正在导入工作空间')
-
-        let fileNameAndType = path.substr(path.lastIndexOf('/') + 1, path.length - 1).split('.')
-        let alias = fileNameAndType[0]
-        let fileType = fileNameAndType[1].toString().toUpperCase()
-        let type
-        switch (fileType) {
-          case 'SXW':
-            type = WorkspaceType.SXW
-            break
-          case 'SMW':
-            type = WorkspaceType.SMW
-            break
-          case 'SXWU':
-            type = WorkspaceType.SXWU
-            break
-          case 'SMWU':
-          default:
-            type = WorkspaceType.SMWU
-        }
-
-        let data = { server: path, type, alias }
-        _params.importTemplate(data, result => {
-          _params.getLayers()
-          Toast.show(result ? '已为您导入工作空间' : '导入工作空间失败')
-          NavigationService.goBack()
-          _params.setContainerLoading && _params.setContainerLoading(false)
-        })
-      } catch (error) {
-        Toast.show('导入工作空间失败')
-        _params.setContainerLoading && _params.setContainerLoading(false)
-      }
-    })
-  }
-}
+// function importWorkspace() {
+//   if (GLOBAL.Type === constants.COLLECTION) {
+//     openWorkspace(async path => {
+//       try {
+//         _params.setContainerLoading &&
+//         _params.setContainerLoading(true, '正在导入工作空间')
+//
+//         let fileNameAndType = path.substr(path.lastIndexOf('/') + 1, path.length - 1).split('.')
+//         let alias = fileNameAndType[0]
+//         let fileType = fileNameAndType[1].toString().toUpperCase()
+//         let type
+//         switch (fileType) {
+//           case 'SXW':
+//             type = WorkspaceType.SXW
+//             break
+//           case 'SMW':
+//             type = WorkspaceType.SMW
+//             break
+//           case 'SXWU':
+//             type = WorkspaceType.SXWU
+//             break
+//           case 'SMWU':
+//           default:
+//             type = WorkspaceType.SMWU
+//         }
+//
+//         let data = { server: path, type, alias }
+//         _params.importTemplate(data, result => {
+//           _params.getLayers()
+//           Toast.show(result ? '已为您导入工作空间' : '导入工作空间失败')
+//           NavigationService.goBack()
+//           _params.setContainerLoading && _params.setContainerLoading(false)
+//         })
+//       } catch (error) {
+//         Toast.show('导入工作空间失败')
+//         _params.setContainerLoading && _params.setContainerLoading(false)
+//       }
+//     })
+//   }
+// }
 
 /** 打开工作空间 **/
 function create() {
@@ -319,7 +318,6 @@ function add(type) {
       break
   }
 }
-
 
 export default {
   getStart,

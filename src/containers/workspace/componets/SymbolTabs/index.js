@@ -8,7 +8,10 @@ import ScrollableTabView from 'react-native-scrollable-tab-view'
 import GroupTab from './GroupTab'
 import SymbolTab from './SymbolTab'
 import { setCurrentSymbol, setCurrentSymbols } from '../../../../models/symbol'
-import { setCurrentTemplateInfo } from '../../../../models/map'
+import {
+  setCurrentTemplateInfo,
+  getSymbolTemplates,
+} from '../../../../models/map'
 import { setEditLayer } from '../../../../models/layers'
 import Temple from './Temple'
 
@@ -25,6 +28,7 @@ const mapDispatchToProps = {
   setCurrentSymbols,
   setCurrentTemplateInfo,
   setEditLayer,
+  getSymbolTemplates,
 }
 
 class SymbolTabs extends React.Component {
@@ -40,6 +44,7 @@ class SymbolTabs extends React.Component {
     showBox: () => {},
     setCurrentTemplateInfo: () => {},
     setEditLayer: () => {},
+    getSymbolTemplates: () => {},
   }
 
   static defaultProps = {
@@ -106,12 +111,13 @@ class SymbolTabs extends React.Component {
         <Temple
           style={styles.temple}
           user={this.props.user}
-          showBox={this.props.showBox}
           showToolbar={this.props.showToolbar}
           template={this.props.map.template}
+          symbolTemplates={this.props.map.symbolTemplates}
           layers={this.props.layers}
           setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
           setEditLayer={this.props.setEditLayer}
+          getSymbolTemplates={this.props.getSymbolTemplates}
         />
       )
     } else {

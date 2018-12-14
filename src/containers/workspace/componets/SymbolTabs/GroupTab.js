@@ -25,7 +25,6 @@ export default class GroupTab extends React.Component {
 
   componentDidMount() {
     SMap.getSymbolGroups().then(result => {
-      console.warn(JSON.stringify(result))
       this.setState({
         data: result,
       })

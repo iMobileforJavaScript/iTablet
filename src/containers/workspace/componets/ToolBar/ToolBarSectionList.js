@@ -52,7 +52,7 @@ export default class ToolBarSectionList extends React.Component {
         style={[styles.item, this.props.itemStyle]}
         onPress={() => this.itemAction({ item, index })}
       >
-        <Text style={styles.itemTitle}>{item.title}</Text>
+        <Text style={styles.itemTitle}>{item.title || item.name}</Text>
       </TouchableOpacity>
     )
   }
@@ -90,7 +90,8 @@ const styles = StyleSheet.create({
   itemTitle: {
     marginLeft: scaleSize(60),
     fontSize: size.fontSize.fontSizeMd,
-    backgroundColor: color.theme,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
     color: color.themeText,
   },
 })

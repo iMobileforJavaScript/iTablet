@@ -1,7 +1,4 @@
-import {
-  SScene,
-  SThemeCartography,
-} from 'imobile_for_reactnative'
+import { SScene, SThemeCartography } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -13,10 +10,10 @@ import CollectionData from './CollectionData'
 import EditData from './EditData'
 import { Alert } from 'react-native'
 
-let _params = {}
+// let _params = {}
 
 function setParams(params) {
-  _params = params
+  // _params = params
   CollectionData.setParams(params)
 }
 
@@ -36,7 +33,10 @@ function getTabBarData(type, params = {}) {
     type === ConstToolType.MAP3D_START
   ) {
     tabBarData = StartData.getStart(type, params)
-  } else if (typeof type === 'string' && type.indexOf(ConstToolType.MAP_TOOL) > -1) {
+  } else if (
+    typeof type === 'string' &&
+    type.indexOf(ConstToolType.MAP_TOOL) > -1
+  ) {
     tabBarData = MapToolData.getMapTool(type, params)
   } else if (typeof type === 'string' && type.indexOf('MAP_SHARE') > -1) {
     tabBarData = ShareData.getShareData(type, params)
