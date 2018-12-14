@@ -6,17 +6,18 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
-} from "react-native";
-import {
-  SOnlineService,
-} from 'imobile_for_reactnative'
-import RenderFindItem from "./RenderFindItem"
-import {  Toast } from '../../../utils/index'
+} from 'react-native'
+import { SOnlineService } from 'imobile_for_reactnative'
+import RenderFindItem from './RenderFindItem'
+import { Toast } from '../../../utils/index'
 import styles from './Styles'
 
-export default class Find extends Component{
+export default class Find extends Component {
+  props: {
+    navigation: Object,
+  }
 
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       data: [{}],

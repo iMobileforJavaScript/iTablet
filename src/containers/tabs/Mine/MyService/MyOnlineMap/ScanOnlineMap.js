@@ -5,62 +5,70 @@
 */
 
 import * as React from 'react'
-import { WebView, Dimensions, ActivityIndicator, Text, View } from "react-native";
+import {
+  WebView,
+  Dimensions,
+  ActivityIndicator,
+  Text,
+  View,
+} from 'react-native'
 import { Container } from '../../../../../components'
-import Toast from "../../../../../utils/Toast"
+import Toast from '../../../../../utils/Toast'
 
 export default class ScanOnlineMap extends React.Component {
   props: {
     navigation: Object,
   }
 
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
-      mapTitle:this.props.navigation.getParam('mapTitle',''),
-      mapUrl:this.props.navigation.getParam('mapUrl','')
+      mapTitle: this.props.navigation.getParam('mapTitle', ''),
+      mapUrl: this.props.navigation.getParam('mapUrl', ''),
     }
   }
-  _renderLoading= ()=>{
-    return <View style={{flex:1,alignItems:'center',justifyContent:'center',backgroundColor:'#353537'}}>
-      <ActivityIndicator
-        color={'gray'}
-        animating={true}
-        size={'large'}
-      />
-      <Text style={{fontSize:12,color:'white'}}>Loading...</Text>
-    </View>
+  _renderLoading = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#353537',
+        }}
+      >
+        <ActivityIndicator color={'gray'} animating={true} size={'large'} />
+        <Text style={{ fontSize: 12, color: 'white' }}>Loading...</Text>
+      </View>
+    )
   }
-  _onLoadStart = ()=>{
-
-  }
+  _onLoadStart = () => {}
   render() {
-    let uri = this.state.mapUrl+'.ol3'
+    let uri = this.state.mapUrl + '.ol3'
     let newUri
-    if(uri.indexOf('https') !== -1){
+    if (uri.indexOf('https') !== -1) {
       let subUri = uri.substring(5)
-      newUri = 'http'+subUri
-    }else{
+      newUri = 'http' + subUri
+    } else {
       newUri = uri
     }
-    console.log(newUri)
     return (
       <Container
-        style={{ flex: 1,}}
+        style={{ flex: 1 }}
         headerProps={{
           title: this.state.mapTitle,
           withoutBack: false,
           navigation: this.props.navigation,
-
         }}
       >
-
         <WebView
-          style={{ flex: 1,
+          style={{
+            flex: 1,
             height: Dimensions.get('window').height,
-            width: Dimensions.get('window').width,}}
+            width: Dimensions.get('window').width,
+          }}
           source={{
-            uri:newUri,
+            uri: newUri,
           }}
           scalesPageToFit={true}
           startInLoadingState={true}
@@ -70,14 +78,12 @@ export default class ScanOnlineMap extends React.Component {
           domStorageEnabled={true}
           mixedContentMode={'always'}
           thirdPartyCookiesEnabled={true}
-          onError={()=>{
+          onError={() => {
             Toast.show('加载失败')
           }}
           onLoadStart={this._onLoadStart}
-
         />
       </Container>
     )
   }
 }
-

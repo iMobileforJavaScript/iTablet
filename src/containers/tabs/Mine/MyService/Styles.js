@@ -27,22 +27,22 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     backgroundColor: color.theme,
   },
-  itemViewStyle:{
-    width:itemWidth,
-    height:itemHeight,
-    flexDirection:'row',
-    padding:15,
-    alignItems: 'center'
+  itemViewStyle: {
+    width: itemWidth,
+    height: itemHeight,
+    flexDirection: 'row',
+    padding: 15,
+    alignItems: 'center',
   },
   imageStyle: {
     width: imageWidth,
     height: imageHeight,
     backgroundColor: '#c0c0c0',
   },
-  restTitleTextStyle:{
-    flex:1,
-    width:itemWidth-30-imageWidth,
-    fontSize:largeFontSize,
+  restTitleTextStyle: {
+    flex: 1,
+    width: itemWidth - 30 - imageWidth,
+    fontSize: largeFontSize,
     fontWeight: 'bold',
     color: 'white',
     paddingLeft: 10,
