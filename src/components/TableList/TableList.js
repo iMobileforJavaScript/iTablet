@@ -66,9 +66,15 @@ export default class TableList extends React.Component {
 
   renderCell = (item, rowIndex, cellIndex) => {
     if (!this.props.renderCell) throw new Error('Please render cell')
+    let width
+    if (screen.deviceWidth < screen.deviceHeight) {
+      width = screen.deviceWidth
+    } else {
+      width = screen.deviceHeight
+    }
     return (
       <View
-        style={{ width: screen.deviceWidth / this.props.numColumns }}
+        style={{ width: width / this.props.numColumns }}
         key={rowIndex + '-' + cellIndex}
       >
         {this.props.renderCell({ item, rowIndex, cellIndex })}

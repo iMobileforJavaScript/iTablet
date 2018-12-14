@@ -10,7 +10,7 @@ import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
-
+import Orientation from 'react-native-orientation'
 import { SScene, SMap, Action } from 'imobile_for_reactnative'
 
 const COLLECTION = 'COLLECTION'
@@ -190,40 +190,50 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DSymbol = async () => {
-    SScene.checkoutListener('startLabelOperate')
-    GLOBAL.Map3DSymbol = true
-    SScene.getLayerList().then(() => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        // SScene.setAllLayersSelection(false)
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
-          containerType: 'table',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.HEIGHT[2],
-        })
-      }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[2]
+          : ConstToolType.HEIGHT[1]
+      SScene.checkoutListener('startLabelOperate')
+      GLOBAL.Map3DSymbol = true
+      SScene.getLayerList().then(() => {
+        const toolRef = this.props.getToolRef()
+        if (toolRef) {
+          // SScene.setAllLayersSelection(false)
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox内容
+          toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+            containerType: 'table',
+            isFullScreen: false,
+            column: column,
+            height: height,
+          })
+        }
+      })
     })
   }
 
   showMap3DTool = async () => {
-    SScene.checkoutListener('startMeasure')
-    SScene.getLayerList().then(layerList => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-          containerType: 'table',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.HEIGHT[1],
-        })
-        toolRef.getOldLayerList(layerList)
-        // SScene.setAllLayersSelection(false)
-      }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      SScene.checkoutListener('startMeasure')
+      SScene.getLayerList().then(layerList => {
+        const toolRef = this.props.getToolRef()
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox内容
+          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+            containerType: 'table',
+            isFullScreen: false,
+            column: column,
+            height: ConstToolType.HEIGHT[1],
+          })
+          toolRef.getOldLayerList(layerList)
+          // SScene.setAllLayersSelection(false)
+        }
+      })
     })
   }
 

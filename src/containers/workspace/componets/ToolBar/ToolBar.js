@@ -633,17 +633,19 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      isFullScreen: false,
-      isTouchProgress: false,
-      isSelectlist: false,
-      containerType: 'list',
-      data: datalist,
-      type: type,
-      buttons: ThemeMenuData.getThemeFourMenu(),
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[4]
-    },
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'list',
+        data: datalist,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+      },
     )
   }
 
@@ -661,17 +663,19 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      isFullScreen: false,
-      isTouchProgress: false,
-      isSelectlist: false,
-      containerType: 'list',
-      data: datalist,
-      type: type,
-      buttons: ThemeMenuData.getThemeFourMenu(),
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[4]
-    },
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'list',
+        data: datalist,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+      },
     )
   }
 
@@ -709,19 +713,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelBackShape()
-    this.setState({
-      isFullScreen: false,
-      isTouchProgress: false,
-      isSelectlist: false,
-      containerType: 'table',
-      column: 4,
-      tableType: 'normal',
-      data: date,
-      type: type,
-      buttons: ThemeMenuData.getThemeFourMenu(),
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[2]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[2]
+      },
+    )
   }
 
   getLabelFontName = async type => {
@@ -732,19 +739,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelFontName()
-    this.setState({
-      isFullScreen: false,
-      isTouchProgress: false,
-      isSelectlist: false,
-      containerType: 'table',
-      column: 4,
-      tableType: 'normal',
-      data: date,
-      type: type,
-      buttons: ThemeMenuData.getThemeFourMenu(),
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[3]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
   }
 
   getLabelFontRotation = async type => {
@@ -755,19 +765,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelFontRotation()
-    this.setState({
-      isFullScreen: false,
-      isTouchProgress: false,
-      isSelectlist: false,
-      containerType: 'table',
-      column: 4,
-      tableType: 'normal',
-      data: date,
-      type: type,
-      buttons: ThemeMenuData.getThemeFourMenu(),
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[0]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[0]
+      },
+    )
   }
 
   getLabelFontSize = async type => {
@@ -777,16 +790,19 @@ export default class ToolBar extends React.Component {
     }).start()
     this.isBoxShow = false
 
-    this.setState({
-      isFullScreen: true,
-      selectName: 'fontsize',
-      isTouchProgress: true,
-      isSelectlist: false,
-      type: type,
-      buttons: ThemeMenuData.getThemeThreeMenu(),
-    }, () => {
-      this.height = 0
-    })
+    this.setState(
+      {
+        isFullScreen: true,
+        selectName: 'fontsize',
+        isTouchProgress: true,
+        isSelectlist: false,
+        type: type,
+        buttons: ThemeMenuData.getThemeThreeMenu(),
+      },
+      () => {
+        this.height = 0
+      },
+    )
   }
 
   getLabelFontColor = async type => {
@@ -797,19 +813,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelFontColor()
-    this.setState({
-      isFullScreen: false,
-      isTouchProgress: false,
-      isSelectlist: false,
-      containerType: 'colortable',
-      column: 8,
-      tableType: 'scroll',
-      data: date,
-      type: type,
-      buttons: ThemeMenuData.getThemeFourMenu(),
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[3]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
   }
 
   getflylist = async () => {
@@ -1729,25 +1748,37 @@ export default class ToolBar extends React.Component {
               RangeParameter: '32.0',
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE) {
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE
+          ) {
             let Params = {
               LayerIndex: '0',
               LabelBackShape: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME) {
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME
+          ) {
             let Params = {
               LayerIndex: '0',
               FontName: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION) {
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION
+          ) {
             let Params = {
               LayerIndex: '0',
               Rotaion: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type == ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR) {
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
+          ) {
             let Params = {
               LayerIndex: '0',
               Color: item.key,
@@ -1780,9 +1811,15 @@ export default class ToolBar extends React.Component {
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
+    let width
+    if (screen.deviceWidth < screen.deviceHeight) {
+      width = screen.deviceWidth
+    } else {
+      width = screen.deviceHeight
+    }
     return (
       <MTBtn
-        style={[styles.cell, { width: screen.deviceWidth / this.state.column }]}
+        style={[styles.cell, { width: width / this.state.column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
@@ -2038,14 +2075,16 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen && !this.state.isTouchProgress && (
+        {this.state.isFullScreen &&
+          !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
