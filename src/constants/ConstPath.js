@@ -11,6 +11,7 @@ const RelativePath = {
   Template: Data + 'Template/',
   Symbol: Data + 'Symbol/',
   Attribute: Data + 'Attribute/',
+  Workspace: Data + 'Workspace/',
 }
 
 const RelativeFilePath = {

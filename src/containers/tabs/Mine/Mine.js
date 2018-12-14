@@ -22,7 +22,7 @@ export default class Mine extends Component {
     NavigationService.navigate('Personal')
   }
 
-  goToMyData =async () => {
+  goToMyData = async () => {
     // let sessionId = await SOnlineService.getAndroidSessionID()
     // let headers = {
     //   method: 'GET',
@@ -47,7 +47,6 @@ export default class Mine extends Component {
     let fontSize = 16
     return (
       <View style={{ flex: 1, backgroundColor: color.border }}>
-
         <View
           style={{
             flexDirection: 'row',
@@ -72,7 +71,12 @@ export default class Mine extends Component {
             />
           </TouchableOpacity>
           <Text
-            style={{ flex: 1, lineHeight: headerHeight, fontSize: fontSize ,color:'white',}}
+            style={{
+              flex: 1,
+              lineHeight: headerHeight,
+              fontSize: fontSize,
+              color: 'white',
+            }}
           >
             {this.props.user.currentUser.userName}
           </Text>
@@ -87,10 +91,10 @@ export default class Mine extends Component {
                 textAlign: 'left',
                 fontSize: fontSize,
                 paddingLeft: 10,
-                color:'white',
+                color: 'white',
               }}
               onPress={() => {
-                NavigationService.navigate('GetBack')
+                // NavigationService.navigate('GetBack')
               }}
             >
               本地数据
@@ -103,7 +107,7 @@ export default class Mine extends Component {
                 textAlign: 'left',
                 fontSize: fontSize,
                 paddingLeft: 10,
-                color:'white',
+                color: 'white',
               }}
               onPress={() => {
                 this.goToMyService()

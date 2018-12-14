@@ -1,8 +1,8 @@
 import React, { PureComponent } from 'react'
 import { Image, Text, View,TouchableOpacity} from 'react-native'
-import { Utility, SOnlineService } from 'imobile_for_reactnative'
 import styles, { textHeight } from './Styles'
-
+import NavigationService from "../../../NavigationService"
+import Toast from "../../../../utils/Toast"
 export default class RenderServiceItem extends PureComponent{
 
   props:{
@@ -12,13 +12,23 @@ export default class RenderServiceItem extends PureComponent{
     itemId:string,
     isPublish:boolean,
     index:number,
+    scenes:Object,
+    mapInfos:Object,
   }
-  defaultProps:{
-    imageUrl:'',
-    restTitle:'地图'
+  defaultProps: {
+    imageUrl: '',
+    restTitle: '地图',
   }
-  constructor(props){
+  constructor(props) {
     super(props)
+  }
+
+  _navigator = ()=>{
+    if(this.props.mapInfos.length > 0 || this.props.scenes.length > 0){
+      NavigationService.navigate('MyOnlineMap',{scenes:this.props.scenes,mapInfos:this.props.mapInfos})
+    }else{
+      Toast.show('服务没有地图可展示')
+    }
   }
 
   render(){
@@ -26,7 +36,7 @@ export default class RenderServiceItem extends PureComponent{
       <View style={styles.itemViewStyle}>
         <TouchableOpacity
           onPress={()=>{
-            Toast.show('服务没有地图')
+            this._navigator()
           }
           }
         >
@@ -37,18 +47,50 @@ export default class RenderServiceItem extends PureComponent{
         </TouchableOpacity>
 
         <View >
-          <Text style={[styles.restTitleTextStyle,]} numberOfLines={1}>{this.props.restTitle}</Text>
+          <Text style={[styles.restTitleTextStyle,]} numberOfLines={2}>{this.props.restTitle}</Text>
           <Text
             onPress={() => {
-              if(this.props.onItemPress){
-                this.props.onItemPress(this.props.isPublish,this.props.itemId,this.props.restTitle,this.props.index)}
-              }
-            }
-            numberOfLines={1}
-            style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>
+              Toast.show('服务没有地图')
+            }}
+          >
+            <Image
+              resizeMode={'stretch'}
+              style={styles.imageStyle}
+              source={{ uri: this.props.imageUrl }}
+            />
+          </TouchableOpacity>
+
+          <View>
+            <Text style={[styles.restTitleTextStyle]} numberOfLines={1}>
+              {this.props.restTitle}
+            </Text>
+            <Text
+              onPress={() => {
+                if (this.props.onItemPress) {
+                  this.props.onItemPress(
+                    this.props.isPublish,
+                    this.props.itemId,
+                    this.props.restTitle,
+                    this.props.index,
+                  )
+                }
+              }}
+              numberOfLines={1}
+              style={[
+                styles.restTitleTextStyle,
+                {
+                  lineHeight: textHeight,
+                  textAlign: 'right',
+                  paddingRight: 25,
+                },
+              ]}
+            >
+              ...
+            </Text>
+          </View>
         </View>
+        <View style={styles.separateViewStyle} />
       </View>
-      <View style={styles.separateViewStyle}/>
-    </View>
+    )
   }
 }

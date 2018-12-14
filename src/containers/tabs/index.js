@@ -10,6 +10,8 @@ import Mine,{
   MyLocalData,
   MyOnlineData,
   Register,
+  MyOnlineMap,
+  ScanOnlineMap,
 } from './Mine'
 import Find from './Find'
 const Tabs = TabNavigator(
@@ -73,9 +75,9 @@ const Tabs = TabNavigator(
     //     }
     //   },
     // },
-    Find:{
-      screen:Find,
-      navigationOptions:()=>{
+    Find: {
+      screen: Find,
+      navigationOptions: () => {
         return {
           tabBarLabel: data => {
             return (
@@ -101,7 +103,7 @@ const Tabs = TabNavigator(
           ),
           header: null,
         }
-      }
+      },
     },
     Mine: {
       screen: Mine,
@@ -195,4 +197,6 @@ export {
   MyLocalData,
   MyOnlineData,
   Register,
+  MyOnlineMap,
+  ScanOnlineMap,
 }

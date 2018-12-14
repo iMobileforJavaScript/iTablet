@@ -68,6 +68,10 @@ export default class MapView extends React.Component {
     setCurrentLayer: PropTypes.func,
     setCurrentAttribute: PropTypes.func,
     getAttributes: PropTypes.func,
+    importTemplate: PropTypes.func,
+    openTemplate: PropTypes.func,
+    setCurrentTemplateInfo: PropTypes.func,
+    setTemplate: PropTypes.func,
   }
 
   constructor(props) {
@@ -196,6 +200,9 @@ export default class MapView extends React.Component {
     this.props.setBufferSetting(null)
     this.props.setOverlaySetting(null)
     this.props.setAnalystLayer(null)
+    this.props.setCollectionInfo() // 置空Redux中Collection中的数据
+    this.props.setCurrentTemplateInfo() // 清空当前模板
+    this.props.setTemplate() // 清空模板
   }
 
   closeWorkspace = (cb = () => {}) => {
@@ -631,7 +638,10 @@ export default class MapView extends React.Component {
               '.udd',
           )
         }
-        this.props.setCollectionInfo() // 置空Redux中Collection中的数据
+        if (this.props.map.template && this.props.map.template.path) {
+          await SMap.closeWorkspace()
+        }
+        this.clearData()
         this.setLoading(false)
         NavigationService.goBack()
       } catch (e) {
@@ -888,6 +898,7 @@ export default class MapView extends React.Component {
         user={this.props.user}
         map={this.props.map}
         symbol={this.props.symbol}
+        layers={this.props.layers}
         layerData={this.props.currentLayer}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
@@ -901,6 +912,8 @@ export default class MapView extends React.Component {
         getLayers={this.props.getLayers}
         setCurrentMap={this.props.setCurrentMap}
         collection={this.props.collection}
+        importTemplate={this.props.importTemplate}
+        openTemplate={this.props.openTemplate}
       />
     )
   }

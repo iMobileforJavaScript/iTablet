@@ -12,6 +12,7 @@ import {
   Text,
   TouchableOpacity,
   Easing,
+  Image,
 } from 'react-native'
 import { scaleSize } from '../../utils'
 import { size } from '../../styles'
@@ -26,6 +27,7 @@ export default class TreeListItem extends React.Component {
     // childrenData: Array,
     style: Object,
     childrenStyle: Object,
+    iconStyle: Object,
     keyExtractor?: () => {},
     onPress?: () => {},
     renderChild: () => {},
@@ -45,6 +47,20 @@ export default class TreeListItem extends React.Component {
       return this.props.children
     }
     const arrowImg = require('../../assets/mapEdit/icon-arrow-down.png')
+    let icon;
+    if (this.props.data.$ && this.props.data.$.type) {
+      switch (this.props.data.$.type) {
+        case 'Region':
+          icon = require('../../assets/map/layertype_georegion.png')
+          break
+        case 'Line':
+          icon = require('../../assets/map/layertype_line.png')
+          break
+        case 'Point':
+          icon = require('../../assets/map/layertype_point.png')
+          break
+      }
+    }
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -56,58 +72,65 @@ export default class TreeListItem extends React.Component {
           })
         }
       >
-        {this.props.data.childGroups &&
-        this.props.data.childGroups.length > 0 ? (
-          <TouchableOpacity
-            style={[styles.btn]}
-            onPress={() => this.showChild(!this.state.isVisible)}
-          >
-            <Animated.Image
-              resizeMode={'contain'}
-              style={[
-                styles.arrowImg,
-                {
-                  transform: [
-                    // scale, scaleX, scaleY, translateX, translateY, rotate, rotateX, rotateY, rotateZ
-                    {
-                      rotate: this.state.imgRotate.interpolate({
-                        // 旋转，使用插值函数做值映射
-                        inputRange: [-1, 1],
-                        outputRange: ['-180deg', '180deg'],
-                      }),
-                    },
-                  ],
-                },
-              ]}
-              source={arrowImg}
-            />
-          </TouchableOpacity>
-        ) : (
-          <View style={styles.arrowImg} />
-        )}
-        <Text style={styles.title}>{this.props.data.name}</Text>
+        {
+          this.props.data.childGroups &&
+          this.props.data.childGroups.length > 0 ||
+          this.props.data.feature &&
+          this.props.data.feature.length > 0  ? (
+            <TouchableOpacity
+              style={[styles.btn]}
+              onPress={() => this.showChild(!this.state.isVisible)}
+            >
+              <Animated.Image
+                resizeMode={'contain'}
+                style={[
+                  styles.arrowImg,
+                  {
+                    transform: [
+                      // scale, scaleX, scaleY, translateX, translateY, rotate, rotateX, rotateY, rotateZ
+                      {
+                        rotate: this.state.imgRotate.interpolate({
+                          // 旋转，使用插值函数做值映射
+                          inputRange: [-1, 1],
+                          outputRange: ['-180deg', '180deg'],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+                source={arrowImg}
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={styles.arrowImg} />
+          )
+        }
+        {icon && <Image resizeMode={'contain'} source={icon} style={[styles.icon, this.props.iconStyle]}/>}
+        <Text style={[styles.title, icon && {marginLeft: scaleSize(20)}]}>{this.props.data.name || (this.props.data.$.code + ' ' + this.props.data.$.name)}</Text>
       </TouchableOpacity>
     )
   }
 
   renderChildGroups = () => {
+    let childGroups = this.props.data.childGroups || this.props.data.feature || []
     if (
-      !this.props.data.childGroups ||
-      this.props.data.childGroups.length === 0 ||
+      !childGroups ||
+      childGroups.length === 0 ||
       !this.state.isVisible
     )
       return null
     let children = []
-    for (let i = 0; i < this.props.data.childGroups.length; i++) {
-      let data = this.props.data.childGroups[i]
+    for (let i = 0; i < childGroups.length; i++) {
+      let data = childGroups[i]
       if (this.props.renderChild) {
         children.push(this.props.renderChild({ data, index: i }))
       } else {
         children.push(
           <TreeListItem
-            key={data.key || data.path}
+            key={data.key || data.path || data.$ && data.$.name || i}
             data={data}
             style={this.props.style}
+            iconStyle={this.props.iconStyle}
             // childrenData={this.props.data.childGroups[i].childGroups}
             keyExtractor={this._keyExtractor}
             onPress={() => this._onPress({ data, index: i })}
@@ -184,5 +207,9 @@ const styles = StyleSheet.create({
     marginRight: scaleSize(20),
     height: scaleSize(20),
     width: scaleSize(20),
+  },
+  icon: {
+    height: scaleSize(40),
+    width: scaleSize(40),
   },
 })

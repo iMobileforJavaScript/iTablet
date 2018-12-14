@@ -71,11 +71,11 @@ export default class FunctionToolbar extends React.Component {
     this.visible = visible
   }
 
-  start = () => {
+  start = type => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_START, {
+      toolRef.setVisible(true, type, {
         containerType: 'table',
         height: ConstToolType.HEIGHT[2],
       })
@@ -447,7 +447,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: this.start,
+            action: () => this.start(ConstToolType.MAP_EDIT_START),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -611,7 +611,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: this.start,
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           // {

@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, WebView, Platform } from 'react-native'
+import { StyleSheet, WebView } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
 import { Container } from '../../components'
@@ -53,8 +53,7 @@ export default class GetBack extends React.Component {
           contentInset={{ top: 0, left: 0, right: 0, bottom: 0 }}
           style={styles.webView}
           source={{
-            uri:
-              'http://www.supermapol.com/proxy/iserver/services/map_world--4/rest/maps/%E4%B8%96%E7%95%8C%E5%9C%B0%E5%9B%BE_Day.leaflet',
+            uri: 'https://sso.supermap.com/password?service=https://www.supermapol.com',
           }}
           javaScriptEnabled={true}
           domStorageEnabled={true}
