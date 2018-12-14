@@ -41,8 +41,7 @@ export default class Color_Btn extends React.Component {
                 { width: scaleSize(80) },
                 { backgroundColor: this.props.background },
               ]}
-            >
-            </Text>
+            />
           )}
         </View>
       </TouchableHighlight>

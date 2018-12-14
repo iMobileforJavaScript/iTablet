@@ -54,9 +54,12 @@ RCT_REMAP_METHOD(deleteFile, deleteFileByPath:(NSString *)path resolver:(RCTProm
   }
 }
 
-RCT_REMAP_METHOD(copyFile, copyFileByPath:(NSString *)fromPath targetPath:(NSString *)toPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+RCT_REMAP_METHOD(copyFile, copyFileByPath:(NSString *)fromPath targetPath:(NSString *)toPath override:(BOOL)override resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
-    BOOL result = [FileTools copyFile:fromPath targetPath:toPath];
+    BOOL result = [[NSFileManager defaultManager] fileExistsAtPath:toPath];
+    if (override || !result) {
+      result = [FileTools copyFile:fromPath targetPath:toPath];
+    }
     resolve([NSNumber numberWithBool:result]);
   } @catch (NSException *exception) {
     reject(@"unZipFile", exception.reason, nil);
@@ -164,34 +167,32 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
     }
   }
   
-  // 初始化用户数据
-  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
+  //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
-  
-  //创建用户目录
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Attribute"]];
-   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Datasource"]];
-   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Scene"]];
-   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Symbol"]];
-   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
-   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Datasource"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Scene"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Symbol"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
   
-  
-  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Workspace.zip"];
-  NSString* workspacePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"];
-  
+  // 初始化模板数据
+  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
+  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
+  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"];
+  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", templatePath, @"地理国情普查"];
   
   BOOL isUnZip = NO;
-  if (![[NSFileManager defaultManager] fileExistsAtPath:workspacePath isDirectory:nil]) {
+  if (![[NSFileManager defaultManager] fileExistsAtPath:templatePath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
     if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
-      isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
+      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
       NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
     } else {
       if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
-        isUnZip = [FileTools unZipFile:commonZipPath targetPath:workspacePath];
+        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
         NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
       }
     }

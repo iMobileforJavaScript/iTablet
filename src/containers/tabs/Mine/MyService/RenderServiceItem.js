@@ -15,11 +15,11 @@ export default class RenderServiceItem extends PureComponent{
     scenes:Object,
     mapInfos:Object,
   }
-  defaultProps:{
-    imageUrl:'',
-    restTitle:'地图'
+  defaultProps: {
+    imageUrl: '',
+    restTitle: '地图',
   }
-  constructor(props){
+  constructor(props) {
     super(props)
   }
 
@@ -50,15 +50,47 @@ export default class RenderServiceItem extends PureComponent{
           <Text style={[styles.restTitleTextStyle,]} numberOfLines={2}>{this.props.restTitle}</Text>
           <Text
             onPress={() => {
-              if(this.props.onItemPress){
-                this.props.onItemPress(this.props.isPublish,this.props.itemId,this.props.restTitle,this.props.index)}
-              }
-            }
-            numberOfLines={1}
-            style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>
+              Toast.show('服务没有地图')
+            }}
+          >
+            <Image
+              resizeMode={'stretch'}
+              style={styles.imageStyle}
+              source={{ uri: this.props.imageUrl }}
+            />
+          </TouchableOpacity>
+
+          <View>
+            <Text style={[styles.restTitleTextStyle]} numberOfLines={1}>
+              {this.props.restTitle}
+            </Text>
+            <Text
+              onPress={() => {
+                if (this.props.onItemPress) {
+                  this.props.onItemPress(
+                    this.props.isPublish,
+                    this.props.itemId,
+                    this.props.restTitle,
+                    this.props.index,
+                  )
+                }
+              }}
+              numberOfLines={1}
+              style={[
+                styles.restTitleTextStyle,
+                {
+                  lineHeight: textHeight,
+                  textAlign: 'right',
+                  paddingRight: 25,
+                },
+              ]}
+            >
+              ...
+            </Text>
+          </View>
         </View>
+        <View style={styles.separateViewStyle} />
       </View>
-      <View style={styles.separateViewStyle}/>
-    </View>
+    )
   }
 }

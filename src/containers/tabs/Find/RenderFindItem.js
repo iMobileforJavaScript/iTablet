@@ -1,40 +1,32 @@
-import React from "react"
-import { Component } from "react"
-import {
-  Image,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native"
-import styles,{textHeight} from './Styles'
+import React from 'react'
+import { Component } from 'react'
+import { Image, Text, TouchableOpacity, View } from 'react-native'
+import styles, { textHeight } from './Styles'
 
-import {  Toast } from '../../../utils/index'
+import { Toast } from '../../../utils/index'
 
-export default class RenderFindItem extends Component{
-
-  props:{
-    fileName:string,
-    imageUrl:string,
-    itemId:string,
-    type:string,
-    time:string,
-    nickname:string,
+export default class RenderFindItem extends Component {
+  props: {
+    fileName: string,
+    imageUrl: string,
+    itemId: string,
+    type: string,
+    time: string,
+    nickname: string,
   }
 
-
-
-  render(){
-    let date=new Date(this.props.time)
-    let year = date.getFullYear()+"年"
-    let month = (date.getMonth()+1)+"月"
-    let day = date.getDate()+"日"
-    let hour = date.getHours()+":"
-    if(hour.length < 3){
-      hour = "0"+hour
+  render() {
+    let date = new Date(this.props.time)
+    let year = date.getFullYear() + '年'
+    let month = date.getMonth() + 1 + '月'
+    let day = date.getDate() + '日'
+    let hour = date.getHours() + ':'
+    if (hour.length < 3) {
+      hour = '0' + hour
     }
-    let minute = date.getMinutes()+''
-    if(minute.length < 2){
-      minute = "0"+minute
+    let minute = date.getMinutes() + ''
+    if (minute.length < 2) {
+      minute = '0' + minute
     }
     let time = year+month+day+" "+hour+minute
     return  <View>

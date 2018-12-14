@@ -17,6 +17,9 @@ export const SET_ATTRIBUTES = 'SET_ATTRIBUTES'
 // --------------------------------------------------
 
 export const setEditLayer = (params, cb = () => {}) => async dispatch => {
+  if (params && params.path) {
+    await SMap.setLayerEditable(params.path, true)
+  }
   await dispatch({
     type: SET_EDIT_LAYER,
     payload: params || {},
@@ -59,11 +62,25 @@ export const setAnalystLayer = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
-export const getLayers = (type = -1, cb = () => {}) => async dispatch => {
-  let layers = await SMap.getLayersByType(type)
+export const getLayers = (params, cb = () => {}) => async dispatch => {
+  if (typeof params === 'number') {
+    params = {
+      type: params,
+      isResetCurrentLayer: false,
+    }
+  } else {
+    params = {
+      type: params.type >= 0 ? params.type : -1,
+      isResetCurrentLayer: params.isResetCurrentLayer || false,
+    }
+  }
+  let layers = await SMap.getLayersByType(params.type)
   await dispatch({
     type: GET_LAYERS,
-    payload: layers || {},
+    payload: {
+      layers,
+      isResetCurrentLayer: params.isResetCurrentLayer,
+    } || {},
   })
   cb && cb(layers)
 }
@@ -121,13 +138,13 @@ export default handleActions(
     [`${GET_LAYERS}`]: (state, { payload }) => {
       let currentLayer = {}
       if (
-        JSON.stringify(state.toJS().currentLayer) === '{}' &&
-        payload.length > 0
+        (JSON.stringify(state.toJS().currentLayer) === '{}' || payload.isResetCurrentLayer) &&
+        payload.layers.length > 0
       ) {
-        currentLayer = payload[0]
+        currentLayer = payload.layers[0]
       }
       return state
-        .setIn(['layers'], fromJS(payload))
+        .setIn(['layers'], fromJS(payload.layers))
         .setIn(['currentLayer'], fromJS(currentLayer))
     },
     [`${GET_ATTRIBUTES}`]: (state, { payload }) => {

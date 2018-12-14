@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
-import { SOnlineService, } from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './Styles'
 import PopupModal from "./PopupModal"
 import Toast from "../../../../utils/Toast"
@@ -17,12 +17,12 @@ import Toast from "../../../../utils/Toast"
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
  * */
 
-let _arrPrivateServiceList=[]
-let _arrPublishServiceList=[]
+let _arrPrivateServiceList = []
+let _arrPublishServiceList = []
 /** 当前页加载多少条服务数据*/
 let _iServicePageSize = 9
 let _loadCount = 1
-export default class MyService extends Component{
+export default class MyService extends Component {
   props: {
     navigation: Object,
     user: Object,
@@ -31,27 +31,28 @@ export default class MyService extends Component{
   constructor(props) {
     super(props)
     this.state = {
-      arrPrivateServiceList:_arrPrivateServiceList,
-      arrPublishServiceList:_arrPublishServiceList,
-      selections:[{title:'私有服务',data:_arrPrivateServiceList},
-        {title:'共有服务',data:_arrPublishServiceList}],
-      modalIsVisible:false,
-      isRefreshing:false,
+      arrPrivateServiceList: _arrPrivateServiceList,
+      arrPublishServiceList: _arrPublishServiceList,
+      selections: [
+        { title: '私有服务', data: _arrPrivateServiceList },
+        { title: '共有服务', data: _arrPublishServiceList },
+      ],
+      modalIsVisible: false,
+      isRefreshing: false,
     }
-    this.serviceListTotal= -1
-    this._initSectionsData(1,_iServicePageSize)
+    this.serviceListTotal = -1
+    this._initSectionsData(1, _iServicePageSize)
     this._renderItem = this._renderItem.bind(this)
-    this._renderSectionHeader=this._renderSectionHeader.bind(this)
+    this._renderSectionHeader = this._renderSectionHeader.bind(this)
   }
 
-
-  _initSectionsData= async (currentPage, pageSize) =>{
-    try{
+  _initSectionsData = async (currentPage, pageSize) => {
+    try {
       let strServiceList = await SOnlineService.getServiceList(1, pageSize)
       let objServiceList = JSON.parse(strServiceList)
       this.serviceListTotal = objServiceList.total
-      let arrPublishServiceList=[]
-      let arrPrivateServiceList=[]
+      let arrPublishServiceList = []
+      let arrPrivateServiceList = []
       /** 构造SectionsData数据*/
       for (let page = 1; page <= currentPage; page++) {
         if (page > 1) {
@@ -60,7 +61,7 @@ export default class MyService extends Component{
         }
 
         let objArrServiceContent = objServiceList.content
-        for (let i = 0; i < objArrServiceContent.length; i++){
+        for (let i = 0; i < objArrServiceContent.length; i++) {
           let objContent = objArrServiceContent[i]
           let arrScenes = objContent.scenes
           let arrMapInfos = objContent.mapInfos
@@ -69,9 +70,9 @@ export default class MyService extends Component{
           let strID = objContent.id
           let bIsPublish = false
           let objArrAuthorizeSetting = objContent.authorizeSetting
-          for(let j = 0;j < objArrAuthorizeSetting.length;j++){
+          for (let j = 0; j < objArrAuthorizeSetting.length; j++) {
             let strPermissionType = objArrAuthorizeSetting[j].permissionType
-            if(strPermissionType === 'READ'){
+            if (strPermissionType === 'READ') {
               bIsPublish = true
               break
             }
@@ -84,42 +85,43 @@ export default class MyService extends Component{
             ',"isPublish":'+bIsPublish+
             '}'
           let objSectionsData = JSON.parse(strSectionsData)
-          if(bIsPublish){
+          if (bIsPublish) {
             arrPublishServiceList.push(objSectionsData)
-          }else{
+          } else {
             arrPrivateServiceList.push(objSectionsData)
           }
-
         }
       }
       /** 重新赋值，避免浅拷贝*/
 
       _arrPrivateServiceList = arrPrivateServiceList
       _arrPublishServiceList = arrPublishServiceList
-      if(_arrPrivateServiceList.length === 0){
+      if (_arrPrivateServiceList.length === 0) {
         _arrPrivateServiceList.push({})
       }
-      if(_arrPublishServiceList.length === 0){
+      if (_arrPublishServiceList.length === 0) {
         _arrPublishServiceList.push({})
       }
-      this.setState({arrPrivateServiceList:_arrPrivateServiceList,arrPublishServiceList:_arrPublishServiceList})
-    }catch (e) {
+      this.setState({
+        arrPrivateServiceList: _arrPrivateServiceList,
+        arrPublishServiceList: _arrPublishServiceList,
+      })
+    } catch (e) {
       Toast.show('网络错误,下拉刷新数据')
-      this.setState({ isRefreshing: false})
+      this.setState({ isRefreshing: false })
     }
-
   }
 
-  _renderSectionHeader(section){
+  _renderSectionHeader(section) {
     let title = section.section.title
-    if( title!== undefined){
-      return <Text  style={styles.titleTextStyle}>{title}</Text>
+    if (title !== undefined) {
+      return <Text style={styles.titleTextStyle}>{title}</Text>
     }
-    return <View/>
+    return <View />
   }
-  _renderItem (info){
+  _renderItem(info) {
     let restTitle = info.item.restTitle
-    if(restTitle!== undefined){
+    if (restTitle !== undefined) {
       let index = info.index
       let imageUri = info.item.thumbnail
       let isPublish = info.item.isPublish
@@ -137,49 +139,60 @@ export default class MyService extends Component{
         mapInfos = {mapInfos}
       />
     }
-    return <View>
-      <Text style={[styles.titleTextStyle,{backgroundColor:'#353537',textAlign:'center'}]}>没有服务</Text>
-    </View>
+    return (
+      <View>
+        <Text
+          style={[
+            styles.titleTextStyle,
+            { backgroundColor: '#353537', textAlign: 'center' },
+          ]}
+        >
+          没有服务
+        </Text>
+      </View>
+    )
   }
 
-  _keyExtractor = (item,index) => {
-    if(item.id === undefined){
-      return index*index
+  _keyExtractor = (item, index) => {
+    if (item.id === undefined) {
+      return index * index
     }
     return item.id
   }
 
-  _onItemPress=(isPublish,itemId,restTitle,index)=>{
+  _onItemPress = (isPublish, itemId, restTitle, index) => {
     this.onClickItemId = itemId
     this.onClickItemRestTitle = restTitle
     this.onClickItemIsPublish = isPublish
     this.onClickItemIndex = index
-    this.setState({modalIsVisible:true})
+    this.setState({ modalIsVisible: true })
   }
 
-  _onModalClick=(isVisible)=>{
-    this.setState({modalIsVisible:isVisible})
+  _onModalClick = isVisible => {
+    this.setState({ modalIsVisible: isVisible })
   }
 
-  _renderModal= ()=>{
-    if(this.state.modalIsVisible){
-      return <PopupModal
-        onRefresh={this._onModalRefresh2}
-        onModalClick={this._onModalClick}
-        modalVisible={(this.state.modalIsVisible)}
-        title = {this.onClickItemRestTitle}
-        isPublish={this.onClickItemIsPublish}
-        itemId ={this.onClickItemId}
-        index={this.onClickItemIndex}
-      />
+  _renderModal = () => {
+    if (this.state.modalIsVisible) {
+      return (
+        <PopupModal
+          onRefresh={this._onModalRefresh2}
+          onModalClick={this._onModalClick}
+          modalVisible={this.state.modalIsVisible}
+          title={this.onClickItemRestTitle}
+          isPublish={this.onClickItemIsPublish}
+          itemId={this.onClickItemId}
+          index={this.onClickItemIndex}
+        />
+      )
     }
   }
 
   _onModalRefresh = async () => {
     if (!this.state.isRefreshing) {
-      this.setState({ isRefreshing: true})
-      await this._initSectionsData(_loadCount,_iServicePageSize)
-      this.setState({ isRefreshing: false})
+      this.setState({ isRefreshing: true })
+      await this._initSectionsData(_loadCount, _iServicePageSize)
+      this.setState({ isRefreshing: false })
     }
   }
 
@@ -249,24 +262,30 @@ export default class MyService extends Component{
       }
     }
 
-    this.setState({arrPrivateServiceList:_arrPrivateServiceList,arrPublishServiceList:_arrPublishServiceList})
+    this.setState({
+      arrPrivateServiceList: _arrPrivateServiceList,
+      arrPublishServiceList: _arrPublishServiceList,
+    })
   }
 
   _onRefresh = async () => {
     if (!this.state.isRefreshing) {
       _loadCount = 1
-      this.setState({ isRefreshing: true})
-      await this._initSectionsData(1,_iServicePageSize)
-      this.setState({ isRefreshing: false})
+      this.setState({ isRefreshing: true })
+      await this._initSectionsData(1, _iServicePageSize)
+      this.setState({ isRefreshing: false })
     }
   }
   _loadData = async () => {
     let publishLength = _arrPublishServiceList.length
     let privateLength = _arrPrivateServiceList.length
     let loadServiceCount = publishLength + privateLength
-    if( this.serviceListTotal > _loadCount*_iServicePageSize && this.serviceListTotal > loadServiceCount){
+    if (
+      this.serviceListTotal > _loadCount * _iServicePageSize &&
+      this.serviceListTotal > loadServiceCount
+    ) {
       _loadCount = ++_loadCount
-      await this._initSectionsData(_loadCount,_iServicePageSize)
+      await this._initSectionsData(_loadCount, _iServicePageSize)
     }
   }
   _footView() {
@@ -277,16 +296,21 @@ export default class MyService extends Component{
       return (
         <View
           style={{
-            flex:1,
-            height:50,
+            flex: 1,
+            height: 50,
             justifyContent: 'center',
             alignItems: 'center',
           }}
         >
           <ActivityIndicator
-            style={{flex:1,height:30,justifyContent:'center',alignItems:'center'}}
+            style={{
+              flex: 1,
+              height: 30,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
             color={'orange'}
-            animating ={true}
+            animating={true}
           />
           <Text
             style={{
@@ -294,7 +318,7 @@ export default class MyService extends Component{
               lineHeight: 20,
               fontSize: 16,
               textAlign: 'center',
-              color:'white'
+              color: 'white',
             }}
           >
             加载中...
@@ -302,67 +326,77 @@ export default class MyService extends Component{
         </View>
       )
     } else {
-      return <View>
-        <Text
-          style={{
-            flex: 1,
-            lineHeight: 30,
-            fontSize: 12,
-            textAlign: 'center',
-          }}
-        >-----这是底线-----</Text>
-      </View>
+      return (
+        <View>
+          <Text
+            style={{
+              flex: 1,
+              lineHeight: 30,
+              fontSize: 12,
+              textAlign: 'center',
+            }}
+          >
+            -----这是底线-----
+          </Text>
+        </View>
+      )
     }
   }
-  _render=()=>{
-    if(_arrPublishServiceList.length === 0 && _arrPrivateServiceList.length === 0){
-      return <View style={styles.noDataViewStyle}>
-        <ActivityIndicator
-          color={'gray'}
-          animating={true}
-        />
-        <Text>Loading...</Text>
-      </View>
-    }else {
-      return <View style={{flex:1}}>
-        <SectionList
-          style={styles.haveDataViewStyle}
-          sections={[{title:'私有服务',data:this.state.arrPrivateServiceList},
-            {title:'共有服务',data:this.state.arrPublishServiceList}]}
-          renderItem={this._renderItem}
-          renderSectionHeader={this._renderSectionHeader}
-          keyExtractor={this._keyExtractor}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this._onRefresh}
-              colors={['orange', 'red']}
-              tintColor={'white'}
-              title={'刷新中...'}
-              enabled={true}
-            />
-          }
-          onEndReachedThreshold={0.1}
-          onEndReached={this._loadData}
-          ListFooterComponent={this._footView()}
-        />
-        {this._renderModal()}
-      </View>
+  _render = () => {
+    if (
+      _arrPublishServiceList.length === 0 &&
+      _arrPrivateServiceList.length === 0
+    ) {
+      return (
+        <View style={styles.noDataViewStyle}>
+          <ActivityIndicator color={'gray'} animating={true} />
+          <Text>Loading...</Text>
+        </View>
+      )
+    } else {
+      return (
+        <View style={{ flex: 1 }}>
+          <SectionList
+            style={styles.haveDataViewStyle}
+            sections={[
+              { title: '私有服务', data: this.state.arrPrivateServiceList },
+              { title: '共有服务', data: this.state.arrPublishServiceList },
+            ]}
+            renderItem={this._renderItem}
+            renderSectionHeader={this._renderSectionHeader}
+            keyExtractor={this._keyExtractor}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._onRefresh}
+                colors={['orange', 'red']}
+                tintColor={'white'}
+                title={'刷新中...'}
+                enabled={true}
+              />
+            }
+            onEndReachedThreshold={0.1}
+            onEndReached={this._loadData}
+            ListFooterComponent={this._footView()}
+          />
+          {this._renderModal()}
+        </View>
+      )
     }
   }
 
-  render(){
-    return (<Container
-      ref = { ref => this.container=ref }
-      headerProps={{
-        title: '我的服务',
-        withoutBack: false,
-        navigation: this.props.navigation,
-      }}
-    >
-      {this._render()}
-
-    </Container>)
+  render() {
+    return (
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: '我的服务',
+          withoutBack: false,
+          navigation: this.props.navigation,
+        }}
+      >
+        {this._render()}
+      </Container>
+    )
   }
-
 }

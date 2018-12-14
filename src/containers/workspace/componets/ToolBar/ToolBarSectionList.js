@@ -49,10 +49,16 @@ export default class ToolBarSectionList extends React.Component {
     }
     return (
       <TouchableOpacity
-        style={[styles.item, this.props.itemStyle,item.backgroundColor&&{backgroundColor:item.backgroundColor}]}
+        style={[
+          styles.item,
+          this.props.itemStyle,
+          item.backgroundColor && { backgroundColor: item.backgroundColor },
+        ]}
         onPress={() => this.itemAction({ item, index })}
       >
-        {item.title&&<Text style={styles.itemTitle}>{item.title}</Text>}
+        {(item.title || item.name) && (
+          <Text style={styles.itemTitle}>{item.title || item.name}</Text>
+        )}
       </TouchableOpacity>
     )
   }
@@ -90,7 +96,8 @@ const styles = StyleSheet.create({
   itemTitle: {
     marginLeft: scaleSize(60),
     fontSize: size.fontSize.fontSizeMd,
-    backgroundColor: color.theme,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
     color: color.themeText,
   },
 })

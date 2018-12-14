@@ -18,7 +18,10 @@ const mapDispatchToProps = {
   setUser,
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Mine)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Mine)
 
 export {
   Register,

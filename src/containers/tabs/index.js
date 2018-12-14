@@ -75,9 +75,9 @@ const Tabs = TabNavigator(
     //     }
     //   },
     // },
-    Find:{
-      screen:Find,
-      navigationOptions:()=>{
+    Find: {
+      screen: Find,
+      navigationOptions: () => {
         return {
           tabBarLabel: data => {
             return (
@@ -103,7 +103,7 @@ const Tabs = TabNavigator(
           ),
           header: null,
         }
-      }
+      },
     },
     Mine: {
       screen: Mine,

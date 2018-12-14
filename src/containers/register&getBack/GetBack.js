@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, WebView, Platform } from 'react-native'
+import { StyleSheet, WebView } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
 import { Container } from '../../components'
