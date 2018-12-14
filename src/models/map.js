@@ -12,6 +12,7 @@ let parser = new xml2js.Parser()
 export const SET_LATEST_MAP = 'SET_LATEST_MAP'
 export const SET_MAP_VIEW = 'SET_MAP_VIEW'
 export const SET_CURRENT_MAP = 'SET_CURRENT_MAP'
+export const OPEN_TEMPLATE = 'OPEN_TEMPLATE'
 export const SET_TEMPLATE = 'SET_TEMPLATE'
 export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
@@ -84,7 +85,7 @@ export const openTemplate = (params, cb = () => {}) => async dispatch => {
   }
 
   await dispatch({
-    type: SET_TEMPLATE,
+    type: OPEN_TEMPLATE,
     payload: payload || {},
   })
 }
@@ -105,10 +106,19 @@ export const importTemplate = (params, cb = () => {}) => async dispatch => {
     mapInfo,
   }
   await dispatch({
-    type: SET_TEMPLATE,
+    type: OPEN_TEMPLATE,
     payload: payload || {},
   })
   cb && cb(result)
+}
+
+// 设置模版
+export const setTemplate = (params, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_TEMPLATE,
+    payload: params || {},
+  })
+  cb && cb()
 }
 
 // 设置当前选中的模板符号
@@ -116,14 +126,17 @@ export const setCurrentTemplateInfo = (
   params,
   cb = () => {},
 ) => async dispatch => {
-  let tempInfo = params.fields[0].field,
-    fieldInfo = []
-  tempInfo.forEach(item => {
-    fieldInfo.push(item.$)
-  })
-  let data = {
-    ...params.$,
-    field: fieldInfo,
+  let data = {}
+  if (params && params.fields) {
+    let tempInfo = params.fields[0].field,
+      fieldInfo = []
+    tempInfo.forEach(item => {
+      fieldInfo.push(item.$)
+    })
+    data = {
+      ...params.$,
+      field: fieldInfo,
+    }
   }
   await dispatch({
     type: SET_CURRENT_TEMPLATE_INFO,
@@ -235,10 +248,13 @@ export default handleActions(
     [`${SET_CURRENT_TEMPLATE_INFO}`]: (state, { payload }) => {
       return state.setIn(['currentTemplateInfo'], fromJS(payload))
     },
-    [`${SET_TEMPLATE}`]: (state, { payload }) => {
+    [`${OPEN_TEMPLATE}`]: (state, { payload }) => {
       return state
         .setIn(['template'], fromJS(payload.templateInfo))
         .setIn(['currentMap'], fromJS(payload.currentMap))
+    },
+    [`${SET_TEMPLATE}`]: (state, { payload }) => {
+      return state.setIn(['template'], fromJS(payload))
     },
     [`${GET_SYMBOL_TEMPLATES}`]: (state, { payload }) => {
       return state.setIn(['symbolTemplates'], fromJS(payload))

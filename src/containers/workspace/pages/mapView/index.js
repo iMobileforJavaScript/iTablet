@@ -9,7 +9,14 @@ import {
   getAttributes,
   setCurrentLayer,
 } from '../../../../models/layers'
-import { setLatestMap, setCurrentMap, importTemplate, openTemplate } from '../../../../models/map'
+import {
+  setLatestMap,
+  setCurrentMap,
+  importTemplate,
+  openTemplate,
+  setCurrentTemplateInfo,
+  setTemplate,
+} from '../../../../models/map'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
 import { setCollectionInfo } from '../../../../models/collection'
 
@@ -46,6 +53,8 @@ const mapDispatchToProps = {
   getAttributes,
   importTemplate,
   openTemplate,
+  setCurrentTemplateInfo,
+  setTemplate,
 }
 
 export default connect(
