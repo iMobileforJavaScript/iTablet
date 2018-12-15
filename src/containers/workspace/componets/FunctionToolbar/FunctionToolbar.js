@@ -118,7 +118,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[1],
       })
     }
   }
