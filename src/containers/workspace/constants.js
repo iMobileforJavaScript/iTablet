@@ -51,6 +51,7 @@ export default {
   OPEN: '打开',
   WORKSPACE: '工作空间',
   CREATE: '新建',
+  TEMPLATE: '模板',
   HISTORY: '历史',
   BASE_MAP: '底图',
   ADD: '添加',

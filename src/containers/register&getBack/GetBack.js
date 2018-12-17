@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, WebView, Platform } from 'react-native'
+import { StyleSheet, WebView } from 'react-native'
 import { constUtil, Toast } from '../../utils'
 
 import { Container } from '../../components'
@@ -45,18 +45,19 @@ export default class GetBack extends React.Component {
         {/*<BorderInput password={true} placeholder='确认密码' />*/}
         {/*<BtnTwo text='找回密码' width={90} btnClick={this._register} />*/}
         {/*</View>*/}
+        {/*let uri ='https://sso.supermap.com/password?service=https://www.supermapol.com' */}
         <WebView
-          scalesPageToFit={Platform.OS === 'ios'}
+          scalesPageToFit={true}
           // scalesPageToFit={true}
           // automaticallyAdjustContentInsets={true}
           contentInset={{ top: 0, left: 0, right: 0, bottom: 0 }}
           style={styles.webView}
           source={{
-            uri:
-              'https://sso.supermap.com/password?service=https://www.supermapol.com',
+            uri: 'https://sso.supermap.com/password?service=https://www.supermapol.com',
           }}
           javaScriptEnabled={true}
           domStorageEnabled={true}
+          startInLoadingState={true}
         />
       </Container>
     )

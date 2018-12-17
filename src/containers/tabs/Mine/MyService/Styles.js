@@ -1,9 +1,9 @@
 import { Dimensions, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 export const itemWidth = Dimensions.get('window').width
-export const itemHeight = 120
-export const imageWidth = 100
-export const imageHeight = 80
+export const itemHeight = 140
+export const imageWidth = 120
+export const imageHeight = 100
 export const textHeight = 40
 const smallFontSize = 16
 const largeFontSize = 18
@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     height: itemHeight,
     flexDirection: 'row',
     padding: 15,
+    alignItems: 'center',
   },
   imageStyle: {
     width: imageWidth,
@@ -46,6 +47,7 @@ const styles = StyleSheet.create({
     color: 'white',
     paddingLeft: 10,
     textAlign: 'left',
+    flexWrap: 'wrap',
   },
   separateViewStyle: {
     width: itemWidth,

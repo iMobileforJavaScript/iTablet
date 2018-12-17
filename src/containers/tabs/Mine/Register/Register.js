@@ -45,75 +45,81 @@ export default class Register extends React.Component {
   }
 
   _register = async () => {
-    let result
-    let isEmail = this.state.onEmailTitleFocus
-    if (isEmail) {
-      if (!this.txtEmail) {
-        Toast.show('请输入QQ邮箱')
-        return
-      }
-      if (!this.txtEmailNickname) {
-        Toast.show('请输入昵称')
-        return
-      }
-      if (!this.txtEmailPassword) {
-        Toast.show('请输入密码')
-        return
-      }
-      this.container.setLoading(true, '注册中...')
-      result = await SOnlineService.registerWithEmail(
-        this.txtEmail,
-        this.txtNickname,
-        this.txtPassword,
-      )
-    } else {
-      if (!this.txtPhoneNumber) {
-        Toast.show('请输入手机号')
-        return
-      }
-      if (!this.txtPhoneNumberNickname) {
-        Toast.show('请输入昵称')
-        return
-      }
-      if (!this.txtVerifyCode) {
-        Toast.show('请输入验证码')
-        return
-      }
-      if (!this.txtPhoneNumberPassword) {
-        Toast.show('请输入密码')
-        return
-      }
-      this.container.setLoading(true, '注册中...')
-      result = await SOnlineService.registerWithPhone(
-        this.txtPhoneNumber,
-        this.txtVerifyCode,
-        this.txtNickname,
-        this.txtPassword,
-      )
-    }
-
-    if (typeof result === 'boolean' && result === true) {
-      let info
+    try {
+      let result
+      let isEmail = this.state.onEmailTitleFocus
       if (isEmail) {
-        info = '注册成功，请前往邮箱激活'
-        Toast.show(info)
+        if (!this.txtEmail) {
+          Toast.show('请输入QQ邮箱')
+          return
+        }
+        if (!this.txtEmailNickname) {
+          Toast.show('请输入昵称')
+          return
+        }
+        if (!this.txtEmailPassword) {
+          Toast.show('请输入密码')
+          return
+        }
+        this.container.setLoading(true, '注册中...')
+        result = await SOnlineService.registerWithEmail(
+          this.txtEmail,
+          this.txtEmailNickname,
+          this.txtEmailPassword,
+        )
       } else {
-        info = '注册成功'
-        Toast.show(info)
+        if (!this.txtPhoneNumber) {
+          Toast.show('请输入手机号')
+          return
+        }
+        if (!this.txtPhoneNumberNickname) {
+          Toast.show('请输入昵称')
+          return
+        }
+        if (!this.txtVerifyCode) {
+          Toast.show('请输入验证码')
+          return
+        }
+        if (!this.txtPhoneNumberPassword) {
+          Toast.show('请输入密码')
+          return
+        }
+        this.container.setLoading(true, '注册中...')
+        result = await SOnlineService.registerWithPhone(
+          this.txtPhoneNumber,
+          this.txtVerifyCode,
+          this.txtPhoneNumberNickname,
+          this.txtPhoneNumberPassword,
+        )
+      }
+
+      if (typeof result === 'boolean' && result === true) {
+        let info
+        if (isEmail) {
+          info = '注册成功，请前往邮箱激活'
+          Toast.show(info)
+        } else {
+          info = '注册成功'
+          Toast.show(info)
+        }
+        this.container.setLoading(false)
+        this._goMine()
+        return
+      } else {
+        Toast.show(result)
       }
       this.container.setLoading(false)
-      this._goMine()
-      return
-    } else {
-      Toast.show(result)
+    } catch (e) {
+      Toast.show('网络错误')
+      this.container.setLoading(false)
     }
-    this.container.setLoading(false)
   }
 
   _renderEmail() {
     return (
       <View>
         <TextInput
+          keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
           placeholder={'请输入QQ邮箱'}
           style={styles.textInputStyle}
@@ -130,6 +136,7 @@ export default class Register extends React.Component {
           }}
         />
         <TextInput
+          keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           placeholder={'请输入密码'}
@@ -146,6 +153,7 @@ export default class Register extends React.Component {
     return (
       <View>
         <TextInput
+          keyboardType={'phone-pad'}
           placeholder={'请输入手机号'}
           style={styles.textInputStyle}
           clearButtonMode={'while-editing'}
@@ -154,6 +162,7 @@ export default class Register extends React.Component {
           }}
         />
         <TextInput
+          keyboardType={'email-address'}
           placeholder={'请输入昵称'}
           clearButtonMode={'while-editing'}
           style={styles.textInputStyle}
@@ -163,6 +172,7 @@ export default class Register extends React.Component {
         />
         <View style={styles.verifyCodeViewStyle}>
           <TextInput
+            keyboardType={'phone-pad'}
             clearButtonMode={'while-editing'}
             placeholder={'请输入验证码'}
             style={{ flex: 1 }}
@@ -184,6 +194,7 @@ export default class Register extends React.Component {
           </TouchableOpacity>
         </View>
         <TextInput
+          keyboardType={'email-address'}
           secureTextEntry={true}
           clearButtonMode={'while-editing'}
           placeholder={'请输入密码'}

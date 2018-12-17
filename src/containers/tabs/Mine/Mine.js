@@ -93,7 +93,9 @@ export default class Mine extends Component {
                 paddingLeft: 10,
                 color: 'white',
               }}
-              onPress={() => {}}
+              onPress={() => {
+                // NavigationService.navigate('GetBack')
+              }}
             >
               本地数据
             </Text>

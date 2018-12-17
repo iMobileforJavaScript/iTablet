@@ -59,8 +59,9 @@ export default class Login extends React.Component {
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {
-        let initDataResult = await nativeFileTools.initUserDefaultData(userName)
-        !initDataResult && Toast.show('初始化用户数据失败')
+        nativeFileTools.initUserDefaultData(userName).then(result => {
+          !result && Toast.show('初始化用户数据失败')
+        })
       } else {
         Toast.show('创建用户目录失败')
       }
@@ -142,6 +143,7 @@ export default class Login extends React.Component {
           }}
         />
         <TextInput
+          keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           defaultValue={''}
@@ -168,7 +170,7 @@ export default class Login extends React.Component {
           }}
         />
         <TextInput
-          clearButtonMode={'while-editing'}
+          keyboardType={'email-address'}
           secureTextEntry={true}
           placeholder={'请输入密码'}
           defaultValue={''}

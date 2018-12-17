@@ -11,6 +11,8 @@ const RelativePath = {
   Template: Data + 'Template/',
   Symbol: Data + 'Symbol/',
   Attribute: Data + 'Attribute/',
+  Workspace: Data + 'Workspace/',
+  Temp: Data + 'Temp/', // 临时文件
 }
 
 const RelativeFilePath = {

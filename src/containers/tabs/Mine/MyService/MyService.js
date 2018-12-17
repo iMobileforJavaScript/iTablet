@@ -10,8 +10,8 @@ import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './Styles'
-import PopupModal from './PopupModal'
-import Toast from '../../../../utils/Toast'
+import PopupModal from "./PopupModal"
+import Toast from "../../../../utils/Toast"
 
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -39,8 +39,8 @@ export default class MyService extends Component {
       ],
       modalIsVisible: false,
       isRefreshing: false,
-      isLoadingData: false,
     }
+    this.serviceListTotal = -1
     this._initSectionsData(1, _iServicePageSize)
     this._renderItem = this._renderItem.bind(this)
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
@@ -63,6 +63,8 @@ export default class MyService extends Component {
         let objArrServiceContent = objServiceList.content
         for (let i = 0; i < objArrServiceContent.length; i++) {
           let objContent = objArrServiceContent[i]
+          let arrScenes = objContent.scenes
+          let arrMapInfos = objContent.mapInfos
           let strThumbnail = objContent.thumbnail
           let strRestTitle = objContent.resTitle
           let strID = objContent.id
@@ -75,15 +77,12 @@ export default class MyService extends Component {
               break
             }
           }
-          let strSectionsData =
-            '{"restTitle":"' +
-            strRestTitle +
-            '","thumbnail":"' +
-            strThumbnail +
-            '","id":"' +
-            strID +
-            '","isPublish":' +
-            bIsPublish +
+          let strSectionsData = '{"restTitle":"'+strRestTitle+
+            '","thumbnail":"'+strThumbnail+
+            '","id":"'+strID+
+            '","scenes":'+JSON.stringify(arrScenes)+
+            ',"mapInfos":'+JSON.stringify(arrMapInfos)+
+            ',"isPublish":'+bIsPublish+
             '}'
           let objSectionsData = JSON.parse(strSectionsData)
           if (bIsPublish) {
@@ -123,18 +122,22 @@ export default class MyService extends Component {
   _renderItem(info) {
     let restTitle = info.item.restTitle
     if (restTitle !== undefined) {
+      let index = info.index
       let imageUri = info.item.thumbnail
       let isPublish = info.item.isPublish
       let itemId = info.item.id
-      return (
-        <RenderServiceItem
-          onItemPress={this._onItemPress}
-          imageUrl={imageUri}
-          restTitle={restTitle}
-          isPublish={isPublish}
-          itemId={itemId}
-        />
-      )
+      let scenes = info.item.scenes
+      let mapInfos = info.item.mapInfos
+      return <RenderServiceItem
+        onItemPress={this._onItemPress}
+        imageUrl={imageUri}
+        restTitle={restTitle}
+        isPublish={isPublish}
+        itemId={ itemId}
+        index = {index}
+        scenes = {scenes}
+        mapInfos = {mapInfos}
+      />
     }
     return (
       <View>
@@ -157,10 +160,11 @@ export default class MyService extends Component {
     return item.id
   }
 
-  _onItemPress = (isPublish, itemId, restTitle) => {
+  _onItemPress = (isPublish, itemId, restTitle, index) => {
     this.onClickItemId = itemId
     this.onClickItemRestTitle = restTitle
     this.onClickItemIsPublish = isPublish
+    this.onClickItemIndex = index
     this.setState({ modalIsVisible: true })
   }
 
@@ -172,12 +176,13 @@ export default class MyService extends Component {
     if (this.state.modalIsVisible) {
       return (
         <PopupModal
-          onRefresh={this._onModalRefresh}
+          onRefresh={this._onModalRefresh2}
           onModalClick={this._onModalClick}
           modalVisible={this.state.modalIsVisible}
           title={this.onClickItemRestTitle}
           isPublish={this.onClickItemIsPublish}
           itemId={this.onClickItemId}
+          index={this.onClickItemIndex}
         />
       )
     }
@@ -191,59 +196,72 @@ export default class MyService extends Component {
     }
   }
 
-  _onModalRefresh2 = async (itemId, isPublish, isDelete) => {
-    let index = 99999
-    if (isPublish) {
-      let length = _arrPublishServiceList.length
+  _onModalRefresh2 = async (itemId,isPublish,isDelete,index)=>{
+    if(index !== undefined){
+      if(isPublish){
+        if(isDelete){
+          _arrPublishServiceList.splice(index,1)
+          let total = this.serviceListTotal-1
+          this.serviceListTotal = total
+        }else{
+          let objPublishList = _arrPublishServiceList[index]
+          let strRestTitle=objPublishList.restTitle
+          let strThumbnail=objPublishList.thumbnail
+          let strID=objPublishList.id
+          let arrScenes = objPublishList.scenes
+          let arrMapInfos = objPublishList.mapInfos
+          let bIsPublish = false
+          let strSectionsData = '{"restTitle":"'+ strRestTitle+
+            '","thumbnail":"'+strThumbnail+
+            '","id":"'+strID+
+            '","scenes":'+JSON.stringify(arrScenes)+
+            ',"mapInfos":'+JSON.stringify(arrMapInfos)+
+            ',"isPublish":'+bIsPublish
+            +'}'
+          let objPrivateList= JSON.parse(strSectionsData)
+          if(_arrPrivateServiceList.length === 1 && _arrPrivateServiceList[0].id === undefined){
+            _arrPrivateServiceList.splice(0,1)
+          }
 
-      if (
-        _arrPrivateServiceList.length > 0 &&
-        _arrPrivateServiceList[0].restTitle === undefined
-      ) {
-        _arrPrivateServiceList.splice(0, 1)
-      }
-
-      for (let i = 0; i < length; i++) {
-        let objService = _arrPublishServiceList[i]
-        let id = objService.id
-        if (id === itemId) {
-          index = i
-          break
+          _arrPrivateServiceList.push(objPrivateList)
+          _arrPublishServiceList.splice(index,1)
+        }
+      }else{
+        if(isDelete){
+          _arrPrivateServiceList.splice(index,1)
+          let total = this.serviceListTotal-1
+          this.serviceListTotal = total
+        }else{
+          let objPrivateList = _arrPrivateServiceList[index]
+          let strRestTitle=objPrivateList.restTitle
+          let strThumbnail=objPrivateList.thumbnail
+          let strID=objPrivateList.id
+          let arrScenes = objPrivateList.scenes
+          let arrMapInfos = objPrivateList.mapInfos
+          let bIsPublish = true
+          let strSectionsData = '{"restTitle":"'+ strRestTitle+
+            '","thumbnail":"'+strThumbnail+
+            '","id":"'+strID+
+            '","scenes":'+JSON.stringify(arrScenes)+
+            ',"mapInfos":'+JSON.stringify(arrMapInfos)+
+            ',"isPublish":'+bIsPublish
+            +'}'
+          let objPublishList= JSON.parse(strSectionsData)
+          if(_arrPublishServiceList.length === 1 && _arrPublishServiceList[0].id === undefined){
+            _arrPublishServiceList.splice(0,1)
+          }
+          _arrPublishServiceList.push(objPublishList)
+          _arrPrivateServiceList.splice(index,1)
         }
       }
-      if (index !== 99999) {
-        if (typeof isDelete === 'boolean' && isDelete) {
-          _arrPublishServiceList.splice(index, 1)
-        } else {
-          _arrPrivateServiceList.push(_arrPublishServiceList[index])
-          _arrPublishServiceList.splice(index, 1)
-        }
+      if(_arrPrivateServiceList.length === 0){
+        _arrPrivateServiceList.push({})
       }
-    } else {
-      let length = _arrPrivateServiceList.length
-      if (
-        _arrPublishServiceList.length > 0 &&
-        _arrPublishServiceList[0].restTitle === undefined
-      ) {
-        _arrPublishServiceList.splice(0, 1)
-      }
-      for (let i = 0; i < length; i++) {
-        let objService = _arrPrivateServiceList[i]
-        let id = objService.id
-        if (id === itemId) {
-          index = i
-          break
-        }
-      }
-      if (index !== 99999) {
-        if (typeof isDelete === 'boolean' && isDelete) {
-          _arrPrivateServiceList.splice(index, 1)
-        } else {
-          _arrPublishServiceList.push(_arrPrivateServiceList[index])
-          _arrPrivateServiceList.splice(index, 1)
-        }
+      if(_arrPublishServiceList.length === 0){
+        _arrPublishServiceList.push({})
       }
     }
+
     this.setState({
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,
@@ -263,19 +281,18 @@ export default class MyService extends Component {
     let privateLength = _arrPrivateServiceList.length
     let loadServiceCount = publishLength + privateLength
     if (
-      !this.state.isLoadingData &&
       this.serviceListTotal > _loadCount * _iServicePageSize &&
       this.serviceListTotal > loadServiceCount
     ) {
-      this.setState({ isLoadingData: true })
       _loadCount = ++_loadCount
       await this._initSectionsData(_loadCount, _iServicePageSize)
-
-      this.setState({ isLoadingData: false })
     }
   }
   _footView() {
-    if (this.state.isLoadingData) {
+    let publishLength = _arrPublishServiceList.length
+    let privateLength = _arrPrivateServiceList.length
+    let loadServiceCount = publishLength + privateLength
+    if (this.serviceListTotal > loadServiceCount) {
       return (
         <View
           style={{
