@@ -10,13 +10,12 @@ export default class Temple extends React.Component {
   props: {
     user: Object,
     template: Object,
-    symbolTemplates: Object,
     layers: Object,
     style?: Object,
     showToolbar: () => {},
     setCurrentTemplateInfo: () => {},
     setEditLayer: () => {},
-    getSymbolTemplates: () => {},
+    // getSymbolTemplates: () => {},
   }
 
   static defaultProps = {
@@ -32,15 +31,15 @@ export default class Temple extends React.Component {
   }
 
   componentDidMount() {
-    this.getData()
+    // this.getData()
   }
 
-  getData = () => {
-    // 防止读取数据卡屏，先滑动，再加载
-    setTimeout(() => {
-      this.props.getSymbolTemplates()
-    }, 300)
-  }
+  // getData = () => {
+  //   // 防止读取数据卡屏，先滑动，再加载
+  //   setTimeout(() => {
+  //     this.props.getSymbolTemplates()
+  //   }, 300)
+  // }
 
   action = ({ data }) => {
     Toast.show('当前选择为:' + data.$.code + ' ' + data.$.name)
@@ -65,14 +64,17 @@ export default class Temple extends React.Component {
         case 'Region':
           actionType = Action.CREATEPOLYGON
           toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_REGION
+          // toolbarType = ConstToolType.MAP_COLLECTION_REGION
           break
         case 'Line':
           actionType = Action.CREATEPOLYLINE
           toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_LINE
+          // toolbarType = ConstToolType.MAP_COLLECTION_LINE
           break
         case 'Point':
           actionType = Action.CREATEPOINT
           toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_POINT
+          // toolbarType = ConstToolType.MAP_COLLECTION_POINT
           break
         default:
           actionType = Action.PAN
@@ -91,7 +93,7 @@ export default class Temple extends React.Component {
     return (
       <TreeList
         style={[styles.container, this.props.style]}
-        data={this.props.symbolTemplates.symbols}
+        data={this.props.template.symbols}
         onPress={this.action}
       />
     )

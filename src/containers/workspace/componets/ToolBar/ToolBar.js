@@ -5,6 +5,7 @@ import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
   ConstPath,
+  ConstOnline,
   BotMap,
   line,
   point,
@@ -45,6 +46,7 @@ import {
   EngineType,
   SThemeCartography,
   SOnlineService,
+  Utility,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 import SymbolTabs from '../SymbolTabs'
@@ -106,6 +108,11 @@ export default class ToolBar extends React.Component {
     setAttributes?: () => {},
     getMaps?: () => {},
     exportWorkspace?: () => {},
+    getSymbolTemplates?: () => {},
+    openWorkspace?: () => {},
+    closeWorkspace?: () => {},
+    openMap?: () => {},
+    closeMap?: () => {},
   }
 
   static defaultProps = {
@@ -128,7 +135,6 @@ export default class ToolBar extends React.Component {
           ? ConstToolType.HEIGHT[3]
           : ConstToolType.HEIGHT[1]
     this.originType = props.type // 初次传入的类型
-    // this.lastType = ''
     this.lastState = {}
     this.shareTo = ''
     this.state = {
@@ -163,17 +169,8 @@ export default class ToolBar extends React.Component {
     if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
       // 实时更新params
       ToolbarData.setParams({
-        user: this.props.user,
-        layers: this.props.layers,
         setToolbarVisible: this.setVisible,
-        showFullMap: this.props.showFullMap,
-        addGeometrySelectedListener: this.props.addGeometrySelectedListener,
-        setSaveViewVisible: this.props.setSaveViewVisible,
-        setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
-        setContainerLoading: this.props.setContainerLoading,
-        importTemplate: this.props.importTemplate,
-        getLayers: this.props.getLayers,
-        map: this.props.map,
+        ...this.props,
       })
     }
   }
@@ -305,18 +302,8 @@ export default class ToolBar extends React.Component {
     let data, buttons, toolbarData
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type, {
-      user: this.props.user,
-      layers: this.props.layers,
       setToolbarVisible: this.setVisible,
-      showFullMap: this.props.showFullMap,
-      addGeometrySelectedListener: this.props.addGeometrySelectedListener,
-      setSaveViewVisible: this.props.setSaveViewVisible,
-      setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
-      setContainerLoading: this.props.setContainerLoading,
-      importTemplate: this.props.importTemplate,
-      getLayers: this.props.getLayers,
-      map: this.props.map,
-      getMaps: this.props.getMaps,
+      ...this.props,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -1705,23 +1692,32 @@ export default class ToolBar extends React.Component {
     try {
       this.props.setContainerLoading &&
         this.props.setContainerLoading(true, '正在打开模板')
-
       // 打开模板工作空间
-      this.props.openTemplate(item, ({ copyResult, openResult }) => {
-        if (openResult) {
+      this.props.openTemplate(item, ({ copyResult, openResult, msg }) => {
+        if (msg) {
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(false)
+          Toast.show(msg)
+        } else if (openResult) {
           // 重新加载图层
           this.props.getLayers({
             type: -1,
             isResetCurrentLayer: true,
           })
-          this.setVisible(false)
-          Toast.show('已为您切换模板')
+          this.props.setContainerLoading(true, '正在读取模板')
+          this.props.getSymbolTemplates(null, () => {
+            this.setVisible(false)
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show('已为您切换模板')
+          })
         } else if (!copyResult) {
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(false)
           Toast.show('拷贝模板失败')
         } else {
           Toast.show('切换模板失败')
         }
-        this.props.setContainerLoading && this.props.setContainerLoading(false)
       })
     } catch (error) {
       Toast.show('切换模板失败')
@@ -1786,6 +1782,54 @@ export default class ToolBar extends React.Component {
           } else {
             this.listAction({ item, index })
           }
+        }}
+        headerAction={({ section }) => {
+          (async function() {
+            if (section.title === '打开默认工作空间') {
+              let defaultWorkspacePath = await Utility.appendingHomeDirectory(
+                (this.props.user.userName
+                  ? ConstPath.UserPath + this.props.user.userName
+                  : ConstPath.CustomerPath) +
+                  ConstPath.RelativeFilePath.Workspace,
+              )
+
+              if (this.props.map.workspace.server === defaultWorkspacePath) {
+                Toast.show(ConstInfo.WORKSPACE_ALREADY_OPENED)
+                return
+              }
+              this.props.closeWorkspace().then(async () => {
+                try {
+                  this.props.setContainerLoading &&
+                    this.props.setContainerLoading(
+                      true,
+                      ConstInfo.WORKSPACE_OPENING,
+                    )
+
+                  let data = { server: defaultWorkspacePath }
+                  let result = await this.props.openWorkspace(data)
+
+                  await SMap.openDatasource(
+                    ConstOnline['Google'].DSParams,
+                    ConstOnline['Google'].layerIndex,
+                  )
+                  await this.props.getLayers()
+
+                  Toast.show(
+                    result
+                      ? ConstInfo.WORKSPACE_DEFAULT_OPEN_SUCCESS
+                      : ConstInfo.WORKSPACE_DEFAULT_OPEN_FAILED,
+                  )
+                  this.setVisible(false)
+                  this.props.setContainerLoading &&
+                    this.props.setContainerLoading(false)
+                } catch (error) {
+                  Toast.show(ConstInfo.WORKSPACE_DEFAULT_OPEN_FAILED)
+                  this.props.setContainerLoading &&
+                    this.props.setContainerLoading(false)
+                }
+              })
+            }
+          }.bind(this)())
         }}
         keyExtractor={(item, index) => index}
       />
@@ -1853,7 +1897,7 @@ export default class ToolBar extends React.Component {
             menutoolRef.setMenuType(type)
           }
 
-          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+          if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             let Params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
@@ -1866,7 +1910,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE
           ) {
             let Params = {
@@ -1875,7 +1919,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME
           ) {
             let Params = {
@@ -1884,7 +1928,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION
           ) {
             let Params = {
@@ -1893,7 +1937,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
           ) {
             let Params = {
@@ -2183,6 +2227,7 @@ export default class ToolBar extends React.Component {
                   // 分享
                   let fileName = path.substr(path.lastIndexOf('/') + 1)
                   let dataName = fileName.substr(0, fileName.lastIndexOf('.'))
+
                   SOnlineService.deleteData(dataName).then(async () => {
                     await SOnlineService.uploadFile(path, dataName, {
                       // onProgress: progress => {

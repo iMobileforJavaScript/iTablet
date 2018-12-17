@@ -75,32 +75,38 @@ export default class MapView extends React.Component {
     getMaps: PropTypes.func,
     exportWorkspace: PropTypes.func,
     openWorkspace: PropTypes.func,
+    closeWorkspace: PropTypes.func,
+    getSymbolTemplates: PropTypes.func,
+    openMap: PropTypes.func,
+    closeMap: PropTypes.func,
   }
 
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.type = params.type || GLOBAL.Type || 'LOCAL'
-    this.mapType = params.mapType || 'DEFAULT'
-    this.operationType = params.operationType || constants.COLLECTION
-    this.isExample = params.isExample || false
-    this.wsData = params.wsData
-    this.mapName = params.mapName || ''
-    this.path = params.path || ''
-    this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
-    this.savepath =
-      params.type === 'ONLINE' || !params.path
-        ? null
-        : params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    let wsName =
-      params.type === 'ONLINE' || !params.path
-        ? null
-        : params.path.substring(params.path.lastIndexOf('/') + 1)
-    wsName =
-      params.type === 'ONLINE' || !params.path
-        ? null
-        : wsName.lastIndexOf('.') > 0 &&
-          wsName.substring(0, wsName.lastIndexOf('.'))
+    this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
+    this.mapType = (params && params.mapType) || 'DEFAULT'
+    this.operationType =
+      (params && params.operationType) || constants.COLLECTION
+    this.isExample = (params && params.isExample) || false
+    this.wsData = params && params.wsData
+    this.mapName = (params && params.mapName) || ''
+    this.path = (params && params.path) || ''
+    this.showDialogCaption =
+      params && params.path ? !params.path.endsWith('.smwu') : true
+    // this.savepath =
+    //   params.type === 'ONLINE' || !params.path
+    //     ? null
+    //     : params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    // let wsName =
+    //   params.type === 'ONLINE' || !params.path
+    //     ? null
+    //     : params.path.substring(params.path.lastIndexOf('/') + 1)
+    // wsName =
+    //   params.type === 'ONLINE' || !params.path
+    //     ? null
+    //     : wsName.lastIndexOf('.') > 0 &&
+    //       wsName.substring(0, wsName.lastIndexOf('.'))
     this.backAction = null
     this.state = {
       showMap: false, // 控制地图初始化显示
@@ -108,7 +114,7 @@ export default class MapView extends React.Component {
       popShow: false, //  一级popView显示控制
       popType: '',
       mapName: '',
-      wsName: wsName,
+      // wsName: wsName,
       measureShow: false,
       measureResult: 0,
       editLayer: {},
@@ -611,12 +617,6 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
-    // this.mapToolbar.setCurrent(0)
-    // this.setLoading(true, '正在关闭')
-    // SMap.closeWorkspace().then(result => {
-    //   this.setLoading(false)
-    //   result && NavigationService.goBack()
-    // })
     this.backAction = async () => {
       try {
         this.setLoading(true, '正在关闭地图')
@@ -642,7 +642,7 @@ export default class MapView extends React.Component {
           )
         }
         if (this.props.map.template && this.props.map.template.path) {
-          await SMap.closeWorkspace()
+          await this.props.closeWorkspace()
         }
         this.clearData()
         this.setLoading(false)
@@ -740,7 +740,7 @@ export default class MapView extends React.Component {
     try {
       // let result = await SMap.openWorkspace(wsData.DSParams)
       let result = await this.props.openWorkspace(wsData.DSParams)
-      result && SMap.openMap(index)
+      result && this.props.openMap(index)
     } catch (e) {
       this.container.setLoading(false)
     }
@@ -899,11 +899,6 @@ export default class MapView extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
-        user={this.props.user}
-        map={this.props.map}
-        symbol={this.props.symbol}
-        layers={this.props.layers}
-        layerData={this.props.currentLayer}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
@@ -912,14 +907,8 @@ export default class MapView extends React.Component {
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
-        setCollectionInfo={this.props.setCollectionInfo}
-        getLayers={this.props.getLayers}
-        setCurrentMap={this.props.setCurrentMap}
-        collection={this.props.collection}
-        importTemplate={this.props.importTemplate}
-        openTemplate={this.props.openTemplate}
-        getMaps={this.props.getMaps}
-        exportWorkspace={this.props.exportWorkspace}
+        {...this.props}
+        layerData={this.props.currentLayer}
       />
     )
   }

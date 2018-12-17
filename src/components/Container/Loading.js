@@ -147,7 +147,8 @@ const styles = StyleSheet.create({
     borderRadius: scaleSize(8),
   },
   title: {
-    height: scaleSize(30),
+    // height: scaleSize(30),
+    width: scaleSize(130),
     fontSize: scaleSize(20),
     color: 'white',
     textAlign: 'center',

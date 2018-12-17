@@ -62,7 +62,7 @@ export const setAnalystLayer = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
-export const getLayers = (params, cb = () => {}) => async dispatch => {
+export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
   if (typeof params === 'number') {
     params = {
       type: params,
