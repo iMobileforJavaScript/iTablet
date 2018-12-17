@@ -1,6 +1,6 @@
 import React from 'react'
 import { scaleSize, screen, Toast } from '../../../../utils'
-import { color, zIndexLevel ,size } from '../../../../styles'
+import { color, zIndexLevel, size } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
@@ -17,6 +17,7 @@ import {
   regionBeforeColorSet,
   regionAfterColorSet,
   Map3DBaseMapList,
+  ConstInfo,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -43,6 +44,7 @@ import {
   SMCollectorType,
   EngineType,
   SThemeCartography,
+  SOnlineService,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -54,6 +56,7 @@ import constants from '../../constants'
 import jsonUtil from '../../../../utils/jsonUtil'
 import ColorTableList from '../../../../components/ColorTableList'
 import { ColorBtn } from '../../../../components/mapTools'
+import { FileTools } from '../../../../native'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -67,6 +70,8 @@ const DEFAULT_FULL_SCREEN = true
 // 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
 
+let isSharing = false
+
 export default class ToolBar extends React.Component {
   props: {
     children: any,
@@ -77,6 +82,7 @@ export default class ToolBar extends React.Component {
     symbol?: Object,
     user?: Object,
     map?: Object,
+    layers?: Object,
     collection?: Object,
     layerData: Object,
     confirm: () => {},
@@ -94,7 +100,11 @@ export default class ToolBar extends React.Component {
     setCurrentMap?: () => {}, // 设置当前地图
     setCollectionInfo?: () => {}, // 设置当前采集数据源信息
     setCurrentLayer?: () => {}, // 设置当前图层
+    importTemplate?: () => {}, // 导入模板
+    openTemplate?: () => {}, // 打开模板
     setAttributes?: () => {},
+    getMaps?: () => {},
+    exportWorkspace?: () => {},
   }
 
   static defaultProps = {
@@ -117,7 +127,9 @@ export default class ToolBar extends React.Component {
           ? ConstToolType.HEIGHT[3]
           : ConstToolType.HEIGHT[1]
     this.originType = props.type // 初次传入的类型
-    this.lastType = ''
+    // this.lastType = ''
+    this.lastState = {}
+    this.shareTo = ''
     this.state = {
       // isShow: false,
       type: props.type, // 当前传入的类型
@@ -131,6 +143,7 @@ export default class ToolBar extends React.Component {
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
       isSelectlist: false,
+      listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
@@ -143,6 +156,25 @@ export default class ToolBar extends React.Component {
     }
     this.isShow = false
     this.isBoxShow = true
+  }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
+      // 实时更新params
+      ToolbarData.setParams({
+        user: this.props.user,
+        layers: this.props.layers,
+        setToolbarVisible: this.setVisible,
+        showFullMap: this.props.showFullMap,
+        addGeometrySelectedListener: this.props.addGeometrySelectedListener,
+        setSaveViewVisible: this.props.setSaveViewVisible,
+        setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
+        setContainerLoading: this.props.setContainerLoading,
+        importTemplate: this.props.importTemplate,
+        getLayers: this.props.getLayers,
+        map: this.props.map,
+      })
+    }
   }
 
   // /**建筑单体触控监听 */
@@ -172,13 +204,17 @@ export default class ToolBar extends React.Component {
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type, {
       user: this.props.user,
+      layers: this.props.layers,
       setToolbarVisible: this.setVisible,
       showFullMap: this.props.showFullMap,
       addGeometrySelectedListener: this.props.addGeometrySelectedListener,
       setSaveViewVisible: this.props.setSaveViewVisible,
       setSaveMapDialogVisible: this.props.setSaveMapDialogVisible,
       setContainerLoading: this.props.setContainerLoading,
+      importTemplate: this.props.importTemplate,
       getLayers: this.props.getLayers,
+      map: this.props.map,
+      getMaps: this.props.getMaps,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -219,6 +255,9 @@ export default class ToolBar extends React.Component {
         buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP_SYMBOL:
+        // if (this.props.map.template && this.props.map.template.path) {
+        //   buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX_FULL, ToolbarBtnType.COMMIT]
+        // }
         // buttons = [ToolbarBtnType.CANCEL]
         break
       // 第一级采集选项
@@ -605,13 +644,19 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      containerType: 'list',
-      data: datalist,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[4]
-    },
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'list',
+        data: datalist,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+      },
     )
   }
 
@@ -629,13 +674,19 @@ export default class ToolBar extends React.Component {
         data: list,
       },
     ]
-    this.setState({
-      containerType: 'list',
-      data: datalist,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[4]
-    },
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'list',
+        data: datalist,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+      },
     )
   }
 
@@ -649,11 +700,15 @@ export default class ToolBar extends React.Component {
     let date = await ThemeMenuData.getRangeMode()
     this.setState(
       {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
         containerType: 'table',
         column: 4,
         tableType: 'normal',
         data: date,
         type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
         this.height = ConstToolType.THEME_HEIGHT[2]
@@ -669,15 +724,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelBackShape()
-    this.setState({
-      containerType: 'table',
-      column: 4,
-      tableType: 'normal',
-      data: date,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[2]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[2]
+      },
+    )
   }
 
   getLabelFontName = async type => {
@@ -688,15 +750,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelFontName()
-    this.setState({
-      containerType: 'table',
-      column: 4,
-      tableType: 'normal',
-      data: date,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[3]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
   }
 
   getLabelFontRotation = async type => {
@@ -707,15 +776,44 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelFontRotation()
-    this.setState({
-      containerType: 'table',
-      column: 4,
-      tableType: 'normal',
-      data: date,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[0]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[0]
+      },
+    )
+  }
+
+  getLabelFontSize = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: 0,
+      duration: 300,
+    }).start()
+    this.isBoxShow = false
+
+    this.setState(
+      {
+        isFullScreen: true,
+        selectName: 'fontsize',
+        isTouchProgress: true,
+        isSelectlist: false,
+        type: type,
+        buttons: ThemeMenuData.getThemeThreeMenu(),
+      },
+      () => {
+        this.height = 0
+      },
+    )
   }
 
   getLabelFontColor = async type => {
@@ -726,15 +824,22 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
 
     let date = await ThemeMenuData.getLabelFontColor()
-    this.setState({
-      containerType: 'colortable',
-      column: 8,
-      tableType: 'scroll',
-      data: date,
-      type: type,
-    }, () => {
-      this.height = ConstToolType.THEME_HEIGHT[3]
-    }, )
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
   }
 
   getflylist = async () => {
@@ -828,7 +933,8 @@ export default class ToolBar extends React.Component {
   /** 采集分类点击事件 **/
   showCollection = type => {
     let { data, buttons } = this.getData(type)
-    this.lastType = this.state.type
+    // this.lastType = this.state.type
+    Object.assign(this.lastState, this.state, { height: this.height })
     this.setState(
       {
         type: type,
@@ -983,14 +1089,15 @@ export default class ToolBar extends React.Component {
         params && typeof params.height === 'number'
           ? params.height
           : ConstToolType.HEIGHT[1]
-      data = params.data || data
+      this.shareTo = params.shareTo || ''
       this.setState(
         {
           isSelectlist: false,
           type: type,
           tableType: params.tableType || 'normal',
-          data: data,
-          buttons: buttons,
+          data: params.data || data,
+          buttons: params.buttons || buttons,
+          listSelectable: params.listSelectable || false,
           isFullScreen:
             params && params.isFullScreen !== undefined
               ? params.isFullScreen
@@ -1208,19 +1315,34 @@ export default class ToolBar extends React.Component {
 
   commit = (type = this.originType) => {
     this.showToolbar(false)
-    if (type.indexOf('MAP_EDIT_') >= 0) {
+    if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
     this.props.existFullMap && this.props.existFullMap()
   }
 
-  showBox = () => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: this.isBoxShow ? 0 : this.height,
-      duration: 300,
-    }).start()
-    this.isBoxShow = !this.isBoxShow
+  showBox = (autoFullScreen = false) => {
+    if (autoFullScreen) {
+      this.setState(
+        {
+          isFullScreen: !this.isBoxShow,
+        },
+        () => {
+          Animated.timing(this.state.boxHeight, {
+            toValue: this.isBoxShow ? 0 : this.height,
+            duration: 300,
+          }).start()
+          this.isBoxShow = !this.isBoxShow
+        },
+      )
+    } else {
+      Animated.timing(this.state.boxHeight, {
+        toValue: this.isBoxShow ? 0 : this.height,
+        duration: 300,
+      }).start()
+      this.isBoxShow = !this.isBoxShow
+    }
   }
 
   showSymbol = () => {
@@ -1465,6 +1587,50 @@ export default class ToolBar extends React.Component {
         },
       })
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
+      if (item.path) {
+        // 打开模板工作空间
+        this.openTemplate(item)
+      } else {
+        // 切换地图
+        this.changeMap(item)
+      }
+    }
+  }
+
+  /** 打开模板工作空间 **/
+  openTemplate = async item => {
+    try {
+      this.props.setContainerLoading &&
+        this.props.setContainerLoading(true, '正在打开模板')
+
+      // 打开模板工作空间
+      this.props.openTemplate(item, ({ copyResult, openResult }) => {
+        if (openResult) {
+          // 重新加载图层
+          this.props.getLayers({
+            type: -1,
+            isResetCurrentLayer: true,
+          })
+          this.setVisible(false)
+          Toast.show('已为您切换模板')
+        } else if (!copyResult) {
+          Toast.show('拷贝模板失败')
+        } else {
+          Toast.show('切换模板失败')
+        }
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      })
+    } catch (error) {
+      Toast.show('切换模板失败')
+      this.props.setContainerLoading && this.props.setContainerLoading(false)
+    }
+  }
+
+  /** 切换地图 **/
+  changeMap = async item => {
+    try {
+      // 获取地图信息
+      // let mapInfo = await SMap.getMapInfo()
       // 打开地图
       let datasourceName = item.title.substr(
         item.title.lastIndexOf('@') + 1,
@@ -1482,7 +1648,7 @@ export default class ToolBar extends React.Component {
           SMap.openMap(item.title).then(isOpen => {
             if (isOpen) {
               Toast.show('已为您切换到' + item.title)
-              this.props.setCurrentMap(item.title)
+              this.props.setCurrentMap(item)
               this.props.getLayers(-1, layers => {
                 this.props.setCurrentLayer(layers.length > 0 && layers[0])
               })
@@ -1499,6 +1665,8 @@ export default class ToolBar extends React.Component {
             }
           })
       })
+    } catch (e) {
+      Toast.show('切换地图失败')
     }
   }
 
@@ -1506,6 +1674,8 @@ export default class ToolBar extends React.Component {
     if (this.state.data.length === 0) return
     return (
       <ToolBarSectionList
+        ref={ref => (this.toolBarSectionList = ref)}
+        listSelectable={this.state.listSelectable}
         sections={this.state.data}
         itemAction={({ item, index }) => {
           if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
@@ -1591,7 +1761,43 @@ export default class ToolBar extends React.Component {
               RangeMode: item.key,
               RangeParameter: '32.0',
             }
-            ThemeMenuData.setRangeThemeParams(Params)
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE
+          ) {
+            let Params = {
+              LayerIndex: '0',
+              LabelBackShape: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME
+          ) {
+            let Params = {
+              LayerIndex: '0',
+              FontName: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION
+          ) {
+            let Params = {
+              LayerIndex: '0',
+              Rotaion: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ==
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
+          ) {
+            let Params = {
+              LayerIndex: '0',
+              Color: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
           }
         }
         item.action()
@@ -1605,7 +1811,13 @@ export default class ToolBar extends React.Component {
   }
 
   renderTabs = () => {
-    return <SymbolTabs style={styles.tabsView} showToolbar={this.setVisible} />
+    return (
+      <SymbolTabs
+        style={styles.tabsView}
+        showToolbar={this.setVisible}
+        showBox={this.showBox}
+      />
+    )
   }
 
   renderSymbol = () => {
@@ -1676,7 +1888,8 @@ export default class ToolBar extends React.Component {
             activeOpacity={0.9}
             underlayColor="#4680DF"
             style={styles.btn}
-            onPress={() => item.action(item)}>
+            onPress={() => item.action(item)}
+          >
             <Text style={styles.text}>{item.key}</Text>
           </TouchableHighlight>
         )}
@@ -1748,6 +1961,10 @@ export default class ToolBar extends React.Component {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
           action = this.showBox
           break
+        case ToolbarBtnType.FLEX_FULL:
+          image = require('../../../../assets/mapEdit/flex.png')
+          action = () => this.showBox(true)
+          break
         case ToolbarBtnType.STYLE:
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.showBox
@@ -1808,9 +2025,9 @@ export default class ToolBar extends React.Component {
           image = require('../../../../assets/mapEdit/icon-rename-white.png')
           action = () => {
             SCollector.stopCollect()
-            this.setVisible(true, this.lastType, {
-              isFullScreen: false,
-              height: ConstToolType.HEIGHT[0],
+            this.setVisible(true, this.lastState.type, {
+              isFullScreen: this.lastState.isFullScreen,
+              height: this.lastState.height,
             })
           }
           break
@@ -1820,6 +2037,60 @@ export default class ToolBar extends React.Component {
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
             })
+          }
+          break
+        case ToolbarBtnType.SHARE:
+          image = require('../../../../assets/mapEdit/icon-rename-white.png')
+          action = () => {
+            if (!this.props.user.currentUser.userName) {
+              Toast.show('请登陆后再分享')
+              return
+            }
+            if (isSharing) {
+              Toast.show('分享中，请稍后')
+              return
+            }
+            if (this.shareTo === constants.SUPERMAP_ONLINE) {
+              let list =
+                (this.toolBarSectionList &&
+                  this.toolBarSectionList.getSelectList()) ||
+                []
+              this.props.exportWorkspace(
+                {
+                  maps: list,
+                },
+                (result, path) => {
+                  Toast.show(
+                    result
+                      ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+                      : ConstInfo.EXPORT_WORKSPACE_FAILED,
+                  )
+                  // 分享
+                  let fileName = path.substr(path.lastIndexOf('/') + 1)
+                  let dataName = fileName.substr(0, fileName.lastIndexOf('.'))
+                  SOnlineService.deleteData(dataName).then(async () => {
+                    await SOnlineService.uploadFile(path, dataName, {
+                      // onProgress: progress => {
+                      //   console.warn(progress)
+                      // },
+                      onResult: async () => {
+                        let result = await SOnlineService.publishService(
+                          dataName,
+                        )
+                        Toast.show(
+                          result
+                            ? ConstInfo.SHARE_SUCCESS
+                            : ConstInfo.SHARE_FAILED,
+                        )
+                        FileTools.deleteFile(path)
+                        isSharing = false
+                      },
+                    })
+                  })
+                },
+              )
+            }
+            // this.close()
           }
           break
         case ToolbarBtnType.CLOSE_CIRCLE:
@@ -1871,22 +2142,18 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
-          <View style={styles.list}>
-            {this.renderSelectList()}
-          </View>
+          <View style={styles.list}>{this.renderSelectList()}</View>
         )}
         <View style={styles.containers}>
           {this.renderView()}
@@ -1984,15 +2251,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: color.subTheme,
   },
-  list:{
+  list: {
     width: scaleSize(300),
     position: 'absolute',
-    top:'30%',
-    left:'30%',
-    right:'30%',
+    top: '30%',
+    left: '30%',
+    right: '30%',
     backgroundColor: 'rgba(48,48,48,0.85)',
   },
-  text:{
+  text: {
     color: 'white',
     fontSize: size.fontSize.fontSizeLg,
     backgroundColor: 'transparent',

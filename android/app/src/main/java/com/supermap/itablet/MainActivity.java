@@ -1,13 +1,14 @@
 package com.supermap.itablet;
 
 import android.Manifest;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
 import com.supermap.data.Environment;
-import com.supermap.file.Decompressor;
-import com.supermap.file.FileTools;
+import com.supermap.RN.FileTools;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -33,6 +34,14 @@ public class MainActivity extends ReactActivity {
         requestPermissions();
         initEnvironment();
         initDefaultData();
+
+    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Intent intent = new Intent("onConfigurationChanged");
+        intent.putExtra("newConfig", newConfig);
+        this.sendBroadcast(intent);
     }
 
     private void initEnvironment() {

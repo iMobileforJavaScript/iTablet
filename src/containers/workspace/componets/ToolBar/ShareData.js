@@ -1,10 +1,11 @@
 /**
  * 获取地图分享数据
  */
-import { Utility, SOnlineService, SScene } from 'imobile_for_reactnative'
-import { ConstPath } from '../../../../constants'
+import { SMap, Utility, SOnlineService, SScene } from 'imobile_for_reactnative'
+import { ConstToolType, ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
+import ToolbarBtnType from './ToolbarBtnType'
 
 let _params = {}
 let isSharing = false
@@ -40,7 +41,7 @@ function getShareData(type, params) {
       key: constants.SUPERMAP_ONLINE,
       title: constants.SUPERMAP_ONLINE,
       action: () => {
-        shareToSuperMapOnline(type)
+        showMapList(constants.SUPERMAP_ONLINE)
       },
       size: 'large',
       image: require('../../../../assets/mapTools/icon_free_line.png'),
@@ -68,6 +69,32 @@ function getShareData(type, params) {
     // },
   ]
   return { data, buttons }
+}
+
+function showMapList(type) {
+  let data = []
+  SMap.getMaps().then(list => {
+    data = [
+      {
+        title: '地图',
+        data: list,
+      },
+    ]
+    _params.setToolbarVisible &&
+      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+        containerType: 'list',
+        isFullScreen: true,
+        height: ConstToolType.HEIGHT[3],
+        listSelectable: true,
+        data,
+        shareTo: type,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.SHARE,
+        ],
+      })
+  })
 }
 
 /**
@@ -132,4 +159,5 @@ async function shareToSuperMapOnline(type) {
 
 export default {
   getShareData,
+  shareToSuperMapOnline,
 }

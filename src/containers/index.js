@@ -4,7 +4,13 @@ import { StackNavigator } from 'react-navigation'
 import MapLoad from './mapLoad'
 
 //我的
-import Tabs, { MyService, MyOnlineData, Register } from './tabs'
+import Tabs, {
+  MyService,
+  MyOnlineData,
+  Register,
+  MyOnlineMap,
+  ScanOnlineMap,
+} from './tabs'
 
 //我的
 // import Register from './register&getBack/register'
@@ -257,6 +263,18 @@ export default StackNavigator(
     },
     MyService: {
       screen: MyService,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MyOnlineMap: {
+      screen: MyOnlineMap,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    ScanOnlineMap: {
+      screen: ScanOnlineMap,
       navigationOptions: {
         header: null,
       },

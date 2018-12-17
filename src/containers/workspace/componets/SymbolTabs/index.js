@@ -2,53 +2,71 @@ import { connect } from 'react-redux'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { color, size } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
 import DefaultTabBar from './DefaultTabBar'
-// eslint-disable-next-line
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import GroupTab from './GroupTab'
-// import TemplateTab from './TemplateTab'
 import SymbolTab from './SymbolTab'
 import { setCurrentSymbol, setCurrentSymbols } from '../../../../models/symbol'
+import {
+  setCurrentTemplateInfo,
+  getSymbolTemplates,
+} from '../../../../models/map'
+import { setEditLayer } from '../../../../models/layers'
+import Temple from './Temple'
 
 const mapStateToProps = state => ({
   symbol: state.symbol.toJS(),
+  user: state.user.toJS(),
+  map: state.map.toJS(),
+  layers: state.layers.toJS().layers,
+  currentMap: state.map.toJS().currentMap,
 })
 
 const mapDispatchToProps = {
   setCurrentSymbol,
   setCurrentSymbols,
+  setCurrentTemplateInfo,
+  setEditLayer,
+  getSymbolTemplates,
 }
 
 class SymbolTabs extends React.Component {
   props: {
     style: Object,
     symbol: Object,
+    layers: Object,
+    map: Object,
+    user: Object,
     setCurrentSymbol: () => {},
     setCurrentSymbols: () => {},
     showToolbar: () => {},
+    showBox: () => {},
+    setCurrentTemplateInfo: () => {},
+    setEditLayer: () => {},
+    getSymbolTemplates: () => {},
   }
 
-  static defaultProps = {}
+  static defaultProps = {
+    type: 'Normal', // Normal | Template
+  }
 
   constructor(props) {
     super(props)
     this.state = {}
-    this.currentTab = 0
   }
 
   goToPage = index => {
     this.scrollTab.goToPage(index)
   }
 
-  render() {
+  renderTabs = () => {
     return (
       <ScrollableTabView
         ref={ref => (this.scrollTab = ref)}
         style={[styles.container, this.props.style]}
-        // page={this.currentTab}
         renderTabBar={() => (
           <DefaultTabBar
-            // backgroundColor={color.theme}
             activeBackgroundColor={color.theme}
             activeTextColor={'white'}
             inactiveTextColor={'white'}
@@ -61,13 +79,8 @@ class SymbolTabs extends React.Component {
             }}
           />
         )}
-        onChangeTab={({ i }) => {
-          this.currentTab = i
-        }}
         tabBarUnderlineStyle={{
           height: 0,
-          // zIndex: -1,
-          // backgroundColor: '#rgba(0, 0, 0, 0.3)',
         }}
       >
         <SymbolTab
@@ -91,12 +104,35 @@ class SymbolTabs extends React.Component {
       </ScrollableTabView>
     )
   }
+
+  render() {
+    if (this.props.map.template && this.props.map.template.path) {
+      return (
+        <Temple
+          style={styles.temple}
+          user={this.props.user}
+          showToolbar={this.props.showToolbar}
+          template={this.props.map.template}
+          symbolTemplates={this.props.map.symbolTemplates}
+          layers={this.props.layers}
+          setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
+          setEditLayer={this.props.setEditLayer}
+          getSymbolTemplates={this.props.getSymbolTemplates}
+        />
+      )
+    } else {
+      return this.renderTabs()
+    }
+  }
 }
 
 const styles = StyleSheet.create({
   container: {
     borderWidth: 0,
     // backgroundColor: color.subTheme,
+  },
+  temple: {
+    paddingHorizontal: scaleSize(30),
   },
 })
 

@@ -356,9 +356,11 @@ const region = [
         ],
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
-        containerType: 'list',
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
         isFullScreen: false,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },

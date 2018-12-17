@@ -71,11 +71,11 @@ export default class FunctionToolbar extends React.Component {
     this.visible = visible
   }
 
-  start = () => {
+  start = type => {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_START, {
+      toolRef.setVisible(true, type, {
         containerType: 'table',
         height: ConstToolType.HEIGHT[2],
       })
@@ -118,7 +118,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[1],
       })
     }
   }
@@ -351,6 +351,8 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  remove = () => {}
+
   Tagging = async () => {
     const toolRef = this.props.getToolRef()
     switch (this.props.type) {
@@ -447,7 +449,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: this.start,
+            action: () => this.start(ConstToolType.MAP_EDIT_START),
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
@@ -476,11 +478,16 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
+            title: '撤销',
+            action: this.remove,
+            image: require('../../../../assets/function/icon_remove.png'),
+          },
+          {
             title: '更多',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -528,7 +535,7 @@ export default class FunctionToolbar extends React.Component {
             action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -611,7 +618,7 @@ export default class FunctionToolbar extends React.Component {
           {
             key: '开始',
             title: '开始',
-            action: this.start,
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
           // {
@@ -639,7 +646,7 @@ export default class FunctionToolbar extends React.Component {
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
