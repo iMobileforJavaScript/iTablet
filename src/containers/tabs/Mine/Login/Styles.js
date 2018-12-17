@@ -9,6 +9,8 @@ const titleOnFocusBackgroundColor = color.blackBg
 const titleOnBlurBackgroundColor = color.border
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    flexDirection: 'column',
     backgroundColor: color.border,
   },
   keyboardAvoidingStyle: {

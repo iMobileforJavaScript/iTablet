@@ -282,6 +282,17 @@ export default class ToolBar extends React.Component {
           this.height = ConstToolType.HEIGHT[0]
           this.showToolbar()
           break
+        case ConstToolType.MAP_EDIT_START:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.HEIGHT[2]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
       }
     })
   }
