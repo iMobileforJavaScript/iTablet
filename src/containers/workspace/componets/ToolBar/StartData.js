@@ -12,7 +12,59 @@ function getStart(type, params) {
   let data = [],
     buttons = []
   switch (type) {
-    case ConstToolType.MAP_3D_START:
+    case ConstToolType.MAP_EDIT_START:
+      data = [
+        {
+          key: constants.WORKSPACE,
+          title: constants.WORKSPACE,
+          action: openWorkspace,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_open.png'),
+        },
+        {
+          key: constants.OPEN,
+          title: constants.OPEN,
+          action: openMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_open.png'),
+        },
+        {
+          key: constants.CREATE,
+          title: constants.CREATE,
+          size: 'large',
+          action: create,
+          image: require('../../../../assets/mapTools/icon_creat.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_creat.png'),
+        },
+        {
+          key: constants.HISTORY,
+          title: constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
+        {
+          key: constants.BASE_MAP,
+          title: constants.BASE_MAP,
+          size: 'large',
+          action: changeBaseLayer,
+          image: require('../../../../assets/mapTools/icon_base.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_base.png'),
+        },
+        {
+          key: constants.ADD,
+          title: constants.ADD,
+          size: 'large',
+          action: add,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+      ]
+      break
+    case ConstToolType.MAP3D_START:
       data = [
         {
           key: constants.OPEN,
@@ -194,7 +246,7 @@ function openWorkspace(cb) {
 }
 
 /** 打开地图 **/
-function openMap(isOpenTemplate = GLOBAL.Type === constants.COLLECTION) {
+function openMap() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   let data = []
@@ -205,20 +257,11 @@ function openMap(isOpenTemplate = GLOBAL.Type === constants.COLLECTION) {
         data: list,
       },
     ]
-    isOpenTemplate &&
-      NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-        templateList => {
-          data.push({
-            title: '模板',
-            data: templateList,
-          })
-          _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-            containerType: 'list',
-            height: ConstToolType.HEIGHT[3],
-            data,
-          })
-        },
-      )
+    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      containerType: 'list',
+      height: ConstToolType.HEIGHT[3],
+      data,
+    })
   })
 }
 

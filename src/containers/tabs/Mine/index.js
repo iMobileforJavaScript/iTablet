@@ -4,8 +4,7 @@ import { setUser } from '../../../models/user'
 import Register from './Register'
 
 import MyService from './MyService'
-import MyOnlineMap,{ScanOnlineMap} from './MyService/MyOnlineMap'
-
+import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
 
 import MyLocalData from './MyLocalData'
 import MyOnlineData from './MyOnlineData'

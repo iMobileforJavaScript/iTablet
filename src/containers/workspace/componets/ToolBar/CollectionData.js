@@ -1,8 +1,4 @@
-import {
-  SMap,
-  SCollector,
-  SMCollectorType,
-} from 'imobile_for_reactnative'
+import { SMap, SCollector, SMCollectorType } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 
@@ -24,7 +20,10 @@ function getCollectionData(type, params) {
   let isCollection = false
 
   // MAP_COLLECTION_CONTROL_ 类型是MapControl的操作
-  if (typeof type === 'string' && type.indexOf('MAP_COLLECTION_CONTROL_') >= 0) {
+  if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
+  ) {
     isCollection = true
   } else {
     Object.keys(SMCollectorType).forEach(key => {
@@ -112,11 +111,17 @@ function getCollectionData(type, params) {
 }
 
 async function collectionSubmit(type) {
-  if (typeof type === 'string' && type.indexOf('MAP_COLLECTION_CONTROL_') >= 0) {
+  if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
+  ) {
     // 若当前操作为模板符号绘制
     await SMap.submit()
     if (_params.layers.editLayer.path) {
-      SMap.setLayerFieldInfo(_params.layers.editLayer.path, _params.map.currentTemplateInfo.field)
+      SMap.setLayerFieldInfo(
+        _params.layers.editLayer.path,
+        _params.map.currentTemplateInfo.field,
+      )
     }
     return
   }
@@ -124,21 +129,30 @@ async function collectionSubmit(type) {
 }
 
 function cancel(type) {
-  if (typeof type === 'string' && type.indexOf('MAP_COLLECTION_CONTROL_') >= 0) {
+  if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
+  ) {
     type = -1
   }
   return SCollector.cancel(type)
 }
 
 function undo(type) {
-  if (typeof type === 'string' && type.indexOf('MAP_COLLECTION_CONTROL_') >= 0) {
+  if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
+  ) {
     type = -1
   }
   return SCollector.undo(type)
 }
 
 function redo(type) {
-  if (typeof type === 'string' && type.indexOf('MAP_COLLECTION_CONTROL_') >= 0) {
+  if (
+    typeof type === 'string' &&
+    type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
+  ) {
     type = -1
   }
   return SCollector.redo(type)

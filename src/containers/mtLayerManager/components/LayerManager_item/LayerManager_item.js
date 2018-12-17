@@ -518,6 +518,13 @@ export default class LayerManager_item extends React.Component {
         <View style={styles.text_container}>
           <Text style={styles.text}>{name}</Text>
         </View>
+        <View style={styles.btnm}>
+          <Image
+            resizeMode={'contain'}
+            style={styles.btn_image}
+            source={require('../../../../assets/function/icon_more.png')}
+          />
+        </View>
       </TouchableOpacity>
     )
   }

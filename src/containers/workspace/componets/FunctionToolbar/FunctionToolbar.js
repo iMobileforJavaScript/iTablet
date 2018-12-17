@@ -398,6 +398,8 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  remove = () => {}
+
   Tagging = async () => {
     Orientation.getOrientation((e, orientation) => {
       let column = orientation === 'PORTRAIT' ? 4 : 8
@@ -501,11 +503,16 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
+            title: '撤销',
+            action: this.remove,
+            image: require('../../../../assets/function/icon_remove.png'),
+          },
+          {
             title: '更多',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -553,7 +560,7 @@ export default class FunctionToolbar extends React.Component {
             action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -664,7 +671,7 @@ export default class FunctionToolbar extends React.Component {
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break

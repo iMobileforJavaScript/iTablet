@@ -1,6 +1,6 @@
 import React from 'react'
 import { scaleSize, screen, Toast } from '../../../../utils'
-import { color, zIndexLevel } from '../../../../styles'
+import { color, zIndexLevel, size } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
@@ -28,6 +28,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Image,
   Text,
   Animated,
@@ -1998,9 +1999,14 @@ export default class ToolBar extends React.Component {
       <FlatList
         data={list}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => item.action(item)}>
-            <Text style={styles.item}>{item.key}</Text>
-          </TouchableOpacity>
+          <TouchableHighlight
+            activeOpacity={0.9}
+            underlayColor="#4680DF"
+            style={styles.btn}
+            onPress={() => item.action(item)}
+          >
+            <Text style={styles.text}>{item.key}</Text>
+          </TouchableHighlight>
         )}
       />
     )
@@ -2264,9 +2270,7 @@ export default class ToolBar extends React.Component {
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
-          <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
-            {this.renderSelectList()}
-          </View>
+          <View style={styles.list}>{this.renderSelectList()}</View>
         )}
         <View style={styles.containers}>
           {this.renderView()}
@@ -2363,5 +2367,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
     backgroundColor: color.subTheme,
+  },
+  list: {
+    width: scaleSize(300),
+    position: 'absolute',
+    top: '30%',
+    left: '30%',
+    right: '30%',
+    backgroundColor: 'rgba(48,48,48,0.85)',
+  },
+  text: {
+    color: 'white',
+    fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+  btn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: scaleSize(80),
+    backgroundColor: 'transparent',
+    minWidth: scaleSize(100),
+    width: scaleSize(300),
   },
 })

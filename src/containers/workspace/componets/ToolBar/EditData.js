@@ -1,8 +1,4 @@
-import {
-  SMap,
-  Action,
-  SCollector,
-} from 'imobile_for_reactnative'
+import { SMap, Action, SCollector } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -15,7 +11,8 @@ import ToolbarBtnType from './ToolbarBtnType'
 function getEditData(type) {
   let data = [],
     buttons = []
-  if (typeof type === 'string' && type.indexOf('MAP_EDIT_') === -1) return { data, buttons }
+  if (typeof type === 'string' && type.indexOf('MAP_EDIT_') === -1)
+    return { data, buttons }
   switch (type) {
     case ConstToolType.MAP_EDIT_TAGGING:
       data = [
