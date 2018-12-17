@@ -177,7 +177,7 @@ const line = [
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -233,7 +233,7 @@ const point = [
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -320,7 +320,7 @@ const region = [
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },

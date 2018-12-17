@@ -1,21 +1,27 @@
 import { Dimensions, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-const screenWidth = Dimensions.get('window').width
-const screenHeight = Dimensions.get('window').height
-const itemWidth = Dimensions.get('window').width * 0.8
+let screenWidth = Dimensions.get('window').width
+let screenHeight = Dimensions.get('window').height
+let width = screenWidth < screenHeight ? screenWidth : screenHeight
+let height = screenWidth < screenHeight ? screenWidth : screenHeight
+const itemWidth = width * 0.8
 const itemHeight = 40
 const fontSize = 16
 const titleOnFocusBackgroundColor = color.blackBg
 const titleOnBlurBackgroundColor = color.border
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    // flexDirection: 'column',
+    // justifyContent:"space-around",
+    alignItems: 'center',
     backgroundColor: color.border,
   },
   keyboardAvoidingStyle: {
     padding: 9,
     alignItems: 'center',
-    width: screenWidth,
-    height: screenHeight,
+    width: width,
+    height: height,
   },
   titleStyle: {
     marginTop: 20,
