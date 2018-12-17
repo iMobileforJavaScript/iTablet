@@ -1,6 +1,6 @@
 import React from 'react'
 import { scaleSize, screen, Toast } from '../../../../utils'
-import { color, zIndexLevel } from '../../../../styles'
+import { color, zIndexLevel ,size } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
@@ -27,6 +27,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Image,
   Text,
   Animated,
@@ -46,11 +47,13 @@ import {
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
-import ThemeColorGradientType from './ThemeColorGradientType'
+import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 
 import jsonUtil from '../../../../utils/jsonUtil'
+import ColorTableList from '../../../../components/ColorTableList'
+import { ColorBtn } from '../../../../components/mapTools'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -587,13 +590,11 @@ export default class ToolBar extends React.Component {
 
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: this.height,
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
 
-    // let path = '/storage/emulated/0/SampleData/World/World.udb'
-    // let DatasetName = 'Countries'
     let list = await SThemeCartography.getThemeExpressByUdb(
       this.state.themeUdbPath,
       this.state.themeDatasetName,
@@ -605,19 +606,23 @@ export default class ToolBar extends React.Component {
       },
     ]
     this.setState({
+      containerType: 'list',
       data: datalist,
       type: type,
-    })
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[4]
+    },
+    )
   }
 
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: this.height,
+      toValue: ConstToolType.THEME_HEIGHT[4],
       duration: 300,
     }).start()
     this.isBoxShow = true
 
-    let list = await ThemeColorGradientType.getColorGradientType()
+    let list = await ThemeMenuData.getColorGradientType()
     let datalist = [
       {
         title: '颜色方案',
@@ -625,9 +630,111 @@ export default class ToolBar extends React.Component {
       },
     ]
     this.setState({
+      containerType: 'list',
       data: datalist,
       type: type,
-    })
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[4]
+    },
+    )
+  }
+
+  getRangeMode = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[2],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getRangeMode()
+    this.setState(
+      {
+        containerType: 'table',
+        column: 4,
+        tableType: 'normal',
+        data: date,
+        type: type,
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[2]
+      },
+    )
+  }
+
+  getLabelBackShape = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[2],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelBackShape()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[2]
+    }, )
+  }
+
+  getLabelFontName = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontName()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[3]
+    }, )
+  }
+
+  getLabelFontRotation = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[0],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontRotation()
+    this.setState({
+      containerType: 'table',
+      column: 4,
+      tableType: 'normal',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[0]
+    }, )
+  }
+
+  getLabelFontColor = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: 300,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelFontColor()
+    this.setState({
+      containerType: 'colortable',
+      column: 8,
+      tableType: 'scroll',
+      data: date,
+      type: type,
+    }, () => {
+      this.height = ConstToolType.THEME_HEIGHT[3]
+    }, )
   }
 
   getflylist = async () => {
@@ -1211,14 +1318,14 @@ export default class ToolBar extends React.Component {
     ) {
       //分段专题图表达式
       this.setState({
-        themeColor: item.key,
+        themeExpress: item.title,
       })
       ;(async function() {
         let Params = {
           // DatasourceAlias: this.state.themeDatasourceAlias,
           // DatasetName: this.state.themeDatasetName,
-          RangeExpression: this.state.themeExpress,
-          // ColorGradientType: item.key,
+          RangeExpression: item.title,
+          // ColorGradientType: this.state.themeColor,
           // LayerName: 'Countries@Countries#1',
           LayerIndex: '0',
         }
@@ -1240,7 +1347,22 @@ export default class ToolBar extends React.Component {
           RangeMode: 'EQUALINTERVAL',
           RangeParameter: '32.0',
         }
-        await SThemeCartography.createThemeRangeMap(Params)
+        await SThemeCartography.createAndRemoveThemeRangeMap(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+    ) {
+      //统一标签表达式
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let Params = {
+          LabelExpression: item.title,
+          // LayerName: 'Countries@Countries#1',
+          LayerIndex: '0',
+        }
+        await SThemeCartography.setUniformLabelExpression(Params)
       }.bind(this)())
     }
   }
@@ -1273,11 +1395,29 @@ export default class ToolBar extends React.Component {
           themeDatasourceAlias: item.title,
           themeDatasetName: item.title,
         })
-        ToolbarData.setThemeParams(
-          item.title,
-          item.title,
-          this.state.themeExpress,
-        )
+        ToolbarData.setUniqueThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          UniqueExpression: this.state.themeExpress,
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setRangeThemeParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          RangeExpression: this.state.themeExpress,
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
+          ColorGradientType: 'TERRAIN',
+        })
+        ToolbarData.setUniformLabelParams({
+          DatasourceAlias: item.title,
+          DatasetName: item.title,
+          LabelExpression: '国家',
+          LabelBackShape: 'NONE',
+          FontName: '宋体',
+          // FontSize: '15.0',
+          ForeColor: '#40E0D0',
+        })
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1390,6 +1530,17 @@ export default class ToolBar extends React.Component {
     )
   }
 
+  renderColorTable = () => {
+    return (
+      <ColorTableList
+        data={this.state.data}
+        type={this.state.tableType}
+        numColumns={this.state.column}
+        renderCell={this._renderColorItem}
+      />
+    )
+  }
+
   itemaction = async item => {
     switch (item.key) {
       case 'psDistance':
@@ -1418,15 +1569,29 @@ export default class ToolBar extends React.Component {
             case constants.THEME_RANGE_STYLE:
               type = constants.THEME_RANGE_STYLE
               break
-            case constants.THEME_UNIQUE_LABEL:
-              type = constants.THEME_UNIQUE_LABEL
+            case constants.THEME_UNIFY_LABEL:
+              type = constants.THEME_UNIFY_LABEL
               break
           }
           let menutoolRef =
             this.props.getMenuAlertDialogRef &&
             this.props.getMenuAlertDialogRef()
-          if (menutoolRef) {
+          if (menutoolRef && type !== '') {
             menutoolRef.setMenuType(type)
+          }
+
+          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+            let Params = {
+              DatasourceAlias: this.state.themeDatasourceAlias,
+              DatasetName: this.state.themeDatasetName,
+              RangeExpression: this.state.themeExpress,
+              ColorGradientType: this.state.themeColor,
+              // LayerName: 'Countries@Countries#1',
+              LayerIndex: '0',
+              RangeMode: item.key,
+              RangeParameter: '32.0',
+            }
+            ThemeMenuData.setRangeThemeParams(Params)
           }
         }
         item.action()
@@ -1456,6 +1621,19 @@ export default class ToolBar extends React.Component {
         textColor={'white'}
         size={MTBtn.Size.NORMAL}
         image={item.image}
+        background={item.background}
+        onPress={() => {
+          this.itemaction(item)
+        }}
+      />
+    )
+  }
+
+  _renderColorItem = ({ item, rowIndex, cellIndex }) => {
+    return (
+      <ColorBtn
+        key={rowIndex + '-' + cellIndex}
+        background={item.background}
         onPress={() => {
           this.itemaction(item)
         }}
@@ -1494,9 +1672,13 @@ export default class ToolBar extends React.Component {
       <FlatList
         data={list}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => item.action(item)}>
-            <Text style={styles.item}>{item.key}</Text>
-          </TouchableOpacity>
+          <TouchableHighlight
+            activeOpacity={0.9}
+            underlayColor="#4680DF"
+            style={styles.btn}
+            onPress={() => item.action(item)}>
+            <Text style={styles.text}>{item.key}</Text>
+          </TouchableHighlight>
         )}
       />
     )
@@ -1524,6 +1706,9 @@ export default class ToolBar extends React.Component {
         break
       case symbol:
         box = this.renderSymbol()
+        break
+      case 'colortable':
+        box = this.renderColorTable()
         break
       case table:
       default:
@@ -1699,7 +1884,7 @@ export default class ToolBar extends React.Component {
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
-          <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
+          <View style={styles.list}>
             {this.renderSelectList()}
           </View>
         )}
@@ -1798,5 +1983,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
     backgroundColor: color.subTheme,
+  },
+  list:{
+    width: scaleSize(300),
+    position: 'absolute',
+    top:'30%',
+    left:'30%',
+    right:'30%',
+    backgroundColor: 'rgba(48,48,48,0.85)',
+  },
+  text:{
+    color: 'white',
+    fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+  btn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: scaleSize(80),
+    backgroundColor: 'transparent',
+    minWidth: scaleSize(100),
+    width: scaleSize(300),
   },
 })

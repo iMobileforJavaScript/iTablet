@@ -1,63 +1,59 @@
 import { Dimensions, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 export const itemWidth = Dimensions.get('window').width
-export const itemHeight = Dimensions.get('window').height
-export const imageWidth = 140
+export const itemHeight = 140
+export const imageWidth = 120
+export const imageHeight = 100
 export const textHeight = 40
-
+const smallFontSize = 16
+const largeFontSize = 18
 const styles = StyleSheet.create({
-  itemBottomContainerStyle: {
-    backgroundColor: color.theme,
-    width: itemWidth,
-    height: 2,
+
+  haveDataViewStyle:{
+    flex:1,
+    backgroundColor:color.blackBg
   },
-  itemTopContainer: {
-    flexDirection: 'row',
-    width: itemWidth,
-    height: imageWidth,
+  noDataViewStyle:{
+    flex:1,
+    justifyContent:'center',
+    alignItems:'center',
+    backgroundColor:color.blackBg
   },
-  itemTopInternalImageStyle: {
-    width: imageWidth,
-    height: imageWidth,
-    backgroundColor: '#52514C',
+  titleTextStyle:{
+    width:itemWidth,
+    lineHeight:textHeight,
+    fontSize:smallFontSize,
+    color:'#c0c0c0',
+    paddingLeft: 10,
+    textAlign: 'left',
+    backgroundColor:color.theme
+  },
+  itemViewStyle:{
+    width:itemWidth,
+    height:itemHeight,
+    flexDirection:'row',
+    padding:15,
+
+  },
+  imageStyle:{
+    width:imageWidth,
+    height:imageHeight,
+    backgroundColor:'#c0c0c0'
+  },
+  restTitleTextStyle:{
+    width:itemWidth-30-imageWidth,
+    fontSize:largeFontSize,
+    fontWeight: 'bold',
+    color:'white',
+    paddingLeft: 10,
+    textAlign: 'left',
+    flexWrap:'wrap',
+  },
+  separateViewStyle:{
+    width:itemWidth,
+    height:8,
+    backgroundColor:color.theme
   },
 
-  itemTopInternalRightContainerStyle: {
-    width: itemWidth - imageWidth,
-    height: imageWidth,
-    backgroundColor: color.border,
-    justifyContent: 'space-between',
-    paddingLeft: 5,
-  },
-  itemTopInternalRightBottomViewStyle: {
-    height: textHeight * 2,
-    width: itemWidth - imageWidth - 5,
-  },
-  itemTopInternalRightTextStyle: {
-    lineHeight: textHeight,
-    width: itemWidth - imageWidth,
-    fontSize: 16,
-    color: 'white',
-  },
-  itemTopInternalItemContainerStyle: {
-    height: textHeight,
-    width: itemWidth - imageWidth,
-  },
-  itemTopInternalRightBottomBottomViewStyle: {
-    flexDirection: 'row',
-    height: textHeight,
-    width: itemWidth - imageWidth,
-  },
-  textStyle: {
-    textAlign: 'left',
-    lineHeight: textHeight,
-    fontSize: 16,
-    color: 'white',
-  },
-  fontLargeStyle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'white',
-  },
 })
 export default styles

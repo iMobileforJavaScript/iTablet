@@ -4,6 +4,8 @@ const blackTheme = {
   border: '#505052',
   subTheme: '#48484b',
   themeText: '#FFFFFF',
+
+  blackBg: '#353537',
 }
 
 let styles

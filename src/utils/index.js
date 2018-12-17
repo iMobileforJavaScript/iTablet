@@ -1,4 +1,4 @@
-import screen, { scaleSize } from './screen'
+import screen, { scaleSize, setscaleSize } from './screen'
 import dataUtil from './dataUtil'
 import Toast from './Toast'
 import * as constUtil from './constUtil'
@@ -9,6 +9,7 @@ import jsonUtil from './jsonUtil'
 export {
   screen,
   scaleSize,
+  setscaleSize,
   dataUtil,
   constUtil,
   Toast,

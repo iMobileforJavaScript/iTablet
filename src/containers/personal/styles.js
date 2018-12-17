@@ -8,7 +8,7 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     // alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: 'white',
+    backgroundColor: color.border,
   },
   header: {
     // flex: 1,
