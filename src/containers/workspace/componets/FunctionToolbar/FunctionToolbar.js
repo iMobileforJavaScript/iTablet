@@ -119,16 +119,23 @@ export default class FunctionToolbar extends React.Component {
   }
 
   startTheme = () => {
-    const toolRef = this.props.getToolRef()
-
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
-        containerType: 'table',
-        isFullScreen: true,
-        height: ConstToolType.THEME_HEIGHT[1],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[1]
+          : ConstToolType.HEIGHT[0]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
+          containerType: 'table',
+          isFullScreen: true,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   changeBaseLayer = () => {
@@ -191,7 +198,7 @@ export default class FunctionToolbar extends React.Component {
       let height =
         orientation === 'PORTRAIT'
           ? ConstToolType.HEIGHT[3]
-          : ConstToolType.HEIGHT[2]
+          : ConstToolType.THEME_HEIGHT[4]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
         this.props.showFullMap && this.props.showFullMap(true)
@@ -328,7 +335,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMore = async type => {
-    // this.moreToolbar && this.moreToolbar.showMore(true, e)
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -341,29 +347,42 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
-    // this.moreToolbar && this.moreToolbar.showMore(true, e)
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
-        isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[2],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[2]
+          : ConstToolType.HEIGHT[0]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox 编辑内容
+        toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
+          isFullScreen: true,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   showTool = async () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-        isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[3],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[2]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+          isFullScreen: true,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   mapStyle = () => {
@@ -380,45 +399,23 @@ export default class FunctionToolbar extends React.Component {
   }
 
   Tagging = async () => {
-    const toolRef = this.props.getToolRef()
-    switch (this.props.type) {
-      case 'MAP_3D':
-        SScene.getLayerList().then(layerList => {
-          const toolRef = this.props.getToolRef()
-          if (toolRef) {
-            toolRef.getOldLayerList(layerList)
-            SScene.setAllLayersSelection(false)
-          }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[2]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox 编辑内容
+        toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+          isFullScreen: false,
+          column: column,
+          height: height,
         })
-        if (toolRef) {
-          this.props.showFullMap && this.props.showFullMap(true)
-          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-            isFullScreen: false,
-          })
-        }
-        break
-
-      case 'MAP_EDIT':
-        if (toolRef) {
-          this.props.showFullMap && this.props.showFullMap(true)
-          // TODO 根据符号类型改变ToolBox 编辑内容
-          toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
-            isFullScreen: false,
-            column: 4,
-            height: ConstToolType.HEIGHT[3],
-          })
-        }
-        break
-
-      default:
-        if (toolRef) {
-          this.props.showFullMap && this.props.showFullMap(true)
-          toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-            isFullScreen: false,
-          })
-        }
-        break
-    }
+      }
+    })
   }
 
   Label = () => {
@@ -605,14 +602,14 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_tools.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
           },
-          {
-            key: '撤销',
-            title: '撤销',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_revert.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_revert.png'),
-          },
+          // {
+          //   key: '撤销',
+          //   title: '撤销',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_revert.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_revert.png'),
+          // },
           {
             key: '更多',
             title: '更多',

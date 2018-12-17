@@ -235,18 +235,58 @@ export default class ToolBar extends React.Component {
             this.showToolbar()
           }
           break
+        case ConstToolType.MAP_TOOL:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.THEME_HEIGHT[2]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_EDIT_TAGGING:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.THEME_HEIGHT[2]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_THEME_START:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.HEIGHT[1]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_THEME_CREATE:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.HEIGHT[2]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP3D_CIRCLEFLY:
+          this.setState({ column: 1 })
+          this.height = ConstToolType.HEIGHT[0]
+          this.showToolbar()
+          break
       }
     })
   }
-  // /**建筑单体触控监听 */
-  // attributeListen() {
-  //   this.listenevent = SScene.addListener({
-  //     callback: result => {
-  //       //  console.log(result)
-  //       this.showMap3DAttribute(result)
-  //     },
-  //   })
-  // }
 
   getOriginType = () => {
     return this.originType
@@ -1888,10 +1928,16 @@ export default class ToolBar extends React.Component {
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let width
-    if (screen.deviceWidth < screen.deviceHeight) {
-      width = screen.deviceWidth
+    if (GLOBAL.orientation === 'PORTRAIT') {
+      width =
+        screen.deviceWidth < screen.deviceHeight
+          ? screen.deviceWidth
+          : screen.deviceHeight
     } else {
-      width = screen.deviceHeight
+      width =
+        screen.deviceWidth > screen.deviceHeight
+          ? screen.deviceWidth
+          : screen.deviceHeight
     }
     return (
       <MTBtn
