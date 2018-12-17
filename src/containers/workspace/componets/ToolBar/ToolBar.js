@@ -17,6 +17,7 @@ import {
   regionBeforeColorSet,
   regionAfterColorSet,
   Map3DBaseMapList,
+  ConstInfo,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -42,6 +43,7 @@ import {
   SMCollectorType,
   EngineType,
   SThemeCartography,
+  SOnlineService,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 import SymbolTabs from '../SymbolTabs'
@@ -54,6 +56,7 @@ import constants from '../../constants'
 import jsonUtil from '../../../../utils/jsonUtil'
 import ColorTableList from '../../../../components/ColorTableList'
 import { ColorBtn } from '../../../../components/mapTools'
+import { FileTools } from '../../../../native'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -66,6 +69,8 @@ const DEFAULT_COLUMN = 4
 const DEFAULT_FULL_SCREEN = true
 // 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
+
+let isSharing = false
 
 export default class ToolBar extends React.Component {
   props: {
@@ -98,6 +103,8 @@ export default class ToolBar extends React.Component {
     importTemplate?: () => {}, // 导入模板
     openTemplate?: () => {}, // 打开模板
     setAttributes?: () => {},
+    getMaps?: () => {},
+    exportWorkspace?: () => {},
   }
 
   static defaultProps = {
@@ -122,6 +129,7 @@ export default class ToolBar extends React.Component {
     this.originType = props.type // 初次传入的类型
     // this.lastType = ''
     this.lastState = {}
+    this.shareTo = ''
     this.state = {
       // isShow: false,
       type: props.type, // 当前传入的类型
@@ -135,6 +143,7 @@ export default class ToolBar extends React.Component {
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
       isSelectlist: false,
+      listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
@@ -266,6 +275,7 @@ export default class ToolBar extends React.Component {
       importTemplate: this.props.importTemplate,
       getLayers: this.props.getLayers,
       map: this.props.map,
+      getMaps: this.props.getMaps,
     })
     data = toolbarData.data
     buttons = toolbarData.buttons
@@ -1141,14 +1151,15 @@ export default class ToolBar extends React.Component {
         params && typeof params.height === 'number'
           ? params.height
           : ConstToolType.HEIGHT[1]
-      data = params.data || data
+      this.shareTo = params.shareTo || ''
       this.setState(
         {
           isSelectlist: false,
           type: type,
           tableType: params.tableType || 'normal',
-          data: data,
-          buttons: buttons,
+          data: params.data || data,
+          buttons: params.buttons || buttons,
+          listSelectable: params.listSelectable || false,
           isFullScreen:
             params && params.isFullScreen !== undefined
               ? params.isFullScreen
@@ -1725,6 +1736,8 @@ export default class ToolBar extends React.Component {
     if (this.state.data.length === 0) return
     return (
       <ToolBarSectionList
+        ref={ref => (this.toolBarSectionList = ref)}
+        listSelectable={this.state.listSelectable}
         sections={this.state.data}
         itemAction={({ item, index }) => {
           if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
@@ -2087,6 +2100,60 @@ export default class ToolBar extends React.Component {
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
             })
+          }
+          break
+        case ToolbarBtnType.SHARE:
+          image = require('../../../../assets/mapEdit/icon-rename-white.png')
+          action = () => {
+            if (!this.props.user.currentUser.userName) {
+              Toast.show('请登陆后再分享')
+              return
+            }
+            if (isSharing) {
+              Toast.show('分享中，请稍后')
+              return
+            }
+            if (this.shareTo === constants.SUPERMAP_ONLINE) {
+              let list =
+                (this.toolBarSectionList &&
+                  this.toolBarSectionList.getSelectList()) ||
+                []
+              this.props.exportWorkspace(
+                {
+                  maps: list,
+                },
+                (result, path) => {
+                  Toast.show(
+                    result
+                      ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+                      : ConstInfo.EXPORT_WORKSPACE_FAILED,
+                  )
+                  // 分享
+                  let fileName = path.substr(path.lastIndexOf('/') + 1)
+                  let dataName = fileName.substr(0, fileName.lastIndexOf('.'))
+                  SOnlineService.deleteData(dataName).then(async () => {
+                    await SOnlineService.uploadFile(path, dataName, {
+                      // onProgress: progress => {
+                      //   console.warn(progress)
+                      // },
+                      onResult: async () => {
+                        let result = await SOnlineService.publishService(
+                          dataName,
+                        )
+                        Toast.show(
+                          result
+                            ? ConstInfo.SHARE_SUCCESS
+                            : ConstInfo.SHARE_FAILED,
+                        )
+                        FileTools.deleteFile(path)
+                        isSharing = false
+                      },
+                    })
+                  })
+                },
+              )
+            }
+            // this.close()
           }
           break
         case ToolbarBtnType.CLOSE_CIRCLE:

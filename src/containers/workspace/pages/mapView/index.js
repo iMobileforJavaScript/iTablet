@@ -16,6 +16,9 @@ import {
   openTemplate,
   setCurrentTemplateInfo,
   setTemplate,
+  getMaps,
+  exportWorkspace,
+  openWorkspace,
 } from '../../../../models/map'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
 import { setCollectionInfo } from '../../../../models/collection'
@@ -55,6 +58,9 @@ const mapDispatchToProps = {
   openTemplate,
   setCurrentTemplateInfo,
   setTemplate,
+  getMaps,
+  exportWorkspace,
+  openWorkspace,
 }
 
 export default connect(

@@ -38,6 +38,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" />
         <meta-data
             android:name="TencentMapSDK"
             android:value="YSGBZ-3XD3P-W6MDB-V6YPH-RDKUT-EIFUR" />

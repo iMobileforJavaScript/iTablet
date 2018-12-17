@@ -110,18 +110,18 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_THEME_START:
       data = [
-        {
-          key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
-          action: openWorkspace,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-        },
+        // {
+        //   key: constants.WORKSPACE,
+        //   title: constants.WORKSPACE,
+        //   action: openWorkspace,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.OPEN,
-          action: openMap,
+          action: openThemeMap,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_point.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point.png'),
@@ -130,7 +130,7 @@ function getStart(type, params) {
           key: constants.CREATE,
           title: constants.CREATE,
           size: 'large',
-          action: create,
+          action: add,
           image: require('../../../../assets/mapTools/icon_words.png'),
           selectedImage: require('../../../../assets/mapTools/icon_words.png'),
         },
@@ -150,14 +150,14 @@ function getStart(type, params) {
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: add,
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_free_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        // },
       ]
       break
   }
@@ -194,30 +194,60 @@ function openWorkspace(cb) {
 }
 
 /** 打开地图 **/
-function openMap() {
+function openMap(isOpenTemplate = GLOBAL.Type === constants.COLLECTION) {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   let data = []
-  SMap.getMaps().then(list => {
+  _params.getMaps(list => {
     data = [
       {
         title: '地图',
         data: list,
       },
     ]
-    NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-      templateList => {
-        data.push({
-          title: '模板',
-          data: templateList,
-        })
-        _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-          containerType: 'list',
-          height: ConstToolType.HEIGHT[3],
-          data,
-        })
+    isOpenTemplate &&
+      NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+        templateList => {
+          data.push({
+            title: '模板',
+            data: templateList,
+          })
+          _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+            containerType: 'list',
+            height: ConstToolType.HEIGHT[3],
+            data,
+          })
+        },
+      )
+  })
+}
+
+/** 专题图打开 **/
+function openThemeMap(isOpenTemplate = GLOBAL.Type === constants.MAP_THEME) {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  let data = []
+  _params.getMaps(list => {
+    data = [
+      {
+        title: '地图',
+        data: list,
       },
-    )
+    ]
+    isOpenTemplate &&
+      NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+        templateList => {
+          data.push({
+            title: '模板',
+            data: templateList,
+          })
+          _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+            containerType: 'list',
+            height: ConstToolType.HEIGHT[3],
+            data,
+          })
+        },
+      )
   })
 }
 
