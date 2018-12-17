@@ -79,8 +79,6 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
-    // console.warn(JSON.stringify(this.props.selectName))
-    // console.warn(JSON.stringify(this.props.currentLayer.type))
     let x = this._previousLeft + gestureState.dx
     this._panBtnStyles.style.left = x
     if (this._panBtnStyles.style.left <= 0) this._panBtnStyles.style.left = 0

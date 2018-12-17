@@ -44,7 +44,7 @@ function getShareData(type, params) {
         showMapList(constants.SUPERMAP_ONLINE)
       },
       size: 'large',
-      image: require('../../../../assets/mapTools/icon_free_line.png'),
+      image: require('../../../../assets/mapTools/icon_share_online.png'),
     },
     // {
     //   key: constants.FRIEND,

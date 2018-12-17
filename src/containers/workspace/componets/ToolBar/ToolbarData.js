@@ -20,7 +20,13 @@ function setParams(params) {
 function getTabBarData(type, params = {}) {
   let tabBarData = CollectionData.getCollectionData(type, params)
 
-  if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
+  if (
+    type === ConstToolType.MAP_COLLECTION_POINT ||
+    type === ConstToolType.MAP_COLLECTION_LINE ||
+    type === ConstToolType.MAP_COLLECTION_REGION
+  ) {
+    tabBarData = CollectionData.getCollectionOperationData(type, params)
+  } else if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = EditData.getEditData(type)
   } else if (typeof type === 'string' && type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)

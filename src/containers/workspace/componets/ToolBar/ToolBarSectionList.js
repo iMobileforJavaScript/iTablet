@@ -112,8 +112,8 @@ export default class ToolBarSectionList extends React.Component {
       return this.props.renderItem({ item, index, section })
     }
     let selectImg = item.isSelected
-      ? require('../../../../assets/map/icon-arrow-up.png')
-      : require('../../../../assets/map/icon-arrow-down.png')
+      ? require('../../../../assets/mapTools/icon_multi_selected.png')
+      : require('../../../../assets/mapTools/icon_multi_unselected.png')
     return (
       <TouchableOpacity
         style={[
