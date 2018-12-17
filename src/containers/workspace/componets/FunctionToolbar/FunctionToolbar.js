@@ -72,14 +72,22 @@ export default class FunctionToolbar extends React.Component {
   }
 
   start = type => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, type, {
-        containerType: 'table',
-        height: ConstToolType.HEIGHT[2],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[2]
+          : ConstToolType.HEIGHT[0]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, type, {
+          containerType: 'table',
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   showMenuAlertDialog = () => {
@@ -103,7 +111,7 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP3D_START, {
+      toolRef.setVisible(true, ConstToolType.MAP_3D_START, {
         containerType: 'table',
         height: ConstToolType.HEIGHT[1],
       })
@@ -179,14 +187,20 @@ export default class FunctionToolbar extends React.Component {
     }
   }
   showSymbol = () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[3],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.HEIGHT[2]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+          isFullScreen: true,
+          height: height,
+        })
+      }
+    })
   }
 
   showMap3DSymbol = async () => {
@@ -195,7 +209,7 @@ export default class FunctionToolbar extends React.Component {
       let height =
         orientation === 'PORTRAIT'
           ? ConstToolType.HEIGHT[2]
-          : ConstToolType.HEIGHT[1]
+          : ConstToolType.HEIGHT[0]
       SScene.checkoutListener('startLabelOperate')
       GLOBAL.Map3DSymbol = true
       SScene.getLayerList().then(() => {
@@ -218,6 +232,10 @@ export default class FunctionToolbar extends React.Component {
   showMap3DTool = async () => {
     Orientation.getOrientation((e, orientation) => {
       let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[1]
+          : ConstToolType.HEIGHT[0]
       SScene.checkoutListener('startMeasure')
       SScene.getLayerList().then(layerList => {
         const toolRef = this.props.getToolRef()
@@ -228,7 +246,7 @@ export default class FunctionToolbar extends React.Component {
             containerType: 'table',
             isFullScreen: false,
             column: column,
-            height: ConstToolType.HEIGHT[1],
+            height: height,
           })
           toolRef.getOldLayerList(layerList)
           // SScene.setAllLayersSelection(false)

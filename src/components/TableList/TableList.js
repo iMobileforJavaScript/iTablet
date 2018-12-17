@@ -7,7 +7,6 @@
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
 import { screen } from '../../utils'
-
 import styles from './styles'
 
 export default class TableList extends React.Component {
@@ -30,7 +29,19 @@ export default class TableList extends React.Component {
     lineSeparator: 10,
   }
 
+  constructor(props) {
+    super(props)
+    this.state = {
+      width: 0,
+    }
+  }
+
+  // componentDidMount(){
+  //   this.getDeviceWidth()
+  // }
+
   renderRows = () => {
+    this.getDeviceWidth()
     let rows = [],
       rowsView = []
     this.props.data.forEach((item, index) => {
@@ -64,17 +75,26 @@ export default class TableList extends React.Component {
     )
   }
 
+  getDeviceWidth = () => {
+    if (GLOBAL.orientation === 'PORTRAIT') {
+      this.width =
+        screen.deviceWidth < screen.deviceHeight
+          ? screen.deviceWidth
+          : screen.deviceHeight
+    } else {
+      this.width =
+        screen.deviceWidth > screen.deviceHeight
+          ? screen.deviceWidth
+          : screen.deviceHeight
+    }
+  }
+
   renderCell = (item, rowIndex, cellIndex) => {
     if (!this.props.renderCell) throw new Error('Please render cell')
-    let width
-    if (screen.deviceWidth < screen.deviceHeight) {
-      width = screen.deviceWidth
-    } else {
-      width = screen.deviceHeight
-    }
+    // this.getDeviceWidth()
     return (
       <View
-        style={{ width: width / this.props.numColumns }}
+        style={{ width: this.width / this.props.numColumns }}
         key={rowIndex + '-' + cellIndex}
       >
         {this.props.renderCell({ item, rowIndex, cellIndex })}

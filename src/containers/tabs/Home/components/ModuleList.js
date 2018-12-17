@@ -29,6 +29,7 @@ export default class ModuleList extends Component {
   componentWillMount() {
     Orientation.getOrientation((e, orientation) => {
       this.setState({ orientation: orientation })
+      GLOBAL.orientation = orientation
     })
     // console.log(GLOBAL.orientation)
     Orientation.addOrientationListener(orientation => {
@@ -36,6 +37,7 @@ export default class ModuleList extends Component {
       this.setState({
         orientation: orientation,
       })
+      GLOBAL.orientation = orientation
     })
   }
 

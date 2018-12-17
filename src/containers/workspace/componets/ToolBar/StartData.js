@@ -12,7 +12,7 @@ function getStart(type, params) {
   let data = [],
     buttons = []
   switch (type) {
-    case ConstToolType.MAP3D_START:
+    case ConstToolType.MAP_3D_START:
       data = [
         {
           key: constants.OPEN,
