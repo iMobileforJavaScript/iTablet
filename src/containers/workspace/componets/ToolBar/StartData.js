@@ -1,6 +1,5 @@
-import { SMap } from 'imobile_for_reactnative'
 import { NativeMethod } from '../../../../native'
-import { ConstToolType } from '../../../../constants'
+import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
@@ -67,6 +66,14 @@ function getStart(type, params) {
     case ConstToolType.MAP_COLLECTION_START:
       data = [
         {
+          key: constants.WORKSPACE,
+          title: constants.WORKSPACE,
+          action: openWorkspace,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
           key: constants.OPEN,
           title: constants.OPEN,
           action: openMap,
@@ -78,7 +85,7 @@ function getStart(type, params) {
           key: constants.CREATE,
           title: constants.CREATE,
           size: 'large',
-          action: create,
+          action: openTemplate,
           image: require('../../../../assets/mapTools/icon_words.png'),
           selectedImage: require('../../../../assets/mapTools/icon_words.png'),
         },
@@ -174,17 +181,21 @@ function openWorkspace(cb) {
       if (cb) {
         cb(path)
       } else {
-        SMap.closeWorkspace().then(async () => {
+        _params.closeWorkspace().then(async () => {
           try {
             _params.setContainerLoading &&
-              _params.setContainerLoading(true, '正在打开工作空间')
+              _params.setContainerLoading(true, ConstInfo.WORKSPACE_OPENING)
             let data = { server: path }
-            let result = await SMap.openWorkspace(data)
-            Toast.show(result ? '已为您切换工作空间' : '切换工作空间失败')
+            let result = await _params.openWorkspace(data)
+            Toast.show(
+              result
+                ? ConstInfo.WORKSPACE_OPEN_SUCCESS
+                : ConstInfo.WORKSPACE_OPEN_FAILED,
+            )
             NavigationService.goBack()
             _params.setContainerLoading && _params.setContainerLoading(false)
           } catch (error) {
-            Toast.show('打开失败')
+            Toast.show(ConstInfo.WORKSPACE_OPEN_FAILED)
             _params.setContainerLoading && _params.setContainerLoading(false)
           }
         })
@@ -194,32 +205,47 @@ function openWorkspace(cb) {
 }
 
 /** 打开地图 **/
-function openMap(isOpenTemplate = GLOBAL.Type === constants.COLLECTION) {
+function openMap() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  let data = []
   _params.getMaps(list => {
-    data = [
+    let data = [
       {
         title: '地图',
         data: list,
       },
     ]
-    isOpenTemplate &&
-      NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-        templateList => {
-          data.push({
-            title: '模板',
-            data: templateList,
-          })
-          _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-            containerType: 'list',
-            height: ConstToolType.HEIGHT[3],
-            data,
-          })
-        },
-      )
+    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      containerType: 'list',
+      height: ConstToolType.HEIGHT[3],
+      data,
+    })
   })
+}
+
+/** 打开模板 **/
+function openTemplate() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+    templateList => {
+      let data = [
+        {
+          title: '打开默认工作空间',
+          data: [],
+        },
+        {
+          title: '模板',
+          data: templateList,
+        },
+      ]
+      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+        containerType: 'list',
+        height: ConstToolType.HEIGHT[3],
+        data,
+      })
+    },
+  )
 }
 
 /** 导入 **/

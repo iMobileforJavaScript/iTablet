@@ -19,6 +19,10 @@ import {
   getMaps,
   exportWorkspace,
   openWorkspace,
+  closeWorkspace,
+  openMap,
+  closeMap,
+  getSymbolTemplates,
 } from '../../../../models/map'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
 import { setCollectionInfo } from '../../../../models/collection'
@@ -61,6 +65,10 @@ const mapDispatchToProps = {
   getMaps,
   exportWorkspace,
   openWorkspace,
+  closeWorkspace,
+  openMap,
+  closeMap,
+  getSymbolTemplates,
 }
 
 export default connect(

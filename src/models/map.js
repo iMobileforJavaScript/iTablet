@@ -4,7 +4,7 @@ import { handleActions } from 'redux-actions'
 import { SMap, Utility } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
-import { ConstPath } from '../constants'
+import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 import xml2js from 'react-native-xml2js'
 let parser = new xml2js.Parser()
@@ -62,6 +62,38 @@ export const closeWorkspace = (params, cb = () => {}) => async dispatch => {
   }
 }
 
+// 打开地图
+export const openMap = (params, cb = () => {}) => async dispatch => {
+  try {
+    if (params === null || params === undefined) return
+    let result = await SMap.openMap(params)
+    if (result) {
+      let mapInfo = await SMap.getMapInfo()
+      await dispatch({
+        type: SET_CURRENT_MAP,
+        payload: mapInfo || {},
+      })
+    }
+    cb && cb(result)
+  } catch (e) {
+    cb && cb(false)
+  }
+}
+
+// 打开地图
+export const closeMap = (cb = () => {}) => async dispatch => {
+  try {
+    await SMap.closeMap()
+    await dispatch({
+      type: SET_CURRENT_MAP,
+      payload: {},
+    })
+    cb && cb()
+  } catch (e) {
+    cb && cb()
+  }
+}
+
 // 获取当前工作空间的地图列表
 export const getMaps = (cb = () => {}) => async dispatch => {
   try {
@@ -106,7 +138,11 @@ export const setCurrentMap = (params, cb = () => {}) => async dispatch => {
 }
 
 // 导入模版
-export const openTemplate = (params, cb = () => {}) => async dispatch => {
+export const openTemplate = (params, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  let workspace = getState().map.toJS().workspace
   let payload = {
     templateInfo: {},
     mapInfo: {},
@@ -123,32 +159,36 @@ export const openTemplate = (params, cb = () => {}) => async dispatch => {
     let targetPath =
       userPath + '/' + ConstPath.RelativePath.Workspace + tempParentDirName // 目标文件目录，不含文件名
     let targetFilePath = targetPath + '/' + fileName
-    copyResult = await FileTools.copyFile(tempDirPath, targetPath)
-    openResult = false
-    if (copyResult) {
-      // 关闭所有地图
-      await SMap.closeMap()
-      await SMap.closeWorkspace()
-      let data = { server: params.path }
-      openResult = await SMap.openWorkspace(data)
-      await SMap.openMap(0)
-      let mapInfo = await SMap.getMapInfo()
+    if (workspace.server === targetFilePath) {
+      cb &&
+        cb({ copyResult, openResult, msg: ConstInfo.WORKSPACE_ALREADY_OPENED })
+    } else {
+      copyResult = await FileTools.copyFile(tempDirPath, targetPath)
+      openResult = false
+      if (copyResult) {
+        // 关闭所有地图
+        await SMap.closeMap()
+        await SMap.closeWorkspace()
+        let data = { server: targetFilePath }
+        openResult = await SMap.openWorkspace(data)
+        await SMap.openMap(0)
+        let mapInfo = await SMap.getMapInfo()
 
-      Object.assign(params, { path: targetFilePath })
-      payload = {
-        templateInfo: params,
-        mapInfo,
+        Object.assign(params, { path: targetFilePath })
+        payload = {
+          templateInfo: params,
+          mapInfo,
+        }
       }
+      await dispatch({
+        type: OPEN_TEMPLATE,
+        payload: payload || {},
+      })
+      cb && cb({ copyResult, openResult })
     }
-    cb && cb({ copyResult, openResult })
   } catch (e) {
     cb && cb({ copyResult, openResult })
   }
-
-  await dispatch({
-    type: OPEN_TEMPLATE,
-    payload: payload || {},
-  })
 }
 
 // 导入模版
@@ -186,17 +226,21 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   let workspace = getState().map.toJS().workspace
   let path = params.outPath,
     fileName = '',
+    fileNameWithoutExtention = '',
+    parentPath = '',
     zipPath = ''
   let result = false
   if (!path) {
     fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
-    path =
+    fileNameWithoutExtention = fileName.substr(0, fileName.lastIndexOf('.'))
+    parentPath = await Utility.appendingHomeDirectory(
       ConstPath.UserPath +
-      userName +
-      '/' +
-      ConstPath.RelativePath.Temp +
-      fileName
-    path = await Utility.appendingHomeDirectory(path)
+        userName +
+        '/' +
+        ConstPath.RelativePath.Temp +
+        fileNameWithoutExtention,
+    )
+    path = parentPath + '/' + fileName
   }
   // 导出工作空间
   if (params.maps && params.maps.length > 0) {
@@ -206,14 +250,11 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   }
   // 压缩工作空间
   if (result) {
-    zipPath =
-      path.substr(0, path.lastIndexOf('/') + 1) +
-      fileName.substr(0, fileName.lastIndexOf('.')) +
-      '.zip'
-    result = await FileTools.zipFile(path, zipPath)
+    zipPath = parentPath + '.zip'
+    result = await FileTools.zipFile(parentPath, zipPath)
   }
   // 删除导出的工作空间
-  await FileTools.deleteFile(path)
+  await FileTools.deleteFile(parentPath)
   isExporting = true
   cb && cb(result, zipPath)
 }
@@ -261,10 +302,7 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
     let template = map.template
     let path = (params && params.path) || template.path
     if (path) {
-      if (
-        path === map.symbolTemplates.path &&
-        map.symbolTemplates.symbols.length > 0
-      ) {
+      if (path === map.template.path && map.template.symbols.length > 0) {
         cb && cb(params)
         return
       }
@@ -292,13 +330,7 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
       })
     }
   } catch (e) {
-    await dispatch({
-      type: GET_SYMBOL_TEMPLATES,
-      payload: {
-        symbols: [],
-        path: '',
-      },
-    })
+    cb && cb(params)
   }
 }
 
@@ -307,11 +339,12 @@ const initialState = fromJS({
   map: {},
   maps: [],
   currentMap: {},
-  template: {},
-  symbolTemplates: {
+  template: {
     symbols: [],
     path: '',
-  },
+    name: '',
+  }, // 当前使用的模板
+  templates: [], // 是用的模板列表，最近使用的在前面
   currentTemplateInfo: {},
   workspace: {},
   // mapControl: {},
@@ -362,28 +395,60 @@ export default handleActions(
       return state.setIn(['currentTemplateInfo'], fromJS(payload))
     },
     [`${OPEN_TEMPLATE}`]: (state, { payload }) => {
+      let newData = state.toJS().templates || []
+      let isExist = false
+      for (let i = 0; i < newData.length; i++) {
+        if (newData[i].path === payload.path) {
+          newData[i] = payload
+          let temp = newData[0]
+          newData[0] = newData[i]
+          newData[i] = temp
+          isExist = true
+          break
+        }
+      }
+      if (!isExist) {
+        newData.unshift(payload)
+      }
       return state
-        .setIn(['template'], fromJS(payload.templateInfo))
+        .setIn(
+          ['template'],
+          fromJS(Object.assign({}, payload.templateInfo, { symbols: [] })),
+        )
+        .setIn(['templates'], fromJS(newData))
         .setIn(['currentMap'], fromJS(payload.currentMap))
+        .setIn(['workspace'], fromJS({ server: payload.templateInfo.path }))
     },
     [`${SET_TEMPLATE}`]: (state, { payload }) => {
       return state.setIn(['template'], fromJS(payload))
     },
     [`${GET_SYMBOL_TEMPLATES}`]: (state, { payload }) => {
-      return state.setIn(['symbolTemplates'], fromJS(payload))
+      let newData = state.toJS().templates || []
+      let template = state.toJS().template || {}
+      for (let i = 0; i < newData.length; i++) {
+        if (newData[i].templateInfo.path === payload.path) {
+          Object.assign(newData[i].templateInfo, payload)
+          Object.assign(template, payload)
+          break
+        }
+      }
+      return state
+        .setIn(['templates'], fromJS(newData))
+        .setIn(['template'], fromJS(template))
     },
     [REHYDRATE]: (state, { payload }) => {
       let data,
         payloadData = (payload && payload.map) || state.toJS()
       data = Object.assign({}, payloadData, {
         currentMap: {},
-        template: {},
-        maps: [],
-        currentTemplateInfo: {},
-        symbolTemplates: {
+        template: {
           symbols: [],
           path: '',
+          name: '',
         },
+        maps: [],
+        currentTemplateInfo: {},
+        workspace: {},
       })
       return fromJS(data)
     },

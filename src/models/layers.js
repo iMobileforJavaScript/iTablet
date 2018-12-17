@@ -62,7 +62,7 @@ export const setAnalystLayer = (params, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
-export const getLayers = (params, cb = () => {}) => async dispatch => {
+export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
   if (typeof params === 'number') {
     params = {
       type: params,
@@ -77,10 +77,11 @@ export const getLayers = (params, cb = () => {}) => async dispatch => {
   let layers = await SMap.getLayersByType(params.type)
   await dispatch({
     type: GET_LAYERS,
-    payload: {
-      layers,
-      isResetCurrentLayer: params.isResetCurrentLayer,
-    } || {},
+    payload:
+      {
+        layers,
+        isResetCurrentLayer: params.isResetCurrentLayer,
+      } || {},
   })
   cb && cb(layers)
 }
@@ -138,7 +139,8 @@ export default handleActions(
     [`${GET_LAYERS}`]: (state, { payload }) => {
       let currentLayer = {}
       if (
-        (JSON.stringify(state.toJS().currentLayer) === '{}' || payload.isResetCurrentLayer) &&
+        (JSON.stringify(state.toJS().currentLayer) === '{}' ||
+          payload.isResetCurrentLayer) &&
         payload.layers.length > 0
       ) {
         currentLayer = payload.layers[0]

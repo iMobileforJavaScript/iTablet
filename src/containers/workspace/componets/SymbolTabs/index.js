@@ -113,7 +113,6 @@ class SymbolTabs extends React.Component {
           user={this.props.user}
           showToolbar={this.props.showToolbar}
           template={this.props.map.template}
-          symbolTemplates={this.props.map.symbolTemplates}
           layers={this.props.layers}
           setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
           setEditLayer={this.props.setEditLayer}
