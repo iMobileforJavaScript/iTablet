@@ -63,7 +63,7 @@ function getStart(type, params) {
         },
       ]
       break
-    case ConstToolType.MAP3D_START:
+    case ConstToolType.MAP_3D_START:
       data = [
         {
           key: constants.OPEN,
