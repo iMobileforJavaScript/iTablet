@@ -46,6 +46,7 @@ import {
   SThemeCartography,
   SOnlineService,
 } from 'imobile_for_reactnative'
+import Orientation from 'react-native-orientation'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -93,7 +94,7 @@ export default class ToolBar extends React.Component {
     setSaveMapDialogVisible?: () => {},
     setContainerLoading?: () => {},
     showFullMap: () => {},
-    dialog: Object,
+    dialog: () => {},
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
     getLayers?: () => {}, // 更新数据（包括其他界面）
@@ -177,6 +178,67 @@ export default class ToolBar extends React.Component {
     }
   }
 
+  componentDidMount() {
+    Orientation.addOrientationListener(orientation => {
+      if (orientation === this.state.orientation) return
+      if (!this.isShow) return
+      switch (this.state.type) {
+        case ConstToolType.MAP3D_SYMBOL:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[2]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP3D_TOOL:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_COLLECTION_START:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[2]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_3D_START:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_SYMBOL:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.THEME_HEIGHT[4]
+            this.showToolbar()
+          }
+          break
+      }
+    })
+  }
   // /**建筑单体触控监听 */
   // attributeListen() {
   //   this.listenevent = SScene.addListener({
@@ -516,7 +578,8 @@ export default class ToolBar extends React.Component {
                 SScene.startDrawText({
                   callback: result => {
                     this.showToolbar()
-                    this.props.dialog.setDialogVisible(true)
+                    let dialog = this.props.dialog()
+                    dialog.setDialogVisible(true)
                     this.point = result
                   },
                 })
@@ -1825,9 +1888,15 @@ export default class ToolBar extends React.Component {
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
+    let width
+    if (screen.deviceWidth < screen.deviceHeight) {
+      width = screen.deviceWidth
+    } else {
+      width = screen.deviceHeight
+    }
     return (
       <MTBtn
-        style={[styles.cell, { width: screen.deviceWidth / this.state.column }]}
+        style={[styles.cell, { width: width / this.state.column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
