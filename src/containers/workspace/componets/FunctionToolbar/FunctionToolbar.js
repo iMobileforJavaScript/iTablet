@@ -10,7 +10,7 @@ import { ConstToolType } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
-
+import Orientation from 'react-native-orientation'
 import { SScene, SMap, Action } from 'imobile_for_reactnative'
 
 const COLLECTION = 'COLLECTION'
@@ -72,14 +72,22 @@ export default class FunctionToolbar extends React.Component {
   }
 
   start = type => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, type, {
-        containerType: 'table',
-        height: ConstToolType.HEIGHT[2],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[2]
+          : ConstToolType.HEIGHT[0]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, type, {
+          containerType: 'table',
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   showMenuAlertDialog = () => {
@@ -103,7 +111,7 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP3D_START, {
+      toolRef.setVisible(true, ConstToolType.MAP_3D_START, {
         containerType: 'table',
         height: ConstToolType.HEIGHT[1],
       })
@@ -118,7 +126,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[1],
       })
     }
   }
@@ -179,51 +187,71 @@ export default class FunctionToolbar extends React.Component {
     }
   }
   showSymbol = () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[3],
-      })
-    }
-  }
-
-  showMap3DSymbol = async () => {
-    SScene.checkoutListener('startLabelOperate')
-    GLOBAL.Map3DSymbol = true
-    SScene.getLayerList().then(() => {
+    Orientation.getOrientation((e, orientation) => {
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.HEIGHT[2]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
-        // SScene.setAllLayersSelection(false)
         this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
-          containerType: 'table',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.HEIGHT[2],
+        toolRef.setVisible(true, ConstToolType.MAP_SYMBOL, {
+          isFullScreen: true,
+          height: height,
         })
       }
     })
   }
 
+  showMap3DSymbol = async () => {
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[2]
+          : ConstToolType.HEIGHT[0]
+      SScene.checkoutListener('startLabelOperate')
+      GLOBAL.Map3DSymbol = true
+      SScene.getLayerList().then(() => {
+        const toolRef = this.props.getToolRef()
+        if (toolRef) {
+          // SScene.setAllLayersSelection(false)
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox内容
+          toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+            containerType: 'table',
+            isFullScreen: false,
+            column: column,
+            height: height,
+          })
+        }
+      })
+    })
+  }
+
   showMap3DTool = async () => {
-    SScene.checkoutListener('startMeasure')
-    SScene.getLayerList().then(layerList => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-          containerType: 'table',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.HEIGHT[1],
-        })
-        toolRef.getOldLayerList(layerList)
-        // SScene.setAllLayersSelection(false)
-      }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[1]
+          : ConstToolType.HEIGHT[0]
+      SScene.checkoutListener('startMeasure')
+      SScene.getLayerList().then(layerList => {
+        const toolRef = this.props.getToolRef()
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          // TODO 根据符号类型改变ToolBox内容
+          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+            containerType: 'table',
+            isFullScreen: false,
+            column: column,
+            height: height,
+          })
+          toolRef.getOldLayerList(layerList)
+          // SScene.setAllLayersSelection(false)
+        }
+      })
     })
   }
 
@@ -351,6 +379,8 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  remove = () => {}
+
   Tagging = async () => {
     const toolRef = this.props.getToolRef()
     switch (this.props.type) {
@@ -476,11 +506,16 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
+            title: '撤销',
+            action: this.remove,
+            image: require('../../../../assets/function/icon_remove.png'),
+          },
+          {
             title: '更多',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -528,7 +563,7 @@ export default class FunctionToolbar extends React.Component {
             action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -639,7 +674,7 @@ export default class FunctionToolbar extends React.Component {
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break

@@ -1,6 +1,6 @@
 import React from 'react'
 import { scaleSize, screen, Toast } from '../../../../utils'
-import { color, zIndexLevel } from '../../../../styles'
+import { color, zIndexLevel, size } from '../../../../styles'
 import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
@@ -29,6 +29,7 @@ import {
   View,
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Image,
   Text,
   Animated,
@@ -47,6 +48,7 @@ import {
   SOnlineService,
   Utility,
 } from 'imobile_for_reactnative'
+import Orientation from 'react-native-orientation'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -94,7 +96,7 @@ export default class ToolBar extends React.Component {
     setSaveMapDialogVisible?: () => {},
     setContainerLoading?: () => {},
     showFullMap: () => {},
-    dialog: Object,
+    dialog: () => {},
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
     getLayers?: () => {}, // 更新数据（包括其他界面）
@@ -173,6 +175,67 @@ export default class ToolBar extends React.Component {
     }
   }
 
+  componentDidMount() {
+    Orientation.addOrientationListener(orientation => {
+      if (orientation === this.state.orientation) return
+      if (!this.isShow) return
+      switch (this.state.type) {
+        case ConstToolType.MAP3D_SYMBOL:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[2]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP3D_TOOL:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_COLLECTION_START:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[2]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_3D_START:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 4 })
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[0]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.MAP_SYMBOL:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.THEME_HEIGHT[4]
+            this.showToolbar()
+          }
+          break
+      }
+    })
+  }
   // /**建筑单体触控监听 */
   // attributeListen() {
   //   this.listenevent = SScene.addListener({
@@ -502,7 +565,8 @@ export default class ToolBar extends React.Component {
                 SScene.startDrawText({
                   callback: result => {
                     this.showToolbar()
-                    this.props.dialog.setDialogVisible(true)
+                    let dialog = this.props.dialog()
+                    dialog.setDialogVisible(true)
                     this.point = result
                   },
                 })
@@ -1868,9 +1932,15 @@ export default class ToolBar extends React.Component {
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
+    let width
+    if (screen.deviceWidth < screen.deviceHeight) {
+      width = screen.deviceWidth
+    } else {
+      width = screen.deviceHeight
+    }
     return (
       <MTBtn
-        style={[styles.cell, { width: screen.deviceWidth / this.state.column }]}
+        style={[styles.cell, { width: width / this.state.column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
@@ -1927,9 +1997,14 @@ export default class ToolBar extends React.Component {
       <FlatList
         data={list}
         renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => item.action(item)}>
-            <Text style={styles.item}>{item.key}</Text>
-          </TouchableOpacity>
+          <TouchableHighlight
+            activeOpacity={0.9}
+            underlayColor="#4680DF"
+            style={styles.btn}
+            onPress={() => item.action(item)}
+          >
+            <Text style={styles.text}>{item.key}</Text>
+          </TouchableHighlight>
         )}
       />
     )
@@ -2192,9 +2267,7 @@ export default class ToolBar extends React.Component {
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
-          <View style={{ position: 'absolute', top: '30%', left: '45%' }}>
-            {this.renderSelectList()}
-          </View>
+          <View style={styles.list}>{this.renderSelectList()}</View>
         )}
         <View style={styles.containers}>
           {this.renderView()}
@@ -2291,5 +2364,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
     backgroundColor: color.subTheme,
+  },
+  list: {
+    width: scaleSize(300),
+    position: 'absolute',
+    top: '30%',
+    left: '30%',
+    right: '30%',
+    backgroundColor: 'rgba(48,48,48,0.85)',
+  },
+  text: {
+    color: 'white',
+    fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+  btn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: scaleSize(80),
+    backgroundColor: 'transparent',
+    minWidth: scaleSize(100),
+    width: scaleSize(300),
   },
 })

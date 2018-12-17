@@ -47,7 +47,7 @@ export default class TreeListItem extends React.Component {
       return this.props.children
     }
     const arrowImg = require('../../assets/mapEdit/icon-arrow-down.png')
-    let icon;
+    let icon
     if (this.props.data.$ && this.props.data.$.type) {
       switch (this.props.data.$.type) {
         case 'Region':
@@ -72,52 +72,55 @@ export default class TreeListItem extends React.Component {
           })
         }
       >
-        {
-          this.props.data.childGroups &&
-          this.props.data.childGroups.length > 0 ||
-          this.props.data.feature &&
-          this.props.data.feature.length > 0  ? (
-            <TouchableOpacity
-              style={[styles.btn]}
-              onPress={() => this.showChild(!this.state.isVisible)}
-            >
-              <Animated.Image
-                resizeMode={'contain'}
-                style={[
-                  styles.arrowImg,
-                  {
-                    transform: [
-                      // scale, scaleX, scaleY, translateX, translateY, rotate, rotateX, rotateY, rotateZ
-                      {
-                        rotate: this.state.imgRotate.interpolate({
-                          // 旋转，使用插值函数做值映射
-                          inputRange: [-1, 1],
-                          outputRange: ['-180deg', '180deg'],
-                        }),
-                      },
-                    ],
-                  },
-                ]}
-                source={arrowImg}
-              />
-            </TouchableOpacity>
-          ) : (
-            <View style={styles.arrowImg} />
-          )
-        }
-        {icon && <Image resizeMode={'contain'} source={icon} style={[styles.icon, this.props.iconStyle]}/>}
-        <Text style={[styles.title, icon && {marginLeft: scaleSize(20)}]}>{this.props.data.name || (this.props.data.$.code + ' ' + this.props.data.$.name)}</Text>
+        {(this.props.data.childGroups &&
+          this.props.data.childGroups.length > 0) ||
+        (this.props.data.feature && this.props.data.feature.length > 0) ? (
+          <TouchableOpacity
+            style={[styles.btn]}
+            onPress={() => this.showChild(!this.state.isVisible)}
+          >
+            <Animated.Image
+              resizeMode={'contain'}
+              style={[
+                styles.arrowImg,
+                {
+                  transform: [
+                    // scale, scaleX, scaleY, translateX, translateY, rotate, rotateX, rotateY, rotateZ
+                    {
+                      rotate: this.state.imgRotate.interpolate({
+                        // 旋转，使用插值函数做值映射
+                        inputRange: [-1, 1],
+                        outputRange: ['-180deg', '180deg'],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+              source={arrowImg}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.arrowImg} />
+        )}
+        {icon && (
+          <Image
+            resizeMode={'contain'}
+            source={icon}
+            style={[styles.icon, this.props.iconStyle]}
+          />
+        )}
+        <Text style={[styles.title, icon && { marginLeft: scaleSize(20) }]}>
+          {this.props.data.name ||
+            this.props.data.$.code + ' ' + this.props.data.$.name}
+        </Text>
       </TouchableOpacity>
     )
   }
 
   renderChildGroups = () => {
-    let childGroups = this.props.data.childGroups || this.props.data.feature || []
-    if (
-      !childGroups ||
-      childGroups.length === 0 ||
-      !this.state.isVisible
-    )
+    let childGroups =
+      this.props.data.childGroups || this.props.data.feature || []
+    if (!childGroups || childGroups.length === 0 || !this.state.isVisible)
       return null
     let children = []
     for (let i = 0; i < childGroups.length; i++) {
@@ -127,7 +130,7 @@ export default class TreeListItem extends React.Component {
       } else {
         children.push(
           <TreeListItem
-            key={data.key || data.path || data.$ && data.$.name || i}
+            key={data.key || data.path || (data.$ && data.$.name) || i}
             data={data}
             style={this.props.style}
             iconStyle={this.props.iconStyle}

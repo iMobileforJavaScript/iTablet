@@ -11,6 +11,58 @@ function getStart(type, params) {
   let data = [],
     buttons = []
   switch (type) {
+    case ConstToolType.MAP_EDIT_START:
+      data = [
+        {
+          key: constants.WORKSPACE,
+          title: constants.WORKSPACE,
+          action: openWorkspace,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_open.png'),
+        },
+        {
+          key: constants.OPEN,
+          title: constants.OPEN,
+          action: openMap,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_open.png'),
+        },
+        {
+          key: constants.CREATE,
+          title: constants.CREATE,
+          size: 'large',
+          action: create,
+          image: require('../../../../assets/mapTools/icon_creat.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_creat.png'),
+        },
+        {
+          key: constants.HISTORY,
+          title: constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
+        {
+          key: constants.BASE_MAP,
+          title: constants.BASE_MAP,
+          size: 'large',
+          action: changeBaseLayer,
+          image: require('../../../../assets/mapTools/icon_base.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_base.png'),
+        },
+        {
+          key: constants.ADD,
+          title: constants.ADD,
+          size: 'large',
+          action: add,
+          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        },
+      ]
+      break
     case ConstToolType.MAP3D_START:
       data = [
         {
@@ -117,14 +169,14 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_THEME_START:
       data = [
-        {
-          key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
-          action: openWorkspace,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-        },
+        // {
+        //   key: constants.WORKSPACE,
+        //   title: constants.WORKSPACE,
+        //   action: openWorkspace,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -137,7 +189,7 @@ function getStart(type, params) {
           key: constants.CREATE,
           title: constants.CREATE,
           size: 'large',
-          action: create,
+          action: add,
           image: require('../../../../assets/mapTools/icon_words.png'),
           selectedImage: require('../../../../assets/mapTools/icon_words.png'),
         },
@@ -157,14 +209,14 @@ function getStart(type, params) {
           image: require('../../../../assets/mapTools/icon_free_line.png'),
           selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: add,
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_free_line.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+        // },
       ]
       break
   }
@@ -208,8 +260,9 @@ function openWorkspace(cb) {
 function openMap() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
+  let data = []
   _params.getMaps(list => {
-    let data = [
+    data = [
       {
         title: '地图',
         data: list,

@@ -189,9 +189,10 @@ const styles = StyleSheet.create({
   },
   pointer: {
     position: 'absolute',
-    top: -scaleSize(10),
+    top: 0,
   },
   line: {
+    top: '55%',
     position: 'absolute',
     height: scaleSize(10),
     width: '95%',

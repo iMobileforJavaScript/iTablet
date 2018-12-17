@@ -5,7 +5,7 @@ import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 import Home from './Home'
-import Mine,{
+import Mine, {
   MyService,
   MyLocalData,
   MyOnlineData,
