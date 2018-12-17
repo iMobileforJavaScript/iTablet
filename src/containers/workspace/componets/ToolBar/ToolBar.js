@@ -293,6 +293,70 @@ export default class ToolBar extends React.Component {
             this.showToolbar()
           }
           break
+        case ConstToolType.MAP_STYLE:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.LINECOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.POINTCOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.REGIONBEFORECOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.REGIONAFTERCOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.GRID_STYLE:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[4]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[4]
+            this.showToolbar()
+          }
+          break
       }
     })
   }
@@ -550,6 +614,13 @@ export default class ToolBar extends React.Component {
         ]
         break
       case ConstToolType.MAP_STYLE:
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ]
+        break
+      case ConstToolType.GRID_STYLE:
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
@@ -2313,16 +2384,14 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

@@ -308,7 +308,7 @@ export default class MT_layerManager extends React.Component {
     if (GLOBAL.Type === constants.MAP_EDIT) {
       SMap.setLayerEditable(data.path, true)
       if (data.type === 83) {
-        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
           containerType: 'list',
           isFullScreen: false,
           height: ConstToolType.HEIGHT[4],
@@ -318,7 +318,7 @@ export default class MT_layerManager extends React.Component {
           containerType: 'symbol',
           isFullScreen: false,
           column: 4,
-          height: ConstToolType.HEIGHT[2],
+          height: ConstToolType.THEME_HEIGHT[3],
         })
       }
       GLOBAL.toolBox.showFullMap()
