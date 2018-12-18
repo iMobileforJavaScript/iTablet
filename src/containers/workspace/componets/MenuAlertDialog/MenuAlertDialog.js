@@ -29,6 +29,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '表达式',
       btntitle: '表达式',
       action: () => {
+        this.setSelectedMenu('表达式')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -43,6 +44,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '颜色方案',
       btntitle: '颜色方案',
       action: () => {
+        this.setSelectedMenu('颜色方案')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -61,6 +63,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '表达式',
       btntitle: '表达式',
       action: () => {
+        this.setSelectedMenu('表达式')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -75,6 +78,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '分段方法',
       btntitle: '分段方法',
       action: () => {
+        this.setSelectedMenu('分段方法')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -87,6 +91,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '颜色方案',
       btntitle: '颜色方案',
       action: () => {
+        this.setSelectedMenu('颜色方案')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -105,6 +110,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '表达式',
       btntitle: '表达式',
       action: () => {
+        this.setSelectedMenu('表达式')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -119,6 +125,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '背景形状',
       btntitle: '背景形状',
       action: () => {
+        this.setSelectedMenu('背景形状')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -133,6 +140,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '字体',
       btntitle: '字体',
       action: () => {
+        this.setSelectedMenu('字体')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -147,6 +155,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '字号',
       btntitle: '字号',
       action: () => {
+        this.setSelectedMenu('字号')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -161,6 +170,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '旋转角度',
       btntitle: '旋转角度',
       action: () => {
+        this.setSelectedMenu('旋转角度')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -175,6 +185,7 @@ export default class MenuAlertDialog extends React.Component {
       key: '颜色',
       btntitle: '颜色',
       action: () => {
+        this.setSelectedMenu('颜色')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
@@ -193,6 +204,7 @@ export default class MenuAlertDialog extends React.Component {
       type: '',
       childrens: [],
       visible: false,
+      selectedMenu: '',
     }
   }
 
@@ -226,6 +238,13 @@ export default class MenuAlertDialog extends React.Component {
   setMenuType = menuType => {
     this.setState({
       type: menuType,
+      selectedMenu: '',
+    })
+  }
+
+  setSelectedMenu(menu) {
+    this.setState({
+      selectedMenu: menu,
     })
   }
 
@@ -243,18 +262,32 @@ export default class MenuAlertDialog extends React.Component {
     // this.props.showFullMap && this.props.showFullMap(false)
   }
 
-  renderItem({ item }) {
-    return (
-      <TouchableHighlight
-        style={styles.btn}
-        activeOpacity={0.9}
-        underlayColor="#4680DF"
-        // underlayColor = {'rgba(70,128,223,0.9)'}
-        onPress={item.action}
-      >
-        <Text style={styles.btnTitle}>{item.btntitle}</Text>
-      </TouchableHighlight>
-    )
+  renderItem(item) {
+    if (this.state.selectedMenu == item.key) {
+      return (
+        <TouchableHighlight
+          style={styles.selectedbtn}
+          activeOpacity={0.9}
+          underlayColor="#4680DF"
+          // underlayColor = {'rgba(70,128,223,0.9)'}
+          onPress={item.action}
+        >
+          <Text style={styles.btnTitle}>{item.btntitle}</Text>
+        </TouchableHighlight>
+      )
+    } else {
+      return (
+        <TouchableHighlight
+          style={styles.btn}
+          activeOpacity={0.9}
+          underlayColor="#4680DF"
+          // underlayColor = {'rgba(70,128,223,0.9)'}
+          onPress={item.action}
+        >
+          <Text style={styles.btnTitle}>{item.btntitle}</Text>
+        </TouchableHighlight>
+      )
+    }
   }
   itemSeparator = () => {
     return <View style={styles.itemSeparator} />
@@ -282,7 +315,8 @@ export default class MenuAlertDialog extends React.Component {
             <View style={styles.dialogStyle}>
               <FlatList
                 data={this.state.childrens}
-                renderItem={this.renderItem}
+                renderItem={({ item }) => this.renderItem(item)}
+                ItemSeparatorComponent={this.itemSeparator.bind(this)}
               />
             </View>
           </View>
@@ -311,6 +345,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
   },
+  selectedbtnTitle: {
+    color: 'white',
+    fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: '#4680DF',
+    textAlign: 'center',
+  },
   btn: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -318,5 +358,17 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     minWidth: scaleSize(100),
     width: scaleSize(300),
+  },
+  selectedbtn: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: scaleSize(80),
+    backgroundColor: '#4680DF',
+    minWidth: scaleSize(100),
+    width: scaleSize(300),
+  },
+  itemSeparator: {
+    height: scaleSize(5),
+    backgroundColor: 'transparent',
   },
 })

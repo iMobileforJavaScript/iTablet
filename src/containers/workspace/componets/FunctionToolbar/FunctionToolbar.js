@@ -622,6 +622,9 @@ export default class FunctionToolbar extends React.Component {
             title: '更多',
             size: 'large',
             selectMode: 'flash',
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE)
+            },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),
           },
