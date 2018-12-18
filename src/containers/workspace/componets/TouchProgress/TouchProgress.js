@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, PanResponder, Image } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
-import { SCartography } from 'imobile_for_reactnative'
+import { SCartography, SThemeCartography } from 'imobile_for_reactnative'
+import constants from '../../constants'
 
 const positionWidth = screen.deviceWidth //设备的宽度
 
@@ -100,6 +101,13 @@ export default class TouchProgress extends Component {
     let pointAngle = (x / (positionWidth - scaleSize(60))) * 360
     let fillOpaqueRate = (x / (positionWidth - scaleSize(60))) * 100
     let gridStyle = (x / (positionWidth - scaleSize(60))) * 200
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      let _params = {
+        LayerName: this.props.currentLayer.caption,
+        FontSize: pointSize / 5,
+      }
+      SThemeCartography.setUniformLabelFontSize(_params)
+    }
     switch (layerType) {
       case 1:
         if (this.props.selectName === '大小') {

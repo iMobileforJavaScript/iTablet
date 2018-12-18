@@ -5,12 +5,12 @@
 */
 
 import * as React from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, Alert } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/componets'
-import { Action, SMap } from 'imobile_for_reactnative'
+import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item } from './components'
 import { ConstToolType } from '../../constants'
 import NavigationService from '../NavigationService'
@@ -323,6 +323,24 @@ export default class MT_layerManager extends React.Component {
       }
       GLOBAL.toolBox.showFullMap()
       NavigationService.goBack()
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
+      switch (data.themeType) {
+        case ThemeType.UNIQUE:
+          NavigationService.goBack()
+          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+          break
+        case ThemeType.RANGE:
+          NavigationService.goBack()
+          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+          break
+        case ThemeType.LABEL:
+          NavigationService.goBack()
+          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+          break
+        default:
+          Alert.alert('提示:请选择专题图层。')
+          break
+      }
     }
   }
 

@@ -11,7 +11,7 @@ function showToast() {
 
 /** 设置分段模式 **/
 function setRangeMode() {
-  return SThemeCartography.createAndRemoveThemeRangeMap(_params)
+  return SThemeCartography.modifyThemeRangeMap(_params)
 }
 
 function getRangeMode() {
