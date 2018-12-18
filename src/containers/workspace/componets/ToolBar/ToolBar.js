@@ -1,6 +1,5 @@
 import React from 'react'
-import { scaleSize, screen, Toast } from '../../../../utils'
-import { color, zIndexLevel, size } from '../../../../styles'
+import { screen, Toast } from '../../../../utils'
 import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
@@ -27,7 +26,6 @@ import ToolbarData from './ToolbarData'
 import EditControlBar from './EditControlBar'
 import {
   View,
-  StyleSheet,
   TouchableOpacity,
   TouchableHighlight,
   Image,
@@ -39,10 +37,7 @@ import {
   SMap,
   SScene,
   Action,
-  DatasetType,
   SCollector,
-  GeoStyle,
-  SMCollectorType,
   EngineType,
   SThemeCartography,
   SOnlineService,
@@ -61,6 +56,8 @@ import ColorTableList from '../../../../components/ColorTableList'
 import { ColorBtn } from '../../../../components/mapTools'
 import { FileTools } from '../../../../native'
 
+import styles from './styles'
+
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -70,8 +67,6 @@ const symbol = 'symbol'
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
-// 地图按钮栏默认高度
-const BUTTON_HEIGHT = scaleSize(80)
 
 let isSharing = false
 
@@ -170,6 +165,7 @@ export default class ToolBar extends React.Component {
       // 实时更新params
       ToolbarData.setParams({
         setToolbarVisible: this.setVisible,
+        setLastState: this.setLastState,
         ...this.props,
       })
     }
@@ -293,6 +289,70 @@ export default class ToolBar extends React.Component {
             this.showToolbar()
           }
           break
+        case ConstToolType.MAP_STYLE:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 4 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.LINECOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.POINTCOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.REGIONBEFORECOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.REGIONAFTERCOLOR_SET:
+          if (orientation === 'PORTRAIT') {
+            this.setState({ column: 8 })
+            this.height = ConstToolType.THEME_HEIGHT[3]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[1]
+            this.setState({ column: 8 })
+            this.showToolbar()
+          }
+          break
+        case ConstToolType.GRID_STYLE:
+          if (orientation === 'PORTRAIT') {
+            this.height = ConstToolType.HEIGHT[4]
+            this.showToolbar()
+          } else {
+            this.height = ConstToolType.HEIGHT[4]
+            this.showToolbar()
+          }
+          break
       }
     })
   }
@@ -314,6 +374,7 @@ export default class ToolBar extends React.Component {
     // toolbarData = this.getCollectionData(type)
     toolbarData = ToolbarData.getTabBarData(type, {
       setToolbarVisible: this.setVisible,
+      setLastState: this.setLastState,
       ...this.props,
     })
     data = toolbarData.data
@@ -360,77 +421,6 @@ export default class ToolBar extends React.Component {
         // }
         // buttons = [ToolbarBtnType.CANCEL]
         break
-      // 第一级采集选项
-      case ConstToolType.MAP_COLLECTION_POINT:
-      case ConstToolType.MAP_COLLECTION_LINE:
-      case ConstToolType.MAP_COLLECTION_REGION: {
-        let gpsPointType =
-          type === ConstToolType.MAP_COLLECTION_POINT
-            ? SMCollectorType.POINT_GPS
-            : type === ConstToolType.MAP_COLLECTION_LINE
-              ? SMCollectorType.LINE_GPS_POINT
-              : SMCollectorType.REGION_GPS_POINT
-        data.push({
-          key: 'gpsPoint',
-          title: 'GPS打点',
-          action: () => this.showCollection(gpsPointType),
-          size: 'large',
-          image: require('../../../../assets/function/icon_function_base_map.png'),
-        })
-        if (type !== ConstToolType.MAP_COLLECTION_POINT) {
-          let gpsPathType =
-            type === ConstToolType.MAP_COLLECTION_LINE
-              ? SMCollectorType.LINE_GPS_PATH
-              : SMCollectorType.REGION_GPS_PATH
-          data.push({
-            key: 'gpsPath',
-            title: 'GPS轨迹',
-            action: () => this.showCollection(gpsPathType),
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          })
-        }
-        let pointDrawType =
-          type === ConstToolType.MAP_COLLECTION_POINT
-            ? SMCollectorType.POINT_HAND
-            : type === ConstToolType.MAP_COLLECTION_LINE
-              ? SMCollectorType.LINE_HAND_POINT
-              : SMCollectorType.REGION_HAND_POINT
-        data.push({
-          key: 'pointDraw',
-          title: '点绘式',
-          action: () => this.showCollection(pointDrawType),
-          size: 'large',
-          image: require('../../../../assets/function/icon_function_base_map.png'),
-        })
-        if (type !== ConstToolType.MAP_COLLECTION_POINT) {
-          let freeDrawType =
-            type === ConstToolType.MAP_COLLECTION_LINE
-              ? SMCollectorType.LINE_HAND_PATH
-              : SMCollectorType.REGION_HAND_PATH
-          data.push({
-            key: 'freeDraw',
-            title: '自由式',
-            action: () => this.showCollection(freeDrawType),
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          })
-        } else {
-          data.push({
-            key: 'takePhoto',
-            title: '拍照',
-            action: () => this.showCollection(type),
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          })
-        }
-        buttons = [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.FLEX,
-          ToolbarBtnType.PLACEHOLDER,
-        ]
-        break
-      }
       case ConstToolType.MAP_EDIT_REGION:
         data = [
           {
@@ -550,6 +540,13 @@ export default class ToolBar extends React.Component {
         ]
         break
       case ConstToolType.MAP_STYLE:
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.MENU,
+          ToolbarBtnType.PLACEHOLDER,
+        ]
+        break
+      case ConstToolType.GRID_STYLE:
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
@@ -956,100 +953,9 @@ export default class ToolBar extends React.Component {
     this.isBoxShow = true
   }
 
-  /** 创建采集 **/
-  createCollector = async type => {
-    // 风格
-    let geoStyle = new GeoStyle()
-    // geoStyle.setPointColor(0, 255, 0)
-    // //线颜色
-    // geoStyle.setLineColor(0, 110, 220)
-    // //面颜色
-    // geoStyle.setFillForeColor(255, 0, 0)
-    //
-    // let style = await SCollector.getStyle()
-    let mType
-    switch (type) {
-      case SMCollectorType.POINT_GPS:
-      case SMCollectorType.POINT_HAND: {
-        if (this.props.symbol.currentSymbol.type === 'marker') {
-          geoStyle.setMarkerStyle(this.props.symbol.currentSymbol.id)
-        }
-        mType = DatasetType.POINT
-        break
-      }
-      case SMCollectorType.LINE_GPS_POINT:
-      case SMCollectorType.LINE_GPS_PATH:
-      case SMCollectorType.LINE_HAND_POINT:
-      case SMCollectorType.LINE_HAND_PATH: {
-        if (this.props.symbol.currentSymbol.type === 'line') {
-          geoStyle.setLineStyle(this.props.symbol.currentSymbol.id)
-        }
-        mType = DatasetType.LINE
-        break
-      }
-      case SMCollectorType.REGION_GPS_POINT:
-      case SMCollectorType.REGION_GPS_PATH:
-      case SMCollectorType.REGION_HAND_POINT:
-      case SMCollectorType.REGION_HAND_PATH: {
-        if (this.props.symbol.currentSymbol.type === 'fill') {
-          geoStyle.setFillStyle(this.props.symbol.currentSymbol.id)
-        }
-        mType = DatasetType.REGION
-        break
-      }
-    }
-    //设置绘制风格
-    SCollector.setStyle(geoStyle)
-
-    let datasetName = this.props.symbol.currentSymbol.type
-      ? this.props.symbol.currentSymbol.type +
-        '_' +
-        this.props.symbol.currentSymbol.id
-      : ''
-    let datasourcePath =
-      this.props.user &&
-      this.props.user.currentUser &&
-      this.props.user.currentUser.name
-        ? ConstPath.UserPath +
-          this.props.user.currentUser.name +
-          ConstPath.RelativePath.Datasource
-        : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
-    let datasourceName = (this.props.map && this.props.map.currentMap) || ''
-
-    SCollector.setDataset({
-      datasourcePath:
-        this.props.collection.datasourceParentPath || datasourcePath,
-      datasourceName: this.props.collection.datasourceName || datasourceName,
-      datasetName,
-      datasetType: mType,
-      style: geoStyle,
-    }).then(() => {
-      SCollector.startCollect(type)
-      this.props.getLayers(-1, layers => {
-        this.props.setCurrentLayer(layers.length > 0 && layers[0])
-      })
-    })
-  }
-
-  /** 采集分类点击事件 **/
-  showCollection = type => {
-    let { data, buttons } = this.getData(type)
-    // this.lastType = this.state.type
+  /** 记录Toolbar上一次的state **/
+  setLastState = () => {
     Object.assign(this.lastState, this.state, { height: this.height })
-    this.setState(
-      {
-        type: type,
-        data: data,
-        buttons: buttons,
-        // height: ConstToolType.HEIGHT[0],
-        column: data.length,
-      },
-      () => {
-        this.height = ConstToolType.HEIGHT[0]
-        this.createCollector(type)
-        this.showToolbar()
-      },
-    )
   }
 
   /** 三维单体触控属性事件 */
@@ -1216,11 +1122,13 @@ export default class ToolBar extends React.Component {
         },
         () => {
           this.showToolbarAndBox(isShow)
+          params.cb && params.cb()
           !isShow && this.props.existFullMap && this.props.existFullMap()
         },
       )
     } else {
       this.showToolbarAndBox(isShow)
+      params.cb && params.cb()
       !isShow && this.props.existFullMap && this.props.existFullMap()
     }
   }
@@ -2336,114 +2244,3 @@ export default class ToolBar extends React.Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  fullContainer: {
-    flexDirection: 'column',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    height: screen.deviceHeight,
-    backgroundColor: '#rgba(0, 0, 0, 0)',
-    zIndex: zIndexLevel.FOUR,
-  },
-  wrapContainer: {
-    flexDirection: 'column',
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    backgroundColor: '#rgba(0, 0, 0, 0)',
-    zIndex: zIndexLevel.FOUR,
-  },
-  overlay: {
-    flex: 1,
-    backgroundColor: '#rgba(0, 0, 0, 0)',
-    // zIndex: zIndexLevel.FOUR,
-  },
-  containers: {
-    flexDirection: 'column',
-    width: '100%',
-    maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
-    minHeight: BUTTON_HEIGHT,
-    backgroundColor: color.theme,
-    // zIndex: zIndexLevel.FOUR,
-  },
-  buttonz: {
-    flexDirection: 'row',
-    height: BUTTON_HEIGHT,
-    paddingHorizontal: scaleSize(20),
-    backgroundColor: color.theme,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  button: {
-    // flex: 1,
-    height: scaleSize(60),
-    width: scaleSize(60),
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: color.theme,
-  },
-  img: {
-    height: scaleSize(40),
-    width: scaleSize(40),
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sectionHeader: {
-    fontSize: 23,
-    fontWeight: 'bold',
-    backgroundColor: color.theme,
-    color: 'white',
-  },
-  item: {
-    padding: 10,
-    fontSize: 18,
-    paddingLeft: 20,
-    height: 44,
-    backgroundColor: color.theme,
-    color: 'white',
-  },
-  themeitem: {
-    padding: 10,
-    fontSize: 25,
-    paddingLeft: 20,
-    height: 60,
-    backgroundColor: color.theme,
-    color: 'white',
-  },
-  cell: {
-    // flex: 1,
-  },
-  tabsView: {
-    height: ConstToolType.HEIGHT[3] - BUTTON_HEIGHT,
-  },
-  table: {
-    flex: 1,
-    paddingHorizontal: scaleSize(30),
-    alignItems: 'center',
-    backgroundColor: color.subTheme,
-  },
-  list: {
-    width: scaleSize(300),
-    position: 'absolute',
-    top: '30%',
-    left: '30%',
-    right: '30%',
-    backgroundColor: 'rgba(48,48,48,0.85)',
-  },
-  text: {
-    color: 'white',
-    fontSize: size.fontSize.fontSizeLg,
-    backgroundColor: 'transparent',
-    textAlign: 'center',
-  },
-  btn: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: scaleSize(80),
-    backgroundColor: 'transparent',
-    minWidth: scaleSize(100),
-    width: scaleSize(300),
-  },
-})

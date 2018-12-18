@@ -44,8 +44,7 @@ function getMapMore(type, params) {
           title: constants.SHARE,
           size: 'large',
           action: shareMap3D,
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+          image: require('../../../../assets/mapTools/icon_share.png'),
         },
       ]
       break
@@ -57,8 +56,7 @@ function getMapMore(type, params) {
           title: constants.CLOSE,
           action: closeMap,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+          image: require('../../../../assets/mapTools/icon_close.png'),
         },
         {
           key: constants.SAVE,
@@ -66,24 +64,21 @@ function getMapMore(type, params) {
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_words.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words.png'),
+          image: require('../../../../assets/mapTools/icon_save.png'),
         },
         {
           key: constants.SAVE_AS,
           title: constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
+          image: require('../../../../assets/mapTools/icon_save_as.png'),
         },
         {
           key: constants.SHARE,
           title: constants.SHARE,
           size: 'large',
           action: shareMap,
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
+          image: require('../../../../assets/mapTools/icon_share.png'),
         },
       ]
       break

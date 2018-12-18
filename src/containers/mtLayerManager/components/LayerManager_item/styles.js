@@ -45,7 +45,7 @@ export default StyleSheet.create({
   btnm: {
     height: scaleSize(50),
     width: scaleSize(100),
-    right: 0,
+    marginRight: 0,
     justifyContent: 'center',
     alignItems: 'center',
   },

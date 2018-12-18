@@ -393,7 +393,7 @@ export default class FunctionToolbar extends React.Component {
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     }
   }
@@ -654,12 +654,12 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '采集',
             action: this.showSymbol,
-            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+            image: require('../../../../assets/function/icon_function_symbol.png'),
           },
           {
             title: '编辑',
             action: this.showEdit,
-            image: require('../../../../assets/function/icon_function_edit.png'),
+            image: require('../../../../assets/function/icon_function_Tagging.png'),
           },
           {
             title: '工具',
