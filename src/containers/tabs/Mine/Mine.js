@@ -94,10 +94,10 @@ export default class Mine extends Component {
                 color: 'white',
               }}
               onPress={() => {
-                // NavigationService.navigate('GetBack')
+                NavigationService.navigate('MyOnlineData')
               }}
             >
-              本地数据
+              在线数据
             </Text>
             {this._renderLine()}
             <Text

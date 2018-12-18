@@ -222,7 +222,6 @@ export default class FunctionToolbar extends React.Component {
       SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
-          // SScene.setAllLayersSelection(false)
           this.props.showFullMap && this.props.showFullMap(true)
           // TODO 根据符号类型改变ToolBox内容
           toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
@@ -244,7 +243,7 @@ export default class FunctionToolbar extends React.Component {
           ? ConstToolType.HEIGHT[1]
           : ConstToolType.HEIGHT[0]
       SScene.checkoutListener('startMeasure')
-      SScene.getLayerList().then(layerList => {
+      SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
           this.props.showFullMap && this.props.showFullMap(true)
@@ -255,8 +254,6 @@ export default class FunctionToolbar extends React.Component {
             column: column,
             height: height,
           })
-          toolRef.getOldLayerList(layerList)
-          // SScene.setAllLayersSelection(false)
         }
       })
     })
@@ -622,6 +619,9 @@ export default class FunctionToolbar extends React.Component {
             title: '更多',
             size: 'large',
             selectMode: 'flash',
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE)
+            },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),
           },

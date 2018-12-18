@@ -735,9 +735,12 @@ export default class ToolBar extends React.Component {
     }).start()
     this.isBoxShow = true
 
-    let list = await SThemeCartography.getThemeExpressByUdb(
-      this.state.themeUdbPath,
-      this.state.themeDatasetName,
+    // let list = await SThemeCartography.getThemeExpressByUdb(
+    //   this.state.themeUdbPath,
+    //   this.state.themeDatasetName,
+    // )
+    let list = await SThemeCartography.getThemeExpressByLayerName(
+      GLOBAL.currentLayer.caption,
     )
     let datalist = [
       {
@@ -1438,15 +1441,12 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
           UniqueExpression: item.title,
           ColorGradientType: this.state.themeColor,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
+          LayerName: GLOBAL.currentLayer.caption,
         }
         // await SThemeCartography.setUniqueExpression(Params)
-        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+        await SThemeCartography.modifyThemeUniqueMap(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR) {
       //单值专题图颜色表
@@ -1455,14 +1455,11 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
           UniqueExpression: this.state.themeExpress,
           ColorGradientType: item.key,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
+          LayerName: GLOBAL.currentLayer.caption,
         }
-        await SThemeCartography.createAndRemoveThemeUniqueMap(Params)
+        await SThemeCartography.modifyThemeUniqueMap(Params)
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
@@ -1473,12 +1470,8 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          // DatasourceAlias: this.state.themeDatasourceAlias,
-          // DatasetName: this.state.themeDatasetName,
           RangeExpression: item.title,
-          // ColorGradientType: this.state.themeColor,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
+          LayerName: GLOBAL.currentLayer.caption,
         }
         await SThemeCartography.setRangeExpression(Params)
       }.bind(this)())
@@ -1489,16 +1482,13 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          DatasourceAlias: this.state.themeDatasourceAlias,
-          DatasetName: this.state.themeDatasetName,
           RangeExpression: this.state.themeExpress,
           ColorGradientType: item.key,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
+          LayerName: GLOBAL.currentLayer.caption,
           RangeMode: 'EQUALINTERVAL',
           RangeParameter: '32.0',
         }
-        await SThemeCartography.createAndRemoveThemeRangeMap(Params)
+        await SThemeCartography.modifyThemeRangeMap(Params)
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
@@ -1510,8 +1500,7 @@ export default class ToolBar extends React.Component {
       ;(async function() {
         let Params = {
           LabelExpression: item.title,
-          // LayerName: 'Countries@Countries#1',
-          LayerIndex: '0',
+          LayerName: GLOBAL.currentLayer.caption,
         }
         await SThemeCartography.setUniformLabelExpression(Params)
       }.bind(this)())
@@ -1844,20 +1833,17 @@ export default class ToolBar extends React.Component {
             menutoolRef.setMenuType(type)
           }
 
-          if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             let Params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
               RangeExpression: this.state.themeExpress,
               ColorGradientType: this.state.themeColor,
-              // LayerName: 'Countries@Countries#1',
-              LayerIndex: '0',
+              LayerName: GLOBAL.currentLayer.caption,
               RangeMode: item.key,
               RangeParameter: '32.0',
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ===
+            this.state.type ==
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE
           ) {
             let Params = {
@@ -1866,7 +1852,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ===
+            this.state.type ==
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME
           ) {
             let Params = {
@@ -1875,7 +1861,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ===
+            this.state.type ==
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION
           ) {
             let Params = {
@@ -1884,7 +1870,7 @@ export default class ToolBar extends React.Component {
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ===
+            this.state.type ==
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
           ) {
             let Params = {
@@ -1897,6 +1883,21 @@ export default class ToolBar extends React.Component {
         item.action()
         break
     }
+  }
+
+  showMenuAlertDialog = type => {
+    let menutoolRef =
+      this.props.getMenuAlertDialogRef && this.props.getMenuAlertDialogRef()
+    if (menutoolRef && type !== '') {
+      menutoolRef.setMenuType(type)
+    }
+    this.props.showFullMap && this.props.showFullMap(true)
+    menutoolRef && menutoolRef.showMenuDialog()
+
+    this.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+      isFullScreen: false,
+      height: ConstToolType.THEME_HEIGHT[1],
+    })
   }
 
   /** 编辑操作控制栏（撤销/重做/取消/提交） **/
@@ -2249,14 +2250,16 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen && !this.state.isTouchProgress && (
+        {this.state.isFullScreen &&
+          !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

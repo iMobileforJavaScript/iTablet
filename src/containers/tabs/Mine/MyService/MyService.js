@@ -114,7 +114,7 @@ export default class MyService extends Component {
         arrPublishServiceList: _arrPublishServiceList,
       })
     } catch (e) {
-      Toast.show('网络错误,下拉刷新数据')
+      Toast.show('网络错误')
       this.setState({ isRefreshing: false })
     }
   }
@@ -317,7 +317,7 @@ export default class MyService extends Component {
       await this._initSectionsData(_loadCount, _iServicePageSize)
     }
   }
-  _footView() {
+  _footView = () => {
     let publishLength = _arrPublishServiceList.length
     let privateLength = _arrPrivateServiceList.length
     let loadServiceCount = publishLength + privateLength
@@ -406,7 +406,7 @@ export default class MyService extends Component {
             }
             onEndReachedThreshold={0.1}
             onEndReached={this._loadData}
-            ListFooterComponent={this._footView()}
+            ListFooterComponent={this._footView}
           />
           {this._renderModal()}
         </View>

@@ -65,6 +65,7 @@ export default class Map3D extends React.Component {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.attributeListener && this.attributeListener.remove()
     this.circleFlyListen && this.circleFlyListen.remove()
+    // GLOBAL.Map3DSymbol&&SScene.clearAllLabel()
   }
 
   initListener = async () => {
@@ -179,21 +180,19 @@ export default class Map3D extends React.Component {
     }.bind(this)())
   }
 
-  back = () => {
+  back = async () => {
     try {
       this.container && this.container.setLoading(true, '正在关闭')
+      if (GLOBAL.Map3DSymbol) {
+        await SScene.clearAllLabel()
+      }
       if (GLOBAL.openWorkspace) {
-        (async function() {
-          await SScene.closeWorkspace()
-          this.container && this.container.setLoading(false)
-          NavigationService.goBack()
-        }.bind(this)())
+        await SScene.closeWorkspace()
+        this.container && this.container.setLoading(false)
+        NavigationService.goBack()
       } else {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
-      }
-      if (GLOBAL.Map3DSymbol) {
-        SScene.clearAllLabel()
       }
       this.props.setCurrentAttribute({})
       this.props.setAttributes({})

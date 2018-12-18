@@ -10,12 +10,13 @@ import {
   Switch,
 } from 'react-native'
 import styles from './styles'
-import { SScene } from 'imobile_for_reactnative'
-
+import settingData from './settingData'
 export default class setting extends Component {
   props: {
     navigation: Object,
     data: Array,
+    setSettingData: () => {},
+    settingData: any,
   }
   constructor(props) {
     super(props)
@@ -27,45 +28,24 @@ export default class setting extends Component {
   }
 
   componentDidMount() {
-    if (this.type === 'MAP_3D') {
-      this.getMap3DSettings()
+    this.getdata()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.settingData) !==
+      JSON.stringify(this.props.settingData)
+    ) {
+      this.setState({ data: this.props.settingData })
     }
   }
-  getMap3DSettings = async () => {
-    let item = await SScene.getSetting()
-    let data = [
-      {
-        titile: '基本设置',
-        visible: true,
-        index: 0,
-        data: [
-          {
-            name: '场景名称',
-            value: item.sceneNmae,
-            isShow: true,
-            index: 0,
-          },
-          {
-            name: '相机角度',
-            value: item.heading,
-            isShow: true,
-            index: 0,
-          },
-          {
-            name: '视图模式',
-            value: '球面',
-            isShow: true,
-            index: 0,
-          },
-          {
-            name: '地形缩放比例',
-            value: 1,
-            isShow: true,
-            index: 0,
-          },
-        ],
-      },
-    ]
+
+  getdata = async () => {
+    let data
+    if (this.type === 'MAP_3D') {
+      // eslint-disable-next-line
+      data = await settingData.getMap3DSettings()
+    }
     this.setState({ data: data })
   }
 
@@ -144,6 +124,8 @@ export default class setting extends Component {
         renderItem={this.renderListItem}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
+        onRefresh={this.getdata}
+        refreshing={false}
       />
     )
   }

@@ -4,8 +4,8 @@ import * as Util from '../../../../utils/constUtil'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: "space-between",
     borderStyle: 'solid',
     borderTopWidth: 0,
     borderLeftWidth: 0,
@@ -14,8 +14,9 @@ export default StyleSheet.create({
     borderColor: '#bbbbbb',
   },
   rowOne: {
+    flex: 1,
     height: 46,
-    width: Util.WIDTH,
+    // width: Util.WIDTH,
     padding: 3,
     display: 'flex',
     flexDirection: 'row',
