@@ -45,4 +45,7 @@ export default {
   DEFAULT: 'DEFAULT',
   CREATE: 'CREATE',
   LOAD: 'LOAD',
+
+  // 时间
+  ANIMATED_DURATION: 300,
 }

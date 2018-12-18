@@ -17,4 +17,6 @@ export default {
   WORKSPACE_DEFAULT_OPEN_SUCCESS: '已为您切换到默认工作空间工作空间',
   WORKSPACE_DEFAULT_OPEN_FAILED: '切换默认工作空间失败',
   WORKSPACE_ALREADY_OPENED: '该工作空间已经打开',
+
+  OUT_OF_MAP_BOUNDS: '不再地图范围内',
 }

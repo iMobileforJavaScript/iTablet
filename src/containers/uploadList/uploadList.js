@@ -68,7 +68,7 @@ export default class UpLoadList extends Component {
         } else {
           let filter = 'sxmu,smwu,udb'
           let fileList = await Utility.getPathListByFilter(absolutePath, {
-            type: filter,
+            extension: filter,
           })
           this.setState({
             data: fileList,

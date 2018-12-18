@@ -198,18 +198,22 @@ public class FileTools extends ReactContextBaseJavaModule {
                     name = n;
                 }
                 boolean isDirectory = files[i].isDirectory();
+                String type = "";
+                if (filter.toHashMap().containsKey("type")) {
+                    type = filter.getString("type");
+                }
 
                 if (!filter.toHashMap().containsKey("name")) {
                     String filterName = filter.getString("name").toLowerCase().trim();
                     // 判断文件名
-                    if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
+                    if (isDirectory && type.equals("Directory") || filterName.equals("") || !name.contains(filterName)) {
                         continue;
                     }
                 }
 
                 boolean isExist = false;
-                if (filter.toHashMap().containsKey("type")) {
-                    String filterType = filter.getString("type").toLowerCase();
+                if (filter.toHashMap().containsKey("extension")) {
+                    String filterType = filter.getString("extension").toLowerCase();
                     String[] types = filterType.split(",");
                     for (int j = 0; j < types.length; j++) {
                         String mType = types[j].trim();

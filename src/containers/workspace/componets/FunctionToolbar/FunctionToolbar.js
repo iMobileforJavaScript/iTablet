@@ -6,7 +6,7 @@
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType } from '../../../../constants'
+import { ConstToolType, Const } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
@@ -66,7 +66,7 @@ export default class FunctionToolbar extends React.Component {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
       toValue: visible ? scaleSize(20) : scaleSize(-200),
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
   }

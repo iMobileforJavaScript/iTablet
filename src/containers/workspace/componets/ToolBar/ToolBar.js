@@ -18,6 +18,7 @@ import {
   regionAfterColorSet,
   Map3DBaseMapList,
   ConstInfo,
+  Const,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -108,6 +109,8 @@ export default class ToolBar extends React.Component {
     closeWorkspace?: () => {},
     openMap?: () => {},
     closeMap?: () => {},
+    setCurrentTemplateInfo?: () => {},
+    setTemplate?: () => {},
   }
 
   static defaultProps = {
@@ -405,7 +408,7 @@ export default class ToolBar extends React.Component {
         //   //获取目录下的xml文件
         //   let absolutePath = await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)
         //   let fileList = await Utility.getPathListByFilter(absolutePath, {
-        //     type: 'xml',
+        //     extension: 'xml',
         //   })
         //   this.setState({
         //     data: fileList,
@@ -728,7 +731,7 @@ export default class ToolBar extends React.Component {
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[4],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -761,7 +764,7 @@ export default class ToolBar extends React.Component {
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[4],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -791,7 +794,7 @@ export default class ToolBar extends React.Component {
   getRangeMode = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[2],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -817,7 +820,7 @@ export default class ToolBar extends React.Component {
   getLabelBackShape = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[2],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -843,7 +846,7 @@ export default class ToolBar extends React.Component {
   getLabelFontName = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[3],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -869,7 +872,7 @@ export default class ToolBar extends React.Component {
   getLabelFontRotation = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[0],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -895,7 +898,7 @@ export default class ToolBar extends React.Component {
   getLabelFontSize = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: 0,
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = false
 
@@ -917,7 +920,7 @@ export default class ToolBar extends React.Component {
   getLabelFontColor = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[3],
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
 
@@ -1092,40 +1095,57 @@ export default class ToolBar extends React.Component {
     ) {
       let { data, buttons } = this.getData(type)
       this.originType = type
-      this.height =
+      let newHeight =
         params && typeof params.height === 'number'
           ? params.height
           : ConstToolType.HEIGHT[1]
       this.shareTo = params.shareTo || ''
-      this.setState(
-        {
-          isSelectlist: false,
-          type: type,
-          tableType: params.tableType || 'normal',
-          data: params.data || data,
-          buttons: params.buttons || buttons,
-          listSelectable: params.listSelectable || false,
-          isFullScreen:
-            params && params.isFullScreen !== undefined
-              ? params.isFullScreen
-              : DEFAULT_FULL_SCREEN,
-          column:
-            params && typeof params.column === 'number'
-              ? params.column
-              : DEFAULT_COLUMN,
-          containerType:
-            params && params.containerType
-              ? params.containerType
-              : type === ConstToolType.MAP_SYMBOL
-                ? tabs
-                : table,
-        },
-        () => {
-          this.showToolbarAndBox(isShow)
-          params.cb && params.cb()
-          !isShow && this.props.existFullMap && this.props.existFullMap()
-        },
-      )
+
+      let setData = function() {
+        this.setState(
+          {
+            isSelectlist: false,
+            type: type,
+            tableType: params.tableType || 'normal',
+            data: params.data || data,
+            buttons: params.buttons || buttons,
+            listSelectable: params.listSelectable || false,
+            isFullScreen:
+              params && params.isFullScreen !== undefined
+                ? params.isFullScreen
+                : DEFAULT_FULL_SCREEN,
+            column:
+              params && typeof params.column === 'number'
+                ? params.column
+                : DEFAULT_COLUMN,
+            containerType:
+              params && params.containerType
+                ? params.containerType
+                : type === ConstToolType.MAP_SYMBOL
+                  ? tabs
+                  : table,
+          },
+          () => {
+            if (this.height <= newHeight) {
+              this.height = newHeight
+              this.showToolbarAndBox(isShow, type)
+              !isShow && this.props.existFullMap && this.props.existFullMap()
+            }
+            params.cb && params.cb()
+          },
+        )
+      }.bind(this)
+
+      if (this.height > newHeight) {
+        this.height = newHeight
+        this.showToolbarAndBox(isShow, type)
+        !isShow && this.props.existFullMap && this.props.existFullMap()
+        setTimeout(() => {
+          setData()
+        }, Const.ANIMATED_DURATION)
+      } else {
+        setData()
+      }
     } else {
       this.showToolbarAndBox(isShow)
       params.cb && params.cb()
@@ -1133,28 +1153,28 @@ export default class ToolBar extends React.Component {
     }
   }
 
-  showToolbarAndBox = isShow => {
+  showToolbarAndBox = (isShow, type = this.state.type) => {
     // Toolbar的显示和隐藏
     if (this.isShow !== isShow) {
       isShow = isShow === undefined ? true : isShow
       Animated.timing(this.state.bottom, {
         toValue: isShow ? 0 : -screen.deviceHeight,
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
       this.isShow = isShow
     }
     // Box内容框的显示和隐藏
-    if (this.state.type === ConstToolType.MAP_THEME_PARAM) {
+    if (type === ConstToolType.MAP_THEME_PARAM) {
       Animated.timing(this.state.boxHeight, {
         toValue: 0,
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = false
     } else {
       if (JSON.stringify(this.state.boxHeight) !== this.height.toString()) {
         Animated.timing(this.state.boxHeight, {
           toValue: this.height,
-          duration: 300,
+          duration: Const.ANIMATED_DURATION,
         }).start()
       }
       this.isBoxShow = true
@@ -1167,7 +1187,7 @@ export default class ToolBar extends React.Component {
       isShow = isShow === undefined ? true : isShow
       Animated.timing(this.state.bottom, {
         toValue: isShow ? 0 : -screen.deviceHeight,
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
       this.isShow = isShow
     }
@@ -1175,7 +1195,7 @@ export default class ToolBar extends React.Component {
     if (JSON.stringify(this.state.boxHeight) !== this.height.toString()) {
       Animated.timing(this.state.boxHeight, {
         toValue: this.height,
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
     }
   }
@@ -1301,7 +1321,7 @@ export default class ToolBar extends React.Component {
   menu = () => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.isBoxShow ? 0 : this.height,
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = !this.isBoxShow
 
@@ -1340,7 +1360,7 @@ export default class ToolBar extends React.Component {
         () => {
           Animated.timing(this.state.boxHeight, {
             toValue: this.isBoxShow ? 0 : this.height,
-            duration: 300,
+            duration: Const.ANIMATED_DURATION,
           }).start()
           this.isBoxShow = !this.isBoxShow
         },
@@ -1348,7 +1368,7 @@ export default class ToolBar extends React.Component {
     } else {
       Animated.timing(this.state.boxHeight, {
         toValue: this.isBoxShow ? 0 : this.height,
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = !this.isBoxShow
     }
@@ -1612,32 +1632,37 @@ export default class ToolBar extends React.Component {
       this.props.setContainerLoading &&
         this.props.setContainerLoading(true, '正在打开模板')
       // 打开模板工作空间
-      this.props.openTemplate(item, ({ copyResult, openResult, msg }) => {
-        if (msg) {
-          this.props.setContainerLoading &&
-            this.props.setContainerLoading(false)
-          Toast.show(msg)
-        } else if (openResult) {
-          // 重新加载图层
-          this.props.getLayers({
-            type: -1,
-            isResetCurrentLayer: true,
-          })
-          this.props.setContainerLoading(true, '正在读取模板')
-          this.props.getSymbolTemplates(null, () => {
-            this.setVisible(false)
+      this.props.openTemplate(
+        { ...item, isImportWorkspace: true },
+        ({ copyResult, openResult, msg }) => {
+          if (msg) {
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
-            Toast.show('已为您切换模板')
-          })
-        } else if (!copyResult) {
-          this.props.setContainerLoading &&
-            this.props.setContainerLoading(false)
-          Toast.show('拷贝模板失败')
-        } else {
-          Toast.show('切换模板失败')
-        }
-      })
+            Toast.show(msg)
+          } else if (openResult) {
+            // 重新加载图层
+            this.props.getLayers({
+              type: -1,
+              isResetCurrentLayer: true,
+            })
+            this.props.setContainerLoading(true, '正在读取模板')
+            this.props.getSymbolTemplates(null, () => {
+              this.setVisible(false)
+              this.props.setContainerLoading &&
+                this.props.setContainerLoading(false)
+              Toast.show('已为您切换模板')
+            })
+          } else if (!copyResult) {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show('拷贝模板失败')
+          } else {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show('切换模板失败')
+          }
+        },
+      )
     } catch (error) {
       Toast.show('切换模板失败')
       this.props.setContainerLoading && this.props.setContainerLoading(false)
@@ -1716,6 +1741,9 @@ export default class ToolBar extends React.Component {
                 Toast.show(ConstInfo.WORKSPACE_ALREADY_OPENED)
                 return
               }
+
+              this.props.setCurrentTemplateInfo() // 清空当前模板
+              this.props.setTemplate() // 清空模板
               this.props.closeWorkspace().then(async () => {
                 try {
                   this.props.setContainerLoading &&
@@ -2118,7 +2146,7 @@ export default class ToolBar extends React.Component {
           }
           break
         case ToolbarBtnType.SHARE:
-          image = require('../../../../assets/mapEdit/icon-rename-white.png')
+          image = require('../../../../assets/mapTools/icon_share.png')
           action = () => {
             if (!this.props.user.currentUser.userName) {
               Toast.show('请登陆后再分享')

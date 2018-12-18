@@ -4,7 +4,7 @@ import { TreeList } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { ConstToolType } from '../../../../constants'
 
-import { SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import { ThemeType } from 'imobile_for_reactnative'
 
 export default class Temple extends React.Component {
   props: {
@@ -16,6 +16,7 @@ export default class Temple extends React.Component {
     setCurrentTemplateInfo: () => {},
     setEditLayer: () => {},
     // getSymbolTemplates: () => {},
+    setCurrentSymbol: () => {},
   }
 
   static defaultProps = {
@@ -46,7 +47,7 @@ export default class Temple extends React.Component {
     this.props.setCurrentTemplateInfo(data)
 
     // 找到对应的图层
-    let layer, type, actionType, toolbarType
+    let layer, type, toolbarType
     for (let i = 0; i < this.props.layers.length; i++) {
       let _layer = this.props.layers[i]
       if (_layer.datasetName === data.$.datasetName) {
@@ -62,30 +63,32 @@ export default class Temple extends React.Component {
     if (layer) {
       switch (type) {
         case 'Region':
-          actionType = Action.CREATEPOLYGON
-          toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_REGION
-          // toolbarType = ConstToolType.MAP_COLLECTION_REGION
+          // actionType = Action.CREATEPOLYGON
+          // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_REGION
+          toolbarType = ConstToolType.MAP_COLLECTION_REGION
           break
         case 'Line':
-          actionType = Action.CREATEPOLYLINE
-          toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_LINE
-          // toolbarType = ConstToolType.MAP_COLLECTION_LINE
+          // actionType = Action.CREATEPOLYLINE
+          // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_LINE
+          toolbarType = ConstToolType.MAP_COLLECTION_LINE
           break
         case 'Point':
-          actionType = Action.CREATEPOINT
-          toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_POINT
-          // toolbarType = ConstToolType.MAP_COLLECTION_POINT
+          // actionType = Action.CREATEPOINT
+          // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_POINT
+          toolbarType = ConstToolType.MAP_COLLECTION_POINT
           break
-        default:
-          actionType = Action.PAN
+        // default:
+        //   actionType = Action.PAN
       }
       this.props.showToolbar(true, toolbarType, {
         isFullScreen: false,
         height: ConstToolType.HEIGHT[0],
       })
-      this.props.setEditLayer(layer, () => {
-        SMap.setAction(actionType)
-      })
+      // this.props.setEditLayer(layer, () => {
+      //   SMap.setAction(actionType)
+      // })
+      let tempSymbol = Object.assign({}, data.$, { layerPath: layer.path })
+      this.props.setCurrentSymbol(tempSymbol)
     }
   }
 

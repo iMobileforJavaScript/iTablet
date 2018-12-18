@@ -123,7 +123,7 @@ export default class WorkSpaceFileList extends Component {
               break
           }
           let fileList = await Utility.getPathListByFilter(absolutePath, {
-            type: filter,
+            extension: filter,
           })
           this.setState({
             data: fileList,

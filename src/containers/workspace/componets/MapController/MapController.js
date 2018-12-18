@@ -6,9 +6,9 @@
 import * as React from 'react'
 import { View, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { scaleSize } from '../../../../utils'
-import { SMap } from 'imobile_for_reactnative'
-import { SScene } from 'imobile_for_reactnative'
+import { Const, ConstInfo } from '../../../../constants'
+import { scaleSize, Toast } from '../../../../utils'
+import { SMap, SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class MapController extends React.Component {
@@ -43,12 +43,12 @@ export default class MapController extends React.Component {
     if (visible) {
       Animated.timing(this.state.left, {
         toValue: scaleSize(20),
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
     } else {
       Animated.timing(this.state.left, {
         toValue: scaleSize(-200),
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
     }
   }
@@ -102,7 +102,9 @@ export default class MapController extends React.Component {
       this.setCompass(0)
       return
     }
-    SMap.moveToCurrent()
+    SMap.moveToCurrent().then(result => {
+      !result && Toast.show(ConstInfo.OUT_OF_MAP_BOUNDS)
+    })
   }
 
   renderCompass = () => {
