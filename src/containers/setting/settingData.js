@@ -1,5 +1,5 @@
 import { SScene } from 'imobile_for_reactnative'
-let getMap3DSettings = async () => {
+async function getMap3DSettings() {
   let item = await SScene.getSetting()
   let data = [
     {
