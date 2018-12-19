@@ -1,10 +1,10 @@
 import { NativeMethod } from '../../../../native'
-import { ConstToolType, ConstInfo } from '../../../../constants'
+import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
+import { Utility } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
-
 let _params = {}
 
 function getStart(type, params) {
@@ -110,13 +110,13 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_COLLECTION_START:
       data = [
-        {
-          key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
-          action: openWorkspace,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
-        },
+        // {
+        //   key: constants.WORKSPACE,
+        //   title: constants.WORKSPACE,
+        //   action: openWorkspace,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_open.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -263,17 +263,38 @@ function openTemplate() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-    templateList => {
-      let data = [
-        {
-          title: '打开默认工作空间',
-          data: [],
-        },
-        {
-          title: '模板',
-          data: templateList,
-        },
-      ]
+    async templateList => {
+      let isDefaultWS = false
+      let defaultWorkspacePath = await Utility.appendingHomeDirectory(
+        (_params.user && _params.user.userName
+          ? ConstPath.UserPath + _params.userName
+          : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
+      )
+
+      if (
+        _params.map &&
+        _params.map.workspace.server === defaultWorkspacePath
+      ) {
+        isDefaultWS = true
+      }
+
+      let data = isDefaultWS
+        ? [
+          {
+            title: '模板',
+            data: templateList,
+          },
+        ]
+        : [
+          {
+            title: '返回默认工作空间',
+            data: [],
+          },
+          {
+            title: '模板',
+            data: templateList,
+          },
+        ]
       _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
         containerType: 'list',
         height: ConstToolType.HEIGHT[3],
@@ -365,9 +386,9 @@ function createThemeMap() {
   Orientation.getOrientation((e, orientation) => {
     let column = orientation === 'PORTRAIT' ? 4 : 8
     let height =
-      orientation === 'PORTRAIT' ?
-        ConstToolType.HEIGHT[2] :
-        ConstToolType.HEIGHT[0]
+      orientation === 'PORTRAIT'
+        ? ConstToolType.HEIGHT[2]
+        : ConstToolType.HEIGHT[0]
 
     _params.setToolbarVisible(true, ConstToolType.MAP_THEME_CREATE, {
       containerType: 'table',

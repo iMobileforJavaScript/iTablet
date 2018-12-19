@@ -103,7 +103,7 @@ export default class TouchProgress extends Component {
     let gridStyle = (x / (positionWidth - scaleSize(60))) * 200
     if (GLOBAL.Type === constants.MAP_THEME) {
       let _params = {
-        LayerName: this.props.currentLayer.caption,
+        LayerName: this.props.currentLayer.name,
         FontSize: pointSize / 5,
       }
       SThemeCartography.setUniformLabelFontSize(_params)
@@ -114,49 +114,43 @@ export default class TouchProgress extends Component {
           if (pointSize <= 1) {
             pointSize = 1
           }
-          SCartography.setMarkerSize(pointSize, this.props.currentLayer.caption)
+          SCartography.setMarkerSize(pointSize, this.props.currentLayer.name)
         } else if (this.props.selectName === '透明度') {
-          SCartography.setMarkerAlpha(
-            pointAlpha,
-            this.props.currentLayer.caption,
-          )
+          SCartography.setMarkerAlpha(pointAlpha, this.props.currentLayer.name)
         } else if (this.props.selectName === '旋转角度') {
-          SCartography.setMarkerAngle(
-            pointAngle,
-            this.props.currentLayer.caption,
-          )
+          SCartography.setMarkerAngle(pointAngle, this.props.currentLayer.name)
         }
         break
       case 3:
         if (lineWidth <= 1) {
           lineWidth = 1
         }
-        SCartography.setLineWidth(lineWidth, this.props.currentLayer.caption)
+        SCartography.setLineWidth(lineWidth, this.props.currentLayer.name)
         break
       case 5:
         SCartography.setFillOpaqueRate(
           fillOpaqueRate,
-          this.props.currentLayer.caption,
+          this.props.currentLayer.name,
         )
         break
       case 83:
         if (this.props.selectName === '透明度') {
           SCartography.setGridOpaqueRate(
             fillOpaqueRate,
-            this.props.currentLayer.caption,
+            this.props.currentLayer.name,
           )
         } else if (this.props.selectName === '对比度') {
           if (gridStyle <= 100) {
             let gridBrigh = -(100 - gridStyle)
             SCartography.setGridBrightness(
               gridBrigh,
-              this.props.currentLayer.caption,
+              this.props.currentLayer.name,
             )
           } else if (gridStyle > 100) {
             let gridBrigh = gridStyle - 100
             SCartography.setGridBrightness(
               gridBrigh,
-              this.props.currentLayer.caption,
+              this.props.currentLayer.name,
             )
           }
         } else if (this.props.selectName === '亮度') {
@@ -164,13 +158,13 @@ export default class TouchProgress extends Component {
             let gridContrast = -(100 - gridStyle)
             SCartography.setGridContrast(
               gridContrast,
-              this.props.currentLayer.caption,
+              this.props.currentLayer.name,
             )
           } else if (gridStyle > 100) {
             let gridContrast = gridStyle - 100
             SCartography.setGridContrast(
               gridContrast,
-              this.props.currentLayer.caption,
+              this.props.currentLayer.name,
             )
           }
         }

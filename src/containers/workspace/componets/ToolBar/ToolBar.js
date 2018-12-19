@@ -1473,7 +1473,9 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.modifyThemeUniqueMap(Params)
       }.bind(this)())
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
+    ) {
       //分段专题图表达式
       this.setState({
         themeExpress: item.title,
@@ -1504,7 +1506,9 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.modifyThemeRangeMap(Params)
       }.bind(this)())
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION) {
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+    ) {
       //统一标签表达式
       this.setState({
         themeExpress: item.title,
@@ -1516,7 +1520,9 @@ export default class ToolBar extends React.Component {
         }
         await SThemeCartography.setUniformLabelExpression(Params)
       }.bind(this)())
-    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS) {
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
+    ) {
       //新建专题图数据集列表
       (async function () {
         let data = await SThemeCartography.getThemeExpressByDatasetName(item.title)
@@ -1541,12 +1547,14 @@ export default class ToolBar extends React.Component {
         },
         )
       }.bind(this)())
-    }else if (this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION) {
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
+    ) {
       //新建专题图字段列表
       this.setState({
         themeExpress: item.title,
-      });
-      (async function () {
+      })
+      ;(async function() {
         let params = {}
         let isSuccess = false
         switch (this.state.themeCreateType) {
@@ -1583,7 +1591,9 @@ export default class ToolBar extends React.Component {
               // FontSize: '15.0',
               ForeColor: '#000000',
             }
-            isSuccess = await SThemeCartography.createUniformThemeLabelMap(params)
+            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
+              params,
+            )
             break
         }
         if (isSuccess) {
@@ -1683,7 +1693,7 @@ export default class ToolBar extends React.Component {
 
   headerAction = ({ section }) => {
     (async function() {
-      if (section.title === '打开默认工作空间') {
+      if (section.title === '返回默认工作空间') {
         let defaultWorkspacePath = await Utility.appendingHomeDirectory(
           (this.props.user.userName
             ? ConstPath.UserPath + this.props.user.userName
@@ -1801,7 +1811,7 @@ export default class ToolBar extends React.Component {
       }
       SMap.openDatasource(DSParams).then(result => {
         result &&
-          SMap.openMap(item.title).then(isOpen => {
+          this.props.openMap(item.title).then(isOpen => {
             if (isOpen) {
               Toast.show('已为您切换到' + item.title)
               this.props.setCurrentMap(item)
@@ -1920,25 +1930,37 @@ export default class ToolBar extends React.Component {
               RangeParameter: '32.0',
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE) {
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE
+          ) {
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               LabelBackShape: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME) {
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME
+          ) {
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               FontName: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION) {
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION
+          ) {
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               Rotaion: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
-          } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR) {
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
+          ) {
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               Color: item.key,

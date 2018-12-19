@@ -33,7 +33,7 @@ export default StyleSheet.create({
     width: '100%',
     maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
-    backgroundColor: color.theme,
+    backgroundColor: color.subTheme,
     // zIndex: zIndexLevel.FOUR,
   },
   buttonz: {
