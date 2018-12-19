@@ -3,18 +3,85 @@ import { Image, SectionList, Text, TouchableOpacity, View } from 'react-native'
 import { Container } from '../../../../../components'
 import styles, { textHeight } from './Styles'
 import NavigationService from '../../../../NavigationService'
-
+import { FetchUtils } from '../../../../../utils'
+import Toast from '../../../../../utils/Toast'
 export default class MyOnlineMap extends Component {
   props: {
     navigation: Object,
   }
   constructor(props) {
     super(props)
-    this.scenes = this.props.navigation.getParam('scenes', [])
-    this.mapInfos = this.props.navigation.getParam('mapInfos', [])
     this.state = {
       scenes: this.props.navigation.getParam('scenes', []),
       mapInfos: this.props.navigation.getParam('mapInfos', []),
+    }
+  }
+  componentDidMount() {
+    this._loadOnlineData()
+  }
+  _showInfo = info => {
+    Toast.show(info, {
+      duration: 3500,
+      position: 100,
+      shadow: true,
+      animation: true,
+      delay: 0,
+    })
+  }
+  _loadOnlineData = async () => {
+    try {
+      let uri = this.props.navigation.getParam('uri', 'null')
+      if (uri === undefined || uri === 'null') {
+        return
+      }
+      if (this.containerRef !== undefined) {
+        this.containerRef.setLoading(true, 'Loading...')
+      }
+      let objDataJson = await FetchUtils.getObjJson(uri)
+      let arrDataItemServices = objDataJson.dataItemServices
+      let length = arrDataItemServices.length
+      let restUrl
+      for (let i = 0; i < length; i++) {
+        let dataItemServices = arrDataItemServices[i]
+        if (dataItemServices.serviceType === 'RESTMAP') {
+          restUrl = dataItemServices.address
+          break
+        }
+      }
+      if (restUrl === undefined) {
+        this._showInfo('数据没有公开已有服务，无法权限浏览')
+      } else {
+        restUrl = 'http' + restUrl.substring(5, restUrl.length) + '/maps.json'
+        let arrMapJson = await FetchUtils.getObjJson(restUrl)
+        if (arrMapJson.errorMsg !== undefined) {
+          this._showInfo('数据没有公开已有服务，无法权限浏览')
+        } else {
+          let arrMapInfos = []
+          for (let j = 0; j < arrMapJson.length; j++) {
+            let objMapJson = arrMapJson[j]
+            let mapTitle = objMapJson.name
+            let mapUrl = objMapJson.path
+            let mapThumbnail = mapUrl + '/entireImage.png?'
+            let objMapInfo = {
+              mapTitle: mapTitle,
+              mapUrl: mapUrl,
+              mapThumbnail: mapThumbnail,
+            }
+            arrMapInfos.push(objMapInfo)
+          }
+          if (arrMapInfos.length > 0) {
+            this.setState({ mapInfos: arrMapInfos })
+          } else {
+            this._showInfo('数据没有服务')
+          }
+        }
+      }
+    } catch (e) {
+      Toast.show('网络错误')
+    } finally {
+      if (this.containerRef !== undefined) {
+        this.containerRef.setLoading(false)
+      }
     }
   }
   _renderItem = info => {
@@ -63,10 +130,7 @@ export default class MyOnlineMap extends Component {
   }
 
   _keyExtractor = (item, index) => {
-    if (item.serviceId === undefined) {
-      return index * index + ''
-    }
-    return item.serviceId + index * index + ''
+    return index * index + ''
   }
 
   _renderSectionHeader = section => {
@@ -98,9 +162,9 @@ export default class MyOnlineMap extends Component {
 
   render() {
     let arrSectionsData = this._initSectionsData()
-
     return (
       <Container
+        ref={ref => (this.containerRef = ref)}
         headerProps={{
           title: '在线地图',
           withoutBack: false,

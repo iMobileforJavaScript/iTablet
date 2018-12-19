@@ -921,4 +921,7 @@ export default {
   getThemeThreeMenu,
   getThemeMapCreate,
   getThemeMapParam,
+  // createThemeUniqueMap,
+  // createThemeRangeMap,
+  // createUniformLabelMap,
 }

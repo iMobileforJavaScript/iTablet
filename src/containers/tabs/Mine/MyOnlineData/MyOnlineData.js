@@ -308,8 +308,9 @@ export default class MyOnlineData extends Component {
       _iDownloadingIndex = this.index
       this._downloading(_iDownloadingIndex)
       this.setState({ data: this.state.data })
+      this.modalRef._changeDownloadingState('下载中...')
       SOnlineService.downloadFileWithDataId(filePath, dataId)
-      Toast.show('开始下载,点击条目显示下载详情')
+      Toast.show('开始下载')
     } catch (e) {
       Toast.show('网络错误')
       this._resetDownloadingState()
