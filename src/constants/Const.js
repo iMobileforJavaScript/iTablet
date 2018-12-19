@@ -45,4 +45,10 @@ export default {
   DEFAULT: 'DEFAULT',
   CREATE: 'CREATE',
   LOAD: 'LOAD',
+
+  RETURN_TO_DEFAULT_MODULE: '返回默认模板',
+  MODULE: '模板',
+
+  // 时间
+  ANIMATED_DURATION: 300,
 }

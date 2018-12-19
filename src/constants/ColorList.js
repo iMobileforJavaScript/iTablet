@@ -4,7 +4,7 @@ const lineColorSet = [
   {
     key: '#000000',
     action: () => {
-      SCartography.setLineColor('#000000', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#000000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#000000',
@@ -12,7 +12,7 @@ const lineColorSet = [
   {
     key: '#424242',
     action: () => {
-      SCartography.setLineColor('#424242', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#424242', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#424242',
@@ -20,7 +20,7 @@ const lineColorSet = [
   {
     key: '#757575',
     action: () => {
-      SCartography.setLineColor('#757575', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#757575', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#757575',
@@ -28,7 +28,7 @@ const lineColorSet = [
   {
     key: '#BDBDBD',
     action: () => {
-      SCartography.setLineColor('#BDBDBD', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#BDBDBD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BDBDBD',
@@ -36,7 +36,7 @@ const lineColorSet = [
   {
     key: '#EEEEEE',
     action: () => {
-      SCartography.setLineColor('#EEEEEE', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#EEEEEE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EEEEEE',
@@ -44,7 +44,7 @@ const lineColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
-      SCartography.setLineColor('#FFFFFF', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFFFFF',
@@ -52,7 +52,7 @@ const lineColorSet = [
   {
     key: '#3E2723',
     action: () => {
-      SCartography.setLineColor('#3E2723', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#3E2723', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3E2723',
@@ -60,7 +60,7 @@ const lineColorSet = [
   {
     key: '#5D4037',
     action: () => {
-      SCartography.setLineColor('#5D4037', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#5D4037', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#5D4037',
@@ -68,7 +68,7 @@ const lineColorSet = [
   {
     key: '#A1887F',
     action: () => {
-      SCartography.setLineColor('#A1887F', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#A1887F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1887F',
@@ -76,7 +76,7 @@ const lineColorSet = [
   {
     key: '#D7CCC8',
     action: () => {
-      SCartography.setLineColor('#D7CCC8', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#D7CCC8', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D7CCC8',
@@ -84,7 +84,7 @@ const lineColorSet = [
   {
     key: '#263238',
     action: () => {
-      SCartography.setLineColor('#263238', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#263238', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#263238',
@@ -92,7 +92,7 @@ const lineColorSet = [
   {
     key: '#546E7A',
     action: () => {
-      SCartography.setLineColor('#546E7A', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#546E7A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#546E7A',
@@ -100,7 +100,7 @@ const lineColorSet = [
   {
     key: '#90A4AE',
     action: () => {
-      SCartography.setLineColor('#90A4AE', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#90A4AE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#90A4AE',
@@ -108,7 +108,7 @@ const lineColorSet = [
   {
     key: '#CFD8DC',
     action: () => {
-      SCartography.setLineColor('#CFD8DC', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#CFD8DC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#CFD8DC',
@@ -116,7 +116,7 @@ const lineColorSet = [
   {
     key: '#FFECB3',
     action: () => {
-      SCartography.setLineColor('#FFECB3', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FFECB3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFECB3',
@@ -124,7 +124,7 @@ const lineColorSet = [
   {
     key: '#FFF9C4',
     action: () => {
-      SCartography.setLineColor('#FFF9C4', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FFF9C4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF9C4',
@@ -132,7 +132,7 @@ const lineColorSet = [
   {
     key: '#F1F8E9',
     action: () => {
-      SCartography.setLineColor('#F1F8E9', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#F1F8E9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F1F8E9',
@@ -140,7 +140,7 @@ const lineColorSet = [
   {
     key: '#E3F2FD',
     action: () => {
-      SCartography.setLineColor('#E3F2FD', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#E3F2FD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E3F2FD',
@@ -148,7 +148,7 @@ const lineColorSet = [
   {
     key: '#EDE7F6',
     action: () => {
-      SCartography.setLineColor('#EDE7F6', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#EDE7F6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EDE7F6',
@@ -156,7 +156,7 @@ const lineColorSet = [
   {
     key: '#FCE4EC',
     action: () => {
-      SCartography.setLineColor('#FCE4EC', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FCE4EC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FCE4EC',
@@ -164,7 +164,7 @@ const lineColorSet = [
   {
     key: '#FBE9E7',
     action: () => {
-      SCartography.setLineColor('#FBE9E7', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FBE9E7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FBE9E7',
@@ -172,7 +172,7 @@ const lineColorSet = [
   {
     key: '#004D40',
     action: () => {
-      SCartography.setLineColor('#004D40', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#004D40', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#004D40',
@@ -180,7 +180,7 @@ const lineColorSet = [
   {
     key: '#006064',
     action: () => {
-      SCartography.setLineColor('#006064', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#006064', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#006064',
@@ -188,7 +188,7 @@ const lineColorSet = [
   {
     key: '#009688',
     action: () => {
-      SCartography.setLineColor('#009688', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#009688', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#009688',
@@ -196,7 +196,7 @@ const lineColorSet = [
   {
     key: '#8BC34A',
     action: () => {
-      SCartography.setLineColor('#8BC34A', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#8BC34A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8BC34A',
@@ -204,7 +204,7 @@ const lineColorSet = [
   {
     key: '#A5D6A7',
     action: () => {
-      SCartography.setLineColor('#A5D6A7', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#A5D6A7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A5D6A7',
@@ -212,7 +212,7 @@ const lineColorSet = [
   {
     key: '#80CBC4',
     action: () => {
-      SCartography.setLineColor('#80CBC4', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#80CBC4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80CBC4',
@@ -220,7 +220,7 @@ const lineColorSet = [
   {
     key: '#80DEEA',
     action: () => {
-      SCartography.setLineColor('#80DEEA', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#80DEEA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80DEEA',
@@ -228,7 +228,7 @@ const lineColorSet = [
   {
     key: '#A1C2FA',
     action: () => {
-      SCartography.setLineColor('#A1C2FA', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#A1C2FA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1C2FA',
@@ -236,7 +236,7 @@ const lineColorSet = [
   {
     key: '#9FA8DA',
     action: () => {
-      SCartography.setLineColor('#9FA8DA', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#9FA8DA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9FA8DA',
@@ -244,7 +244,7 @@ const lineColorSet = [
   {
     key: '#01579B',
     action: () => {
-      SCartography.setLineColor('#01579B', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#01579B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#01579B',
@@ -252,7 +252,7 @@ const lineColorSet = [
   {
     key: '#1A237E',
     action: () => {
-      SCartography.setLineColor('#1A237E', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#1A237E', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1A237E',
@@ -260,7 +260,7 @@ const lineColorSet = [
   {
     key: '#3F51B5',
     action: () => {
-      SCartography.setLineColor('#3F51B5', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#3F51B5', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3F51B5',
@@ -268,7 +268,7 @@ const lineColorSet = [
   {
     key: '#03A9F4',
     action: () => {
-      SCartography.setLineColor('#03A9F4', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#03A9F4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#03A9F4',
@@ -276,7 +276,7 @@ const lineColorSet = [
   {
     key: '#4A148C',
     action: () => {
-      SCartography.setLineColor('#4A148C', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#4A148C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4A148C',
@@ -284,7 +284,7 @@ const lineColorSet = [
   {
     key: '#673AB7',
     action: () => {
-      SCartography.setLineColor('#673AB7', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#673AB7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#673AB7',
@@ -292,7 +292,7 @@ const lineColorSet = [
   {
     key: '#9C27B0',
     action: () => {
-      SCartography.setLineColor('#9C27B0', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#9C27B0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9C27B0',
@@ -300,7 +300,7 @@ const lineColorSet = [
   {
     key: '#880E4F',
     action: () => {
-      SCartography.setLineColor('#880E4F', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#880E4F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#880E4F',
@@ -308,7 +308,7 @@ const lineColorSet = [
   {
     key: '#E91E63',
     action: () => {
-      SCartography.setLineColor('#E91E63', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#E91E63', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E91E63',
@@ -316,7 +316,7 @@ const lineColorSet = [
   {
     key: '#F44336',
     action: () => {
-      SCartography.setLineColor('#F44336', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#F44336', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F44336',
@@ -324,7 +324,7 @@ const lineColorSet = [
   {
     key: '#F48FB1',
     action: () => {
-      SCartography.setLineColor('#F48FB1', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#F48FB1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F48FB1',
@@ -332,7 +332,7 @@ const lineColorSet = [
   {
     key: '#EF9A9A',
     action: () => {
-      SCartography.setLineColor('#EF9A9A', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#EF9A9A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EF9A9A',
@@ -340,7 +340,7 @@ const lineColorSet = [
   {
     key: '#F57F17',
     action: () => {
-      SCartography.setLineColor('#F57F17', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#F57F17', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F57F17',
@@ -348,7 +348,7 @@ const lineColorSet = [
   {
     key: '#F4B400',
     action: () => {
-      SCartography.setLineColor('#F4B400', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#F4B400', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F4B400',
@@ -356,7 +356,7 @@ const lineColorSet = [
   {
     key: '#FADA80',
     action: () => {
-      SCartography.setLineColor('#FADA80', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FADA80', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FADA80',
@@ -364,7 +364,7 @@ const lineColorSet = [
   {
     key: '#FFF59D',
     action: () => {
-      SCartography.setLineColor('#FFF59D', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FFF59D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF59D',
@@ -372,7 +372,7 @@ const lineColorSet = [
   {
     key: '#FFEB3B',
     action: () => {
-      SCartography.setLineColor('#FFEB3B', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FFEB3B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFEB3B',
@@ -380,7 +380,7 @@ const lineColorSet = [
   {
     key: '#FFD700',
     action: () => {
-      SCartography.setLineColor('#FFD700', GLOBAL.currentLayer.caption)
+      SCartography.setLineColor('#FFD700', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFD700',
@@ -391,7 +391,7 @@ const pointColorSet = [
   {
     key: '#000000',
     action: () => {
-      SCartography.setMarkerColor('#000000', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#000000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#000000',
@@ -399,7 +399,7 @@ const pointColorSet = [
   {
     key: '#424242',
     action: () => {
-      SCartography.setMarkerColor('#424242', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#424242', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#424242',
@@ -407,7 +407,7 @@ const pointColorSet = [
   {
     key: '#757575',
     action: () => {
-      SCartography.setMarkerColor('#757575', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#757575', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#757575',
@@ -415,7 +415,7 @@ const pointColorSet = [
   {
     key: '#BDBDBD',
     action: () => {
-      SCartography.setMarkerColor('#BDBDBD', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#BDBDBD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BDBDBD',
@@ -423,7 +423,7 @@ const pointColorSet = [
   {
     key: '#EEEEEE',
     action: () => {
-      SCartography.setMarkerColor('#EEEEEE', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#EEEEEE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EEEEEE',
@@ -431,7 +431,7 @@ const pointColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
-      SCartography.setMarkerColor('#FFFFFF', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFFFFF',
@@ -439,7 +439,7 @@ const pointColorSet = [
   {
     key: '#3E2723',
     action: () => {
-      SCartography.setMarkerColor('#3E2723', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#3E2723', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3E2723',
@@ -447,7 +447,7 @@ const pointColorSet = [
   {
     key: '#5D4037',
     action: () => {
-      SCartography.setMarkerColor('#5D4037', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#5D4037', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#5D4037',
@@ -455,7 +455,7 @@ const pointColorSet = [
   {
     key: '#A1887F',
     action: () => {
-      SCartography.setMarkerColor('#A1887F', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#A1887F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1887F',
@@ -463,7 +463,7 @@ const pointColorSet = [
   {
     key: '#D7CCC8',
     action: () => {
-      SCartography.setMarkerColor('#D7CCC8', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#D7CCC8', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D7CCC8',
@@ -471,7 +471,7 @@ const pointColorSet = [
   {
     key: '#263238',
     action: () => {
-      SCartography.setMarkerColor('#263238', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#263238', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#263238',
@@ -479,7 +479,7 @@ const pointColorSet = [
   {
     key: '#546E7A',
     action: () => {
-      SCartography.setMarkerColor('#546E7A', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#546E7A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#546E7A',
@@ -487,7 +487,7 @@ const pointColorSet = [
   {
     key: '#90A4AE',
     action: () => {
-      SCartography.setMarkerColor('#90A4AE', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#90A4AE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#90A4AE',
@@ -495,7 +495,7 @@ const pointColorSet = [
   {
     key: '#CFD8DC',
     action: () => {
-      SCartography.setMarkerColor('#CFD8DC', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#CFD8DC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#CFD8DC',
@@ -503,7 +503,7 @@ const pointColorSet = [
   {
     key: '#FFECB3',
     action: () => {
-      SCartography.setMarkerColor('#FFECB3', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FFECB3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFECB3',
@@ -511,7 +511,7 @@ const pointColorSet = [
   {
     key: '#FFF9C4',
     action: () => {
-      SCartography.setMarkerColor('#FFF9C4', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FFF9C4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF9C4',
@@ -519,7 +519,7 @@ const pointColorSet = [
   {
     key: '#F1F8E9',
     action: () => {
-      SCartography.setMarkerColor('#F1F8E9', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#F1F8E9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F1F8E9',
@@ -527,7 +527,7 @@ const pointColorSet = [
   {
     key: '#E3F2FD',
     action: () => {
-      SCartography.setMarkerColor('#E3F2FD', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#E3F2FD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E3F2FD',
@@ -535,7 +535,7 @@ const pointColorSet = [
   {
     key: '#EDE7F6',
     action: () => {
-      SCartography.setMarkerColor('#EDE7F6', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#EDE7F6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EDE7F6',
@@ -543,7 +543,7 @@ const pointColorSet = [
   {
     key: '#FCE4EC',
     action: () => {
-      SCartography.setMarkerColor('#FCE4EC', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FCE4EC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FCE4EC',
@@ -551,7 +551,7 @@ const pointColorSet = [
   {
     key: '#FBE9E7',
     action: () => {
-      SCartography.setMarkerColor('#FBE9E7', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FBE9E7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FBE9E7',
@@ -559,7 +559,7 @@ const pointColorSet = [
   {
     key: '#004D40',
     action: () => {
-      SCartography.setMarkerColor('#004D40', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#004D40', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#004D40',
@@ -567,7 +567,7 @@ const pointColorSet = [
   {
     key: '#006064',
     action: () => {
-      SCartography.setMarkerColor('#006064', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#006064', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#006064',
@@ -575,7 +575,7 @@ const pointColorSet = [
   {
     key: '#009688',
     action: () => {
-      SCartography.setMarkerColor('#009688', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#009688', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#009688',
@@ -583,7 +583,7 @@ const pointColorSet = [
   {
     key: '#8BC34A',
     action: () => {
-      SCartography.setMarkerColor('#8BC34A', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#8BC34A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8BC34A',
@@ -591,7 +591,7 @@ const pointColorSet = [
   {
     key: '#A5D6A7',
     action: () => {
-      SCartography.setMarkerColor('#A5D6A7', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#A5D6A7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A5D6A7',
@@ -599,7 +599,7 @@ const pointColorSet = [
   {
     key: '#80CBC4',
     action: () => {
-      SCartography.setMarkerColor('#80CBC4', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#80CBC4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80CBC4',
@@ -607,7 +607,7 @@ const pointColorSet = [
   {
     key: '#80DEEA',
     action: () => {
-      SCartography.setMarkerColor('#80DEEA', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#80DEEA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80DEEA',
@@ -615,7 +615,7 @@ const pointColorSet = [
   {
     key: '#A1C2FA',
     action: () => {
-      SCartography.setMarkerColor('#A1C2FA', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#A1C2FA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1C2FA',
@@ -623,7 +623,7 @@ const pointColorSet = [
   {
     key: '#9FA8DA',
     action: () => {
-      SCartography.setMarkerColor('#9FA8DA', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#9FA8DA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9FA8DA',
@@ -631,7 +631,7 @@ const pointColorSet = [
   {
     key: '#01579B',
     action: () => {
-      SCartography.setMarkerColor('#01579B', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#01579B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#01579B',
@@ -639,7 +639,7 @@ const pointColorSet = [
   {
     key: '#1A237E',
     action: () => {
-      SCartography.setMarkerColor('#1A237E', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#1A237E', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1A237E',
@@ -647,7 +647,7 @@ const pointColorSet = [
   {
     key: '#3F51B5',
     action: () => {
-      SCartography.setMarkerColor('#3F51B5', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#3F51B5', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3F51B5',
@@ -655,7 +655,7 @@ const pointColorSet = [
   {
     key: '#03A9F4',
     action: () => {
-      SCartography.setMarkerColor('#03A9F4', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#03A9F4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#03A9F4',
@@ -663,7 +663,7 @@ const pointColorSet = [
   {
     key: '#4A148C',
     action: () => {
-      SCartography.setMarkerColor('#4A148C', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#4A148C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4A148C',
@@ -671,7 +671,7 @@ const pointColorSet = [
   {
     key: '#673AB7',
     action: () => {
-      SCartography.setMarkerColor('#673AB7', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#673AB7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#673AB7',
@@ -679,7 +679,7 @@ const pointColorSet = [
   {
     key: '#9C27B0',
     action: () => {
-      SCartography.setMarkerColor('#9C27B0', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#9C27B0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9C27B0',
@@ -687,7 +687,7 @@ const pointColorSet = [
   {
     key: '#880E4F',
     action: () => {
-      SCartography.setMarkerColor('#880E4F', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#880E4F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#880E4F',
@@ -695,7 +695,7 @@ const pointColorSet = [
   {
     key: '#E91E63',
     action: () => {
-      SCartography.setMarkerColor('#E91E63', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#E91E63', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E91E63',
@@ -703,7 +703,7 @@ const pointColorSet = [
   {
     key: '#F44336',
     action: () => {
-      SCartography.setMarkerColor('#F44336', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#F44336', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F44336',
@@ -711,7 +711,7 @@ const pointColorSet = [
   {
     key: '#F48FB1',
     action: () => {
-      SCartography.setMarkerColor('#F48FB1', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#F48FB1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F48FB1',
@@ -719,7 +719,7 @@ const pointColorSet = [
   {
     key: '#EF9A9A',
     action: () => {
-      SCartography.setMarkerColor('#EF9A9A', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#EF9A9A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EF9A9A',
@@ -727,7 +727,7 @@ const pointColorSet = [
   {
     key: '#F57F17',
     action: () => {
-      SCartography.setMarkerColor('#F57F17', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#F57F17', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F57F17',
@@ -735,7 +735,7 @@ const pointColorSet = [
   {
     key: '#F4B400',
     action: () => {
-      SCartography.setMarkerColor('#F4B400', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#F4B400', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F4B400',
@@ -743,7 +743,7 @@ const pointColorSet = [
   {
     key: '#FADA80',
     action: () => {
-      SCartography.setMarkerColor('#FADA80', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FADA80', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FADA80',
@@ -751,7 +751,7 @@ const pointColorSet = [
   {
     key: '#FFF59D',
     action: () => {
-      SCartography.setMarkerColor('#FFF59D', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FFF59D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF59D',
@@ -759,7 +759,7 @@ const pointColorSet = [
   {
     key: '#FFEB3B',
     action: () => {
-      SCartography.setMarkerColor('#FFEB3B', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FFEB3B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFEB3B',
@@ -767,7 +767,7 @@ const pointColorSet = [
   {
     key: '#FFD700',
     action: () => {
-      SCartography.setMarkerColor('#FFD700', GLOBAL.currentLayer.caption)
+      SCartography.setMarkerColor('#FFD700', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFD700',
@@ -778,7 +778,7 @@ const regionBeforeColorSet = [
   {
     key: '#000000',
     action: () => {
-      SCartography.setFillForeColor('#000000', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#000000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#000000',
@@ -786,7 +786,7 @@ const regionBeforeColorSet = [
   {
     key: '#424242',
     action: () => {
-      SCartography.setFillForeColor('#424242', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#424242', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#424242',
@@ -794,7 +794,7 @@ const regionBeforeColorSet = [
   {
     key: '#757575',
     action: () => {
-      SCartography.setFillForeColor('#757575', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#757575', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#757575',
@@ -802,7 +802,7 @@ const regionBeforeColorSet = [
   {
     key: '#BDBDBD',
     action: () => {
-      SCartography.setFillForeColor('#BDBDBD', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#BDBDBD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BDBDBD',
@@ -810,7 +810,7 @@ const regionBeforeColorSet = [
   {
     key: '#EEEEEE',
     action: () => {
-      SCartography.setFillForeColor('#EEEEEE', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#EEEEEE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EEEEEE',
@@ -818,7 +818,7 @@ const regionBeforeColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
-      SCartography.setFillForeColor('#FFFFFF', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFFFFF',
@@ -826,7 +826,7 @@ const regionBeforeColorSet = [
   {
     key: '#3E2723',
     action: () => {
-      SCartography.setFillForeColor('#3E2723', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#3E2723', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3E2723',
@@ -834,7 +834,7 @@ const regionBeforeColorSet = [
   {
     key: '#5D4037',
     action: () => {
-      SCartography.setFillForeColor('#5D4037', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#5D4037', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#5D4037',
@@ -842,7 +842,7 @@ const regionBeforeColorSet = [
   {
     key: '#A1887F',
     action: () => {
-      SCartography.setFillForeColor('#A1887F', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#A1887F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1887F',
@@ -850,7 +850,7 @@ const regionBeforeColorSet = [
   {
     key: '#D7CCC8',
     action: () => {
-      SCartography.setFillForeColor('#D7CCC8', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#D7CCC8', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D7CCC8',
@@ -858,7 +858,7 @@ const regionBeforeColorSet = [
   {
     key: '#263238',
     action: () => {
-      SCartography.setFillForeColor('#263238', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#263238', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#263238',
@@ -866,7 +866,7 @@ const regionBeforeColorSet = [
   {
     key: '#546E7A',
     action: () => {
-      SCartography.setFillForeColor('#546E7A', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#546E7A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#546E7A',
@@ -874,7 +874,7 @@ const regionBeforeColorSet = [
   {
     key: '#90A4AE',
     action: () => {
-      SCartography.setFillForeColor('#90A4AE', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#90A4AE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#90A4AE',
@@ -882,7 +882,7 @@ const regionBeforeColorSet = [
   {
     key: '#CFD8DC',
     action: () => {
-      SCartography.setFillForeColor('#CFD8DC', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#CFD8DC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#CFD8DC',
@@ -890,7 +890,7 @@ const regionBeforeColorSet = [
   {
     key: '#FFECB3',
     action: () => {
-      SCartography.setFillForeColor('#FFECB3', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FFECB3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFECB3',
@@ -898,7 +898,7 @@ const regionBeforeColorSet = [
   {
     key: '#FFF9C4',
     action: () => {
-      SCartography.setFillForeColor('#FFF9C4', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FFF9C4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF9C4',
@@ -906,7 +906,7 @@ const regionBeforeColorSet = [
   {
     key: '#F1F8E9',
     action: () => {
-      SCartography.setFillForeColor('#F1F8E9', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#F1F8E9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F1F8E9',
@@ -914,7 +914,7 @@ const regionBeforeColorSet = [
   {
     key: '#E3F2FD',
     action: () => {
-      SCartography.setFillForeColor('#E3F2FD', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#E3F2FD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E3F2FD',
@@ -922,7 +922,7 @@ const regionBeforeColorSet = [
   {
     key: '#EDE7F6',
     action: () => {
-      SCartography.setFillForeColor('#EDE7F6', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#EDE7F6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EDE7F6',
@@ -930,7 +930,7 @@ const regionBeforeColorSet = [
   {
     key: '#FCE4EC',
     action: () => {
-      SCartography.setFillForeColor('#FCE4EC', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FCE4EC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FCE4EC',
@@ -938,7 +938,7 @@ const regionBeforeColorSet = [
   {
     key: '#FBE9E7',
     action: () => {
-      SCartography.setFillForeColor('#FBE9E7', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FBE9E7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FBE9E7',
@@ -946,7 +946,7 @@ const regionBeforeColorSet = [
   {
     key: '#004D40',
     action: () => {
-      SCartography.setFillForeColor('#004D40', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#004D40', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#004D40',
@@ -954,7 +954,7 @@ const regionBeforeColorSet = [
   {
     key: '#006064',
     action: () => {
-      SCartography.setFillForeColor('#006064', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#006064', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#006064',
@@ -962,7 +962,7 @@ const regionBeforeColorSet = [
   {
     key: '#009688',
     action: () => {
-      SCartography.setFillForeColor('#009688', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#009688', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#009688',
@@ -970,7 +970,7 @@ const regionBeforeColorSet = [
   {
     key: '#8BC34A',
     action: () => {
-      SCartography.setFillForeColor('#8BC34A', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#8BC34A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8BC34A',
@@ -978,7 +978,7 @@ const regionBeforeColorSet = [
   {
     key: '#A5D6A7',
     action: () => {
-      SCartography.setFillForeColor('#A5D6A7', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#A5D6A7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A5D6A7',
@@ -986,7 +986,7 @@ const regionBeforeColorSet = [
   {
     key: '#80CBC4',
     action: () => {
-      SCartography.setFillForeColor('#80CBC4', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#80CBC4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80CBC4',
@@ -994,7 +994,7 @@ const regionBeforeColorSet = [
   {
     key: '#80DEEA',
     action: () => {
-      SCartography.setFillForeColor('#80DEEA', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#80DEEA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80DEEA',
@@ -1002,7 +1002,7 @@ const regionBeforeColorSet = [
   {
     key: '#A1C2FA',
     action: () => {
-      SCartography.setFillForeColor('#A1C2FA', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#A1C2FA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1C2FA',
@@ -1010,7 +1010,7 @@ const regionBeforeColorSet = [
   {
     key: '#9FA8DA',
     action: () => {
-      SCartography.setFillForeColor('#9FA8DA', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#9FA8DA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9FA8DA',
@@ -1018,7 +1018,7 @@ const regionBeforeColorSet = [
   {
     key: '#01579B',
     action: () => {
-      SCartography.setFillForeColor('#01579B', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#01579B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#01579B',
@@ -1026,7 +1026,7 @@ const regionBeforeColorSet = [
   {
     key: '#1A237E',
     action: () => {
-      SCartography.setFillForeColor('#1A237E', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#1A237E', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1A237E',
@@ -1034,7 +1034,7 @@ const regionBeforeColorSet = [
   {
     key: '#3F51B5',
     action: () => {
-      SCartography.setFillForeColor('#3F51B5', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#3F51B5', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3F51B5',
@@ -1042,7 +1042,7 @@ const regionBeforeColorSet = [
   {
     key: '#03A9F4',
     action: () => {
-      SCartography.setFillForeColor('#03A9F4', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#03A9F4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#03A9F4',
@@ -1050,7 +1050,7 @@ const regionBeforeColorSet = [
   {
     key: '#4A148C',
     action: () => {
-      SCartography.setFillForeColor('#4A148C', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#4A148C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4A148C',
@@ -1058,7 +1058,7 @@ const regionBeforeColorSet = [
   {
     key: '#673AB7',
     action: () => {
-      SCartography.setFillForeColor('#673AB7', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#673AB7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#673AB7',
@@ -1066,7 +1066,7 @@ const regionBeforeColorSet = [
   {
     key: '#9C27B0',
     action: () => {
-      SCartography.setFillForeColor('#9C27B0', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#9C27B0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9C27B0',
@@ -1074,7 +1074,7 @@ const regionBeforeColorSet = [
   {
     key: '#880E4F',
     action: () => {
-      SCartography.setFillForeColor('#880E4F', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#880E4F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#880E4F',
@@ -1082,7 +1082,7 @@ const regionBeforeColorSet = [
   {
     key: '#E91E63',
     action: () => {
-      SCartography.setFillForeColor('#E91E63', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#E91E63', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E91E63',
@@ -1090,7 +1090,7 @@ const regionBeforeColorSet = [
   {
     key: '#F44336',
     action: () => {
-      SCartography.setFillForeColor('#F44336', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#F44336', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F44336',
@@ -1098,7 +1098,7 @@ const regionBeforeColorSet = [
   {
     key: '#F48FB1',
     action: () => {
-      SCartography.setFillForeColor('#F48FB1', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#F48FB1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F48FB1',
@@ -1106,7 +1106,7 @@ const regionBeforeColorSet = [
   {
     key: '#EF9A9A',
     action: () => {
-      SCartography.setFillForeColor('#EF9A9A', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#EF9A9A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EF9A9A',
@@ -1114,7 +1114,7 @@ const regionBeforeColorSet = [
   {
     key: '#F57F17',
     action: () => {
-      SCartography.setFillForeColor('#F57F17', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#F57F17', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F57F17',
@@ -1122,7 +1122,7 @@ const regionBeforeColorSet = [
   {
     key: '#F4B400',
     action: () => {
-      SCartography.setFillForeColor('#F4B400', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#F4B400', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F4B400',
@@ -1130,7 +1130,7 @@ const regionBeforeColorSet = [
   {
     key: '#FADA80',
     action: () => {
-      SCartography.setFillForeColor('#FADA80', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FADA80', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FADA80',
@@ -1138,7 +1138,7 @@ const regionBeforeColorSet = [
   {
     key: '#FFF59D',
     action: () => {
-      SCartography.setFillForeColor('#FFF59D', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FFF59D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF59D',
@@ -1146,7 +1146,7 @@ const regionBeforeColorSet = [
   {
     key: '#FFEB3B',
     action: () => {
-      SCartography.setFillForeColor('#FFEB3B', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FFEB3B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFEB3B',
@@ -1154,7 +1154,7 @@ const regionBeforeColorSet = [
   {
     key: '#FFD700',
     action: () => {
-      SCartography.setFillForeColor('#FFD700', GLOBAL.currentLayer.caption)
+      SCartography.setFillForeColor('#FFD700', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFD700',
@@ -1165,7 +1165,7 @@ const regionAfterColorSet = [
   {
     key: '#000000',
     action: () => {
-      SCartography.setFillBackColor('#000000', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#000000', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#000000',
@@ -1173,7 +1173,7 @@ const regionAfterColorSet = [
   {
     key: '#424242',
     action: () => {
-      SCartography.setFillBackColor('#424242', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#424242', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#424242',
@@ -1181,7 +1181,7 @@ const regionAfterColorSet = [
   {
     key: '#757575',
     action: () => {
-      SCartography.setFillBackColor('#757575', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#757575', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#757575',
@@ -1189,7 +1189,7 @@ const regionAfterColorSet = [
   {
     key: '#BDBDBD',
     action: () => {
-      SCartography.setFillBackColor('#BDBDBD', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#BDBDBD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#BDBDBD',
@@ -1197,7 +1197,7 @@ const regionAfterColorSet = [
   {
     key: '#EEEEEE',
     action: () => {
-      SCartography.setFillBackColor('#EEEEEE', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#EEEEEE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EEEEEE',
@@ -1205,7 +1205,7 @@ const regionAfterColorSet = [
   {
     key: '#FFFFFF',
     action: () => {
-      SCartography.setFillBackColor('#FFFFFF', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FFFFFF', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFFFFF',
@@ -1213,7 +1213,7 @@ const regionAfterColorSet = [
   {
     key: '#3E2723',
     action: () => {
-      SCartography.setFillBackColor('#3E2723', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#3E2723', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3E2723',
@@ -1221,7 +1221,7 @@ const regionAfterColorSet = [
   {
     key: '#5D4037',
     action: () => {
-      SCartography.setFillBackColor('#5D4037', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#5D4037', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#5D4037',
@@ -1229,7 +1229,7 @@ const regionAfterColorSet = [
   {
     key: '#A1887F',
     action: () => {
-      SCartography.setFillBackColor('#A1887F', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#A1887F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1887F',
@@ -1237,7 +1237,7 @@ const regionAfterColorSet = [
   {
     key: '#D7CCC8',
     action: () => {
-      SCartography.setFillBackColor('#D7CCC8', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#D7CCC8', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#D7CCC8',
@@ -1245,7 +1245,7 @@ const regionAfterColorSet = [
   {
     key: '#263238',
     action: () => {
-      SCartography.setFillBackColor('#263238', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#263238', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#263238',
@@ -1253,7 +1253,7 @@ const regionAfterColorSet = [
   {
     key: '#546E7A',
     action: () => {
-      SCartography.setFillBackColor('#546E7A', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#546E7A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#546E7A',
@@ -1261,7 +1261,7 @@ const regionAfterColorSet = [
   {
     key: '#90A4AE',
     action: () => {
-      SCartography.setFillBackColor('#90A4AE', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#90A4AE', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#90A4AE',
@@ -1269,7 +1269,7 @@ const regionAfterColorSet = [
   {
     key: '#CFD8DC',
     action: () => {
-      SCartography.setFillBackColor('#CFD8DC', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#CFD8DC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#CFD8DC',
@@ -1277,7 +1277,7 @@ const regionAfterColorSet = [
   {
     key: '#FFECB3',
     action: () => {
-      SCartography.setFillBackColor('#FFECB3', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FFECB3', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFECB3',
@@ -1285,7 +1285,7 @@ const regionAfterColorSet = [
   {
     key: '#FFF9C4',
     action: () => {
-      SCartography.setFillBackColor('#FFF9C4', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FFF9C4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF9C4',
@@ -1293,7 +1293,7 @@ const regionAfterColorSet = [
   {
     key: '#F1F8E9',
     action: () => {
-      SCartography.setFillBackColor('#F1F8E9', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#F1F8E9', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F1F8E9',
@@ -1301,7 +1301,7 @@ const regionAfterColorSet = [
   {
     key: '#E3F2FD',
     action: () => {
-      SCartography.setFillBackColor('#E3F2FD', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#E3F2FD', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E3F2FD',
@@ -1309,7 +1309,7 @@ const regionAfterColorSet = [
   {
     key: '#EDE7F6',
     action: () => {
-      SCartography.setFillBackColor('#EDE7F6', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#EDE7F6', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EDE7F6',
@@ -1317,7 +1317,7 @@ const regionAfterColorSet = [
   {
     key: '#FCE4EC',
     action: () => {
-      SCartography.setFillBackColor('#FCE4EC', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FCE4EC', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FCE4EC',
@@ -1325,7 +1325,7 @@ const regionAfterColorSet = [
   {
     key: '#FBE9E7',
     action: () => {
-      SCartography.setFillBackColor('#FBE9E7', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FBE9E7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FBE9E7',
@@ -1333,7 +1333,7 @@ const regionAfterColorSet = [
   {
     key: '#004D40',
     action: () => {
-      SCartography.setFillBackColor('#004D40', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#004D40', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#004D40',
@@ -1341,7 +1341,7 @@ const regionAfterColorSet = [
   {
     key: '#006064',
     action: () => {
-      SCartography.setFillBackColor('#006064', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#006064', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#006064',
@@ -1349,7 +1349,7 @@ const regionAfterColorSet = [
   {
     key: '#009688',
     action: () => {
-      SCartography.setFillBackColor('#009688', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#009688', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#009688',
@@ -1357,7 +1357,7 @@ const regionAfterColorSet = [
   {
     key: '#8BC34A',
     action: () => {
-      SCartography.setFillBackColor('#8BC34A', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#8BC34A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#8BC34A',
@@ -1365,7 +1365,7 @@ const regionAfterColorSet = [
   {
     key: '#A5D6A7',
     action: () => {
-      SCartography.setFillBackColor('#A5D6A7', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#A5D6A7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A5D6A7',
@@ -1373,7 +1373,7 @@ const regionAfterColorSet = [
   {
     key: '#80CBC4',
     action: () => {
-      SCartography.setFillBackColor('#80CBC4', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#80CBC4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80CBC4',
@@ -1381,7 +1381,7 @@ const regionAfterColorSet = [
   {
     key: '#80DEEA',
     action: () => {
-      SCartography.setFillBackColor('#80DEEA', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#80DEEA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#80DEEA',
@@ -1389,7 +1389,7 @@ const regionAfterColorSet = [
   {
     key: '#A1C2FA',
     action: () => {
-      SCartography.setFillBackColor('#A1C2FA', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#A1C2FA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#A1C2FA',
@@ -1397,7 +1397,7 @@ const regionAfterColorSet = [
   {
     key: '#9FA8DA',
     action: () => {
-      SCartography.setFillBackColor('#9FA8DA', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#9FA8DA', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9FA8DA',
@@ -1405,7 +1405,7 @@ const regionAfterColorSet = [
   {
     key: '#01579B',
     action: () => {
-      SCartography.setFillBackColor('#01579B', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#01579B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#01579B',
@@ -1413,7 +1413,7 @@ const regionAfterColorSet = [
   {
     key: '#1A237E',
     action: () => {
-      SCartography.setFillBackColor('#1A237E', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#1A237E', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#1A237E',
@@ -1421,7 +1421,7 @@ const regionAfterColorSet = [
   {
     key: '#3F51B5',
     action: () => {
-      SCartography.setFillBackColor('#3F51B5', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#3F51B5', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#3F51B5',
@@ -1429,7 +1429,7 @@ const regionAfterColorSet = [
   {
     key: '#03A9F4',
     action: () => {
-      SCartography.setFillBackColor('#03A9F4', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#03A9F4', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#03A9F4',
@@ -1437,7 +1437,7 @@ const regionAfterColorSet = [
   {
     key: '#4A148C',
     action: () => {
-      SCartography.setFillBackColor('#4A148C', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#4A148C', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#4A148C',
@@ -1445,7 +1445,7 @@ const regionAfterColorSet = [
   {
     key: '#673AB7',
     action: () => {
-      SCartography.setFillBackColor('#673AB7', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#673AB7', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#673AB7',
@@ -1453,7 +1453,7 @@ const regionAfterColorSet = [
   {
     key: '#9C27B0',
     action: () => {
-      SCartography.setFillBackColor('#9C27B0', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#9C27B0', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#9C27B0',
@@ -1461,7 +1461,7 @@ const regionAfterColorSet = [
   {
     key: '#880E4F',
     action: () => {
-      SCartography.setFillBackColor('#880E4F', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#880E4F', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#880E4F',
@@ -1469,7 +1469,7 @@ const regionAfterColorSet = [
   {
     key: '#E91E63',
     action: () => {
-      SCartography.setFillBackColor('#E91E63', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#E91E63', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#E91E63',
@@ -1477,7 +1477,7 @@ const regionAfterColorSet = [
   {
     key: '#F44336',
     action: () => {
-      SCartography.setFillBackColor('#F44336', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#F44336', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F44336',
@@ -1485,7 +1485,7 @@ const regionAfterColorSet = [
   {
     key: '#F48FB1',
     action: () => {
-      SCartography.setFillBackColor('#F48FB1', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#F48FB1', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F48FB1',
@@ -1493,7 +1493,7 @@ const regionAfterColorSet = [
   {
     key: '#EF9A9A',
     action: () => {
-      SCartography.setFillBackColor('#EF9A9A', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#EF9A9A', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#EF9A9A',
@@ -1501,7 +1501,7 @@ const regionAfterColorSet = [
   {
     key: '#F57F17',
     action: () => {
-      SCartography.setFillBackColor('#F57F17', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#F57F17', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F57F17',
@@ -1509,7 +1509,7 @@ const regionAfterColorSet = [
   {
     key: '#F4B400',
     action: () => {
-      SCartography.setFillBackColor('#F4B400', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#F4B400', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#F4B400',
@@ -1517,7 +1517,7 @@ const regionAfterColorSet = [
   {
     key: '#FADA80',
     action: () => {
-      SCartography.setFillBackColor('#FADA80', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FADA80', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FADA80',
@@ -1525,7 +1525,7 @@ const regionAfterColorSet = [
   {
     key: '#FFF59D',
     action: () => {
-      SCartography.setFillBackColor('#FFF59D', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FFF59D', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFF59D',
@@ -1533,7 +1533,7 @@ const regionAfterColorSet = [
   {
     key: '#FFEB3B',
     action: () => {
-      SCartography.setFillBackColor('#FFEB3B', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FFEB3B', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFEB3B',
@@ -1541,7 +1541,7 @@ const regionAfterColorSet = [
   {
     key: '#FFD700',
     action: () => {
-      SCartography.setFillBackColor('#FFD700', GLOBAL.currentLayer.caption)
+      SCartography.setFillBackColor('#FFD700', GLOBAL.currentLayer.name)
     },
     size: 'large',
     background: '#FFD700',

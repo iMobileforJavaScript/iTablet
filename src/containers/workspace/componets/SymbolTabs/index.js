@@ -117,6 +117,7 @@ class SymbolTabs extends React.Component {
           setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
           setEditLayer={this.props.setEditLayer}
           getSymbolTemplates={this.props.getSymbolTemplates}
+          setCurrentSymbol={this.props.setCurrentSymbol}
         />
       )
     } else {

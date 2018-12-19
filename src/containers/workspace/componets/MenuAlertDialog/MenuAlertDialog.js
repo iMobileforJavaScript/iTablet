@@ -294,6 +294,7 @@ export default class MenuAlertDialog extends React.Component {
   }
   render() {
     if (this.state.childrens.length === 0) return null
+    if (this.state.type === '') return null
     return (
       <Modal
         animationType="none"

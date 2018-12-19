@@ -8,6 +8,7 @@ import { View, StyleSheet, ScrollView, Animated } from 'react-native'
 import Header from '../Header'
 import Loading from './Loading'
 import { scaleSize } from '../../utils'
+import { Const } from '../../constants'
 
 import styles from './styles'
 
@@ -53,7 +54,7 @@ export default class Container extends PureComponent {
       if (this.headerVisible === visible) return
       Animated.timing(this.state.top, {
         toValue: visible ? 0 : scaleSize(-200),
-        duration: 300,
+        duration: Const.ANIMATED_DURATION,
       }).start()
       this.headerVisible = visible
     } else {
@@ -65,7 +66,7 @@ export default class Container extends PureComponent {
     if (this.bottomVisible === visible) return
     Animated.timing(this.state.bottom, {
       toValue: visible ? 0 : scaleSize(-200),
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.bottomVisible = visible
   }
