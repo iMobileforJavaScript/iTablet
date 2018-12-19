@@ -151,16 +151,7 @@ export default class Find extends Component {
         style={styles.haveDataViewStyle}
         data={this.state.data}
         renderItem={data => {
-          return (
-            <RenderFindItem
-              fileName={data.item.fileName}
-              type={data.item.type}
-              nickname={data.item.nickname}
-              time={data.item.lastModfiedTime}
-              itemId={data.item.id}
-              imageUrl={data.item.thumbnail}
-            />
-          )
+          return <RenderFindItem data={data.item} />
         }}
         refreshControl={
           <RefreshControl

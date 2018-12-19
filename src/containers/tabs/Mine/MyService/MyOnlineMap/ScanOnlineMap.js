@@ -5,13 +5,7 @@
 */
 
 import * as React from 'react'
-import {
-  WebView,
-  Dimensions,
-  ActivityIndicator,
-  Text,
-  View,
-} from 'react-native'
+import { WebView, Dimensions, ActivityIndicator, View } from 'react-native'
 import { Container } from '../../../../../components'
 import Toast from '../../../../../utils/Toast'
 
@@ -37,8 +31,12 @@ export default class ScanOnlineMap extends React.Component {
           backgroundColor: '#353537',
         }}
       >
-        <ActivityIndicator color={'gray'} animating={true} size={'large'} />
-        <Text style={{ fontSize: 12, color: 'white' }}>Loading...</Text>
+        <ActivityIndicator
+          style={{ width: 70, height: 70 }}
+          color={'gray'}
+          animating={true}
+          size={'small'}
+        />
       </View>
     )
   }
