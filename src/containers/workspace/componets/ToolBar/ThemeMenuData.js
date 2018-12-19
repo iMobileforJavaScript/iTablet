@@ -10,41 +10,41 @@ function showTips() {
 
 let _toolbarParams = {}
 
-//单值专题图参数
-let _paramsUniqueTheme = {}
+// //单值专题图参数
+// let _paramsUniqueTheme = {}
 
-function setUniqueThemeParams(params) {
-  _paramsUniqueTheme = params
-}
+// function setUniqueThemeParams(params) {
+//   _paramsUniqueTheme = params
+// }
 
-/** 新建单值风格专题图 **/
-function createThemeUniqueMap() {
-  return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
-}
+// /** 新建单值风格专题图 **/
+// function createThemeUniqueMap() {
+//   return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
+// }
 
-//分段专题图参数
-let _paramsRangeTheme = {}
+// //分段专题图参数
+// let _paramsRangeTheme = {}
 
-function setRangeThemeParams(params) {
-  _paramsRangeTheme = params
-}
+// function setRangeThemeParams(params) {
+//   _paramsRangeTheme = params
+// }
 
-/** 新建分段风格专题图 **/
-function createThemeRangeMap() {
-  return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
-}
+// /** 新建分段风格专题图 **/
+// function createThemeRangeMap() {
+//   return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
+// }
 
-//统一标签专题图参数
-let _paramsUniformLabel = {}
+// //统一标签专题图参数
+// let _paramsUniformLabel = {}
 
-function setUniformLabelParams(params) {
-  _paramsUniformLabel = params
-}
+// function setUniformLabelParams(params) {
+//   _paramsUniformLabel = params
+// }
 
-/** 新建统一标签专题图 **/
-function createUniformLabelMap() {
-  return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
-}
+// /** 新建统一标签专题图 **/
+// function createUniformLabelMap() {
+//   return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
+// }
 
 function showDatasetsList() {
   let data = []
@@ -71,6 +71,7 @@ function showDatasetsList() {
           buttons: [ToolbarBtnType.THEME_CANCEL],
         },
       )
+    _toolbarParams.scrollListToLocation && _toolbarParams.scrollListToLocation()
   })
 }
 
@@ -920,9 +921,6 @@ export default {
   getThemeThreeMenu,
   getThemeMapCreate,
   getThemeMapParam,
-  setUniqueThemeParams,
-  setRangeThemeParams,
-  setUniformLabelParams,
   createThemeUniqueMap,
   createThemeRangeMap,
   createUniformLabelMap,

@@ -166,8 +166,7 @@ function getStart(type, params) {
           title: constants.WORKSPACE,
           action: openWorkspace,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+          image: require('../../../../assets/mapTools/icon_open.png'),
         },
         {
           key: constants.OPEN,

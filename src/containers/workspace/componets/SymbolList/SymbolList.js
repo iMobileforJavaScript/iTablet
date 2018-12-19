@@ -19,13 +19,13 @@ export default class SymbolList extends React.Component {
 
   _onSymbolClick = data => {
     if (this.props.layerData.type === 3) {
-      SCartography.setLineSymbolID(data.id, this.props.layerData.caption)
+      SCartography.setLineSymbolID(data.id, this.props.layerData.name)
     }
     if (this.props.layerData.type === 1) {
-      SCartography.setMakerSymbolID(data.id, this.props.layerData.caption)
+      SCartography.setMakerSymbolID(data.id, this.props.layerData.name)
     }
     if (this.props.layerData.type === 5) {
-      SCartography.setFillSymbolID(data.id, this.props.layerData.caption)
+      SCartography.setFillSymbolID(data.id, this.props.layerData.name)
     }
   }
 
