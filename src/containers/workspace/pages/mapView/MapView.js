@@ -285,7 +285,7 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
-      case ConstToolType.MAP_EDIT_DEFAULT:
+      case ConstToolType.MAP_EDIT_DEFAULT: {
         SMap.appointEditGeometry(event.id, event.layerInfo.name)
         if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
           let column = 4,
@@ -317,6 +317,7 @@ export default class MapView extends React.Component {
             })
         }
         break
+      }
     }
   }
 

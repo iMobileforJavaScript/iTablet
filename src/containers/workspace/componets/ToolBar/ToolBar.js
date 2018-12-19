@@ -1228,6 +1228,13 @@ export default class ToolBar extends React.Component {
     if (type === ConstToolType.MAP_EDIT_TAGGING) {
       SMap.setAction(Action.PAN)
     } else if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_') >= -1)
+    ) {
+      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+      SMap.setAction(Action.PAN)
+    }
+    if (
       typeof type === 'string' &&
       type.indexOf('MAP_EDIT_') >= 0 &&
       type !== ConstToolType.MAP_EDIT_DEFAULT
@@ -1239,21 +1246,16 @@ export default class ToolBar extends React.Component {
         height: 0,
       })
       SMap.setAction(Action.SELECT)
-    } else if (
-      typeof type === 'number' ||
-      (typeof type === 'string' && type.indexOf('MAP_') >= -1)
-    ) {
-      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-      SMap.setAction(Action.PAN)
+    } else {
+      this.showToolbar(false)
+      if (
+        this.state.isTouchProgress === true ||
+        this.state.isSelectlist === true
+      ) {
+        this.setState({ isTouchProgress: false, isSelectlist: false })
+      }
+      this.props.existFullMap && this.props.existFullMap()
     }
-    this.showToolbar(false)
-    if (
-      this.state.isTouchProgress === true ||
-      this.state.isSelectlist === true
-    ) {
-      this.setState({ isTouchProgress: false, isSelectlist: false })
-    }
-    this.props.existFullMap && this.props.existFullMap()
   }
 
   clearCurrentLabel = () => {
@@ -1346,12 +1348,12 @@ export default class ToolBar extends React.Component {
   }
 
   commit = (type = this.originType) => {
-    this.showToolbar(false)
+    // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
       SMap.setAction(Action.PAN)
     }
-    this.props.existFullMap && this.props.existFullMap()
+    // this.props.existFullMap && this.props.existFullMap()
   }
 
   showBox = (autoFullScreen = false) => {
@@ -1615,9 +1617,67 @@ export default class ToolBar extends React.Component {
     }
   }
 
+  headerAction = ({ section }) => {
+    (async function() {
+      if (section.title === '打开默认工作空间') {
+        let defaultWorkspacePath = await Utility.appendingHomeDirectory(
+          (this.props.user.userName
+            ? ConstPath.UserPath + this.props.user.userName
+            : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
+        )
+
+        if (this.props.map.workspace.server === defaultWorkspacePath) {
+          Toast.show(ConstInfo.WORKSPACE_ALREADY_OPENED)
+          return
+        }
+
+        this.props.setCurrentTemplateInfo() // 清空当前模板
+        this.props.setTemplate() // 清空模板
+        // await SMap.closeDatasource()
+        this.props.closeWorkspace().then(async () => {
+          try {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(true, ConstInfo.WORKSPACE_OPENING)
+
+            let data = { server: defaultWorkspacePath }
+            let result = await this.props.openWorkspace(data)
+
+            await SMap.openDatasource(
+              ConstOnline['Google'].DSParams,
+              ConstOnline['Google'].layerIndex,
+            )
+            await this.props.getLayers()
+
+            Toast.show(
+              result
+                ? ConstInfo.WORKSPACE_DEFAULT_OPEN_SUCCESS
+                : ConstInfo.WORKSPACE_DEFAULT_OPEN_FAILED,
+            )
+            this.setVisible(false)
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          } catch (error) {
+            Toast.show(ConstInfo.WORKSPACE_DEFAULT_OPEN_FAILED)
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          }
+        })
+      }
+    }.bind(this)())
+  }
+
   /** 打开模板工作空间 **/
   openTemplate = async item => {
     try {
+      let tempPath = item.path.replace(
+        ConstPath.RelativePath.Template,
+        ConstPath.RelativePath.Workspace,
+      )
+
+      if (this.props.map.template.path === tempPath) {
+        Toast.show(ConstInfo.MODULE_ALREADY_OPENED)
+        return
+      }
       this.props.setContainerLoading &&
         this.props.setContainerLoading(true, '正在打开模板')
       // 打开模板工作空间
@@ -1716,57 +1776,7 @@ export default class ToolBar extends React.Component {
             this.listAction({ item, index })
           }
         }}
-        headerAction={({ section }) => {
-          (async function() {
-            if (section.title === '打开默认工作空间') {
-              let defaultWorkspacePath = await Utility.appendingHomeDirectory(
-                (this.props.user.userName
-                  ? ConstPath.UserPath + this.props.user.userName
-                  : ConstPath.CustomerPath) +
-                  ConstPath.RelativeFilePath.Workspace,
-              )
-
-              if (this.props.map.workspace.server === defaultWorkspacePath) {
-                Toast.show(ConstInfo.WORKSPACE_ALREADY_OPENED)
-                return
-              }
-
-              this.props.setCurrentTemplateInfo() // 清空当前模板
-              this.props.setTemplate() // 清空模板
-              this.props.closeWorkspace().then(async () => {
-                try {
-                  this.props.setContainerLoading &&
-                    this.props.setContainerLoading(
-                      true,
-                      ConstInfo.WORKSPACE_OPENING,
-                    )
-
-                  let data = { server: defaultWorkspacePath }
-                  let result = await this.props.openWorkspace(data)
-
-                  await SMap.openDatasource(
-                    ConstOnline['Google'].DSParams,
-                    ConstOnline['Google'].layerIndex,
-                  )
-                  await this.props.getLayers()
-
-                  Toast.show(
-                    result
-                      ? ConstInfo.WORKSPACE_DEFAULT_OPEN_SUCCESS
-                      : ConstInfo.WORKSPACE_DEFAULT_OPEN_FAILED,
-                  )
-                  this.setVisible(false)
-                  this.props.setContainerLoading &&
-                    this.props.setContainerLoading(false)
-                } catch (error) {
-                  Toast.show(ConstInfo.WORKSPACE_DEFAULT_OPEN_FAILED)
-                  this.props.setContainerLoading &&
-                    this.props.setContainerLoading(false)
-                }
-              })
-            }
-          }.bind(this)())
-        }}
+        headerAction={this.headerAction}
         keyExtractor={(item, index) => index}
       />
     )
@@ -2250,16 +2260,14 @@ export default class ToolBar extends React.Component {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.setVisible(false)}
             style={styles.overlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

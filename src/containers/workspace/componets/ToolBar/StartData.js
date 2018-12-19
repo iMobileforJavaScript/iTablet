@@ -39,7 +39,7 @@ function getStart(type, params) {
           title: constants.HISTORY,
           size: 'large',
           action: showHistory,
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          image: require('../../../../assets/mapTools/icon_history_white.png'),
         },
         {
           key: constants.BASE_MAP,
@@ -53,7 +53,7 @@ function getStart(type, params) {
           title: constants.ADD,
           size: 'large',
           action: add,
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          image: require('../../../../assets/mapTools/icon_add_white.png'),
         },
       ]
       break
@@ -114,7 +114,7 @@ function getStart(type, params) {
           title: constants.WORKSPACE,
           action: openWorkspace,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
+          image: require('../../../../assets/mapTools/icon_open.png'),
         },
         {
           key: constants.OPEN,
@@ -135,7 +135,7 @@ function getStart(type, params) {
           title: constants.HISTORY,
           size: 'large',
           action: showHistory,
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          image: require('../../../../assets/mapTools/icon_history_white.png'),
         },
         {
           key: constants.BASE_MAP,
@@ -149,7 +149,7 @@ function getStart(type, params) {
           title: constants.ADD,
           size: 'large',
           action: add,
-          image: require('../../../../assets/mapTools/icon_free_line.png'),
+          image: require('../../../../assets/mapTools/icon_add_white.png'),
         },
       ]
       break
@@ -182,7 +182,7 @@ function getStart(type, params) {
           title: constants.HISTORY,
           size: 'large',
           action: showHistory,
-          image: require('../../../../assets/mapTools/icon_point_line.png'),
+          image: require('../../../../assets/mapTools/icon_history_white.png'),
         },
         {
           key: constants.BASE_MAP,

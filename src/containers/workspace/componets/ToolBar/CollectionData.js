@@ -242,14 +242,15 @@ function showCollection(type) {
 }
 
 /** 创建采集 **/
-function createCollector(type) {
+async function createCollector(type) {
   // 风格
   let geoStyle = new GeoStyle()
-  geoStyle.setPointColor(0, 255, 0)
+  let collectorStyle = new GeoStyle()
+  collectorStyle.setPointColor(0, 255, 0)
   //线颜色
-  geoStyle.setLineColor(0, 110, 220)
+  collectorStyle.setLineColor(0, 110, 220)
   //面颜色
-  geoStyle.setFillForeColor(255, 0, 0)
+  collectorStyle.setFillForeColor(255, 0, 0)
 
   // let style = await SCollector.getStyle()
   let mType
@@ -284,10 +285,9 @@ function createCollector(type) {
     }
   }
   //设置绘制风格
-  // SCollector.setStyle(geoStyle)
+  // await SCollector.setStyle(geoStyle)
 
   let params = {}
-
   if (_params.symbol.currentSymbol.layerPath) {
     params = { layerPath: _params.symbol.currentSymbol.layerPath }
   } else {
