@@ -1139,7 +1139,7 @@ export default class ToolBar extends React.Component {
                   : table,
           },
           () => {
-            if (this.height < newHeight) {
+            if (this.height <= newHeight) {
               this.height = newHeight
               this.showToolbarAndBox(isShow, type)
               !isShow && this.props.existFullMap && this.props.existFullMap()
@@ -1149,7 +1149,7 @@ export default class ToolBar extends React.Component {
         )
       }.bind(this)
 
-      if (this.height >= newHeight) {
+      if (this.height > newHeight && this.height > 0) {
         this.height = newHeight
         this.showToolbarAndBox(isShow, type)
         !isShow && this.props.existFullMap && this.props.existFullMap()
@@ -1228,13 +1228,6 @@ export default class ToolBar extends React.Component {
 
   close = (type = this.state.type) => {
     GLOBAL.currentToolbarType = ''
-    // 关闭采集, type 为number时为采集类型，若有冲突再更改
-    if (
-      typeof type === 'number' ||
-      (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
-    ) {
-      SCollector.stopCollect()
-    }
     if (type === ConstToolType.MAP_EDIT_TAGGING) {
       SMap.setAction(Action.PAN)
     } else if (
@@ -1266,6 +1259,13 @@ export default class ToolBar extends React.Component {
         this.setState({ isTouchProgress: false, isSelectlist: false })
       }
       this.props.existFullMap && this.props.existFullMap()
+    }
+    // 关闭采集, type 为number时为采集类型，若有冲突再更改
+    if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
+    ) {
+      SCollector.stopCollect()
     }
   }
 
@@ -1362,7 +1362,14 @@ export default class ToolBar extends React.Component {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
-      SMap.setAction(Action.PAN)
+      if (
+        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+        type !== ConstToolType.MAP_EDIT_TAGGING
+      ) {
+        SMap.setAction(Action.SELECT)
+      } else {
+        SMap.setAction(Action.PAN)
+      }
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -1525,27 +1532,32 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
       //新建专题图数据集列表
-      (async function () {
-        let data = await SThemeCartography.getThemeExpressByDatasetName(item.title)
+      (async function() {
+        let data = await SThemeCartography.getThemeExpressByDatasetName(
+          item.title,
+        )
         let dataset = data.dataset
-        let datalist = [{
-          title: dataset.datasetName,
-          data: data.list,
-        }]
-        this.setState({
-          themeDatasetName: item.title,
-          isFullScreen: false,
-          isTouchProgress: false,
-          isSelectlist: false,
-          containerType: 'list',
-          data: datalist,
-          buttons: [ToolbarBtnType.THEME_CANCEL],
-          type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
-        },
-        () => {
-          this.height = ConstToolType.THEME_HEIGHT[6]
-          this.scrollListToLocation()
-        },
+        let datalist = [
+          {
+            title: dataset.datasetName,
+            data: data.list,
+          },
+        ]
+        this.setState(
+          {
+            themeDatasetName: item.title,
+            isFullScreen: false,
+            isTouchProgress: false,
+            isSelectlist: false,
+            containerType: 'list',
+            data: datalist,
+            buttons: [ToolbarBtnType.THEME_CANCEL],
+            type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
+          },
+          () => {
+            this.height = ConstToolType.THEME_HEIGHT[6]
+            this.scrollListToLocation()
+          },
         )
       }.bind(this)())
     } else if (

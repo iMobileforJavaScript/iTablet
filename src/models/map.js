@@ -250,6 +250,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
     Toast.show('请稍后再试')
     return false
   }
+  isExporting = true
   let userName = getState().user.toJS().currentUser.userName || 'Customer'
   let workspace = getState().map.toJS().workspace
   let path = params.outPath,
@@ -283,7 +284,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   }
   // 删除导出的工作空间
   await FileTools.deleteFile(parentPath)
-  isExporting = true
+  isExporting = false
   cb && cb(result, zipPath)
 }
 

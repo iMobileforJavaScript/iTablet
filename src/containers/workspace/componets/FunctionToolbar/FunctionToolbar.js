@@ -6,8 +6,8 @@
 import * as React from 'react'
 import { View, FlatList, Animated, Alert } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType, Const } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { ConstToolType, Const, ConstInfo } from '../../../../constants'
+import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
@@ -346,6 +346,7 @@ export default class FunctionToolbar extends React.Component {
         height,
         tableType,
       })
+      Toast.show(ConstInfo.CHOOSE_EDIT_OBJ)
     }
   }
 

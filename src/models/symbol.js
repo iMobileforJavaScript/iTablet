@@ -60,15 +60,16 @@ export default handleActions(
     [`${SET_CURRENT_SYMBOL}`]: (state, { payload }) => {
       let newData = state.toJS().latestSymbols || []
       let maxLength = state.toJS().maxLength || initialState.toJS().maxLength
-      let index = newData.indexOf(payload.id)
-      index > -1 && newData.splice(index, 1)
-      newData.unshift(payload.id)
-      if (newData.length >= maxLength) {
-        newData = newData.slice(0, maxLength)
+      if (payload.id) {
+        let index = newData.indexOf(payload.id)
+        index > -1 && newData.splice(index, 1)
+        newData.unshift(payload.id)
+        if (newData.length >= maxLength) {
+          newData = newData.slice(0, maxLength)
+        }
+        state.setIn(['latestSymbols'], fromJS(newData))
       }
-      return state
-        .setIn(['currentSymbol'], fromJS(payload))
-        .setIn(['latestSymbols'], fromJS(newData))
+      return state.setIn(['currentSymbol'], fromJS(payload))
     },
     [REHYDRATE]: state => {
       // return payload && payload.nav ? fromJS(payload.nav) : state
