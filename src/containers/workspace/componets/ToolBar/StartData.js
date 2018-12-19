@@ -1,5 +1,10 @@
 import { NativeMethod } from '../../../../native'
-import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
+import {
+  ConstToolType,
+  ConstInfo,
+  ConstPath,
+  Const,
+} from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
@@ -282,17 +287,17 @@ function openTemplate() {
       let data = isDefaultWS
         ? [
           {
-            title: '模板',
+            title: Const.MODULE,
             data: templateList,
           },
         ]
         : [
           {
-            title: '返回默认工作空间',
+            title: Const.RETURN_TO_DEFAULT_MODULE,
             data: [],
           },
           {
-            title: '模板',
+            title: Const.MODULE,
             data: templateList,
           },
         ]

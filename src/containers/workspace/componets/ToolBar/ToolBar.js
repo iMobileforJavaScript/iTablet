@@ -1125,7 +1125,7 @@ export default class ToolBar extends React.Component {
                   : table,
           },
           () => {
-            if (this.height <= newHeight) {
+            if (this.height < newHeight) {
               this.height = newHeight
               this.showToolbarAndBox(isShow, type)
               !isShow && this.props.existFullMap && this.props.existFullMap()
@@ -1135,7 +1135,7 @@ export default class ToolBar extends React.Component {
         )
       }.bind(this)
 
-      if (this.height > newHeight) {
+      if (this.height >= newHeight) {
         this.height = newHeight
         this.showToolbarAndBox(isShow, type)
         !isShow && this.props.existFullMap && this.props.existFullMap()
@@ -1233,7 +1233,8 @@ export default class ToolBar extends React.Component {
     if (
       typeof type === 'string' &&
       type.indexOf('MAP_EDIT_') >= 0 &&
-      type !== ConstToolType.MAP_EDIT_DEFAULT
+      type !== ConstToolType.MAP_EDIT_DEFAULT &&
+      type !== ConstToolType.MAP_EDIT_TAGGING
     ) {
       GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
       // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
@@ -1686,7 +1687,7 @@ export default class ToolBar extends React.Component {
 
   headerAction = ({ section }) => {
     (async function() {
-      if (section.title === '返回默认工作空间') {
+      if (section.title === Const.RETURN_TO_DEFAULT_MODULE) {
         let defaultWorkspacePath = await Utility.appendingHomeDirectory(
           (this.props.user.userName
             ? ConstPath.UserPath + this.props.user.userName
