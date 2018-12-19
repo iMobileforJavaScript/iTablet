@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { SMap, Utility } from 'imobile_for_reactnative'
+import { SMap, Utility, WorkspaceType } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath, ConstInfo } from '../constants'
@@ -154,11 +154,30 @@ export const openTemplate = (params, cb = () => {}) => async (
     // 拷贝模板文件
     let userPath = params.path.substr(0, params.path.indexOf('/Data/Template'))
     let fileName = params.path.substr(params.path.lastIndexOf('/') + 1)
+    // let alias = fileName.split('.')[0].toString()
+    let fileType = fileName.split('.')[1].toString()
     let tempDirPath = params.path.substr(0, params.path.lastIndexOf('/'))
     let tempParentDirName = tempDirPath.substr(tempDirPath.lastIndexOf('/') + 1)
     let targetPath =
       userPath + '/' + ConstPath.RelativePath.Workspace + tempParentDirName // 目标文件目录，不含文件名
     let targetFilePath = targetPath + '/' + fileName
+
+    let type
+    switch (fileType) {
+      case 'SXW':
+        type = WorkspaceType.SXW
+        break
+      case 'SMW':
+        type = WorkspaceType.SMW
+        break
+      case 'SXWU':
+        type = WorkspaceType.SXWU
+        break
+      case 'SMWU':
+      default:
+        type = WorkspaceType.SMWU
+    }
+
     if (workspace.server === targetFilePath) {
       cb &&
         cb({ copyResult, openResult, msg: ConstInfo.WORKSPACE_ALREADY_OPENED })
@@ -169,9 +188,18 @@ export const openTemplate = (params, cb = () => {}) => async (
         // 关闭所有地图
         await SMap.closeMap()
         await SMap.closeWorkspace()
-        let data = { server: targetFilePath }
+        let data = { server: targetFilePath, type }
         openResult = await SMap.openWorkspace(data)
-        await SMap.openMap(0)
+        // 导入新的模板工作空间
+        if (params.isImportWorkspace) {
+          let importWSData = { server: params.path, type }
+          await SMap.importWorkspace(importWSData)
+        }
+        params.isImportWorkspace !== undefined &&
+          delete params.isImportWorkspace
+
+        let maps = await SMap.getMaps()
+        await SMap.openMap(maps.length > 0 ? maps.length - 1 : -1)
         let mapInfo = await SMap.getMapInfo()
 
         Object.assign(params, { path: targetFilePath })
@@ -180,12 +208,12 @@ export const openTemplate = (params, cb = () => {}) => async (
           mapInfo,
         }
       }
-      await dispatch({
-        type: OPEN_TEMPLATE,
-        payload: payload || {},
-      })
-      cb && cb({ copyResult, openResult })
     }
+    await dispatch({
+      type: OPEN_TEMPLATE,
+      payload: payload || {},
+    })
+    cb && cb({ copyResult, openResult })
   } catch (e) {
     cb && cb({ copyResult, openResult })
   }
@@ -308,9 +336,10 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
       }
       let tempPath = path.substr(0, path.lastIndexOf('/') + 1)
       Utility.getPathListByFilter(tempPath, {
-        type: 'xml',
+        extension: 'xml',
+        type: 'file',
       }).then(xmlList => {
-        if (xmlList && xmlList.length > 0) {
+        if (xmlList && xmlList.length > 0 && !xmlList[0].isDirectory) {
           let xmlInfo = xmlList[0]
           Utility.appendingHomeDirectory(xmlInfo.path).then(xmlPath => {
             fs.readFile(xmlPath).then(data => {

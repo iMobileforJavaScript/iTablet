@@ -71,13 +71,13 @@ function getCollectionOperationData(type, params) {
           size: 'large',
           image: require('../../../../assets/mapTools/icon_collection_point.png'),
         },
-        {
-          key: 'takePhoto',
-          title: '拍照',
-          action: () => showCollection(type),
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_take_photo.png'),
-        },
+        // {
+        //   key: 'takePhoto',
+        //   title: '拍照',
+        //   action: () => showCollection(type),
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_take_photo.png'),
+        // },
       )
       break
     case ConstToolType.MAP_COLLECTION_LINE:
@@ -192,32 +192,28 @@ function getCollectionData(type, params) {
     title: constants.UNDO,
     action: () => undo(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_undo.png'),
-    selectedImage: require('../../../../assets/mapTools/icon_undo_selected.png'),
+    image: require('../../../../assets/mapTools/icon_undo_white.png'),
   })
   data.push({
     key: constants.REDO,
     title: constants.REDO,
     action: () => redo(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_redo.png'),
-    selectedImage: require('../../../../assets/mapTools/icon_redo_selected.png'),
+    image: require('../../../../assets/mapTools/icon_recover_white.png'),
   })
   data.push({
     key: constants.CANCEL,
     title: constants.CANCEL,
     action: () => cancel(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_cancel.png'),
-    selectedImage: require('../../../../assets/mapTools/icon_cancel_selected.png'),
+    image: require('../../../../assets/mapTools/icon_close_white.png'),
   })
   data.push({
     key: constants.SUBMIT,
     title: constants.SUBMIT,
     action: () => collectionSubmit(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_submit.png'),
-    selectedImage: require('../../../../assets/mapTools/icon_submit_select.png'),
+    image: require('../../../../assets/mapTools/icon_submit_white.png'),
   })
   buttons = [
     ToolbarBtnType.CANCEL,
@@ -246,15 +242,16 @@ function showCollection(type) {
 }
 
 /** 创建采集 **/
-function createCollector(type) {
+async function createCollector(type) {
   // 风格
   let geoStyle = new GeoStyle()
-  // geoStyle.setPointColor(0, 255, 0)
-  // //线颜色
-  // geoStyle.setLineColor(0, 110, 220)
-  // //面颜色
-  // geoStyle.setFillForeColor(255, 0, 0)
-  //
+  let collectorStyle = new GeoStyle()
+  collectorStyle.setPointColor(0, 255, 0)
+  //线颜色
+  collectorStyle.setLineColor(0, 110, 220)
+  //面颜色
+  collectorStyle.setFillForeColor(255, 0, 0)
+
   // let style = await SCollector.getStyle()
   let mType
   switch (type) {
@@ -288,26 +285,35 @@ function createCollector(type) {
     }
   }
   //设置绘制风格
-  SCollector.setStyle(geoStyle)
+  // await SCollector.setStyle(geoStyle)
 
-  let datasetName = _params.symbol.currentSymbol.type
-    ? _params.symbol.currentSymbol.type + '_' + _params.symbol.currentSymbol.id
-    : ''
-  let datasourcePath =
-    _params.user && _params.user.currentUser && _params.user.currentUser.name
-      ? ConstPath.UserPath +
-        _params.user.currentUser.name +
-        ConstPath.RelativePath.Datasource
-      : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
-  let datasourceName = (_params.map && _params.map.currentMap) || ''
+  let params = {}
+  if (_params.symbol.currentSymbol.layerPath) {
+    params = { layerPath: _params.symbol.currentSymbol.layerPath }
+  } else {
+    let datasetName = _params.symbol.currentSymbol.type
+      ? _params.symbol.currentSymbol.type +
+        '_' +
+        _params.symbol.currentSymbol.id
+      : ''
+    let datasourcePath =
+      _params.user && _params.user.currentUser && _params.user.currentUser.name
+        ? ConstPath.UserPath +
+          _params.user.currentUser.name +
+          ConstPath.RelativePath.Datasource
+        : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
+    let datasourceName = (_params.map && _params.map.currentMap) || ''
 
-  SCollector.setDataset({
-    datasourcePath: _params.collection.datasourceParentPath || datasourcePath,
-    datasourceName: _params.collection.datasourceName || datasourceName,
-    datasetName,
-    datasetType: mType,
-    style: geoStyle,
-  }).then(() => {
+    params = {
+      datasourcePath: _params.collection.datasourceParentPath || datasourcePath,
+      datasourceName: _params.collection.datasourceName || datasourceName,
+      datasetName,
+      datasetType: mType,
+      style: geoStyle,
+    }
+  }
+
+  SCollector.setDataset(params).then(() => {
     SCollector.startCollect(type)
     _params.getLayers(-1, layers => {
       _params.setCurrentLayer(layers.length > 0 && layers[0])
@@ -316,21 +322,28 @@ function createCollector(type) {
 }
 
 async function collectionSubmit(type) {
-  if (
-    typeof type === 'string' &&
-    type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
-  ) {
-    // 若当前操作为模板符号绘制
-    await SMap.submit()
-    if (_params.layers.editLayer.path) {
-      SMap.setLayerFieldInfo(
-        _params.layers.editLayer.path,
-        _params.map.currentTemplateInfo.field,
-      )
-    }
-    return
+  // if (
+  //   typeof type === 'string' &&
+  //   type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
+  // ) {
+  //   // 若当前操作为模板符号绘制
+  //   await SMap.submit()
+  //   if (_params.layers.editLayer.path) {
+  //     SMap.setLayerFieldInfo(
+  //       _params.layers.editLayer.path,
+  //       _params.map.currentTemplateInfo.field,
+  //     )
+  //   }
+  //   return
+  // }
+  let result = await SCollector.submit(type)
+  if (_params.symbol.currentSymbol.layerPath) {
+    SMap.setLayerFieldInfo(
+      _params.symbol.currentSymbol.layerPath,
+      _params.map.currentTemplateInfo.field,
+    )
   }
-  return SCollector.submit(type)
+  return result
 }
 
 function cancel(type) {

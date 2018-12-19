@@ -6,7 +6,7 @@
 import * as React from 'react'
 import { View, FlatList, Animated, Alert } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType } from '../../../../constants'
+import { ConstToolType, Const } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
@@ -66,7 +66,7 @@ export default class FunctionToolbar extends React.Component {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
       toValue: visible ? scaleSize(20) : scaleSize(-200),
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
   }
@@ -240,7 +240,6 @@ export default class FunctionToolbar extends React.Component {
       SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
-          // SScene.setAllLayersSelection(false)
           this.props.showFullMap && this.props.showFullMap(true)
           // TODO 根据符号类型改变ToolBox内容
           toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
@@ -262,7 +261,7 @@ export default class FunctionToolbar extends React.Component {
           ? ConstToolType.HEIGHT[1]
           : ConstToolType.HEIGHT[0]
       SScene.checkoutListener('startMeasure')
-      SScene.getLayerList().then(layerList => {
+      SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
           this.props.showFullMap && this.props.showFullMap(true)
@@ -273,8 +272,6 @@ export default class FunctionToolbar extends React.Component {
             column: column,
             height: height,
           })
-          toolRef.getOldLayerList(layerList)
-          // SScene.setAllLayersSelection(false)
         }
       })
     })
