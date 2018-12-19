@@ -1,5 +1,5 @@
 import React from 'react'
-import { screen, Toast } from '../../../../utils'
+import { screen, Toast, scaleSize } from '../../../../utils'
 import { MTBtn, TableList } from '../../../../components'
 import {
   ConstToolType,
@@ -735,7 +735,7 @@ export default class ToolBar extends React.Component {
       this.toolBarSectionList.scrollToLocation({
         sectionIndex: 0,
         itemIndex: 0,
-        viewOffset: 100,
+        viewOffset: scaleSize(80),
       })
   }
 
@@ -1539,7 +1539,7 @@ export default class ToolBar extends React.Component {
         let dataset = data.dataset
         let datalist = [
           {
-            title: dataset.datasetName,
+            title: '数据集: ' + dataset.datasetName,
             data: data.list,
           },
         ]
@@ -1556,10 +1556,10 @@ export default class ToolBar extends React.Component {
           },
           () => {
             this.height = ConstToolType.THEME_HEIGHT[6]
-            this.scrollListToLocation()
           },
         )
       }.bind(this)())
+      this.scrollListToLocation()
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
