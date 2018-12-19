@@ -4,6 +4,7 @@ import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 import { Utility } from 'imobile_for_reactnative'
+import Orientation from 'react-native-orientation'
 let _params = {}
 
 function getStart(type, params) {
@@ -109,13 +110,13 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_COLLECTION_START:
       data = [
-        {
-          key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
-          action: openWorkspace,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
-        },
+        // {
+        //   key: constants.WORKSPACE,
+        //   title: constants.WORKSPACE,
+        //   action: openWorkspace,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_open.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -155,14 +156,14 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_THEME_START:
       data = [
-        // {
-        //   key: constants.WORKSPACE,
-        //   title: constants.WORKSPACE,
-        //   action: openWorkspace,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_point.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_point.png'),
-        // },
+        {
+          key: constants.WORKSPACE,
+          title: constants.WORKSPACE,
+          action: openWorkspace,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+        },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -174,7 +175,7 @@ function getStart(type, params) {
           key: constants.CREATE,
           title: constants.CREATE,
           size: 'large',
-          action: add,
+          action: createThemeMap,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
         {
@@ -376,6 +377,27 @@ function changeBaseLayer(type) {
       })
       break
   }
+}
+
+/**新建专题图 **/
+function createThemeMap() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+
+  Orientation.getOrientation((e, orientation) => {
+    let column = orientation === 'PORTRAIT' ? 4 : 8
+    let height =
+      orientation === 'PORTRAIT'
+        ? ConstToolType.HEIGHT[2]
+        : ConstToolType.HEIGHT[0]
+
+    _params.setToolbarVisible(true, ConstToolType.MAP_THEME_CREATE, {
+      containerType: 'table',
+      isFullScreen: true,
+      column: column,
+      height: height,
+    })
+  })
 }
 
 /** 添加 **/

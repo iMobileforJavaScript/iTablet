@@ -42,13 +42,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  btnm: {
-    height: scaleSize(50),
-    width: scaleSize(100),
-    marginRight: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   btn_image: {
     height: scaleSize(40),
     width: scaleSize(40),
@@ -72,6 +65,7 @@ export default StyleSheet.create({
   text_container: {
     // height:40,
     // width: scaleSize(),
+    flex: 1,
     marginLeft: scaleSize(30),
   },
   text: {

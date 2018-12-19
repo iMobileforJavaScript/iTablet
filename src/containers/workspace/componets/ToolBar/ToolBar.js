@@ -152,11 +152,10 @@ export default class ToolBar extends React.Component {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
-      themeUdbPath: '',
-      themeDatasourceAlias: '',
       themeDatasetName: '',
       themeExpress: 'SMID',
       themeColor: 'TERRAIN',
+      themeCreateType: '',
       selectName: '',
     }
     this.isShow = false
@@ -735,17 +734,14 @@ export default class ToolBar extends React.Component {
     }).start()
     this.isBoxShow = true
 
-    // let list = await SThemeCartography.getThemeExpressByUdb(
-    //   this.state.themeUdbPath,
-    //   this.state.themeDatasetName,
-    // )
-    let list = await SThemeCartography.getThemeExpressByLayerName(
-      GLOBAL.currentLayer.caption,
+    let data = await SThemeCartography.getThemeExpressByLayerName(
+      GLOBAL.currentLayer.name,
     )
+    let dataset = data.dataset
     let datalist = [
       {
-        title: '数据集字段',
-        data: list,
+        title: dataset.datasetName,
+        data: data.list,
       },
     ]
     this.setState(
@@ -1445,7 +1441,7 @@ export default class ToolBar extends React.Component {
         let Params = {
           UniqueExpression: item.title,
           ColorGradientType: this.state.themeColor,
-          LayerName: GLOBAL.currentLayer.caption,
+          LayerName: GLOBAL.currentLayer.name,
         }
         // await SThemeCartography.setUniqueExpression(Params)
         await SThemeCartography.modifyThemeUniqueMap(Params)
@@ -1459,7 +1455,7 @@ export default class ToolBar extends React.Component {
         let Params = {
           UniqueExpression: this.state.themeExpress,
           ColorGradientType: item.key,
-          LayerName: GLOBAL.currentLayer.caption,
+          LayerName: GLOBAL.currentLayer.name,
         }
         await SThemeCartography.modifyThemeUniqueMap(Params)
       }.bind(this)())
@@ -1473,9 +1469,13 @@ export default class ToolBar extends React.Component {
       ;(async function() {
         let Params = {
           RangeExpression: item.title,
-          LayerName: GLOBAL.currentLayer.caption,
+          LayerName: GLOBAL.currentLayer.name,
+          ColorGradientType: this.state.themeColor,
+          RangeMode: 'EQUALINTERVAL',
+          RangeParameter: '32.0',
         }
-        await SThemeCartography.setRangeExpression(Params)
+        // await SThemeCartography.setRangeExpression(Params)
+        await SThemeCartography.modifyThemeRangeMap(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
       //分段专题图颜色表
@@ -1486,7 +1486,7 @@ export default class ToolBar extends React.Component {
         let Params = {
           RangeExpression: this.state.themeExpress,
           ColorGradientType: item.key,
-          LayerName: GLOBAL.currentLayer.caption,
+          LayerName: GLOBAL.currentLayer.name,
           RangeMode: 'EQUALINTERVAL',
           RangeParameter: '32.0',
         }
@@ -1502,9 +1502,103 @@ export default class ToolBar extends React.Component {
       ;(async function() {
         let Params = {
           LabelExpression: item.title,
-          LayerName: GLOBAL.currentLayer.caption,
+          LayerName: GLOBAL.currentLayer.name,
         }
         await SThemeCartography.setUniformLabelExpression(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
+    ) {
+      //新建专题图数据集列表
+      this.setState({
+        themeDatasetName: item.title,
+      })
+      ;(async function() {
+        let data = await SThemeCartography.getThemeExpressByDatasetName(
+          item.title,
+        )
+
+        let dataset = data.dataset
+        let datalist = [
+          {
+            title: dataset.datasetName,
+            data: data.list,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            isSelectlist: false,
+            containerType: 'list',
+            data: datalist,
+            buttons: [ToolbarBtnType.THEME_CANCEL],
+            type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
+          },
+          () => {
+            this.height = ConstToolType.THEME_HEIGHT[6]
+          },
+        )
+      }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
+    ) {
+      //新建专题图字段列表
+      this.setState({
+        themeExpress: item.title,
+      })
+      ;(async function() {
+        let params = {}
+        let isSuccess = false
+        switch (this.state.themeCreateType) {
+          case constants.THEME_UNIQUE_STYLE:
+            //单值风格
+            params = {
+              DatasourceIndex: '0',
+              DatasetName: this.state.themeDatasetName,
+              UniqueExpression: item.title,
+              ColorGradientType: 'TERRAIN',
+            }
+            isSuccess = await SThemeCartography.createThemeUniqueMap(params)
+            break
+          case constants.THEME_RANGE_STYLE:
+            //分段风格
+            params = {
+              DatasourceIndex: '0',
+              DatasetName: this.state.themeDatasetName,
+              RangeExpression: item.title,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '32.0',
+              ColorGradientType: 'TERRAIN',
+            }
+            isSuccess = await SThemeCartography.createThemeRangeMap(params)
+            break
+          case constants.THEME_UNIFY_LABEL:
+            //统一标签
+            params = {
+              DatasourceIndex: '0',
+              DatasetName: this.state.themeDatasetName,
+              LabelExpression: item.title,
+              LabelBackShape: 'NONE',
+              FontName: '宋体',
+              // FontSize: '15.0',
+              ForeColor: '#000000',
+            }
+            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
+              params,
+            )
+            break
+        }
+        if (isSuccess) {
+          Toast.show('创建专题图成功')
+          //设置当前图层
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        } else {
+          Toast.show('创建专题图失败')
+        }
+        this.setVisible(false)
       }.bind(this)())
     }
   }
@@ -1533,33 +1627,6 @@ export default class ToolBar extends React.Component {
       })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
-        this.setState({
-          themeDatasourceAlias: item.title,
-          themeDatasetName: item.title,
-        })
-        ToolbarData.setUniqueThemeParams({
-          DatasourceAlias: item.title,
-          DatasetName: item.title,
-          UniqueExpression: this.state.themeExpress,
-          ColorGradientType: 'TERRAIN',
-        })
-        ToolbarData.setRangeThemeParams({
-          DatasourceAlias: item.title,
-          DatasetName: item.title,
-          RangeExpression: this.state.themeExpress,
-          RangeMode: 'EQUALINTERVAL',
-          RangeParameter: '32.0',
-          ColorGradientType: 'TERRAIN',
-        })
-        ToolbarData.setUniformLabelParams({
-          DatasourceAlias: item.title,
-          DatasetName: item.title,
-          LabelExpression: '国家',
-          LabelBackShape: 'NONE',
-          FontName: '宋体',
-          // FontSize: '15.0',
-          ForeColor: '#40E0D0',
-        })
         let udbpath = {
           server: this.path,
           alias: item.title,
@@ -1737,7 +1804,7 @@ export default class ToolBar extends React.Component {
       }
       SMap.openDatasource(DSParams).then(result => {
         result &&
-          SMap.openMap(item.title).then(isOpen => {
+          this.props.openMap(item.title).then(isOpen => {
             if (isOpen) {
               Toast.show('已为您切换到' + item.title)
               this.props.setCurrentMap(item)
@@ -1840,51 +1907,55 @@ export default class ToolBar extends React.Component {
             this.props.getMenuAlertDialogRef &&
             this.props.getMenuAlertDialogRef()
           if (menutoolRef && type !== '') {
+            //创建的专题图类型
+            this.setState({
+              themeCreateType: type,
+            })
             menutoolRef.setMenuType(type)
           }
 
-          if (this.state.type == ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+          if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             let Params = {
               RangeExpression: this.state.themeExpress,
               ColorGradientType: this.state.themeColor,
-              LayerName: GLOBAL.currentLayer.caption,
+              LayerName: GLOBAL.currentLayer.name,
               RangeMode: item.key,
               RangeParameter: '32.0',
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE
           ) {
             let Params = {
-              LayerIndex: '0',
+              LayerName: GLOBAL.currentLayer.name,
               LabelBackShape: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME
           ) {
             let Params = {
-              LayerIndex: '0',
+              LayerName: GLOBAL.currentLayer.name,
               FontName: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION
           ) {
             let Params = {
-              LayerIndex: '0',
+              LayerName: GLOBAL.currentLayer.name,
               Rotaion: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
-            this.state.type ==
+            this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
           ) {
             let Params = {
-              LayerIndex: '0',
+              LayerName: GLOBAL.currentLayer.name,
               Color: item.key,
             }
             ThemeMenuData.setThemeParams(Params)
