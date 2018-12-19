@@ -1619,7 +1619,7 @@ export default class ToolBar extends React.Component {
 
   headerAction = ({ section }) => {
     (async function() {
-      if (section.title === '打开默认工作空间') {
+      if (section.title === '返回默认工作空间') {
         let defaultWorkspacePath = await Utility.appendingHomeDirectory(
           (this.props.user.userName
             ? ConstPath.UserPath + this.props.user.userName
