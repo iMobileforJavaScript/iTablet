@@ -31,14 +31,19 @@ export default class TreeListItem extends React.Component {
     keyExtractor?: () => {},
     onPress?: () => {},
     renderChild: () => {},
+    defaultShowChildren: boolean,
+  }
+
+  static defaultProps = {
+    defaultShowChildren: false,
   }
 
   constructor(props) {
     super(props)
     this.state = {
       // height: new Animated.Value(0),
-      imgRotate: new Animated.Value(0),
-      isVisible: true,
+      imgRotate: new Animated.Value(props.defaultShowChildren ? 0 : -0.5),
+      isVisible: props.defaultShowChildren,
     }
   }
 

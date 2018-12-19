@@ -4,14 +4,14 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Animated } from 'react-native'
+import { View, FlatList, Animated, Alert } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType } from '../../../../constants'
+import { ConstToolType, Const } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
-import { SScene, SMap, Action } from 'imobile_for_reactnative'
+import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -66,7 +66,7 @@ export default class FunctionToolbar extends React.Component {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
       toValue: visible ? scaleSize(20) : scaleSize(-200),
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
   }
@@ -91,6 +91,24 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
+    switch (GLOBAL.GLOBAL.currentLayer.themeType) {
+      case ThemeType.UNIQUE:
+      case ThemeType.RANGE:
+      case ThemeType.LABEL:
+        break
+      case ThemeType.GRIDRANGE:
+      case ThemeType.GRIDUNIQUE:
+      case ThemeType.CUSTOM:
+      case ThemeType.DOTDENSITY:
+      case ThemeType.GRAPH:
+      case ThemeType.GRADUATEDSYMBOL:
+        Alert.alert('提示: 暂不支持编辑的专题图层。')
+        return
+      default:
+        Alert.alert('提示: 请先选择专题图层。')
+        return
+    }
+
     const menuRef = this.props.getMenuAlertDialogRef()
     if (menuRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -123,7 +141,7 @@ export default class FunctionToolbar extends React.Component {
       let column = orientation === 'PORTRAIT' ? 4 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[1]
+          ? ConstToolType.HEIGHT[2]
           : ConstToolType.HEIGHT[0]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -222,7 +240,6 @@ export default class FunctionToolbar extends React.Component {
       SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
-          // SScene.setAllLayersSelection(false)
           this.props.showFullMap && this.props.showFullMap(true)
           // TODO 根据符号类型改变ToolBox内容
           toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
@@ -244,7 +261,7 @@ export default class FunctionToolbar extends React.Component {
           ? ConstToolType.HEIGHT[1]
           : ConstToolType.HEIGHT[0]
       SScene.checkoutListener('startMeasure')
-      SScene.getLayerList().then(layerList => {
+      SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
           this.props.showFullMap && this.props.showFullMap(true)
@@ -255,8 +272,6 @@ export default class FunctionToolbar extends React.Component {
             column: column,
             height: height,
           })
-          toolRef.getOldLayerList(layerList)
-          // SScene.setAllLayersSelection(false)
         }
       })
     })

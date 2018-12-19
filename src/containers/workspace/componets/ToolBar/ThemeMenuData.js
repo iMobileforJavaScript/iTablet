@@ -2,8 +2,184 @@ import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
 import ToolbarBtnType from './ToolbarBtnType'
+import { ConstToolType } from '../../../../constants'
+
+function showTips() {
+  Toast.show('功能暂未开放')
+}
+
+let _toolbarParams = {}
+
+//单值专题图参数
+let _paramsUniqueTheme = {}
+
+function setUniqueThemeParams(params) {
+  _paramsUniqueTheme = params
+}
+
+/** 新建单值风格专题图 **/
+function createThemeUniqueMap() {
+  return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
+}
+
+//分段专题图参数
+let _paramsRangeTheme = {}
+
+function setRangeThemeParams(params) {
+  _paramsRangeTheme = params
+}
+
+/** 新建分段风格专题图 **/
+function createThemeRangeMap() {
+  return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
+}
+
+//统一标签专题图参数
+let _paramsUniformLabel = {}
+
+function setUniformLabelParams(params) {
+  _paramsUniformLabel = params
+}
+
+/** 新建统一标签专题图 **/
+function createUniformLabelMap() {
+  return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
+}
+
+function showDatasetsList() {
+  let data = []
+  SThemeCartography.getDatasetNames().then(getdata => {
+    let datasource = getdata.datasource
+    data = [
+      {
+        title: datasource.alias,
+        data: getdata.list,
+      },
+    ]
+    _toolbarParams.setToolbarVisible &&
+      _toolbarParams.setToolbarVisible(true, ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS, {
+        containerType: 'list',
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        height: ConstToolType.THEME_HEIGHT[6],
+        // listSelectable: true, //单选框
+        data,
+        buttons: [ToolbarBtnType.THEME_CANCEL],
+      })
+  })
+}
+
+/**
+ * 获取创建专题图菜单
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeMapCreate(type, params) {
+  _toolbarParams = params
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_CREATE) return {data, buttons}
+  data = [{
+    //统一风格
+    key: constants.THEME_UNIFY_STYLE,
+    title: constants.THEME_UNIFY_STYLE,
+    action: showTips,
+    size: 'large',
+    image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+  },
+  {
+    //单值风格
+    key: constants.THEME_UNIQUE_STYLE,
+    title: constants.THEME_UNIQUE_STYLE,
+    size: 'large',
+    action: showDatasetsList,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+  },
+  {
+    //分段风格
+    key: constants.THEME_RANGE_STYLE,
+    title: constants.THEME_RANGE_STYLE,
+    size: 'large',
+    action: showDatasetsList,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+  },
+  {
+    //自定义风格
+    key: constants.THEME_CUSTOME_STYLE,
+    title: constants.THEME_CUSTOME_STYLE,
+    size: 'large',
+    action: showTips,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+  },
+  {
+    //自定义标签
+    key: constants.THEME_CUSTOME_LABEL,
+    title: constants.THEME_CUSTOME_LABEL,
+    size: 'large',
+    action: showTips,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+  },
+  {
+    //统一标签
+    key: constants.THEME_UNIFY_LABEL,
+    title: constants.THEME_UNIFY_LABEL,
+    size: 'large',
+    action: showDatasetsList,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+  },
+  {
+    //单值标签
+    key: constants.THEME_UNIQUE_LABEL,
+    title: constants.THEME_UNIQUE_LABEL,
+    size: 'large',
+    action: showTips,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+  },
+  {
+    //分段标签
+    key: constants.THEME_RANGE_LABEL,
+    title: constants.THEME_RANGE_LABEL,
+    size: 'large',
+    action: showTips,
+    image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+    selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+  },
+  ]
+  return {data, buttons}
+}
+
+/**
+ * 专题图参数设置
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeMapParam(type, params) {
+  _toolbarParams = params
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_PARAM) return {data, buttons}
+  buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.THEME_COMMIT,
+  ]
+  return {data, buttons}
+}
 
 let _params = {}
+
+function setThemeParams(params) {
+  _params = params
+}
 
 function showToast() {
   Toast.show('功能暂未开放')
@@ -730,10 +906,16 @@ function getColorGradientType() {
 export default {
   getRangeMode,
   getColorGradientType,
+  setThemeParams,
   getLabelBackShape,
   getLabelFontName,
   getLabelFontRotation,
   getLabelFontColor,
   getThemeFourMenu,
   getThemeThreeMenu,
+  getThemeMapCreate,
+  getThemeMapParam,
+  setUniqueThemeParams,
+  setRangeThemeParams,
+  setUniformLabelParams,
 }

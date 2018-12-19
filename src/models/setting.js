@@ -9,6 +9,7 @@ export const BUFFER_SETTING_SET = 'BUFFER_SETTING_SET'
 export const OVERLAY_SETTING_SET = 'OVERLAY_SETTING_SET'
 export const ROUTE_SETTING_SET = 'ROUTE_SETTING_SET'
 export const TRACKING_SETTING_SET = 'TRACKING_SETTING_SET'
+export const SETTING_DATA = 'SETTING_DATA'
 
 // Actions
 // --------------------------------------------------
@@ -43,6 +44,13 @@ export const setTrackingSetting = (params, cb = () => {}) => async dispatch => {
   })
   cb && cb()
 }
+export const setSettingData = (data = [], cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SETTING_DATA,
+    payload: data,
+  })
+  cb && cb()
+}
 
 const initialState = fromJS({
   buffer: {
@@ -60,6 +68,7 @@ const initialState = fromJS({
   route: {
     mode: '',
   },
+  settingData: [],
 })
 
 export default handleActions(
@@ -96,6 +105,15 @@ export default handleActions(
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.setting ? fromJS(payload.setting) : state
+    },
+    [`${SETTING_DATA}`]: (state, { payload }) => {
+      let data = state.toJS().settingData
+      if (payload) {
+        data = payload
+      } else {
+        data = []
+      }
+      return state.setIn(['settingData'], fromJS(data))
     },
   },
   initialState,
