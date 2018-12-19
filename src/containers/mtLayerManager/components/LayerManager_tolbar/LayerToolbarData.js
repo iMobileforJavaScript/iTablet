@@ -1,6 +1,14 @@
 const layersetting = [
   {
+    title: '设置为当前图层',
+    data: [],
+  },
+  {
     title: '可见比例尺范围',
+    data: [],
+  },
+  {
+    title: '图层风格',
     data: [],
   },
   {
@@ -11,12 +19,16 @@ const layersetting = [
     title: '重命名',
     data: [],
   },
+  // {
+  //   title: '复制',
+  //   data: [],
+  // },
   {
-    title: '删除',
+    title: '插入复制的图层',
     data: [],
   },
   {
-    title: '复制',
+    title: '移除',
     data: [],
   },
 ]

@@ -1,13 +1,11 @@
 import React from 'react'
-import { screen } from '../../../../utils'
+import { screen, scaleSize } from '../../../../utils'
 import { ConstToolType } from '../../../../constants'
 import { layersetting } from './LayerToolbarData'
 import { View, TouchableOpacity, Animated } from 'react-native'
 import ToolBarSectionList from '../../../workspace/componets/ToolBar/ToolBarSectionList'
-import { SMap } from 'imobile_for_reactnative'
 import styles from './styles'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -142,8 +140,8 @@ export default class LayerManager_tolbar extends React.Component {
     if (section.action) {
       section.action && section.action()
     }
-    if (section.title === '删除') {
-      SMap.removeLayerWithName(this.state.layername)
+    if (section.title === '移除') {
+      // SMap.removeLayerWithName(this.state.layername)
     }
   }
 
