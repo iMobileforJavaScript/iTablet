@@ -15,6 +15,8 @@ export default class ToolBarSectionList extends React.Component {
     sectionStyle?: Object,
     itemStyle?: Object,
     listSelectable?: boolean,
+    sectionTitleStyle?: Object,
+    activeOpacity?: Object,
     sections: Array,
     renderItem: () => {},
     renderSectionHeader: () => {},
@@ -26,6 +28,7 @@ export default class ToolBarSectionList extends React.Component {
   static defaultProps = {
     sections: [],
     listSelectable: false,
+    activeOpacity: 1,
   }
 
   constructor(props) {
@@ -98,11 +101,13 @@ export default class ToolBarSectionList extends React.Component {
     }
     return (
       <TouchableOpacity
-        activeOpacity={1}
+        activeOpacity={this.props.activeOpacity}
         style={[styles.sectionHeader, this.props.sectionStyle]}
         onPress={() => this.headerAction({ section })}
       >
-        <Text style={styles.sectionTitle}>{section.title}</Text>
+        <Text style={[styles.sectionTitle, this.props.sectionTitleStyle]}>
+          {section.title}
+        </Text>
       </TouchableOpacity>
     )
   }

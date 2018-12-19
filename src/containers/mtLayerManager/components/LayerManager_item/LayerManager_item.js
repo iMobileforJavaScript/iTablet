@@ -31,6 +31,7 @@ export default class LayerManager_item extends React.Component {
     setEditable: () => {},
     onArrowPress: () => {},
     onPress: () => {},
+    onToolPress: () => {},
     onOpen: () => {},
     child: Array,
     sectionID: number,
@@ -327,6 +328,14 @@ export default class LayerManager_item extends React.Component {
     } else return
   }
 
+  _tool_row = async () => {
+    if (this.props.onToolPress) {
+      await this.props.onToolPress({
+        data: this.props.data,
+      })
+    } else return
+  }
+
   _arrow_pop_row = async () => {
     let isShow = !this.state.rowShow
     if (this.props.data.type === 'layerGroup') {
@@ -518,13 +527,13 @@ export default class LayerManager_item extends React.Component {
         <View style={styles.text_container}>
           <Text style={styles.text}>{name}</Text>
         </View>
-        <View style={styles.btnm}>
+        <TouchableOpacity style={styles.btn} onPress={this._tool_row}>
           <Image
             resizeMode={'contain'}
             style={styles.btn_image}
             source={require('../../../../assets/function/icon_more.png')}
           />
-        </View>
+        </TouchableOpacity>
       </TouchableOpacity>
     )
   }

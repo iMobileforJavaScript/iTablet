@@ -11,7 +11,7 @@ import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/componets'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
-import { LayerManager_item } from './components'
+import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
 import NavigationService from '../NavigationService'
 
@@ -344,6 +344,13 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
+  onToolPress = async ({ data }) => {
+    this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+      height: ConstToolType.THEME_HEIGHT[5],
+      layername: data.caption,
+    })
+  }
+
   getChildList = async ({ data }) => {
     try {
       if (data.type !== 'layerGroup') return
@@ -398,12 +405,17 @@ export default class MT_layerManager extends React.Component {
         }}
         onPress={this.onPressRow}
         onArrowPress={this.getChildList}
+        onToolPress={this.onToolPress}
       />
     )
   }
 
   renderToolBar = () => {
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
+  }
+
+  renderTool = () => {
+    return <LayerManager_tolbar ref={ref => (this.toolBox = ref)} />
   }
 
   render() {
@@ -433,6 +445,7 @@ export default class MT_layerManager extends React.Component {
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
         />
+        {this.renderTool()}
         {/*<SaveDialog*/}
         {/*ref={ref => (this.saveDialog = ref)}*/}
         {/*confirmAction={this.saveMapAndWorkspace}*/}
