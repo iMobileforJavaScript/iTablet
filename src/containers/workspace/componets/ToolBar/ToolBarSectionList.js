@@ -95,6 +95,10 @@ export default class ToolBarSectionList extends React.Component {
     return this.state.selectList
   }
 
+  scrollToLocation = params => {
+    this.sectionList.scrollToLocation(params)
+  }
+
   renderSection = ({ section }) => {
     if (this.props.renderSectionHeader) {
       return this.props.renderSectionHeader({ section })
@@ -150,6 +154,7 @@ export default class ToolBarSectionList extends React.Component {
   render() {
     return (
       <SectionList
+        ref={ref => (this.sectionList = ref)}
         style={[this.props.style]}
         sections={this.state.sections}
         renderItem={this.renderItem}

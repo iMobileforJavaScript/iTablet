@@ -168,6 +168,7 @@ export default class ToolBar extends React.Component {
       ToolbarData.setParams({
         setToolbarVisible: this.setVisible,
         setLastState: this.setLastState,
+        scrollListToLocation: this.scrollListToLocation,
         ...this.props,
       })
     }
@@ -377,6 +378,7 @@ export default class ToolBar extends React.Component {
     toolbarData = ToolbarData.getTabBarData(type, {
       setToolbarVisible: this.setVisible,
       setLastState: this.setLastState,
+      scrollListToLocation: this.scrollListToLocation,
       ...this.props,
     })
     data = toolbarData.data
@@ -727,6 +729,16 @@ export default class ToolBar extends React.Component {
     return { data, buttons }
   }
 
+  //滚动到顶部
+  scrollListToLocation = () => {
+    this.toolBarSectionList &&
+      this.toolBarSectionList.scrollToLocation({
+        sectionIndex: 0,
+        itemIndex: 0,
+        viewOffset: 100,
+      })
+  }
+
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[4],
@@ -756,6 +768,7 @@ export default class ToolBar extends React.Component {
       },
       () => {
         this.height = ConstToolType.THEME_HEIGHT[4]
+        this.scrollListToLocation()
       },
     )
   }
@@ -786,6 +799,7 @@ export default class ToolBar extends React.Component {
       },
       () => {
         this.height = ConstToolType.THEME_HEIGHT[4]
+        this.scrollListToLocation()
       },
     )
   }
@@ -1504,18 +1518,15 @@ export default class ToolBar extends React.Component {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS) {
       //新建专题图数据集列表
-      this.setState({
-        themeDatasetName: item.title,
-      });
       (async function () {
         let data = await SThemeCartography.getThemeExpressByDatasetName(item.title)
-
         let dataset = data.dataset
         let datalist = [{
           title: dataset.datasetName,
           data: data.list,
         }]
         this.setState({
+          themeDatasetName: item.title,
           isFullScreen: false,
           isTouchProgress: false,
           isSelectlist: false,
@@ -1526,6 +1537,7 @@ export default class ToolBar extends React.Component {
         },
         () => {
           this.height = ConstToolType.THEME_HEIGHT[6]
+          this.scrollListToLocation()
         },
         )
       }.bind(this)())
