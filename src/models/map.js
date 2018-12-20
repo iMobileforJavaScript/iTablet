@@ -75,6 +75,7 @@ export const openMap = (params, cb = () => {}) => async dispatch => {
       })
     }
     cb && cb(result)
+    return result
   } catch (e) {
     cb && cb(false)
   }
