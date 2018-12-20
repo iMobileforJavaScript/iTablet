@@ -52,7 +52,7 @@ function showDatasetsList() {
     let datasource = getdata.datasource
     data = [
       {
-        title: datasource.alias,
+        title: '数据源: ' + datasource.alias,
         data: getdata.list,
       },
     ]
@@ -86,15 +86,15 @@ function getThemeMapCreate(type, params) {
     buttons = []
   if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
   data = [
-    {
-      //统一风格
-      key: constants.THEME_UNIFY_STYLE,
-      title: constants.THEME_UNIFY_STYLE,
-      action: showTips,
-      size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    },
+    // {
+    //   //统一风格
+    //   key: constants.THEME_UNIFY_STYLE,
+    //   title: constants.THEME_UNIFY_STYLE,
+    //   action: showTips,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
+    // },
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
@@ -113,24 +113,24 @@ function getThemeMapCreate(type, params) {
       image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
     },
-    {
-      //自定义风格
-      key: constants.THEME_CUSTOME_STYLE,
-      title: constants.THEME_CUSTOME_STYLE,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
-    },
-    {
-      //自定义标签
-      key: constants.THEME_CUSTOME_LABEL,
-      title: constants.THEME_CUSTOME_LABEL,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
-    },
+    // {
+    //   //自定义风格
+    //   key: constants.THEME_CUSTOME_STYLE,
+    //   title: constants.THEME_CUSTOME_STYLE,
+    //   size: 'large',
+    //   action: showTips,
+    //   image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
+    // },
+    // {
+    //   //自定义标签
+    //   key: constants.THEME_CUSTOME_LABEL,
+    //   title: constants.THEME_CUSTOME_LABEL,
+    //   size: 'large',
+    //   action: showTips,
+    //   image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
+    // },
     {
       //统一标签
       key: constants.THEME_UNIFY_LABEL,
@@ -140,24 +140,24 @@ function getThemeMapCreate(type, params) {
       image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
     },
-    {
-      //单值标签
-      key: constants.THEME_UNIQUE_LABEL,
-      title: constants.THEME_UNIQUE_LABEL,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-    },
-    {
-      //分段标签
-      key: constants.THEME_RANGE_LABEL,
-      title: constants.THEME_RANGE_LABEL,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-    },
+    // {
+    //   //单值标签
+    //   key: constants.THEME_UNIQUE_LABEL,
+    //   title: constants.THEME_UNIQUE_LABEL,
+    //   size: 'large',
+    //   action: showTips,
+    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
+    // },
+    // {
+    //   //分段标签
+    //   key: constants.THEME_RANGE_LABEL,
+    //   title: constants.THEME_RANGE_LABEL,
+    //   size: 'large',
+    //   action: showTips,
+    //   image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
+    // },
   ]
   return { data, buttons }
 }
@@ -185,10 +185,6 @@ let _params = {}
 
 function setThemeParams(params) {
   _params = params
-}
-
-function showToast() {
-  Toast.show('功能暂未开放')
 }
 
 /** 设置分段模式 **/
@@ -314,7 +310,7 @@ function getLabelBackShape() {
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
       title: '符号背景',
-      action: showToast,
+      action: showTips,
       size: 'large',
       image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),

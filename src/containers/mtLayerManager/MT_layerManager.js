@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { FlatList, Alert } from 'react-native'
+import { FlatList } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
@@ -338,7 +338,7 @@ export default class MT_layerManager extends React.Component {
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         default:
-          Alert.alert('提示:请选择专题图层。')
+          Toast.show('提示: 请选择专题图层。')
           break
       }
     }

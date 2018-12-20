@@ -1,6 +1,11 @@
 import React from 'react'
-import { screen, Toast } from '../../../../utils'
-import { MTBtn, TableList } from '../../../../components'
+import { screen, Toast, scaleSize, jsonUtil } from '../../../../utils'
+import {
+  MTBtn,
+  TableList,
+  ColorTableList,
+  ColorBtn,
+} from '../../../../components'
 import {
   ConstToolType,
   ConstPath,
@@ -52,9 +57,6 @@ import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 
-import jsonUtil from '../../../../utils/jsonUtil'
-import ColorTableList from '../../../../components/ColorTableList'
-import { ColorBtn } from '../../../../components/mapTools'
 import { FileTools } from '../../../../native'
 
 import styles from './styles'
@@ -69,9 +71,10 @@ const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
 
+export const BUTTON_HEIGHT = scaleSize(80)
 let isSharing = false
 
-export default class ToolBar extends React.Component {
+export default class ToolBar extends React.PureComponent {
   props: {
     children: any,
     type?: string,
@@ -153,7 +156,6 @@ export default class ToolBar extends React.Component {
       isTouchProgress: false,
       tableType: 'normal',
       themeDatasetName: '',
-      themeExpress: 'SMID',
       themeColor: 'TERRAIN',
       themeCreateType: '',
       selectName: '',
@@ -735,7 +737,7 @@ export default class ToolBar extends React.Component {
       this.toolBarSectionList.scrollToLocation({
         sectionIndex: 0,
         itemIndex: 0,
-        viewOffset: 100,
+        viewOffset: scaleSize(80),
       })
   }
 
@@ -753,6 +755,7 @@ export default class ToolBar extends React.Component {
     let datalist = [
       {
         title: dataset.datasetName,
+        datasetType: dataset.datasetType,
         data: data.list,
       },
     ]
@@ -1114,51 +1117,38 @@ export default class ToolBar extends React.Component {
           : ConstToolType.HEIGHT[1]
       this.shareTo = params.shareTo || ''
 
-      let setData = function() {
-        this.setState(
-          {
-            isSelectlist: false,
-            type: type,
-            tableType: params.tableType || 'normal',
-            data: params.data || data,
-            buttons: params.buttons || buttons,
-            listSelectable: params.listSelectable || false,
-            isFullScreen:
-              params && params.isFullScreen !== undefined
-                ? params.isFullScreen
-                : DEFAULT_FULL_SCREEN,
-            column:
-              params && typeof params.column === 'number'
-                ? params.column
-                : DEFAULT_COLUMN,
-            containerType:
-              params && params.containerType
-                ? params.containerType
-                : type === ConstToolType.MAP_SYMBOL
-                  ? tabs
-                  : table,
-          },
-          () => {
-            if (this.height < newHeight) {
-              this.height = newHeight
-              this.showToolbarAndBox(isShow, type)
-              !isShow && this.props.existFullMap && this.props.existFullMap()
-            }
-            params.cb && params.cb()
-          },
-        )
-      }.bind(this)
-
-      if (this.height >= newHeight) {
-        this.height = newHeight
-        this.showToolbarAndBox(isShow, type)
-        !isShow && this.props.existFullMap && this.props.existFullMap()
-        setTimeout(() => {
-          setData()
-        }, Const.ANIMATED_DURATION)
-      } else {
-        setData()
-      }
+      this.setState(
+        {
+          isSelectlist: false,
+          type: type,
+          tableType: params.tableType || 'normal',
+          data: params.data || data,
+          buttons: params.buttons || buttons,
+          listSelectable: params.listSelectable || false,
+          isFullScreen:
+            params && params.isFullScreen !== undefined
+              ? params.isFullScreen
+              : DEFAULT_FULL_SCREEN,
+          column:
+            params && typeof params.column === 'number'
+              ? params.column
+              : DEFAULT_COLUMN,
+          containerType:
+            params && params.containerType
+              ? params.containerType
+              : type === ConstToolType.MAP_SYMBOL
+                ? tabs
+                : table,
+        },
+        () => {
+          // if (!showViewFirst) {
+          this.height = newHeight
+          this.showToolbarAndBox(isShow, type)
+          !isShow && this.props.existFullMap && this.props.existFullMap()
+          // }
+          params.cb && params.cb()
+        },
+      )
     } else {
       this.showToolbarAndBox(isShow)
       params.cb && params.cb()
@@ -1167,49 +1157,76 @@ export default class ToolBar extends React.Component {
   }
 
   showToolbarAndBox = (isShow, type = this.state.type) => {
+    let animatedList = []
     // Toolbar的显示和隐藏
     if (this.isShow !== isShow) {
       isShow = isShow === undefined ? true : isShow
-      Animated.timing(this.state.bottom, {
-        toValue: isShow ? 0 : -screen.deviceHeight,
-        duration: Const.ANIMATED_DURATION,
-      }).start()
+      animatedList.push(
+        Animated.timing(this.state.bottom, {
+          toValue: isShow ? 0 : -screen.deviceHeight,
+          duration: Const.ANIMATED_DURATION,
+        }),
+      )
       this.isShow = isShow
     }
     // Box内容框的显示和隐藏
+    let bottom = parseFloat(JSON.stringify(this.state.bottom))
     if (type === ConstToolType.MAP_THEME_PARAM) {
-      Animated.timing(this.state.boxHeight, {
-        toValue: 0,
-        duration: Const.ANIMATED_DURATION,
-      }).start()
+      animatedList.push(
+        Animated.timing(this.state.boxHeight, {
+          toValue: 0,
+          duration: Const.ANIMATED_DURATION,
+        }),
+      )
       this.isBoxShow = false
     } else {
       if (JSON.stringify(this.state.boxHeight) !== this.height.toString()) {
-        Animated.timing(this.state.boxHeight, {
+        let boxAnimated = Animated.timing(this.state.boxHeight, {
           toValue: this.height,
           duration: Const.ANIMATED_DURATION,
-        }).start()
+        })
+        this.state.boxHeight === 0 && bottom >= 0
+          ? animatedList.unshift(boxAnimated)
+          : animatedList.push(boxAnimated)
       }
       this.isBoxShow = true
+    }
+    if (bottom < 0) {
+      animatedList.forEach(animated => animated.start())
+    } else {
+      Animated.sequence(animatedList).start()
     }
   }
 
   showToolbar = isShow => {
+    let animatedList = []
+    // Toolbar的显示和隐藏
     // Toolbar的显示和隐藏
     if (this.isShow !== isShow) {
       isShow = isShow === undefined ? true : isShow
-      Animated.timing(this.state.bottom, {
-        toValue: isShow ? 0 : -screen.deviceHeight,
-        duration: Const.ANIMATED_DURATION,
-      }).start()
+      animatedList.push(
+        Animated.timing(this.state.bottom, {
+          toValue: isShow ? 0 : -screen.deviceHeight,
+          duration: Const.ANIMATED_DURATION,
+        }),
+      )
       this.isShow = isShow
     }
     // Box内容框的显示和隐藏
+    let bottom = parseFloat(JSON.stringify(this.state.bottom))
     if (JSON.stringify(this.state.boxHeight) !== this.height.toString()) {
-      Animated.timing(this.state.boxHeight, {
+      let boxAnimated = Animated.timing(this.state.boxHeight, {
         toValue: this.height,
         duration: Const.ANIMATED_DURATION,
-      }).start()
+      })
+      this.height === 0 && bottom >= 0
+        ? animatedList.unshift(boxAnimated)
+        : animatedList.push(boxAnimated)
+    }
+    if (bottom < 0) {
+      animatedList.forEach(animated => animated.start())
+    } else {
+      Animated.sequence(animatedList).start()
     }
   }
 
@@ -1227,46 +1244,60 @@ export default class ToolBar extends React.Component {
   }
 
   close = (type = this.state.type) => {
-    GLOBAL.currentToolbarType = ''
-    // 关闭采集, type 为number时为采集类型，若有冲突再更改
-    if (
-      typeof type === 'number' ||
-      (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
-    ) {
-      SCollector.stopCollect()
-    }
-    if (type === ConstToolType.MAP_EDIT_TAGGING) {
-      SMap.setAction(Action.PAN)
-    } else if (
-      typeof type === 'number' ||
-      (typeof type === 'string' && type.indexOf('MAP_') >= -1)
-    ) {
-      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-      SMap.setAction(Action.PAN)
-    }
-    if (
-      typeof type === 'string' &&
-      type.indexOf('MAP_EDIT_') >= 0 &&
-      type !== ConstToolType.MAP_EDIT_DEFAULT &&
-      type !== ConstToolType.MAP_EDIT_TAGGING
-    ) {
-      GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
-      // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
-      this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
-        isFullScreen: false,
-        height: 0,
-      })
-      SMap.setAction(Action.SELECT)
-    } else {
-      this.showToolbar(false)
+    (async function() {
+      GLOBAL.currentToolbarType = ''
+      let actionType = Action.PAN
+
+      // if (type === ConstToolType.MAP_EDIT_TAGGING) {
+      //   SMap.setAction(Action.PAN)
+      // } else if (
+      //   typeof type === 'number' ||
+      //   (typeof type === 'string' && type.indexOf('MAP_') >= -1)
+      // ) {
+      //   // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+      //   SMap.setAction(Action.PAN)
+      // }
       if (
-        this.state.isTouchProgress === true ||
-        this.state.isSelectlist === true
+        typeof type === 'string' &&
+        type.indexOf('MAP_EDIT_') >= 0 &&
+        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+        type !== ConstToolType.MAP_EDIT_TAGGING
       ) {
-        this.setState({ isTouchProgress: false, isSelectlist: false })
+        actionType = Action.SELECT
+        GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
+        // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+        this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
+          isFullScreen: false,
+          height: 0,
+        })
+      } else {
+        this.showToolbar(false)
+        if (
+          this.state.isTouchProgress === true ||
+          this.state.isSelectlist === true
+        ) {
+          this.setState({ isTouchProgress: false, isSelectlist: false })
+        }
+        this.props.existFullMap && this.props.existFullMap()
+        // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
+        this.setState({
+          data: [],
+          // buttons: [],
+        })
+        this.height = 0
       }
-      this.props.existFullMap && this.props.existFullMap()
-    }
+      setTimeout(() => {
+        // 关闭采集, type 为number时为采集类型，若有冲突再更改
+        if (
+          typeof type === 'number' ||
+          (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
+        ) {
+          SCollector.stopCollect()
+        } else {
+          SMap.setAction(actionType)
+        }
+      }, Const.ANIMATED_DURATION_2)
+    }.bind(this)())
   }
 
   clearCurrentLabel = () => {
@@ -1362,7 +1393,14 @@ export default class ToolBar extends React.Component {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       SMap.submit()
-      SMap.setAction(Action.PAN)
+      if (
+        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+        type !== ConstToolType.MAP_EDIT_TAGGING
+      ) {
+        SMap.setAction(Action.SELECT)
+      } else {
+        SMap.setAction(Action.PAN)
+      }
     }
     // this.props.existFullMap && this.props.existFullMap()
   }
@@ -1449,10 +1487,7 @@ export default class ToolBar extends React.Component {
   listThemeAction = ({ item }) => {
     if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
       //单值专题图表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let Params = {
           UniqueExpression: item.title,
           ColorGradientType: this.state.themeColor,
@@ -1468,7 +1503,6 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          UniqueExpression: this.state.themeExpress,
           ColorGradientType: item.key,
           LayerName: GLOBAL.currentLayer.name,
         }
@@ -1478,19 +1512,14 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
     ) {
       //分段专题图表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let Params = {
           RangeExpression: item.title,
           LayerName: GLOBAL.currentLayer.name,
-          ColorGradientType: this.state.themeColor,
-          RangeMode: 'EQUALINTERVAL',
-          RangeParameter: '32.0',
+          // ColorGradientType: this.state.themeColor,
         }
-        // await SThemeCartography.setRangeExpression(Params)
-        await SThemeCartography.modifyThemeRangeMap(Params)
+        // await SThemeCartography.modifyThemeRangeMap(Params)
+        await SThemeCartography.setRangeExpression(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
       //分段专题图颜色表
@@ -1499,11 +1528,8 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          RangeExpression: this.state.themeExpress,
           ColorGradientType: item.key,
           LayerName: GLOBAL.currentLayer.name,
-          RangeMode: 'EQUALINTERVAL',
-          RangeParameter: '32.0',
         }
         await SThemeCartography.modifyThemeRangeMap(Params)
       }.bind(this)())
@@ -1511,10 +1537,7 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
     ) {
       //统一标签表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let Params = {
           LabelExpression: item.title,
           LayerName: GLOBAL.currentLayer.name,
@@ -1525,37 +1548,40 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
       //新建专题图数据集列表
-      (async function () {
-        let data = await SThemeCartography.getThemeExpressByDatasetName(item.title)
+      (async function() {
+        let data = await SThemeCartography.getThemeExpressByDatasetName(
+          item.datasetName,
+        )
         let dataset = data.dataset
-        let datalist = [{
-          title: dataset.datasetName,
-          data: data.list,
-        }]
-        this.setState({
-          themeDatasetName: item.title,
-          isFullScreen: false,
-          isTouchProgress: false,
-          isSelectlist: false,
-          containerType: 'list',
-          data: datalist,
-          buttons: [ToolbarBtnType.THEME_CANCEL],
-          type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
-        },
-        () => {
-          this.height = ConstToolType.THEME_HEIGHT[6]
-          this.scrollListToLocation()
-        },
+        let datalist = [
+          {
+            title: dataset.datasetName,
+            datasetType: dataset.datasetType,
+            data: data.list,
+          },
+        ]
+        this.setState(
+          {
+            themeDatasetName: item.datasetName,
+            isFullScreen: false,
+            isTouchProgress: false,
+            isSelectlist: false,
+            containerType: 'list',
+            data: datalist,
+            buttons: [ToolbarBtnType.THEME_CANCEL],
+            type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
+          },
+          () => {
+            this.height = ConstToolType.THEME_HEIGHT[6]
+          },
         )
       }.bind(this)())
+      this.scrollListToLocation()
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
       //新建专题图字段列表
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let params = {}
         let isSuccess = false
         switch (this.state.themeCreateType) {
@@ -1767,7 +1793,7 @@ export default class ToolBar extends React.Component {
             // 重新加载图层
             this.props.getLayers({
               type: -1,
-              isResetCurrentLayer: true,
+              currentLayerIndex: 0,
             })
             this.props.setContainerLoading(true, '正在读取模板')
             this.props.getSymbolTemplates(null, () => {
@@ -1828,6 +1854,9 @@ export default class ToolBar extends React.Component {
               })
               this.setVisible(false)
             } else {
+              this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
               Toast.show('该地图为当前地图')
             }
           })
@@ -1923,12 +1952,11 @@ export default class ToolBar extends React.Component {
           }
 
           if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+            //分段专题图：分段方法
             let Params = {
-              RangeExpression: this.state.themeExpress,
               ColorGradientType: this.state.themeColor,
               LayerName: GLOBAL.currentLayer.name,
               RangeMode: item.key,
-              RangeParameter: '32.0',
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
@@ -2228,7 +2256,7 @@ export default class ToolBar extends React.Component {
           }
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:
-          image = require('../../../../assets/mapEdit/icon-rename-white.png')
+          image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
