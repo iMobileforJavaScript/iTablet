@@ -52,7 +52,7 @@ function showDatasetsList() {
     let datasource = getdata.datasource
     data = [
       {
-        title: datasource.alias,
+        title: '数据源: ' + datasource.alias,
         data: getdata.list,
       },
     ]

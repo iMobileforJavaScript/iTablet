@@ -151,6 +151,14 @@ export default class ToolBarSectionList extends React.Component {
     )
   }
 
+  getItemLayout = (data, index) => {
+    return {
+      length: scaleSize(80),
+      offset: scaleSize(80 + 1) * index,
+      index,
+    }
+  }
+
   render() {
     return (
       <SectionList
@@ -160,6 +168,7 @@ export default class ToolBarSectionList extends React.Component {
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSection}
         keyExtractor={(item, index) => index}
+        getItemLayout={this.getItemLayout}
       />
     )
   }
