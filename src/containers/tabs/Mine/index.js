@@ -1,6 +1,7 @@
 import { connect } from 'react-redux'
 import Mine from './Mine'
 import { setUser } from '../../../models/user'
+import { closeWorkspace, openWorkspace } from '../../../models/map'
 import Register from './Register'
 
 import MyService from './MyService'
@@ -15,6 +16,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setUser,
+  closeWorkspace,
+  openWorkspace,
 }
 
 export default connect(

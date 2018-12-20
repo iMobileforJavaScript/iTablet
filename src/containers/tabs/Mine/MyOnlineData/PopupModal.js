@@ -14,6 +14,7 @@ const screenWidth = Dimensions.get('window').width
 
 export default class PopupModal extends PureComponent {
   props: {
+    openWorkspace: () => {},
     onDeleteService: () => {},
     onDownloadFile: () => {},
     onPublishService: () => {},
@@ -39,7 +40,7 @@ export default class PopupModal extends PureComponent {
   _changeDownloadingState = progress => {
     this.bIsCallBackProps = false
     let isClick = false
-    if (progress === '下载完成' || progress === '下载失败') {
+    if (progress === '下载完成，可导入' || progress === '下载失败') {
       isClick = true
     }
     this.setState({ progress: progress, isClick: isClick })
@@ -154,10 +155,14 @@ export default class PopupModal extends PureComponent {
       <TouchableOpacity
         style={{ backgroundColor: color.content }}
         onPress={() => {
-          if (this.props.data.isDownloading === true) {
-            this.props.onDownloadFile()
+          if (progress === '下载完成，可导入') {
+            this.props.openWorkspace()
           } else {
-            Toast.show('有数据正在下载')
+            if (this.props.data.isDownloading === true) {
+              this.props.onDownloadFile()
+            } else {
+              Toast.show('有数据正在下载')
+            }
           }
         }}
       >

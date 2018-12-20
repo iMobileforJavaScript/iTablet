@@ -11,7 +11,7 @@ import {
   DeviceEventEmitter,
   NativeModules,
 } from 'react-native'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { SOnlineService, Utility, SMap } from 'imobile_for_reactnative'
 import Container from '../../../../components/Container/index'
 import styles from './Styles'
 import Toast from '../../../../utils/Toast'
@@ -25,6 +25,7 @@ export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
     user: Object,
+    openWorkspace: () => {},
   }
 
   constructor(props) {
@@ -185,7 +186,7 @@ export default class MyOnlineData extends Component {
         },
       )
       this.downloadedListener = callBackIos.addListener(downloadedType, () => {
-        let result = '下载完成'
+        let result = '下载完成，可导入'
         this._changeModalProgressState(result)
       })
     }
@@ -200,7 +201,7 @@ export default class MyOnlineData extends Component {
       this.downloadedListener = DeviceEventEmitter.addListener(
         downloadedType,
         () => {
-          let result = '下载完成'
+          let result = '下载完成，可导入'
           this._changeModalProgressState(result)
         },
       )
@@ -223,6 +224,7 @@ export default class MyOnlineData extends Component {
       objContent.fileName
     let filePath = await Utility.appendingHomeDirectory(path)
     let savePath = filePath.substring(0, filePath.length - 4)
+    this._unZipFilePath = savePath
     nativeFileTools.unZipFile(filePath, savePath)
   }
 
@@ -238,11 +240,11 @@ export default class MyOnlineData extends Component {
       ) {
         this.modalRef._changeDownloadingState(progress)
       }
-      if (progress === '下载完成' || progress === '下载失败') {
+      if (progress === '下载完成，可导入' || progress === '下载失败') {
         this._resetDownloadingState()
         this._setFinalDownloadingProgress(_iDownloadingIndex, progress)
         this.setState({ data: this.state.data })
-        if (progress === '下载完成') {
+        if (progress === '下载完成，可导入') {
           this._unZipFile()
         }
       }
@@ -301,8 +303,8 @@ export default class MyOnlineData extends Component {
       let filePath = await Utility.appendingHomeDirectory(path)
       let isFileExist = await Utility.fileIsExist(path)
       if (isFileExist) {
-        Toast.show('下载完成')
-        this._changeModalProgressState('下载完成')
+        Toast.show('下载完成，可导入')
+        this._changeModalProgressState('下载完成，可导入')
         return
       }
       _iDownloadingIndex = this.index
@@ -422,6 +424,11 @@ export default class MyOnlineData extends Component {
     }
   }
 
+  _openWorkspace = async () => {
+    await Utility.getPathListByFilter()
+    let path = this._unZipFilePath
+    SMap.importWorkspace({ server: path })
+  }
   _renderModal = () => {
     if (this.index !== undefined) {
       return (
@@ -432,6 +439,7 @@ export default class MyOnlineData extends Component {
             }
           }}
           data={this.state.data[this.index]}
+          openWorkspace={this._openWorkspace}
           onDeleteService={this._onDeleteService}
           onDownloadFile={this._onDownloadFile}
           onPublishService={this._onPublishService}
