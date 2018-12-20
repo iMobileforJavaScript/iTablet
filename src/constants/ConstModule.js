@@ -106,29 +106,29 @@ export default [
       GLOBAL.Type = constants.MAP_THEME
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      let wsPath = await Utility.appendingHomeDirectory(customerPath)
-      let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
-      if (exist && !user.userName) {
-        NavigationService.navigate('MapView', {
-          // 若未登录，则打开游客工作空间
-          operationType: constants.MAP_THEME,
-          wsData: [
-            {
-              DSParams: { server: wsPath },
-              type: 'Workspace',
-            },
-            ConstOnline['Google'],
-          ],
-          mapName: '专题制图',
-          isExample: false,
-        })
+      let wsPath
+      if (user.userName) {
+        const userWSPath =
+          ConstPath.UserPath +
+          user.userName +
+          '/' +
+          ConstPath.RelativeFilePath.Workspace
+        wsPath = await Utility.appendingHomeDirectory(userWSPath)
       } else {
-        // TODO 打开对应user的工作空间
-        NavigationService.navigate('MapView', {
-          operationType: constants.MAP_THEME,
-          wsData: ConstOnline['SuperMapCloud'],
-        })
+        wsPath = await Utility.appendingHomeDirectory(customerPath)
       }
+      NavigationService.navigate('MapView', {
+        operationType: constants.MAP_THEME,
+        wsData: [
+          {
+            DSParams: { server: wsPath },
+            type: 'Workspace',
+          },
+          ConstOnline['Baidu'],
+        ],
+        mapName: '专题制图',
+        isExample: false,
+      })
     },
   },
   {

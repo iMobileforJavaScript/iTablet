@@ -153,7 +153,6 @@ export default class ToolBar extends React.Component {
       isTouchProgress: false,
       tableType: 'normal',
       themeDatasetName: '',
-      themeExpress: 'SMID',
       themeColor: 'TERRAIN',
       themeCreateType: '',
       selectName: '',
@@ -753,6 +752,7 @@ export default class ToolBar extends React.Component {
     let datalist = [
       {
         title: dataset.datasetName,
+        datasetType: dataset.datasetType,
         data: data.list,
       },
     ]
@@ -1456,10 +1456,7 @@ export default class ToolBar extends React.Component {
   listThemeAction = ({ item }) => {
     if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
       //单值专题图表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let Params = {
           UniqueExpression: item.title,
           ColorGradientType: this.state.themeColor,
@@ -1475,7 +1472,6 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          UniqueExpression: this.state.themeExpress,
           ColorGradientType: item.key,
           LayerName: GLOBAL.currentLayer.name,
         }
@@ -1485,19 +1481,14 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
     ) {
       //分段专题图表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let Params = {
           RangeExpression: item.title,
           LayerName: GLOBAL.currentLayer.name,
-          ColorGradientType: this.state.themeColor,
-          RangeMode: 'EQUALINTERVAL',
-          RangeParameter: '32.0',
+          // ColorGradientType: this.state.themeColor,
         }
-        // await SThemeCartography.setRangeExpression(Params)
-        await SThemeCartography.modifyThemeRangeMap(Params)
+        // await SThemeCartography.modifyThemeRangeMap(Params)
+        await SThemeCartography.setRangeExpression(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
       //分段专题图颜色表
@@ -1506,11 +1497,8 @@ export default class ToolBar extends React.Component {
       })
       ;(async function() {
         let Params = {
-          RangeExpression: this.state.themeExpress,
           ColorGradientType: item.key,
           LayerName: GLOBAL.currentLayer.name,
-          RangeMode: 'EQUALINTERVAL',
-          RangeParameter: '32.0',
         }
         await SThemeCartography.modifyThemeRangeMap(Params)
       }.bind(this)())
@@ -1518,10 +1506,7 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
     ) {
       //统一标签表达式
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let Params = {
           LabelExpression: item.title,
           LayerName: GLOBAL.currentLayer.name,
@@ -1534,18 +1519,19 @@ export default class ToolBar extends React.Component {
       //新建专题图数据集列表
       (async function() {
         let data = await SThemeCartography.getThemeExpressByDatasetName(
-          item.title,
+          item.datasetName,
         )
         let dataset = data.dataset
         let datalist = [
           {
-            title: '数据集: ' + dataset.datasetName,
+            title: dataset.datasetName,
+            datasetType: dataset.datasetType,
             data: data.list,
           },
         ]
         this.setState(
           {
-            themeDatasetName: item.title,
+            themeDatasetName: item.datasetName,
             isFullScreen: false,
             isTouchProgress: false,
             isSelectlist: false,
@@ -1564,10 +1550,7 @@ export default class ToolBar extends React.Component {
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
       //新建专题图字段列表
-      this.setState({
-        themeExpress: item.title,
-      })
-      ;(async function() {
+      (async function() {
         let params = {}
         let isSuccess = false
         switch (this.state.themeCreateType) {
@@ -1935,12 +1918,11 @@ export default class ToolBar extends React.Component {
           }
 
           if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
+            //分段专题图：分段方法
             let Params = {
-              RangeExpression: this.state.themeExpress,
               ColorGradientType: this.state.themeColor,
               LayerName: GLOBAL.currentLayer.name,
               RangeMode: item.key,
-              RangeParameter: '32.0',
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
