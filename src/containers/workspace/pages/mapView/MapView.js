@@ -33,7 +33,12 @@ import {
   SaveDialog,
 } from '../../../../components'
 import { Toast, scaleSize, jsonUtil } from '../../../../utils'
-import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
+import {
+  ConstPath,
+  ConstToolType,
+  ConstInfo,
+  Const,
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
@@ -286,7 +291,6 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
       case ConstToolType.MAP_EDIT_DEFAULT: {
-        SMap.appointEditGeometry(event.id, event.layerInfo.name)
         if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
           let column = 4,
             height = ConstToolType.HEIGHT[3],
@@ -316,6 +320,10 @@ export default class MapView extends React.Component {
               tableType,
             })
         }
+        setTimeout(
+          () => SMap.appointEditGeometry(event.id, event.layerInfo.name),
+          Const.ANIMATED_DURATION_2,
+        )
         break
       }
     }
@@ -623,7 +631,7 @@ export default class MapView extends React.Component {
         this.setLoading(true, '正在关闭地图')
         let mapIndex = await SMap.getMapIndex() // 获取地图index，若临时地图没有保存，则为-1
         await SMap.closeMap()
-        await SMap.closeDatasource()
+        // await SMap.closeDatasource()
         // 采集 - 若临时地图未保存，则删除采集数据源
         if (
           GLOBAL.Type === constants.COLLECTION &&
@@ -701,29 +709,32 @@ export default class MapView extends React.Component {
         GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
         // 获取图层列表
-        this.props.getLayers(-1, async layers => {
-          // 若数据源已经打开，图层未加载，则去默认加载一个图层
-          if (layers.length === 0) {
-            let result = false
-            if (this.wsData instanceof Array) {
-              for (let i = 0; i < this.wsData.length; i++) {
-                let item = this.wsData[i]
-                if (item === null) continue
-                if (item.type === 'Datasource') {
-                  result = await SMap.addLayer(item.DSParams.alias, 0)
+        this.props.getLayers(
+          { type: -1, currentLayerIndex: 0 },
+          async layers => {
+            // 若数据源已经打开，图层未加载，则去默认加载一个图层
+            if (layers.length === 0) {
+              let result = false
+              if (this.wsData instanceof Array) {
+                for (let i = 0; i < this.wsData.length; i++) {
+                  let item = this.wsData[i]
+                  if (item === null) continue
+                  if (item.type === 'Datasource') {
+                    result = await SMap.addLayer(item.DSParams.alias, 0)
+                  }
                 }
+              } else if (this.wsData.type === 'Datasource') {
+                result = await SMap.addLayer(this.wsData.DSParams.alias, 0)
               }
-            } else if (this.wsData.type === 'Datasource') {
-              result = await SMap.addLayer(this.wsData.DSParams.alias, 0)
-            }
-            result && this.props.getLayers()
-          }
-          if (layers.length === 0 && this.wsData.DSParams) {
-            SMap.addLayer(this.wsData.DSParams.alias, 0).then(result => {
               result && this.props.getLayers()
-            })
-          }
-        })
+            }
+            if (layers.length === 0 && this.wsData.DSParams) {
+              SMap.addLayer(this.wsData.DSParams.alias, 0).then(result => {
+                result && this.props.getLayers()
+              })
+            }
+          },
+        )
         this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {

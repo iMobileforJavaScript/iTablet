@@ -67,9 +67,12 @@ export default handleActions(
         if (newData.length >= maxLength) {
           newData = newData.slice(0, maxLength)
         }
-        state.setIn(['latestSymbols'], fromJS(newData))
+        return state
+          .setIn(['currentSymbol'], fromJS(payload))
+          .setIn(['latestSymbols'], fromJS(newData))
+      } else {
+        return state.setIn(['currentSymbol'], fromJS(payload))
       }
-      return state.setIn(['currentSymbol'], fromJS(payload))
     },
     [REHYDRATE]: state => {
       // return payload && payload.nav ? fromJS(payload.nav) : state

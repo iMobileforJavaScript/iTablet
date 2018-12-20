@@ -310,7 +310,7 @@ export default class FunctionToolbar extends React.Component {
     //   Toast.show('请选择图层')
     //   return
     // }
-    await SMap.setAction(Action.SELECT)
+    // await SMap.setAction(Action.SELECT)
     // this.props.addGeometrySelectedListener &&
     //   (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
@@ -345,6 +345,11 @@ export default class FunctionToolbar extends React.Component {
         column,
         height,
         tableType,
+        cb: () => {
+          setTimeout(() => {
+            SMap.setAction(Action.SELECT)
+          }, Const.ANIMATED_DURATION_2)
+        },
       })
       Toast.show(ConstInfo.CHOOSE_EDIT_OBJ)
     }
