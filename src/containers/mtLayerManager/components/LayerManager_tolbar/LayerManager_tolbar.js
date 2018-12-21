@@ -6,6 +6,7 @@ import { View, TouchableOpacity, Animated } from 'react-native'
 import ToolBarSectionList from '../../../workspace/componets/ToolBar/ToolBarSectionList'
 import styles from './styles'
 import { color, size } from '../../../../styles'
+import { SMap } from 'imobile_for_reactnative'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -141,7 +142,7 @@ export default class LayerManager_tolbar extends React.Component {
       section.action && section.action()
     }
     if (section.title === '移除') {
-      // SMap.removeLayerWithName(this.state.layername)
+      SMap.removeLayerWithName(this.state.layername)
     }
   }
 

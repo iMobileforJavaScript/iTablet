@@ -56,6 +56,7 @@ import jsonUtil from '../../../../utils/jsonUtil'
 import ColorTableList from '../../../../components/ColorTableList'
 import { ColorBtn } from '../../../../components/mapTools'
 import { FileTools } from '../../../../native'
+import PropTypes from 'prop-types'
 
 import styles from './styles'
 
@@ -157,6 +158,7 @@ export default class ToolBar extends React.Component {
       themeColor: 'TERRAIN',
       themeCreateType: '',
       selectName: '',
+      defaultlayer: PropTypes.object,
     }
     this.isShow = false
     this.isBoxShow = true
@@ -398,7 +400,11 @@ export default class ToolBar extends React.Component {
         break
       case ConstToolType.MAP_ADD_LAYER:
         data = layerAdd
-        buttons = [ToolbarBtnType.CANCEL]
+        buttons = [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
+        ]
         break
       case ConstToolType.MAP_OPEN:
         //读取目录下UDB文件名和MAP文件名

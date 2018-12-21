@@ -74,10 +74,7 @@ export default class LayerManager_item extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(prevProps.map) !== JSON.stringify(this.props.map) ||
-      JSON.stringify(prevProps.layer) !== JSON.stringify(this.props.layer)
-    ) {
+    if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
       this.getData(this.props.data)
     }
   }
@@ -130,7 +127,8 @@ export default class LayerManager_item extends React.Component {
         isVectorLayer: isVectorLayer,
         options: options,
         editable: data.isEditable && !showLevelOne,
-        visable: data.isVisible && !showLevelOne,
+        // visable: data.isVisible && !showLevelOne,
+        visable: data.isVisible,
         selectable: data.isSelectable && !showLevelOne,
         snapable: data.isSnapable && !showLevelOne,
         rowShow: this.state.rowShow || false,

@@ -12,6 +12,7 @@ import { scaleSize } from '../../../../utils'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
 import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import PropTypes from 'prop-types'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -30,7 +31,7 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     Label: () => {},
-
+    layers: PropTypes.object,
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
@@ -401,6 +402,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   mapStyle = () => {
+    // console.warn(JSON.stringify(this.props.layers.layers[0].name))
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -409,6 +411,7 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: false,
         column: 4,
         height: ConstToolType.THEME_HEIGHT[3],
+        defaultlayer: this.props.layers.layers[0],
       })
     }
   }
