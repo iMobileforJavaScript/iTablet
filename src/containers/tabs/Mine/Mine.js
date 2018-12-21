@@ -11,12 +11,16 @@ import { Container } from '../../../components'
 import NavigationService from '../../NavigationService'
 import Login from './Login'
 import { color } from './styles'
+import ConstPath from '../../../constants/ConstPath'
+// import { SMap } from 'imobile_for_reactnative'
 
 export default class Mine extends Component {
   props: {
     navigation: Object,
     user: Object,
     setUser: () => {},
+    closeWorkspace: () => {},
+    openWorkspace: () => {},
   }
 
   constructor(props) {
@@ -25,22 +29,21 @@ export default class Mine extends Component {
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
   }
 
+  openUserWorkspace = () => {
+    this.props.closeWorkspace(() => {
+      let userPath =
+        ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativeFilePath.Workspace
+      this.props.openWorkspace({ server: userPath })
+    })
+  }
   goToPersonal = () => {
     NavigationService.navigate('Personal')
   }
 
   goToMyOnlineData = async () => {
-    // let sessionId = await SOnlineService.getAndroidSessionID()
-    // let headers = {
-    //   method: 'GET',
-    //   headers:{
-    //     'Host':'www.supermapol.com',
-    //     'Cookie':'JSESSIONID='+sessionId,
-    //   },
-    //   credentials:'include',
-    // }
-    //
-    // let getImage = fetch('https://www.supermapol.com/proxy/iserver/services/map_beijing_new/rest/maps/beijing/entireImage.png',headers)
     NavigationService.navigate('MyOnlineData')
   }
 
@@ -201,6 +204,7 @@ export default class Mine extends Component {
       this.props.user.currentUser &&
       this.props.user.currentUser.userName
     ) {
+      this.openUserWorkspace()
       return (
         <Container
           ref={ref => (this.container = ref)}

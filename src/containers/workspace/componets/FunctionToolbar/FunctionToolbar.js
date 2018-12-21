@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Animated, Alert } from 'react-native'
+import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType, Const, ConstInfo } from '../../../../constants'
 import { scaleSize, Toast } from '../../../../utils'
@@ -102,10 +102,10 @@ export default class FunctionToolbar extends React.Component {
       case ThemeType.DOTDENSITY:
       case ThemeType.GRAPH:
       case ThemeType.GRADUATEDSYMBOL:
-        Alert.alert('提示: 暂不支持编辑的专题图层。')
+        Toast.show('提示: 暂不支持编辑的专题图层。')
         return
       default:
-        Alert.alert('提示: 请先选择专题图层。')
+        Toast.show('提示: 请先选择专题图层。')
         return
     }
 
@@ -365,10 +365,10 @@ export default class FunctionToolbar extends React.Component {
 
   showThemeCreate = async () => {
     Orientation.getOrientation((e, orientation) => {
-      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let column = orientation === 'PORTRAIT' ? 3 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[2]
+          ? ConstToolType.HEIGHT[0]
           : ConstToolType.HEIGHT[0]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -610,22 +610,22 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_param.png'),
           },
-          {
-            key: '标注',
-            title: '标注',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_label.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
-          },
-          {
-            key: '工具',
-            title: '工具',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_tools.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
-          },
+          // {
+          //   key: '标注',
+          //   title: '标注',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_label.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
+          // },
+          // {
+          //   key: '工具',
+          //   title: '工具',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_tools.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
+          // },
           // {
           //   key: '撤销',
           //   title: '撤销',

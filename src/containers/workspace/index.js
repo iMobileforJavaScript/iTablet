@@ -1,5 +1,4 @@
-import { MapView } from './pages'
-import { Map3D } from './pages'
+import { MapView, Map3D } from './pages'
 // export { MapView, Map3D }
 
 import { TabNavigator } from 'react-navigation'

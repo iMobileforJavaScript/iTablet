@@ -389,10 +389,10 @@ function createThemeMap() {
   _params.showFullMap && _params.showFullMap(true)
 
   Orientation.getOrientation((e, orientation) => {
-    let column = orientation === 'PORTRAIT' ? 4 : 8
+    let column = orientation === 'PORTRAIT' ? 3 : 8
     let height =
       orientation === 'PORTRAIT'
-        ? ConstToolType.HEIGHT[2]
+        ? ConstToolType.HEIGHT[0]
         : ConstToolType.HEIGHT[0]
 
     _params.setToolbarVisible(true, ConstToolType.MAP_THEME_CREATE, {

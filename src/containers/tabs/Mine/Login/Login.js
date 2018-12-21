@@ -137,17 +137,19 @@ export default class Login extends React.Component {
           keyboardType={'email-address'}
           placeholder={'请输入邮箱或昵称'}
           defaultValue={''}
+          multiline={false}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmail = text
           }}
         />
         <TextInput
-          keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           defaultValue={''}
           placeholder={'请输入密码'}
+          multiline={false}
+          password={true}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmailPassword = text
@@ -170,8 +172,9 @@ export default class Login extends React.Component {
           }}
         />
         <TextInput
-          keyboardType={'email-address'}
           secureTextEntry={true}
+          multiline={false}
+          textContentType={'password'}
           placeholder={'请输入密码'}
           defaultValue={''}
           style={styles.textInputStyle}

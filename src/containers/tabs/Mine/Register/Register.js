@@ -136,7 +136,6 @@ export default class Register extends React.Component {
           }}
         />
         <TextInput
-          keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           placeholder={'请输入密码'}
@@ -194,7 +193,6 @@ export default class Register extends React.Component {
           </TouchableOpacity>
         </View>
         <TextInput
-          keyboardType={'email-address'}
           secureTextEntry={true}
           clearButtonMode={'while-editing'}
           placeholder={'请输入密码'}

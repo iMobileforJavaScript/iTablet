@@ -6,6 +6,7 @@ import PropTypes from 'prop-types'
 import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
+import { openWorkspace } from './src/models/map'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { scaleSize, AudioAnalyst, Toast } from './src/utils'
@@ -41,6 +42,7 @@ class AppRoot extends Component {
     editLayer: PropTypes.object,
     setNav: PropTypes.func,
     setUser: PropTypes.func,
+    openWorkspace:PropTypes.func,
   }
 
   constructor(props) {
@@ -56,6 +58,9 @@ class AppRoot extends Component {
     ;(async function () {
       await this.initDirectories()
       SOnlineService.init()
+      let customerPath = ConstPath.CustomerPath+ConstPath.RelativeFilePath.Workspace
+      let path = await Utility.appendingHomeDirectory(customerPath)
+      this.props.openWorkspace({server:path})
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
@@ -180,6 +185,7 @@ const mapStateToProps = state => {
 const AppRootWithRedux = connect(mapStateToProps, {
   setNav,
   setUser,
+  openWorkspace,
 })(AppRoot)
 
 const App = () =>
