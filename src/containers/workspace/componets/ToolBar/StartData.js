@@ -418,7 +418,7 @@ function add(type) {
       _params.setToolbarVisible(true, ConstToolType.MAP_ADD_LAYER, {
         containerType: 'list',
         isFullScreen: false,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
       break
   }

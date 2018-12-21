@@ -1815,6 +1815,7 @@ export default class ToolBar extends React.Component {
               Toast.show('已为您切换到' + item.title)
               this.props.setCurrentMap(item)
               this.props.getLayers(-1, layers => {
+                // console.log(layers)
                 this.props.setCurrentLayer(layers.length > 0 && layers[0])
               })
               this.props.setCollectionInfo({
