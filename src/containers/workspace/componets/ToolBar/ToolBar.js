@@ -259,7 +259,7 @@ export default class ToolBar extends React.PureComponent {
         case ConstToolType.MAP_THEME_START:
           if (orientation === 'PORTRAIT') {
             this.setState({ column: 4 })
-            this.height = ConstToolType.HEIGHT[1]
+            this.height = ConstToolType.HEIGHT[0]
             this.showToolbar()
           } else {
             this.height = ConstToolType.HEIGHT[0]

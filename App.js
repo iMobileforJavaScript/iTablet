@@ -58,6 +58,7 @@ class AppRoot extends Component {
     ;(async function () {
       await this.initDirectories()
       SOnlineService.init()
+      SOnlineService.removeCookie()
       let customerPath = ConstPath.CustomerPath+ConstPath.RelativeFilePath.Workspace
       let path = await Utility.appendingHomeDirectory(customerPath)
       this.props.openWorkspace({server:path})

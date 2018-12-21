@@ -21,6 +21,7 @@ const nativeFileTools = NativeModules.FileTools
 let _iLoadOnlineDataCount = -1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
+let _arrOnlineData = [{}]
 export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
@@ -30,18 +31,20 @@ export default class MyOnlineData extends Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
-      data: [{}],
+      data: _arrOnlineData,
       isRefreshing: false,
       modalIsVisible: false,
       downloadingIndex: -1,
     }
     this.pageSize = 20
-    this._initData(1, this.pageSize)
     this._addListener()
   }
 
+  async componentDidMount() {
+    _arrOnlineData = await this._initData(1, this.pageSize)
+    this.setState({ data: _arrOnlineData })
+  }
   componentWillUnmount() {
     this._removeListener()
   }
@@ -61,7 +64,8 @@ export default class MyOnlineData extends Component {
         newData.push(objContent)
       }
       if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
-        this.setState({ data: newData })
+        _arrOnlineData = newData
+        this.setState({ data: _arrOnlineData })
       }
     } catch (e) {
       Toast.show('网络错误')
@@ -136,8 +140,11 @@ export default class MyOnlineData extends Component {
       try {
         this.setState({ isRefreshing: true })
         _iLoadOnlineDataCount = 1
-        let newData = await this._initData(_iLoadOnlineDataCount, this.pageSize)
-        this.setState({ data: newData, isRefreshing: false })
+        _arrOnlineData = await this._initData(
+          _iLoadOnlineDataCount,
+          this.pageSize,
+        )
+        this.setState({ data: _arrOnlineData, isRefreshing: false })
       } catch (e) {
         this.setState({ isRefreshing: false })
       }
@@ -151,7 +158,8 @@ export default class MyOnlineData extends Component {
       let data = await this._initData(_iLoadOnlineDataCount, this.pageSize)
       let newData = this.state.data
       newData.push(data)
-      this.setState({ data: newData })
+      _arrOnlineData = newData
+      this.setState({ data: _arrOnlineData })
     }
   }
   _footView = () => {
@@ -267,6 +275,7 @@ export default class MyOnlineData extends Component {
       let objContent = this.state.data[i]
       objContent.isDownloading = true
     }
+    _arrOnlineData = this.state.data
   }
 
   _downloading = index => {
@@ -276,6 +285,7 @@ export default class MyOnlineData extends Component {
         objContent.isDownloading = false
       }
     }
+    _arrOnlineData = this.state.data
   }
   _removeListener = () => {
     if (this.downloadFailureListener !== undefined) {

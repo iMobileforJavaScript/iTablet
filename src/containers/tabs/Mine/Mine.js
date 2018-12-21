@@ -12,7 +12,7 @@ import NavigationService from '../../NavigationService'
 import Login from './Login'
 import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
-// import { SMap } from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 export default class Mine extends Component {
   props: {
@@ -205,6 +205,7 @@ export default class Mine extends Component {
       this.props.user.currentUser.userName
     ) {
       this.openUserWorkspace()
+      SOnlineService.syncAndroidCookie()
       return (
         <Container
           ref={ref => (this.container = ref)}

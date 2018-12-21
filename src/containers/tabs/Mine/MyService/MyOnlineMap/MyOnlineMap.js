@@ -110,9 +110,9 @@ export default class MyOnlineMap extends Component {
           style={styles.imageStyle}
           source={{
             uri: info.item.mapThumbnail,
-            headers: {
-              Cookie: 'JSESSIONID=' + this.state.cookie,
-            },
+            // headers: {
+            //   Cookie: 'JSESSIONID=' + this.state.cookie,
+            // },
           }}
         />
       )

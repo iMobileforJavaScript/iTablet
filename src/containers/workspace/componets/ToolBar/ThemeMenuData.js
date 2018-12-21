@@ -1,12 +1,12 @@
 import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
+// import { Toast } from '../../../../utils'
 import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType } from '../../../../constants'
 
-function showTips() {
-  Toast.show('功能暂未开放')
-}
+// function showTips() {
+//   Toast.show('功能暂未开放')
+// }
 
 let _toolbarParams = {}
 
@@ -307,14 +307,14 @@ function getLabelBackShape() {
       image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
     },
-    {
-      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
-      title: '符号背景',
-      action: showTips,
-      size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    },
+    // {
+    //   key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
+    //   title: '符号背景',
+    //   action: showTips,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    //   selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    // },
   ]
   return data
 }
