@@ -44,7 +44,6 @@ import {
   SScene,
   Action,
   SCollector,
-  EngineType,
   SThemeCartography,
   SOnlineService,
   Utility,
@@ -77,15 +76,16 @@ let isSharing = false
 export default class ToolBar extends React.PureComponent {
   props: {
     children: any,
-    type?: string,
+    type: string,
     containerProps?: Object,
     data: Array,
     existFullMap: () => {},
-    symbol?: Object,
-    user?: Object,
-    map?: Object,
-    layers?: Object,
-    collection?: Object,
+    symbol: Object,
+    user: Object,
+    map: Object,
+    layers: Object,
+    collection: Object,
+    template: Object,
     layerData: Object,
     confirm: () => {},
     showDialog: () => {},
@@ -98,22 +98,22 @@ export default class ToolBar extends React.PureComponent {
     dialog: () => {},
     tableType?: string, // 用于设置表格类型 normal | scroll
     getMenuAlertDialogRef: () => {},
-    getLayers?: () => {}, // 更新数据（包括其他界面）
-    setCurrentMap?: () => {}, // 设置当前地图
-    setCollectionInfo?: () => {}, // 设置当前采集数据源信息
-    setCurrentLayer?: () => {}, // 设置当前图层
-    importTemplate?: () => {}, // 导入模板
-    openTemplate?: () => {}, // 打开模板
-    setAttributes?: () => {},
-    getMaps?: () => {},
-    exportWorkspace?: () => {},
-    getSymbolTemplates?: () => {},
-    openWorkspace?: () => {},
-    closeWorkspace?: () => {},
-    openMap?: () => {},
-    closeMap?: () => {},
-    setCurrentTemplateInfo?: () => {},
-    setTemplate?: () => {},
+    getLayers: () => {}, // 更新数据（包括其他界面）
+    setCurrentMap: () => {}, // 设置当前地图
+    setCollectionInfo: () => {}, // 设置当前采集数据源信息
+    setCurrentLayer: () => {}, // 设置当前图层
+    importTemplate: () => {}, // 导入模板
+    openTemplate: () => {}, // 打开模板
+    setAttributes: () => {},
+    getMaps: () => {},
+    exportWorkspace: () => {},
+    getSymbolTemplates: () => {},
+    openWorkspace: () => {},
+    closeWorkspace: () => {},
+    openMap: () => {},
+    closeMap: () => {},
+    setCurrentTemplateInfo: () => {},
+    setTemplate: () => {},
   }
 
   static defaultProps = {
@@ -1147,12 +1147,16 @@ export default class ToolBar extends React.PureComponent {
           this.showToolbarAndBox(isShow, type)
           !isShow && this.props.existFullMap && this.props.existFullMap()
           // }
-          params.cb && params.cb()
+          if (params.cb) {
+            setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
+          }
         },
       )
     } else {
       this.showToolbarAndBox(isShow)
-      params.cb && params.cb()
+      if (params.cb) {
+        setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
+      }
       !isShow && this.props.existFullMap && this.props.existFullMap()
     }
   }
@@ -1199,7 +1203,7 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
-  showToolbar = isShow => {
+  showToolbar = (isShow, cb = () => {}) => {
     let animatedList = []
     // Toolbar的显示和隐藏
     // Toolbar的显示和隐藏
@@ -1228,6 +1232,9 @@ export default class ToolBar extends React.PureComponent {
       animatedList.forEach(animated => animated.start())
     } else {
       Animated.sequence(animatedList).start()
+    }
+    if (cb) {
+      setTimeout(() => cb(), Const.ANIMATED_DURATION_2)
     }
   }
 
@@ -1430,11 +1437,11 @@ export default class ToolBar extends React.PureComponent {
   }
 
   showSymbol = () => {
-    SCollector.stopCollect()
     this.props.showFullMap && this.props.showFullMap(true)
     this.setVisible(true, ConstToolType.MAP_SYMBOL, {
       isFullScreen: true,
       height: ConstToolType.HEIGHT[3],
+      cb: () => SCollector.stopCollect(),
     })
   }
 
@@ -1475,7 +1482,6 @@ export default class ToolBar extends React.PureComponent {
   }
 
   endFly = () => {
-    SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1778,21 +1784,24 @@ export default class ToolBar extends React.PureComponent {
         ConstPath.RelativePath.Workspace,
       )
 
-      if (this.props.map.template.path === tempPath) {
+      if (this.props.template.template.path === tempPath) {
         Toast.show(ConstInfo.MODULE_ALREADY_OPENED)
         return
       }
       this.props.setContainerLoading &&
         this.props.setContainerLoading(true, '正在打开模板')
       // 打开模板工作空间
-      this.props.openTemplate(
-        { ...item, isImportWorkspace: true },
-        ({ copyResult, openResult, msg }) => {
+      this.props
+        .openTemplate({ ...item, isImportWorkspace: true })
+        .then(async ({ copyResult, openResult, msg }) => {
           if (msg) {
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
             Toast.show(msg)
           } else if (openResult) {
+            // 打开地图
+            let maps = await SMap.getMaps()
+            await this.props.openMap(maps.length > 0 ? maps.length - 1 : -1)
             // 重新加载图层
             this.props.getLayers({
               type: -1,
@@ -1814,8 +1823,7 @@ export default class ToolBar extends React.PureComponent {
               this.props.setContainerLoading(false)
             Toast.show('切换模板失败')
           }
-        },
-      )
+        })
     } catch (error) {
       Toast.show('切换模板失败')
       this.props.setContainerLoading && this.props.setContainerLoading(false)
@@ -1828,42 +1836,42 @@ export default class ToolBar extends React.PureComponent {
       // 获取地图信息
       // let mapInfo = await SMap.getMapInfo()
       // 打开地图
-      let datasourceName = item.title.substr(
-        item.title.lastIndexOf('@') + 1,
-        item.title.length - 1,
-      )
-      let server =
-        this.props.collection.datasourceParentPath + datasourceName + '.udb'
-      let DSParams = {
-        server: server,
-        engineType: EngineType.UDB,
-        alias: datasourceName,
-      }
-      SMap.openDatasource(DSParams).then(result => {
-        result &&
-          this.props.openMap(item.title).then(isOpen => {
-            if (isOpen) {
-              Toast.show('已为您切换到' + item.title)
-              this.props.setCurrentMap(item)
-              this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              this.props.setCollectionInfo({
-                datasourceName: datasourceName,
-                datasourceParentPath: this.props.collection
-                  .datasourceParentPath,
-                datasourceServer: server,
-                datasourceType: EngineType.UDB,
-              })
-              this.setVisible(false)
-            } else {
-              this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              Toast.show('该地图为当前地图')
-            }
+      // let datasourceName = item.title.substr(
+      //   item.title.lastIndexOf('@') + 1,
+      //   item.title.length - 1,
+      // )
+      // let server =
+      //   this.props.collection.datasourceParentPath + datasourceName + '.udb'
+      // let DSParams = {
+      //   server: server,
+      //   engineType: EngineType.UDB,
+      //   alias: datasourceName,
+      // }
+      // SMap.openDatasource(DSParams).then(result => {
+      //   result &&
+      this.props.openMap(item.title).then(isOpen => {
+        if (isOpen) {
+          Toast.show('已为您切换到' + item.title)
+          this.props.setCurrentMap(item)
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
+          // this.props.setCollectionInfo({
+          //   datasourceName: datasourceName,
+          //   datasourceParentPath: this.props.collection
+          //     .datasourceParentPath,
+          //   datasourceServer: server,
+          //   datasourceType: EngineType.UDB,
+          // })
+          this.setVisible(false)
+        } else {
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+          Toast.show('该地图为当前地图')
+        }
       })
+      // })
     } catch (e) {
       Toast.show('切换地图失败')
     }

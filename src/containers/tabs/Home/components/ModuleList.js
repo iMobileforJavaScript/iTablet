@@ -11,7 +11,7 @@ import {
   // Dimensions,
 } from 'react-native'
 import { ConstModule } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, screen } from '../../../../utils'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 import Orientation from 'react-native-orientation'
 export default class ModuleList extends Component {
@@ -22,7 +22,8 @@ export default class ModuleList extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      orientation: '',
+      orientation:
+        screen.deviceHeight > screen.deviceWidth ? 'PORTRAIT' : 'LANDSCAPE',
     }
   }
   // eslint-disable-next-line

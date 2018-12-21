@@ -12,29 +12,29 @@ export default [
     title: '地图制图',
     baseImage: require('../assets/home/icon_lefttop_free.png'),
     moduleImage: require('../assets/home/icon_cartography.png'),
-    action: async user => {
+    action: async () => {
       GLOBAL.Type = constants.MAP_EDIT
-      const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
-      let wsPath
-      if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace
-        wsPath = await Utility.appendingHomeDirectory(userWSPath)
-      } else {
-        wsPath = await Utility.appendingHomeDirectory(customerPath)
-      }
+      // const customerPath =
+      //   ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
+      // let wsPath
+      // if (user.userName) {
+      //   const userWSPath =
+      //     ConstPath.UserPath +
+      //     user.userName +
+      //     '/' +
+      //     ConstPath.RelativeFilePath.Workspace
+      //   wsPath = await Utility.appendingHomeDirectory(userWSPath)
+      // } else {
+      //   wsPath = await Utility.appendingHomeDirectory(customerPath)
+      // }
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_EDIT,
         wsData: [
-          {
-            DSParams: { server: wsPath },
-            type: 'Workspace',
-          },
+          // {
+          //   DSParams: { server: wsPath },
+          //   type: 'Workspace',
+          // },
           ConstOnline['Google'],
         ],
         mapName: '地图制图',
@@ -102,28 +102,28 @@ export default [
     title: '专题地图',
     baseImage: require('../assets/home/icon_lefttop_vip.png'),
     moduleImage: require('../assets/home/icon_thematicmap.png'),
-    action: async user => {
+    action: async () => {
       GLOBAL.Type = constants.MAP_THEME
-      const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      let wsPath
-      if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace
-        wsPath = await Utility.appendingHomeDirectory(userWSPath)
-      } else {
-        wsPath = await Utility.appendingHomeDirectory(customerPath)
-      }
+      // const customerPath =
+      //   ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // let wsPath
+      // if (user.userName) {
+      //   const userWSPath =
+      //     ConstPath.UserPath +
+      //     user.userName +
+      //     '/' +
+      //     ConstPath.RelativeFilePath.Workspace
+      //   wsPath = await Utility.appendingHomeDirectory(userWSPath)
+      // } else {
+      //   wsPath = await Utility.appendingHomeDirectory(customerPath)
+      // }
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
         wsData: [
-          {
-            DSParams: { server: wsPath },
-            type: 'Workspace',
-          },
+          // {
+          //   DSParams: { server: wsPath },
+          //   type: 'Workspace',
+          // },
           ConstOnline['Baidu'],
         ],
         mapName: '专题制图',
@@ -136,34 +136,34 @@ export default [
     title: '外业采集',
     baseImage: require('../assets/home/icon_rightbottom_vip.png'),
     moduleImage: require('../assets/home/icon_collection.png'),
-    action: async user => {
+    action: async () => {
       GLOBAL.Type = constants.COLLECTION
-      const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // const customerPath =
+      //   ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
-      let wsPath
+      // let wsPath
       // const customerPath =
       //   ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
       // let wsPath = await Utility.appendingHomeDirectory(customerPath)
       // let exist = await Utility.fileIsExistInHomeDirectory(customerPath)
-      if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace
-        wsPath = await Utility.appendingHomeDirectory(userWSPath)
-      } else {
-        wsPath = await Utility.appendingHomeDirectory(customerPath)
-      }
+      // if (user.userName) {
+      //   const userWSPath =
+      //     ConstPath.UserPath +
+      //     user.userName +
+      //     '/' +
+      //     ConstPath.RelativeFilePath.Workspace
+      //   wsPath = await Utility.appendingHomeDirectory(userWSPath)
+      // } else {
+      //   wsPath = await Utility.appendingHomeDirectory(customerPath)
+      // }
       NavigationService.navigate('MapView', {
         // 若未登录，则打开游客工作空间
         wsData: [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
+          // {
+          //   DSParams: { server: wsPath },
+          //   // layerIndex: 0,
+          //   type: 'Workspace',
+          // },
           ConstOnline['Google'],
         ],
         mapName: '外业采集',

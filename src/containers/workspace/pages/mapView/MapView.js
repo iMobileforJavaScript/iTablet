@@ -53,6 +53,7 @@ export default class MapView extends React.Component {
     latestMap: PropTypes.array,
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
+    template: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -650,7 +651,7 @@ export default class MapView extends React.Component {
               '.udd',
           )
         }
-        if (this.props.map.template && this.props.map.template.path) {
+        if (this.props.template.template && this.props.template.template.path) {
           await this.props.closeWorkspace()
         }
         this.clearData()

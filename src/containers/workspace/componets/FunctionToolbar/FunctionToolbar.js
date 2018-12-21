@@ -365,11 +365,7 @@ export default class FunctionToolbar extends React.Component {
         column,
         height,
         tableType,
-        cb: () => {
-          setTimeout(() => {
-            SMap.setAction(Action.SELECT)
-          }, Const.ANIMATED_DURATION_2)
-        },
+        cb: () => SMap.setAction(Action.SELECT),
       })
       Toast.show(ConstInfo.CHOOSE_EDIT_OBJ)
     }
