@@ -73,8 +73,8 @@ export default class Login extends React.Component {
   _login = async () => {
     let result
     let isEmail = this.state.onEmailTitleFocus
-    let userName
-    let password
+    let userName = 'imobile1234'
+    let password = 'imobile'
     try {
       if (isEmail) {
         if (!this.txtEmail) {
