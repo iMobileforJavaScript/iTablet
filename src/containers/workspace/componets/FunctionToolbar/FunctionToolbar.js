@@ -91,7 +91,11 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
-    switch (GLOBAL.GLOBAL.currentLayer.themeType) {
+    if (!GLOBAL.currentLayer || !GLOBAL.currentLayer.themeType) {
+      Toast.show('提示: 请先选择专题图层。')
+      return
+    }
+    switch (GLOBAL.currentLayer.themeType) {
       case ThemeType.UNIQUE:
       case ThemeType.RANGE:
       case ThemeType.LABEL:
@@ -141,7 +145,7 @@ export default class FunctionToolbar extends React.Component {
       let column = orientation === 'PORTRAIT' ? 4 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[2]
+          ? ConstToolType.HEIGHT[0]
           : ConstToolType.HEIGHT[0]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -644,7 +648,7 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE)
+              this.showMore(ConstToolType.MAP_MORE_THEME)
             },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),
