@@ -11,7 +11,7 @@ import {
   DeviceEventEmitter,
   NativeModules,
 } from 'react-native'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { SOnlineService, Utility, SMap } from 'imobile_for_reactnative'
 import Container from '../../../../components/Container/index'
 import styles from './Styles'
 import Toast from '../../../../utils/Toast'
@@ -21,26 +21,30 @@ const nativeFileTools = NativeModules.FileTools
 let _iLoadOnlineDataCount = -1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
+let _arrOnlineData = [{}]
 export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
     user: Object,
+    openWorkspace: () => {},
   }
 
   constructor(props) {
     super(props)
-
     this.state = {
-      data: [{}],
+      data: _arrOnlineData,
       isRefreshing: false,
       modalIsVisible: false,
       downloadingIndex: -1,
     }
     this.pageSize = 20
-    this._initData(1, this.pageSize)
     this._addListener()
   }
 
+  async componentDidMount() {
+    _arrOnlineData = await this._initData(1, this.pageSize)
+    this.setState({ data: _arrOnlineData })
+  }
   componentWillUnmount() {
     this._removeListener()
   }
@@ -60,7 +64,8 @@ export default class MyOnlineData extends Component {
         newData.push(objContent)
       }
       if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
-        this.setState({ data: newData })
+        _arrOnlineData = newData
+        this.setState({ data: _arrOnlineData })
       }
     } catch (e) {
       Toast.show('网络错误')
@@ -135,8 +140,11 @@ export default class MyOnlineData extends Component {
       try {
         this.setState({ isRefreshing: true })
         _iLoadOnlineDataCount = 1
-        let newData = await this._initData(_iLoadOnlineDataCount, this.pageSize)
-        this.setState({ data: newData, isRefreshing: false })
+        _arrOnlineData = await this._initData(
+          _iLoadOnlineDataCount,
+          this.pageSize,
+        )
+        this.setState({ data: _arrOnlineData, isRefreshing: false })
       } catch (e) {
         this.setState({ isRefreshing: false })
       }
@@ -150,7 +158,8 @@ export default class MyOnlineData extends Component {
       let data = await this._initData(_iLoadOnlineDataCount, this.pageSize)
       let newData = this.state.data
       newData.push(data)
-      this.setState({ data: newData })
+      _arrOnlineData = newData
+      this.setState({ data: _arrOnlineData })
     }
   }
   _footView = () => {
@@ -185,7 +194,7 @@ export default class MyOnlineData extends Component {
         },
       )
       this.downloadedListener = callBackIos.addListener(downloadedType, () => {
-        let result = '下载完成'
+        let result = '下载完成，可导入'
         this._changeModalProgressState(result)
       })
     }
@@ -200,7 +209,7 @@ export default class MyOnlineData extends Component {
       this.downloadedListener = DeviceEventEmitter.addListener(
         downloadedType,
         () => {
-          let result = '下载完成'
+          let result = '下载完成，可导入'
           this._changeModalProgressState(result)
         },
       )
@@ -223,6 +232,7 @@ export default class MyOnlineData extends Component {
       objContent.fileName
     let filePath = await Utility.appendingHomeDirectory(path)
     let savePath = filePath.substring(0, filePath.length - 4)
+    this._unZipFilePath = savePath
     nativeFileTools.unZipFile(filePath, savePath)
   }
 
@@ -238,11 +248,11 @@ export default class MyOnlineData extends Component {
       ) {
         this.modalRef._changeDownloadingState(progress)
       }
-      if (progress === '下载完成' || progress === '下载失败') {
+      if (progress === '下载完成，可导入' || progress === '下载失败') {
         this._resetDownloadingState()
         this._setFinalDownloadingProgress(_iDownloadingIndex, progress)
         this.setState({ data: this.state.data })
-        if (progress === '下载完成') {
+        if (progress === '下载完成，可导入') {
           this._unZipFile()
         }
       }
@@ -265,6 +275,7 @@ export default class MyOnlineData extends Component {
       let objContent = this.state.data[i]
       objContent.isDownloading = true
     }
+    _arrOnlineData = this.state.data
   }
 
   _downloading = index => {
@@ -274,6 +285,7 @@ export default class MyOnlineData extends Component {
         objContent.isDownloading = false
       }
     }
+    _arrOnlineData = this.state.data
   }
   _removeListener = () => {
     if (this.downloadFailureListener !== undefined) {
@@ -301,15 +313,16 @@ export default class MyOnlineData extends Component {
       let filePath = await Utility.appendingHomeDirectory(path)
       let isFileExist = await Utility.fileIsExist(path)
       if (isFileExist) {
-        Toast.show('下载完成')
-        this._changeModalProgressState('下载完成')
+        Toast.show('下载完成，可导入')
+        this._changeModalProgressState('下载完成，可导入')
         return
       }
       _iDownloadingIndex = this.index
       this._downloading(_iDownloadingIndex)
       this.setState({ data: this.state.data })
+      this.modalRef._changeDownloadingState('下载中...')
       SOnlineService.downloadFileWithDataId(filePath, dataId)
-      Toast.show('开始下载,点击条目显示下载详情')
+      Toast.show('开始下载')
     } catch (e) {
       Toast.show('网络错误')
       this._resetDownloadingState()
@@ -421,6 +434,11 @@ export default class MyOnlineData extends Component {
     }
   }
 
+  _openWorkspace = async () => {
+    await Utility.getPathListByFilter()
+    let path = this._unZipFilePath
+    SMap.importWorkspace({ server: path })
+  }
   _renderModal = () => {
     if (this.index !== undefined) {
       return (
@@ -431,6 +449,7 @@ export default class MyOnlineData extends Component {
             }
           }}
           data={this.state.data[this.index]}
+          openWorkspace={this._openWorkspace}
           onDeleteService={this._onDeleteService}
           onDownloadFile={this._onDownloadFile}
           onPublishService={this._onPublishService}

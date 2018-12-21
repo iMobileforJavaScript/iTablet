@@ -4,10 +4,10 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Animated, Alert } from 'react-native'
+import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType, Const } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { ConstToolType, Const, ConstInfo } from '../../../../constants'
+import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
@@ -92,7 +92,11 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
-    switch (GLOBAL.GLOBAL.currentLayer.themeType) {
+    if (!GLOBAL.currentLayer || !GLOBAL.currentLayer.themeType) {
+      Toast.show('提示: 请先选择专题图层。')
+      return
+    }
+    switch (GLOBAL.currentLayer.themeType) {
       case ThemeType.UNIQUE:
       case ThemeType.RANGE:
       case ThemeType.LABEL:
@@ -103,10 +107,10 @@ export default class FunctionToolbar extends React.Component {
       case ThemeType.DOTDENSITY:
       case ThemeType.GRAPH:
       case ThemeType.GRADUATEDSYMBOL:
-        Alert.alert('提示: 暂不支持编辑的专题图层。')
+        Toast.show('提示: 暂不支持编辑的专题图层。')
         return
       default:
-        Alert.alert('提示: 请先选择专题图层。')
+        Toast.show('提示: 请先选择专题图层。')
         return
     }
 
@@ -142,7 +146,7 @@ export default class FunctionToolbar extends React.Component {
       let column = orientation === 'PORTRAIT' ? 4 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[2]
+          ? ConstToolType.HEIGHT[0]
           : ConstToolType.HEIGHT[0]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -311,7 +315,7 @@ export default class FunctionToolbar extends React.Component {
     //   Toast.show('请选择图层')
     //   return
     // }
-    await SMap.setAction(Action.SELECT)
+    // await SMap.setAction(Action.SELECT)
     // this.props.addGeometrySelectedListener &&
     //   (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
@@ -346,7 +350,9 @@ export default class FunctionToolbar extends React.Component {
         column,
         height,
         tableType,
+        cb: () => SMap.setAction(Action.SELECT),
       })
+      Toast.show(ConstInfo.CHOOSE_EDIT_OBJ)
     }
   }
 
@@ -364,10 +370,10 @@ export default class FunctionToolbar extends React.Component {
 
   showThemeCreate = async () => {
     Orientation.getOrientation((e, orientation) => {
-      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let column = orientation === 'PORTRAIT' ? 3 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[2]
+          ? ConstToolType.HEIGHT[0]
           : ConstToolType.HEIGHT[0]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -402,18 +408,24 @@ export default class FunctionToolbar extends React.Component {
   }
 
   mapStyle = () => {
-    // console.warn(JSON.stringify(this.props.layers.layers[0].name))
     const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-        defaultlayer: this.props.layers.layers[0],
-      })
-    }
+    if (this.props.layers.themeType <= 0)
+      if (
+        this.props.layers.type === 1 ||
+        this.props.layers.type === 3 ||
+        this.props.layers.type === 5 ||
+        this.props.layers.type === 83
+      ) {
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
+            containerType: 'symbol',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.THEME_HEIGHT[3],
+          })
+        }
+      }
   }
 
   remove = () => {}
@@ -611,22 +623,22 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_param.png'),
           },
-          {
-            key: '标注',
-            title: '标注',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_label.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
-          },
-          {
-            key: '工具',
-            title: '工具',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_tools.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
-          },
+          // {
+          //   key: '标注',
+          //   title: '标注',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_label.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
+          // },
+          // {
+          //   key: '工具',
+          //   title: '工具',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_tools.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
+          // },
           // {
           //   key: '撤销',
           //   title: '撤销',
@@ -641,7 +653,7 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE)
+              this.showMore(ConstToolType.MAP_MORE_THEME)
             },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),

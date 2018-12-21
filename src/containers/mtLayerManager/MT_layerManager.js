@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { FlatList, Alert } from 'react-native'
+import { FlatList } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
@@ -305,7 +305,7 @@ export default class MT_layerManager extends React.Component {
       this.props.setCurrentLayer(data, () => {
         Toast.show('当前图层为' + data.caption)
       })
-    if (GLOBAL.Type === constants.MAP_EDIT) {
+    if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
       SMap.setLayerEditable(data.path, true)
       if (data.type === 83) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
@@ -313,16 +313,18 @@ export default class MT_layerManager extends React.Component {
           isFullScreen: false,
           height: ConstToolType.HEIGHT[4],
         })
-      } else {
+        GLOBAL.toolBox.showFullMap()
+        NavigationService.goBack()
+      } else if (data.type === 1 || data.type === 3 || data.type === 5) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
           isFullScreen: false,
           column: 4,
           height: ConstToolType.THEME_HEIGHT[3],
         })
+        GLOBAL.toolBox.showFullMap()
+        NavigationService.goBack()
       }
-      GLOBAL.toolBox.showFullMap()
-      NavigationService.goBack()
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
@@ -338,7 +340,7 @@ export default class MT_layerManager extends React.Component {
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         default:
-          Alert.alert('提示:请选择专题图层。')
+          Toast.show('提示: 请选择专题图层。')
           break
       }
     }

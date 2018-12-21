@@ -5,16 +5,9 @@
 */
 
 import * as React from 'react'
-import {
-  WebView,
-  Dimensions,
-  ActivityIndicator,
-  Text,
-  View,
-} from 'react-native'
+import { WebView, Dimensions, ActivityIndicator, View } from 'react-native'
 import { Container } from '../../../../../components'
 import Toast from '../../../../../utils/Toast'
-
 export default class ScanOnlineMap extends React.Component {
   props: {
     navigation: Object,
@@ -25,7 +18,12 @@ export default class ScanOnlineMap extends React.Component {
     this.state = {
       mapTitle: this.props.navigation.getParam('mapTitle', ''),
       mapUrl: this.props.navigation.getParam('mapUrl', ''),
+      cookie: this.props.navigation.getParam('cookie', ''),
+      isLoadWebView: false,
     }
+  }
+  componentDidMount() {
+    this.setState({ isLoadWebView: true })
   }
   _renderLoading = () => {
     return (
@@ -34,41 +32,30 @@ export default class ScanOnlineMap extends React.Component {
           flex: 1,
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: '#353537',
+          backgroundColor: 'white',
         }}
       >
-        <ActivityIndicator color={'gray'} animating={true} size={'large'} />
-        <Text style={{ fontSize: 12, color: 'white' }}>Loading...</Text>
+        <ActivityIndicator color={'gray'} animating={true} size={'small'} />
       </View>
     )
   }
   _onLoadStart = () => {}
-  render() {
-    let uri = this.state.mapUrl + '.ol3'
-    let newUri
-    if (uri.indexOf('https') !== -1) {
-      let subUri = uri.substring(5)
-      newUri = 'http' + subUri
-    } else {
-      newUri = uri
-    }
-    return (
-      <Container
-        style={{ flex: 1 }}
-        headerProps={{
-          title: this.state.mapTitle,
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
+  _loadWebView = uri => {
+    if (this.state.isLoadWebView) {
+      return (
         <WebView
           style={{
-            flex: 1,
             height: Dimensions.get('window').height,
             width: Dimensions.get('window').width,
           }}
           source={{
-            uri: newUri,
+            uri: uri,
+            // headers: {
+            //   Cookie: 'JSESSIONID=' + this.state.cookie,
+            //   'Cache-Control': 'no-cache',
+            // },
+            // cache: 'reload',
+            // credentials: 'include',
           }}
           scalesPageToFit={true}
           startInLoadingState={true}
@@ -83,6 +70,27 @@ export default class ScanOnlineMap extends React.Component {
           }}
           onLoadStart={this._onLoadStart}
         />
+      )
+    }
+  }
+  render() {
+    let uri = this.state.mapUrl + '.ol3'
+    let newUri
+    if (uri.indexOf('https') !== -1) {
+      let subUri = uri.substring(5)
+      newUri = 'http' + subUri
+    } else {
+      newUri = uri
+    }
+    return (
+      <Container
+        headerProps={{
+          title: this.state.mapTitle,
+          withoutBack: false,
+          navigation: this.props.navigation,
+        }}
+      >
+        {this._loadWebView(newUri)}
       </Container>
     )
   }

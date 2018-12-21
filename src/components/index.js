@@ -29,6 +29,7 @@ import {
   PopBtnList,
   PopBtnSectionList,
   PopMeasureBar,
+  ColorBtn,
 } from './mapTools'
 import LayerItem from './LayerItem'
 import Progress from './Progress'
@@ -82,4 +83,5 @@ export {
   SaveDialog,
   SaveMapNameDialog,
   ColorTableList,
+  ColorBtn,
 }

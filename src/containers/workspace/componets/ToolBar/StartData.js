@@ -1,5 +1,10 @@
 import { NativeMethod } from '../../../../native'
-import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
+import {
+  ConstToolType,
+  ConstInfo,
+  ConstPath,
+  Const,
+} from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
@@ -158,36 +163,35 @@ function getStart(type, params) {
       data = [
         {
           key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
+          title: constants.THEME_WORKSPACE,
           action: openWorkspace,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_point.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_point.png'),
+          image: require('../../../../assets/mapTools/icon_open.png'),
         },
         {
           key: constants.OPEN,
-          title: constants.OPEN,
+          title: constants.THEME_OPEN,
           action: openMap,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
         {
           key: constants.CREATE,
-          title: constants.CREATE,
+          title: constants.THEME_CREATE,
           size: 'large',
           action: createThemeMap,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
-        {
-          key: constants.HISTORY,
-          title: constants.HISTORY,
-          size: 'large',
-          action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
-        },
+        // {
+        //   key: constants.HISTORY,
+        //   title: constants.HISTORY,
+        //   size: 'large',
+        //   action: showHistory,
+        //   image: require('../../../../assets/mapTools/icon_history_white.png'),
+        // },
         {
           key: constants.BASE_MAP,
-          title: constants.BASE_MAP,
+          title: constants.THEME_BASE_MAP,
           size: 'large',
           action: changeBaseLayer,
           image: require('../../../../assets/mapTools/icon_base.png'),
@@ -282,17 +286,17 @@ function openTemplate() {
       let data = isDefaultWS
         ? [
           {
-            title: '模板',
+            title: Const.MODULE,
             data: templateList,
           },
         ]
         : [
           {
-            title: '返回默认工作空间',
+            title: Const.RETURN_TO_DEFAULT_MODULE,
             data: [],
           },
           {
-            title: '模板',
+            title: Const.MODULE,
             data: templateList,
           },
         ]
@@ -385,10 +389,10 @@ function createThemeMap() {
   _params.showFullMap && _params.showFullMap(true)
 
   Orientation.getOrientation((e, orientation) => {
-    let column = orientation === 'PORTRAIT' ? 4 : 8
+    let column = orientation === 'PORTRAIT' ? 3 : 8
     let height =
       orientation === 'PORTRAIT'
-        ? ConstToolType.HEIGHT[2]
+        ? ConstToolType.HEIGHT[0]
         : ConstToolType.HEIGHT[0]
 
     _params.setToolbarVisible(true, ConstToolType.MAP_THEME_CREATE, {

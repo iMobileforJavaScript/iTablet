@@ -95,6 +95,10 @@ export default class ToolBarSectionList extends React.Component {
     return this.state.selectList
   }
 
+  scrollToLocation = params => {
+    this.sectionList.scrollToLocation(params)
+  }
+
   renderSection = ({ section }) => {
     if (this.props.renderSectionHeader) {
       return this.props.renderSectionHeader({ section })
@@ -105,6 +109,13 @@ export default class ToolBarSectionList extends React.Component {
         style={[styles.sectionHeader, this.props.sectionStyle]}
         onPress={() => this.headerAction({ section })}
       >
+        {section.datasetType && (
+          <Image
+            source={this.getDatasetTypeImg(section)}
+            resizeMode={'contain'}
+            style={styles.section_dataset_type}
+          />
+        )}
         <Text style={[styles.sectionTitle, this.props.sectionTitleStyle]}>
           {section.title}
         </Text>
@@ -140,6 +151,16 @@ export default class ToolBarSectionList extends React.Component {
             />
           </TouchableOpacity>
         )}
+        {item.datasetType && item.datasetName && (
+          <Image
+            source={this.getDatasetTypeImg(item)}
+            resizeMode={'contain'}
+            style={styles.dataset_type}
+          />
+        )}
+        {item.datasetType && item.datasetName && (
+          <Text style={styles.dataset_title}>{item.datasetName}</Text>
+        )}
         {(item.title || item.name) && (
           <Text style={styles.itemTitle}>{item.title || item.name}</Text>
         )}
@@ -147,14 +168,58 @@ export default class ToolBarSectionList extends React.Component {
     )
   }
 
+  getDatasetTypeImg = item => {
+    let img
+    switch (item.datasetType) {
+      case 'POINT':
+        img = require('../../../../assets/mapToolbar/dataset_type_point.png')
+        break
+      case 'LINE':
+        img = require('../../../../assets/mapToolbar/dataset_type_line.png')
+        break
+      case 'REGION':
+        img = require('../../../../assets/mapToolbar/dataset_type_region.png')
+        break
+      case 'TEXT':
+        img = require('../../../../assets/mapToolbar/dataset_type_text.png')
+        break
+      case 'IMAGE':
+        img = require('../../../../assets/mapToolbar/dataset_type_image.png')
+        break
+      case 'CAD':
+        img = require('../../../../assets/mapToolbar/dataset_type_cad.png')
+        break
+      case 'GRID':
+        img = require('../../../../assets/mapToolbar/dataset_type_grid.png')
+        break
+      case 'NETWORK':
+        img = require('../../../../assets/mapToolbar/dataset_type_network.png')
+        break
+      default:
+        img = require('../../../../assets/mapToolbar/dataset_type_else.png')
+        break
+    }
+    return img
+  }
+
+  getItemLayout = (data, index) => {
+    return {
+      length: scaleSize(80),
+      offset: scaleSize(80 + 1) * index,
+      index,
+    }
+  }
+
   render() {
     return (
       <SectionList
+        ref={ref => (this.sectionList = ref)}
         style={[this.props.style]}
         sections={this.state.sections}
         renderItem={this.renderItem}
         renderSectionHeader={this.renderSection}
         keyExtractor={(item, index) => index}
+        getItemLayout={this.getItemLayout}
       />
     )
   }
@@ -164,7 +229,8 @@ const styles = StyleSheet.create({
   sectionHeader: {
     backgroundColor: color.subTheme,
     height: scaleSize(80),
-    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   sectionTitle: {
     marginLeft: scaleSize(30),
@@ -194,5 +260,22 @@ const styles = StyleSheet.create({
   selectImg: {
     width: scaleSize(40),
     height: scaleSize(40),
+  },
+  section_dataset_type: {
+    width: scaleSize(50),
+    height: scaleSize(50),
+    marginLeft: scaleSize(30),
+  },
+  dataset_type: {
+    width: scaleSize(50),
+    height: scaleSize(50),
+    marginLeft: scaleSize(50),
+  },
+  dataset_title: {
+    marginLeft: scaleSize(20),
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    color: color.themeText,
   },
 })

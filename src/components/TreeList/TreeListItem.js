@@ -207,9 +207,16 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     paddingLeft: scaleSize(30),
   },
+  btn: {
+    paddingVertical: scaleSize(20),
+    width: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     color: 'white',
     fontSize: size.fontSize.fontSizeSm,
+    backgroundColor: 'transparent',
   },
   arrowImg: {
     marginRight: scaleSize(20),

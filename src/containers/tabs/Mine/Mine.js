@@ -1,39 +1,49 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Dimensions,
+} from 'react-native'
 import { Container } from '../../../components'
 import NavigationService from '../../NavigationService'
 import Login from './Login'
-import styles, { screen, color } from './styles'
+import { color } from './styles'
+import ConstPath from '../../../constants/ConstPath'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 export default class Mine extends Component {
   props: {
     navigation: Object,
     user: Object,
     setUser: () => {},
+    closeWorkspace: () => {},
+    openWorkspace: () => {},
   }
 
   constructor(props) {
     super(props)
     this.goToMyService = this.goToMyService.bind(this)
-    this.goToMyData = this.goToMyData.bind(this)
+    this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
   }
 
+  openUserWorkspace = () => {
+    this.props.closeWorkspace(() => {
+      let userPath =
+        ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativeFilePath.Workspace
+      this.props.openWorkspace({ server: userPath })
+    })
+  }
   goToPersonal = () => {
     NavigationService.navigate('Personal')
   }
 
-  goToMyData = async () => {
-    // let sessionId = await SOnlineService.getAndroidSessionID()
-    // let headers = {
-    //   method: 'GET',
-    //   headers:{
-    //     'Host':'www.supermapol.com',
-    //     'Cookie':'JSESSIONID='+sessionId,
-    //   },
-    //   credentials:'include',
-    // }
-    //
-    // let getImage = fetch('https://www.supermapol.com/proxy/iserver/services/map_beijing_new/rest/maps/beijing/entireImage.png',headers)
+  goToMyOnlineData = async () => {
     NavigationService.navigate('MyOnlineData')
   }
 
@@ -41,105 +51,87 @@ export default class Mine extends Component {
     NavigationService.navigate('MyService')
   }
 
-  renderHeader = () => {
-    let headerHeight = 80
-    let imageWidth = 40
+  _render = () => {
+    this.screenWidth = Dimensions.get('window').width
     let fontSize = 16
     return (
       <View style={{ flex: 1, backgroundColor: color.border }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            height: headerHeight,
-            width: screen.deviceWidth,
-          }}
-        >
-          <TouchableOpacity
-            onPress={this.goToPersonal}
-            activeOpacity={1}
-            style={{
-              width: headerHeight,
-              height: headerHeight,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <Image
-              resizeMode={'contain'}
-              style={{ width: imageWidth, height: imageWidth, padding: 5 }}
-              source={require('../../../assets/public/icon-avatar-default.png')}
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              flex: 1,
-              lineHeight: headerHeight,
-              fontSize: fontSize,
-              color: 'white',
-            }}
-          >
-            {this.props.user.currentUser.userName}
-          </Text>
-        </View>
+        {this._renderHeader(fontSize)}
         <ScrollView style={{ flex: 1 }}>
           <View style={{ flex: 1 }}>
+            {this._renderMyOnlineDataItem(50, fontSize)}
+            {this._renderMyServiceItem(50, fontSize)}
             {this._renderLine()}
-            <Text
-              style={{
-                lineHeight: 60,
-                flex: 1,
-                textAlign: 'left',
-                fontSize: fontSize,
-                paddingLeft: 10,
-                color: 'white',
-              }}
-              onPress={() => {
-                NavigationService.navigate('MyOnlineData')
-              }}
-            >
-              在线数据
-            </Text>
-            {this._renderLine()}
-            <Text
-              style={{
-                lineHeight: 47,
-                flex: 1,
-                textAlign: 'left',
-                fontSize: fontSize,
-                paddingLeft: 10,
-                color: 'white',
-              }}
-              onPress={() => {
-                this.goToMyService()
-              }}
-            >
-              我的服务
-            </Text>
           </View>
         </ScrollView>
+      </View>
+    )
+  }
+  _renderHeader = fontSize => {
+    let headerHeight = 80
+    let imageWidth = 40
+    return (
+      <View
+        style={{
+          flexDirection: 'row',
+          height: headerHeight,
+          width: this.screenWidth,
+        }}
+      >
+        <TouchableOpacity
+          onPress={this.goToPersonal}
+          activeOpacity={1}
+          style={{
+            width: headerHeight,
+            height: headerHeight,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Image
+            resizeMode={'contain'}
+            style={{ width: imageWidth, height: imageWidth, padding: 5 }}
+            source={require('../../../assets/public/icon-avatar-default.png')}
+          />
+        </TouchableOpacity>
+        <Text
+          style={{
+            flex: 1,
+            lineHeight: headerHeight,
+            fontSize: fontSize,
+            color: 'white',
+          }}
+        >
+          {this.props.user.currentUser.userName}
+        </Text>
       </View>
     )
   }
   _renderLine = () => {
     return <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
   }
-  _renderMyItem = (itemWidth, itemHeight, fontSize, strText = 'wen') => {
+  _renderMyServiceItem = (itemHeight, fontSize) => {
+    let imageWidth = itemHeight / 2
     return (
-      <View style={{ width: itemWidth, height: itemHeight + 4, padding: 5 }}>
-        <View style={{ flex: 1, height: 4, backgroundColor: color.border }} />
-        <View
+      <View>
+        <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
+        <TouchableOpacity
           style={{
             flexDirection: 'row',
-            width: itemWidth,
+            width: this.screenWidth,
             height: itemHeight,
-            justifyContent: 'center',
+            alignItems: 'center',
+            paddingLeft: 10,
+            paddingRight: 10,
           }}
-          onPress={() => {}}
+          onPress={() => {
+            this.goToMyService()
+          }}
         >
           <Image
-            style={{ width: itemHeight / 2, height: itemHeight / 2 }}
+            style={{ width: imageWidth, height: imageWidth }}
             resizeMode={'contain'}
-            source={require('../../../assets/public/icon-avatar-default.png')}
+            source={require('../../../assets/Mine/个人主页-我的服务.png')}
           />
           <Text
             style={{
@@ -147,34 +139,73 @@ export default class Mine extends Component {
               flex: 1,
               textAlign: 'left',
               fontSize: fontSize,
+              color: 'white',
+              paddingLeft: 5,
             }}
           >
-            {strText}
+            我的服务
           </Text>
           <Image
-            style={{ width: itemHeight / 2, height: itemHeight / 2 }}
+            style={{ width: imageWidth, height: imageWidth }}
             resizeMode={'contain'}
-            source={require('../../../assets/public/icon-avatar-default.png')}
+            source={require('../../../assets/Mine/个人主页-箭头.png')}
           />
-        </View>
+        </TouchableOpacity>
       </View>
     )
   }
-
-  renderHeaderItem = value => {
+  _renderMyOnlineDataItem = (itemHeight, fontSize) => {
+    let imageWidth = itemHeight / 2
     return (
-      <View style={styles.labelView}>
-        <Text style={styles.label}>{value}</Text>
+      <View>
+        <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            width: this.screenWidth,
+            height: itemHeight,
+            alignItems: 'center',
+            paddingLeft: 10,
+            paddingRight: 10,
+          }}
+          onPress={() => {
+            this.goToMyOnlineData()
+          }}
+        >
+          <Image
+            style={{ width: imageWidth, height: imageWidth }}
+            resizeMode={'contain'}
+            source={require('../../../assets/Mine/个人主页-我的数据.png')}
+          />
+          <Text
+            style={{
+              lineHeight: itemHeight,
+              flex: 1,
+              textAlign: 'left',
+              fontSize: fontSize,
+              color: 'white',
+              paddingLeft: 5,
+            }}
+          >
+            在线数据
+          </Text>
+          <Image
+            style={{ width: imageWidth, height: imageWidth }}
+            resizeMode={'contain'}
+            source={require('../../../assets/Mine/个人主页-箭头.png')}
+          />
+        </TouchableOpacity>
       </View>
     )
   }
-
   render() {
     if (
       this.props.user &&
       this.props.user.currentUser &&
       this.props.user.currentUser.userName
     ) {
+      this.openUserWorkspace()
+      SOnlineService.syncAndroidCookie()
       return (
         <Container
           ref={ref => (this.container = ref)}
@@ -184,7 +215,7 @@ export default class Mine extends Component {
             navigation: this.props.navigation,
           }}
         >
-          {this.renderHeader()}
+          {this._render()}
         </Container>
       )
     } else {

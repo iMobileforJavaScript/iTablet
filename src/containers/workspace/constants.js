@@ -56,6 +56,15 @@ export default {
   BASE_MAP: '底图',
   ADD: '添加',
 
+  THEME_CLOSE: '关闭地图',
+  THEME_SAVE: '保存底图',
+  THEME_SAVE_AS: '另存地图',
+  THEME_SHARE: '分享地图',
+  THEME_WORKSPACE: '工作空间',
+  THEME_OPEN: '打开地图',
+  THEME_CREATE: '新建地图',
+  THEME_BASE_MAP: '底图切换',
+
   THEME_UNIFY_STYLE: '统一风格',
   THEME_UNIQUE_STYLE: '单值风格',
   THEME_RANGE_STYLE: '分段风格',
