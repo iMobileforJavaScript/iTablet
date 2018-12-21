@@ -45,7 +45,6 @@ import {
   Action,
   SCollector,
   SThemeCartography,
-  SOnlineService,
   Utility,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
@@ -55,8 +54,7 @@ import ToolbarBtnType from './ToolbarBtnType'
 import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
-
-import { FileTools } from '../../../../native'
+import ShareData from './ShareData'
 
 import styles from './styles'
 
@@ -114,6 +112,7 @@ export default class ToolBar extends React.PureComponent {
     closeMap: () => {},
     setCurrentTemplateInfo: () => {},
     setTemplate: () => {},
+    setInputDialogVisible: () => {},
   }
 
   static defaultProps = {
@@ -155,8 +154,9 @@ export default class ToolBar extends React.PureComponent {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
+      themeDatasourceAlias: '',
       themeDatasetName: '',
-      themeColor: 'TERRAIN',
+      themeColor: 'CYANWHITE',
       themeCreateType: '',
       selectName: '',
     }
@@ -1564,6 +1564,7 @@ export default class ToolBar extends React.PureComponent {
       //新建专题图数据集列表
       (async function() {
         let data = await SThemeCartography.getThemeExpressByDatasetName(
+          item.datasourceName,
           item.datasetName,
         )
         let dataset = data.dataset
@@ -1576,6 +1577,7 @@ export default class ToolBar extends React.PureComponent {
         ]
         this.setState(
           {
+            themeDatasourceAlias: item.datasourceName,
             themeDatasetName: item.datasetName,
             isFullScreen: false,
             isTouchProgress: false,
@@ -1602,29 +1604,29 @@ export default class ToolBar extends React.PureComponent {
           case constants.THEME_UNIQUE_STYLE:
             //单值风格
             params = {
-              DatasourceIndex: '0',
+              DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               UniqueExpression: item.title,
-              ColorGradientType: 'TERRAIN',
+              ColorGradientType: 'CYANWHITE',
             }
             isSuccess = await SThemeCartography.createThemeUniqueMap(params)
             break
           case constants.THEME_RANGE_STYLE:
             //分段风格
             params = {
-              DatasourceIndex: '0',
+              DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               RangeExpression: item.title,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '32.0',
-              ColorGradientType: 'TERRAIN',
+              RangeParameter: '6.0',
+              ColorGradientType: 'CYANWHITE',
             }
             isSuccess = await SThemeCartography.createThemeRangeMap(params)
             break
           case constants.THEME_UNIFY_LABEL:
             //统一标签
             params = {
-              DatasourceIndex: '0',
+              DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               LabelExpression: item.title,
               LabelBackShape: 'NONE',
@@ -2295,41 +2297,13 @@ export default class ToolBar extends React.PureComponent {
                 (this.toolBarSectionList &&
                   this.toolBarSectionList.getSelectList()) ||
                 []
-              this.props.exportWorkspace(
-                {
-                  maps: list,
+              this.props.setInputDialogVisible(true, {
+                placeholder: '请输入分享数据名称',
+                confirmAction: value => {
+                  ShareData.shareToSuperMapOnline(list, value)
+                  this.props.setInputDialogVisible(false)
                 },
-                (result, path) => {
-                  Toast.show(
-                    result
-                      ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
-                      : ConstInfo.EXPORT_WORKSPACE_FAILED,
-                  )
-                  // 分享
-                  let fileName = path.substr(path.lastIndexOf('/') + 1)
-                  let dataName = fileName.substr(0, fileName.lastIndexOf('.'))
-
-                  SOnlineService.deleteData(dataName).then(async () => {
-                    await SOnlineService.uploadFile(path, dataName, {
-                      // onProgress: progress => {
-                      //   console.warn(progress)
-                      // },
-                      onResult: async () => {
-                        let result = await SOnlineService.publishService(
-                          dataName,
-                        )
-                        Toast.show(
-                          result
-                            ? ConstInfo.SHARE_SUCCESS
-                            : ConstInfo.SHARE_FAILED,
-                        )
-                        FileTools.deleteFile(path)
-                        isSharing = false
-                      },
-                    })
-                  })
-                },
-              )
+              })
             }
             // this.close()
           }

@@ -31,6 +31,7 @@ import {
   Dialog,
   SaveMapNameDialog,
   SaveDialog,
+  InputDialog,
 } from '../../../../components'
 import { Toast, scaleSize, jsonUtil } from '../../../../utils'
 import {
@@ -825,6 +826,14 @@ export default class MapView extends React.Component {
   }
 
   /**
+   * 中间弹出的命名框
+   * @param visible
+   */
+  setInputDialogVisible = (visible, params = {}) => {
+    this.InputDialog && this.InputDialog.setDialogVisible(visible, params)
+  }
+
+  /**
    * 底部工具栏
    * @returns {XML}
    */
@@ -921,6 +930,7 @@ export default class MapView extends React.Component {
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
+        setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         layerData={this.props.currentLayer}
       />
@@ -1007,6 +1017,7 @@ export default class MapView extends React.Component {
           confirmAction={data => this.saveAsMap(data.mapName)}
           type="normal"
         />
+        <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
       </Container>
     )
   }
