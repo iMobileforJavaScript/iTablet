@@ -12,6 +12,7 @@ import { scaleSize, Toast } from '../../../../utils'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
 import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import constants from '../../constants'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -95,10 +96,16 @@ export default class FunctionToolbar extends React.Component {
       Toast.show('提示: 请先选择专题图层。')
       return
     }
+    let type = ''
     switch (GLOBAL.currentLayer.themeType) {
       case ThemeType.UNIQUE:
+        type = constants.THEME_UNIQUE_STYLE
+        break
       case ThemeType.RANGE:
+        type = constants.THEME_RANGE_STYLE
+        break
       case ThemeType.LABEL:
+        type = constants.THEME_UNIFY_LABEL
         break
       case ThemeType.GRIDRANGE:
       case ThemeType.GRIDUNIQUE:
@@ -116,6 +123,7 @@ export default class FunctionToolbar extends React.Component {
     const menuRef = this.props.getMenuAlertDialogRef()
     if (menuRef) {
       this.props.showFullMap && this.props.showFullMap(true)
+      menuRef.setMenuType(type)
       menuRef.showMenuDialog()
     }
 
@@ -140,7 +148,15 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  hideThemeMenuDialog = () => {
+    const menutoolRef = this.props.getMenuAlertDialogRef()
+    if (menutoolRef) {
+      menutoolRef.setDialogVisible(false)
+    }
+  }
+
   startTheme = () => {
+    this.hideThemeMenuDialog()
     Orientation.getOrientation((e, orientation) => {
       let column = orientation === 'PORTRAIT' ? 4 : 8
       let height =
@@ -360,6 +376,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMore = async type => {
+    this.hideThemeMenuDialog()
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -372,6 +389,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
+    this.hideThemeMenuDialog()
     Orientation.getOrientation((e, orientation) => {
       let column = orientation === 'PORTRAIT' ? 3 : 8
       let height =
