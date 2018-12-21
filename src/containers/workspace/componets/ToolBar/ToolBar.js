@@ -45,7 +45,6 @@ import {
   Action,
   SCollector,
   SThemeCartography,
-  SOnlineService,
   Utility,
 } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
@@ -55,8 +54,7 @@ import ToolbarBtnType from './ToolbarBtnType'
 import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
-
-import { FileTools } from '../../../../native'
+import ShareData from './ShareData'
 
 import styles from './styles'
 
@@ -114,6 +112,7 @@ export default class ToolBar extends React.PureComponent {
     closeMap: () => {},
     setCurrentTemplateInfo: () => {},
     setTemplate: () => {},
+    setInputDialogVisible: () => {},
   }
 
   static defaultProps = {
@@ -2287,41 +2286,13 @@ export default class ToolBar extends React.PureComponent {
                 (this.toolBarSectionList &&
                   this.toolBarSectionList.getSelectList()) ||
                 []
-              this.props.exportWorkspace(
-                {
-                  maps: list,
+              this.props.setInputDialogVisible(true, {
+                placeholder: '请输入分享数据名称',
+                confirmAction: value => {
+                  ShareData.shareToSuperMapOnline(list, value)
+                  this.props.setInputDialogVisible(false)
                 },
-                (result, path) => {
-                  Toast.show(
-                    result
-                      ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
-                      : ConstInfo.EXPORT_WORKSPACE_FAILED,
-                  )
-                  // 分享
-                  let fileName = path.substr(path.lastIndexOf('/') + 1)
-                  let dataName = fileName.substr(0, fileName.lastIndexOf('.'))
-
-                  SOnlineService.deleteData(dataName).then(async () => {
-                    await SOnlineService.uploadFile(path, dataName, {
-                      // onProgress: progress => {
-                      //   console.warn(progress)
-                      // },
-                      onResult: async () => {
-                        let result = await SOnlineService.publishService(
-                          dataName,
-                        )
-                        Toast.show(
-                          result
-                            ? ConstInfo.SHARE_SUCCESS
-                            : ConstInfo.SHARE_FAILED,
-                        )
-                        FileTools.deleteFile(path)
-                        isSharing = false
-                      },
-                    })
-                  })
-                },
-              )
+              })
             }
             // this.close()
           }

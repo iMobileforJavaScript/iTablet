@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { View, Text, Image } from 'react-native'
 import { Container, Button } from '../../components'
+import { ConstPath } from '../../constants'
 // import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, Utility } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Personal extends Component {
@@ -11,6 +12,8 @@ export default class Personal extends Component {
     navigation: Object,
     user: Object,
     setUser: () => {},
+    openWorkspace: () => {},
+    closeWorkspace: () => {},
   }
 
   constructor(props) {
@@ -21,9 +24,14 @@ export default class Personal extends Component {
     (async function() {
       try {
         await SOnlineService.logout()
-
-        NavigationService.goBack()
-        this.props.setUser()
+        this.props.closeWorkspace(async () => {
+          let customPath = await Utility.appendingHomeDirectory(
+            ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+          )
+          await this.props.openWorkspace({ server: customPath })
+          NavigationService.goBack()
+          this.props.setUser()
+        })
       } catch (e) {
         // Toast.show('退出登录失败')
         this.props.setUser()

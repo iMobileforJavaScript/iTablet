@@ -12,7 +12,7 @@ import NavigationService from '../../NavigationService'
 import Login from './Login'
 import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, Utility } from 'imobile_for_reactnative'
 
 export default class Mine extends Component {
   props: {
@@ -29,16 +29,29 @@ export default class Mine extends Component {
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
   }
 
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userName !==
+        prevProps.user.currentUser.userName
+    ) {
+      this.openUserWorkspace()
+      SOnlineService.syncAndroidCookie()
+    }
+  }
+
   openUserWorkspace = () => {
-    this.props.closeWorkspace(() => {
-      let userPath =
+    this.props.closeWorkspace(async () => {
+      let userPath = await Utility.appendingHomeDirectory(
         ConstPath.UserPath +
-        this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativeFilePath.Workspace
+          this.props.user.currentUser.userName +
+          '/' +
+          ConstPath.RelativeFilePath.Workspace,
+      )
       this.props.openWorkspace({ server: userPath })
     })
   }
+
   goToPersonal = () => {
     NavigationService.navigate('Personal')
   }
@@ -204,8 +217,6 @@ export default class Mine extends Component {
       this.props.user.currentUser &&
       this.props.user.currentUser.userName
     ) {
-      this.openUserWorkspace()
-      SOnlineService.syncAndroidCookie()
       return (
         <Container
           ref={ref => (this.container = ref)}

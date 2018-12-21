@@ -12,7 +12,6 @@ import { Toast } from '../../../../utils'
 import { MapToolbar } from '../../../workspace/componets'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-// import { scaleSize } from '../../../../utils'
 import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
@@ -32,14 +31,7 @@ export default class LayerAttribute extends React.Component {
     const { params } = this.props.navigation.state
     this.type = params && params.type
     this.state = {
-      dataSourceList: [],
-      openList: {},
-      // dataset: params.dataset,
       attribute: {},
-      tableTitle: [],
-      // tableHead: ['名称', '属性值'],
-      tableHead: [],
-      tableData: [],
       showTable: false,
     }
 
@@ -61,21 +53,22 @@ export default class LayerAttribute extends React.Component {
       JSON.stringify(this.props.currentLayer)
     ) {
       this.getAttribute()
-    } else if (
-      JSON.stringify(prevProps.currentAttribute) !==
-      JSON.stringify(this.props.currentAttribute)
-    ) {
-      this.setState({
-        attribute: this.props.currentAttribute,
-      })
     }
+    // else if (
+    //   JSON.stringify(prevProps.currentAttribute) !==
+    //   JSON.stringify(this.props.currentAttribute)
+    // ) {
+    //   this.setState({
+    //     attribute: this.props.currentAttribute,
+    //   })
+    // }
   }
 
   componentWillUnmount() {
     this.props.setCurrentAttribute({})
   }
 
-  getMap3DAttribute = async cb => {
+  getMap3DAttribute = async () => {
     let data = await SScene.getLableAttributeList()
     let list = []
     for (let index = 0; index < data.length; index++) {
@@ -99,14 +92,10 @@ export default class LayerAttribute extends React.Component {
       list.push(item)
     }
     this.props.setAttributes(list)
-    this.setState(
-      {
+    !this.state.showTable &&
+      this.setState({
         showTable: true,
-      },
-      () => {
-        cb && cb()
-      },
-    )
+      })
   }
 
   getAttribute = () => {
@@ -115,25 +104,10 @@ export default class LayerAttribute extends React.Component {
     ;(async function() {
       try {
         this.props.getAttributes(this.props.currentLayer.path)
-        // let attribute = await SMap.getLayerAttribute(
-        //   this.props.currentLayer.path,
-        // )
-        // let tableHead = []
-        // if (attribute && attribute.length > 0) {
-        //   this.props.setCurrentAttribute(attribute[0])
-        //   attribute[0].forEach(item => {
-        //     if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-        //       tableHead.unshift(item.fieldInfo.caption)
-        //     } else {
-        //       tableHead.push(item.fieldInfo.caption)
-        //     }
-        //   })
-        // }
-        this.setState({
-          // attribute: attribute,
-          // tableHead: tableHead,
-          showTable: true,
-        })
+        !this.state.showTable &&
+          this.setState({
+            showTable: true,
+          })
         this.container.setLoading(false)
       } catch (e) {
         this.container.setLoading(false)
@@ -193,13 +167,6 @@ export default class LayerAttribute extends React.Component {
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        {/*<LayerAttributeTab*/}
-        {/*edit={this.edit}*/}
-        {/*btns={['edit']}*/}
-        {/*startAudio={() => {*/}
-        {/*GLOBAL.AudioBottomDialog.setVisible(true)*/}
-        {/*}}*/}
-        {/*/>*/}
         {this.state.showTable ? (
           this.props.attributes.head.length > 0 ? (
             this.type === 'MAP_3D' ? (
