@@ -10,52 +10,16 @@ import { ConstToolType } from '../../../../constants'
 
 let _toolbarParams = {}
 
-// //单值专题图参数
-// let _paramsUniqueTheme = {}
-
-// function setUniqueThemeParams(params) {
-//   _paramsUniqueTheme = params
-// }
-
-// /** 新建单值风格专题图 **/
-// function createThemeUniqueMap() {
-//   return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
-// }
-
-// //分段专题图参数
-// let _paramsRangeTheme = {}
-
-// function setRangeThemeParams(params) {
-//   _paramsRangeTheme = params
-// }
-
-// /** 新建分段风格专题图 **/
-// function createThemeRangeMap() {
-//   return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
-// }
-
-// //统一标签专题图参数
-// let _paramsUniformLabel = {}
-
-// function setUniformLabelParams(params) {
-//   _paramsUniformLabel = params
-// }
-
-// /** 新建统一标签专题图 **/
-// function createUniformLabelMap() {
-//   return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
-// }
-
 function showDatasetsList() {
   let data = []
-  SThemeCartography.getDatasetNames().then(getdata => {
-    let datasource = getdata.datasource
-    data = [
-      {
-        title: '数据源: ' + datasource.alias,
-        data: getdata.list,
-      },
-    ]
+  SThemeCartography.getAllDatasetNames().then(getdata => {
+    for (let i = 0; i < getdata.length; i++) {
+      let datalist = getdata[i]
+      data[i] = {
+        title: '数据源: ' + datalist.datasource.alias,
+        data: datalist.list,
+      }
+    }
     _toolbarParams.setToolbarVisible &&
       _toolbarParams.setToolbarVisible(
         true,
@@ -917,7 +881,4 @@ export default {
   getThemeThreeMenu,
   getThemeMapCreate,
   getThemeMapParam,
-  // createThemeUniqueMap,
-  // createThemeRangeMap,
-  // createUniformLabelMap,
 }

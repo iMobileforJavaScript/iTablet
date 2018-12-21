@@ -154,8 +154,9 @@ export default class ToolBar extends React.PureComponent {
       isTouch: true,
       isTouchProgress: false,
       tableType: 'normal',
+      themeDatasourceAlias: '',
       themeDatasetName: '',
-      themeColor: 'TERRAIN',
+      themeColor: 'CYANWHITE',
       themeCreateType: '',
       selectName: '',
     }
@@ -1555,6 +1556,7 @@ export default class ToolBar extends React.PureComponent {
       //新建专题图数据集列表
       (async function() {
         let data = await SThemeCartography.getThemeExpressByDatasetName(
+          item.datasourceName,
           item.datasetName,
         )
         let dataset = data.dataset
@@ -1567,6 +1569,7 @@ export default class ToolBar extends React.PureComponent {
         ]
         this.setState(
           {
+            themeDatasourceAlias: item.datasourceName,
             themeDatasetName: item.datasetName,
             isFullScreen: false,
             isTouchProgress: false,
@@ -1593,29 +1596,29 @@ export default class ToolBar extends React.PureComponent {
           case constants.THEME_UNIQUE_STYLE:
             //单值风格
             params = {
-              DatasourceIndex: '0',
+              DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               UniqueExpression: item.title,
-              ColorGradientType: 'TERRAIN',
+              ColorGradientType: 'CYANWHITE',
             }
             isSuccess = await SThemeCartography.createThemeUniqueMap(params)
             break
           case constants.THEME_RANGE_STYLE:
             //分段风格
             params = {
-              DatasourceIndex: '0',
+              DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               RangeExpression: item.title,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '32.0',
-              ColorGradientType: 'TERRAIN',
+              RangeParameter: '6.0',
+              ColorGradientType: 'CYANWHITE',
             }
             isSuccess = await SThemeCartography.createThemeRangeMap(params)
             break
           case constants.THEME_UNIFY_LABEL:
             //统一标签
             params = {
-              DatasourceIndex: '0',
+              DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               LabelExpression: item.title,
               LabelBackShape: 'NONE',
