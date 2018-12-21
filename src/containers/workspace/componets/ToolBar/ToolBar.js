@@ -44,7 +44,6 @@ import {
   SScene,
   Action,
   SCollector,
-  EngineType,
   SThemeCartography,
   SOnlineService,
   Utility,
@@ -1834,42 +1833,42 @@ export default class ToolBar extends React.PureComponent {
       // 获取地图信息
       // let mapInfo = await SMap.getMapInfo()
       // 打开地图
-      let datasourceName = item.title.substr(
-        item.title.lastIndexOf('@') + 1,
-        item.title.length - 1,
-      )
-      let server =
-        this.props.collection.datasourceParentPath + datasourceName + '.udb'
-      let DSParams = {
-        server: server,
-        engineType: EngineType.UDB,
-        alias: datasourceName,
-      }
-      SMap.openDatasource(DSParams).then(result => {
-        result &&
-          this.props.openMap(item.title).then(isOpen => {
-            if (isOpen) {
-              Toast.show('已为您切换到' + item.title)
-              this.props.setCurrentMap(item)
-              this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              this.props.setCollectionInfo({
-                datasourceName: datasourceName,
-                datasourceParentPath: this.props.collection
-                  .datasourceParentPath,
-                datasourceServer: server,
-                datasourceType: EngineType.UDB,
-              })
-              this.setVisible(false)
-            } else {
-              this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              Toast.show('该地图为当前地图')
-            }
+      // let datasourceName = item.title.substr(
+      //   item.title.lastIndexOf('@') + 1,
+      //   item.title.length - 1,
+      // )
+      // let server =
+      //   this.props.collection.datasourceParentPath + datasourceName + '.udb'
+      // let DSParams = {
+      //   server: server,
+      //   engineType: EngineType.UDB,
+      //   alias: datasourceName,
+      // }
+      // SMap.openDatasource(DSParams).then(result => {
+      //   result &&
+      this.props.openMap(item.title).then(isOpen => {
+        if (isOpen) {
+          Toast.show('已为您切换到' + item.title)
+          this.props.setCurrentMap(item)
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
+          // this.props.setCollectionInfo({
+          //   datasourceName: datasourceName,
+          //   datasourceParentPath: this.props.collection
+          //     .datasourceParentPath,
+          //   datasourceServer: server,
+          //   datasourceType: EngineType.UDB,
+          // })
+          this.setVisible(false)
+        } else {
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+          Toast.show('该地图为当前地图')
+        }
       })
+      // })
     } catch (e) {
       Toast.show('切换地图失败')
     }
