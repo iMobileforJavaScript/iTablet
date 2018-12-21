@@ -5,13 +5,7 @@
 */
 
 import * as React from 'react'
-import {
-  WebView,
-  Dimensions,
-  ActivityIndicator,
-  View,
-  Platform,
-} from 'react-native'
+import { WebView, Dimensions, ActivityIndicator, View } from 'react-native'
 import { Container } from '../../../../../components'
 import Toast from '../../../../../utils/Toast'
 export default class ScanOnlineMap extends React.Component {
@@ -25,7 +19,11 @@ export default class ScanOnlineMap extends React.Component {
       mapTitle: this.props.navigation.getParam('mapTitle', ''),
       mapUrl: this.props.navigation.getParam('mapUrl', ''),
       cookie: this.props.navigation.getParam('cookie', ''),
+      isLoadWebView: false,
     }
+  }
+  componentDidMount() {
+    this.setState({ isLoadWebView: true })
   }
   _renderLoading = () => {
     return (
@@ -43,7 +41,7 @@ export default class ScanOnlineMap extends React.Component {
   }
   _onLoadStart = () => {}
   _loadWebView = uri => {
-    if (Platform.OS === 'ios') {
+    if (this.state.isLoadWebView) {
       return (
         <WebView
           style={{
@@ -52,36 +50,12 @@ export default class ScanOnlineMap extends React.Component {
           }}
           source={{
             uri: uri,
-          }}
-          scalesPageToFit={true}
-          startInLoadingState={true}
-          renderLoading={this._renderLoading}
-          /* android */
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          mixedContentMode={'always'}
-          thirdPartyCookiesEnabled={true}
-          onError={() => {
-            Toast.show('加载失败')
-          }}
-          onLoadStart={this._onLoadStart}
-        />
-      )
-    } else if (Platform.OS === 'android') {
-      return (
-        <WebView
-          style={{
-            height: Dimensions.get('window').height,
-            width: Dimensions.get('window').width,
-          }}
-          source={{
-            uri: uri,
-            headers: {
-              Cookie: 'JSESSIONID=' + this.state.cookie,
-              'Cache-Control': 'no-cache',
-            },
-            cache: 'reload',
-            credentials: 'include',
+            // headers: {
+            //   Cookie: 'JSESSIONID=' + this.state.cookie,
+            //   'Cache-Control': 'no-cache',
+            // },
+            // cache: 'reload',
+            // credentials: 'include',
           }}
           scalesPageToFit={true}
           startInLoadingState={true}
