@@ -23,6 +23,11 @@ export default StyleSheet.create({
     backgroundColor: '#rgba(0, 0, 0, 0)',
     zIndex: zIndexLevel.FOUR,
   },
+  themeoverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    // zIndex: zIndexLevel.FOUR,
+  },
   overlay: {
     flex: 1,
     backgroundColor: '#rgba(0, 0, 0, 0)',

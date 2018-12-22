@@ -765,7 +765,7 @@ export default class ToolBar extends React.PureComponent {
     ]
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'list',
@@ -796,7 +796,7 @@ export default class ToolBar extends React.PureComponent {
     ]
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'list',
@@ -821,7 +821,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getRangeMode()
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -847,7 +847,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelBackShape()
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -873,7 +873,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelFontName()
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -899,7 +899,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelFontRotation()
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -947,7 +947,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelFontColor()
     this.setState(
       {
-        isFullScreen: false,
+        isFullScreen: true,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'colortable',
@@ -1247,6 +1247,9 @@ export default class ToolBar extends React.PureComponent {
       duration: 200,
     }).start()
     this.isBoxShow = false
+    this.setState({
+      isFullScreen: false,
+    })
 
     const menutoolRef = this.props.getMenuAlertDialogRef()
     if (menutoolRef) {
@@ -1420,6 +1423,42 @@ export default class ToolBar extends React.PureComponent {
     // this.props.existFullMap && this.props.existFullMap()
   }
 
+  showThemeBox = (autoFullScreen = false) => {
+    if (autoFullScreen) {
+      this.setState(
+        {
+          isFullScreen: !this.isBoxShow,
+        },
+        () => {
+          Animated.timing(this.state.boxHeight, {
+            toValue: this.isBoxShow ? 0 : this.height,
+            duration: Const.ANIMATED_DURATION,
+          }).start()
+          this.isBoxShow = !this.isBoxShow
+        },
+      )
+    } else {
+      if (this.isBoxShow) {
+        Animated.timing(this.state.boxHeight, {
+          toValue: 0,
+          duration: Const.ANIMATED_DURATION,
+        }).start()
+        this.setState({
+          isFullScreen: false,
+        })
+      } else {
+        Animated.timing(this.state.boxHeight, {
+          toValue: this.height,
+          duration: Const.ANIMATED_DURATION,
+        }).start()
+        this.setState({
+          isFullScreen: true,
+        })
+      }
+      this.isBoxShow = !this.isBoxShow
+    }
+  }
+
   showBox = (autoFullScreen = false) => {
     if (autoFullScreen) {
       this.setState(
@@ -1579,7 +1618,7 @@ export default class ToolBar extends React.PureComponent {
           {
             themeDatasourceAlias: item.datasourceName,
             themeDatasetName: item.datasetName,
-            isFullScreen: false,
+            isFullScreen: true,
             isTouchProgress: false,
             isSelectlist: false,
             containerType: 'list',
@@ -2325,7 +2364,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_FLEX:
           //专题图-显示与隐藏
           image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
-          action = this.showBox
+          action = this.showThemeBox
           break
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
@@ -2351,6 +2390,26 @@ export default class ToolBar extends React.PureComponent {
     return <View style={styles.buttonz}>{btns}</View>
   }
 
+  overlayOnPress = () => {
+    if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS ||
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
+    ) {
+      this.setVisible(false)
+    } else if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+      this.setState({
+        isFullScreen: false,
+      })
+    } else {
+      this.setVisible(false)
+    }
+  }
+
   render() {
     let containerStyle = this.state.isFullScreen
       ? styles.fullContainer
@@ -2360,8 +2419,8 @@ export default class ToolBar extends React.PureComponent {
         {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => this.setVisible(false)}
-            style={styles.overlay}
+            onPress={this.overlayOnPress}
+            style={styles.themeoverlay}
           />
         )}
         {this.state.isTouchProgress && this.state.isFullScreen && (

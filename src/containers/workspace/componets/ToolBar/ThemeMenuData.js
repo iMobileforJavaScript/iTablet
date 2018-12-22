@@ -26,7 +26,7 @@ function showDatasetsList() {
         ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
         {
           containerType: 'list',
-          isFullScreen: false,
+          isFullScreen: true,
           isTouchProgress: false,
           isSelectlist: false,
           height: ConstToolType.THEME_HEIGHT[6],
@@ -203,15 +203,15 @@ function getRangeMode() {
       image: require('../../../../assets/mapTools/range_mode_quantile.png'),
       selectedImage: require('../../../../assets/mapTools/range_mode_quantile.png'),
     },
-    {
-      // 自定义分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
-      title: '自定义分段',
-      action: setRangeMode,
-      size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
-    },
+    // {
+    //   // 自定义分段
+    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
+    //   title: '自定义分段',
+    //   action: setRangeMode,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    //   selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    // },
   ]
   return data
 }

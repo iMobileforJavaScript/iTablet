@@ -295,6 +295,9 @@ export default class MenuAlertDialog extends React.Component {
   render() {
     if (this.state.childrens.length === 0) return null
     if (this.state.type === '') return null
+    let modalBackgroundStyle = {
+      backgroundColor: 'rgba(0,0,0,0.5)',
+    }
     return (
       <Modal
         animationType="none"
@@ -307,27 +310,34 @@ export default class MenuAlertDialog extends React.Component {
           }
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ flex: 1 }}
-          onPress={this._onClose}
-        >
-          <View style={styles.mainTitle}>
-            <View style={styles.dialogStyle}>
-              <FlatList
-                data={this.state.childrens}
-                renderItem={({ item }) => this.renderItem(item)}
-                ItemSeparatorComponent={this.itemSeparator.bind(this)}
-              />
+        <View style={[styles.container, modalBackgroundStyle]}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={{ flex: 1 }}
+            onPress={this._onClose}
+          >
+            <View style={styles.mainTitle}>
+              <View style={styles.dialogStyle}>
+                <FlatList
+                  data={this.state.childrens}
+                  renderItem={({ item }) => this.renderItem(item)}
+                  ItemSeparatorComponent={this.itemSeparator.bind(this)}
+                />
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </Modal>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    // padding: 40,
+  },
   mainTitle: {
     flex: 1,
     justifyContent: 'center',
