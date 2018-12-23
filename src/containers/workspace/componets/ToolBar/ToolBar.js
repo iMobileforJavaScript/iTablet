@@ -780,6 +780,68 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  getUniqueColorScheme = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[4],
+      duration: Const.ANIMATED_DURATION,
+    }).start()
+    this.isBoxShow = true
+
+    let list = await ThemeMenuData.getUniqueColorScheme()
+    let datalist = [
+      {
+        title: '颜色方案',
+        data: list,
+      },
+    ]
+    this.setState(
+      {
+        isFullScreen: true,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'list',
+        data: datalist,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+        this.scrollListToLocation()
+      },
+    )
+  }
+
+  getRangeColorScheme = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[4],
+      duration: Const.ANIMATED_DURATION,
+    }).start()
+    this.isBoxShow = true
+
+    let list = await ThemeMenuData.getRangeColorScheme()
+    let datalist = [
+      {
+        title: '颜色方案',
+        data: list,
+      },
+    ]
+    this.setState(
+      {
+        isFullScreen: true,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'list',
+        data: datalist,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[4]
+        this.scrollListToLocation()
+      },
+    )
+  }
+
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[4],
@@ -833,6 +895,28 @@ export default class ToolBar extends React.PureComponent {
       },
       () => {
         this.height = ConstToolType.THEME_HEIGHT[2]
+      },
+    )
+  }
+
+  getRangeParameter = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: 0,
+      duration: Const.ANIMATED_DURATION,
+    }).start()
+    this.isBoxShow = false
+
+    this.setState(
+      {
+        isFullScreen: true,
+        selectName: 'range_parameter',
+        isTouchProgress: true,
+        isSelectlist: false,
+        type: type,
+        buttons: ThemeMenuData.getThemeThreeMenu(),
+      },
+      () => {
+        this.height = 0
       },
     )
   }
@@ -1556,10 +1640,10 @@ export default class ToolBar extends React.PureComponent {
       })
       ;(async function() {
         let Params = {
-          ColorGradientType: item.key,
+          ColorScheme: item.key,
           LayerName: GLOBAL.currentLayer.name,
         }
-        await SThemeCartography.modifyThemeUniqueMap(Params)
+        await SThemeCartography.setUniqueColorScheme(Params)
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
@@ -1581,10 +1665,10 @@ export default class ToolBar extends React.PureComponent {
       })
       ;(async function() {
         let Params = {
-          ColorGradientType: item.key,
+          ColorScheme: item.key,
           LayerName: GLOBAL.currentLayer.name,
         }
-        await SThemeCartography.modifyThemeRangeMap(Params)
+        await SThemeCartography.setRangeColorScheme(Params)
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION

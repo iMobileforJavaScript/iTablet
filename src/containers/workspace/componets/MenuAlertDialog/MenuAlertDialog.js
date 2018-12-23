@@ -49,7 +49,7 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getColorGradientType(
+          toolRef.getUniqueColorScheme(
             ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
           )
         }
@@ -88,6 +88,19 @@ export default class MenuAlertDialog extends React.Component {
       },
     },
     {
+      key: '分段参数',
+      btntitle: '分段参数',
+      action: () => {
+        this.setSelectedMenu('分段参数')
+        this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getRangeParameter(ConstToolType.MAP_THEME_PARAM_RANGE_PARAM)
+        }
+      },
+    },
+    {
       key: '颜色方案',
       btntitle: '颜色方案',
       action: () => {
@@ -96,9 +109,7 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getColorGradientType(
-            ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
-          )
+          toolRef.getRangeColorScheme(ConstToolType.MAP_THEME_PARAM_RANGE_COLOR)
         }
       },
     },

@@ -869,6 +869,309 @@ function getColorGradientType() {
   return list
 }
 
+/**
+ * 分段专题图颜色方案
+ */
+function getRangeColorScheme() {
+  let list = [
+    {
+      key: 'CA_Oranges',
+      title: 'CA_Oranges',
+    },
+    {
+      key: 'CB_Reds',
+      title: 'CB_Reds',
+    },
+    {
+      key: 'CC_Lemons',
+      title: 'CC_Lemons',
+    },
+    {
+      key: 'CD_Cyans',
+      title: 'CD_Cyans',
+    },
+    {
+      key: 'CE_Greens',
+      title: 'CE_Greens',
+    },
+    {
+      key: 'CF_Blues',
+      title: 'CF_Blues',
+    },
+    {
+      key: 'CG_Purples',
+      title: 'CG_Purples',
+    },
+    {
+      key: 'DA_Oranges',
+      title: 'DA_Oranges',
+    },
+    {
+      key: 'DB_Reds',
+      title: 'DB_Reds',
+    },
+    {
+      key: 'DC_Lemons',
+      title: 'DC_Lemons',
+    },
+    {
+      key: 'DD_Cyans',
+      title: 'DD_Cyans',
+    },
+    {
+      key: 'DE_Greens',
+      title: 'DE_Greens',
+    },
+    {
+      key: 'DF_Blues',
+      title: 'DF_Blues',
+    },
+    {
+      key: 'DG_Purples',
+      title: 'DG_Purples',
+    },
+    {
+      key: 'EA_Oranges',
+      title: 'EA_Oranges',
+    },
+    {
+      key: 'EB_Reds',
+      title: 'EB_Reds',
+    },
+    {
+      key: 'EC_Lemons',
+      title: 'EC_Lemons',
+    },
+    {
+      key: 'ED_Cyans',
+      title: 'ED_Cyans',
+    },
+    {
+      key: 'EE_Greens',
+      title: 'EE_Greens',
+    },
+    {
+      key: 'EF_Blues',
+      title: 'EF_Blues',
+    },
+    {
+      key: 'EG_Purples',
+      title: 'EG_Purples',
+    },
+    {
+      key: 'FA_Oranges',
+      title: 'FA_Oranges',
+    },
+    {
+      key: 'FB_Reds',
+      title: 'FB_Reds',
+    },
+    {
+      key: 'FC_Lemons',
+      title: 'FC_Lemons',
+    },
+    {
+      key: 'FD_Cyans',
+      title: 'FD_Cyans',
+    },
+    {
+      key: 'FE_Greens',
+      title: 'FE_Greens',
+    },
+    {
+      key: 'FF_Blues',
+      title: 'FF_Blues',
+    },
+    {
+      key: 'FG_Purples',
+      title: 'FG_Purples',
+    },
+    {
+      key: 'GA_Yellow to Orange',
+      title: 'GA_Yellow to Orange',
+    },
+    {
+      key: 'GB_Orange to Red',
+      title: 'GB_Orange to Red',
+    },
+    {
+      key: 'GC_Olive to Purple',
+      title: 'GC_Olive to Purple',
+    },
+    {
+      key: 'GD_Green to Orange',
+      title: 'GD_Green to Orange',
+    },
+    {
+      key: 'GE_Blue to Lemon',
+      title: 'GE_Blue to Lemon',
+    },
+    {
+      key: 'ZA_Temperature 1',
+      title: 'ZA_Temperature 1',
+    },
+    {
+      key: 'ZB_Temperature 2',
+      title: 'ZB_Temperature 2',
+    },
+    {
+      key: 'ZC_Temperature 3',
+      title: 'ZC_Temperature 3',
+    },
+    {
+      key: 'ZD_Temperature 4',
+      title: 'ZD_Temperature 4',
+    },
+    {
+      key: 'ZE_Precipitation 1',
+      title: 'ZE_Precipitation 1',
+    },
+    {
+      key: 'ZF_Precipitation 2',
+      title: 'ZF_Precipitation 2',
+    },
+    {
+      key: 'ZG_Precipitation 3',
+      title: 'ZG_Precipitation 3',
+    },
+    {
+      key: 'ZH_Precipitation 4',
+      title: 'ZH_Precipitation 4',
+    },
+    {
+      key: 'ZI_Altitude 1',
+      title: 'ZI_Altitude 1',
+    },
+    {
+      key: 'ZJ_Altitude 2',
+      title: 'ZJ_Altitude 2',
+    },
+    {
+      key: 'ZK_Altitude 3',
+      title: 'ZK_Altitude 3',
+    },
+  ]
+  return list
+}
+
+/**
+ * 单值专题图颜色方案
+ */
+
+function getUniqueColorScheme() {
+  let list = [
+    {
+      key: 'BA_Blue',
+      title: 'BA_Blue',
+    },
+    {
+      key: 'BB_Green',
+      title: 'BB_Green',
+    },
+    {
+      key: 'BC_Orange',
+      title: 'BC_Orange',
+    },
+    {
+      key: 'BD_Pink',
+      title: 'BD_Pink',
+    },
+    {
+      key: 'CA_Red Rose',
+      title: 'CA_Red Rose',
+    },
+    {
+      key: 'CB_Blue and Yellow',
+      title: 'CB_Blue and Yellow',
+    },
+    {
+      key: 'CC_Pink and Green',
+      title: 'CC_Pink and Green',
+    },
+    {
+      key: 'CD_Fresh',
+      title: 'CD_Fresh',
+    },
+    {
+      key: 'DA_Ragular',
+      title: 'DA_Ragular',
+    },
+    {
+      key: 'DB_Common',
+      title: 'DB_Common',
+    },
+    {
+      key: 'DC_Bright',
+      title: 'DC_Bright',
+    },
+    {
+      key: 'DD_Warm',
+      title: 'DD_Warm',
+    },
+    {
+      key: 'DE_Set',
+      title: 'DE_Set',
+    },
+    {
+      key: 'DF_Pastel',
+      title: 'DF_Pastel',
+    },
+    {
+      key: 'DG_Grass',
+      title: 'DG_Grass',
+    },
+    {
+      key: 'EA_Sin_ColorScheme8',
+      title: 'EA_Sin_ColorScheme8',
+    },
+    {
+      key: 'EB_Sweet',
+      title: 'EB_Sweet',
+    },
+    {
+      key: 'EC_Dusk',
+      title: 'EC_Dusk',
+    },
+    {
+      key: 'ED_Pastel',
+      title: 'ED_Pastel',
+    },
+    {
+      key: 'EE_Lake',
+      title: 'EE_Lake',
+    },
+    {
+      key: 'EF_Grass',
+      title: 'EF_Grass',
+    },
+    {
+      key: 'EG_Sin_ColorScheme1',
+      title: 'EG_Sin_ColorScheme1',
+    },
+    {
+      key: 'EH_Sin_ColorScheme4',
+      title: 'EH_Sin_ColorScheme4',
+    },
+    {
+      key: 'EI_Sin_ColorScheme6',
+      title: 'EI_Sin_ColorScheme6',
+    },
+    {
+      key: 'EJ_Sin_ColorScheme7',
+      title: 'EJ_Sin_ColorScheme7',
+    },
+    {
+      key: 'FA_Red-Yellow-Blue',
+      title: 'FA_Red-Yellow-Blue',
+    },
+    {
+      key: 'FB_Red-Yellow-Green',
+      title: 'FB_Red-Yellow-Green',
+    },
+  ]
+  return list
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -881,4 +1184,6 @@ export default {
   getThemeThreeMenu,
   getThemeMapCreate,
   getThemeMapParam,
+  getRangeColorScheme,
+  getUniqueColorScheme,
 }
