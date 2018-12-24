@@ -10,8 +10,8 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/componets'
-import { Action, SMap } from 'imobile_for_reactnative'
-import { LayerManager_item } from './components'
+import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
+import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
 import NavigationService from '../NavigationService'
 
@@ -305,25 +305,52 @@ export default class MT_layerManager extends React.Component {
       this.props.setCurrentLayer(data, () => {
         Toast.show('当前图层为' + data.caption)
       })
-    if (GLOBAL.Type === constants.MAP_EDIT) {
+    if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
       SMap.setLayerEditable(data.path, true)
       if (data.type === 83) {
-        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
           containerType: 'list',
           isFullScreen: false,
           height: ConstToolType.HEIGHT[4],
         })
-      } else {
+        GLOBAL.toolBox.showFullMap()
+        NavigationService.goBack()
+      } else if (data.type === 1 || data.type === 3 || data.type === 5) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
           isFullScreen: false,
           column: 4,
-          height: ConstToolType.HEIGHT[2],
+          height: ConstToolType.THEME_HEIGHT[3],
         })
+        GLOBAL.toolBox.showFullMap()
+        NavigationService.goBack()
       }
-      GLOBAL.toolBox.showFullMap()
-      NavigationService.goBack()
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
+      switch (data.themeType) {
+        case ThemeType.UNIQUE:
+          NavigationService.goBack()
+          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+          break
+        case ThemeType.RANGE:
+          NavigationService.goBack()
+          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+          break
+        case ThemeType.LABEL:
+          NavigationService.goBack()
+          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+          break
+        default:
+          Toast.show('提示: 请选择专题图层。')
+          break
+      }
     }
+  }
+
+  onToolPress = async ({ data }) => {
+    this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+      height: ConstToolType.THEME_HEIGHT[5],
+      layername: data.name,
+    })
   }
 
   getChildList = async ({ data }) => {
@@ -380,12 +407,17 @@ export default class MT_layerManager extends React.Component {
         }}
         onPress={this.onPressRow}
         onArrowPress={this.getChildList}
+        onToolPress={this.onToolPress}
       />
     )
   }
 
   renderToolBar = () => {
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
+  }
+
+  renderTool = () => {
+    return <LayerManager_tolbar ref={ref => (this.toolBox = ref)} />
   }
 
   render() {
@@ -415,6 +447,7 @@ export default class MT_layerManager extends React.Component {
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
         />
+        {this.renderTool()}
         {/*<SaveDialog*/}
         {/*ref={ref => (this.saveDialog = ref)}*/}
         {/*confirmAction={this.saveMapAndWorkspace}*/}

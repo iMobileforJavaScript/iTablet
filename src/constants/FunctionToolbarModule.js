@@ -177,7 +177,7 @@ const line = [
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -207,9 +207,11 @@ const line = [
         ],
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET, {
-        containerType: 'list',
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
         isFullScreen: false,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -231,7 +233,7 @@ const point = [
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -262,9 +264,11 @@ const point = [
         ],
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET, {
-        containerType: 'list',
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
         isFullScreen: false,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -316,7 +320,7 @@ const region = [
         containerType: 'symbol',
         isFullScreen: false,
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -332,9 +336,11 @@ const region = [
         ],
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET, {
-        containerType: 'list',
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
         isFullScreen: false,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },
@@ -350,9 +356,11 @@ const region = [
         ],
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
-        containerType: 'list',
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
         isFullScreen: false,
-        height: ConstToolType.HEIGHT[2],
+        height: ConstToolType.THEME_HEIGHT[3],
       })
     },
   },

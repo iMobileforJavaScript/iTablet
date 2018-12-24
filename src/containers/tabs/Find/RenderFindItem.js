@@ -1,21 +1,41 @@
+/*
+  Copyright © SuperMap. All rights reserved.
+  Author: lu cheng dong
+  E-mail: 756355668@qq.com
+*/
 import React, { Component } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import styles from './Styles'
-
 import { Toast } from '../../../utils/index'
+import NavigationService from '../../NavigationService'
 
 export default class RenderFindItem extends Component {
   props: {
-    fileName: string,
-    imageUrl: string,
-    itemId: string,
-    type: string,
-    time: string,
-    nickname: string,
+    data: Object,
+  }
+
+  _navigator = uri => {
+    NavigationService.navigate('MyOnlineMap', {
+      uri: uri,
+    })
+  }
+  _nextView = async () => {
+    if (this.props.data.type === 'WORKSPACE') {
+      if (this.props.data.serviceStatus === 'UNPUBLISHED') {
+        let dataId = this.props.data.id
+        let dataUrl = 'https://www.supermapol.com/web/datas/' + dataId + '.json'
+        this._navigator(dataUrl)
+      } else {
+        Toast.show('服务没有公开，无权限浏览')
+      }
+    } else {
+      let info = this.props.data.type + '数据无法浏览'
+      Toast.show(info)
+    }
   }
 
   render() {
-    let date = new Date(this.props.time)
+    let date = new Date(this.props.data.lastModfiedTime)
     let year = date.getFullYear() + '年'
     let month = date.getMonth() + 1 + '月'
     let day = date.getDate() + '日'
@@ -33,18 +53,18 @@ export default class RenderFindItem extends Component {
         <TouchableOpacity
           style={styles.itemViewStyle}
           onPress={() => {
-            Toast.show('数据无法浏览')
+            this._nextView()
           }}
         >
           <Image
             resizeMode={'contain'}
             style={styles.imageStyle}
-            source={{ uri: this.props.imageUrl }}
+            source={{ uri: this.props.data.thumbnail }}
           />
 
           <View>
             <Text style={styles.restTitleTextStyle} numberOfLines={1}>
-              {this.props.fileName}
+              {this.props.data.fileName}
             </Text>
             <View style={styles.viewStyle2}>
               <Image
@@ -53,7 +73,7 @@ export default class RenderFindItem extends Component {
                 source={require('../../../assets/tabBar/tab-我的-当前.png')}
               />
               <Text style={styles.textStyle2} numberOfLines={1}>
-                {this.props.nickname}
+                {this.props.data.nickname}
               </Text>
             </View>
             <View style={[styles.viewStyle2, { marginTop: 5 }]}>

@@ -14,11 +14,12 @@ export default StyleSheet.create({
     backgroundColor: 'rgb(80,80,80)',
   },
   row: {
-    // flex: 1,
-    width: '100%',
+    flex: 1,
+    // width: '100%',
     flexDirection: 'row',
-    height: scaleSize(80),
+    height: scaleSize(120),
     // justifyContent: 'space-around',
     alignItems: 'center',
+    // backgroundColor:"blue"
   },
 })

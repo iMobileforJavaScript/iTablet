@@ -53,7 +53,8 @@ export default class GetBack extends React.Component {
           contentInset={{ top: 0, left: 0, right: 0, bottom: 0 }}
           style={styles.webView}
           source={{
-            uri: 'https://sso.supermap.com/password?service=https://www.supermapol.com',
+            uri:
+              'https://sso.supermap.com/password?service=https://www.supermapol.com',
           }}
           javaScriptEnabled={true}
           domStorageEnabled={true}

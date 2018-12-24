@@ -69,12 +69,12 @@ export default class TreeList extends React.Component {
       <TreeListItem
         data={data}
         index={index}
-        key={'row-' + (data.path || data.$ && data.$.name || index)}
+        key={'row-' + (data.path || (data.$ && data.$.name) || index)}
         style={[styles.row]}
         childrenStyle={[styles.children]}
         iconStyle={this.props.iconStyle}
         // childrenData={item.childGroups}
-        keyExtractor={data => data.path || data.$ && data.$.name || index}
+        keyExtractor={data => data.path || (data.$ && data.$.name) || index}
         renderChild={this.renderChild}
         onPress={this._onPress}
       />

@@ -31,9 +31,15 @@ import {
   Dialog,
   SaveMapNameDialog,
   SaveDialog,
+  InputDialog,
 } from '../../../../components'
 import { Toast, scaleSize, jsonUtil } from '../../../../utils'
-import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
+import {
+  ConstPath,
+  ConstToolType,
+  ConstInfo,
+  Const,
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
@@ -48,6 +54,7 @@ export default class MapView extends React.Component {
     latestMap: PropTypes.array,
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
+    template: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -75,32 +82,38 @@ export default class MapView extends React.Component {
     getMaps: PropTypes.func,
     exportWorkspace: PropTypes.func,
     openWorkspace: PropTypes.func,
+    closeWorkspace: PropTypes.func,
+    getSymbolTemplates: PropTypes.func,
+    openMap: PropTypes.func,
+    closeMap: PropTypes.func,
   }
 
   constructor(props) {
     super(props)
     const { params } = this.props.navigation.state
-    this.type = params.type || GLOBAL.Type || 'LOCAL'
-    this.mapType = params.mapType || 'DEFAULT'
-    this.operationType = params.operationType || constants.COLLECTION
-    this.isExample = params.isExample || false
-    this.wsData = params.wsData
-    this.mapName = params.mapName || ''
-    this.path = params.path || ''
-    this.showDialogCaption = params.path ? !params.path.endsWith('.smwu') : true
-    this.savepath =
-      params.type === 'ONLINE' || !params.path
-        ? null
-        : params.path.substring(0, params.path.lastIndexOf('/') + 1)
-    let wsName =
-      params.type === 'ONLINE' || !params.path
-        ? null
-        : params.path.substring(params.path.lastIndexOf('/') + 1)
-    wsName =
-      params.type === 'ONLINE' || !params.path
-        ? null
-        : wsName.lastIndexOf('.') > 0 &&
-          wsName.substring(0, wsName.lastIndexOf('.'))
+    this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
+    this.mapType = (params && params.mapType) || 'DEFAULT'
+    this.operationType =
+      (params && params.operationType) || constants.COLLECTION
+    this.isExample = (params && params.isExample) || false
+    this.wsData = params && params.wsData
+    this.mapName = (params && params.mapName) || ''
+    this.path = (params && params.path) || ''
+    this.showDialogCaption =
+      params && params.path ? !params.path.endsWith('.smwu') : true
+    // this.savepath =
+    //   params.type === 'ONLINE' || !params.path
+    //     ? null
+    //     : params.path.substring(0, params.path.lastIndexOf('/') + 1)
+    // let wsName =
+    //   params.type === 'ONLINE' || !params.path
+    //     ? null
+    //     : params.path.substring(params.path.lastIndexOf('/') + 1)
+    // wsName =
+    //   params.type === 'ONLINE' || !params.path
+    //     ? null
+    //     : wsName.lastIndexOf('.') > 0 &&
+    //       wsName.substring(0, wsName.lastIndexOf('.'))
     this.backAction = null
     this.state = {
       showMap: false, // 控制地图初始化显示
@@ -108,7 +121,7 @@ export default class MapView extends React.Component {
       popShow: false, //  一级popView显示控制
       popType: '',
       mapName: '',
-      wsName: wsName,
+      // wsName: wsName,
       measureShow: false,
       measureResult: 0,
       editLayer: {},
@@ -279,8 +292,7 @@ export default class MapView extends React.Component {
       case ConstToolType.MAP_EDIT_POINT:
       case ConstToolType.MAP_EDIT_LINE:
       case ConstToolType.MAP_EDIT_REGION:
-      case ConstToolType.MAP_EDIT_DEFAULT:
-        SMap.appointEditGeometry(event.id, event.layerInfo.name)
+      case ConstToolType.MAP_EDIT_DEFAULT: {
         if (GLOBAL.currentToolbarType === ConstToolType.MAP_EDIT_DEFAULT) {
           let column = 4,
             height = ConstToolType.HEIGHT[3],
@@ -310,7 +322,12 @@ export default class MapView extends React.Component {
               tableType,
             })
         }
+        setTimeout(
+          () => SMap.appointEditGeometry(event.id, event.layerInfo.name),
+          Const.ANIMATED_DURATION_2,
+        )
         break
+      }
     }
   }
 
@@ -611,18 +628,12 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
-    // this.mapToolbar.setCurrent(0)
-    // this.setLoading(true, '正在关闭')
-    // SMap.closeWorkspace().then(result => {
-    //   this.setLoading(false)
-    //   result && NavigationService.goBack()
-    // })
     this.backAction = async () => {
       try {
         this.setLoading(true, '正在关闭地图')
         let mapIndex = await SMap.getMapIndex() // 获取地图index，若临时地图没有保存，则为-1
         await SMap.closeMap()
-        await SMap.closeDatasource()
+        // await SMap.closeDatasource()
         // 采集 - 若临时地图未保存，则删除采集数据源
         if (
           GLOBAL.Type === constants.COLLECTION &&
@@ -641,8 +652,8 @@ export default class MapView extends React.Component {
               '.udd',
           )
         }
-        if (this.props.map.template && this.props.map.template.path) {
-          await SMap.closeWorkspace()
+        if (this.props.template.template && this.props.template.template.path) {
+          await this.props.closeWorkspace()
         }
         this.clearData()
         this.setLoading(false)
@@ -700,29 +711,32 @@ export default class MapView extends React.Component {
         GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
 
         // 获取图层列表
-        this.props.getLayers(-1, async layers => {
-          // 若数据源已经打开，图层未加载，则去默认加载一个图层
-          if (layers.length === 0) {
-            let result = false
-            if (this.wsData instanceof Array) {
-              for (let i = 0; i < this.wsData.length; i++) {
-                let item = this.wsData[i]
-                if (item === null) continue
-                if (item.type === 'Datasource') {
-                  result = await SMap.addLayer(item.DSParams.alias, 0)
+        this.props.getLayers(
+          { type: -1, currentLayerIndex: 0 },
+          async layers => {
+            // 若数据源已经打开，图层未加载，则去默认加载一个图层
+            if (layers.length === 0) {
+              let result = false
+              if (this.wsData instanceof Array) {
+                for (let i = 0; i < this.wsData.length; i++) {
+                  let item = this.wsData[i]
+                  if (item === null) continue
+                  if (item.type === 'Datasource') {
+                    result = await SMap.addLayer(item.DSParams.alias, 0)
+                  }
                 }
+              } else if (this.wsData.type === 'Datasource') {
+                result = await SMap.addLayer(this.wsData.DSParams.alias, 0)
               }
-            } else if (this.wsData.type === 'Datasource') {
-              result = await SMap.addLayer(this.wsData.DSParams.alias, 0)
-            }
-            result && this.props.getLayers()
-          }
-          if (layers.length === 0 && this.wsData.DSParams) {
-            SMap.addLayer(this.wsData.DSParams.alias, 0).then(result => {
               result && this.props.getLayers()
-            })
-          }
-        })
+            }
+            if (layers.length === 0 && this.wsData.DSParams) {
+              SMap.addLayer(this.wsData.DSParams.alias, 0).then(result => {
+                result && this.props.getLayers()
+              })
+            }
+          },
+        )
         this._addGeometrySelectedListener()
         this.container.setLoading(false)
       } catch (e) {
@@ -740,7 +754,7 @@ export default class MapView extends React.Component {
     try {
       // let result = await SMap.openWorkspace(wsData.DSParams)
       let result = await this.props.openWorkspace(wsData.DSParams)
-      result && SMap.openMap(index)
+      result && this.props.openMap(index)
     } catch (e) {
       this.container.setLoading(false)
     }
@@ -812,6 +826,14 @@ export default class MapView extends React.Component {
   }
 
   /**
+   * 中间弹出的命名框
+   * @param visible
+   */
+  setInputDialogVisible = (visible, params = {}) => {
+    this.InputDialog && this.InputDialog.setDialogVisible(visible, params)
+  }
+
+  /**
    * 底部工具栏
    * @returns {XML}
    */
@@ -836,6 +858,7 @@ export default class MapView extends React.Component {
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
+        layers={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         setMapType={this.setMapType}
@@ -899,11 +922,6 @@ export default class MapView extends React.Component {
       <ToolBar
         ref={ref => (this.toolBox = ref)}
         existFullMap={() => this.showFullMap(false)}
-        user={this.props.user}
-        map={this.props.map}
-        symbol={this.props.symbol}
-        layers={this.props.layers}
-        layerData={this.props.currentLayer}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
@@ -912,14 +930,9 @@ export default class MapView extends React.Component {
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
-        setCollectionInfo={this.props.setCollectionInfo}
-        getLayers={this.props.getLayers}
-        setCurrentMap={this.props.setCurrentMap}
-        collection={this.props.collection}
-        importTemplate={this.props.importTemplate}
-        openTemplate={this.props.openTemplate}
-        getMaps={this.props.getMaps}
-        exportWorkspace={this.props.exportWorkspace}
+        setInputDialogVisible={this.setInputDialogVisible}
+        {...this.props}
+        layerData={this.props.currentLayer}
       />
     )
   }
@@ -1004,6 +1017,7 @@ export default class MapView extends React.Component {
           confirmAction={data => this.saveAsMap(data.mapName)}
           type="normal"
         />
+        <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
       </Container>
     )
   }

@@ -1,6 +1,5 @@
-import { SScene, SThemeCartography } from 'imobile_for_reactnative'
+import { SScene } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
-import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 import MapToolData from './MapToolData'
 import MoreData from './MoreData'
@@ -8,7 +7,7 @@ import ShareData from './ShareData'
 import StartData from './StartData'
 import CollectionData from './CollectionData'
 import EditData from './EditData'
-import { Alert } from 'react-native'
+import ThemeMenuData from './ThemeMenuData'
 
 // let _params = {}
 
@@ -20,7 +19,13 @@ function setParams(params) {
 function getTabBarData(type, params = {}) {
   let tabBarData = CollectionData.getCollectionData(type, params)
 
-  if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
+  if (
+    type === ConstToolType.MAP_COLLECTION_POINT ||
+    type === ConstToolType.MAP_COLLECTION_LINE ||
+    type === ConstToolType.MAP_COLLECTION_REGION
+  ) {
+    tabBarData = CollectionData.getCollectionOperationData(type, params)
+  } else if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = EditData.getEditData(type)
   } else if (typeof type === 'string' && type.indexOf('MAP3D_') > -1) {
     tabBarData = getMap3DData(type)
@@ -41,9 +46,9 @@ function getTabBarData(type, params = {}) {
   } else if (typeof type === 'string' && type.indexOf('MAP_SHARE') > -1) {
     tabBarData = ShareData.getShareData(type, params)
   } else if (type === ConstToolType.MAP_THEME_CREATE) {
-    tabBarData = getThemeMapCreate(type)
+    tabBarData = ThemeMenuData.getThemeMapCreate(type, params)
   } else if (type === ConstToolType.MAP_THEME_PARAM) {
-    tabBarData = getThemeMapParam(type)
+    tabBarData = ThemeMenuData.getThemeMapParam(type, params)
   }
   return {
     data: tabBarData.data,
@@ -229,154 +234,7 @@ function getMap3DData(type) {
   return { data, buttons }
 }
 
-/**
- * 专题图参数设置
- * @param type
- * @returns {{data: Array, buttons: Array}}
- */
-function getThemeMapParam(type) {
-  let data = [],
-    buttons = []
-  if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
-  buttons = [
-    ToolbarBtnType.THEME_CANCEL,
-    ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_FLEX,
-    ToolbarBtnType.THEME_COMMIT,
-  ]
-  return { data, buttons }
-}
-
-function showTips() {
-  Alert.alert('功能暂未开放。')
-}
-
-//单值专题图参数
-let _paramsUniqueTheme = {}
-
-function setUniqueThemeParams(params) {
-  _paramsUniqueTheme = params
-}
-
-/** 新建单值风格专题图 **/
-function createThemeUniqueMap() {
-  return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
-}
-
-//分段专题图参数
-let _paramsRangeTheme = {}
-
-function setRangeThemeParams(params) {
-  _paramsRangeTheme = params
-}
-
-/** 新建分段风格专题图 **/
-function createThemeRangeMap() {
-  return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
-}
-
-//统一标签专题图参数
-let _paramsUniformLabel = {}
-
-function setUniformLabelParams(params) {
-  _paramsUniformLabel = params
-}
-
-/** 新建统一标签专题图 **/
-function createUniformLabelMap() {
-  return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
-}
-
-/**
- * 获取创建专题图菜单
- * @param type
- * @returns {{data: Array, buttons: Array}}
- */
-function getThemeMapCreate(type) {
-  let data = [],
-    buttons = []
-  if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
-  data = [
-    {
-      //统一风格
-      key: constants.THEME_UNIFY_STYLE,
-      title: constants.THEME_UNIFY_STYLE,
-      action: showTips,
-      size: 'large',
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    },
-    {
-      //单值风格
-      key: constants.THEME_UNIQUE_STYLE,
-      title: constants.THEME_UNIQUE_STYLE,
-      size: 'large',
-      action: createThemeUniqueMap,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
-    },
-    {
-      //分段风格
-      key: constants.THEME_RANGE_STYLE,
-      title: constants.THEME_RANGE_STYLE,
-      size: 'large',
-      action: createThemeRangeMap,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
-    },
-    {
-      //自定义风格
-      key: constants.THEME_CUSTOME_STYLE,
-      title: constants.THEME_CUSTOME_STYLE,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_style.png'),
-    },
-    {
-      //自定义标签
-      key: constants.THEME_CUSTOME_LABEL,
-      title: constants.THEME_CUSTOME_LABEL,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_custom_label.png'),
-    },
-    {
-      //统一标签
-      key: constants.THEME_UNIFY_LABEL,
-      title: constants.THEME_UNIFY_LABEL,
-      size: 'large',
-      action: createUniformLabelMap,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
-    },
-    {
-      //单值标签
-      key: constants.THEME_UNIQUE_LABEL,
-      title: constants.THEME_UNIQUE_LABEL,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-    },
-    {
-      //分段标签
-      key: constants.THEME_RANGE_LABEL,
-      title: constants.THEME_RANGE_LABEL,
-      size: 'large',
-      action: showTips,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-    },
-  ]
-  return { data, buttons }
-}
-
 export default {
   setParams,
   getTabBarData,
-  setUniqueThemeParams,
-  setRangeThemeParams,
-  setUniformLabelParams,
 }

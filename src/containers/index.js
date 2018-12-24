@@ -4,7 +4,13 @@ import { StackNavigator } from 'react-navigation'
 import MapLoad from './mapLoad'
 
 //我的
-import Tabs, { MyService, MyOnlineData, Register,MyOnlineMap,ScanOnlineMap } from './tabs'
+import Tabs, {
+  MyService,
+  MyOnlineData,
+  Register,
+  MyOnlineMap,
+  ScanOnlineMap,
+} from './tabs'
 
 //我的
 // import Register from './register&getBack/register'
@@ -37,7 +43,7 @@ import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
-import { MapTabs, Map3DTabs } from './workspace'
+import { MapTabs, Map3DTabs, MapThemeTabs } from './workspace'
 import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
 import TouchProgress from './workspace/componets/TouchProgress'
 
@@ -63,6 +69,12 @@ export default StackNavigator(
     },
     Map3DTabs: {
       screen: Map3DTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapThemeTabs: {
+      screen: MapThemeTabs,
       navigationOptions: {
         header: null,
       },
@@ -261,14 +273,14 @@ export default StackNavigator(
         header: null,
       },
     },
-    MyOnlineMap:{
-      screen:MyOnlineMap,
+    MyOnlineMap: {
+      screen: MyOnlineMap,
       navigationOptions: {
         header: null,
       },
     },
-    ScanOnlineMap:{
-      screen:ScanOnlineMap,
+    ScanOnlineMap: {
+      screen: ScanOnlineMap,
       navigationOptions: {
         header: null,
       },

@@ -46,7 +46,6 @@ export default class MapToolbar extends React.Component {
     let list = []
     switch (type) {
       case constants.MAP_EDIT:
-      case constants.MAP_THEME:
       case constants.COLLECTION:
         list = [
           {
@@ -142,6 +141,56 @@ export default class MapToolbar extends React.Component {
               // Utility.unZipFile(toPath,path)
               this.props.navigation &&
                 this.props.navigation.navigate('Map3DSetting', {})
+            },
+          },
+        ]
+        break
+      case constants.MAP_THEME:
+        list = [
+          {
+            key: 'ThemeMapView',
+            title: '地图',
+            image: require('../../../../assets/mapToolbar/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('ThemeMapView')
+            },
+          },
+          {
+            key: 'ThemeLayerManager',
+            title: '图层',
+            image: require('../../../../assets/mapToolbar/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('ThemeLayerManager', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+          {
+            key: 'ThemeLayerAttribute',
+            title: '属性',
+            image: require('../../../../assets/mapToolbar/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('ThemeLayerAttribute', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+          {
+            key: 'ThemeSetting',
+            title: '设置',
+            image: require('../../../../assets/mapToolbar/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('ThemeSetting', {
+                  type: constants.MAP_THEME,
+                })
             },
           },
         ]

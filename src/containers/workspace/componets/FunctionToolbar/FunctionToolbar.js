@@ -6,12 +6,14 @@
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { ConstToolType, Const, ConstInfo } from '../../../../constants'
+import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
-import { SScene, SMap, Action } from 'imobile_for_reactnative'
+import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import PropTypes from 'prop-types'
+import constants from '../../constants'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -30,7 +32,7 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     Label: () => {},
-
+    layers: PropTypes.object,
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
@@ -66,7 +68,7 @@ export default class FunctionToolbar extends React.Component {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
       toValue: visible ? scaleSize(20) : scaleSize(-200),
-      duration: 300,
+      duration: Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
   }
@@ -91,9 +93,38 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
+    if (!GLOBAL.currentLayer || !GLOBAL.currentLayer.themeType) {
+      Toast.show('提示: 请先选择专题图层。')
+      return
+    }
+    let type = ''
+    switch (GLOBAL.currentLayer.themeType) {
+      case ThemeType.UNIQUE:
+        type = constants.THEME_UNIQUE_STYLE
+        break
+      case ThemeType.RANGE:
+        type = constants.THEME_RANGE_STYLE
+        break
+      case ThemeType.LABEL:
+        type = constants.THEME_UNIFY_LABEL
+        break
+      case ThemeType.GRIDRANGE:
+      case ThemeType.GRIDUNIQUE:
+      case ThemeType.CUSTOM:
+      case ThemeType.DOTDENSITY:
+      case ThemeType.GRAPH:
+      case ThemeType.GRADUATEDSYMBOL:
+        Toast.show('提示: 暂不支持编辑的专题图层。')
+        return
+      default:
+        Toast.show('提示: 请先选择专题图层。')
+        return
+    }
+
     const menuRef = this.props.getMenuAlertDialogRef()
     if (menuRef) {
       this.props.showFullMap && this.props.showFullMap(true)
+      menuRef.setMenuType(type)
       menuRef.showMenuDialog()
     }
 
@@ -118,17 +149,32 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  startTheme = () => {
-    const toolRef = this.props.getToolRef()
-
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
-        containerType: 'table',
-        isFullScreen: true,
-        height: ConstToolType.THEME_HEIGHT[1],
-      })
+  hideThemeMenuDialog = () => {
+    const menutoolRef = this.props.getMenuAlertDialogRef()
+    if (menutoolRef) {
+      menutoolRef.setDialogVisible(false)
     }
+  }
+
+  startTheme = () => {
+    this.hideThemeMenuDialog()
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[0]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
+          containerType: 'table',
+          isFullScreen: true,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   changeBaseLayer = () => {
@@ -191,7 +237,7 @@ export default class FunctionToolbar extends React.Component {
       let height =
         orientation === 'PORTRAIT'
           ? ConstToolType.HEIGHT[3]
-          : ConstToolType.HEIGHT[2]
+          : ConstToolType.THEME_HEIGHT[4]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
         this.props.showFullMap && this.props.showFullMap(true)
@@ -215,7 +261,6 @@ export default class FunctionToolbar extends React.Component {
       SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
-          // SScene.setAllLayersSelection(false)
           this.props.showFullMap && this.props.showFullMap(true)
           // TODO 根据符号类型改变ToolBox内容
           toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
@@ -237,7 +282,7 @@ export default class FunctionToolbar extends React.Component {
           ? ConstToolType.HEIGHT[1]
           : ConstToolType.HEIGHT[0]
       SScene.checkoutListener('startMeasure')
-      SScene.getLayerList().then(layerList => {
+      SScene.getLayerList().then(() => {
         const toolRef = this.props.getToolRef()
         if (toolRef) {
           this.props.showFullMap && this.props.showFullMap(true)
@@ -248,8 +293,6 @@ export default class FunctionToolbar extends React.Component {
             column: column,
             height: height,
           })
-          toolRef.getOldLayerList(layerList)
-          // SScene.setAllLayersSelection(false)
         }
       })
     })
@@ -288,7 +331,7 @@ export default class FunctionToolbar extends React.Component {
     //   Toast.show('请选择图层')
     //   return
     // }
-    await SMap.setAction(Action.SELECT)
+    // await SMap.setAction(Action.SELECT)
     // this.props.addGeometrySelectedListener &&
     //   (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
@@ -323,12 +366,14 @@ export default class FunctionToolbar extends React.Component {
         column,
         height,
         tableType,
+        cb: () => SMap.setAction(Action.SELECT),
       })
+      Toast.show(ConstInfo.CHOOSE_EDIT_OBJ)
     }
   }
 
   showMore = async type => {
-    // this.moreToolbar && this.moreToolbar.showMore(true, e)
+    this.hideThemeMenuDialog()
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -341,84 +386,86 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
-    // this.moreToolbar && this.moreToolbar.showMore(true, e)
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
-        isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[2],
-      })
-    }
+    this.hideThemeMenuDialog()
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 3 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[0]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox 编辑内容
+        toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
+          isFullScreen: true,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   showTool = async () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-        isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[3],
-      })
-    }
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[2]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
+          isFullScreen: true,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   mapStyle = () => {
     const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.HEIGHT[2],
-      })
-    }
-  }
-
-  Tagging = async () => {
-    const toolRef = this.props.getToolRef()
-    switch (this.props.type) {
-      case 'MAP_3D':
-        SScene.getLayerList().then(layerList => {
-          const toolRef = this.props.getToolRef()
-          if (toolRef) {
-            toolRef.getOldLayerList(layerList)
-            SScene.setAllLayersSelection(false)
-          }
-        })
+    if (this.props.layers.themeType <= 0)
+      if (
+        this.props.layers.type === 1 ||
+        this.props.layers.type === 3 ||
+        this.props.layers.type === 5 ||
+        this.props.layers.type === 83
+      ) {
         if (toolRef) {
           this.props.showFullMap && this.props.showFullMap(true)
-          toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-            isFullScreen: false,
-          })
-        }
-        break
-
-      case 'MAP_EDIT':
-        if (toolRef) {
-          this.props.showFullMap && this.props.showFullMap(true)
-          // TODO 根据符号类型改变ToolBox 编辑内容
-          toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+          toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
+            containerType: 'symbol',
             isFullScreen: false,
             column: 4,
-            height: ConstToolType.HEIGHT[3],
+            height: ConstToolType.THEME_HEIGHT[3],
           })
         }
-        break
+      }
+  }
 
-      default:
-        if (toolRef) {
-          this.props.showFullMap && this.props.showFullMap(true)
-          toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
-            isFullScreen: false,
-          })
-        }
-        break
-    }
+  remove = () => {}
+
+  Tagging = async () => {
+    Orientation.getOrientation((e, orientation) => {
+      let column = orientation === 'PORTRAIT' ? 4 : 8
+      let height =
+        orientation === 'PORTRAIT'
+          ? ConstToolType.HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[2]
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        // TODO 根据符号类型改变ToolBox 编辑内容
+        toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+          isFullScreen: false,
+          column: column,
+          height: height,
+        })
+      }
+    })
   }
 
   Label = () => {
@@ -504,11 +551,16 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
           },
           {
+            title: '撤销',
+            action: this.remove,
+            image: require('../../../../assets/function/icon_remove.png'),
+          },
+          {
             title: '更多',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -556,7 +608,7 @@ export default class FunctionToolbar extends React.Component {
             action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break
@@ -589,35 +641,38 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_param.png'),
           },
-          {
-            key: '标注',
-            title: '标注',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_label.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
-          },
-          {
-            key: '工具',
-            title: '工具',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_tools.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
-          },
-          {
-            key: '撤销',
-            title: '撤销',
-            size: 'large',
-            selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_revert.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_revert.png'),
-          },
+          // {
+          //   key: '标注',
+          //   title: '标注',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_label.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
+          // },
+          // {
+          //   key: '工具',
+          //   title: '工具',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_tools.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
+          // },
+          // {
+          //   key: '撤销',
+          //   title: '撤销',
+          //   size: 'large',
+          //   selectMode: 'flash',
+          //   image: require('../../../../assets/function/icon_function_theme_revert.png'),
+          //   selectedImage: require('../../../../assets/function/icon_function_theme_revert.png'),
+          // },
           {
             key: '更多',
             title: '更多',
             size: 'large',
             selectMode: 'flash',
+            action: () => {
+              this.showMore(ConstToolType.MAP_MORE_THEME)
+            },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
             selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),
           },
@@ -650,12 +705,12 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '采集',
             action: this.showSymbol,
-            image: require('../../../../assets/function/icon_function_hand_draw.png'),
+            image: require('../../../../assets/function/icon_function_symbol.png'),
           },
           {
             title: '编辑',
             action: this.showEdit,
-            image: require('../../../../assets/function/icon_function_edit.png'),
+            image: require('../../../../assets/function/icon_function_Tagging.png'),
           },
           {
             title: '工具',
@@ -667,7 +722,7 @@ export default class FunctionToolbar extends React.Component {
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_share.png'),
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break

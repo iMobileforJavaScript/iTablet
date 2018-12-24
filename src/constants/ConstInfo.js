@@ -10,4 +10,18 @@ export default {
 
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',
+
+  WORKSPACE_OPENING: '正在打开工作空间',
+  WORKSPACE_OPEN_SUCCESS: '已为您切换到工作空间工作空间',
+  WORKSPACE_OPEN_FAILED: '切换工作空间失败',
+  WORKSPACE_DEFAULT_OPEN_SUCCESS: '已为您切换到默认工作空间工作空间',
+  WORKSPACE_DEFAULT_OPEN_FAILED: '切换默认工作空间失败',
+  WORKSPACE_ALREADY_OPENED: '该工作空间已经打开',
+  MODULE_ALREADY_OPENED: '该模板已经打开',
+
+  OUT_OF_MAP_BOUNDS: '不再地图范围内',
+
+  CHOOSE_EDIT_OBJ: '请选择编辑对象',
+
+  SYMBOL_LIB_EMPTY: '当前符号库为空',
 }

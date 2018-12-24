@@ -49,9 +49,9 @@ public class MainActivity extends ReactActivity {
         String licenseName = "Trial_License.slm";
         if (!Utils.fileIsExit(licensePath + licenseName)) {
             Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
-            Environment.setLicensePath(SDCARD + "/iTablet/license");
-            Environment.initialization(this);
         }
+        Environment.setLicensePath(SDCARD + "/iTablet/license");
+        Environment.initialization(this);
     }
 
     private void initDefaultData() {

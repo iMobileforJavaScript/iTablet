@@ -73,21 +73,21 @@ export default class Login extends React.Component {
   _login = async () => {
     let result
     let isEmail = this.state.onEmailTitleFocus
-    let userName
-    let password
+    let userName = ''
+    let password = ''
     try {
       if (isEmail) {
-        if (!this.txtEmail) {
-          Toast.show('请输入邮箱或昵称')
-          return
-        }
-        if (!this.txtEmailPassword) {
-          Toast.show('请输入密码')
-          return
-        }
+        // if (!this.txtEmail) {
+        //   Toast.show('请输入邮箱或昵称')
+        //   return
+        // }
+        // if (!this.txtEmailPassword) {
+        //   Toast.show('请输入密码')
+        //   return
+        // }
         this.container.setLoading(true, '登录中...')
-        userName = this.txtEmail
-        password = this.txtEmailPassword
+        userName = this.txtEmail || 'imobile1234'
+        password = this.txtEmailPassword || 'imobile'
         result = await SOnlineService.login(userName, password)
       } else {
         if (!this.txtPhoneNumber) {
@@ -137,17 +137,19 @@ export default class Login extends React.Component {
           keyboardType={'email-address'}
           placeholder={'请输入邮箱或昵称'}
           defaultValue={''}
+          multiline={false}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmail = text
           }}
         />
         <TextInput
-          keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
           defaultValue={''}
           placeholder={'请输入密码'}
+          multiline={false}
+          password={true}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmailPassword = text
@@ -170,8 +172,9 @@ export default class Login extends React.Component {
           }}
         />
         <TextInput
-          keyboardType={'email-address'}
           secureTextEntry={true}
+          multiline={false}
+          textContentType={'password'}
           placeholder={'请输入密码'}
           defaultValue={''}
           style={styles.textInputStyle}

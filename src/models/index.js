@@ -5,5 +5,6 @@ import setting from './setting'
 import user from './user'
 import symbol from './symbol'
 import collection from './collection'
+import template from './template'
 
-export { nav, layers, map, setting, user, symbol, collection }
+export { nav, layers, map, setting, user, symbol, collection, template }
