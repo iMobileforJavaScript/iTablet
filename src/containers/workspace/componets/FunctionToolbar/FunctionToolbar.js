@@ -411,7 +411,7 @@ export default class FunctionToolbar extends React.Component {
       let column = orientation === 'PORTRAIT' ? 4 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[3]
+          ? ConstToolType.THEME_HEIGHT[3]
           : ConstToolType.THEME_HEIGHT[2]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -448,12 +448,36 @@ export default class FunctionToolbar extends React.Component {
 
   remove = () => {}
 
+  /** 添加 **/
+  add = async () => {
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+            containerType: 'list',
+            isFullScreen: true,
+            height: ConstToolType.HEIGHT[3],
+          })
+          break
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
+            containerType: 'list',
+            isFullScreen: false,
+            height: ConstToolType.THEME_HEIGHT[3],
+          })
+          break
+      }
+    }
+  }
+
   Tagging = async () => {
     Orientation.getOrientation((e, orientation) => {
       let column = orientation === 'PORTRAIT' ? 4 : 8
       let height =
         orientation === 'PORTRAIT'
-          ? ConstToolType.HEIGHT[3]
+          ? ConstToolType.THEME_HEIGHT[3]
           : ConstToolType.THEME_HEIGHT[2]
       const toolRef = this.props.getToolRef()
       if (toolRef) {
@@ -512,36 +536,36 @@ export default class FunctionToolbar extends React.Component {
           //   size: 'large',
           //   image: require('../../../../assets/function/icon_function_base_map.png'),
           // },
-          // {
-          //   key: '添加',
-          //   title: '添加',
-          //   action: this.add,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             key: '开始',
             title: '开始',
             action: () => this.start(ConstToolType.MAP_EDIT_START),
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
-            key: '标注',
-            title: '标注',
-            action: this.Tagging,
+            key: constants.ADD,
+            title: constants.ADD,
             size: 'large',
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
-            selectMode: 'flash',
+            action: this.add,
+            image: require('../../../../assets/function/icon_function_add.png'),
           },
-          {
-            key: '工具',
-            title: '工具',
-            action: this.showTool,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_tool.png'),
-            selectMode: 'flash',
-          },
+          // {
+          //   key: '标注',
+          //   title: '标注',
+          //   action: this.Tagging,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_Tagging.png'),
+          //   selectMode: 'flash',
+          // },
+          // {
+          //   key: '工具',
+          //   title: '工具',
+          //   action: this.showTool,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_tool.png'),
+          //   selectMode: 'flash',
+          // },
           {
             key: '风格',
             title: '风格',
