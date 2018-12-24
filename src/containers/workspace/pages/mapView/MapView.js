@@ -85,6 +85,7 @@ export default class MapView extends React.Component {
     getSymbolTemplates: PropTypes.func,
     openMap: PropTypes.func,
     closeMap: PropTypes.func,
+    device: PropTypes.object,
   }
 
   constructor(props) {
@@ -851,6 +852,7 @@ export default class MapView extends React.Component {
         symbol={this.props.symbol}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
+        device={this.props.device}
         setMapType={this.setMapType}
         save={() => {
           //this.saveMapWithNoWorkspace()

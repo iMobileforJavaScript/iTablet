@@ -9,6 +9,8 @@ export default class Home extends Component {
     nav: Object,
     latestMap: Array,
     currentUser: Object,
+    setShow: () => {},
+    device: Object,
   }
 
   constructor(props) {
@@ -50,6 +52,7 @@ export default class Home extends Component {
         <ModuleList
           currentUser={this.props.currentUser}
           styles={styles.modulelist}
+          device={this.props.device}
         />
       </Container>
     )

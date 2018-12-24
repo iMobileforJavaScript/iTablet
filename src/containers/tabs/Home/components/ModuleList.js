@@ -11,35 +11,16 @@ import {
   // Dimensions,
 } from 'react-native'
 import { ConstModule } from '../../../../constants'
-import { scaleSize, screen } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 // const SCREEN_WIDTH = Dimensions.get('window').width
-import Orientation from 'react-native-orientation'
 export default class ModuleList extends Component {
   props: {
     currentUser: Object,
+    device: Object,
   }
 
   constructor(props) {
     super(props)
-    this.state = {
-      orientation:
-        screen.deviceHeight > screen.deviceWidth ? 'PORTRAIT' : 'LANDSCAPE',
-    }
-  }
-  // eslint-disable-next-line
-  componentWillMount() {
-    Orientation.getOrientation((e, orientation) => {
-      this.setState({ orientation: orientation })
-      GLOBAL.orientation = orientation
-    })
-    // console.log(GLOBAL.orientation)
-    Orientation.addOrientationListener(orientation => {
-      if (orientation === this.state.orientation) return
-      this.setState({
-        orientation: orientation,
-      })
-      GLOBAL.orientation = orientation
-    })
   }
 
   itemAction = item => {
@@ -86,7 +67,9 @@ export default class ModuleList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.state.orientation === 'PORTRAIT' ? (
+        {this.props.device.orientation === 'LANDSCAPE' ? (
+          this._renderScrollView()
+        ) : (
           <FlatList
             style={styles.flatList}
             data={ConstModule}
@@ -96,8 +79,6 @@ export default class ModuleList extends Component {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'always'}
           />
-        ) : (
-          this._renderScrollView()
         )}
       </View>
     )

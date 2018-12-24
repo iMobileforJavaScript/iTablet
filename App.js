@@ -7,12 +7,14 @@ import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
 import { openWorkspace } from './src/models/map'
+import { setShow}  from './src/models/device'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
-
+import Orientation from 'react-native-orientation'
+import {screen} from './src/utils'
 import { SpeechManager, Utility, SOnlineService, SMap, WorkspaceType } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
@@ -43,6 +45,7 @@ class AppRoot extends Component {
     setNav: PropTypes.func,
     setUser: PropTypes.func,
     openWorkspace:PropTypes.func,
+    setShow:PropTypes.func,
   }
 
   constructor(props) {
@@ -65,6 +68,7 @@ class AppRoot extends Component {
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
+      await this.initOrientation()
     }).bind(this)()
   }
 
@@ -86,6 +90,24 @@ class AppRoot extends Component {
       //   }).bind(this)()
       // }
     }
+  }
+
+  //初始化横竖屏显示方式
+  initOrientation=async()=>{
+    Orientation.getOrientation((e, orientation) => {
+      this.props.setShow({orientation:orientation})
+    })
+    Orientation.addOrientationListener(orientation => { 
+      if (orientation === "LANDSCAPE"){
+        this.props.setShow({
+          orientation:orientation,
+        })
+      }else{
+        this.props.setShow({
+          orientation:orientation,
+        })
+      }
+    })
   }
 
   // 初始化文件目录
@@ -180,6 +202,7 @@ const mapStateToProps = state => {
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,
+    device:state.device.toJS().device,
   }
 }
 
@@ -187,6 +210,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setNav,
   setUser,
   openWorkspace,
+  setShow,
 })(AppRoot)
 
 const App = () =>

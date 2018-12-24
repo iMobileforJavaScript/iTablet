@@ -46,6 +46,7 @@ const mapStateToProps = state => ({
   layers: state.layers.toJS(),
   collection: state.collection.toJS(),
   template: state.template.toJS(),
+  device: state.device.toJS().device,
 })
 
 const mapDispatchToProps = {
