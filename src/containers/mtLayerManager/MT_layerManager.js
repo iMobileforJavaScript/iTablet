@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, TouchableOpacity, Text, View } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
@@ -14,6 +14,7 @@ import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
 import NavigationService from '../NavigationService'
+import { color, size } from '../../styles'
 
 export default class MT_layerManager extends React.Component {
   props: {
@@ -305,7 +306,7 @@ export default class MT_layerManager extends React.Component {
       this.props.setCurrentLayer(data, () => {
         Toast.show('当前图层为' + data.caption)
       })
-    if (GLOBAL.Type === constants.MAP_EDIT) {
+    if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
       SMap.setLayerEditable(data.path, true)
       if (data.type === 83) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
@@ -313,16 +314,18 @@ export default class MT_layerManager extends React.Component {
           isFullScreen: false,
           height: ConstToolType.HEIGHT[4],
         })
-      } else {
+        GLOBAL.toolBox.showFullMap()
+        NavigationService.goBack()
+      } else if (data.type === 1 || data.type === 3 || data.type === 5) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
           isFullScreen: false,
           column: 4,
           height: ConstToolType.THEME_HEIGHT[3],
         })
+        GLOBAL.toolBox.showFullMap()
+        NavigationService.goBack()
       }
-      GLOBAL.toolBox.showFullMap()
-      NavigationService.goBack()
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
@@ -414,26 +417,28 @@ export default class MT_layerManager extends React.Component {
     return <MapToolbar navigation={this.props.navigation} initIndex={1} />
   }
 
-  renderTool = () => {
-    return <LayerManager_tolbar ref={ref => (this.toolBox = ref)} />
-  }
-
-  render() {
+  renderList = () => {
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: '地图管理',
-          navigation: this.props.navigation,
-        }}
-        bottomBar={this.renderToolBar()}
-      >
-        {/*<LayerManager_tab*/}
-        {/*mapChange={this._map_change}*/}
-        {/*showSaveDialog={this.showSaveDialog}*/}
-        {/*addDataset={this._add_dataset}*/}
-        {/*addLayerGroup={this._add_layer_group}*/}
-        {/*/>*/}
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          style={{
+            height: scaleSize(60),
+            backgroundColor: color.content,
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              marginLeft: scaleSize(50),
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: size.fontSize.fontSizeXXl,
+              color: color.white,
+            }}
+          >
+            我的图层
+          </Text>
+        </TouchableOpacity>
         <FlatList
           refreshing={this.state.refreshing}
           onRefresh={() => {
@@ -445,6 +450,37 @@ export default class MT_layerManager extends React.Component {
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
         />
+      </View>
+    )
+  }
+
+  renderTool = () => {
+    return <LayerManager_tolbar ref={ref => (this.toolBox = ref)} />
+  }
+
+  render() {
+    let title
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      title = '地图制图'
+    } else {
+      title = '地图管理'
+    }
+    return (
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: title,
+          navigation: this.props.navigation,
+        }}
+        bottomBar={this.renderToolBar()}
+      >
+        {/*<LayerManager_tab*/}
+        {/*mapChange={this._map_change}*/}
+        {/*showSaveDialog={this.showSaveDialog}*/}
+        {/*addDataset={this._add_dataset}*/}
+        {/*addLayerGroup={this._add_layer_group}*/}
+        {/*/>*/}
+        {this.renderList()}
         {this.renderTool()}
         {/*<SaveDialog*/}
         {/*ref={ref => (this.saveDialog = ref)}*/}

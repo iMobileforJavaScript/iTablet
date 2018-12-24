@@ -117,7 +117,7 @@ export default [
       // } else {
       //   wsPath = await Utility.appendingHomeDirectory(customerPath)
       // }
-      NavigationService.navigate('MapView', {
+      NavigationService.navigate('ThemeMapView', {
         operationType: constants.MAP_THEME,
         wsData: [
           // {

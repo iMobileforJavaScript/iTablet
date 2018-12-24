@@ -1,10 +1,11 @@
 /**
  * 获取地图分享数据
  */
-import { SMap, Utility, SOnlineService, SScene } from 'imobile_for_reactnative'
-import { ConstToolType, ConstPath } from '../../../../constants'
+import { SMap, SOnlineService, SScene, Utility } from 'imobile_for_reactnative'
+import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
+import { FileTools } from '../../../../native'
 import ToolbarBtnType from './ToolbarBtnType'
 
 let _params = {}
@@ -119,7 +120,7 @@ function showMapList(type) {
 /**
  * 分享到SuperMap Online
  */
-async function shareToSuperMapOnline(type) {
+async function shareToSuperMapOnline(list = [], name = '') {
   try {
     if (!_params.user.currentUser.userName) {
       Toast.show('请登陆后再分享')
@@ -130,49 +131,39 @@ async function shareToSuperMapOnline(type) {
       return
     }
     Toast.show('开始分享')
-    let dataName, customerPath, targetPath, dataPath
-    if (type === 'MAP_SHARE') {
-      dataName = _params.user.currentUser.userName
-      customerPath =
-        ConstPath.UserPath + dataName + '/' + ConstPath.RelativePath.Data
-      targetPath = await Utility.appendingHomeDirectory(
-        ConstPath.UserPath + dataName + '.zip',
-      )
-      dataPath = await Utility.appendingHomeDirectory(customerPath)
-    } else {
-      let path = await SScene.getWorkspacePath()
-      dataPath = path.substr(0, path.lastIndexOf('/'))
-      dataName = _params.user.currentUser.userName
-      let fileName = dataPath.substr(dataPath.lastIndexOf('/') + 1)
-      targetPath = await Utility.appendingHomeDirectory(
-        ConstPath.UserPath + dataName + '/Scene/' + fileName + '.zip',
-      )
-      // targetPath = await Utility.appendingHomeDirectory(
-      //   ConstPath.UserPath + dataName+ '/Scen/'+ '.zip',
-      // )
-    }
-    let zipResult = await Utility.zipFiles([dataPath], targetPath)
-    let uploadResult = false
-    if (zipResult) {
-      isSharing = true
-      await SOnlineService.deleteData(dataName).then(async () => {
-        uploadResult = await SOnlineService.uploadFile(targetPath, dataName, {
-          // onProgress: progress => {
-          //   console.warn(progress)
-          // },
-          onResult: async () => {
-            let result = await SOnlineService.publishService(dataName)
-            isSharing = false
-            Toast.show(result ? '分享成功' : '分享成功')
-            Utility.deleteFile(targetPath)
-          },
+    _params.exportWorkspace(
+      {
+        maps: list,
+      },
+      (result, path) => {
+        Toast.show(
+          result
+            ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+            : ConstInfo.EXPORT_WORKSPACE_FAILED,
+        )
+        // 分享
+        let fileName = path.substr(path.lastIndexOf('/') + 1)
+        let dataName = name || fileName.substr(0, fileName.lastIndexOf('.'))
+
+        SOnlineService.deleteData(dataName).then(async () => {
+          await SOnlineService.uploadFile(path, dataName, {
+            // onProgress: progress => {
+            //   console.warn(progress)
+            // },
+            onResult: async () => {
+              let result = await SOnlineService.publishService(dataName)
+              Toast.show(
+                result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+              )
+              FileTools.deleteFile(path)
+              isSharing = false
+            },
+          })
         })
-      })
-    }
-    return uploadResult
+      },
+    )
   } catch (e) {
     isSharing = false
-    return false
   }
 }
 

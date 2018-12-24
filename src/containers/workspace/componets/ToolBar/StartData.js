@@ -54,13 +54,13 @@ function getStart(type, params) {
           action: changeBaseLayer,
           image: require('../../../../assets/mapTools/icon_base.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: add,
-          image: require('../../../../assets/mapTools/icon_add_white.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_3D_START:
@@ -395,8 +395,8 @@ function add(type) {
     default:
       _params.setToolbarVisible(true, ConstToolType.MAP_ADD_LAYER, {
         containerType: 'list',
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
+        isFullScreen: false,
+        height: ConstToolType.THEME_HEIGHT[3],
       })
       break
   }

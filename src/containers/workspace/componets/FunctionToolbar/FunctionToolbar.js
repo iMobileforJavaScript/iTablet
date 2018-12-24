@@ -11,6 +11,8 @@ import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import PropTypes from 'prop-types'
+import constants from '../../constants'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -29,7 +31,7 @@ export default class FunctionToolbar extends React.Component {
     type: string,
     data?: Array,
     Label: () => {},
-
+    layers: PropTypes.object,
     getToolRef: () => {},
     getMenuAlertDialogRef: () => {},
     showFullMap: () => {},
@@ -88,10 +90,16 @@ export default class FunctionToolbar extends React.Component {
       Toast.show('提示: 请先选择专题图层。')
       return
     }
+    let type = ''
     switch (GLOBAL.currentLayer.themeType) {
       case ThemeType.UNIQUE:
+        type = constants.THEME_UNIQUE_STYLE
+        break
       case ThemeType.RANGE:
+        type = constants.THEME_RANGE_STYLE
+        break
       case ThemeType.LABEL:
+        type = constants.THEME_UNIFY_LABEL
         break
       case ThemeType.GRIDRANGE:
       case ThemeType.GRIDUNIQUE:
@@ -109,6 +117,7 @@ export default class FunctionToolbar extends React.Component {
     const menuRef = this.props.getMenuAlertDialogRef()
     if (menuRef) {
       this.props.showFullMap && this.props.showFullMap(true)
+      menuRef.setMenuType(type)
       menuRef.showMenuDialog()
     }
 
@@ -133,6 +142,13 @@ export default class FunctionToolbar extends React.Component {
             ? ConstToolType.HEIGHT[0]
             : ConstToolType.HEIGHT[1],
       })
+    }
+  }
+
+  hideThemeMenuDialog = () => {
+    const menutoolRef = this.props.getMenuAlertDialogRef()
+    if (menutoolRef) {
+      menutoolRef.setDialogVisible(false)
     }
   }
 
@@ -333,6 +349,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMore = async type => {
+    this.hideThemeMenuDialog()
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -374,6 +391,30 @@ export default class FunctionToolbar extends React.Component {
 
   mapStyle = () => {
     const toolRef = this.props.getToolRef()
+    if (this.props.layers.themeType <= 0)
+      if (
+        this.props.layers.type === 1 ||
+        this.props.layers.type === 3 ||
+        this.props.layers.type === 5 ||
+        this.props.layers.type === 83
+      ) {
+        if (toolRef) {
+          this.props.showFullMap && this.props.showFullMap(true)
+          toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
+            containerType: 'symbol',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.THEME_HEIGHT[3],
+          })
+        }
+      }
+  }
+
+  remove = () => {}
+
+  /** 添加 **/
+  add = async () => {
+    const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
@@ -387,8 +428,6 @@ export default class FunctionToolbar extends React.Component {
       })
     }
   }
-
-  remove = () => {}
 
   Tagging = async () => {
     const toolRef = this.props.getToolRef()
@@ -450,36 +489,36 @@ export default class FunctionToolbar extends React.Component {
           //   size: 'large',
           //   image: require('../../../../assets/function/icon_function_base_map.png'),
           // },
-          // {
-          //   key: '添加',
-          //   title: '添加',
-          //   action: this.add,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             key: '开始',
             title: '开始',
             action: () => this.start(ConstToolType.MAP_EDIT_START),
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
-            key: '标注',
-            title: '标注',
-            action: this.Tagging,
+            key: constants.ADD,
+            title: constants.ADD,
             size: 'large',
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
-            selectMode: 'flash',
+            action: this.add,
+            image: require('../../../../assets/function/icon_function_add.png'),
           },
-          {
-            key: '工具',
-            title: '工具',
-            action: this.showTool,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_tool.png'),
-            selectMode: 'flash',
-          },
+          // {
+          //   key: '标注',
+          //   title: '标注',
+          //   action: this.Tagging,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_Tagging.png'),
+          //   selectMode: 'flash',
+          // },
+          // {
+          //   key: '工具',
+          //   title: '工具',
+          //   action: this.showTool,
+          //   size: 'large',
+          //   image: require('../../../../assets/function/icon_function_tool.png'),
+          //   selectMode: 'flash',
+          // },
           {
             key: '风格',
             title: '风格',
