@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, PanResponder, Image } from 'react-native'
+import { StyleSheet, View, PanResponder, Image, Text } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import { SCartography, SThemeCartography } from 'imobile_for_reactnative'
 import constants from '../../constants'
@@ -19,6 +19,9 @@ export default class TouchProgress extends Component {
             />
           </View>
         </View>
+        {this.state.tips !== '' && (
+          <Text style={[styles.tips]}>{this.state.tips}</Text>
+        )}
       </View>
     )
   }
@@ -54,6 +57,9 @@ export default class TouchProgress extends Component {
       style: {
         left: this._previousLeft,
       },
+    }
+    this.state = {
+      tips: '',
     }
 
     this._panResponder = PanResponder.create({
@@ -101,12 +107,27 @@ export default class TouchProgress extends Component {
     let pointAngle = (x / (positionWidth - scaleSize(60))) * 360
     let fillOpaqueRate = (x / (positionWidth - scaleSize(60))) * 100
     let gridStyle = (x / (positionWidth - scaleSize(60))) * 200
+    let range_parameter = (x / (positionWidth - scaleSize(60))) * 32
     if (GLOBAL.Type === constants.MAP_THEME) {
-      let _params = {
-        LayerName: this.props.currentLayer.name,
-        FontSize: pointSize / 5,
+      if (this.props.selectName === 'range_parameter') {
+        this.setState({
+          tips: parseInt(range_parameter),
+        })
+        let Params = {
+          LayerName: this.props.currentLayer.name,
+          RangeParameter: range_parameter,
+        }
+        SThemeCartography.modifyThemeRangeMap(Params)
+      } else if (this.props.selectName === 'fontsize') {
+        this.setState({
+          tips: parseInt(pointSize / 5),
+        })
+        let _params = {
+          LayerName: this.props.currentLayer.name,
+          FontSize: pointSize / 5,
+        }
+        SThemeCartography.setUniformLabelFontSize(_params)
       }
-      SThemeCartography.setUniformLabelFontSize(_params)
     }
     switch (layerType) {
       case 1:
@@ -177,6 +198,7 @@ const styles = StyleSheet.create({
   box: {
     backgroundColor: '#rgba(0, 0, 0, 0)',
     flex: 1,
+    alignItems: 'center',
   },
   container: {
     backgroundColor: '#rgba(0, 0, 0, 0)',
@@ -202,5 +224,16 @@ const styles = StyleSheet.create({
   image: {
     height: scaleSize(50),
     width: scaleSize(50),
+  },
+  tips: {
+    fontSize: scaleSize(20),
+    // fontFamily 字体
+    fontWeight: 'bold',
+    color: 'white',
+    paddingLeft: scaleSize(20),
+    paddingRight: scaleSize(20),
+    paddingTop: scaleSize(5),
+    paddingBottom: scaleSize(5),
+    backgroundColor: 'rgba(48,48,48,0.85)',
   },
 })
