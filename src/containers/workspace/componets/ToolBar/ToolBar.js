@@ -31,6 +31,7 @@ import NavigationService from '../../../../containers/NavigationService'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
+import { FileTools } from '../../../../native'
 import {
   View,
   TouchableOpacity,
@@ -885,6 +886,31 @@ export default class ToolBar extends React.PureComponent {
     this.isBoxShow = true
   }
 
+  getWorkspaceList = async () => {
+    try {
+      let buttons = []
+      let data = []
+      let userName = this.props.user.userName || 'Customer'
+      let path = await FileTools.appendingHomeDirectory(
+        ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.List,
+      )
+      let result = await FileTools.fileIsExist(path)
+      if (result) {
+        let fileList = await FileTools.getPathListByFilter(path, {
+          extension: 'json',
+        })
+        for (let index = 0; index < fileList.length; index++) {
+          let element = fileList[index]
+          element.name = element.name.substr(0, element.name.lastIndexOf('.'))
+        }
+        data = fileList
+      }
+      return { data, buttons }
+    } catch (error) {
+      Toast.show('无场景列表')
+    }
+  }
+
   /** 记录Toolbar上一次的state **/
   setLastState = () => {
     Object.assign(this.lastState, this.state, { height: this.height })
@@ -965,6 +991,20 @@ export default class ToolBar extends React.PureComponent {
           this.showToolbar()
         },
       )
+    } else if (type === ConstToolType.MAP3D_WORKSPACE_LIST) {
+      let { data, buttons } = await this.getWorkspaceList()
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          containerType: 'list',
+        },
+        () => {
+          this.height = ConstToolType.HEIGHT[3]
+          this.showToolbar()
+        },
+      )
     } else {
       let { data, buttons } = this.getData(type)
       this.setState(
@@ -1014,6 +1054,10 @@ export default class ToolBar extends React.PureComponent {
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
+    }
+    if (type === ConstToolType.MAP3D_WORKSPACE_LIST) {
+      this.showMap3DTool(type)
+      return
     }
     if (this.isShow === isShow && type === this.state.type) return
     if (
@@ -2081,7 +2125,9 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_BASE:
           case ConstToolType.MAP3D_TOOL_FLYLIST:
           case ConstToolType.MAP3D_ATTRIBUTE:
-          case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
+          case ConstToolType.MAP3D_WORKSPACE_LIST:
+            box = this.renderMap3DList()
+            break
           case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
             box = this.renderMap3DList()
             break

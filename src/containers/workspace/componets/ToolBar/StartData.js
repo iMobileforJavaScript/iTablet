@@ -70,8 +70,16 @@ function getStart(type, params) {
           title: constants.OPEN,
           action: () => {
             if (!_params.setToolbarVisible) return
-            _params.setToolbarVisible(false)
-            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            // _params.setToolbarVisible(false)
+            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            _params.setToolbarVisible(
+              true,
+              ConstToolType.MAP3D_WORKSPACE_LIST,
+              {
+                containerType: 'list',
+                height: ConstToolType.HEIGHT[3],
+              },
+            )
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
