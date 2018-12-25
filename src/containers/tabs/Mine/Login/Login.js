@@ -17,7 +17,8 @@ import {
 import { Toast } from '../../../../utils/index'
 
 import { Container } from '../../../../components'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { FileTools } from '../../../../native'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 import styles, {
   titleOnFocusBackgroundColor,
@@ -53,9 +54,10 @@ export default class Login extends React.Component {
       for (let i = 0; i < paths.length; i++) {
         let path =
           ConstPath.UserPath + userName + '/' + ConstPath.RelativePath[paths[i]]
-        absolutePath = await Utility.appendingHomeDirectory(path)
-        let exist = await Utility.fileIsExistInHomeDirectory(path)
-        let fileCreated = exist || (await Utility.createDirectory(absolutePath))
+        absolutePath = await FileTools.appendingHomeDirectory(path)
+        let exist = await FileTools.fileIsExistInHomeDirectory(path)
+        let fileCreated =
+          exist || (await FileTools.createDirectory(absolutePath))
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {

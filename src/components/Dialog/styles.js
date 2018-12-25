@@ -37,7 +37,7 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     marginVertical: scaleSize(20),
     textAlign: 'center',
-    color: color.content,
+    color: color.themeText,
   },
   btns: {
     marginTop: scaleSize(30),
@@ -85,7 +85,7 @@ export default StyleSheet.create({
   },
   label: {
     fontSize: size.fontSize.fontSizeMd,
-    height: size.fontSize.fontSizeMd,
+    height: scaleSize(32),
     color: color.themeText,
     // width: scaleSize(160),
     textAlign: 'center',

@@ -32,9 +32,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipException;
-import java.util.zip.ZipOutputStream;
+//import java.util.zip.ZipOutputStream;
+import org.apache.tools.zip.ZipOutputStream;
 
 public class FileTools extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "FileTools";
@@ -56,11 +60,9 @@ public class FileTools extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getSDCARD(Promise promise) {
+    public void getHomeDirectory(Promise promise) {
         try {
-            WritableMap map = Arguments.createMap();
-            map.putString("SDCARD", SDCARD);
-            promise.resolve(map);
+            promise.resolve(SDCARD);
         } catch (Exception e) {
             promise.reject(e);
         }
@@ -103,9 +105,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                 isExist = true;
             }
 
-            WritableMap map = Arguments.createMap();
-            map.putBoolean("isExist", isExist);
-            promise.resolve(map);
+            promise.resolve(isExist);
         } catch (Exception e) {
             promise.reject(e);
         }
@@ -121,9 +121,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                 isExist = true;
             }
 
-            WritableMap map = Arguments.createMap();
-            map.putBoolean("isExist", isExist);
-            promise.resolve(map);
+            promise.resolve(isExist);
         } catch (Exception e) {
             promise.reject(e);
         }
@@ -190,23 +188,24 @@ public class FileTools extends ReactContextBaseJavaModule {
                 String p = files[i].getAbsolutePath().replace(SDCARD, "");
                 String n = files[i].getName();
                 int lastDot = n.lastIndexOf(".");
-                String name, type = "Directory";
+                String name, extension = "";
                 if (lastDot > 0) {
                     name = n.substring(0, lastDot).toLowerCase();
-                    type = n.substring(lastDot + 1).toLowerCase();
+                    extension = n.substring(lastDot + 1).toLowerCase();
                 } else {
                     name = n;
                 }
                 boolean isDirectory = files[i].isDirectory();
+
+                String type = "Directory";
                 if (filter.toHashMap().containsKey("type")) {
                     type = filter.getString("type");
-                    if (type.equals("")) type = "Directory";
                 }
 
                 if (!filter.toHashMap().containsKey("name")) {
                     String filterName = filter.getString("name").toLowerCase().trim();
                     // 判断文件名
-                    if (isDirectory && type.equals("Directory") || filterName.equals("") || !name.contains(filterName)) {
+                    if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
                         continue;
                     }
                 }
@@ -214,11 +213,11 @@ public class FileTools extends ReactContextBaseJavaModule {
                 boolean isExist = false;
                 if (filter.toHashMap().containsKey("extension")) {
                     String filterType = filter.getString("extension").toLowerCase();
-                    String[] types = filterType.split(",");
-                    for (int j = 0; j < types.length; j++) {
-                        String mType = types[j].trim();
+                    String[] extensions = filterType.split(",");
+                    for (int j = 0; j < extensions.length; j++) {
+                        String mExtension = extensions[j].trim();
                         // 判断文件类型
-                        if (isDirectory || !isDirectory && !type.equals("") && type.contains(mType)) {
+                        if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
                             isExist = true;
                             break;
                         } else {
@@ -272,8 +271,9 @@ public class FileTools extends ReactContextBaseJavaModule {
     @ReactMethod
     public static void zipFile(String archive, String targetPath, Promise promise) throws IOException, FileNotFoundException, ZipException {
         try {
-            ZipOutputStream zipout = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(
+            org.apache.tools.zip.ZipOutputStream zipout = new org.apache.tools.zip.ZipOutputStream(new BufferedOutputStream(new FileOutputStream(
                     targetPath), BUFF_SIZE));
+            zipout.setEncoding("GBK");
             Boolean result = true;
             File file = new File(archive);
             if (file.exists()) {
@@ -293,6 +293,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         try {
             ZipOutputStream zipout = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(
                     targetPath), BUFF_SIZE));
+            zipout.setEncoding("GBK");
             Boolean result = true;
             for (int i = 0; i < archives.size(); i++) {
                 File file = new File(archives.getString(i));
@@ -425,6 +426,21 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void fileIsExistInHomeDirectory(String path, Promise promise) {
+        try {
+            Boolean isExist = false;
+            File file = new File(SDCARD + "/" + path);
+
+            if (file.exists()) {
+                isExist = true;
+            }
+            promise.resolve(isExist);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)
@@ -439,7 +455,7 @@ public class FileTools extends ReactContextBaseJavaModule {
             byte buffer[] = new byte[BUFF_SIZE];
             BufferedInputStream in = new BufferedInputStream(new FileInputStream(resFile),
                     BUFF_SIZE);
-            zipout.putNextEntry(new java.util.zip.ZipEntry(rootpath));
+            zipout.putNextEntry(new ZipEntry(rootpath));
             int realLength;
             while ((realLength = in.read(buffer)) != -1) {
                 zipout.write(buffer, 0, realLength);
@@ -459,6 +475,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         org.apache.tools.zip.ZipOutputStream zos = null;
         try {
             zos = new org.apache.tools.zip.ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFilePath)));
+            zos.setEncoding("GBK");
             for (File file : fs) {
                 if (file == null || !file.exists()) {
                     continue;
@@ -491,11 +508,17 @@ public class FileTools extends ReactContextBaseJavaModule {
         boolean isUnZipped = false;
         try {
             BufferedInputStream bi;
+//            String encodeType = getCharset(new File(archive));
             ZipFile zf = new ZipFile(archive, "GBK");
             Enumeration e = zf.getEntries();
             while (e.hasMoreElements()) {
                 ZipEntry ze2 = (ZipEntry) e.nextElement();
                 String entryName = ze2.getName();
+
+                if (isMessyCode(entryName)) {
+                    entryName = new String(entryName.getBytes( "GBK" ), "UTF-8");
+                }
+
                 String path = decompressDir + "/" + entryName;
                 if (ze2.isDirectory()) {
                     System.out.println("正在创建解压目录 - " + entryName);
@@ -621,6 +644,103 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
 
         return isUnZip;
+    }
+
+    /**
+     * 判断文件编码
+     * @param file
+     * @return
+     */
+    static public String getCharset(File file) {
+        String charset = "GBK";
+        byte[] first3Bytes = new byte[3];
+        try {
+            boolean checked = false;
+            BufferedInputStream bis = new BufferedInputStream(
+                    new FileInputStream(file));
+            bis.mark(0);
+            int read = bis.read(first3Bytes, 0, 3);
+            if (read == -1)
+                return charset;
+            if (first3Bytes[0] == (byte) 0xFF && first3Bytes[1] == (byte) 0xFE) {
+                charset = "UTF-16LE";
+                checked = true;
+            } else if (first3Bytes[0] == (byte) 0xFE
+                    && first3Bytes[1] == (byte) 0xFF) {
+                charset = "UTF-16BE";
+                checked = true;
+            } else if (first3Bytes[0] == (byte) 0xEF
+                    && first3Bytes[1] == (byte) 0xBB
+                    && first3Bytes[2] == (byte) 0xBF) {
+                charset = "UTF-8";
+                checked = true;
+            }
+            bis.reset();
+            if (!checked) {
+                int loc = 0;
+                while ((read = bis.read()) != -1) {
+                    loc++;
+                    if (read >= 0xF0)
+                        break;
+                    if (0x80 <= read && read <= 0xBF)
+                        break;
+                    if (0xC0 <= read && read <= 0xDF) {
+                        read = bis.read();
+                        if (0x80 <= read && read <= 0xBF)
+                            continue;
+                        else
+                            break;
+                    } else if (0xE0 <= read && read <= 0xEF) {
+                        read = bis.read();
+                        if (0x80 <= read && read <= 0xBF) {
+                            read = bis.read();
+                            if (0x80 <= read && read <= 0xBF) {
+                                charset = "UTF-8";
+                                break;
+                            } else
+                                break;
+                        } else
+                            break;
+                    }
+                }
+            }
+            bis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return charset;
+    }
+
+    /**
+     * 判断字符串是否是乱码
+     *
+     * @param strName 字符串
+     * @return 是否是乱码
+     */
+    public static boolean isMessyCode(String strName) {
+        try {
+            Pattern p = Pattern.compile("\\s*|\t*|\r*|\n*");
+            Matcher m = p.matcher(strName);
+            String after = m.replaceAll("");
+            String temp = after.replaceAll("\\p{P}", "");
+            char[] ch = temp.trim().toCharArray();
+
+            int length = (ch != null) ? ch.length : 0;
+            for (int i = 0; i < length; i++) {
+                char c = ch[i];
+                if (!Character.isLetterOrDigit(c)) {
+                    String str = "" + ch[i];
+                    if (!str.matches("[\u4e00-\u9fa5]+")) {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
     }
 }
 
