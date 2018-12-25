@@ -3,7 +3,8 @@ import { View, Text, TextInput, StyleSheet, Platform } from 'react-native'
 import { Dialog } from '../../../components'
 import { scaleSize, Toast } from '../../../utils'
 import { color, size } from '../../../styles'
-import { Utility, OnlineService } from 'imobile_for_reactnative'
+import { FileTools } from '../../../native'
+import { OnlineService } from 'imobile_for_reactnative'
 import { ConstPath } from '../../../constants'
 import NavigationService from '../../NavigationService'
 export default class UploadDialog extends PureComponent {
@@ -32,12 +33,12 @@ export default class UploadDialog extends PureComponent {
   getZipList = async () => {
     let zipList = []
     // Object.keys(this.props.data).forEach(element => {
-    //   // Utility.copyFile(this.props.data[element], fartherPath)
+    //   // FileTools.copyFile(this.props.data[element], fartherPath)
     //   zipList.push(this.props.data[element])
     // })
     for (const key in this.props.data) {
       if (this.props.data.hasOwnProperty(key)) {
-        let path = await Utility.appendingHomeDirectory(this.props.data[key])
+        let path = await FileTools.appendingHomeDirectory(this.props.data[key])
         zipList.push(path)
       }
     }
@@ -50,7 +51,7 @@ export default class UploadDialog extends PureComponent {
     }
   }
   onComplete() {
-    Utility.deleteFile(this.zipPath)
+    FileTools.deleteFile(this.zipPath)
     Toast.show('上传成功')
     NavigationService.goBack()
   }
@@ -58,13 +59,13 @@ export default class UploadDialog extends PureComponent {
     try {
       if (this.state.dataName !== '') {
         let toPath =
-          (await Utility.appendingHomeDirectory(ConstPath.LocalDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.LocalDataPath)) +
           this.state.dataName +
           '.zip'
         this.zipPath = toPath
         let zipList = await this.getZipList()
         await Toast.show('文件压缩中')
-        let result = await Utility.zipFiles(zipList, toPath)
+        let result = await FileTools.zipFiles(zipList, toPath)
         if (result) {
           this.dialog.setDialogVisible(false)
           Toast.show('文件上传中......')

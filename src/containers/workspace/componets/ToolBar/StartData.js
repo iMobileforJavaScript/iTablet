@@ -1,4 +1,4 @@
-import { NativeMethod } from '../../../../native'
+import { NativeMethod, FileTools } from '../../../../native'
 import {
   ConstToolType,
   ConstInfo,
@@ -8,7 +8,7 @@ import {
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
-import { Utility } from 'imobile_for_reactnative'
+// import { Utility } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 let _params = {}
 
@@ -270,7 +270,7 @@ function openTemplate() {
   NativeMethod.getTemplates(_params.user.currentUser.userName).then(
     async templateList => {
       let isDefaultWS = false
-      let defaultWorkspacePath = await Utility.appendingHomeDirectory(
+      let defaultWorkspacePath = await FileTools.appendingHomeDirectory(
         (_params.user && _params.user.userName
           ? ConstPath.UserPath + _params.userName
           : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,

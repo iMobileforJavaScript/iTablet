@@ -650,8 +650,8 @@ export default class FunctionToolbar extends React.Component {
             action: this.startTheme,
             size: 'large',
             selectMode: 'flash',
-            image: require('../../../../assets/function/icon_function_theme_start.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_start.png'),
+            image: require('../../../../assets/function/icon_function_start.png'),
+            selectedImage: require('../../../../assets/function/icon_function_start.png'),
           },
           {
             key: '专题图',

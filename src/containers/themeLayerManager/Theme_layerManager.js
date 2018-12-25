@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { FlatList } from 'react-native'
+import { FlatList, TouchableOpacity, Text, View } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
@@ -14,6 +14,7 @@ import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
 import NavigationService from '../NavigationService'
+import { color, size } from '../../styles'
 
 export default class Theme_layerManager extends React.Component {
   props: {
@@ -302,11 +303,6 @@ export default class Theme_layerManager extends React.Component {
   }
 
   onPressRow = async ({ data }) => {
-    this.index = await SMap.getLayerIndexByName(data.caption)
-    this.props.setCurrentLayer &&
-      this.props.setCurrentLayer(data, () => {
-        Toast.show('当前图层为' + data.caption)
-      })
     if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
       SMap.setLayerEditable(data.path, true)
       if (data.type === 83) {
@@ -331,18 +327,33 @@ export default class Theme_layerManager extends React.Component {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
           NavigationService.goBack()
+          this.index = await SMap.getLayerIndexByName(data.name)
+          this.props.setCurrentLayer &&
+            this.props.setCurrentLayer(data, () => {
+              Toast.show('当前图层为:' + data.name)
+            })
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
           break
         case ThemeType.RANGE:
           NavigationService.goBack()
+          this.index = await SMap.getLayerIndexByName(data.name)
+          this.props.setCurrentLayer &&
+            this.props.setCurrentLayer(data, () => {
+              Toast.show('当前图层为:' + data.name)
+            })
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
           break
         case ThemeType.LABEL:
           NavigationService.goBack()
+          this.index = await SMap.getLayerIndexByName(data.name)
+          this.props.setCurrentLayer &&
+            this.props.setCurrentLayer(data, () => {
+              Toast.show('当前图层为:' + data.name)
+            })
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         default:
-          Toast.show('提示: 请选择专题图层。')
+          Toast.show('提示:请选择专题图层')
           break
       }
     }
@@ -410,6 +421,7 @@ export default class Theme_layerManager extends React.Component {
         onPress={this.onPressRow}
         onArrowPress={this.getChildList}
         onToolPress={this.onToolPress}
+        swipeEnabled={false}
       />
     )
   }
@@ -421,6 +433,43 @@ export default class Theme_layerManager extends React.Component {
         initIndex={1}
         type={this.type}
       />
+    )
+  }
+
+  renderList = () => {
+    return (
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          style={{
+            height: scaleSize(60),
+            backgroundColor: color.content,
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              marginLeft: scaleSize(50),
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: size.fontSize.fontSizeXXl,
+              color: color.white,
+            }}
+          >
+            我的图层
+          </Text>
+        </TouchableOpacity>
+        <FlatList
+          refreshing={this.state.refreshing}
+          onRefresh={() => {
+            this.setRefreshing(true)
+            this.getData()
+          }}
+          ref={ref => (this.listView = ref)}
+          data={this.props.layers}
+          renderItem={this._renderItem}
+          getItemLayout={this.getItemLayout}
+        />
+      </View>
     )
   }
 
@@ -444,17 +493,7 @@ export default class Theme_layerManager extends React.Component {
         {/*addDataset={this._add_dataset}*/}
         {/*addLayerGroup={this._add_layer_group}*/}
         {/*/>*/}
-        <FlatList
-          refreshing={this.state.refreshing}
-          onRefresh={() => {
-            this.setRefreshing(true)
-            this.getData()
-          }}
-          ref={ref => (this.listView = ref)}
-          data={this.props.layers}
-          renderItem={this._renderItem}
-          getItemLayout={this.getItemLayout}
-        />
+        {this.renderList()}
         {this.renderTool()}
         {/*<SaveDialog*/}
         {/*ref={ref => (this.saveDialog = ref)}*/}

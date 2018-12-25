@@ -2,9 +2,10 @@ import React, { Component } from 'react'
 import { View, Text, Image } from 'react-native'
 import { Container, Button } from '../../components'
 import { ConstPath } from '../../constants'
+import { FileTools } from '../../native'
 // import { Toast } from '../../utils'
 import NavigationService from '../NavigationService'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Personal extends Component {
@@ -25,7 +26,7 @@ export default class Personal extends Component {
       try {
         await SOnlineService.logout()
         this.props.closeWorkspace(async () => {
-          let customPath = await Utility.appendingHomeDirectory(
+          let customPath = await FileTools.appendingHomeDirectory(
             ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
           )
           await this.props.openWorkspace({ server: customPath })

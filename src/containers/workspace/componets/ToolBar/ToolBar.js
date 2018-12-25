@@ -1464,9 +1464,6 @@ export default class ToolBar extends React.PureComponent {
     return this.point
   }
 
-  getType = () => {
-    return this.type
-  }
   menu = () => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.isBoxShow ? 0 : this.height,
@@ -2435,7 +2432,7 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.THEME_CANCEL:
           //专题图-取消
-          image = require('../../../../assets/mapEdit/icon_function_theme_param_close.png')
+          image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
           break
         case ToolbarBtnType.THEME_MENU:
