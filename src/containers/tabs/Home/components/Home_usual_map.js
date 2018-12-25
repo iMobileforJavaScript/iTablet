@@ -61,7 +61,7 @@ export default class HomeUsualMap extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerTitile}>最近常用</Text>
+          <Text style={styles.headerTitle}>最近常用</Text>
         </View>
         {this.props.data && this.props.data.length > 0 ? (
           <FlatList
@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     marginLeft: scaleSize(40),
     // paddingTop:scaleSize(10),
   },
-  headerTitile: {
+  headerTitle: {
     fontSize: size.fontSize.fontSizeXl,
     color: color.content,
   },

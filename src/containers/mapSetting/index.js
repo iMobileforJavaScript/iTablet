@@ -1,14 +1,17 @@
-import ThemeSetting from './ThemeSetting'
+import MapSetting from './MapSetting'
 import { connect } from 'react-redux'
 import { setSettingData } from '../../models/setting'
+
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
-  settingData: state.setting.toJS().settingData,
+  mapSetting: state.setting.toJS().mapSetting,
 })
+
 const mapDispatchToProps = {
   setSettingData,
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ThemeSetting)
+)(MapSetting)

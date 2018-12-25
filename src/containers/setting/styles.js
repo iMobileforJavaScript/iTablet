@@ -18,6 +18,7 @@ export default StyleSheet.create({
     height: scaleSize(60),
     backgroundColor: '#333333',
     paddingLeft: scaleSize(60),
+    paddingRight: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -25,7 +26,7 @@ export default StyleSheet.create({
     width: scaleSize(40),
     height: scaleSize(40),
   },
-  sectionsTitile: {
+  sectionsTitle: {
     color: 'white',
     fontSize: scaleSize(24),
   },

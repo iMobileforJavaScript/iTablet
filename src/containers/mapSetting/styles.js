@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../utils'
+import { color } from '../../styles'
 export default StyleSheet.create({
   container: {
     backgroundColor: '#333333',
@@ -18,6 +19,7 @@ export default StyleSheet.create({
     height: scaleSize(60),
     backgroundColor: '#333333',
     paddingLeft: scaleSize(60),
+    paddingRight: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -25,16 +27,16 @@ export default StyleSheet.create({
     width: scaleSize(40),
     height: scaleSize(40),
   },
-  sectionsTitile: {
-    color: 'white',
+  sectionsTitle: {
+    color: color.themeText,
     fontSize: scaleSize(24),
   },
   itemName: {
-    color: 'white',
+    color: color.themeText,
     fontSize: scaleSize(20),
   },
   itemValue: {
-    color: '#C4C4C4',
+    // color: '#C4C4C4',
     marginRight: scaleSize(15),
   },
 })

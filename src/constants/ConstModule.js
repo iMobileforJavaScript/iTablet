@@ -6,6 +6,15 @@ import ConstOnline from './ConstOnline'
 import { ConstPath } from '../constants'
 import { Platform } from 'react-native'
 
+const MAP_MODULE = {
+  MAP_EDIT: '地图制图',
+  MAP_3D: '三维场景',
+  MAP_THEME: '专题制图',
+  MAP_COLLECTION: '外业采集',
+}
+
+export { MAP_MODULE }
+
 export default [
   {
     key: '地图制图',

@@ -4,7 +4,7 @@ import Const from './Const'
 import AudioKeywords from './AudioKeywords'
 import EventConst from './EventConst'
 import ExampleMapData from './ExampleMapData'
-import ConstModule from './ConstModule'
+import ConstModule, { MAP_MODULE } from './ConstModule'
 import ConstToolType from './ConstToolType'
 import Map3DBaseMapList from './Map3DBaseMapList'
 import ConstInfo from './ConstInfo'
@@ -34,6 +34,7 @@ export {
   EventConst,
   ExampleMapData,
   ConstModule,
+  MAP_MODULE,
   layerAdd,
   BotMap,
   line,

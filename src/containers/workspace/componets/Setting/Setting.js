@@ -275,7 +275,7 @@ export default class Setting extends React.Component {
         settingView = (
           <ChooseLayer
             ref={ref => (this.chooseLayer = ref)}
-            headerTitile={'图层选择'}
+            headerTitle={'图层选择'}
             alwaysVisible={true}
             map={this.props.map}
             mapControl={this.props.mapControl}

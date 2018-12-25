@@ -34,12 +34,7 @@ import {
 } from '../../../../components'
 import { Toast, scaleSize, jsonUtil } from '../../../../utils'
 import { FileTools } from '../../../../native'
-import {
-  ConstPath,
-  ConstToolType,
-  ConstInfo,
-  Const,
-} from '../../../../constants'
+import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
@@ -321,12 +316,10 @@ export default class MapView extends React.Component {
               column,
               height,
               tableType,
+              cb: () =>
+                SMap.appointEditGeometry(event.id, event.layerInfo.name),
             })
         }
-        setTimeout(
-          () => SMap.appointEditGeometry(event.id, event.layerInfo.name),
-          Const.ANIMATED_DURATION_2,
-        )
         break
       }
     }
