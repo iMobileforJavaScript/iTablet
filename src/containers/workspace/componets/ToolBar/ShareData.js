@@ -7,7 +7,7 @@ import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
 import ToolbarBtnType from './ToolbarBtnType'
-
+const Fs = require('react-native-fs')
 let _params = {}
 let isSharing = false
 
@@ -190,6 +190,11 @@ async function map3DShareToSuperMapOnline() {
         fileName +
         '.zip',
     )
+    let mapList = await SScene.getMapList()
+    for (let index = 0; index < mapList.length; index++) {
+      let element = mapList[index]
+      createJson(element.name, path, dataPath)
+    }
     let zipResult = await Utility.zipFiles([dataPath], targetPath)
     let uploadResult = false
     if (zipResult) {
@@ -197,9 +202,7 @@ async function map3DShareToSuperMapOnline() {
       await SOnlineService.deleteData(dataName).then(async () => {
         uploadResult = await SOnlineService.uploadFile(targetPath, fileName, {
           onResult: async () => {
-            let result = await SOnlineService.publishService(dataName)
-            isSharing = false
-            Toast.show(result ? '分享成功' : '分享成功')
+            Toast.show('分享成功')
             Utility.deleteFile(targetPath)
           },
         })
@@ -210,6 +213,12 @@ async function map3DShareToSuperMapOnline() {
     isSharing = false
     return false
   }
+}
+
+async function createJson(sceneName, serverUrl, targetPath) {
+  targetPath = targetPath + '/' + sceneName + '.json'
+  let content = '{sceneName:"' + sceneName + '",serverUrl:"' + serverUrl + '"}'
+  Fs.writeFile(targetPath, content, 'utf8')
 }
 export default {
   getShareData,

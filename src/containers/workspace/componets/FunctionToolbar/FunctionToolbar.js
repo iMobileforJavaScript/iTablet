@@ -146,9 +146,11 @@ export default class FunctionToolbar extends React.Component {
   }
 
   hideThemeMenuDialog = () => {
-    const menutoolRef = this.props.getMenuAlertDialogRef()
-    if (menutoolRef) {
-      menutoolRef.setDialogVisible(false)
+    if (this.props.getMenuAlertDialogRef) {
+      const menutoolRef = this.props.getMenuAlertDialogRef()
+      if (menutoolRef) {
+        menutoolRef.setDialogVisible(false)
+      }
     }
   }
 
