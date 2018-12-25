@@ -82,7 +82,7 @@ export default class setting extends Component {
         }}
       >
         <Image source={image} style={styles.selection} />
-        <Text style={styles.sectionsTitile}>{section.titile}</Text>
+        <Text style={styles.sectionsTitle}>{section.title}</Text>
       </TouchableOpacity>
     )
   }
@@ -94,8 +94,7 @@ export default class setting extends Component {
             <Text style={styles.itemName} />
             <Switch
               style={styles.switch}
-              onTintColor={'white'}
-              tintColor={'white'}
+              trackColor={item.value ? 'white' : '#4F4F4F'}
               thumbColor={'#4F4F4F'}
               value={item.value}
               onValueChange={value => {

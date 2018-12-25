@@ -8,9 +8,9 @@ import { color } from '../../styles'
 import LayerManager from '../mtLayerManager'
 import Map3DLayerManager from '../map3DLayerManager'
 import Setting from '../setting'
+import MapSetting from '../mapSetting'
 import { LayerAttribute } from '../layerAttribute'
 import ThemeLayerManager from '../themeLayerManager'
-import ThemeSetting from '../themeSetting'
 
 const MapTabs = TabNavigator(
   {
@@ -23,8 +23,8 @@ const MapTabs = TabNavigator(
     LayerAttribute: {
       screen: LayerAttribute,
     },
-    Setting: {
-      screen: Setting,
+    MapSetting: {
+      screen: MapSetting,
     },
   },
   {
@@ -117,8 +117,8 @@ const MapThemeTabs = TabNavigator(
     ThemeLayerAttribute: {
       screen: LayerAttribute,
     },
-    ThemeSetting: {
-      screen: ThemeSetting,
+    MapSetting: {
+      screen: MapSetting,
     },
   },
   {
