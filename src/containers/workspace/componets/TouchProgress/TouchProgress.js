@@ -115,7 +115,6 @@ export default class TouchProgress extends Component {
         })
         let Params = {
           LayerName: this.props.currentLayer.name,
-          ColorGradientType: 'CYANWHITE',
           RangeParameter: range_parameter,
         }
         SThemeCartography.modifyThemeRangeMap(Params)

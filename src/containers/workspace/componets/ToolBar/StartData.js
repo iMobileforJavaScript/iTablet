@@ -54,13 +54,13 @@ function getStart(type, params) {
           action: changeBaseLayer,
           image: require('../../../../assets/mapTools/icon_base.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: add,
-          image: require('../../../../assets/mapTools/icon_add_white.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_3D_START:

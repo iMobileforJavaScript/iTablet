@@ -156,7 +156,7 @@ export default class ToolBar extends React.PureComponent {
       tableType: 'normal',
       themeDatasourceAlias: '',
       themeDatasetName: '',
-      themeColor: 'CYANWHITE',
+      themeColor: '',
       themeCreateType: '',
       selectName: '',
     }
@@ -1624,7 +1624,6 @@ export default class ToolBar extends React.PureComponent {
       (async function() {
         let Params = {
           UniqueExpression: item.title,
-          ColorGradientType: this.state.themeColor,
           LayerName: GLOBAL.currentLayer.name,
         }
         // await SThemeCartography.setUniqueExpression(Params)
@@ -1650,9 +1649,7 @@ export default class ToolBar extends React.PureComponent {
         let Params = {
           RangeExpression: item.title,
           LayerName: GLOBAL.currentLayer.name,
-          // ColorGradientType: this.state.themeColor,
         }
-        // await SThemeCartography.modifyThemeRangeMap(Params)
         await SThemeCartography.setRangeExpression(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
@@ -1727,7 +1724,8 @@ export default class ToolBar extends React.PureComponent {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               UniqueExpression: item.title,
-              ColorGradientType: 'CYANWHITE',
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
             }
             isSuccess = await SThemeCartography.createThemeUniqueMap(params)
             break
@@ -1739,7 +1737,8 @@ export default class ToolBar extends React.PureComponent {
               RangeExpression: item.title,
               RangeMode: 'EQUALINTERVAL',
               RangeParameter: '6.0',
-              ColorGradientType: 'CYANWHITE',
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'CD_Cyans',
             }
             isSuccess = await SThemeCartography.createThemeRangeMap(params)
             break
@@ -2092,7 +2091,6 @@ export default class ToolBar extends React.PureComponent {
           if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             //分段专题图：分段方法
             let Params = {
-              ColorGradientType: this.state.themeColor,
               LayerName: GLOBAL.currentLayer.name,
               RangeMode: item.key,
             }
@@ -2316,7 +2314,7 @@ export default class ToolBar extends React.PureComponent {
         action = () => {}
       switch (type) {
         case ToolbarBtnType.CANCEL:
-          image = require('../../../../assets/mapEdit/icon_function_theme_param_close.png')
+          image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
           break
         case ToolbarBtnType.FLEX:
