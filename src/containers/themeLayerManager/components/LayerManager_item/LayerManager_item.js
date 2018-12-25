@@ -12,6 +12,7 @@ import { Const } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
+import { color } from '../../../../styles'
 
 const LAYER_GROUP = 'layerGroup'
 
@@ -406,19 +407,19 @@ export default class LayerManager_item extends React.Component {
         icon = require('../../../../assets/map/icon-directory.png')
         break
       case DatasetType.POINT: // 点数据集
-        icon = require('../../../../assets/map/icon-dot.png')
+        icon = require('../../../../assets/map/icon-shallow-dot.png')
         break
       case DatasetType.LINE: // 线数据集
-        icon = require('../../../../assets/map/icon-line.png')
+        icon = require('../../../../assets/map/icon-shallow-line.png')
         break
       case DatasetType.REGION: // 多边形数据集
-        icon = require('../../../../assets/map/icon-polygon.png')
+        icon = require('../../../../assets/map/icon-shallow-polygon.png')
         break
       case DatasetType.TEXT: // 文本数据集
-        icon = require('../../../../assets/map/icon-text.png')
+        icon = require('../../../../assets/map/icon-shallow-text.png')
         break
       case DatasetType.IMAGE: // 影像数据集
-        icon = require('../../../../assets/map/icon-surface.png')
+        icon = require('../../../../assets/map/icon-shallow-image.png')
         break
       case DatasetType.CAD: // 复合数据集
         icon = require('../../../../assets/map/icon-cad.png')
@@ -472,8 +473,8 @@ export default class LayerManager_item extends React.Component {
   renderItem = () => {
     let name = this.props.data.caption
     const visibleImg = this.state.visable
-      ? require('../../../../assets/map/icon_visible_selected.png')
-      : require('../../../../assets/map/icon_visible.png')
+      ? require('../../../../assets/mapTools/icon_multi_selected.png')
+      : require('../../../../assets/mapTools/icon_multi_unselected.png')
     const arrowImg = this.state.rowShow
       ? require('../../../../assets/mapEdit/icon-arrow-down.png')
       : require('../../../../assets/mapEdit/icon-arrow-left.png')
@@ -484,7 +485,7 @@ export default class LayerManager_item extends React.Component {
     ) : null
     return (
       <TouchableOpacity
-        activeOpacity={1}
+        activeOpacity={0.5}
         style={styles.rowOne}
         onPress={this._pop_row}
       >
@@ -529,7 +530,7 @@ export default class LayerManager_item extends React.Component {
           <Image
             resizeMode={'contain'}
             style={styles.btn_image}
-            source={require('../../../../assets/function/icon_more.png')}
+            source={require('../../../../assets/function/icon_shallow_more.png')}
           />
         </TouchableOpacity>
       </TouchableOpacity>
@@ -546,7 +547,7 @@ export default class LayerManager_item extends React.Component {
         // rowID={this.state.rowID}
         // sectionID={this.state.sectionID}
         autoClose={true}
-        backgroundColor={'white'}
+        backgroundColor={color.theme}
         onOpen={() => {
           // 参数sectionID, rowID
           this.props.onOpen && this.props.onOpen(this.props.data)
