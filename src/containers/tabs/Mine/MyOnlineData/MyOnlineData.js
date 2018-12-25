@@ -11,7 +11,8 @@ import {
   DeviceEventEmitter,
   NativeModules,
 } from 'react-native'
-import { SOnlineService, Utility, SMap } from 'imobile_for_reactnative'
+import { SOnlineService, SMap } from 'imobile_for_reactnative'
+import { FileTools } from '../../../../native'
 import Container from '../../../../components/Container/index'
 import styles from './Styles'
 import Toast from '../../../../utils/Toast'
@@ -230,7 +231,7 @@ export default class MyOnlineData extends Component {
       this.props.user.currentUser.userName +
       '/Data/downloads/' +
       objContent.fileName
-    let filePath = await Utility.appendingHomeDirectory(path)
+    let filePath = await FileTools.appendingHomeDirectory(path)
     let savePath = filePath.substring(0, filePath.length - 4)
     this._unZipFilePath = savePath
     nativeFileTools.unZipFile(filePath, savePath)
@@ -310,8 +311,8 @@ export default class MyOnlineData extends Component {
         this.props.user.currentUser.userName +
         '/Data/downloads/' +
         objContent.fileName
-      let filePath = await Utility.appendingHomeDirectory(path)
-      let isFileExist = await Utility.fileIsExist(path)
+      let filePath = await FileTools.appendingHomeDirectory(path)
+      let isFileExist = await FileTools.fileIsExist(path)
       if (isFileExist) {
         Toast.show('下载完成，可导入')
         this._changeModalProgressState('下载完成，可导入')
@@ -435,7 +436,7 @@ export default class MyOnlineData extends Component {
   }
 
   _openWorkspace = async () => {
-    await Utility.getPathListByFilter()
+    await FileTools.getPathListByFilter()
     let path = this._unZipFilePath
     SMap.importWorkspace({ server: path })
   }
