@@ -16,7 +16,7 @@ export const OPEN_TEMPLATE = 'OPEN_TEMPLATE'
 export const SET_TEMPLATE = 'SET_TEMPLATE'
 export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
-
+// const Fs = require('react-native-fs')
 let isExporting = false
 
 // Actions
@@ -183,6 +183,36 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   await FileTools.deleteFile(parentPath)
   isExporting = false
   cb && cb(result, zipPath)
+}
+//导入工作空间
+export const map3DleadWorkspace = (
+  params = {},
+  cb = () => {},
+) => async getState => {
+  let userName = 'Customer' || getState().user.toJS().currentUser.userName
+  let targetPath = await FileTools.appendingHomeDirectory(
+    ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.Scene,
+  )
+  if (params.path) {
+    let result = await FileTools.unZipFile(params.path, targetPath)
+    let zipName = params.path.substr(params.path.lastIndexOf('/') + 1)
+    let dataName = zipName.substr(0, zipName.lastIndexOf('.'))
+    let jsonPath = targetPath + dataName + '/Json'
+    let jsonExist = result && (await FileTools.fileIsExist(jsonPath))
+    if (jsonExist) {
+      let fileList = await FileTools.getPathListByFilter(jsonPath, {
+        extension: 'json',
+      })
+      if (fileList.length > 0) {
+        let path = await FileTools.appendingHomeDirectory(fileList[0].path)
+        let listPath = await FileTools.appendingHomeDirectory(
+          ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.List,
+        )
+        await FileTools.copyFile(path, listPath)
+      }
+    }
+  }
+  cb && cb()
 }
 
 const initialState = fromJS({

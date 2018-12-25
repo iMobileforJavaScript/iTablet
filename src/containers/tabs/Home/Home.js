@@ -9,6 +9,9 @@ export default class Home extends Component {
     nav: Object,
     latestMap: Array,
     currentUser: Object,
+    setShow: () => {},
+    device: Object,
+    map3DleadWorkspace: () => {},
   }
 
   constructor(props) {
@@ -22,7 +25,15 @@ export default class Home extends Component {
     return (
       <View style={styles.header}>
         <View style={{ flex: 1.5 }} />
-        <TouchableOpacity style={styles.userView}>
+        <TouchableOpacity
+          style={styles.userView}
+          onPress={() => {
+            this.props.map3DleadWorkspace({
+              path:
+                '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
+            })
+          }}
+        >
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
@@ -50,6 +61,7 @@ export default class Home extends Component {
         <ModuleList
           currentUser={this.props.currentUser}
           styles={styles.modulelist}
+          device={this.props.device}
         />
       </Container>
     )

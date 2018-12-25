@@ -321,20 +321,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    @ReactMethod
-    public static void doZipFiles(ReadableArray array,String toPath,Promise promise) {
-        try {
-            int num=array.size();
-            File[] files=new File[num];
-            for (int i = 0; i < num; i++) {
-                files[i]=new File(array.getString(i));
-            }
-            zipFiles(files,toPath);
-            promise.resolve(true);
-        }catch (Exception e){
-            promise.reject(e);
-        }
-    }
 
     @ReactMethod
     public static void deleteFile(String zippath, Promise promise) {
@@ -357,8 +343,8 @@ public class FileTools extends ReactContextBaseJavaModule {
             File toFile = new File(toPath);
             boolean result = toFile.exists();
             if (override || !result) {
-                result = FileManager.getInstance().copy(fromPath, toPath);
-            }
+
+            }result = FileManager.getInstance().copy(fromPath, toPath);
             promise.resolve(result);
         }catch (Exception e){
             promise.reject(e);
@@ -466,44 +452,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-
-    public static boolean zipFiles(File fs[], String zipFilePath) {
-        if (fs == null) {
-            throw new NullPointerException("fs == null");
-        }
-        boolean result = false;
-        org.apache.tools.zip.ZipOutputStream zos = null;
-        try {
-            zos = new org.apache.tools.zip.ZipOutputStream(new BufferedOutputStream(new FileOutputStream(zipFilePath)));
-            zos.setEncoding("GBK");
-            for (File file : fs) {
-                if (file == null || !file.exists()) {
-                    continue;
-                }
-                if (file.isDirectory()) {
-                    recursionZip(zos, file, file.getName() + File.separator);
-                } else {
-                    recursionZip(zos, file, "");
-                }
-            }
-            result = true;
-            zos.flush();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, "zip file failed err: " + e.getMessage());
-        } finally {
-            try {
-                if (zos != null) {
-                    zos.closeEntry();
-                    zos.close();
-                }
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return result;
-    }
-
     public static boolean unZipFile(String archive, String decompressDir) {
         boolean isUnZipped = false;
         try {
@@ -552,36 +500,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    private static void recursionZip(org.apache.tools.zip.ZipOutputStream zipOut, File file, String baseDir) throws Exception {
-        if (file.isDirectory()) {
-            Log.i(TAG, "the file is dir name -->>" + file.getName() + " the baseDir-->>>" + baseDir);
-            File[] files = file.listFiles();
-            for (File fileSec : files) {
-                if (fileSec == null) {
-                    continue;
-                }
-                if (fileSec.isDirectory()) {
-                    baseDir = file.getName() + File.separator + fileSec.getName() + File.separator;
-                    Log.i(TAG, "basDir111-->>" + baseDir);
-                    recursionZip(zipOut, fileSec, baseDir);
-                } else {
-                    Log.i(TAG, "basDir222-->>" + baseDir);
-                    recursionZip(zipOut, fileSec, baseDir);
-                }
-            }
-        } else {
-            Log.i(TAG, "the file name is -->>" + file.getName() + " the base dir -->>" + baseDir);
-            byte[] buf = new byte[BUFF_SIZE];
-            InputStream input = new BufferedInputStream(new FileInputStream(file));
-            zipOut.putNextEntry(new ZipEntry(baseDir + file.getName()));
-            int len;
-            while ((len = input.read(buf)) != -1) {
-                zipOut.write(buf, 0, len);
-            }
-            input.close();
-        }
-    }
-
     public static Boolean createDirectory(String path) {
         boolean result = false;
         File file = new File(path);
@@ -617,6 +535,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Attribute");
         createDirectory(dataPath + "Datasource");
         createDirectory(dataPath + "Scene");
+        createDirectory(dataPath + "Scene/List");
         createDirectory(dataPath + "Symbol");
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
