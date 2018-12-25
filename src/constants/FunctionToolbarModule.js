@@ -378,20 +378,20 @@ const region = [
       })
     },
   },
-  {
-    key: '渐变',
-    action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        isSelectlist: false,
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
-          ToolbarBtnType.PLACEHOLDER,
-        ],
-      })
-    },
-  },
+  // {
+  //   key: '渐变',
+  //   action: () => {
+  //     GLOBAL.toolBox.setState({
+  //       isTouchProgress: true,
+  //       isSelectlist: false,
+  //       buttons: [
+  //         ToolbarBtnType.CANCEL,
+  //         ToolbarBtnType.MENUS,
+  //         ToolbarBtnType.PLACEHOLDER,
+  //       ],
+  //     })
+  //   },
+  // },
 ]
 
 const grid = [

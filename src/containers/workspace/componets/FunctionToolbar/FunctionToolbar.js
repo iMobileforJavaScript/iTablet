@@ -442,12 +442,18 @@ export default class FunctionToolbar extends React.Component {
         this.props.layers.type === 83
       ) {
         if (toolRef) {
+          let Height
+          if (this.props.layers.type === 83) {
+            Height = ConstToolType.HEIGHT[4]
+          } else {
+            Height = ConstToolType.THEME_HEIGHT[3]
+          }
           this.props.showFullMap && this.props.showFullMap(true)
           toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
             containerType: 'symbol',
             isFullScreen: false,
             column: 4,
-            height: ConstToolType.THEME_HEIGHT[3],
+            height: Height,
           })
         }
       }
