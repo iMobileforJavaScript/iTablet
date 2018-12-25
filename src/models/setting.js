@@ -10,6 +10,7 @@ export const OVERLAY_SETTING_SET = 'OVERLAY_SETTING_SET'
 export const ROUTE_SETTING_SET = 'ROUTE_SETTING_SET'
 export const TRACKING_SETTING_SET = 'TRACKING_SETTING_SET'
 export const SETTING_DATA = 'SETTING_DATA'
+export const MAP_SETTING = 'MAP_SETTING'
 
 // Actions
 // --------------------------------------------------
@@ -44,10 +45,27 @@ export const setTrackingSetting = (params, cb = () => {}) => async dispatch => {
   })
   cb && cb()
 }
+
 export const setSettingData = (data = [], cb = () => {}) => async dispatch => {
   await dispatch({
     type: SETTING_DATA,
     payload: data,
+  })
+  cb && cb()
+}
+
+export const setMapSetting = (cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: MAP_SETTING,
+    payload: [],
+  })
+  cb && cb()
+}
+
+export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: MAP_SETTING,
+    payload: params || [],
   })
   cb && cb()
 }
@@ -69,6 +87,7 @@ const initialState = fromJS({
     mode: '',
   },
   settingData: [],
+  mapSetting: [],
 })
 
 export default handleActions(
@@ -103,9 +122,6 @@ export default handleActions(
       }
       return state.setIn(['overlay'], fromJS(data))
     },
-    [REHYDRATE]: (state, { payload }) => {
-      return payload && payload.setting ? fromJS(payload.setting) : state
-    },
     [`${SETTING_DATA}`]: (state, { payload }) => {
       let data = state.toJS().settingData
       if (payload) {
@@ -114,6 +130,18 @@ export default handleActions(
         data = []
       }
       return state.setIn(['settingData'], fromJS(data))
+    },
+    [`${MAP_SETTING}`]: (state, { payload }) => {
+      let data = state.toJS().mapSetting
+      if (payload) {
+        data = payload
+      } else {
+        data = []
+      }
+      return state.setIn(['mapSetting'], fromJS(data))
+    },
+    [REHYDRATE]: (state, { payload }) => {
+      return payload && payload.setting ? fromJS(payload.setting) : state
     },
   },
   initialState,

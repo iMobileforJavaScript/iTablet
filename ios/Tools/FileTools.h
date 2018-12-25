@@ -10,7 +10,9 @@
 #import "React/RCTBridgeModule.h"
 #import <ZipArchive/ZipArchive.h>
 
-@interface FileTools : NSObject<RCTBridgeModule>
+@interface FileTools : NSObject<RCTBridgeModule, SSZipArchiveDelegate>
+@property(nonatomic) id<SSZipArchiveDelegate> zipArchiveDelegate;
+
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;
 +(BOOL)zipFiles:(NSArray *)archivePaths targetPath:(NSString *)targetPath;
 +(BOOL)unZipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;

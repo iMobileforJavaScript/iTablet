@@ -9,7 +9,7 @@ import {
   Platform,
 } from 'react-native'
 import { Container, EmptyView, TextBtn } from '../../components'
-import { Utility } from 'imobile_for_reactnative'
+import { FileTools } from '../../native'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constants'
 
@@ -37,7 +37,7 @@ export default class UpLoadList extends Component {
     (async function() {
       try {
         this.container.setLoading(true)
-        let exist = await Utility.fileIsExistInHomeDirectory(
+        let exist = await FileTools.fileIsExistInHomeDirectory(
           ConstPath.LocalDataPath,
         )
         if (!exist) {
@@ -61,13 +61,13 @@ export default class UpLoadList extends Component {
   getFileList = item => {
     (async function() {
       try {
-        let absolutePath = await Utility.appendingHomeDirectory(item.path)
-        let isDirectory = await Utility.isDirectory(absolutePath)
+        let absolutePath = await FileTools.appendingHomeDirectory(item.path)
+        let isDirectory = await FileTools.isDirectory(absolutePath)
         if (!isDirectory) {
           return
         } else {
           let filter = 'sxmu,smwu,udb'
-          let fileList = await Utility.getPathListByFilter(absolutePath, {
+          let fileList = await FileTools.getPathListByFilter(absolutePath, {
             extension: filter,
           })
           this.setState({

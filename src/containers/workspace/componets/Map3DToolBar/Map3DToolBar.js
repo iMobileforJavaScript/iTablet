@@ -148,7 +148,20 @@ export default class Map3DToolBar extends React.Component {
     })
   }
 
+  openWorkspace = () => {}
+
   renderItem = ({ item }) => {
+    if (this.props.type === 'MAP3D_WORKSPACE_LIST') {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.openWorkspace(item)
+          }}
+        >
+          <Text style={styles.item}>{item.name}</Text>
+        </TouchableOpacity>
+      )
+    }
     item.name = item.name.toUpperCase()
     if (
       item.name === 'SMUSERID' ||

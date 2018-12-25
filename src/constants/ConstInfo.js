@@ -22,4 +22,6 @@ export default {
   OUT_OF_MAP_BOUNDS: '不再地图范围内',
 
   CHOOSE_EDIT_OBJ: '请选择编辑对象',
+
+  SYMBOL_LIB_EMPTY: '当前符号库为空',
 }

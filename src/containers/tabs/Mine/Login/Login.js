@@ -17,7 +17,8 @@ import {
 import { Toast } from '../../../../utils/index'
 
 import { Container } from '../../../../components'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { FileTools } from '../../../../native'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 import styles, {
   titleOnFocusBackgroundColor,
@@ -53,9 +54,10 @@ export default class Login extends React.Component {
       for (let i = 0; i < paths.length; i++) {
         let path =
           ConstPath.UserPath + userName + '/' + ConstPath.RelativePath[paths[i]]
-        absolutePath = await Utility.appendingHomeDirectory(path)
-        let exist = await Utility.fileIsExistInHomeDirectory(path)
-        let fileCreated = exist || (await Utility.createDirectory(absolutePath))
+        absolutePath = await FileTools.appendingHomeDirectory(path)
+        let exist = await FileTools.fileIsExistInHomeDirectory(path)
+        let fileCreated =
+          exist || (await FileTools.createDirectory(absolutePath))
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {
@@ -73,24 +75,21 @@ export default class Login extends React.Component {
   _login = async () => {
     let result
     let isEmail = this.state.onEmailTitleFocus
-    let userName
-    let password
+    let userName = ''
+    let password = ''
     try {
       if (isEmail) {
-        // if (!this.txtEmail) {
-        //   Toast.show('请输入邮箱或昵称')
-        //   return
-        // }
-        // if (!this.txtEmailPassword) {
-        //   Toast.show('请输入密码')
-        //   return
-        // }
-        // this.container.setLoading(true, '登录中...')
-        // userName = this.txtEmail
-        // password = this.txtEmailPassword
+        if (!this.txtEmail) {
+          Toast.show('请输入邮箱或昵称')
+          return
+        }
+        if (!this.txtEmailPassword) {
+          Toast.show('请输入密码')
+          return
+        }
         this.container.setLoading(true, '登录中...')
-        userName = 'imobile1234'
-        password = 'imobile'
+        userName = this.txtEmail
+        password = this.txtEmailPassword
         result = await SOnlineService.login(userName, password)
       } else {
         if (!this.txtPhoneNumber) {

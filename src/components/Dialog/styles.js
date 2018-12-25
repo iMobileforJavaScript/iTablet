@@ -21,7 +21,7 @@ export default StyleSheet.create({
   dialogStyle: {
     width: '70%',
     borderRadius: scaleSize(16),
-    backgroundColor: color.white,
+    backgroundColor: color.subTheme,
     paddingVertical: scaleSize(30),
   },
   title: {
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     marginVertical: scaleSize(20),
     textAlign: 'center',
-    color: color.title,
+    color: color.themeText,
   },
   info: {
     marginTop: scaleSize(20),
@@ -37,7 +37,7 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
     marginVertical: scaleSize(20),
     textAlign: 'center',
-    color: color.content,
+    color: color.themeText,
   },
   btns: {
     marginTop: scaleSize(30),
@@ -84,11 +84,12 @@ export default StyleSheet.create({
     // backgroundColor: 'yellow',
   },
   label: {
-    fontSize: size.fontSize.fontSizeSm,
-    color: color.title,
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(32),
+    color: color.themeText,
     // width: scaleSize(160),
     textAlign: 'center',
-    backgroundColor: 'white',
+    backgroundColor: color.subTheme,
   },
   input: {
     flex: 1,
@@ -99,6 +100,8 @@ export default StyleSheet.create({
     borderRadius: scaleSize(4),
     backgroundColor: 'transparent',
     textAlign: 'center',
+    color: color.themeText,
+    fontSize: size.fontSize.fontSizeMd,
     ...Platform.select({
       android: {
         padding: 0,

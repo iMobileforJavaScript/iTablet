@@ -288,8 +288,8 @@ async function createCollector(type) {
   // await SCollector.setStyle(geoStyle)
 
   let params = {}
-  if (_params.symbol.currentSymbol.layerPath) {
-    params = { layerPath: _params.symbol.currentSymbol.layerPath }
+  if (_params.template.currentTemplateInfo.layerPath) {
+    params = { layerPath: _params.template.currentTemplateInfo.layerPath }
   } else {
     let datasetName = _params.symbol.currentSymbol.type
       ? _params.symbol.currentSymbol.type +
@@ -322,25 +322,11 @@ async function createCollector(type) {
 }
 
 async function collectionSubmit(type) {
-  // if (
-  //   typeof type === 'string' &&
-  //   type.indexOf('MAP_COLLECTION_CONTROL_') >= 0
-  // ) {
-  //   // 若当前操作为模板符号绘制
-  //   await SMap.submit()
-  //   if (_params.layers.editLayer.path) {
-  //     SMap.setLayerFieldInfo(
-  //       _params.layers.editLayer.path,
-  //       _params.map.currentTemplateInfo.field,
-  //     )
-  //   }
-  //   return
-  // }
   let result = await SCollector.submit(type)
-  if (_params.symbol.currentSymbol.layerPath) {
+  if (_params.template.currentTemplateInfo.layerPath) {
     SMap.setLayerFieldInfo(
-      _params.symbol.currentSymbol.layerPath,
-      _params.map.currentTemplateInfo.field,
+      _params.template.currentTemplateInfo.layerPath,
+      _params.template.currentTemplateInfo.field,
     )
   }
   return result

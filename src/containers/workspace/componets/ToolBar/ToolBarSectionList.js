@@ -18,8 +18,8 @@ export default class ToolBarSectionList extends React.Component {
     sectionTitleStyle?: Object,
     activeOpacity?: Object,
     sections: Array,
-    renderItem: () => {},
-    renderSectionHeader: () => {},
+    renderItem?: () => {},
+    renderSectionHeader?: () => {},
     keyExtractor: () => {},
     itemAction?: () => {},
     headerAction?: () => {},
@@ -151,19 +151,32 @@ export default class ToolBarSectionList extends React.Component {
             />
           </TouchableOpacity>
         )}
-        {item.datasetType && item.datasetName && (
+        {item.datasetType &&
+          item.datasetName && (
           <Image
             source={this.getDatasetTypeImg(item)}
             resizeMode={'contain'}
             style={styles.dataset_type}
           />
         )}
-        {item.datasetType && item.datasetName && (
+        {item.datasetType &&
+          item.datasetName && (
           <Text style={styles.dataset_title}>{item.datasetName}</Text>
         )}
         {(item.title || item.name) && (
           <Text style={styles.itemTitle}>{item.title || item.name}</Text>
         )}
+        {item.colorSchemeName && (
+          <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
+        )}
+        {/* {item.colorScheme && (
+          //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
+          <Image
+            source={item.colorScheme}
+            resizeMode={'stretch'}
+            style={styles.colorScheme}
+          />
+        )} */}
       </TouchableOpacity>
     )
   }
@@ -273,6 +286,19 @@ const styles = StyleSheet.create({
   },
   dataset_title: {
     marginLeft: scaleSize(20),
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    color: color.themeText,
+  },
+  colorScheme: {
+    width: scaleSize(420),
+    height: scaleSize(40),
+    marginLeft: scaleSize(20),
+  },
+  colorSchemeName: {
+    width: scaleSize(220),
+    marginLeft: scaleSize(40),
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',

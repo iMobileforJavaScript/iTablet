@@ -49,7 +49,7 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getColorGradientType(
+          toolRef.getUniqueColorScheme(
             ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
           )
         }
@@ -88,6 +88,19 @@ export default class MenuAlertDialog extends React.Component {
       },
     },
     {
+      key: '分段参数',
+      btntitle: '分段参数',
+      action: () => {
+        this.setSelectedMenu('分段参数')
+        this.setDialogVisible(false)
+
+        const toolRef = this.props.getToolBarRef()
+        if (toolRef) {
+          toolRef.getRangeParameter(ConstToolType.MAP_THEME_PARAM_RANGE_PARAM)
+        }
+      },
+    },
+    {
       key: '颜色方案',
       btntitle: '颜色方案',
       action: () => {
@@ -96,9 +109,7 @@ export default class MenuAlertDialog extends React.Component {
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getColorGradientType(
-            ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
-          )
+          toolRef.getRangeColorScheme(ConstToolType.MAP_THEME_PARAM_RANGE_COLOR)
         }
       },
     },
@@ -295,6 +306,9 @@ export default class MenuAlertDialog extends React.Component {
   render() {
     if (this.state.childrens.length === 0) return null
     if (this.state.type === '') return null
+    let modalBackgroundStyle = {
+      backgroundColor: 'rgba(105, 105, 105, 0.3)',
+    }
     return (
       <Modal
         animationType="none"
@@ -307,27 +321,34 @@ export default class MenuAlertDialog extends React.Component {
           }
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{ flex: 1 }}
-          onPress={this._onClose}
-        >
-          <View style={styles.mainTitle}>
-            <View style={styles.dialogStyle}>
-              <FlatList
-                data={this.state.childrens}
-                renderItem={({ item }) => this.renderItem(item)}
-                ItemSeparatorComponent={this.itemSeparator.bind(this)}
-              />
+        <View style={[styles.container, modalBackgroundStyle]}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            style={{ flex: 1 }}
+            onPress={this._onClose}
+          >
+            <View style={styles.mainTitle}>
+              <View style={styles.dialogStyle}>
+                <FlatList
+                  data={this.state.childrens}
+                  renderItem={({ item }) => this.renderItem(item)}
+                  ItemSeparatorComponent={this.itemSeparator.bind(this)}
+                />
+              </View>
             </View>
-          </View>
-        </TouchableOpacity>
+          </TouchableOpacity>
+        </View>
       </Modal>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    // padding: 40,
+  },
   mainTitle: {
     flex: 1,
     justifyContent: 'center',

@@ -1,68 +1,32 @@
 import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
-import { Toast } from '../../../../utils'
+// import { Toast } from '../../../../utils'
 import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType } from '../../../../constants'
 
-function showTips() {
-  Toast.show('功能暂未开放')
-}
+// function showTips() {
+//   Toast.show('功能暂未开放')
+// }
 
 let _toolbarParams = {}
 
-// //单值专题图参数
-// let _paramsUniqueTheme = {}
-
-// function setUniqueThemeParams(params) {
-//   _paramsUniqueTheme = params
-// }
-
-// /** 新建单值风格专题图 **/
-// function createThemeUniqueMap() {
-//   return SThemeCartography.createThemeUniqueMap(_paramsUniqueTheme)
-// }
-
-// //分段专题图参数
-// let _paramsRangeTheme = {}
-
-// function setRangeThemeParams(params) {
-//   _paramsRangeTheme = params
-// }
-
-// /** 新建分段风格专题图 **/
-// function createThemeRangeMap() {
-//   return SThemeCartography.createThemeRangeMap(_paramsRangeTheme)
-// }
-
-// //统一标签专题图参数
-// let _paramsUniformLabel = {}
-
-// function setUniformLabelParams(params) {
-//   _paramsUniformLabel = params
-// }
-
-// /** 新建统一标签专题图 **/
-// function createUniformLabelMap() {
-//   return SThemeCartography.createUniformThemeLabelMap(_paramsUniformLabel)
-// }
-
 function showDatasetsList() {
   let data = []
-  SThemeCartography.getDatasetNames().then(getdata => {
-    let datasource = getdata.datasource
-    data = [
-      {
-        title: '数据源: ' + datasource.alias,
-        data: getdata.list,
-      },
-    ]
+  SThemeCartography.getAllDatasetNames().then(getdata => {
+    for (let i = 0; i < getdata.length; i++) {
+      let datalist = getdata[i]
+      data[i] = {
+        title: '数据源: ' + datalist.datasource.alias,
+        data: datalist.list,
+      }
+    }
     _toolbarParams.setToolbarVisible &&
       _toolbarParams.setToolbarVisible(
         true,
         ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
         {
           containerType: 'list',
-          isFullScreen: false,
+          isFullScreen: true,
           isTouchProgress: false,
           isSelectlist: false,
           height: ConstToolType.THEME_HEIGHT[6],
@@ -239,15 +203,15 @@ function getRangeMode() {
       image: require('../../../../assets/mapTools/range_mode_quantile.png'),
       selectedImage: require('../../../../assets/mapTools/range_mode_quantile.png'),
     },
-    {
-      // 自定义分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
-      title: '自定义分段',
-      action: setRangeMode,
-      size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
-    },
+    // {
+    //   // 自定义分段
+    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
+    //   title: '自定义分段',
+    //   action: setRangeMode,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    //   selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    // },
   ]
   return data
 }
@@ -307,14 +271,14 @@ function getLabelBackShape() {
       image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
       selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
     },
-    {
-      key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
-      title: '符号背景',
-      action: showTips,
-      size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-    },
+    // {
+    //   key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
+    //   title: '符号背景',
+    //   action: showTips,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    //   selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+    // },
   ]
   return data
 }
@@ -905,6 +869,380 @@ function getColorGradientType() {
   return list
 }
 
+/**
+ * 分段专题图颜色方案
+ */
+function getRangeColorScheme() {
+  let list = [
+    {
+      key: 'CA_Oranges',
+      colorSchemeName: 'CA_Oranges',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'CB_Reds',
+      colorSchemeName: 'CB_Reds',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'CC_Lemons',
+      colorSchemeName: 'CC_Lemons',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'CD_Cyans',
+      colorSchemeName: 'CD_Cyans',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'CE_Greens',
+      colorSchemeName: 'CE_Greens',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'CF_Blues',
+      colorSchemeName: 'CF_Blues',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'CG_Purples',
+      colorSchemeName: 'CG_Purples',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DA_Oranges',
+      colorSchemeName: 'DA_Oranges',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DB_Reds',
+      colorSchemeName: 'DB_Reds',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DC_Lemons',
+      colorSchemeName: 'DC_Lemons',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DD_Cyans',
+      colorSchemeName: 'DD_Cyans',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DE_Greens',
+      colorSchemeName: 'DE_Greens',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DF_Blues',
+      colorSchemeName: 'DF_Blues',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'DG_Purples',
+      colorSchemeName: 'DG_Purples',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'EA_Oranges',
+      colorSchemeName: 'EA_Oranges',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'EB_Reds',
+      colorSchemeName: 'EB_Reds',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'EC_Lemons',
+      colorSchemeName: 'EC_Lemons',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ED_Cyans',
+      colorSchemeName: 'ED_Cyans',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'EE_Greens',
+      colorSchemeName: 'EE_Greens',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'EF_Blues',
+      colorSchemeName: 'EF_Blues',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'EG_Purples',
+      colorSchemeName: 'EG_Purples',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FA_Oranges',
+      colorSchemeName: 'FA_Oranges',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FB_Reds',
+      colorSchemeName: 'FB_Reds',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FC_Lemons',
+      colorSchemeName: 'FC_Lemons',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FD_Cyans',
+      colorSchemeName: 'FD_Cyans',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FE_Greens',
+      colorSchemeName: 'FE_Greens',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FF_Blues',
+      colorSchemeName: 'FF_Blues',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'FG_Purples',
+      colorSchemeName: 'FG_Purples',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'GA_Yellow to Orange',
+      colorSchemeName: 'GA_Yellow to Orange',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'GB_Orange to Red',
+      colorSchemeName: 'GB_Orange to Red',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'GC_Olive to Purple',
+      colorSchemeName: 'GC_Olive to Purple',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'GD_Green to Orange',
+      colorSchemeName: 'GD_Green to Orange',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'GE_Blue to Lemon',
+      colorSchemeName: 'GE_Blue to Lemon',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZA_Temperature 1',
+      colorSchemeName: 'ZA_Temperature 1',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZB_Temperature 2',
+      colorSchemeName: 'ZB_Temperature 2',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZC_Temperature 3',
+      colorSchemeName: 'ZC_Temperature 3',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZD_Temperature 4',
+      colorSchemeName: 'ZD_Temperature 4',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZE_Precipitation 1',
+      colorSchemeName: 'ZE_Precipitation 1',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZF_Precipitation 2',
+      colorSchemeName: 'ZF_Precipitation 2',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZG_Precipitation 3',
+      colorSchemeName: 'ZG_Precipitation 3',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZH_Precipitation 4',
+      colorSchemeName: 'ZH_Precipitation 4',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZI_Altitude 1',
+      colorSchemeName: 'ZI_Altitude 1',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZJ_Altitude 2',
+      colorSchemeName: 'ZJ_Altitude 2',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+    {
+      key: 'ZK_Altitude 3',
+      colorSchemeName: 'ZK_Altitude 3',
+      colorScheme: require('../../../../assets/rangeColorScheme/ZD_Cyans.png'),
+    },
+  ]
+  return list
+}
+
+/**
+ * 单值专题图颜色方案
+ */
+
+function getUniqueColorScheme() {
+  let list = [
+    {
+      key: 'BA_Blue',
+      colorSchemeName: 'BA_Blue',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'BB_Green',
+      colorSchemeName: 'BB_Green',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'BC_Orange',
+      colorSchemeName: 'BC_Orange',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'BD_Pink',
+      colorSchemeName: 'BD_Pink',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'CA_Red Rose',
+      colorSchemeName: 'CA_Red Rose',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'CB_Blue and Yellow',
+      colorSchemeName: 'CB_Blue and Yellow',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'CC_Pink and Green',
+      colorSchemeName: 'CC_Pink and Green',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'CD_Fresh',
+      colorSchemeName: 'CD_Fresh',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DA_Ragular',
+      colorSchemeName: 'DA_Ragular',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DB_Common',
+      colorSchemeName: 'DB_Common',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DC_Bright',
+      colorSchemeName: 'DC_Bright',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DD_Warm',
+      colorSchemeName: 'DD_Warm',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DE_Set',
+      colorSchemeName: 'DE_Set',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DF_Pastel',
+      colorSchemeName: 'DF_Pastel',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DG_Grass',
+      colorSchemeName: 'DG_Grass',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EA_Sin_ColorScheme8',
+      colorSchemeName: 'EA_Sin_ColorScheme8',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EB_Sweet',
+      colorSchemeName: 'EB_Sweet',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EC_Dusk',
+      colorSchemeName: 'EC_Dusk',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'ED_Pastel',
+      colorSchemeName: 'ED_Pastel',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EE_Lake',
+      colorSchemeName: 'EE_Lake',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EF_Grass',
+      colorSchemeName: 'EF_Grass',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EG_Sin_ColorScheme1',
+      colorSchemeName: 'EG_Sin_ColorScheme1',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EH_Sin_ColorScheme4',
+      colorSchemeName: 'EH_Sin_ColorScheme4',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EI_Sin_ColorScheme6',
+      colorSchemeName: 'EI_Sin_ColorScheme6',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'EJ_Sin_ColorScheme7',
+      colorSchemeName: 'EJ_Sin_ColorScheme7',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'FA_Red-Yellow-Blue',
+      colorSchemeName: 'FA_Red-Yellow-Blue',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'FB_Red-Yellow-Green',
+      colorSchemeName: 'FB_Red-Yellow-Green',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+  ]
+  return list
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -917,7 +1255,6 @@ export default {
   getThemeThreeMenu,
   getThemeMapCreate,
   getThemeMapParam,
-  // createThemeUniqueMap,
-  // createThemeRangeMap,
-  // createUniformLabelMap,
+  getRangeColorScheme,
+  getUniqueColorScheme,
 }

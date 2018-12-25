@@ -6,7 +6,7 @@ import { ConstToolType } from '../../../../constants'
 
 import { ThemeType } from 'imobile_for_reactnative'
 
-export default class Temple extends React.Component {
+export default class TemplateList extends React.Component {
   props: {
     user: Object,
     template: Object,
@@ -16,7 +16,8 @@ export default class Temple extends React.Component {
     setCurrentTemplateInfo: () => {},
     setEditLayer: () => {},
     // getSymbolTemplates: () => {},
-    setCurrentSymbol: () => {},
+    setCurrentTemplateList: () => {},
+    goToPage: () => {},
   }
 
   static defaultProps = {
@@ -44,7 +45,7 @@ export default class Temple extends React.Component {
 
   action = ({ data }) => {
     Toast.show('当前选择为:' + data.$.code + ' ' + data.$.name)
-    this.props.setCurrentTemplateInfo(data)
+    // this.props.setCurrentTemplateInfo(data)
 
     // 找到对应的图层
     let layer, type, toolbarType
@@ -58,37 +59,46 @@ export default class Temple extends React.Component {
         }
       }
     }
-    this.showToolbar && this.showToolbar(type)
     // 设置对应图层为可编辑
     if (layer) {
       switch (type) {
         case 'Region':
-          // actionType = Action.CREATEPOLYGON
-          // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_REGION
           toolbarType = ConstToolType.MAP_COLLECTION_REGION
           break
         case 'Line':
-          // actionType = Action.CREATEPOLYLINE
-          // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_LINE
           toolbarType = ConstToolType.MAP_COLLECTION_LINE
           break
         case 'Point':
-          // actionType = Action.CREATEPOINT
-          // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_POINT
           toolbarType = ConstToolType.MAP_COLLECTION_POINT
           break
         // default:
         //   actionType = Action.PAN
       }
+      // this.props.showToolbar(true, toolbarType, {
+      //   isFullScreen: false,
+      //   height: ConstToolType.HEIGHT[0],
+      // })
       this.props.showToolbar(true, toolbarType, {
         isFullScreen: false,
         height: ConstToolType.HEIGHT[0],
+        cb: () => {
+          this.props.setCurrentTemplateList(data)
+          let tempSymbol = Object.assign(
+            {},
+            data.$,
+            { field: data.fields[0].field },
+            { layerPath: layer.path },
+          )
+          this.props.setCurrentTemplateInfo(tempSymbol)
+        },
       })
       // this.props.setEditLayer(layer, () => {
       //   SMap.setAction(actionType)
       // })
-      let tempSymbol = Object.assign({}, data.$, { layerPath: layer.path })
-      this.props.setCurrentSymbol(tempSymbol)
+      // let tempSymbol = Object.assign({}, data, { layerPath: layer.path })
+      // this.props.setCurrentTemplateInfo(tempSymbol)
+
+      // this.props.goToPage && this.props.goToPage(1)
     }
   }
 
@@ -96,7 +106,7 @@ export default class Temple extends React.Component {
     return (
       <TreeList
         style={[styles.container, this.props.style]}
-        data={this.props.template.symbols}
+        data={this.props.template.template.symbols}
         onPress={this.action}
       />
     )

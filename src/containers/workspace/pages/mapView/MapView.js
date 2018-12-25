@@ -11,7 +11,6 @@ import {
   DatasetType,
   SMap,
   SCollector,
-  Utility,
   EngineType,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -31,14 +30,11 @@ import {
   Dialog,
   SaveMapNameDialog,
   SaveDialog,
+  InputDialog,
 } from '../../../../components'
 import { Toast, scaleSize, jsonUtil } from '../../../../utils'
-import {
-  ConstPath,
-  ConstToolType,
-  ConstInfo,
-  Const,
-} from '../../../../constants'
+import { FileTools } from '../../../../native'
+import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
@@ -53,6 +49,7 @@ export default class MapView extends React.Component {
     latestMap: PropTypes.array,
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
+    template: PropTypes.object,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -84,6 +81,7 @@ export default class MapView extends React.Component {
     getSymbolTemplates: PropTypes.func,
     openMap: PropTypes.func,
     closeMap: PropTypes.func,
+    device: PropTypes.object,
   }
 
   constructor(props) {
@@ -318,12 +316,10 @@ export default class MapView extends React.Component {
               column,
               height,
               tableType,
+              cb: () =>
+                SMap.appointEditGeometry(event.id, event.layerInfo.name),
             })
         }
-        setTimeout(
-          () => SMap.appointEditGeometry(event.id, event.layerInfo.name),
-          Const.ANIMATED_DURATION_2,
-        )
         break
       }
     }
@@ -370,7 +366,7 @@ export default class MapView extends React.Component {
     ;(async function() {
       try {
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -415,7 +411,7 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -478,7 +474,7 @@ export default class MapView extends React.Component {
       try {
         let mapName = await SMap.getMapName()
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -519,7 +515,7 @@ export default class MapView extends React.Component {
       try {
         let mapName = await SMap.getMapName()
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -650,7 +646,7 @@ export default class MapView extends React.Component {
               '.udd',
           )
         }
-        if (this.props.map.template && this.props.map.template.path) {
+        if (this.props.template.template && this.props.template.template.path) {
           await this.props.closeWorkspace()
         }
         this.clearData()
@@ -780,14 +776,14 @@ export default class MapView extends React.Component {
     let collectorDSName = 'Collection-' + new Date().getTime()
     let initResult = false
     if (this.props.user.currentUser.userName) {
-      collectorDSPath = await Utility.appendingHomeDirectory(
+      collectorDSPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath +
           this.props.user.currentUser.userName +
           '/' +
           ConstPath.RelativePath.Datasource,
       )
     } else {
-      collectorDSPath = await Utility.appendingHomeDirectory(
+      collectorDSPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
       )
     }
@@ -824,6 +820,14 @@ export default class MapView extends React.Component {
   }
 
   /**
+   * 中间弹出的命名框
+   * @param visible
+   */
+  setInputDialogVisible = (visible, params = {}) => {
+    this.InputDialog && this.InputDialog.setDialogVisible(visible, params)
+  }
+
+  /**
    * 底部工具栏
    * @returns {XML}
    */
@@ -848,8 +852,10 @@ export default class MapView extends React.Component {
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         symbol={this.props.symbol}
+        layers={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
+        device={this.props.device}
         setMapType={this.setMapType}
         save={() => {
           //this.saveMapWithNoWorkspace()
@@ -919,6 +925,7 @@ export default class MapView extends React.Component {
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
+        setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         layerData={this.props.currentLayer}
       />
@@ -1005,6 +1012,7 @@ export default class MapView extends React.Component {
           confirmAction={data => this.saveAsMap(data.mapName)}
           type="normal"
         />
+        <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
       </Container>
     )
   }

@@ -12,18 +12,20 @@ import {
 import {
   setLatestMap,
   setCurrentMap,
+  getMaps,
+  openWorkspace,
+  closeWorkspace,
+  exportWorkspace,
+  openMap,
+  closeMap,
+} from '../../../../models/map'
+import {
   importTemplate,
   openTemplate,
   setCurrentTemplateInfo,
   setTemplate,
-  getMaps,
-  exportWorkspace,
-  openWorkspace,
-  closeWorkspace,
-  openMap,
-  closeMap,
   getSymbolTemplates,
-} from '../../../../models/map'
+} from '../../../../models/template'
 import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
 import { setCollectionInfo } from '../../../../models/collection'
 
@@ -43,6 +45,8 @@ const mapStateToProps = state => ({
   currentLayer: state.layers.toJS().currentLayer,
   layers: state.layers.toJS(),
   collection: state.collection.toJS(),
+  template: state.template.toJS(),
+  device: state.device.toJS().device,
 })
 
 const mapDispatchToProps = {

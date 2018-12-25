@@ -90,12 +90,20 @@ export const getAttributes = (
   layerPath = '',
   cb = () => {},
 ) => async dispatch => {
-  let attribute = await SMap.getLayerAttribute(layerPath)
-  await dispatch({
-    type: GET_ATTRIBUTES,
-    payload: attribute || {},
-  })
-  cb && cb(attribute)
+  try {
+    let attribute = await SMap.getLayerAttribute(layerPath)
+    await dispatch({
+      type: GET_ATTRIBUTES,
+      payload: attribute || [],
+    })
+    cb && cb(attribute)
+  } catch (e) {
+    await dispatch({
+      type: GET_ATTRIBUTES,
+      payload: [],
+    })
+    cb && cb()
+  }
 }
 
 export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
