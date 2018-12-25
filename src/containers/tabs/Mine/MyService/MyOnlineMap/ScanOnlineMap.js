@@ -5,7 +5,7 @@
 */
 
 import * as React from 'react'
-import { WebView, Dimensions, ActivityIndicator, View } from 'react-native'
+import { WebView, Dimensions, View } from 'react-native'
 import { Container } from '../../../../../components'
 import Toast from '../../../../../utils/Toast'
 export default class ScanOnlineMap extends React.Component {
@@ -15,31 +15,56 @@ export default class ScanOnlineMap extends React.Component {
 
   constructor(props) {
     super(props)
+    this.screenWidth = Dimensions.get('window').width
     this.state = {
       mapTitle: this.props.navigation.getParam('mapTitle', ''),
       mapUrl: this.props.navigation.getParam('mapUrl', ''),
       cookie: this.props.navigation.getParam('cookie', ''),
       isLoadWebView: false,
+      progressWidth: this.screenWidth * 0.4,
     }
   }
   componentDidMount() {
     this.setState({ isLoadWebView: true })
   }
+  componentWillUnmount() {
+    this._clearInterval()
+  }
+  _clearInterval = () => {
+    if (this.objProgressWidth !== undefined) {
+      clearInterval(this.objProgressWidth)
+      this.setState({ progressWidth: this.screenWidth })
+    }
+  }
   _renderLoading = () => {
     return (
-      <View
-        style={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: 'white',
-        }}
-      >
-        <ActivityIndicator color={'gray'} animating={true} size={'small'} />
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <View
+          style={{
+            height: 2,
+            width: this.state.progressWidth,
+            backgroundColor: '#1c84c0',
+          }}
+        />
       </View>
     )
   }
-  _onLoadStart = () => {}
+  _onLoadStart = () => {
+    this.objProgressWidth = setInterval(() => {
+      let prevProgressWidth = this.state.progressWidth
+      let currentPorWidth
+      if (prevProgressWidth >= this.screenWidth - 200) {
+        currentPorWidth = prevProgressWidth + 1
+        if (currentPorWidth >= this.screenWidth - 50) {
+          currentPorWidth = this.screenWidth - 50
+          return
+        }
+      } else {
+        currentPorWidth = prevProgressWidth * 1.01
+      }
+      this.setState({ progressWidth: currentPorWidth })
+    }, 100)
+  }
   _loadWebView = uri => {
     if (this.state.isLoadWebView) {
       return (
@@ -69,6 +94,9 @@ export default class ScanOnlineMap extends React.Component {
             Toast.show('加载失败')
           }}
           onLoadStart={this._onLoadStart}
+          onLoadEnd={() => {
+            this._clearInterval()
+          }}
         />
       )
     }

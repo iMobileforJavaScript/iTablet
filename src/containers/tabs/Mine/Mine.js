@@ -29,15 +29,23 @@ export default class Mine extends Component {
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
   }
 
+  componentDidMount() {
+    this.openUserWorkspace()
+  }
   openUserWorkspace = () => {
-    this.props.closeWorkspace(() => {
-      let userPath =
-        ConstPath.UserPath +
-        this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativeFilePath.Workspace
-      this.props.openWorkspace({ server: userPath })
-    })
+    if (
+      this.props.user.currentUser.userName !== undefined &&
+      this.props.user.currentUser.userName !== ''
+    ) {
+      this.props.closeWorkspace(() => {
+        let userPath =
+          ConstPath.UserPath +
+          this.props.user.currentUser.userName +
+          '/' +
+          ConstPath.RelativeFilePath.Workspace
+        this.props.openWorkspace({ server: userPath })
+      })
+    }
   }
   goToPersonal = () => {
     NavigationService.navigate('Personal')
@@ -198,13 +206,22 @@ export default class Mine extends Component {
       </View>
     )
   }
+  componentDidUpdate(previousProps) {
+    if (
+      this.props.user.currentUser.userName !== undefined &&
+      this.props.user.currentUser.userName !== '' &&
+      this.props.user.currentUser.userName !==
+        previousProps.user.currentUser.userName
+    ) {
+      this.openUserWorkspace()
+    }
+  }
   render() {
     if (
       this.props.user &&
       this.props.user.currentUser &&
       this.props.user.currentUser.userName
     ) {
-      this.openUserWorkspace()
       SOnlineService.syncAndroidCookie()
       return (
         <Container

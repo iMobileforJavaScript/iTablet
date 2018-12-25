@@ -6,6 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Dimensions,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import RenderFindItem from './RenderFindItem'
@@ -19,21 +20,56 @@ export default class Find extends Component {
 
   constructor(props) {
     super(props)
+    this.screenWidth = Dimensions.get('window').width
     this.state = {
       data: [{}],
       isRefresh: false,
       loadCount: 1,
+      progressWidth: this.screenWidth * 0.6,
     }
     this.flatListData = []
     this.userDataCount = -1
-    this._loadUserData(1)
   }
-
+  componentDidMount() {
+    this._loadFirstUserData()
+  }
+  componentWillUnmount() {
+    this._clearInterval()
+  }
+  _clearInterval = () => {
+    if (this.objProgressWidth !== undefined) {
+      clearInterval(this.objProgressWidth)
+      this.setState({ progressWidth: this.screenWidth })
+    }
+  }
+  _loadFirstUserData = async () => {
+    try {
+      this._showLoadProgressView()
+      await this._loadUserData(1)
+    } finally {
+      this._clearInterval()
+    }
+  }
+  _showLoadProgressView = () => {
+    this.objProgressWidth = setInterval(() => {
+      let prevProgressWidth = this.state.progressWidth
+      let currentPorWidth
+      if (prevProgressWidth >= this.screenWidth - 250) {
+        currentPorWidth = prevProgressWidth + 1
+        if (currentPorWidth >= this.screenWidth - 50) {
+          currentPorWidth = this.screenWidth - 50
+          return
+        }
+      } else {
+        currentPorWidth = prevProgressWidth * 1.01
+      }
+      this.setState({ progressWidth: currentPorWidth })
+    }, 100)
+  }
   _loadUserData = async currentPage => {
     let arrObjContent = []
     try {
       let strUserData = await SOnlineService.getAllUserDataList(currentPage)
-
       let objUserData = JSON.parse(strUserData)
       this.userDataCount = objUserData.total
       let objArrUserDataContent = objUserData.content
@@ -140,8 +176,19 @@ export default class Find extends Component {
     if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
       return (
         <View style={styles.noDataViewStyle}>
-          <ActivityIndicator color={'gray'} animating={true} />
-          <Text>Loading...</Text>
+          <View
+            style={{
+              height: 2,
+              width: this.state.progressWidth,
+              backgroundColor: '#1c84c0',
+            }}
+          />
+          <ActivityIndicator
+            color={'gray'}
+            size={'small'}
+            animating={true}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          />
         </View>
       )
     }
