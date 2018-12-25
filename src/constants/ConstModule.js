@@ -124,7 +124,7 @@ export default [
             DSParams: { server: wsPath },
             type: 'Workspace',
           },
-          ConstOnline['Baidu'],
+          ConstOnline['Google'],
         ],
         mapName: '专题制图',
         isExample: false,
