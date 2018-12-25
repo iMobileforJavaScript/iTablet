@@ -11,9 +11,16 @@ import { scaleSize, Toast } from '../../../../utils'
 // import MoreToolbar from '../MoreToolbar'
 import styles from './styles'
 import Orientation from 'react-native-orientation'
-import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
+import {
+  SScene,
+  SMap,
+  Action,
+  ThemeType,
+  SThemeCartography,
+} from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import constants from '../../constants'
+import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -472,6 +479,50 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  /**专题图-添加 */
+  getThemeMapAdd = async () => {
+    let data = [],
+      buttons = []
+    buttons = [
+      ToolbarBtnType.THEME_CANCEL,
+      // ToolbarBtnType.THEME_COMMIT,
+    ]
+    data[0] = {
+      title: '选择数据源',
+      data: [
+        {
+          title: '选择目录',
+          action: 'ADD',
+        },
+      ],
+    }
+    SThemeCartography.getAllDatasetNames().then(getdata => {
+      for (let i = 0; i < getdata.length; i++) {
+        let datalist = getdata[i]
+        data[i + 1] = {
+          title: '数据源: ' + datalist.datasource.alias,
+          data: datalist.list,
+        }
+      }
+
+      const toolRef = this.props.getToolRef()
+      if (toolRef) {
+        this.props.showFullMap && this.props.showFullMap(true)
+        toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD, {
+          containerType: 'list',
+          isFullScreen: true,
+          isTouchProgress: false,
+          isSelectlist: false,
+          listSelectable: false, //单选框
+          height: ConstToolType.THEME_HEIGHT[6],
+          data,
+          buttons: buttons,
+        })
+        toolRef.scrollListToLocation()
+      }
+    })
+  }
+
   Tagging = async () => {
     Orientation.getOrientation((e, orientation) => {
       let column = orientation === 'PORTRAIT' ? 4 : 8
@@ -645,7 +696,13 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_start.png'),
-            selectedImage: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: '添加',
+            title: '添加',
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
           },
           {
             key: '专题图',
@@ -654,7 +711,6 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_theme_create.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_create.png'),
           },
           {
             key: '参数',
@@ -663,7 +719,6 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
             action: this.showMenuAlertDialog,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           // {
           //   key: '标注',
@@ -698,7 +753,6 @@ export default class FunctionToolbar extends React.Component {
               this.showMore(ConstToolType.MAP_MORE_THEME)
             },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
-            selectedImage: require('../../../../assets/function/icon_function_theme_more.png'),
           },
         ]
         break
