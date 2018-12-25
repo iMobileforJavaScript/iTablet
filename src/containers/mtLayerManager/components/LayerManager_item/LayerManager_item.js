@@ -426,6 +426,9 @@ export default class LayerManager_item extends React.Component {
       case DatasetType.Network: // 复合数据集
         icon = require('../../../../assets/map/icon-network.png')
         break
+      case DatasetType.GRID: // GRID数据集
+        icon = require('../../../../assets/map/icon-grid.png')
+        break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
         break
