@@ -8,11 +8,12 @@ import {
   Dimensions,
 } from 'react-native'
 import { Container } from '../../../components'
+import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
 import Login from './Login'
 import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 export default class Mine extends Component {
   props: {
@@ -42,7 +43,7 @@ export default class Mine extends Component {
 
   openUserWorkspace = () => {
     this.props.closeWorkspace(async () => {
-      let userPath = await Utility.appendingHomeDirectory(
+      let userPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath +
           this.props.user.currentUser.userName +
           '/' +

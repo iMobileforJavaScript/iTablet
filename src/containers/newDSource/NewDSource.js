@@ -8,8 +8,9 @@ import * as React from 'react'
 import { View, TextInput, Text } from 'react-native'
 import { BtnTwo, Container, Dialog } from '../../components'
 import { constUtil, Toast } from '../../utils'
+import { FileTools } from '../../native'
 import { ConstPath } from '../../constants'
-import { EngineType, Utility, Workspace } from 'imobile_for_reactnative'
+import { EngineType, Workspace } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 
 import styles from './styles'
@@ -41,11 +42,11 @@ export default class NewDSource extends React.Component {
         this.workspace = await workspaceModule.createObj()
       }
       this.defaultpath =
-        (await Utility.appendingHomeDirectory()) + ConstPath.LocalDataPath
+        (await FileTools.appendingHomeDirectory()) + ConstPath.LocalDataPath
       let connInfo = await this.workspace.getConnectionInfo()
       let server = await connInfo.getServer()
       let path = server.substr(0, server.lastIndexOf('/'))
-      let isExist = await Utility.fileIsExist(path)
+      let isExist = await FileTools.fileIsExist(path)
       this.setState({
         path: isExist ? path : this.defaultpath,
       })
@@ -68,7 +69,7 @@ export default class NewDSource extends React.Component {
         return
       }
       let filePath = this.state.path + '/' + this.state.name + '.udb'
-      let isExist = await Utility.fileIsExist(filePath)
+      let isExist = await FileTools.fileIsExist(filePath)
       if (isExist) {
         this.dialog.setDialogVisible(true)
       } else {

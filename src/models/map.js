@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { SMap, Utility } from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath } from '../constants'
@@ -159,7 +159,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   if (!path) {
     fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
     fileNameWithoutExtention = fileName.substr(0, fileName.lastIndexOf('.'))
-    parentPath = await Utility.appendingHomeDirectory(
+    parentPath = await FileTools.appendingHomeDirectory(
       ConstPath.UserPath +
         userName +
         '/' +

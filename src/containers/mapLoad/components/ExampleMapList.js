@@ -11,7 +11,8 @@ import {
 import NavigationService from '../../../containers/NavigationService'
 import Thumbnails from '../../../components/Thumbnails'
 import { scaleSize, Toast } from '../../../utils'
-import { Utility, OnlineService, EngineType } from 'imobile_for_reactnative'
+import { FileTools } from '../../../native'
+import { OnlineService, EngineType } from 'imobile_for_reactnative'
 import { ConstPath } from '../../../constants'
 const openNativeSampleCode =
   Platform.OS === 'ios'
@@ -46,7 +47,7 @@ export default class ExampleMapList extends React.Component {
   }
 
   cancel = async zipfile => {
-    await Utility.deleteFile(zipfile)
+    await FileTools.deleteFile(zipfile)
     let downitem = await this.getDownitem(GLOBAL.downitemname)
     downitem.downloaded(true)
   }
@@ -63,7 +64,9 @@ export default class ExampleMapList extends React.Component {
       // { key: ObliquePhoto, path: ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu' },
     ]
     for (let index = 0; index < testData.length; index++) {
-      let exist = await Utility.fileIsExistInHomeDirectory(testData[index].path)
+      let exist = await FileTools.fileIsExistInHomeDirectory(
+        testData[index].path,
+      )
       exist
         ? (testData[index].backgroundcolor = null)
         : (testData[index].backgroundcolor = '#A3A3A3')
@@ -78,11 +81,13 @@ export default class ExampleMapList extends React.Component {
       case vectorMap:
         path = ConstPath.SampleDataPath + '/hotMap/hotMap.smwu'
         filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'hotMap.zip'
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        outPath = await FileTools.appendingHomeDirectory(
+          ConstPath.SampleDataPath,
+        )
         fileName = 'hotMap'
-        exist = await Utility.fileIsExistInHomeDirectory(path)
+        exist = await FileTools.fileIsExistInHomeDirectory(path)
         if (exist) {
           openNativeSampleCode.open('Visual')
         } else {
@@ -92,14 +97,16 @@ export default class ExampleMapList extends React.Component {
       case map3D:
         path = ConstPath.SampleDataPath + '/CBD/CBD.smwu'
         filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'CBD.zip'
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        outPath = await FileTools.appendingHomeDirectory(
+          ConstPath.SampleDataPath,
+        )
         openPath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'CBD/CBD.smwu'
         fileName = 'CBD'
-        exist = await Utility.fileIsExistInHomeDirectory(path)
+        exist = await FileTools.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('MapView', {
             path: openPath,
@@ -114,14 +121,16 @@ export default class ExampleMapList extends React.Component {
       case ObliquePhoto:
         path = ConstPath.SampleDataPath + '/MaSai/MaSai.sxwu'
         filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'MaSai.zip'
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        outPath = await FileTools.appendingHomeDirectory(
+          ConstPath.SampleDataPath,
+        )
         openPath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'MaSai/MaSai.sxwu'
         fileName = 'MaSai'
-        exist = await Utility.fileIsExistInHomeDirectory(path)
+        exist = await FileTools.fileIsExistInHomeDirectory(path)
         if (exist) {
           NavigationService.navigate('Map3D', {
             path: openPath,
@@ -134,14 +143,16 @@ export default class ExampleMapList extends React.Component {
       case gl:
         path = ConstPath.SampleDataPath + '/Changchun/Changchun.smwu'
         filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'Changchun.zip'
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        outPath = await FileTools.appendingHomeDirectory(
+          ConstPath.SampleDataPath,
+        )
         openPath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'Changchun/Changchun.smwu'
         fileName = 'Changchun'
-        exist = await Utility.fileIsExistInHomeDirectory(path)
+        exist = await FileTools.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', {
@@ -157,14 +168,16 @@ export default class ExampleMapList extends React.Component {
       case overLay:
         path = ConstPath.SampleDataPath + '/DOM/DOM.smwu'
         filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'DOM.zip'
-        outPath = await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)
+        outPath = await FileTools.appendingHomeDirectory(
+          ConstPath.SampleDataPath,
+        )
         openPath =
-          (await Utility.appendingHomeDirectory(ConstPath.SampleDataPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.SampleDataPath)) +
           'DOM/DOM.smwu'
         fileName = 'DOM'
-        exist = await Utility.fileIsExistInHomeDirectory(path)
+        exist = await FileTools.fileIsExistInHomeDirectory(path)
         if (exist) {
           // NavigationService.navigate('MapView', { type: '', path: path, isExample: true })
           NavigationService.navigate('MapView', {
@@ -211,7 +224,7 @@ export default class ExampleMapList extends React.Component {
         Toast.show('文件解压中,请等待')
         // console.log("zip")
         this.ziping = true
-        let result = await Utility.unZipFile(this.zipfile, this.targetdir)
+        let result = await FileTools.unZipFile(this.zipfile, this.targetdir)
         if (result) {
           GLOBAL.downitemname = ''
           Alert.alert(
@@ -221,7 +234,7 @@ export default class ExampleMapList extends React.Component {
               {
                 text: '确定',
                 onPress: () => {
-                  Utility.deleteFile(this.zipfile)
+                  FileTools.deleteFile(this.zipfile)
                 },
               },
             ],

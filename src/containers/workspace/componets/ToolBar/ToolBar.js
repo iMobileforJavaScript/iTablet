@@ -1464,9 +1464,6 @@ export default class ToolBar extends React.PureComponent {
     return this.point
   }
 
-  getType = () => {
-    return this.type
-  }
   menu = () => {
     Animated.timing(this.state.boxHeight, {
       toValue: this.isBoxShow ? 0 : this.height,

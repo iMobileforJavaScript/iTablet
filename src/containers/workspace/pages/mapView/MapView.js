@@ -11,7 +11,6 @@ import {
   DatasetType,
   SMap,
   SCollector,
-  Utility,
   EngineType,
 } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
@@ -34,6 +33,7 @@ import {
   InputDialog,
 } from '../../../../components'
 import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { FileTools } from '../../../../native'
 import {
   ConstPath,
   ConstToolType,
@@ -372,7 +372,7 @@ export default class MapView extends React.Component {
     ;(async function() {
       try {
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -417,7 +417,7 @@ export default class MapView extends React.Component {
     (async function() {
       try {
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -480,7 +480,7 @@ export default class MapView extends React.Component {
       try {
         let mapName = await SMap.getMapName()
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -521,7 +521,7 @@ export default class MapView extends React.Component {
       try {
         let mapName = await SMap.getMapName()
         const filePath =
-          (await Utility.appendingHomeDirectory(ConstPath.CustomerPath)) +
+          (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
           mapName +
           '.xml'
         let config = await jsonUtil.readConfig()
@@ -782,14 +782,14 @@ export default class MapView extends React.Component {
     let collectorDSName = 'Collection-' + new Date().getTime()
     let initResult = false
     if (this.props.user.currentUser.userName) {
-      collectorDSPath = await Utility.appendingHomeDirectory(
+      collectorDSPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath +
           this.props.user.currentUser.userName +
           '/' +
           ConstPath.RelativePath.Datasource,
       )
     } else {
-      collectorDSPath = await Utility.appendingHomeDirectory(
+      collectorDSPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
       )
     }

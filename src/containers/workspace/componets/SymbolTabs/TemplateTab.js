@@ -141,13 +141,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   listItemName: {
-    height: size.fontSize.fontSizeSm,
+    height: scaleSize(32),
     width: scaleSize(160),
     color: color.themeText,
     fontSize: size.fontSize.fontSizeSm,
   },
   listItemSubTitle: {
-    height: size.fontSize.fontSizeSm,
+    height: scaleSize(32),
     width: scaleSize(160),
     color: color.themeText,
     fontSize: size.fontSize.fontSizeSm,
