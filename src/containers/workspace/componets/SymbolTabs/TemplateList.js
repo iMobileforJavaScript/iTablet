@@ -2,9 +2,9 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { TreeList } from '../../../../components'
 import { Toast } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
-//
-// import { ThemeType } from 'imobile_for_reactnative'
+import { ConstToolType } from '../../../../constants'
+
+import { ThemeType } from 'imobile_for_reactnative'
 
 export default class TemplateList extends React.Component {
   props: {
@@ -48,51 +48,58 @@ export default class TemplateList extends React.Component {
     // this.props.setCurrentTemplateInfo(data)
 
     // 找到对应的图层
-    // let layer, type, toolbarType
-    // for (let i = 0; i < this.props.layers.length; i++) {
-    //   let _layer = this.props.layers[i]
-    //   if (_layer.datasetName === data.$.datasetName) {
-    //     if (_layer.themeType === ThemeType.UNIQUE || _layer.themeType === 0) {
-    //       layer = _layer
-    //       type = data.$.type
-    //       break
-    //     }
-    //   }
-    // }
+    let layer, type, toolbarType
+    for (let i = 0; i < this.props.layers.length; i++) {
+      let _layer = this.props.layers[i]
+      if (_layer.datasetName === data.$.datasetName) {
+        if (_layer.themeType === ThemeType.UNIQUE || _layer.themeType === 0) {
+          layer = _layer
+          type = data.$.type
+          break
+        }
+      }
+    }
     // 设置对应图层为可编辑
-    // if (layer) {
-    //   switch (type) {
-    //     case 'Region':
-    //       // actionType = Action.CREATEPOLYGON
-    //       // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_REGION
-    //       toolbarType = ConstToolType.MAP_COLLECTION_REGION
-    //       break
-    //     case 'Line':
-    //       // actionType = Action.CREATEPOLYLINE
-    //       // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_LINE
-    //       toolbarType = ConstToolType.MAP_COLLECTION_LINE
-    //       break
-    //     case 'Point':
-    //       // actionType = Action.CREATEPOINT
-    //       // toolbarType = ConstToolType.MAP_COLLECTION_CONTROL_POINT
-    //       toolbarType = ConstToolType.MAP_COLLECTION_POINT
-    //       break
-    //     // default:
-    //     //   actionType = Action.PAN
-    //   }
-    //   this.props.showToolbar(true, toolbarType, {
-    //     isFullScreen: false,
-    //     height: ConstToolType.HEIGHT[0],
-    //   })
-    //   // this.props.setEditLayer(layer, () => {
-    //   //   SMap.setAction(actionType)
-    //   // })
-    //   let tempSymbol = Object.assign({}, data, { layerPath: layer.path })
-    // this.props.setCurrentTemplateInfo(tempSymbol)
+    if (layer) {
+      switch (type) {
+        case 'Region':
+          toolbarType = ConstToolType.MAP_COLLECTION_REGION
+          break
+        case 'Line':
+          toolbarType = ConstToolType.MAP_COLLECTION_LINE
+          break
+        case 'Point':
+          toolbarType = ConstToolType.MAP_COLLECTION_POINT
+          break
+        // default:
+        //   actionType = Action.PAN
+      }
+      // this.props.showToolbar(true, toolbarType, {
+      //   isFullScreen: false,
+      //   height: ConstToolType.HEIGHT[0],
+      // })
+      this.props.showToolbar(true, toolbarType, {
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[0],
+        cb: () => {
+          this.props.setCurrentTemplateList(data)
+          let tempSymbol = Object.assign(
+            {},
+            data.$,
+            { field: data.fields[0].field },
+            { layerPath: layer.path },
+          )
+          this.props.setCurrentTemplateInfo(tempSymbol)
+        },
+      })
+      // this.props.setEditLayer(layer, () => {
+      //   SMap.setAction(actionType)
+      // })
+      // let tempSymbol = Object.assign({}, data, { layerPath: layer.path })
+      // this.props.setCurrentTemplateInfo(tempSymbol)
 
-    this.props.setCurrentTemplateList(data)
-    this.props.goToPage && this.props.goToPage(1)
-    // }
+      // this.props.goToPage && this.props.goToPage(1)
+    }
   }
 
   render() {

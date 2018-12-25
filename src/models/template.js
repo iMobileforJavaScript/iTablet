@@ -215,6 +215,7 @@ export const setCurrentTemplateList = (
   try {
     let list = [{ ...params.$, field: params.fields[0].field }]
     let getData = function(data) {
+      if (!data.feature || data.feature.length === 0) return
       for (let i = 0; i < data.feature.length; i++) {
         let item = data.feature[i]
         list.push({ ...item.$, field: item.fields[0].field })
