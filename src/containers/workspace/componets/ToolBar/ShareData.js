@@ -1,7 +1,7 @@
 /**
  * 获取地图分享数据
  */
-import { SMap, SOnlineService, SScene, Utility } from 'imobile_for_reactnative'
+import { SMap, SOnlineService, SScene } from 'imobile_for_reactnative'
 import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
@@ -182,7 +182,7 @@ async function map3DShareToSuperMapOnline() {
     let dataPath = path.substr(0, path.lastIndexOf('/'))
     let dataName = _params.user.currentUser.userName
     let fileName = dataPath.substr(dataPath.lastIndexOf('/') + 1)
-    let targetPath = await Utility.appendingHomeDirectory(
+    let targetPath = await FileTools.appendingHomeDirectory(
       ConstPath.UserPath +
         dataName +
         '/' +
@@ -190,12 +190,16 @@ async function map3DShareToSuperMapOnline() {
         fileName +
         '.zip',
     )
+    let jsonExist = await FileTools.fileIsExist(dataPath + '/Json')
+    if (!jsonExist) {
+      await FileTools.createDirectory(dataPath + '/Json/')
+    }
     let mapList = await SScene.getMapList()
     for (let index = 0; index < mapList.length; index++) {
       let element = mapList[index]
       createJson(element.name, path, dataPath)
     }
-    let zipResult = await Utility.zipFiles([dataPath], targetPath)
+    let zipResult = await FileTools.zipFiles([dataPath], targetPath)
     let uploadResult = false
     if (zipResult) {
       isSharing = true
@@ -203,7 +207,7 @@ async function map3DShareToSuperMapOnline() {
         uploadResult = await SOnlineService.uploadFile(targetPath, fileName, {
           onResult: async () => {
             Toast.show('分享成功')
-            Utility.deleteFile(targetPath)
+            FileTools.deleteFile(targetPath)
           },
         })
       })
@@ -216,8 +220,9 @@ async function map3DShareToSuperMapOnline() {
 }
 
 async function createJson(sceneName, serverUrl, targetPath) {
-  targetPath = targetPath + '/' + sceneName + '.json'
-  let content = '{sceneName:"' + sceneName + '",serverUrl:"' + serverUrl + '"}'
+  targetPath = targetPath + '/Json/' + sceneName + '.json'
+  let content =
+    '{"sceneName":"' + sceneName + '","serverUrl":"' + serverUrl + '"}'
   Fs.writeFile(targetPath, content, 'utf8')
 }
 export default {
