@@ -9,11 +9,15 @@ import {
 } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
+import { FileTools } from '../../../../native'
+const Fs = require('react-native-fs')
 export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
     data: Array,
     setfly: () => {},
+    showToolbar: () => {},
+    existFullMap: () => {},
   }
   constructor(props) {
     super(props)
@@ -148,7 +152,26 @@ export default class Map3DToolBar extends React.Component {
     })
   }
 
-  openWorkspace = () => {}
+  openWorkspace = async item => {
+    let path = await FileTools.appendingHomeDirectory(item.path)
+    Fs.readFile(path).then(result => {
+      let data = JSON.parse(result)
+      let workspacePath = data.serverUrl
+      SScene.openWorkspace({ server: workspacePath }).then(result => {
+        result &&
+          SScene.openMap(item.name).then(() => {
+            SScene.setListener().then(() => {
+              SScene.getAttribute()
+              SScene.setCircleFly()
+            })
+            GLOBAL.openWorkspace = true
+            this.props.existFullMap && this.props.existFullMap(true)
+            this.props.showToolbar && this.props.showToolbar(false)
+          })
+      })
+      // console.log(data)
+    })
+  }
 
   renderItem = ({ item }) => {
     if (this.props.type === 'MAP3D_WORKSPACE_LIST') {
@@ -157,6 +180,7 @@ export default class Map3DToolBar extends React.Component {
           onPress={() => {
             this.openWorkspace(item)
           }}
+          style={styles.sceneItem}
         >
           <Text style={styles.item}>{item.name}</Text>
         </TouchableOpacity>
@@ -200,7 +224,10 @@ export default class Map3DToolBar extends React.Component {
   }
 
   render() {
-    if (this.props.type === 'MAP3D_ATTRIBUTE') {
+    if (
+      this.props.type === 'MAP3D_ATTRIBUTE' ||
+      this.props.type === 'MAP3D_WORKSPACE_LIST'
+    ) {
       return (
         <FlatList
           data={this.state.data}

@@ -380,7 +380,7 @@ export default class ToolBar extends React.PureComponent {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ]
         break
       case ConstToolType.GRID_STYLE:
@@ -568,6 +568,15 @@ export default class ToolBar extends React.PureComponent {
       this.toolBarSectionList.scrollToLocation({
         sectionIndex: 0,
         itemIndex: 0,
+        viewOffset: scaleSize(80),
+      })
+  }
+  //滚动到指定位置
+  scrollListTo = (sectionIndex, itemIndex) => {
+    this.toolBarSectionList &&
+      this.toolBarSectionList.scrollToLocation({
+        sectionIndex: sectionIndex,
+        itemIndex: itemIndex,
         viewOffset: scaleSize(80),
       })
   }
@@ -889,7 +898,7 @@ export default class ToolBar extends React.PureComponent {
 
   getWorkspaceList = async () => {
     try {
-      let buttons = []
+      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       let data = []
       let userName = this.props.user.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
@@ -902,7 +911,10 @@ export default class ToolBar extends React.PureComponent {
         })
         for (let index = 0; index < fileList.length; index++) {
           let element = fileList[index]
-          element.name = element.name.substr(0, element.name.lastIndexOf('.'))
+          fileList[index].name = element.name.substr(
+            0,
+            element.name.lastIndexOf('.'),
+          )
         }
         data = fileList
       }
@@ -1002,7 +1014,10 @@ export default class ToolBar extends React.PureComponent {
           containerType: 'list',
         },
         () => {
-          this.height = ConstToolType.HEIGHT[3]
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[2]
+              : ConstToolType.HEIGHT[3]
           this.showToolbar()
         },
       )
@@ -1488,6 +1503,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   endFly = () => {
+    SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1557,7 +1573,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
-      //新建专题图数据集列表
+      //跳转到专题图字段列表
       (async function() {
         let data = await SThemeCartography.getThemeExpressByDatasetName(
           item.datasourceName,
@@ -1592,7 +1608,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
-      //新建专题图字段列表
+      //点击字段名创建专题图
       (async function() {
         let params = {}
         let isSuccess = false
@@ -1669,7 +1685,6 @@ export default class ToolBar extends React.PureComponent {
           this.setState({
             data: datalist,
             type: ConstToolType.MAP_ADD_DATASET,
-            themeUdbPath: path,
           })
         },
       })
@@ -1729,7 +1744,63 @@ export default class ToolBar extends React.PureComponent {
         // 切换地图
         this.changeMap(item)
       }
+    } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
+      //专题图添加数据源
+      if (item.theme_add_udb) {
+        NavigationService.navigate('WorkspaceFlieList', {
+          cb: async path => {
+            let udbName = this.basename(path)
+            let udbpath = {
+              server: path,
+              alias: udbName,
+              engineType: 219,
+            }
+            //只添加数据源
+            await SMap.openDatasource(udbpath, '')
+            let alldata = []
+            let getdata = await SThemeCartography.getAllDatasetNames()
+            getdata.reverse() //反序
+            alldata[0] = {
+              title: '选择数据源',
+              data: [
+                {
+                  title: '选择目录',
+                  theme_add_udb: true,
+                },
+              ],
+            }
+            for (let i = 0; i < getdata.length; i++) {
+              let datalist = getdata[i]
+              alldata[i + 1] = {
+                title: '数据源: ' + datalist.datasource.alias,
+                data: datalist.list,
+              }
+            }
+            this.setState({
+              data: alldata,
+            })
+            this.scrollListToLocation()
+          },
+        })
+      } else if (item.datasetName) {
+        let params = {
+          DatasourceName: item.datasourceName,
+          DatasetName: item.datasetName,
+        }
+        SMap.addDatasetToMap(params)
+      }
     }
+  }
+
+  basename(str) {
+    var idx = str.lastIndexOf('/')
+    idx = idx > -1 ? idx : str.lastIndexOf('\\')
+    if (idx < 0) {
+      return str
+    }
+    let file = str.substring(idx + 1)
+    let arr = file.split('.')
+    return arr[0]
   }
 
   headerAction = ({ section }) => {
@@ -1909,6 +1980,7 @@ export default class ToolBar extends React.PureComponent {
         type={this.state.tableType}
         numColumns={this.state.column}
         renderCell={this._renderItem}
+        Heighttype={this.state.type}
         device={this.props.device}
       />
     )
@@ -2055,6 +2127,9 @@ export default class ToolBar extends React.PureComponent {
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column =
       this.props.device.orientation === 'LANDSCAPE' ? 8 : this.state.column
+    if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
+      column = 1
+    }
     return (
       <MTBtn
         style={[styles.cell, { width: this.props.device.width / column }]}
@@ -2090,6 +2165,8 @@ export default class ToolBar extends React.PureComponent {
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
+        showToolbar={this.showToolbar}
+        existFullMap={this.props.existFullMap}
       />
     )
   }

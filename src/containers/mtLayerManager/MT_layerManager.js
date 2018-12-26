@@ -13,7 +13,6 @@ import { MapToolbar } from '../workspace/componets'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
-import NavigationService from '../NavigationService'
 import { color, size } from '../../styles'
 
 export default class MT_layerManager extends React.Component {
@@ -315,7 +314,7 @@ export default class MT_layerManager extends React.Component {
           height: ConstToolType.HEIGHT[4],
         })
         GLOBAL.toolBox.showFullMap()
-        NavigationService.goBack()
+        this.props.navigation.navigate('MapView')
       } else if (data.type === 1 || data.type === 3 || data.type === 5) {
         GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
           containerType: 'symbol',
@@ -324,20 +323,20 @@ export default class MT_layerManager extends React.Component {
           height: ConstToolType.THEME_HEIGHT[3],
         })
         GLOBAL.toolBox.showFullMap()
-        NavigationService.goBack()
+        this.props.navigation.navigate('MapView')
       }
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          NavigationService.goBack()
+          this.props.navigation.navigate('MapView')
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
           break
         case ThemeType.RANGE:
-          NavigationService.goBack()
+          this.props.navigation.navigate('MapView')
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
           break
         case ThemeType.LABEL:
-          NavigationService.goBack()
+          this.props.navigation.navigate('MapView')
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         default:

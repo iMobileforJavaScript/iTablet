@@ -21,8 +21,8 @@ const BotMap = [
         title: 'Google RoadMap',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['Google'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -30,8 +30,8 @@ const BotMap = [
         title: 'Google Staelite',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 1)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['Google'].DSParams, 1, false)
           }.bind(this)())
         },
       },
@@ -39,8 +39,8 @@ const BotMap = [
         title: 'Google Terrain',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 2)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['Google'].DSParams, 2, false)
           }.bind(this)())
         },
       },
@@ -48,8 +48,8 @@ const BotMap = [
         title: 'Google Hybrid',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 3)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['Google'].DSParams, 3, false)
           }.bind(this)())
         },
       },
@@ -62,9 +62,17 @@ const BotMap = [
         title: '全球矢量地图（经纬度）',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDJWD'].DSParams, 0)
-            await SMap.openDatasource(ConstOnline['TDJWD'].labelDSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(
+              ConstOnline['TDJWD'][0].DSParams,
+              0,
+              false,
+            )
+            await SMap.openDatasource(
+              ConstOnline['TDJWD'][1].DSParams,
+              0,
+              false,
+            )
           }.bind(this)())
         },
       },
@@ -72,9 +80,9 @@ const BotMap = [
         title: '全球矢量地图（墨卡托）',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TD'][0].DSParams, 0)
-            await SMap.openDatasource(ConstOnline['TD'][1].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['TD'][0].DSParams, 0, false)
+            await SMap.openDatasource(ConstOnline['TD'][1].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -82,8 +90,8 @@ const BotMap = [
         title: '全球影像地图服务（经纬度）',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDYX'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['TDYX'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -91,8 +99,8 @@ const BotMap = [
         title: '全球影像地图服务（墨卡托）',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDYXM'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['TDYXM'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -100,8 +108,8 @@ const BotMap = [
         title: '全球地形晕渲地图服务（经纬度）',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDQ'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['TDQ'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -114,8 +122,8 @@ const BotMap = [
         title: 'Baidu Map',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -128,8 +136,8 @@ const BotMap = [
         title: 'OSM Map',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -142,8 +150,12 @@ const BotMap = [
         title: 'quanguo',
         action: () => {
           (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['SuperMapCloud'].DSParams, 0)
+            await SMap.removeAllLayer()
+            await SMap.openDatasource(
+              ConstOnline['SuperMapCloud'].DSParams,
+              0,
+              false,
+            )
           }.bind(this)())
         },
       },

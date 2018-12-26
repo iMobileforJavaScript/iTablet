@@ -392,7 +392,7 @@ export default class FunctionToolbar extends React.Component {
         column: 4,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[0]
+            ? ConstToolType.HEIGHT[2]
             : ConstToolType.HEIGHT[3],
       })
     }
@@ -464,11 +464,12 @@ export default class FunctionToolbar extends React.Component {
       data: [
         {
           title: '选择目录',
-          action: 'ADD',
+          theme_add_udb: true,
         },
       ],
     }
     SThemeCartography.getAllDatasetNames().then(getdata => {
+      getdata.reverse()
       for (let i = 0; i < getdata.length; i++) {
         let datalist = getdata[i]
         data[i + 1] = {
@@ -480,7 +481,7 @@ export default class FunctionToolbar extends React.Component {
       const toolRef = this.props.getToolRef()
       if (toolRef) {
         this.props.showFullMap && this.props.showFullMap(true)
-        toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD, {
+        toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
           containerType: 'list',
           isFullScreen: true,
           isTouchProgress: false,

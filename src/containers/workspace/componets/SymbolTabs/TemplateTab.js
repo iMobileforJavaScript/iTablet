@@ -13,6 +13,7 @@ export default class TemplateTab extends React.Component {
     layers: Object,
     setCurrentTemplateInfo: () => {},
     showToolbar: () => {},
+    device: Object,
   }
 
   constructor(props) {
@@ -113,6 +114,7 @@ export default class TemplateTab extends React.Component {
         type={'scroll'}
         numColumns={3}
         renderCell={this._renderItem}
+        device={this.props.device}
       />
     )
   }

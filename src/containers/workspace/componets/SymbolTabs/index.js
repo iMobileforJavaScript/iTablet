@@ -24,6 +24,7 @@ const mapStateToProps = state => ({
   template: state.template.toJS(),
   layers: state.layers.toJS().layers,
   currentMap: state.map.toJS().currentMap,
+  device: state.device.toJS().device,
 })
 
 const mapDispatchToProps = {
@@ -51,6 +52,7 @@ class SymbolTabs extends React.Component {
     setEditLayer: () => {},
     getSymbolTemplates: () => {},
     setCurrentTemplateList: () => {},
+    device: Object,
   }
 
   static defaultProps = {
@@ -145,6 +147,7 @@ class SymbolTabs extends React.Component {
           setEditLayer={this.props.setEditLayer}
           getSymbolTemplates={this.props.getSymbolTemplates}
           setCurrentSymbol={this.props.setCurrentSymbol}
+          device={this.props.device}
         />
         <TemplateTab
           tabLabel="模板"
@@ -157,6 +160,7 @@ class SymbolTabs extends React.Component {
           setEditLayer={this.props.setEditLayer}
           getSymbolTemplates={this.props.getSymbolTemplates}
           setCurrentSymbol={this.props.setCurrentSymbol}
+          device={this.props.device}
         />
         <TemplateList
           tabLabel="分组"
