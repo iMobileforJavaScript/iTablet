@@ -1,4 +1,4 @@
-import { NativeMethod } from '../../../../native'
+import { NativeMethod, FileTools } from '../../../../native'
 import {
   ConstToolType,
   ConstInfo,
@@ -8,9 +8,10 @@ import {
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
-import { Utility } from 'imobile_for_reactnative'
+// import { Utility } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 let _params = {}
+import { SMap } from 'imobile_for_reactnative'
 
 function getStart(type, params) {
   _params = params
@@ -54,13 +55,13 @@ function getStart(type, params) {
           action: changeBaseLayer,
           image: require('../../../../assets/mapTools/icon_base.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: add,
-          image: require('../../../../assets/mapTools/icon_add_white.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_3D_START:
@@ -70,28 +71,20 @@ function getStart(type, params) {
           title: constants.OPEN,
           action: () => {
             if (!_params.setToolbarVisible) return
-            _params.setToolbarVisible(false)
-            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            // _params.setToolbarVisible(false)
+            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            _params.setToolbarVisible(
+              true,
+              ConstToolType.MAP3D_WORKSPACE_LIST,
+              {
+                containerType: 'list',
+                height: ConstToolType.HEIGHT[3],
+              },
+            )
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
-        // {
-        //   key: constants.CREATE,
-        //   title: constants.CREATE,
-        //   size: 'large',
-        //   action: () => {},
-        //   image: require('../../../../assets/mapTools/icon_words.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-        // },
-        // {
-        //   key: constants.HISTORY,
-        //   title: constants.HISTORY,
-        //   size: 'large',
-        //   action: () => {},
-        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
@@ -101,16 +94,6 @@ function getStart(type, params) {
           },
           image: require('../../../../assets/mapTools/icon_base.png'),
         },
-        // {
-        //   key: constants.ADD,
-        //   title: constants.ADD,
-        //   size: 'large',
-        //   action: () => {
-        //     add('MAP_3D')
-        //   },
-        //   image: require('../../../../assets/mapTools/icon_free_line.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        // },
       ]
       break
     case ConstToolType.MAP_COLLECTION_START:
@@ -270,7 +253,7 @@ function openTemplate() {
   NativeMethod.getTemplates(_params.user.currentUser.userName).then(
     async templateList => {
       let isDefaultWS = false
-      let defaultWorkspacePath = await Utility.appendingHomeDirectory(
+      let defaultWorkspacePath = await FileTools.appendingHomeDirectory(
         (_params.user && _params.user.userName
           ? ConstPath.UserPath + _params.userName
           : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
@@ -355,6 +338,9 @@ function openTemplate() {
 function create() {
   if (GLOBAL.Type === constants.COLLECTION) {
     openWorkspace()
+  }
+  if (GLOBAL.Type === constants.MAP_EDIT) {
+    SMap.removeAllLayer()
   }
 }
 

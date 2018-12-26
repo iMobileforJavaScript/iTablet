@@ -1,5 +1,6 @@
 const blackTheme = {
   theme: '#2D2D2F',
+  reverseTheme: '#FFFFFF',
   borderLight: '#C1C0B9',
   border: '#505052',
   subTheme: '#48484b',

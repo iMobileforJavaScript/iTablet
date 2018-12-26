@@ -1,3 +1,8 @@
+/*
+  Copyright © SuperMap. All rights reserved.
+  Author: lu cheng dong
+  E-mail: 756355668@qq.com
+*/
 import React, { Component } from 'react'
 import {
   View,
@@ -8,11 +13,12 @@ import {
   Dimensions,
 } from 'react-native'
 import { Container } from '../../../components'
+import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
 import Login from './Login'
 import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 export default class Mine extends Component {
   props: {
@@ -28,12 +34,12 @@ export default class Mine extends Component {
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
   }
-
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(previousProps) {
     if (
-      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userName !== undefined &&
+      this.props.user.currentUser.userName !== '' &&
       this.props.user.currentUser.userName !==
-        prevProps.user.currentUser.userName
+        previousProps.user.currentUser.userName
     ) {
       this.openUserWorkspace()
       SOnlineService.syncAndroidCookie()
@@ -42,7 +48,7 @@ export default class Mine extends Component {
 
   openUserWorkspace = () => {
     this.props.closeWorkspace(async () => {
-      let userPath = await Utility.appendingHomeDirectory(
+      let userPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath +
           this.props.user.currentUser.userName +
           '/' +
@@ -211,6 +217,7 @@ export default class Mine extends Component {
       </View>
     )
   }
+
   render() {
     if (
       this.props.user &&

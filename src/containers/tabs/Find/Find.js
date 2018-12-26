@@ -1,3 +1,8 @@
+/*
+  Copyright © SuperMap. All rights reserved.
+  Author: lu cheng dong
+  E-mail: 756355668@qq.com
+*/
 import React, { Component } from 'react'
 import Container from '../../../components/Container'
 import {
@@ -6,6 +11,7 @@ import {
   FlatList,
   ActivityIndicator,
   RefreshControl,
+  Dimensions,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import RenderFindItem from './RenderFindItem'
@@ -15,25 +21,61 @@ import styles from './Styles'
 export default class Find extends Component {
   props: {
     navigation: Object,
+    user: Object,
   }
 
   constructor(props) {
     super(props)
+    this.screenWidth = Dimensions.get('window').width
     this.state = {
       data: [{}],
       isRefresh: false,
       loadCount: 1,
+      progressWidth: this.screenWidth * 0.6,
     }
     this.flatListData = []
     this.userDataCount = -1
-    this._loadUserData(1)
   }
-
+  componentDidMount() {
+    this._loadFirstUserData()
+  }
+  componentWillUnmount() {
+    this._clearInterval()
+  }
+  _clearInterval = () => {
+    if (this.objProgressWidth !== undefined) {
+      clearInterval(this.objProgressWidth)
+      this.setState({ progressWidth: this.screenWidth })
+    }
+  }
+  _loadFirstUserData = async () => {
+    try {
+      this._showLoadProgressView()
+      await this._loadUserData(1)
+    } finally {
+      this._clearInterval()
+    }
+  }
+  _showLoadProgressView = () => {
+    this.objProgressWidth = setInterval(() => {
+      let prevProgressWidth = this.state.progressWidth
+      let currentPorWidth
+      if (prevProgressWidth >= this.screenWidth - 250) {
+        currentPorWidth = prevProgressWidth + 1
+        if (currentPorWidth >= this.screenWidth - 50) {
+          currentPorWidth = this.screenWidth - 50
+          return
+        }
+      } else {
+        currentPorWidth = prevProgressWidth * 1.01
+      }
+      this.setState({ progressWidth: currentPorWidth })
+    }, 100)
+  }
   _loadUserData = async currentPage => {
     let arrObjContent = []
     try {
       let strUserData = await SOnlineService.getAllUserDataList(currentPage)
-
       let objUserData = JSON.parse(strUserData)
       this.userDataCount = objUserData.total
       let objArrUserDataContent = objUserData.content
@@ -52,7 +94,6 @@ export default class Find extends Component {
     }
     return arrObjContent
   }
-
   _onRefresh = async () => {
     try {
       if (!this.state.isRefresh) {
@@ -102,7 +143,7 @@ export default class Find extends Component {
             style={{
               flex: 1,
               lineHeight: 20,
-              fontSize: 16,
+              fontSize: 12,
               textAlign: 'center',
               color: 'white',
             }}
@@ -140,8 +181,19 @@ export default class Find extends Component {
     if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
       return (
         <View style={styles.noDataViewStyle}>
-          <ActivityIndicator color={'gray'} animating={true} />
-          <Text>Loading...</Text>
+          <View
+            style={{
+              height: 2,
+              width: this.state.progressWidth,
+              backgroundColor: '#1c84c0',
+            }}
+          />
+          <ActivityIndicator
+            color={'gray'}
+            size={'small'}
+            animating={true}
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          />
         </View>
       )
     }
@@ -151,14 +203,15 @@ export default class Find extends Component {
         style={styles.haveDataViewStyle}
         data={this.state.data}
         renderItem={data => {
-          return <RenderFindItem data={data.item} />
+          return <RenderFindItem user={this.props.user} data={data.item} />
         }}
         refreshControl={
           <RefreshControl
             refreshing={this.state.isRefresh}
             onRefresh={this._onRefresh}
-            colors={['gray', 'orange']}
-            tintColor={'gray'}
+            colors={['orange', 'red']}
+            tintColor={'white'}
+            titleColor={'white'}
             title={'刷新中...'}
             enabled={true}
           />

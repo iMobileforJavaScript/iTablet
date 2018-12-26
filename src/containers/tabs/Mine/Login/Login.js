@@ -10,14 +10,14 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
-  ScrollView,
   TouchableOpacity,
   NativeModules,
 } from 'react-native'
 import { Toast } from '../../../../utils/index'
 
 import { Container } from '../../../../components'
-import { SOnlineService, Utility } from 'imobile_for_reactnative'
+import { FileTools } from '../../../../native'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 import styles, {
   titleOnFocusBackgroundColor,
@@ -53,9 +53,10 @@ export default class Login extends React.Component {
       for (let i = 0; i < paths.length; i++) {
         let path =
           ConstPath.UserPath + userName + '/' + ConstPath.RelativePath[paths[i]]
-        absolutePath = await Utility.appendingHomeDirectory(path)
-        let exist = await Utility.fileIsExistInHomeDirectory(path)
-        let fileCreated = exist || (await Utility.createDirectory(absolutePath))
+        absolutePath = await FileTools.appendingHomeDirectory(path)
+        let exist = await FileTools.fileIsExistInHomeDirectory(path)
+        let fileCreated =
+          exist || (await FileTools.createDirectory(absolutePath))
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {
@@ -77,17 +78,17 @@ export default class Login extends React.Component {
     let password = ''
     try {
       if (isEmail) {
-        // if (!this.txtEmail) {
-        //   Toast.show('请输入邮箱或昵称')
-        //   return
-        // }
-        // if (!this.txtEmailPassword) {
-        //   Toast.show('请输入密码')
-        //   return
-        // }
+        if (!this.txtEmail) {
+          Toast.show('请输入邮箱或昵称')
+          return
+        }
+        if (!this.txtEmailPassword) {
+          Toast.show('请输入密码')
+          return
+        }
         this.container.setLoading(true, '登录中...')
-        userName = this.txtEmail || 'imobile1234'
-        password = this.txtEmailPassword || 'imobile'
+        userName = this.txtEmail
+        password = this.txtEmailPassword
         result = await SOnlineService.login(userName, password)
       } else {
         if (!this.txtPhoneNumber) {
@@ -229,10 +230,11 @@ export default class Login extends React.Component {
           style={styles.keyboardAvoidingStyle}
           behavior={this.state.behavior}
         >
-          <ScrollView
+          {/*       <ScrollView
             contentContainerStyle={{ alignItems: 'center', flex: 1 }}
             showsVerticalScrollIndicator={false}
-          >
+          >*/}
+          <View style={{ alignItems: 'center', flex: 1 }}>
             <View style={styles.titleStyle}>
               <Text
                 style={[
@@ -243,7 +245,6 @@ export default class Login extends React.Component {
                   this._onEmailPress()
                 }}
               >
-                {' '}
                 邮箱登录
               </Text>
               <Text
@@ -273,7 +274,7 @@ export default class Login extends React.Component {
               >
                 注册
               </Text>
-              <Text
+              {/*   <Text
                 style={{
                   width: 100,
                   lineHeight: 40,
@@ -285,9 +286,11 @@ export default class Login extends React.Component {
                 }}
               >
                 忘记密码
-              </Text>
+              </Text>*/}
             </View>
             <TouchableOpacity
+              accessible={true}
+              accessibilityLabel={'登录'}
               style={styles.loginStyle}
               onPress={() => {
                 this._login()
@@ -296,7 +299,9 @@ export default class Login extends React.Component {
               <Text style={styles.titleContainerStyle}>登录</Text>
             </TouchableOpacity>
             <View style={{ flex: 1, height: 200 }} />
-          </ScrollView>
+          </View>
+
+          {/*   </ScrollView>*/}
         </KeyboardAvoidingView>
       </Container>
     )

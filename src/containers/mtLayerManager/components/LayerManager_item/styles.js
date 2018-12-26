@@ -70,6 +70,7 @@ export default StyleSheet.create({
   },
   text: {
     fontSize: size.fontSize.fontSizeSm,
+    color: color.white,
     backgroundColor: 'transparent',
   },
   rowTwo: {
@@ -78,8 +79,8 @@ export default StyleSheet.create({
     backgroundColor: 'white',
   },
   samllImage: {
-    width: scaleSize(20),
-    height: scaleSize(20),
+    width: scaleSize(60),
+    height: scaleSize(60),
   },
   additionView: {
     flexDirection: 'column',

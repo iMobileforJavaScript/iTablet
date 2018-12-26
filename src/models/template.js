@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { SMap, Utility, WorkspaceType } from 'imobile_for_reactnative'
+import { SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
@@ -177,13 +177,13 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
         return
       }
       let tempPath = path.substr(0, path.lastIndexOf('/') + 1)
-      Utility.getPathListByFilter(tempPath, {
+      FileTools.getPathListByFilter(tempPath, {
         extension: 'xml',
         type: 'file',
       }).then(xmlList => {
         if (xmlList && xmlList.length > 0 && !xmlList[0].isDirectory) {
           let xmlInfo = xmlList[0]
-          Utility.appendingHomeDirectory(xmlInfo.path).then(xmlPath => {
+          FileTools.appendingHomeDirectory(xmlInfo.path).then(xmlPath => {
             fs.readFile(xmlPath).then(data => {
               parser.parseString(data, async (err, result) => {
                 await dispatch({
@@ -215,6 +215,7 @@ export const setCurrentTemplateList = (
   try {
     let list = [{ ...params.$, field: params.fields[0].field }]
     let getData = function(data) {
+      if (!data.feature || data.feature.length === 0) return
       for (let i = 0; i < data.feature.length; i++) {
         let item = data.feature[i]
         list.push({ ...item.$, field: item.fields[0].field })
@@ -255,7 +256,7 @@ export default handleActions(
       let isExist = false
       let originData = payload.originData
       for (let i = 0; i < newData.length; i++) {
-        if (newData[i].code === originData.code) {
+        if (originData && newData[i].code === originData.code) {
           newData[i] = originData
           let temp = newData[0]
           newData[0] = newData[i]

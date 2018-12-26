@@ -7,13 +7,15 @@ import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
 import { openWorkspace } from './src/models/map'
+import { setShow }  from './src/models/device'
+import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { scaleSize, AudioAnalyst, Toast } from './src/utils'
 import { ConstPath } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
-
-import { SpeechManager, Utility, SOnlineService, SMap, WorkspaceType } from 'imobile_for_reactnative'
+import Orientation from 'react-native-orientation'
+import { SOnlineService } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
 
@@ -43,6 +45,7 @@ class AppRoot extends Component {
     setNav: PropTypes.func,
     setUser: PropTypes.func,
     openWorkspace:PropTypes.func,
+    setShow:PropTypes.func,
   }
 
   constructor(props) {
@@ -60,11 +63,12 @@ class AppRoot extends Component {
       SOnlineService.init()
       SOnlineService.removeCookie()
       let customerPath = ConstPath.CustomerPath+ConstPath.RelativeFilePath.Workspace
-      let path = await Utility.appendingHomeDirectory(customerPath)
+      let path = await FileTools.appendingHomeDirectory(customerPath)
       this.props.openWorkspace({server:path})
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
+      await this.initOrientation()
     }).bind(this)()
   }
 
@@ -88,6 +92,24 @@ class AppRoot extends Component {
     }
   }
 
+  //初始化横竖屏显示方式
+  initOrientation=async()=>{
+    Orientation.getOrientation((e, orientation) => {
+      this.props.setShow({orientation:orientation})
+    })
+    Orientation.addOrientationListener(orientation => {
+      if (orientation === "LANDSCAPE"){
+        this.props.setShow({
+          orientation:orientation,
+        })
+      }else{
+        this.props.setShow({
+          orientation:orientation,
+        })
+      }
+    })
+  }
+
   // 初始化文件目录
   initDirectories = async () => {
     try {
@@ -96,9 +118,9 @@ class AppRoot extends Component {
       for (let i = 0; i < paths.length; i++) {
         let path = ConstPath[paths[i]]
         if (typeof path !== 'string') continue
-        absolutePath = await Utility.appendingHomeDirectory(path)
-        let exist = await Utility.fileIsExistInHomeDirectory(path)
-        let fileCreated = exist || await Utility.createDirectory(absolutePath)
+        absolutePath = await FileTools.appendingHomeDirectory(path)
+        let exist = await FileTools.fileIsExistInHomeDirectory(path)
+        let fileCreated = exist || await FileTools.createDirectory(absolutePath)
         isCreate = fileCreated && isCreate
       }
       isCreate = this.initCustomerDirectories() && isCreate
@@ -118,9 +140,9 @@ class AppRoot extends Component {
       for (let i = 0; i < paths.length; i++) {
         let path = ConstPath.RelativePath[paths[i]]
         if (typeof path !== 'string') continue
-        absolutePath = await Utility.appendingHomeDirectory(ConstPath.CustomerPath + path)
-        let exist = await Utility.fileIsExistInHomeDirectory(ConstPath.CustomerPath + path)
-        let fileCreated = exist || await Utility.createDirectory(absolutePath)
+        absolutePath = await FileTools.appendingHomeDirectory(ConstPath.CustomerPath + path)
+        let exist = await FileTools.fileIsExistInHomeDirectory(ConstPath.CustomerPath + path)
+        let fileCreated = exist || await FileTools.createDirectory(absolutePath)
         isCreate = fileCreated && isCreate
       }
       return isCreate
@@ -130,31 +152,31 @@ class AppRoot extends Component {
   }
 
   // 初始化录音
-  initSpeechManager = async () => {
-    try {
-      GLOBAL.SpeechManager = new SpeechManager()
-      await GLOBAL.SpeechManager.init()
-    } catch (e) {
-      Toast.show('语音初始化失败')
-    }
-  }
+  // initSpeechManager = async () => {
+  //   try {
+  //     GLOBAL.SpeechManager = new SpeechManager()
+  //     await GLOBAL.SpeechManager.init()
+  //   } catch (e) {
+  //     Toast.show('语音初始化失败')
+  //   }
+  // }
 
   // 初始化游客工作空间
-  initCustomerWorkspace = async () => {
-    try {
-      const customerPath = ConstPath.CustomerPath
-      let exist = await Utility.fileIsExistInHomeDirectory(customerPath + ConstPath.RelativePath.CustomerWorkspace)
-      !exist && Utility.appendingHomeDirectory(customerPath).then(path => {
-        SMap.saveWorkspace({
-          caption: 'Customer',
-          type: WorkspaceType.SMWU,
-          server: path,
-        })
-      })
-    } catch (e) {
-      Toast.show('游客工作空间初始化失败')
-    }
-  }
+  // initCustomerWorkspace = async () => {
+  //   try {
+  //     const customerPath = ConstPath.CustomerPath
+  //     let exist = await FileTools.fileIsExistInHomeDirectory(customerPath + ConstPath.RelativePath.CustomerWorkspace)
+  //     !exist && FileTools.appendingHomeDirectory(customerPath).then(path => {
+  //       SMap.saveWorkspace({
+  //         caption: 'Customer',
+  //         type: WorkspaceType.SMWU,
+  //         server: path,
+  //       })
+  //     })
+  //   } catch (e) {
+  //     Toast.show('游客工作空间初始化失败')
+  //   }
+  // }
 
   render() {
     return (
@@ -180,6 +202,7 @@ const mapStateToProps = state => {
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,
+    device:state.device.toJS().device,
   }
 }
 
@@ -187,6 +210,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setNav,
   setUser,
   openWorkspace,
+  setShow,
 })(AppRoot)
 
 const App = () =>

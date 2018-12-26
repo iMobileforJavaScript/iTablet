@@ -9,9 +9,10 @@ import {
   Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { EngineType, Utility, SScene } from 'imobile_for_reactnative'
+import { EngineType, SScene } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constants'
+import { FileTools } from '../../native'
 import NavigationService from '../NavigationService'
 import { color } from '../../styles'
 
@@ -49,7 +50,7 @@ export default class WorkSpaceFileList extends Component {
     (async function() {
       try {
         this.container.setLoading(true)
-        let exist = await Utility.fileIsExistInHomeDirectory(
+        let exist = await FileTools.fileIsExistInHomeDirectory(
           ConstPath.LocalDataPath,
         )
         if (!exist) {
@@ -85,8 +86,8 @@ export default class WorkSpaceFileList extends Component {
   getFileList = item => {
     (async function() {
       try {
-        let absolutePath = await Utility.appendingHomeDirectory(item.path)
-        let isDirectory = await Utility.isDirectory(absolutePath)
+        let absolutePath = await FileTools.appendingHomeDirectory(item.path)
+        let isDirectory = await FileTools.isDirectory(absolutePath)
         if (!isDirectory) {
           let filename = item.path
             .substr(item.path.lastIndexOf('.'))
@@ -122,7 +123,7 @@ export default class WorkSpaceFileList extends Component {
               filter = 'sxwu,smwu,udb'
               break
           }
-          let fileList = await Utility.getPathListByFilter(absolutePath, {
+          let fileList = await FileTools.getPathListByFilter(absolutePath, {
             extension: filter,
           })
           this.setState({

@@ -307,7 +307,7 @@ export default class MenuAlertDialog extends React.Component {
     if (this.state.childrens.length === 0) return null
     if (this.state.type === '') return null
     let modalBackgroundStyle = {
-      backgroundColor: 'rgba(0,0,0,0.5)',
+      backgroundColor: 'rgba(105, 105, 105, 0.3)',
     }
     return (
       <Modal

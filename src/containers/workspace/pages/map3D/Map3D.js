@@ -29,6 +29,7 @@ export default class Map3D extends React.Component {
     setCurrentAttribute: () => {},
     setAttributes: () => {},
     user: Object,
+    device: Object,
   }
 
   constructor(props) {
@@ -213,6 +214,7 @@ export default class Map3D extends React.Component {
         }}
         type={this.type}
         showFullMap={this.showFullMap}
+        device={this.props.device}
       />
     )
   }
@@ -290,6 +292,7 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={() => this.dialog}
+        {...this.props}
         setAttributes={this.props.setAttributes}
       />
     )
