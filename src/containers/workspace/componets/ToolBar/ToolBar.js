@@ -86,6 +86,7 @@ export default class ToolBar extends React.PureComponent {
     collection: Object,
     template: Object,
     layerData: Object,
+    selection: Object,
     device: Object,
     confirm: () => {},
     showDialog: () => {},
@@ -2265,6 +2266,13 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
+            if (
+              !this.props.selection.layerInfo ||
+              !this.props.selection.layerInfo.path
+            ) {
+              Toast.show(ConstInfo.NON_SELECTED_OBJ)
+              return
+            }
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
             })
