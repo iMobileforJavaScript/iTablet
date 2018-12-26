@@ -13,7 +13,6 @@ import { MapToolbar } from '../workspace/componets'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
-import NavigationService from '../NavigationService'
 import { color, size } from '../../styles'
 
 export default class Theme_layerManager extends React.Component {
@@ -303,30 +302,10 @@ export default class Theme_layerManager extends React.Component {
   }
 
   onPressRow = async ({ data }) => {
-    if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
-      SMap.setLayerEditable(data.path, true)
-      if (data.type === 83) {
-        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-          containerType: 'list',
-          isFullScreen: false,
-          height: ConstToolType.HEIGHT[4],
-        })
-        GLOBAL.toolBox.showFullMap()
-        NavigationService.goBack()
-      } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-          containerType: 'symbol',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.THEME_HEIGHT[3],
-        })
-        GLOBAL.toolBox.showFullMap()
-        NavigationService.goBack()
-      }
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
+    if (GLOBAL.Type === constants.MAP_THEME) {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          NavigationService.goBack()
+          this.props.navigation.navigate('ThemeMapView')
           this.index = await SMap.getLayerIndexByName(data.name)
           this.props.setCurrentLayer &&
             this.props.setCurrentLayer(data, () => {
@@ -335,7 +314,7 @@ export default class Theme_layerManager extends React.Component {
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
           break
         case ThemeType.RANGE:
-          NavigationService.goBack()
+          this.props.navigation.navigate('ThemeMapView')
           this.index = await SMap.getLayerIndexByName(data.name)
           this.props.setCurrentLayer &&
             this.props.setCurrentLayer(data, () => {
@@ -344,7 +323,7 @@ export default class Theme_layerManager extends React.Component {
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
           break
         case ThemeType.LABEL:
-          NavigationService.goBack()
+          this.props.navigation.navigate('ThemeMapView')
           this.index = await SMap.getLayerIndexByName(data.name)
           this.props.setCurrentLayer &&
             this.props.setCurrentLayer(data, () => {
