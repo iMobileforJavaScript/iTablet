@@ -622,6 +622,14 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
+    if (
+      Platform.OS === 'android' &&
+      this.toolBox &&
+      this.toolBox.getState().isShow
+    ) {
+      this.toolBox.close()
+      return true
+    }
     this.backAction = async () => {
       try {
         this.setLoading(true, '正在关闭地图')

@@ -40,8 +40,7 @@ export default class MapSetting extends Component {
   // }
 
   getData = async () => {
-    let data = []
-    this.setState({ data: data })
+    this.setState({ data: getMapSettings() })
   }
 
   refreshList = section => {

@@ -1126,6 +1126,15 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  getState = () => {
+    return {
+      type: this.state.type, // 当前传入的类型
+      containerType: this.state.containerType,
+      isFullScreen: this.state.isFullScreen,
+      isShow: this.isShow,
+    }
+  }
+
   showToolbarAndBox = (isShow, type = this.state.type) => {
     let animatedList = []
     // Toolbar的显示和隐藏

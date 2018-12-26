@@ -1,9 +1,13 @@
+/*
+  Copyright © SuperMap. All rights reserved.
+  Author: lu cheng dong
+  E-mail: 756355668@qq.com
+*/
 import React, { Component } from 'react'
 import {
   DeviceEventEmitter,
   Dimensions,
   FlatList,
-  NativeModules,
   Platform,
   RefreshControl,
   Text,
@@ -18,7 +22,6 @@ import Toast from '../../../../utils/Toast'
 import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
 
-const nativeFileTools = NativeModules.FileTools
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
@@ -247,17 +250,17 @@ export default class MyOnlineData extends Component {
     this.setState({ modalIsVisible: false })
   }
   _unZipFile = async () => {
-    if (this.index !== undefined) {
-      let objContent = this.state.data[this.index]
+    if (_iDownloadingIndex >= 0) {
+      let objContent = this.state.data[_iDownloadingIndex]
       let path =
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Data/downloads/' +
+        '/Data/Downloads/' +
         objContent.fileName
       let filePath = await FileTools.appendingHomeDirectory(path)
       let savePath = filePath.substring(0, filePath.length - 4)
+      FileTools.unZipFile(filePath, savePath)
       this._unZipFilePath = savePath
-      nativeFileTools.unZipFile(filePath, savePath)
     }
   }
   _changeModalProgressState = progress => {
@@ -331,7 +334,7 @@ export default class MyOnlineData extends Component {
   _openWorkspace = async () => {
     // let path = this._unZipFilePath
     // if(path){
-    //   let arrPaths = await Utility.getPathListByFilter(this._unZipFilePath,{extension:'.smwu'})
+    //   let arrPaths = await FileTools.getPathListByFilter(this._unZipFilePath,{extension:'.smwu'})
     //   SMap.importWorkspace({ server: path })
     // }
   }
@@ -356,7 +359,9 @@ export default class MyOnlineData extends Component {
         objContent.fileName.length - 4,
       )
       this._resetDownloadIndex(this.index)
-      this.modalRef._changeDownloadingState('下载中...')
+      if (this.modalRef) {
+        this.modalRef._changeDownloadingState('下载中...')
+      }
       this._setDownloadingState(_iDownloadingIndex)
       SOnlineService.downloadFileWithDataId(filePath, dataId)
       Toast.show('开始下载')
