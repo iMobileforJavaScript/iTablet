@@ -923,11 +923,9 @@ export default class MapView extends React.Component {
         showFullMap={this.showFullMap}
         setSaveViewVisible={this.setSaveViewVisible}
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
-        setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
-        layerData={this.props.currentLayer}
       />
     )
   }

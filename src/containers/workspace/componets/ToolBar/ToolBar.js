@@ -888,7 +888,7 @@ export default class ToolBar extends React.PureComponent {
 
   getWorkspaceList = async () => {
     try {
-      let buttons = []
+      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       let data = []
       let userName = this.props.user.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
@@ -901,7 +901,10 @@ export default class ToolBar extends React.PureComponent {
         })
         for (let index = 0; index < fileList.length; index++) {
           let element = fileList[index]
-          element.name = element.name.substr(0, element.name.lastIndexOf('.'))
+          fileList[index].name = element.name.substr(
+            0,
+            element.name.lastIndexOf('.'),
+          )
         }
         data = fileList
       }
@@ -1001,7 +1004,10 @@ export default class ToolBar extends React.PureComponent {
           containerType: 'list',
         },
         () => {
-          this.height = ConstToolType.HEIGHT[3]
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[2]
+              : ConstToolType.HEIGHT[3]
           this.showToolbar()
         },
       )
@@ -1478,6 +1484,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   endFly = () => {
+    SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -1899,6 +1906,7 @@ export default class ToolBar extends React.PureComponent {
         type={this.state.tableType}
         numColumns={this.state.column}
         renderCell={this._renderItem}
+        Heighttype={this.state.type}
         device={this.props.device}
       />
     )
@@ -2045,6 +2053,9 @@ export default class ToolBar extends React.PureComponent {
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column =
       this.props.device.orientation === 'LANDSCAPE' ? 8 : this.state.column
+    if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
+      column = 1
+    }
     return (
       <MTBtn
         style={[styles.cell, { width: this.props.device.width / column }]}
@@ -2080,6 +2091,8 @@ export default class ToolBar extends React.PureComponent {
         data={this.state.data}
         type={this.state.type}
         setfly={this.setfly}
+        showToolbar={this.showToolbar}
+        existFullMap={this.props.existFullMap}
       />
     )
   }

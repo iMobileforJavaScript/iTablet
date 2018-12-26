@@ -88,8 +88,10 @@ export default class Login extends React.Component {
           return
         }
         this.container.setLoading(true, '登录中...')
-        userName = this.txtEmail
-        password = this.txtEmailPassword
+        // userName = this.txtEmail
+        // password = this.txtEmailPassword
+        userName = 'imobile1234'
+        password = 'imobile'
         result = await SOnlineService.login(userName, password)
       } else {
         if (!this.txtPhoneNumber) {
