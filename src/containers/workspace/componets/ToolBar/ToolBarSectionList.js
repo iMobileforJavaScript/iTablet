@@ -151,16 +151,14 @@ export default class ToolBarSectionList extends React.Component {
             />
           </TouchableOpacity>
         )}
-        {item.datasetType &&
-          item.datasetName && (
+        {item.datasetType && item.datasetName && (
           <Image
             source={this.getDatasetTypeImg(item)}
             resizeMode={'contain'}
             style={styles.dataset_type}
           />
         )}
-        {item.datasetType &&
-          item.datasetName && (
+        {item.datasetType && item.datasetName && (
           <Text style={styles.dataset_title}>{item.datasetName}</Text>
         )}
         {(item.title || item.name) && (
@@ -169,14 +167,14 @@ export default class ToolBarSectionList extends React.Component {
         {item.colorSchemeName && (
           <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
         )}
-        {/* {item.colorScheme && (
+        {item.colorScheme && (
           //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
           <Image
             source={item.colorScheme}
             resizeMode={'stretch'}
             style={styles.colorScheme}
           />
-        )} */}
+        )}
       </TouchableOpacity>
     )
   }

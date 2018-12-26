@@ -20,6 +20,7 @@ import {
 import PropTypes from 'prop-types'
 import constants from '../../constants'
 import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
+import NavigationService from '../../../NavigationService'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -444,6 +445,32 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  basename(str) {
+    var idx = str.lastIndexOf('/')
+    idx = idx > -1 ? idx : str.lastIndexOf('\\')
+    if (idx < 0) {
+      return str
+    }
+    return str.substring(idx + 1)
+  }
+
+  chooseWorkspaceFile = async () => {
+    NavigationService.navigate('WorkspaceFlieList', {
+      cb: async path => {
+        let fileName = this.basename(path)
+        let udbpath = {
+          server: path,
+          alias: fileName,
+          engineType: 219,
+        }
+        //只添加数据源
+        SMap.openDatasource(udbpath, '').then(() => {
+          this.getThemeMapAdd()
+        })
+      },
+    })
+  }
+
   /**专题图-添加 */
   getThemeMapAdd = async () => {
     let data = [],
@@ -457,7 +484,7 @@ export default class FunctionToolbar extends React.Component {
       data: [
         {
           title: '选择目录',
-          action: 'ADD',
+          action: this.chooseWorkspaceFile,
         },
       ],
     }
@@ -658,13 +685,13 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_start.png'),
           },
-          {
-            key: '添加',
-            title: '添加',
-            size: 'large',
-            action: this.getThemeMapAdd,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   key: '添加',
+          //   title: '添加',
+          //   size: 'large',
+          //   action: this.getThemeMapAdd,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             key: '专题图',
             title: '专题图',

@@ -25,7 +25,7 @@ export default StyleSheet.create({
   },
   themeoverlay: {
     flex: 1,
-    backgroundColor: 'rgba(105, 105, 105, 0.3)',
+    backgroundColor: 'rgba(105, 105, 105, 0.6)',
     // zIndex: zIndexLevel.FOUR,
   },
   overlay: {
