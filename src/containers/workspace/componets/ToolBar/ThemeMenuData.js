@@ -13,6 +13,7 @@ let _toolbarParams = {}
 function showDatasetsList() {
   let data = []
   SThemeCartography.getAllDatasetNames().then(getdata => {
+    getdata.reverse()
     for (let i = 0; i < getdata.length; i++) {
       let datalist = getdata[i]
       data[i] = {

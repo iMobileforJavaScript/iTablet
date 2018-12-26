@@ -203,8 +203,10 @@ export default class TouchProgress extends Component {
               (ragngeCount * (positionWidth - scaleSize(60))) / 32
             this._previousLeft =
               (ragngeCount * (positionWidth - scaleSize(60))) / 32
+            this._BackLine.style.width =
+              (ragngeCount * (positionWidth - scaleSize(60))) / 32
             this.setState({
-              tips: parseInt(ragngeCount),
+              tips: '分段个数    ' + parseInt(ragngeCount),
             })
           }
           break
@@ -218,8 +220,10 @@ export default class TouchProgress extends Component {
               (fontsize * (positionWidth - scaleSize(60))) / 20
             this._previousLeft =
               (fontsize * (positionWidth - scaleSize(60))) / 20
+            this._BackLine.style.width =
+              (fontsize * (positionWidth - scaleSize(60))) / 20
             this.setState({
-              tips: parseInt(fontsize),
+              tips: '字号    ' + parseInt(fontsize),
             })
           }
           break
@@ -385,7 +389,7 @@ export default class TouchProgress extends Component {
     if (GLOBAL.Type === constants.MAP_THEME) {
       if (this.props.selectName === 'range_parameter') {
         this.setState({
-          tips: parseInt(range_parameter),
+          tips: '分段个数    ' + parseInt(range_parameter),
         })
         let Params = {
           LayerName: this.props.currentLayer.name,
@@ -394,7 +398,7 @@ export default class TouchProgress extends Component {
         SThemeCartography.modifyThemeRangeMap(Params)
       } else if (this.props.selectName === 'fontsize') {
         this.setState({
-          tips: parseInt(fontsize),
+          tips: '字号    ' + parseInt(fontsize),
         })
         let _params = {
           LayerName: this.props.currentLayer.name,
