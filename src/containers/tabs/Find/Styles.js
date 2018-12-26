@@ -6,7 +6,7 @@ export const imageWidth = 120
 export const imageHeight = 120
 export const textHeight = 40
 const smallFontSize = 12
-const largeFontSize = 20
+const largeFontSize = 18
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
@@ -55,6 +55,23 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     fontSize: smallFontSize,
     paddingLeft: 5,
+  },
+  downloadStyle: {
+    width: 200,
+    height: 40,
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    justifyContent: 'flex-end',
+    flexDirection: 'row',
+  },
+  downloadTextStyle: {
+    width: 80,
+    lineHeight: 30,
+    textAlign: 'center',
+    position: 'absolute',
+    bottom: 10,
+    color: 'white',
   },
   separateViewStyle: {
     width: itemWidth,

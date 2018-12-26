@@ -88,10 +88,10 @@ export default class MenuAlertDialog extends React.Component {
       },
     },
     {
-      key: '分段参数',
-      btntitle: '分段参数',
+      key: '分段个数',
+      btntitle: '分段个数',
       action: () => {
-        this.setSelectedMenu('分段参数')
+        this.setSelectedMenu('分段个数')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()

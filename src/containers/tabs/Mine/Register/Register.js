@@ -10,7 +10,6 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
-  ScrollView,
   TouchableOpacity,
 } from 'react-native'
 import { Toast } from '../../../../utils'
@@ -249,10 +248,11 @@ export default class Register extends React.Component {
           style={styles.keyboardAvoidingStyle}
           behavior={this.state.behavior}
         >
-          <ScrollView
+          {/* <ScrollView
             contentContainerStyle={{ alignItems: 'center', flex: 1 }}
             showsVerticalScrollIndicator={false}
-          >
+          >*/}
+          <View style={{ alignItems: 'center', flex: 1 }}>
             <View style={styles.titleStyle}>
               <Text
                 style={[
@@ -289,7 +289,8 @@ export default class Register extends React.Component {
               <Text style={styles.titleContainerStyle}>注册</Text>
             </TouchableOpacity>
             <View style={{ flex: 1, height: 200 }} />
-          </ScrollView>
+          </View>
+          {/* </ScrollView>*/}
         </KeyboardAvoidingView>
       </Container>
     )

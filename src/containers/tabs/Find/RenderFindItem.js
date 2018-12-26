@@ -8,10 +8,20 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import styles from './Styles'
 import { Toast } from '../../../utils/index'
 import NavigationService from '../../NavigationService'
-
+import RNFS from 'react-native-fs'
+import ConstPath from '../../../constants/ConstPath'
 export default class RenderFindItem extends Component {
   props: {
     data: Object,
+    user: Object,
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      progress: '下载',
+      isDownloading: false,
+    }
   }
 
   _navigator = uri => {
@@ -33,7 +43,71 @@ export default class RenderFindItem extends Component {
       Toast.show(info)
     }
   }
-
+  _downloadFile = async () => {
+    if (this.state.isDownloading) {
+      Toast.show('正在下载...')
+      return
+    }
+    Toast.show('开始下载')
+    this.setState({ progress: '下载中...', isDownloading: true })
+    let dataId = this.props.data.id
+    let dataUrl = 'https://www.supermapol.com/web/datas/' + dataId + '/download'
+    let fileName = this.props.data.fileName
+    let appHome = RNFS.DocumentDirectoryPath
+    let fileDir
+    if (
+      this.props.user &&
+      this.props.user.currentUser &&
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userName !== ''
+    ) {
+      fileDir =
+        appHome +
+        ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/Downloads/'
+    } else {
+      fileDir = appHome + ConstPath.CustomerPath + 'Downloads/'
+    }
+    let exists = await RNFS.exists(fileDir)
+    if (!exists) {
+      await RNFS.mkdir(fileDir)
+    }
+    let filePath = fileDir + fileName
+    const downloadOptions = {
+      fromUrl: dataUrl,
+      toFile: filePath,
+      background: true,
+      // begin: result => {
+      //
+      // },
+      progress: res => {
+        let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+        // console.warn("value:"+value)
+        let progress = '下载:' + value + '%'
+        if (this.state.progress !== progress) {
+          this.setState({ progress: progress })
+        }
+      },
+    }
+    try {
+      const ret = RNFS.downloadFile(downloadOptions)
+      ret.promise
+        .then(result => {
+          if (result.statusCode === 200) {
+            Toast.show('下载成功')
+            this.setState({ progress: '下载完成', isDownloading: false })
+          }
+        })
+        .catch(() => {
+          Toast.show('下载失败')
+          this.setState({ progress: '下载', isDownloading: false })
+        })
+    } catch (e) {
+      Toast.show('网络错误')
+      this.setState({ progress: '下载', isDownloading: false })
+    }
+  }
   render() {
     let date = new Date(this.props.data.lastModfiedTime)
     let year = date.getFullYear() + '年'
@@ -48,19 +122,24 @@ export default class RenderFindItem extends Component {
       minute = '0' + minute
     }
     let time = year + month + day + ' ' + hour + minute
+    let size =
+      this.props.data.size / 1024 / 1024 > 0.1
+        ? (this.props.data.size / 1024 / 1024).toFixed(2) + 'MB'
+        : (this.props.data.size / 1024).toFixed(2) + 'K'
     return (
       <View>
-        <TouchableOpacity
-          style={styles.itemViewStyle}
-          onPress={() => {
-            this._nextView()
-          }}
-        >
-          <Image
-            resizeMode={'contain'}
-            style={styles.imageStyle}
-            source={{ uri: this.props.data.thumbnail }}
-          />
+        <View style={styles.itemViewStyle}>
+          <TouchableOpacity
+            onPress={() => {
+              this._nextView()
+            }}
+          >
+            <Image
+              resizeMode={'contain'}
+              style={styles.imageStyle}
+              source={{ uri: this.props.data.thumbnail }}
+            />
+          </TouchableOpacity>
 
           <View>
             <Text style={styles.restTitleTextStyle} numberOfLines={1}>
@@ -86,9 +165,27 @@ export default class RenderFindItem extends Component {
                 {time}
               </Text>
             </View>
-            {/*<View style={{flex:1}}/>*/}
-            {/*<Text style={[styles.restTitleTextStyle,{lineHeight:textHeight,textAlign:'right',paddingRight:25}]}>...</Text>*/}
           </View>
+        </View>
+        <TouchableOpacity
+          style={styles.downloadStyle}
+          onPress={() => {
+            this._downloadFile()
+          }}
+        >
+          <Text
+            style={[
+              styles.downloadTextStyle,
+              { width: 100, right: 80, textAlign: 'left' },
+            ]}
+            numberOfLines={1}
+          >
+            大小:
+            {size}
+          </Text>
+          <Text style={styles.downloadTextStyle} numberOfLines={1}>
+            {this.state.progress}
+          </Text>
         </TouchableOpacity>
         <View style={styles.separateViewStyle} />
       </View>

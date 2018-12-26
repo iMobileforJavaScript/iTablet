@@ -11,6 +11,7 @@ import constants from '../../constants'
 // import { Utility } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 let _params = {}
+import { SMap } from 'imobile_for_reactnative'
 
 function getStart(type, params) {
   _params = params
@@ -336,6 +337,9 @@ function openTemplate() {
 function create() {
   if (GLOBAL.Type === constants.COLLECTION) {
     openWorkspace()
+  }
+  if (GLOBAL.Type === constants.MAP_EDIT) {
+    SMap.removeAllLayer()
   }
 }
 
