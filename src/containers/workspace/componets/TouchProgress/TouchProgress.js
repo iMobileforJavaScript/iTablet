@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
     width: scaleSize(50),
   },
   tips: {
-    marginTop: scaleSize(5),
+    marginTop: scaleSize(10),
     fontSize: scaleSize(22),
     // fontFamily 字体
     fontWeight: 'bold',
