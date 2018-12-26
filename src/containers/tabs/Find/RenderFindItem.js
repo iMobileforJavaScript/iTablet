@@ -80,7 +80,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={styles.imageStyle2}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/tmp-time-icon.png')}
+                source={require('../../../assets/tabBar/find-time.png')}
               />
               <Text style={styles.textStyle2} numberOfLines={1}>
                 {time}
