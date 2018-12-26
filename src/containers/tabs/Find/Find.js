@@ -1,3 +1,8 @@
+/*
+  Copyright © SuperMap. All rights reserved.
+  Author: lu cheng dong
+  E-mail: 756355668@qq.com
+*/
 import React, { Component } from 'react'
 import Container from '../../../components/Container'
 import {
@@ -16,6 +21,7 @@ import styles from './Styles'
 export default class Find extends Component {
   props: {
     navigation: Object,
+    user: Object,
   }
 
   constructor(props) {
@@ -88,7 +94,6 @@ export default class Find extends Component {
     }
     return arrObjContent
   }
-
   _onRefresh = async () => {
     try {
       if (!this.state.isRefresh) {
@@ -138,7 +143,7 @@ export default class Find extends Component {
             style={{
               flex: 1,
               lineHeight: 20,
-              fontSize: 16,
+              fontSize: 12,
               textAlign: 'center',
               color: 'white',
             }}
@@ -198,14 +203,15 @@ export default class Find extends Component {
         style={styles.haveDataViewStyle}
         data={this.state.data}
         renderItem={data => {
-          return <RenderFindItem data={data.item} />
+          return <RenderFindItem user={this.props.user} data={data.item} />
         }}
         refreshControl={
           <RefreshControl
             refreshing={this.state.isRefresh}
             onRefresh={this._onRefresh}
-            colors={['gray', 'orange']}
-            tintColor={'gray'}
+            colors={['orange', 'red']}
+            tintColor={'white'}
+            titleColor={'white'}
             title={'刷新中...'}
             enabled={true}
           />
