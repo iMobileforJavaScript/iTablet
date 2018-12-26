@@ -73,8 +73,8 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TD'].DSParams, 0)
-            await SMap.openDatasource(ConstOnline['TD'].labelDSParams, 0)
+            await SMap.openDatasource(ConstOnline['TD'][0].DSParams, 0)
+            await SMap.openDatasource(ConstOnline['TD'][1].DSParams, 0)
           }.bind(this)())
         },
       },
