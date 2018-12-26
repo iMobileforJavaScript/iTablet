@@ -1,3 +1,8 @@
+/*
+  Copyright © SuperMap. All rights reserved.
+  Author: lu cheng dong
+  E-mail: 756355668@qq.com
+*/
 import React, { Component } from 'react'
 import {
   View,
@@ -29,12 +34,12 @@ export default class Mine extends Component {
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
   }
-
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(previousProps) {
     if (
-      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userName !== undefined &&
+      this.props.user.currentUser.userName !== '' &&
       this.props.user.currentUser.userName !==
-        prevProps.user.currentUser.userName
+        previousProps.user.currentUser.userName
     ) {
       this.openUserWorkspace()
       SOnlineService.syncAndroidCookie()
@@ -212,6 +217,7 @@ export default class Mine extends Component {
       </View>
     )
   }
+
   render() {
     if (
       this.props.user &&

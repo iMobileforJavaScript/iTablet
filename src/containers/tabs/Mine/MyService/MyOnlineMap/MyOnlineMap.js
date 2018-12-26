@@ -5,7 +5,7 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Platform,
+  Dimensions,
 } from 'react-native'
 import { Container } from '../../../../../components'
 import styles, { textHeight } from './Styles'
@@ -19,13 +19,19 @@ export default class MyOnlineMap extends Component {
   }
   constructor(props) {
     super(props)
+    this.screenWidth = Dimensions.get('window').width
     this.state = {
       scenes: this.props.navigation.getParam('scenes', []),
       mapInfos: this.props.navigation.getParam('mapInfos', []),
+      progressWidth: this.screenWidth * 0.6,
+      isLoadingProgressView: true,
     }
   }
   componentDidMount() {
     this._loadOnlineData()
+  }
+  componentWillUnmount() {
+    this._clearInterval()
   }
   _showInfo = info => {
     Toast.show(info, {
@@ -36,17 +42,37 @@ export default class MyOnlineMap extends Component {
       delay: 0,
     })
   }
+  _clearInterval = () => {
+    if (this.objProgressWidth !== undefined) {
+      clearInterval(this.objProgressWidth)
+      this.setState({ progressWidth: this.screenWidth })
+    }
+  }
+  _showLoadProgressView = () => {
+    this.objProgressWidth = setInterval(() => {
+      let prevProgressWidth = this.state.progressWidth
+      let currentPorWidth
+      if (prevProgressWidth >= this.screenWidth - 200) {
+        currentPorWidth = prevProgressWidth + 1
+        if (currentPorWidth >= this.screenWidth - 50) {
+          currentPorWidth = this.screenWidth - 50
+          return
+        }
+      } else {
+        currentPorWidth = prevProgressWidth * 1.01
+      }
+      this.setState({ progressWidth: currentPorWidth })
+    }, 100)
+  }
   _loadOnlineData = async () => {
     try {
       this.cookie = await SOnlineService.getAndroidSessionID()
       let uri = this.props.navigation.getParam('uri', 'null')
       if (uri === undefined || uri === null || uri === 'null') {
-        this._initSectionsData()
+        this.setState({ isLoadingProgressView: false })
         return
       }
-      if (this.containerRef !== undefined) {
-        this.containerRef.setLoading(true, 'Loading...')
-      }
+      this._showLoadProgressView()
       let objDataJson = await FetchUtils.getObjJson(uri)
       let arrDataItemServices = objDataJson.dataItemServices
       let length = arrDataItemServices.length
@@ -89,34 +115,24 @@ export default class MyOnlineMap extends Component {
     } catch (e) {
       Toast.show('网络错误')
     } finally {
-      if (this.containerRef !== undefined) {
-        this.containerRef.setLoading(false)
-      }
+      this.setState({ isLoadingProgressView: false })
+      this._clearInterval()
     }
   }
   _selectImage = info => {
-    if (Platform.OS === 'ios') {
-      return (
-        <Image
-          resizeMode={'stretch'}
-          style={styles.imageStyle}
-          source={{ uri: info.item.mapThumbnail }}
-        />
-      )
-    } else {
-      return (
-        <Image
-          resizeMode={'stretch'}
-          style={styles.imageStyle}
-          source={{
-            uri: info.item.mapThumbnail,
-            // headers: {
-            //   Cookie: 'JSESSIONID=' + this.state.cookie,
-            // },
-          }}
-        />
-      )
-    }
+    return (
+      <Image
+        resizeMode={'stretch'}
+        style={styles.imageStyle}
+        source={{
+          uri: info.item.mapThumbnail,
+          headers: {
+            // Cookie: 'JSESSIONID=' + this.state.cookie,
+            // 'Cache-Control': 'no-cache',
+          },
+        }}
+      />
+    )
   }
 
   _renderItem = info => {
@@ -194,9 +210,33 @@ export default class MyOnlineMap extends Component {
     }
     return sectionsData
   }
-
+  _renderLoading = () => {
+    if (this.state.isLoadingProgressView) {
+      return (
+        <View style={styles.noDataViewStyle}>
+          <View
+            style={{
+              height: 2,
+              width: this.state.progressWidth,
+              backgroundColor: '#1c84c0',
+            }}
+          />
+        </View>
+      )
+    } else {
+      let arrSectionsData = this._initSectionsData()
+      return (
+        <SectionList
+          style={styles.haveDataViewStyle}
+          sections={arrSectionsData}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
+          renderSectionHeader={this._renderSectionHeader}
+        />
+      )
+    }
+  }
   render() {
-    let arrSectionsData = this._initSectionsData()
     return (
       <Container
         ref={ref => (this.containerRef = ref)}
@@ -206,13 +246,7 @@ export default class MyOnlineMap extends Component {
           navigation: this.props.navigation,
         }}
       >
-        <SectionList
-          style={styles.haveDataViewStyle}
-          sections={arrSectionsData}
-          renderItem={this._renderItem}
-          keyExtractor={this._keyExtractor}
-          renderSectionHeader={this._renderSectionHeader}
-        />
+        {this._renderLoading()}
       </Container>
     )
   }

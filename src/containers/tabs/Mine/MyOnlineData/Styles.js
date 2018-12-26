@@ -14,8 +14,6 @@ const styles = StyleSheet.create({
   },
   noDataViewStyle: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: color.blackBg,
   },
   titleTextStyle: {
@@ -56,3 +54,4 @@ const styles = StyleSheet.create({
   },
 })
 export default styles
+export { color }

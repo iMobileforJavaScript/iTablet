@@ -11,6 +11,7 @@ import constants from '../../constants'
 // import { Utility } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 let _params = {}
+import { SMap } from 'imobile_for_reactnative'
 
 function getStart(type, params) {
   _params = params
@@ -70,8 +71,16 @@ function getStart(type, params) {
           title: constants.OPEN,
           action: () => {
             if (!_params.setToolbarVisible) return
-            _params.setToolbarVisible(false)
-            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            // _params.setToolbarVisible(false)
+            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            _params.setToolbarVisible(
+              true,
+              ConstToolType.MAP3D_WORKSPACE_LIST,
+              {
+                containerType: 'list',
+                height: ConstToolType.HEIGHT[3],
+              },
+            )
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
@@ -329,6 +338,9 @@ function openTemplate() {
 function create() {
   if (GLOBAL.Type === constants.COLLECTION) {
     openWorkspace()
+  }
+  if (GLOBAL.Type === constants.MAP_EDIT) {
+    SMap.removeAllLayer()
   }
 }
 
