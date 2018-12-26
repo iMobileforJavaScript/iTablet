@@ -1,7 +1,11 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, PanResponder, Image, Text } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
-import { SCartography, SThemeCartography } from 'imobile_for_reactnative'
+import {
+  SCartography,
+  SThemeCartography,
+  ThemeType,
+} from 'imobile_for_reactnative'
 import constants from '../../constants'
 
 const positionWidth = screen.deviceWidth //设备的宽度
@@ -96,6 +100,7 @@ export default class TouchProgress extends Component {
 
   _initialization = async () => {
     let layerType = this.props.currentLayer.type
+    let themeType = this.props.currentLayer.themeType
     let pointSize = await SCartography.getMarkerSize(
       this.props.currentLayer.name,
     )
@@ -183,6 +188,47 @@ export default class TouchProgress extends Component {
         }
         break
     }
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      // if (this.props.selectName === 'range_parameter') {
+      // } else if (this.props.selectName === 'fontsize') {
+      switch (themeType) {
+        case ThemeType.UNIQUE: // 单值专题图
+          break
+        case ThemeType.RANGE: // 分段专题图
+          {
+            let ragngeCount = await SThemeCartography.getRangeCount({
+              LayerName: this.props.currentLayer.name,
+            })
+            this._panBtnStyles.style.left =
+              (ragngeCount * (positionWidth - scaleSize(60))) / 32
+            this._previousLeft =
+              (ragngeCount * (positionWidth - scaleSize(60))) / 32
+            this._BackLine.style.width =
+              (ragngeCount * (positionWidth - scaleSize(60))) / 32
+            this.setState({
+              tips: '分段个数    ' + parseInt(ragngeCount),
+            })
+          }
+          break
+        case ThemeType.LABEL: // 标签专题图
+          {
+            let FZ = await SThemeCartography.getUniformLabelFontSize({
+              LayerName: this.props.currentLayer.name,
+            })
+            let fontsize = FZ.FontSize
+            this._panBtnStyles.style.left =
+              (fontsize * (positionWidth - scaleSize(60))) / 20
+            this._previousLeft =
+              (fontsize * (positionWidth - scaleSize(60))) / 20
+            this._BackLine.style.width =
+              (fontsize * (positionWidth - scaleSize(60))) / 20
+            this.setState({
+              tips: '字号    ' + parseInt(fontsize),
+            })
+          }
+          break
+      }
+    }
     this._updateNativeStyles()
     this._updateBackLine()
   }
@@ -226,27 +272,7 @@ export default class TouchProgress extends Component {
     let fillOpaqueRate = (x / (positionWidth - scaleSize(60))) * 100
     let gridStyle = (x / (positionWidth - scaleSize(60))) * 200
     let range_parameter = (x / (positionWidth - scaleSize(60))) * 32
-    if (GLOBAL.Type === constants.MAP_THEME) {
-      if (this.props.selectName === 'range_parameter') {
-        this.setState({
-          tips: parseInt(range_parameter),
-        })
-        let Params = {
-          LayerName: this.props.currentLayer.name,
-          RangeParameter: range_parameter,
-        }
-        SThemeCartography.modifyThemeRangeMap(Params)
-      } else if (this.props.selectName === 'fontsize') {
-        this.setState({
-          tips: parseInt(pointSize / 5),
-        })
-        let _params = {
-          LayerName: this.props.currentLayer.name,
-          FontSize: pointSize / 5,
-        }
-        SThemeCartography.setUniformLabelFontSize(_params)
-      }
-    }
+    let fontsize = (x / (positionWidth - scaleSize(60))) * 20
     switch (layerType) {
       case 1:
         if (this.props.selectName === '大小') {
@@ -359,6 +385,27 @@ export default class TouchProgress extends Component {
           }
         }
         break
+    }
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      if (this.props.selectName === 'range_parameter') {
+        this.setState({
+          tips: '分段个数    ' + parseInt(range_parameter),
+        })
+        let Params = {
+          LayerName: this.props.currentLayer.name,
+          RangeParameter: range_parameter,
+        }
+        SThemeCartography.modifyThemeRangeMap(Params)
+      } else if (this.props.selectName === 'fontsize') {
+        this.setState({
+          tips: '字号    ' + parseInt(fontsize),
+        })
+        let _params = {
+          LayerName: this.props.currentLayer.name,
+          FontSize: fontsize,
+        }
+        SThemeCartography.setUniformLabelFontSize(_params)
+      }
     }
   }
 }
