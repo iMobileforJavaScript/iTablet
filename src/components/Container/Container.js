@@ -129,7 +129,7 @@ export default class Container extends PureComponent {
     return (
       <ContainerView style={[styles.container, this.props.style]}>
         {!fixHeader && this.renderHeader(fixHeader)}
-        {this.props.children}
+        <View style={{ flex: 1 }}>{this.props.children}</View>
         {fixHeader && this.renderHeader(fixHeader)}
         {this.renderBottom()}
         <Loading

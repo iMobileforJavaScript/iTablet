@@ -27,7 +27,7 @@ export default class ChooseLayer extends React.Component {
     getDataset: PropTypes.func,
     setLoading: PropTypes.func,
     alwaysVisible: PropTypes.bool,
-    headerTitile: PropTypes.string,
+    headerTitle: PropTypes.string,
   }
 
   static defaultProps = {
@@ -42,7 +42,7 @@ export default class ChooseLayer extends React.Component {
       isShow: props.alwaysVisible || false,
       showList: false,
       type: props.type,
-      headerTitile: props.headerTitile || '',
+      headerTitle: props.headerTitle || '',
       datasourceList: [],
     }
   }
@@ -56,26 +56,26 @@ export default class ChooseLayer extends React.Component {
   }
 
   show = type => {
-    let headerTitile = ''
+    let headerTitle = ''
     switch (type) {
       case DatasetType.POINT:
-        headerTitile = '点图层选择'
+        headerTitle = '点图层选择'
         break
       case DatasetType.LINE:
-        headerTitile = '线图层选择'
+        headerTitle = '线图层选择'
         break
       case DatasetType.REGION:
-        headerTitile = '面图层选择'
+        headerTitle = '面图层选择'
         break
       default:
-        headerTitile = '图层选择'
+        headerTitle = '图层选择'
         break
     }
     this.setState(
       {
         isShow: true,
         showList: false,
-        headerTitile: headerTitile,
+        headerTitle: headerTitle,
       },
       () => {
         this.getData(type)
@@ -286,9 +286,9 @@ export default class ChooseLayer extends React.Component {
     if (!this.state.isShow) return null
     return (
       <View style={styles.chooseLayerContainer}>
-        {this.state.headerTitile ? (
+        {this.state.headerTitle ? (
           <View style={styles.titleView}>
-            <Text style={styles.title}>{this.state.headerTitile}</Text>
+            <Text style={styles.title}>{this.state.headerTitle}</Text>
           </View>
         ) : null}
         {this.props.listType === 'layer'

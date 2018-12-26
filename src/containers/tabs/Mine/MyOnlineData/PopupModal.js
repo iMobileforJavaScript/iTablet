@@ -23,6 +23,7 @@ export default class PopupModal extends PureComponent {
     onCloseModal: () => {},
     modalVisible: boolean,
     data: Object,
+    downloadingFileName: string,
   }
 
   constructor(props) {
@@ -37,6 +38,9 @@ export default class PopupModal extends PureComponent {
     this.bIsCallBackProps = true
   }
 
+  componentWillUnmount() {
+    // console.warn("PopupModal_componentWillUnmount")
+  }
   _changeDownloadingState = progress => {
     this.bIsCallBackProps = false
     let isClick = false
@@ -57,135 +61,157 @@ export default class PopupModal extends PureComponent {
   _publishServiceButton = () => {
     let title = '发布服务'
     let objContent = this.props.data
-    let dataItemServices = objContent.dataItemServices
-    for (let i = 0; i < dataItemServices.length; i++) {
-      let serviceType = dataItemServices[i].serviceType
-      if (serviceType === 'RESTMAP') {
-        title = '删除' + dataItemServices[i].serviceName + '服务'
+    if (objContent && objContent.dataItemServices) {
+      let dataItemServices = objContent.dataItemServices
+      for (let i = 0; i < dataItemServices.length; i++) {
+        let serviceType = dataItemServices[i].serviceType
+        if (serviceType === 'RESTMAP') {
+          title = '删除' + dataItemServices[i].serviceName + '服务'
+        }
       }
-    }
-    return (
-      <TouchableOpacity
-        style={{ backgroundColor: color.content }}
-        onPress={async () => {
-          if (title === '发布服务') {
-            this.props.onPublishService()
-          } else {
-            this.props.onDeleteService()
-          }
-        }}
-      >
-        <Text
-          style={{
-            lineHeight: 50,
-            width: screenWidth,
-            position: 'relative',
-            textAlign: 'center',
-            fontSize: 16,
+      return (
+        <TouchableOpacity
+          style={{ backgroundColor: color.content }}
+          onPress={async () => {
+            if (title === '发布服务') {
+              this.props.onPublishService()
+            } else {
+              this.props.onDeleteService()
+            }
           }}
-          numberOfLines={1}
         >
-          {title}
-        </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 1,
-            backgroundColor: color.theme,
-          }}
-        />
-      </TouchableOpacity>
-    )
+          <Text
+            style={{
+              lineHeight: 50,
+              width: screenWidth,
+              position: 'relative',
+              textAlign: 'center',
+              fontSize: 16,
+            }}
+            numberOfLines={1}
+          >
+            {title}
+          </Text>
+          <View
+            style={{
+              width: screenWidth,
+              height: 4,
+              backgroundColor: color.theme,
+            }}
+          />
+        </TouchableOpacity>
+      )
+    } else {
+      return <View />
+    }
   }
   _dataVisibleButton = () => {
-    let isPublish = false
-    let authorizeSetting = this.props.data.authorizeSetting
-    for (let i = 0; i < authorizeSetting.length; i++) {
-      let dataPermissionType = authorizeSetting[i].dataPermissionType
-      if (dataPermissionType === 'DOWNLOAD') {
-        isPublish = true
-        break
+    if (this.props.data && this.props.data.authorizeSetting) {
+      let isPublish = false
+      let authorizeSetting = this.props.data.authorizeSetting
+      for (let i = 0; i < authorizeSetting.length; i++) {
+        let dataPermissionType = authorizeSetting[i].dataPermissionType
+        if (dataPermissionType === 'DOWNLOAD') {
+          isPublish = true
+          break
+        }
       }
-    }
-    let title
-    if (isPublish) {
-      title = '设为私有数据'
-    } else {
-      title = '设为共有数据'
-    }
-    return (
-      <TouchableOpacity
-        style={{ backgroundColor: color.content }}
-        onPress={async () => {
-          this.props.onChangeDataVisibility()
-        }}
-      >
-        <Text
-          style={{
-            lineHeight: 50,
-            width: screenWidth,
-            position: 'relative',
-            textAlign: 'center',
-            fontSize: 16,
+      let title
+      if (isPublish) {
+        title = '设为私有数据'
+      } else {
+        title = '设为共有数据'
+      }
+      return (
+        <TouchableOpacity
+          style={{ backgroundColor: color.content }}
+          onPress={async () => {
+            this.props.onChangeDataVisibility()
           }}
         >
-          {title}
-        </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 1,
-            backgroundColor: color.theme,
-          }}
-        />
-      </TouchableOpacity>
-    )
+          <Text
+            style={{
+              lineHeight: 50,
+              width: screenWidth,
+              position: 'relative',
+              textAlign: 'center',
+              fontSize: 16,
+            }}
+          >
+            {title}
+          </Text>
+          <View
+            style={{
+              width: screenWidth,
+              height: 4,
+              backgroundColor: color.theme,
+            }}
+          />
+        </TouchableOpacity>
+      )
+    } else {
+      return <View />
+    }
   }
 
   _downloadButton = () => {
-    let progress = '下载'
-    if (this.props.data.isDownloading) {
-      if (this.bIsCallBackProps) {
-        progress = this.props.data.downloadingProgress
-      } else {
-        progress = this.state.progress
+    if (this.props.data && this.props.data.isDownloading !== undefined) {
+      let progress = '下载'
+      if (this.props.data.isDownloading) {
+        if (this.bIsCallBackProps) {
+          progress = this.props.data.downloadingProgress
+        } else {
+          progress = this.state.progress
+        }
       }
-    }
-    return (
-      <TouchableOpacity
-        style={{ backgroundColor: color.content }}
-        onPress={() => {
-          if (progress === '下载完成，可导入') {
-            this.props.openWorkspace()
-          } else {
-            if (this.props.data.isDownloading === true) {
-              this.props.onDownloadFile()
+      return (
+        <TouchableOpacity
+          style={{ backgroundColor: color.content }}
+          onPress={() => {
+            if (progress === '下载完成，可导入') {
+              this.props.openWorkspace()
             } else {
-              Toast.show('有数据正在下载')
+              if (this.props.data.isDownloading === true) {
+                if (progress.indexOf('%') != -1) {
+                  Toast.show('当前数据正在下载')
+                } else {
+                  this.props.onDownloadFile()
+                }
+              } else {
+                let info
+                if (this.props.downloadingFileName !== undefined) {
+                  info = this.props.downloadingFileName + '数据正在下载'
+                } else {
+                  info = '有数据正在下载'
+                }
+                Toast.show(info)
+              }
             }
-          }
-        }}
-      >
-        <Text
-          style={{
-            lineHeight: 50,
-            width: screenWidth,
-            position: 'relative',
-            textAlign: 'center',
-            fontSize: 16,
           }}
         >
-          {progress}
-        </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 1,
-            backgroundColor: color.theme,
-          }}
-        />
-      </TouchableOpacity>
-    )
+          <Text
+            style={{
+              lineHeight: 50,
+              width: screenWidth,
+              position: 'relative',
+              textAlign: 'center',
+              fontSize: 16,
+            }}
+          >
+            {progress}
+          </Text>
+          <View
+            style={{
+              width: screenWidth,
+              height: 4,
+              backgroundColor: color.theme,
+            }}
+          />
+        </TouchableOpacity>
+      )
+    } else {
+      return <View />
+    }
   }
 
   _deleteButton = title => {
@@ -210,7 +236,7 @@ export default class PopupModal extends PureComponent {
         <View
           style={{
             width: screenWidth,
-            height: 1,
+            height: 4,
             backgroundColor: color.theme,
           }}
         />
@@ -235,37 +261,9 @@ export default class PopupModal extends PureComponent {
           }}
         >
           <View style={{ position: 'absolute', bottom: 0 }}>
-            <View
-              style={{
-                width: screenWidth,
-                height: 4,
-                backgroundColor: color.theme,
-              }}
-            />
             {this._publishServiceButton()}
-            <View
-              style={{
-                width: screenWidth,
-                height: 4,
-                backgroundColor: color.theme,
-              }}
-            />
             {this._downloadButton()}
-            <View
-              style={{
-                width: screenWidth,
-                height: 4,
-                backgroundColor: color.theme,
-              }}
-            />
             {this._dataVisibleButton()}
-            <View
-              style={{
-                width: screenWidth,
-                height: 4,
-                backgroundColor: color.theme,
-              }}
-            />
             {this._deleteButton('删除')}
           </View>
         </TouchableOpacity>

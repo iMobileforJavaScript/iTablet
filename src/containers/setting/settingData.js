@@ -3,7 +3,7 @@ async function getMap3DSettings() {
   let item = await SScene.getSetting()
   let data = [
     {
-      titile: '基本设置',
+      title: '基本设置',
       visible: true,
       index: 0,
       data: [

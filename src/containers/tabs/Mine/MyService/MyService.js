@@ -5,6 +5,7 @@ import {
   RefreshControl,
   ActivityIndicator,
   SectionList,
+  Dimensions,
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
@@ -30,6 +31,7 @@ export default class MyService extends Component {
   }
   constructor(props) {
     super(props)
+    this.screenWidth = Dimensions.get('window').width
     this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,
@@ -39,13 +41,50 @@ export default class MyService extends Component {
       ],
       modalIsVisible: false,
       isRefreshing: false,
+      progressWidth: this.screenWidth * 0.6,
     }
+
     this.serviceListTotal = -1
-    this._initSectionsData(1, _iServicePageSize)
     this._renderItem = this._renderItem.bind(this)
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
   }
 
+  componentDidMount() {
+    this._initFirstSectionData()
+  }
+  componentWillUnmount() {
+    this._clearInterval()
+  }
+  _clearInterval = () => {
+    if (this.objProgressWidth !== undefined) {
+      clearInterval(this.objProgressWidth)
+      this.setState({ progressWidth: this.screenWidth })
+    }
+  }
+  _initFirstSectionData = async () => {
+    try {
+      this._showLoadProgressView()
+      await this._initSectionsData(1, _iServicePageSize)
+    } finally {
+      this._clearInterval()
+    }
+  }
+  _showLoadProgressView = () => {
+    this.objProgressWidth = setInterval(() => {
+      let prevProgressWidth = this.state.progressWidth
+      let currentPorWidth
+      if (prevProgressWidth >= this.screenWidth - 200) {
+        currentPorWidth = prevProgressWidth + 1
+        if (currentPorWidth >= this.screenWidth - 50) {
+          currentPorWidth = this.screenWidth - 50
+          return
+        }
+      } else {
+        currentPorWidth = prevProgressWidth * 1.01
+      }
+      this.setState({ progressWidth: currentPorWidth })
+    }, 100)
+  }
   _initSectionsData = async (currentPage, pageSize) => {
     try {
       let strServiceList = await SOnlineService.getServiceList(1, pageSize)
@@ -345,7 +384,7 @@ export default class MyService extends Component {
             style={{
               flex: 1,
               lineHeight: 20,
-              fontSize: 16,
+              fontSize: 12,
               textAlign: 'center',
               color: 'white',
             }}
@@ -378,8 +417,13 @@ export default class MyService extends Component {
     ) {
       return (
         <View style={styles.noDataViewStyle}>
-          <ActivityIndicator color={'gray'} animating={true} />
-          <Text>Loading...</Text>
+          <View
+            style={{
+              height: 2,
+              width: this.state.progressWidth,
+              backgroundColor: '#1c84c0',
+            }}
+          />
         </View>
       )
     } else {

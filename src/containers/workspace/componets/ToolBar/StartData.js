@@ -71,28 +71,20 @@ function getStart(type, params) {
           title: constants.OPEN,
           action: () => {
             if (!_params.setToolbarVisible) return
-            _params.setToolbarVisible(false)
-            NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            // _params.setToolbarVisible(false)
+            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            _params.setToolbarVisible(
+              true,
+              ConstToolType.MAP3D_WORKSPACE_LIST,
+              {
+                containerType: 'list',
+                height: ConstToolType.HEIGHT[3],
+              },
+            )
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
-        // {
-        //   key: constants.CREATE,
-        //   title: constants.CREATE,
-        //   size: 'large',
-        //   action: () => {},
-        //   image: require('../../../../assets/mapTools/icon_words.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_words.png'),
-        // },
-        // {
-        //   key: constants.HISTORY,
-        //   title: constants.HISTORY,
-        //   size: 'large',
-        //   action: () => {},
-        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
-        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
@@ -102,16 +94,6 @@ function getStart(type, params) {
           },
           image: require('../../../../assets/mapTools/icon_base.png'),
         },
-        // {
-        //   key: constants.ADD,
-        //   title: constants.ADD,
-        //   size: 'large',
-        //   action: () => {
-        //     add('MAP_3D')
-        //   },
-        //   image: require('../../../../assets/mapTools/icon_free_line.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
-        // },
       ]
       break
     case ConstToolType.MAP_COLLECTION_START:

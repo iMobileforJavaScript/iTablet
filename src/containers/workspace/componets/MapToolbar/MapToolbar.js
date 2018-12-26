@@ -78,13 +78,13 @@ export default class MapToolbar extends React.Component {
             },
           },
           {
-            key: 'LayerManager1',
+            key: 'MapSetting',
             title: '设置',
             image: require('../../../../assets/mapToolbar/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('LayerManager')
+                this.props.navigation.navigate('MapSetting')
             },
           },
         ]
@@ -182,13 +182,13 @@ export default class MapToolbar extends React.Component {
             },
           },
           {
-            key: 'ThemeSetting',
+            key: 'MapSetting',
             title: '设置',
             image: require('../../../../assets/mapToolbar/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('ThemeSetting', {
+                this.props.navigation.navigate('MapSetting', {
                   type: constants.MAP_THEME,
                 })
             },
