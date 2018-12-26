@@ -432,15 +432,22 @@ export default class FunctionToolbar extends React.Component {
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
-      toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[3],
-      })
+      switch (this.props.type) {
+        case 'MAP_3D':
+          toolRef.setVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+            containerType: 'list',
+            isFullScreen: true,
+            height: ConstToolType.HEIGHT[3],
+          })
+          break
+        default:
+          toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
+            containerType: 'list',
+            isFullScreen: false,
+            height: ConstToolType.THEME_HEIGHT[3],
+          })
+          break
+      }
     }
   }
 
