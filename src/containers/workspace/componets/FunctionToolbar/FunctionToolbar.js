@@ -580,11 +580,11 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_style.png'),
             selectMode: 'flash',
           },
-          {
-            title: '撤销',
-            action: this.remove,
-            image: require('../../../../assets/function/icon_remove.png'),
-          },
+          // {
+          //   title: '撤销',
+          //   action: this.remove,
+          //   image: require('../../../../assets/function/icon_remove.png'),
+          // },
           {
             title: '更多',
             action: () => {
