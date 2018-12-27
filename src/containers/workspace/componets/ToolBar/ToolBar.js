@@ -85,7 +85,7 @@ export default class ToolBar extends React.PureComponent {
     layers: Object,
     collection: Object,
     template: Object,
-    layerData: Object,
+    currentLayer: Object,
     selection: Object,
     device: Object,
     confirm: () => {},
@@ -2121,7 +2121,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.props.layerData} />
+    return <SymbolList layerData={this.props.currentLayer} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -2173,7 +2173,7 @@ export default class ToolBar extends React.PureComponent {
 
   renderSelectList = () => {
     let list
-    switch (this.props.layerData.type) {
+    switch (this.props.currentLayer.type) {
       case 1:
         list = point
         break
@@ -2451,16 +2451,14 @@ export default class ToolBar extends React.PureComponent {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
