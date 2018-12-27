@@ -92,61 +92,64 @@ export default class MyService extends Component {
   }
   _initSectionsData = async (currentPage, pageSize) => {
     try {
-      let strServiceList = await SOnlineService.getServiceList(1, pageSize)
-      let objServiceList = JSON.parse(strServiceList)
-      this.serviceListTotal = objServiceList.total
       let arrPublishServiceList = []
       let arrPrivateServiceList = []
-      /** 构造SectionsData数据*/
-      for (let page = 1; page <= currentPage; page++) {
-        if (page > 1) {
-          strServiceList = await SOnlineService.getServiceList(page, pageSize)
-          objServiceList = JSON.parse(strServiceList)
-        }
+      let strServiceList = await SOnlineService.getServiceList(1, pageSize)
+      if (typeof strServiceList === 'string') {
+        let objServiceList = JSON.parse(strServiceList)
+        this.serviceListTotal = objServiceList.total
 
-        let objArrServiceContent = objServiceList.content
-        for (let i = 0; i < objArrServiceContent.length; i++) {
-          let objContent = objArrServiceContent[i]
-          let arrScenes = objContent.scenes
-          let arrMapInfos = objContent.mapInfos
-          let strThumbnail = objContent.thumbnail
-          let strRestTitle = objContent.resTitle
-          let strID = objContent.id
-          let bIsPublish = false
-          let objArrAuthorizeSetting = objContent.authorizeSetting
-          for (let j = 0; j < objArrAuthorizeSetting.length; j++) {
-            let strPermissionType = objArrAuthorizeSetting[j].permissionType
-            if (strPermissionType === 'READ') {
-              bIsPublish = true
-              break
+        /** 构造SectionsData数据*/
+        for (let page = 1; page <= currentPage; page++) {
+          if (page > 1) {
+            strServiceList = await SOnlineService.getServiceList(page, pageSize)
+            objServiceList = JSON.parse(strServiceList)
+          }
+
+          let objArrServiceContent = objServiceList.content
+          for (let i = 0; i < objArrServiceContent.length; i++) {
+            let objContent = objArrServiceContent[i]
+            let arrScenes = objContent.scenes
+            let arrMapInfos = objContent.mapInfos
+            let strThumbnail = objContent.thumbnail
+            let strRestTitle = objContent.resTitle
+            let strID = objContent.id
+            let bIsPublish = false
+            let objArrAuthorizeSetting = objContent.authorizeSetting
+            for (let j = 0; j < objArrAuthorizeSetting.length; j++) {
+              let strPermissionType = objArrAuthorizeSetting[j].permissionType
+              if (strPermissionType === 'READ') {
+                bIsPublish = true
+                break
+              }
+            }
+            let strSectionsData =
+              '{"restTitle":"' +
+              strRestTitle +
+              '","thumbnail":"' +
+              strThumbnail +
+              '","id":"' +
+              strID +
+              '","scenes":' +
+              JSON.stringify(arrScenes) +
+              ',"mapInfos":' +
+              JSON.stringify(arrMapInfos) +
+              ',"isPublish":' +
+              bIsPublish +
+              '}'
+            let objSectionsData = JSON.parse(strSectionsData)
+            if (bIsPublish) {
+              arrPublishServiceList.push(objSectionsData)
+            } else {
+              arrPrivateServiceList.push(objSectionsData)
             }
           }
-          let strSectionsData =
-            '{"restTitle":"' +
-            strRestTitle +
-            '","thumbnail":"' +
-            strThumbnail +
-            '","id":"' +
-            strID +
-            '","scenes":' +
-            JSON.stringify(arrScenes) +
-            ',"mapInfos":' +
-            JSON.stringify(arrMapInfos) +
-            ',"isPublish":' +
-            bIsPublish +
-            '}'
-          let objSectionsData = JSON.parse(strSectionsData)
-          if (bIsPublish) {
-            arrPublishServiceList.push(objSectionsData)
-          } else {
-            arrPrivateServiceList.push(objSectionsData)
-          }
         }
-      }
-      /** 重新赋值，避免浅拷贝*/
+        /** 重新赋值，避免浅拷贝*/
 
-      _arrPrivateServiceList = arrPrivateServiceList
-      _arrPublishServiceList = arrPublishServiceList
+        _arrPrivateServiceList = arrPrivateServiceList
+        _arrPublishServiceList = arrPublishServiceList
+      }
       if (_arrPrivateServiceList.length === 0) {
         _arrPrivateServiceList.push({})
       }

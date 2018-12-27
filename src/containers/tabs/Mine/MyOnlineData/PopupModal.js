@@ -266,7 +266,6 @@ export default class PopupModal extends PureComponent {
               width: '100%',
               position: 'absolute',
               bottom: 0,
-              backgroundColor: 'red',
             }}
           >
             {this._publishServiceButton()}
