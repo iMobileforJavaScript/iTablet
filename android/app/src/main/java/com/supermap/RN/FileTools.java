@@ -343,8 +343,8 @@ public class FileTools extends ReactContextBaseJavaModule {
             File toFile = new File(toPath);
             boolean result = toFile.exists();
             if (override || !result) {
-
-            }result = FileManager.getInstance().copy(fromPath, toPath);
+                result = FileManager.getInstance().copy(fromPath, toPath);
+            }
             promise.resolve(result);
         }catch (Exception e){
             promise.reject(e);

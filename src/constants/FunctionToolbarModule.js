@@ -63,8 +63,8 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDJWD'].DSParams, 0)
-            await SMap.openDatasource(ConstOnline['TDJWD'].labelDSParams, 0)
+            await SMap.openDatasource(ConstOnline.TDJWD[0].DSParams, 0, false)
+            await SMap.openDatasource(ConstOnline.TDJWD[1].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -73,8 +73,8 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TD'][0].DSParams, 0)
-            await SMap.openDatasource(ConstOnline['TD'][1].DSParams, 0)
+            await SMap.openDatasource(ConstOnline.TD[0].DSParams, 0, false)
+            await SMap.openDatasource(ConstOnline.TD[1].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -83,7 +83,7 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDYX'].DSParams, 0)
+            await SMap.openDatasource(ConstOnline.TDYX.DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -92,7 +92,7 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDYXM'].DSParams, 0)
+            await SMap.openDatasource(ConstOnline.TDYXM.DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -101,7 +101,7 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['TDQ'].DSParams, 0)
+            await SMap.openDatasource(ConstOnline.TDQ.DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -115,7 +115,7 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0)
+            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -129,7 +129,7 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0)
+            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0, false)
           }.bind(this)())
         },
       },
@@ -143,7 +143,11 @@ const BotMap = [
         action: () => {
           (async function() {
             await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['SuperMapCloud'].DSParams, 0)
+            await SMap.openDatasource(
+              ConstOnline['SuperMapCloud'].DSParams,
+              0,
+              false,
+            )
           }.bind(this)())
         },
       },

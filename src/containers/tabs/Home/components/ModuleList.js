@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flatList: {
-    marginTop: scaleSize(40),
+    marginTop: scaleSize(150),
   },
   baseImage: {
     position: 'absolute',
@@ -128,7 +128,10 @@ const styles = StyleSheet.create({
     marginTop: scaleSize(10),
   },
   scrollView: {
+    // position:"absolute",
     width: '72%',
-    // marginTop: scaleSize(15),
+    // height:"100%",
+    // alignItems:"center",
+    marginTop: scaleSize(80),
   },
 })

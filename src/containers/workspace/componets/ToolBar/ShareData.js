@@ -1,13 +1,13 @@
 /**
  * 获取地图分享数据
  */
-import { SMap, SOnlineService, SScene } from 'imobile_for_reactnative'
-import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
+import { SMap, SOnlineService } from 'imobile_for_reactnative'
+import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
 import ToolbarBtnType from './ToolbarBtnType'
-const Fs = require('react-native-fs')
+// const Fs = require('react-native-fs')
 let _params = {}
 let isSharing = false
 
@@ -178,53 +178,34 @@ async function map3DShareToSuperMapOnline() {
       return
     }
     Toast.show('开始分享')
-    let path = await SScene.getWorkspacePath()
-    let dataPath = path.substr(0, path.lastIndexOf('/'))
-    let dataName = _params.user.currentUser.userName
-    let fileName = dataPath.substr(dataPath.lastIndexOf('/') + 1)
-    let targetPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath +
-        dataName +
-        '/' +
-        ConstPath.RelativeFilePath.Scene +
-        fileName +
-        '.zip',
-    )
-    let jsonExist = await FileTools.fileIsExist(dataPath + '/Json')
-    if (!jsonExist) {
-      await FileTools.createDirectory(dataPath + '/Json/')
-    }
-    let mapList = await SScene.getMapList()
-    for (let index = 0; index < mapList.length; index++) {
-      let element = mapList[index]
-      createJson(element.name, path, dataPath)
-    }
-    let zipResult = await FileTools.zipFiles([dataPath], targetPath)
-    let uploadResult = false
-    if (zipResult) {
-      isSharing = true
-      await SOnlineService.deleteData(dataName).then(async () => {
-        uploadResult = await SOnlineService.uploadFile(targetPath, fileName, {
-          onResult: async () => {
-            Toast.show('分享成功')
-            FileTools.deleteFile(targetPath)
-          },
-        })
-      })
-    }
-    return uploadResult
+    //拷贝
+    //导出
+    // let zipResult = await FileTools.zipFiles([toPath], targetPath)
+    // let uploadResult = false
+    // if (zipResult) {
+    //   isSharing = true
+    //   await SOnlineService.deleteData(dataName).then(async () => {
+    //     uploadResult = await SOnlineService.uploadFile(targetPath, fileName, {
+    //       onResult: async () => {
+    //         Toast.show('分享成功')
+    //         FileTools.deleteFile(targetPath)
+    //       },
+    //     })
+    //   })
+    // }
+    // return uploadResult
   } catch (e) {
     isSharing = false
     return false
   }
 }
 
-async function createJson(sceneName, serverUrl, targetPath) {
-  targetPath = targetPath + '/Json/' + sceneName + '.json'
-  let content =
-    '{"sceneName":"' + sceneName + '","serverUrl":"' + serverUrl + '"}'
-  Fs.writeFile(targetPath, content, 'utf8')
-}
+// async function createJson(sceneName, serverUrl, targetPath) {
+//   targetPath = targetPath + '/Json/' + sceneName + '.json'
+//   let content =
+//     '{"sceneName":"' + sceneName + '","serverUrl":"' + serverUrl + '"}'
+//   Fs.writeFile(targetPath, content, 'utf8')
+// }
 export default {
   getShareData,
   shareToSuperMapOnline,
