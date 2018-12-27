@@ -11,7 +11,7 @@ export default class Home extends Component {
     currentUser: Object,
     setShow: () => {},
     device: Object,
-    map3DleadWorkspace: () => {},
+    // map3DleadWorkspace: () => {},
   }
 
   constructor(props) {
@@ -24,14 +24,14 @@ export default class Home extends Component {
     const title = 'SuperMap iTablet'
     return (
       <View style={styles.header}>
-        <View style={{ flex: 1.5 }} />
+        <View style={{ flex: 1 }} />
         <TouchableOpacity
           style={styles.userView}
           onPress={() => {
-            this.props.map3DleadWorkspace({
-              path:
-                '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
-            })
+            // this.props.map3DleadWorkspace({
+            //   path:
+            //     '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
+            // })
           }}
         >
           <Image source={userImg} style={styles.userImg} />
@@ -44,7 +44,7 @@ export default class Home extends Component {
             style={styles.moreImg}
           />
         </TouchableOpacity>
-        <View style={{ flex: 1.5 }} />
+        <View style={{ flex: 1 }} />
       </View>
     )
   }

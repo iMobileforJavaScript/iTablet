@@ -349,12 +349,18 @@ export default class MapView extends React.Component {
   saveAsMap = (name = '') => {
     try {
       this.setLoading(true, '正在保存地图')
-      SMap.saveAsMap(name).then(result => {
-        this.setLoading(false)
-        Toast.show(
-          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-        )
-      })
+      SMap.saveAsMap(name).then(
+        result => {
+          this.setLoading(false)
+          Toast.show(
+            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+          )
+        },
+        () => {
+          Toast.show(ConstInfo.CLOSE_MAP_FAILED)
+          this.setLoading(false)
+        },
+      )
     } catch (e) {
       this.setLoading(false)
     }
@@ -931,11 +937,9 @@ export default class MapView extends React.Component {
         showFullMap={this.showFullMap}
         setSaveViewVisible={this.setSaveViewVisible}
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
-        setCurrentLayer={this.props.setCurrentLayer}
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
-        layerData={this.props.currentLayer}
       />
     )
   }
@@ -1013,6 +1017,9 @@ export default class MapView extends React.Component {
               this.backAction()
               this.backAction = null
             }
+          }}
+          cancel={() => {
+            this.backAction = null
           }}
         />
         <SaveDialog

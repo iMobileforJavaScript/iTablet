@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   icon: {
-    width: scaleSize(40),
-    height: scaleSize(40),
+    width: 30,
+    height: 30,
   },
   labelView: {
     flexDirection: 'row',
@@ -189,9 +189,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 })
-
 export default Tabs
-
 export {
   MyService,
   MyLocalData,

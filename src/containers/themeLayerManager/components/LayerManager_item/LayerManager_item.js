@@ -418,13 +418,16 @@ export default class LayerManager_item extends React.Component {
       case DatasetType.TEXT: // 文本数据集
         icon = require('../../../../assets/map/icon-shallow-text.png')
         break
+      case DatasetType.GRID: // 栅格数据集
+        icon = require('../../../../assets/map/icon_shallow_grid.png')
+        break
       case DatasetType.IMAGE: // 影像数据集
         icon = require('../../../../assets/map/icon-shallow-image.png')
         break
       case DatasetType.CAD: // 复合数据集
         icon = require('../../../../assets/map/icon-cad.png')
         break
-      case DatasetType.Network: // 复合数据集
+      case DatasetType.Network: // 网络数据集
         icon = require('../../../../assets/map/icon-network.png')
         break
       default:

@@ -248,7 +248,7 @@ async function createCollector(type) {
   let collectorStyle = new GeoStyle()
   collectorStyle.setPointColor(0, 255, 0)
   //线颜色
-  collectorStyle.setLineColor(0, 110, 220)
+  collectorStyle.setLineColor(0, 255, 0)
   //面颜色
   collectorStyle.setFillForeColor(255, 0, 0)
 
@@ -285,7 +285,7 @@ async function createCollector(type) {
     }
   }
   //设置绘制风格
-  // await SCollector.setStyle(geoStyle)
+  await SCollector.setStyle(collectorStyle)
 
   let params = {}
   if (_params.template.currentTemplateInfo.layerPath) {
