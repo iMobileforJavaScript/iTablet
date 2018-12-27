@@ -151,14 +151,16 @@ export default class ToolBarSectionList extends React.Component {
             />
           </TouchableOpacity>
         )}
-        {item.datasetType && item.datasetName && (
+        {item.datasetType &&
+          item.datasetName && (
           <Image
             source={this.getDatasetTypeImg(item)}
             resizeMode={'contain'}
             style={styles.dataset_type}
           />
         )}
-        {item.datasetType && item.datasetName && (
+        {item.datasetType &&
+          item.datasetName && (
           <Text style={styles.dataset_title}>{item.datasetName}</Text>
         )}
         {(item.title || item.name) && (

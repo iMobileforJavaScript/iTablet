@@ -11,7 +11,7 @@ export default class Home extends Component {
     currentUser: Object,
     setShow: () => {},
     device: Object,
-    map3DleadWorkspace: () => {},
+    // map3DleadWorkspace: () => {},
   }
 
   constructor(props) {
@@ -28,10 +28,10 @@ export default class Home extends Component {
         <TouchableOpacity
           style={styles.userView}
           onPress={() => {
-            this.props.map3DleadWorkspace({
-              path:
-                '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
-            })
+            // this.props.map3DleadWorkspace({
+            //   path:
+            //     '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
+            // })
           }}
         >
           <Image source={userImg} style={styles.userImg} />

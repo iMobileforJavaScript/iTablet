@@ -84,6 +84,10 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  getVisible = () => {
+    return this.state.visible
+  }
+
   render() {
     let animationType = this.props.animated ? 'fade' : 'none'
     return (
@@ -94,7 +98,7 @@ export default class MT_layerManager extends React.Component {
         onRequestClose={() => {
           //点击物理按键需要隐藏对话框
           if (this.props.backHide) {
-            this.setDialogVisible(false)
+            this.setVisible(false)
           }
         }}
       >

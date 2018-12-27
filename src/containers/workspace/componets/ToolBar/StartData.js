@@ -78,7 +78,6 @@ function getStart(type, params) {
               ConstToolType.MAP3D_WORKSPACE_LIST,
               {
                 containerType: 'list',
-                height: ConstToolType.HEIGHT[3],
               },
             )
           },

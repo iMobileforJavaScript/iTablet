@@ -88,4 +88,8 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  sceneItem: {
+    flex: 1,
+    marginTop: scaleSize(20),
+  },
 })

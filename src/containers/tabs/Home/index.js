@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Home from './Home'
 import { setShow } from '../../../models/device'
-import { map3DleadWorkspace } from '../../../models/map'
+// import { map3DleadWorkspace } from '../../../models/map'
 
 const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
@@ -10,7 +10,6 @@ const mapStateToProps = state => ({
 })
 const mapDispatchToProps = {
   setShow,
-  map3DleadWorkspace,
 }
 
 export default connect(
