@@ -4,7 +4,7 @@ import { scaleSize } from '../../../../utils'
 export default StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 85,
+    top: 95,
     right: scaleSize(20),
     backgroundColor: 'white',
     borderRadius: scaleSize(4),

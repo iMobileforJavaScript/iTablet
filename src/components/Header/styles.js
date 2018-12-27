@@ -2,7 +2,7 @@ import { StyleSheet, Platform } from 'react-native'
 import { scaleSize } from '../../utils'
 import { color, size } from '../../styles'
 
-export const HEADER_HEIGHT = 45 + (Platform.OS === 'ios' ? 20 : 0)
+export const HEADER_HEIGHT = 50 + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default StyleSheet.create({
