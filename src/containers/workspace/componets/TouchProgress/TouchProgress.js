@@ -212,10 +212,9 @@ export default class TouchProgress extends Component {
           break
         case ThemeType.LABEL: // 标签专题图
           {
-            let FZ = await SThemeCartography.getUniformLabelFontSize({
+            let fontsize = await SThemeCartography.getUniformLabelFontSize({
               LayerName: this.props.currentLayer.name,
             })
-            let fontsize = FZ.FontSize
             this._panBtnStyles.style.left =
               (fontsize * (positionWidth - scaleSize(60))) / 20
             this._previousLeft =

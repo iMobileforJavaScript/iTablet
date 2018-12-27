@@ -1102,7 +1102,6 @@ function getRangeColorScheme() {
 /**
  * 单值专题图颜色方案
  */
-
 function getUniqueColorScheme() {
   let list = [
     {
@@ -1234,6 +1233,11 @@ function getUniqueColorScheme() {
       key: 'FA_Red-Yellow-Blue',
       colorSchemeName: 'FA_Red-Yellow-Blue',
       colorScheme: require('../../../../assets/uniqueColorScheme/FA_Red-Yellow-Blue.png'),
+    },
+    {
+      key: 'FA_Blue-Yellow-Red',
+      colorSchemeName: 'FA_Blue-Yellow-Red',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Blue-Yellow-Red.png'),
     },
     {
       key: 'FB_Red-Yellow-Green',

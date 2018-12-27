@@ -1,16 +1,9 @@
 import React, { PureComponent } from 'react'
-import {
-  Modal,
-  TouchableOpacity,
-  View,
-  Dimensions,
-  Text,
-  Platform,
-} from 'react-native'
+import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 
 import { color } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
-const screenWidth = Dimensions.get('window').width
+const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
   props: {
@@ -251,7 +244,15 @@ export default class PopupModal extends PureComponent {
         animationType={'slide'}
         transparent={true}
         visible={visible}
+        style={{ flex: 1 }}
         onRequestClose={this._onRequestClose}
+        supportedOrientations={[
+          'portrait',
+          'portrait-upside-down',
+          'landscape',
+          'landscape-left',
+          'landscape-right',
+        ]}
       >
         <TouchableOpacity
           style={{ flex: 1 }}
@@ -260,7 +261,14 @@ export default class PopupModal extends PureComponent {
             this._onClose()
           }}
         >
-          <View style={{ position: 'absolute', bottom: 0 }}>
+          <View
+            style={{
+              width: '100%',
+              position: 'absolute',
+              bottom: 0,
+              backgroundColor: 'red',
+            }}
+          >
             {this._publishServiceButton()}
             {this._downloadButton()}
             {this._dataVisibleButton()}
