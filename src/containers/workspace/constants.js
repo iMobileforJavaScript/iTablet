@@ -57,7 +57,7 @@ export default {
   ADD: '添加',
 
   THEME_CLOSE: '关闭地图',
-  THEME_SAVE: '保存底图',
+  THEME_SAVE: '保存地图',
   THEME_SAVE_AS: '另存地图',
   THEME_SHARE: '分享地图',
   THEME_WORKSPACE: '工作空间',

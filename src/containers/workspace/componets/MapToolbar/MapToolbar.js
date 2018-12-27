@@ -262,13 +262,13 @@ export default class MapToolbar extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 65,
+    height: 80,
     width: '100%',
     backgroundColor: color.theme,
     alignSelf: 'center',
     borderStyle: 'solid',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
 })

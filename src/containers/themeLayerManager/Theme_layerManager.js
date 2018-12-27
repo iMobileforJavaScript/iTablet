@@ -447,6 +447,7 @@ export default class Theme_layerManager extends React.Component {
           data={this.props.layers}
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
+          keyExtractor={(item, index) => index}
         />
       </View>
     )
