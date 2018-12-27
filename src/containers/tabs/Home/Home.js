@@ -24,7 +24,7 @@ export default class Home extends Component {
     const title = 'SuperMap iTablet'
     return (
       <View style={styles.header}>
-        <View style={{ flex: 1.5 }} />
+        <View style={{ flex: 1 }} />
         <TouchableOpacity
           style={styles.userView}
           onPress={() => {
@@ -44,7 +44,7 @@ export default class Home extends Component {
             style={styles.moreImg}
           />
         </TouchableOpacity>
-        <View style={{ flex: 1.5 }} />
+        <View style={{ flex: 1 }} />
       </View>
     )
   }

@@ -335,7 +335,7 @@ export default class Map3D extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: this.isExample ? '三维场景' : this.state.title,
+          title: '三维场景',
           navigation: this.props.navigation,
           backAction: this.back,
           type: 'fix',
