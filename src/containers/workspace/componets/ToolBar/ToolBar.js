@@ -580,6 +580,30 @@ export default class ToolBar extends React.PureComponent {
       })
   }
 
+  /**刷新字段表达式列表 */
+  refreshThemeExpression = async selectedExpression => {
+    let dataset = this.expressionData.dataset
+    let allExpressions = this.expressionData.list
+    for (let index = 0; index < allExpressions.length; index++) {
+      const element = allExpressions[index]
+      if (element.expression === selectedExpression) {
+        element.isSelected = true
+      } else {
+        element.isSelected = false
+      }
+    }
+    let datalist = [
+      {
+        title: dataset.datasetName,
+        datasetType: dataset.datasetType,
+        data: allExpressions,
+      },
+    ]
+    this.setState({
+      data: datalist,
+    })
+  }
+
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[4],
@@ -587,20 +611,47 @@ export default class ToolBar extends React.PureComponent {
     }).start()
     this.isBoxShow = true
 
-    let data = await SThemeCartography.getThemeExpressByLayerName(
+    if (this.state.type === type) {
+      return
+    }
+
+    this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
       GLOBAL.currentLayer.name,
     )
-    let dataset = data.dataset
+    let selectedExpression
+    let param = {
+      LayerName: GLOBAL.currentLayer.name,
+    }
+    if (type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
+      selectedExpression = await SThemeCartography.getUniqueExpression(param)
+    } else if (type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+      selectedExpression = await SThemeCartography.getRangeExpression(param)
+    } else if (type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION) {
+      selectedExpression = await SThemeCartography.getUniformLabelExpression(
+        param,
+      )
+    }
+    let dataset = this.expressionData.dataset
+    let allExpressions = this.expressionData.list
+    if (selectedExpression) {
+      for (let i = 0; i < allExpressions.length; i++) {
+        if (allExpressions[i].expression === selectedExpression) {
+          allExpressions[i].isSelected = true
+        } else {
+          allExpressions[i].isSelected = false
+        }
+      }
+    }
     let datalist = [
       {
         title: dataset.datasetName,
         datasetType: dataset.datasetType,
-        data: data.list,
+        data: allExpressions,
       },
     ]
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'list',
@@ -622,6 +673,10 @@ export default class ToolBar extends React.PureComponent {
     }).start()
     this.isBoxShow = true
 
+    if (this.state.type === type) {
+      return
+    }
+
     let list = await ThemeMenuData.getUniqueColorScheme()
     let datalist = [
       {
@@ -631,7 +686,7 @@ export default class ToolBar extends React.PureComponent {
     ]
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'list',
@@ -653,6 +708,10 @@ export default class ToolBar extends React.PureComponent {
     }).start()
     this.isBoxShow = true
 
+    if (this.state.type === type) {
+      return
+    }
+
     let list = await ThemeMenuData.getRangeColorScheme()
     let datalist = [
       {
@@ -662,7 +721,7 @@ export default class ToolBar extends React.PureComponent {
     ]
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'list',
@@ -684,6 +743,10 @@ export default class ToolBar extends React.PureComponent {
     }).start()
     this.isBoxShow = true
 
+    if (this.state.type === type) {
+      return
+    }
+
     let list = await ThemeMenuData.getColorGradientType()
     let datalist = [
       {
@@ -693,7 +756,7 @@ export default class ToolBar extends React.PureComponent {
     ]
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'list',
@@ -718,7 +781,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getRangeMode()
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -766,7 +829,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelBackShape()
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -792,7 +855,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelFontName()
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -818,7 +881,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelFontRotation()
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'table',
@@ -866,7 +929,7 @@ export default class ToolBar extends React.PureComponent {
     let date = await ThemeMenuData.getLabelFontColor()
     this.setState(
       {
-        isFullScreen: true,
+        isFullScreen: false,
         isTouchProgress: false,
         isSelectlist: false,
         containerType: 'colortable',
@@ -1426,7 +1489,7 @@ export default class ToolBar extends React.PureComponent {
           duration: Const.ANIMATED_DURATION,
         }).start()
         this.setState({
-          isFullScreen: true,
+          isFullScreen: false,
         })
       }
       this.isBoxShow = !this.isBoxShow
@@ -1517,10 +1580,11 @@ export default class ToolBar extends React.PureComponent {
       //单值专题图表达式
       (async function() {
         let Params = {
-          UniqueExpression: item.title,
+          UniqueExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
         }
         // await SThemeCartography.setUniqueExpression(Params)
+        await this.refreshThemeExpression(item.expression)
         await SThemeCartography.modifyThemeUniqueMap(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR) {
@@ -1541,9 +1605,10 @@ export default class ToolBar extends React.PureComponent {
       //分段专题图表达式
       (async function() {
         let Params = {
-          RangeExpression: item.title,
+          RangeExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
         }
+        await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setRangeExpression(Params)
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
@@ -1564,17 +1629,18 @@ export default class ToolBar extends React.PureComponent {
       //统一标签表达式
       (async function() {
         let Params = {
-          LabelExpression: item.title,
+          LabelExpression: item.expression,
           LayerName: GLOBAL.currentLayer.name,
         }
+        await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setUniformLabelExpression(Params)
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
-      //跳转到专题图字段列表
+      //跳转到专题图字段选择列表
       (async function() {
-        let data = await SThemeCartography.getThemeExpressByDatasetName(
+        let data = await SThemeCartography.getThemeExpressionByDatasetName(
           item.datasourceName,
           item.datasetName,
         )
@@ -2443,16 +2509,14 @@ export default class ToolBar extends React.PureComponent {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
