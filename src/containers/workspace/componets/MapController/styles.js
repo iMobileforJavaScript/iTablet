@@ -5,7 +5,7 @@ export default StyleSheet.create({
   container: {
     position: 'absolute',
     left: scaleSize(20),
-    bottom: scaleSize(120),
+    bottom: 100,
     flexDirection: 'column',
     backgroundColor: 'transparent',
     // padding: scaleSize(20),
@@ -39,7 +39,7 @@ export default StyleSheet.create({
     height: scaleSize(50),
     borderRadius: scaleSize(4),
     // backgroundColor: 'white',
-    marginBottom: scaleSize(20),
+    marginBottom: 20,
   },
   shadow: {
     elevation: 20,

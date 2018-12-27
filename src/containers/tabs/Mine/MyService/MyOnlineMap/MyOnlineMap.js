@@ -153,10 +153,11 @@ export default class MyOnlineMap extends Component {
         >
           <View style={styles.itemViewStyle}>
             {this._selectImage(info)}
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={[styles.restTitleTextStyle]} numberOfLines={2}>
                 {mapTitle}
               </Text>
+              <View style={{ flex: 1 }} />
               <Text
                 numberOfLines={1}
                 style={[
@@ -239,7 +240,6 @@ export default class MyOnlineMap extends Component {
   render() {
     return (
       <Container
-        ref={ref => (this.containerRef = ref)}
         headerProps={{
           title: '在线地图',
           withoutBack: false,

@@ -24,4 +24,5 @@ export default {
   CHOOSE_EDIT_OBJ: '请选择编辑对象',
 
   SYMBOL_LIB_EMPTY: '当前符号库为空',
+  NON_SELECTED_OBJ: '没有选择对象',
 }

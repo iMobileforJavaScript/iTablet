@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 export default StyleSheet.create({
@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   functionToolbar: {
     position: 'absolute',
-    top: scaleSize(100),
+    top: (Platform.OS === 'ios' ? 10 : 0) + 60 + 20,
     right: scaleSize(20),
     backgroundColor: color.white,
   },

@@ -85,7 +85,8 @@ export default class ToolBar extends React.PureComponent {
     layers: Object,
     collection: Object,
     template: Object,
-    layerData: Object,
+    currentLayer: Object,
+    selection: Object,
     device: Object,
     confirm: () => {},
     showDialog: () => {},
@@ -2186,7 +2187,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.props.layerData} />
+    return <SymbolList layerData={this.props.currentLayer} />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -2238,7 +2239,7 @@ export default class ToolBar extends React.PureComponent {
 
   renderSelectList = () => {
     let list
-    switch (this.props.layerData.type) {
+    switch (this.props.currentLayer.type) {
       case 1:
         list = point
         break
@@ -2408,6 +2409,13 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
+            if (
+              !this.props.selection.layerInfo ||
+              !this.props.selection.layerInfo.path
+            ) {
+              Toast.show(ConstInfo.NON_SELECTED_OBJ)
+              return
+            }
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
             })

@@ -13,12 +13,12 @@ const styles = StyleSheet.create({
     backgroundColor: color.blackBg,
   },
   noDataViewStyle: {
-    flex: 1,
+    width: '100%',
     backgroundColor: color.blackBg,
   },
 
   itemViewStyle: {
-    width: itemWidth,
+    width: '100%',
     height: itemHeight,
     flexDirection: 'row',
     padding: 10,
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   separateViewStyle: {
-    width: itemWidth,
+    width: '100%',
     height: 8,
     backgroundColor: color.theme,
   },

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+// import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 import { ListSeparator } from '../../../../components'
 import constants from '../../constants'
@@ -262,7 +262,7 @@ export default class MapToolbar extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: scaleSize(80),
+    height: 65,
     width: '100%',
     backgroundColor: color.theme,
     alignSelf: 'center',
