@@ -4,14 +4,7 @@
   E-mail: 756355668@qq.com
 */
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-} from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
@@ -45,7 +38,6 @@ export default class Mine extends Component {
       SOnlineService.syncAndroidCookie()
     }
   }
-
   openUserWorkspace = () => {
     this.props.closeWorkspace(async () => {
       let userPath = await FileTools.appendingHomeDirectory(
@@ -71,17 +63,23 @@ export default class Mine extends Component {
   }
 
   _render = () => {
-    this.screenWidth = Dimensions.get('window').width
     let fontSize = 16
+    let itemWidth = '100%'
+    let itemHeight = 50
     return (
       <View style={{ flex: 1, backgroundColor: color.border }}>
         {this._renderHeader(fontSize)}
-        <ScrollView style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            {this._renderMyOnlineDataItem(50, fontSize)}
-            {this._renderMyServiceItem(50, fontSize)}
-            {this._renderLine()}
-          </View>
+        <ScrollView
+          style={{ flex: 1 }}
+          // contentContainerStyle={{ alignItems:'center' }}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          overScrollMode={'always'}
+          bounces={true}
+        >
+          {this._renderMyOnlineDataItem(itemWidth, itemHeight, fontSize)}
+          {this._renderMyServiceItem(itemWidth, itemHeight, fontSize)}
+          {this._renderLine()}
         </ScrollView>
       </View>
     )
@@ -94,7 +92,7 @@ export default class Mine extends Component {
         style={{
           flexDirection: 'row',
           height: headerHeight,
-          width: this.screenWidth,
+          width: '100%',
         }}
       >
         <TouchableOpacity
@@ -127,17 +125,23 @@ export default class Mine extends Component {
     )
   }
   _renderLine = () => {
-    return <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
+    return (
+      <View
+        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+      />
+    )
   }
-  _renderMyServiceItem = (itemHeight, fontSize) => {
+  _renderMyServiceItem = (itemWidth, itemHeight, fontSize) => {
     let imageWidth = itemHeight / 2
     return (
       <View>
-        <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
+        <View
+          style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
+        />
         <TouchableOpacity
           style={{
             flexDirection: 'row',
-            width: this.screenWidth,
+            width: itemWidth,
             height: itemHeight,
             alignItems: 'center',
             paddingLeft: 10,
@@ -173,15 +177,17 @@ export default class Mine extends Component {
       </View>
     )
   }
-  _renderMyOnlineDataItem = (itemHeight, fontSize) => {
+  _renderMyOnlineDataItem = (itemWidth, itemHeight, fontSize) => {
     let imageWidth = itemHeight / 2
     return (
       <View>
-        <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
+        <View
+          style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
+        />
         <TouchableOpacity
           style={{
             flexDirection: 'row',
-            width: this.screenWidth,
+            width: itemWidth,
             height: itemHeight,
             alignItems: 'center',
             paddingLeft: 10,

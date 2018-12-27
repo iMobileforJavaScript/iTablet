@@ -12,13 +12,13 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   NativeModules,
+  ScrollView,
 } from 'react-native'
 import { Toast } from '../../../../utils/index'
 
 import { Container } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
-
 import styles, {
   titleOnFocusBackgroundColor,
   titleOnBlurBackgroundColor,
@@ -41,6 +41,7 @@ export default class Login extends React.Component {
       titleEmailDefaultBg: titleOnFocusBackgroundColor,
       titlePhoneBg: titleOnBlurBackgroundColor,
       behavior: 'padding',
+      isChangeOrientation: false,
     }
   }
 
@@ -132,12 +133,11 @@ export default class Login extends React.Component {
   }
   _renderEmail() {
     return (
-      <View>
+      <View style={{ width: '80%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
           keyboardType={'email-address'}
           placeholder={'请输入邮箱或昵称'}
-          defaultValue={''}
           multiline={false}
           style={styles.textInputStyle}
           onChangeText={text => {
@@ -147,7 +147,6 @@ export default class Login extends React.Component {
         <TextInput
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
-          defaultValue={''}
           placeholder={'请输入密码'}
           multiline={false}
           password={true}
@@ -161,7 +160,7 @@ export default class Login extends React.Component {
   }
   _renderPhone() {
     return (
-      <View>
+      <View style={{ width: '80%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
           placeholder={'请输入手机号'}
@@ -227,81 +226,92 @@ export default class Login extends React.Component {
         <KeyboardAvoidingView
           enabled={true}
           keyboardVerticalOffset={0}
-          style={styles.keyboardAvoidingStyle}
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            flex: 1,
+            alignItems: 'center',
+            flexDirection: 'column',
+          }}
           behavior={this.state.behavior}
         >
-          {/*       <ScrollView
-            contentContainerStyle={{ alignItems: 'center', flex: 1 }}
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{ height: 500, alignItems: 'center' }}
+            keyboardDismissMode={'on-drag'}
+            keyboardShouldPersistTaps={'handled'}
+            showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-          >*/}
-          <View style={{ alignItems: 'center', flex: 1 }}>
-            <View style={styles.titleStyle}>
-              <Text
-                style={[
-                  styles.titleContainerStyle,
-                  { backgroundColor: this.state.titleEmailDefaultBg },
-                ]}
+          >
+            <View style={styles.keyboardAvoidingStyle}>
+              <View style={styles.titleStyle}>
+                <Text
+                  style={[
+                    styles.titleContainerStyle,
+                    {
+                      backgroundColor: this.state.titleEmailDefaultBg,
+                      flex: 1,
+                    },
+                  ]}
+                  onPress={() => {
+                    this._onEmailPress()
+                  }}
+                >
+                  邮箱登录
+                </Text>
+                <Text
+                  style={[
+                    styles.titleContainerStyle,
+                    { backgroundColor: this.state.titlePhoneBg, flex: 1 },
+                  ]}
+                  onPress={() => {
+                    this._onPhonePress()
+                  }}
+                >
+                  手机登录
+                </Text>
+              </View>
+              {this._onSelectTitle()}
+              <View style={styles.viewStyle}>
+                <Text
+                  style={{
+                    width: 100,
+                    lineHeight: 40,
+                    textAlign: 'left',
+                    color: '#c0c0c0',
+                  }}
+                  onPress={() => {
+                    NavigationService.navigate('Register')
+                  }}
+                >
+                  注册
+                </Text>
+                <Text
+                  style={{
+                    width: 100,
+                    lineHeight: 40,
+                    textAlign: 'right',
+                    color: '#c0c0c0',
+                  }}
+                  onPress={() => {
+                    NavigationService.navigate('GetBack')
+                  }}
+                >
+                  忘记密码
+                </Text>
+              </View>
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel={'登录'}
+                style={styles.loginStyle}
                 onPress={() => {
-                  this._onEmailPress()
+                  this._login()
                 }}
               >
-                邮箱登录
-              </Text>
-              <Text
-                style={[
-                  styles.titleContainerStyle,
-                  { backgroundColor: this.state.titlePhoneBg },
-                ]}
-                onPress={() => {
-                  this._onPhonePress()
-                }}
-              >
-                手机登录
-              </Text>
+                <Text style={[styles.titleContainerStyle]}>登录</Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1, height: 200 }} />
             </View>
-            {this._onSelectTitle()}
-            <View style={styles.viewStyle}>
-              <Text
-                style={{
-                  width: 100,
-                  lineHeight: 40,
-                  textAlign: 'left',
-                  color: '#c0c0c0',
-                }}
-                onPress={() => {
-                  NavigationService.navigate('Register')
-                }}
-              >
-                注册
-              </Text>
-              {/*   <Text
-                style={{
-                  width: 100,
-                  lineHeight: 40,
-                  textAlign: 'right',
-                  color: '#c0c0c0',
-                }}
-                onPress={() => {
-                  NavigationService.navigate('GetBack')
-                }}
-              >
-                忘记密码
-              </Text>*/}
-            </View>
-            <TouchableOpacity
-              accessible={true}
-              accessibilityLabel={'登录'}
-              style={styles.loginStyle}
-              onPress={() => {
-                this._login()
-              }}
-            >
-              <Text style={styles.titleContainerStyle}>登录</Text>
-            </TouchableOpacity>
-            <View style={{ flex: 1, height: 200 }} />
-          </View>
-
-          {/*   </ScrollView>*/}
+          </ScrollView>
         </KeyboardAvoidingView>
       </Container>
     )

@@ -11,6 +11,7 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
+  ScrollView,
 } from 'react-native'
 import { Toast } from '../../../../utils'
 
@@ -116,7 +117,7 @@ export default class Register extends React.Component {
 
   _renderEmail() {
     return (
-      <View>
+      <View style={{ width: '80%' }}>
         <TextInput
           keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
@@ -149,7 +150,7 @@ export default class Register extends React.Component {
 
   _renderPhone() {
     return (
-      <View>
+      <View style={{ width: '80%' }}>
         <TextInput
           keyboardType={'phone-pad'}
           placeholder={'请输入手机号'}
@@ -245,52 +246,61 @@ export default class Register extends React.Component {
         <KeyboardAvoidingView
           enabled={true}
           keyboardVerticalOffset={0}
-          style={styles.keyboardAvoidingStyle}
+          style={{ flex: 1, backgroundColor: 'cc0066' }}
+          contentContainerStyle={styles.keyboardAvoidingStyle}
           behavior={this.state.behavior}
         >
-          {/* <ScrollView
-            contentContainerStyle={{ alignItems: 'center', flex: 1 }}
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={{
+              alignItems: 'center',
+              height: 500,
+              width: '100%',
+            }}
+            keyboardDismissMode={'on-drag'}
+            keyboardShouldPersistTaps={'handled'}
+            showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
-          >*/}
-          <View style={{ alignItems: 'center', flex: 1 }}>
-            <View style={styles.titleStyle}>
-              <Text
-                style={[
-                  styles.titleContainerStyle,
-                  { backgroundColor: this.state.titleEmailDefaultBg },
-                ]}
-                onPress={() => {
-                  this._onEmailPress()
-                }}
-              >
-                {' '}
-                邮箱注册
-              </Text>
-              <Text
-                style={[
-                  styles.titleContainerStyle,
-                  { backgroundColor: this.state.titlePhoneBg },
-                ]}
-                onPress={() => {
-                  this._onPhonePress()
-                }}
-              >
-                手机注册
-              </Text>
-            </View>
-            {this._onSelectTitle()}
+          >
+            <View style={{ alignItems: 'center', width: '100%' }}>
+              <View style={styles.titleStyle}>
+                <Text
+                  style={[
+                    styles.titleContainerStyle,
+                    { backgroundColor: this.state.titleEmailDefaultBg },
+                  ]}
+                  onPress={() => {
+                    this._onEmailPress()
+                  }}
+                >
+                  {' '}
+                  邮箱注册
+                </Text>
+                <Text
+                  style={[
+                    styles.titleContainerStyle,
+                    { backgroundColor: this.state.titlePhoneBg },
+                  ]}
+                  onPress={() => {
+                    this._onPhonePress()
+                  }}
+                >
+                  手机注册
+                </Text>
+              </View>
+              {this._onSelectTitle()}
 
-            <TouchableOpacity
-              style={styles.registerStyle}
-              onPress={() => {
-                this._register()
-              }}
-            >
-              <Text style={styles.titleContainerStyle}>注册</Text>
-            </TouchableOpacity>
-            <View style={{ flex: 1, height: 200 }} />
-          </View>
-          {/* </ScrollView>*/}
+              <TouchableOpacity
+                style={styles.registerStyle}
+                onPress={() => {
+                  this._register()
+                }}
+              >
+                <Text style={styles.titleContainerStyle}>注册</Text>
+              </TouchableOpacity>
+              <View style={{ flex: 1, height: 200 }} />
+            </View>
+          </ScrollView>
         </KeyboardAvoidingView>
       </Container>
     )

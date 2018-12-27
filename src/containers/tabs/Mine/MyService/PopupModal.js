@@ -1,17 +1,10 @@
 import React, { PureComponent } from 'react'
-import {
-  Modal,
-  TouchableOpacity,
-  View,
-  Dimensions,
-  Text,
-  Platform,
-} from 'react-native'
+import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 import Toast from '../../../../utils/Toast'
 
 import { color } from '../../../../styles'
 import { SOnlineService } from 'imobile_for_reactnative'
-const screenWidth = Dimensions.get('window').width
+const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
   props: {
@@ -84,7 +77,7 @@ export default class PopupModal extends PureComponent {
         <View
           style={{
             width: screenWidth,
-            height: 1,
+            height: 4,
             backgroundColor: color.theme,
           }}
         />
@@ -124,7 +117,7 @@ export default class PopupModal extends PureComponent {
         <View
           style={{
             width: screenWidth,
-            height: 1,
+            height: 4,
             backgroundColor: color.theme,
           }}
         />
@@ -139,7 +132,15 @@ export default class PopupModal extends PureComponent {
         animationType={'slide'}
         transparent={true}
         visible={visible}
+        style={{ flex: 1 }}
         onRequestClose={this._onRequestClose}
+        supportedOrientations={[
+          'portrait',
+          'portrait-upside-down',
+          'landscape',
+          'landscape-left',
+          'landscape-right',
+        ]}
       >
         <TouchableOpacity
           style={{ flex: 1 }}
@@ -148,7 +149,7 @@ export default class PopupModal extends PureComponent {
             this._onClose()
           }}
         >
-          <View style={{ position: 'absolute', bottom: 0 }}>
+          <View style={{ width: '100%', position: 'absolute', bottom: 0 }}>
             <View
               style={{
                 width: screenWidth,
@@ -157,13 +158,6 @@ export default class PopupModal extends PureComponent {
               }}
             />
             {this._publishButton(!this.props.isPublish)}
-            <View
-              style={{
-                width: screenWidth,
-                height: 4,
-                backgroundColor: color.theme,
-              }}
-            />
             {this._deleteButton('删除')}
           </View>
         </TouchableOpacity>

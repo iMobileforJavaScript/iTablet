@@ -551,6 +551,7 @@ export default class MyOnlineData extends Component {
       let length = dataName.length - 4
       let newDataName = dataName.substring(0, length)
       let itemHeight = 50
+      let itemWidth = '100%'
       return (
         <TouchableOpacity
           onPress={() => {
@@ -560,7 +561,7 @@ export default class MyOnlineData extends Component {
           <View
             style={{
               flexDirection: 'row',
-              width: Dimensions.get('window').width,
+              width: itemWidth,
               height: itemHeight,
               backgroundColor: this.state.onClickItemBgColor,
             }}
@@ -593,7 +594,7 @@ export default class MyOnlineData extends Component {
           <View
             style={{
               height: 2,
-              width: Dimensions.get('window').width,
+              width: itemWidth,
               backgroundColor: '#2D2D2F',
             }}
           />

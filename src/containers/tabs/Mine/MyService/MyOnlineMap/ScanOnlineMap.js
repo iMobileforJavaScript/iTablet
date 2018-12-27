@@ -53,7 +53,7 @@ export default class ScanOnlineMap extends React.Component {
     this.objProgressWidth = setInterval(() => {
       let prevProgressWidth = this.state.progressWidth
       let currentPorWidth
-      if (prevProgressWidth >= this.screenWidth - 200) {
+      if (prevProgressWidth >= this.screenWidth - 300) {
         currentPorWidth = prevProgressWidth + 1
         if (currentPorWidth >= this.screenWidth - 50) {
           currentPorWidth = this.screenWidth - 50
@@ -70,8 +70,8 @@ export default class ScanOnlineMap extends React.Component {
       return (
         <WebView
           style={{
-            height: Dimensions.get('window').height,
-            width: Dimensions.get('window').width,
+            height: '100%',
+            width: '100%',
           }}
           source={{
             uri: uri,
