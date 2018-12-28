@@ -148,20 +148,35 @@ export default class MenuAlertDialog extends React.Component {
       },
     },
     {
-      key: '字体',
-      btntitle: '字体',
+      key: '背景颜色',
+      btntitle: '背景颜色',
       action: () => {
-        this.setSelectedMenu('字体')
+        this.setSelectedMenu('背景颜色')
         this.setDialogVisible(false)
 
         const toolRef = this.props.getToolBarRef()
         if (toolRef) {
-          toolRef.getLabelFontName(
-            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+          toolRef.getLabelBackColor(
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
           )
         }
       },
     },
+    // {
+    //   key: '字体',
+    //   btntitle: '字体',
+    //   action: () => {
+    //     this.setSelectedMenu('字体')
+    //     this.setDialogVisible(false)
+
+    //     const toolRef = this.props.getToolBarRef()
+    //     if (toolRef) {
+    //       toolRef.getLabelFontName(
+    //         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+    //       )
+    //     }
+    //   },
+    // },
     {
       key: '字号',
       btntitle: '字号',

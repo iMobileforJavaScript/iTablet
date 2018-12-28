@@ -4,7 +4,8 @@
 import { ConstToolType } from '../../../../constants'
 // import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SThemeCartography } from 'imobile_for_reactnative'
+import { Toast } from '../../../../utils'
 
 let _params = {}
 
@@ -64,7 +65,7 @@ function getMapMore(type, params) {
           title: constants.THEME_SAVE,
           size: 'large',
           // 保存地图
-          action: () => saveMap('TempMap'),
+          action: saveMapTheme,
           image: require('../../../../assets/mapTools/icon_save.png'),
         },
         {
@@ -127,6 +128,16 @@ function getMapMore(type, params) {
 /**专题制图:关闭地图 */
 function closeMapTheme() {
   SMap.closeMap()
+}
+
+/**专题制图:保存地图 */
+function saveMapTheme() {
+  let save = SThemeCartography.saveMap()
+  if (save) {
+    Toast.show('保存成功')
+  } else {
+    Toast.show('保存失败')
+  }
 }
 
 /** 关闭地图 **/
