@@ -7,12 +7,11 @@ import {
   FlatList,
   // Dimensions,
   StyleSheet,
-  // ScrollView,
+  ScrollView,
   // Dimensions,
 } from 'react-native'
 import { ConstModule } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
-import { size } from '../../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default class ModuleList extends Component {
   props: {
@@ -49,20 +48,20 @@ export default class ModuleList extends Component {
   }
   _renderScrollView = () => {
     return (
-      // <ScrollView
-      //   style={styles.scrollView}
-      //   horizontal={true}
-      //   showsHorizontalScrollIndicator={false}
-      // >
-      //  </ScrollView>
-      <FlatList
-        data={ConstModule}
-        renderItem={this._renderItem}
-        horizontal={false}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps={'always'}
-      />
+      <ScrollView
+        style={styles.scrollView}
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+      >
+        <FlatList
+          data={ConstModule}
+          renderItem={this._renderItem}
+          horizontal={false}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={'always'}
+        />
+      </ScrollView>
     )
   }
   render() {
@@ -123,18 +122,19 @@ const styles = StyleSheet.create({
   title: {
     width: scaleSize(150),
     height: scaleSize(40),
-    fontSize: size.setSpText(10),
+    fontSize: scaleSize(25),
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: scaleSize(10),
   },
   scrollView: {
     // position:"absolute",
-    width: '72%',
+    // width: '72%',
     // height:"100%",
+    flex: 1,
     flexDirection: 'column',
     // alignItems:"center",
-    justifyContent: 'space-around',
-    marginTop: scaleSize(80),
+    // justifyContent: 'space-around',
+    // marginTop: scaleSize(80),
   },
 })

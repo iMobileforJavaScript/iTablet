@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: size.fontSize.fontSizeSm,
+    fontSize: size.fontSize.fontSizeLg,
     color: color.themeText,
   },
 })

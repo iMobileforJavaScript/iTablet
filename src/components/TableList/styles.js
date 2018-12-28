@@ -18,7 +18,7 @@ export default StyleSheet.create({
     // width: '100%',
     flexDirection: 'row',
     height: scaleSize(120),
-    // justifyContent: 'space-around',
+    justifyContent: 'space-around',
     alignItems: 'center',
     // backgroundColor:"blue"
   },
