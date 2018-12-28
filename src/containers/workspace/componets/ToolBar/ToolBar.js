@@ -1039,6 +1039,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.CLEAR,
           ToolbarBtnType.FLEX,
         ],
+        isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
         containerType: 'list',
@@ -1061,6 +1062,7 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
+          isFullScreen: false,
         },
         () => {
           this.height = ConstToolType.HEIGHT[1]
