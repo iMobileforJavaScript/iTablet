@@ -12,6 +12,7 @@ import Login from './Login'
 import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
+import Toast from '../../../utils/Toast'
 
 export default class Mine extends Component {
   props: {
@@ -26,6 +27,7 @@ export default class Mine extends Component {
     super(props)
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
+    this.goToMyLocalData = this.goToMyLocalData.bind(this)
   }
   componentDidUpdate(previousProps) {
     if (
@@ -54,6 +56,9 @@ export default class Mine extends Component {
     NavigationService.navigate('Personal')
   }
 
+  goToMyLocalData = () => {
+    NavigationService.navigate('MyLocalData')
+  }
   goToMyOnlineData = async () => {
     NavigationService.navigate('MyOnlineData')
   }
@@ -64,8 +69,6 @@ export default class Mine extends Component {
 
   _render = () => {
     let fontSize = 16
-    let itemWidth = '100%'
-    let itemHeight = 50
     return (
       <View style={{ flex: 1, backgroundColor: color.border }}>
         {this._renderHeader(fontSize)}
@@ -77,8 +80,22 @@ export default class Mine extends Component {
           overScrollMode={'always'}
           bounces={true}
         >
-          {this._renderMyOnlineDataItem(itemWidth, itemHeight, fontSize)}
-          {this._renderMyServiceItem(itemWidth, itemHeight, fontSize)}
+          {this._renderItem({
+            title: '本地数据',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
+            onClick: this.goToMyLocalData,
+          })}
+          {this._renderItem({
+            title: '在线数据',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),
+            onClick: this.goToMyOnlineData,
+          })}
+          {this._renderItem({
+            title: '我的服务',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的服务.png'),
+            onClick: this.goToMyService,
+          })}
+
           {this._renderLine()}
         </ScrollView>
       </View>
@@ -131,8 +148,33 @@ export default class Mine extends Component {
       />
     )
   }
-  _renderMyServiceItem = (itemWidth, itemHeight, fontSize) => {
-    let imageWidth = itemHeight / 2
+  _renderItem = (
+    itemRequire = {
+      title: '',
+      leftImagePath: '',
+      onClick: () => {
+        Toast.show('test')
+      },
+    },
+    itemOptions = {
+      itemWidth: '100%',
+      itemHeight: 50,
+      fontSize: 16,
+      imageWidth: 25,
+      imageHeight: 25,
+      rightImagePath: require('../../../assets/Mine/个人主页-箭头.png'),
+    },
+  ) => {
+    const { title, leftImagePath, onClick } = itemRequire
+    const {
+      itemWidth,
+      itemHeight,
+      fontSize,
+      imageWidth,
+      imageHeight,
+      rightImagePath,
+    } = itemOptions
+
     return (
       <View>
         <View
@@ -147,14 +189,12 @@ export default class Mine extends Component {
             paddingLeft: 10,
             paddingRight: 10,
           }}
-          onPress={() => {
-            this.goToMyService()
-          }}
+          onPress={onClick}
         >
           <Image
-            style={{ width: imageWidth, height: imageWidth }}
+            style={{ width: imageWidth, height: imageHeight }}
             resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-我的服务.png')}
+            source={leftImagePath}
           />
           <Text
             style={{
@@ -166,58 +206,12 @@ export default class Mine extends Component {
               paddingLeft: 5,
             }}
           >
-            我的服务
+            {title}
           </Text>
           <Image
-            style={{ width: imageWidth, height: imageWidth }}
+            style={{ width: imageWidth, height: imageHeight }}
             resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-箭头.png')}
-          />
-        </TouchableOpacity>
-      </View>
-    )
-  }
-  _renderMyOnlineDataItem = (itemWidth, itemHeight, fontSize) => {
-    let imageWidth = itemHeight / 2
-    return (
-      <View>
-        <View
-          style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
-        />
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            width: itemWidth,
-            height: itemHeight,
-            alignItems: 'center',
-            paddingLeft: 10,
-            paddingRight: 10,
-          }}
-          onPress={() => {
-            this.goToMyOnlineData()
-          }}
-        >
-          <Image
-            style={{ width: imageWidth, height: imageWidth }}
-            resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-我的数据.png')}
-          />
-          <Text
-            style={{
-              lineHeight: itemHeight,
-              flex: 1,
-              textAlign: 'left',
-              fontSize: fontSize,
-              color: 'white',
-              paddingLeft: 5,
-            }}
-          >
-            在线数据
-          </Text>
-          <Image
-            style={{ width: imageWidth, height: imageWidth }}
-            resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-箭头.png')}
+            source={rightImagePath}
           />
         </TouchableOpacity>
       </View>
