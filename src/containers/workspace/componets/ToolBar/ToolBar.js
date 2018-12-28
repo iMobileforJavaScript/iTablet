@@ -217,7 +217,6 @@ export default class ToolBar extends React.PureComponent {
     switch (type) {
       case ConstToolType.MAP_BASE:
         data = BotMap
-        buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP3D_BASE:
         data = Map3DBaseMapList.baseListData
@@ -2511,10 +2510,8 @@ export default class ToolBar extends React.PureComponent {
     } else {
       this.setVisible(false)
     }
-    if (GLOBAL.Type === constants.MAP_EDIT) {
-      this.props.getLayers(-1, layers => {
-        this.props.setCurrentLayer(layers.length > 0 && layers[0])
-      })
+    if (this.state.type === ConstToolType.MAP_BASE) {
+      this.props.getLayers()
     }
   }
 
@@ -2524,16 +2521,14 @@ export default class ToolBar extends React.PureComponent {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

@@ -460,7 +460,9 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderTool = () => {
-    return <LayerManager_tolbar ref={ref => (this.toolBox = ref)} />
+    return (
+      <LayerManager_tolbar ref={ref => (this.toolBox = ref)} {...this.props} />
+    )
   }
 
   render() {

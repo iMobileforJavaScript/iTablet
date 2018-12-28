@@ -9,18 +9,17 @@ function OpenData(data, index) {
       if (GLOBAL.isArrayData) {
         await SMap.removeLayer(0)
       } else {
-        for (let i = 0; i < 2; i++) {
-          await SMap.removeLayer(0)
-        }
+        await SMap.removeLayer(0)
+        await SMap.removeLayer(0)
       }
     }
     if (data instanceof Array) {
-      await SMap.openDatasource(data[0].DSParams, index)
-      await SMap.openDatasource(data[1].DSParams, index)
+      await SMap.openDatasource(data[1].DSParams, index, false)
+      await SMap.openDatasource(data[0].DSParams, index, false)
       GLOBAL.isArrayData = false
       GLOBAL.isNewMap = true
     } else {
-      await SMap.openDatasource(data.DSParams, index)
+      await SMap.openDatasource(data.DSParams, index, false)
       GLOBAL.isArrayData = true
       GLOBAL.isNewMap = true
     }
