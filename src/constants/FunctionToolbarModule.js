@@ -18,9 +18,11 @@ function OpenData(data, index) {
       await SMap.openDatasource(data[0].DSParams, index)
       await SMap.openDatasource(data[1].DSParams, index)
       GLOBAL.isArrayData = false
+      GLOBAL.isNewMap = true
     } else {
       await SMap.openDatasource(data.DSParams, index)
       GLOBAL.isArrayData = true
+      GLOBAL.isNewMap = true
     }
   }.bind(this)())
 }

@@ -2509,6 +2509,11 @@ export default class ToolBar extends React.PureComponent {
     } else {
       this.setVisible(false)
     }
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      this.props.getLayers(-1, layers => {
+        this.props.setCurrentLayer(layers.length > 0 && layers[0])
+      })
+    }
   }
 
   render() {
