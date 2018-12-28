@@ -69,7 +69,7 @@ const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
 
-export const BUTTON_HEIGHT = scaleSize(80)
+export const BUTTON_HEIGHT = scaleSize(95)
 let isSharing = false
 
 export default class ToolBar extends React.PureComponent {

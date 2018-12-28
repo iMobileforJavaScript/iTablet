@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: 14,
+    fontSize: scaleSize(22),
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',

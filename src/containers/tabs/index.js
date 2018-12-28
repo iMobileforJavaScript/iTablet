@@ -151,8 +151,8 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(20),
   },
   icon: {
-    width: scaleSize(50),
-    height: scaleSize(50),
+    width: scaleSize(45),
+    height: scaleSize(45),
   },
   labelView: {
     flexDirection: 'row',

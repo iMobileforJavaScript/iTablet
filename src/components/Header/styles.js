@@ -1,15 +1,16 @@
 import { StyleSheet, Platform } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, screen } from '../../utils'
 import { color } from '../../styles'
 
-export const HEADER_HEIGHT = 50 + (Platform.OS === 'ios' ? 20 : 0)
+export const HEADER_HEIGHT =
+  screen.deviceWidth > 320 ? 50 + (Platform.OS === 'ios' ? 20 : 0) : 50
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default StyleSheet.create({
   defaultHeaderView: {
     width: '100%',
-    paddingTop: HEADER_PADDINGTOP,
-    height: HEADER_HEIGHT,
+    paddingTop: scaleSize(HEADER_PADDINGTOP),
+    height: scaleSize(HEADER_HEIGHT),
     // borderBottomWidth: 1,
     // borderBottomColor: '#e2e2e2',
     flexDirection: 'row',
