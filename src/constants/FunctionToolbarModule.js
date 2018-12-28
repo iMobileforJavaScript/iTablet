@@ -3,6 +3,28 @@ import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/componets/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
 
+function OpenData(data, index) {
+  (async function() {
+    if (GLOBAL.isNewMap) {
+      if (GLOBAL.isArrayData) {
+        await SMap.removeLayer(0)
+      } else {
+        for (let i = 0; i < 2; i++) {
+          await SMap.removeLayer(0)
+        }
+      }
+    }
+    if (data instanceof Array) {
+      await SMap.openDatasource(data[0].DSParams, index)
+      await SMap.openDatasource(data[1].DSParams, index)
+      GLOBAL.isArrayData = false
+    } else {
+      await SMap.openDatasource(data.DSParams, index)
+      GLOBAL.isArrayData = true
+    }
+  }.bind(this)())
+}
+
 const layerAdd = [
   {
     title: '选择数据源',
@@ -20,37 +42,25 @@ const BotMap = [
       {
         title: 'Google RoadMap',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 0)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 0)
         },
       },
       {
         title: 'Google Staelite',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 1)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 1)
         },
       },
       {
         title: 'Google Terrain',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 2)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 2)
         },
       },
       {
         title: 'Google Hybrid',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 3)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 3)
         },
       },
     ],
@@ -58,53 +68,36 @@ const BotMap = [
   {
     title: 'MapWorld',
     data: [
+      // {
+      //   title: '全球矢量地图（经纬度）',
+      //   action: () => {
+      //     OpenData(ConstOnline.TDJWD,0)
+      //   },
+      // },
       {
-        title: '全球矢量地图（经纬度）',
+        title: '全球矢量地图',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDJWD[0].DSParams, 0, false)
-            await SMap.openDatasource(ConstOnline.TDJWD[1].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.TD, 0)
         },
       },
+      // {
+      //   title: '全球影像地图服务（经纬度）',
+      //   action: () => {
+      //     OpenData(ConstOnline.TDYX,0)
+      //   },
+      // },
       {
-        title: '全球矢量地图（墨卡托）',
+        title: '全球影像地图服务',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TD[0].DSParams, 0, false)
-            await SMap.openDatasource(ConstOnline.TD[1].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.TDYXM, 0)
         },
       },
-      {
-        title: '全球影像地图服务（经纬度）',
-        action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDYX.DSParams, 0, false)
-          }.bind(this)())
-        },
-      },
-      {
-        title: '全球影像地图服务（墨卡托）',
-        action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDYXM.DSParams, 0, false)
-          }.bind(this)())
-        },
-      },
-      {
-        title: '全球地形晕渲地图服务（经纬度）',
-        action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDQ.DSParams, 0, false)
-          }.bind(this)())
-        },
-      },
+      // {
+      //   title: '全球地形晕渲地图服务（经纬度）',
+      //   action: () => {
+      //     OpenData(ConstOnline.TDQ,0)
+      //   },
+      // },
     ],
   },
   {
@@ -113,10 +106,7 @@ const BotMap = [
       {
         title: 'Baidu Map',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.Baidu, 0)
         },
       },
     ],
@@ -127,10 +117,7 @@ const BotMap = [
       {
         title: 'OSM Map',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.OSM, 0)
         },
       },
     ],
@@ -141,14 +128,7 @@ const BotMap = [
       {
         title: 'quanguo',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(
-              ConstOnline['SuperMapCloud'].DSParams,
-              0,
-              false,
-            )
-          }.bind(this)())
+          OpenData(ConstOnline.SuperMapCloud, 0)
         },
       },
     ],
