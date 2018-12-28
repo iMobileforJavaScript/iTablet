@@ -1039,6 +1039,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.CLEAR,
           ToolbarBtnType.FLEX,
         ],
+        isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
         containerType: 'list',
@@ -1061,6 +1062,7 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
+          isFullScreen: false,
         },
         () => {
           this.height = ConstToolType.HEIGHT[1]
@@ -2522,14 +2524,16 @@ export default class ToolBar extends React.PureComponent {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen && !this.state.isTouchProgress && (
+        {this.state.isFullScreen &&
+          !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

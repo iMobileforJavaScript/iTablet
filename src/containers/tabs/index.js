@@ -3,7 +3,7 @@ import React from 'react'
 import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 
 import { scaleSize } from '../../utils'
-import { color, size } from '../../styles'
+import { color } from '../../styles'
 import Home from './Home'
 import Mine, {
   MyService,
@@ -144,11 +144,11 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: color.gray2,
-    fontSize: size.setSpText(8),
+    fontSize: scaleSize(20),
   },
   selectedTabText: {
     color: color.blue2,
-    fontSize: size.setSpText(8),
+    fontSize: scaleSize(20),
   },
   icon: {
     width: 30,
