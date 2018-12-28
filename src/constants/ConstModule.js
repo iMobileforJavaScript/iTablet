@@ -128,7 +128,7 @@ export default [
       } else {
         wsPath = await FileTools.appendingHomeDirectory(customerPath)
       }
-      NavigationService.navigate('ThemeMapView', {
+      NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
         wsData: [
           {

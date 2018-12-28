@@ -252,7 +252,7 @@ export default class FunctionToolbar extends React.Component {
         // TODO 根据符号类型改变ToolBox内容
         toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
           containerType: 'table',
-          isFullScreen: false,
+          isFullScreen: true,
           column: 4,
           height:
             this.props.device.orientation === 'LANDSCAPE'
@@ -272,7 +272,7 @@ export default class FunctionToolbar extends React.Component {
         // TODO 根据符号类型改变ToolBox内容
         toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
           containerType: 'table',
-          isFullScreen: false,
+          isFullScreen: true,
           column: 4,
           height:
             this.props.device.orientation === 'LANDSCAPE'

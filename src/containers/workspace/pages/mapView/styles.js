@@ -83,7 +83,7 @@ export default StyleSheet.create({
   },
   functionToolbar: {
     position: 'absolute',
-    top: (Platform.OS === 'ios' ? 20 : 0) + 60 + 20,
+    top: (Platform.OS === 'ios' ? 10 : 0) + 60 + 20,
     right: scaleSize(20),
     backgroundColor: color.white,
   },

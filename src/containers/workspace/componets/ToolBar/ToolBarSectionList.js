@@ -1,6 +1,6 @@
 import React from 'react'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { screen, scaleSize } from '../../../../utils'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -166,6 +166,15 @@ export default class ToolBarSectionList extends React.Component {
         {(item.title || item.name) && (
           <Text style={styles.itemTitle}>{item.title || item.name}</Text>
         )}
+        {item.expression && (
+          <Text
+            style={
+              item.isSelected ? styles.itemTitleSelected : styles.itemTitle
+            }
+          >
+            {item.expression}
+          </Text>
+        )}
         {item.colorSchemeName && (
           <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
         )}
@@ -303,5 +312,17 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.themeText,
+  },
+  itemTitleSelected: {
+    width: screen.deviceWidth,
+    paddingLeft: scaleSize(60),
+    // textAlign: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    textAlignVertical: 'center',
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(70),
+    backgroundColor: color.grayLight,
+    color: color.black,
   },
 })

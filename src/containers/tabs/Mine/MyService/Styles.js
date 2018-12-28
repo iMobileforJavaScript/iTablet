@@ -1,6 +1,6 @@
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-export const itemWidth = Dimensions.get('window').width
+export const itemWidth = '100%'
 export const itemHeight = 140
 export const imageWidth = 120
 export const imageHeight = 100
@@ -38,14 +38,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#c0c0c0',
   },
   restTitleTextStyle: {
-    flex: 1,
-    width: itemWidth - 30 - imageWidth,
+    width: itemWidth,
     fontSize: largeFontSize,
     fontWeight: 'bold',
     color: 'white',
     paddingLeft: 10,
     textAlign: 'left',
-    flexWrap: 'wrap',
   },
   separateViewStyle: {
     width: itemWidth,

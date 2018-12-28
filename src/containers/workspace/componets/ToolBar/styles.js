@@ -64,8 +64,8 @@ export default StyleSheet.create({
     backgroundColor: color.theme,
   },
   img: {
-    height: scaleSize(40),
-    width: scaleSize(40),
+    height: 30,
+    width: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },

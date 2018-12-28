@@ -3,7 +3,7 @@ import React from 'react'
 import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 
 import { scaleSize } from '../../utils'
-import { color } from '../../styles'
+import { color, size } from '../../styles'
 import Home from './Home'
 import Mine, {
   MyService,
@@ -46,35 +46,6 @@ const Tabs = TabNavigator(
         }
       },
     },
-    // CloudService: {
-    //   screen: CloudService,
-    //   navigationOptions: () => {
-    //     return {
-    //       tabBarLabel: data => {
-    //         return (
-    //           <View style={styles.labelView}>
-    //             <Text
-    //               style={data.focused ? styles.selectedTabText : styles.tabText}
-    //             >
-    //               云服务
-    //             </Text>
-    //           </View>
-    //         )
-    //       },
-    //       tabBarIcon: ({ focused }: any) =>
-    //         <Image
-    //           resizeMode="contain"
-    //           source={
-    //             focused
-    //               ? require('../../assets/tabBar/icon-service-selected.png')
-    //               : require('../../assets/tabBar/icon-service.png')
-    //           }
-    //           style={styles.icon}
-    //         />,
-    //       header: null,
-    //     }
-    //   },
-    // },
     Find: {
       screen: Find,
       navigationOptions: () => {
@@ -173,15 +144,15 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: color.gray2,
-    fontSize: 12,
+    fontSize: size.setSpText(8),
   },
   selectedTabText: {
     color: color.blue2,
-    fontSize: 12,
+    fontSize: size.setSpText(8),
   },
   icon: {
-    width: scaleSize(40),
-    height: scaleSize(40),
+    width: 30,
+    height: 30,
   },
   labelView: {
     flexDirection: 'row',
@@ -189,9 +160,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
 })
-
 export default Tabs
-
 export {
   MyService,
   MyLocalData,

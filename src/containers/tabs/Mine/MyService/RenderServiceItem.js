@@ -49,10 +49,11 @@ export default class RenderServiceItem extends PureComponent {
             />
           </TouchableOpacity>
 
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[styles.restTitleTextStyle]} numberOfLines={2}>
               {this.props.restTitle}
             </Text>
+            <View style={{ flex: 1 }} />
             <Text
               onPress={() => {
                 if (this.props.onItemPress) {

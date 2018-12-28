@@ -7,11 +7,12 @@ import {
   FlatList,
   // Dimensions,
   StyleSheet,
-  ScrollView,
+  // ScrollView,
   // Dimensions,
 } from 'react-native'
 import { ConstModule } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
+import { size } from '../../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default class ModuleList extends Component {
   props: {
@@ -48,20 +49,20 @@ export default class ModuleList extends Component {
   }
   _renderScrollView = () => {
     return (
-      <ScrollView
-        style={styles.scrollView}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
-        <FlatList
-          data={ConstModule}
-          renderItem={this._renderItem}
-          horizontal={false}
-          numColumns={4}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps={'always'}
-        />
-      </ScrollView>
+      // <ScrollView
+      //   style={styles.scrollView}
+      //   horizontal={true}
+      //   showsHorizontalScrollIndicator={false}
+      // >
+      //  </ScrollView>
+      <FlatList
+        data={ConstModule}
+        renderItem={this._renderItem}
+        horizontal={false}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps={'always'}
+      />
     )
   }
   render() {
@@ -93,7 +94,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flatList: {
-    marginTop: scaleSize(40),
+    marginTop: scaleSize(150),
   },
   baseImage: {
     position: 'absolute',
@@ -122,13 +123,18 @@ const styles = StyleSheet.create({
   title: {
     width: scaleSize(150),
     height: scaleSize(40),
-    fontSize: scaleSize(25),
+    fontSize: size.setSpText(10),
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: scaleSize(10),
   },
   scrollView: {
+    // position:"absolute",
     width: '72%',
-    // marginTop: scaleSize(15),
+    // height:"100%",
+    flexDirection: 'column',
+    // alignItems:"center",
+    justifyContent: 'space-around',
+    marginTop: scaleSize(80),
   },
 })

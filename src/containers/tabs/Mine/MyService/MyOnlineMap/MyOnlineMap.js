@@ -75,40 +75,44 @@ export default class MyOnlineMap extends Component {
       this._showLoadProgressView()
       let objDataJson = await FetchUtils.getObjJson(uri)
       let arrDataItemServices = objDataJson.dataItemServices
-      let length = arrDataItemServices.length
-      let restUrl
-      for (let i = 0; i < length; i++) {
-        let dataItemServices = arrDataItemServices[i]
-        if (dataItemServices.serviceType === 'RESTMAP') {
-          restUrl = dataItemServices.address
-          break
-        }
-      }
-      if (restUrl === undefined) {
-        this._showInfo('数据没有发布服务')
+      if (arrDataItemServices === undefined) {
+        this._showInfo('资源不存在或无权访问')
       } else {
-        restUrl = 'http' + restUrl.substring(5, restUrl.length) + '/maps.json'
-        let arrMapJson = await FetchUtils.getObjJson(restUrl)
-        if (arrMapJson.errorMsg !== undefined) {
-          this._showInfo('数据没有公开已有服务，无权限浏览')
-        } else {
-          let arrMapInfos = []
-          for (let j = 0; j < arrMapJson.length; j++) {
-            let objMapJson = arrMapJson[j]
-            let mapTitle = objMapJson.name
-            let mapUrl = objMapJson.path
-            let mapThumbnail = mapUrl + '/entireImage.png?'
-            let objMapInfo = {
-              mapTitle: mapTitle,
-              mapUrl: mapUrl,
-              mapThumbnail: mapThumbnail,
-            }
-            arrMapInfos.push(objMapInfo)
+        let length = arrDataItemServices.length
+        let restUrl
+        for (let i = 0; i < length; i++) {
+          let dataItemServices = arrDataItemServices[i]
+          if (dataItemServices.serviceType === 'RESTMAP') {
+            restUrl = dataItemServices.address
+            break
           }
-          if (arrMapInfos.length > 0) {
-            this.setState({ mapInfos: arrMapInfos })
+        }
+        if (restUrl === undefined) {
+          this._showInfo('数据没有发布服务')
+        } else {
+          restUrl = 'http' + restUrl.substring(5, restUrl.length) + '/maps.json'
+          let arrMapJson = await FetchUtils.getObjJson(restUrl)
+          if (arrMapJson.errorMsg !== undefined) {
+            this._showInfo('数据没有公开已有服务，无权限浏览')
           } else {
-            this._showInfo('数据没有服务')
+            let arrMapInfos = []
+            for (let j = 0; j < arrMapJson.length; j++) {
+              let objMapJson = arrMapJson[j]
+              let mapTitle = objMapJson.name
+              let mapUrl = objMapJson.path
+              let mapThumbnail = mapUrl + '/entireImage.png?'
+              let objMapInfo = {
+                mapTitle: mapTitle,
+                mapUrl: mapUrl,
+                mapThumbnail: mapThumbnail,
+              }
+              arrMapInfos.push(objMapInfo)
+            }
+            if (arrMapInfos.length > 0) {
+              this.setState({ mapInfos: arrMapInfos })
+            } else {
+              this._showInfo('数据没有服务')
+            }
           }
         }
       }
@@ -153,10 +157,11 @@ export default class MyOnlineMap extends Component {
         >
           <View style={styles.itemViewStyle}>
             {this._selectImage(info)}
-            <View>
+            <View style={{ flex: 1 }}>
               <Text style={[styles.restTitleTextStyle]} numberOfLines={2}>
                 {mapTitle}
               </Text>
+              <View style={{ flex: 1 }} />
               <Text
                 numberOfLines={1}
                 style={[
@@ -239,7 +244,6 @@ export default class MyOnlineMap extends Component {
   render() {
     return (
       <Container
-        ref={ref => (this.containerRef = ref)}
         headerProps={{
           title: '在线地图',
           withoutBack: false,
