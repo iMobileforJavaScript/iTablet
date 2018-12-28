@@ -333,12 +333,13 @@ function openTemplate() {
 //   }
 // }
 
-/** 打开工作空间 **/
+/** 新建 **/
 function create() {
   if (GLOBAL.Type === constants.COLLECTION) {
     openWorkspace()
   }
   if (GLOBAL.Type === constants.MAP_EDIT) {
+    GLOBAL.isNewMap = false
     SMap.removeAllLayer()
   }
 }

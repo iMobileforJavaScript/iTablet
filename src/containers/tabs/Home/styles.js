@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../utils'
-import { size } from '../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {
@@ -43,7 +42,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     textAlignVertical: 'center',
-    fontSize: size.setSpText(20),
+    fontSize: scaleSize(45),
     // fontFamily: 'CenturyGothic',
   },
   moreImg: {

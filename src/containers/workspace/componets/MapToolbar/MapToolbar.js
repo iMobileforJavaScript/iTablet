@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-// import { scaleSize } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 import { ListSeparator } from '../../../../components'
 import constants from '../../constants'
@@ -148,35 +148,34 @@ export default class MapToolbar extends React.Component {
       case constants.MAP_THEME:
         list = [
           {
-            key: 'ThemeMapView',
+            key: 'MapView',
             title: '地图',
             image: require('../../../../assets/mapToolbar/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
             btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('ThemeMapView')
+              this.props.navigation && this.props.navigation.navigate('MapView')
             },
           },
           {
-            key: 'ThemeLayerManager',
+            key: 'LayerManager',
             title: '图层',
             image: require('../../../../assets/mapToolbar/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('ThemeLayerManager', {
+                this.props.navigation.navigate('LayerManager', {
                   type: constants.MAP_THEME,
                 })
             },
           },
           {
-            key: 'ThemeLayerAttribute',
+            key: 'LayerAttribute',
             title: '属性',
             image: require('../../../../assets/mapToolbar/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('ThemeLayerAttribute', {
+                this.props.navigation.navigate('LayerAttribute', {
                   type: constants.MAP_THEME,
                 })
             },
@@ -209,6 +208,7 @@ export default class MapToolbar extends React.Component {
         key={item.key}
         title={item.title}
         textColor={'white'}
+        textStyle={{ fontSize: scaleSize(22) }}
         selected={this.state.currentIndex === index}
         image={item.image}
         selectedImage={item.selectedImage}
@@ -262,7 +262,7 @@ export default class MapToolbar extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: 80,
+    height: scaleSize(95),
     width: '100%',
     backgroundColor: color.theme,
     alignSelf: 'center',

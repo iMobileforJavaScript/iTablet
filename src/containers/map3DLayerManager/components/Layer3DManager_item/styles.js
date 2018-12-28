@@ -41,8 +41,8 @@ export default StyleSheet.create({
     width: 40,
   },
   text_container: {
-    height: 40,
-    width: 150,
+    flex: 1,
+    alignItems: 'center',
   },
   rowTwo: {
     height: 46,
