@@ -43,7 +43,7 @@ import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
-import { MapTabs, Map3DTabs, MapThemeTabs } from './workspace'
+import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
 import TouchProgress from './workspace/componets/TouchProgress'
 
@@ -69,12 +69,6 @@ export default StackNavigator(
     },
     Map3DTabs: {
       screen: Map3DTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapThemeTabs: {
-      screen: MapThemeTabs,
       navigationOptions: {
         header: null,
       },
