@@ -79,19 +79,17 @@ export default class Login extends React.Component {
     let password = ''
     try {
       if (isEmail) {
-        // if (!this.txtEmail) {
-        //   Toast.show('请输入邮箱或昵称')
-        //   return
-        // }
-        // if (!this.txtEmailPassword) {
-        //   Toast.show('请输入密码')
-        //   return
-        // }
+        if (!this.txtEmail) {
+          Toast.show('请输入邮箱或昵称')
+          return
+        }
+        if (!this.txtEmailPassword) {
+          Toast.show('请输入密码')
+          return
+        }
         this.container.setLoading(true, '登录中...')
-        // userName = this.txtEmail
-        // password = this.txtEmailPassword
-        userName = 'imobile1234'
-        password = 'imobile'
+        userName = this.txtEmail
+        password = this.txtEmailPassword
         result = await SOnlineService.login(userName, password)
       } else {
         if (!this.txtPhoneNumber) {
