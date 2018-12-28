@@ -148,35 +148,34 @@ export default class MapToolbar extends React.Component {
       case constants.MAP_THEME:
         list = [
           {
-            key: 'ThemeMapView',
+            key: 'MapView',
             title: '地图',
             image: require('../../../../assets/mapToolbar/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
             btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('ThemeMapView')
+              this.props.navigation && this.props.navigation.navigate('MapView')
             },
           },
           {
-            key: 'ThemeLayerManager',
+            key: 'LayerManager',
             title: '图层',
             image: require('../../../../assets/mapToolbar/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('ThemeLayerManager', {
+                this.props.navigation.navigate('LayerManager', {
                   type: constants.MAP_THEME,
                 })
             },
           },
           {
-            key: 'ThemeLayerAttribute',
+            key: 'LayerAttribute',
             title: '属性',
             image: require('../../../../assets/mapToolbar/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('ThemeLayerAttribute', {
+                this.props.navigation.navigate('LayerAttribute', {
                   type: constants.MAP_THEME,
                 })
             },

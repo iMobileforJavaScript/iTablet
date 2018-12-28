@@ -303,7 +303,9 @@ export default class MT_layerManager extends React.Component {
     this.index = await SMap.getLayerIndexByName(data.caption)
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
-        Toast.show('当前图层为' + data.caption)
+        if (GLOBAL.Type !== constants.MAP_THEME) {
+          Toast.show('当前图层为' + data.caption)
+        }
       })
     if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
       SMap.setLayerEditable(data.path, true)
@@ -329,18 +331,21 @@ export default class MT_layerManager extends React.Component {
       switch (data.themeType) {
         case ThemeType.UNIQUE:
           this.props.navigation.navigate('MapView')
+          Toast.show('当前图层为:' + data.name)
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
           break
         case ThemeType.RANGE:
           this.props.navigation.navigate('MapView')
+          Toast.show('当前图层为:' + data.name)
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
           break
         case ThemeType.LABEL:
           this.props.navigation.navigate('MapView')
+          Toast.show('当前图层为:' + data.name)
           GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         default:
-          Toast.show('提示: 请选择专题图层。')
+          Toast.show('提示:请选择专题图层')
           break
       }
     }
@@ -448,6 +453,7 @@ export default class MT_layerManager extends React.Component {
           data={this.props.layers}
           renderItem={this._renderItem}
           getItemLayout={this.getItemLayout}
+          keyExtractor={(item, index) => index.toString()}
         />
       </View>
     )
