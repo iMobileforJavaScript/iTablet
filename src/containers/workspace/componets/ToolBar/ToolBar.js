@@ -1065,6 +1065,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.CLEAR,
           ToolbarBtnType.FLEX,
         ],
+        isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
         containerType: 'list',
@@ -1087,6 +1088,7 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
+          isFullScreen: false,
         },
         () => {
           this.height = ConstToolType.HEIGHT[1]
@@ -2549,6 +2551,11 @@ export default class ToolBar extends React.PureComponent {
       })
     } else {
       this.setVisible(false)
+    }
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      this.props.getLayers(-1, layers => {
+        this.props.setCurrentLayer(layers.length > 0 && layers[0])
+      })
     }
   }
 

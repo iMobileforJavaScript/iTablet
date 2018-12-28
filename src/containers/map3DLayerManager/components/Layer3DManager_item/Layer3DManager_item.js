@@ -112,7 +112,7 @@ export default class Layer3DManager_item extends React.Component {
             {/* <TouchableOpacity style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._setObjectsColor}><Image style={styles.btn_image} source={image3}/></TouchableOpacity> */}
           </View>
           <View style={styles.text_container}>
-            <Text>{name}</Text>
+            <Text style={{ color: 'white' }}>{name}</Text>
           </View>
           {/* <TouchableOpacity activeOpacity={0.8} style={styles.btn} underlayColor={Util.UNDERLAYCOLOR} onPress={this._pop_row}><Image style={styles.btn_image} source={image4}/></TouchableOpacity> */}
         </View>

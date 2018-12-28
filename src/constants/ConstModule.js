@@ -23,6 +23,8 @@ export default [
     moduleImage: require('../assets/home/icon_cartography.png'),
     action: async user => {
       GLOBAL.Type = constants.MAP_EDIT
+      GLOBAL.isArrayData = true
+      GLOBAL.isNewMap = true
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)

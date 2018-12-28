@@ -339,6 +339,7 @@ function create() {
     openWorkspace()
   }
   if (GLOBAL.Type === constants.MAP_EDIT) {
+    GLOBAL.isNewMap = false
     SMap.removeAllLayer()
   }
 }

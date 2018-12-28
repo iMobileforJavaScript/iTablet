@@ -6,8 +6,8 @@ const deviceWidth = Dimensions.get('window').width //设备的宽度
 const deviceHeight = Dimensions.get('window').height //设备的高度
 
 //px转换成dp
-const w2 = 720 / defaultPixel
-const h2 = 1080 / defaultPixel
+let w2 = deviceWidth > 320 ? 720 / defaultPixel : 640 / defaultPixel
+let h2 = deviceWidth > 320 ? 1080 / defaultPixel : 1136 / defaultPixel
 let scale //获取缩放比例
 if (deviceWidth > deviceHeight) {
   scale = Math.min(deviceHeight / w2, deviceWidth / h2)
