@@ -52,7 +52,7 @@ export default class TableList extends React.Component {
       } else {
         column = this.props.numColumns
       }
-      if (this.props.type === 'MAP3D_CIRCLEFLY') {
+      if (this.props.Heighttype === 'MAP3D_CIRCLEFLY') {
         column = 1
       }
       let rowIndex = Math.floor(index / column)
@@ -89,7 +89,7 @@ export default class TableList extends React.Component {
     if (!this.props.renderCell) throw new Error('Please render cell')
     let column =
       this.props.device.orientation === 'LANDSCAPE' ? 8 : this.props.numColumns
-    if (this.props.type === 'MAP3D_CIRCLEFLY') {
+    if (this.props.Heighttype === 'MAP3D_CIRCLEFLY') {
       column = 1
     }
     return (

@@ -187,8 +187,8 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
   },
   normalImage: {
-    height: scaleSize(45),
-    width: scaleSize(45),
+    height: scaleSize(50),
+    width: scaleSize(50),
     alignSelf: 'center',
     // borderRadius: 5,
   },
