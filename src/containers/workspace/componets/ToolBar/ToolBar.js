@@ -846,6 +846,32 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
+  getLabelBackColor = async type => {
+    Animated.timing(this.state.boxHeight, {
+      toValue: ConstToolType.THEME_HEIGHT[3],
+      duration: Const.ANIMATED_DURATION,
+    }).start()
+    this.isBoxShow = true
+
+    let date = await ThemeMenuData.getLabelColor()
+    this.setState(
+      {
+        isFullScreen: false,
+        isTouchProgress: false,
+        isSelectlist: false,
+        containerType: 'colortable',
+        column: 8,
+        tableType: 'scroll',
+        data: date,
+        type: type,
+        buttons: ThemeMenuData.getThemeFourMenu(),
+      },
+      () => {
+        this.height = ConstToolType.THEME_HEIGHT[3]
+      },
+    )
+  }
+
   getLabelFontName = async type => {
     Animated.timing(this.state.boxHeight, {
       toValue: ConstToolType.THEME_HEIGHT[3],
@@ -927,7 +953,7 @@ export default class ToolBar extends React.PureComponent {
     }).start()
     this.isBoxShow = true
 
-    let date = await ThemeMenuData.getLabelFontColor()
+    let date = await ThemeMenuData.getLabelColor()
     this.setState(
       {
         isFullScreen: false,
@@ -1461,6 +1487,10 @@ export default class ToolBar extends React.PureComponent {
       }
     }
     // this.props.existFullMap && this.props.existFullMap()
+  }
+
+  commitTheme = () => {
+    ThemeMenuData.saveMapTheme()
   }
 
   showThemeBox = (autoFullScreen = false) => {
@@ -2149,6 +2179,17 @@ export default class ToolBar extends React.PureComponent {
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               Color: item.key,
+              ColorType: 'FORECOLOR',
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR
+          ) {
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              Color: item.key,
+              ColorType: 'BACKSHAPE_COLOR',
             }
             ThemeMenuData.setThemeParams(Params)
           }
@@ -2455,7 +2496,7 @@ export default class ToolBar extends React.PureComponent {
           action = this.closeCircle
           break
         case ToolbarBtnType.THEME_CANCEL:
-          //专题图-取消
+          //专题图-退出
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
           break
@@ -2472,7 +2513,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.close
+          action = this.commitTheme
           break
       }
 
