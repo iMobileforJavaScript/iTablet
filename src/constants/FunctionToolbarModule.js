@@ -155,8 +155,9 @@ const line = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '符号线',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
@@ -165,6 +166,7 @@ const line = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '符号线',
   },
   {
     key: '线宽',
@@ -177,8 +179,11 @@ const line = [
           ToolbarBtnType.MENUS,
           ToolbarBtnType.PLACEHOLDER,
         ],
+        selectName: '线宽',
+        selectKey: '线宽',
       })
     },
+    selectKey: '线宽',
   },
   {
     key: '颜色',
@@ -188,8 +193,9 @@ const line = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '线颜色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET, {
         containerType: 'colortable',
@@ -199,6 +205,7 @@ const line = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '线颜色',
   },
 ]
 
@@ -211,8 +218,9 @@ const point = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '点符号',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
@@ -221,6 +229,7 @@ const point = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '点符号',
   },
   {
     key: '大小',
@@ -229,6 +238,7 @@ const point = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '大小',
+        selectKey: '大小',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -236,6 +246,7 @@ const point = [
         ],
       })
     },
+    selectKey: '大小',
   },
   {
     key: '颜色',
@@ -245,8 +256,9 @@ const point = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '点颜色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET, {
         containerType: 'colortable',
@@ -256,6 +268,7 @@ const point = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '点颜色',
   },
   {
     key: '旋转角度',
@@ -264,6 +277,7 @@ const point = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '旋转角度',
+        selectKey: '旋转角度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -271,6 +285,7 @@ const point = [
         ],
       })
     },
+    selectKey: '旋转角度',
   },
   {
     key: '透明度',
@@ -279,6 +294,7 @@ const point = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '透明度',
+        selectKey: '点透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -286,6 +302,7 @@ const point = [
         ],
       })
     },
+    selectKey: '点透明度',
   },
 ]
 
@@ -298,8 +315,9 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '面符号',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
@@ -308,6 +326,7 @@ const region = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '面符号',
   },
   {
     key: '前景色',
@@ -317,8 +336,9 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '前景色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET, {
         containerType: 'colortable',
@@ -328,6 +348,7 @@ const region = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '前景色',
   },
   {
     key: '背景色',
@@ -337,8 +358,9 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '背景色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
         containerType: 'colortable',
@@ -348,6 +370,7 @@ const region = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '背景色',
   },
   {
     key: '透明度',
@@ -360,8 +383,11 @@ const region = [
           ToolbarBtnType.MENUS,
           ToolbarBtnType.PLACEHOLDER,
         ],
+        selectName: '透明度',
+        selectKey: '面透明度',
       })
     },
+    selectKey: '面透明度',
   },
   // {
   //   key: '渐变',
@@ -387,6 +413,7 @@ const grid = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '透明度',
+        selectKey: '栅格透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -394,6 +421,7 @@ const grid = [
         ],
       })
     },
+    selectKey: '栅格透明度',
   },
   {
     key: '对比度',
@@ -402,6 +430,7 @@ const grid = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '对比度',
+        selectKey: '栅格对比度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -409,6 +438,7 @@ const grid = [
         ],
       })
     },
+    selectKey: '栅格对比度',
   },
   {
     key: '亮度',
@@ -417,6 +447,7 @@ const grid = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '亮度',
+        selectKey: '栅格亮度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -424,6 +455,7 @@ const grid = [
         ],
       })
     },
+    selectKey: '栅格亮度',
   },
 ]
 export { layerAdd, BotMap, openData, line, point, region, grid }

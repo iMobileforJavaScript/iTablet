@@ -35,11 +35,8 @@ import { FileTools } from '../../../../native'
 import {
   View,
   TouchableOpacity,
-  TouchableHighlight,
   Image,
-  Text,
   Animated,
-  FlatList,
 } from 'react-native'
 import {
   SMap,
@@ -55,7 +52,7 @@ import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 import ShareData from './ShareData'
-
+import SelectList from './SelectList'
 import styles from './styles'
 
 /** 工具栏类型 **/
@@ -161,6 +158,7 @@ export default class ToolBar extends React.PureComponent {
       themeColor: '',
       themeCreateType: '',
       selectName: '',
+      selectKey: '',
     }
     this.isShow = false
     this.isBoxShow = true
@@ -1326,6 +1324,11 @@ export default class ToolBar extends React.PureComponent {
 
   close = (type = this.state.type) => {
     (async function() {
+      if (GLOBAL.Type === constants.MAP_EDIT) {
+        GLOBAL.showMenu = true
+        GLOBAL.showFlex = true
+        this.setState({ selectKey: '' })
+      }
       GLOBAL.currentToolbarType = ''
       let actionType = Action.PAN
       if (type === ConstToolType.MAP_ADD_DATASET) {
@@ -1460,6 +1463,28 @@ export default class ToolBar extends React.PureComponent {
       this.setState({ isFullScreen: false, isSelectlist: false })
     }
     this.setState({ isTouchProgress: false })
+
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      if (GLOBAL.showFlex) {
+        GLOBAL.showFlex = false
+        this.setState({
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.PLACEHOLDER,
+          ],
+        })
+      } else {
+        GLOBAL.showFlex = true
+        this.setState({
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.FLEX,
+          ],
+        })
+      }
+    }
   }
 
   menus = () => {
@@ -1555,6 +1580,27 @@ export default class ToolBar extends React.PureComponent {
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = !this.isBoxShow
+      if (GLOBAL.Type === constants.MAP_EDIT) {
+        if (GLOBAL.showMenu) {
+          GLOBAL.showMenu = false
+          this.setState({
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.PLACEHOLDER,
+              ToolbarBtnType.FLEX,
+            ],
+          })
+        } else {
+          GLOBAL.showMenu = true
+          this.setState({
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.FLEX,
+            ],
+          })
+        }
+      }
     }
   }
 
@@ -2380,21 +2426,7 @@ export default class ToolBar extends React.PureComponent {
         list = grid
         break
     }
-    return (
-      <FlatList
-        data={list}
-        renderItem={({ item }) => (
-          <TouchableHighlight
-            activeOpacity={0.9}
-            underlayColor="#4680DF"
-            style={styles.btn}
-            onPress={() => item.action(item)}
-          >
-            <Text style={styles.text}>{item.key}</Text>
-          </TouchableHighlight>
-        )}
-      />
-    )
+    return <SelectList list={list} selectKey={this.state.selectKey} />
   }
 
   renderView = () => {
@@ -2638,6 +2670,11 @@ export default class ToolBar extends React.PureComponent {
     }
     if (this.state.type === ConstToolType.MAP_BASE) {
       this.props.getLayers()
+    }
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      GLOBAL.showMenu = true
+      GLOBAL.showFlex = true
+      this.setState({ selectKey: '' })
     }
   }
 
