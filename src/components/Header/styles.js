@@ -1,8 +1,8 @@
 import { StyleSheet, Platform } from 'react-native'
 import { scaleSize } from '../../utils'
-import { color, size } from '../../styles'
+import { color } from '../../styles'
 
-export const HEADER_HEIGHT = 60 + (Platform.OS === 'ios' ? 20 : 0)
+export const HEADER_HEIGHT = scaleSize(60) + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default StyleSheet.create({
@@ -119,7 +119,7 @@ export default StyleSheet.create({
     // fontSize: 18,
     // color: '#222222',
     color: 'white',
-    fontSize: size.fontSize.fontSizeXXl,
+    fontSize: scaleSize(30),
     // fontWeight: 'bold',
     backgroundColor: 'rgba(255, 255, 255, 0)',
   },

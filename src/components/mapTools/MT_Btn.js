@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   inner: {
     flex: 1,
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: size.fontSize.fontSizeXs,
+    fontSize: scaleSize(22),
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',

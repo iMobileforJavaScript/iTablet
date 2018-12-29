@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, PanResponder, Image, Text } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  PanResponder,
+  Image,
+  Text,
+  Platform,
+} from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import {
   SCartography,
@@ -212,10 +219,9 @@ export default class TouchProgress extends Component {
           break
         case ThemeType.LABEL: // 标签专题图
           {
-            let FZ = await SThemeCartography.getUniformLabelFontSize({
+            let fontsize = await SThemeCartography.getUniformLabelFontSize({
               LayerName: this.props.currentLayer.name,
             })
-            let fontsize = FZ.FontSize
             this._panBtnStyles.style.left =
               (fontsize * (positionWidth - scaleSize(60))) / 20
             this._previousLeft =
@@ -417,6 +423,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
+    marginTop: Platform.OS === 'ios' ? scaleSize(20) : 0,
     backgroundColor: '#rgba(110, 110, 110,1)',
     flexDirection: 'column',
     height: scaleSize(40),

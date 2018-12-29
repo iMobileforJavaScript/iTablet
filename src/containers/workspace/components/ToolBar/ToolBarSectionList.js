@@ -1,12 +1,13 @@
 import React from 'react'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { screen, scaleSize } from '../../../../utils'
 import {
   StyleSheet,
   TouchableOpacity,
   Text,
   SectionList,
   Image,
+  View,
 } from 'react-native'
 
 export default class ToolBarSectionList extends React.Component {
@@ -151,33 +152,54 @@ export default class ToolBarSectionList extends React.Component {
             />
           </TouchableOpacity>
         )}
-        {item.datasetType &&
-          item.datasetName && (
-          <Image
-            source={this.getDatasetTypeImg(item)}
-            resizeMode={'contain'}
-            style={styles.dataset_type}
-          />
-        )}
-        {item.datasetType &&
-          item.datasetName && (
-          <Text style={styles.dataset_title}>{item.datasetName}</Text>
-        )}
         {(item.title || item.name) && (
           <Text style={styles.itemTitle}>{item.title || item.name}</Text>
         )}
-        {item.colorSchemeName && (
-          <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
-        )}
-        {item.colorScheme && (
-          //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
-          <Image
-            source={item.colorScheme}
-            resizeMode={'stretch'}
-            style={styles.colorScheme}
-          />
-        )}
+        {item.datasetType && item.datasetName && this.getDatasetItem(item)}
+        {item.expression && this.getExpressionItem(item)}
+        {item.colorSchemeName &&
+          item.colorScheme &&
+          this.getColorSchemeItem(item)}
       </TouchableOpacity>
+    )
+  }
+
+  /**颜色方案Item */
+  getColorSchemeItem = item => {
+    return (
+      <View style={styles.item}>
+        <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
+        <Image
+          source={item.colorScheme}
+          resizeMode={'stretch'} //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
+          style={styles.colorScheme}
+        />
+      </View>
+    )
+  }
+
+  /**字段表达式Item */
+  getExpressionItem = item => {
+    return (
+      <Text
+        style={item.isSelected ? styles.itemTitleSelected : styles.itemTitle}
+      >
+        {item.expression}
+      </Text>
+    )
+  }
+
+  /**数据集类型字段Item */
+  getDatasetItem = item => {
+    return (
+      <View style={styles.item}>
+        <Image
+          source={this.getDatasetTypeImg(item)}
+          resizeMode={'contain'}
+          style={styles.dataset_type}
+        />
+        <Text style={styles.dataset_title}>{item.datasetName}</Text>
+      </View>
     )
   }
 
@@ -303,5 +325,17 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.themeText,
+  },
+  itemTitleSelected: {
+    width: screen.deviceWidth,
+    paddingLeft: scaleSize(60),
+    // textAlign: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    textAlignVertical: 'center',
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(70),
+    backgroundColor: color.grayLight,
+    color: color.black,
   },
 })

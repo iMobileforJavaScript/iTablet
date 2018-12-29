@@ -26,7 +26,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.103"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.115"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -112,14 +112,14 @@ static NSString* g_sampleCodeName = @"#";;
   }
 }
 
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
-{
-  if (self.allowRotation == YES) {
-    //横屏
-    return UIInterfaceOrientationMaskLandscape;
-  } else{
-    //竖屏
-    return UIInterfaceOrientationMaskPortrait;
-  }
-}
+//- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
+//{
+//  if (self.allowRotation == YES) {
+//    //横屏
+//    return UIInterfaceOrientationMaskLandscape;
+//  } else{
+//    //竖屏
+//    return UIInterfaceOrientationMaskPortrait;
+//  }
+//}
 @end

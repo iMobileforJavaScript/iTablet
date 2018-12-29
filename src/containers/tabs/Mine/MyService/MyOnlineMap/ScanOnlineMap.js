@@ -15,13 +15,12 @@ export default class ScanOnlineMap extends React.Component {
 
   constructor(props) {
     super(props)
-    this.screenWidth = Dimensions.get('window').width
     this.state = {
       mapTitle: this.props.navigation.getParam('mapTitle', ''),
       mapUrl: this.props.navigation.getParam('mapUrl', ''),
       cookie: this.props.navigation.getParam('cookie', ''),
       isLoadWebView: false,
-      progressWidth: this.screenWidth * 0.4,
+      progressWidth: Dimensions.get('window').width * 0.4,
     }
   }
   componentDidMount() {
@@ -33,13 +32,14 @@ export default class ScanOnlineMap extends React.Component {
   _clearInterval = () => {
     if (this.objProgressWidth !== undefined) {
       clearInterval(this.objProgressWidth)
-      this.setState({ progressWidth: this.screenWidth })
+      this.setState({ progressWidth: '100%' })
     }
   }
   _renderLoading = () => {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
         <View
+          ref={ref => (this.progressViewRef = ref)}
           style={{
             height: 2,
             width: this.state.progressWidth,
@@ -50,19 +50,34 @@ export default class ScanOnlineMap extends React.Component {
     )
   }
   _onLoadStart = () => {
+    this.progressViewWidth = this.state.progressWidth
     this.objProgressWidth = setInterval(() => {
-      let prevProgressWidth = this.state.progressWidth
-      let currentPorWidth
-      if (prevProgressWidth >= this.screenWidth - 200) {
-        currentPorWidth = prevProgressWidth + 1
-        if (currentPorWidth >= this.screenWidth - 50) {
-          currentPorWidth = this.screenWidth - 50
-          return
+      //  帧动画
+      requestAnimationFrame(() => {
+        let screenWidth = Dimensions.get('window').width
+        if (this.progressViewRef) {
+          let prevProgressWidth = this.progressViewWidth
+          let currentPorWidth
+          if (prevProgressWidth >= screenWidth - 300) {
+            currentPorWidth = prevProgressWidth + 1
+            if (currentPorWidth >= screenWidth - 50) {
+              currentPorWidth = screenWidth - 50
+              this.progressViewWidth = currentPorWidth
+              return
+            }
+          } else {
+            currentPorWidth = prevProgressWidth * 1.01
+          }
+          this.progressViewWidth = currentPorWidth
+          this.progressViewRef.setNativeProps({
+            style: {
+              height: 2,
+              width: currentPorWidth,
+              backgroundColor: '#1c84c0',
+            },
+          })
         }
-      } else {
-        currentPorWidth = prevProgressWidth * 1.01
-      }
-      this.setState({ progressWidth: currentPorWidth })
+      })
     }, 100)
   }
   _loadWebView = uri => {
@@ -70,13 +85,13 @@ export default class ScanOnlineMap extends React.Component {
       return (
         <WebView
           style={{
-            height: Dimensions.get('window').height,
-            width: Dimensions.get('window').width,
+            height: '100%',
+            width: '100%',
           }}
           source={{
             uri: uri,
             // headers: {
-            //   Cookie: 'JSESSIONID=' + this.state.cookie,
+            //   'Cookie': 'JSESSIONID=' + this.state.cookie,
             //   'Cache-Control': 'no-cache',
             // },
             // cache: 'reload',

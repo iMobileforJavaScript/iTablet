@@ -660,30 +660,7 @@ export default class MapView extends React.Component {
     this.backAction = async () => {
       try {
         this.setLoading(true, '正在关闭地图')
-        let mapIndex = await SMap.getMapIndex() // 获取地图index，若临时地图没有保存，则为-1
-        await SMap.closeMap()
-        await SMap.closeDatasource()
-        // 采集 - 若临时地图未保存，则删除采集数据源
-        if (
-          GLOBAL.Type === constants.COLLECTION &&
-          mapIndex < 0 &&
-          this.props.collection.datasourceParentPath &&
-          this.props.collection.datasourceName
-        ) {
-          await SMap.deleteDatasource(
-            this.props.collection.datasourceParentPath +
-              this.props.collection.datasourceName +
-              '.udb',
-          )
-          await SMap.deleteDatasource(
-            this.props.collection.datasourceParentPath +
-              this.props.collection.datasourceName +
-              '.udd',
-          )
-        }
-        if (this.props.template.template && this.props.template.template.path) {
-          await this.props.closeWorkspace()
-        }
+        await this.props.closeMap()
         this.clearData()
         this.setLoading(false)
         NavigationService.goBack()

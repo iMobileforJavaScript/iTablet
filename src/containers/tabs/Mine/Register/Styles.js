@@ -1,8 +1,6 @@
-import { Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-const screenWidth = Dimensions.get('window').width
-const screenHeight = Dimensions.get('window').height
-const itemWidth = Dimensions.get('window').width * 0.8
+const itemWidth = '80%'
 const itemHeight = 40
 const fontSize = 16
 const titleOnFocusBackgroundColor = color.blackBg
@@ -14,14 +12,13 @@ const styles = StyleSheet.create({
   keyboardAvoidingStyle: {
     padding: 9,
     alignItems: 'center',
-    width: screenWidth,
-    height: screenHeight,
+    flex: 1,
   },
   titleStyle: {
-    marginTop: 20,
     flexDirection: 'row',
     width: itemWidth,
     height: itemHeight,
+    marginTop: 20,
     marginBottom: 20,
   },
   titleContainerStyle: {
@@ -32,7 +29,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textInputStyle: {
-    width: itemWidth,
+    width: '100%',
     height: itemHeight,
     fontSize: fontSize,
     borderBottomColor: color.borderLight,
@@ -42,13 +39,14 @@ const styles = StyleSheet.create({
   },
   registerStyle: {
     height: itemHeight,
-    width: itemWidth * 0.6,
+    width: '50%',
     backgroundColor: color.blackBg,
     marginTop: 40,
     borderRadius: 4,
+    alignItems: 'center',
   },
   verifyCodeViewStyle: {
-    width: itemWidth,
+    width: '100%',
     height: itemHeight,
     marginTop: 10,
     borderBottomColor: color.borderLight,

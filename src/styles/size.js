@@ -4,10 +4,8 @@ import { scaleSize } from '../utils'
 const screen = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height,
-  onePixel: 1 / 2,
   statusBarHeight: Platform.OS === 'ios' ? 20 : 0,
 }
-
 const fontSize = {
   fontSizeXXl: scaleSize(28),
   fontSizeXl: scaleSize(26),
@@ -21,7 +19,6 @@ const layoutSize = {
   horizonWidth: 15,
   verticalHeight: 15,
 }
-
 export default {
   screen,
   fontSize,

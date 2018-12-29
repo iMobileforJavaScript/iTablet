@@ -57,7 +57,7 @@ export default class ModuleList extends Component {
           data={ConstModule}
           renderItem={this._renderItem}
           horizontal={false}
-          numColumns={4}
+          numColumns={2}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'always'}
         />
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   flatList: {
-    marginTop: scaleSize(40),
+    marginTop: scaleSize(150),
   },
   baseImage: {
     position: 'absolute',
@@ -128,7 +128,13 @@ const styles = StyleSheet.create({
     marginTop: scaleSize(10),
   },
   scrollView: {
-    width: '72%',
-    // marginTop: scaleSize(15),
+    // position:"absolute",
+    // width: '72%',
+    // height:"100%",
+    flex: 1,
+    flexDirection: 'column',
+    // alignItems:"center",
+    // justifyContent: 'space-around',
+    // marginTop: scaleSize(80),
   },
 })
