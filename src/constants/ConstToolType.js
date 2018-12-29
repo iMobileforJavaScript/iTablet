@@ -125,5 +125,6 @@ export default {
     scaleSize(500),
     scaleSize(600),
     scaleSize(700),
+    scaleSize(300),
   ],
 }
