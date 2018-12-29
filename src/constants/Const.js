@@ -46,7 +46,7 @@ export default {
   CREATE: 'CREATE',
   LOAD: 'LOAD',
 
-  RETURN_TO_DEFAULT_MODULE: '返回默认模板',
+  CREATE_SYMBOL_COLLECTION: '新建符号采集',
   MODULE: '模板',
 
   // 时间

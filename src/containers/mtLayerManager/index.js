@@ -5,6 +5,8 @@ import { setEditLayer, setCurrentLayer, getLayers } from '../../models/layers'
 const mapStateToProps = state => ({
   editLayer: state.layers.toJS().editLayer,
   layers: state.layers.toJS().layers,
+  map: state.map.toJS(),
+  collection: state.collection.toJS(),
 })
 
 const mapDispatchToProps = {

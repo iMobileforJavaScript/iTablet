@@ -13,10 +13,12 @@ export default class RenderServiceItem extends PureComponent {
     index: number,
     scenes: Object,
     mapInfos: Object,
+    display?: string,
   }
   defaultProps: {
     imageUrl: '',
     restTitle: '地图',
+    display: 'flex',
   }
   constructor(props) {
     super(props)
@@ -35,7 +37,7 @@ export default class RenderServiceItem extends PureComponent {
 
   render() {
     return (
-      <View>
+      <View display={this.props.display}>
         <View style={styles.itemViewStyle}>
           <TouchableOpacity
             onPress={() => {

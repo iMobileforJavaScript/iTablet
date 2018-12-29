@@ -9,7 +9,7 @@ import { FlatList } from 'react-native'
 import { Container } from '../../components'
 import { SScene } from 'imobile_for_reactnative'
 import { Layer3DManager_item } from './components'
-import { MapToolbar } from '../../containers/workspace/componets'
+import { MapToolbar } from '../../containers/workspace/components'
 export default class Map3DLayerManager extends React.Component {
   props: {
     navigation: any,

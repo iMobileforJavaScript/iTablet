@@ -27,6 +27,10 @@ export default class PopupModal extends PureComponent {
     }
   }
 
+  componentDidMount() {
+    // console.warn("PopupModal_componentDidMount")
+  }
+
   UNSAFE_componentWillReceiveProps() {
     this.bIsCallBackProps = true
   }
@@ -149,7 +153,7 @@ export default class PopupModal extends PureComponent {
 
   _downloadButton = () => {
     if (this.props.data && this.props.data.isDownloading !== undefined) {
-      let progress = '下载'
+      let progress = this.state.progress
       if (this.props.data.isDownloading) {
         if (this.bIsCallBackProps) {
           progress = this.props.data.downloadingProgress

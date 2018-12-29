@@ -22,7 +22,7 @@ import {
   MenuAlertDialog,
   SaveView,
   AlertDialog,
-} from '../../componets'
+} from '../../components'
 import constants from '../../constants'
 import {
   Container,
@@ -327,6 +327,27 @@ export default class MapView extends React.Component {
 
   geometryMultiSelected = () => {
     // TODO 处理多选
+  }
+
+  // 导出(保存)工作空间中地图到模块
+  saveMapName = (mapName = '', cb = () => {}) => {
+    try {
+      this.setLoading(true, '正在保存地图')
+      SMap.saveMapName(mapName).then(
+        result => {
+          this.setLoading(false)
+          Toast.show(
+            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+          )
+          cb && cb()
+        },
+        () => {
+          this.setLoading(false)
+        },
+      )
+    } catch (e) {
+      this.setLoading(false)
+    }
   }
 
   // 地图保存
@@ -639,30 +660,7 @@ export default class MapView extends React.Component {
     this.backAction = async () => {
       try {
         this.setLoading(true, '正在关闭地图')
-        let mapIndex = await SMap.getMapIndex() // 获取地图index，若临时地图没有保存，则为-1
-        await SMap.closeMap()
-        // await SMap.closeDatasource()
-        // 采集 - 若临时地图未保存，则删除采集数据源
-        if (
-          GLOBAL.Type === constants.COLLECTION &&
-          mapIndex < 0 &&
-          this.props.collection.datasourceParentPath &&
-          this.props.collection.datasourceName
-        ) {
-          await SMap.deleteDatasource(
-            this.props.collection.datasourceParentPath +
-              this.props.collection.datasourceName +
-              '.udb',
-          )
-          await SMap.deleteDatasource(
-            this.props.collection.datasourceParentPath +
-              this.props.collection.datasourceName +
-              '.udd',
-          )
-        }
-        if (this.props.template.template && this.props.template.template.path) {
-          await this.props.closeWorkspace()
-        }
+        await this.props.closeMap()
         this.clearData()
         this.setLoading(false)
         NavigationService.goBack()
@@ -670,7 +668,7 @@ export default class MapView extends React.Component {
         this.setLoading(false)
       }
     }
-    SMap.workspaceIsModified().then(result => {
+    SMap.mapIsModified().then(result => {
       if (result) {
         this.setSaveViewVisible(true)
       } else {
@@ -998,14 +996,16 @@ export default class MapView extends React.Component {
         <SaveView
           ref={ref => (this.SaveMapView = ref)}
           save={() => {
-            let mapName =
-              (this.props.layers.layers.length > 0 &&
-                this.props.layers.layers[this.props.layers.layers.length - 1]
-                  .name) ||
-              ''
-            if (this.props.collection.datasourceName)
-              mapName += '@' + this.props.collection.datasourceName
-            this.saveMap(mapName, () => {
+            let mapName = ''
+            if (this.props.map.currentMap.name) {
+              mapName = this.props.map.currentMap.name
+              mapName = mapName.substr(0, mapName.lastIndexOf('.'))
+            } else if (this.props.layers.layers.length > 0) {
+              // mapName = this.props.layers.layers[this.props.layers.layers.length - 1].name +
+              //   this.props.collection.datasourceName ? ('@' + this.props.collection.datasourceName) : ''
+              mapName = this.props.collection.datasourceName
+            }
+            this.saveMapName(mapName, () => {
               if (this.backAction) {
                 this.backAction()
                 this.backAction = null

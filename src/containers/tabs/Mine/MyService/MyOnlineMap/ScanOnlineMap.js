@@ -74,6 +74,10 @@ export default class ScanOnlineMap extends React.Component {
               height: 2,
               width: currentPorWidth,
               backgroundColor: '#1c84c0',
+              borderBottomRightRadius: 1,
+              borderTopRightRadius: 1,
+              borderBottomLeftRadius: 0,
+              borderTopLeftRadius: 0,
             },
           })
         }
