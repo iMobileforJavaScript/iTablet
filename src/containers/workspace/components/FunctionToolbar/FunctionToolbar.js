@@ -487,7 +487,10 @@ export default class FunctionToolbar extends React.Component {
           isTouchProgress: false,
           isSelectlist: false,
           listSelectable: false, //单选框
-          height: ConstToolType.THEME_HEIGHT[6],
+          height:
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[6],
           data,
           buttons: buttons,
         })

@@ -32,12 +32,7 @@ import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
 import { FileTools } from '../../../../native'
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Animated,
-} from 'react-native'
+import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
   SScene,
@@ -603,7 +598,10 @@ export default class ToolBar extends React.PureComponent {
 
   getThemeExpress = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[4],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -657,7 +655,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[4]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[4]
         this.scrollListToLocation()
       },
     )
@@ -665,7 +666,10 @@ export default class ToolBar extends React.PureComponent {
 
   getUniqueColorScheme = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[4],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -692,7 +696,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[4]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[4]
         this.scrollListToLocation()
       },
     )
@@ -700,7 +707,10 @@ export default class ToolBar extends React.PureComponent {
 
   getRangeColorScheme = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[4],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -727,7 +737,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[4]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[4]
         this.scrollListToLocation()
       },
     )
@@ -735,7 +748,10 @@ export default class ToolBar extends React.PureComponent {
 
   getColorGradientType = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[4],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[4],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -762,7 +778,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[4]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[4]
         this.scrollListToLocation()
       },
     )
@@ -770,7 +789,10 @@ export default class ToolBar extends React.PureComponent {
 
   getRangeMode = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[2],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[0]
+          : ConstToolType.THEME_HEIGHT[2],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -789,7 +811,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[2]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[0]
+            : ConstToolType.THEME_HEIGHT[2]
       },
     )
   }
@@ -818,7 +843,10 @@ export default class ToolBar extends React.PureComponent {
 
   getLabelBackShape = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[2],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[0]
+          : ConstToolType.THEME_HEIGHT[2],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -837,14 +865,20 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[2]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[0]
+            : ConstToolType.THEME_HEIGHT[2]
       },
     )
   }
 
   getLabelBackColor = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[3],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[7]
+          : ConstToolType.THEME_HEIGHT[3],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -863,14 +897,20 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[3]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[7]
+            : ConstToolType.THEME_HEIGHT[3]
       },
     )
   }
 
   getLabelFontName = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[3],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[2]
+          : ConstToolType.THEME_HEIGHT[3],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -889,7 +929,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[3]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[2]
+            : ConstToolType.THEME_HEIGHT[3]
       },
     )
   }
@@ -944,7 +987,10 @@ export default class ToolBar extends React.PureComponent {
 
   getLabelFontColor = async type => {
     Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[3],
+      toValue:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[7]
+          : ConstToolType.THEME_HEIGHT[3],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -963,7 +1009,10 @@ export default class ToolBar extends React.PureComponent {
         buttons: ThemeMenuData.getThemeFourMenu(),
       },
       () => {
-        this.height = ConstToolType.THEME_HEIGHT[3]
+        this.height =
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[7]
+            : ConstToolType.THEME_HEIGHT[3]
       },
     )
   }
@@ -2197,6 +2246,7 @@ export default class ToolBar extends React.PureComponent {
         }}
         headerAction={this.headerAction}
         keyExtractor={(item, index) => index}
+        device={this.props.device}
       />
     )
   }
@@ -2221,6 +2271,7 @@ export default class ToolBar extends React.PureComponent {
         type={this.state.tableType}
         numColumns={this.state.column}
         renderCell={this._renderColorItem}
+        device={this.props.device}
       />
     )
   }

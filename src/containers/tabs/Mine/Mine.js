@@ -25,6 +25,9 @@ export default class Mine extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      display: 'flex',
+    }
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
     this.goToMyLocalData = this.goToMyLocalData.bind(this)
@@ -57,6 +60,7 @@ export default class Mine extends Component {
   }
 
   goToMyLocalData = () => {
+    // this.setState({display:'none'})
     NavigationService.navigate('MyLocalData')
   }
   goToMyOnlineData = async () => {
@@ -70,7 +74,7 @@ export default class Mine extends Component {
   _render = () => {
     let fontSize = 16
     return (
-      <View style={{ flex: 1, backgroundColor: color.border }}>
+      <View opacity={1} style={{ flex: 1, backgroundColor: color.border }}>
         {this._renderHeader(fontSize)}
         <ScrollView
           style={{ flex: 1 }}
@@ -80,11 +84,11 @@ export default class Mine extends Component {
           overScrollMode={'always'}
           bounces={true}
         >
-          {/* {this._renderItem({
+          {this._renderItem({
             title: '本地数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
             onClick: this.goToMyLocalData,
-          })}*/}
+          })}
           {this._renderItem({
             title: '在线数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),
@@ -104,6 +108,9 @@ export default class Mine extends Component {
   _renderHeader = fontSize => {
     let headerHeight = 80
     let imageWidth = 40
+    // let headerImage = require('../../../assets/public/icon-avatar-default.png')
+    let headerImage =
+      'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png'
     return (
       <View
         style={{
@@ -124,8 +131,13 @@ export default class Mine extends Component {
         >
           <Image
             resizeMode={'contain'}
-            style={{ width: imageWidth, height: imageWidth, padding: 5 }}
-            source={require('../../../assets/public/icon-avatar-default.png')}
+            style={{
+              width: imageWidth,
+              height: imageWidth,
+              backgroundColor: '#c0c0c0',
+              borderRadius: imageWidth / 2,
+            }}
+            source={{ uri: headerImage }}
           />
         </TouchableOpacity>
         <Text
@@ -176,7 +188,7 @@ export default class Mine extends Component {
     } = itemOptions
 
     return (
-      <View>
+      <View display={this.state.display}>
         <View
           style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
         />

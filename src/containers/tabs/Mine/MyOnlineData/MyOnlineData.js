@@ -41,7 +41,8 @@ export default class MyOnlineData extends Component {
       isRefreshing: false,
       modalIsVisible: false,
       downloadingIndex: -1,
-      onClickItemBgColor: color.blackBg,
+      onClickItemBgColor: color.pink,
+      itemBgColor: color.blackBg,
       progressWidth: this.screenWidth * 0.6,
     }
     this.pageSize = 20
@@ -126,21 +127,38 @@ export default class MyOnlineData extends Component {
   }
   _firstLoadData = async () => {
     let newData = []
-    if (_iLoadOnlineDataCount === 1) {
+    if (
+      _iLoadOnlineDataCount === 1 &&
+      (_arrOnlineData.length === 1 &&
+        _arrOnlineData[0].isDownloading === undefined)
+    ) {
       this._showLoadProgressView()
     }
     try {
       for (let i = 1; i <= _iLoadOnlineDataCount; i++) {
-        let newData2 = await this._getOnlineData(i, this.pageSize)
-        newData = newData.concat(newData2)
+        let tempData = await this._getOnlineData(i, this.pageSize)
+        newData = newData.concat(tempData)
       }
-      _arrOnlineData = newData
-      if (
-        _iLoadOnlineDataCount > 1 &&
-        JSON.stringify(this.state.data) === JSON.stringify(newData)
-      ) {
+      // 如果有数据正在下载，则重构newData
+      if (_iDownloadingIndex >= 0) {
+        let prevData = [...this.state.data]
+        // 记录是否存在下载id
+        let downloadingIndexId = prevData[_iDownloadingIndex].id
+        for (let i = 0; i < newData.length; i++) {
+          let objContent = newData[i]
+          if (objContent.id === downloadingIndexId) {
+            objContent = prevData[_iDownloadingIndex]
+            this._resetDownloadIndex(i)
+          } else {
+            objContent.isDownloading = false
+          }
+        }
+      }
+      // 如果加载出来的数据一样，则不更新
+      if (JSON.stringify(this.state.data) === JSON.stringify(newData)) {
         return
       }
+      _arrOnlineData = newData
       this.setState({ data: _arrOnlineData })
     } finally {
       if (_iLoadOnlineDataCount === 1) {
@@ -151,7 +169,7 @@ export default class MyOnlineData extends Component {
   _clearInterval = () => {
     if (this.objProgressWidth !== undefined) {
       clearInterval(this.objProgressWidth)
-      this.setState({ progressWidth: this.screenWidth })
+      this.setState({ progressWidth: '100%' })
     }
   }
   _showLoadProgressView = () => {
@@ -212,7 +230,7 @@ export default class MyOnlineData extends Component {
               _arrOnlineData[i] = prevData[_iDownloadingIndex]
               this._resetDownloadIndex(i)
             } else {
-              _arrOnlineData.isDownloading = false
+              _arrOnlineData[i].isDownloading = false
             }
           }
         }
@@ -238,6 +256,21 @@ export default class MyOnlineData extends Component {
         )
         let newData = [...this.state.data]
         _arrOnlineData = newData.concat(data)
+
+        if (_iDownloadingIndex >= 0) {
+          let prevData = [...this.state.data]
+          // 记录是否存在下载id
+          let downloadingIndexId = prevData[_iDownloadingIndex].id
+          for (let i = 0; i < _arrOnlineData.length; i++) {
+            let objContent = _arrOnlineData[i]
+            if (objContent.id === downloadingIndexId) {
+              _arrOnlineData[i] = prevData[_iDownloadingIndex]
+              this._resetDownloadIndex(i)
+            } else {
+              _arrOnlineData[i].isDownloading = false
+            }
+          }
+        }
         this.setState({ data: _arrOnlineData })
       }
       this.isLoadingData = false
@@ -276,6 +309,7 @@ export default class MyOnlineData extends Component {
         this.state.data[this.index].isDownloading &&
         !this.state.isRefreshing
       ) {
+        // console.warn("progress:"+progress)
         this.modalRef._changeDownloadingState(progress)
       }
       if (progress === '下载完成' || progress === '下载失败') {
@@ -519,13 +553,10 @@ export default class MyOnlineData extends Component {
   }
   _renderModal = () => {
     if (this.state.modalIsVisible) {
+      // console.warn("MyData---renderModal")
       return (
         <PopupModal
-          ref={ref => {
-            if (this.index && this.state.data[this.index].isDownloading) {
-              this.modalRef = ref
-            }
-          }}
+          ref={ref => (this.modalRef = ref)}
           data={this.state.data[this.index]}
           openWorkspace={this._openWorkspace}
           onDeleteService={this._onDeleteService}
@@ -543,8 +574,10 @@ export default class MyOnlineData extends Component {
   _onClickItemEvent = item => {
     this.index = item.index
     /** 重新渲染render，使modal展示出来*/
+    // this.setState({ modalIsVisible: true })
     this.setState({ modalIsVisible: true, data: _arrOnlineData })
   }
+
   _renderItem = item => {
     let dataName = item.item.fileName
     if (dataName !== undefined) {
@@ -557,13 +590,13 @@ export default class MyOnlineData extends Component {
           onPress={() => {
             this._onClickItemEvent(item)
           }}
+          style={{ backgroundColor: this.state.itemBgColor }}
         >
           <View
             style={{
               flexDirection: 'row',
               width: itemWidth,
               height: itemHeight,
-              backgroundColor: this.state.onClickItemBgColor,
             }}
           >
             <Text

@@ -31,7 +31,10 @@ function showDatasetsList() {
           isFullScreen: true,
           isTouchProgress: false,
           isSelectlist: false,
-          height: ConstToolType.THEME_HEIGHT[6],
+          height:
+            _toolbarParams.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[6],
           // listSelectable: true, //单选框
           data,
           buttons: [ToolbarBtnType.THEME_CANCEL],

@@ -1,6 +1,6 @@
 import React from 'react'
 import { color, size } from '../../../../styles'
-import { screen, scaleSize } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -24,6 +24,7 @@ export default class ToolBarSectionList extends React.Component {
     keyExtractor: () => {},
     itemAction?: () => {},
     headerAction?: () => {},
+    device: Object,
   }
 
   static defaultProps = {
@@ -166,13 +167,19 @@ export default class ToolBarSectionList extends React.Component {
 
   /**颜色方案Item */
   getColorSchemeItem = item => {
+    let itemstyle
+    if (this.props.device.orientation === 'LANDSCAPE') {
+      itemstyle = styles.colorScheme_Landscape
+    } else {
+      itemstyle = styles.colorScheme
+    }
     return (
       <View style={styles.item}>
         <Text style={styles.colorSchemeName}>{item.colorSchemeName}</Text>
         <Image
           source={item.colorScheme}
           resizeMode={'stretch'} //stretch: 拉伸图片且不维持宽高比,直到宽高都刚好填满容器
-          style={styles.colorScheme}
+          style={itemstyle}
         />
       </View>
     )
@@ -180,10 +187,20 @@ export default class ToolBarSectionList extends React.Component {
 
   /**字段表达式Item */
   getExpressionItem = item => {
+    const itemSelectedStyle = {
+      width: this.props.device.width,
+      paddingLeft: scaleSize(60),
+      // textAlign: 'center',
+      // alignItems: 'center',
+      // justifyContent: 'center',
+      textAlignVertical: 'center',
+      fontSize: size.fontSize.fontSizeMd,
+      height: scaleSize(70),
+      backgroundColor: color.grayLight,
+      color: color.black,
+    }
     return (
-      <Text
-        style={item.isSelected ? styles.itemTitleSelected : styles.itemTitle}
-      >
+      <Text style={item.isSelected ? itemSelectedStyle : styles.itemTitle}>
         {item.expression}
       </Text>
     )
@@ -318,6 +335,11 @@ const styles = StyleSheet.create({
     height: scaleSize(40),
     marginLeft: scaleSize(20),
   },
+  colorScheme_Landscape: {
+    width: scaleSize(700),
+    height: scaleSize(40),
+    marginLeft: scaleSize(20),
+  },
   colorSchemeName: {
     width: scaleSize(220),
     marginLeft: scaleSize(40),
@@ -325,17 +347,5 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.themeText,
-  },
-  itemTitleSelected: {
-    width: screen.deviceWidth,
-    paddingLeft: scaleSize(60),
-    // textAlign: 'center',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    textAlignVertical: 'center',
-    fontSize: size.fontSize.fontSizeMd,
-    height: scaleSize(70),
-    backgroundColor: color.grayLight,
-    color: color.black,
   },
 })
