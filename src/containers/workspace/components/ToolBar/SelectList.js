@@ -1,8 +1,8 @@
 import React from 'react'
 import { TouchableHighlight, Text, FlatList } from 'react-native'
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
-import { size } from '../../../../styles'
+import { scaleSize } from '../../../../utils/index'
+import { size } from '../../../../styles/index'
 
 export default class SelectList extends React.PureComponent {
   props: {

@@ -48,7 +48,7 @@ export default class SymbolList extends React.Component {
         SMap.findSymbolsByGroups('line', '').then(result => {
           let symbols = []
           result.forEach(item => {
-            symbols.push(item.id)
+            symbols.push(item)
           })
           this.setState({ layerData: this.props.layerData, data: symbols })
         })
@@ -57,7 +57,7 @@ export default class SymbolList extends React.Component {
         SMap.findSymbolsByGroups('point', '').then(result => {
           let symbols = []
           result.forEach(item => {
-            symbols.push(item.id)
+            symbols.push(item)
           })
           this.setState({ layerData: this.props.layerData, data: symbols })
         })
@@ -66,7 +66,7 @@ export default class SymbolList extends React.Component {
         SMap.findSymbolsByGroups('fill', '').then(result => {
           let symbols = []
           result.forEach(item => {
-            symbols.push(item.id)
+            symbols.push(item)
           })
           this.setState({ layerData: this.props.layerData, data: symbols })
         })

@@ -36,7 +36,7 @@ export default class GroupTab extends React.Component {
     SMap.findSymbolsByGroups(data.type, data.path).then(result => {
       let symbols = []
       result.forEach(item => {
-        symbols.push(item.id)
+        symbols.push(item)
       })
       this.props.setCurrentSymbols && this.props.setCurrentSymbols(symbols)
       if (symbols.length > 0) {
