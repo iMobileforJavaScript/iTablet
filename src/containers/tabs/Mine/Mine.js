@@ -84,11 +84,11 @@ export default class Mine extends Component {
           overScrollMode={'always'}
           bounces={true}
         >
-          {this._renderItem({
+          {/* {this._renderItem({
             title: '本地数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
             onClick: this.goToMyLocalData,
-          })}
+          })}*/}
           {this._renderItem({
             title: '在线数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),

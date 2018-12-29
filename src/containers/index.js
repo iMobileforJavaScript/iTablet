@@ -269,14 +269,14 @@ export default StackNavigator(
       screen: MyOnlineData,
       navigationOptions: {
         header: null,
-        gesturesEnabled: true,
+        // gesturesEnabled: true,
       },
     },
     MyService: {
       screen: MyService,
       navigationOptions: {
         header: null,
-        gesturesEnabled: true,
+        // gesturesEnabled: true,
       },
     },
     MyOnlineMap: {
