@@ -3,13 +3,12 @@ import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, WorkspaceType } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
-import { ConstPath, ConstInfo } from '../constants'
+import { ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 import xml2js from 'react-native-xml2js'
 let parser = new xml2js.Parser()
 // Constants
 // --------------------------------------------------
-export const IMPORT_TEMPLATE = 'IMPORT_TEMPLATE'
 export const SET_TEMPLATE = 'SET_TEMPLATE'
 export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
 export const SET_CURRENT_TEMPLATE_SYMBOL_LIST =
@@ -21,26 +20,95 @@ export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
 // Actions
 // --------------------------------------------------
 // 导入模版
+// export const openTemplate = (params, cb = () => {}) => async (
+//   dispatch,
+//   getState,
+// ) => {
+//   let workspace = getState().map.toJS().workspace
+//   let payload = {}
+//   let copyResult = true,
+//     openResult = false
+//   try {
+//     // 查看模板工作空间是否存在
+//     // 拷贝模板文件
+//     let userPath = params.path.substr(0, params.path.indexOf('/Data/Template'))
+//     let fileName = params.path.substr(params.path.lastIndexOf('/') + 1)
+//     // let alias = fileName.split('.')[0].toString()
+//     let fileType = fileName.split('.')[1].toString()
+//     let tempDirPath = params.path.substr(0, params.path.lastIndexOf('/'))
+//     let tempParentDirName = tempDirPath.substr(tempDirPath.lastIndexOf('/') + 1)
+//     let targetPath =
+//       userPath + '/' + ConstPath.RelativePath.Workspace + tempParentDirName // 目标文件目录，不含文件名
+//     let targetFilePath = targetPath + '/' + fileName
+//
+//     let type
+//     switch (fileType) {
+//       case 'SXW':
+//         type = WorkspaceType.SXW
+//         break
+//       case 'SMW':
+//         type = WorkspaceType.SMW
+//         break
+//       case 'SXWU':
+//         type = WorkspaceType.SXWU
+//         break
+//       case 'SMWU':
+//       default:
+//         type = WorkspaceType.SMWU
+//     }
+//
+//     if (workspace.server === targetFilePath) {
+//       cb &&
+//         cb({ copyResult, openResult, msg: ConstInfo.WORKSPACE_ALREADY_OPENED })
+//     } else {
+//       copyResult = await FileTools.copyFile(tempDirPath, targetPath)
+//       openResult = false
+//       if (copyResult) {
+//         // 关闭所有地图
+//         await SMap.closeMap()
+//         await SMap.closeWorkspace()
+//         let data = { server: targetFilePath, type }
+//         openResult = await SMap.openWorkspace(data)
+//         // 导入新的模板工作空间
+//         if (params.isImportWorkspace) {
+//           let importWSData = { server: params.path, type }
+//           await SMap.importWorkspace(importWSData)
+//         }
+//         params.isImportWorkspace !== undefined &&
+//           delete params.isImportWorkspace
+//
+//         // let maps = await SMap.getMaps()
+//         // await SMap.openMap(maps.length > 0 ? maps.length - 1 : -1)
+//         // let mapInfo = await SMap.getMapInfo()
+//
+//         Object.assign(params, { path: targetFilePath })
+//         payload = params
+//       }
+//     }
+//     await dispatch({
+//       type: SET_TEMPLATE,
+//       payload: payload || {},
+//     })
+//     cb && cb({ copyResult, openResult })
+//     return { copyResult, openResult }
+//   } catch (e) {
+//     cb && cb({ copyResult, openResult })
+//     return { copyResult, openResult }
+//   }
+// }
 export const openTemplate = (params, cb = () => {}) => async (
   dispatch,
   getState,
 ) => {
   let workspace = getState().map.toJS().workspace
   let payload = {}
-  let copyResult = true,
-    openResult = false
+  let mapsInfo = []
   try {
     // 查看模板工作空间是否存在
     // 拷贝模板文件
-    let userPath = params.path.substr(0, params.path.indexOf('/Data/Template'))
-    let fileName = params.path.substr(params.path.lastIndexOf('/') + 1)
-    // let alias = fileName.split('.')[0].toString()
+    let paths = params.path.split('/')
+    let fileName = paths[paths.length - 1]
     let fileType = fileName.split('.')[1].toString()
-    let tempDirPath = params.path.substr(0, params.path.lastIndexOf('/'))
-    let tempParentDirName = tempDirPath.substr(tempDirPath.lastIndexOf('/') + 1)
-    let targetPath =
-      userPath + '/' + ConstPath.RelativePath.Workspace + tempParentDirName // 目标文件目录，不含文件名
-    let targetFilePath = targetPath + '/' + fileName
 
     let type
     switch (fileType) {
@@ -58,43 +126,24 @@ export const openTemplate = (params, cb = () => {}) => async (
         type = WorkspaceType.SMWU
     }
 
-    if (workspace.server === targetFilePath) {
-      cb &&
-        cb({ copyResult, openResult, msg: ConstInfo.WORKSPACE_ALREADY_OPENED })
+    if (workspace.server === params.path) {
+      cb && cb({ mapsInfo, msg: ConstInfo.WORKSPACE_ALREADY_OPENED })
     } else {
-      copyResult = await FileTools.copyFile(tempDirPath, targetPath)
-      openResult = false
-      if (copyResult) {
-        // 关闭所有地图
-        await SMap.closeMap()
-        await SMap.closeWorkspace()
-        let data = { server: targetFilePath, type }
-        openResult = await SMap.openWorkspace(data)
-        // 导入新的模板工作空间
-        if (params.isImportWorkspace) {
-          let importWSData = { server: params.path, type }
-          await SMap.importWorkspace(importWSData)
-        }
-        params.isImportWorkspace !== undefined &&
-          delete params.isImportWorkspace
-
-        // let maps = await SMap.getMaps()
-        // await SMap.openMap(maps.length > 0 ? maps.length - 1 : -1)
-        // let mapInfo = await SMap.getMapInfo()
-
-        Object.assign(params, { path: targetFilePath })
-        payload = params
-      }
+      // 关闭所有地图
+      await SMap.closeMap()
+      let data = { server: params.path, type }
+      mapsInfo = await SMap.importWorkspaceInfo(data, params.module)
+      payload = params
     }
     await dispatch({
-      type: IMPORT_TEMPLATE,
+      type: SET_TEMPLATE,
       payload: payload || {},
     })
-    cb && cb({ copyResult, openResult })
-    return { copyResult, openResult }
+    cb && cb({ mapsInfo })
+    return { mapsInfo }
   } catch (e) {
-    cb && cb({ copyResult, openResult })
-    return { copyResult, openResult }
+    cb && cb({ mapsInfo, msg: e })
+    return { mapsInfo, msg: e }
   }
 }
 
@@ -115,7 +164,7 @@ export const importTemplate = (params, cb = () => {}) => async dispatch => {
   // }
   let payload = params
   await dispatch({
-    type: IMPORT_TEMPLATE,
+    type: SET_TEMPLATE,
     payload: payload || {},
   })
   cb && cb(result)
@@ -168,14 +217,27 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
     let templateData = getState().template.toJS()
     let template = templateData.template
     let path = (params && params.path) || template.path
-    if (path) {
-      if (
-        path === templateData.template.path &&
-        templateData.template.symbols.length > 0
-      ) {
-        cb && cb(params)
-        return
-      }
+    if (
+      path === templateData.template.path &&
+      templateData.template.symbols.length > 0
+    ) {
+      cb && cb(params)
+      return
+    }
+    if (path && path.substr(path.lastIndexOf('.') + 1) === 'xml') {
+      fs.readFile(path).then(data => {
+        parser.parseString(data, async (err, result) => {
+          await dispatch({
+            type: GET_SYMBOL_TEMPLATES,
+            payload: {
+              symbols: result.featureSymbol.template[0].feature || [],
+              ...params,
+            },
+          })
+          cb && cb(params)
+        })
+      })
+    } else if (path) {
       let tempPath = path.substr(0, path.lastIndexOf('/') + 1)
       FileTools.getPathListByFilter(tempPath, {
         extension: 'xml',
@@ -276,20 +338,22 @@ export default handleActions(
     [`${SET_CURRENT_TEMPLATE_SYMBOL_LIST}`]: (state, { payload }) => {
       return state.setIn(['currentTemplateList'], fromJS(payload))
     },
-    [`${IMPORT_TEMPLATE}`]: (state, { payload }) => {
+    [`${SET_TEMPLATE}`]: (state, { payload }) => {
       let newData = state.toJS().templates || []
       let isExist = false
-      for (let i = 0; i < newData.length; i++) {
-        if (newData[i].path === payload.path) {
-          newData[i] = payload
-          let temp = newData[0]
-          newData[0] = newData[i]
-          newData[i] = temp
-          isExist = true
-          break
+      if (payload.path) {
+        for (let i = 0; i < newData.length; i++) {
+          if (newData[i].path === payload.path) {
+            newData[i] = payload
+            let temp = newData[0]
+            newData[0] = newData[i]
+            newData[i] = temp
+            isExist = true
+            break
+          }
         }
       }
-      if (!isExist && payload) {
+      if (!isExist && payload && payload.path) {
         newData.unshift(payload)
       }
       return state
@@ -301,22 +365,25 @@ export default handleActions(
       // .setIn(['currentMap'], fromJS(payload.currentMap))
       // .setIn(['workspace'], fromJS({ server: payload.templateInfo.path }))
     },
-    [`${SET_TEMPLATE}`]: (state, { payload }) => {
-      return state.setIn(['template'], fromJS(payload))
-    },
+    // [`${SET_TEMPLATE}`]: (state, { payload }) => {
+    //   return state.setIn(['template'], fromJS(payload))
+    // },
     [`${GET_SYMBOL_TEMPLATES}`]: (state, { payload }) => {
       let newData = state.toJS().templates || []
-      let template = state.toJS().template || {}
-      for (let i = 0; i < newData.length; i++) {
-        if (newData[i].path === payload.path) {
-          Object.assign(newData[i], payload)
-          Object.assign(template, payload)
-          break
+      if (newData.length > 0) {
+        for (let i = 0; i < newData.length; i++) {
+          if (!newData[i].path || newData[i].path === payload.path) {
+            Object.assign(newData[i], payload)
+            // Object.assign(template, payload)
+            break
+          }
         }
+      } else {
+        newData.push(payload)
       }
       return state
         .setIn(['templates'], fromJS(newData))
-        .setIn(['template'], fromJS(template))
+        .setIn(['template'], fromJS(payload))
     },
     [REHYDRATE]: (state, { payload }) => {
       let data,

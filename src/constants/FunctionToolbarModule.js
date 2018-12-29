@@ -1,6 +1,6 @@
 import { SMap } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
-import ToolbarBtnType from '../containers/workspace/componets/ToolBar/ToolbarBtnType'
+import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
 
 const layerAdd = [

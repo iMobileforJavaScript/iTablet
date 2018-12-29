@@ -13,7 +13,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
-} from '../../componets'
+} from '../../components'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'

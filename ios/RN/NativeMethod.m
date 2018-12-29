@@ -16,7 +16,7 @@ RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName resol
     if (userName == nil || [userName isEqualToString:@""]) {
       userName = @"Customer";
     }
-    NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Template"];
+    NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Downloads"];
     
     NSMutableArray* templateList = [NSMutableArray array];
     BOOL flag = YES;

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MapToolbar } from '../../containers/workspace/componets'
+import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
   Text,

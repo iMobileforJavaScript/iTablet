@@ -184,56 +184,58 @@ public class FileTools extends ReactContextBaseJavaModule {
 
             File[] files = file.listFiles();
             WritableArray array = Arguments.createArray();
-            for (int i = 0; i < files.length; i++) {
-                String p = files[i].getAbsolutePath().replace(SDCARD, "");
-                String n = files[i].getName();
-                int lastDot = n.lastIndexOf(".");
-                String name, extension = "";
-                if (lastDot > 0) {
-                    name = n.substring(0, lastDot).toLowerCase();
-                    extension = n.substring(lastDot + 1).toLowerCase();
-                } else {
-                    name = n;
-                }
-                boolean isDirectory = files[i].isDirectory();
-
-                String type = "Directory";
-                if (filter.toHashMap().containsKey("type")) {
-                    type = filter.getString("type");
-                }
-
-                if (!filter.toHashMap().containsKey("name")) {
-                    String filterName = filter.getString("name").toLowerCase().trim();
-                    // 判断文件名
-                    if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
-                        continue;
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    String p = files[i].getAbsolutePath().replace(SDCARD, "");
+                    String n = files[i].getName();
+                    int lastDot = n.lastIndexOf(".");
+                    String name, extension = "";
+                    if (lastDot > 0) {
+                        name = n.substring(0, lastDot).toLowerCase();
+                        extension = n.substring(lastDot + 1).toLowerCase();
+                    } else {
+                        name = n;
                     }
-                }
+                    boolean isDirectory = files[i].isDirectory();
 
-                boolean isExist = false;
-                if (filter.toHashMap().containsKey("extension")) {
-                    String filterType = filter.getString("extension").toLowerCase();
-                    String[] extensions = filterType.split(",");
-                    for (int j = 0; j < extensions.length; j++) {
-                        String mExtension = extensions[j].trim();
-                        // 判断文件类型
-                        if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
-                            isExist = true;
-                            break;
-                        } else {
-                            isExist = false;
+                    String type = "Directory";
+                    if (filter.toHashMap().containsKey("type")) {
+                        type = filter.getString("type");
+                    }
+
+                    if (!filter.toHashMap().containsKey("name")) {
+                        String filterName = filter.getString("name").toLowerCase().trim();
+                        // 判断文件名
+                        if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
+                            continue;
                         }
                     }
-                }
-                if (!isExist) {
-                    continue;
-                }
 
-                WritableMap map = Arguments.createMap();
-                map.putString("path", p);
-                map.putString("name", n);
-                map.putBoolean("isDirectory", isDirectory);
-                array.pushMap(map);
+                    boolean isExist = false;
+                    if (filter.toHashMap().containsKey("extension")) {
+                        String filterType = filter.getString("extension").toLowerCase();
+                        String[] extensions = filterType.split(",");
+                        for (int j = 0; j < extensions.length; j++) {
+                            String mExtension = extensions[j].trim();
+                            // 判断文件类型
+                            if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
+                                isExist = true;
+                                break;
+                            } else {
+                                isExist = false;
+                            }
+                        }
+                    }
+                    if (!isExist) {
+                        continue;
+                    }
+
+                    WritableMap map = Arguments.createMap();
+                    map.putString("path", p);
+                    map.putString("name", n);
+                    map.putBoolean("isDirectory", isDirectory);
+                    array.pushMap(map);
+                }
             }
             promise.resolve(array);
         } catch (Exception e) {
@@ -516,6 +518,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         userName = userName == null || userName.equals("") ? "Customer" : userName;
 
         // 初始化用户工作空间
+        String downloadsPath = SDCARD + "/iTablet/User/" + userName + "/Downloads/";
         String dataPath = SDCARD + "/iTablet/User/" + userName + "/Data/";
         String dataPath2 = SDCARD + "/iTablet/User/" + userName + "/Data/Scene/";
         String originName = "Customer.smwu";
@@ -540,12 +543,13 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
         createDirectory(dataPath + "Temp");
+        createDirectory(downloadsPath);
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
-        String templatePath = dataPath + "Template/";
+        String templatePath = downloadsPath;
         String templateFilePath = templatePath + "地理国情普查";
 
         Boolean isUnZip;

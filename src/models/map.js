@@ -5,6 +5,9 @@ import { SMap } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath } from '../constants'
+import fs from 'react-native-fs'
+// import xml2js from 'react-native-xml2js'
+// let parser = new xml2js.Parser()
 // Constants
 // --------------------------------------------------
 export const OPEN_WORKSPACE = 'OPEN_WORKSPACE'
@@ -44,6 +47,7 @@ export const openWorkspace = (params, cb = () => {}) => async dispatch => {
 // 关闭工作空间
 export const closeWorkspace = (cb = () => {}) => async dispatch => {
   try {
+    // await SMap.closeDatasource()
     let result = await SMap.closeWorkspace()
     await dispatch({
       type: OPEN_WORKSPACE,
@@ -64,27 +68,83 @@ export const closeWorkspace = (cb = () => {}) => async dispatch => {
 // 打开地图
 export const openMap = (params, cb = () => {}) => async dispatch => {
   try {
-    if (params === null || params === undefined) return
-    let result = await SMap.openMap(params)
-    if (result) {
-      let mapInfo = await SMap.getMapInfo()
-      await dispatch({
-        type: SET_CURRENT_MAP,
-        payload: mapInfo || {},
-      })
+    if (
+      params === null ||
+      params === undefined ||
+      (!params.title && !params.name) ||
+      !params.path
+    )
+      return
+    // let paths = params.path.split('/')
+    let module = params.module || ''
+    let fileName = params.name || params.title
+    let importResult = await SMap.openMapName(fileName, module)
+    // let expFilePath = await FileTools.appendingHomeDirectory(params.path.substr(0, params.path.lastIndexOf('.')) + '.exp')
+    let expFilePath =
+      params.path.substr(0, params.path.lastIndexOf('.')) + '.exp'
+
+    // let expIsExist = await FileTools.fileIsExist(expFilePath)
+    // if (expIsExist) {
+    //   fs.readFile(expFilePath).then(data => {
+    //     parser.parseString(data, async (err, result) => {
+    //       let openMapResult = importResult && await SMap.openMap(params.title)
+    //       if (openMapResult) {
+    //         let mapInfo = await SMap.getMapInfo()
+    //         await dispatch({
+    //           type: SET_CURRENT_MAP,
+    //           payload: mapInfo || {},
+    //         })
+    //       }
+    //       cb && cb(result)
+    //       return result
+    //     })
+    //   })
+    // } else {
+    //   let result = importResult && await SMap.openMap(params.title)
+    //   if (result) {
+    //     let mapInfo = await SMap.getMapInfo()
+    //     await dispatch({
+    //       type: SET_CURRENT_MAP,
+    //       payload: mapInfo || {},
+    //     })
+    //   }
+    //   cb && cb(result)
+    //   return result
+    // }
+    let openMapResult = importResult && (await SMap.openMap(fileName))
+    let mapInfo = await SMap.getMapInfo()
+    if (openMapResult) {
+      let expIsExist = await FileTools.fileIsExist(expFilePath)
+      if (expIsExist) {
+        let data = await fs.readFile(expFilePath)
+        Object.assign(mapInfo, JSON.parse(data))
+        await dispatch({
+          type: SET_CURRENT_MAP,
+          payload: mapInfo || {},
+        })
+        cb && cb(mapInfo)
+        return mapInfo
+      }
+    } else {
+      // await dispatch({
+      //   type: SET_CURRENT_MAP,
+      //   payload: mapInfo || {},
+      // })
+      // cb && cb(mapInfo)
+      return openMapResult
     }
-    cb && cb(result)
-    return result
   } catch (e) {
     cb && cb(false)
     return false
   }
 }
 
-// 打开地图
+// 关闭地图
 export const closeMap = (cb = () => {}) => async dispatch => {
   try {
     await SMap.closeMap()
+    await SMap.removeMap(-1) // 移除所有地图
+    await SMap.closeDatasource()
     await dispatch({
       type: SET_CURRENT_MAP,
       payload: {},
