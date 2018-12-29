@@ -298,6 +298,11 @@ export default class MyOnlineData extends Component {
   }
   _changeModalProgressState = progress => {
     if (_iDownloadingIndex >= 0) {
+      if (!this.downloadingFileName) {
+        this.downloadingFileName = this.state.data[
+          _iDownloadingIndex
+        ].fileName.substring(0, this.state.data[this.index].fileName.length - 4)
+      }
       let newData = [...this.state.data]
       newData[_iDownloadingIndex].downloadingProgress = progress
       _arrOnlineData = newData
