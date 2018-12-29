@@ -990,7 +990,7 @@ export default class ToolBar extends React.PureComponent {
       let data = []
       let userName = this.props.user.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.List,
+        ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.Scene,
       )
       let result = await FileTools.fileIsExist(path)
       if (result) {
@@ -1102,6 +1102,7 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
+          isFullScreen: false,
         },
         () => {
           this.height =

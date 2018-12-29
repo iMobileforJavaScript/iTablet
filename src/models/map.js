@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SScene } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath } from '../constants'
@@ -184,11 +184,30 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   isExporting = false
   cb && cb(result, zipPath)
 }
-//导入工作空间
+//导出工作空间
 // export const map3DleadWorkspace = (
 //   params = {},
 //   cb = () => {},
 // ) => async getState => {}
+
+//到入三维工作空间
+export const improtSceneWorkspace = params => async getState => {
+  let userName = getState().user.toJS().currentUser.userName || 'Customer'
+  if (userName !== 'Customer') {
+    let path = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.Scene,
+    )
+    await SScene.setCustomerDirectory(path)
+  }
+  if (params.server) {
+    let result = SScene.is3DWorkspace()
+    if (result) {
+      await SScene.import3DWorkspaceInfo({ server: params.server })
+    } else {
+      Toast.show('倒入失败')
+    }
+  }
+}
 
 const initialState = fromJS({
   latestMap: [],

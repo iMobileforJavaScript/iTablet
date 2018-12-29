@@ -10,7 +10,6 @@ import {
 import { SScene } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
-const Fs = require('react-native-fs')
 export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
@@ -154,23 +153,25 @@ export default class Map3DToolBar extends React.Component {
 
   openWorkspace = async item => {
     let path = await FileTools.appendingHomeDirectory(item.path)
-    Fs.readFile(path).then(result => {
-      let data = JSON.parse(result)
-      let workspacePath = data.serverUrl
-      SScene.openWorkspace({ server: workspacePath }).then(result => {
-        result &&
-          SScene.openMap(item.name).then(() => {
-            SScene.setListener().then(() => {
-              SScene.getAttribute()
-              SScene.setCircleFly()
-            })
-            GLOBAL.openWorkspace = true
-            this.props.existFullMap && this.props.existFullMap(true)
-            this.props.showToolbar && this.props.showToolbar(false)
-          })
+    await SScene.openScenceName(path).then(() => {
+      SScene.setListener().then(() => {
+        SScene.getAttribute()
+        SScene.setCircleFly()
       })
-      // console.log(data)
+      GLOBAL.openWorkspace = true
+      this.props.existFullMap && this.props.existFullMap(true)
+      this.props.showToolbar && this.props.showToolbar(false)
     })
+    // Fs.readFile(path).then(result => {
+    //   let data = JSON.parse(result)
+    //   let workspacePath = data.serverUrl
+    //   SScene.openWorkspace({ server: workspacePath }).then(result => {
+    //     result &&
+    //       SScene.openMap(item.name).then(() => {
+    //       })
+    //   })
+    //   // console.log(data)
+    // })
   }
 
   renderItem = ({ item }) => {

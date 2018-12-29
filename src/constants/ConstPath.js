@@ -19,6 +19,7 @@ const RelativeFilePath = {
   Workspace: Data + 'Workspace.smwu', // 工作空间
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
+  DownLoad: Data + 'DownLoad/',
 }
 
 // 默认创建的目录
