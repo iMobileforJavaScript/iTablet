@@ -5,7 +5,7 @@
  */
 import React, { PureComponent } from 'react'
 import { View, Text } from 'react-native'
-import { Dialog } from '../../../../components'
+import { Dialog } from '../../../../components/index'
 import styles from './styles'
 
 export default class ModifiedDialog extends PureComponent {

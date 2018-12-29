@@ -181,7 +181,8 @@ class SymbolTabs extends React.Component {
   }
 
   render() {
-    if (this.props.template.template && this.props.template.template.path) {
+    // if (this.props.template.template && this.props.template.template.path) {
+    if (this.props.map.currentMap && this.props.map.currentMap.Template) {
       // return (
       //   <TemplateList
       //     style={styles.temple}

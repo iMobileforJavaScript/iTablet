@@ -1,11 +1,11 @@
 import React from 'react'
-import { screen, scaleSize } from '../../../../utils'
-import { ConstToolType } from '../../../../constants'
+import { screen, scaleSize } from '../../../../utils/index'
+import { ConstToolType } from '../../../../constants/index'
 import { layersetting } from './LayerToolbarData'
 import { View, TouchableOpacity, Animated } from 'react-native'
-import ToolBarSectionList from '../../../workspace/componets/ToolBar/ToolBarSectionList'
+import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { color, size } from '../../../../styles'
+import { color, size } from '../../../../styles/index'
 import { SMap } from 'imobile_for_reactnative'
 
 /** 工具栏类型 **/

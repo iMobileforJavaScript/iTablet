@@ -131,7 +131,8 @@ function closeMapTheme() {
 
 /** 关闭地图 **/
 function closeMap() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  if (!_params.closeMap) return
+  _params.closeMap()
 }
 
 /** 保存地图 **/

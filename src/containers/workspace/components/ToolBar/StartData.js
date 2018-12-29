@@ -229,20 +229,51 @@ function openWorkspace(cb) {
 function openMap() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  let data = []
-  _params.getMaps(list => {
-    data = [
-      {
-        title: '地图',
-        data: list,
-      },
-    ]
-    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-      containerType: 'list',
-      height: ConstToolType.HEIGHT[3],
-      data,
+  ;(async function() {
+    let data = [],
+      path =
+        (await FileTools.appendingHomeDirectory(
+          _params.user && _params.user.userName
+            ? ConstPath.UserPath + _params.userName
+            : ConstPath.CustomerPath,
+        )) + ConstPath.RelativeFilePath.Map
+    FileTools.getPathListByFilter(path, {
+      extension: 'xml',
+      type: 'file',
+    }).then(fileList => {
+      let list = []
+      fileList.forEach(item => {
+        let name = item.name
+        item.title = name
+        item.name = name.split('.')[0]
+        list.push(item)
+      })
+      data = [
+        {
+          title: '地图',
+          data: list,
+        },
+      ]
+      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+        containerType: 'list',
+        height: ConstToolType.HEIGHT[3],
+        data,
+      })
     })
-  })
+    // _params.getMaps(list => {
+    //   data = [
+    //     {
+    //       title: '地图',
+    //       data: list,
+    //     },
+    //   ]
+    //   _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+    //     containerType: 'list',
+    //     height: ConstToolType.HEIGHT[3],
+    //     data,
+    //   })
+    // })
+  })()
 }
 
 /** 打开模板 **/
@@ -251,30 +282,32 @@ function openTemplate() {
   _params.showFullMap && _params.showFullMap(true)
   NativeMethod.getTemplates(_params.user.currentUser.userName).then(
     async templateList => {
-      let isDefaultWS = false
-      let defaultWorkspacePath = await FileTools.appendingHomeDirectory(
-        (_params.user && _params.user.userName
-          ? ConstPath.UserPath + _params.userName
-          : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
-      )
+      // let isDefaultWS = false
+      // let defaultWorkspacePath = await FileTools.appendingHomeDirectory(
+      //   (_params.user && _params.user.userName
+      //     ? ConstPath.UserPath + _params.userName
+      //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
+      // )
 
-      if (
-        _params.map &&
-        _params.map.workspace.server === defaultWorkspacePath
-      ) {
-        isDefaultWS = true
-      }
+      // if (
+      //   _params.map &&
+      //   _params.map.workspace.server === defaultWorkspacePath
+      // ) {
+      //   isDefaultWS = true
+      // }
 
-      let data = isDefaultWS
-        ? [
+      let data =
+        // isDefaultWS
+        // ? [
+        //   {
+        //     title: Const.MODULE,
+        //     data: templateList,
+        //   },
+        // ]
+        // :
+        [
           {
-            title: Const.MODULE,
-            data: templateList,
-          },
-        ]
-        : [
-          {
-            title: Const.RETURN_TO_DEFAULT_MODULE,
+            title: Const.CREATE_SYMBOL_COLLECTION,
             data: [],
           },
           {
@@ -282,7 +315,7 @@ function openTemplate() {
             data: templateList,
           },
         ]
-      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      _params.setToolbarVisible(true, ConstToolType.MAP_TEMPLATE, {
         containerType: 'list',
         height: ConstToolType.HEIGHT[3],
         data,
