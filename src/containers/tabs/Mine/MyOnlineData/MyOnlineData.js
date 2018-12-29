@@ -79,7 +79,7 @@ export default class MyOnlineData extends Component {
         },
       )
       this.downloadedListener = callBackIos.addListener(downloadedType, () => {
-        let result = '下载完成，可导入'
+        let result = '下载完成'
         this._changeModalProgressState(result)
         this._resetDownloadIndex(-1)
       })
@@ -95,7 +95,7 @@ export default class MyOnlineData extends Component {
       this.downloadedListener = DeviceEventEmitter.addListener(
         downloadedType,
         () => {
-          let result = '下载完成，可导入'
+          let result = '下载完成'
           this._changeModalProgressState(result)
           this._resetDownloadIndex(-1)
         },
@@ -278,9 +278,9 @@ export default class MyOnlineData extends Component {
       ) {
         this.modalRef._changeDownloadingState(progress)
       }
-      if (progress === '下载完成，可导入' || progress === '下载失败') {
+      if (progress === '下载完成' || progress === '下载失败') {
         this._setFinalDownloadingProgressState(_iDownloadingIndex, progress)
-        if (progress === '下载完成，可导入') {
+        if (progress === '下载完成') {
           this._unZipFile()
         }
       }
@@ -350,8 +350,8 @@ export default class MyOnlineData extends Component {
       let filePath = await FileTools.appendingHomeDirectory(path)
       let isFileExist = await FileTools.fileIsExist(path)
       if (isFileExist) {
-        Toast.show('下载完成，可导入')
-        this._changeModalProgressState('下载完成，可导入')
+        Toast.show('下载完成')
+        this._changeModalProgressState('下载完成')
         return
       }
       this.downloadingFileName = objContent.fileName.substring(
@@ -639,7 +639,7 @@ export default class MyOnlineData extends Component {
                 enabled={true}
               />
             }
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.8}
             onEndReached={this._onLoadData}
             ListFooterComponent={this._footView}
           />

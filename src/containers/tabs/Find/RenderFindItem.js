@@ -44,68 +44,68 @@ export default class RenderFindItem extends Component {
     }
   }
   _downloadFile = async () => {
-    if (this.state.isDownloading) {
-      Toast.show('正在下载...')
-      return
-    }
-    Toast.show('开始下载')
-    this.setState({ progress: '下载中...', isDownloading: true })
-    let dataId = this.props.data.id
-    let dataUrl = 'https://www.supermapol.com/web/datas/' + dataId + '/download'
-    let fileName = this.props.data.fileName
-    let appHome = RNFS.DocumentDirectoryPath
-    let fileDir
     if (
       this.props.user &&
       this.props.user.currentUser &&
       this.props.user.currentUser.userName &&
       this.props.user.currentUser.userName !== ''
     ) {
-      fileDir =
+      if (this.state.isDownloading) {
+        Toast.show('正在下载...')
+        return
+      }
+      Toast.show('开始下载')
+      this.setState({ progress: '下载中...', isDownloading: true })
+      let dataId = this.props.data.id
+      let dataUrl =
+        'https://www.supermapol.com/web/datas/' + dataId + '/download'
+      let fileName = this.props.data.fileName
+      let appHome = RNFS.DocumentDirectoryPath
+      let fileDir =
         appHome +
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Downloads/'
-    } else {
-      fileDir = appHome + ConstPath.CustomerPath + 'Downloads/'
-    }
-    let exists = await RNFS.exists(fileDir)
-    if (!exists) {
-      await RNFS.mkdir(fileDir)
-    }
-    let filePath = fileDir + fileName
-    const downloadOptions = {
-      fromUrl: dataUrl,
-      toFile: filePath,
-      background: true,
-      // begin: result => {
-      //
-      // },
-      progress: res => {
-        let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
-        // console.warn("value:"+value)
-        let progress = '下载:' + value + '%'
-        if (this.state.progress !== progress) {
-          this.setState({ progress: progress })
-        }
-      },
-    }
-    try {
-      const ret = RNFS.downloadFile(downloadOptions)
-      ret.promise
-        .then(result => {
-          if (result.statusCode === 200) {
-            Toast.show('下载成功')
-            this.setState({ progress: '下载完成', isDownloading: false })
+        '/Data/Downloads/'
+      let exists = await RNFS.exists(fileDir)
+      if (!exists) {
+        await RNFS.mkdir(fileDir)
+      }
+      let filePath = fileDir + fileName
+      const downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: filePath,
+        background: true,
+        // begin: result => {
+        //
+        // },
+        progress: res => {
+          let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+          // console.warn("value:"+value)
+          let progress = '下载:' + value + '%'
+          if (this.state.progress !== progress) {
+            this.setState({ progress: progress })
           }
-        })
-        .catch(() => {
-          Toast.show('下载失败')
-          this.setState({ progress: '下载', isDownloading: false })
-        })
-    } catch (e) {
-      Toast.show('网络错误')
-      this.setState({ progress: '下载', isDownloading: false })
+        },
+      }
+      try {
+        const ret = RNFS.downloadFile(downloadOptions)
+        ret.promise
+          .then(result => {
+            if (result.statusCode === 200) {
+              Toast.show('下载成功')
+              this.setState({ progress: '下载完成', isDownloading: false })
+            }
+          })
+          .catch(() => {
+            Toast.show('下载失败')
+            this.setState({ progress: '下载', isDownloading: false })
+          })
+      } catch (e) {
+        Toast.show('网络错误')
+        this.setState({ progress: '下载', isDownloading: false })
+      }
+    } else {
+      Toast.show('登录后可下载')
     }
   }
   render() {

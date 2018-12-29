@@ -12,7 +12,6 @@ import styles, { textHeight } from './Styles'
 import NavigationService from '../../../../NavigationService'
 import { FetchUtils } from '../../../../../utils'
 import Toast from '../../../../../utils/Toast'
-import { SOnlineService } from 'imobile_for_reactnative'
 export default class MyOnlineMap extends Component {
   props: {
     navigation: Object,
@@ -66,7 +65,6 @@ export default class MyOnlineMap extends Component {
   }
   _loadOnlineData = async () => {
     try {
-      this.cookie = await SOnlineService.getAndroidSessionID()
       let uri = this.props.navigation.getParam('uri', 'null')
       if (uri === undefined || uri === null || uri === 'null') {
         this.setState({ isLoadingProgressView: false })
@@ -90,7 +88,8 @@ export default class MyOnlineMap extends Component {
         if (restUrl === undefined) {
           this._showInfo('数据没有发布服务')
         } else {
-          restUrl = 'http' + restUrl.substring(5, restUrl.length) + '/maps.json'
+          let subUrl = restUrl.substring(5, restUrl.length)
+          restUrl = 'http' + subUrl + '/maps.json'
           let arrMapJson = await FetchUtils.getObjJson(restUrl)
           if (arrMapJson.errorMsg !== undefined) {
             this._showInfo('数据没有公开已有服务，无权限浏览')
@@ -142,9 +141,6 @@ export default class MyOnlineMap extends Component {
   _renderItem = info => {
     let mapTitle = info.item.mapTitle
     if (mapTitle !== undefined) {
-      if (this.cookie === undefined) {
-        this.cookie = ''
-      }
       return (
         <TouchableOpacity
           onPress={() => {

@@ -1,16 +1,15 @@
 import { StyleSheet, Platform } from 'react-native'
-import { scaleSize, screen } from '../../utils'
+import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 
-export const HEADER_HEIGHT =
-  screen.deviceWidth > 320 ? 50 + (Platform.OS === 'ios' ? 20 : 0) : 50
+export const HEADER_HEIGHT = scaleSize(60) + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default StyleSheet.create({
   defaultHeaderView: {
     width: '100%',
-    paddingTop: scaleSize(HEADER_PADDINGTOP),
-    height: scaleSize(HEADER_HEIGHT),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     // borderBottomWidth: 1,
     // borderBottomColor: '#e2e2e2',
     flexDirection: 'row',
@@ -24,8 +23,8 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 10001,
     width: '100%',
-    paddingTop: scaleSize(HEADER_PADDINGTOP),
-    height: scaleSize(HEADER_HEIGHT),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     backgroundColor: color.theme,
     flexDirection: 'row',
     alignItems: 'center',
@@ -37,8 +36,8 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 10001,
     width: '100%',
-    paddingTop: scaleSize(HEADER_PADDINGTOP),
-    height: scaleSize(HEADER_HEIGHT),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     backgroundColor: '#rgba(255, 255, 255, 0)',
     flexDirection: 'row',
     alignItems: 'center',
@@ -50,8 +49,8 @@ export default StyleSheet.create({
     right: 0,
     zIndex: 100019,
     width: '100%',
-    paddingTop: scaleSize(HEADER_PADDINGTOP),
-    height: scaleSize(HEADER_HEIGHT),
+    paddingTop: HEADER_PADDINGTOP,
+    height: HEADER_HEIGHT,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#rgba(255, 255, 255, 0)',
