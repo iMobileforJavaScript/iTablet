@@ -37,7 +37,7 @@ export default class PopupModal extends PureComponent {
   _changeDownloadingState = progress => {
     this.bIsCallBackProps = false
     let isClick = false
-    if (progress === '下载完成，可导入' || progress === '下载失败') {
+    if (progress === '下载完成' || progress === '下载失败') {
       isClick = true
     }
     this.setState({ progress: progress, isClick: isClick })
@@ -161,7 +161,7 @@ export default class PopupModal extends PureComponent {
         <TouchableOpacity
           style={{ backgroundColor: color.content }}
           onPress={() => {
-            if (progress === '下载完成，可导入') {
+            if (progress === '下载完成') {
               this.props.openWorkspace()
             } else {
               if (this.props.data.isDownloading === true) {

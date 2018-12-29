@@ -18,6 +18,7 @@ export default class LayerManager_tolbar extends React.Component {
     data: Array,
     existFullMap: () => {},
     layername: string,
+    getLayers: () => {}, // 更新数据（包括其他界面）
   }
 
   static defaultProps = {
@@ -142,7 +143,12 @@ export default class LayerManager_tolbar extends React.Component {
       section.action && section.action()
     }
     if (section.title === '移除') {
-      SMap.removeLayerWithName(this.state.layername)
+      (async function() {
+        await SMap.removeLayerWithName(this.state.layername)
+        await this.props.getLayers()
+      }.bind(this)())
+      this.setVisible(false)
+      GLOBAL.isNewMap = false
     }
   }
 
