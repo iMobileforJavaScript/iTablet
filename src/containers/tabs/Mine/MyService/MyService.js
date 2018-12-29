@@ -37,12 +37,16 @@ export default class MyService extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
+    this.publishServiceTitle = '共有服务'
+    this.privateServiceTitle = '私有服务'
     this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,
+      bPrivateServiceShow: true,
+      bPublishServiceShow: true,
       selections: [
-        { title: '私有服务', data: _arrPrivateServiceList },
-        { title: '共有服务', data: _arrPublishServiceList },
+        { title: this.privateServiceTitle, data: _arrPrivateServiceList },
+        { title: this.publishServiceTitle, data: _arrPublishServiceList },
       ],
       modalIsVisible: false,
       isRefreshing: false,
@@ -146,7 +150,6 @@ export default class MyService extends Component {
           }
         }
         /** 重新赋值，避免浅拷贝*/
-
         _arrPrivateServiceList = arrPrivateServiceList
         _arrPublishServiceList = arrPublishServiceList
       }
@@ -166,15 +169,33 @@ export default class MyService extends Component {
     }
   }
 
+  _isShowRenderItem = (isShow: boolean, title: string) => {
+    if (title === this.publishServiceTitle) {
+      this.setState({ bPublishServiceShow: !isShow })
+    } else if (title === this.privateServiceTitle) {
+      this.setState({ bPrivateServiceShow: !isShow })
+    }
+  }
+
   _renderSectionHeader(section) {
     let title = section.section.title
     if (title !== undefined) {
-      return <Text style={styles.titleTextStyle}>{title}</Text>
+      return (
+        <Text
+          style={[styles.titleTextStyle, { fontSize: 18, fontWeight: 'bold' }]}
+          onPress={() => {
+            this._isShowRenderItem(section.section.isShowItem, title)
+          }}
+        >
+          {title}
+        </Text>
+      )
     }
     return <View />
   }
   _renderItem(info) {
     let restTitle = info.item.restTitle
+    let display = info.section.isShowItem ? 'flex' : 'none'
     if (restTitle !== undefined) {
       let index = info.index
       let imageUri = info.item.thumbnail
@@ -184,6 +205,7 @@ export default class MyService extends Component {
       let mapInfos = info.item.mapInfos
       return (
         <RenderServiceItem
+          display={display}
           onItemPress={this._onItemPress}
           imageUrl={imageUri}
           restTitle={restTitle}
@@ -196,7 +218,7 @@ export default class MyService extends Component {
       )
     }
     return (
-      <View>
+      <View display={display}>
         <Text
           style={[
             styles.titleTextStyle,
@@ -354,11 +376,24 @@ export default class MyService extends Component {
   }
   _loadData = async () => {
     let publishLength = _arrPublishServiceList.length
+    if (
+      _arrPublishServiceList.length === 1 &&
+      _arrPublishServiceList[0].id === undefined
+    ) {
+      publishLength = 0
+    }
     let privateLength = _arrPrivateServiceList.length
+    if (
+      _arrPrivateServiceList.length === 1 &&
+      _arrPrivateServiceList[0].id === undefined
+    ) {
+      privateLength = 0
+    }
     let loadServiceCount = publishLength + privateLength
     if (
       this.serviceListTotal > _loadCount * _iServicePageSize &&
-      this.serviceListTotal > loadServiceCount
+      this.serviceListTotal > loadServiceCount &&
+      (this.state.bPublishServiceShow || this.state.bPrivateServiceShow)
     ) {
       _loadCount = ++_loadCount
       await this._initSectionsData(_loadCount, _iServicePageSize)
@@ -366,9 +401,25 @@ export default class MyService extends Component {
   }
   _footView = () => {
     let publishLength = _arrPublishServiceList.length
+    if (
+      _arrPublishServiceList.length === 1 &&
+      _arrPublishServiceList[0].id === undefined
+    ) {
+      publishLength = 0
+    }
     let privateLength = _arrPrivateServiceList.length
+    if (
+      _arrPrivateServiceList.length === 1 &&
+      _arrPrivateServiceList[0].id === undefined
+    ) {
+      privateLength = 0
+    }
     let loadServiceCount = publishLength + privateLength
-    if (this.serviceListTotal > loadServiceCount) {
+    if (
+      this.serviceListTotal > loadServiceCount &&
+      (this.state.bPublishServiceShow || this.state.bPrivateServiceShow) &&
+      !this.state.isRefreshing
+    ) {
       return (
         <View
           style={{
@@ -440,8 +491,16 @@ export default class MyService extends Component {
           <SectionList
             style={styles.haveDataViewStyle}
             sections={[
-              { title: '私有服务', data: this.state.arrPrivateServiceList },
-              { title: '共有服务', data: this.state.arrPublishServiceList },
+              {
+                title: this.privateServiceTitle,
+                data: this.state.arrPrivateServiceList,
+                isShowItem: this.state.bPrivateServiceShow,
+              },
+              {
+                title: this.publishServiceTitle,
+                data: this.state.arrPublishServiceList,
+                isShowItem: this.state.bPublishServiceShow,
+              },
             ]}
             renderItem={this._renderItem}
             renderSectionHeader={this._renderSectionHeader}
@@ -456,7 +515,7 @@ export default class MyService extends Component {
                 enabled={true}
               />
             }
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.5}
             onEndReached={this._loadData}
             ListFooterComponent={this._footView}
           />
