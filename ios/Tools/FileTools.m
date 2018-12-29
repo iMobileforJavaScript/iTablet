@@ -21,34 +21,36 @@ RCT_REMAP_METHOD(getHomeDirectory,getHomeDirectoryWithresolver:(RCTPromiseResolv
 }
 
 RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*)filter getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
-  NSMutableArray* array = [NSMutableArray arrayWithCapacity:10];
-  
+  BOOL flag = YES;
   NSFileManager* fileMgr = [NSFileManager defaultManager];
-  NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
+  NSMutableArray* array = [NSMutableArray array];
   
-  NSString* filterKey = filter[@"name"];
-  NSString* filterEx = filter[@"extension"];
-  NSString* type = @"Directory";
-  if (filter[@"type"]) {
-    type = [filter[@"type"] isEqualToString:@""] ? @"Directory" : filter[@"type"];
-  }
-  for (NSString* fileName in tempArray) {
+  if ([fileMgr fileExistsAtPath:path isDirectory:&flag]) {
+    NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
     
-    BOOL flag = YES;
-    
-    NSString* fullPath = [path stringByAppendingPathComponent:fileName];
-    
-    if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+    NSString* filterKey = filter[@"name"];
+    NSString* filterEx = filter[@"extension"];
+    NSString* type = @"Directory";
+    if (filter[@"type"]) {
+      type = [filter[@"type"] isEqualToString:@""] ? @"Directory" : filter[@"type"];
+    }
+    for (NSString* fileName in tempArray) {
       
-      NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
-      NSString* extension = [tt pathExtension];
-      NSString* fileName = [tt lastPathComponent];
-      if(([filterEx containsString:extension] && ([fileName containsString:filterKey] || [filterKey isEqualToString:@""])) || (flag && [type isEqualToString:@"Directory"])) {
-        [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
+      
+      NSString* fullPath = [path stringByAppendingPathComponent:fileName];
+      
+      if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+        
+        NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
+        NSString* extension = [tt pathExtension];
+        NSString* fileName = [tt lastPathComponent];
+        if(([filterEx containsString:extension] && ([fileName containsString:filterKey] || [filterKey isEqualToString:@""])) || (flag && [type isEqualToString:@"Directory"])) {
+          [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
+        }
+        
       }
       
     }
-    
   }
   
   resolve(array);
@@ -286,6 +288,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
+  NSString* downloadsPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Downloads/"];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Attribute"]];
@@ -295,15 +298,16 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Temp"]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", downloadsPath, @""]];
   
   // 初始化模板数据
   NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
   NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
-  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"];
-  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", templatePath, @"地理国情普查"];
+  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", downloadsPath];
+  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", downloadsPath, @"地理国情普查"];
   
   BOOL isUnZip = NO;
-  if (![[NSFileManager defaultManager] fileExistsAtPath:templatePath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
+  if (![[NSFileManager defaultManager] fileExistsAtPath:downloadsPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
     if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
       isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
       NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");

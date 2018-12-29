@@ -1,7 +1,7 @@
-import LayerManager_item from './LayerManager_item'
-import LayerManager_tab from './LayerManager_tab'
-import ModifiedDialog from './ModifiedDialog'
-import LayerManager_tolbar from './LayerManager_tolbar'
+import LayerManager_item from './LayerManager_item/index'
+import LayerManager_tab from './LayerManager_tab/index'
+import ModifiedDialog from './ModifiedDialog/index'
+import LayerManager_tolbar from './LayerManager_tolbar/index'
 
 export {
   LayerManager_item,

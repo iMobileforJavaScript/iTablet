@@ -158,8 +158,8 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-fs')
-    implementation project(':react-native-orientation')
+    api project(':react-native-fs')
+    api project(':react-native-orientation')
     implementation project(':imobile_for_reactnative')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'

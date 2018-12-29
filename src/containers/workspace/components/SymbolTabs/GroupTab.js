@@ -39,7 +39,7 @@ export default class GroupTab extends React.Component {
         symbols.push(item.id)
       })
       this.props.setCurrentSymbols && this.props.setCurrentSymbols(symbols)
-      if (symbols.length >= 0) {
+      if (symbols.length > 0) {
         this.props.goToPage && this.props.goToPage(1)
       } else {
         Toast.show(ConstInfo.SYMBOL_LIB_EMPTY)

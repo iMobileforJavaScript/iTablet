@@ -5,9 +5,9 @@
  */
 import * as React from 'react'
 import { View } from 'react-native'
-import { CollectionToolbar } from '../../componets'
+import { CollectionToolbar } from '../../components'
 import constants from '../../constants'
-import ToolbarList from '../../componets/ToolbarList'
+import ToolbarList from '../../components/ToolbarList'
 
 const COLLECTION_LEFT = 'COLLECTION_LEFT'
 const COLLECTION_RIGHT = 'COLLECTION_RIGHT'

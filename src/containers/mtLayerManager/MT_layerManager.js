@@ -6,19 +6,22 @@
 
 import * as React from 'react'
 import { FlatList, TouchableOpacity, Text, View } from 'react-native'
-import { Container } from '../../components'
+import { Container } from '../../components/index'
 import constants from '../workspace/constants'
-import { Toast, scaleSize } from '../../utils'
-import { MapToolbar } from '../workspace/componets'
+import { Toast, scaleSize } from '../../utils/index'
+import { ConstInfo } from '../../constants/index'
+import { MapToolbar, SaveView } from '../workspace/components/index'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
-import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType } from '../../constants'
-import { color, size } from '../../styles'
+import { LayerManager_item, LayerManager_tolbar } from './components/index'
+import { ConstToolType } from '../../constants/index'
+import { color, size } from '../../styles/index'
 
 export default class MT_layerManager extends React.Component {
   props: {
     navigation: Object,
     editLayer: Object,
+    map: Object,
+    collection: Object,
     layers: Object,
     setEditLayer: () => {},
     setCurrentLayer: () => {},
@@ -380,6 +383,27 @@ export default class MT_layerManager extends React.Component {
     SMap.setLayerVisible(data.path, value)
   }
 
+  // 导出(保存)工作空间中地图到模块
+  saveMapName = (mapName = '', cb = () => {}) => {
+    try {
+      this.setLoading(true, '正在保存地图')
+      SMap.saveMapName(mapName).then(
+        result => {
+          this.setLoading(false)
+          Toast.show(
+            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+          )
+          cb && cb()
+        },
+        () => {
+          this.setLoading(false)
+        },
+      )
+    } catch (e) {
+      this.setLoading(false)
+    }
+  }
+
   _renderItem = ({ item }) => {
     // sectionID = sectionID || 0
     return (
@@ -478,6 +502,7 @@ export default class MT_layerManager extends React.Component {
         headerProps={{
           title: title,
           navigation: this.props.navigation,
+          backAction: this.back,
         }}
         bottomBar={this.renderToolBar()}
       >
@@ -514,6 +539,35 @@ export default class MT_layerManager extends React.Component {
         {/*label={'图层名称'}*/}
         {/*confirmAction={this._renameLayer}*/}
         {/*/>*/}
+        <SaveView
+          ref={ref => (this.SaveMapView = ref)}
+          save={() => {
+            let mapName = ''
+            if (this.props.map.currentMap.name) {
+              mapName = this.props.map.currentMap.name
+              mapName = mapName.substr(0, mapName.lastIndexOf('.'))
+            } else if (this.props.layers.layers.length > 0) {
+              // mapName = this.props.layers.layers[this.props.layers.layers.length - 1].name +
+              //   this.props.collection.datasourceName ? ('@' + this.props.collection.datasourceName) : ''
+              mapName = this.props.collection.datasourceName
+            }
+            this.saveMapName(mapName, () => {
+              if (this.backAction) {
+                this.backAction()
+                this.backAction = null
+              }
+            })
+          }}
+          notSave={() => {
+            if (this.backAction) {
+              this.backAction()
+              this.backAction = null
+            }
+          }}
+          cancel={() => {
+            this.backAction = null
+          }}
+        />
       </Container>
     )
   }

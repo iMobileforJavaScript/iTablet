@@ -25,6 +25,8 @@ export default [
       GLOBAL.Type = constants.MAP_EDIT
       GLOBAL.isArrayData = true
       GLOBAL.isNewMap = true
+      GLOBAL.showMenu = true
+      GLOBAL.showFlex = true
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
