@@ -1,7 +1,30 @@
 import { SMap } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
-import ToolbarBtnType from '../containers/workspace/componets/ToolBar/ToolbarBtnType'
+import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
+
+function OpenData(data, index) {
+  (async function() {
+    if (GLOBAL.isNewMap) {
+      if (GLOBAL.isArrayData) {
+        await SMap.removeLayer(0)
+      } else {
+        await SMap.removeLayer(0)
+        await SMap.removeLayer(0)
+      }
+    }
+    if (data instanceof Array) {
+      await SMap.openDatasource(data[1].DSParams, index, false)
+      await SMap.openDatasource(data[0].DSParams, index, false)
+      GLOBAL.isArrayData = false
+      GLOBAL.isNewMap = true
+    } else {
+      await SMap.openDatasource(data.DSParams, index, false)
+      GLOBAL.isArrayData = true
+      GLOBAL.isNewMap = true
+    }
+  }.bind(this)())
+}
 
 const layerAdd = [
   {
@@ -20,37 +43,25 @@ const BotMap = [
       {
         title: 'Google RoadMap',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 0)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 0)
         },
       },
       {
         title: 'Google Staelite',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 1)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 1)
         },
       },
       {
         title: 'Google Terrain',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 2)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 2)
         },
       },
       {
         title: 'Google Hybrid',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Google'].DSParams, 3)
-          }.bind(this)())
+          OpenData(ConstOnline.Google, 3)
         },
       },
     ],
@@ -58,53 +69,36 @@ const BotMap = [
   {
     title: 'MapWorld',
     data: [
+      // {
+      //   title: '全球矢量地图（经纬度）',
+      //   action: () => {
+      //     OpenData(ConstOnline.TDJWD,0)
+      //   },
+      // },
       {
-        title: '全球矢量地图（经纬度）',
+        title: '全球矢量地图',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDJWD[0].DSParams, 0, false)
-            await SMap.openDatasource(ConstOnline.TDJWD[1].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.TD, 0)
         },
       },
+      // {
+      //   title: '全球影像地图服务（经纬度）',
+      //   action: () => {
+      //     OpenData(ConstOnline.TDYX,0)
+      //   },
+      // },
       {
-        title: '全球矢量地图（墨卡托）',
+        title: '全球影像地图服务',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TD[0].DSParams, 0, false)
-            await SMap.openDatasource(ConstOnline.TD[1].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.TDYXM, 0)
         },
       },
-      {
-        title: '全球影像地图服务（经纬度）',
-        action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDYX.DSParams, 0, false)
-          }.bind(this)())
-        },
-      },
-      {
-        title: '全球影像地图服务（墨卡托）',
-        action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDYXM.DSParams, 0, false)
-          }.bind(this)())
-        },
-      },
-      {
-        title: '全球地形晕渲地图服务（经纬度）',
-        action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline.TDQ.DSParams, 0, false)
-          }.bind(this)())
-        },
-      },
+      // {
+      //   title: '全球地形晕渲地图服务（经纬度）',
+      //   action: () => {
+      //     OpenData(ConstOnline.TDQ,0)
+      //   },
+      // },
     ],
   },
   {
@@ -113,10 +107,7 @@ const BotMap = [
       {
         title: 'Baidu Map',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['Baidu'].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.Baidu, 0)
         },
       },
     ],
@@ -127,10 +118,7 @@ const BotMap = [
       {
         title: 'OSM Map',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(ConstOnline['OSM'].DSParams, 0, false)
-          }.bind(this)())
+          OpenData(ConstOnline.OSM, 0)
         },
       },
     ],
@@ -141,14 +129,7 @@ const BotMap = [
       {
         title: 'quanguo',
         action: () => {
-          (async function() {
-            await SMap.closeMap()
-            await SMap.openDatasource(
-              ConstOnline['SuperMapCloud'].DSParams,
-              0,
-              false,
-            )
-          }.bind(this)())
+          OpenData(ConstOnline.SuperMapCloud, 0)
         },
       },
     ],
@@ -174,8 +155,9 @@ const line = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '符号线',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
@@ -184,6 +166,7 @@ const line = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '符号线',
   },
   {
     key: '线宽',
@@ -196,8 +179,11 @@ const line = [
           ToolbarBtnType.MENUS,
           ToolbarBtnType.PLACEHOLDER,
         ],
+        selectName: '线宽',
+        selectKey: '线宽',
       })
     },
+    selectKey: '线宽',
   },
   {
     key: '颜色',
@@ -207,8 +193,9 @@ const line = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '线颜色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET, {
         containerType: 'colortable',
@@ -218,6 +205,7 @@ const line = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '线颜色',
   },
 ]
 
@@ -230,8 +218,9 @@ const point = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '点符号',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
@@ -240,6 +229,7 @@ const point = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '点符号',
   },
   {
     key: '大小',
@@ -248,6 +238,7 @@ const point = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '大小',
+        selectKey: '大小',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -255,6 +246,7 @@ const point = [
         ],
       })
     },
+    selectKey: '大小',
   },
   {
     key: '颜色',
@@ -264,8 +256,9 @@ const point = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '点颜色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET, {
         containerType: 'colortable',
@@ -275,6 +268,7 @@ const point = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '点颜色',
   },
   {
     key: '旋转角度',
@@ -283,6 +277,7 @@ const point = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '旋转角度',
+        selectKey: '旋转角度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -290,6 +285,7 @@ const point = [
         ],
       })
     },
+    selectKey: '旋转角度',
   },
   {
     key: '透明度',
@@ -298,6 +294,7 @@ const point = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '透明度',
+        selectKey: '点透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -305,6 +302,7 @@ const point = [
         ],
       })
     },
+    selectKey: '点透明度',
   },
 ]
 
@@ -317,8 +315,9 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '面符号',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
         containerType: 'symbol',
@@ -327,6 +326,7 @@ const region = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '面符号',
   },
   {
     key: '前景色',
@@ -336,8 +336,9 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '前景色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET, {
         containerType: 'colortable',
@@ -347,6 +348,7 @@ const region = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '前景色',
   },
   {
     key: '背景色',
@@ -356,8 +358,9 @@ const region = [
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.FLEX,
         ],
+        selectKey: '背景色',
       })
       GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
         containerType: 'colortable',
@@ -367,6 +370,7 @@ const region = [
         height: ConstToolType.THEME_HEIGHT[3],
       })
     },
+    selectKey: '背景色',
   },
   {
     key: '透明度',
@@ -379,8 +383,11 @@ const region = [
           ToolbarBtnType.MENUS,
           ToolbarBtnType.PLACEHOLDER,
         ],
+        selectName: '透明度',
+        selectKey: '面透明度',
       })
     },
+    selectKey: '面透明度',
   },
   // {
   //   key: '渐变',
@@ -406,6 +413,7 @@ const grid = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '透明度',
+        selectKey: '栅格透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -413,6 +421,7 @@ const grid = [
         ],
       })
     },
+    selectKey: '栅格透明度',
   },
   {
     key: '对比度',
@@ -421,6 +430,7 @@ const grid = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '对比度',
+        selectKey: '栅格对比度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -428,6 +438,7 @@ const grid = [
         ],
       })
     },
+    selectKey: '栅格对比度',
   },
   {
     key: '亮度',
@@ -436,6 +447,7 @@ const grid = [
         isTouchProgress: true,
         isSelectlist: false,
         selectName: '亮度',
+        selectKey: '栅格亮度',
         buttons: [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENUS,
@@ -443,6 +455,7 @@ const grid = [
         ],
       })
     },
+    selectKey: '栅格亮度',
   },
 ]
 export { layerAdd, BotMap, openData, line, point, region, grid }

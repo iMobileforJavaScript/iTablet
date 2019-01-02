@@ -1,11 +1,11 @@
 import React from 'react'
-import { screen, scaleSize } from '../../../../utils'
-import { ConstToolType } from '../../../../constants'
+import { screen, scaleSize } from '../../../../utils/index'
+import { ConstToolType } from '../../../../constants/index'
 import { layersetting } from './LayerToolbarData'
 import { View, TouchableOpacity, Animated } from 'react-native'
-import ToolBarSectionList from '../../../workspace/componets/ToolBar/ToolBarSectionList'
+import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { color, size } from '../../../../styles'
+import { color, size } from '../../../../styles/index'
 import { SMap } from 'imobile_for_reactnative'
 
 /** 工具栏类型 **/
@@ -18,6 +18,7 @@ export default class LayerManager_tolbar extends React.Component {
     data: Array,
     existFullMap: () => {},
     layername: string,
+    getLayers: () => {}, // 更新数据（包括其他界面）
   }
 
   static defaultProps = {
@@ -142,7 +143,12 @@ export default class LayerManager_tolbar extends React.Component {
       section.action && section.action()
     }
     if (section.title === '移除') {
-      SMap.removeLayerWithName(this.state.layername)
+      (async function() {
+        await SMap.removeLayerWithName(this.state.layername)
+        await this.props.getLayers()
+      }.bind(this)())
+      this.setVisible(false)
+      GLOBAL.isNewMap = false
     }
   }
 

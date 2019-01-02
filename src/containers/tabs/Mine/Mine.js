@@ -4,14 +4,7 @@
   E-mail: 756355668@qq.com
 */
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-  Dimensions,
-} from 'react-native'
+import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
@@ -19,6 +12,7 @@ import Login from './Login'
 import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
+import Toast from '../../../utils/Toast'
 
 export default class Mine extends Component {
   props: {
@@ -31,8 +25,12 @@ export default class Mine extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      display: 'flex',
+    }
     this.goToMyService = this.goToMyService.bind(this)
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
+    this.goToMyLocalData = this.goToMyLocalData.bind(this)
   }
   componentDidUpdate(previousProps) {
     if (
@@ -45,7 +43,6 @@ export default class Mine extends Component {
       SOnlineService.syncAndroidCookie()
     }
   }
-
   openUserWorkspace = () => {
     this.props.closeWorkspace(async () => {
       let userPath = await FileTools.appendingHomeDirectory(
@@ -62,6 +59,10 @@ export default class Mine extends Component {
     NavigationService.navigate('Personal')
   }
 
+  goToMyLocalData = () => {
+    // this.setState({display:'none'})
+    NavigationService.navigate('MyLocalData')
+  }
   goToMyOnlineData = async () => {
     NavigationService.navigate('MyOnlineData')
   }
@@ -71,17 +72,35 @@ export default class Mine extends Component {
   }
 
   _render = () => {
-    this.screenWidth = Dimensions.get('window').width
     let fontSize = 16
     return (
-      <View style={{ flex: 1, backgroundColor: color.border }}>
+      <View opacity={1} style={{ flex: 1, backgroundColor: color.border }}>
         {this._renderHeader(fontSize)}
-        <ScrollView style={{ flex: 1 }}>
-          <View style={{ flex: 1 }}>
-            {this._renderMyOnlineDataItem(50, fontSize)}
-            {this._renderMyServiceItem(50, fontSize)}
-            {this._renderLine()}
-          </View>
+        <ScrollView
+          style={{ flex: 1 }}
+          // contentContainerStyle={{ alignItems:'center' }}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          overScrollMode={'always'}
+          bounces={true}
+        >
+          {/* {this._renderItem({
+            title: '本地数据',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
+            onClick: this.goToMyLocalData,
+          })}*/}
+          {this._renderItem({
+            title: '在线数据',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),
+            onClick: this.goToMyOnlineData,
+          })}
+          {this._renderItem({
+            title: '我的服务',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的服务.png'),
+            onClick: this.goToMyService,
+          })}
+
+          {this._renderLine()}
         </ScrollView>
       </View>
     )
@@ -89,12 +108,15 @@ export default class Mine extends Component {
   _renderHeader = fontSize => {
     let headerHeight = 80
     let imageWidth = 40
+    // let headerImage = require('../../../assets/public/icon-avatar-default.png')
+    let headerImage =
+      'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png'
     return (
       <View
         style={{
           flexDirection: 'row',
           height: headerHeight,
-          width: this.screenWidth,
+          width: '100%',
         }}
       >
         <TouchableOpacity
@@ -109,8 +131,13 @@ export default class Mine extends Component {
         >
           <Image
             resizeMode={'contain'}
-            style={{ width: imageWidth, height: imageWidth, padding: 5 }}
-            source={require('../../../assets/public/icon-avatar-default.png')}
+            style={{
+              width: imageWidth,
+              height: imageWidth,
+              backgroundColor: '#c0c0c0',
+              borderRadius: imageWidth / 2,
+            }}
+            source={{ uri: headerImage }}
           />
         </TouchableOpacity>
         <Text
@@ -127,74 +154,59 @@ export default class Mine extends Component {
     )
   }
   _renderLine = () => {
-    return <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
-  }
-  _renderMyServiceItem = (itemHeight, fontSize) => {
-    let imageWidth = itemHeight / 2
     return (
-      <View>
-        <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            width: this.screenWidth,
-            height: itemHeight,
-            alignItems: 'center',
-            paddingLeft: 10,
-            paddingRight: 10,
-          }}
-          onPress={() => {
-            this.goToMyService()
-          }}
-        >
-          <Image
-            style={{ width: imageWidth, height: imageWidth }}
-            resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-我的服务.png')}
-          />
-          <Text
-            style={{
-              lineHeight: itemHeight,
-              flex: 1,
-              textAlign: 'left',
-              fontSize: fontSize,
-              color: 'white',
-              paddingLeft: 5,
-            }}
-          >
-            我的服务
-          </Text>
-          <Image
-            style={{ width: imageWidth, height: imageWidth }}
-            resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-箭头.png')}
-          />
-        </TouchableOpacity>
-      </View>
+      <View
+        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+      />
     )
   }
-  _renderMyOnlineDataItem = (itemHeight, fontSize) => {
-    let imageWidth = itemHeight / 2
+  _renderItem = (
+    itemRequire = {
+      title: '',
+      leftImagePath: '',
+      onClick: () => {
+        Toast.show('test')
+      },
+    },
+    itemOptions = {
+      itemWidth: '100%',
+      itemHeight: 50,
+      fontSize: 16,
+      imageWidth: 25,
+      imageHeight: 25,
+      rightImagePath: require('../../../assets/Mine/个人主页-箭头.png'),
+    },
+  ) => {
+    const { title, leftImagePath, onClick } = itemRequire
+    const {
+      itemWidth,
+      itemHeight,
+      fontSize,
+      imageWidth,
+      imageHeight,
+      rightImagePath,
+    } = itemOptions
+
     return (
-      <View>
-        <View style={{ flex: 1, height: 4, backgroundColor: color.theme }} />
+      <View display={this.state.display}>
+        <View
+          style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
+        />
         <TouchableOpacity
           style={{
             flexDirection: 'row',
-            width: this.screenWidth,
+            width: itemWidth,
             height: itemHeight,
             alignItems: 'center',
             paddingLeft: 10,
             paddingRight: 10,
           }}
-          onPress={() => {
-            this.goToMyOnlineData()
-          }}
+          onPress={onClick}
         >
           <Image
-            style={{ width: imageWidth, height: imageWidth }}
+            style={{ width: imageWidth, height: imageHeight }}
             resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-我的数据.png')}
+            source={leftImagePath}
           />
           <Text
             style={{
@@ -206,12 +218,12 @@ export default class Mine extends Component {
               paddingLeft: 5,
             }}
           >
-            在线数据
+            {title}
           </Text>
           <Image
-            style={{ width: imageWidth, height: imageWidth }}
+            style={{ width: imageWidth, height: imageHeight }}
             resizeMode={'contain'}
-            source={require('../../../assets/Mine/个人主页-箭头.png')}
+            source={rightImagePath}
           />
         </TouchableOpacity>
       </View>

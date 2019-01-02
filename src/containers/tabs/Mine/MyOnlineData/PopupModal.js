@@ -1,16 +1,9 @@
 import React, { PureComponent } from 'react'
-import {
-  Modal,
-  TouchableOpacity,
-  View,
-  Dimensions,
-  Text,
-  Platform,
-} from 'react-native'
+import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 
 import { color } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
-const screenWidth = Dimensions.get('window').width
+const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
   props: {
@@ -34,6 +27,10 @@ export default class PopupModal extends PureComponent {
     }
   }
 
+  componentDidMount() {
+    // console.warn("PopupModal_componentDidMount")
+  }
+
   UNSAFE_componentWillReceiveProps() {
     this.bIsCallBackProps = true
   }
@@ -44,7 +41,7 @@ export default class PopupModal extends PureComponent {
   _changeDownloadingState = progress => {
     this.bIsCallBackProps = false
     let isClick = false
-    if (progress === '下载完成，可导入' || progress === '下载失败') {
+    if (progress === '下载完成' || progress === '下载失败') {
       isClick = true
     }
     this.setState({ progress: progress, isClick: isClick })
@@ -156,7 +153,7 @@ export default class PopupModal extends PureComponent {
 
   _downloadButton = () => {
     if (this.props.data && this.props.data.isDownloading !== undefined) {
-      let progress = '下载'
+      let progress = this.state.progress
       if (this.props.data.isDownloading) {
         if (this.bIsCallBackProps) {
           progress = this.props.data.downloadingProgress
@@ -168,7 +165,7 @@ export default class PopupModal extends PureComponent {
         <TouchableOpacity
           style={{ backgroundColor: color.content }}
           onPress={() => {
-            if (progress === '下载完成，可导入') {
+            if (progress === '下载完成') {
               this.props.openWorkspace()
             } else {
               if (this.props.data.isDownloading === true) {
@@ -251,7 +248,15 @@ export default class PopupModal extends PureComponent {
         animationType={'slide'}
         transparent={true}
         visible={visible}
+        style={{ flex: 1 }}
         onRequestClose={this._onRequestClose}
+        supportedOrientations={[
+          'portrait',
+          'portrait-upside-down',
+          'landscape',
+          'landscape-left',
+          'landscape-right',
+        ]}
       >
         <TouchableOpacity
           style={{ flex: 1 }}
@@ -260,7 +265,13 @@ export default class PopupModal extends PureComponent {
             this._onClose()
           }}
         >
-          <View style={{ position: 'absolute', bottom: 0 }}>
+          <View
+            style={{
+              width: '100%',
+              position: 'absolute',
+              bottom: 0,
+            }}
+          >
             {this._publishServiceButton()}
             {this._downloadButton()}
             {this._dataVisibleButton()}

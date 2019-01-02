@@ -10,6 +10,7 @@ import Tabs, {
   Register,
   MyOnlineMap,
   ScanOnlineMap,
+  MyLocalData,
 } from './tabs'
 
 //我的
@@ -43,9 +44,9 @@ import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
-import { MapTabs, Map3DTabs, MapThemeTabs } from './workspace'
-import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
-import TouchProgress from './workspace/componets/TouchProgress'
+import { MapTabs, Map3DTabs } from './workspace'
+import MapToolbarSetting from './workspace/components/MapToolbarSetting'
+import TouchProgress from './workspace/components/TouchProgress'
 
 export default StackNavigator(
   {
@@ -69,12 +70,6 @@ export default StackNavigator(
     },
     Map3DTabs: {
       screen: Map3DTabs,
-      navigationOptions: {
-        header: null,
-      },
-    },
-    MapThemeTabs: {
-      screen: MapThemeTabs,
       navigationOptions: {
         header: null,
       },
@@ -253,42 +248,56 @@ export default StackNavigator(
       screen: Register,
       navigationOptions: {
         header: null,
+        gesturesEnabled: true,
       },
     },
     GetBack: {
       screen: GetBack,
       navigationOptions: {
         header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyLocalData: {
+      screen: MyLocalData,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
       },
     },
     MyOnlineData: {
       screen: MyOnlineData,
       navigationOptions: {
         header: null,
+        // gesturesEnabled: true,
       },
     },
     MyService: {
       screen: MyService,
       navigationOptions: {
         header: null,
+        // gesturesEnabled: true,
       },
     },
     MyOnlineMap: {
       screen: MyOnlineMap,
       navigationOptions: {
         header: null,
+        gesturesEnabled: true,
       },
     },
     ScanOnlineMap: {
       screen: ScanOnlineMap,
       navigationOptions: {
         header: null,
+        gesturesEnabled: true,
       },
     },
     Personal: {
       screen: Personal,
       navigationOptions: {
         header: null,
+        gesturesEnabled: true,
       },
     },
   },

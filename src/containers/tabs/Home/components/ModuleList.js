@@ -57,7 +57,7 @@ export default class ModuleList extends Component {
           data={ConstModule}
           renderItem={this._renderItem}
           horizontal={false}
-          numColumns={4}
+          numColumns={2}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'always'}
         />
@@ -129,9 +129,12 @@ const styles = StyleSheet.create({
   },
   scrollView: {
     // position:"absolute",
-    width: '72%',
+    // width: '72%',
     // height:"100%",
+    flex: 1,
+    flexDirection: 'column',
     // alignItems:"center",
-    marginTop: scaleSize(80),
+    // justifyContent: 'space-around',
+    // marginTop: scaleSize(80),
   },
 })

@@ -1,5 +1,5 @@
 /**
- * 消息提示
+ * 中文消息提示
  */
 export default {
   CLOSE_MAP_SUCCESS: '地图保存成功',
@@ -7,6 +7,19 @@ export default {
 
   EXPORT_WORKSPACE_SUCCESS: '地图导出成功',
   EXPORT_WORKSPACE_FAILED: '地图导出失败',
+
+  MAP_SYMBOL_COLLECTION_CREATING: '正在新建符号采集',
+  MAP_SYMBOL_COLLECTION_CREATED: '符号采集已创建',
+  MAP_OPENING: '正在打开地图',
+  MAP_CHANGING: '正在切换地图',
+  MAP_ALREADY_OPENED: '该地图已打开',
+  CHANGE_MAP_FAILED: '切换地图失败',
+  CHANGE_MAP_TO: '已为您切换到',
+  OPEN_MAP_TO: '已为您打开',
+
+  TEMPLATE_READING: '正在读取模板',
+  TEMPLATE_CHANGE_SUCCESS: '已为您切换模板',
+  TEMPLATE_CHANGE_FAILED: '切换模板失败',
 
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',

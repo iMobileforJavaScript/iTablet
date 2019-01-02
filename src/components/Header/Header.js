@@ -4,14 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { Component } from 'react'
-import {
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  Animated,
-} from 'react-native'
+import { Text, View, Image, TouchableOpacity, Animated } from 'react-native'
 import styles, * as stylesConst from './styles'
 
 class NavigationHeader extends Component {

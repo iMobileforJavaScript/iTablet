@@ -37,12 +37,16 @@ export default class MyService extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
+    this.publishServiceTitle = '共有服务'
+    this.privateServiceTitle = '私有服务'
     this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,
+      bPrivateServiceShow: true,
+      bPublishServiceShow: true,
       selections: [
-        { title: '私有服务', data: _arrPrivateServiceList },
-        { title: '共有服务', data: _arrPublishServiceList },
+        { title: this.privateServiceTitle, data: _arrPrivateServiceList },
+        { title: this.publishServiceTitle, data: _arrPublishServiceList },
       ],
       modalIsVisible: false,
       isRefreshing: false,
@@ -92,61 +96,63 @@ export default class MyService extends Component {
   }
   _initSectionsData = async (currentPage, pageSize) => {
     try {
-      let strServiceList = await SOnlineService.getServiceList(1, pageSize)
-      let objServiceList = JSON.parse(strServiceList)
-      this.serviceListTotal = objServiceList.total
       let arrPublishServiceList = []
       let arrPrivateServiceList = []
-      /** 构造SectionsData数据*/
-      for (let page = 1; page <= currentPage; page++) {
-        if (page > 1) {
-          strServiceList = await SOnlineService.getServiceList(page, pageSize)
-          objServiceList = JSON.parse(strServiceList)
-        }
+      let strServiceList = await SOnlineService.getServiceList(1, pageSize)
+      if (typeof strServiceList === 'string') {
+        let objServiceList = JSON.parse(strServiceList)
+        this.serviceListTotal = objServiceList.total
 
-        let objArrServiceContent = objServiceList.content
-        for (let i = 0; i < objArrServiceContent.length; i++) {
-          let objContent = objArrServiceContent[i]
-          let arrScenes = objContent.scenes
-          let arrMapInfos = objContent.mapInfos
-          let strThumbnail = objContent.thumbnail
-          let strRestTitle = objContent.resTitle
-          let strID = objContent.id
-          let bIsPublish = false
-          let objArrAuthorizeSetting = objContent.authorizeSetting
-          for (let j = 0; j < objArrAuthorizeSetting.length; j++) {
-            let strPermissionType = objArrAuthorizeSetting[j].permissionType
-            if (strPermissionType === 'READ') {
-              bIsPublish = true
-              break
+        /** 构造SectionsData数据*/
+        for (let page = 1; page <= currentPage; page++) {
+          if (page > 1) {
+            strServiceList = await SOnlineService.getServiceList(page, pageSize)
+            objServiceList = JSON.parse(strServiceList)
+          }
+
+          let objArrServiceContent = objServiceList.content
+          for (let i = 0; i < objArrServiceContent.length; i++) {
+            let objContent = objArrServiceContent[i]
+            let arrScenes = objContent.scenes
+            let arrMapInfos = objContent.mapInfos
+            let strThumbnail = objContent.thumbnail
+            let strRestTitle = objContent.resTitle
+            let strID = objContent.id
+            let bIsPublish = false
+            let objArrAuthorizeSetting = objContent.authorizeSetting
+            for (let j = 0; j < objArrAuthorizeSetting.length; j++) {
+              let strPermissionType = objArrAuthorizeSetting[j].permissionType
+              if (strPermissionType === 'READ') {
+                bIsPublish = true
+                break
+              }
+            }
+            let strSectionsData =
+              '{"restTitle":"' +
+              strRestTitle +
+              '","thumbnail":"' +
+              strThumbnail +
+              '","id":"' +
+              strID +
+              '","scenes":' +
+              JSON.stringify(arrScenes) +
+              ',"mapInfos":' +
+              JSON.stringify(arrMapInfos) +
+              ',"isPublish":' +
+              bIsPublish +
+              '}'
+            let objSectionsData = JSON.parse(strSectionsData)
+            if (bIsPublish) {
+              arrPublishServiceList.push(objSectionsData)
+            } else {
+              arrPrivateServiceList.push(objSectionsData)
             }
           }
-          let strSectionsData =
-            '{"restTitle":"' +
-            strRestTitle +
-            '","thumbnail":"' +
-            strThumbnail +
-            '","id":"' +
-            strID +
-            '","scenes":' +
-            JSON.stringify(arrScenes) +
-            ',"mapInfos":' +
-            JSON.stringify(arrMapInfos) +
-            ',"isPublish":' +
-            bIsPublish +
-            '}'
-          let objSectionsData = JSON.parse(strSectionsData)
-          if (bIsPublish) {
-            arrPublishServiceList.push(objSectionsData)
-          } else {
-            arrPrivateServiceList.push(objSectionsData)
-          }
         }
+        /** 重新赋值，避免浅拷贝*/
+        _arrPrivateServiceList = arrPrivateServiceList
+        _arrPublishServiceList = arrPublishServiceList
       }
-      /** 重新赋值，避免浅拷贝*/
-
-      _arrPrivateServiceList = arrPrivateServiceList
-      _arrPublishServiceList = arrPublishServiceList
       if (_arrPrivateServiceList.length === 0) {
         _arrPrivateServiceList.push({})
       }
@@ -163,15 +169,33 @@ export default class MyService extends Component {
     }
   }
 
+  _isShowRenderItem = (isShow: boolean, title: string) => {
+    if (title === this.publishServiceTitle) {
+      this.setState({ bPublishServiceShow: !isShow })
+    } else if (title === this.privateServiceTitle) {
+      this.setState({ bPrivateServiceShow: !isShow })
+    }
+  }
+
   _renderSectionHeader(section) {
     let title = section.section.title
     if (title !== undefined) {
-      return <Text style={styles.titleTextStyle}>{title}</Text>
+      return (
+        <Text
+          style={[styles.titleTextStyle, { fontSize: 18, fontWeight: 'bold' }]}
+          onPress={() => {
+            this._isShowRenderItem(section.section.isShowItem, title)
+          }}
+        >
+          {title}
+        </Text>
+      )
     }
     return <View />
   }
   _renderItem(info) {
     let restTitle = info.item.restTitle
+    let display = info.section.isShowItem ? 'flex' : 'none'
     if (restTitle !== undefined) {
       let index = info.index
       let imageUri = info.item.thumbnail
@@ -181,6 +205,7 @@ export default class MyService extends Component {
       let mapInfos = info.item.mapInfos
       return (
         <RenderServiceItem
+          display={display}
           onItemPress={this._onItemPress}
           imageUrl={imageUri}
           restTitle={restTitle}
@@ -193,7 +218,7 @@ export default class MyService extends Component {
       )
     }
     return (
-      <View>
+      <View display={display}>
         <Text
           style={[
             styles.titleTextStyle,
@@ -351,11 +376,24 @@ export default class MyService extends Component {
   }
   _loadData = async () => {
     let publishLength = _arrPublishServiceList.length
+    if (
+      _arrPublishServiceList.length === 1 &&
+      _arrPublishServiceList[0].id === undefined
+    ) {
+      publishLength = 0
+    }
     let privateLength = _arrPrivateServiceList.length
+    if (
+      _arrPrivateServiceList.length === 1 &&
+      _arrPrivateServiceList[0].id === undefined
+    ) {
+      privateLength = 0
+    }
     let loadServiceCount = publishLength + privateLength
     if (
       this.serviceListTotal > _loadCount * _iServicePageSize &&
-      this.serviceListTotal > loadServiceCount
+      this.serviceListTotal > loadServiceCount &&
+      (this.state.bPublishServiceShow || this.state.bPrivateServiceShow)
     ) {
       _loadCount = ++_loadCount
       await this._initSectionsData(_loadCount, _iServicePageSize)
@@ -363,9 +401,25 @@ export default class MyService extends Component {
   }
   _footView = () => {
     let publishLength = _arrPublishServiceList.length
+    if (
+      _arrPublishServiceList.length === 1 &&
+      _arrPublishServiceList[0].id === undefined
+    ) {
+      publishLength = 0
+    }
     let privateLength = _arrPrivateServiceList.length
+    if (
+      _arrPrivateServiceList.length === 1 &&
+      _arrPrivateServiceList[0].id === undefined
+    ) {
+      privateLength = 0
+    }
     let loadServiceCount = publishLength + privateLength
-    if (this.serviceListTotal > loadServiceCount) {
+    if (
+      this.serviceListTotal > loadServiceCount &&
+      (this.state.bPublishServiceShow || this.state.bPrivateServiceShow) &&
+      !this.state.isRefreshing
+    ) {
       return (
         <View
           style={{
@@ -437,8 +491,16 @@ export default class MyService extends Component {
           <SectionList
             style={styles.haveDataViewStyle}
             sections={[
-              { title: '私有服务', data: this.state.arrPrivateServiceList },
-              { title: '共有服务', data: this.state.arrPublishServiceList },
+              {
+                title: this.privateServiceTitle,
+                data: this.state.arrPrivateServiceList,
+                isShowItem: this.state.bPrivateServiceShow,
+              },
+              {
+                title: this.publishServiceTitle,
+                data: this.state.arrPublishServiceList,
+                isShowItem: this.state.bPublishServiceShow,
+              },
             ]}
             renderItem={this._renderItem}
             renderSectionHeader={this._renderSectionHeader}
@@ -453,7 +515,7 @@ export default class MyService extends Component {
                 enabled={true}
               />
             }
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.5}
             onEndReached={this._loadData}
             ListFooterComponent={this._footView}
           />

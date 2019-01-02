@@ -46,35 +46,6 @@ const Tabs = TabNavigator(
         }
       },
     },
-    // CloudService: {
-    //   screen: CloudService,
-    //   navigationOptions: () => {
-    //     return {
-    //       tabBarLabel: data => {
-    //         return (
-    //           <View style={styles.labelView}>
-    //             <Text
-    //               style={data.focused ? styles.selectedTabText : styles.tabText}
-    //             >
-    //               云服务
-    //             </Text>
-    //           </View>
-    //         )
-    //       },
-    //       tabBarIcon: ({ focused }: any) =>
-    //         <Image
-    //           resizeMode="contain"
-    //           source={
-    //             focused
-    //               ? require('../../assets/tabBar/icon-service-selected.png')
-    //               : require('../../assets/tabBar/icon-service.png')
-    //           }
-    //           style={styles.icon}
-    //         />,
-    //       header: null,
-    //     }
-    //   },
-    // },
     Find: {
       screen: Find,
       navigationOptions: () => {
@@ -173,15 +144,15 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: color.gray2,
-    fontSize: 12,
+    fontSize: scaleSize(20),
   },
   selectedTabText: {
     color: color.blue2,
-    fontSize: 12,
+    fontSize: scaleSize(20),
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: scaleSize(45),
+    height: scaleSize(45),
   },
   labelView: {
     flexDirection: 'row',

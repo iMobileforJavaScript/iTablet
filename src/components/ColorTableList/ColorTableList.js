@@ -6,7 +6,6 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
-import { screen } from '../../utils'
 
 import styles from './styles'
 
@@ -19,13 +18,14 @@ export default class ColorTableList extends React.Component {
     cellStyle?: Object,
     rowStyle?: Object,
     renderCell: () => {},
+    device: Object,
 
     type?: string,
   }
 
   static defaultProps = {
     data: [],
-    numColumns: 2,
+    numColumns: 8,
     type: 'normal', // normal | scroll
     lineSeparator: 10,
   }
@@ -34,7 +34,11 @@ export default class ColorTableList extends React.Component {
     let rows = [],
       rowsView = []
     this.props.data.forEach((item, index) => {
-      let rowIndex = Math.floor(index / this.props.numColumns)
+      let column =
+        this.props.device.orientation === 'LANDSCAPE'
+          ? 12
+          : this.props.numColumns
+      let rowIndex = Math.floor(index / column)
       if (!rows[rowIndex]) {
         rows[rowIndex] = []
       }
@@ -70,9 +74,11 @@ export default class ColorTableList extends React.Component {
 
   renderCell = (item, rowIndex, cellIndex) => {
     if (!this.props.renderCell) throw new Error('Please render cell')
+    let column =
+      this.props.device.orientation === 'LANDSCAPE' ? 12 : this.props.numColumns
     return (
       <View
-        style={{ width: screen.deviceWidth / this.props.numColumns }}
+        style={{ width: this.props.device.width / column }}
         // style={{ width: (screen.deviceWidth - scaleSize(80) * this.props.numColumns) / this.props.numColumns }}
         // style={{ width: scaleSize(80) }}
         key={rowIndex + '-' + cellIndex}

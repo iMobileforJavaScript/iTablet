@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import PropTypes from 'prop-types'
-import { BtnOne, ListSeparator } from '../../../../components'
+import { BtnOne, ListSeparator } from '../../../../components/index'
 
 import styles from './styles'
 

@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { constUtil, scaleSize } from '../../../../utils'
-import { color, size } from '../../../../styles'
+import { color } from '../../../../styles'
 
 export default StyleSheet.create({
   container: {
@@ -69,7 +69,7 @@ export default StyleSheet.create({
     marginLeft: scaleSize(30),
   },
   text: {
-    fontSize: size.fontSize.fontSizeSm,
+    fontSize: scaleSize(24),
     color: color.white,
     backgroundColor: 'transparent',
   },

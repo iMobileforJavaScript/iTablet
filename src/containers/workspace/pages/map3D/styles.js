@@ -23,7 +23,7 @@ export default StyleSheet.create({
   },
   functionToolbar: {
     position: 'absolute',
-    top: scaleSize(100),
+    top: scaleSize(130),
     right: scaleSize(20),
     backgroundColor: color.white,
   },

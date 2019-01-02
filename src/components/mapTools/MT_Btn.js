@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
   },
   inner: {
     flex: 1,
@@ -186,8 +187,8 @@ const styles = StyleSheet.create({
     // borderRadius: 5,
   },
   normalImage: {
-    height: 35,
-    width: 35,
+    height: scaleSize(50),
+    width: scaleSize(50),
     alignSelf: 'center',
     // borderRadius: 5,
   },
@@ -205,7 +206,7 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: size.fontSize.fontSizeXs,
+    fontSize: scaleSize(22),
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',

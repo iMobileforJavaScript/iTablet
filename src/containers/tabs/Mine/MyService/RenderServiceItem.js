@@ -13,10 +13,12 @@ export default class RenderServiceItem extends PureComponent {
     index: number,
     scenes: Object,
     mapInfos: Object,
+    display?: string,
   }
   defaultProps: {
     imageUrl: '',
     restTitle: '地图',
+    display: 'flex',
   }
   constructor(props) {
     super(props)
@@ -35,7 +37,7 @@ export default class RenderServiceItem extends PureComponent {
 
   render() {
     return (
-      <View>
+      <View display={this.props.display}>
         <View style={styles.itemViewStyle}>
           <TouchableOpacity
             onPress={() => {
@@ -49,10 +51,11 @@ export default class RenderServiceItem extends PureComponent {
             />
           </TouchableOpacity>
 
-          <View>
+          <View style={{ flex: 1 }}>
             <Text style={[styles.restTitleTextStyle]} numberOfLines={2}>
               {this.props.restTitle}
             </Text>
+            <View style={{ flex: 1 }} />
             <Text
               onPress={() => {
                 if (this.props.onItemPress) {

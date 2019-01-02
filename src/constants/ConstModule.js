@@ -23,6 +23,10 @@ export default [
     moduleImage: require('../assets/home/icon_cartography.png'),
     action: async user => {
       GLOBAL.Type = constants.MAP_EDIT
+      GLOBAL.isArrayData = true
+      GLOBAL.isNewMap = true
+      GLOBAL.showMenu = true
+      GLOBAL.showFlex = true
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
@@ -126,7 +130,7 @@ export default [
       } else {
         wsPath = await FileTools.appendingHomeDirectory(customerPath)
       }
-      NavigationService.navigate('ThemeMapView', {
+      NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
         wsData: [
           {
