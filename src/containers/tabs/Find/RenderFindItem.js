@@ -65,7 +65,7 @@ export default class RenderFindItem extends Component {
         appHome +
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Data/Downloads/'
+        '/Downloads/'
       let exists = await RNFS.exists(fileDir)
       if (!exists) {
         await RNFS.mkdir(fileDir)
