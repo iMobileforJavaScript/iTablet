@@ -9,7 +9,7 @@ const screenWidth = '100%'
 export default class PopupModal extends PureComponent {
   props: {
     onRefresh: () => {},
-    onModalClick: () => {},
+    onCloseModal: () => {},
     isPublish: boolean,
     modalVisible: boolean,
     title: string,
@@ -21,8 +21,8 @@ export default class PopupModal extends PureComponent {
     super(props)
   }
 
-  _onClose() {
-    this.props.onModalClick(false)
+  _onClose = () => {
+    this.props.onCloseModal()
   }
 
   _onRefresh() {
@@ -34,9 +34,9 @@ export default class PopupModal extends PureComponent {
     )
   }
 
-  _onRequestClose() {
+  _onRequestClose = () => {
     if (Platform.OS === 'android') {
-      this.props.onModalClick(false)
+      this._onClose()
     }
   }
   _publishButton = isPublish => {
@@ -50,6 +50,7 @@ export default class PopupModal extends PureComponent {
       <TouchableOpacity
         style={{ backgroundColor: color.content }}
         onPress={async () => {
+          this._onClose()
           let result = await SOnlineService.changeServiceVisibilityWithServiceId(
             this.props.itemId,
             isPublish,
@@ -57,7 +58,6 @@ export default class PopupModal extends PureComponent {
           if (typeof result === 'boolean' && result) {
             Toast.show('设置成功')
             this._onRefresh()
-            this._onClose()
           } else {
             Toast.show('设置失败')
           }
@@ -90,6 +90,7 @@ export default class PopupModal extends PureComponent {
       <TouchableOpacity
         style={{ backgroundColor: color.content }}
         onPress={async () => {
+          this._onClose()
           let result = await SOnlineService.deleteServiceWithServiceId(
             this.props.itemId,
           )
@@ -97,7 +98,6 @@ export default class PopupModal extends PureComponent {
             this.deleteService = true
             this._onRefresh()
             Toast.show('删除成功')
-            this._onClose()
           } else {
             Toast.show('删除失败')
           }

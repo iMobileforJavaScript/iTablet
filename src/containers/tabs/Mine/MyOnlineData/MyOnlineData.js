@@ -211,7 +211,7 @@ export default class MyOnlineData extends Component {
         newData.push(objContent)
       }
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show('登录失效，请重新登录')
     }
     return newData
   }
