@@ -233,8 +233,8 @@ function openMap() {
     let data = [],
       path =
         (await FileTools.appendingHomeDirectory(
-          _params.user && _params.user.userName
-            ? ConstPath.UserPath + _params.userName
+          _params.user && _params.user.currentUser.userName
+            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
             : ConstPath.CustomerPath,
         )) + ConstPath.RelativeFilePath.Map
     FileTools.getPathListByFilter(path, {

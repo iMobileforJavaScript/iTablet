@@ -2095,7 +2095,7 @@ export default class ToolBar extends React.PureComponent {
             let templatePath =
               (await FileTools.appendingHomeDirectory(
                 this.props.user && this.props.user.userName
-                  ? ConstPath.UserPath + this.props.user.userName
+                  ? ConstPath.UserPath + this.props.user.userName + '/'
                   : ConstPath.CustomerPath,
               )) + ConstPath.RelativeFilePath.Map
             // switch (GLOBAL.Type) {
