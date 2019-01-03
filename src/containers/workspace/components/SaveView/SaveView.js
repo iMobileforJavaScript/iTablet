@@ -77,11 +77,18 @@ export default class MT_layerManager extends React.Component {
     this.setVisible(false)
   }
 
-  setVisible = visible => {
+  setVisible = (visible, setLoading) => {
     if (this.state.visible === visible) return
+    if (setLoading && typeof setLoading === 'function') {
+      this.setLoading = setLoading
+    }
     this.setState({
       visible,
     })
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.setLoading && this.setLoading(loading, info, extra)
   }
 
   getVisible = () => {

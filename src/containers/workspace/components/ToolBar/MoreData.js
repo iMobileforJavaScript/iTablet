@@ -149,6 +149,7 @@ function closeMap() {
 /** 保存地图 **/
 function saveMap() {
   if (!_params.setSaveViewVisible) return
+  GLOBAL.isBackHome = false
   _params.setSaveViewVisible(true)
 }
 
