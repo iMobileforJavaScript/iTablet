@@ -6,16 +6,31 @@ import PropTypes from 'prop-types'
 import RootNavigator from './src/containers'
 import { setNav } from './src/models/nav'
 import { setUser } from './src/models/user'
-import { openWorkspace } from './src/models/map'
+import {
+  setEditLayer,
+  setSelection,
+} from './src/models/layers'
+import {
+  openWorkspace,
+  closeMap,
+  setCurrentMap,
+} from './src/models/map'
+import {
+  setCurrentTemplateInfo,
+  setTemplate,
+} from './src/models/template'
+import { setMapSetting } from './src/models/setting'
+import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
 import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
-import { scaleSize, AudioAnalyst, Toast } from './src/utils'
-import { ConstPath } from './src/constants'
+import { SaveView } from './src/containers/workspace/components'
+import { scaleSize, Toast } from './src/utils'
+import { ConstPath, ConstInfo } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SMap } from 'imobile_for_reactnative'
 
 const { persistor, store } = ConfigStore()
 
@@ -42,10 +57,22 @@ class AppRoot extends Component {
     nav: PropTypes.object,
     user: PropTypes.object,
     editLayer: PropTypes.object,
+    map: PropTypes.object,
+    collection: PropTypes.object,
+    layers: PropTypes.array,
     setNav: PropTypes.func,
     setUser: PropTypes.func,
     openWorkspace:PropTypes.func,
     setShow:PropTypes.func,
+    closeMap:PropTypes.func,
+    setCurrentMap:PropTypes.func,
+
+    setEditLayer:PropTypes.func,
+    setSelection:PropTypes.func,
+    setCollectionInfo:PropTypes.func,
+    setCurrentTemplateInfo:PropTypes.func,
+    setTemplate:PropTypes.func,
+    setMapSetting:PropTypes.func,
   }
 
   constructor(props) {
@@ -54,6 +81,7 @@ class AppRoot extends Component {
       sceneStyle: styles.invisibleMap,
     }
     GLOBAL.AppState = AppState.currentState
+    GLOBAL.isBackHome = true
   }
 
   componentDidMount() {
@@ -70,6 +98,15 @@ class AppRoot extends Component {
       // await this.initCustomerWorkspace()
       await this.initOrientation()
     }).bind(this)()
+    GLOBAL.clearMapData = () => {
+      this.props.setEditLayer(null) // 清空地图图层中的数据
+      this.props.setSelection(null) // 清空地图选中目标中的数据
+      this.props.setMapSetting(null) // 清空地图设置中的数据
+      this.props.setCollectionInfo() // 清空Collection中的数据
+      this.props.setCurrentTemplateInfo() // 清空当前模板
+      this.props.setTemplate() // 清空模板
+      this.props.setCurrentMap() // 清空当前地图
+    }
   }
 
   handleStateChange = appState => {
@@ -178,6 +215,62 @@ class AppRoot extends Component {
   //   }
   // }
 
+  saveMap = () => {
+    let mapName = ''
+    if (this.props.map.currentMap.name) {
+      mapName = this.props.map.currentMap.name
+      mapName = mapName.substr(0, mapName.lastIndexOf('.'))
+    } else if (this.props.layers.length > 0) {
+      mapName = this.props.collection.datasourceName
+    }
+    let addition = {}
+    if (this.props.map.currentMap.Template) {
+      addition.Template = this.props.map.currentMap.Template
+    }
+    this.saveMapName(mapName, '', addition, this.closeMapHandler)
+  }
+
+  // 导出(保存)工作空间中地图到模块
+  saveMapName = (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
+    try {
+      this.setSaveMapViewLoading(true, '正在保存地图')
+      SMap.saveMapName(mapName, nModule, addition).then(
+        result => {
+          this.setSaveMapViewLoading(false)
+          Toast.show(
+            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+          )
+          cb && cb()
+        },
+        () => {
+          this.setSaveMapViewLoading(false)
+        },
+      )
+    } catch (e) {
+      this.setSaveMapViewLoading(false)
+    }
+  }
+
+  setSaveMapViewLoading = (loading = false, info, extra) => {
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setLoading(loading, info, extra)
+  }
+
+  closeMapHandler = async () => {
+    if (GLOBAL.isBackHome) {
+      try {
+        this.setSaveMapViewLoading(true, '正在关闭地图')
+        await this.props.closeMap()
+        GLOBAL.clearMapData()
+        this.setSaveMapViewLoading(false)
+        NavigationService.goBack()
+      } catch (e) {
+        this.setSaveMapViewLoading(false)
+      }
+    } else {
+      GLOBAL.isBackHome = true // 默认是true
+    }
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -187,9 +280,17 @@ class AppRoot extends Component {
           }}
           onNavigationStateChange={(prevState, currentState) => {
             this.props.setNav(currentState)
-            AudioAnalyst.setConfig({
-              nav: currentState,
-            })
+            // AudioAnalyst.setConfig({
+            //   nav: currentState,
+            // })
+          }}
+        />
+        <SaveView
+          ref={ref => GLOBAL.SaveMapView = ref}
+          save={this.saveMap}
+          notSave={this.closeMapHandler}
+          cancel={() => {
+            // this.backAction = null
           }}
         />
       </View>
@@ -203,6 +304,9 @@ const mapStateToProps = state => {
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,
     device:state.device.toJS().device,
+    map:state.map.toJS(),
+    collection:state.collection.toJS(),
+    layers:state.layers.toJS().layers,
   }
 }
 
@@ -211,6 +315,14 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setUser,
   openWorkspace,
   setShow,
+  closeMap,
+  setCurrentMap,
+  setEditLayer,
+  setSelection,
+  setCollectionInfo,
+  setCurrentTemplateInfo,
+  setTemplate,
+  setMapSetting,
 })(AppRoot)
 
 const App = () =>
