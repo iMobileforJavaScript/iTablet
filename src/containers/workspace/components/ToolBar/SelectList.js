@@ -1,6 +1,5 @@
 import React from 'react'
-import { TouchableHighlight, Text, FlatList } from 'react-native'
-import { StyleSheet } from 'react-native'
+import { TouchableHighlight, Text, FlatList, StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils/index'
 import { size } from '../../../../styles/index'
 
