@@ -5,10 +5,11 @@ import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
-import { SMap } from 'imobile_for_reactnative'
+// import { SMap,SScene } from 'imobile_for_reactnative'
 export default class MyLocalData extends Component {
   props: {
     navigation: Object,
+    openTemplate: () => {},
   }
 
   constructor(props) {
@@ -119,7 +120,7 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
-    let txtInfo = info.item.fileName + ' (' + ')'
+    let txtInfo = info.item.fileName
     let itemHeight = 50
     let separatorLineHeight = 2
     let display = info.section.isShowItem ? 'flex' : 'none'
@@ -204,15 +205,22 @@ export default class MyLocalData extends Component {
     try {
       if (this.itemInfo !== undefined) {
         let filePath = this.itemInfo.item.filePath
-        let result = await SMap.importWorkspaceInfo({
-          server: filePath,
-          type: 9,
-        })
-        if (result.length > 0) {
-          Toast.show('导入成功')
-        } else {
+        let result = await this.props.openTemplate({ path: filePath })
+        // console.warn(result)
+        if (result.msg !== undefined) {
           Toast.show('导入失败')
+        } else {
+          Toast.show('导入成功')
         }
+        // let result = await SMap.importWorkspaceInfo({
+        //   server: filePath,
+        //   type: 9,
+        // })
+        // if (result.length > 0) {
+        //   Toast.show('导入成功')
+        // } else {
+        //   Toast.show('导入失败')
+        // }
         this.setState({ modalIsVisible: false })
       }
     } catch (e) {
