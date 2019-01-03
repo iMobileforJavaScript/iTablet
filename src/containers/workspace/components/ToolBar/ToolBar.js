@@ -2205,7 +2205,7 @@ export default class ToolBar extends React.PureComponent {
             mapInfo.Template
           await this.props.getSymbolTemplates({
             path: templatePath,
-            name: item.title,
+            name: item.name,
           })
         } else {
           await this.props.setTemplate()
