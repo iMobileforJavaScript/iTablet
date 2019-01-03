@@ -20,13 +20,13 @@ function getStart(type, params) {
   switch (type) {
     case ConstToolType.MAP_EDIT_START:
       data = [
-        // {
-        //   key: constants.WORKSPACE,
-        //   title: constants.WORKSPACE,
-        //   action: openWorkspace,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_open.png'),
-        // },
+        {
+          key: constants.THEME_WORKSPACE,
+          title: constants.THEME_WORKSPACE,
+          action: importTemplate,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_open.png'),
+        },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -151,9 +151,9 @@ function getStart(type, params) {
     case ConstToolType.MAP_THEME_START:
       data = [
         {
-          key: constants.WORKSPACE,
+          key: constants.THEME_WORKSPACE,
           title: constants.THEME_WORKSPACE,
-          action: openWorkspace,
+          action: importTemplate,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
@@ -281,6 +281,27 @@ function openMap() {
     //   })
     // })
   })()
+}
+
+/**地图制图，专题制图：导入模块（暂用） */
+function importTemplate() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+    async templateList => {
+      let data = [
+        {
+          title: Const.MODULE,
+          data: templateList,
+        },
+      ]
+      _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
+        containerType: 'list',
+        height: ConstToolType.HEIGHT[3],
+        data,
+      })
+    },
+  )
 }
 
 /** 打开模板 **/
