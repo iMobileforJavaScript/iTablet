@@ -369,7 +369,11 @@ export default class MyService extends Component {
   _onRefresh = async () => {
     if (!this.state.isRefreshing) {
       _loadCount = 1
-      this.setState({ isRefreshing: true })
+      this.setState({
+        isRefreshing: true,
+        bPrivateServiceShow: true,
+        bPublishServiceShow: true,
+      })
       await this._initSectionsData(1, _iServicePageSize)
       this.setState({ isRefreshing: false })
     }
