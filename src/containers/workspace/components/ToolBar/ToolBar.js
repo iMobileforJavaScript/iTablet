@@ -95,7 +95,7 @@ export default class ToolBar extends React.PureComponent {
     setCollectionInfo: () => {}, // 设置当前采集数据源信息
     setCurrentLayer: () => {}, // 设置当前图层
     importTemplate: () => {}, // 导入模板
-    openTemplate: () => {}, // 打开模板
+    importWorkspace: () => {}, // 打开模板
     setAttributes: () => {},
     getMaps: () => {},
     exportWorkspace: () => {},
@@ -1034,7 +1034,7 @@ export default class ToolBar extends React.PureComponent {
     try {
       let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       let data = []
-      let userName = this.props.user.userName || 'Customer'
+      let userName = this.props.user.currentUser.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.List,
       )
@@ -2004,8 +2004,8 @@ export default class ToolBar extends React.PureComponent {
     (async function() {
       if (section.title === Const.CREATE_SYMBOL_COLLECTION) {
         // let defaultWorkspacePath = await Utility.appendingHomeDirectory(
-        //   (this.props.user.userName
-        //     ? ConstPath.UserPath + this.props.user.userName
+        //   (this.props.user.currentUser.userName
+        //     ? ConstPath.UserPath + this.props.user.currentUser.userName
         //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
         // )
 
@@ -2084,7 +2084,7 @@ export default class ToolBar extends React.PureComponent {
         await this.props.closeMap()
       }
       this.props
-        .openTemplate({ ...item, module: moduleName })
+        .importWorkspace({ ...item, module: moduleName })
         .then(async ({ mapsInfo, msg }) => {
           if (msg) {
             this.props.setContainerLoading &&
@@ -2094,8 +2094,10 @@ export default class ToolBar extends React.PureComponent {
             // 打开地图
             let templatePath =
               (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.userName
-                  ? ConstPath.UserPath + this.props.user.userName + '/'
+                this.props.user && this.props.user.currentUser.userName
+                  ? ConstPath.UserPath +
+                    this.props.user.currentUser.userName +
+                    '/'
                   : ConstPath.CustomerPath,
               )) + ConstPath.RelativeFilePath.Map
             // switch (GLOBAL.Type) {
@@ -2121,9 +2123,9 @@ export default class ToolBar extends React.PureComponent {
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
                 let templatePath =
                   (await FileTools.appendingHomeDirectory(
-                    this.props.user.currentUser.name
+                    this.props.user.currentUser.userName
                       ? ConstPath.UserPath +
-                        this.props.user.currentUser.name +
+                        this.props.user.currentUser.userName +
                         '/'
                       : ConstPath.CustomerPath,
                   )) +
@@ -2197,8 +2199,10 @@ export default class ToolBar extends React.PureComponent {
           this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
           let templatePath =
             (await FileTools.appendingHomeDirectory(
-              this.props.user.currentUser.name
-                ? ConstPath.UserPath + this.props.user.currentUser.name + '/'
+              this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
                 : ConstPath.CustomerPath,
             )) +
             ConstPath.RelativePath.Template +

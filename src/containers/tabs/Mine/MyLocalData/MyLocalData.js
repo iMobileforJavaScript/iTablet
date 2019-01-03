@@ -9,7 +9,7 @@ import { SScene } from 'imobile_for_reactnative'
 export default class MyLocalData extends Component {
   props: {
     navigation: Object,
-    openTemplate: () => {},
+    importWorkspace: () => {},
   }
 
   constructor(props) {
@@ -287,7 +287,7 @@ export default class MyLocalData extends Component {
             Toast.show('导入3D失败')
           }
         } else {
-          let result = await this.props.openTemplate({ path: filePath })
+          let result = await this.props.importWorkspace({ path: filePath })
           if (result.msg !== undefined) {
             Toast.show('导入失败')
           } else {
