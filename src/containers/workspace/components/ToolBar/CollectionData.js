@@ -300,6 +300,7 @@ async function createCollector(type) {
       _params.user && _params.user.currentUser && _params.user.currentUser.name
         ? ConstPath.UserPath +
           _params.user.currentUser.name +
+          '/' +
           ConstPath.RelativePath.Datasource
         : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
     let datasourceName = (_params.map && _params.map.currentMap) || ''

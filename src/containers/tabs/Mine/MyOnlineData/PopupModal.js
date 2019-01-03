@@ -7,7 +7,6 @@ const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
   props: {
-    openWorkspace: () => {},
     onDeleteService: () => {},
     onDownloadFile: () => {},
     onPublishService: () => {},
@@ -165,24 +164,20 @@ export default class PopupModal extends PureComponent {
         <TouchableOpacity
           style={{ backgroundColor: color.content }}
           onPress={() => {
-            if (progress === '下载完成') {
-              this.props.openWorkspace()
-            } else {
-              if (this.props.data.isDownloading === true) {
-                if (progress.indexOf('%') != -1) {
-                  Toast.show('当前数据正在下载')
-                } else {
-                  this.props.onDownloadFile()
-                }
+            if (this.props.data.isDownloading === true) {
+              if (progress.indexOf('%') !== -1) {
+                Toast.show('当前数据正在下载')
               } else {
-                let info
-                if (this.props.downloadingFileName !== undefined) {
-                  info = this.props.downloadingFileName + '数据正在下载'
-                } else {
-                  info = '有数据正在下载'
-                }
-                Toast.show(info)
+                this.props.onDownloadFile()
               }
+            } else {
+              let info
+              if (this.props.downloadingFileName !== undefined) {
+                info = this.props.downloadingFileName + '数据正在下载'
+              } else {
+                info = '有数据正在下载'
+              }
+              Toast.show(info)
             }
           }}
         >

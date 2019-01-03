@@ -20,13 +20,13 @@ function getStart(type, params) {
   switch (type) {
     case ConstToolType.MAP_EDIT_START:
       data = [
-        {
-          key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
-          action: openWorkspace,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
-        },
+        // {
+        //   key: constants.WORKSPACE,
+        //   title: constants.WORKSPACE,
+        //   action: openWorkspace,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_open.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -41,13 +41,13 @@ function getStart(type, params) {
           action: create,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
-        {
-          key: constants.HISTORY,
-          title: constants.HISTORY,
-          size: 'large',
-          action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
-        },
+        // {
+        //   key: constants.HISTORY,
+        //   title: constants.HISTORY,
+        //   size: 'large',
+        //   action: showHistory,
+        //   image: require('../../../../assets/mapTools/icon_history_white.png'),
+        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
@@ -233,8 +233,8 @@ function openMap() {
     let data = [],
       path =
         (await FileTools.appendingHomeDirectory(
-          _params.user && _params.user.userName
-            ? ConstPath.UserPath + _params.userName
+          _params.user && _params.user.currentUser.userName
+            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
             : ConstPath.CustomerPath,
         )) + ConstPath.RelativeFilePath.Map
     FileTools.getPathListByFilter(path, {
