@@ -148,7 +148,6 @@ export default class LayerManager_tolbar extends React.Component {
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
-      GLOBAL.isNewMap = false
     }
   }
 

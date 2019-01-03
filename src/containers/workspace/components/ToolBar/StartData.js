@@ -62,6 +62,13 @@ function getStart(type, params) {
         //   action: add,
         //   image: require('../../../../assets/mapTools/icon_add_white.png'),
         // },
+        // {
+        //   key: '导出',
+        //   title: '导出',
+        //   size: 'large',
+        //   action: outPutMap,
+        //   image: require('../../../../assets/mapTools/icon_share.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_3D_START:
@@ -372,7 +379,6 @@ function create() {
     openWorkspace()
   }
   if (GLOBAL.Type === constants.MAP_EDIT) {
-    GLOBAL.isNewMap = false
     SMap.removeAllLayer()
   }
 }
@@ -401,6 +407,11 @@ function changeBaseLayer(type) {
       break
   }
 }
+
+// /** 导出成图片 **/
+// function outPutMap() {
+//
+// }
 
 /**新建专题图 **/
 function createThemeMap() {
