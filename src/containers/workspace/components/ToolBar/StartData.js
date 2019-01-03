@@ -41,13 +41,13 @@ function getStart(type, params) {
           action: create,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
-        // {
-        //   key: constants.HISTORY,
-        //   title: constants.HISTORY,
-        //   size: 'large',
-        //   action: showHistory,
-        //   image: require('../../../../assets/mapTools/icon_history_white.png'),
-        // },
+        {
+          key: constants.HISTORY,
+          title: constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_history_white.png'),
+        },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
@@ -61,6 +61,13 @@ function getStart(type, params) {
         //   size: 'large',
         //   action: add,
         //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
+        // {
+        //   key: '导出',
+        //   title: '导出',
+        //   size: 'large',
+        //   action: outPutMap,
+        //   image: require('../../../../assets/mapTools/icon_share.png'),
         // },
       ]
       break
@@ -393,7 +400,6 @@ function create() {
     openWorkspace()
   }
   if (GLOBAL.Type === constants.MAP_EDIT) {
-    GLOBAL.isNewMap = false
     SMap.removeAllLayer()
   }
 }
@@ -422,6 +428,11 @@ function changeBaseLayer(type) {
       break
   }
 }
+
+// /** 导出成图片 **/
+// function outPutMap() {
+//
+// }
 
 /**新建专题图 **/
 function createThemeMap() {
