@@ -137,6 +137,7 @@ export default class Mine extends Component {
               width: imageWidth,
               height: imageWidth,
               borderRadius: imageWidth / 5,
+              overlayColor: color.border,
             }}
             source={{ uri: headerImage }}
           />
