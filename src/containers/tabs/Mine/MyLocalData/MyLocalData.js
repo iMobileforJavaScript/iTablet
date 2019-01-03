@@ -9,7 +9,7 @@ import LocalDataPopupModal from './LocalDataPopupModal'
 export default class MyLocalData extends Component {
   props: {
     navigation: Object,
-    openTemplate: () => {},
+    importWorkspace: () => {},
   }
 
   constructor(props) {
@@ -205,7 +205,7 @@ export default class MyLocalData extends Component {
     try {
       if (this.itemInfo !== undefined) {
         let filePath = this.itemInfo.item.filePath
-        let result = await this.props.openTemplate({ path: filePath })
+        let result = await this.props.importWorkspace({ path: filePath })
         // console.warn(result)
         if (result.msg !== undefined) {
           Toast.show('导入失败')

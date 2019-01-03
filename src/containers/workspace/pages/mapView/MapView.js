@@ -71,7 +71,7 @@ export default class MapView extends React.Component {
     setCurrentAttribute: PropTypes.func,
     getAttributes: PropTypes.func,
     importTemplate: PropTypes.func,
-    openTemplate: PropTypes.func,
+    importWorkspace: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
     setTemplate: PropTypes.func,
     getMaps: PropTypes.func,
