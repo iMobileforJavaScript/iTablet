@@ -149,6 +149,9 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       this.setVisible(false)
     }
+    if (section.title === '取消') {
+      this.setVisible(false)
+    }
   }
 
   renderList = () => {
