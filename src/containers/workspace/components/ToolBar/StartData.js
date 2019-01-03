@@ -146,7 +146,7 @@ function getStart(type, params) {
         {
           key: constants.WORKSPACE,
           title: constants.THEME_WORKSPACE,
-          action: openWorkspace,
+          action: openThemeTemplate,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
@@ -274,6 +274,33 @@ function openMap() {
     //   })
     // })
   })()
+}
+
+/** 专题图： 打开模板 **/
+function openThemeTemplate() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+    async templateList => {
+      let data = [
+        // {
+        //   title: '导入模板',
+        //   data: [{
+        //     title: '选择目录',
+        //   }],
+        // },
+        {
+          title: Const.MODULE,
+          data: templateList,
+        },
+      ]
+      _params.setToolbarVisible(true, ConstToolType.MAP_TEMPLATE, {
+        containerType: 'list',
+        height: ConstToolType.HEIGHT[3],
+        data,
+      })
+    },
+  )
 }
 
 /** 打开模板 **/

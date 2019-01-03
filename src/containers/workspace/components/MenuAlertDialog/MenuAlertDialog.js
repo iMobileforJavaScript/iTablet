@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Modal,
   TouchableOpacity,
-  TouchableHighlight,
   FlatList,
 } from 'react-native'
 import { size } from '../../../../styles'
@@ -291,27 +290,23 @@ export default class MenuAlertDialog extends React.Component {
   renderItem(item) {
     if (this.state.selectedMenu == item.key) {
       return (
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.selectedbtn}
-          activeOpacity={0.9}
-          underlayColor="#4680DF"
-          // underlayColor = {'rgba(70,128,223,0.9)'}
+          activeOpacity={0.5}
           onPress={item.action}
         >
           <Text style={styles.btnTitle}>{item.btntitle}</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
       )
     } else {
       return (
-        <TouchableHighlight
+        <TouchableOpacity
           style={styles.btn}
-          activeOpacity={0.9}
-          underlayColor="#4680DF"
-          // underlayColor = {'rgba(70,128,223,0.9)'}
+          // activeOpacity={0.5}
           onPress={item.action}
         >
           <Text style={styles.btnTitle}>{item.btntitle}</Text>
-        </TouchableHighlight>
+        </TouchableOpacity>
       )
     }
   }

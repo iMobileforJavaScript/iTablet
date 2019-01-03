@@ -921,6 +921,7 @@ export default class FunctionToolbar extends React.Component {
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}
+        activeOpacity={0.5}
       />
     )
   }
