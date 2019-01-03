@@ -5,7 +5,7 @@ import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
-// import { SMap,SScene } from 'imobile_for_reactnative'
+import { SScene } from 'imobile_for_reactnative'
 export default class MyLocalData extends Component {
   props: {
     navigation: Object,
@@ -30,7 +30,7 @@ export default class MyLocalData extends Component {
   /**
    * 深度遍历fullFileDir目录下的fileType数据
    * fullFileDir 文件目录
-   * fileType 文件类型
+   * fileType 文件类型 {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
    * arrFilterFile 添加到arrFilterFile数组中保存
    * */
   _setFilterDatas = async (fullFileDir, fileType, arrFilterFile) => {
@@ -43,7 +43,13 @@ export default class MyLocalData extends Component {
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
         if (isFile === 'file' && !isRecordFile) {
-          if (fileName.indexOf(fileType) !== -1) {
+          if (
+            (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
+            (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
+            (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
+            (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
+            (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+          ) {
             if (
               !(
                 fileName.indexOf('~[') !== -1 &&
@@ -79,8 +85,75 @@ export default class MyLocalData extends Component {
     this.path =
       this.homePath + ConstPath.UserPath + this.state.userName + '/Downloads'
     let newData = []
-    await this._setFilterDatas(this.path, 'smwu', newData)
-    return [{ title: '文件类型:smwu', data: newData, isShowItem: true }]
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+    )
+    // console.warn(newData)
+    // {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
+    let smwuData = []
+    let sxwuData = []
+    let sxwData = []
+    let smwData = []
+    // let udbData=[]
+    for (let i = 0; i < newData.length; i++) {
+      let data = newData[i]
+      if (data.filePath.indexOf('smwu') !== -1) {
+        smwuData.push(data)
+      } else if (data.filePath.indexOf('sxwu') !== -1) {
+        sxwuData.push(data)
+      } else if (data.filePath.indexOf('sxw') !== -1) {
+        sxwData.push(data)
+      } else if (data.filePath.indexOf('smw') !== -1) {
+        smwData.push(data)
+      }
+      // else if(data.fileType === 'sxwu'){
+      //   udbData.push(data)
+      // }
+    }
+    let sectionData = [
+      { title: '文件类型:smwu', data: smwuData, isShowItem: true },
+      { title: '文件类型:sxwu', data: sxwuData, isShowItem: true },
+      { title: '文件类型:sxw', data: sxwData, isShowItem: true },
+      { title: '文件类型:smw', data: smwData, isShowItem: true },
+    ]
+
+    if (smwuData.length === 0) {
+      for (let i = 0; i < sectionData.length; i++) {
+        if (sectionData[i].title === '文件类型:smwu') {
+          sectionData.splice(i, 1)
+          break
+        }
+      }
+    }
+
+    if (sxwuData.length === 0) {
+      for (let i = 0; i < sectionData.length; i++) {
+        if (sectionData[i].title === '文件类型:sxwu') {
+          sectionData.splice(i, 1)
+          break
+        }
+      }
+    }
+    if (sxwData.length === 0) {
+      for (let i = 0; i < sectionData.length; i++) {
+        if (sectionData[i].title === '文件类型:sxw') {
+          sectionData.splice(i, 1)
+          break
+        }
+      }
+    }
+    if (smwData.length === 0) {
+      for (let i = 0; i < sectionData.length; i++) {
+        if (sectionData[i].title === '文件类型:smw') {
+          sectionData.splice(i, 1)
+          break
+        }
+      }
+    }
+    // console.warn(sectionData)
+    return sectionData
   }
 
   _renderSectionHeader = info => {
@@ -205,12 +278,21 @@ export default class MyLocalData extends Component {
     try {
       if (this.itemInfo !== undefined) {
         let filePath = this.itemInfo.item.filePath
-        let result = await this.props.openTemplate({ path: filePath })
-        // console.warn(result)
-        if (result.msg !== undefined) {
-          Toast.show('导入失败')
+        let is3D = await SScene.is3DWorkspace({ server: filePath })
+        if (is3D === true) {
+          let result = await SScene.import3DWorkspace({ server: filePath })
+          if (result === true) {
+            Toast.show('导入3D成功')
+          } else {
+            Toast.show('导入3D失败')
+          }
         } else {
-          Toast.show('导入成功')
+          let result = await this.props.openTemplate({ path: filePath })
+          if (result.msg !== undefined) {
+            Toast.show('导入失败')
+          } else {
+            Toast.show('导入成功')
+          }
         }
         // let result = await SMap.importWorkspaceInfo({
         //   server: filePath,

@@ -16,6 +16,8 @@ export default class ScanOnlineMap extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
+      isLoadingEnd: false,
+      headerType: '',
       mapTitle: this.props.navigation.getParam('mapTitle', ''),
       mapUrl: this.props.navigation.getParam('mapUrl', ''),
       cookie: this.props.navigation.getParam('cookie', ''),
@@ -32,7 +34,6 @@ export default class ScanOnlineMap extends React.Component {
   _clearInterval = () => {
     if (this.objProgressWidth !== undefined) {
       clearInterval(this.objProgressWidth)
-      this.setState({ progressWidth: '100%' })
     }
   }
   _renderLoading = () => {
@@ -48,6 +49,41 @@ export default class ScanOnlineMap extends React.Component {
         />
       </View>
     )
+    // if(Platform.OS === 'android'){
+    //   return(
+    //     <Container
+    //       headerProps={{
+    //         title: this.state.mapTitle,
+    //         withoutBack: false,
+    //         navigation: this.props.navigation,
+    //         type:'',
+    //       }}
+    //     >
+    //       <View style={{ flex: 1, backgroundColor: 'white' }}>
+    //         <View
+    //           ref={ref => (this.progressViewRef = ref)}
+    //           style={{
+    //             height: 2,
+    //             width: this.state.progressWidth,
+    //             backgroundColor: '#1c84c0',
+    //           }}
+    //         />
+    //       </View>
+    //     </Container>)
+    // }else{
+    //   return (
+    //     <View style={{ flex: 1, backgroundColor: 'white' }}>
+    //       <View
+    //         ref={ref => (this.progressViewRef = ref)}
+    //         style={{
+    //           height: 2,
+    //           width: this.state.progressWidth,
+    //           backgroundColor: '#1c84c0',
+    //         }}
+    //       />
+    //     </View>
+    //   )
+    // }
   }
   _onLoadStart = () => {
     this.progressViewWidth = this.state.progressWidth
@@ -114,6 +150,7 @@ export default class ScanOnlineMap extends React.Component {
           }}
           onLoadStart={this._onLoadStart}
           onLoadEnd={() => {
+            // this.setState({isLoadingEnd:true,headerType:''})
             this._clearInterval()
           }}
         />
@@ -122,7 +159,7 @@ export default class ScanOnlineMap extends React.Component {
   }
   render() {
     let uri = this.state.mapUrl + '.ol3'
-    let newUri = uri
+    // let newUri
     // if (uri.indexOf('https') !== -1) {
     //   let subUri = uri.substring(5)
     //   newUri = 'http' + subUri
@@ -137,7 +174,7 @@ export default class ScanOnlineMap extends React.Component {
           navigation: this.props.navigation,
         }}
       >
-        {this._loadWebView(newUri)}
+        {this._loadWebView(uri)}
       </Container>
     )
   }

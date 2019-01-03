@@ -164,7 +164,7 @@ export default class MyService extends Component {
         arrPublishServiceList: _arrPublishServiceList,
       })
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show('登录失效，请重新登录')
       this.setState({ isRefreshing: false })
     }
   }
@@ -246,8 +246,8 @@ export default class MyService extends Component {
     this.setState({ modalIsVisible: true })
   }
 
-  _onModalClick = isVisible => {
-    this.setState({ modalIsVisible: isVisible })
+  _onCloseModal = () => {
+    this.setState({ modalIsVisible: false })
   }
 
   _renderModal = () => {
@@ -255,7 +255,7 @@ export default class MyService extends Component {
       return (
         <PopupModal
           onRefresh={this._onModalRefresh2}
-          onModalClick={this._onModalClick}
+          onCloseModal={this._onCloseModal}
           modalVisible={this.state.modalIsVisible}
           title={this.onClickItemRestTitle}
           isPublish={this.onClickItemIsPublish}
