@@ -96,7 +96,7 @@ export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
 //     return { copyResult, openResult }
 //   }
 // }
-export const openTemplate = (params, cb = () => {}) => async (
+export const importWorkspace = (params, cb = () => {}) => async (
   dispatch,
   getState,
 ) => {

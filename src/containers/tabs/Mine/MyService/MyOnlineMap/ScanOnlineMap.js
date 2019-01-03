@@ -122,13 +122,13 @@ export default class ScanOnlineMap extends React.Component {
   }
   render() {
     let uri = this.state.mapUrl + '.ol3'
-    let newUri
-    if (uri.indexOf('https') !== -1) {
-      let subUri = uri.substring(5)
-      newUri = 'http' + subUri
-    } else {
-      newUri = uri
-    }
+    let newUri = uri
+    // if (uri.indexOf('https') !== -1) {
+    //   let subUri = uri.substring(5)
+    //   newUri = 'http' + subUri
+    // } else {
+    //   newUri = uri
+    // }
     return (
       <Container
         headerProps={{

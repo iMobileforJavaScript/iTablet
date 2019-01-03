@@ -71,7 +71,7 @@ export default class MapView extends React.Component {
     setCurrentAttribute: PropTypes.func,
     getAttributes: PropTypes.func,
     importTemplate: PropTypes.func,
-    openTemplate: PropTypes.func,
+    importWorkspace: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
     setTemplate: PropTypes.func,
     getMaps: PropTypes.func,
@@ -330,10 +330,10 @@ export default class MapView extends React.Component {
   }
 
   // 导出(保存)工作空间中地图到模块
-  saveMapName = (mapName = '', cb = () => {}) => {
+  saveMapName = (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
     try {
       this.setLoading(true, '正在保存地图')
-      SMap.saveMapName(mapName).then(
+      SMap.saveMapName(mapName, nModule, addition).then(
         result => {
           this.setLoading(false)
           Toast.show(
@@ -1005,7 +1005,11 @@ export default class MapView extends React.Component {
               //   this.props.collection.datasourceName ? ('@' + this.props.collection.datasourceName) : ''
               mapName = this.props.collection.datasourceName
             }
-            this.saveMapName(mapName, () => {
+            let addition = {}
+            if (this.props.map.currentMap.Template) {
+              addition.Template = this.props.map.currentMap.Template
+            }
+            this.saveMapName(mapName, '', addition, () => {
               if (this.backAction) {
                 this.backAction()
                 this.backAction = null
