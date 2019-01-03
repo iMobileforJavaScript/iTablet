@@ -1,19 +1,22 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
+import { MAP_MODULE, ConstToolType } from '../../constants'
 import constants from '../workspace/constants'
+import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
 import { SectionList } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
+import { SMap } from 'imobile_for_reactnative'
 
 export default class MapSetting extends Component {
   props: {
     navigation: Object,
     data: Array,
     setMapSetting: () => {},
+    closeMap: () => {},
     mapSetting: any,
   }
 
@@ -54,6 +57,42 @@ export default class MapSetting extends Component {
     this.setState({
       data: newData.concat(),
     })
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  setSaveViewVisible = visible => {
+    GLOBAL.SaveMapView &&
+      GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
+  }
+
+  back = () => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      NavigationService.goBack()
+    } else {
+      this.backAction = async () => {
+        try {
+          this.setLoading(true, '正在关闭地图')
+          await this.props.closeMap()
+          GLOBAL.clearMapData()
+          this.setLoading(false)
+          NavigationService.goBack()
+        } catch (e) {
+          this.setLoading(false)
+        }
+      }
+      SMap.mapIsModified().then(async result => {
+        if (result) {
+          this.setSaveViewVisible(true)
+        } else {
+          await this.backAction()
+          this.backAction = null
+        }
+      })
+    }
+    return true
   }
 
   _onValueChange = ({ value, item, index }) => {
@@ -127,6 +166,7 @@ export default class MapSetting extends Component {
         headerProps={{
           title: title,
           navigation: this.props.navigation,
+          backAction: this.back,
         }}
         bottomBar={this.renderToolBar()}
       >

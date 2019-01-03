@@ -2,8 +2,7 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { TreeList } from '../../../../components'
-import { scaleSize, Toast } from '../../../../utils'
-import { ConstInfo } from '../../../../constants'
+import { scaleSize } from '../../../../utils'
 import { SMap } from 'imobile_for_reactnative'
 
 export default class GroupTab extends React.Component {
@@ -42,7 +41,7 @@ export default class GroupTab extends React.Component {
       if (symbols.length > 0) {
         this.props.goToPage && this.props.goToPage(1)
       } else {
-        Toast.show(ConstInfo.SYMBOL_LIB_EMPTY)
+        // Toast.show(ConstInfo.SYMBOL_LIB_EMPTY)
       }
     })
   }
