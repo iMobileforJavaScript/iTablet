@@ -92,7 +92,7 @@ export default class Mine extends Component {
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
-            title: '在线数据',
+            title: '我的数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),
             onClick: this.goToMyOnlineData,
           })}
@@ -136,8 +136,8 @@ export default class Mine extends Component {
             style={{
               width: imageWidth,
               height: imageWidth,
-              backgroundColor: '#c0c0c0',
               borderRadius: imageWidth / 2,
+              overlayColor: color.border,
             }}
             source={{ uri: headerImage }}
           />

@@ -49,7 +49,7 @@ export default class PopupModal extends PureComponent {
   _onClose() {
     this.props.onCloseModal()
   }
-  _onRequestClose() {
+  _onRequestClose = () => {
     if (Platform.OS === 'android') {
       this._onClose()
     }
