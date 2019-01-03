@@ -208,7 +208,7 @@ export default class MyLocalData extends Component {
           server: filePath,
           type: 9,
         })
-        if (result === true) {
+        if (result.length > 0) {
           Toast.show('导入成功')
         } else {
           Toast.show('导入失败')

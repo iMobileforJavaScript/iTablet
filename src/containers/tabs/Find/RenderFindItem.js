@@ -9,6 +9,7 @@ import styles from './Styles'
 import { Toast } from '../../../utils/index'
 import NavigationService from '../../NavigationService'
 import RNFS from 'react-native-fs'
+import { FileTools } from '../../../native'
 import ConstPath from '../../../constants/ConstPath'
 export default class RenderFindItem extends Component {
   props: {
@@ -60,7 +61,7 @@ export default class RenderFindItem extends Component {
       let dataUrl =
         'https://www.supermapol.com/web/datas/' + dataId + '/download'
       let fileName = this.props.data.fileName
-      let appHome = RNFS.DocumentDirectoryPath
+      let appHome = await FileTools.appendingHomeDirectory()
       let fileDir =
         appHome +
         ConstPath.UserPath +
