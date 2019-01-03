@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: color.theme,
+    backgroundColor: '#rgba(80, 80, 80, 1)',
   },
   item: {
     flex: 1,
@@ -109,25 +109,28 @@ export default class MT_layerManager extends React.Component {
         >
           <View style={styles.container}>
             <View style={styles.item}>
-              <Text style={styles.title}>是否保存当前地图</Text>
+              <Text style={styles.title}>是否保存当前地图？</Text>
             </View>
             <Button
               style={styles.item}
               titleStyle={styles.title}
               title="保存"
               onPress={this.save}
+              activeOpacity={0.5}
             />
             <Button
               style={[styles.item, { marginTop: scaleSize(1) }]}
               titleStyle={styles.title}
               title="不保存"
               onPress={this.notSave}
+              activeOpacity={0.5}
             />
             <Button
-              style={[styles.item, { marginTop: scaleSize(20) }]}
+              style={[styles.item, { marginTop: scaleSize(10) }]}
               titleStyle={styles.title}
               title="取消"
               onPress={this.cancel}
+              activeOpacity={0.5}
             />
           </View>
         </TouchableOpacity>

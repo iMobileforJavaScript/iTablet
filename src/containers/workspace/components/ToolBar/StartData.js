@@ -144,13 +144,6 @@ function getStart(type, params) {
     case ConstToolType.MAP_THEME_START:
       data = [
         {
-          key: constants.WORKSPACE,
-          title: constants.THEME_WORKSPACE,
-          action: openThemeTemplate,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
-        },
-        {
           key: constants.OPEN,
           title: constants.THEME_OPEN,
           action: openMap,
@@ -164,13 +157,13 @@ function getStart(type, params) {
           action: createThemeMap,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
-        // {
-        //   key: constants.HISTORY,
-        //   title: constants.HISTORY,
-        //   size: 'large',
-        //   action: showHistory,
-        //   image: require('../../../../assets/mapTools/icon_history_white.png'),
-        // },
+        {
+          key: constants.HISTORY,
+          title: constants.HISTORY,
+          size: 'large',
+          action: showHistory,
+          image: require('../../../../assets/mapTools/icon_history_white.png'),
+        },
         {
           key: constants.BASE_MAP,
           title: constants.THEME_BASE_MAP,
@@ -274,33 +267,6 @@ function openMap() {
     //   })
     // })
   })()
-}
-
-/** 专题图： 打开模板 **/
-function openThemeTemplate() {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
-  NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-    async templateList => {
-      let data = [
-        // {
-        //   title: '导入模板',
-        //   data: [{
-        //     title: '选择目录',
-        //   }],
-        // },
-        {
-          title: Const.MODULE,
-          data: templateList,
-        },
-      ]
-      _params.setToolbarVisible(true, ConstToolType.MAP_TEMPLATE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-        data,
-      })
-    },
-  )
 }
 
 /** 打开模板 **/

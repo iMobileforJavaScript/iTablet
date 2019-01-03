@@ -4,8 +4,6 @@
 import { ConstToolType } from '../../../../constants'
 // import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
-import { SMap } from 'imobile_for_reactnative'
-// import { Toast } from '../../../../utils'
 
 let _params = {}
 
@@ -50,41 +48,6 @@ function getMapMore(type, params) {
         },
       ]
       break
-    case ConstToolType.MAP_MORE_THEME:
-      data = [
-        {
-          key: constants.CLOSE,
-          title: constants.THEME_CLOSE,
-          // 关闭地图
-          action: closeMapTheme,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_close.png'),
-        },
-        {
-          key: constants.SAVE,
-          title: constants.THEME_SAVE,
-          size: 'large',
-          // 保存地图
-          action: saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_save.png'),
-        },
-        {
-          key: constants.SAVE_AS,
-          title: constants.THEME_SAVE_AS,
-          size: 'large',
-          // 地图另存为
-          action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_save_as.png'),
-        },
-        {
-          key: constants.SHARE,
-          title: constants.THEME_SHARE,
-          size: 'large',
-          action: shareMap,
-          image: require('../../../../assets/mapTools/icon_share.png'),
-        },
-      ]
-      break
     default:
       data = [
         {
@@ -124,21 +87,6 @@ function getMapMore(type, params) {
 }
 
 /*******************************************操作分割线*********************************************/
-
-/**专题制图:关闭地图 */
-function closeMapTheme() {
-  SMap.closeMap()
-}
-
-/**专题制图:保存地图 */
-// function saveMapTheme() {
-//   let save = SThemeCartography.saveMap()
-//   if (save) {
-//     Toast.show('保存成功')
-//   } else {
-//     Toast.show('保存失败')
-//   }
-// }
 
 /** 关闭地图 **/
 function closeMap() {

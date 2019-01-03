@@ -722,7 +722,7 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE_THEME)
+              this.showMore(ConstToolType.MAP_MORE)
             },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
           },
