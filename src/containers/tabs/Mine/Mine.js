@@ -92,7 +92,7 @@ export default class Mine extends Component {
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
-            title: '在线数据',
+            title: '我的数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),
             onClick: this.goToMyOnlineData,
           })}
