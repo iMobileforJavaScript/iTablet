@@ -1219,6 +1219,8 @@ export default class ToolBar extends React.PureComponent {
       params.column !== this.state.column
     ) {
       let { data, buttons } = this.getData(type)
+      params.createThemeByLayer &&
+        ThemeMenuData.setLayerNameCreateTheme(params.createThemeByLayer)
       this.originType = type
       let newHeight =
         params && typeof params.height === 'number'
@@ -1889,9 +1891,10 @@ export default class ToolBar extends React.PureComponent {
       })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
+        let udbName = this.basename(this.path)
         let udbpath = {
           server: this.path,
-          alias: item.title,
+          alias: udbName,
           engineType: 219,
         }
         await SMap.openDatasource(udbpath, index)
@@ -1984,7 +1987,13 @@ export default class ToolBar extends React.PureComponent {
           DatasourceName: item.datasourceName,
           DatasetName: item.datasetName,
         }
+        // 添加数据集
         SMap.addDatasetToMap(params)
+        // 重新加载图层
+        this.props.getLayers({
+          type: -1,
+          currentLayerIndex: 0,
+        })
       }
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
       this.importTemplate(item)
