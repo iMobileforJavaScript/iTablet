@@ -45,7 +45,7 @@ export default class MapView extends React.Component {
     editLayer: PropTypes.object,
     analystLayer: PropTypes.object,
     selection: PropTypes.object,
-    latestMap: PropTypes.array,
+    latestMap: PropTypes.object,
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
@@ -329,10 +329,16 @@ export default class MapView extends React.Component {
   }
 
   // 导出(保存)工作空间中地图到模块
-  saveMapName = (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
+  saveMapName = (
+    mapName = '',
+    nModule = '',
+    addition = {},
+    isNew = false,
+    cb = () => {},
+  ) => {
     try {
       this.setLoading(true, '正在保存地图')
-      SMap.saveMapName(mapName, nModule, addition).then(
+      SMap.saveMapName(mapName, nModule, addition, isNew).then(
         result => {
           this.setLoading(false)
           Toast.show(
@@ -368,19 +374,11 @@ export default class MapView extends React.Component {
   // 地图另存为
   saveAsMap = (name = '') => {
     try {
-      this.setLoading(true, '正在保存地图')
-      SMap.saveAsMap(name).then(
-        result => {
-          this.setLoading(false)
-          Toast.show(
-            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-          )
-        },
-        () => {
-          Toast.show(ConstInfo.CLOSE_MAP_FAILED)
-          this.setLoading(false)
-        },
-      )
+      let addition = {}
+      if (this.props.map.currentMap.Template) {
+        addition.Template = this.props.map.currentMap.Template
+      }
+      this.saveMapName(name, '', addition, true)
     } catch (e) {
       this.setLoading(false)
     }

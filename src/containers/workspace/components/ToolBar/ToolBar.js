@@ -2011,13 +2011,11 @@ export default class ToolBar extends React.PureComponent {
           } else if (mapsInfo && mapsInfo.length > 0) {
             // 打开地图
             let templatePath =
-              (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.currentUser.userName
-                  ? ConstPath.UserPath +
-                      this.props.user.currentUser.userName +
-                      '/'
-                  : ConstPath.CustomerPath,
-              )) + ConstPath.RelativeFilePath.Map
+              (this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
+                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
             let mapInfo = await this.props.openMap({
               path: templatePath + mapsInfo[0] + '.xml',
               name: mapsInfo[0],
@@ -2081,7 +2079,7 @@ export default class ToolBar extends React.PureComponent {
         this.props.setContainerLoading &&
           this.props.setContainerLoading(
             true,
-            ConstInfo.MAP_CREATING_SYMBOL_COLLECTION,
+            ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
           )
         await this.props.closeMap()
         this.props.setCurrentTemplateInfo() // 清空当前模板
@@ -2157,13 +2155,12 @@ export default class ToolBar extends React.PureComponent {
           } else if (mapsInfo && mapsInfo.length > 0) {
             // 打开地图
             let templatePath =
-              (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.currentUser.userName
-                  ? ConstPath.UserPath +
-                      this.props.user.currentUser.userName +
-                      '/'
-                  : ConstPath.CustomerPath,
-              )) + ConstPath.RelativeFilePath.Map
+              (this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
+                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
+            // let absolutePath = await FileTools.appendingHomeDirectory(templatePath)
             // switch (GLOBAL.Type) {
             //   case constants.COLLECTION:
             //     templatePath = templatePath + ConstPath.RelativeFilePath.Collection
@@ -2189,8 +2186,8 @@ export default class ToolBar extends React.PureComponent {
                   (await FileTools.appendingHomeDirectory(
                     this.props.user.currentUser.userName
                       ? ConstPath.UserPath +
-                          this.props.user.currentUser.userName +
-                          '/'
+                        this.props.user.currentUser.userName +
+                        '/'
                       : ConstPath.CustomerPath,
                   )) +
                   ConstPath.RelativePath.Template +
@@ -2253,8 +2250,8 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
-      let path = await FileTools.appendingHomeDirectory(item.path)
-      let mapInfo = await this.props.openMap({ ...item, path })
+      // let absolutePath = await FileTools.appendingHomeDirectory(item.path)
+      let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {
         Toast.show(ConstInfo.CHANGE_MAP_TO + mapInfo.name)
         // if (item.path.substr(item.path.lastIndexOf('.')) === 'xml')
@@ -2265,8 +2262,8 @@ export default class ToolBar extends React.PureComponent {
             (await FileTools.appendingHomeDirectory(
               this.props.user.currentUser.userName
                 ? ConstPath.UserPath +
-                    this.props.user.currentUser.userName +
-                    '/'
+                  this.props.user.currentUser.userName +
+                  '/'
                 : ConstPath.CustomerPath,
             )) +
             ConstPath.RelativePath.Template +
@@ -2803,14 +2800,16 @@ export default class ToolBar extends React.PureComponent {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen && !this.state.isTouchProgress && (
+        {this.state.isFullScreen &&
+          !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
