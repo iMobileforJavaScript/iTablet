@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
@@ -13,6 +13,7 @@ export default class Home extends Component {
     setShow: () => {},
     device: Object,
     // map3DleadWorkspace: () => {},
+    improtSceneWorkspace: () => {},
   }
 
   constructor(props) {
@@ -26,15 +27,7 @@ export default class Home extends Component {
     return (
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity
-          style={styles.userView}
-          onPress={() => {
-            // this.props.map3DleadWorkspace({
-            //   path:
-            //     '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
-            // })
-          }}
-        >
+        <TouchableOpacity style={styles.userView} onPress={async () => {}}>
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
@@ -81,7 +74,9 @@ export default class Home extends Component {
               />
             </TouchableOpacity>
           ),
-          headerStyle: { height: scaleSize(70) },
+          headerStyle: {
+            height: scaleSize(70) + (Platform.OS === 'ios' ? 20 : 0),
+          },
         }}
         style={styles.container}
       >

@@ -5,7 +5,7 @@ import {
   setCurrentAttribute,
   setAttributes,
 } from '../../../../models/layers'
-import { setLatestMap } from '../../../../models/map'
+import { setLatestMap, exportmap3DWorkspace } from '../../../../models/map'
 
 const mapStateToProps = state => ({
   editLayer: state.layers.toJS().editLayer,
@@ -23,6 +23,7 @@ const mapDispatchToProps = {
   setLatestMap,
   setCurrentAttribute,
   setAttributes,
+  exportmap3DWorkspace,
 }
 
 export default connect(
