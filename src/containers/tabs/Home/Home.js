@@ -3,9 +3,6 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-import { FileTools } from '../../../native'
-import { ConstPath } from '../../../constants'
-import { Toast } from '../../../utils'
 // import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
@@ -29,45 +26,7 @@ export default class Home extends Component {
     return (
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity
-          style={styles.userView}
-          onPress={async () => {
-            try {
-              Toast.show('准备导入')
-              let userName = this.props.currentUser
-                ? this.props.currentUser
-                : ' Customer'
-              // let path=await FileTools.appendingHomeDirectory(
-              //   ConstPath.UserPath +
-              //     userName +
-              //     '/' +
-              //     ConstPath.RelativePath.DownLoad+"OlympicGreen_ios.zip"
-              // )
-              // let targePath=await FileTools.appendingHomeDirectory(
-              //   ConstPath.UserPath +
-              //     userName +
-              //     '/' +
-              //     ConstPath.RelativePath.DownLoad
-              // )
-              //  Toast.show("开始解压")
-              // FileTools.unZipFile(path,targePath)
-              let filepath = await FileTools.appendingHomeDirectory(
-                ConstPath.UserPath +
-                  userName +
-                  '/' +
-                  ConstPath.RelativePath.Temp +
-                  'OlympicGreen_ios/OlympicGreen_ios.sxwu',
-              )
-              Toast.show('开始导入')
-              this.props.improtSceneWorkspace({
-                server: filepath,
-              })
-            } catch (error) {
-              // console.warn(error)
-              //  Toast.show(error)
-            }
-          }}
-        >
+        <TouchableOpacity style={styles.userView} onPress={async () => {}}>
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>

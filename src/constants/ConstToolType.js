@@ -79,6 +79,7 @@ export default {
   MAP_EDIT_START: 'MAP_START',
   MAP_3D_START: 'MAP_3D_START',
   MAP_CHANGE: 'MAP_CHANGE',
+  MAP_TEMPLATE: 'MAP_TEMPLATE',
   MAP_SELECT: 'MAP_SELECT',
   LINECOLOR_SET: 'LINECOLOR_SET',
   POINTCOLOR_SET: 'POINTCOLOR_SET',
@@ -109,6 +110,7 @@ export default {
   MAP3D_WORKSPACE_LIST: 'MAP3D_WORKSPACE_LIST',
   MAP_MORE_MAP3D: 'MAP_MORE_MAP3D',
   MAP_MORE_THEME: 'MAP_MORE_THEME',
+  MAP3D_SHARE: 'MAP3D_SHARE',
   // 工具视图高度级别
   HEIGHT: [
     scaleSize(100),
@@ -125,5 +127,6 @@ export default {
     scaleSize(500),
     scaleSize(600),
     scaleSize(700),
+    scaleSize(300),
   ],
 }

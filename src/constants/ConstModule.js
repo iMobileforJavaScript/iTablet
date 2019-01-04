@@ -4,7 +4,6 @@ import { FileTools } from '../native'
 import ConstToolType from './ConstToolType'
 import ConstOnline from './ConstOnline'
 import { ConstPath } from '../constants'
-import { Platform } from 'react-native'
 
 const MAP_MODULE = {
   MAP_EDIT: '地图制图',
@@ -25,6 +24,8 @@ export default [
       GLOBAL.Type = constants.MAP_EDIT
       GLOBAL.isArrayData = true
       GLOBAL.isNewMap = true
+      GLOBAL.showMenu = true
+      GLOBAL.showFlex = true
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
@@ -58,36 +59,33 @@ export default [
     title: '三维场景',
     baseImage: require('../assets/home/icon_rightbottom_free.png'),
     moduleImage: require('../assets/home/icon_map3D.png'),
-    action: async user => {
+    action: () => {
       GLOBAL.Type = ConstToolType.MAP_3D
-      let customerPath
-      let default3DDataPath
-      if (Platform.OS === 'android') {
-        default3DDataPath = 'OlympicGreen_android/OlympicGreen_android.sxwu'
-      } else {
-        default3DDataPath = 'OlympicGreen_ios/OlympicGreen_ios.sxwu'
-      }
-      customerPath =
-        ConstPath.CustomerPath +
-        ConstPath.RelativeFilePath.Scene +
-        default3DDataPath
+      // let customerPath
+      // let default3DDataPath
+      // if (Platform.OS === 'android') {
+      //   default3DDataPath = 'OlympicGreen_android/OlympicGreen_android.sxwu'
+      // } else {
+      //   default3DDataPath = 'OlympicGreen_ios/OlympicGreen_ios.sxwu'
+      // }
+      // customerPath =
+      //   ConstPath.CustomerPath +
+      //   ConstPath.RelativeFilePath.Scene +
+      //   default3DDataPath
 
-      let ssPath = await FileTools.appendingHomeDirectory(customerPath)
-      if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Scene +
-          default3DDataPath
-        ssPath = await FileTools.appendingHomeDirectory(userWSPath)
-      } else {
-        ssPath = await FileTools.appendingHomeDirectory(customerPath)
-      }
-      NavigationService.navigate('Map3D', {
-        path: ssPath,
-        type: ConstToolType.MAP_3D,
-      })
+      // let ssPath = await FileTools.appendingHomeDirectory(customerPath)
+      // if (user.userName) {
+      //   const userWSPath =
+      //     ConstPath.UserPath +
+      //     user.userName +
+      //     '/' +
+      //     ConstPath.RelativeFilePath.Scene +
+      //     default3DDataPath
+      //   ssPath = await FileTools.appendingHomeDirectory(userWSPath)
+      // } else {
+      //   ssPath = await FileTools.appendingHomeDirectory(customerPath)
+      // }
+      NavigationService.navigate('Map3D', {})
     },
   },
   // {

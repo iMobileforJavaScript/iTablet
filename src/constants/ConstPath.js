@@ -1,11 +1,21 @@
 const AppPath = '/iTablet/'
 const Data = 'Data/'
+const Collection = 'Collection'
+const MapEdit = 'MapEdit'
+const MapTheme = 'Map/MapTheme'
+
+const Module = {
+  Collection,
+  MapEdit,
+  MapTheme,
+}
 
 const RelativePath = {
   // 对应用户中的相对路径
   Environment: 'Environment/',
   License: 'License/',
   Log: 'Log/',
+  Downloads: 'Downloads/',
   Data: Data,
   Datasource: Data + 'Datasource/',
   Template: Data + 'Template/',
@@ -19,7 +29,10 @@ const RelativeFilePath = {
   Workspace: Data + 'Workspace.smwu', // 工作空间
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
-  DownLoad: Data + 'DownLoad/',
+  Map: Data + 'Map/',
+  Collection: Data + 'Map/' + Collection + '/',
+  MapEdit: Data + 'Map/' + MapEdit + '/',
+  MapTheme: Data + 'Map/' + MapTheme + '/',
 }
 
 // 默认创建的目录
@@ -39,4 +52,5 @@ export default {
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据
   RelativePath,
   RelativeFilePath,
+  Module,
 }

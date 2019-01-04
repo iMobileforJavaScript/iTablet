@@ -9,7 +9,7 @@ import { View } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
-import { MapToolbar } from '../../../workspace/componets'
+import { MapToolbar } from '../../../workspace/components'
 import { LayerAttributeTable } from '../../components'
 import { SMap } from 'imobile_for_reactnative'
 

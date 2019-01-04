@@ -147,7 +147,7 @@ export default handleActions(
     [`${GET_LAYERS}`]: (state, { payload }) => {
       let currentLayer = {},
         currentLayerIndex = payload.currentLayerIndex || -1
-      if (currentLayerIndex >= 0 && payload.layers.length > 0) {
+      if (currentLayerIndex >= 0 && payload.layers.length > currentLayerIndex) {
         currentLayer = payload.layers[0]
       }
       return state

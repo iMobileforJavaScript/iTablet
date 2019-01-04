@@ -45,8 +45,8 @@ import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
 // import { Map3D, MapView } from './workspace'
 import { MapTabs, Map3DTabs } from './workspace'
-import MapToolbarSetting from './workspace/componets/MapToolbarSetting'
-import TouchProgress from './workspace/componets/TouchProgress'
+import MapToolbarSetting from './workspace/components/MapToolbarSetting'
+import TouchProgress from './workspace/components/TouchProgress'
 
 export default StackNavigator(
   {
@@ -269,14 +269,14 @@ export default StackNavigator(
       screen: MyOnlineData,
       navigationOptions: {
         header: null,
-        gesturesEnabled: true,
+        // gesturesEnabled: true,
       },
     },
     MyService: {
       screen: MyService,
       navigationOptions: {
         header: null,
-        gesturesEnabled: true,
+        // gesturesEnabled: true,
       },
     },
     MyOnlineMap: {

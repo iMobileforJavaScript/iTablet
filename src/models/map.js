@@ -5,6 +5,9 @@ import { SMap, SScene } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath } from '../constants'
+import fs from 'react-native-fs'
+// import xml2js from 'react-native-xml2js'
+// let parser = new xml2js.Parser()
 // Constants
 // --------------------------------------------------
 export const OPEN_WORKSPACE = 'OPEN_WORKSPACE'
@@ -44,6 +47,7 @@ export const openWorkspace = (params, cb = () => {}) => async dispatch => {
 // 关闭工作空间
 export const closeWorkspace = (cb = () => {}) => async dispatch => {
   try {
+    // await SMap.closeDatasource()
     let result = await SMap.closeWorkspace()
     await dispatch({
       type: OPEN_WORKSPACE,
@@ -64,27 +68,83 @@ export const closeWorkspace = (cb = () => {}) => async dispatch => {
 // 打开地图
 export const openMap = (params, cb = () => {}) => async dispatch => {
   try {
-    if (params === null || params === undefined) return
-    let result = await SMap.openMap(params)
-    if (result) {
-      let mapInfo = await SMap.getMapInfo()
-      await dispatch({
-        type: SET_CURRENT_MAP,
-        payload: mapInfo || {},
-      })
+    if (
+      params === null ||
+      params === undefined ||
+      (!params.title && !params.name) ||
+      !params.path
+    )
+      return
+    // let paths = params.path.split('/')
+    let module = params.module || ''
+    let fileName = params.name || params.title
+    let importResult = await SMap.openMapName(fileName, module)
+    // let expFilePath = await FileTools.appendingHomeDirectory(params.path.substr(0, params.path.lastIndexOf('.')) + '.exp')
+    let expFilePath =
+      params.path.substr(0, params.path.lastIndexOf('.')) + '.exp'
+
+    // let expIsExist = await FileTools.fileIsExist(expFilePath)
+    // if (expIsExist) {
+    //   fs.readFile(expFilePath).then(data => {
+    //     parser.parseString(data, async (err, result) => {
+    //       let openMapResult = importResult && await SMap.openMap(params.title)
+    //       if (openMapResult) {
+    //         let mapInfo = await SMap.getMapInfo()
+    //         await dispatch({
+    //           type: SET_CURRENT_MAP,
+    //           payload: mapInfo || {},
+    //         })
+    //       }
+    //       cb && cb(result)
+    //       return result
+    //     })
+    //   })
+    // } else {
+    //   let result = importResult && await SMap.openMap(params.title)
+    //   if (result) {
+    //     let mapInfo = await SMap.getMapInfo()
+    //     await dispatch({
+    //       type: SET_CURRENT_MAP,
+    //       payload: mapInfo || {},
+    //     })
+    //   }
+    //   cb && cb(result)
+    //   return result
+    // }
+    let openMapResult = importResult && (await SMap.openMap(fileName))
+    let mapInfo = await SMap.getMapInfo()
+    if (openMapResult) {
+      let expIsExist = await FileTools.fileIsExist(expFilePath)
+      if (expIsExist) {
+        let data = await fs.readFile(expFilePath)
+        Object.assign(mapInfo, JSON.parse(data))
+        await dispatch({
+          type: SET_CURRENT_MAP,
+          payload: mapInfo || {},
+        })
+        cb && cb(mapInfo)
+        return mapInfo
+      }
+    } else {
+      // await dispatch({
+      //   type: SET_CURRENT_MAP,
+      //   payload: mapInfo || {},
+      // })
+      // cb && cb(mapInfo)
+      return openMapResult
     }
-    cb && cb(result)
-    return result
   } catch (e) {
     cb && cb(false)
     return false
   }
 }
 
-// 打开地图
+// 关闭地图
 export const closeMap = (cb = () => {}) => async dispatch => {
   try {
     await SMap.closeMap()
+    await SMap.removeMap(-1) // 移除所有地图
+    await SMap.closeDatasource()
     await dispatch({
       type: SET_CURRENT_MAP,
       payload: {},
@@ -185,14 +245,56 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   cb && cb(result, zipPath)
 }
 //导出工作空间
-// export const map3DleadWorkspace = (
-//   params = {},
-//   cb = () => {},
-// ) => async getState => {}
-
-//到入三维工作空间
-export const improtSceneWorkspace = params => async getState => {
+export const exportmap3DWorkspace = (params, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  // return
   let userName = getState().user.toJS().currentUser.userName || 'Customer'
+  if (params.name) {
+    if (isExporting) {
+      Toast.show('请稍后再试')
+      return false
+    }
+    isExporting = true
+    let path = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.Temp +
+        params.name,
+    )
+    let result = await SScene.export3DScenceName(params.name, path)
+    if (result) {
+      let zipPath = path + '.zip'
+      result = await FileTools.zipFile(path, zipPath)
+      if (result) {
+        await FileTools.deleteFile(path)
+        Toast.show('导出成功,开始分享')
+        isExporting = false
+        cb && cb(result, zipPath)
+      }
+    } else {
+      Toast.show('导出失败')
+    }
+    // let result = await SScene.is3DWorkspace({ server: params.server })
+    // if (result) {
+    //   let result2 = await SScene.import3DWorkspace({ server: params.server })
+    //   if (result2) {
+    //     Toast.show('倒入成功')
+    //   } else {
+    //     Toast.show('倒入失败')
+    //   }
+    // } else {
+    //   Toast.show('倒入失败')
+    // }
+  }
+}
+//到入三维工作空间
+export const improtSceneWorkspace = params => async (dispatch, getState) => {
+  let userName = getState().user.toJS().currentUser.userName || 'Customer'
+  // console.log(userName)
+  // return
   if (userName !== 'Customer') {
     let path = await FileTools.appendingHomeDirectory(
       ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.Scene,
@@ -200,9 +302,14 @@ export const improtSceneWorkspace = params => async getState => {
     await SScene.setCustomerDirectory(path)
   }
   if (params.server) {
-    let result = SScene.is3DWorkspace()
+    let result = await SScene.is3DWorkspace({ server: params.server })
     if (result) {
-      await SScene.import3DWorkspaceInfo({ server: params.server })
+      let result2 = await SScene.import3DWorkspace({ server: params.server })
+      if (result2) {
+        Toast.show('倒入成功')
+      } else {
+        Toast.show('倒入失败')
+      }
     } else {
       Toast.show('倒入失败')
     }

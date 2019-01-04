@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize, screen } from '../../../../utils'
-import { color, zIndexLevel, size } from '../../../../styles'
-import { ConstToolType } from '../../../../constants'
+import { scaleSize, screen } from '../../../../utils/index'
+import { color, zIndexLevel, size } from '../../../../styles/index'
+import { ConstToolType } from '../../../../constants/index'
 // 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
 

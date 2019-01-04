@@ -13,7 +13,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
-} from '../../componets'
+} from '../../components'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
@@ -28,6 +28,7 @@ export default class Map3D extends React.Component {
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
     setAttributes: () => {},
+    exportmap3DWorkspace: () => {},
     user: Object,
     device: Object,
   }
