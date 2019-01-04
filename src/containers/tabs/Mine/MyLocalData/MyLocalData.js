@@ -83,7 +83,11 @@ export default class MyLocalData extends Component {
   _constructSectionData = async () => {
     this.homePath = await this._getHomePath()
     this.path =
-      this.homePath + ConstPath.UserPath + this.state.userName + '/Downloads'
+      this.homePath +
+      ConstPath.UserPath +
+      this.state.userName +
+      '/' +
+      ConstPath.RelativePath.ExternalData
     let newData = []
     await this._setFilterDatas(
       this.path,
