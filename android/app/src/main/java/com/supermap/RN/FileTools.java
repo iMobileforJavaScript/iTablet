@@ -538,7 +538,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Attribute");
         createDirectory(dataPath + "Datasource");
         createDirectory(dataPath + "Scene");
-        createDirectory(dataPath + "Scene/List");
         createDirectory(dataPath + "Symbol");
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");

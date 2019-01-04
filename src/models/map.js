@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SScene } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath } from '../constants'
@@ -294,11 +294,77 @@ export const exportWorkspace = (params, cb = () => {}) => async (
   isExporting = false
   cb && cb(result, zipPath)
 }
-//导入工作空间
-// export const map3DleadWorkspace = (
-//   params = {},
-//   cb = () => {},
-// ) => async getState => {}
+//导出工作空间
+export const exportmap3DWorkspace = (params, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  // return
+  let userName = getState().user.toJS().currentUser.userName || 'Customer'
+  if (params.name) {
+    if (isExporting) {
+      Toast.show('请稍后再试')
+      return false
+    }
+    isExporting = true
+    let path = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.Temp +
+        params.name,
+    )
+    let result = await SScene.export3DScenceName(params.name, path)
+    if (result) {
+      let zipPath = path + '.zip'
+      result = await FileTools.zipFile(path, zipPath)
+      if (result) {
+        await FileTools.deleteFile(path)
+        Toast.show('导出成功,开始分享')
+        isExporting = false
+        cb && cb(result, zipPath)
+      }
+    } else {
+      Toast.show('导出失败')
+    }
+    // let result = await SScene.is3DWorkspace({ server: params.server })
+    // if (result) {
+    //   let result2 = await SScene.import3DWorkspace({ server: params.server })
+    //   if (result2) {
+    //     Toast.show('倒入成功')
+    //   } else {
+    //     Toast.show('倒入失败')
+    //   }
+    // } else {
+    //   Toast.show('倒入失败')
+    // }
+  }
+}
+//到入三维工作空间
+export const improtSceneWorkspace = params => async (dispatch, getState) => {
+  let userName = getState().user.toJS().currentUser.userName || 'Customer'
+  // console.log(userName)
+  // return
+  if (userName !== 'Customer') {
+    let path = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.Scene,
+    )
+    await SScene.setCustomerDirectory(path)
+  }
+  if (params.server) {
+    let result = await SScene.is3DWorkspace({ server: params.server })
+    if (result) {
+      let result2 = await SScene.import3DWorkspace({ server: params.server })
+      if (result2) {
+        Toast.show('倒入成功')
+      } else {
+        Toast.show('倒入失败')
+      }
+    } else {
+      Toast.show('倒入失败')
+    }
+  }
+}
 
 const initialState = fromJS({
   latestMap: {},

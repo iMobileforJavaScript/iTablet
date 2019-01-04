@@ -28,4 +28,5 @@ export default {
   THEME_MENU: 'theme_menu',
   THEME_FLEX: 'theme_flex',
   THEME_COMMIT: 'theme_commit',
+  MAP3DSHARE: 'map3dshare',
 }

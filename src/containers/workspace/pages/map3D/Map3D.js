@@ -28,6 +28,7 @@ export default class Map3D extends React.Component {
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
     setAttributes: () => {},
+    exportmap3DWorkspace: () => {},
     user: Object,
     device: Object,
   }
