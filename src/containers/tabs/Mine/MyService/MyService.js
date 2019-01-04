@@ -15,7 +15,7 @@ import {
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
 import { SOnlineService } from 'imobile_for_reactnative'
-import styles from './Styles'
+import styles, { color } from './Styles'
 import PopupModal from './PopupModal'
 import Toast from '../../../../utils/Toast'
 
@@ -222,7 +222,7 @@ export default class MyService extends Component {
         <Text
           style={[
             styles.titleTextStyle,
-            { backgroundColor: '#353537', textAlign: 'center' },
+            { backgroundColor: color.content, textAlign: 'center' },
           ]}
         >
           没有服务
@@ -431,6 +431,7 @@ export default class MyService extends Component {
             height: 50,
             justifyContent: 'center',
             alignItems: 'center',
+            backgroundColor: color.content,
           }}
         >
           <ActivityIndicator
@@ -465,6 +466,7 @@ export default class MyService extends Component {
               lineHeight: 30,
               fontSize: 12,
               textAlign: 'center',
+              backgroundColor: color.content,
             }}
           >
             -----这是底线-----
@@ -516,6 +518,7 @@ export default class MyService extends Component {
                 colors={['orange', 'red']}
                 tintColor={'white'}
                 title={'刷新中...'}
+                titleColr={'white'}
                 enabled={true}
               />
             }

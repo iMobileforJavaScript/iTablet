@@ -518,7 +518,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         userName = userName == null || userName.equals("") ? "Customer" : userName;
 
         // 初始化用户工作空间
-        String downloadsPath = SDCARD + "/iTablet/User/" + userName + "/Downloads/";
+        String downloadsPath = SDCARD + "/iTablet/User/" + userName + "/ExternalData/";
         String dataPath = SDCARD + "/iTablet/User/" + userName + "/Data/";
         String dataPath2 = SDCARD + "/iTablet/User/" + userName + "/Data/Scene/";
         String originName = "Customer.smwu";
@@ -538,7 +538,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Attribute");
         createDirectory(dataPath + "Datasource");
         createDirectory(dataPath + "Scene");
-        createDirectory(dataPath + "Scene/List");
         createDirectory(dataPath + "Symbol");
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");

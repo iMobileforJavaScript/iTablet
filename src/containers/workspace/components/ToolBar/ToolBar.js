@@ -39,6 +39,7 @@ import {
   Action,
   SCollector,
   SThemeCartography,
+  SOnlineService,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -107,6 +108,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentTemplateInfo: () => {},
     setTemplate: () => {},
     setInputDialogVisible: () => {},
+    exportmap3DWorkspace: () => {},
   }
 
   static defaultProps = {
@@ -1036,21 +1038,23 @@ export default class ToolBar extends React.PureComponent {
       let data = []
       let userName = this.props.user.currentUser.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.List,
+        ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.Scene,
       )
       let result = await FileTools.fileIsExist(path)
       if (result) {
         let fileList = await FileTools.getPathListByFilter(path, {
-          extension: 'json',
+          extension: 'pxp',
         })
         for (let index = 0; index < fileList.length; index++) {
           let element = fileList[index]
-          fileList[index].name = element.name.substr(
-            0,
-            element.name.lastIndexOf('.'),
-          )
+          if (element.name.indexOf('.pxp') > -1) {
+            fileList[index].name = element.name.substr(
+              0,
+              element.name.lastIndexOf('.'),
+            )
+            data.push(element)
+          }
         }
-        data = fileList
       }
       return { data, buttons }
     } catch (error) {
@@ -1148,6 +1152,7 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
+          isFullScreen: false,
         },
         () => {
           this.height =
@@ -2731,6 +2736,60 @@ export default class ToolBar extends React.PureComponent {
                   this.props.setInputDialogVisible(false)
                 },
               })
+            }
+            // this.close()
+          }
+          break
+        case ToolbarBtnType.MAP3DSHARE:
+          image = require('../../../../assets/mapTools/icon_share.png')
+          action = () => {
+            try {
+              let isSharing = false
+              if (!this.props.user.currentUser.userName) {
+                Toast.show('请登陆后再分享')
+                return
+              }
+              if (isSharing) {
+                Toast.show('分享中，请稍后')
+                return
+              }
+              if (this.shareTo === constants.SUPERMAP_ONLINE) {
+                let list =
+                  (this.toolBarSectionList &&
+                    this.toolBarSectionList.getSelectList()) ||
+                  []
+                if (list.length > 0) {
+                  isSharing = true
+                  for (let index = 0; index < list.length; index++) {
+                    this.props.exportmap3DWorkspace(
+                      { name: list[index] },
+                      async (result, zipPath) => {
+                        if (result) {
+                          await SOnlineService.uploadFile(
+                            zipPath,
+                            list[index],
+                            {
+                              onResult: async result => {
+                                Toast.show(
+                                  result
+                                    ? ConstInfo.SHARE_SUCCESS
+                                    : ConstInfo.SHARE_FAILED,
+                                )
+                                FileTools.deleteFile(zipPath)
+                                isSharing = false
+                              },
+                            },
+                          )
+                        } else {
+                          Toast.show('上传失败')
+                        }
+                      },
+                    )
+                  }
+                }
+              }
+            } catch (error) {
+              Toast.show('分享失败')
             }
             // this.close()
           }

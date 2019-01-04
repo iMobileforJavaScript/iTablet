@@ -1,7 +1,7 @@
 /**
  * 获取地图分享数据
  */
-import { SMap, SOnlineService } from 'imobile_for_reactnative'
+import { SMap, SOnlineService, SScene } from 'imobile_for_reactnative'
 import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
@@ -23,7 +23,7 @@ function getShareData(type, params) {
           key: constants.SUPERMAP_ONLINE,
           title: constants.SUPERMAP_ONLINE,
           action: () => {
-            map3DShareToSuperMapOnline()
+            showMap3DList(constants.SUPERMAP_ONLINE)
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_share_online.png'),
@@ -117,6 +117,36 @@ function showMapList(type) {
   })
 }
 
+function showMap3DList(type) {
+  let data = []
+  let arr = []
+  SScene.getMapList().then(list => {
+    for (let index = 0; index < list.length; index++) {
+      const element = list[index]
+      arr.push({ title: element.name })
+    }
+    data = [
+      {
+        title: '场景',
+        data: arr,
+      },
+    ]
+    _params.setToolbarVisible &&
+      _params.setToolbarVisible(true, ConstToolType.MAP3D_SHARE, {
+        containerType: 'list',
+        isFullScreen: true,
+        height: ConstToolType.HEIGHT[3],
+        listSelectable: true,
+        data,
+        shareTo: type,
+        buttons: [
+          ToolbarBtnType.CANCEL,
+          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.MAP3DSHARE,
+        ],
+      })
+  })
+}
 /**
  * 分享到SuperMap Online
  */
@@ -167,47 +197,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
   }
 }
 
-async function map3DShareToSuperMapOnline() {
-  try {
-    if (!_params.user.currentUser.userName) {
-      Toast.show('请登陆后再分享')
-      return
-    }
-    if (isSharing) {
-      Toast.show('分享中，请稍后')
-      return
-    }
-    Toast.show('开始分享')
-    //拷贝
-    //导出
-    // let zipResult = await FileTools.zipFiles([toPath], targetPath)
-    // let uploadResult = false
-    // if (zipResult) {
-    //   isSharing = true
-    //   await SOnlineService.deleteData(dataName).then(async () => {
-    //     uploadResult = await SOnlineService.uploadFile(targetPath, fileName, {
-    //       onResult: async () => {
-    //         Toast.show('分享成功')
-    //         FileTools.deleteFile(targetPath)
-    //       },
-    //     })
-    //   })
-    // }
-    // return uploadResult
-  } catch (e) {
-    isSharing = false
-    return false
-  }
-}
-
-// async function createJson(sceneName, serverUrl, targetPath) {
-//   targetPath = targetPath + '/Json/' + sceneName + '.json'
-//   let content =
-//     '{"sceneName":"' + sceneName + '","serverUrl":"' + serverUrl + '"}'
-//   Fs.writeFile(targetPath, content, 'utf8')
-// }
 export default {
   getShareData,
   shareToSuperMapOnline,
-  map3DShareToSuperMapOnline,
 }

@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   item: {
     flex: 1,
-    backgroundColor: color.subTheme,
+    backgroundColor: color.content,
     height: scaleSize(60),
     borderRadius: 0,
     alignItems: 'center',

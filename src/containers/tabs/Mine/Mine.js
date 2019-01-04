@@ -76,7 +76,7 @@ export default class Mine extends Component {
   _render = () => {
     let fontSize = 16
     return (
-      <View opacity={1} style={{ flex: 1, backgroundColor: color.border }}>
+      <View opacity={1} style={{ flex: 1, backgroundColor: color.content }}>
         {this._renderHeader(fontSize)}
         <ScrollView
           style={{ flex: 1 }}
@@ -86,6 +86,7 @@ export default class Mine extends Component {
           overScrollMode={'always'}
           bounces={true}
         >
+          {this._renderLine()}
           {this._renderItem({
             title: '本地数据',
             leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
@@ -101,8 +102,6 @@ export default class Mine extends Component {
             leftImagePath: require('../../../assets/Mine/个人主页-我的服务.png'),
             onClick: this.goToMyService,
           })}
-
-          {this._renderLine()}
         </ScrollView>
       </View>
     )
@@ -136,8 +135,7 @@ export default class Mine extends Component {
             style={{
               width: imageWidth,
               height: imageWidth,
-              borderRadius: imageWidth / 2,
-              overlayColor: color.border,
+              borderRadius: 8,
             }}
             source={{ uri: headerImage }}
           />
@@ -158,7 +156,7 @@ export default class Mine extends Component {
   _renderLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+        style={{ width: '100%', height: 8, backgroundColor: color.theme }}
       />
     )
   }
@@ -191,9 +189,6 @@ export default class Mine extends Component {
 
     return (
       <View display={this.state.display}>
-        <View
-          style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
-        />
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -228,6 +223,9 @@ export default class Mine extends Component {
             source={rightImagePath}
           />
         </TouchableOpacity>
+        <View
+          style={{ width: itemWidth, height: 1, backgroundColor: color.theme }}
+        />
       </View>
     )
   }
