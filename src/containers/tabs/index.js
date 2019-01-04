@@ -123,7 +123,7 @@ const Tabs = TabNavigator(
       style: {
         backgroundColor: color.theme, // TabBar 背景色
         // height: Platform.OS === 'android' ? 50 : 49,
-        height: scaleSize(80),
+        height: 60,
         borderTopColor: color.border,
         borderTopWidth: 1,
         justifyContent: 'center',

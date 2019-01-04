@@ -94,9 +94,12 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(100),
     alignItems: 'center',
     justifyContent: 'center',
+    alignSelf: 'center',
   },
   flatList: {
-    marginTop: '35%',
+    position: 'absolute',
+    alignSelf: 'center',
+    // marginTop: '35%',
     // backgroundColor: 'white',
     // marginLeft: scaleSize(40),
   },
@@ -148,6 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // alignItems:"center",
     // justifyContent: 'space-around',
-    marginTop: '8%',
+    position: 'absolute',
+    alignSelf: 'center',
   },
 })

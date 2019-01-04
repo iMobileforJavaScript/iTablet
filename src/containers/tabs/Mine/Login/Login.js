@@ -25,6 +25,7 @@ import styles, {
 } from './Styles'
 import ConstPath from '../../../../constants/ConstPath'
 import NavigationService from '../../../NavigationService'
+import color from '../../../../styles/color'
 const nativeFileTools = NativeModules.FileTools
 export default class Login extends React.Component {
   props: {
@@ -133,7 +134,7 @@ export default class Login extends React.Component {
   }
   _renderEmail() {
     return (
-      <View style={{ width: '80%' }}>
+      <View style={{ width: '70%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
           keyboardType={'email-address'}
@@ -160,7 +161,7 @@ export default class Login extends React.Component {
   }
   _renderPhone() {
     return (
-      <View style={{ width: '80%' }}>
+      <View style={{ width: '70%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
           placeholder={'请输入手机号'}
@@ -244,36 +245,51 @@ export default class Login extends React.Component {
           >
             <View style={styles.keyboardAvoidingStyle}>
               <View style={styles.titleStyle}>
-                <Text
-                  style={[
-                    styles.titleContainerStyle,
-                    {
-                      backgroundColor: this.state.titleEmailDefaultBg,
-                      flex: 1,
-                    },
-                  ]}
+                <TouchableOpacity
                   onPress={() => {
                     this._onEmailPress()
                   }}
-                >
-                  邮箱登录
-                </Text>
-                <Text
                   style={[
-                    styles.titleContainerStyle,
-                    { backgroundColor: this.state.titlePhoneBg, flex: 1 },
+                    {
+                      flex: 1,
+                      height: '100%',
+                      alignItems: 'center',
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                      borderColor: color.theme,
+                      justifyContent: 'center',
+                      backgroundColor: this.state.titleEmailDefaultBg,
+                    },
                   ]}
+                >
+                  <Text style={[styles.titleContainerStyle]}>邮箱登录</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => {
                     this._onPhonePress()
                   }}
+                  style={{
+                    flex: 1,
+                    height: '100%',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                    borderTopRightRadius: 4,
+                    borderBottomRightRadius: 4,
+                    justifyContent: 'center',
+                    backgroundColor: this.state.titlePhoneBg,
+                  }}
                 >
-                  手机登录
-                </Text>
+                  <Text style={[styles.titleContainerStyle]}>手机登录</Text>
+                </TouchableOpacity>
               </View>
               {this._onSelectTitle()}
               <View style={styles.viewStyle}>
                 <Text
                   style={{
+                    paddingLeft: 5,
                     width: 100,
                     lineHeight: 40,
                     textAlign: 'left',
@@ -287,6 +303,7 @@ export default class Login extends React.Component {
                 </Text>
                 <Text
                   style={{
+                    paddingRight: 5,
                     width: 100,
                     lineHeight: 40,
                     textAlign: 'right',
@@ -307,7 +324,7 @@ export default class Login extends React.Component {
                   this._login()
                 }}
               >
-                <Text style={[styles.titleContainerStyle]}>登录</Text>
+                <Text style={styles.titleContainerStyle}>登录</Text>
               </TouchableOpacity>
               <View style={{ flex: 1, height: 200 }} />
             </View>

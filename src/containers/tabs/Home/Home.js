@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-import { scaleSize } from '../../../utils'
 // import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
@@ -49,7 +48,6 @@ export default class Home extends Component {
     return (
       <Container
         ref={ref => (this.container = ref)}
-        scrollable={true}
         headerProps={{
           title: 'SuperMap iTablet',
           headerLeft: (
@@ -75,17 +73,26 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerStyle: {
-            height: scaleSize(70) + (Platform.OS === 'ios' ? 20 : 0),
+            height: 60 + (Platform.OS === 'ios' ? 10 : 0),
           },
         }}
         style={styles.container}
       >
         {/*{this.headRender()}*/}
-        <ModuleList
-          currentUser={this.props.currentUser}
-          styles={styles.modulelist}
-          device={this.props.device}
-        />
+        <View
+          style={{
+            flex: 1,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ModuleList
+            currentUser={this.props.currentUser}
+            styles={styles.modulelist}
+            device={this.props.device}
+          />
+        </View>
       </Container>
     )
   }
