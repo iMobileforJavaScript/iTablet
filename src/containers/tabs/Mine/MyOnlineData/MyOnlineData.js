@@ -295,7 +295,8 @@ export default class MyOnlineData extends Component {
       let path =
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Downloads/' +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
         objContent.fileName
       let filePath = await FileTools.appendingHomeDirectory(path)
       let savePath = filePath.substring(0, filePath.length - 4)
@@ -379,7 +380,8 @@ export default class MyOnlineData extends Component {
       let path =
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Downloads/' +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
         objContent.fileName
       let filePath = await FileTools.appendingHomeDirectory(path)
       let isFileExist = await FileTools.fileIsExist(path)
@@ -585,7 +587,7 @@ export default class MyOnlineData extends Component {
           onPress={() => {
             this._onClickItemEvent(item)
           }}
-          style={{ backgroundColor: this.state.itemBgColor }}
+          style={{ backgroundColor: color.content }}
         >
           <View
             style={{
@@ -623,7 +625,7 @@ export default class MyOnlineData extends Component {
             style={{
               height: 2,
               width: itemWidth,
-              backgroundColor: '#2D2D2F',
+              backgroundColor: color.theme,
             }}
           />
         </TouchableOpacity>

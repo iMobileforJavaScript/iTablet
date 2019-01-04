@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.blackBg,
+    backgroundColor: color.content,
   },
   titleTextStyle: {
     width: itemWidth,
