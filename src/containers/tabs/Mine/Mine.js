@@ -102,8 +102,6 @@ export default class Mine extends Component {
             leftImagePath: require('../../../assets/Mine/个人主页-我的服务.png'),
             onClick: this.goToMyService,
           })}
-
-          {/* {this._renderLine()}*/}
         </ScrollView>
       </View>
     )
@@ -191,9 +189,6 @@ export default class Mine extends Component {
 
     return (
       <View display={this.state.display}>
-        {/*<View
-          style={{ width: itemWidth, height: 4, backgroundColor: color.theme }}
-        />*/}
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -228,6 +223,9 @@ export default class Mine extends Component {
             source={rightImagePath}
           />
         </TouchableOpacity>
+        <View
+          style={{ width: itemWidth, height: 1, backgroundColor: color.theme }}
+        />
       </View>
     )
   }
