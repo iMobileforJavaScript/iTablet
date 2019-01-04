@@ -5,6 +5,7 @@ import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
+import { color } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
 export default class MyLocalData extends Component {
   props: {
@@ -209,7 +210,14 @@ export default class MyLocalData extends Component {
           this.setState({ modalIsVisible: true })
         }}
       >
-        <View display={display} style={{ width: '100%', flexDirection: 'row' }}>
+        <View
+          display={display}
+          style={{
+            width: '100%',
+            flexDirection: 'row',
+            backgroundColor: color.content,
+          }}
+        >
           <Text
             numberOfLines={1}
             style={{
@@ -219,7 +227,6 @@ export default class MyLocalData extends Component {
               fontSize: 16,
               flex: 1,
               height: itemHeight,
-              backgroundColor: '#353537',
             }}
           >
             {txtInfo}
@@ -228,7 +235,6 @@ export default class MyLocalData extends Component {
             style={{
               width: 100,
               height: itemHeight,
-              backgroundColor: '#353537',
               lineHeight: itemHeight,
               textAlign: 'right',
               paddingRight: 15,

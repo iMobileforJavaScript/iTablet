@@ -39,6 +39,13 @@ export default class PopupModal extends PureComponent {
       this._onClose()
     }
   }
+  _renderSeparatorLine = () => {
+    return (
+      <View
+        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+      />
+    )
+  }
   _publishButton = isPublish => {
     let title
     if (isPublish) {
@@ -74,13 +81,7 @@ export default class PopupModal extends PureComponent {
         >
           {title}
         </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 4,
-            backgroundColor: color.theme,
-          }}
-        />
+        {this._renderSeparatorLine()}
       </TouchableOpacity>
     )
   }
@@ -114,13 +115,7 @@ export default class PopupModal extends PureComponent {
         >
           {title}
         </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 4,
-            backgroundColor: color.theme,
-          }}
-        />
+        {this._renderSeparatorLine()}
       </TouchableOpacity>
     )
   }
@@ -143,20 +138,14 @@ export default class PopupModal extends PureComponent {
         ]}
       >
         <TouchableOpacity
-          style={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
           activeOpacity={1}
           onPress={() => {
             this._onClose()
           }}
         >
           <View style={{ width: '100%', position: 'absolute', bottom: 0 }}>
-            <View
-              style={{
-                width: screenWidth,
-                height: 4,
-                backgroundColor: color.theme,
-              }}
-            />
+            {this._renderSeparatorLine()}
             {this._publishButton(!this.props.isPublish)}
             {this._deleteButton('删除')}
           </View>
