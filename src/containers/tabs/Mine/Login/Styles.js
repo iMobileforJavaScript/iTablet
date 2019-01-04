@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-let itemWidth = '80%'
+let itemWidth = '70%'
 const itemHeight = 40
 const fontSize = 16
-const titleOnFocusBackgroundColor = color.blackBg
-const titleOnBlurBackgroundColor = color.border
+const titleOnFocusBackgroundColor = color.theme
+const titleOnBlurBackgroundColor = color.content
 let styles = StyleSheet.create({
   container: {
-    backgroundColor: color.border,
+    backgroundColor: color.content,
   },
   keyboardAvoidingStyle: {
     padding: 9,
@@ -18,19 +18,19 @@ let styles = StyleSheet.create({
   },
   titleStyle: {
     marginTop: 20,
+    marginBottom: 20,
     flexDirection: 'row',
     width: itemWidth,
-    height: itemHeight,
-    marginBottom: 20,
+    height: itemHeight - 8,
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor:'#aaaaaa',
+    borderRadius: 6,
+    borderColor: color.theme,
+    borderWidth: 2,
   },
   titleContainerStyle: {
-    fontSize: fontSize,
-    lineHeight: itemHeight,
-    height: itemHeight,
     color: 'white',
+    fontSize: fontSize,
     textAlign: 'center',
   },
   textInputStyle: {
@@ -45,14 +45,14 @@ let styles = StyleSheet.create({
   loginStyle: {
     height: itemHeight,
     width: '50%',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.theme,
     marginTop: 20,
     borderRadius: 4,
     alignItems: 'center',
     justifyContent: 'center',
   },
   viewStyle: {
-    width: '78%',
+    width: '65%',
     height: itemHeight,
     flexDirection: 'row',
     justifyContent: 'space-between',
