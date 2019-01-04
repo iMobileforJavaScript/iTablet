@@ -53,3 +53,4 @@ const styles = StyleSheet.create({
   },
 })
 export default styles
+export { color }
