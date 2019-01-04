@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
+import { scaleSize } from '../../../utils'
 // import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
@@ -43,14 +44,41 @@ export default class Home extends Component {
   }
 
   render() {
+    let userImg = require('../../../assets/home/icon_mine_select.png')
+    let moreImg = require('../../../assets/home/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
         scrollable={true}
-        withoutHeader
+        headerProps={{
+          title: 'SuperMap iTablet',
+          headerLeft: (
+            <TouchableOpacity
+              style={styles.userView}
+              onPress={() => {
+                // this.props.map3DleadWorkspace({
+                //   path:
+                //     '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
+                // })
+              }}
+            >
+              <Image source={userImg} style={styles.userImg} />
+            </TouchableOpacity>
+          ),
+          headerRight: (
+            <TouchableOpacity style={styles.moreImg}>
+              <Image
+                resizeMode={'contain'}
+                source={moreImg}
+                style={styles.moreImg}
+              />
+            </TouchableOpacity>
+          ),
+          headerStyle: { height: scaleSize(70) },
+        }}
         style={styles.container}
       >
-        {this.headRender()}
+        {/*{this.headRender()}*/}
         <ModuleList
           currentUser={this.props.currentUser}
           styles={styles.modulelist}

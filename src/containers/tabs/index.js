@@ -123,9 +123,10 @@ const Tabs = TabNavigator(
       style: {
         backgroundColor: color.theme, // TabBar 背景色
         // height: Platform.OS === 'android' ? 50 : 49,
-        height: scaleSize(96),
+        height: scaleSize(80),
         borderTopColor: color.border,
         borderTopWidth: 1,
+        justifyContent: 'center',
       },
       tabStyle: {
         flexDirection: 'column',
@@ -145,10 +146,12 @@ const styles = StyleSheet.create({
   tabText: {
     color: color.gray2,
     fontSize: scaleSize(20),
+    marginTop: scaleSize(5),
   },
   selectedTabText: {
     color: color.blue2,
     fontSize: scaleSize(20),
+    marginTop: scaleSize(5),
   },
   icon: {
     width: scaleSize(45),

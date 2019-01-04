@@ -188,12 +188,6 @@ export default class Find extends Component {
               backgroundColor: '#1c84c0',
             }}
           />
-          {/*  <ActivityIndicator
-            color={'gray'}
-            size={'small'}
-            animating={true}
-            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-          />*/}
         </View>
       )
     }

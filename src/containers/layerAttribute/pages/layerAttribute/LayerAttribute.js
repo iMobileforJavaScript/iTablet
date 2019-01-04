@@ -9,10 +9,11 @@ import { View, Text, Dimensions } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
+import { ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-import { SScene } from 'imobile_for_reactnative'
+import { SScene, SMap } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
   props: {
@@ -24,6 +25,7 @@ export default class LayerAttribute extends React.Component {
     setAttributes: () => {},
     setCurrentAttribute: () => {},
     getAttributes: () => {},
+    closeMap: () => {},
   }
 
   constructor(props) {
@@ -146,6 +148,42 @@ export default class LayerAttribute extends React.Component {
     this.currentFieldIndex = index
   }
 
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  setSaveViewVisible = visible => {
+    GLOBAL.SaveMapView &&
+      GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
+  }
+
+  back = () => {
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      NavigationService.goBack()
+    } else {
+      this.backAction = async () => {
+        try {
+          this.setLoading(true, '正在关闭地图')
+          await this.props.closeMap()
+          GLOBAL.clearMapData()
+          this.setLoading(false)
+          NavigationService.goBack()
+        } catch (e) {
+          this.setLoading(false)
+        }
+      }
+      SMap.mapIsModified().then(async result => {
+        if (result) {
+          this.setSaveViewVisible(true)
+        } else {
+          await this.backAction()
+          this.backAction = null
+        }
+      })
+    }
+    return true
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -163,6 +201,7 @@ export default class LayerAttribute extends React.Component {
         headerProps={{
           title: '属性表',
           navigation: this.props.navigation,
+          backAction: this.back,
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}

@@ -82,12 +82,18 @@ export default class FunctionToolbar extends React.Component {
 
   start = type => {
     const toolRef = this.props.getToolRef()
+    let height
+    if (ConstToolType.MAP_EDIT_START === type) {
+      height = ConstToolType.HEIGHT[0]
+    } else {
+      height = ConstToolType.HEIGHT[2]
+    }
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
         containerType: 'table',
         column: 4,
-        height: ConstToolType.HEIGHT[2],
+        height: height,
       })
     }
   }
@@ -722,7 +728,7 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE_THEME)
+              this.showMore(ConstToolType.MAP_MORE)
             },
             image: require('../../../../assets/function/icon_function_theme_more.png'),
           },
@@ -921,6 +927,7 @@ export default class FunctionToolbar extends React.Component {
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}
+        activeOpacity={0.5}
       />
     )
   }

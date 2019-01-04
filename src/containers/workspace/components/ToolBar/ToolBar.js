@@ -96,7 +96,7 @@ export default class ToolBar extends React.PureComponent {
     setCollectionInfo: () => {}, // 设置当前采集数据源信息
     setCurrentLayer: () => {}, // 设置当前图层
     importTemplate: () => {}, // 导入模板
-    openTemplate: () => {}, // 打开模板
+    importWorkspace: () => {}, // 打开模板
     setAttributes: () => {},
     getMaps: () => {},
     exportWorkspace: () => {},
@@ -1036,7 +1036,7 @@ export default class ToolBar extends React.PureComponent {
     try {
       let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       let data = []
-      let userName = this.props.user.userName || 'Customer'
+      let userName = this.props.user.currentUser.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath + userName + '/' + ConstPath.RelativeFilePath.Scene,
       )
@@ -1991,6 +1991,70 @@ export default class ToolBar extends React.PureComponent {
         }
         SMap.addDatasetToMap(params)
       }
+    } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
+      this.importTemplate(item)
+    }
+  }
+
+  /** 导入工作空间 **/
+  importTemplate = async item => {
+    try {
+      this.props.setContainerLoading &&
+        this.props.setContainerLoading(true, '正在打开模板')
+      // 打开模板工作空间
+      let moduleName = ''
+      if (this.props.map.currentMap.name) {
+        await this.props.closeMap()
+      }
+      this.props
+        .importWorkspace({ ...item, module: moduleName })
+        .then(async ({ mapsInfo, msg }) => {
+          if (msg) {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show(msg)
+          } else if (mapsInfo && mapsInfo.length > 0) {
+            // 打开地图
+            let templatePath =
+              (await FileTools.appendingHomeDirectory(
+                this.props.user && this.props.user.currentUser.userName
+                  ? ConstPath.UserPath +
+                    this.props.user.currentUser.userName +
+                    '/'
+                  : ConstPath.CustomerPath,
+              )) + ConstPath.RelativeFilePath.Map
+            let mapInfo = await this.props.openMap({
+              path: templatePath + mapsInfo[0] + '.xml',
+              name: mapsInfo[0],
+            })
+            if (mapInfo) {
+              await this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+              this.props.setContainerLoading(false)
+              this.setVisible(false)
+            } else {
+              this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+              Toast.show('该地图已打开')
+              this.props.setContainerLoading(false)
+            }
+            // 重新加载图层
+            this.props.getLayers({
+              type: -1,
+              currentLayerIndex: 0,
+            })
+            this.props.setContainerLoading(false)
+          } else {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show('导入失败')
+          }
+        })
+    } catch (error) {
+      Toast.show('导入失败')
+      this.props.setContainerLoading && this.props.setContainerLoading(false)
     }
   }
 
@@ -2009,8 +2073,8 @@ export default class ToolBar extends React.PureComponent {
     (async function() {
       if (section.title === Const.CREATE_SYMBOL_COLLECTION) {
         // let defaultWorkspacePath = await Utility.appendingHomeDirectory(
-        //   (this.props.user.userName
-        //     ? ConstPath.UserPath + this.props.user.userName
+        //   (this.props.user.currentUser.userName
+        //     ? ConstPath.UserPath + this.props.user.currentUser.userName
         //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
         // )
 
@@ -2089,7 +2153,7 @@ export default class ToolBar extends React.PureComponent {
         await this.props.closeMap()
       }
       this.props
-        .openTemplate({ ...item, module: moduleName })
+        .importWorkspace({ ...item, module: moduleName })
         .then(async ({ mapsInfo, msg }) => {
           if (msg) {
             this.props.setContainerLoading &&
@@ -2099,8 +2163,10 @@ export default class ToolBar extends React.PureComponent {
             // 打开地图
             let templatePath =
               (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.userName
-                  ? ConstPath.UserPath + this.props.user.userName
+                this.props.user && this.props.user.currentUser.userName
+                  ? ConstPath.UserPath +
+                    this.props.user.currentUser.userName +
+                    '/'
                   : ConstPath.CustomerPath,
               )) + ConstPath.RelativeFilePath.Map
             // switch (GLOBAL.Type) {
@@ -2126,9 +2192,9 @@ export default class ToolBar extends React.PureComponent {
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
                 let templatePath =
                   (await FileTools.appendingHomeDirectory(
-                    this.props.user.currentUser.name
+                    this.props.user.currentUser.userName
                       ? ConstPath.UserPath +
-                        this.props.user.currentUser.name +
+                        this.props.user.currentUser.userName +
                         '/'
                       : ConstPath.CustomerPath,
                   )) +
@@ -2202,15 +2268,17 @@ export default class ToolBar extends React.PureComponent {
           this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
           let templatePath =
             (await FileTools.appendingHomeDirectory(
-              this.props.user.currentUser.name
-                ? ConstPath.UserPath + this.props.user.currentUser.name + '/'
+              this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
                 : ConstPath.CustomerPath,
             )) +
             ConstPath.RelativePath.Template +
             mapInfo.Template
           await this.props.getSymbolTemplates({
             path: templatePath,
-            name: item.title,
+            name: item.name,
           })
         } else {
           await this.props.setTemplate()

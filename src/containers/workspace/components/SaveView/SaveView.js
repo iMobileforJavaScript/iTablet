@@ -25,11 +25,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: color.theme,
+    backgroundColor: '#rgba(80, 80, 80, 1)',
   },
   item: {
     flex: 1,
-    backgroundColor: color.subTheme,
+    backgroundColor: color.content,
     height: scaleSize(60),
     borderRadius: 0,
     alignItems: 'center',
@@ -77,11 +77,18 @@ export default class MT_layerManager extends React.Component {
     this.setVisible(false)
   }
 
-  setVisible = visible => {
+  setVisible = (visible, setLoading) => {
     if (this.state.visible === visible) return
+    if (setLoading && typeof setLoading === 'function') {
+      this.setLoading = setLoading
+    }
     this.setState({
       visible,
     })
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.setLoading && this.setLoading(loading, info, extra)
   }
 
   getVisible = () => {
@@ -109,25 +116,28 @@ export default class MT_layerManager extends React.Component {
         >
           <View style={styles.container}>
             <View style={styles.item}>
-              <Text style={styles.title}>是否保存当前地图</Text>
+              <Text style={styles.title}>是否保存当前地图？</Text>
             </View>
             <Button
               style={styles.item}
               titleStyle={styles.title}
               title="保存"
               onPress={this.save}
+              activeOpacity={0.5}
             />
             <Button
               style={[styles.item, { marginTop: scaleSize(1) }]}
               titleStyle={styles.title}
               title="不保存"
               onPress={this.notSave}
+              activeOpacity={0.5}
             />
             <Button
-              style={[styles.item, { marginTop: scaleSize(20) }]}
+              style={[styles.item, { marginTop: scaleSize(10) }]}
               titleStyle={styles.title}
               title="取消"
               onPress={this.cancel}
+              activeOpacity={0.5}
             />
           </View>
         </TouchableOpacity>

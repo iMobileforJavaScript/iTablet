@@ -21,9 +21,9 @@ function getStart(type, params) {
     case ConstToolType.MAP_EDIT_START:
       data = [
         {
-          key: constants.WORKSPACE,
-          title: constants.WORKSPACE,
-          action: openWorkspace,
+          key: constants.THEME_WORKSPACE,
+          title: constants.THEME_WORKSPACE,
+          action: importTemplate,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
@@ -61,6 +61,13 @@ function getStart(type, params) {
         //   size: 'large',
         //   action: add,
         //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
+        // {
+        //   key: '导出',
+        //   title: '导出',
+        //   size: 'large',
+        //   action: outPutMap,
+        //   image: require('../../../../assets/mapTools/icon_share.png'),
         // },
       ]
       break
@@ -144,9 +151,9 @@ function getStart(type, params) {
     case ConstToolType.MAP_THEME_START:
       data = [
         {
-          key: constants.WORKSPACE,
+          key: constants.THEME_WORKSPACE,
           title: constants.THEME_WORKSPACE,
-          action: openWorkspace,
+          action: importTemplate,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
@@ -233,8 +240,8 @@ function openMap() {
     let data = [],
       path =
         (await FileTools.appendingHomeDirectory(
-          _params.user && _params.user.userName
-            ? ConstPath.UserPath + _params.userName
+          _params.user && _params.user.currentUser.userName
+            ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
             : ConstPath.CustomerPath,
         )) + ConstPath.RelativeFilePath.Map
     FileTools.getPathListByFilter(path, {
@@ -274,6 +281,27 @@ function openMap() {
     //   })
     // })
   })()
+}
+
+/**地图制图，专题制图：导入模块（暂用） */
+function importTemplate() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+    async templateList => {
+      let data = [
+        {
+          title: Const.MODULE,
+          data: templateList,
+        },
+      ]
+      _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
+        containerType: 'list',
+        height: ConstToolType.HEIGHT[3],
+        data,
+      })
+    },
+  )
 }
 
 /** 打开模板 **/
@@ -372,7 +400,6 @@ function create() {
     openWorkspace()
   }
   if (GLOBAL.Type === constants.MAP_EDIT) {
-    GLOBAL.isNewMap = false
     SMap.removeAllLayer()
   }
 }
@@ -401,6 +428,11 @@ function changeBaseLayer(type) {
       break
   }
 }
+
+// /** 导出成图片 **/
+// function outPutMap() {
+//
+// }
 
 /**新建专题图 **/
 function createThemeMap() {

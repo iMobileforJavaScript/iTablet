@@ -7,7 +7,6 @@ const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
   props: {
-    openWorkspace: () => {},
     onDeleteService: () => {},
     onDownloadFile: () => {},
     onPublishService: () => {},
@@ -50,11 +49,19 @@ export default class PopupModal extends PureComponent {
   _onClose() {
     this.props.onCloseModal()
   }
-  _onRequestClose() {
+  _onRequestClose = () => {
     if (Platform.OS === 'android') {
       this._onClose()
     }
   }
+  _renderSeparatorLine = () => {
+    return (
+      <View
+        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+      />
+    )
+  }
+
   _publishServiceButton = () => {
     let title = '发布服务'
     let objContent = this.props.data
@@ -89,13 +96,7 @@ export default class PopupModal extends PureComponent {
           >
             {title}
           </Text>
-          <View
-            style={{
-              width: screenWidth,
-              height: 4,
-              backgroundColor: color.theme,
-            }}
-          />
+          {this._renderSeparatorLine()}
         </TouchableOpacity>
       )
     } else {
@@ -137,13 +138,7 @@ export default class PopupModal extends PureComponent {
           >
             {title}
           </Text>
-          <View
-            style={{
-              width: screenWidth,
-              height: 4,
-              backgroundColor: color.theme,
-            }}
-          />
+          {this._renderSeparatorLine()}
         </TouchableOpacity>
       )
     } else {
@@ -165,24 +160,20 @@ export default class PopupModal extends PureComponent {
         <TouchableOpacity
           style={{ backgroundColor: color.content }}
           onPress={() => {
-            if (progress === '下载完成') {
-              this.props.openWorkspace()
-            } else {
-              if (this.props.data.isDownloading === true) {
-                if (progress.indexOf('%') != -1) {
-                  Toast.show('当前数据正在下载')
-                } else {
-                  this.props.onDownloadFile()
-                }
+            if (this.props.data.isDownloading === true) {
+              if (progress.indexOf('%') !== -1) {
+                Toast.show('当前数据正在下载')
               } else {
-                let info
-                if (this.props.downloadingFileName !== undefined) {
-                  info = this.props.downloadingFileName + '数据正在下载'
-                } else {
-                  info = '有数据正在下载'
-                }
-                Toast.show(info)
+                this.props.onDownloadFile()
               }
+            } else {
+              let info
+              if (this.props.downloadingFileName !== undefined) {
+                info = this.props.downloadingFileName + '数据正在下载'
+              } else {
+                info = '有数据正在下载'
+              }
+              Toast.show(info)
             }
           }}
         >
@@ -197,13 +188,7 @@ export default class PopupModal extends PureComponent {
           >
             {progress}
           </Text>
-          <View
-            style={{
-              width: screenWidth,
-              height: 4,
-              backgroundColor: color.theme,
-            }}
-          />
+          {this._renderSeparatorLine()}
         </TouchableOpacity>
       )
     } else {
@@ -230,13 +215,7 @@ export default class PopupModal extends PureComponent {
         >
           {title}
         </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 4,
-            backgroundColor: color.theme,
-          }}
-        />
+        {this._renderSeparatorLine()}
       </TouchableOpacity>
     )
   }
@@ -259,7 +238,7 @@ export default class PopupModal extends PureComponent {
         ]}
       >
         <TouchableOpacity
-          style={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
           activeOpacity={1}
           onPress={() => {
             this._onClose()
@@ -272,6 +251,7 @@ export default class PopupModal extends PureComponent {
               bottom: 0,
             }}
           >
+            {this._renderSeparatorLine()}
             {this._publishServiceButton()}
             {this._downloadButton()}
             {this._dataVisibleButton()}
