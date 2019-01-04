@@ -21,7 +21,7 @@ import {
 } from '../../../../models/map'
 import {
   importTemplate,
-  openTemplate,
+  importWorkspace,
   setCurrentTemplateInfo,
   setTemplate,
   getSymbolTemplates,
@@ -63,7 +63,7 @@ const mapDispatchToProps = {
   setCurrentAttribute,
   getAttributes,
   importTemplate,
-  openTemplate,
+  importWorkspace,
   setCurrentTemplateInfo,
   setTemplate,
   getMaps,

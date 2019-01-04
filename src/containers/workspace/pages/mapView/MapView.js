@@ -20,7 +20,6 @@ import {
   MapController,
   ToolBar,
   MenuAlertDialog,
-  SaveView,
   AlertDialog,
 } from '../../components'
 import constants from '../../constants'
@@ -71,7 +70,7 @@ export default class MapView extends React.Component {
     setCurrentAttribute: PropTypes.func,
     getAttributes: PropTypes.func,
     importTemplate: PropTypes.func,
-    openTemplate: PropTypes.func,
+    importWorkspace: PropTypes.func,
     setCurrentTemplateInfo: PropTypes.func,
     setTemplate: PropTypes.func,
     getMaps: PropTypes.func,
@@ -330,10 +329,10 @@ export default class MapView extends React.Component {
   }
 
   // 导出(保存)工作空间中地图到模块
-  saveMapName = (mapName = '', cb = () => {}) => {
+  saveMapName = (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
     try {
       this.setLoading(true, '正在保存地图')
-      SMap.saveMapName(mapName).then(
+      SMap.saveMapName(mapName, nModule, addition).then(
         result => {
           this.setLoading(false)
           Toast.show(
@@ -661,7 +660,7 @@ export default class MapView extends React.Component {
       try {
         this.setLoading(true, '正在关闭地图')
         await this.props.closeMap()
-        this.clearData()
+        GLOBAL.clearMapData()
         this.setLoading(false)
         NavigationService.goBack()
       } catch (e) {
@@ -820,7 +819,9 @@ export default class MapView extends React.Component {
    * @param visible
    */
   setSaveViewVisible = visible => {
-    this.SaveMapView && this.SaveMapView.setVisible(visible)
+    // this.SaveMapView && this.SaveMapView.setVisible(visible)
+    GLOBAL.SaveMapView &&
+      GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
   }
 
   /**
@@ -993,35 +994,39 @@ export default class MapView extends React.Component {
           childrens={this.closeInfo}
           Alerttitle={'是否保存当前地图'}
         />
-        <SaveView
-          ref={ref => (this.SaveMapView = ref)}
-          save={() => {
-            let mapName = ''
-            if (this.props.map.currentMap.name) {
-              mapName = this.props.map.currentMap.name
-              mapName = mapName.substr(0, mapName.lastIndexOf('.'))
-            } else if (this.props.layers.layers.length > 0) {
-              // mapName = this.props.layers.layers[this.props.layers.layers.length - 1].name +
-              //   this.props.collection.datasourceName ? ('@' + this.props.collection.datasourceName) : ''
-              mapName = this.props.collection.datasourceName
-            }
-            this.saveMapName(mapName, () => {
-              if (this.backAction) {
-                this.backAction()
-                this.backAction = null
-              }
-            })
-          }}
-          notSave={() => {
-            if (this.backAction) {
-              this.backAction()
-              this.backAction = null
-            }
-          }}
-          cancel={() => {
-            this.backAction = null
-          }}
-        />
+        {/*<SaveView*/}
+        {/*ref={ref => (this.SaveMapView = ref)}*/}
+        {/*save={() => {*/}
+        {/*let mapName = ''*/}
+        {/*if (this.props.map.currentMap.name) {*/}
+        {/*mapName = this.props.map.currentMap.name*/}
+        {/*mapName = mapName.substr(0, mapName.lastIndexOf('.'))*/}
+        {/*} else if (this.props.layers.layers.length > 0) {*/}
+        {/*// mapName = this.props.layers.layers[this.props.layers.layers.length - 1].name +*/}
+        {/*//   this.props.collection.datasourceName ? ('@' + this.props.collection.datasourceName) : ''*/}
+        {/*mapName = this.props.collection.datasourceName*/}
+        {/*}*/}
+        {/*let addition = {}*/}
+        {/*if (this.props.map.currentMap.Template) {*/}
+        {/*addition.Template = this.props.map.currentMap.Template*/}
+        {/*}*/}
+        {/*this.saveMapName(mapName, '', addition, () => {*/}
+        {/*if (this.backAction) {*/}
+        {/*this.backAction()*/}
+        {/*this.backAction = null*/}
+        {/*}*/}
+        {/*})*/}
+        {/*}}*/}
+        {/*notSave={() => {*/}
+        {/*if (this.backAction) {*/}
+        {/*this.backAction()*/}
+        {/*this.backAction = null*/}
+        {/*}*/}
+        {/*}}*/}
+        {/*cancel={() => {*/}
+        {/*this.backAction = null*/}
+        {/*}}*/}
+        {/*/>*/}
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}
           confirmAction={data => this.saveAsMap(data.mapName)}

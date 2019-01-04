@@ -30,7 +30,6 @@ export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
     user: Object,
-    openWorkspace: () => {},
   }
 
   constructor(props) {
@@ -141,6 +140,14 @@ export default class MyOnlineData extends Component {
       }
       // 如果有数据正在下载，则重构newData
       if (_iDownloadingIndex >= 0) {
+        if (!this.downloadingFileName) {
+          this.downloadingFileName = this.state.data[
+            _iDownloadingIndex
+          ].fileName.substring(
+            0,
+            this.state.data[_iDownloadingIndex].fileName.length - 4,
+          )
+        }
         let prevData = [...this.state.data]
         // 记录是否存在下载id
         let downloadingIndexId = prevData[_iDownloadingIndex].id
@@ -204,7 +211,7 @@ export default class MyOnlineData extends Component {
         newData.push(objContent)
       }
     } catch (e) {
-      Toast.show('网络错误')
+      Toast.show('登录失效，请重新登录')
     }
     return newData
   }
@@ -288,21 +295,16 @@ export default class MyOnlineData extends Component {
       let path =
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Data/Downloads/' +
+        '/Downloads/' +
         objContent.fileName
       let filePath = await FileTools.appendingHomeDirectory(path)
       let savePath = filePath.substring(0, filePath.length - 4)
-      FileTools.unZipFile(filePath, savePath)
-      this._unZipFilePath = savePath
+      await FileTools.unZipFile(filePath, savePath)
+      FileTools.deleteFile(filePath)
     }
   }
   _changeModalProgressState = progress => {
     if (_iDownloadingIndex >= 0) {
-      if (!this.downloadingFileName) {
-        this.downloadingFileName = this.state.data[
-          _iDownloadingIndex
-        ].fileName.substring(0, this.state.data[this.index].fileName.length - 4)
-      }
       let newData = [...this.state.data]
       newData[_iDownloadingIndex].downloadingProgress = progress
       _arrOnlineData = newData
@@ -370,13 +372,6 @@ export default class MyOnlineData extends Component {
     _arrOnlineData = newData
     this.setState({ data: _arrOnlineData })
   }
-  _openWorkspace = async () => {
-    // let path = this._unZipFilePath
-    // if(path){
-    //   let arrPaths = await FileTools.getPathListByFilter(this._unZipFilePath,{extension:'.smwu'})
-    //   SMap.importWorkspace({ server: path })
-    // }
-  }
   _onDownloadFile = async () => {
     try {
       let objContent = this.state.data[this.index]
@@ -384,7 +379,7 @@ export default class MyOnlineData extends Component {
       let path =
         ConstPath.UserPath +
         this.props.user.currentUser.userName +
-        '/Data/Downloads/' +
+        '/Downloads/' +
         objContent.fileName
       let filePath = await FileTools.appendingHomeDirectory(path)
       let isFileExist = await FileTools.fileIsExist(path)
@@ -522,11 +517,8 @@ export default class MyOnlineData extends Component {
       if (typeof result === 'boolean' && result) {
         newData.splice(this.index, 1)
         if (_iDownloadingIndex >= 0) {
-          // 删除最后一个item时，则取消下载
-          if (
-            _iDownloadingIndex >= newData.length ||
-            _iDownloadingIndex === this.index
-          ) {
+          // 删除当前item，则取消下载
+          if (_iDownloadingIndex === this.index) {
             this._resetDownloadIndex(-1)
             SOnlineService.cancelDownload()
             for (let i = 0; i < newData.length; i++) {
@@ -535,11 +527,10 @@ export default class MyOnlineData extends Component {
               newData[i].downloadingProgress = '下载 (' + fileSize + ')'
             }
           } else {
-            let downloadingId // 记录正在下载的id
-            downloadingId = newData[_iDownloadingIndex].id
+            let downloadingId = this.state.data[_iDownloadingIndex].id // 记录正在下载的id
             for (let i = 0; i < newData.length; i++) {
               if (newData[i].id === downloadingId) {
-                _iDownloadingIndex = i // 将下载的索引重新赋值
+                this._resetDownloadIndex(i) // 将下载的索引重新赋值
                 break
               }
             }
@@ -563,7 +554,6 @@ export default class MyOnlineData extends Component {
         <PopupModal
           ref={ref => (this.modalRef = ref)}
           data={this.state.data[this.index]}
-          openWorkspace={this._openWorkspace}
           onDeleteService={this._onDeleteService}
           onDownloadFile={this._onDownloadFile}
           onPublishService={this._onPublishService}

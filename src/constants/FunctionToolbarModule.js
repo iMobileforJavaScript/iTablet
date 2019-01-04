@@ -5,23 +5,19 @@ import { ConstToolType } from '../constants'
 
 function OpenData(data, index) {
   (async function() {
-    if (GLOBAL.isNewMap) {
-      if (GLOBAL.isArrayData) {
-        await SMap.removeLayer(0)
-      } else {
-        await SMap.removeLayer(0)
-        await SMap.removeLayer(0)
-      }
+    if (GLOBAL.isArrayData) {
+      await SMap.removeLayer(0)
+    } else {
+      await SMap.removeLayer(0)
+      await SMap.removeLayer(0)
     }
     if (data instanceof Array) {
       await SMap.openDatasource(data[1].DSParams, index, false)
       await SMap.openDatasource(data[0].DSParams, index, false)
       GLOBAL.isArrayData = false
-      GLOBAL.isNewMap = true
     } else {
       await SMap.openDatasource(data.DSParams, index, false)
       GLOBAL.isArrayData = true
-      GLOBAL.isNewMap = true
     }
   }.bind(this)())
 }
