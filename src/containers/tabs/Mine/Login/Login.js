@@ -289,6 +289,7 @@ export default class Login extends React.Component {
               <View style={styles.viewStyle}>
                 <Text
                   style={{
+                    paddingLeft: 5,
                     width: 100,
                     lineHeight: 40,
                     textAlign: 'left',
@@ -302,6 +303,7 @@ export default class Login extends React.Component {
                 </Text>
                 <Text
                   style={{
+                    paddingRight: 5,
                     width: 100,
                     lineHeight: 40,
                     textAlign: 'right',

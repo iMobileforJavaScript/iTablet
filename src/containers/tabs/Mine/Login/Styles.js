@@ -52,7 +52,7 @@ let styles = StyleSheet.create({
     justifyContent: 'center',
   },
   viewStyle: {
-    width: '65%',
+    width: '70%',
     height: itemHeight,
     flexDirection: 'row',
     justifyContent: 'space-between',
