@@ -38,7 +38,7 @@ public class NativeMethod extends ReactContextBaseJavaModule {
             }
 
             WritableArray templateList = Arguments.createArray();
-            String templatePath = SDCARD + "iTablet/User/" + userName + "/Downloads";
+            String templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData";
             File file = new File(templatePath);
 
             if (file.exists() && file.isDirectory()) {
