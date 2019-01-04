@@ -54,6 +54,14 @@ export default class PopupModal extends PureComponent {
       this._onClose()
     }
   }
+  _renderSeparatorLine = () => {
+    return (
+      <View
+        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+      />
+    )
+  }
+
   _publishServiceButton = () => {
     let title = '发布服务'
     let objContent = this.props.data
@@ -88,13 +96,7 @@ export default class PopupModal extends PureComponent {
           >
             {title}
           </Text>
-          <View
-            style={{
-              width: screenWidth,
-              height: 4,
-              backgroundColor: color.theme,
-            }}
-          />
+          {this._renderSeparatorLine()}
         </TouchableOpacity>
       )
     } else {
@@ -136,13 +138,7 @@ export default class PopupModal extends PureComponent {
           >
             {title}
           </Text>
-          <View
-            style={{
-              width: screenWidth,
-              height: 4,
-              backgroundColor: color.theme,
-            }}
-          />
+          {this._renderSeparatorLine()}
         </TouchableOpacity>
       )
     } else {
@@ -192,13 +188,7 @@ export default class PopupModal extends PureComponent {
           >
             {progress}
           </Text>
-          <View
-            style={{
-              width: screenWidth,
-              height: 4,
-              backgroundColor: color.theme,
-            }}
-          />
+          {this._renderSeparatorLine()}
         </TouchableOpacity>
       )
     } else {
@@ -225,13 +215,7 @@ export default class PopupModal extends PureComponent {
         >
           {title}
         </Text>
-        <View
-          style={{
-            width: screenWidth,
-            height: 4,
-            backgroundColor: color.theme,
-          }}
-        />
+        {this._renderSeparatorLine()}
       </TouchableOpacity>
     )
   }
@@ -254,7 +238,7 @@ export default class PopupModal extends PureComponent {
         ]}
       >
         <TouchableOpacity
-          style={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
           activeOpacity={1}
           onPress={() => {
             this._onClose()
@@ -267,6 +251,7 @@ export default class PopupModal extends PureComponent {
               bottom: 0,
             }}
           >
+            {this._renderSeparatorLine()}
             {this._publishServiceButton()}
             {this._downloadButton()}
             {this._dataVisibleButton()}

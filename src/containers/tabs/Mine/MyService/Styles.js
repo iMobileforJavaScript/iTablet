@@ -10,11 +10,11 @@ const largeFontSize = 18
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.blackBg,
+    backgroundColor: color.theme,
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.blackBg,
+    backgroundColor: color.content,
   },
   titleTextStyle: {
     width: itemWidth,
@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 15,
     alignItems: 'center',
+    backgroundColor: color.content,
   },
   imageStyle: {
     width: imageWidth,

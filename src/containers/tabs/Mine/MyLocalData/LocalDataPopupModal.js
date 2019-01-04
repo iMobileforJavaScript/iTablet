@@ -24,6 +24,13 @@ export default class LocalDataPopupModal extends PureComponent {
   _onCloseModal = () => {
     this.props.onCloseModal()
   }
+
+  _renderSeparatorLine = () => {
+    return (
+      <View style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }} />
+    )
+  }
+
   _onImportWorkspace = () => {
     return (
       <TouchableOpacity
@@ -42,9 +49,7 @@ export default class LocalDataPopupModal extends PureComponent {
         >
           导入数据
         </Text>
-        <View
-          style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }}
-        />
+        {this._renderSeparatorLine()}
       </TouchableOpacity>
     )
   }
@@ -66,9 +71,7 @@ export default class LocalDataPopupModal extends PureComponent {
         >
           删除
         </Text>
-        <View
-          style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }}
-        />
+        {this._renderSeparatorLine()}
       </TouchableOpacity>
     )
   }
@@ -93,7 +96,7 @@ export default class LocalDataPopupModal extends PureComponent {
           onPress={() => {
             this._onCloseModal()
           }}
-          style={{ flex: 1 }}
+          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
         >
           <View
             style={{
@@ -104,6 +107,7 @@ export default class LocalDataPopupModal extends PureComponent {
               right: 0,
             }}
           >
+            {this._renderSeparatorLine()}
             {this._onImportWorkspace()}
             {this._onDeleteButton()}
           </View>

@@ -587,7 +587,7 @@ export default class MyOnlineData extends Component {
           onPress={() => {
             this._onClickItemEvent(item)
           }}
-          style={{ backgroundColor: this.state.itemBgColor }}
+          style={{ backgroundColor: color.content }}
         >
           <View
             style={{
@@ -625,7 +625,7 @@ export default class MyOnlineData extends Component {
             style={{
               height: 2,
               width: itemWidth,
-              backgroundColor: '#2D2D2F',
+              backgroundColor: color.theme,
             }}
           />
         </TouchableOpacity>
