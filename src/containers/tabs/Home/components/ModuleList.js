@@ -33,7 +33,9 @@ export default class ModuleList extends Component {
           onPress={() => this.itemAction(item)}
           style={styles.module}
         >
-          <Image source={item.baseImage} style={styles.baseImage} />
+          <View style={styles.baseImage}>
+            <Image source={item.baseImage} style={item.style} />
+          </View>
           <View style={styles.moduleItem}>
             <Image
               resizeMode={'contain'}
@@ -94,18 +96,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   flatList: {
-    marginTop: '40%',
+    marginTop: '35%',
+    // backgroundColor: 'white',
     // marginLeft: scaleSize(40),
   },
   baseImage: {
     position: 'absolute',
-    width: scaleSize(280),
-    height: scaleSize(210),
-    resizeMode: 'center',
+    width: scaleSize(260),
+    height: scaleSize(195),
+    // resizeMode: 'stretch',
+    backgroundColor: '#696969',
+    borderRadius: 5,
   },
   module: {
     width: scaleSize(280),
-    height: scaleSize(160),
+    height: scaleSize(215),
+    flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   moduleImage: {
@@ -114,7 +121,10 @@ const styles = StyleSheet.create({
   },
   moduleView: {
     width: scaleSize(280),
-    height: scaleSize(160),
+    height: scaleSize(215),
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
     // paddingHorizontal: scaleSize(10),
     // marginTop: scaleSize(5),
   },
@@ -138,6 +148,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // alignItems:"center",
     // justifyContent: 'space-around',
-    marginTop: '10%',
+    marginTop: '8%',
   },
 })
