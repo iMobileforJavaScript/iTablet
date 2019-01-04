@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
@@ -81,7 +81,9 @@ export default class Home extends Component {
               />
             </TouchableOpacity>
           ),
-          headerStyle: { height: scaleSize(70) },
+          headerStyle: {
+            height: scaleSize(70) + (Platform.OS === 'ios' ? 20 : 0),
+          },
         }}
         style={styles.container}
       >

@@ -89,20 +89,23 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: scaleSize(40),
+    // marginTop: scaleSize(100),
     alignItems: 'center',
+    justifyContent: 'center',
   },
   flatList: {
-    marginTop: scaleSize(150),
+    marginTop: '40%',
+    // marginLeft: scaleSize(40),
   },
   baseImage: {
     position: 'absolute',
-    width: scaleSize(260),
-    height: scaleSize(145),
+    width: scaleSize(280),
+    height: scaleSize(210),
+    resizeMode: 'center',
   },
   module: {
-    width: scaleSize(270),
-    height: scaleSize(145),
+    width: scaleSize(280),
+    height: scaleSize(160),
     justifyContent: 'center',
   },
   moduleImage: {
@@ -110,10 +113,10 @@ const styles = StyleSheet.create({
     height: scaleSize(80),
   },
   moduleView: {
-    width: scaleSize(270),
-    height: scaleSize(155),
-    paddingHorizontal: scaleSize(5),
-    marginTop: scaleSize(25),
+    width: scaleSize(280),
+    height: scaleSize(160),
+    // paddingHorizontal: scaleSize(10),
+    // marginTop: scaleSize(5),
   },
   moduleItem: {
     alignItems: 'center',
@@ -135,6 +138,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // alignItems:"center",
     // justifyContent: 'space-around',
-    // marginTop: scaleSize(80),
+    marginTop: '10%',
   },
 })
