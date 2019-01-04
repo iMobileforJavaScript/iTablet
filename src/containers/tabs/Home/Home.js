@@ -81,11 +81,13 @@ export default class Home extends Component {
         style={styles.container}
       >
         {/*{this.headRender()}*/}
+        {/*<View styles={{height:'100%',backgroundColor:'red'}}>*/}
         <ModuleList
           currentUser={this.props.currentUser}
           styles={styles.modulelist}
           device={this.props.device}
         />
+        {/*</View>*/}
       </Container>
     )
   }

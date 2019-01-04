@@ -41,13 +41,13 @@ function getStart(type, params) {
           action: create,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
-        {
-          key: constants.HISTORY,
-          title: constants.HISTORY,
-          size: 'large',
-          action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
-        },
+        // {
+        //   key: constants.HISTORY,
+        //   title: constants.HISTORY,
+        //   size: 'large',
+        //   action: showHistory,
+        //   image: require('../../../../assets/mapTools/icon_history_white.png'),
+        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
