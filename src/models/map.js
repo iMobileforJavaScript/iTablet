@@ -149,6 +149,46 @@ export const openMap = (params, cb = () => {}) => async (
   }
 }
 
+// 保存地图地图
+export const saveMap = (params = {}, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  try {
+    if (!params.mapName) return
+    let result = await SMap.saveMapName(
+      params.mapName,
+      params.nModule || '',
+      params.addition,
+      params.isNew,
+    )
+    let userName = getState().user.toJS().currentUser.userName || 'Customer'
+    let path = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.Map +
+        params.mapName +
+        '.xml',
+    )
+    if (!params.isNew) {
+      await dispatch({
+        type: SET_CURRENT_MAP,
+        payload: { path, name: params.mapName },
+        extData: {
+          userName,
+          moduleName: GLOBAL.Type,
+        },
+      })
+    }
+    cb && cb()
+    return result
+  } catch (e) {
+    cb && cb()
+    return null
+  }
+}
+
 // 关闭地图
 export const closeMap = (cb = () => {}) => async dispatch => {
   try {
@@ -338,6 +378,7 @@ export default handleActions(
         if (!isExist && payload && payload.path) {
           newData[extData.userName][extData.moduleName].unshift(payload)
         }
+
         return state
           .setIn(['currentMap'], fromJS(payload))
           .setIn(['latestMap'], fromJS(newData))

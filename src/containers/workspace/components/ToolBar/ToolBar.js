@@ -2084,6 +2084,22 @@ export default class ToolBar extends React.PureComponent {
         await this.props.closeMap()
         this.props.setCurrentTemplateInfo() // 清空当前模板
         this.props.setTemplate() // 清空模板
+
+        // 重新打开工作空间，防止Resource被删除或破坏
+        const customerPath =
+          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath
+        if (this.props.user.currentUser.userName) {
+          const userWSPath =
+            ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Workspace
+          wsPath = await FileTools.appendingHomeDirectory(userWSPath)
+        } else {
+          wsPath = await FileTools.appendingHomeDirectory(customerPath)
+        }
+        await this.props.openWorkspace({ server: wsPath })
         await SMap.openDatasource(
           ConstOnline['Google'].DSParams,
           ConstOnline['Google'].layerIndex,

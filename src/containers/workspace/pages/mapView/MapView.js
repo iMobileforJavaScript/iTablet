@@ -56,6 +56,7 @@ export default class MapView extends React.Component {
     layers: PropTypes.object,
     map: PropTypes.object,
     collection: PropTypes.object,
+    device: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -80,7 +81,7 @@ export default class MapView extends React.Component {
     getSymbolTemplates: PropTypes.func,
     openMap: PropTypes.func,
     closeMap: PropTypes.func,
-    device: PropTypes.object,
+    saveMap: PropTypes.func,
   }
 
   constructor(props) {
@@ -338,7 +339,7 @@ export default class MapView extends React.Component {
   ) => {
     try {
       this.setLoading(true, '正在保存地图')
-      SMap.saveMapName(mapName, nModule, addition, isNew).then(
+      this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
           Toast.show(
@@ -350,6 +351,18 @@ export default class MapView extends React.Component {
           this.setLoading(false)
         },
       )
+      // SMap.saveMapName(mapName, nModule, addition, isNew).then(
+      //   result => {
+      //     this.setLoading(false)
+      //     Toast.show(
+      //       result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      //     )
+      //     cb && cb()
+      //   },
+      //   () => {
+      //     this.setLoading(false)
+      //   },
+      // )
     } catch (e) {
       this.setLoading(false)
     }
