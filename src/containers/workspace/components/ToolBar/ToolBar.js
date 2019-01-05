@@ -1576,10 +1576,6 @@ export default class ToolBar extends React.PureComponent {
     // this.props.existFullMap && this.props.existFullMap()
   }
 
-  commitTheme = () => {
-    ThemeMenuData.saveMapTheme()
-  }
-
   showThemeBox = (autoFullScreen = false) => {
     if (autoFullScreen) {
       this.setState(
@@ -1849,6 +1845,66 @@ export default class ToolBar extends React.PureComponent {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
               LabelExpression: item.title,
+              LabelBackShape: 'NONE',
+              FontName: '宋体',
+              // FontSize: '15.0',
+              ForeColor: '#000000',
+            }
+            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
+              params,
+            )
+            break
+        }
+        if (isSuccess) {
+          Toast.show('创建专题图成功')
+          //设置当前图层
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        } else {
+          Toast.show('创建专题图失败')
+        }
+        this.setVisible(false)
+      }.bind(this)())
+    } else if (
+      this.state.type ===
+      ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
+    ) {
+      //点击字段名创建专题图
+      (async function() {
+        let params = {}
+        let isSuccess = false
+        switch (this.state.themeCreateType) {
+          case constants.THEME_UNIQUE_STYLE:
+            //单值风格
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              UniqueExpression: item.expression,
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
+            }
+            isSuccess = await SThemeCartography.createThemeUniqueMap(params)
+            break
+          case constants.THEME_RANGE_STYLE:
+            //分段风格
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '6.0',
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createThemeRangeMap(params)
+            break
+          case constants.THEME_UNIFY_LABEL:
+            //统一标签
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              LabelExpression: item.expression,
               LabelBackShape: 'NONE',
               FontName: '宋体',
               // FontSize: '15.0',
@@ -2216,8 +2272,8 @@ export default class ToolBar extends React.PureComponent {
                   (await FileTools.appendingHomeDirectory(
                     this.props.user.currentUser.userName
                       ? ConstPath.UserPath +
-                        this.props.user.currentUser.userName +
-                        '/'
+                          this.props.user.currentUser.userName +
+                          '/'
                       : ConstPath.CustomerPath,
                   )) +
                   ConstPath.RelativePath.Template +
@@ -2292,8 +2348,8 @@ export default class ToolBar extends React.PureComponent {
             (await FileTools.appendingHomeDirectory(
               this.props.user.currentUser.userName
                 ? ConstPath.UserPath +
-                  this.props.user.currentUser.userName +
-                  '/'
+                    this.props.user.currentUser.userName +
+                    '/'
                 : ConstPath.CustomerPath,
             )) +
             ConstPath.RelativePath.Template +
@@ -2829,7 +2885,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.commitTheme
+          action = this.close
           break
       }
 
@@ -2853,7 +2909,9 @@ export default class ToolBar extends React.PureComponent {
   overlayOnPress = () => {
     if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS ||
-      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION ||
+      this.state.type ===
+        ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
     ) {
       this.setVisible(false)
     } else if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
@@ -2884,16 +2942,14 @@ export default class ToolBar extends React.PureComponent {
       : styles.wrapContainer
     return (
       <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

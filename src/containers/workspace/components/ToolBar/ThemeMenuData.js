@@ -3,11 +3,6 @@ import { SThemeCartography } from 'imobile_for_reactnative'
 // import { Toast } from '../../../../utils'
 import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType } from '../../../../constants'
-import { Toast } from '../../../../utils'
-
-// function showTips() {
-//   Toast.show('功能暂未开放')
-// }
 
 let _toolbarParams = {}
 
@@ -55,7 +50,7 @@ function showExpressionList() {
     getdata => {
       let dataset = getdata.dataset
       let allExpressions = getdata.list
-      let datalist = [
+      let data = [
         {
           title: dataset.datasetName,
           datasetType: dataset.datasetType,
@@ -65,7 +60,7 @@ function showExpressionList() {
       _toolbarParams.setToolbarVisible &&
         _toolbarParams.setToolbarVisible(
           true,
-          ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
+          ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME,
           {
             containerType: 'list',
             isFullScreen: true,
@@ -76,7 +71,7 @@ function showExpressionList() {
                 ? ConstToolType.THEME_HEIGHT[3]
                 : ConstToolType.THEME_HEIGHT[6],
             // listSelectable: true, //单选框
-            datalist,
+            data,
             buttons: [ToolbarBtnType.THEME_CANCEL],
           },
         )
@@ -1781,16 +1776,6 @@ function getUniqueColorScheme() {
   return list
 }
 
-/**专题制图:提交 */
-function saveMapTheme() {
-  let save = SThemeCartography.saveMap()
-  if (save) {
-    Toast.show('保存成功')
-  } else {
-    Toast.show('保存失败')
-  }
-}
-
 export default {
   getRangeMode,
   getColorGradientType,
@@ -1805,7 +1790,6 @@ export default {
   getThemeMapParam,
   getRangeColorScheme,
   getUniqueColorScheme,
-  saveMapTheme,
   getThemeMapCreateByLayer,
   setLayerNameCreateTheme,
 }
