@@ -8,7 +8,7 @@ import { scaleSize } from '../../../utils'
 export default class Home extends Component {
   props: {
     nav: Object,
-    latestMap: Array,
+    latestMap: Object,
     currentUser: Object,
     setShow: () => {},
     device: Object,
@@ -49,7 +49,6 @@ export default class Home extends Component {
     return (
       <Container
         ref={ref => (this.container = ref)}
-        scrollable={true}
         headerProps={{
           title: 'SuperMap iTablet',
           headerLeft: (
@@ -75,17 +74,26 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerStyle: {
-            height: scaleSize(70) + (Platform.OS === 'ios' ? 20 : 0),
+            height: scaleSize(80) + (Platform.OS === 'ios' ? 20 : 0),
           },
         }}
         style={styles.container}
       >
         {/*{this.headRender()}*/}
-        <ModuleList
-          currentUser={this.props.currentUser}
-          styles={styles.modulelist}
-          device={this.props.device}
-        />
+        <View
+          style={{
+            flex: 1,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ModuleList
+            currentUser={this.props.currentUser}
+            styles={styles.modulelist}
+            device={this.props.device}
+          />
+        </View>
       </Container>
     )
   }

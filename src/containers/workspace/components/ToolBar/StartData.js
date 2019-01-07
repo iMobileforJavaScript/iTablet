@@ -8,10 +8,13 @@ import {
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
-// import { Utility } from 'imobile_for_reactnative'
 import Orientation from 'react-native-orientation'
 let _params = {}
 import { SMap } from 'imobile_for_reactnative'
+
+function setParams(params) {
+  _params = params
+}
 
 function getStart(type, params) {
   _params = params
@@ -41,13 +44,13 @@ function getStart(type, params) {
           action: create,
           image: require('../../../../assets/mapTools/icon_create.png'),
         },
-        {
-          key: constants.HISTORY,
-          title: constants.HISTORY,
-          size: 'large',
-          action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
-        },
+        // {
+        //   key: constants.HISTORY,
+        //   title: constants.HISTORY,
+        //   size: 'large',
+        //   action: showHistory,
+        //   image: require('../../../../assets/mapTools/icon_history_white.png'),
+        // },
         {
           key: constants.BASE_MAP,
           title: constants.BASE_MAP,
@@ -139,13 +142,13 @@ function getStart(type, params) {
           action: changeBaseLayer,
           image: require('../../../../assets/mapTools/icon_base.png'),
         },
-        {
-          key: constants.ADD,
-          title: constants.ADD,
-          size: 'large',
-          action: add,
-          image: require('../../../../assets/mapTools/icon_add_white.png'),
-        },
+        // {
+        //   key: constants.ADD,
+        //   title: constants.ADD,
+        //   size: 'large',
+        //   action: add,
+        //   image: require('../../../../assets/mapTools/icon_add_white.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_THEME_START:
@@ -406,7 +409,26 @@ function create() {
 
 /** 历史 **/
 function showHistory() {
-  // return SMap.setAction(Action.PATCH_HOLLOW_REGION)
+  let userName = _params.user.currentUser.userName || 'Customer'
+  let latestMap = []
+  if (
+    _params.map.latestMap &&
+    _params.map.latestMap[userName] &&
+    _params.map.latestMap[userName][GLOBAL.Type]
+  ) {
+    latestMap = _params.map.latestMap[userName][GLOBAL.Type]
+  }
+  let data = [
+    {
+      title: Const.HISTORY,
+      data: latestMap,
+    },
+  ]
+  _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+    containerType: 'list',
+    height: ConstToolType.HEIGHT[3],
+    data,
+  })
 }
 
 /** 切换底图 **/
@@ -456,29 +478,30 @@ function createThemeMap() {
 }
 
 /** 添加 **/
-function add(type) {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
-
-  switch (type) {
-    case 'MAP_3D':
-      _params.setToolbarVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
-        containerType: 'list',
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[3],
-      })
-      break
-
-    default:
-      _params.setToolbarVisible(true, ConstToolType.MAP_ADD_LAYER, {
-        containerType: 'list',
-        isFullScreen: false,
-        height: ConstToolType.THEME_HEIGHT[3],
-      })
-      break
-  }
-}
+// function add(type) {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
+//
+//   switch (type) {
+//     case 'MAP_3D':
+//       _params.setToolbarVisible(true, ConstToolType.MAP3D_ADD_LAYER, {
+//         containerType: 'list',
+//         isFullScreen: true,
+//         height: ConstToolType.HEIGHT[3],
+//       })
+//       break
+//
+//     default:
+//       _params.setToolbarVisible(true, ConstToolType.MAP_ADD_LAYER, {
+//         containerType: 'list',
+//         isFullScreen: false,
+//         height: ConstToolType.THEME_HEIGHT[3],
+//       })
+//       break
+//   }
+// }
 
 export default {
   getStart,
+  setParams,
 }

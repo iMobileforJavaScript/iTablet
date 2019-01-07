@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-const itemWidth = '80%'
+const itemWidth = '70%'
 const itemHeight = 40
 const fontSize = 16
 const titleOnFocusBackgroundColor = color.blackBg
@@ -17,14 +17,17 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     width: itemWidth,
-    height: itemHeight,
+    height: itemHeight - 8,
     marginTop: 20,
     marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 6,
+    borderColor: color.theme,
+    borderWidth: 2,
   },
   titleContainerStyle: {
-    flex: 1,
     fontSize: fontSize,
-    lineHeight: itemHeight,
     color: 'white',
     textAlign: 'center',
   },
@@ -40,10 +43,11 @@ const styles = StyleSheet.create({
   registerStyle: {
     height: itemHeight,
     width: '50%',
-    backgroundColor: color.blackBg,
+    backgroundColor: color.theme,
     marginTop: 40,
     borderRadius: 4,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   verifyCodeViewStyle: {
     width: '100%',

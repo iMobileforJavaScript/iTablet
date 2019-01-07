@@ -365,10 +365,17 @@ export default class MT_layerManager extends React.Component {
   }
 
   onToolPress = async ({ data }) => {
-    this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-      height: ConstToolType.THEME_HEIGHT[5],
-      layername: data.name,
-    })
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
+        height: ConstToolType.THEME_HEIGHT[5],
+        layerdata: data,
+      })
+    } else {
+      this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        height: ConstToolType.THEME_HEIGHT[5],
+        layerdata: data,
+      })
+    }
   }
 
   getChildList = async ({ data }) => {
@@ -518,6 +525,8 @@ export default class MT_layerManager extends React.Component {
     let title
     if (GLOBAL.Type === constants.MAP_EDIT) {
       title = '地图制图'
+    } else if (GLOBAL.Type === constants.MAP_THEME) {
+      title = '专题制图'
     } else {
       title = '地图管理'
     }

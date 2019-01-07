@@ -14,6 +14,7 @@ import {
   openWorkspace,
   closeMap,
   setCurrentMap,
+  saveMap,
 } from './src/models/map'
 import {
   setCurrentTemplateInfo,
@@ -73,6 +74,7 @@ class AppRoot extends Component {
     setCurrentTemplateInfo:PropTypes.func,
     setTemplate:PropTypes.func,
     setMapSetting:PropTypes.func,
+    saveMap:PropTypes.func,
   }
 
   constructor(props) {
@@ -231,21 +233,18 @@ class AppRoot extends Component {
   }
 
   // 导出(保存)工作空间中地图到模块
-  saveMapName = (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
+  saveMapName = async (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
     try {
       this.setSaveMapViewLoading(true, '正在保存地图')
-      SMap.saveMapName(mapName, nModule, addition).then(
-        result => {
-          this.setSaveMapViewLoading(false)
-          Toast.show(
-            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-          )
-          cb && cb()
-        },
-        () => {
-          this.setSaveMapViewLoading(false)
-        },
-      )
+      this.props.saveMap({mapName, nModule, addition}).then(result => {
+        this.setSaveMapViewLoading(false)
+        Toast.show(
+          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+        )
+        cb && cb()
+      }, () => {
+        this.setSaveMapViewLoading(false)
+      })
     } catch (e) {
       this.setSaveMapViewLoading(false)
     }
@@ -323,6 +322,7 @@ const AppRootWithRedux = connect(mapStateToProps, {
   setCurrentTemplateInfo,
   setTemplate,
   setMapSetting,
+  saveMap,
 })(AppRoot)
 
 const App = () =>
