@@ -14,6 +14,7 @@ import ThemeMenuData from './ThemeMenuData'
 function setParams(params) {
   // _params = params
   CollectionData.setParams(params)
+  StartData.setParams(params)
 }
 
 function getTabBarData(type, params = {}) {
@@ -49,6 +50,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = ThemeMenuData.getThemeMapCreate(type, params)
   } else if (type === ConstToolType.MAP_THEME_PARAM) {
     tabBarData = ThemeMenuData.getThemeMapParam(type, params)
+  } else if (type === ConstToolType.MAP_THEME_CREATE_BY_LAYER) {
+    tabBarData = ThemeMenuData.getThemeMapCreateByLayer(type, params)
   }
   return {
     data: tabBarData.data,

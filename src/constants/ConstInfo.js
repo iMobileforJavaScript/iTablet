@@ -5,6 +5,7 @@ export default {
   CLOSE_MAP_SUCCESS: '地图保存成功',
   CLOSE_MAP_FAILED: '地图已存在',
 
+  EXPORTING_MAP: '正在导出地图，请稍后',
   EXPORT_WORKSPACE_SUCCESS: '地图导出成功',
   EXPORT_WORKSPACE_FAILED: '地图导出失败',
 

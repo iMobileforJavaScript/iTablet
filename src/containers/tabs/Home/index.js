@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 import Home from './Home'
 import { setShow } from '../../../models/device'
-import { improtSceneWorkspace } from '../../../models/map'
+import { importSceneWorkspace } from '../../../models/map'
 
 const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
@@ -9,7 +9,7 @@ const mapStateToProps = state => ({
   device: state.device.toJS().device,
 })
 const mapDispatchToProps = {
-  improtSceneWorkspace,
+  importSceneWorkspace,
   setShow,
 }
 

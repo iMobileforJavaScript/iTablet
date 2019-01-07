@@ -22,7 +22,7 @@ import styles from './styles'
 export default class Map3D extends React.Component {
   props: {
     editLayer: Object,
-    latestMap: Array,
+    latestMap: Object,
     navigation: Object,
     setEditLayer: () => {},
     setLatestMap: () => {},

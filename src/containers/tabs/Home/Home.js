@@ -1,18 +1,22 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
+import { scaleSize } from '../../../utils'
+// import {FileTools } from '../../../native'
+// import { Toast } from '../../../utils'
+// import {ConstPath } from '../../../constants'
 // import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
     nav: Object,
-    latestMap: Array,
+    latestMap: Object,
     currentUser: Object,
     setShow: () => {},
     device: Object,
     // map3DleadWorkspace: () => {},
-    improtSceneWorkspace: () => {},
+    importSceneWorkspace: () => {},
   }
 
   constructor(props) {
@@ -26,46 +30,7 @@ export default class Home extends Component {
     return (
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity
-          style={styles.userView}
-          onPress={async () => {
-            // try {
-            //   Toast.show('准备导入')
-            // let userName = this.props.currentUser
-            //   ? this.props.currentUser
-            //   : ' Customer'
-            // let userName = 'Customer'
-            // let path=await FileTools.appendingHomeDirectory(
-            //   ConstPath.UserPath +
-            //     userName +
-            //     '/' +
-            //     ConstPath.RelativePath.DownLoad+"OlympicGreen_ios.zip"
-            // )
-            // let targePath=await FileTools.appendingHomeDirectory(
-            //   ConstPath.UserPath +
-            //     userName +
-            //     '/' +
-            //     ConstPath.RelativePath.DownLoad
-            // )
-            //  Toast.show("开始解压")
-            // FileTools.unZipFile(path,targePath)
-            //   let filepath = await FileTools.appendingHomeDirectory(
-            //     ConstPath.UserPath +
-            //       userName +
-            //       '/' +
-            //       ConstPath.RelativePath.Temp +
-            //       'OlympicGreen_ios/OlympicGreen_ios.sxwu',
-            //   )
-            //   Toast.show('开始导入')
-            //   this.props.improtSceneWorkspace({
-            //     server: filepath,
-            //   })
-            // } catch (error) {
-            // console.warn(error)
-            //  Toast.show(error)
-            // }
-          }}
-        >
+        <TouchableOpacity style={styles.userView}>
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
@@ -82,19 +47,70 @@ export default class Home extends Component {
   }
 
   render() {
+    let userImg = require('../../../assets/home/icon_mine_select.png')
+    let moreImg = require('../../../assets/home/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
-        scrollable={true}
-        withoutHeader
+        headerProps={{
+          title: 'SuperMap iTablet',
+          headerLeft: (
+            <TouchableOpacity
+              style={styles.userView}
+              onPress={async () => {
+                // try {
+                //   Toast.show('准备导入')
+                // let userName = 'Customer'
+                // let filepath = await FileTools.appendingHomeDirectory(
+                //     ConstPath.UserPath +
+                //       userName +
+                //       '/' +
+                //       ConstPath.RelativePath.Temp +
+                //       'OlympicGreen_android/OlympicGreen_android.sxwu',
+                //   )
+                //   Toast.show('开始导入')
+                //   this.props.importSceneWorkspace({
+                //     server: filepath,
+                //   })
+                // } catch (error) {
+                // console.warn(error)
+                //  Toast.show(error)
+                // }
+              }}
+            >
+              <Image source={userImg} style={styles.userImg} />
+            </TouchableOpacity>
+          ),
+          headerRight: (
+            <TouchableOpacity style={styles.moreImg}>
+              <Image
+                resizeMode={'contain'}
+                source={moreImg}
+                style={styles.moreImg}
+              />
+            </TouchableOpacity>
+          ),
+          headerStyle: {
+            height: scaleSize(80) + (Platform.OS === 'ios' ? 20 : 0),
+          },
+        }}
         style={styles.container}
       >
-        {this.headRender()}
-        <ModuleList
-          currentUser={this.props.currentUser}
-          styles={styles.modulelist}
-          device={this.props.device}
-        />
+        {/*{this.headRender()}*/}
+        <View
+          style={{
+            flex: 1,
+            alignSelf: 'center',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <ModuleList
+            currentUser={this.props.currentUser}
+            styles={styles.modulelist}
+            device={this.props.device}
+          />
+        </View>
       </Container>
     )
   }

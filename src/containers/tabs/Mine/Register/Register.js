@@ -22,6 +22,7 @@ import styles, {
   titleOnFocusBackgroundColor,
   titleOnBlurBackgroundColor,
 } from './Styles'
+import color from '../../../../styles/color'
 
 export default class Register extends React.Component {
   props: {
@@ -117,7 +118,7 @@ export default class Register extends React.Component {
 
   _renderEmail() {
     return (
-      <View style={{ width: '80%' }}>
+      <View style={{ width: '70%' }}>
         <TextInput
           keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
@@ -150,7 +151,7 @@ export default class Register extends React.Component {
 
   _renderPhone() {
     return (
-      <View style={{ width: '80%' }}>
+      <View style={{ width: '70%' }}>
         <TextInput
           keyboardType={'phone-pad'}
           placeholder={'请输入手机号'}
@@ -264,29 +265,45 @@ export default class Register extends React.Component {
           >
             <View style={{ alignItems: 'center', width: '100%' }}>
               <View style={styles.titleStyle}>
-                <Text
-                  style={[
-                    styles.titleContainerStyle,
-                    { backgroundColor: this.state.titleEmailDefaultBg },
-                  ]}
+                <TouchableOpacity
                   onPress={() => {
                     this._onEmailPress()
                   }}
-                >
-                  {' '}
-                  邮箱注册
-                </Text>
-                <Text
                   style={[
-                    styles.titleContainerStyle,
-                    { backgroundColor: this.state.titlePhoneBg },
+                    {
+                      flex: 1,
+                      height: '100%',
+                      alignItems: 'center',
+                      borderTopLeftRadius: 4,
+                      borderBottomLeftRadius: 4,
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                      borderColor: color.theme,
+                      justifyContent: 'center',
+                      backgroundColor: this.state.titleEmailDefaultBg,
+                    },
                   ]}
+                >
+                  <Text style={[styles.titleContainerStyle]}>邮箱注册</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                   onPress={() => {
                     this._onPhonePress()
                   }}
+                  style={{
+                    flex: 1,
+                    height: '100%',
+                    alignItems: 'center',
+                    borderTopLeftRadius: 0,
+                    borderBottomLeftRadius: 0,
+                    borderTopRightRadius: 4,
+                    borderBottomRightRadius: 4,
+                    justifyContent: 'center',
+                    backgroundColor: this.state.titlePhoneBg,
+                  }}
                 >
-                  手机注册
-                </Text>
+                  <Text style={[styles.titleContainerStyle]}>手机注册</Text>
+                </TouchableOpacity>
               </View>
               {this._onSelectTitle()}
 

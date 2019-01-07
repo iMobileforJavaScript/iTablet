@@ -1,11 +1,16 @@
 /**
  * 获取地图更多
  */
-import { ConstToolType } from '../../../../constants'
+import {
+  ConstToolType,
+  // ConstInfo,
+} from '../../../../constants'
+// import { Toast } from '../../../../utils'
 // import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 
 let _params = {}
+// let exporting = false
 
 function getMapMore(type, params) {
   let data = [],
@@ -72,6 +77,13 @@ function getMapMore(type, params) {
           action: saveMapAs,
           image: require('../../../../assets/mapTools/icon_save_as.png'),
         },
+        // {
+        //   key: constants.EXPORT_MAP,
+        //   title: constants.EXPORT_MAP,
+        //   size: 'large',
+        //   action: exportMap,
+        //   image: require('../../../../assets/mapTools/icon_share.png'),
+        // },
         {
           key: constants.SHARE,
           title: constants.SHARE,
@@ -119,6 +131,28 @@ function shareMap() {
     height: ConstToolType.HEIGHT[0],
   })
 }
+
+/** 导出地图 **/
+// function exportMap() {
+//   if (exporting) {
+//     Toast.show(ConstInfo.EXPORTING_MAP)
+//     return
+//   }
+//   Toast.show('开始分享')
+//   _params.exportWorkspace(
+//     {
+//       maps: [_params.map.currentMap],
+//     },
+//     (result, path) => {
+//       Toast.show(
+//         result
+//           ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+//           : ConstInfo.EXPORT_WORKSPACE_FAILED,
+//       )
+//       exporting = false
+//     },
+//   )
+// }
 
 function shareMap3D() {
   if (!_params.setToolbarVisible) return

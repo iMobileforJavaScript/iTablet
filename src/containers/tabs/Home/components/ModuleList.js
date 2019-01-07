@@ -33,7 +33,9 @@ export default class ModuleList extends Component {
           onPress={() => this.itemAction(item)}
           style={styles.module}
         >
-          <Image source={item.baseImage} style={styles.baseImage} />
+          <View style={styles.baseImage}>
+            <Image source={item.baseImage} style={item.style} />
+          </View>
           <View style={styles.moduleItem}>
             <Image
               resizeMode={'contain'}
@@ -89,20 +91,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    marginTop: scaleSize(40),
+    // marginTop: scaleSize(100),
     alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
   },
   flatList: {
-    marginTop: scaleSize(150),
+    position: 'absolute',
+    alignSelf: 'center',
+    // marginTop: '35%',
+    // backgroundColor: 'white',
+    // marginLeft: scaleSize(40),
   },
   baseImage: {
     position: 'absolute',
     width: scaleSize(260),
-    height: scaleSize(145),
+    height: scaleSize(195),
+    // resizeMode: 'stretch',
+    backgroundColor: '#696969',
+    borderRadius: 5,
   },
   module: {
-    width: scaleSize(270),
-    height: scaleSize(145),
+    width: scaleSize(280),
+    height: scaleSize(215),
+    flexDirection: 'column',
+    alignItems: 'center',
     justifyContent: 'center',
   },
   moduleImage: {
@@ -110,10 +123,13 @@ const styles = StyleSheet.create({
     height: scaleSize(80),
   },
   moduleView: {
-    width: scaleSize(270),
-    height: scaleSize(155),
-    paddingHorizontal: scaleSize(5),
-    marginTop: scaleSize(25),
+    width: scaleSize(280),
+    height: scaleSize(215),
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // paddingHorizontal: scaleSize(10),
+    // marginTop: scaleSize(5),
   },
   moduleItem: {
     alignItems: 'center',
@@ -135,6 +151,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     // alignItems:"center",
     // justifyContent: 'space-around',
-    // marginTop: scaleSize(80),
+    position: 'absolute',
+    alignSelf: 'center',
   },
 })

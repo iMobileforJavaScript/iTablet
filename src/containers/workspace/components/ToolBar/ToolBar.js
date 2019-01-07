@@ -1224,6 +1224,8 @@ export default class ToolBar extends React.PureComponent {
       params.column !== this.state.column
     ) {
       let { data, buttons } = this.getData(type)
+      params.createThemeByLayer &&
+        ThemeMenuData.setLayerNameCreateTheme(params.createThemeByLayer)
       this.originType = type
       let newHeight =
         params && typeof params.height === 'number'
@@ -1574,10 +1576,6 @@ export default class ToolBar extends React.PureComponent {
     // this.props.existFullMap && this.props.existFullMap()
   }
 
-  commitTheme = () => {
-    ThemeMenuData.saveMapTheme()
-  }
-
   showThemeBox = (autoFullScreen = false) => {
     if (autoFullScreen) {
       this.setState(
@@ -1868,6 +1866,66 @@ export default class ToolBar extends React.PureComponent {
         }
         this.setVisible(false)
       }.bind(this)())
+    } else if (
+      this.state.type ===
+      ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
+    ) {
+      //点击字段名创建专题图
+      (async function() {
+        let params = {}
+        let isSuccess = false
+        switch (this.state.themeCreateType) {
+          case constants.THEME_UNIQUE_STYLE:
+            //单值风格
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              UniqueExpression: item.expression,
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
+            }
+            isSuccess = await SThemeCartography.createThemeUniqueMap(params)
+            break
+          case constants.THEME_RANGE_STYLE:
+            //分段风格
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '6.0',
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createThemeRangeMap(params)
+            break
+          case constants.THEME_UNIFY_LABEL:
+            //统一标签
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              LabelExpression: item.expression,
+              LabelBackShape: 'NONE',
+              FontName: '宋体',
+              // FontSize: '15.0',
+              ForeColor: '#000000',
+            }
+            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
+              params,
+            )
+            break
+        }
+        if (isSuccess) {
+          Toast.show('创建专题图成功')
+          //设置当前图层
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        } else {
+          Toast.show('创建专题图失败')
+        }
+        this.setVisible(false)
+      }.bind(this)())
     }
   }
 
@@ -1894,9 +1952,10 @@ export default class ToolBar extends React.PureComponent {
       })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
+        let udbName = this.basename(this.path)
         let udbpath = {
           server: this.path,
-          alias: item.title,
+          alias: udbName,
           engineType: 219,
         }
         await SMap.openDatasource(udbpath, index)
@@ -1989,7 +2048,13 @@ export default class ToolBar extends React.PureComponent {
           DatasourceName: item.datasourceName,
           DatasetName: item.datasetName,
         }
+        // 添加数据集
         SMap.addDatasetToMap(params)
+        // 重新加载图层
+        this.props.getLayers({
+          type: -1,
+          currentLayerIndex: 0,
+        })
       }
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
       this.importTemplate(item)
@@ -2016,13 +2081,11 @@ export default class ToolBar extends React.PureComponent {
           } else if (mapsInfo && mapsInfo.length > 0) {
             // 打开地图
             let templatePath =
-              (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.currentUser.userName
-                  ? ConstPath.UserPath +
-                    this.props.user.currentUser.userName +
-                    '/'
-                  : ConstPath.CustomerPath,
-              )) + ConstPath.RelativeFilePath.Map
+              (this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
+                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
             let mapInfo = await this.props.openMap({
               path: templatePath + mapsInfo[0] + '.xml',
               name: mapsInfo[0],
@@ -2086,11 +2149,27 @@ export default class ToolBar extends React.PureComponent {
         this.props.setContainerLoading &&
           this.props.setContainerLoading(
             true,
-            ConstInfo.MAP_CREATING_SYMBOL_COLLECTION,
+            ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
           )
         await this.props.closeMap()
         this.props.setCurrentTemplateInfo() // 清空当前模板
         this.props.setTemplate() // 清空模板
+
+        // 重新打开工作空间，防止Resource被删除或破坏
+        const customerPath =
+          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+        let wsPath
+        if (this.props.user.currentUser.userName) {
+          const userWSPath =
+            ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativeFilePath.Workspace
+          wsPath = await FileTools.appendingHomeDirectory(userWSPath)
+        } else {
+          wsPath = await FileTools.appendingHomeDirectory(customerPath)
+        }
+        await this.props.openWorkspace({ server: wsPath })
         await SMap.openDatasource(
           ConstOnline['Google'].DSParams,
           ConstOnline['Google'].layerIndex,
@@ -2162,13 +2241,12 @@ export default class ToolBar extends React.PureComponent {
           } else if (mapsInfo && mapsInfo.length > 0) {
             // 打开地图
             let templatePath =
-              (await FileTools.appendingHomeDirectory(
-                this.props.user && this.props.user.currentUser.userName
-                  ? ConstPath.UserPath +
-                    this.props.user.currentUser.userName +
-                    '/'
-                  : ConstPath.CustomerPath,
-              )) + ConstPath.RelativeFilePath.Map
+              (this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
+                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
+            // let absolutePath = await FileTools.appendingHomeDirectory(templatePath)
             // switch (GLOBAL.Type) {
             //   case constants.COLLECTION:
             //     templatePath = templatePath + ConstPath.RelativeFilePath.Collection
@@ -2258,8 +2336,8 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
-      let path = await FileTools.appendingHomeDirectory(item.path)
-      let mapInfo = await this.props.openMap({ ...item, path })
+      // let absolutePath = await FileTools.appendingHomeDirectory(item.path)
+      let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {
         Toast.show(ConstInfo.CHANGE_MAP_TO + mapInfo.name)
         // if (item.path.substr(item.path.lastIndexOf('.')) === 'xml')
@@ -2810,7 +2888,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.commitTheme
+          action = this.close
           break
       }
 
@@ -2834,7 +2912,9 @@ export default class ToolBar extends React.PureComponent {
   overlayOnPress = () => {
     if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS ||
-      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
+      this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION ||
+      this.state.type ===
+        ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
     ) {
       this.setVisible(false)
     } else if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
