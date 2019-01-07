@@ -399,10 +399,10 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
         column: 4,
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[2]
-            : ConstToolType.HEIGHT[3],
+        height: ConstToolType.HEIGHT[0],
+        // this.props.device.orientation === 'LANDSCAPE'
+        //   ? ConstToolType.HEIGHT[2]
+        //   : ConstToolType.HEIGHT[3],
       })
     }
   }

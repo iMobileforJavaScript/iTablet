@@ -155,7 +155,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
   getState,
 ) => {
   try {
-    if (!params.mapName) return
+    // if (!params.mapName) return
     let result = await SMap.saveMapName(
       params.mapName,
       params.nModule || '',
