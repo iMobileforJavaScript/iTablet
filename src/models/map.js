@@ -297,7 +297,7 @@ export const improtSceneWorkspace = params => async (dispatch, getState) => {
   // return
   if (userName !== 'Customer') {
     let path = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.Scene,
+      ConstPath.UserPath + userName,
     )
     await SScene.setCustomerDirectory(path)
   }

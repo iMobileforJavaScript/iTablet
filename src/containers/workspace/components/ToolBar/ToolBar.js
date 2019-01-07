@@ -2567,6 +2567,9 @@ export default class ToolBar extends React.PureComponent {
           case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
             box = this.renderMap3DList()
             break
+          case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
+            box = this.renderMap3DList()
+            break
           default:
             box = this.renderList()
             break
