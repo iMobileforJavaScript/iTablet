@@ -1,7 +1,7 @@
 import React from 'react'
 import { screen, scaleSize, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
-import { layersetting } from './LayerToolbarData'
+import { layersetting, layerThemeSetting } from './LayerToolbarData'
 import { View, TouchableOpacity, Animated } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
@@ -58,8 +58,7 @@ export default class LayerManager_tolbar extends React.Component {
         data = layersetting
         break
       case ConstToolType.MAP_THEME_STYLE:
-        // data = layerThemeSetting
-        data = layersetting
+        data = layerThemeSetting
         break
     }
     return data

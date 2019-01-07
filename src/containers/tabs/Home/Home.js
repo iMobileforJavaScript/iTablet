@@ -8,7 +8,7 @@ import { scaleSize } from '../../../utils'
 export default class Home extends Component {
   props: {
     nav: Object,
-    latestMap: Array,
+    latestMap: Object,
     currentUser: Object,
     setShow: () => {},
     device: Object,

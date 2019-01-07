@@ -18,6 +18,7 @@ import {
   exportWorkspace,
   openMap,
   closeMap,
+  saveMap,
 } from '../../../../models/map'
 import {
   importTemplate,
@@ -73,6 +74,7 @@ const mapDispatchToProps = {
   openMap,
   closeMap,
   getSymbolTemplates,
+  saveMap,
 }
 
 export default connect(

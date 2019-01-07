@@ -14,6 +14,7 @@ import ThemeMenuData from './ThemeMenuData'
 function setParams(params) {
   // _params = params
   CollectionData.setParams(params)
+  StartData.setParams(params)
 }
 
 function getTabBarData(type, params = {}) {

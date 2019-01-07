@@ -83,7 +83,10 @@ export default class FunctionToolbar extends React.Component {
   start = type => {
     const toolRef = this.props.getToolRef()
     let height
-    if (ConstToolType.MAP_EDIT_START === type) {
+    if (
+      ConstToolType.MAP_EDIT_START === type ||
+      ConstToolType.MAP_COLLECTION_START === type
+    ) {
       height = ConstToolType.HEIGHT[0]
     } else {
       height = ConstToolType.HEIGHT[2]

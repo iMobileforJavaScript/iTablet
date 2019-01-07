@@ -47,6 +47,7 @@ export default {
   SAVE: '保存地图',
   SAVE_AS: '另存地图',
   SHARE: '分享地图',
+  EXPORT_MAP: '导出地图',
   START: '开始',
   OPEN: '打开地图',
   WORKSPACE: '工作空间',

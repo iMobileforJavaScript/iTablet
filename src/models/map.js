@@ -66,7 +66,10 @@ export const closeWorkspace = (cb = () => {}) => async dispatch => {
 }
 
 // 打开地图
-export const openMap = (params, cb = () => {}) => async dispatch => {
+export const openMap = (params, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
   try {
     if (
       params === null ||
@@ -75,13 +78,16 @@ export const openMap = (params, cb = () => {}) => async dispatch => {
       !params.path
     )
       return
+    let absultePath = await FileTools.appendingHomeDirectory(params.path)
+    let userName = getState().user.toJS().currentUser.userName || 'Customer'
+    let moduleName = GLOBAL.Type
     // let paths = params.path.split('/')
     let module = params.module || ''
     let fileName = params.name || params.title
     let importResult = await SMap.openMapName(fileName, module)
     // let expFilePath = await FileTools.appendingHomeDirectory(params.path.substr(0, params.path.lastIndexOf('.')) + '.exp')
     let expFilePath =
-      params.path.substr(0, params.path.lastIndexOf('.')) + '.exp'
+      absultePath.substr(0, absultePath.lastIndexOf('.')) + '.exp'
 
     // let expIsExist = await FileTools.fileIsExist(expFilePath)
     // if (expIsExist) {
@@ -117,10 +123,14 @@ export const openMap = (params, cb = () => {}) => async dispatch => {
       let expIsExist = await FileTools.fileIsExist(expFilePath)
       if (expIsExist) {
         let data = await fs.readFile(expFilePath)
-        Object.assign(mapInfo, JSON.parse(data))
+        Object.assign(mapInfo, JSON.parse(data), { path: params.path })
         await dispatch({
           type: SET_CURRENT_MAP,
           payload: mapInfo || {},
+          extData: {
+            userName,
+            moduleName,
+          },
         })
         cb && cb(mapInfo)
         return mapInfo
@@ -136,6 +146,46 @@ export const openMap = (params, cb = () => {}) => async dispatch => {
   } catch (e) {
     cb && cb(false)
     return false
+  }
+}
+
+// 保存地图地图
+export const saveMap = (params = {}, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  try {
+    if (!params.mapName) return
+    let result = await SMap.saveMapName(
+      params.mapName,
+      params.nModule || '',
+      params.addition,
+      params.isNew,
+    )
+    let userName = getState().user.toJS().currentUser.userName || 'Customer'
+    let path = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.Map +
+        params.mapName +
+        '.xml',
+    )
+    if (!params.isNew) {
+      await dispatch({
+        type: SET_CURRENT_MAP,
+        payload: { path, name: params.mapName },
+        extData: {
+          userName,
+          moduleName: GLOBAL.Type,
+        },
+      })
+    }
+    cb && cb()
+    return result
+  } catch (e) {
+    cb && cb()
+    return null
   }
 }
 
@@ -317,7 +367,7 @@ export const improtSceneWorkspace = params => async (dispatch, getState) => {
 }
 
 const initialState = fromJS({
-  latestMap: [],
+  latestMap: {},
   map: {},
   maps: [],
   currentMap: {},
@@ -362,8 +412,45 @@ export default handleActions(
     [`${GET_MAPS}`]: (state, { payload }) => {
       return state.setIn(['maps'], fromJS(payload))
     },
-    [`${SET_CURRENT_MAP}`]: (state, { payload }) => {
-      return state.setIn(['currentMap'], fromJS(payload))
+    [`${SET_CURRENT_MAP}`]: (state, { payload, extData }) => {
+      let newData = state.toJS().latestMap || {}
+      if (extData) {
+        if (!newData[extData.userName]) {
+          newData[extData.userName] = {}
+        }
+        if (!newData[extData.userName][extData.moduleName]) {
+          newData[extData.userName][extData.moduleName] = []
+        }
+        let isExist = false
+        for (
+          let i = 0;
+          i < newData[extData.userName][extData.moduleName].length;
+          i++
+        ) {
+          if (!payload.path) break
+          if (
+            newData[extData.userName][extData.moduleName][i].path ===
+            payload.path
+          ) {
+            newData[extData.userName][extData.moduleName][i] = payload
+            let temp = newData[extData.userName][extData.moduleName][0]
+            newData[extData.userName][extData.moduleName][0] =
+              newData[extData.userName][extData.moduleName][i]
+            newData[extData.userName][extData.moduleName][i] = temp
+            isExist = true
+            break
+          }
+        }
+        if (!isExist && payload && payload.path) {
+          newData[extData.userName][extData.moduleName].unshift(payload)
+        }
+
+        return state
+          .setIn(['currentMap'], fromJS(payload))
+          .setIn(['latestMap'], fromJS(newData))
+      } else {
+        return state.setIn(['currentMap'], fromJS(payload))
+      }
     },
     [REHYDRATE]: (state, { payload }) => {
       let data,

@@ -22,6 +22,7 @@ const RelativePath = {
   Symbol: Data + 'Symbol/',
   Attribute: Data + 'Attribute/',
   Workspace: Data + 'Workspace/',
+  Map: Data + 'Map/',
   Temp: Data + 'Temp/', // 临时文件
 }
 
