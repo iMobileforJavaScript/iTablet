@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
+import { scaleSize } from '../../../utils'
 // import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
@@ -73,7 +74,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerStyle: {
-            height: 60 + (Platform.OS === 'ios' ? 10 : 0),
+            height: scaleSize(80) + (Platform.OS === 'ios' ? 20 : 0),
           },
         }}
         style={styles.container}
