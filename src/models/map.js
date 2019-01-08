@@ -241,12 +241,12 @@ export const setMapView = (params, cb = () => {}) => async dispatch => {
 }
 
 export const setCurrentMap = (params, cb = () => {}) => async dispatch => {
-  let result = await SMap.importWorkspace(params)
+  // let result = params && await SMap.importWorkspace(params)
   await dispatch({
     type: SET_CURRENT_MAP,
     payload: params || {},
   })
-  cb && cb(result)
+  cb && cb()
 }
 
 // 导出模版
