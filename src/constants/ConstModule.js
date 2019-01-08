@@ -29,8 +29,9 @@ export default [
       left: 0,
     },
     action: async user => {
+      let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_EDIT
-      GLOBAL.isArrayData = true
+      GLOBAL.isArrayData = data instanceof Array
       GLOBAL.showMenu = true
       GLOBAL.showFlex = true
       const customerPath =
@@ -54,7 +55,7 @@ export default [
             DSParams: { server: wsPath },
             type: 'Workspace',
           },
-          ConstOnline['Google'],
+          data,
         ],
         mapName: '地图制图',
         isExample: false,
@@ -133,7 +134,9 @@ export default [
       left: 0,
     },
     action: async user => {
+      let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_THEME
+      GLOBAL.isArrayData = data instanceof Array
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let wsPath
@@ -154,7 +157,7 @@ export default [
             DSParams: { server: wsPath },
             type: 'Workspace',
           },
-          ConstOnline['Google'],
+          data,
         ],
         mapName: '专题制图',
         isExample: false,
@@ -174,7 +177,9 @@ export default [
       bottom: 0,
     },
     action: async user => {
+      let data = ConstOnline['Google']
       GLOBAL.Type = constants.COLLECTION
+      GLOBAL.isArrayData = data instanceof Array
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
@@ -201,7 +206,7 @@ export default [
             // layerIndex: 0,
             type: 'Workspace',
           },
-          ConstOnline['Google'],
+          data,
         ],
         mapName: '外业采集',
         isExample: false,

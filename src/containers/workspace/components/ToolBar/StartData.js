@@ -476,12 +476,14 @@ function changeBaseLayer(type) {
     case 'MAP_3D':
       _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
         containerType: 'list',
+        isFullScreen: true,
       })
       break
     default:
       _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
         containerType: 'list',
         height: ConstToolType.HEIGHT[3],
+        isFullScreen: true,
       })
       break
   }
