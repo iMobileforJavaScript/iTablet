@@ -147,7 +147,7 @@ export default class LayerManager_tolbar extends React.Component {
     }
     if (section.title === '移除') {
       (async function() {
-        await SMap.removeLayerWithName(this.state.layerdata.name)
+        await SMap.removeLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)

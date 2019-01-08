@@ -21,7 +21,7 @@ export default StyleSheet.create({
   dialogStyle: {
     width: '70%',
     borderRadius: scaleSize(16),
-    backgroundColor: color.subTheme,
+    backgroundColor: color.white,
     paddingVertical: scaleSize(30),
   },
   title: {
@@ -53,7 +53,7 @@ export default StyleSheet.create({
     height: scaleSize(60),
     paddingHorizontal: scaleSize(30),
     borderRadius: scaleSize(30),
-    backgroundColor: color.blue2,
+    backgroundColor: color.gray,
     minWidth: scaleSize(120),
   },
   cancelBtnStyle: {
