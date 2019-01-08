@@ -7,19 +7,17 @@ function OpenData(data, index) {
   (async function() {
     let layers = await SMap.getLayersByType()
     // Layer index = 0 为顶层
-    if (GLOBAL.isArrayData) {
-      let result = await SMap.removeLayer(layers.length - 1)
-      await SMap.removeLayer(result ? layers.length - 2 : layers.length - 1)
-    } else {
-      await SMap.removeLayer(layers.length - 1)
+    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+      await SMap.removeLayer(layers.length - i)
     }
     if (data instanceof Array) {
-      await SMap.openDatasource(data[1].DSParams, index, false)
-      await SMap.openDatasource(data[0].DSParams, index, false)
-      GLOBAL.isArrayData = true
+      for (let i = data.length - 1; i >= 0; i--) {
+        await SMap.openDatasource(data[i].DSParams, index, false)
+      }
+      GLOBAL.BaseMapSize = data.length
     } else {
       await SMap.openDatasource(data.DSParams, index, false)
-      GLOBAL.isArrayData = false
+      GLOBAL.BaseMapSize = 1
     }
   }.bind(this)())
 }

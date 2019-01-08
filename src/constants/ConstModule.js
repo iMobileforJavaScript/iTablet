@@ -31,7 +31,7 @@ export default [
     action: async user => {
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_EDIT
-      GLOBAL.isArrayData = data instanceof Array
+      GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       GLOBAL.showMenu = true
       GLOBAL.showFlex = true
       const customerPath =
@@ -136,7 +136,7 @@ export default [
     action: async user => {
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_THEME
-      GLOBAL.isArrayData = data instanceof Array
+      GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let wsPath
@@ -179,7 +179,7 @@ export default [
     action: async user => {
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.COLLECTION
-      GLOBAL.isArrayData = data instanceof Array
+      GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       const customerPath =
         ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
