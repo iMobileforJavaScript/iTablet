@@ -39,11 +39,12 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_TOOL:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[3]
-      } else {
-        height = ConstToolType.THEME_HEIGHT[2]
-      }
+      // if (orientation === 'PORTRAIT') {
+      //   height = ConstToolType.HEIGHT[3]
+      // } else {
+      //   height = ConstToolType.THEME_HEIGHT[2]
+      // }
+      height = ConstToolType.THEME_HEIGHT[0]
       break
     case ConstToolType.MAP_EDIT_TAGGING:
       if (orientation === 'PORTRAIT') {
@@ -122,7 +123,7 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_EDIT_START:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.HEIGHT[0]
       } else {
         height = ConstToolType.HEIGHT[0]
       }
@@ -131,7 +132,14 @@ function getToorbarHeight(orientation, type) {
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
       } else {
-        height = ConstToolType.HEIGHT[1]
+        height = ConstToolType.THEME_HEIGHT[2]
+      }
+      break
+    case ConstToolType.MAP_NULL:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[4]
+      } else {
+        height = ConstToolType.HEIGHT[4]
       }
       break
     case ConstToolType.LINECOLOR_SET:
@@ -183,6 +191,25 @@ function getToorbarHeight(orientation, type) {
         height = ConstToolType.HEIGHT[2]
       }
       break
+    case ConstToolType.MAP_CHANGE:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[3]
+      } else {
+        height = ConstToolType.HEIGHT[2]
+      }
+      break
+    case ConstToolType.MAP_EDIT_DEFAULT:
+      height = 0
+      break
+    case ConstToolType.MAP_EDIT_POINT:
+      height = ConstToolType.HEIGHT[0]
+      break
+    case ConstToolType.MAP_EDIT_LINE:
+    case ConstToolType.MAP_EDIT_REGION:
+      height = ConstToolType.HEIGHT[2]
+      break
+    default:
+      height = ConstToolType.HEIGHT[2]
   }
   return height
 }

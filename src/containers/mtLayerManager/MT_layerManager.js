@@ -372,7 +372,7 @@ export default class MT_layerManager extends React.Component {
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.THEME_HEIGHT[5],
+        height: ConstToolType.THEME_HEIGHT[1],
         layerdata: data,
       })
     }

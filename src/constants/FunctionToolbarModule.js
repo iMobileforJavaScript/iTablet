@@ -112,9 +112,21 @@ const BotMap = [
     title: 'OSM',
     data: [
       {
-        title: 'OSM Map',
+        title: 'Standard',
         action: () => {
           OpenData(ConstOnline.OSM, 0)
+        },
+      },
+      {
+        title: 'CycleMap',
+        action: () => {
+          OpenData(ConstOnline.OSM, 1)
+        },
+      },
+      {
+        title: 'Transport',
+        action: () => {
+          OpenData(ConstOnline.OSM, 2)
         },
       },
     ],

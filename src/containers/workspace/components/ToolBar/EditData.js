@@ -136,7 +136,7 @@ function getEditData(type) {
           title: constants.MOVE,
           action: move,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
+          image: require('../../../../assets/mapTools/icon_move_white.png'),
         },
         // {
         //   key: constants.SUBMIT,
@@ -154,7 +154,7 @@ function getEditData(type) {
           title: constants.MOVE,
           action: move,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
+          image: require('../../../../assets/mapTools/icon_move_white.png'),
         },
         {
           key: constants.DELETE,
@@ -217,7 +217,7 @@ function getEditData(type) {
           title: constants.MOVE,
           action: move,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_move.png'),
+          image: require('../../../../assets/mapTools/icon_move_white.png'),
         },
         {
           key: constants.DELETE,
