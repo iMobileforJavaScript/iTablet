@@ -7,6 +7,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
 import com.supermap.RN.NativeMethod;
 import com.supermap.RN.FileTools;
+import com.supermap.RN.SPUtils;
 
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class MyReactpackge implements  ReactPackage {
         modules.add(new IntentModule(reactContext));
         modules.add(new FileTools(reactContext));
         modules.add(new NativeMethod(reactContext));
+        modules.add(new SPUtils(reactContext));
         return modules;
     }
 
