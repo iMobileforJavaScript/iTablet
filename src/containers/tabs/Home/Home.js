@@ -22,6 +22,9 @@ export default class Home extends Component {
 
   constructor(props) {
     super(props)
+    this.state = {
+      isDownloaded: false,
+    }
   }
 
   /**
@@ -72,51 +75,67 @@ export default class Home extends Component {
     }
     return arrFilterFile
   }
-  _onImportWorkspace = async (zipFilePath, currentModuleKey, item) => {
+  _onImportWorkspace = async (zipFilePath, item, isExist) => {
     try {
       if (zipFilePath !== undefined) {
-        let fileDirPath = zipFilePath.substring(0, zipFilePath.length - 4)
-        // console.warn(`filePath:${zipFilePath},savePath${fileDirPath}`)
-        let unFileZipResult = await FileTools.unZipFile(
-          zipFilePath,
-          fileDirPath,
-        )
-        if (!unFileZipResult) {
-          FileTools.deleteFile(fileDirPath)
-          return
+        let currentUserName = this.props.currentUser.userName
+        if (currentUserName === undefined) {
+          currentUserName = ''
         }
-        let arrFilePath = []
-        await FileTools.getFilterFiles(
-          fileDirPath,
-          { smwu: 'smwu', sxwu: 'sxwu' },
-          arrFilePath,
-        )
-        let filePath = arrFilePath[0].filePath
-        if (
-          this.props.currentUser.userName &&
-          currentModuleKey.indexOf(this.props.currentUser.userName) === -1
-        ) {
-          currentModuleKey = this.props.currentUser.userName + item.key
-        }
-        let is3D = await SScene.is3DWorkspace({ server: filePath })
-        if (is3D === true) {
-          let result = await SScene.import3DWorkspace({ server: filePath })
-          if (result === true) {
-            AsyncStorage.setItem(currentModuleKey, true)
-            Toast.show('导入3D成功')
+        let currentModuleKey = currentUserName + item.key
+        let result = await AsyncStorage.getItem(currentModuleKey)
+        // console.warn('userName:'+this.props.currentUser.userName+' oldKey:'+currentModuleKey+' result:'+result)
+        if (result === null) {
+          if (isExist) {
+            item.action && item.action(this.props.currentUser)
+          }
+          // console.warn('entry')
+          let fileDirPath = zipFilePath.substring(0, zipFilePath.length - 4)
+          // console.warn(`filePath:${zipFilePath},savePath${fileDirPath}`)
+          let unFileZipResult = await FileTools.unZipFile(
+            zipFilePath,
+            fileDirPath,
+          )
+          if (!unFileZipResult) {
+            FileTools.deleteFile(fileDirPath)
+            return
+          }
+          let arrFilePath = []
+          await FileTools.getFilterFiles(
+            fileDirPath,
+            { smwu: 'smwu', sxwu: 'sxwu' },
+            arrFilePath,
+          )
+          let filePath = arrFilePath[0].filePath
+          if (
+            this.props.currentUser.userName &&
+            currentModuleKey.indexOf(this.props.currentUser.userName) === -1
+          ) {
+            currentModuleKey = this.props.currentUser.userName + item.key
+          }
+          // console.warn('userName:'+this.props.currentUser.userName+' newKey:'+currentModuleKey)
+          let is3D = await SScene.is3DWorkspace({ server: filePath })
+          if (is3D === true) {
+            let result = await SScene.import3DWorkspace({ server: filePath })
+            if (result === true) {
+              AsyncStorage.setItem(currentModuleKey, currentModuleKey)
+              Toast.show('导入3D成功')
+            } else {
+              Toast.show('导入3D失败')
+            }
           } else {
-            Toast.show('导入3D失败')
+            let result = await this.props.importWorkspace({ path: filePath })
+            // console.warn(result)
+            if (result.msg !== undefined) {
+              Toast.show('导入失败')
+            } else {
+              // console.warn(currentModuleKey)
+              AsyncStorage.setItem(currentModuleKey, currentModuleKey)
+              Toast.show('导入成功')
+            }
           }
         } else {
-          let result = await this.props.importWorkspace({ path: filePath })
-          // console.warn(result)
-          if (result.msg !== undefined) {
-            Toast.show('导入失败')
-          } else {
-            AsyncStorage.setItem(currentModuleKey, currentModuleKey)
-            // item.action && item.action(this.props.currentUser)
-            Toast.show('导入成功')
-          }
+          item.action && item.action(this.props.currentUser)
         }
       }
     } catch (e) {
@@ -124,6 +143,7 @@ export default class Home extends Component {
     } finally {
       let fileDirPath = zipFilePath.substring(0, zipFilePath.length - 4)
       FileTools.deleteFile(fileDirPath)
+      this.setState({ isDownloaded: true })
     }
   }
   headRender() {
@@ -209,6 +229,7 @@ export default class Home extends Component {
           }}
         >
           <ModuleList
+            ref={ref => (this.moduleListRef = ref)}
             importWorkspace={this._onImportWorkspace}
             currentUser={this.props.currentUser}
             styles={styles.modulelist}

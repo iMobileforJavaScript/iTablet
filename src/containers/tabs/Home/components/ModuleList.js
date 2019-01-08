@@ -8,7 +8,6 @@ import {
   // Dimensions,
   StyleSheet,
   ScrollView,
-  AsyncStorage,
   Platform,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
@@ -21,7 +20,6 @@ import Toast from '../../../../utils/Toast'
 class RenderModuleItem extends Component {
   props: {
     item: Object,
-    currentUser: Object,
     importWorkspace: () => {},
   }
 
@@ -33,98 +31,79 @@ class RenderModuleItem extends Component {
       disabled: false,
     }
   }
-
-  _isDataExisted = async item => {
-    let currentUser = this.props.currentUser
-    let currentUserName = currentUser.userName
-    if (currentUserName === undefined) {
-      currentUserName = ''
-    }
+  itemAction = async item => {
+    let fileName
+    let dataUrl
     let moduleKey = item.key
-    let currentModuleKey = currentUserName + item.key
-    let result = await AsyncStorage.getItem(currentModuleKey)
-    if (result === null) {
-      let fileName
-      let dataUrl
-      if (moduleKey === '地图制图') {
-        fileName = '湖南'
-        dataUrl = 'https://www.supermapol.com/web/datas/456143933/download'
-      } else if (moduleKey === '专题地图') {
-        fileName = '北京'
-        dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
-      } else if (moduleKey === '外业采集') {
-        fileName = '地理国情普查'
-        dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
-      } else if (moduleKey === '三维场景') {
-        if (Platform.OS === 'android') {
-          fileName = 'OlympicGreen_android'
-          dataUrl = 'https://www.supermapol.com/web/datas/2007044835/download'
-        } else if (Platform.OS === 'ios') {
-          fileName = 'OlympicGreen_ios'
-          dataUrl = 'https://www.supermapol.com/web/datas/2083541538/download'
-        }
+    if (moduleKey === '地图制图') {
+      fileName = '湖南'
+      dataUrl = 'https://www.supermapol.com/web/datas/456143933/download'
+    } else if (moduleKey === '专题地图') {
+      fileName = '北京'
+      dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
+    } else if (moduleKey === '外业采集') {
+      fileName = '地理国情普查'
+      dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
+    } else if (moduleKey === '三维场景') {
+      if (Platform.OS === 'android') {
+        fileName = 'OlympicGreen_android'
+        dataUrl = 'https://www.supermapol.com/web/datas/1075928570/download'
+      } else if (Platform.OS === 'ios') {
+        fileName = 'OlympicGreen_ios'
+        dataUrl = 'https://www.supermapol.com/web/datas/1766529829/download'
       }
-      let homePath = await FileTools.appendingHomeDirectory()
-      let fileDirPath = homePath + ConstPath.CachePath + fileName
+    }
+    let homePath = await FileTools.appendingHomeDirectory()
+    let fileDirPath = homePath + ConstPath.CachePath + fileName
+    let fileCachePath = fileDirPath + '.zip'
+    let isExist = await FileTools.fileIsExist(fileCachePath)
+    // console.warn(dataUrl + ' '+fileName+' '+isExist)
+    if (!isExist) {
+      this.setState({
+        progress: '0%',
+        isShowProgressView: true,
+        disabled: true,
+      })
       let fileCachePath = fileDirPath + '.zip'
-      let isExist = await FileTools.fileIsExist(fileCachePath)
-      if (!isExist) {
-        this.setState({
-          progress: '0%',
-          isShowProgressView: true,
-          disabled: true,
-        })
-        let fileCachePath = fileDirPath + '.zip'
-        let downloadOptions = {
-          fromUrl: dataUrl,
-          toFile: fileCachePath,
-          background: true,
-          progress: res => {
-            let value =
-              ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-            if (value !== this.state.progress) {
-              // console.warn(value)
-              this.setState({
-                progress: value,
-                isShowProgressView: true,
-                disabled: true,
-              })
-            }
-          },
-        }
-        try {
-          let result = RNFS.downloadFile(downloadOptions)
-          result.promise
-            .then(async result => {
-              if (result.statusCode === 200) {
-                Toast.show('下载成功')
-                this.props.importWorkspace(
-                  fileCachePath,
-                  currentModuleKey,
-                  item,
-                )
-                this.setState({ isShowProgressView: false, disabled: false })
-              }
+      let downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: fileCachePath,
+        background: true,
+        progress: res => {
+          let value =
+            ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+          // console.warn(value)
+          if (value !== this.state.progress) {
+            this.setState({
+              progress: value,
+              isShowProgressView: true,
+              disabled: true,
             })
-            .catch(() => {
-              Toast.show('下载失败')
+          }
+        },
+      }
+      try {
+        let result = RNFS.downloadFile(downloadOptions)
+        result.promise
+          .then(async result => {
+            if (result.statusCode === 200) {
+              Toast.show('下载成功')
+              this.props.importWorkspace(fileCachePath, item, isExist)
               this.setState({ isShowProgressView: false, disabled: false })
-            })
-        } catch (e) {
-          Toast.show('网络错误，下载失败')
-        } finally {
-          this.setState({ isShowProgressView: false, disabled: false })
-        }
-      } else {
-        this.props.importWorkspace(fileCachePath, currentModuleKey, item)
+            }
+          })
+          .catch(() => {
+            Toast.show('下载失败')
+            this.setState({ isShowProgressView: false, disabled: false })
+          })
+      } catch (e) {
+        Toast.show('网络错误，下载失败')
+      } finally {
+        this.setState({ isShowProgressView: false, disabled: false })
       }
     } else {
-      item.action && item.action(this.props.currentUser)
+      this.props.importWorkspace(fileCachePath, item, isExist)
     }
-  }
-
-  itemAction = item => {
-    this._isDataExisted(item)
   }
 
   _renderProgressView = () => {
@@ -178,7 +157,6 @@ class RenderModuleItem extends Component {
 
 export default class ModuleList extends Component {
   props: {
-    currentUser: Object,
     device: Object,
     importWorkspace: () => {},
   }
@@ -193,7 +171,6 @@ export default class ModuleList extends Component {
     return (
       <RenderModuleItem
         item={item}
-        currentUser={this.props.currentUser}
         importWorkspace={this.props.importWorkspace}
       />
     )
