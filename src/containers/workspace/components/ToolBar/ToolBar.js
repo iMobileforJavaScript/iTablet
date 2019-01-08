@@ -2239,6 +2239,10 @@ export default class ToolBar extends React.PureComponent {
               this.props.setContainerLoading(false)
             Toast.show(msg)
           } else if (mapsInfo && mapsInfo.length > 0) {
+            // 关闭地图
+            if (this.props.map.currentMap.name) {
+              await this.props.closeMap()
+            }
             // 打开地图
             let templatePath =
               (this.props.user && this.props.user.currentUser.userName
@@ -2327,7 +2331,7 @@ export default class ToolBar extends React.PureComponent {
     try {
       if (
         this.props.map.currentMap &&
-        this.props.map.currentMap.name === item.name
+        this.props.map.currentMap.path === item.path
       ) {
         Toast.show(ConstInfo.MAP_ALREADY_OPENED)
         return
@@ -2354,6 +2358,16 @@ export default class ToolBar extends React.PureComponent {
             )) +
             ConstPath.RelativePath.Template +
             mapInfo.Template
+          if (
+            item.path.indexOf(
+              ConstPath.CustomerPath + ConstPath.RelativePath.Map,
+            ) >= 0
+          ) {
+            templatePath =
+              (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
+              ConstPath.RelativePath.Template +
+              mapInfo.Template
+          }
           await this.props.getSymbolTemplates({
             path: templatePath,
             name: item.name,

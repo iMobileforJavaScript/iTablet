@@ -247,30 +247,17 @@ function openMap() {
             ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
             : ConstPath.CustomerPath,
         )) + ConstPath.RelativeFilePath.Map
-    FileTools.getPathListByFilter(path, {
-      extension: 'xml',
-      type: 'file',
-    }).then(fileList => {
-      let list = []
-      fileList.forEach(item => {
-        let name = item.name
-        item.title = name
-        item.name = name.split('.')[0]
-        list.push(item)
-      })
-      data = [
-        {
-          title: '地图',
-          data: list,
-        },
-      ]
-      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-        data,
-      })
-    })
-    // _params.getMaps(list => {
+    // FileTools.getPathListByFilter(path, {
+    //   extension: 'xml',
+    //   type: 'file',
+    // }).then(fileList => {
+    //   let list = []
+    //   fileList.forEach(item => {
+    //     let name = item.name
+    //     item.title = name
+    //     item.name = name.split('.')[0]
+    //     list.push(item)
+    //   })
     //   data = [
     //     {
     //       title: '地图',
@@ -283,6 +270,55 @@ function openMap() {
     //     data,
     //   })
     // })
+    let customerPath =
+      (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
+      ConstPath.RelativeFilePath.Map
+    let fileList = await FileTools.getPathListByFilter(customerPath, {
+      extension: 'xml',
+      type: 'file',
+    })
+    let userFileList
+    if (_params.user && _params.user.currentUser.userName) {
+      userFileList = await FileTools.getPathListByFilter(path, {
+        extension: 'xml',
+        type: 'file',
+      })
+    }
+
+    let list = []
+    fileList.forEach(item => {
+      let name = item.name
+      item.title = name
+      item.name = name.split('.')[0]
+      list.push(item)
+    })
+    data = [
+      {
+        title:
+          _params.user && _params.user.currentUser.userName
+            ? '公共地图'
+            : '地图',
+        data: list,
+      },
+    ]
+    if (userFileList && userFileList.length > 0) {
+      let userList = []
+      userFileList.forEach(item => {
+        let name = item.name
+        item.title = name
+        item.name = name.split('.')[0]
+        userList.push(item)
+      })
+      data.push({
+        title: '地图',
+        data: userFileList,
+      })
+    }
+    _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+      containerType: 'list',
+      height: ConstToolType.HEIGHT[3],
+      data,
+    })
   })()
 }
 
