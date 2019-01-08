@@ -1,5 +1,5 @@
 import React from 'react'
-import { screen, Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, scaleSize, jsonUtil } from '../../../../utils'
 import {
   MTBtn,
   TableList,
@@ -143,7 +143,7 @@ export default class ToolBar extends React.PureComponent {
       // data: this.getData(props.type),
       data: [],
       buttons: [],
-      bottom: new Animated.Value(-screen.deviceHeight),
+      bottom: new Animated.Value(-props.device.height),
       boxHeight: new Animated.Value(this.height),
       isSelectlist: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
@@ -1178,7 +1178,7 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -screen.deviceHeight,
+          toValue: isShow ? 0 : -this.props.device.height,
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -1221,7 +1221,7 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -screen.deviceHeight,
+          toValue: isShow ? 0 : -this.props.device.height,
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -2842,20 +2842,22 @@ export default class ToolBar extends React.PureComponent {
     let containerStyle = this.state.isFullScreen
       ? styles.fullContainer
       : styles.wrapContainer
-    let height = {}
-    if (this.state.isFullScreen) {
-      if (this.props.device.orientation === 'LANDSCAPE') {
-        height =
-          screen.deviceHeight < screen.deviceWidth
-            ? { height: screen.deviceHeight }
-            : { height: screen.deviceWidth }
-      } else {
-        height =
-          screen.deviceHeight > screen.deviceWidth
-            ? { height: screen.deviceHeight }
-            : { height: screen.deviceWidth }
-      }
-    }
+    let height = this.state.isFullScreen
+      ? { height: this.props.device.height }
+      : {}
+    // if (this.state.isFullScreen) {
+    //   if (this.props.device.orientation === 'LANDSCAPE') {
+    //     height =
+    //       screen.deviceHeight < screen.deviceWidth
+    //         ? { height: screen.deviceHeight }
+    //         : { height: screen.deviceWidth }
+    //   } else {
+    //     height =
+    //       screen.deviceHeight > screen.deviceWidth
+    //         ? { height: screen.deviceHeight }
+    //         : { height: screen.deviceWidth }
+    //   }
+    // }
     return (
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
