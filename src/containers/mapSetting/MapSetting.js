@@ -10,6 +10,7 @@ import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
+import { SPUtils } from '../../native'
 
 export default class MapSetting extends Component {
   props: {
@@ -25,12 +26,12 @@ export default class MapSetting extends Component {
     const { params } = this.props.navigation.state
     this.type = params && params.type
     this.state = {
-      data: getMapSettings(),
+      data: [],
     }
   }
 
   componentDidMount() {
-    // this.getData()
+    this.getData()
   }
 
   // componentDidUpdate(prevProps) {
@@ -43,7 +44,25 @@ export default class MapSetting extends Component {
   // }
 
   getData = async () => {
-    this.setState({ data: getMapSettings() })
+    let statusBar = false
+    let navigationBar = false
+    let isAntialias = false
+    let isVisibleScalesEnabled = false
+
+    isAntialias = await SMap.isAntialias()
+    isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
+    navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
+
+    let newData = getMapSettings()
+    newData[0].data[0].value = statusBar
+    newData[0].data[1].value = navigationBar
+    newData[1].data[0].value = isAntialias
+    newData[2].data[0].value = isVisibleScalesEnabled
+
+    this.setState({
+      data: newData,
+    })
   }
 
   refreshList = section => {
@@ -98,6 +117,20 @@ export default class MapSetting extends Component {
   _onValueChange = ({ value, item, index }) => {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
+    switch (newData[item.sectionIndex].data[index].name) {
+      case '显示状态栏':
+        SPUtils.putBoolean('MapSetting', '显示状态栏', value)
+        break
+      case '显示导航栏':
+        SPUtils.putBoolean('MapSetting', '显示导航栏', value)
+        break
+      case '地图反走样':
+        SMap.setAntialias(value)
+        break
+      case '固定比例尺':
+        SMap.setVisibleScalesEnabled(value)
+        break
+    }
     this.setState({
       data: newData.concat(),
     })
