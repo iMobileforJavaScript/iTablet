@@ -157,7 +157,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
 ) => {
   try {
     // if (!params.mapName) return
-    let result = await SMap.saveMapName(
+    let mapName = await SMap.saveMapName(
       params.mapName,
       params.nModule || '',
       params.addition,
@@ -169,13 +169,13 @@ export const saveMap = (params = {}, cb = () => {}) => async (
         userName +
         '/' +
         ConstPath.RelativePath.Map +
-        params.mapName +
+        mapName +
         '.xml',
     )
     if (!params.isNew) {
       await dispatch({
         type: SET_CURRENT_MAP,
-        payload: { path, name: params.mapName },
+        payload: { path, name: mapName },
         extData: {
           userName,
           moduleName: GLOBAL.Type,
@@ -183,7 +183,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
       })
     }
     cb && cb()
-    return result
+    return mapName
   } catch (e) {
     cb && cb()
     return null
