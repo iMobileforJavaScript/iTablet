@@ -179,7 +179,11 @@ export default class ToolBar extends React.PureComponent {
   }
 
   changeHeight = async (orientation, type) => {
-    this.height = ToolbarHeight.getToorbarHeight(orientation, type)
+    let data = ToolbarHeight.getToorbarHeight(orientation, type)
+    this.height = data.height
+    this.setState({
+      column: data.column,
+    })
     this.showToolbar()
   }
 
@@ -2462,8 +2466,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
-    let column =
-      this.props.device.orientation === 'LANDSCAPE' ? 8 : this.state.column
+    let column = this.state.column
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       column = 1
     }
@@ -2840,7 +2843,18 @@ export default class ToolBar extends React.PureComponent {
       ? styles.fullContainer
       : styles.wrapContainer
     return (
-      <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
+      <Animated.View
+        style={[
+          containerStyle,
+          { bottom: this.state.bottom },
+          {
+            height:
+              this.props.device.orientation === 'LANDSCAPE'
+                ? screen.deviceWidth
+                : screen.deviceHeight,
+          },
+        ]}
+      >
         {this.state.isFullScreen &&
           !this.state.isTouchProgress && (
           <TouchableOpacity

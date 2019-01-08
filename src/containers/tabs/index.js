@@ -126,7 +126,6 @@ const Tabs = TabNavigator(
         height: scaleSize(90),
         borderTopColor: color.border,
         borderTopWidth: 1,
-        justifyContent: 'center',
       },
       tabStyle: {
         flexDirection: 'column',
@@ -146,16 +145,16 @@ const styles = StyleSheet.create({
   tabText: {
     color: color.gray2,
     fontSize: scaleSize(20),
-    marginTop: scaleSize(3),
+    marginTop: scaleSize(1),
   },
   selectedTabText: {
     color: color.blue2,
     fontSize: scaleSize(20),
-    marginTop: scaleSize(5),
+    marginTop: scaleSize(1),
   },
   icon: {
-    width: scaleSize(45),
-    height: scaleSize(45),
+    width: 30,
+    height: 30,
   },
   labelView: {
     flexDirection: 'row',
