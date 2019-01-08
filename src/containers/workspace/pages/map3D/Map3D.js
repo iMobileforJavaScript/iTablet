@@ -188,17 +188,20 @@ export default class Map3D extends React.Component {
       GLOBAL.SaveMapView.setVisible(true, this.setLoading)
     // try {
     //   this.container && this.container.setLoading(true, '正在关闭')
-    if (GLOBAL.Map3DSymbol) {
-      await SScene.clearAllLabel()
-    }
+    // if (GLOBAL.Map3DSymbol) {
+    //   await SScene.clearAllLabel()
+    // }
     //   if (GLOBAL.openWorkspace) {
     //     // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
     //     await SScene.closeWorkspace()
     //     this.container && this.container.setLoading(false)
     //     NavigationService.goBack()
     //   } else {
-    this.container && this.container.setLoading(false)
-    NavigationService.goBack()
+    if (!GLOBAL.openWorkspace) {
+      this.container && this.container.setLoading(false)
+      NavigationService.goBack()
+    }
+
     //   }
     //   this.props.setCurrentAttribute({})
     //   this.props.setAttributes({})

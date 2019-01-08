@@ -84,7 +84,8 @@ export const openMap = (params, cb = () => {}) => async (
     // let paths = params.path.split('/')
     let module = params.module || ''
     let fileName = params.name || params.title
-    let importResult = await SMap.openMapName(fileName, module)
+    let isCustomerPath = params.path.indexOf(ConstPath.CustomerPath) >= 0
+    let importResult = await SMap.openMapName(fileName, module, !isCustomerPath)
     // let expFilePath = await FileTools.appendingHomeDirectory(params.path.substr(0, params.path.lastIndexOf('.')) + '.exp')
     let expFilePath =
       absultePath.substr(0, absultePath.lastIndexOf('.')) + '.exp'
@@ -155,7 +156,7 @@ export const saveMap = (params = {}, cb = () => {}) => async (
   getState,
 ) => {
   try {
-    if (!params.mapName) return
+    // if (!params.mapName) return
     let result = await SMap.saveMapName(
       params.mapName,
       params.nModule || '',

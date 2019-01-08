@@ -465,7 +465,8 @@ public class FileTools extends ReactContextBaseJavaModule {
                 ZipEntry ze2 = (ZipEntry) e.nextElement();
                 String entryName = ze2.getName();
 
-                if (isMessyCode(entryName)) {
+//                if (isMessyCode(entryName)) {
+                if (!(java.nio.charset.Charset.forName("GBK").newEncoder().canEncode(entryName))) {
                     entryName = new String(entryName.getBytes( "GBK" ), "UTF-8");
                 }
 

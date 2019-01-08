@@ -179,7 +179,11 @@ export default class ToolBar extends React.PureComponent {
   }
 
   changeHeight = async (orientation, type) => {
-    this.height = ToolbarHeight.getToorbarHeight(orientation, type)
+    let data = ToolbarHeight.getToorbarHeight(orientation, type)
+    this.height = data.height
+    this.setState({
+      column: data.column,
+    })
     this.showToolbar()
   }
 
@@ -251,124 +255,124 @@ export default class ToolBar extends React.PureComponent {
         // }
         // buttons = [ToolbarBtnType.CANCEL]
         break
-      case ConstToolType.MAP_EDIT_REGION:
-        data = [
-          {
-            key: 'addPoint',
-            title: '添加节点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'editPoint',
-            title: '编辑节点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'pointDraw',
-            title: '点绘式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'freeDraw',
-            title: '自由式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'takePhoto',
-            title: '拍照',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-        ]
-        buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
-        break
-      case ConstToolType.MAP_EDIT_LINE:
-        data = [
-          {
-            key: 'addPoint',
-            title: '添加节点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'editPoint',
-            title: '编辑节点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'pointDraw',
-            title: '点绘式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'freeDraw',
-            title: '自由式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'takePhoto',
-            title: '拍照',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-        ]
-        break
-      case ConstToolType.MAP_EDIT_POINT:
-        data = [
-          {
-            key: 'addPoint',
-            title: '添加节点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'editPoint',
-            title: '编辑节点',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'pointDraw',
-            title: '点绘式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'freeDraw',
-            title: '自由式',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-          {
-            key: 'takePhoto',
-            title: '拍照',
-            action: this.changeLayer,
-            size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
-          },
-        ]
-        break
+      // case ConstToolType.MAP_EDIT_REGION:
+      //   data = [
+      //     {
+      //       key: 'addPoint',
+      //       title: '添加节点',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'editPoint',
+      //       title: '编辑节点',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'pointDraw',
+      //       title: '点绘式',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'freeDraw',
+      //       title: '自由式',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'takePhoto',
+      //       title: '拍照',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //   ]
+      //   buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      //   break
+      // case ConstToolType.MAP_EDIT_LINE:
+      //   data = [
+      //     {
+      //       key: 'addPoint',
+      //       title: '添加节点',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'editPoint',
+      //       title: '编辑节点',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'pointDraw',
+      //       title: '点绘式',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'freeDraw',
+      //       title: '自由式',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'takePhoto',
+      //       title: '拍照',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //   ]
+      //   break
+      // case ConstToolType.MAP_EDIT_POINT:
+      //   data = [
+      //     {
+      //       key: 'addPoint',
+      //       title: '添加节点',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'editPoint',
+      //       title: '编辑节点',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'pointDraw',
+      //       title: '点绘式',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'freeDraw',
+      //       title: '自由式',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //     {
+      //       key: 'takePhoto',
+      //       title: '拍照',
+      //       action: this.changeLayer,
+      //       size: 'large',
+      //       image: require('../../../../assets/function/icon_function_base_map.png'),
+      //     },
+      //   ]
+      //   break
       case ConstToolType.MAP_STYLE:
         buttons = [
           ToolbarBtnType.CANCEL,
@@ -2239,6 +2243,10 @@ export default class ToolBar extends React.PureComponent {
               this.props.setContainerLoading(false)
             Toast.show(msg)
           } else if (mapsInfo && mapsInfo.length > 0) {
+            // 关闭地图
+            if (this.props.map.currentMap.name) {
+              await this.props.closeMap()
+            }
             // 打开地图
             let templatePath =
               (this.props.user && this.props.user.currentUser.userName
@@ -2327,7 +2335,7 @@ export default class ToolBar extends React.PureComponent {
     try {
       if (
         this.props.map.currentMap &&
-        this.props.map.currentMap.name === item.name
+        this.props.map.currentMap.path === item.path
       ) {
         Toast.show(ConstInfo.MAP_ALREADY_OPENED)
         return
@@ -2354,6 +2362,16 @@ export default class ToolBar extends React.PureComponent {
             )) +
             ConstPath.RelativePath.Template +
             mapInfo.Template
+          if (
+            item.path.indexOf(
+              ConstPath.CustomerPath + ConstPath.RelativePath.Map,
+            ) >= 0
+          ) {
+            templatePath =
+              (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
+              ConstPath.RelativePath.Template +
+              mapInfo.Template
+          }
           await this.props.getSymbolTemplates({
             path: templatePath,
             name: item.name,
@@ -2566,8 +2584,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
-    let column =
-      this.props.device.orientation === 'LANDSCAPE' ? 8 : this.state.column
+    let column = this.state.column
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       column = 1
     }
