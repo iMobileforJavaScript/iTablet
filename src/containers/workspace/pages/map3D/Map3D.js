@@ -183,26 +183,37 @@ export default class Map3D extends React.Component {
   }
 
   back = async () => {
-    try {
-      this.container && this.container.setLoading(true, '正在关闭')
-      if (GLOBAL.Map3DSymbol) {
-        await SScene.clearAllLabel()
-      }
-      if (GLOBAL.openWorkspace) {
-        await SScene.closeWorkspace()
-        this.container && this.container.setLoading(false)
-        NavigationService.goBack()
-      } else {
-        this.container && this.container.setLoading(false)
-        NavigationService.goBack()
-      }
-      this.props.setCurrentAttribute({})
-      this.props.setAttributes({})
-    } catch (e) {
+    GLOBAL.SaveMapView &&
+      GLOBAL.openWorkspace &&
+      GLOBAL.SaveMapView.setVisible(true, this.setLoading)
+    // try {
+    //   this.container && this.container.setLoading(true, '正在关闭')
+    // if (GLOBAL.Map3DSymbol) {
+    //   await SScene.clearAllLabel()
+    // }
+    //   if (GLOBAL.openWorkspace) {
+    //     // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
+    //     await SScene.closeWorkspace()
+    //     this.container && this.container.setLoading(false)
+    //     NavigationService.goBack()
+    //   } else {
+    if (!GLOBAL.openWorkspace) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
     }
-    return true
+
+    //   }
+    //   this.props.setCurrentAttribute({})
+    //   this.props.setAttributes({})
+    // } catch (e) {
+    //   this.container && this.container.setLoading(false)
+    //   NavigationService.goBack()
+    // }
+    // return true
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
   }
 
   renderFunctionToolbar = () => {
@@ -349,6 +360,11 @@ export default class Map3D extends React.Component {
         {this.renderFunctionToolbar()}
         {this.renderTool()}
         {this.renderDialog()}
+        {/* <SaveDialog
+          ref={ref => (this.SaveDialog = ref)}
+          confirmAction={data => this.saveAsMap(data.mapName)}
+          type="normal"
+        /> */}
       </Container>
     )
   }

@@ -466,6 +466,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                 String entryName = ze2.getName();
 
                 if (isMessyCode(entryName)) {
+//                if (!(java.nio.charset.Charset.forName("GBK").newEncoder().canEncode(entryName))) {
                     entryName = new String(entryName.getBytes( "GBK" ), "UTF-8");
                 }
 
@@ -652,7 +653,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                 char c = ch[i];
                 if (!Character.isLetterOrDigit(c)) {
                     String str = "" + ch[i];
-                    if (!str.matches("[\u4e00-\u9fa5]+")) {
+                    if (!str.matches("[\u4e00-\u9fa5]|[ _`~!@#$%^&*()+=|{}':;',\\[\\].<>/?~！@#￥%……&*（）——+|{}【】‘；：”“’。，、？]|\n|\r|\t+")) {
                         return true;
                     }
                 }

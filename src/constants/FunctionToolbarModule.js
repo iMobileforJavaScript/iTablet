@@ -5,19 +5,19 @@ import { ConstToolType } from '../constants'
 
 function OpenData(data, index) {
   (async function() {
-    if (GLOBAL.isArrayData) {
-      await SMap.removeLayer(0)
-    } else {
-      await SMap.removeLayer(0)
-      await SMap.removeLayer(0)
+    let layers = await SMap.getLayersByType()
+    // Layer index = 0 为顶层
+    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+      await SMap.removeLayer(layers.length - i)
     }
     if (data instanceof Array) {
-      await SMap.openDatasource(data[1].DSParams, index, false)
-      await SMap.openDatasource(data[0].DSParams, index, false)
-      GLOBAL.isArrayData = false
+      for (let i = data.length - 1; i >= 0; i--) {
+        await SMap.openDatasource(data[i].DSParams, index, false)
+      }
+      GLOBAL.BaseMapSize = data.length
     } else {
       await SMap.openDatasource(data.DSParams, index, false)
-      GLOBAL.isArrayData = true
+      GLOBAL.BaseMapSize = 1
     }
   }.bind(this)())
 }
@@ -112,9 +112,21 @@ const BotMap = [
     title: 'OSM',
     data: [
       {
-        title: 'OSM Map',
+        title: 'Standard',
         action: () => {
           OpenData(ConstOnline.OSM, 0)
+        },
+      },
+      {
+        title: 'CycleMap',
+        action: () => {
+          OpenData(ConstOnline.OSM, 1)
+        },
+      },
+      {
+        title: 'Transport',
+        action: () => {
+          OpenData(ConstOnline.OSM, 2)
         },
       },
     ],

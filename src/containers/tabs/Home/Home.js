@@ -1,15 +1,9 @@
 import React, { Component } from 'react'
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  Platform,
-  AsyncStorage,
-} from 'react-native'
+import { View, Text, TouchableOpacity, Image, AsyncStorage } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
+import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
 import { SScene } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
@@ -22,7 +16,7 @@ export default class Home extends Component {
     setShow: () => {},
     device: Object,
     // map3DleadWorkspace: () => {},
-    improtSceneWorkspace: () => {},
+    importSceneWorkspace: () => {},
     importWorkspace: () => {},
   }
 
@@ -139,7 +133,7 @@ export default class Home extends Component {
     return (
       <View style={styles.header}>
         <View style={{ flex: 1 }} />
-        <TouchableOpacity style={styles.userView} onPress={async () => {}}>
+        <TouchableOpacity style={styles.userView}>
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
@@ -166,11 +160,25 @@ export default class Home extends Component {
           headerLeft: (
             <TouchableOpacity
               style={styles.userView}
-              onPress={() => {
-                // this.props.map3DleadWorkspace({
-                //   path:
-                //     '/storage/emulated/0/iTablet/Common/OlympicGreen_android.zip',
-                // })
+              onPress={async () => {
+                // try {
+                //   Toast.show('准备导入')
+                // let userName = 'Customer'
+                // let filepath = await FileTools.appendingHomeDirectory(
+                //     ConstPath.UserPath +
+                //       userName +
+                //       '/' +
+                //       ConstPath.RelativePath.Temp +
+                //       'OlympicGreen_android/OlympicGreen_android.sxwu',
+                //   )
+                //   Toast.show('开始导入')
+                //   this.props.importSceneWorkspace({
+                //     server: filepath,
+                //   })
+                // } catch (error) {
+                // console.warn(error)
+                //  Toast.show(error)
+                // }
               }}
             >
               <Image source={userImg} style={styles.userImg} />
@@ -186,7 +194,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerStyle: {
-            height: 60 + (Platform.OS === 'ios' ? 10 : 0),
+            height: scaleSize(80),
           },
         }}
         style={styles.container}
