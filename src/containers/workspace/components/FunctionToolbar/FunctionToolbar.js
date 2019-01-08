@@ -157,6 +157,7 @@ export default class FunctionToolbar extends React.Component {
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
             : ConstToolType.HEIGHT[1],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
   }
@@ -177,11 +178,11 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_START, {
         containerType: 'table',
         isFullScreen: true,
-        column: 4,
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
             : ConstToolType.HEIGHT[0],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
   }
@@ -247,6 +248,7 @@ export default class FunctionToolbar extends React.Component {
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
             : ConstToolType.HEIGHT[3],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
   }
@@ -262,11 +264,11 @@ export default class FunctionToolbar extends React.Component {
         toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
           containerType: 'table',
           isFullScreen: true,
-          column: 4,
           height:
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.HEIGHT[0]
               : ConstToolType.HEIGHT[2],
+          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
         })
       }
     })
@@ -282,11 +284,11 @@ export default class FunctionToolbar extends React.Component {
         toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
           containerType: 'table',
           isFullScreen: true,
-          column: 4,
           height:
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.HEIGHT[0]
               : ConstToolType.HEIGHT[1],
+          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
         })
       }
     })
@@ -500,6 +502,7 @@ export default class FunctionToolbar extends React.Component {
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[3]
               : ConstToolType.THEME_HEIGHT[6],
+          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
           data,
           buttons: buttons,
         })
@@ -515,11 +518,11 @@ export default class FunctionToolbar extends React.Component {
       // TODO 根据符号类型改变ToolBox 编辑内容
       toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
         isFullScreen: false,
-        column: 4,
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
             : ConstToolType.HEIGHT[3],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
   }
