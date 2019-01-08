@@ -61,7 +61,7 @@ export default {
   THEME_SAVE: '保存地图',
   THEME_SAVE_AS: '另存地图',
   THEME_SHARE: '分享地图',
-  THEME_WORKSPACE: '导入模板',
+  THEME_WORKSPACE: '导入数据',
   THEME_OPEN: '打开地图',
   THEME_CREATE: '新建地图',
   THEME_BASE_MAP: '底图切换',

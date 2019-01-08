@@ -122,7 +122,7 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_EDIT_START:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.HEIGHT[0]
       } else {
         height = ConstToolType.HEIGHT[0]
       }
@@ -131,7 +131,14 @@ function getToorbarHeight(orientation, type) {
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
       } else {
-        height = ConstToolType.HEIGHT[1]
+        height = ConstToolType.THEME_HEIGHT[2]
+      }
+      break
+    case ConstToolType.MAP_NULL:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[4]
+      } else {
+        height = ConstToolType.HEIGHT[4]
       }
       break
     case ConstToolType.LINECOLOR_SET:
@@ -177,6 +184,13 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_ADD_LAYER:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[3]
+      } else {
+        height = ConstToolType.HEIGHT[2]
+      }
+      break
+    case ConstToolType.MAP_CHANGE:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.HEIGHT[3]
       } else {

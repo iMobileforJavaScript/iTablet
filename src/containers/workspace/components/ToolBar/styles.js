@@ -107,8 +107,9 @@ export default StyleSheet.create({
     width: scaleSize(300),
     position: 'absolute',
     top: '30%',
-    left: '30%',
-    right: '30%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'center',
     backgroundColor: 'rgba(48,48,48,0.85)',
   },
   text: {
