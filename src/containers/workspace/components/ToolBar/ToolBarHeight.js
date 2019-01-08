@@ -242,7 +242,7 @@ function getToorbarHeight(orientation, type) {
       height = ConstToolType.HEIGHT[2]
       break
     default:
-      height = ConstToolType.HEIGHT[2]
+      height = 0
   }
   return { height, column }
 }

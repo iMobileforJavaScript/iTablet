@@ -6,10 +6,9 @@ import {
   TouchableOpacity,
   Image,
   View,
-  Platform,
 } from 'react-native'
 import { Container, EmptyView } from '../../components'
-import { EngineType, SScene } from 'imobile_for_reactnative'
+import { EngineType } from 'imobile_for_reactnative'
 import { Toast, scaleSize } from '../../utils'
 import { ConstPath } from '../../constants'
 import { FileTools } from '../../native'
@@ -34,8 +33,9 @@ export default class WorkSpaceFileList extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params.type
+    this.userName = props.user.currentUser.userName
     this.path = props.user.currentUser.userName
-      ? ConstPath.UserPath + props.user.currentUser.userName
+      ? ConstPath.UserPath + props.user.currentUser.userName + '/'
       : ConstPath.CustomerPath
     this.title = params.title
     this.cb = params.cb
@@ -126,9 +126,26 @@ export default class WorkSpaceFileList extends Component {
           let fileList = await FileTools.getPathListByFilter(absolutePath, {
             extension: filter,
           })
+          let userPath = await FileTools.appendingHomeDirectory(
+            ConstPath.UserPath,
+          )
+          let list = []
+          if (absolutePath + '/' === userPath) {
+            for (let index = 0; index < fileList.length; index++) {
+              let element = fileList[index]
+              if (element.name === 'Customer') {
+                list.push(element)
+              }
+              if (this.userName && element.name === this.userName) {
+                list.push(element)
+              }
+            }
+          } else {
+            list = fileList
+          }
           let backPath = item.path.substr(0, item.path.lastIndexOf('/') - 1)
           this.setState({
-            data: fileList,
+            data: list,
             backPath: backPath,
             showData: true,
           })
@@ -140,48 +157,13 @@ export default class WorkSpaceFileList extends Component {
     }.bind(this)())
   }
 
-  _toLoadMapView = (path, type) => {
+  _toLoadMapView = path => {
     (async function() {
       switch (this.type) {
-        case 'MAP_3D':
-          this._loadMap3D(path, type)
-          break
         default:
           this.cb && this.cb(path)
       }
     }.bind(this)())
-  }
-
-  _loadMap3D = async (path, type) => {
-    switch (type) {
-      case 'sxwu':
-        try {
-          if (GLOBAL.openWorkspace) {
-            await SScene.removeKMLOfWorkcspace()
-          }
-          this.container && this.container.setLoading(true, '正在打开地图')
-          let data = { server: path }
-          let result = await SScene.openWorkspace(data)
-          let mapList = await SScene.getMapList()
-          result &&
-            SScene.openMap(mapList[0].name).then(result => {
-              if (result) {
-                GLOBAL.openWorkspace = true
-              } else {
-                GLOBAL.openWorkspace = false
-              }
-            })
-          SScene.setListener().then(() => {
-            SScene.getAttribute()
-            SScene.setCircleFly()
-          })
-          NavigationService.goBack() && this.container.setLoading(false)
-        } catch (error) {
-          Toast.show('打开失败')
-          this.container.setLoading(false)
-        }
-        break
-    }
   }
 
   _refresh = async item => {
@@ -204,11 +186,11 @@ export default class WorkSpaceFileList extends Component {
   }
 
   headerBack = () => {
-    let isRootPath =
-      Platform.OS === 'android'
-        ? false
-        : this.state.backPath === ConstPath.AppPath
-    if (this.state.backPath === '' || isRootPath) {
+    if (
+      this.state.backPath === '' ||
+      this.state.backPath ===
+        ConstPath.AppPath.substr(0, ConstPath.AppPath.lastIndexOf('/') - 1)
+    ) {
       return null
     } else {
       return (
