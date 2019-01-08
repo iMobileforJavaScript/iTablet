@@ -2961,7 +2961,7 @@ export default class ToolBar extends React.PureComponent {
       ? styles.fullContainer
       : styles.wrapContainer
     return (
-      <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
+      <View style={{ flex: 1 }}>
         {this.state.isFullScreen &&
           !this.state.isTouchProgress && (
           <TouchableOpacity
@@ -2970,18 +2970,20 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
-          <TouchProgress selectName={this.state.selectName} />
-        )}
-        {this.state.isSelectlist && (
-          <View style={styles.list}>{this.renderSelectList()}</View>
-        )}
-        <View style={styles.containers}>
-          {this.renderView()}
-          {this.renderBottomBtns()}
-        </View>
-      </Animated.View>
+        <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
+          {this.state.isTouchProgress &&
+            this.state.isFullScreen && (
+            <TouchProgress selectName={this.state.selectName} />
+          )}
+          {this.state.isSelectlist && (
+            <View style={styles.list}>{this.renderSelectList()}</View>
+          )}
+          <View style={styles.containers}>
+            {this.renderView()}
+            {this.renderBottomBtns()}
+          </View>
+        </Animated.View>
+      </View>
     )
   }
 }
