@@ -2842,8 +2842,11 @@ export default class ToolBar extends React.PureComponent {
     let containerStyle = this.state.isFullScreen
       ? styles.fullContainer
       : styles.wrapContainer
+    let height = this.state.isFullScreen ? { height: screen.deviceHeight } : {}
     return (
-      <Animated.View style={[containerStyle, { bottom: this.state.bottom }]}>
+      <Animated.View
+        style={[containerStyle, { bottom: this.state.bottom }, height]}
+      >
         {this.state.isFullScreen &&
           !this.state.isTouchProgress && (
           <TouchableOpacity
