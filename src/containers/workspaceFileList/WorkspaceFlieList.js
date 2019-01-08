@@ -126,9 +126,10 @@ export default class WorkSpaceFileList extends Component {
           let fileList = await FileTools.getPathListByFilter(absolutePath, {
             extension: filter,
           })
+          let backPath = item.path.substr(0, item.path.lastIndexOf('/') - 1)
           this.setState({
             data: fileList,
-            backPath: item.path,
+            backPath: backPath,
             showData: true,
           })
           this.container.setLoading(false)

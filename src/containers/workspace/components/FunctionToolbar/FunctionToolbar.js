@@ -254,6 +254,10 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DSymbol = async () => {
+    if (!GLOBAL.openWorkspace) {
+      Toast.show('请打开场景')
+      return
+    }
     SScene.checkoutListener('startLabelOperate')
     GLOBAL.Map3DSymbol = true
     SScene.getLayerList().then(() => {
