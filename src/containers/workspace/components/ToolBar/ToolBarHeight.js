@@ -23,7 +23,7 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_COLLECTION_START:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.HEIGHT[0]
         column = 4
       } else {
         height = ConstToolType.HEIGHT[0]
@@ -147,7 +147,7 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_EDIT_START:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.HEIGHT[0]
         column = 4
       } else {
         height = ConstToolType.HEIGHT[0]
