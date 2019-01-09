@@ -51,10 +51,10 @@ class RenderModuleItem extends Component {
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'
-        dataUrl = 'https://www.supermapol.com/web/datas/1075928570/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/1309053453/download'
       } else if (Platform.OS === 'ios') {
         fileName = 'OlympicGreen_ios'
-        dataUrl = 'https://www.supermapol.com/web/datas/1766529829/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/1206338222/download'
       }
     }
     let homePath = await FileTools.appendingHomeDirectory()
