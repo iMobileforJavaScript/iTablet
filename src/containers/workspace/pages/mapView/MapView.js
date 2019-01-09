@@ -905,7 +905,12 @@ export default class MapView extends React.Component {
 
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
-    return <MapController ref={ref => (this.mapController = ref)} />
+    return (
+      <MapController
+        ref={ref => (this.mapController = ref)}
+        type={GLOBAL.Type}
+      />
+    )
   }
 
   /** 显示全屏 **/
@@ -1005,39 +1010,6 @@ export default class MapView extends React.Component {
           childrens={this.closeInfo}
           Alerttitle={'是否保存当前地图'}
         />
-        {/*<SaveView*/}
-        {/*ref={ref => (this.SaveMapView = ref)}*/}
-        {/*save={() => {*/}
-        {/*let mapName = ''*/}
-        {/*if (this.props.map.currentMap.name) {*/}
-        {/*mapName = this.props.map.currentMap.name*/}
-        {/*mapName = mapName.substr(0, mapName.lastIndexOf('.'))*/}
-        {/*} else if (this.props.layers.layers.length > 0) {*/}
-        {/*// mapName = this.props.layers.layers[this.props.layers.layers.length - 1].name +*/}
-        {/*//   this.props.collection.datasourceName ? ('@' + this.props.collection.datasourceName) : ''*/}
-        {/*mapName = this.props.collection.datasourceName*/}
-        {/*}*/}
-        {/*let addition = {}*/}
-        {/*if (this.props.map.currentMap.Template) {*/}
-        {/*addition.Template = this.props.map.currentMap.Template*/}
-        {/*}*/}
-        {/*this.saveMapName(mapName, '', addition, () => {*/}
-        {/*if (this.backAction) {*/}
-        {/*this.backAction()*/}
-        {/*this.backAction = null*/}
-        {/*}*/}
-        {/*})*/}
-        {/*}}*/}
-        {/*notSave={() => {*/}
-        {/*if (this.backAction) {*/}
-        {/*this.backAction()*/}
-        {/*this.backAction = null*/}
-        {/*}*/}
-        {/*}}*/}
-        {/*cancel={() => {*/}
-        {/*this.backAction = null*/}
-        {/*}}*/}
-        {/*/>*/}
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}
           confirmAction={data => this.saveAsMap(data.mapName)}
