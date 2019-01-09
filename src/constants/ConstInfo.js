@@ -25,6 +25,10 @@ export default {
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',
 
+  DATA_IMPORTING: '正在导入数据',
+  DATA_IMPORT_SUCCESS: '导入数据成功',
+  DATA_IMPORT_FAILED: '导入数据失败',
+
   WORKSPACE_OPENING: '正在打开工作空间',
   WORKSPACE_OPEN_SUCCESS: '已为您切换到工作空间工作空间',
   WORKSPACE_OPEN_FAILED: '切换工作空间失败',

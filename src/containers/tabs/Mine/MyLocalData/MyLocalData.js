@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, SectionList, TouchableOpacity } from 'react-native'
 import Container from '../../../../components/Container'
-import ConstPath from '../../../../constants/ConstPath'
+import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -287,6 +287,7 @@ export default class MyLocalData extends Component {
   _onImportWorkspace = async () => {
     try {
       if (this.itemInfo !== undefined) {
+        this.setLoading(true, ConstInfo.DATA_IMPORTING)
         let filePath = this.itemInfo.item.filePath
         let is3D = await SScene.is3DWorkspace({ server: filePath })
         if (is3D === true) {
@@ -313,9 +314,11 @@ export default class MyLocalData extends Component {
         // } else {
         //   Toast.show('导入失败')
         // }
+        this.setLoading(false)
         this.setState({ modalIsVisible: false })
       }
     } catch (e) {
+      this.setLoading(false)
       Toast.show('导入失败')
       this._closeModal()
     }
@@ -334,9 +337,14 @@ export default class MyLocalData extends Component {
     }
   }
 
+  setLoading = (visible, info) => {
+    this.container && this.container.setLoading(visible, info)
+  }
+
   render() {
     return (
       <Container
+        ref={ref => (this.container = ref)}
         headerProps={{
           title: '本地数据',
           withoutBack: false,
