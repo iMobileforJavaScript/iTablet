@@ -47,7 +47,7 @@ export default {
   LOAD: 'LOAD',
 
   CREATE_SYMBOL_COLLECTION: '新建符号采集',
-  MODULE: '模板',
+  MODULE: '数据',
   HISTORY: '历史记录',
 
   // 时间
