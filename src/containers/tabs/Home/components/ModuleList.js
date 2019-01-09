@@ -110,6 +110,7 @@ class RenderModuleItem extends Component {
       })
       this.props.importWorkspace(fileCachePath, item, isExist)
     }
+    this.setState({ disabled: false })
   }
 
   _renderProgressView = () => {
