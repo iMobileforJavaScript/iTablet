@@ -3,11 +3,11 @@ import { color } from '../../../../styles'
 const itemWidth = '70%'
 const itemHeight = 40
 const fontSize = 16
-const titleOnFocusBackgroundColor = color.blackBg
-const titleOnBlurBackgroundColor = color.border
+const titleOnFocusBackgroundColor = color.theme
+const titleOnBlurBackgroundColor = color.content
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: color.border,
+    backgroundColor: color.content,
   },
   keyboardAvoidingStyle: {
     padding: 9,
