@@ -79,6 +79,7 @@ export default class MapController extends React.Component {
   }
 
   map3Dplus = async () => {
+    if (this.props.type !== 'MAP_3D') return
     clearInterval(this.timer)
     this.timer = setInterval(async () => {
       await SScene.zoom(0.025)
@@ -86,6 +87,7 @@ export default class MapController extends React.Component {
   }
 
   map3Dminus = async () => {
+    if (this.props.type !== 'MAP_3D') return
     clearInterval(this.timer)
     this.timer = setInterval(async () => {
       await SScene.zoom(-0.025)
@@ -93,6 +95,7 @@ export default class MapController extends React.Component {
   }
 
   cloestimer = async () => {
+    if (this.props.type !== 'MAP_3D') return
     clearInterval(this.timer)
   }
 

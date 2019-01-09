@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform } from 'react-native'
+import { View, AppState, StyleSheet, Platform, StatusBar } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -9,6 +9,8 @@ import { setUser } from './src/models/user'
 import {
   setEditLayer,
   setSelection,
+  setCurrentAttribute,
+  setAttributes,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -23,7 +25,7 @@ import {
 import { setMapSetting } from './src/models/setting'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
-import { FileTools }  from './src/native'
+import { FileTools, SPUtils }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
@@ -31,8 +33,8 @@ import { scaleSize, Toast } from './src/utils'
 import { ConstPath, ConstInfo } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SMap } from 'imobile_for_reactnative'
-
+import { SOnlineService } from 'imobile_for_reactnative'
+import {ConstToolType} from './src/constants'
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -75,6 +77,8 @@ class AppRoot extends Component {
     setTemplate:PropTypes.func,
     setMapSetting:PropTypes.func,
     saveMap:PropTypes.func,
+    setCurrentAttribute:PropTypes.func,
+    setAttributes:PropTypes.func,
   }
 
   constructor(props) {
@@ -99,6 +103,13 @@ class AppRoot extends Component {
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
       await this.initOrientation()
+      //状态栏
+      let statusBar = false
+      statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
+      StatusBar.setHidden(!statusBar)
+      StatusBar.setBackgroundColor('#2D2D2F')
+      StatusBar.setTranslucent(false)
+      StatusBar.setBarStyle('default')
     }).bind(this)()
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
@@ -217,7 +228,36 @@ class AppRoot extends Component {
   //   }
   // }
 
+  map3dBackAction=async()=>{
+    try {
+      this.container && this.container.setLoading(true, '正在关闭')
+      if (GLOBAL.Map3DSymbol) {
+        await SScene.clearAllLabel()
+      }
+      if (GLOBAL.openWorkspace) {
+        // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
+        await SScene.closeWorkspace()
+        this.container && this.container.setLoading(false)
+        NavigationService.goBack()
+      } else {
+        this.container && this.container.setLoading(false)
+        NavigationService.goBack()
+      }
+      this.props.setCurrentAttribute({})
+      this.props.setAttributes({})
+    } catch (e) {
+      this.container && this.container.setLoading(false)
+      NavigationService.goBack()
+    }
+  }
+
   saveMap = () => {
+    if (GLOBAL.Type===ConstToolType.MAP_3D){
+      console.log("3d")
+      this.map3dBackAction()
+      GLOBAL.openWorkspace&&Toast.show("保存成功")
+      return
+    }
     let mapName = ''
     if (this.props.map.currentMap.name) {
       mapName = this.props.map.currentMap.name
@@ -255,6 +295,11 @@ class AppRoot extends Component {
   }
 
   closeMapHandler = async () => {
+    if (GLOBAL.Type===ConstToolType.MAP_3D){
+      console.log("3d")
+      this.map3dBackAction()
+      return
+    }
     if (GLOBAL.isBackHome) {
       try {
         this.setSaveMapViewLoading(true, '正在关闭地图')

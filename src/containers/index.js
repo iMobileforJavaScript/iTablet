@@ -1,4 +1,5 @@
 import { StackNavigator } from 'react-navigation'
+import CardStackStyleInterpolator from 'react-navigation/src/views/CardStack/CardStackStyleInterpolator'
 
 //主页
 import MapLoad from './mapLoad'
@@ -313,5 +314,8 @@ export default StackNavigator(
     },
     lazy: true,
     mode: 'card',
+    transitionConfig: () => ({
+      screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+    }),
   },
 )
