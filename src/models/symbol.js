@@ -61,10 +61,17 @@ export default handleActions(
       let newData = state.toJS().latestSymbols || []
       let maxLength = state.toJS().maxLength || initialState.toJS().maxLength
       if (payload.id) {
-        // let index = newData.indexOf(payload.id)
-        let index = newData.indexOf(payload)
+        let index = -1
+        for (let i = 0; i < newData.length; i++) {
+          if (
+            newData[i].id === payload.id &&
+            newData[i].type === payload.type
+          ) {
+            index = i
+            break
+          }
+        }
         index > -1 && newData.splice(index, 1)
-        // newData.unshift(payload.id)
         newData.unshift(payload)
         if (newData.length >= maxLength) {
           newData = newData.slice(0, maxLength)

@@ -46,12 +46,7 @@ export default class TableList extends React.Component {
     let rows = [],
       rowsView = []
     this.props.data.forEach((item, index) => {
-      let column
-      if (this.props.device.orientation === 'LANDSCAPE') {
-        column = 8
-      } else {
-        column = this.props.numColumns
-      }
+      let column = this.props.numColumns
       if (this.props.Heighttype === 'MAP3D_CIRCLEFLY') {
         column = 1
       }
@@ -87,8 +82,7 @@ export default class TableList extends React.Component {
 
   renderCell = (item, rowIndex, cellIndex) => {
     if (!this.props.renderCell) throw new Error('Please render cell')
-    let column =
-      this.props.device.orientation === 'LANDSCAPE' ? 8 : this.props.numColumns
+    let column = this.props.numColumns
     if (this.props.Heighttype === 'MAP3D_CIRCLEFLY') {
       column = 1
     }
