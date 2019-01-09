@@ -2218,7 +2218,7 @@ export default class ToolBar extends React.PureComponent {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
-        Toast.show(ConstInfo.MAP_ALREADY_OPENED)
+        Toast.show(ConstInfo.CHANGE_MAP_FAILED)
         this.props.setContainerLoading(false)
       }
       // })

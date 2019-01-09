@@ -27,11 +27,12 @@ class RenderModuleItem extends Component {
     super(props)
     this.state = {
       isShowProgressView: false,
-      progress: 0,
+      progress: '',
       disabled: false,
     }
   }
   itemAction = async item => {
+    this.setState({ disabled: true })
     let fileName
     let dataUrl
     let moduleKey = item.key
@@ -104,12 +105,13 @@ class RenderModuleItem extends Component {
     } else {
       this.props.importWorkspace(fileCachePath, item, isExist)
     }
+    this.setState({ disabled: false })
   }
 
   _renderProgressView = () => {
     let display = this.state.isShowProgressView ? 'flex' : 'none'
     let progress = this.state.progress
-    return (
+    return this.state.isShowProgressView ? (
       <View
         style={[
           {
@@ -126,6 +128,8 @@ class RenderModuleItem extends Component {
       >
         <Text>{progress}</Text>
       </View>
+    ) : (
+      <View />
     )
   }
   render() {
