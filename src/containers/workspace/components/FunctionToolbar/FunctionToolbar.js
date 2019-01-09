@@ -942,6 +942,7 @@ export default class FunctionToolbar extends React.Component {
         image={item.image}
         onPress={item.action}
         activeOpacity={0.5}
+        // separator={scaleSize(2)}
       />
     )
   }

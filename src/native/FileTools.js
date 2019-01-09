@@ -118,6 +118,68 @@ function initUserDefaultData(userName = '') {
   return FileTools.initUserDefaultData(userName)
 }
 
+/**
+ * 深度遍历fileDir目录下的fileType数据,并添加到arrFilterFile中
+ * fileDir 文件目录
+ * fileType 文件类型 {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
+ * arrFilterFile 添加到arrFilterFile数组中保存
+ * */
+async function getFilterFiles(
+  fileDir: string,
+  fileType: Object,
+  arrFilterFile: Array,
+) {
+  try {
+    if (typeof fileDir !== 'string') {
+      return
+    }
+    if (fileType === undefined) {
+      fileType = { smwu: 'smwu', sxwu: 'sxwu', sxw: 'sxw', smw: 'smw' }
+    }
+    if (arrFilterFile === undefined) {
+      arrFilterFile = []
+    }
+    let isRecordFile = false
+    let arrDirContent = await getDirectoryContent(fileDir)
+    for (let i = 0; i < arrDirContent.length; i++) {
+      let fileContent = arrDirContent[i]
+      let isFile = fileContent.type
+      let fileName = fileContent.name
+      let newPath = fileDir + '/' + fileName
+      if (isFile === 'file' && !isRecordFile) {
+        if (
+          (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
+          (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
+          (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
+          (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
+          (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+        ) {
+          if (
+            !(
+              fileName.indexOf('~[') !== -1 &&
+              fileName.indexOf(']') !== -1 &&
+              fileName.indexOf('@') !== -1
+            )
+          ) {
+            fileName = fileName.substring(0, fileName.length - 5)
+            arrFilterFile.push({
+              filePath: newPath,
+              fileName: fileName,
+              directory: fileDir,
+            })
+            isRecordFile = true
+          }
+        }
+      } else if (isFile === 'directory') {
+        await getFilterFiles(newPath, fileType, arrFilterFile)
+      }
+    }
+  } catch (e) {
+    // Toast.show('没有数据')
+  }
+  return arrFilterFile
+}
+
 export default {
   getHomeDirectory,
   appendingHomeDirectory,
@@ -136,4 +198,5 @@ export default {
   deleteFile,
   copyFile,
   initUserDefaultData,
+  getFilterFiles,
 }

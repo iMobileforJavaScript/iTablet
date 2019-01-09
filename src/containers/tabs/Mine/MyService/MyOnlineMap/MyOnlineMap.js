@@ -85,7 +85,7 @@ export default class MyOnlineMap extends Component {
             break
           }
         }
-        if (restUrl === undefined) {
+        if (restUrl === undefined || restUrl === '') {
           this._showInfo('数据没有发布服务')
         } else {
           let subUrl = restUrl.substring(5, restUrl.length)

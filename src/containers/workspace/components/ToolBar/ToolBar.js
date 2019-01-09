@@ -1,5 +1,5 @@
 import React from 'react'
-import { screen, Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, scaleSize, jsonUtil } from '../../../../utils'
 import {
   MTBtn,
   TableList,
@@ -144,7 +144,7 @@ export default class ToolBar extends React.PureComponent {
       // data: this.getData(props.type),
       data: [],
       buttons: [],
-      bottom: new Animated.Value(-screen.deviceHeight),
+      bottom: new Animated.Value(-props.device.height),
       boxHeight: new Animated.Value(this.height),
       isSelectlist: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
@@ -1179,7 +1179,7 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -screen.deviceHeight,
+          toValue: isShow ? 0 : -this.props.device.height,
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -1222,7 +1222,7 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -screen.deviceHeight,
+          toValue: isShow ? 0 : -this.props.device.height,
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -1953,7 +1953,7 @@ export default class ToolBar extends React.PureComponent {
   importTemplate = async item => {
     try {
       this.props.setContainerLoading &&
-        this.props.setContainerLoading(true, '正在打开模板')
+        this.props.setContainerLoading(true, '正在打开数据')
       // 打开模板工作空间
       let moduleName = ''
       if (this.props.map.currentMap.name) {
@@ -1968,14 +1968,14 @@ export default class ToolBar extends React.PureComponent {
             Toast.show(msg)
           } else if (mapsInfo && mapsInfo.length > 0) {
             // 打开地图
-            let templatePath =
-              (this.props.user && this.props.user.currentUser.userName
-                ? ConstPath.UserPath +
-                  this.props.user.currentUser.userName +
-                  '/'
-                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
+            // let templatePath =
+            //   (this.props.user && this.props.user.currentUser.userName
+            //     ? ConstPath.UserPath +
+            //       this.props.user.currentUser.userName +
+            //       '/'
+            //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
             let mapInfo = await this.props.openMap({
-              path: templatePath + mapsInfo[0] + '.xml',
+              path: ConstPath.UserPath + mapsInfo[0] + '.xml',
               name: mapsInfo[0],
             })
             if (mapInfo) {
@@ -2105,17 +2105,6 @@ export default class ToolBar extends React.PureComponent {
         this.props.setContainerLoading(true, '正在打开模板')
       // 打开模板工作空间
       let moduleName = ''
-      // switch (GLOBAL.Type) {
-      //   case constants.COLLECTION:
-      //     moduleName = ConstPath.Module.Collection
-      //     break
-      //   case constants.MAP_EDIT:
-      //     moduleName = ConstPath.Module.MapEdit
-      //     break
-      //   case constants.MAP_THEME:
-      //     moduleName = ConstPath.Module.MapTheme
-      //     break
-      // }
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
@@ -2132,44 +2121,22 @@ export default class ToolBar extends React.PureComponent {
               await this.props.closeMap()
             }
             // 打开地图
-            let templatePath =
+            let mapPath =
               (this.props.user && this.props.user.currentUser.userName
                 ? ConstPath.UserPath +
                   this.props.user.currentUser.userName +
                   '/'
                 : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
-            // let absolutePath = await FileTools.appendingHomeDirectory(templatePath)
-            // switch (GLOBAL.Type) {
-            //   case constants.COLLECTION:
-            //     templatePath = templatePath + ConstPath.RelativeFilePath.Collection
-            //     break
-            //   case constants.MAP_EDIT:
-            //     templatePath = templatePath + ConstPath.RelativeFilePath.MapEdit
-            //     break
-            //   case constants.MAP_THEME:
-            //     templatePath = templatePath + ConstPath.RelativeFilePath.MapTheme
-            //     break
-            // }
             let mapInfo = await this.props.openMap({
-              path: templatePath + mapsInfo[0] + '.xml',
+              path: mapPath + mapsInfo[0] + '.xml',
               name: mapsInfo[0],
             })
             if (mapInfo) {
-              // Toast.show(ConstInfo.OPEN_MAP_TO + mapInfo.name)
-              // if (item.path.substr(item.path.lastIndexOf('.')) === 'xml')
-              // this.props.setCurrentMap(item)
               if (mapInfo.Template) {
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
-                let templatePath =
-                  (await FileTools.appendingHomeDirectory(
-                    this.props.user.currentUser.userName
-                      ? ConstPath.UserPath +
-                          this.props.user.currentUser.userName +
-                          '/'
-                      : ConstPath.CustomerPath,
-                  )) +
-                  ConstPath.RelativePath.Template +
-                  mapInfo.Template
+                let templatePath = await FileTools.appendingHomeDirectory(
+                  ConstPath.UserPath + mapInfo.Template,
+                )
                 await this.props.getSymbolTemplates({
                   path: templatePath,
                   name: item.name,
@@ -2228,34 +2195,14 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
-      // let absolutePath = await FileTools.appendingHomeDirectory(item.path)
       let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {
         Toast.show(ConstInfo.CHANGE_MAP_TO + mapInfo.name)
-        // if (item.path.substr(item.path.lastIndexOf('.')) === 'xml')
-        // this.props.setCurrentMap(item)
         if (mapInfo.Template) {
           this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
-          let templatePath =
-            (await FileTools.appendingHomeDirectory(
-              this.props.user.currentUser.userName
-                ? ConstPath.UserPath +
-                    this.props.user.currentUser.userName +
-                    '/'
-                : ConstPath.CustomerPath,
-            )) +
-            ConstPath.RelativePath.Template +
-            mapInfo.Template
-          if (
-            item.path.indexOf(
-              ConstPath.CustomerPath + ConstPath.RelativePath.Map,
-            ) >= 0
-          ) {
-            templatePath =
-              (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
-              ConstPath.RelativePath.Template +
-              mapInfo.Template
-          }
+          let templatePath = await FileTools.appendingHomeDirectory(
+            ConstPath.UserPath + mapInfo.Template,
+          )
           await this.props.getSymbolTemplates({
             path: templatePath,
             name: item.name,
@@ -2273,7 +2220,7 @@ export default class ToolBar extends React.PureComponent {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
-        Toast.show(ConstInfo.MAP_ALREADY_OPENED)
+        Toast.show(ConstInfo.CHANGE_MAP_FAILED)
         this.props.setContainerLoading(false)
       }
       // })
@@ -2844,7 +2791,22 @@ export default class ToolBar extends React.PureComponent {
     let containerStyle = this.state.isFullScreen
       ? styles.fullContainer
       : styles.wrapContainer
-    let height = this.state.isFullScreen ? { height: screen.deviceHeight } : {}
+    let height = this.state.isFullScreen
+      ? { height: this.props.device.height }
+      : {}
+    // if (this.state.isFullScreen) {
+    //   if (this.props.device.orientation === 'LANDSCAPE') {
+    //     height =
+    //       screen.deviceHeight < screen.deviceWidth
+    //         ? { height: screen.deviceHeight }
+    //         : { height: screen.deviceWidth }
+    //   } else {
+    //     height =
+    //       screen.deviceHeight > screen.deviceWidth
+    //         ? { height: screen.deviceHeight }
+    //         : { height: screen.deviceWidth }
+    //   }
+    // }
     return (
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}

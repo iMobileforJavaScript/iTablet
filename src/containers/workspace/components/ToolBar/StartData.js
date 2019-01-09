@@ -10,7 +10,7 @@ import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 import Orientation from 'react-native-orientation'
 let _params = {}
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SScene } from 'imobile_for_reactnative'
 
 function setParams(params) {
   _params = params
@@ -328,10 +328,19 @@ function importTemplate() {
   _params.showFullMap && _params.showFullMap(true)
   NativeMethod.getTemplates(_params.user.currentUser.userName).then(
     async templateList => {
+      let tpList = []
+      for (let i = 0; i < templateList.length; i++) {
+        let item = templateList[i]
+        let path = await FileTools.appendingHomeDirectory(item.path)
+        let is3D = await SScene.is3DWorkspace({ server: path })
+        if (!is3D) {
+          tpList.push(item)
+        }
+      }
       let data = [
         {
-          title: Const.MODULE,
-          data: templateList,
+          title: Const.INFORMATION,
+          data: tpList,
         },
       ]
       _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
@@ -349,39 +358,25 @@ function openTemplate() {
   _params.showFullMap && _params.showFullMap(true)
   NativeMethod.getTemplates(_params.user.currentUser.userName).then(
     async templateList => {
-      // let isDefaultWS = false
-      // let defaultWorkspacePath = await FileTools.appendingHomeDirectory(
-      //   (_params.user && _params.user.userName
-      //     ? ConstPath.UserPath + _params.userName
-      //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Workspace,
-      // )
-
-      // if (
-      //   _params.map &&
-      //   _params.map.workspace.server === defaultWorkspacePath
-      // ) {
-      //   isDefaultWS = true
-      // }
-
-      let data =
-        // isDefaultWS
-        // ? [
-        //   {
-        //     title: Const.MODULE,
-        //     data: templateList,
-        //   },
-        // ]
-        // :
-        [
-          {
-            title: Const.CREATE_SYMBOL_COLLECTION,
-            data: [],
-          },
-          {
-            title: Const.MODULE,
-            data: templateList,
-          },
-        ]
+      let tpList = []
+      for (let i = 0; i < templateList.length; i++) {
+        let item = templateList[i]
+        let path = await FileTools.appendingHomeDirectory(item.path)
+        let is3D = await SScene.is3DWorkspace({ server: path })
+        if (!is3D) {
+          tpList.push(item)
+        }
+      }
+      let data = [
+        {
+          title: Const.CREATE_SYMBOL_COLLECTION,
+          data: [],
+        },
+        {
+          title: Const.MODULE,
+          data: tpList,
+        },
+      ]
       _params.setToolbarVisible(true, ConstToolType.MAP_TEMPLATE, {
         containerType: 'list',
         height: ConstToolType.HEIGHT[3],
