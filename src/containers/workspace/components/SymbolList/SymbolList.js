@@ -83,8 +83,8 @@ export default class SymbolList extends React.Component {
           data={this.state.data}
           tableStyle={{
             orientation: 1,
-            imageSize: Platform.OS === 'ios' ? scaleSize(90) : scaleSize(150),
-            count: 4,
+            imageSize: Platform.OS === 'ios' ? scaleSize(80) : scaleSize(150),
+            count: Platform.OS === 'ios' ? 5 : 4,
             legendBackgroundColor: dataUtil.colorRgba(color.subTheme),
             textColor: dataUtil.colorRgba(color.themeText),
           }}

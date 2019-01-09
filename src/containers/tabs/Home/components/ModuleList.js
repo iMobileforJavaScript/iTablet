@@ -32,7 +32,9 @@ class RenderModuleItem extends Component {
     }
   }
   itemAction = async item => {
-    this.setState({ disabled: true })
+    this.setState({
+      disabled: true,
+    })
     let fileName
     let dataUrl
     let moduleKey = item.key
@@ -103,13 +105,15 @@ class RenderModuleItem extends Component {
         this.setState({ isShowProgressView: false, disabled: false })
       }
     } else {
+      this.setState({
+        disabled: false,
+      })
       this.props.importWorkspace(fileCachePath, item, isExist)
     }
     this.setState({ disabled: false })
   }
 
   _renderProgressView = () => {
-    let display = this.state.isShowProgressView ? 'flex' : 'none'
     let progress = this.state.progress
     return this.state.isShowProgressView ? (
       <View
@@ -118,15 +122,23 @@ class RenderModuleItem extends Component {
             position: 'absolute',
             width: scaleSize(260),
             height: scaleSize(195),
-            backgroundColor: '#rgba(128, 192, 255,0.5)',
+            backgroundColor: '#rgba(112, 128, 144,0.9)',
             alignItems: 'center',
             justifyContent: 'center',
             borderRadius: 5,
-            display: display,
           },
         ]}
       >
-        <Text>{progress}</Text>
+        <Text
+          style={{
+            fontSize: scaleSize(25),
+            fontWeight: 'bold',
+            // fontStyle:'italic',
+            color: 'white',
+            textShadowColor: '#fff',
+            textShadowRadius: 4,
+          }}
+        >{`下载${progress}`}</Text>
       </View>
     ) : (
       <View />
