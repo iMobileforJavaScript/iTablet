@@ -109,6 +109,7 @@ export default class ToolBar extends React.PureComponent {
     setTemplate: () => {},
     setInputDialogVisible: () => {},
     exportmap3DWorkspace: () => {},
+    getMapSetting: () => {},
   }
 
   static defaultProps = {
@@ -1891,6 +1892,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 切换地图
       this.changeMap(item)
+      this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       //专题图添加数据源
       if (item.theme_add_udb) {
@@ -2162,8 +2164,8 @@ export default class ToolBar extends React.PureComponent {
                   (await FileTools.appendingHomeDirectory(
                     this.props.user.currentUser.userName
                       ? ConstPath.UserPath +
-                        this.props.user.currentUser.userName +
-                        '/'
+                          this.props.user.currentUser.userName +
+                          '/'
                       : ConstPath.CustomerPath,
                   )) +
                   ConstPath.RelativePath.Template +
@@ -2238,8 +2240,8 @@ export default class ToolBar extends React.PureComponent {
             (await FileTools.appendingHomeDirectory(
               this.props.user.currentUser.userName
                 ? ConstPath.UserPath +
-                  this.props.user.currentUser.userName +
-                  '/'
+                    this.props.user.currentUser.userName +
+                    '/'
                 : ConstPath.CustomerPath,
             )) +
             ConstPath.RelativePath.Template +
@@ -2847,16 +2849,14 @@ export default class ToolBar extends React.PureComponent {
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

@@ -27,7 +27,11 @@ import {
   setTemplate,
   getSymbolTemplates,
 } from '../../../../models/template'
-import { setBufferSetting, setOverlaySetting } from '../../../../models/setting'
+import {
+  setBufferSetting,
+  setOverlaySetting,
+  getMapSetting,
+} from '../../../../models/setting'
 import { setCollectionInfo } from '../../../../models/collection'
 
 const mapStateToProps = state => ({
@@ -75,6 +79,7 @@ const mapDispatchToProps = {
   closeMap,
   getSymbolTemplates,
   saveMap,
+  getMapSetting,
 }
 
 export default connect(
