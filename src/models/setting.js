@@ -1,7 +1,9 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { DatasetType } from 'imobile_for_reactnative'
+import { DatasetType, SMap } from 'imobile_for_reactnative'
+import { SPUtils } from '../native'
+import { getMapSettings } from '../containers/mapSetting/settingData'
 
 // Constants
 // --------------------------------------------------
@@ -63,11 +65,35 @@ export const setMapSetting = (cb = () => {}) => async dispatch => {
 }
 
 export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: MAP_SETTING,
-    payload: params || [],
-  })
-  cb && cb()
+  try {
+    let statusBar = false
+    // let navigationBar = false
+    let isAntialias = true
+    let isVisibleScalesEnabled = false
+
+    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
+    // navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
+    isAntialias = await SMap.isAntialias()
+    isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+
+    let newData = getMapSettings()
+    newData[0].data[0].value = statusBar
+    // newData[0].data[1].value = navigationBar
+    newData[1].data[0].value = isAntialias
+    newData[2].data[0].value = isVisibleScalesEnabled
+
+    await dispatch({
+      type: MAP_SETTING,
+      payload: newData || [],
+    })
+    cb && cb(newData)
+  } catch (e) {
+    await dispatch({
+      type: MAP_SETTING,
+      payload: params || [],
+    })
+    cb && cb()
+  }
 }
 
 const initialState = fromJS({

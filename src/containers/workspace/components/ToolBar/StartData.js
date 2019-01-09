@@ -357,7 +357,7 @@ function importTemplate() {
       }
       let data = [
         {
-          title: Const.MODULE,
+          title: Const.INFORMATION,
           data: tpList,
         },
       ]

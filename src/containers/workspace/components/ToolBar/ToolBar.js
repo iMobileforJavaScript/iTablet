@@ -110,6 +110,7 @@ export default class ToolBar extends React.PureComponent {
     setInputDialogVisible: () => {},
     exportmap3DWorkspace: () => {},
     importSceneWorkspace: () => {},
+    getMapSetting: () => {},
   }
 
   static defaultProps = {
@@ -1924,6 +1925,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_CHANGE) {
       // 切换地图
       this.changeMap(item)
+      this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       //专题图添加数据源
       if (item.theme_add_udb) {
@@ -1984,7 +1986,7 @@ export default class ToolBar extends React.PureComponent {
   importTemplate = async item => {
     try {
       this.props.setContainerLoading &&
-        this.props.setContainerLoading(true, '正在打开模板')
+        this.props.setContainerLoading(true, '正在打开数据')
       // 打开模板工作空间
       let moduleName = ''
       if (this.props.map.currentMap.name) {
