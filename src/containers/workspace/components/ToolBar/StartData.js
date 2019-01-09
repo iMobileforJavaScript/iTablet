@@ -362,7 +362,6 @@ function openTemplate() {
       // ) {
       //   isDefaultWS = true
       // }
-
       let data =
         // isDefaultWS
         // ? [
