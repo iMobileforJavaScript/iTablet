@@ -247,7 +247,7 @@ export default class Register extends React.Component {
         <KeyboardAvoidingView
           enabled={true}
           keyboardVerticalOffset={0}
-          style={{ flex: 1, backgroundColor: 'cc0066' }}
+          style={{ flex: 1 }}
           contentContainerStyle={styles.keyboardAvoidingStyle}
           behavior={this.state.behavior}
         >

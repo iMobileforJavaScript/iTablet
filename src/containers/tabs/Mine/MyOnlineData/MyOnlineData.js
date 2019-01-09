@@ -683,7 +683,7 @@ export default class MyOnlineData extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '在线数据',
+          title: '我的数据',
           withoutBack: false,
           navigation: this.props.navigation,
         }}

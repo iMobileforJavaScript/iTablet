@@ -24,7 +24,7 @@ export default class MapSetting extends Component {
               style={styles.switch}
               trackColor={{
                 false: color.reverseTheme,
-                true: color.reverseTheme,
+                true: '#00BFFF',
               }}
               thumbColor={color.theme}
               ios_backgroundColor={
