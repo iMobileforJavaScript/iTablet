@@ -521,19 +521,19 @@ public class FileTools extends ReactContextBaseJavaModule {
         // 初始化用户工作空间
         String downloadsPath = SDCARD + "/iTablet/User/" + userName + "/ExternalData/";
         String dataPath = SDCARD + "/iTablet/User/" + userName + "/Data/";
-        String dataPath2 = SDCARD + "/iTablet/User/" + userName + "/Data/Scene/";
+//        String dataPath2 = SDCARD + "/iTablet/User/" + userName + "/Data/Scene/";
         String originName = "Customer.smwu";
-        String originName2 = "OlympicGreen_android.zip";
+//        String originName2 = "OlympicGreen_android.zip";
         String wsName = "Workspace.smwu";
-        String ssName = "OlympicGreen_android.zip";
+//        String ssName = "OlympicGreen_android.zip";
         if (!Utils.fileIsExit(dataPath + wsName)) {
             Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath, originName, wsName);
         }
-        if (!Utils.fileIsExit(dataPath2 + ssName)) {
-            Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath2, originName2, ssName);
-            Decompressor.UnZipFolder(dataPath2 + originName2, dataPath2);
-            Utils.deleteFile(dataPath2 + originName2);
-        }
+//        if (!Utils.fileIsExit(dataPath2 + ssName)) {
+//            Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath2, originName2, ssName);
+//            Decompressor.UnZipFolder(dataPath2 + originName2, dataPath2);
+//            Utils.deleteFile(dataPath2 + originName2);
+//        }
 
         //创建用户目录
         createDirectory(dataPath + "Attribute");
@@ -546,27 +546,28 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(downloadsPath);
 
         // 初始化用户数据
-        String commonPath = SDCARD + "/iTablet/Common/";
-        String commonZipPath = commonPath + "Template.zip";
-        String defaultZipData = "Template.zip";
-        String templatePath = downloadsPath;
-        String templateFilePath = templatePath + "地理国情普查";
-
-        Boolean isUnZip;
-        if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
-            if (Utils.fileIsExit(commonZipPath)) {
-                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
-                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
-            } else {
-                Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, defaultZipData);
-                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
-                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
-            }
-        } else {
-            isUnZip = true;
-        }
-
-        return isUnZip;
+//        String commonPath = SDCARD + "/iTablet/Common/";
+//        String commonZipPath = commonPath + "Template.zip";
+//        String defaultZipData = "Template.zip";
+//        String templatePath = downloadsPath;
+//        String templateFilePath = templatePath + "地理国情普查";
+//
+//        Boolean isUnZip;
+//        if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
+//            if (Utils.fileIsExit(commonZipPath)) {
+//                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
+//                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
+//            } else {
+//                Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, defaultZipData);
+//                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
+//                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
+//            }
+//        } else {
+//            isUnZip = true;
+//        }
+//
+//        return isUnZip;
+        return true;
     }
 
     /**
