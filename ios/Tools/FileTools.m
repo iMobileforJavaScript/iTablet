@@ -301,40 +301,42 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", downloadsPath, @""]];
   
   // 初始化模板数据
-  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
-  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
-  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", downloadsPath];
-  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", downloadsPath, @"地理国情普查"];
+//  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
+//  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
+//  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", downloadsPath];
+//  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", downloadsPath, @"地理国情普查"];
+//
+//  BOOL isUnZip = NO;
+//  if (![[NSFileManager defaultManager] fileExistsAtPath:downloadsPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
+//    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
+//      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
+//      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+//    } else {
+//      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
+//        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
+//        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+//      }
+//    }
+//  } else {
+//    isUnZip = YES;
+//  }
+//
+//   NSString* sceneData = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios.zip"];
+//   NSString* sceneDir = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/"];
+//   NSString* srcSceneData = [[NSBundle mainBundle] pathForResource:@"OlympicGreen_ios" ofType:@"zip"];
+//  if (![[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios"] isDirectory:nil]) {
+//      if ([FileTools copyFile:srcSceneData targetPath:sceneData]) {
+//        isUnZip = [FileTools unZipFile:sceneData targetPath:sceneDir];
+//        [FileTools deleteFile:sceneData];
+//        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+//      }
+//  } else {
+//    isUnZip = YES;
+//  }
+//
+//  return isUnZip;
   
-  BOOL isUnZip = NO;
-  if (![[NSFileManager defaultManager] fileExistsAtPath:downloadsPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
-    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
-      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
-      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-    } else {
-      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
-        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
-        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-      }
-    }
-  } else {
-    isUnZip = YES;
-  }
-  
-   NSString* sceneData = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios.zip"];
-   NSString* sceneDir = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/"];
-   NSString* srcSceneData = [[NSBundle mainBundle] pathForResource:@"OlympicGreen_ios" ofType:@"zip"];
-  if (![[NSFileManager defaultManager] fileExistsAtPath:[NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios"] isDirectory:nil]) {
-      if ([FileTools copyFile:srcSceneData targetPath:sceneData]) {
-        isUnZip = [FileTools unZipFile:sceneData targetPath:sceneDir];
-        [FileTools deleteFile:sceneData];
-        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-      }
-  } else {
-    isUnZip = YES;
-  }
-  
-  return isUnZip;
+  return YES;
 }
 
 RCT_REMAP_METHOD(createDirectory,createDirectoryPath:(NSString*)path getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){

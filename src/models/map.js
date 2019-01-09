@@ -78,46 +78,15 @@ export const openMap = (params, cb = () => {}) => async (
       !params.path
     )
       return
-    let absultePath = await FileTools.appendingHomeDirectory(params.path)
+    let absolutePath = await FileTools.appendingHomeDirectory(params.path)
     let userName = getState().user.toJS().currentUser.userName || 'Customer'
     let moduleName = GLOBAL.Type
-    // let paths = params.path.split('/')
     let module = params.module || ''
     let fileName = params.name || params.title
     let isCustomerPath = params.path.indexOf(ConstPath.CustomerPath) >= 0
     let importResult = await SMap.openMapName(fileName, module, !isCustomerPath)
-    // let expFilePath = await FileTools.appendingHomeDirectory(params.path.substr(0, params.path.lastIndexOf('.')) + '.exp')
     let expFilePath =
-      absultePath.substr(0, absultePath.lastIndexOf('.')) + '.exp'
-
-    // let expIsExist = await FileTools.fileIsExist(expFilePath)
-    // if (expIsExist) {
-    //   fs.readFile(expFilePath).then(data => {
-    //     parser.parseString(data, async (err, result) => {
-    //       let openMapResult = importResult && await SMap.openMap(params.title)
-    //       if (openMapResult) {
-    //         let mapInfo = await SMap.getMapInfo()
-    //         await dispatch({
-    //           type: SET_CURRENT_MAP,
-    //           payload: mapInfo || {},
-    //         })
-    //       }
-    //       cb && cb(result)
-    //       return result
-    //     })
-    //   })
-    // } else {
-    //   let result = importResult && await SMap.openMap(params.title)
-    //   if (result) {
-    //     let mapInfo = await SMap.getMapInfo()
-    //     await dispatch({
-    //       type: SET_CURRENT_MAP,
-    //       payload: mapInfo || {},
-    //     })
-    //   }
-    //   cb && cb(result)
-    //   return result
-    // }
+      absolutePath.substr(0, absolutePath.lastIndexOf('.')) + '.exp'
     let openMapResult = importResult && (await SMap.openMap(fileName))
     let mapInfo = await SMap.getMapInfo()
     if (openMapResult) {
@@ -137,11 +106,6 @@ export const openMap = (params, cb = () => {}) => async (
         return mapInfo
       }
     } else {
-      // await dispatch({
-      //   type: SET_CURRENT_MAP,
-      //   payload: mapInfo || {},
-      // })
-      // cb && cb(mapInfo)
       return openMapResult
     }
   } catch (e) {
