@@ -229,7 +229,6 @@ export default class Home extends Component {
           }}
         >
           <ModuleList
-            ref={ref => (this.moduleListRef = ref)}
             importWorkspace={this._onImportWorkspace}
             currentUser={this.props.currentUser}
             styles={styles.modulelist}
