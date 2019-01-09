@@ -4,6 +4,7 @@ import { scaleSize } from '../../../../utils'
 import {
   StyleSheet,
   TouchableOpacity,
+  TouchableHighlight,
   Text,
   SectionList,
   Image,
@@ -18,6 +19,7 @@ export default class ToolBarSectionList extends React.Component {
     listSelectable?: boolean,
     sectionTitleStyle?: Object,
     activeOpacity?: Object,
+    underlayColor?: Object,
     sections: Array,
     renderItem?: () => {},
     renderSectionHeader?: () => {},
@@ -106,22 +108,25 @@ export default class ToolBarSectionList extends React.Component {
       return this.props.renderSectionHeader({ section })
     }
     return (
-      <TouchableOpacity
+      <TouchableHighlight
         activeOpacity={this.props.activeOpacity}
+        underlayColor={this.props.underlayColor}
         style={[styles.sectionHeader, this.props.sectionStyle]}
         onPress={() => this.headerAction({ section })}
       >
-        {section.datasetType && (
-          <Image
-            source={this.getDatasetTypeImg(section)}
-            resizeMode={'contain'}
-            style={styles.section_dataset_type}
-          />
-        )}
-        <Text style={[styles.sectionTitle, this.props.sectionTitleStyle]}>
-          {section.title}
-        </Text>
-      </TouchableOpacity>
+        <View style={{ flexDirection: 'row' }}>
+          {section.datasetType && (
+            <Image
+              source={this.getDatasetTypeImg(section)}
+              resizeMode={'contain'}
+              style={styles.section_dataset_type}
+            />
+          )}
+          <Text style={[styles.sectionTitle, this.props.sectionTitleStyle]}>
+            {section.title}
+          </Text>
+        </View>
+      </TouchableHighlight>
     )
   }
 

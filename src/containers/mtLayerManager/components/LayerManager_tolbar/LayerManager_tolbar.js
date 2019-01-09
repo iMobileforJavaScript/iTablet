@@ -194,7 +194,8 @@ export default class LayerManager_tolbar extends React.Component {
         headerAction={({ section }) => {
           this.listAction({ section })
         }}
-        activeOpacity={0.8}
+        // activeOpacity={0.4}
+        underlayColor={'#rgba(105, 105, 105, 0.8)'}
         sectionTitleStyle={{
           marginLeft: scaleSize(60),
           fontSize: size.fontSize.fontSizeLg,
