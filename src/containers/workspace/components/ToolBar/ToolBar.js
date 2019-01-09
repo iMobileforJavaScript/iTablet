@@ -1951,7 +1951,7 @@ export default class ToolBar extends React.PureComponent {
   importTemplate = async item => {
     try {
       this.props.setContainerLoading &&
-        this.props.setContainerLoading(true, '正在打开模板')
+        this.props.setContainerLoading(true, '正在打开数据')
       // 打开模板工作空间
       let moduleName = ''
       if (this.props.map.currentMap.name) {
