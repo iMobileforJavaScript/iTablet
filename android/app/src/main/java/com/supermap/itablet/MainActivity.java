@@ -1,7 +1,9 @@
 package com.supermap.itablet;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,7 +18,6 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 import io.reactivex.functions.Consumer;
 
 public class MainActivity extends ReactActivity {
-
     public final static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
 
     /**
@@ -34,6 +35,9 @@ public class MainActivity extends ReactActivity {
         requestPermissions();
         initEnvironment();
         initDefaultData();
+        if(!isTablet(this)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 
     }
     @Override
@@ -107,5 +111,9 @@ public class MainActivity extends ReactActivity {
                         }
                     }
                 });
+    }
+
+    private boolean isTablet (Activity context){
+       return(context.getResources().getConfiguration().screenLayout&Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
 }
