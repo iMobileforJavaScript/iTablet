@@ -74,6 +74,15 @@ export default class Home extends Component {
             } else {
               Toast.show('导入3D失败')
             }
+          } else {
+            let result = await this.props.importWorkspace({
+              server: filePath,
+            })
+            if (result.msg !== undefined) {
+              Toast.show('导入失败')
+            } else {
+              Toast.show('导入成功')
+            }
           }
         } else if (isExist === true) {
           item.action && item.action(this.props.currentUser)
