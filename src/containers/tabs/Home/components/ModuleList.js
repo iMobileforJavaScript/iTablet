@@ -65,7 +65,8 @@ class RenderModuleItem extends Component {
         cachePath: cachePath,
         itemData: item,
       }
-      this._showAlert(item.key)
+      // this._showAlert(item.key)
+      this._downloadModuleData()
     } else {
       await this.props.importWorkspace(fileDirPath, item, isDownloaded)
       this.setState({

@@ -5,7 +5,7 @@ export const itemHeight = 140
 export const imageWidth = 120
 export const imageHeight = 100
 export const textHeight = 40
-const largeFontSize = 25
+const largeFontSize = 20
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
