@@ -1,11 +1,10 @@
 import React from 'react'
-import { screen, scaleSize, Toast } from '../../../../utils/index'
+import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
 import { layersetting, layerThemeSetting } from './LayerToolbarData'
 import { View, TouchableOpacity, Animated } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { color, size } from '../../../../styles/index'
 import { SMap } from 'imobile_for_reactnative'
 
 /** 工具栏类型 **/
@@ -196,11 +195,12 @@ export default class LayerManager_tolbar extends React.Component {
         }}
         // activeOpacity={0.4}
         underlayColor={'#rgba(105, 105, 105, 0.8)'}
+        sectionStyle={{
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
         sectionTitleStyle={{
-          marginLeft: scaleSize(60),
-          fontSize: size.fontSize.fontSizeLg,
-          fontWeight: 'bold',
-          color: color.themeText,
+          marginLeft: 0,
         }}
         keyExtractor={(item, index) => index}
       />

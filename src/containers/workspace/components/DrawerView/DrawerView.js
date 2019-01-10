@@ -27,6 +27,8 @@ export default class DrawerView extends React.Component {
     children: any,
     heightChangeListener: () => {},
     containerStyle: any,
+    activeOpacity: number,
+    title: string,
     thresholds: [], // 最小值 0； 最大值如果是 'max'，择为当前父组件的高度; DrawerView初始显示默认高度为
   }
 

@@ -72,7 +72,7 @@ export default class PopupModal extends PureComponent {
       >
         <Text
           style={{
-            lineHeight: 50,
+            lineHeight: 60,
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
@@ -106,7 +106,7 @@ export default class PopupModal extends PureComponent {
       >
         <Text
           style={{
-            lineHeight: 50,
+            lineHeight: 60,
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',

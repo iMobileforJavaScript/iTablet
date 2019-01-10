@@ -580,7 +580,7 @@ export default class MyOnlineData extends Component {
     if (dataName !== undefined) {
       let length = dataName.length - 4
       let newDataName = dataName.substring(0, length)
-      let itemHeight = 50
+      let itemHeight = 60
       let itemWidth = '100%'
       return (
         <TouchableOpacity

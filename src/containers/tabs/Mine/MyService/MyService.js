@@ -518,7 +518,8 @@ export default class MyService extends Component {
                 colors={['orange', 'red']}
                 tintColor={'white'}
                 title={'刷新中...'}
-                titleColr={'white'}
+                o
+                titleColor={'white'}
                 enabled={true}
               />
             }

@@ -41,10 +41,10 @@ export default class LocalDataPopupModal extends PureComponent {
         <Text
           style={{
             width: '100%',
-            height: 50,
+            height: 60,
             backgroundColor: '#555555',
             textAlign: 'center',
-            lineHeight: 50,
+            lineHeight: 60,
           }}
         >
           导入数据
@@ -63,10 +63,10 @@ export default class LocalDataPopupModal extends PureComponent {
         <Text
           style={{
             width: '100%',
-            height: 50,
+            height: 60,
             backgroundColor: '#555555',
             textAlign: 'center',
-            lineHeight: 50,
+            lineHeight: 60,
           }}
         >
           删除
