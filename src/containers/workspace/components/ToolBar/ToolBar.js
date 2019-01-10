@@ -2068,6 +2068,7 @@ export default class ToolBar extends React.PureComponent {
                 ? ConstToolType.THEME_HEIGHT[3]
                 : ConstToolType.THEME_HEIGHT[6],
             data,
+            buttons: [ToolbarBtnType.THEME_CANCEL],
           })
         }.bind(this)())
         // NavigationService.navigate('WorkspaceFlieList', {
