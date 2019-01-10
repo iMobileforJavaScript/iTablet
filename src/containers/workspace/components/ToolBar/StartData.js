@@ -77,8 +77,26 @@ function getStart(type, params) {
     case ConstToolType.MAP_3D_START:
       data = [
         {
+          key: constants.CREATE,
+          title: '导入场景',
+          size: 'large',
+          action: () => {
+            if (!_params.setToolbarVisible) return
+            // _params.setToolbarVisible(false)
+            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            _params.setToolbarVisible(
+              true,
+              ConstToolType.MAP3D_IMPORTWORKSPACE,
+              {
+                containerType: 'list',
+              },
+            )
+          },
+          image: require('../../../../assets/mapTools/icon_create.png'),
+        },
+        {
           key: constants.OPEN,
-          title: constants.OPEN,
+          title: '打开场景',
           action: () => {
             if (!_params.setToolbarVisible) return
             // _params.setToolbarVisible(false)
@@ -339,7 +357,7 @@ function importTemplate() {
       }
       let data = [
         {
-          title: Const.MODULE,
+          title: Const.INFORMATION,
           data: tpList,
         },
       ]

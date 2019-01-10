@@ -23,12 +23,12 @@ function getMapSettings() {
           isShow: true,
           sectionIndex: 0,
         },
-        {
-          name: '显示导航栏',
-          value: false,
-          isShow: true,
-          sectionIndex: 0,
-        },
+        // {
+        //   name: '显示导航栏',
+        //   value: false,
+        //   isShow: true,
+        //   sectionIndex: 0,
+        // },
       ],
     },
     {
@@ -135,31 +135,31 @@ function getMapSettings() {
         },
       ],
     },
-    {
-      title: '坐标系设置',
-      visible: true,
-      index: 3,
-      data: [
-        {
-          name: '投影信息',
-          value: '',
-          isShow: true,
-          sectionIndex: 3,
-        },
-        // {
-        //   name: '投影设置',
-        //   value: '',
-        //   isShow: true,
-        //   sectionIndex: 3,
-        // },
-        // {
-        //   name: '投影转换',
-        //   value: '',
-        //   isShow: true,
-        //   sectionIndex: 3,
-        // },
-      ],
-    },
+    // {
+    //   title: '坐标系设置',
+    //   visible: true,
+    //   index: 3,
+    //   data: [
+    //     {
+    //       name: '投影信息',
+    //       value: '',
+    //       isShow: true,
+    //       sectionIndex: 3,
+    //     },
+    //     {
+    //       name: '投影设置',
+    //       value: '',
+    //       isShow: true,
+    //       sectionIndex: 3,
+    //     },
+    //     {
+    //       name: '投影转换',
+    //       value: '',
+    //       isShow: true,
+    //       sectionIndex: 3,
+    //     },
+    //   ],
+    // },
   ]
   return data
 }

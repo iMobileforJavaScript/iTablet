@@ -32,7 +32,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#4C4C4C',
   },
   headTitle: {
     flex: 6.5,
@@ -48,6 +48,7 @@ export default StyleSheet.create({
   moreImg: {
     // width: scaleSize(10),
     height: scaleSize(30),
+    marginRight: scaleSize(10),
   },
   modulelist: {
     flex: 1,

@@ -4,7 +4,7 @@ import { MAP_MODULE, ConstToolType } from '../../constants'
 import constants from '../workspace/constants'
 import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList } from 'react-native'
+import { SectionList, StatusBar } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
@@ -34,29 +34,29 @@ export default class MapSetting extends Component {
     this.getData()
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     JSON.stringify(prevProps.mapSetting) !==
-  //     JSON.stringify(this.props.mapSetting)
-  //   ) {
-  //     this.setState({ data: this.props.mapSetting })
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.mapSetting) !==
+      JSON.stringify(this.props.mapSetting)
+    ) {
+      this.setState({ data: this.props.mapSetting })
+    }
+  }
 
   getData = async () => {
     let statusBar = false
-    let navigationBar = false
-    let isAntialias = false
+    // let navigationBar = false
+    let isAntialias = true
     let isVisibleScalesEnabled = false
 
+    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
+    // navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
     isAntialias = await SMap.isAntialias()
     isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
-    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
-    navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
 
     let newData = getMapSettings()
     newData[0].data[0].value = statusBar
-    newData[0].data[1].value = navigationBar
+    // newData[0].data[1].value = navigationBar
     newData[1].data[0].value = isAntialias
     newData[2].data[0].value = isVisibleScalesEnabled
 
@@ -80,6 +80,13 @@ export default class MapSetting extends Component {
 
   setLoading = (loading = false, info, extra) => {
     this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  setStatusBarHidden = hidden => {
+    StatusBar.setHidden(hidden, 'fade')
+    StatusBar.setBackgroundColor('#2D2D2F')
+    StatusBar.setTranslucent(false)
+    StatusBar.setBarStyle('default')
   }
 
   setSaveViewVisible = visible => {
@@ -120,6 +127,7 @@ export default class MapSetting extends Component {
     switch (newData[item.sectionIndex].data[index].name) {
       case '显示状态栏':
         SPUtils.putBoolean('MapSetting', '显示状态栏', value)
+        this.setStatusBarHidden(!value)
         break
       case '显示导航栏':
         SPUtils.putBoolean('MapSetting', '显示导航栏', value)
