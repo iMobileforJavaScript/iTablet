@@ -48,12 +48,9 @@ export default class Map3D extends React.Component {
     }
     this.path = params.path || ''
     this.type = params.type || 'MAP_3D'
-    // this._addScene2(params.path)
-    // this.listenevent=this.addListen()
   }
 
   componentDidMount() {
-    // this.container && this.container.setLoading(true, '地图加载中')
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
@@ -67,7 +64,6 @@ export default class Map3D extends React.Component {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.attributeListener && this.attributeListener.remove()
     this.circleFlyListen && this.circleFlyListen.remove()
-    // GLOBAL.Map3DSymbol&&SScene.clearAllLabel()
   }
 
   initListener = async () => {
@@ -94,7 +90,6 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    // await this.initListener()
     if (!this.path) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
@@ -117,11 +112,7 @@ export default class Map3D extends React.Component {
 
   _onGetInstance = sceneControl => {
     GLOBAL.sceneControl = sceneControl
-    // GLOBAL.sceneControlId = sceneControlId
     this._addScene()
-    // SScene.getAttribute()
-    // this.container.setLoading(false)
-    // this.initListener()
   }
 
   _pop_list = (show, type) => {
@@ -130,12 +121,6 @@ export default class Map3D extends React.Component {
       return { popShow: show, popType: type }
     })
   }
-
-  //一级pop按钮 图层管理 点击函数
-  // _layer_manager = () => {
-  //   NavigationService.navigate('Map3DLayerManager', { type: 'MAP_3D' })
-  //   // Toast.show("待做")
-  // }
 
   //一级pop按钮 数据采集 点击函数
   _data_collection = () => {
@@ -151,7 +136,6 @@ export default class Map3D extends React.Component {
 
   _flyToCamera = () => {
     (async function() {
-      // lon, lat, alt, heading, tilt
       let camera = await new Camera().createObj(
         116.467575,
         39.91542777777778,
@@ -167,18 +151,8 @@ export default class Map3D extends React.Component {
     (async function() {
       let layers3ds = await this.scene.getLayer3Ds()
       let layer3D = await layers3ds.get(4)
-      // let name = await layer3D.getName()
       layer3D.setObjectsColor(1, 255, 0, 0, 0.8)
       await this.scene.refresh()
-    }.bind(this)())
-  }
-
-  _getObjectsColorCount = () => {
-    (async function() {
-      // let layers3ds = await this.scene.getLayer3Ds()
-      // let layer3D = await layers3ds.get(4)
-      // let name = await layer3D.getName()
-      // let count = await layer3D.getObjectsColorCount()
     }.bind(this)())
   }
 
@@ -186,30 +160,10 @@ export default class Map3D extends React.Component {
     GLOBAL.SaveMapView &&
       GLOBAL.openWorkspace &&
       GLOBAL.SaveMapView.setVisible(true, this.setLoading)
-    // try {
-    //   this.container && this.container.setLoading(true, '正在关闭')
-    // if (GLOBAL.Map3DSymbol) {
-    //   await SScene.clearAllLabel()
-    // }
-    //   if (GLOBAL.openWorkspace) {
-    //     // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
-    //     await SScene.closeWorkspace()
-    //     this.container && this.container.setLoading(false)
-    //     NavigationService.goBack()
-    //   } else {
     if (!GLOBAL.openWorkspace) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
     }
-
-    //   }
-    //   this.props.setCurrentAttribute({})
-    //   this.props.setAttributes({})
-    // } catch (e) {
-    //   this.container && this.container.setLoading(false)
-    //   NavigationService.goBack()
-    // }
-    // return true
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -247,13 +201,11 @@ export default class Map3D extends React.Component {
   }
 
   confirm = async () => {
-    // console.log(this)
     if (
       this.state.inputText.indexOf(' ') > -1 ||
       this.state.inputText === '' ||
       this.state.inputText == null
     ) {
-      // Toast.show('请输入文本内容')
       this.setState({
         placeholder: true,
       })
@@ -270,14 +222,11 @@ export default class Map3D extends React.Component {
         inputText: '',
       })
     })
-    // this.toolBox.showToolbar(!this.toolBox.isShow)
     this.toolBox.showToolbar()
     this.dialog.setDialogVisible(false)
   }
 
   cancel = async () => {
-    // console.log(this)
-    // this.toolBox.showToolbar(!this.toolBox.isShow)
     this.setState({
       placeholder: false,
     })
@@ -360,11 +309,6 @@ export default class Map3D extends React.Component {
         {this.renderFunctionToolbar()}
         {this.renderTool()}
         {this.renderDialog()}
-        {/* <SaveDialog
-          ref={ref => (this.SaveDialog = ref)}
-          confirmAction={data => this.saveAsMap(data.mapName)}
-          type="normal"
-        /> */}
       </Container>
     )
   }

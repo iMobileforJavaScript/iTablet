@@ -131,7 +131,7 @@ async function getFilterFiles(
 ) {
   try {
     if (typeof fileDir !== 'string') {
-      return
+      return []
     }
     if (fileType === undefined) {
       fileType = { smwu: 'smwu', sxwu: 'sxwu', sxw: 'sxw', smw: 'smw' }
