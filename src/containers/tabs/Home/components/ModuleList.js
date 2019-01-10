@@ -58,7 +58,8 @@ class RenderModuleItem extends Component {
       }
     }
     let homePath = await FileTools.appendingHomeDirectory()
-    let fileDirPath = homePath + ConstPath.CachePath + fileName
+    let cachePath = homePath + ConstPath.CachePath
+    let fileDirPath = cachePath + fileName
     let arrFile = await FileTools.getFilterFiles(fileDirPath)
     let isDownloaded = true
     // console.warn('arrFile:' + arrFile)
@@ -101,7 +102,7 @@ class RenderModuleItem extends Component {
             if (result.statusCode === 200) {
               // Toast.show('下载成功')
               // FileTools.deleteFile(fileCachePath)
-              await FileTools.unZipFile(fileCachePath, fileDirPath)
+              await FileTools.unZipFile(fileCachePath, cachePath)
               FileTools.deleteFile(fileDirPath + '.zip')
               this.props.importWorkspace(fileDirPath, item, isDownloaded)
               this.setState({ isShowProgressView: false, disabled: false })
