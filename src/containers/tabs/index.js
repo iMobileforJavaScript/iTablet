@@ -36,8 +36,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/tab-首页-选中.png')
-                  : require('../../assets/tabBar/tab-首页-当前.png')
+                  ? require('../../assets/tabBar/tab_home_selected.png')
+                  : require('../../assets/tabBar/tab_home.png')
               }
               style={styles.icon}
             />
@@ -66,8 +66,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/tab-发现-选中.png')
-                  : require('../../assets/tabBar/tab-发现-当前.png')
+                  ? require('../../assets/tabBar/tab_find_selected.png')
+                  : require('../../assets/tabBar/tab_find.png')
               }
               style={styles.icon}
             />
@@ -96,8 +96,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/tab-我的-选中.png')
-                  : require('../../assets/tabBar/tab-我的-当前.png')
+                  ? require('../../assets/tabBar/tab_user_selected.png')
+                  : require('../../assets/tabBar/tab_user.png')
               }
               style={styles.icon}
             />

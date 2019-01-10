@@ -31,7 +31,7 @@ import NavigationService from '../../../../containers/NavigationService'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
-import { FileTools, NativeMethod } from '../../../../native'
+import { FileTools } from '../../../../native'
 import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
@@ -951,13 +951,19 @@ export default class ToolBar extends React.PureComponent {
   }
 
   importMap3Dworkspace = async () => {
-    let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
-    let data = await NativeMethod.getTemplates(
-      this.props.user.currentUser.userName
-        ? this.props.user.currentUser.userName
-        : 'Customer',
-    )
-    return { data, buttons }
+    // let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+    // let userName = this.props.user.currentUser.userName || 'Customer'
+    // let path = await FileTools.appendingHomeDirectory(
+    //   ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.ExternalData,
+    // )
+    // let result = await FileTools.getFilterFiles(path)
+    // let data=[]
+    // let data = await NativeMethod.getTemplates(
+    //   this.props.user.currentUser.userName
+    //     ? this.props.user.currentUser.userName
+    //     : 'Customer',
+    // )
+    // return { data, buttons }
   }
 
   /** 记录Toolbar上一次的state **/
