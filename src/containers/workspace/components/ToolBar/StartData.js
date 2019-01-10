@@ -23,13 +23,13 @@ function getStart(type, params) {
   switch (type) {
     case ConstToolType.MAP_EDIT_START:
       data = [
-        {
-          key: constants.THEME_WORKSPACE,
-          title: constants.THEME_WORKSPACE,
-          action: importTemplate,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
-        },
+        // {
+        //   key: constants.THEME_WORKSPACE,
+        //   title: constants.THEME_WORKSPACE,
+        //   action: importTemplate,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_open.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.OPEN,
@@ -169,13 +169,13 @@ function getStart(type, params) {
       break
     case ConstToolType.MAP_THEME_START:
       data = [
-        {
-          key: constants.THEME_WORKSPACE,
-          title: constants.THEME_WORKSPACE,
-          action: importTemplate,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
-        },
+        // {
+        //   key: constants.THEME_WORKSPACE,
+        //   title: constants.THEME_WORKSPACE,
+        //   action: importTemplate,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_open.png'),
+        // },
         {
           key: constants.OPEN,
           title: constants.THEME_OPEN,
@@ -339,70 +339,70 @@ function openMap() {
 }
 
 /**地图制图，专题制图：导入模块（暂用） */
-function importTemplate() {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
-  ;(async function() {
-    let templatePath = FileTools.appendingHomeDirectory(
-      ConstPath.UserPath +
-        (_params.user.currentUser.userName || 'Customer') +
-        '/' +
-        ConstPath.RelativePath.ExternalData,
-    )
-    FileTools.getFilterFiles(templatePath, { smwu: 'smwu', sxwu: 'sxwu' }).then(
-      async listData => {
-        let tpList = []
-        for (let i = 0; i < listData.length; i++) {
-          let item = listData[i]
-          let path = item.filePath
-          let is3D = await SScene.is3DWorkspace({ server: path })
-          if (!is3D) {
-            tpList.push({
-              name: item.fileName,
-              path: item.filePath,
-            })
-          }
-        }
-
-        let data = [
-          {
-            title: Const.INFORMATION,
-            data: tpList,
-          },
-        ]
-        _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
-          containerType: 'list',
-          height: ConstToolType.HEIGHT[3],
-          data,
-        })
-      },
-    )
-  }.bind(this)())
-  // NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-  //   async templateList => {
-  //     let tpList = []
-  //     for (let i = 0; i < templateList.length; i++) {
-  //       let item = templateList[i]
-  //       let path = await FileTools.appendingHomeDirectory(item.path)
-  //       let is3D = await SScene.is3DWorkspace({ server: path })
-  //       if (!is3D) {
-  //         tpList.push(item)
-  //       }
-  //     }
-  //     let data = [
-  //       {
-  //         title: Const.MODULE,
-  //         data: tpList,
-  //       },
-  //     ]
-  //     _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
-  //       containerType: 'list',
-  //       height: ConstToolType.HEIGHT[3],
-  //       data,
-  //     })
-  //   },
-  // )
-}
+// function importTemplate() {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
+//   ;(async function() {
+//     let templatePath = FileTools.appendingHomeDirectory(
+//       ConstPath.UserPath +
+//         (_params.user.currentUser.userName || 'Customer') +
+//         '/' +
+//         ConstPath.RelativePath.ExternalData,
+//     )
+//     FileTools.getFilterFiles(templatePath, { smwu: 'smwu', sxwu: 'sxwu' }).then(
+//       async listData => {
+//         let tpList = []
+//         for (let i = 0; i < listData.length; i++) {
+//           let item = listData[i]
+//           let path = item.filePath
+//           let is3D = await SScene.is3DWorkspace({ server: path })
+//           if (!is3D) {
+//             tpList.push({
+//               name: item.fileName,
+//               path: item.filePath,
+//             })
+//           }
+//         }
+//
+//         let data = [
+//           {
+//             title: Const.INFORMATION,
+//             data: tpList,
+//           },
+//         ]
+//         _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
+//           containerType: 'list',
+//           height: ConstToolType.HEIGHT[3],
+//           data,
+//         })
+//       },
+//     )
+//   }.bind(this)())
+//   // NativeMethod.getTemplates(_params.user.currentUser.userName).then(
+//   //   async templateList => {
+//   //     let tpList = []
+//   //     for (let i = 0; i < templateList.length; i++) {
+//   //       let item = templateList[i]
+//   //       let path = await FileTools.appendingHomeDirectory(item.path)
+//   //       let is3D = await SScene.is3DWorkspace({ server: path })
+//   //       if (!is3D) {
+//   //         tpList.push(item)
+//   //       }
+//   //     }
+//   //     let data = [
+//   //       {
+//   //         title: Const.MODULE,
+//   //         data: tpList,
+//   //       },
+//   //     ]
+//   //     _params.setToolbarVisible(true, ConstToolType.MAP_IMPORT_TEMPLATE, {
+//   //       containerType: 'list',
+//   //       height: ConstToolType.HEIGHT[3],
+//   //       data,
+//   //     })
+//   //   },
+//   // )
+// }
 
 /** 打开模板 **/
 function openTemplate() {

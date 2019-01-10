@@ -44,4 +44,7 @@ export default {
 
   SYMBOL_LIB_EMPTY: '当前符号库为空',
   NON_SELECTED_OBJ: '没有选择对象',
+
+  ADD_SUCCESS: '添加成功',
+  ADD_FAILED: '添加成功',
 }

@@ -15,7 +15,6 @@ import {
   point,
   region,
   grid,
-  layerAdd,
   openData,
   lineColorSet,
   pointColorSet,
@@ -227,7 +226,7 @@ export default class ToolBar extends React.PureComponent {
         buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT]
         break
       case ConstToolType.MAP_ADD_LAYER:
-        data = layerAdd
+        // data = layerAdd
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.PLACEHOLDER,
@@ -1860,22 +1859,38 @@ export default class ToolBar extends React.PureComponent {
     if (item.action) {
       item.action && item.action()
     } else if (this.state.type === ConstToolType.MAP_ADD_LAYER) {
-      NavigationService.navigate('WorkspaceFlieList', {
-        cb: async path => {
-          this.path = path
-          let list = await SMap.getUDBName(path)
-          let datalist = [
+      (async function() {
+        this.path = await FileTools.appendingHomeDirectory(item.path)
+        SMap.getUDBName(this.path).then(list => {
+          let dataList = [
             {
               title: '数据集',
               data: list,
             },
           ]
           this.setState({
-            data: datalist,
+            data: dataList,
             type: ConstToolType.MAP_ADD_DATASET,
           })
-        },
-      })
+          // this.setLastState()
+        })
+      }.bind(this)())
+      // NavigationService.navigate('WorkspaceFlieList', {
+      //   cb: async path => {
+      //     this.path = path
+      //     let list = await SMap.getUDBName(path)
+      //     let datalist = [
+      //       {
+      //         title: '数据集',
+      //         data: list,
+      //       },
+      //     ]
+      //     this.setState({
+      //       data: datalist,
+      //       type: ConstToolType.MAP_ADD_DATASET,
+      //     })
+      //   },
+      // })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
         let udbName = this.basename(this.path)
@@ -1884,7 +1899,10 @@ export default class ToolBar extends React.PureComponent {
           alias: udbName,
           engineType: 219,
         }
-        await SMap.openDatasource(udbpath, index)
+        let result = await SMap.openDatasource(udbpath, index)
+        Toast.show(
+          result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
+        )
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_OPEN) {
       NavigationService.navigate('WorkspaceFlieList', {
