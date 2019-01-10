@@ -215,7 +215,7 @@ export default class MyLocalData extends Component {
           style={{
             width: '100%',
             flexDirection: 'row',
-            backgroundColor: color.content,
+            backgroundColor: color.theme,
           }}
         >
           <Text
@@ -354,7 +354,7 @@ export default class MyLocalData extends Component {
         <SectionList
           style={{
             flex: 1,
-            backgroundColor: color.theme,
+            backgroundColor: color.content,
           }}
           sections={this.state.sectionData}
           initialNumToRender={20}
