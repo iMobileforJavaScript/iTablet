@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
@@ -42,6 +42,8 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidMount() {
+    Platform.OS === 'android' &&
+      BackHandler.addEventListener('hardwareBackPress', this.back)
     if (this.type === 'MAP_3D') {
       this.getMap3DAttribute()
     } else {
@@ -67,6 +69,9 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    }
     this.props.setCurrentAttribute({})
   }
 
