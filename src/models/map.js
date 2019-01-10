@@ -321,12 +321,16 @@ export const importSceneWorkspace = params => async (dispatch, getState) => {
     if (result) {
       let result2 = await SScene.import3DWorkspace({ server: params.server })
       if (result2) {
-        Toast.show('导入成功')
+        // Toast.show('导入成功')
+        return result2
       } else {
-        Toast.show('导入失败')
+        // Toast.show('导入失败')
+        return result2
       }
     } else {
-      Toast.show('导入失败')
+      // Toast.show('导入失败')
+      // return
+      return result
     }
   }
 }
