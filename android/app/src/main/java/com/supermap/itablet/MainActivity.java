@@ -14,6 +14,7 @@ import com.supermap.RN.FileTools;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import org.devio.rn.splashscreen.SplashScreen;
 
 import io.reactivex.functions.Consumer;
 
@@ -30,7 +31,7 @@ public class MainActivity extends ReactActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
+        SplashScreen.show(this);
         super.onCreate(savedInstanceState);
         requestPermissions();
         initEnvironment();

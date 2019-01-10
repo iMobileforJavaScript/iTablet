@@ -8,4 +8,9 @@
         <!-- 隐藏状态栏 -->
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="Dialog_Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>
