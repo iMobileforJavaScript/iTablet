@@ -169,8 +169,8 @@ class RenderModuleItem extends Component {
             fontWeight: 'bold',
             // fontStyle:'italic',
             color: 'white',
-            textShadowColor: '#fff',
-            textShadowRadius: 4,
+            // textShadowColor: '#fff',
+            // textShadowRadius: 4,
           }}
         >{`下载${progress}`}</Text>
       </View>
