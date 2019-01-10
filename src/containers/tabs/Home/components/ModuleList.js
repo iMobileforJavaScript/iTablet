@@ -51,10 +51,10 @@ class RenderModuleItem extends Component {
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'
-        dataUrl = 'https://www.supermapol.com/web/datas/1075928570/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/1309053453/download'
       } else if (Platform.OS === 'ios') {
         fileName = 'OlympicGreen_ios'
-        dataUrl = 'https://www.supermapol.com/web/datas/1766529829/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/1206338222/download'
       }
     }
     let homePath = await FileTools.appendingHomeDirectory()
@@ -102,6 +102,7 @@ class RenderModuleItem extends Component {
               // Toast.show('下载成功')
               // FileTools.deleteFile(fileCachePath)
               await FileTools.unZipFile(fileCachePath, fileDirPath)
+              FileTools.deleteFile(fileDirPath + '.zip')
               this.props.importWorkspace(fileDirPath, item, isDownloaded)
               this.setState({ isShowProgressView: false, disabled: false })
             }
@@ -113,7 +114,6 @@ class RenderModuleItem extends Component {
           })
       } catch (e) {
         Toast.show('网络错误，下载失败')
-      } finally {
         FileTools.deleteFile(fileDirPath + '.zip')
         this.setState({ isShowProgressView: false, disabled: false })
       }
@@ -123,59 +123,6 @@ class RenderModuleItem extends Component {
       })
       this.props.importWorkspace(fileDirPath, item, isDownloaded)
     }
-    // let fileCachePath = fileDirPath + '.zip'
-    // let isExist = await FileTools.fileIsExist(fileDirPath)
-    // // console.warn(dataUrl + ' '+fileName+' '+isExist)
-    // if (!isExist) {
-    //   this.setState({
-    //     progress: '0%',
-    //     isShowProgressView: true,
-    //     disabled: true,
-    //   })
-    //   let fileCachePath = fileDirPath + '.zip'
-    //   let downloadOptions = {
-    //     fromUrl: dataUrl,
-    //     toFile: fileCachePath,
-    //     background: true,
-    //     progress: res => {
-    //       let value =
-    //         ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-    //       // console.warn(value)
-    //       if (value !== this.state.progress) {
-    //         this.setState({
-    //           progress: value,
-    //           isShowProgressView: true,
-    //           disabled: true,
-    //         })
-    //       }
-    //     },
-    //   }
-    //   try {
-    //     let result = RNFS.downloadFile(downloadOptions)
-    //     result.promise
-    //       .then(async result => {
-    //         if (result.statusCode === 200) {
-    //           Toast.show('下载成功')
-    //           this.props.importWorkspace(fileCachePath, item, isExist)
-    //           this.setState({ isShowProgressView: false, disabled: false })
-    //         }
-    //       })
-    //       .catch(() => {
-    //         Toast.show('下载失败')
-    //         this.setState({ isShowProgressView: false, disabled: false })
-    //       })
-    //   } catch (e) {
-    //     Toast.show('网络错误，下载失败')
-    //   } finally {
-    //     this.setState({ isShowProgressView: false, disabled: false })
-    //   }
-    // } else {
-    //   this.setState({
-    //     disabled: false,
-    //   })
-    //   this.props.importWorkspace(fileCachePath, item, isExist)
-    // }
-    // this.setState({ disabled: false })
   }
 
   _renderProgressView = () => {
