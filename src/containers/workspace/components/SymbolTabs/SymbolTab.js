@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Platform } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { ConstToolType } from '../../../../constants'
@@ -43,8 +43,8 @@ export default class SymbolTab extends React.Component {
   }
 
   render() {
-    let count = Platform.OS === 'ios' ? 4 : 5
-    let imageSize = Platform.OS === 'ios' ? 55 : 50
+    // let count = Platform.OS === 'ios' ? 4 : 5
+    // let imageSize = Platform.OS === 'ios' ? 55 : 50
     return (
       <View style={styles.container}>
         <SMSymbolTable
@@ -56,8 +56,8 @@ export default class SymbolTab extends React.Component {
             // width: 600,
             textSize: 15,
             lineSpacing: 10,
-            imageSize: imageSize,
-            count: count,
+            imageSize: 50,
+            count: 5,
             legendBackgroundColor: dataUtil.colorRgba(color.theme),
             textColor: dataUtil.colorRgba(color.themeText),
           }}
