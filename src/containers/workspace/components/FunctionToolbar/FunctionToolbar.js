@@ -8,6 +8,8 @@ import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { ConstToolType, Const, ConstInfo } from '../../../../constants'
 import { scaleSize, Toast } from '../../../../utils'
+import { FileTools } from '../../../../native'
+import { ConstPath } from '../../../../constants'
 import styles from './styles'
 import {
   SScene,
@@ -50,6 +52,7 @@ export default class FunctionToolbar extends React.Component {
     removeGeometrySelectedListener: () => {},
     symbol: Object,
     device: Object,
+    user: Object,
   }
 
   static defaultProps = {
@@ -452,11 +455,57 @@ export default class FunctionToolbar extends React.Component {
           })
           break
         default:
-          toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
-            containerType: 'list',
-            isFullScreen: false,
-            height: ConstToolType.THEME_HEIGHT[3],
-          })
+          {
+            let data = []
+            let customerUDBPath = await FileTools.appendingHomeDirectory(
+              ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+            )
+            let customerUDBs = await FileTools.getPathListByFilter(
+              customerUDBPath,
+              {
+                extension: 'udb',
+                type: 'file',
+              },
+            )
+
+            let userUDBPath, userUDBs
+            if (this.props.user && this.props.user.currentUser.userName) {
+              userUDBPath =
+                (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+                this.props.user.currentUser.userName +
+                '/' +
+                ConstPath.RelativePath.Datasource
+              userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+                extension: 'udb',
+                type: 'file',
+              })
+
+              data = [
+                {
+                  title: Const.PUBLIC_DATA_SOURCE,
+                  data: customerUDBs,
+                },
+                {
+                  title: Const.DATA_SOURCE,
+                  data: userUDBs,
+                },
+              ]
+            } else {
+              data = [
+                {
+                  title: Const.DATA_SOURCE,
+                  data: customerUDBs,
+                },
+              ]
+            }
+
+            toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
+              containerType: 'list',
+              isFullScreen: false,
+              height: ConstToolType.THEME_HEIGHT[3],
+              data,
+            })
+          }
           break
       }
     }
