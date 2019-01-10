@@ -200,7 +200,7 @@ export default class MyLocalData extends Component {
   _renderItem = info => {
     let txtInfo = info.item.fileName
     let itemHeight = 50
-    let separatorLineHeight = 2
+    let separatorLineHeight = 1
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
       <TouchableOpacity
@@ -215,7 +215,7 @@ export default class MyLocalData extends Component {
           style={{
             width: '100%',
             flexDirection: 'row',
-            backgroundColor: color.theme,
+            backgroundColor: color.content,
           }}
         >
           <Text
@@ -247,7 +247,11 @@ export default class MyLocalData extends Component {
         </View>
         <View
           display={display}
-          style={{ width: '100%', height: separatorLineHeight }}
+          style={{
+            width: '100%',
+            height: separatorLineHeight,
+            backgroundColor: color.theme,
+          }}
         />
       </TouchableOpacity>
     )
