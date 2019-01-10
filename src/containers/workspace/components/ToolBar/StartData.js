@@ -26,7 +26,7 @@ function getStart(type, params) {
         {
           key: constants.THEME_WORKSPACE,
           title: constants.THEME_WORKSPACE,
-          action: importTemplate,
+          action: importData,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
@@ -172,7 +172,7 @@ function getStart(type, params) {
         {
           key: constants.THEME_WORKSPACE,
           title: constants.THEME_WORKSPACE,
-          action: importTemplate,
+          action: importData,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
@@ -339,11 +339,13 @@ function openMap() {
 }
 
 /**地图制图，专题制图：导入模块（暂用） */
-function importTemplate() {
+function importData() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   ;(async function() {
-    let templatePath = FileTools.appendingHomeDirectory(
+    _params.setContainerLoading &&
+      _params.setContainerLoading(true, '正在加载数据列表')
+    let templatePath = await FileTools.appendingHomeDirectory(
       ConstPath.UserPath +
         (_params.user.currentUser.userName || 'Customer') +
         '/' +
@@ -375,6 +377,7 @@ function importTemplate() {
           height: ConstToolType.HEIGHT[3],
           data,
         })
+        _params.setContainerLoading && _params.setContainerLoading(false)
       },
     )
   }.bind(this)())

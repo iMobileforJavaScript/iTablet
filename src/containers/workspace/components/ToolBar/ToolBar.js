@@ -1984,12 +1984,13 @@ export default class ToolBar extends React.PureComponent {
         })
       }
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
-      this.importTemplate(item)
+      //地图制图，专题制图：导入数据
+      this.importData(item)
     }
   }
 
   /** 导入工作空间 **/
-  importTemplate = async item => {
+  importData = async item => {
     try {
       this.props.setContainerLoading &&
         this.props.setContainerLoading(true, '正在打开数据')
@@ -2006,15 +2007,19 @@ export default class ToolBar extends React.PureComponent {
               this.props.setContainerLoading(false)
             Toast.show(msg)
           } else if (mapsInfo && mapsInfo.length > 0) {
+            // 关闭地图
+            if (this.props.map.currentMap.name) {
+              await this.props.closeMap()
+            }
             // 打开地图
-            // let templatePath =
-            //   (this.props.user && this.props.user.currentUser.userName
-            //     ? ConstPath.UserPath +
-            //       this.props.user.currentUser.userName +
-            //       '/'
-            //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
+            let mapPath =
+              (this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
+                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
             let mapInfo = await this.props.openMap({
-              path: ConstPath.UserPath + mapsInfo[0] + '.xml',
+              path: mapPath + mapsInfo[0] + '.xml',
               name: mapsInfo[0],
             })
             if (mapInfo) {
@@ -2854,16 +2859,14 @@ export default class ToolBar extends React.PureComponent {
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (
