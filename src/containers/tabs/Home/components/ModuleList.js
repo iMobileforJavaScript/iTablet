@@ -20,6 +20,7 @@ import Toast from '../../../../utils/Toast'
 class RenderModuleItem extends Component {
   props: {
     item: Object,
+    currentUser: Object,
     importWorkspace: () => {},
   }
 
@@ -58,59 +59,123 @@ class RenderModuleItem extends Component {
     }
     let homePath = await FileTools.appendingHomeDirectory()
     let fileDirPath = homePath + ConstPath.CachePath + fileName
-    let fileCachePath = fileDirPath + '.zip'
-    let isExist = await FileTools.fileIsExist(fileCachePath)
-    // console.warn(dataUrl + ' '+fileName+' '+isExist)
-    if (!isExist) {
-      this.setState({
-        progress: '0%',
-        isShowProgressView: true,
-        disabled: true,
-      })
-      let fileCachePath = fileDirPath + '.zip'
-      let downloadOptions = {
-        fromUrl: dataUrl,
-        toFile: fileCachePath,
-        background: true,
-        progress: res => {
-          let value =
-            ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-          // console.warn(value)
-          if (value !== this.state.progress) {
-            this.setState({
-              progress: value,
-              isShowProgressView: true,
-              disabled: true,
-            })
-          }
-        },
-      }
+    let arrFile = await FileTools.getFilterFiles(fileDirPath)
+    let isDownloaded = true
+    // console.warn('arrFile:' + arrFile)
+    if (arrFile.length === 0) {
       try {
+        isDownloaded = false
+        this.setState({
+          progress: '0%',
+          isShowProgressView: true,
+          disabled: true,
+        })
+        let fileCachePath = fileDirPath + '.zip'
+        FileTools.deleteFile(fileCachePath)
+        let downloadOptions = {
+          fromUrl: dataUrl,
+          toFile: fileCachePath,
+          background: true,
+          progress: res => {
+            let value =
+              ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+            // console.warn(value)
+            if (value === '100%') {
+              this.setState({
+                progress: '导入中...',
+                isShowProgressView: true,
+                disabled: true,
+              })
+            } else if (value !== this.state.progress) {
+              this.setState({
+                progress: value,
+                isShowProgressView: true,
+                disabled: true,
+              })
+            }
+          },
+        }
         let result = RNFS.downloadFile(downloadOptions)
         result.promise
           .then(async result => {
             if (result.statusCode === 200) {
-              Toast.show('下载成功')
-              this.props.importWorkspace(fileCachePath, item, isExist)
+              // Toast.show('下载成功')
+              // FileTools.deleteFile(fileCachePath)
+              await FileTools.unZipFile(fileCachePath, fileDirPath)
+              this.props.importWorkspace(fileDirPath, item, isDownloaded)
               this.setState({ isShowProgressView: false, disabled: false })
             }
           })
           .catch(() => {
             Toast.show('下载失败')
+            FileTools.deleteFile(fileCachePath)
             this.setState({ isShowProgressView: false, disabled: false })
           })
       } catch (e) {
         Toast.show('网络错误，下载失败')
       } finally {
+        FileTools.deleteFile(fileDirPath + '.zip')
         this.setState({ isShowProgressView: false, disabled: false })
       }
     } else {
       this.setState({
         disabled: false,
       })
-      this.props.importWorkspace(fileCachePath, item, isExist)
+      this.props.importWorkspace(fileDirPath, item, isDownloaded)
     }
-    this.setState({ disabled: false })
+    // let fileCachePath = fileDirPath + '.zip'
+    // let isExist = await FileTools.fileIsExist(fileDirPath)
+    // // console.warn(dataUrl + ' '+fileName+' '+isExist)
+    // if (!isExist) {
+    //   this.setState({
+    //     progress: '0%',
+    //     isShowProgressView: true,
+    //     disabled: true,
+    //   })
+    //   let fileCachePath = fileDirPath + '.zip'
+    //   let downloadOptions = {
+    //     fromUrl: dataUrl,
+    //     toFile: fileCachePath,
+    //     background: true,
+    //     progress: res => {
+    //       let value =
+    //         ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+    //       // console.warn(value)
+    //       if (value !== this.state.progress) {
+    //         this.setState({
+    //           progress: value,
+    //           isShowProgressView: true,
+    //           disabled: true,
+    //         })
+    //       }
+    //     },
+    //   }
+    //   try {
+    //     let result = RNFS.downloadFile(downloadOptions)
+    //     result.promise
+    //       .then(async result => {
+    //         if (result.statusCode === 200) {
+    //           Toast.show('下载成功')
+    //           this.props.importWorkspace(fileCachePath, item, isExist)
+    //           this.setState({ isShowProgressView: false, disabled: false })
+    //         }
+    //       })
+    //       .catch(() => {
+    //         Toast.show('下载失败')
+    //         this.setState({ isShowProgressView: false, disabled: false })
+    //       })
+    //   } catch (e) {
+    //     Toast.show('网络错误，下载失败')
+    //   } finally {
+    //     this.setState({ isShowProgressView: false, disabled: false })
+    //   }
+    // } else {
+    //   this.setState({
+    //     disabled: false,
+    //   })
+    //   this.props.importWorkspace(fileCachePath, item, isExist)
+    // }
+    // this.setState({ disabled: false })
   }
 
   _renderProgressView = () => {
@@ -174,6 +239,7 @@ class RenderModuleItem extends Component {
 export default class ModuleList extends Component {
   props: {
     device: Object,
+    currentUser: Object,
     importWorkspace: () => {},
   }
 
@@ -187,6 +253,7 @@ export default class ModuleList extends Component {
     return (
       <RenderModuleItem
         item={item}
+        currentUser={this.props.currentUser}
         importWorkspace={this.props.importWorkspace}
       />
     )

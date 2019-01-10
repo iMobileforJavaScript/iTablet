@@ -16,6 +16,7 @@ export default class Map3DToolBar extends React.Component {
     setfly: () => {},
     showToolbar: () => {},
     existFullMap: () => {},
+    importSceneWorkspace: () => {},
   }
   constructor(props) {
     super(props)
@@ -160,16 +161,15 @@ export default class Map3DToolBar extends React.Component {
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
     })
-    // Fs.readFile(path).then(result => {
-    //   let data = JSON.parse(result)
-    //   let workspacePath = data.serverUrl
-    //   SScene.openWorkspace({ server: workspacePath }).then(result => {
-    //     result &&
-    //       SScene.openMap(item.name).then(() => {
-    //       })
-    //   })
-    //   // console.log(data)
-    // })
+  }
+
+  importWorkspace = async item => {
+    (await this.props.importSceneWorkspace) &&
+      this.props.importSceneWorkspace({ server: item.path })(
+        await this.props.existFullMap,
+      ) &&
+      this.props.existFullMap(true)(await this.props.showToolbar) &&
+      this.props.showToolbar(false)
   }
 
   renderItem = ({ item }) => {
@@ -178,6 +178,18 @@ export default class Map3DToolBar extends React.Component {
         <TouchableOpacity
           onPress={() => {
             this.openWorkspace(item)
+          }}
+          style={styles.sceneItem}
+        >
+          <Text style={styles.item}>{item.name}</Text>
+        </TouchableOpacity>
+      )
+    }
+    if (this.props.type === 'MAP3D_IMPORTWORKSPACE') {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.importWorkspace(item)
           }}
           style={styles.sceneItem}
         >
@@ -225,7 +237,8 @@ export default class Map3DToolBar extends React.Component {
   render() {
     if (
       this.props.type === 'MAP3D_ATTRIBUTE' ||
-      this.props.type === 'MAP3D_WORKSPACE_LIST'
+      this.props.type === 'MAP3D_WORKSPACE_LIST' ||
+      this.props.type === 'MAP3D_IMPORTWORKSPACE'
     ) {
       return (
         <FlatList

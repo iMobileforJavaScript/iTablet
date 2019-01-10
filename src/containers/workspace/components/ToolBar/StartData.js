@@ -77,8 +77,26 @@ function getStart(type, params) {
     case ConstToolType.MAP_3D_START:
       data = [
         {
+          key: constants.CREATE,
+          title: '导入场景',
+          size: 'large',
+          action: () => {
+            if (!_params.setToolbarVisible) return
+            // _params.setToolbarVisible(false)
+            // NavigationService.navigate('WorkspaceFlieList', { type: 'MAP_3D' })
+            _params.setToolbarVisible(
+              true,
+              ConstToolType.MAP3D_IMPORTWORKSPACE,
+              {
+                containerType: 'list',
+              },
+            )
+          },
+          image: require('../../../../assets/mapTools/icon_create.png'),
+        },
+        {
           key: constants.OPEN,
-          title: constants.OPEN,
+          title: '打开场景',
           action: () => {
             if (!_params.setToolbarVisible) return
             // _params.setToolbarVisible(false)
@@ -326,28 +344,31 @@ function openMap() {
 function importTemplate() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  let templatePath = FileTools.appendingHomeDirectory(
-    ConstPath.UserPath +
-      (_params.user.currentUser.userName || 'Customer') +
-      ConstPath.RelativePath.ExternalData,
-  )
-  FileTools.getFilterFiles(templatePath, { smwu: 'smwu', sxwu: 'sxwu' }).then(
-    async listData => {
-      let tpList = []
-      for (let i = 0; i < listData.length; i++) {
-        let item = listData[i]
-        let path = item.filePath
-        let is3D = await SScene.is3DWorkspace({ server: path })
-        if (!is3D) {
-          tpList.push({
-            name: item.fileName,
-            path: item.filePath,
-          })
+  ;(async function() {
+    let templatePath = FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        (_params.user.currentUser.userName || 'Customer') +
+        '/' +
+        ConstPath.RelativePath.ExternalData,
+    )
+    FileTools.getFilterFiles(templatePath, { smwu: 'smwu', sxwu: 'sxwu' }).then(
+      async listData => {
+        let tpList = []
+        for (let i = 0; i < listData.length; i++) {
+          let item = listData[i]
+          let path = item.filePath
+          let is3D = await SScene.is3DWorkspace({ server: path })
+          if (!is3D) {
+            tpList.push({
+              name: item.fileName,
+              path: item.filePath,
+            })
+          }
         }
 
         let data = [
           {
-            title: Const.MODULE,
+            title: Const.INFORMATION,
             data: tpList,
           },
         ]
@@ -356,9 +377,9 @@ function importTemplate() {
           height: ConstToolType.HEIGHT[3],
           data,
         })
-      }
-    },
-  )
+      },
+    )
+  }.bind(this)())
   // NativeMethod.getTemplates(_params.user.currentUser.userName).then(
   //   async templateList => {
   //     let tpList = []
@@ -389,23 +410,28 @@ function importTemplate() {
 function openTemplate() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
-  let templatePath = FileTools.appendingHomeDirectory(
-    ConstPath.UserPath +
-      (_params.user.currentUser.userName || 'Customer') +
-      ConstPath.RelativePath.ExternalData,
-  )
-  FileTools.getFilterFiles(templatePath, { smwu: 'smwu', sxwu: 'sxwu' }).then(
-    async listData => {
-      let tpList = []
-      for (let i = 0; i < listData.length; i++) {
-        let item = listData[i]
-        let path = item.filePath
-        let is3D = await SScene.is3DWorkspace({ server: path })
-        if (!is3D) {
-          tpList.push({
-            name: item.fileName,
-            path: item.filePath,
-          })
+  ;(async function() {
+    _params.setContainerLoading &&
+      _params.setContainerLoading(true, ConstInfo.TEMPLATE_LIST_LOADING)
+    let templatePath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        (_params.user.currentUser.userName || 'Customer') +
+        '/' +
+        ConstPath.RelativePath.ExternalData,
+    )
+    FileTools.getFilterFiles(templatePath, { smwu: 'smwu', sxwu: 'sxwu' }).then(
+      async listData => {
+        let tpList = []
+        for (let i = 0; i < listData.length; i++) {
+          let item = listData[i]
+          let path = item.filePath
+          let is3D = await SScene.is3DWorkspace({ server: path })
+          if (!is3D) {
+            tpList.push({
+              name: item.fileName,
+              path: item.filePath,
+            })
+          }
         }
 
         let data = [
@@ -423,9 +449,10 @@ function openTemplate() {
           height: ConstToolType.HEIGHT[3],
           data,
         })
-      }
-    },
-  )
+        _params.setContainerLoading && _params.setContainerLoading(false)
+      },
+    )
+  }.bind(this)())
   // NativeMethod.getTemplates(_params.user.currentUser.userName).then(
   //   async templateList => {
   //     let tpList = []
