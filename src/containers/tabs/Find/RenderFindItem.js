@@ -151,7 +151,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={styles.imageStyle2}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/tab-我的-当前.png')}
+                source={require('../../../assets/tabBar/tab_user.png')}
               />
               <Text style={styles.textStyle2} numberOfLines={1}>
                 {this.props.data.nickname}
