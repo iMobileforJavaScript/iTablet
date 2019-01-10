@@ -32,6 +32,28 @@ class RenderModuleItem extends Component {
       disabled: false,
     }
   }
+
+  componentDidMount() {}
+
+  // UNSAFE_componentWillReceiveProps() {
+  //   console.log('UNSAFE_componentWillReceiveProps')
+  // }
+  // shouldComponentUpdate( ) {
+  //   console.log('shouldComponentUpdate')
+  //   return true
+  // }
+  // UNSAFE_componentWillUpdate() {
+  //   console.log('UNSAFE_componentWillUpdate')
+  // }
+  // componentDidUpdate( ) {
+  //   console.log('componentDidUpdate')
+  // }
+  //
+  //
+  // componentWillUnmount(){
+  //   console.warn('componentWillUnmount')
+  // }
+
   itemAction = async item => {
     this.setState({
       disabled: true,
@@ -100,8 +122,6 @@ class RenderModuleItem extends Component {
         result.promise
           .then(async result => {
             if (result.statusCode === 200) {
-              // Toast.show('下载成功')
-              // FileTools.deleteFile(fileCachePath)
               await FileTools.unZipFile(fileCachePath, cachePath)
               FileTools.deleteFile(fileDirPath + '.zip')
               this.props.importWorkspace(fileDirPath, item, isDownloaded)
@@ -128,6 +148,7 @@ class RenderModuleItem extends Component {
 
   _renderProgressView = () => {
     let progress = this.state.progress
+    // console.warn(this.state.isShowProgressView + '---------')
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -158,6 +179,7 @@ class RenderModuleItem extends Component {
     )
   }
   render() {
+    // console.warn('RenderModuleItem')
     let item = this.props.item
     return (
       <View style={styles.moduleView}>

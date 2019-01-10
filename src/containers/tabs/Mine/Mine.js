@@ -73,6 +73,25 @@ export default class Mine extends Component {
     NavigationService.navigate('MyService')
   }
 
+  _selectionRender = () => {
+    if (this.props.user.currentUser.userName === 'Customer') {
+      let fontSize = 16
+      return (
+        <View opacity={1} style={{ flex: 1, backgroundColor: color.content }}>
+          {this._renderHeader(fontSize)}
+          {this._renderLine()}
+          {this._renderItem({
+            title: '本地数据',
+            leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
+            onClick: this.goToMyLocalData,
+          })}
+        </View>
+      )
+    } else {
+      return this._render()
+    }
+  }
+
   _render = () => {
     let fontSize = 16
     return (
@@ -245,7 +264,7 @@ export default class Mine extends Component {
             navigation: this.props.navigation,
           }}
         >
-          {this._render()}
+          {this._selectionRender()}
         </Container>
       )
     } else {

@@ -352,6 +352,10 @@ export default class MyLocalData extends Component {
         }}
       >
         <SectionList
+          style={{
+            flex: 1,
+            backgroundColor: color.theme,
+          }}
           sections={this.state.sectionData}
           initialNumToRender={20}
           keyExtractor={this._keyExtractor}
