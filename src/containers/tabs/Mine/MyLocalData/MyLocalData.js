@@ -169,7 +169,7 @@ export default class MyLocalData extends Component {
           style={[
             {
               color: 'white',
-              lineHeight: 50,
+              lineHeight: 60,
               paddingLeft: 10,
               fontSize: 18,
               fontWeight: 'bold',
@@ -199,7 +199,7 @@ export default class MyLocalData extends Component {
 
   _renderItem = info => {
     let txtInfo = info.item.fileName
-    let itemHeight = 50
+    let itemHeight = 60
     let separatorLineHeight = 1
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
