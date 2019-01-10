@@ -11,6 +11,7 @@
     "installRelease:android": "cd android && ./gradlew installRelease",
     "installDebug:android": "cd android && ./gradlew installDebug",
     "assembleRelease": "cd android && ./gradlew assembleRelease",
+    "bundle:android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "test": "jest",
     "precommit": "lint-staged",
     "prepush": "",
