@@ -76,8 +76,9 @@ export default class Home extends Component {
             }
           } else {
             let result = await this.props.importWorkspace({
-              server: filePath,
+              path: filePath,
             })
+            // console.warn(JSON.stringify(result))
             if (result.msg !== undefined) {
               Toast.show('导入失败')
             } else {
