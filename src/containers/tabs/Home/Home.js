@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image, AsyncStorage } from 'react-native'
+import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
 import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
-import { SScene } from 'imobile_for_reactnative'
+import { SScene, SMap } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
 import ConstPath from '../../../constants/ConstPath'
 // import Orientation from '../../../constants/Orientation'
@@ -50,19 +50,15 @@ export default class Home extends Component {
             ConstPath.RelativePath.ExternalData +
             fileName
         }
-        let currentModuleKey = currentUserName + item.key
         let arrFilePath = await FileTools.getFilterFiles(toPath, {
           smwu: 'smwu',
           sxwu: 'sxwu',
         })
-        // console.warn(arrFilePath.length)
         if (arrFilePath.length === 0) {
-          // console.warn('toPath:'+toPath)
           if (isExist) {
             item.action && item.action(this.props.currentUser)
           }
           await FileTools.copyFile(fileDirPath, toPath)
-          AsyncStorage.setItem(currentModuleKey, currentModuleKey)
           let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
             smwu: 'smwu',
             sxwu: 'sxwu',
@@ -70,21 +66,29 @@ export default class Home extends Component {
           let filePath = arrFilePath[0].filePath
           let is3D = await SScene.is3DWorkspace({ server: filePath })
           if (is3D === true) {
-            let result = await SScene.import3DWorkspace({ server: filePath })
+            let result = await this.props.importSceneWorkspace({
+              server: filePath,
+            })
             if (result === true) {
-              Toast.show('导入3D成功')
+              // Toast.show('导入3D成功')
             } else {
               Toast.show('导入3D失败')
             }
+          } else {
+            let result = await SMap.importWorkspaceInfo({
+              server: filePath,
+              type: 9,
+            })
+            if (result.length === 0) {
+              Toast.show('导入失败')
+            }
           }
-        } else {
+        } else if (isExist === true) {
           item.action && item.action(this.props.currentUser)
         }
       }
     } catch (e) {
       Toast.show('导入失败')
-    } finally {
-      this.setState({ isDownloaded: true })
     }
   }
   headRender() {

@@ -6,9 +6,14 @@
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType, Const, ConstInfo } from '../../../../constants'
+import {
+  ConstToolType,
+  Const,
+  ConstInfo,
+  ConstPath,
+} from '../../../../constants'
 import { scaleSize, Toast } from '../../../../utils'
-// import MoreToolbar from '../MoreToolbar'
+import { FileTools } from '../../../../native'
 import styles from './styles'
 import {
   SScene,
@@ -51,6 +56,7 @@ export default class FunctionToolbar extends React.Component {
     removeGeometrySelectedListener: () => {},
     symbol: Object,
     device: Object,
+    user: Object,
   }
 
   static defaultProps = {
@@ -327,13 +333,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showEdit = async () => {
-    // if (!this.props.symbol.currentSymbol.type) {
-    //   Toast.show('请选择图层')
-    //   return
-    // }
-    // await SMap.setAction(Action.SELECT)
-    // this.props.addGeometrySelectedListener &&
-    //   (await this.props.addGeometrySelectedListener())
     const toolRef = this.props.getToolRef()
     let height = ConstToolType.HEIGHT[3]
     let column = 4
@@ -460,11 +459,57 @@ export default class FunctionToolbar extends React.Component {
           })
           break
         default:
-          toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
-            containerType: 'list',
-            isFullScreen: false,
-            height: ConstToolType.THEME_HEIGHT[3],
-          })
+          {
+            let data = []
+            let customerUDBPath = await FileTools.appendingHomeDirectory(
+              ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+            )
+            let customerUDBs = await FileTools.getPathListByFilter(
+              customerUDBPath,
+              {
+                extension: 'udb',
+                type: 'file',
+              },
+            )
+
+            let userUDBPath, userUDBs
+            if (this.props.user && this.props.user.currentUser.userName) {
+              userUDBPath =
+                (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+                this.props.user.currentUser.userName +
+                '/' +
+                ConstPath.RelativePath.Datasource
+              userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+                extension: 'udb',
+                type: 'file',
+              })
+
+              data = [
+                {
+                  title: Const.PUBLIC_DATA_SOURCE,
+                  data: customerUDBs,
+                },
+                {
+                  title: Const.DATA_SOURCE,
+                  data: userUDBs,
+                },
+              ]
+            } else {
+              data = [
+                {
+                  title: Const.DATA_SOURCE,
+                  data: customerUDBs,
+                },
+              ]
+            }
+
+            toolRef.setVisible(true, ConstToolType.MAP_ADD_LAYER, {
+              containerType: 'list',
+              isFullScreen: false,
+              height: ConstToolType.THEME_HEIGHT[3],
+              data,
+            })
+          }
           break
       }
     }
@@ -633,16 +678,6 @@ export default class FunctionToolbar extends React.Component {
         break
       case MAP_3D:
         data = [
-          // {
-          //   title: '底图',
-          //   action: this.changeBaseLayer,
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   title: '添加',
-          //   action: this.add,
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             key: '开始',
             title: '开始',
@@ -650,16 +685,6 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   title: '底图',
-          //   action: this.changeBaseLayer,
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   title: '添加',
-          //   action: this.showAddLayer,
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             title: '标注',
             action: this.showMap3DSymbol,
@@ -712,30 +737,6 @@ export default class FunctionToolbar extends React.Component {
             action: this.showMenuAlertDialog,
             image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
-          // {
-          //   key: '标注',
-          //   title: '标注',
-          //   size: 'large',
-          //   selectMode: 'flash',
-          //   image: require('../../../../assets/function/icon_function_theme_label.png'),
-          //   selectedImage: require('../../../../assets/function/icon_function_theme_label.png'),
-          // },
-          // {
-          //   key: '工具',
-          //   title: '工具',
-          //   size: 'large',
-          //   selectMode: 'flash',
-          //   image: require('../../../../assets/function/icon_function_theme_tools.png'),
-          //   selectedImage: require('../../../../assets/function/icon_function_theme_tools.png'),
-          // },
-          // {
-          //   key: '撤销',
-          //   title: '撤销',
-          //   size: 'large',
-          //   selectMode: 'flash',
-          //   image: require('../../../../assets/function/icon_function_theme_revert.png'),
-          //   selectedImage: require('../../../../assets/function/icon_function_theme_revert.png'),
-          // },
           {
             key: '更多',
             title: '更多',
@@ -751,27 +752,12 @@ export default class FunctionToolbar extends React.Component {
       case COLLECTION:
       default:
         data = [
-          // {
-          //   title: '底图',
-          //   action: this.changeBaseLayer,
-          //   image: require('../../../../assets/function/icon_function_base_map.png'),
-          // },
-          // {
-          //   title: '添加',
-          //   action: this.add,
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             key: '开始',
             title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   title: '符号',
-          //   action: this.showSymbol,
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             title: '采集',
             action: this.showSymbol,
@@ -845,11 +831,6 @@ export default class FunctionToolbar extends React.Component {
             action: this.open3DMap,
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          // {
-          //   title: '关闭',
-          //   action: this.closeMap(),
-          //   image: require('../../../../assets/function/icon_function_add.png'),
-          // },
           {
             title: '保存',
             action: this.save,

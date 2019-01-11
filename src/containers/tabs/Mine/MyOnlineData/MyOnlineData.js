@@ -8,6 +8,7 @@ import {
   DeviceEventEmitter,
   Dimensions,
   FlatList,
+  Image,
   Platform,
   RefreshControl,
   Text,
@@ -580,7 +581,9 @@ export default class MyOnlineData extends Component {
     if (dataName !== undefined) {
       let length = dataName.length - 4
       let newDataName = dataName.substring(0, length)
-      let itemHeight = 50
+      let itemHeight = 60
+      let imageWidth = 30,
+        imageHeight = 30
       let itemWidth = '100%'
       return (
         <TouchableOpacity
@@ -594,12 +597,18 @@ export default class MyOnlineData extends Component {
               flexDirection: 'row',
               width: itemWidth,
               height: itemHeight,
+              alignItems: 'center',
             }}
           >
+            <Image
+              style={{ width: imageWidth, height: imageHeight, marginLeft: 10 }}
+              resizeMode={'contain'}
+              source={require('../../../../assets/Mine/个人主页-我的数据.png')}
+            />
             <Text
               style={{
                 flex: 1,
-                lineHeight: itemHeight,
+                // lineHeight: itemHeight,
                 textAlign: 'left',
                 fontSize: 18,
                 color: 'white',
@@ -608,18 +617,15 @@ export default class MyOnlineData extends Component {
             >
               {newDataName}
             </Text>
-            <Text
+            <Image
               style={{
-                lineHeight: itemHeight,
-                width: 100,
-                textAlign: 'right',
-                fontSize: 25,
-                color: 'white',
-                paddingRight: 20,
+                width: imageWidth,
+                height: imageHeight,
+                marginRight: 10,
               }}
-            >
-              ...
-            </Text>
+              resizeMode={'contain'}
+              source={require('../../../../assets/Mine/工具条-更多-白.png')}
+            />
           </View>
           <View
             style={{

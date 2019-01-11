@@ -51,6 +51,9 @@ export default {
   INFORMATION: '数据',
   HISTORY: '历史记录',
 
+  PUBLIC_DATA_SOURCE: '公共数据源',
+  DATA_SOURCE: '数据源',
+
   // 时间
   ANIMATED_DURATION: 300,
   ANIMATED_DURATION_2: 400,

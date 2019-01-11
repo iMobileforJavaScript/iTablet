@@ -9,8 +9,6 @@ import { setUser } from './src/models/user'
 import {
   setEditLayer,
   setSelection,
-  setCurrentAttribute,
-  setAttributes,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -27,14 +25,14 @@ import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
 import { FileTools, SPUtils }  from './src/native'
 import ConfigStore from './src/store'
-import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
 import { ConstPath, ConstInfo } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SScene } from 'imobile_for_reactnative'
 import {ConstToolType} from './src/constants'
+import SplashScreen from 'react-native-splash-screen'
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -120,6 +118,7 @@ class AppRoot extends Component {
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
     }
+    SplashScreen.hide()
   }
 
   handleStateChange = appState => {
@@ -253,7 +252,6 @@ class AppRoot extends Component {
 
   saveMap = () => {
     if (GLOBAL.Type===ConstToolType.MAP_3D){
-      console.log("3d")
       this.map3dBackAction()
       GLOBAL.openWorkspace&&Toast.show("保存成功")
       return
@@ -296,7 +294,6 @@ class AppRoot extends Component {
 
   closeMapHandler = async () => {
     if (GLOBAL.Type===ConstToolType.MAP_3D){
-      console.log("3d")
       this.map3dBackAction()
       return
     }
@@ -372,7 +369,8 @@ const AppRootWithRedux = connect(mapStateToProps, {
 
 const App = () =>
   <Provider store={store}>
-    <PersistGate loading={<Loading/>} persistor={persistor}>
+    {/*<PersistGate loading={<Loading/>} persistor={persistor}>*/}
+    <PersistGate loading={null} persistor={persistor}>
       <AppRootWithRedux />
     </PersistGate>
   </Provider>

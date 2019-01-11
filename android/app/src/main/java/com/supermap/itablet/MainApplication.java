@@ -4,6 +4,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.rnfs.RNFSPackage;
 import com.supermap.SupermapFullPackage;
@@ -28,8 +29,9 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-                    new OrientationPackage(),
-                    new RNFSPackage(),
+            new OrientationPackage(),
+            new RNFSPackage(),
+            new SplashScreenReactPackage(),
                     new SupermapFullPackage(),
                     new MyReactpackge()
 

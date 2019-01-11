@@ -53,6 +53,12 @@ export default class MT_layerManager extends React.Component {
     this.getData()
   }
 
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    }
+  }
+
   setRefreshing = refreshing => {
     if (refreshing === this.state.refreshing) return
     this.setState({
