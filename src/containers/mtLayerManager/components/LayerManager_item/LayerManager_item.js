@@ -406,19 +406,19 @@ export default class LayerManager_item extends React.Component {
         icon = require('../../../../assets/map/icon-directory.png')
         break
       case DatasetType.POINT: // 点数据集
-        icon = require('../../../../assets/map/icon-shallow-dot.png')
+        icon = require('../../../../assets/map/icon-shallow-dot_black.png')
         break
       case DatasetType.LINE: // 线数据集
-        icon = require('../../../../assets/map/icon-shallow-line.png')
+        icon = require('../../../../assets/map/icon-shallow-line_black.png')
         break
       case DatasetType.REGION: // 多边形数据集
-        icon = require('../../../../assets/map/icon-shallow-polygon.png')
+        icon = require('../../../../assets/map/icon-shallow-polygon_black.png')
         break
       case DatasetType.TEXT: // 文本数据集
-        icon = require('../../../../assets/map/icon-shallow-text.png')
+        icon = require('../../../../assets/map/icon-shallow-text_black.png')
         break
       case DatasetType.IMAGE: // 影像数据集
-        icon = require('../../../../assets/map/icon-shallow-image.png')
+        icon = require('../../../../assets/map/icon-shallow-image_black.png')
         break
       case DatasetType.CAD: // 复合数据集
         icon = require('../../../../assets/map/icon-cad.png')
@@ -427,7 +427,7 @@ export default class LayerManager_item extends React.Component {
         icon = require('../../../../assets/map/icon-network.png')
         break
       case DatasetType.GRID: // GRID数据集
-        icon = require('../../../../assets/map/icon-grid.png')
+        icon = require('../../../../assets/map/icon-grid_black.png')
         break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
@@ -475,8 +475,8 @@ export default class LayerManager_item extends React.Component {
   renderItem = () => {
     let name = this.props.data.caption
     const visibleImg = this.state.visable
-      ? require('../../../../assets/mapTools/icon_multi_selected.png')
-      : require('../../../../assets/mapTools/icon_multi_unselected.png')
+      ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
+      : require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
     const arrowImg = this.state.rowShow
       ? require('../../../../assets/mapEdit/icon-arrow-down.png')
       : require('../../../../assets/mapEdit/icon-arrow-left.png')
@@ -532,7 +532,7 @@ export default class LayerManager_item extends React.Component {
           <Image
             resizeMode={'contain'}
             style={styles.btn_image}
-            source={require('../../../../assets/function/icon_shallow_more.png')}
+            source={require('../../../../assets/function/icon_shallow_more_black.png')}
           />
         </TouchableOpacity>
       </TouchableOpacity>
