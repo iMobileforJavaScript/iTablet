@@ -252,7 +252,7 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: true,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[3]
+            ? ConstToolType.THEME_HEIGHT[4]
             : ConstToolType.HEIGHT[3],
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
