@@ -1217,7 +1217,11 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -this.props.device.height,
+          toValue: isShow
+            ? 0
+            : -(this.props.device.height >= this.props.device.width
+              ? this.props.device.height
+              : this.props.device.width),
           duration: Const.ANIMATED_DURATION,
         }),
       )

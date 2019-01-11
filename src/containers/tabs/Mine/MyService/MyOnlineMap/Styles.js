@@ -5,12 +5,11 @@ export const itemHeight = 140
 export const imageWidth = 120
 export const imageHeight = 100
 export const textHeight = 40
-const smallFontSize = 16
-const largeFontSize = 18
+const largeFontSize = 20
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.theme,
+    backgroundColor: color.content,
   },
   noDataViewStyle: {
     flex: 1,
@@ -18,8 +17,8 @@ const styles = StyleSheet.create({
   },
   titleTextStyle: {
     width: itemWidth,
-    lineHeight: textHeight,
-    fontSize: smallFontSize,
+    lineHeight: 60,
+    fontSize: largeFontSize,
     color: '#c0c0c0',
     paddingLeft: 10,
     textAlign: 'left',

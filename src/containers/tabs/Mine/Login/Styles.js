@@ -51,6 +51,14 @@ let styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  probationStyle: {
+    height: itemHeight,
+    width: '50%',
+    marginTop: 10,
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   viewStyle: {
     width: '70%',
     height: itemHeight,

@@ -4,7 +4,14 @@
   E-mail: 756355668@qq.com
 */
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image, ScrollView } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+  Platform,
+} from 'react-native'
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
@@ -75,7 +82,7 @@ export default class Mine extends Component {
 
   _selectionRender = () => {
     if (this.props.user.currentUser.userName === 'Customer') {
-      let fontSize = 16
+      let fontSize = Platform.OS === 'ios' ? 18 : 16
       return (
         <View opacity={1} style={{ flex: 1, backgroundColor: color.content }}>
           {this._renderHeader(fontSize)}
@@ -93,7 +100,7 @@ export default class Mine extends Component {
   }
 
   _render = () => {
-    let fontSize = 16
+    let fontSize = Platform.OS === 'ios' ? 18 : 16
     return (
       <View opacity={1} style={{ flex: 1, backgroundColor: color.content }}>
         {this._renderHeader(fontSize)}
@@ -189,8 +196,8 @@ export default class Mine extends Component {
     },
     itemOptions = {
       itemWidth: '100%',
-      itemHeight: 50,
-      fontSize: 16,
+      itemHeight: 60,
+      fontSize: Platform.OS === 'ios' ? 18 : 16,
       imageWidth: 25,
       imageHeight: 25,
       rightImagePath: require('../../../assets/Mine/个人主页-箭头.png'),

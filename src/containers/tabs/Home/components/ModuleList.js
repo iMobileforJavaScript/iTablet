@@ -9,13 +9,13 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
+  Alert,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
 import RNFS from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
-// const SCREEN_WIDTH = Dimensions.get('window').width
 
 class RenderModuleItem extends Component {
   props: {
@@ -35,48 +35,23 @@ class RenderModuleItem extends Component {
 
   componentDidMount() {}
 
-  // UNSAFE_componentWillReceiveProps() {
-  //   console.log('UNSAFE_componentWillReceiveProps')
-  // }
-  // shouldComponentUpdate( ) {
-  //   console.log('shouldComponentUpdate')
-  //   return true
-  // }
-  // UNSAFE_componentWillUpdate() {
-  //   console.log('UNSAFE_componentWillUpdate')
-  // }
-  // componentDidUpdate( ) {
-  //   console.log('componentDidUpdate')
-  // }
-  //
-  //
-  // componentWillUnmount(){
-  //   console.warn('componentWillUnmount')
-  // }
-
   itemAction = async item => {
     this.setState({
       disabled: true,
     })
     let fileName
-    let dataUrl
     let moduleKey = item.key
     if (moduleKey === '地图制图') {
       fileName = '湖南'
-      dataUrl = 'https://www.supermapol.com/web/datas/456143933/download'
     } else if (moduleKey === '专题地图') {
       fileName = '北京'
-      dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
     } else if (moduleKey === '外业采集') {
       fileName = '地理国情普查'
-      dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         fileName = 'OlympicGreen_android'
-        dataUrl = 'https://www.supermapol.com/web/datas/1309053453/download'
       } else if (Platform.OS === 'ios') {
         fileName = 'OlympicGreen_ios'
-        dataUrl = 'https://www.supermapol.com/web/datas/1206338222/download'
       }
     }
     let homePath = await FileTools.appendingHomeDirectory()
@@ -84,71 +59,98 @@ class RenderModuleItem extends Component {
     let fileDirPath = cachePath + fileName
     let arrFile = await FileTools.getFilterFiles(fileDirPath)
     let isDownloaded = true
-    // console.warn('arrFile:' + arrFile)
     if (arrFile.length === 0) {
-      try {
-        isDownloaded = false
-        this.setState({
-          progress: '0%',
-          isShowProgressView: true,
-          disabled: true,
-        })
-        let fileCachePath = fileDirPath + '.zip'
-        FileTools.deleteFile(fileCachePath)
-        let downloadOptions = {
-          fromUrl: dataUrl,
-          toFile: fileCachePath,
-          background: true,
-          progress: res => {
-            let value =
-              ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-            // console.warn(value)
-            if (value === '100%') {
-              this.setState({
-                progress: '导入中...',
-                isShowProgressView: true,
-                disabled: true,
-              })
-            } else if (value !== this.state.progress) {
-              this.setState({
-                progress: value,
-                isShowProgressView: true,
-                disabled: true,
-              })
-            }
-          },
-        }
-        let result = RNFS.downloadFile(downloadOptions)
-        result.promise
-          .then(async result => {
-            if (result.statusCode === 200) {
-              await FileTools.unZipFile(fileCachePath, cachePath)
-              FileTools.deleteFile(fileDirPath + '.zip')
-              this.props.importWorkspace(fileDirPath, item, isDownloaded)
-              this.setState({ isShowProgressView: false, disabled: false })
-            }
-          })
-          .catch(() => {
-            Toast.show('下载失败')
-            FileTools.deleteFile(fileCachePath)
-            this.setState({ isShowProgressView: false, disabled: false })
-          })
-      } catch (e) {
-        Toast.show('网络错误，下载失败')
-        FileTools.deleteFile(fileDirPath + '.zip')
-        this.setState({ isShowProgressView: false, disabled: false })
+      this.downloadData = {
+        fileName: fileName,
+        cachePath: cachePath,
+        itemData: item,
       }
+      // this._showAlert(item.key)
+      this._downloadModuleData()
     } else {
+      await this.props.importWorkspace(fileDirPath, item, isDownloaded)
       this.setState({
         disabled: false,
+        isShowProgressView: false,
       })
-      this.props.importWorkspace(fileDirPath, item, isDownloaded)
     }
   }
 
+  _downloadModuleData = async () => {
+    let item = this.downloadData.itemData
+    let moduleKey = item.key
+    let dataUrl
+    if (moduleKey === '地图制图') {
+      dataUrl = 'https://www.supermapol.com/web/datas/456143933/download'
+    } else if (moduleKey === '专题地图') {
+      dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
+    } else if (moduleKey === '外业采集') {
+      dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
+    } else if (moduleKey === '三维场景') {
+      if (Platform.OS === 'android') {
+        dataUrl = 'https://www.supermapol.com/web/datas/1254811966/download'
+      } else if (Platform.OS === 'ios') {
+        dataUrl = 'https://www.supermapol.com/web/datas/595812366/download'
+      }
+    }
+    let cachePath = this.downloadData.cachePath
+    let fileDirPath = cachePath + this.downloadData.fileName
+    try {
+      this.setState({
+        progress: '0%',
+        isShowProgressView: true,
+        disabled: true,
+      })
+      let fileCachePath = fileDirPath + '.zip'
+      FileTools.deleteFile(fileCachePath)
+      let downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: fileCachePath,
+        background: true,
+        progress: res => {
+          let value =
+            ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+          if (value === '100%') {
+            this.setState({
+              progress: '导入中...',
+              isShowProgressView: true,
+              disabled: true,
+            })
+          } else if (value !== this.state.progress) {
+            this.setState({
+              progress: value,
+              isShowProgressView: true,
+              disabled: true,
+            })
+          }
+        },
+      }
+      let result = RNFS.downloadFile(downloadOptions)
+      result.promise
+        .then(async result => {
+          if (result.statusCode === 200) {
+            await FileTools.unZipFile(fileCachePath, cachePath)
+            FileTools.deleteFile(fileDirPath + '.zip')
+            await this.props.importWorkspace(fileDirPath, item, false)
+            this.setState({ isShowProgressView: false, disabled: false })
+          }
+        })
+        .catch(() => {
+          Toast.show('下载失败')
+          FileTools.deleteFile(fileCachePath)
+          this.setState({ isShowProgressView: false, disabled: false })
+        })
+    } catch (e) {
+      Toast.show('网络错误，下载失败')
+      FileTools.deleteFile(fileDirPath + '.zip')
+      this.setState({ isShowProgressView: false, disabled: false })
+    }
+  }
   _renderProgressView = () => {
-    let progress = this.state.progress
-    // console.warn(this.state.isShowProgressView + '---------')
+    let progress =
+      this.state.progress.indexOf('%') === -1
+        ? this.state.progress
+        : `下载${this.state.progress}`
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -172,20 +174,48 @@ class RenderModuleItem extends Component {
             // textShadowColor: '#fff',
             // textShadowRadius: 4,
           }}
-        >{`下载${progress}`}</Text>
+        >
+          {progress}
+        </Text>
       </View>
     ) : (
       <View />
     )
   }
+  _showAlert = moduleName => {
+    Alert.alert(
+      '下载',
+      `${moduleName}没有数据`,
+      [
+        {
+          text: '取消',
+          onPress: () => {
+            this.setState({
+              disabled: false,
+            })
+          },
+          style: 'cancel',
+        },
+        {
+          text: '确认',
+          onPress: () => {
+            this._downloadModuleData()
+          },
+          style: 'destructive',
+        },
+      ],
+      { cancelable: true },
+    )
+  }
   render() {
-    // console.warn('RenderModuleItem')
     let item = this.props.item
     return (
       <View style={styles.moduleView}>
         <TouchableOpacity
           disabled={this.state.disabled}
-          onPress={() => this.itemAction(item)}
+          onPress={() => {
+            this.itemAction(item)
+          }}
           style={[styles.module]}
         >
           <View style={styles.baseImage}>
@@ -249,7 +279,7 @@ export default class ModuleList extends Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.props.device.orientation === 'LANDSCAPE' ? (
+        {/*{this.props.device.orientation === 'LANDSCAPE' ? (
           this._renderScrollView()
         ) : (
           <FlatList
@@ -261,7 +291,16 @@ export default class ModuleList extends Component {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'always'}
           />
-        )}
+        )}*/}
+        <FlatList
+          style={styles.flatList}
+          data={ConstModule}
+          renderItem={this._renderItem}
+          horizontal={false}
+          numColumns={2}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps={'always'}
+        />
       </View>
     )
   }

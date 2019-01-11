@@ -6,10 +6,14 @@
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
-import { ConstToolType, Const, ConstInfo } from '../../../../constants'
+import {
+  ConstToolType,
+  Const,
+  ConstInfo,
+  ConstPath,
+} from '../../../../constants'
 import { scaleSize, Toast } from '../../../../utils'
 import { FileTools } from '../../../../native'
-import { ConstPath } from '../../../../constants'
 import styles from './styles'
 import {
   SScene,
@@ -248,7 +252,7 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: true,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[3]
+            ? ConstToolType.THEME_HEIGHT[4]
             : ConstToolType.HEIGHT[3],
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })

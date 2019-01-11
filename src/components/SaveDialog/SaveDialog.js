@@ -20,6 +20,7 @@ export default class SaveDialog extends PureComponent {
     showPath: boolean,
     withoutHeader: boolean,
     headerProps?: Object,
+    navigation: Object,
   }
 
   static defaultProps = {
