@@ -294,6 +294,8 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeLg,
     fontWeight: 'bold',
     color: color.themeText,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
   item: {
     height: scaleSize(80),

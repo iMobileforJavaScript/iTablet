@@ -28,7 +28,7 @@ import { setShow }  from './src/models/device'
 import { FileTools, SPUtils }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
-import { SaveView } from './src/containers/workspace/components'
+import { SaveView, constants } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
 import { ConstPath, ConstInfo } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
@@ -88,6 +88,7 @@ class AppRoot extends Component {
     }
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
+    GLOBAL.isCreateThemeMap = false
   }
 
   componentDidMount() {
@@ -312,6 +313,37 @@ class AppRoot extends Component {
       }
     } else {
       GLOBAL.isBackHome = true // 默认是true
+
+      if (GLOBAL.Type === constants.MAP_THEME && GLOBAL.isCreateThemeMap) {
+        //开始-->创建专题图
+        try {
+          this.setSaveMapViewLoading(true, '正在关闭地图')
+          await this.props.closeMap()
+          GLOBAL.clearMapData()
+          this.setSaveMapViewLoading(false)
+
+          Orientation.getOrientation((e, orientation) => {
+            let column = orientation === 'PORTRAIT' ? 3 : 8
+            let height =
+              orientation === 'PORTRAIT' ?
+                ConstToolType.HEIGHT[0] :
+                ConstToolType.HEIGHT[0]
+
+            GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_START_CREATE, {
+              containerType: 'table',
+              isFullScreen: true,
+              isTouchProgress: false,
+              isSelectlist: false,
+              column: column,
+              height: height,
+            })
+          })
+        } catch (e) {
+          this.setSaveMapViewLoading(false)
+        }
+
+        GLOBAL.isCreateThemeMap = false
+      }
     }
   }
 

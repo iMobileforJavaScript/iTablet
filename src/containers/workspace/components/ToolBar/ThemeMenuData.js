@@ -2,7 +2,8 @@ import constants from '../../constants'
 import { SThemeCartography } from 'imobile_for_reactnative'
 // import { Toast } from '../../../../utils'
 import ToolbarBtnType from './ToolbarBtnType'
-import { ConstToolType } from '../../../../constants'
+import { ConstToolType, ConstPath, Const } from '../../../../constants'
+import { FileTools } from '../../../../native'
 
 let _toolbarParams = {}
 
@@ -29,7 +30,7 @@ function showDatasetsList() {
           height:
             _toolbarParams.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[6],
+              : ConstToolType.THEME_HEIGHT[5],
           // listSelectable: true, //单选框
           data,
           buttons: [ToolbarBtnType.THEME_CANCEL],
@@ -69,7 +70,7 @@ function showExpressionList() {
             height:
               _toolbarParams.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
-                : ConstToolType.THEME_HEIGHT[6],
+                : ConstToolType.THEME_HEIGHT[5],
             // listSelectable: true, //单选框
             data,
             buttons: [ToolbarBtnType.THEME_CANCEL],
@@ -251,6 +252,108 @@ function getThemeMapCreate(type, params) {
     //   image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
     //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
     // },
+  ]
+  return { data, buttons }
+}
+
+async function showLocalDatasetsList() {
+  let data = []
+  let customerUDBPath = await FileTools.appendingHomeDirectory(
+    ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+  )
+  let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+    extension: 'udb',
+    type: 'file',
+  })
+
+  let userUDBPath, userUDBs
+  if (_toolbarParams.user && _toolbarParams.user.currentUser.userName) {
+    userUDBPath =
+      (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+      _toolbarParams.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Datasource
+    userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+      extension: 'udb',
+      type: 'file',
+    })
+
+    data = [
+      {
+        title: Const.PUBLIC_DATA_SOURCE,
+        data: customerUDBs,
+      },
+      {
+        title: Const.DATA_SOURCE,
+        data: userUDBs,
+      },
+    ]
+  } else {
+    data = [
+      {
+        title: Const.DATA_SOURCE,
+        data: customerUDBs,
+      },
+    ]
+  }
+
+  _toolbarParams.setToolbarVisible &&
+    _toolbarParams.setToolbarVisible(
+      true,
+      ConstToolType.MAP_THEME_START_OPENDS,
+      {
+        containerType: 'list',
+        isFullScreen: true,
+        isTouchProgress: false,
+        isSelectlist: false,
+        height:
+          _toolbarParams.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        data,
+        buttons: [ToolbarBtnType.THEME_CANCEL],
+      },
+    )
+}
+
+/**
+ * 开始->新建专题图
+ * @param type
+ * @returns {{data: Array, buttons: Array}}
+ */
+function getThemeMapStartCreate(type, params) {
+  _toolbarParams = params
+  let data = [],
+    buttons = []
+  if (type !== ConstToolType.MAP_THEME_START_CREATE) return { data, buttons }
+  data = [
+    {
+      //单值风格
+      key: constants.THEME_UNIQUE_STYLE,
+      title: constants.THEME_UNIQUE_STYLE,
+      size: 'large',
+      action: showLocalDatasetsList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+    },
+    {
+      //分段风格
+      key: constants.THEME_RANGE_STYLE,
+      title: constants.THEME_RANGE_STYLE,
+      size: 'large',
+      action: showLocalDatasetsList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+    },
+    {
+      //统一标签
+      key: constants.THEME_UNIFY_LABEL,
+      title: constants.THEME_UNIFY_LABEL,
+      size: 'large',
+      action: showLocalDatasetsList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+    },
   ]
   return { data, buttons }
 }
@@ -1792,4 +1895,5 @@ export default {
   getUniqueColorScheme,
   getThemeMapCreateByLayer,
   setLayerNameCreateTheme,
+  getThemeMapStartCreate,
 }
