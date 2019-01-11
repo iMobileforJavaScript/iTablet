@@ -38,7 +38,7 @@ export default {
   WORKSPACE_ALREADY_OPENED: '该工作空间已经打开',
   MODULE_ALREADY_OPENED: '该模板已经打开',
 
-  OUT_OF_MAP_BOUNDS: '不再地图范围内',
+  OUT_OF_MAP_BOUNDS: '不在地图范围内',
 
   CHOOSE_EDIT_OBJ: '请选择编辑对象',
 
