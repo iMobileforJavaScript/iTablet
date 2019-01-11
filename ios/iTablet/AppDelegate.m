@@ -67,10 +67,12 @@ static NSString* g_sampleCodeName = @"#";;
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
-    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-        NSLog(@"拷贝数据失败");
-    }
+//    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+//      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+//        NSLog(@"拷贝数据失败");
+//    }
+    if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+      NSLog(@"拷贝数据失败");
   }
 }
 

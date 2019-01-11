@@ -128,14 +128,21 @@ export const saveMap = (params = {}, cb = () => {}) => async (
       params.isNew,
     )
     let userName = getState().user.toJS().currentUser.userName || 'Customer'
-    let path = await FileTools.appendingHomeDirectory(
+    // let path = await FileTools.appendingHomeDirectory(
+    //   ConstPath.UserPath +
+    //     userName +
+    //     '/' +
+    //     ConstPath.RelativePath.Map +
+    //     mapName +
+    //     '.xml',
+    // )
+    let path =
       ConstPath.UserPath +
-        userName +
-        '/' +
-        ConstPath.RelativePath.Map +
-        mapName +
-        '.xml',
-    )
+      userName +
+      '/' +
+      ConstPath.RelativePath.Map +
+      mapName +
+      '.xml'
     if (!params.isNew) {
       await dispatch({
         type: SET_CURRENT_MAP,
