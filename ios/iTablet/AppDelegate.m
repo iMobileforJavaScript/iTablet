@@ -13,6 +13,7 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
+#import "RNSplashScreen.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -55,6 +56,8 @@ static NSString* g_sampleCodeName = @"#";;
   
   self.allowRotation = NO;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
+  
+  [RNSplashScreen show];
   return YES;
 }
 
