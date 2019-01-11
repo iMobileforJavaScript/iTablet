@@ -147,7 +147,10 @@ class RenderModuleItem extends Component {
     }
   }
   _renderProgressView = () => {
-    let progress = this.state.progress
+    let progress =
+      this.state.progress.indexOf('%') === -1
+        ? this.state.progress
+        : `下载${this.state.progress}`
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -171,7 +174,9 @@ class RenderModuleItem extends Component {
             // textShadowColor: '#fff',
             // textShadowRadius: 4,
           }}
-        >{`下载${progress}`}</Text>
+        >
+          {progress}
+        </Text>
       </View>
     ) : (
       <View />
@@ -209,7 +214,6 @@ class RenderModuleItem extends Component {
         <TouchableOpacity
           disabled={this.state.disabled}
           onPress={() => {
-            this.itemData = item
             this.itemAction(item)
           }}
           style={[styles.module]}

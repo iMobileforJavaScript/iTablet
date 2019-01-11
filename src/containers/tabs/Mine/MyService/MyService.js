@@ -421,6 +421,7 @@ export default class MyService extends Component {
     let loadServiceCount = publishLength + privateLength
     if (
       this.serviceListTotal > loadServiceCount &&
+      this.serviceListTotal > _loadCount * _iServicePageSize &&
       (this.state.bPublishServiceShow || this.state.bPrivateServiceShow) &&
       !this.state.isRefreshing
     ) {
@@ -518,12 +519,11 @@ export default class MyService extends Component {
                 colors={['orange', 'red']}
                 tintColor={'white'}
                 title={'刷新中...'}
-                o
                 titleColor={'white'}
                 enabled={true}
               />
             }
-            onEndReachedThreshold={0.5}
+            onEndReachedThreshold={0.1}
             onEndReached={this._loadData}
             ListFooterComponent={this._footView}
           />

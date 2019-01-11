@@ -5,7 +5,7 @@ import { ModuleList } from './components'
 import styles from './styles'
 import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
-import { SScene } from 'imobile_for_reactnative'
+import { SScene, SMap } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
 import ConstPath from '../../../constants/ConstPath'
 // import Orientation from '../../../constants/Orientation'
@@ -70,19 +70,17 @@ export default class Home extends Component {
               server: filePath,
             })
             if (result === true) {
-              Toast.show('导入3D成功')
+              // Toast.show('导入3D成功')
             } else {
               Toast.show('导入3D失败')
             }
           } else {
-            let result = await this.props.importWorkspace({
-              path: filePath,
+            let result = await SMap.importWorkspaceInfo({
+              server: filePath,
+              type: 9,
             })
-            // console.warn(JSON.stringify(result))
-            if (result.msg !== undefined) {
+            if (result.length === 0) {
               Toast.show('导入失败')
-            } else {
-              Toast.show('导入成功')
             }
           }
         } else if (isExist === true) {
@@ -91,8 +89,6 @@ export default class Home extends Component {
       }
     } catch (e) {
       Toast.show('导入失败')
-    } finally {
-      this.setState({ isDownloaded: true })
     }
   }
   headRender() {

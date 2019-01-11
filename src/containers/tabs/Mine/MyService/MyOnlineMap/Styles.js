@@ -9,7 +9,7 @@ const largeFontSize = 20
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.theme,
+    backgroundColor: color.content,
   },
   noDataViewStyle: {
     flex: 1,

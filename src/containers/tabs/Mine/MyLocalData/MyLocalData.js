@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, SectionList, TouchableOpacity } from 'react-native'
+import { View, Text, SectionList, TouchableOpacity, Image } from 'react-native'
 import Container from '../../../../components/Container'
 import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -200,6 +200,8 @@ export default class MyLocalData extends Component {
   _renderItem = info => {
     let txtInfo = info.item.fileName
     let itemHeight = 60
+    let imageWidth = 30,
+      imageHeight = 30
     let separatorLineHeight = 1
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
@@ -216,34 +218,31 @@ export default class MyLocalData extends Component {
             width: '100%',
             flexDirection: 'row',
             backgroundColor: color.content,
+            alignItems: 'center',
+            height: itemHeight,
           }}
         >
+          <Image
+            style={{ width: imageWidth, height: imageHeight, marginLeft: 10 }}
+            resizeMode={'contain'}
+            source={require('../../../../assets/Mine/个人主页-我的数据.png')}
+          />
           <Text
             numberOfLines={1}
             style={{
               color: 'white',
-              lineHeight: itemHeight,
               paddingLeft: 15,
               fontSize: 16,
               flex: 1,
-              height: itemHeight,
             }}
           >
             {txtInfo}
           </Text>
-          <Text
-            style={{
-              width: 100,
-              height: itemHeight,
-              lineHeight: itemHeight,
-              textAlign: 'right',
-              paddingRight: 15,
-              color: 'white',
-              fontSize: 20,
-            }}
-          >
-            ...
-          </Text>
+          <Image
+            style={{ width: imageWidth, height: imageHeight, marginRight: 10 }}
+            resizeMode={'contain'}
+            source={require('../../../../assets/Mine/工具条-更多-白.png')}
+          />
         </View>
         <View
           display={display}
@@ -309,15 +308,6 @@ export default class MyLocalData extends Component {
             Toast.show('导入成功')
           }
         }
-        // let result = await SMap.importWorkspaceInfo({
-        //   server: filePath,
-        //   type: 9,
-        // })
-        // if (result.length > 0) {
-        //   Toast.show('导入成功')
-        // } else {
-        //   Toast.show('导入失败')
-        // }
         this.setLoading(false)
         this.setState({ modalIsVisible: false })
       }
