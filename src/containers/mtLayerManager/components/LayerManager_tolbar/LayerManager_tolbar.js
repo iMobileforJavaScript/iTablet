@@ -2,7 +2,7 @@ import React from 'react'
 import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
 import { layersetting, layerThemeSetting } from './LayerToolbarData'
-import { View, TouchableOpacity, Animated } from 'react-native'
+import { View, TouchableOpacity, Animated, Text } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
@@ -187,25 +187,35 @@ export default class LayerManager_tolbar extends React.Component {
     if (this.state.data.length === 0) return
     return (
       <ToolBarSectionList
-        ref={ref => (this.toolBarSectionList = ref)}
-        listSelectable={this.state.listSelectable}
         sections={this.state.data}
-        headerAction={({ section }) => {
+        renderSectionHeader={({ section }) => this.renderHeader({ section })}
+      />
+    )
+  }
+
+  renderHeader = ({ section }) => {
+    return (
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => {
           this.listAction({ section })
         }}
-        // activeOpacity={0.4}
-        underlayColor={'#rgba(105, 105, 105, 0.8)'}
-        sectionStyle={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          backgroundColor: '#F0F0F0',
-        }}
-        sectionTitleStyle={{
-          marginLeft: 0,
-          color: 'black',
-        }}
-        keyExtractor={(item, index) => index}
-      />
+      >
+        <Text
+          style={{
+            width: '100%',
+            height: 60,
+            backgroundColor: '#555555',
+            textAlign: 'center',
+            lineHeight: 60,
+          }}
+        >
+          {section.title}
+        </Text>
+        <View
+          style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }}
+        />
+      </TouchableOpacity>
     )
   }
 

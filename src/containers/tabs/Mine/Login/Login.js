@@ -337,7 +337,7 @@ export default class Login extends React.Component {
               <TouchableOpacity
                 accessible={true}
                 accessibilityLabel={'试用'}
-                style={styles.probationStyle}
+                style={styles.loginStyle}
                 onPress={() => {
                   this._probation()
                 }}
