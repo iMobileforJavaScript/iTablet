@@ -26,12 +26,12 @@ import { setShow }  from './src/models/device'
 import { FileTools, SPUtils }  from './src/native'
 import ConfigStore from './src/store'
 import { SaveView } from './src/containers/workspace/components'
+import { Loading } from './src/components'
 import { scaleSize, Toast } from './src/utils'
-import { ConstPath, ConstInfo } from './src/constants'
+import { ConstPath, ConstInfo, ConstToolType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene } from 'imobile_for_reactnative'
-import {ConstToolType} from './src/constants'
 import SplashScreen from 'react-native-splash-screen'
 const { persistor, store } = ConfigStore()
 
@@ -118,7 +118,7 @@ class AppRoot extends Component {
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
     }
-    SplashScreen.hide()
+    Platform.OS === 'android' && SplashScreen.hide()
   }
 
   handleStateChange = appState => {
@@ -369,8 +369,8 @@ const AppRootWithRedux = connect(mapStateToProps, {
 
 const App = () =>
   <Provider store={store}>
-    {/*<PersistGate loading={<Loading/>} persistor={persistor}>*/}
-    <PersistGate loading={null} persistor={persistor}>
+    <PersistGate loading={Platform.OS === 'android' ? null : <Loading/>} persistor={persistor}>
+      {/*<PersistGate loading={null} persistor={persistor}>*/}
       <AppRootWithRedux />
     </PersistGate>
   </Provider>
