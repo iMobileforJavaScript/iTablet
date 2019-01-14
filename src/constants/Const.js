@@ -46,7 +46,7 @@ export default {
   CREATE: 'CREATE',
   LOAD: 'LOAD',
 
-  CREATE_SYMBOL_COLLECTION: '新建符号采集',
+  CREATE_SYMBOL_COLLECTION: '新建普通采集',
   MODULE: '模板',
   INFORMATION: '数据',
   HISTORY: '历史记录',

@@ -9,7 +9,7 @@ export default {
   EXPORT_WORKSPACE_SUCCESS: '地图导出成功',
   EXPORT_WORKSPACE_FAILED: '地图导出失败',
 
-  MAP_SYMBOL_COLLECTION_CREATING: '正在新建符号采集',
+  MAP_SYMBOL_COLLECTION_CREATING: '正在新建普通采集',
   MAP_SYMBOL_COLLECTION_CREATED: '符号采集已创建',
   MAP_OPENING: '正在打开地图',
   MAP_CHANGING: '正在切换地图',

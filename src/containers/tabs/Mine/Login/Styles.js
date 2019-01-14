@@ -45,7 +45,7 @@ let styles = StyleSheet.create({
   loginStyle: {
     height: itemHeight,
     width: '50%',
-    backgroundColor: 'black',
+    backgroundColor: '#303030',
     marginTop: 20,
     borderRadius: 4,
     alignItems: 'center',

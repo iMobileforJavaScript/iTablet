@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { View, StyleSheet, Platform } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
 import { SMSymbolTable, SMap, SCartography } from 'imobile_for_reactnative'
@@ -83,8 +83,10 @@ export default class SymbolList extends React.Component {
           data={this.state.data}
           tableStyle={{
             orientation: 1,
-            imageSize: Platform.OS === 'ios' ? scaleSize(60) : scaleSize(150),
-            count: Platform.OS === 'ios' ? 5 : 4,
+            // imageSize: Platform.OS === 'ios' ? scaleSize(60) : scaleSize(150),
+            // count: Platform.OS === 'ios' ? 5 : 4,
+            imageSize: 50,
+            count: 5,
             legendBackgroundColor: dataUtil.colorRgba(color.subTheme),
             textColor: dataUtil.colorRgba(color.themeText),
           }}
