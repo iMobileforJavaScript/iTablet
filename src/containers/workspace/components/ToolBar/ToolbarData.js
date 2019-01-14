@@ -52,6 +52,8 @@ function getTabBarData(type, params = {}) {
     tabBarData = ThemeMenuData.getThemeMapParam(type, params)
   } else if (type === ConstToolType.MAP_THEME_CREATE_BY_LAYER) {
     tabBarData = ThemeMenuData.getThemeMapCreateByLayer(type, params)
+  } else if (type === ConstToolType.MAP_THEME_START_CREATE) {
+    tabBarData = ThemeMenuData.getThemeMapStartCreate(type, params)
   }
   return {
     data: tabBarData.data,

@@ -72,6 +72,13 @@ export default class Login extends React.Component {
       Toast.show('创建用户目录失败')
     }
   }
+  /**试用*/
+  _probation = () => {
+    this.props.setUser({
+      userName: 'Customer',
+      password: 'Customer',
+    })
+  }
 
   _login = async () => {
     let result
@@ -324,7 +331,18 @@ export default class Login extends React.Component {
                   this._login()
                 }}
               >
-                <Text style={styles.titleContainerStyle}>登录</Text>
+                <Text style={[styles.titleContainerStyle]}>登录</Text>
+              </TouchableOpacity>
+              {/*<View style={{marginTop: 5}}/>*/}
+              <TouchableOpacity
+                accessible={true}
+                accessibilityLabel={'游客'}
+                style={styles.probationStyle}
+                onPress={() => {
+                  this._probation()
+                }}
+              >
+                <Text style={[styles.titleContainerStyle]}>游客</Text>
               </TouchableOpacity>
               <View style={{ flex: 1, height: 200 }} />
             </View>

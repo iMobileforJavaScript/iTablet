@@ -13,6 +13,7 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
+#import "RNSplashScreen.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
@@ -26,7 +27,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.124"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.112"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -55,6 +56,8 @@ static NSString* g_sampleCodeName = @"#";;
   
   self.allowRotation = NO;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
+  
+  [RNSplashScreen show];
   return YES;
 }
 
@@ -64,10 +67,12 @@ static NSString* g_sampleCodeName = @"#";;
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
-    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-        NSLog(@"拷贝数据失败");
-    }
+//    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+//      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+//        NSLog(@"拷贝数据失败");
+//    }
+    if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+      NSLog(@"拷贝数据失败");
   }
 }
 

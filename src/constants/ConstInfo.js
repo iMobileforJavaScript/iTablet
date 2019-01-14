@@ -9,7 +9,7 @@ export default {
   EXPORT_WORKSPACE_SUCCESS: '地图导出成功',
   EXPORT_WORKSPACE_FAILED: '地图导出失败',
 
-  MAP_SYMBOL_COLLECTION_CREATING: '正在新建符号采集',
+  MAP_SYMBOL_COLLECTION_CREATING: '正在新建普通采集',
   MAP_SYMBOL_COLLECTION_CREATED: '符号采集已创建',
   MAP_OPENING: '正在打开地图',
   MAP_CHANGING: '正在切换地图',
@@ -18,6 +18,7 @@ export default {
   CHANGE_MAP_TO: '已为您切换到',
   OPEN_MAP_TO: '已为您打开',
 
+  TEMPLATE_LIST_LOADING: '正在加载模版列表',
   TEMPLATE_READING: '正在读取模板',
   TEMPLATE_CHANGE_SUCCESS: '已为您切换模板',
   TEMPLATE_CHANGE_FAILED: '切换模板失败',
@@ -37,10 +38,13 @@ export default {
   WORKSPACE_ALREADY_OPENED: '该工作空间已经打开',
   MODULE_ALREADY_OPENED: '该模板已经打开',
 
-  OUT_OF_MAP_BOUNDS: '不再地图范围内',
+  OUT_OF_MAP_BOUNDS: '不在地图范围内',
 
   CHOOSE_EDIT_OBJ: '请选择编辑对象',
 
   SYMBOL_LIB_EMPTY: '当前符号库为空',
   NON_SELECTED_OBJ: '没有选择对象',
+
+  ADD_SUCCESS: '添加成功',
+  ADD_FAILED: '添加成功',
 }

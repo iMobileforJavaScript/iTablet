@@ -261,6 +261,8 @@ export const getSymbolTemplates = (params, cb = () => {}) => async (
           })
         }
       })
+    } else {
+      cb && cb(params)
     }
     return
   } catch (e) {

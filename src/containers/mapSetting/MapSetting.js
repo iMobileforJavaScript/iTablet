@@ -4,7 +4,13 @@ import { MAP_MODULE, ConstToolType } from '../../constants'
 import constants from '../workspace/constants'
 import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import { SectionList, StatusBar } from 'react-native'
+import {
+  SectionList,
+  StatusBar,
+  View,
+  Platform,
+  BackHandler,
+} from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
@@ -31,6 +37,8 @@ export default class MapSetting extends Component {
   }
 
   componentDidMount() {
+    Platform.OS === 'android' &&
+      BackHandler.addEventListener('hardwareBackPress', this.back)
     this.getData()
   }
 
@@ -40,6 +48,12 @@ export default class MapSetting extends Component {
       JSON.stringify(this.props.mapSetting)
     ) {
       this.setState({ data: this.props.mapSetting })
+    }
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', this.back)
     }
   }
 
@@ -161,7 +175,7 @@ export default class MapSetting extends Component {
   }
 
   renderSelection = () => {
-    if (this.state.data.length === 0) return
+    if (this.state.data.length === 0) return <View style={{ flex: 1 }} />
     return (
       <SectionList
         sections={this.state.data}

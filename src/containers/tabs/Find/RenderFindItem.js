@@ -92,18 +92,22 @@ export default class RenderFindItem extends Component {
       try {
         const ret = RNFS.downloadFile(downloadOptions)
         ret.promise
-          .then(result => {
+          .then(async result => {
             if (result.statusCode === 200) {
               Toast.show('下载成功')
               this.setState({ progress: '下载完成', isDownloading: false })
+              await FileTools.unZipFile(filePath, fileDir)
+              FileTools.deleteFile(filePath)
             }
           })
           .catch(() => {
             Toast.show('下载失败')
+            FileTools.deleteFile(filePath)
             this.setState({ progress: '下载', isDownloading: false })
           })
       } catch (e) {
         Toast.show('网络错误')
+        FileTools.deleteFile(filePath)
         this.setState({ progress: '下载', isDownloading: false })
       }
     } else {
@@ -151,7 +155,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={styles.imageStyle2}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/tab-我的-当前.png')}
+                source={require('../../../assets/tabBar/tab_user.png')}
               />
               <Text style={styles.textStyle2} numberOfLines={1}>
                 {this.props.data.nickname}

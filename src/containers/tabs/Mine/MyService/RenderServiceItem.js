@@ -3,6 +3,7 @@ import { Image, Text, View, TouchableOpacity } from 'react-native'
 import styles, { textHeight } from './Styles'
 import NavigationService from '../../../NavigationService'
 import Toast from '../../../../utils/Toast'
+import { scaleSize } from '../../../../utils'
 export default class RenderServiceItem extends PureComponent {
   props: {
     onItemPress: () => {},
@@ -73,7 +74,7 @@ export default class RenderServiceItem extends PureComponent {
                 {
                   lineHeight: textHeight,
                   textAlign: 'right',
-                  paddingRight: 25,
+                  paddingRight: scaleSize(20),
                 },
               ]}
             >

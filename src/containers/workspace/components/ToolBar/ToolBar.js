@@ -15,7 +15,6 @@ import {
   point,
   region,
   grid,
-  layerAdd,
   openData,
   lineColorSet,
   pointColorSet,
@@ -31,7 +30,7 @@ import NavigationService from '../../../../containers/NavigationService'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
-import { FileTools, NativeMethod } from '../../../../native'
+import { FileTools } from '../../../../native'
 import { View, TouchableOpacity, Image, Animated } from 'react-native'
 import {
   SMap,
@@ -227,7 +226,7 @@ export default class ToolBar extends React.PureComponent {
         buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT]
         break
       case ConstToolType.MAP_ADD_LAYER:
-        data = layerAdd
+        // data = layerAdd
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.PLACEHOLDER,
@@ -491,7 +490,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -548,7 +547,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -559,7 +558,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -589,7 +588,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -600,7 +599,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -630,7 +629,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -641,7 +640,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -671,7 +670,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -951,13 +950,19 @@ export default class ToolBar extends React.PureComponent {
   }
 
   importMap3Dworkspace = async () => {
-    let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
-    let data = await NativeMethod.getTemplates(
-      this.props.user.currentUser.userName
-        ? this.props.user.currentUser.userName
-        : 'Customer',
-    )
-    return { data, buttons }
+    // let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+    // let userName = this.props.user.currentUser.userName || 'Customer'
+    // let path = await FileTools.appendingHomeDirectory(
+    //   ConstPath.UserPath + userName + '/' + ConstPath.RelativePath.ExternalData,
+    // )
+    // let result = await FileTools.getFilterFiles(path)
+    // let data=[]
+    // let data = await NativeMethod.getTemplates(
+    //   this.props.user.currentUser.userName
+    //     ? this.props.user.currentUser.userName
+    //     : 'Customer',
+    // )
+    // return { data, buttons }
   }
 
   /** 记录Toolbar上一次的state **/
@@ -1212,7 +1217,11 @@ export default class ToolBar extends React.PureComponent {
       isShow = isShow === undefined ? true : isShow
       animatedList.push(
         Animated.timing(this.state.bottom, {
-          toValue: isShow ? 0 : -this.props.device.height,
+          toValue: isShow
+            ? 0
+            : -(this.props.device.height >= this.props.device.width
+              ? this.props.device.height
+              : this.props.device.width),
           duration: Const.ANIMATED_DURATION,
         }),
       )
@@ -1722,7 +1731,10 @@ export default class ToolBar extends React.PureComponent {
             type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
           },
           () => {
-            this.height = ConstToolType.THEME_HEIGHT[6]
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
           },
         )
       }.bind(this)())
@@ -1854,22 +1866,101 @@ export default class ToolBar extends React.PureComponent {
     if (item.action) {
       item.action && item.action()
     } else if (this.state.type === ConstToolType.MAP_ADD_LAYER) {
-      NavigationService.navigate('WorkspaceFlieList', {
-        cb: async path => {
-          this.path = path
-          let list = await SMap.getUDBName(path)
-          let datalist = [
+      (async function() {
+        this.path = await FileTools.appendingHomeDirectory(item.path)
+        SMap.getUDBName(this.path).then(list => {
+          let dataList = [
             {
               title: '数据集',
               data: list,
             },
           ]
           this.setState({
-            data: datalist,
+            data: dataList,
             type: ConstToolType.MAP_ADD_DATASET,
           })
-        },
-      })
+          // this.setLastState()
+        })
+        this.scrollListToLocation()
+      }.bind(this)())
+      // NavigationService.navigate('WorkspaceFlieList', {
+      //   cb: async path => {
+      //     this.path = path
+      //     let list = await SMap.getUDBName(path)
+      //     let datalist = [
+      //       {
+      //         title: '数据集',
+      //         data: list,
+      //       },
+      //     ]
+      //     this.setState({
+      //       data: datalist,
+      //       type: ConstToolType.MAP_ADD_DATASET,
+      //     })
+      //   },
+      // })
+    } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
+      (async function() {
+        let path = await FileTools.appendingHomeDirectory(item.path)
+        let udbName = this.basename(path)
+        let udbpath = {
+          server: path,
+          alias: udbName,
+          engineType: 219,
+        }
+        //只添加数据源
+        await SMap.openDatasource(udbpath, '')
+        let alldata = []
+        let getdata = await SThemeCartography.getAllDatasetNames()
+        getdata.reverse() //反序
+        alldata[0] = {
+          title: '选择数据源',
+          data: [
+            {
+              title: '选择目录',
+              theme_add_udb: true,
+            },
+          ],
+        }
+        for (let i = 0; i < getdata.length; i++) {
+          let datalist = getdata[i]
+          alldata[i + 1] = {
+            title: '数据源: ' + datalist.datasource.alias,
+            data: datalist.list,
+          }
+        }
+        this.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
+          containerType: 'list',
+          isFullScreen: true,
+          isTouchProgress: false,
+          isSelectlist: false,
+          listSelectable: false, //单选框
+          height:
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5],
+          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+          data: alldata,
+          buttons: [ToolbarBtnType.THEME_CANCEL],
+        })
+        this.scrollListToLocation()
+      }.bind(this)())
+      // NavigationService.navigate('WorkspaceFlieList', {
+      //   cb: async path => {
+      //     this.path = path
+      //     let list = await SMap.getUDBName(path)
+      //     let datalist = [
+      //       {
+      //         title: '数据集',
+      //         data: list,
+      //       },
+      //     ]
+      //     this.setState({
+      //       data: datalist,
+      //       type: ConstToolType.MAP_ADD_DATASET,
+      //     })
+      //   },
+      // })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
         let udbName = this.basename(this.path)
@@ -1878,7 +1969,10 @@ export default class ToolBar extends React.PureComponent {
           alias: udbName,
           engineType: 219,
         }
-        await SMap.openDatasource(udbpath, index)
+        let result = await SMap.openDatasource(udbpath, index)
+        Toast.show(
+          result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
+        )
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_OPEN) {
       NavigationService.navigate('WorkspaceFlieList', {
@@ -1929,48 +2023,106 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       //专题图添加数据源
       if (item.theme_add_udb) {
-        NavigationService.navigate('WorkspaceFlieList', {
-          cb: async path => {
-            let udbName = this.basename(path)
-            let udbpath = {
-              server: path,
-              alias: udbName,
-              engineType: 219,
-            }
-            //只添加数据源
-            await SMap.openDatasource(udbpath, '')
-            let alldata = []
-            let getdata = await SThemeCartography.getAllDatasetNames()
-            getdata.reverse() //反序
-            alldata[0] = {
-              title: '选择数据源',
-              data: [
-                {
-                  title: '选择目录',
-                  theme_add_udb: true,
-                },
-              ],
-            }
-            for (let i = 0; i < getdata.length; i++) {
-              let datalist = getdata[i]
-              alldata[i + 1] = {
-                title: '数据源: ' + datalist.datasource.alias,
-                data: datalist.list,
-              }
-            }
-            this.setState({
-              data: alldata,
+        (async function() {
+          let data = []
+          let customerUDBPath = await FileTools.appendingHomeDirectory(
+            ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+          )
+          let customerUDBs = await FileTools.getPathListByFilter(
+            customerUDBPath,
+            {
+              extension: 'udb',
+              type: 'file',
+            },
+          )
+
+          let userUDBPath, userUDBs
+          if (this.props.user && this.props.user.currentUser.userName) {
+            userUDBPath =
+              (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Datasource
+            userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+              extension: 'udb',
+              type: 'file',
             })
-            this.scrollListToLocation()
-          },
-        })
+
+            data = [
+              {
+                title: Const.PUBLIC_DATA_SOURCE,
+                data: customerUDBs,
+              },
+              {
+                title: Const.DATA_SOURCE,
+                data: userUDBs,
+              },
+            ]
+          } else {
+            data = [
+              {
+                title: Const.DATA_SOURCE,
+                data: customerUDBs,
+              },
+            ]
+          }
+
+          this.setVisible(true, ConstToolType.MAP_THEME_ADD_DATASET, {
+            containerType: 'list',
+            isFullScreen: false,
+            height:
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5],
+            data,
+            buttons: [ToolbarBtnType.THEME_CANCEL],
+          })
+        }.bind(this)())
+        // NavigationService.navigate('WorkspaceFlieList', {
+        //   cb: async path => {
+        //     let udbName = this.basename(path)
+        //     let udbpath = {
+        //       server: path,
+        //       alias: udbName,
+        //       engineType: 219,
+        //     }
+        //     //只添加数据源
+        //     await SMap.openDatasource(udbpath, '')
+        //     let alldata = []
+        //     let getdata = await SThemeCartography.getAllDatasetNames()
+        //     getdata.reverse() //反序
+        //     alldata[0] = {
+        //       title: '选择数据源',
+        //       data: [
+        //         {
+        //           title: '选择目录',
+        //           theme_add_udb: true,
+        //         },
+        //       ],
+        //     }
+        //     for (let i = 0; i < getdata.length; i++) {
+        //       let datalist = getdata[i]
+        //       alldata[i + 1] = {
+        //         title: '数据源: ' + datalist.datasource.alias,
+        //         data: datalist.list,
+        //       }
+        //     }
+        //     this.setState({
+        //       data: alldata,
+        //     })
+        //     this.scrollListToLocation()
+        //   },
+        // })
       } else if (item.datasetName) {
         let params = {
           DatasourceName: item.datasourceName,
           DatasetName: item.datasetName,
         }
         // 添加数据集
-        SMap.addDatasetToMap(params)
+        let result = SMap.addDatasetToMap(params)
+        Toast.show(
+          result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
+        )
         // 重新加载图层
         this.props.getLayers({
           type: -1,
@@ -1978,12 +2130,51 @@ export default class ToolBar extends React.PureComponent {
         })
       }
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
-      this.importTemplate(item)
+      //地图制图，专题制图：导入数据
+      this.importData(item)
+    } else if (this.state.type === ConstToolType.MAP_THEME_START_OPENDS) {
+      //专题制图：开始->新建地图->数据源列表(->数据集列表)
+      (async function() {
+        this.path = await FileTools.appendingHomeDirectory(item.path)
+        let arr = item.name.split('.')
+        let alias = arr[0]
+        SThemeCartography.getUDBName(this.path).then(list => {
+          let dataList = [
+            {
+              title: '数据源：' + alias,
+              data: list,
+            },
+          ]
+          this.setState({
+            data: dataList,
+            type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
+          })
+        })
+        // let getdata = await SThemeCartography.getDatasetsByDatasource({Alias: alias})
+        // let dataList = [{
+        //   title: '数据源：' + alias,
+        //   data: getdata[0].list,
+        // }]
+        // this.setVisible(true, ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS, {
+        //   containerType: 'list',
+        //   isFullScreen: true,
+        //   isTouchProgress: false,
+        //   isSelectlist: false,
+        //   listSelectable: false, //单选框
+        //   height: this.props.device.orientation === 'LANDSCAPE' ?
+        //     ConstToolType.THEME_HEIGHT[3] :
+        //     ConstToolType.THEME_HEIGHT[5],
+        //   column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        //   data: dataList,
+        //   buttons: [ToolbarBtnType.THEME_CANCEL],
+        // })
+        this.scrollListToLocation()
+      }.bind(this)())
     }
   }
 
   /** 导入工作空间 **/
-  importTemplate = async item => {
+  importData = async item => {
     try {
       this.props.setContainerLoading &&
         this.props.setContainerLoading(true, '正在打开数据')
@@ -2000,15 +2191,19 @@ export default class ToolBar extends React.PureComponent {
               this.props.setContainerLoading(false)
             Toast.show(msg)
           } else if (mapsInfo && mapsInfo.length > 0) {
+            // 关闭地图
+            if (this.props.map.currentMap.name) {
+              await this.props.closeMap()
+            }
             // 打开地图
-            // let templatePath =
-            //   (this.props.user && this.props.user.currentUser.userName
-            //     ? ConstPath.UserPath +
-            //       this.props.user.currentUser.userName +
-            //       '/'
-            //     : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
+            let mapPath =
+              (this.props.user && this.props.user.currentUser.userName
+                ? ConstPath.UserPath +
+                  this.props.user.currentUser.userName +
+                  '/'
+                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
             let mapInfo = await this.props.openMap({
-              path: ConstPath.UserPath + mapsInfo[0] + '.xml',
+              path: mapPath + mapsInfo[0] + '.xml',
               name: mapsInfo[0],
             })
             if (mapInfo) {
@@ -2848,16 +3043,14 @@ export default class ToolBar extends React.PureComponent {
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

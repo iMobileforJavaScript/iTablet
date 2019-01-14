@@ -67,15 +67,7 @@ export default class Map3DToolBar extends React.Component {
         break
     }
   }
-  // .then(
-  //   result => {
-  //     if (result) {
-  //       Toast.show('添加成功')
-  //     } else {
-  //       Toast.show('添加失败，请检查网络')
-  //     }
-  //   },
-  // )
+
   setAnalystResult = data => {
     this.setState({
       analystresult: data,
@@ -156,6 +148,14 @@ export default class Map3DToolBar extends React.Component {
       SScene.setListener().then(() => {
         SScene.getAttribute()
         SScene.setCircleFly()
+        SScene.addLayer3D(
+          'http://t0.tianditu.com/img_c/wmts',
+          'l3dBingMaps',
+          'bingmap',
+          'JPG_PNG',
+          96.0,
+          true,
+        )
       })
       GLOBAL.openWorkspace = true
       this.props.existFullMap && this.props.existFullMap(true)
