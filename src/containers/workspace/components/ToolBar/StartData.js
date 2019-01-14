@@ -584,24 +584,50 @@ function changeBaseLayer(type) {
 //
 // }
 
+function setSaveViewVisible(visible) {
+  if (!_params.setSaveViewVisible) return
+  GLOBAL.isBackHome = false
+  GLOBAL.isCreateThemeMap = true
+  _params.setSaveViewVisible(visible)
+}
+
 /**新建专题图 **/
 function createThemeMap() {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
+  let isAnyMapOpened = true //是否有打开的地图
+  SMap.mapIsModified().then(async result => {
+    isAnyMapOpened = await SMap.isAnyMapOpened()
+    if (isAnyMapOpened && result) {
+      setSaveViewVisible(true)
+    } else {
+      //先关闭地图
+      if (isAnyMapOpened) {
+        _params.setContainerLoading &&
+          _params.setContainerLoading(true, '正在关闭当前地图')
+        if (!_params.closeMap) return
+        _params.closeMap()
+        _params.setContainerLoading && _params.setContainerLoading(false)
+      }
 
-  Orientation.getOrientation((e, orientation) => {
-    let column = orientation === 'PORTRAIT' ? 3 : 8
-    let height =
-      orientation === 'PORTRAIT'
-        ? ConstToolType.HEIGHT[0]
-        : ConstToolType.HEIGHT[0]
+      if (!_params.setToolbarVisible) return
+      _params.showFullMap && _params.showFullMap(true)
 
-    _params.setToolbarVisible(true, ConstToolType.MAP_THEME_CREATE, {
-      containerType: 'table',
-      isFullScreen: true,
-      column: column,
-      height: height,
-    })
+      Orientation.getOrientation((e, orientation) => {
+        let column = orientation === 'PORTRAIT' ? 3 : 8
+        let height =
+          orientation === 'PORTRAIT'
+            ? ConstToolType.HEIGHT[0]
+            : ConstToolType.HEIGHT[0]
+
+        _params.setToolbarVisible(true, ConstToolType.MAP_THEME_START_CREATE, {
+          containerType: 'table',
+          isFullScreen: true,
+          isTouchProgress: false,
+          isSelectlist: false,
+          column: column,
+          height: height,
+        })
+      })
+    }
   })
 }
 

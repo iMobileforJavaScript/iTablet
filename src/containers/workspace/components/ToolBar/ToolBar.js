@@ -490,7 +490,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -547,7 +547,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -558,7 +558,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -588,7 +588,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -599,7 +599,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -629,7 +629,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -640,7 +640,7 @@ export default class ToolBar extends React.PureComponent {
       toValue:
         this.props.device.orientation === 'LANDSCAPE'
           ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[4],
+          : ConstToolType.THEME_HEIGHT[5],
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.isBoxShow = true
@@ -670,7 +670,7 @@ export default class ToolBar extends React.PureComponent {
         this.height =
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[5]
         this.scrollListToLocation()
       },
     )
@@ -1731,7 +1731,10 @@ export default class ToolBar extends React.PureComponent {
             type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
           },
           () => {
-            this.height = ConstToolType.THEME_HEIGHT[6]
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
           },
         )
       }.bind(this)())
@@ -1935,7 +1938,7 @@ export default class ToolBar extends React.PureComponent {
           height:
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[6],
+              : ConstToolType.THEME_HEIGHT[5],
           column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
           data: alldata,
           buttons: [ToolbarBtnType.THEME_CANCEL],
@@ -2070,7 +2073,7 @@ export default class ToolBar extends React.PureComponent {
             height:
               this.props.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
-                : ConstToolType.THEME_HEIGHT[6],
+                : ConstToolType.THEME_HEIGHT[5],
             data,
             buttons: [ToolbarBtnType.THEME_CANCEL],
           })
@@ -2129,6 +2132,44 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
       //地图制图，专题制图：导入数据
       this.importData(item)
+    } else if (this.state.type === ConstToolType.MAP_THEME_START_OPENDS) {
+      //专题制图：开始->新建地图->数据源列表(->数据集列表)
+      (async function() {
+        this.path = await FileTools.appendingHomeDirectory(item.path)
+        let arr = item.name.split('.')
+        let alias = arr[0]
+        SThemeCartography.getUDBName(this.path).then(list => {
+          let dataList = [
+            {
+              title: '数据源：' + alias,
+              data: list,
+            },
+          ]
+          this.setState({
+            data: dataList,
+            type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
+          })
+        })
+        // let getdata = await SThemeCartography.getDatasetsByDatasource({Alias: alias})
+        // let dataList = [{
+        //   title: '数据源：' + alias,
+        //   data: getdata[0].list,
+        // }]
+        // this.setVisible(true, ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS, {
+        //   containerType: 'list',
+        //   isFullScreen: true,
+        //   isTouchProgress: false,
+        //   isSelectlist: false,
+        //   listSelectable: false, //单选框
+        //   height: this.props.device.orientation === 'LANDSCAPE' ?
+        //     ConstToolType.THEME_HEIGHT[3] :
+        //     ConstToolType.THEME_HEIGHT[5],
+        //   column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        //   data: dataList,
+        //   buttons: [ToolbarBtnType.THEME_CANCEL],
+        // })
+        this.scrollListToLocation()
+      }.bind(this)())
     }
   }
 

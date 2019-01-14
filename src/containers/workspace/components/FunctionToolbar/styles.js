@@ -6,7 +6,7 @@ export default StyleSheet.create({
     position: 'absolute',
     top: 95,
     right: scaleSize(20),
-    backgroundColor: 'white',
+    backgroundColor: '#rgba(240, 240, 240 ,0)',
     borderRadius: scaleSize(4),
     elevation: 20,
     shadowOffset: { width: 0, height: 0 },

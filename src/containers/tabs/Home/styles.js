@@ -7,7 +7,7 @@ export default StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     // flexDirection: 'column',
-    backgroundColor: '#4C4C4C',
+    backgroundColor: '#F0F0F0',
   },
   header: {
     // width: SCREEN_WIDTH * 0.762,
