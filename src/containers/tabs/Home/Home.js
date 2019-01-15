@@ -211,7 +211,7 @@ export default class Home extends Component {
             <TouchableOpacity
               onPress={() => {
                 this.topNavigatorBarImageId = 'right'
-                this.setState({ modalIsVisible: true })
+                // this.setState({ modalIsVisible: true })
               }}
               // style={{ flex: 1, marginRight: scaleSize(18.5) }}
             >

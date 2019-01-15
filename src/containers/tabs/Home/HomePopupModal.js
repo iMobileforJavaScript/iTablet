@@ -96,21 +96,21 @@ export default class HomePopupModal extends PureComponent {
         )
       }
     } else {
-      // return (
-      //   <View
-      //     style={{
-      //       flex: 1,
-      //       position: 'absolute',
-      //       bottom: 0,
-      //       left: 0,
-      //       right: 0,
-      //     }}
-      //   >
-      //     {this._renderSeparatorLine()}
-      //     {this._renderItem('关于iTablet', this.props.onAbout)}
-      //     {this._renderItem('设置', this.props.onSetting)}
-      //   </View>
-      // )
+      return (
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+          }}
+        >
+          {this._renderSeparatorLine()}
+          {this._renderItem('关于iTablet', this.props.onAbout)}
+          {this._renderItem('设置', this.props.onSetting)}
+        </View>
+      )
     }
   }
 
