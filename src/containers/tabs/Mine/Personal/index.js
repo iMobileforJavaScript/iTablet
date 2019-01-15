@@ -1,14 +1,19 @@
-import Login from './Login'
+import { connect } from 'react-redux'
+import Personal from './Personal'
 import { setUser } from '../../../../models/user'
-import connect from 'react-redux/es/connect/connect'
+import { openWorkspace, closeWorkspace } from '../../../../models/map'
+
 const mapStateToProps = state => ({
   user: state.user.toJS(),
 })
 
 const mapDispatchToProps = {
   setUser,
+  openWorkspace,
+  closeWorkspace,
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Login)
+)(Personal)

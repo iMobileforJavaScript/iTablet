@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
-import RNFS from 'react-native-fs'
+import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 
@@ -32,9 +32,6 @@ class RenderModuleItem extends Component {
       disabled: false,
     }
   }
-
-  componentDidMount() {}
-
   itemAction = async item => {
     this.setState({
       disabled: true,
@@ -85,7 +82,7 @@ class RenderModuleItem extends Component {
     } else if (moduleKey === '专题地图') {
       dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
     } else if (moduleKey === '外业采集') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1605521624/download'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         dataUrl = 'https://www.supermapol.com/web/datas/1254811966/download'
@@ -110,6 +107,7 @@ class RenderModuleItem extends Component {
         progress: res => {
           let value =
             ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+          // console.warn(value)
           if (value === '100%') {
             this.setState({
               progress: '导入中...',
@@ -125,7 +123,7 @@ class RenderModuleItem extends Component {
           }
         },
       }
-      let result = RNFS.downloadFile(downloadOptions)
+      let result = downloadFile(downloadOptions)
       result.promise
         .then(async result => {
           if (result.statusCode === 200) {
@@ -151,6 +149,7 @@ class RenderModuleItem extends Component {
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
         : `下载${this.state.progress}`
+    // console.warn(progress)
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -249,6 +248,28 @@ export default class ModuleList extends Component {
       isShowProgressView: false,
     }
   }
+  // UNSAFE_componentWillMount() {
+  //   console.warn('ModuleList WILL MOUNT!')
+  // }
+  // componentDidMount() {
+  //   console.warn('ModuleList DID MOUNT!')
+  // }
+  // UNSAFE_componentWillReceiveProps() {
+  //   console.warn('ModuleList WILL RECEIVE PROPS!')
+  // }
+  // shouldComponentUpdate() {
+  //   return true
+  // }
+  // UNSAFE_componentWillUpdate( ) {
+  //   console.warn('ModuleList WILL UPDATE!')
+  // }
+  // componentDidUpdate( ) {
+  //   console.warn('ModuleList DID UPDATE!')
+  // }
+  // componentWillUnmount() {
+  //   console.warn('ModuleList WILL UNMOUNT!')
+  // }
+
   _renderItem = ({ item }) => {
     return (
       <RenderModuleItem
@@ -276,6 +297,7 @@ export default class ModuleList extends Component {
     )
   }
   render() {
+    // console.warn('render-list')
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (

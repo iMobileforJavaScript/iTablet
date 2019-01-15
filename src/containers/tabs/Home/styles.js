@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../utils'
+// import { color } from '../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {

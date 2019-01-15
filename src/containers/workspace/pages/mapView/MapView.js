@@ -709,18 +709,22 @@ export default class MapView extends React.Component {
                 this.wsData[i],
                 this.wsData[i].layerIndex,
               )
-            } else {
+            } else if (item.type === 'Datasource') {
               await this._openDatasource(
                 this.wsData[i],
                 this.wsData[i].layerIndex,
               )
+            } else if (item.type === 'Map') {
+              await this._openMap(this.wsData[i])
             }
           }
         } else {
           if (this.wsData.type === 'Workspace') {
             await this._openWorkspace(this.wsData, this.wsData.layerIndex)
-          } else {
+          } else if (this.wsData.type === 'Datasource') {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
+          } else if (this.wsData.type === 'Map') {
+            await this._openMap(this.wsData)
           }
         }
 
@@ -784,6 +788,23 @@ export default class MapView extends React.Component {
     }
     try {
       await SMap.openDatasource(wsData.DSParams, index)
+    } catch (e) {
+      this.container.setLoading(false)
+    }
+  }
+
+  _openMap = async data => {
+    try {
+      let mapInfo = await this.props.openMap({
+        path: data.path,
+        name: data.name,
+      })
+      if (mapInfo) {
+        await this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
+        this.setVisible(false)
+      }
     } catch (e) {
       this.container.setLoading(false)
     }
