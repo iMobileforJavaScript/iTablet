@@ -28,7 +28,11 @@ static NSString* g_sampleCodeName = @"#";;
   
 #if DEBUG
 <<<<<<< HEAD
+<<<<<<< HEAD
   [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.119"];
+=======
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.106"];
+>>>>>>> parent of bcc674b... scalsize，首页修改
 =======
   [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.218.106"];
 >>>>>>> parent of bcc674b... scalsize，首页修改
