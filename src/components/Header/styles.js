@@ -2,7 +2,7 @@ import { StyleSheet, Platform } from 'react-native'
 import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 
-export const HEADER_HEIGHT = scaleSize(60) + (Platform.OS === 'ios' ? 20 : 0)
+export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export const HEADER_PADDINGTOP = Platform.OS === 'ios' ? 20 : 0
 
 export default StyleSheet.create({
@@ -72,8 +72,8 @@ export default StyleSheet.create({
   backIcon: {
     // width: 9,
     // height: 14,
-    width: scaleSize(34),
-    height: scaleSize(34),
+    width: scaleSize(60),
+    height: scaleSize(60),
     backgroundColor: '#rgba(255, 255, 255, 0)',
     marginRight: 3,
   },
@@ -92,7 +92,7 @@ export default StyleSheet.create({
     zIndex: 10001,
     width: 60,
     padding: 5,
-    marginLeft: 5,
+    marginLeft: scaleSize(25),
     alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -104,8 +104,9 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    right: 10,
+    right: scaleSize(25),
     backgroundColor: 'transparent',
+    // backgroundColor:"red",
   },
   headerTitleView: {
     position: 'absolute',
@@ -119,7 +120,7 @@ export default StyleSheet.create({
     // fontSize: 18,
     // color: '#222222',
     color: 'white',
-    fontSize: scaleSize(30),
+    fontSize: scaleSize(36),
     // fontWeight: 'bold',
     backgroundColor: 'rgba(255, 255, 255, 0)',
   },

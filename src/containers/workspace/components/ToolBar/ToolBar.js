@@ -914,10 +914,11 @@ export default class ToolBar extends React.PureComponent {
       let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       return { data, buttons }
     } catch (error) {
+      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let data = []
       Toast.show('当前场景无飞行轨迹')
+      return { data, buttons }
     }
-    this.isShow = false
-    this.isBoxShow = true
   }
 
   getWorkspaceList = async () => {
@@ -1044,7 +1045,7 @@ export default class ToolBar extends React.PureComponent {
           isFullScreen: false,
         },
         () => {
-          this.height = ConstToolType.HEIGHT[1]
+          this.height = ConstToolType.HEIGHT[2]
           this.showToolbar()
         },
       )

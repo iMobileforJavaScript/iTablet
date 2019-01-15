@@ -83,8 +83,8 @@ export default StyleSheet.create({
   },
   functionToolbar: {
     position: 'absolute',
-    top: scaleSize(130),
-    right: scaleSize(20),
+    top: scaleSize(143),
+    right: scaleSize(31),
     backgroundColor: color.white,
   },
   headerBtnSeparator: {

@@ -116,7 +116,7 @@ export default class Home extends Component {
 
   render() {
     let userImg = require('../../../assets/home/icon_mine_select.png')
-    let moreImg = require('../../../assets/home/icon_else_selected.png')
+    let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -150,7 +150,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerRight: (
-            <TouchableOpacity style={styles.moreImg}>
+            <TouchableOpacity style={styles.moreView}>
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
