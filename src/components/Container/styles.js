@@ -36,7 +36,7 @@ export default StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: scaleSize(80),
+    height: scaleSize(48),
     backgroundColor: color.theme,
     alignSelf: 'center',
     zIndex: zIndexLevel.TWO,
@@ -45,7 +45,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   flexBottomBar: {
-    height: scaleSize(80),
+    height: scaleSize(48),
     width: '100%',
     alignSelf: 'center',
     zIndex: 100,

@@ -123,20 +123,16 @@ export default {
 
   // 工具视图高度级别
   HEIGHT: [
+    scaleSize(50),
     scaleSize(100),
-    scaleSize(150),
     scaleSize(250),
-    scaleSize(720),
+    scaleSize(317),
     scaleSize(0),
   ],
   THEME_HEIGHT: [
     scaleSize(100),
     scaleSize(150),
     scaleSize(250),
-    scaleSize(400),
-    scaleSize(500),
-    scaleSize(600),
-    scaleSize(700),
-    scaleSize(300),
+    scaleSize(317),
   ],
 }

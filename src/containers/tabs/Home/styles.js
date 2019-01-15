@@ -7,7 +7,7 @@ export default StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     // flexDirection: 'column',
-    backgroundColor: '#4C4C4C',
+    backgroundColor: '#F0F0F0',
   },
   header: {
     // width: SCREEN_WIDTH * 0.762,
@@ -21,18 +21,20 @@ export default StyleSheet.create({
     marginTop: scaleSize(50),
   },
   userImg: {
-    width: scaleSize(28),
+    width: scaleSize(30),
     // flex:1,
-    height: scaleSize(28),
+    height: scaleSize(30),
   },
   userView: {
-    width: scaleSize(45),
+    flex: 1,
+    // width: scaleSize(30),
     // flex:6,
-    height: scaleSize(45),
+    // height: scaleSize(30),
     borderRadius: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#4C4C4C',
+    marginLeft: scaleSize(30),
   },
   headTitle: {
     flex: 6.5,
@@ -46,9 +48,10 @@ export default StyleSheet.create({
     // fontFamily: 'CenturyGothic',
   },
   moreImg: {
-    // width: scaleSize(10),
+    width: scaleSize(30),
     height: scaleSize(30),
-    marginRight: scaleSize(10),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   modulelist: {
     flex: 1,

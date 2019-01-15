@@ -3,16 +3,16 @@ import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 export default StyleSheet.create({
   sectionHeader: {
-    fontSize: scaleSize(28),
+    fontSize: scaleSize(14),
     fontWeight: 'bold',
     backgroundColor: color.theme,
     color: 'white',
   },
   item: {
     padding: scaleSize(5),
-    fontSize: scaleSize(22),
-    paddingLeft: scaleSize(20),
-    height: scaleSize(50),
+    fontSize: scaleSize(11),
+    paddingLeft: scaleSize(10),
+    height: scaleSize(30),
     backgroundColor: color.theme,
     color: 'white',
   },
@@ -29,13 +29,13 @@ export default StyleSheet.create({
     // textAlign:"center",
     // textAlignVertical:"center",
 
-    fontSize: scaleSize(22),
+    fontSize: scaleSize(11),
     color: 'white',
   },
   key: {
     // width:scaleSize(200),
     flex: 4,
-    height: scaleSize(60),
+    height: scaleSize(25),
     // fontSize: scaleSize(22),
     alignItems: 'center',
     justifyContent: 'center',
@@ -47,7 +47,7 @@ export default StyleSheet.create({
   value: {
     // width:scaleSize(520),
     flex: 6,
-    height: scaleSize(60),
+    height: scaleSize(25),
     // fontSize: scaleSize(22),
     alignItems: 'center',
     justifyContent: 'center',
@@ -56,9 +56,9 @@ export default StyleSheet.create({
     borderBottomColor: '#C4C4C4',
   },
   name: {
-    width: scaleSize(200),
-    height: scaleSize(40),
-    fontSize: scaleSize(24),
+    width: scaleSize(100),
+    height: scaleSize(25),
+    fontSize: scaleSize(12),
     color: 'white',
     textAlign: 'center',
     // backgroundColor:"blue",
@@ -67,8 +67,8 @@ export default StyleSheet.create({
   result: {
     // width: scaleSize(300),
     flex: 1,
-    height: scaleSize(40),
-    fontSize: scaleSize(24),
+    height: scaleSize(25),
+    fontSize: scaleSize(12),
     color: 'white',
     textAlign: 'center',
     // backgroundColor:"white",
@@ -83,13 +83,13 @@ export default StyleSheet.create({
     justifyContent: 'center',
     // backgroundColor:"red",
     // alignItems:"center",
-    marginTop: scaleSize(20),
+    marginTop: scaleSize(10),
   },
   container: {
     flex: 1,
   },
   sceneItem: {
     flex: 1,
-    marginTop: scaleSize(20),
+    marginTop: scaleSize(10),
   },
 })
