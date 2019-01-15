@@ -30,9 +30,10 @@ export default class Find extends Component {
     this.state = {
       data: [{}],
       isRefresh: false,
-      loadCount: 1,
       progressWidth: this.screenWidth * 0.6,
+      isLoadingData: false,
     }
+    this.loadCount = 1
     this.flatListData = []
     this.userDataCount = -1
   }
@@ -97,6 +98,7 @@ export default class Find extends Component {
   _onRefresh = async () => {
     try {
       if (!this.state.isRefresh) {
+        this.loadCount = 1
         this.setState({ isRefresh: true })
         this.flatListData = await this._loadUserData(1, 20)
         this.setState({ isRefresh: false, data: this.flatListData })
@@ -108,13 +110,16 @@ export default class Find extends Component {
   }
   _loadData = async () => {
     try {
-      let currentPage = this.state.loadCount++
-      let arrData = await this._loadUserData(currentPage)
-      this.flatListData = this.flatListData.concat(arrData)
-      this.setState({ data: this.flatListData })
+      if (!this.state.isLoadingData) {
+        this.setState({ data: this.flatListData, isLoadingData: true })
+        this.loadCount = this.loadCount + 1
+        let arrData = await this._loadUserData(this.loadCount)
+        this.flatListData = this.flatListData.concat(arrData)
+        this.setState({ data: this.flatListData, isLoadingData: false })
+      }
     } catch (e) {
       Toast.show('网络错误')
-      this.setState({ isLoadData: false })
+      this.setState({ isLoadingData: false })
     }
   }
 

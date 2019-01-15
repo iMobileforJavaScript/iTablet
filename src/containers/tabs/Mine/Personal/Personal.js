@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
-import { Container } from '../../components'
-import { ConstPath } from '../../constants'
-import { FileTools } from '../../native'
-import { color } from '../../styles'
+import { Container } from '../../../../components'
+import { ConstPath } from '../../../../constants'
+import { FileTools } from '../../../../native'
+import { color } from '../../../../styles'
 // import { Toast } from '../../utils'
-import NavigationService from '../NavigationService'
+import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
 
@@ -22,23 +22,21 @@ export default class Personal extends Component {
     super(props)
   }
 
-  logout = () => {
-    (function() {
-      try {
-        SOnlineService.logout()
-        this.props.closeWorkspace(async () => {
-          let customPath = await FileTools.appendingHomeDirectory(
-            ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
-          )
-          this.props.setUser()
-          NavigationService.goBack()
-          await this.props.openWorkspace({ server: customPath })
-        })
-      } catch (e) {
-        // Toast.show('退出登录失败')
+  _logout = () => {
+    try {
+      SOnlineService.logout()
+      this.props.closeWorkspace(async () => {
+        let customPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+        )
         this.props.setUser()
-      }
-    }.bind(this)())
+        NavigationService.goBack()
+        await this.props.openWorkspace({ server: customPath })
+      })
+    } catch (e) {
+      // Toast.show('退出登录失败')
+      this.props.setUser()
+    }
   }
 
   _renderItem = (key, value) => {
@@ -86,7 +84,7 @@ export default class Personal extends Component {
         this.props.user.currentUser.userName === 'Customer' &&
         this.props.user.currentUser.password === 'Customer'
       let image = isCustomer
-        ? require('../../assets/home/系统默认头像.png')
+        ? require('../../../../assets/home/系统默认头像.png')
         : {
           uri:
               'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
@@ -153,7 +151,9 @@ export default class Personal extends Component {
         accessibilityLabel={''}
         activeOpacity={0.8}
         style={styles.item2}
-        onPress={this.logout}
+        onPress={() => {
+          NavigationService.navigate('ToggleAccount')
+        }}
       >
         <Text style={{ fontSize: 18, color: 'white' }}>切换账号</Text>
       </TouchableOpacity>
@@ -167,7 +167,7 @@ export default class Personal extends Component {
         accessibilityLabel={''}
         activeOpacity={0.8}
         style={styles.item2}
-        onPress={this.logout}
+        onPress={this._logout}
       >
         <Text style={{ fontSize: 18, color: 'white' }}>退出登录</Text>
       </TouchableOpacity>

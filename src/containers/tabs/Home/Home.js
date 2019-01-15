@@ -132,9 +132,20 @@ export default class Home extends Component {
     NavigationService.navigate('Register')
   }
 
-  _onSetting = () => {}
+  _onSetting = () => {
+    this._closeModal()
+    NavigationService.navigate('Setting')
+  }
 
-  _onToggleAccount = () => {}
+  _onAbout = () => {
+    this._closeModal()
+    NavigationService.navigate('AboutITablet')
+  }
+
+  _onToggleAccount = () => {
+    this._closeModal()
+    NavigationService.navigate('ToggleAccount')
+  }
 
   _onLogout = () => {
     SOnlineService.logout()
@@ -144,7 +155,8 @@ export default class Home extends Component {
       )
       this.props.setUser()
       NavigationService.navigate('Mine')
-      await this.props.openWorkspace({ server: customPath })
+      this._closeModal()
+      this.props.openWorkspace({ server: customPath })
     })
   }
 
@@ -158,6 +170,7 @@ export default class Home extends Component {
         onToggleAccount={this._onToggleAccount}
         onLogout={this._onLogout}
         onSetting={this._onSetting}
+        onAbout={this._onAbout}
         modalVisible={this.state.modalIsVisible}
         onCloseModal={this._closeModal}
         topNavigatorBarImageId={this.topNavigatorBarImageId}

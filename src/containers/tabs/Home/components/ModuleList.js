@@ -82,7 +82,7 @@ class RenderModuleItem extends Component {
     } else if (moduleKey === '专题地图') {
       dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
     } else if (moduleKey === '外业采集') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1605521624/download'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         dataUrl = 'https://www.supermapol.com/web/datas/1254811966/download'

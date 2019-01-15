@@ -11,6 +11,7 @@ export default class HomePopupModal extends PureComponent {
     onLogout: () => {},
     onToggleAccount: () => {},
     onSetting: () => {},
+    onAbout: () => {},
     topNavigatorBarImageId: String,
   }
 
@@ -40,6 +41,7 @@ export default class HomePopupModal extends PureComponent {
     return (
       <View style={{ width: '100%' }}>
         <TouchableOpacity
+          activeOpacity={0.9}
           style={{
             width: '100%',
             height: 60,
@@ -94,21 +96,21 @@ export default class HomePopupModal extends PureComponent {
         )
       }
     } else {
-      return (
-        <View
-          style={{
-            flex: 1,
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-          }}
-        >
-          {this._renderSeparatorLine()}
-          {this._renderItem('关于iTablet', this.props.onLogin)}
-          {this._renderItem('设置', this.props.onSetting)}
-        </View>
-      )
+      // return (
+      //   <View
+      //     style={{
+      //       flex: 1,
+      //       position: 'absolute',
+      //       bottom: 0,
+      //       left: 0,
+      //       right: 0,
+      //     }}
+      //   >
+      //     {this._renderSeparatorLine()}
+      //     {this._renderItem('关于iTablet', this.props.onAbout)}
+      //     {this._renderItem('设置', this.props.onSetting)}
+      //   </View>
+      // )
     }
   }
 

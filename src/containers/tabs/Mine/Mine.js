@@ -150,6 +150,7 @@ export default class Mine extends Component {
           flexDirection: 'row',
           height: headerHeight,
           width: '100%',
+          alignItems: 'center',
         }}
       >
         <TouchableOpacity
@@ -174,8 +175,6 @@ export default class Mine extends Component {
         </TouchableOpacity>
         <Text
           style={{
-            flex: 1,
-            lineHeight: headerHeight,
             fontSize: fontSize,
             color: 'white',
           }}

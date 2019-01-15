@@ -8,6 +8,8 @@ import {
 } from '../../../models/map'
 import { importWorkspace } from '../../../models/template'
 import { setUser } from '../../../models/user'
+import AboutITablet from './AboutITablet'
+import Setting from './Setting'
 const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
   currentUser: state.user.toJS().currentUser,
@@ -26,3 +28,5 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps,
 )(Home)
+
+export { AboutITablet, Setting }
