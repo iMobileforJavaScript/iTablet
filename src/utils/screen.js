@@ -16,14 +16,6 @@ let scale2
 //   scale = Math.min(deviceHeight / h2, deviceWidth / w2)
 // }
 
-// if (deviceWidth > deviceHeight) {
-//   scaleWidth2 = deviceWidth / 540
-//   scaleHeight2 = deviceHeight / 360
-// } else {
-//   scaleWidth2 = deviceWidth / 360
-//   scaleHeight2 = deviceHeight / 540
-// }
-
 /**
  * 设置尺寸的大小
  * @param size: 单位：px （720*1080为模版标记的原始像素值）
@@ -32,16 +24,6 @@ let scale2
 // export function scaleSize2(size) {
 //   size = Math.round(size * scale + 0.5)
 //   return size / defaultPixel
-// }
-
-// export function scaleWidth(size) {
-//   size = size * scaleWidth2
-//   return size
-// }
-
-// export function scaleHeight(size) {
-//   size = size * scaleHeight2
-//   return size
 // }
 
 if (deviceWidth > deviceHeight) {

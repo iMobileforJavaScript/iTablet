@@ -85,7 +85,7 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS:
     case ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[6]
+        height = ConstToolType.THEME_HEIGHT[5]
         column = 4
       } else {
         height = ConstToolType.THEME_HEIGHT[3]
@@ -96,7 +96,7 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION:
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[4]
+        height = ConstToolType.THEME_HEIGHT[5]
         column = 4
       } else {
         height = ConstToolType.THEME_HEIGHT[3]
@@ -106,7 +106,7 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR:
     case ConstToolType.MAP_THEME_PARAM_RANGE_COLOR:
       if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[4]
+        height = ConstToolType.THEME_HEIGHT[5]
         column = 4
       } else {
         height = ConstToolType.THEME_HEIGHT[3]
@@ -155,13 +155,15 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_STYLE:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[3]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[1]
-        column = 8
-      }
+      // if (orientation === 'PORTRAIT') {
+      //   height = ConstToolType.THEME_HEIGHT[3]
+      //   column = 4
+      // } else {
+      //   height = ConstToolType.HEIGHT[1]
+      //   column = 8
+      // }
+      height = ConstToolType.THEME_HEIGHT[3]
+      column = 4
       break
     case ConstToolType.LINECOLOR_SET:
       if (orientation === 'PORTRAIT') {

@@ -9,8 +9,6 @@ import { setUser } from './src/models/user'
 import {
   setEditLayer,
   setSelection,
-  setCurrentAttribute,
-  setAttributes,
 } from './src/models/layers'
 import {
   openWorkspace,
@@ -28,13 +26,13 @@ import { setShow }  from './src/models/device'
 import { FileTools, SPUtils }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
-import { SaveView } from './src/containers/workspace/components'
+import { SaveView, constants } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
-import { ConstPath, ConstInfo } from './src/constants'
+import { ConstPath, ConstInfo, ConstToolType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService } from 'imobile_for_reactnative'
-import {ConstToolType} from './src/constants'
+import { SOnlineService, SScene } from 'imobile_for_reactnative'
+import SplashScreen from 'react-native-splash-screen'
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -88,6 +86,7 @@ class AppRoot extends Component {
     }
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
+    GLOBAL.isCreateThemeMap = false
   }
 
   componentDidMount() {
@@ -120,6 +119,7 @@ class AppRoot extends Component {
       this.props.setTemplate() // 清空模板
       this.props.setCurrentMap() // 清空当前地图
     }
+    Platform.OS === 'android' && SplashScreen.hide()
   }
 
   handleStateChange = appState => {
@@ -253,7 +253,6 @@ class AppRoot extends Component {
 
   saveMap = () => {
     if (GLOBAL.Type===ConstToolType.MAP_3D){
-      console.log("3d")
       this.map3dBackAction()
       GLOBAL.openWorkspace&&Toast.show("保存成功")
       return
@@ -296,7 +295,6 @@ class AppRoot extends Component {
 
   closeMapHandler = async () => {
     if (GLOBAL.Type===ConstToolType.MAP_3D){
-      console.log("3d")
       this.map3dBackAction()
       return
     }
@@ -312,6 +310,37 @@ class AppRoot extends Component {
       }
     } else {
       GLOBAL.isBackHome = true // 默认是true
+
+      if (GLOBAL.Type === constants.MAP_THEME && GLOBAL.isCreateThemeMap) {
+        //开始-->创建专题图
+        try {
+          this.setSaveMapViewLoading(true, '正在关闭地图')
+          await this.props.closeMap()
+          GLOBAL.clearMapData()
+          this.setSaveMapViewLoading(false)
+
+          Orientation.getOrientation((e, orientation) => {
+            let column = orientation === 'PORTRAIT' ? 3 : 8
+            let height =
+              orientation === 'PORTRAIT' ?
+                ConstToolType.HEIGHT[0] :
+                ConstToolType.HEIGHT[0]
+
+            GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_START_CREATE, {
+              containerType: 'table',
+              isFullScreen: true,
+              isTouchProgress: false,
+              isSelectlist: false,
+              column: column,
+              height: height,
+            })
+          })
+        } catch (e) {
+          this.setSaveMapViewLoading(false)
+        }
+
+        GLOBAL.isCreateThemeMap = false
+      }
     }
   }
 
@@ -372,7 +401,8 @@ const AppRootWithRedux = connect(mapStateToProps, {
 
 const App = () =>
   <Provider store={store}>
-    <PersistGate loading={<Loading/>} persistor={persistor}>
+    <PersistGate loading={Platform.OS === 'android' ? null : <Loading/>} persistor={persistor}>
+      {/*<PersistGate loading={null} persistor={persistor}>*/}
       <AppRootWithRedux />
     </PersistGate>
   </Provider>

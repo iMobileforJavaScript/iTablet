@@ -166,7 +166,6 @@ export default class MyOnlineMap extends Component {
                     fontSize: 12,
                     lineHeight: textHeight,
                     textAlign: 'right',
-                    paddingRight: 25,
                   },
                 ]}
               >

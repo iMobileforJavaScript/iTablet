@@ -158,6 +158,7 @@ android {
 }
 
 dependencies {
+    api project(':react-native-splash-screen')
     api project(':react-native-fs')
     api project(':react-native-orientation')
     implementation project(':imobile_for_reactnative')
