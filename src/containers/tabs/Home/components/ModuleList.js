@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -32,27 +32,6 @@ class RenderModuleItem extends Component {
       disabled: false,
     }
   }
-  // UNSAFE_componentWillMount() {
-  //   console.warn('Component WILL MOUNT!')
-  // }
-  // componentDidMount() {
-  //   console.warn('Component DID MOUNT!')
-  // }
-  // UNSAFE_componentWillReceiveProps(newProps) {
-  //   console.warn('Component WILL RECEIVE PROPS!')
-  // }
-  // shouldComponentUpdate(newProps, newState) {
-  //   return true
-  // }
-  // UNSAFE_componentWillUpdate(nextProps, nextState) {
-  //   console.warn('Component WILL UPDATE!')
-  // }
-  // componentDidUpdate(prevProps, prevState) {
-  //   console.warn('Component DID UPDATE!')
-  // }
-  // componentWillUnmount() {
-  //   console.warn('Component WILL UNMOUNT!')
-  // }
   itemAction = async item => {
     this.setState({
       disabled: true,
@@ -176,18 +155,18 @@ class RenderModuleItem extends Component {
         style={[
           {
             position: 'absolute',
-            width: scaleSize(260),
-            height: scaleSize(195),
+            width: scaleSize(130),
+            height: scaleSize(130),
             backgroundColor: '#rgba(112, 128, 144,0.9)',
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: 5,
+            borderRadius: 2,
           },
         ]}
       >
         <Text
           style={{
-            fontSize: scaleSize(25),
+            fontSize: scaleSize(12),
             fontWeight: 'bold',
             // fontStyle:'italic',
             color: 'white',
@@ -323,19 +302,6 @@ export default class ModuleList extends Component {
     // console.warn('render-list')
     return (
       <View style={styles.container}>
-        {/*{this.props.device.orientation === 'LANDSCAPE' ? (
-          this._renderScrollView()
-        ) : (
-          <FlatList
-            style={styles.flatList}
-            data={ConstModule}
-            renderItem={this._renderItem}
-            horizontal={false}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'always'}
-          />
-        )}*/}
         <FlatList
           style={styles.flatList}
           data={ConstModule}
@@ -368,43 +334,45 @@ const styles = StyleSheet.create({
   },
   baseImage: {
     position: 'absolute',
-    width: scaleSize(260),
-    height: scaleSize(195),
+    width: scaleSize(130),
+    height: scaleSize(130),
     // resizeMode: 'stretch',
     backgroundColor: '#696969',
-    borderRadius: 5,
+    borderRadius: 2,
   },
   module: {
-    width: scaleSize(280),
-    height: scaleSize(215),
+    flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
   },
   moduleImage: {
-    width: scaleSize(100),
-    height: scaleSize(80),
+    width: scaleSize(50),
+    height: scaleSize(50),
   },
   moduleView: {
-    width: scaleSize(280),
-    height: scaleSize(215),
+    width: scaleSize(150),
+    height: scaleSize(150),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    // backgroundColor:"red"
     // paddingHorizontal: scaleSize(10),
     // marginTop: scaleSize(5),
+    // elevation: 20,
   },
   moduleItem: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
-    width: scaleSize(150),
-    height: scaleSize(40),
-    fontSize: scaleSize(25),
+    width: scaleSize(65),
+    height: scaleSize(16),
+    fontSize: setSpText(12),
     color: '#FFFFFF',
     textAlign: 'center',
-    marginTop: scaleSize(10),
+    // marginTop: scaleSize(10),
   },
   scrollView: {
     // position:"absolute",

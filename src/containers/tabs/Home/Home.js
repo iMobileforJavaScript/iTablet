@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
@@ -178,6 +178,7 @@ export default class Home extends Component {
       : require('../../../assets/home/系统默认头像.png')
     // require('../../../assets/home/icon_mine_select.png')
     let moreImg = require('../../../assets/Mine/工具条-更多-白.png')
+    const HEADERHEIGHT = scaleSize(44) + (Platform.OS === 'ios' ? 15 : 0)
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -200,7 +201,7 @@ export default class Home extends Component {
                 this.topNavigatorBarImageId = 'right'
                 this.setState({ modalIsVisible: true })
               }}
-              style={styles.moreImg}
+              style={{ flex: 1, marginRight: scaleSize(18.5) }}
             >
               <Image
                 resizeMode={'contain'}
@@ -210,7 +211,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerStyle: {
-            height: scaleSize(80),
+            height: HEADERHEIGHT,
           },
         }}
         style={styles.container}

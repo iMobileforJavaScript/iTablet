@@ -7,6 +7,7 @@ import {
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
 import { ConstToolType, ConstPath } from '../../../../constants'
+import { FileTools } from '../../../../native'
 import ToolbarBtnType from './ToolbarBtnType'
 
 let _params = {}
@@ -228,7 +229,7 @@ function getCollectionData(type, params) {
 function showCollection(type) {
   let { data, buttons } = getCollectionData(type, _params)
   if (!_params.setToolbarVisible) return
-  _params.setLastState()
+  // _params.setLastState()
   _params.setToolbarVisible(true, type, {
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
@@ -236,6 +237,7 @@ function showCollection(type) {
     buttons: buttons,
     column: data.length,
     cb: () => {
+      _params.setLastState()
       createCollector(type)
     },
   })
@@ -296,15 +298,18 @@ async function createCollector(type) {
         '_' +
         _params.symbol.currentSymbol.id
       : ''
-    let datasourcePath =
+    let datasourcePath = await FileTools.appendingHomeDirectory(
       _params.user && _params.user.currentUser && _params.user.currentUser.name
         ? ConstPath.UserPath +
           _params.user.currentUser.name +
           '/' +
           ConstPath.RelativePath.Datasource
-        : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource
-    let datasourceName = (_params.map && _params.map.currentMap) || ''
+        : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+    )
 
+    let datasourceName =
+      (_params.map && _params.map.currentMap.name) ||
+      'Collection-' + new Date().getTime()
     params = {
       datasourcePath: _params.collection.datasourceParentPath || datasourcePath,
       datasourceName: _params.collection.datasourceName || datasourceName,
@@ -367,4 +372,5 @@ export default {
   setParams,
   getCollectionOperationData,
   getCollectionData,
+  showCollection,
 }

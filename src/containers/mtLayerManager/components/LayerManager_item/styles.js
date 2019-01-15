@@ -70,7 +70,7 @@ export default StyleSheet.create({
   },
   text: {
     fontSize: scaleSize(24),
-    color: color.white,
+    color: color.black,
     backgroundColor: 'transparent',
   },
   rowTwo: {
