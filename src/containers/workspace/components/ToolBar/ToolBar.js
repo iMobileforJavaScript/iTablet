@@ -39,6 +39,7 @@ import {
   SCollector,
   SThemeCartography,
   SOnlineService,
+  SMCollectorType,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
 import SymbolList from '../SymbolList/SymbolList'
@@ -1391,6 +1392,35 @@ export default class ToolBar extends React.PureComponent {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  changeCollection = () => {
+    SCollector.stopCollect()
+    let toolbarType
+    switch (this.lastState.type) {
+      case SMCollectorType.REGION_HAND_POINT:
+        toolbarType = ConstToolType.MAP_COLLECTION_REGION
+        break
+      case SMCollectorType.LINE_HAND_POINT:
+        toolbarType = ConstToolType.MAP_COLLECTION_LINE
+        break
+      case SMCollectorType.POINT_HAND:
+        toolbarType = ConstToolType.MAP_COLLECTION_POINT
+        break
+      case SMCollectorType.REGION_HAND_PATH:
+        toolbarType = ConstToolType.MAP_COLLECTION_REGION
+        break
+      case SMCollectorType.LINE_HAND_PATH:
+        toolbarType = ConstToolType.MAP_COLLECTION_LINE
+        break
+    }
+    this.setVisible(true, toolbarType, {
+      isFullScreen: false,
+      height: ConstToolType.HEIGHT[0],
+      cb: () => {
+        this.setLastState()
+      },
+    })
+  }
+
   getMap3DAttribute = async () => {
     let data = await SScene.getLableAttributeList()
     let list = []
@@ -2268,6 +2298,7 @@ export default class ToolBar extends React.PureComponent {
             ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
           )
         await this.props.closeMap()
+        this.props.setCollectionInfo() // 清空当前模板
         this.props.setCurrentTemplateInfo() // 清空当前模板
         this.props.setTemplate() // 清空模板
 
@@ -2842,13 +2873,7 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.CHANGE_COLLECTION:
           image = require('../../../../assets/mapEdit/icon-rename-white.png')
-          action = () => {
-            SCollector.stopCollect()
-            this.setVisible(true, this.lastState.type, {
-              isFullScreen: this.lastState.isFullScreen,
-              height: this.lastState.height,
-            })
-          }
+          action = this.changeCollection
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:
           image = require('../../../../assets/mapTools/icon_attribute_white.png')

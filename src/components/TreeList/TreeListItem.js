@@ -77,9 +77,9 @@ export default class TreeListItem extends React.Component {
           })
         }
       >
-        {(this.props.data.childGroups &&
-          this.props.data.childGroups.length > 0) ||
-        (this.props.data.feature && this.props.data.feature.length > 0) ? (
+        {this.props.data.childGroups &&
+        this.props.data.childGroups.length > 0 ? (
+          // || (this.props.data.feature && this.props.data.feature.length > 0)
           <TouchableOpacity
             style={[styles.btn]}
             onPress={() => this.showChild(!this.state.isVisible)}

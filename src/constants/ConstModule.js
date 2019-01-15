@@ -34,20 +34,27 @@ export default [
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       GLOBAL.showMenu = true
       GLOBAL.showFlex = true
-      const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
-      let wsPath
+
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
       if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace
-        wsPath = await FileTools.appendingHomeDirectory(userWSPath)
-      } else {
-        wsPath = await FileTools.appendingHomeDirectory(customerPath)
+        userPath = ConstPath.UserPath + user.userName + '/'
       }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+      let moduleMapName = 'Hunan_叠加谷歌晕渲图风格'
+      let moduleMapFullName = moduleMapName + '.xml'
+      // 地图用相对路径
+      let moduleMapPath =
+        userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+      if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+        data = {
+          type: 'Map',
+          path: moduleMapPath,
+          name: moduleMapName,
+        }
+      }
+
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_EDIT,
         wsData: [
@@ -137,19 +144,27 @@ export default [
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_THEME
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-      const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      let wsPath
+
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
       if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace
-        wsPath = await FileTools.appendingHomeDirectory(userWSPath)
-      } else {
-        wsPath = await FileTools.appendingHomeDirectory(customerPath)
+        userPath = ConstPath.UserPath + user.userName + '/'
       }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+      let moduleMapName = 'Beijing'
+      let moduleMapFullName = moduleMapName + '.xml'
+      // 地图用相对路径
+      let moduleMapPath =
+        userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+      if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+        data = {
+          type: 'Map',
+          path: moduleMapPath,
+          name: moduleMapName,
+        }
+      }
+
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
         wsData: [
@@ -180,24 +195,14 @@ export default [
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.COLLECTION
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-      const customerPath =
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
-      // let wsPath
-      // const customerPath =
-      //   ConstPath.LocalDataPath + 'IndoorNavigationData/beijing.smwu'
-      let wsPath = await FileTools.appendingHomeDirectory(customerPath)
-      // let exist = await FileTools.fileIsExistInHomeDirectory(customerPath)
+
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
       if (user.userName) {
-        const userWSPath =
-          ConstPath.UserPath +
-          user.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace
-        wsPath = await FileTools.appendingHomeDirectory(userWSPath)
-      } else {
-        wsPath = await FileTools.appendingHomeDirectory(customerPath)
+        userPath = ConstPath.UserPath + user.userName + '/'
       }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
       NavigationService.navigate('MapView', {
         // 若未登录，则打开游客工作空间
         wsData: [

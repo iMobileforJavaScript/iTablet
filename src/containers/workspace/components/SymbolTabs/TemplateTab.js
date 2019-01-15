@@ -3,8 +3,9 @@ import { Text, View, TouchableOpacity, StyleSheet, Image } from 'react-native'
 import { color, size } from '../../../../styles'
 import { TableList } from '../../../../components'
 import { scaleSize, Toast } from '../../../../utils'
-import { ConstToolType } from '../../../../constants'
-import { ThemeType } from 'imobile_for_reactnative'
+// import { ConstToolType } from '../../../../constants'
+import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
+import { ThemeType, SMCollectorType } from 'imobile_for_reactnative'
 
 export default class TemplateTab extends React.Component {
   props: {
@@ -44,23 +45,29 @@ export default class TemplateTab extends React.Component {
     if (layer) {
       switch (type) {
         case 'Region':
-          toolbarType = ConstToolType.MAP_COLLECTION_REGION
+          // toolbarType = ConstToolType.MAP_COLLECTION_REGION
+          toolbarType = SMCollectorType.REGION_HAND_POINT
           break
         case 'Line':
-          toolbarType = ConstToolType.MAP_COLLECTION_LINE
+          // toolbarType = ConstToolType.MAP_COLLECTION_LINE
+          toolbarType = SMCollectorType.LINE_HAND_POINT
           break
         case 'Point':
-          toolbarType = ConstToolType.MAP_COLLECTION_POINT
+          // toolbarType = ConstToolType.MAP_COLLECTION_POINT
+          toolbarType = SMCollectorType.POINT_HAND
           break
       }
-      this.props.showToolbar(true, toolbarType, {
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[0],
-        cb: () => {
-          let tempSymbol = Object.assign({}, item, { layerPath: layer.path })
-          this.props.setCurrentTemplateInfo(tempSymbol)
-        },
-      })
+      let tempSymbol = Object.assign({}, item, { layerPath: layer.path })
+      this.props.setCurrentTemplateInfo(tempSymbol)
+      CollectionData.showCollection(toolbarType)
+      // this.props.showToolbar(true, toolbarType, {
+      //   isFullScreen: false,
+      //   height: ConstToolType.HEIGHT[0],
+      //   cb: () => {
+      //     let tempSymbol = Object.assign({}, item, { layerPath: layer.path })
+      //     this.props.setCurrentTemplateInfo(tempSymbol)
+      //   },
+      // })
     }
   }
 
