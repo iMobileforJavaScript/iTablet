@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
+import { SOnlineService } from 'imobile_for_reactnative'
+import Toast from '../../../../utils/Toast'
 export default class ToggleAccount extends Component {
   props: {
     navigation: Object,
@@ -32,12 +34,40 @@ export default class ToggleAccount extends Component {
           }
       return (
         <TouchableOpacity
-          onPress={() => {
-            this.props.setUser({
-              userName: userName,
-              password: info.item.password,
-            })
-            NavigationService.navigate('Mine')
+          onPress={async () => {
+            try {
+              let isEmail = info.item.isEmail
+              let password = info.item.password
+              if (
+                this.props.user.currentUser.userName === userName &&
+                this.props.user.currentUser.password === password
+              ) {
+                Toast.show('处于当前用户下，不可切换')
+                return
+              }
+              if (this.containerRef) {
+                this.containerRef.setLoading(true, '切换中...')
+              }
+              this.props.setUser({
+                userName: userName,
+                password: password,
+                isEmail: isEmail,
+              })
+              if (isEmail === true) {
+                await SOnlineService.login(userName, password)
+              } else if (isEmail === false) {
+                await SOnlineService.loginWithPhoneNumber(userName, password)
+              }
+              if (this.containerRef) {
+                this.containerRef.setLoading(false)
+              }
+
+              NavigationService.navigate('Mine')
+            } catch (e) {
+              if (this.containerRef) {
+                this.containerRef.setLoading(false)
+              }
+            }
           }}
           style={{
             height: itemHeight,
@@ -101,6 +131,7 @@ export default class ToggleAccount extends Component {
   render() {
     return (
       <Container
+        ref={ref => (this.containerRef = ref)}
         headerProps={{
           title: '账号管理',
           navigation: this.props.navigation,
