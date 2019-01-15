@@ -2,8 +2,9 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
-import { ConstToolType } from '../../../../constants'
-import { SMSymbolTable } from 'imobile_for_reactnative'
+// import { ConstToolType } from '../../../../constants'
+import { SMSymbolTable, SMCollectorType } from 'imobile_for_reactnative'
+import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
 
 export default class SymbolTab extends React.Component {
   props: {
@@ -27,19 +28,23 @@ export default class SymbolTab extends React.Component {
     let type = ''
     switch (data.type) {
       case 'marker':
-        type = ConstToolType.MAP_COLLECTION_POINT
+        // type = ConstToolType.MAP_COLLECTION_POINT
+        type = SMCollectorType.POINT_HAND
         break
       case 'line':
-        type = ConstToolType.MAP_COLLECTION_LINE
+        // type = ConstToolType.MAP_COLLECTION_LINE
+        type = SMCollectorType.LINE_HAND_POINT
         break
       case 'fill':
-        type = ConstToolType.MAP_COLLECTION_REGION
+        // type = ConstToolType.MAP_COLLECTION_REGION
+        type = SMCollectorType.REGION_HAND_POINT
         break
     }
-    this.props.showToolbar(true, type, {
-      isFullScreen: false,
-      height: ConstToolType.HEIGHT[0],
-    })
+    CollectionData.showCollection(type)
+    // this.props.showToolbar(true, type, {
+    //   isFullScreen: false,
+    //   height: ConstToolType.HEIGHT[0],
+    // })
   }
 
   render() {

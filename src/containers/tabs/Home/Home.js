@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import { View, Text, TouchableOpacity, Image, Platform } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
@@ -115,42 +115,21 @@ export default class Home extends Component {
   }
 
   render() {
-    let userImg = require('../../../assets/home/icon_mine_select.png')
-    let moreImg = require('../../../assets/home/icon_else_selected.png')
+    let userImg = require('../../../assets/home/Frenchgrey/icon_mine_select.png')
+    let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
+    const HEADERHEIGHT = scaleSize(44) + (Platform.OS === 'ios' ? 15 : 0)
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
           title: 'SuperMap iTablet',
           headerLeft: (
-            <TouchableOpacity
-              style={styles.userView}
-              onPress={async () => {
-                // try {
-                //   Toast.show('准备导入')
-                // let userName = 'Customer'
-                // let filepath = await FileTools.appendingHomeDirectory(
-                //     ConstPath.UserPath +
-                //       userName +
-                //       '/' +
-                //       ConstPath.RelativePath.Temp +
-                //       'OlympicGreen_android/OlympicGreen_android.sxwu',
-                //   )
-                //   Toast.show('开始导入')
-                //   this.props.importSceneWorkspace({
-                //     server: filepath,
-                //   })
-                // } catch (error) {
-                // console.warn(error)
-                //  Toast.show(error)
-                // }
-              }}
-            >
+            <TouchableOpacity style={styles.userView} onPress={async () => {}}>
               <Image source={userImg} style={styles.userImg} />
             </TouchableOpacity>
           ),
           headerRight: (
-            <TouchableOpacity style={styles.moreImg}>
+            <TouchableOpacity style={{ flex: 1, marginRight: scaleSize(18.5) }}>
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
@@ -159,7 +138,7 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerStyle: {
-            height: scaleSize(80),
+            height: HEADERHEIGHT,
           },
         }}
         style={styles.container}

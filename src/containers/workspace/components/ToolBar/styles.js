@@ -3,7 +3,7 @@ import { scaleSize, screen } from '../../../../utils'
 import { color, zIndexLevel, size } from '../../../../styles'
 import { ConstToolType } from '../../../../constants'
 // 地图按钮栏默认高度
-export const BUTTON_HEIGHT = scaleSize(95)
+export const BUTTON_HEIGHT = scaleSize(48)
 
 export default StyleSheet.create({
   fullContainer: {
@@ -57,15 +57,15 @@ export default StyleSheet.create({
   },
   button: {
     // flex: 1,
-    height: scaleSize(60),
-    width: scaleSize(60),
+    height: scaleSize(30),
+    width: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: color.theme,
   },
   img: {
-    height: scaleSize(45),
-    width: scaleSize(45),
+    height: scaleSize(30),
+    width: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
   },

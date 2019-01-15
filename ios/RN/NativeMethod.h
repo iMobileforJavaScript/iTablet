@@ -11,5 +11,5 @@
 #import "FileTools.h"
 
 @interface NativeMethod : NSObject<RCTBridgeModule>
-
++ (NSMutableArray *)getTemplate:(NSString *)path;
 @end
