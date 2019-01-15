@@ -6,9 +6,9 @@
 
 import * as React from 'react'
 import {
-  FlatList,
   TouchableOpacity,
   Text,
+  SectionList,
   View,
   Platform,
   BackHandler,
@@ -442,40 +442,66 @@ export default class MT_layerManager extends React.Component {
     return true
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item, section }) => {
     // sectionID = sectionID || 0
+    if (section.title === '我的图层') {
+      return (
+        <LayerManager_item
+          key={item.id}
+          // sectionID={sectionID}
+          // rowID={item.index}
+          ref={ref => {
+            if (!this.itemRefs) {
+              this.itemRefs = {}
+            }
+            this.itemRefs[item.name] = ref
+            return this.itemRefs[item.name]
+          }}
+          layer={item.layer}
+          // map={this.map}
+          data={item}
+          isClose={this.state.currentOpenItemName !== item.name}
+          mapControl={this.mapControl}
+          setLayerVisible={this.setLayerVisible}
+          onOpen={data => {
+            // data, sectionID, rowID
+            if (this.state.currentOpenItemName !== data.name) {
+              let item = this.itemRefs[this.state.currentOpenItemName]
+              item && item.close()
+            }
+            this.setState({
+              currentOpenItemName: data.name,
+            })
+          }}
+          onPress={this.onPressRow}
+          onArrowPress={this.getChildList}
+          onToolPress={this.onToolPress}
+        />
+      )
+    }
+  }
+
+  renderSection = ({ section }) => {
     return (
-      <LayerManager_item
-        key={item.id}
-        // sectionID={sectionID}
-        // rowID={item.index}
-        ref={ref => {
-          if (!this.itemRefs) {
-            this.itemRefs = {}
-          }
-          this.itemRefs[item.name] = ref
-          return this.itemRefs[item.name]
+      <TouchableOpacity
+        style={{
+          height: scaleSize(60),
+          backgroundColor: color.content,
+          justifyContent: 'center',
         }}
-        layer={item.layer}
-        // map={this.map}
-        data={item}
-        isClose={this.state.currentOpenItemName !== item.name}
-        mapControl={this.mapControl}
-        setLayerVisible={this.setLayerVisible}
-        onOpen={data => {
-          // data, sectionID, rowID
-          if (this.state.currentOpenItemName !== data.name) {
-            let item = this.itemRefs[this.state.currentOpenItemName]
-            item && item.close()
-          }
-          this.setState({
-            currentOpenItemName: data.name,
-          })
-        }}
-        onPress={this.onPressRow}
-        onArrowPress={this.getChildList}
-        onToolPress={this.onToolPress}
-      />
+      >
+        <Text
+          style={{
+            marginLeft: scaleSize(50),
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: size.fontSize.fontSizeXXl,
+            color: color.white,
+          }}
+        >
+          {section.title}
+        </Text>
+      </TouchableOpacity>
     )
   }
 
@@ -484,36 +510,22 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderList = () => {
+    let data = [
+      { title: '我的图层', data: this.props.layers },
+      { title: '我的底图', data: [] },
+    ]
     return (
       <View style={{ flex: 1 }}>
-        <TouchableOpacity
-          style={{
-            height: scaleSize(60),
-            backgroundColor: color.content,
-            justifyContent: 'center',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: scaleSize(50),
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: size.fontSize.fontSizeXXl,
-              color: color.white,
-            }}
-          >
-            我的图层
-          </Text>
-        </TouchableOpacity>
-        <FlatList
+        <SectionList
           refreshing={this.state.refreshing}
           onRefresh={() => {
             this.setRefreshing(true)
             this.getData()
           }}
           ref={ref => (this.listView = ref)}
-          data={this.props.layers}
+          sections={data}
           renderItem={this._renderItem}
+          renderSectionHeader={this.renderSection}
           getItemLayout={this.getItemLayout}
           keyExtractor={(item, index) => index.toString()}
         />
