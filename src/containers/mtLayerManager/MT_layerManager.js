@@ -21,7 +21,7 @@ import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType } from '../../constants'
 import { color, size } from '../../styles'
-// import NavigationService from '../../containers/NavigationService'
+import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
   props: {
@@ -416,30 +416,29 @@ export default class MT_layerManager extends React.Component {
   }
 
   back = () => {
-    this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
+      NavigationService.goBack()
+    } else {
+      this.backAction = async () => {
+        try {
+          this.setLoading(true, '正在关闭地图')
+          await this.props.closeMap()
+          GLOBAL.clearMapData()
+          this.setLoading(false)
+          NavigationService.goBack()
+        } catch (e) {
+          this.setLoading(false)
+        }
+      }
+      SMap.mapIsModified().then(async result => {
+        if (result) {
+          this.setSaveViewVisible(true)
+        } else {
+          await this.backAction()
+          this.backAction = null
+        }
+      })
+    }
     return true
   }
 
@@ -543,7 +542,7 @@ export default class MT_layerManager extends React.Component {
         headerProps={{
           title: title,
           navigation: this.props.navigation,
-          // backAction: this.back,
+          backAction: this.back,
         }}
         bottomBar={this.renderToolBar()}
       >
