@@ -91,7 +91,7 @@ class NavigationHeader extends Component {
       headerCenter,
     } = this.props
 
-    let backBtnSource = require('../../assets/public/Frenchgrey/icon-back-white.png')
+    let backBtnSource = require('../../assets/public/icon-back-white.png')
     // backBtnType === 'white'
     //   ? require('../../assets/public/icon-back-white.png')
     //   : require('../../assets/public/icon-back-gray.png')

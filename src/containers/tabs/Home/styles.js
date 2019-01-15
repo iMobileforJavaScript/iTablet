@@ -22,20 +22,18 @@ export default StyleSheet.create({
     marginTop: scaleSize(50),
   },
   userImg: {
-    width: scaleSize(30),
+    width: scaleSize(28),
     // flex:1,
-    height: scaleSize(30),
+    height: scaleSize(28),
   },
   userView: {
-    flex: 1,
-    // width: scaleSize(30),
+    width: scaleSize(45),
     // flex:6,
-    // height: scaleSize(30),
+    height: scaleSize(45),
     borderRadius: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#4C4C4C',
-    marginLeft: scaleSize(30),
   },
   headTitle: {
     flex: 6.5,
@@ -49,10 +47,9 @@ export default StyleSheet.create({
     // fontFamily: 'CenturyGothic',
   },
   moreImg: {
-    width: scaleSize(30),
+    // width: scaleSize(10),
     height: scaleSize(30),
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginRight: scaleSize(10),
   },
   modulelist: {
     flex: 1,
