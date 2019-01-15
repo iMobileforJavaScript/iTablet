@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../utils'
+import { color } from '../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {
@@ -7,7 +8,7 @@ export default StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     // flexDirection: 'column',
-    backgroundColor: '#4C4C4C',
+    backgroundColor: color.content,
   },
   header: {
     // width: SCREEN_WIDTH * 0.762,
@@ -32,7 +33,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4C4C4C',
+    // backgroundColor: '#4C4C4C',
   },
   headTitle: {
     flex: 6.5,

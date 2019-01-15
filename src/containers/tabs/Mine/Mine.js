@@ -135,9 +135,15 @@ export default class Mine extends Component {
   _renderHeader = fontSize => {
     let headerHeight = 80
     let imageWidth = 40
-    // let headerImage = require('../../../assets/public/icon-avatar-default.png')
-    let headerImage =
-      'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png'
+    let isPro =
+      this.props.user.currentUser.userName === 'Customer' &&
+      this.props.user.currentUser.password === 'Customer'
+    let headerImage = isPro
+      ? require('../../../assets/home/系统默认头像.png')
+      : {
+        uri:
+            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+      }
     return (
       <View
         style={{
@@ -163,7 +169,7 @@ export default class Mine extends Component {
               height: imageWidth,
               borderRadius: 8,
             }}
-            source={{ uri: headerImage }}
+            source={headerImage}
           />
         </TouchableOpacity>
         <Text

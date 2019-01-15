@@ -1,8 +1,13 @@
 import { connect } from 'react-redux'
 import Home from './Home'
 import { setShow } from '../../../models/device'
-import { importSceneWorkspace } from '../../../models/map'
+import {
+  importSceneWorkspace,
+  openWorkspace,
+  closeWorkspace,
+} from '../../../models/map'
 import { importWorkspace } from '../../../models/template'
+import { setUser } from '../../../models/user'
 const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
   currentUser: state.user.toJS().currentUser,
@@ -12,6 +17,9 @@ const mapDispatchToProps = {
   importSceneWorkspace,
   setShow,
   importWorkspace,
+  openWorkspace,
+  closeWorkspace,
+  setUser,
 }
 
 export default connect(
