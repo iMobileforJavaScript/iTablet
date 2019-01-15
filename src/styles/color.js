@@ -10,28 +10,11 @@ const blackTheme = {
   blackBg: '#353537',
 }
 
-const frenchGrey = {
-  theme: '#303030',
-  reverseTheme: '#FFFFFF',
-  borderLight: '#C1C0B9',
-  border: '#505052',
-  subTheme: '#48484b',
-  themeText: '#FFFFFF',
-  themePlaceHolder: '#959595',
-
-  blackBg: '#353537',
-}
-
 let styles
 switch (GLOBAL.themeStyle) {
   case 'blackTheme':
-    styles = blackTheme
-    break
-  case 'frenchGrey':
-    styles = frenchGrey
-    break
   default:
-    styles = frenchGrey
+    styles = blackTheme
     break
 }
 
