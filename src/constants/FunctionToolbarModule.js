@@ -143,6 +143,76 @@ const BotMap = [
     ],
   },
 ]
+
+const layerManagerData = [
+  {
+    title: 'Google RoadMap',
+    action: () => {
+      OpenData(ConstOnline.Google, 0)
+    },
+  },
+  {
+    title: 'Google Staelite',
+    action: () => {
+      OpenData(ConstOnline.Google, 1)
+    },
+  },
+  {
+    title: 'Google Terrain',
+    action: () => {
+      OpenData(ConstOnline.Google, 2)
+    },
+  },
+  {
+    title: 'Google Hybrid',
+    action: () => {
+      OpenData(ConstOnline.Google, 3)
+    },
+  },
+  {
+    title: '全球矢量地图',
+    action: () => {
+      OpenData(ConstOnline.TD, 0)
+    },
+  },
+  {
+    title: '全球影像地图服务',
+    action: () => {
+      OpenData(ConstOnline.TDYXM, 0)
+    },
+  },
+  {
+    title: 'Baidu Map',
+    action: () => {
+      OpenData(ConstOnline.Baidu, 0)
+    },
+  },
+  {
+    title: 'Standard',
+    action: () => {
+      OpenData(ConstOnline.OSM, 0)
+    },
+  },
+  {
+    title: 'CycleMap',
+    action: () => {
+      OpenData(ConstOnline.OSM, 1)
+    },
+  },
+  {
+    title: 'Transport',
+    action: () => {
+      OpenData(ConstOnline.OSM, 2)
+    },
+  },
+  {
+    title: 'quanguo',
+    action: () => {
+      OpenData(ConstOnline.SuperMapCloud, 0)
+    },
+  },
+]
+
 const openData = [
   {
     title: '地图',
@@ -466,4 +536,13 @@ const grid = [
     selectKey: '栅格亮度',
   },
 ]
-export { layerAdd, BotMap, openData, line, point, region, grid }
+export {
+  layerAdd,
+  BotMap,
+  layerManagerData,
+  openData,
+  line,
+  point,
+  region,
+  grid,
+}

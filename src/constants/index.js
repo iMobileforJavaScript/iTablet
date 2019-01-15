@@ -17,6 +17,7 @@ import {
   point,
   region,
   grid,
+  layerManagerData,
 } from './FunctionToolbarModule'
 
 import {
@@ -32,6 +33,7 @@ export {
   Const,
   AudioKeywords,
   EventConst,
+  layerManagerData,
   ExampleMapData,
   ConstModule,
   MAP_MODULE,

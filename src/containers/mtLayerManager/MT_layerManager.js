@@ -19,7 +19,7 @@ import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/components'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType } from '../../constants'
+import { ConstToolType, layerManagerData } from '../../constants'
 import { color, size } from '../../styles'
 // import NavigationService from '../../containers/NavigationService'
 
@@ -479,14 +479,43 @@ export default class MT_layerManager extends React.Component {
           onToolPress={this.onToolPress}
         />
       )
+    } else {
+      return (
+        <TouchableOpacity
+          onPress={() => {
+            this.onPress({ item })
+          }}
+          style={{
+            height: scaleSize(80),
+            justifyContent: 'center',
+          }}
+        >
+          <Text
+            style={{
+              marginLeft: scaleSize(50),
+              justifyContent: 'center',
+              alignItems: 'center',
+              fontSize: scaleSize(24),
+              color: color.black,
+            }}
+          >
+            {item.title}
+          </Text>
+        </TouchableOpacity>
+      )
     }
+  }
+
+  onPress = ({ item }) => {
+    item.action()
+    this.props.getLayers()
   }
 
   renderSection = ({ section }) => {
     return (
       <TouchableOpacity
         style={{
-          height: scaleSize(60),
+          height: scaleSize(80),
           backgroundColor: color.content,
           justifyContent: 'center',
         }}
@@ -514,6 +543,7 @@ export default class MT_layerManager extends React.Component {
     let data = [
       { title: '我的图层', data: this.props.layers },
       { title: '我的底图', data: [] },
+      { title: '切换底图', data: layerManagerData },
     ]
     return (
       <View style={{ flex: 1 }}>
