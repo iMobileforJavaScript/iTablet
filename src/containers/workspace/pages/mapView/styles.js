@@ -83,12 +83,12 @@ export default StyleSheet.create({
   },
   functionToolbar: {
     position: 'absolute',
-    top: scaleSize(71.5),
-    right: scaleSize(15.5),
+    top: scaleSize(130),
+    right: scaleSize(20),
     backgroundColor: color.white,
   },
   headerBtnSeparator: {
-    marginLeft: scaleSize(2.5),
+    marginLeft: scaleSize(40),
   },
 
   mapController: {

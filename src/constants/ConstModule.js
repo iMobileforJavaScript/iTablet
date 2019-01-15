@@ -19,15 +19,14 @@ export default [
   {
     key: '地图制图',
     title: '地图制图',
-    baseImage: require('../assets/home/Frenchgrey/icon_lefttop_free.png'),
-    moduleImage: require('../assets/home/Frenchgrey/icon_cartography.png'),
+    baseImage: require('../assets/home/left_top_free.png'),
+    moduleImage: require('../assets/home/icon_cartography.png'),
     style: {
-      width: scaleSize(28.8),
-      height: scaleSize(28.8),
+      width: scaleSize(60),
+      height: scaleSize(60),
       position: 'absolute',
       top: 0,
       left: 0,
-      borderRadius: 2,
     },
     action: async user => {
       let data = ConstOnline['Google']
@@ -66,15 +65,14 @@ export default [
   {
     key: '三维场景',
     title: '三维场景',
-    baseImage: require('../assets/home/Frenchgrey/icon_rightbottom_free.png'),
-    moduleImage: require('../assets/home/Frenchgrey/icon_map3D.png'),
+    baseImage: require('../assets/home/right_bottom_free.png'),
+    moduleImage: require('../assets/home/icon_map3D.png'),
     style: {
-      width: scaleSize(28.8),
-      height: scaleSize(28.8),
+      width: scaleSize(60),
+      height: scaleSize(60),
       position: 'absolute',
       right: 0,
       bottom: 0,
-      borderRadius: 2,
     },
     action: () => {
       GLOBAL.Type = ConstToolType.MAP_3D
@@ -126,15 +124,14 @@ export default [
   {
     key: '专题地图',
     title: '专题地图',
-    baseImage: require('../assets/home/Frenchgrey/icon_lefttop_vip.png'),
-    moduleImage: require('../assets/home/Frenchgrey/icon_map3D.png'),
+    baseImage: require('../assets/home/left_top_vip.png'),
+    moduleImage: require('../assets/home/icon_thematicmap.png'),
     style: {
-      width: scaleSize(28.8),
-      height: scaleSize(28.8),
+      width: scaleSize(60),
+      height: scaleSize(60),
       position: 'absolute',
       top: 0,
       left: 0,
-      borderRadius: 2,
     },
     action: async user => {
       let data = ConstOnline['Google']
@@ -170,15 +167,14 @@ export default [
   {
     key: '外业采集',
     title: '外业采集',
-    baseImage: require('../assets/home/Frenchgrey/icon_rightbottom_vip.png'),
-    moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
+    baseImage: require('../assets/home/right_bottom_vip.png'),
+    moduleImage: require('../assets/home/icon_collection.png'),
     style: {
-      width: scaleSize(28.8),
-      height: scaleSize(28.8),
+      width: scaleSize(60),
+      height: scaleSize(60),
       position: 'absolute',
       right: 0,
       bottom: 0,
-      borderRadius: 2,
     },
     action: async user => {
       let data = ConstOnline['Google']
@@ -217,4 +213,16 @@ export default [
       })
     },
   },
+  // {
+  //   key: '应急标绘',
+  //   title: '应急标绘',
+  //   baseImage: require('../assets/home/icon_lefttop_vip.png'),
+  //   moduleImage: require('../assets/home/icon_plot.png'),
+  // },
+  // {
+  //   key: '数据分析',
+  //   title: '数据分析',
+  //   baseImage: require('../assets/home/icon_rightbottom_vip.png'),
+  //   moduleImage: require('../assets/home/icon_mapanalysis.png'),
+  // },
 ]

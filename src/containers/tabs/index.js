@@ -1,8 +1,8 @@
 import { TabNavigator } from 'react-navigation'
 import React from 'react'
-import { Platform, Image, StyleSheet } from 'react-native'
+import { Platform, Image, StyleSheet, View, Text } from 'react-native'
 
-import { scaleSize, setSpText } from '../../utils'
+import { scaleSize } from '../../utils'
 import { color } from '../../styles'
 import Home from './Home'
 import Mine, {
@@ -20,14 +20,24 @@ const Tabs = TabNavigator(
       screen: Home,
       navigationOptions: () => {
         return {
-          tabBarLabel: '首页',
+          tabBarLabel: data => {
+            return (
+              <View style={styles.labelView}>
+                <Text
+                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                >
+                  首页
+                </Text>
+              </View>
+            )
+          },
           tabBarIcon: ({ focused }: any) => (
             <Image
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
-                  : require('../../assets/tabBar/Frenchgrey/tab_home.png')
+                  ? require('../../assets/tabBar/tab_home_selected.png')
+                  : require('../../assets/tabBar/tab_home.png')
               }
               style={styles.icon}
             />
@@ -40,14 +50,24 @@ const Tabs = TabNavigator(
       screen: Find,
       navigationOptions: () => {
         return {
-          tabBarLabel: '发现',
+          tabBarLabel: data => {
+            return (
+              <View style={styles.labelView}>
+                <Text
+                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                >
+                  发现
+                </Text>
+              </View>
+            )
+          },
           tabBarIcon: ({ focused }: any) => (
             <Image
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
-                  : require('../../assets/tabBar/Frenchgrey/tab_find.png')
+                  ? require('../../assets/tabBar/tab_find_selected.png')
+                  : require('../../assets/tabBar/tab_find.png')
               }
               style={styles.icon}
             />
@@ -60,14 +80,24 @@ const Tabs = TabNavigator(
       screen: Mine,
       navigationOptions: () => {
         return {
-          tabBarLabel: '我的',
+          tabBarLabel: data => {
+            return (
+              <View style={styles.labelView}>
+                <Text
+                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                >
+                  我的
+                </Text>
+              </View>
+            )
+          },
           tabBarIcon: ({ focused }: any) => (
             <Image
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
-                  : require('../../assets/tabBar/Frenchgrey/tab_user.png')
+                  ? require('../../assets/tabBar/tab_user_selected.png')
+                  : require('../../assets/tabBar/tab_user.png')
               }
               style={styles.icon}
             />
@@ -93,24 +123,16 @@ const Tabs = TabNavigator(
       style: {
         backgroundColor: color.theme, // TabBar 背景色
         // height: Platform.OS === 'android' ? 50 : 49,
-        height: scaleSize(54),
+        height: scaleSize(90),
         borderTopColor: color.border,
         borderTopWidth: 1,
-        // flexDirection: 'row',
-        // justifyContent:"center",
       },
       tabStyle: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-        flex: 1,
-        alignItems: 'center',
-        // alignSelf:"center",
-        height: scaleSize(50),
-        marginTop: Platform.OS === 'android' ? scaleSize(4) : 0,
       },
       labelStyle: {
-        fontSize: setSpText(12), // 文字大小
-        // marginTop:Platform.OS === 'android' ? scaleSize(2) : 0,
+        fontSize: Platform.OS === 'android' ? 16 : 12, // 文字大小
       },
     },
   },
@@ -122,14 +144,22 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: color.gray2,
+    fontSize: scaleSize(20),
+    marginTop: scaleSize(1),
   },
   selectedTabText: {
     color: color.blue2,
+    fontSize: scaleSize(20),
+    marginTop: scaleSize(1),
   },
   icon: {
-    width: scaleSize(30),
-    height: scaleSize(30),
-    // paddingTop:Platform.OS === 'android' ? scaleSize(2) : 0
+    width: 30,
+    height: 30,
+  },
+  labelView: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 5,
   },
 })
 export default Tabs

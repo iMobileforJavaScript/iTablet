@@ -4,10 +4,10 @@ import { scaleSize } from '../../../../utils'
 export default StyleSheet.create({
   container: {
     position: 'absolute',
-    top: scaleSize(71.5),
-    right: scaleSize(15.5),
-    backgroundColor: 'white',
-    borderRadius: scaleSize(2),
+    top: 95,
+    right: scaleSize(20),
+    backgroundColor: '#rgba(240, 240, 240 ,0)',
+    borderRadius: scaleSize(4),
     elevation: 20,
     shadowOffset: { width: 0, height: 0 },
     shadowColor: 'black',
