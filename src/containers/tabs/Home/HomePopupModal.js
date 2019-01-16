@@ -34,7 +34,13 @@ export default class HomePopupModal extends PureComponent {
 
   _renderSeparatorLine = () => {
     return (
-      <View style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }} />
+      <View
+        style={{
+          width: '100%',
+          height: 4,
+          backgroundColor: color.item_separate_white,
+        }}
+      />
     )
   }
   _renderItem = (label, onClick: () => {}) => {
@@ -45,7 +51,7 @@ export default class HomePopupModal extends PureComponent {
           style={{
             width: '100%',
             height: 60,
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -53,7 +59,9 @@ export default class HomePopupModal extends PureComponent {
             onClick()
           }}
         >
-          <Text>{label}</Text>
+          <Text style={{ fontSize: 16, color: color.font_color_white }}>
+            {label}
+          </Text>
         </TouchableOpacity>
         {this._renderSeparatorLine()}
       </View>

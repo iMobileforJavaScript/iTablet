@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
+import { color } from '../../../../styles'
 export default class LocalDataPopupModal extends PureComponent {
   props: {
     modalVisible: boolean,
@@ -27,7 +28,13 @@ export default class LocalDataPopupModal extends PureComponent {
 
   _renderSeparatorLine = () => {
     return (
-      <View style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }} />
+      <View
+        style={{
+          width: '100%',
+          height: 4,
+          backgroundColor: color.item_separate_white,
+        }}
+      />
     )
   }
 
@@ -42,7 +49,7 @@ export default class LocalDataPopupModal extends PureComponent {
           style={{
             width: '100%',
             height: 60,
-            backgroundColor: '#555555',
+            backgroundColor: color.content_white,
             textAlign: 'center',
             lineHeight: 60,
           }}
@@ -64,7 +71,7 @@ export default class LocalDataPopupModal extends PureComponent {
           style={{
             width: '100%',
             height: 60,
-            backgroundColor: '#555555',
+            backgroundColor: color.content_white,
             textAlign: 'center',
             lineHeight: 60,
           }}

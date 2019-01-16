@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../utils'
-// import { color } from '../../../styles'
+import { color } from '../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
   container: {
@@ -8,7 +8,7 @@ export default StyleSheet.create({
     // justifyContent: 'center',
     // alignItems: 'center',
     // flexDirection: 'column',
-    backgroundColor: '#F0F0F0',
+    backgroundColor: color.content_white,
   },
   header: {
     // width: SCREEN_WIDTH * 0.762,
@@ -41,7 +41,7 @@ export default StyleSheet.create({
     flex: 6.5,
     // width: scaleSize(500),
     height: scaleSize(60),
-    color: '#FFFFFF',
+    color: '#fff',
     textAlign: 'center',
     justifyContent: 'center',
     textAlignVertical: 'center',

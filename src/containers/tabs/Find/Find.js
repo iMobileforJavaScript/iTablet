@@ -150,7 +150,7 @@ export default class Find extends Component {
               lineHeight: 20,
               fontSize: 12,
               textAlign: 'center',
-              color: 'white',
+              color: 'orange',
             }}
           >
             加载中...
@@ -209,8 +209,8 @@ export default class Find extends Component {
             refreshing={this.state.isRefresh}
             onRefresh={this._onRefresh}
             colors={['orange', 'red']}
-            tintColor={'white'}
-            titleColor={'white'}
+            tintColor={'orange'}
+            titleColor={'orange'}
             title={'刷新中...'}
             enabled={true}
           />

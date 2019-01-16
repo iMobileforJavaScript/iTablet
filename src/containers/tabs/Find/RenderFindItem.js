@@ -11,6 +11,7 @@ import NavigationService from '../../NavigationService'
 import RNFS from 'react-native-fs'
 import { FileTools } from '../../../native'
 import ConstPath from '../../../constants/ConstPath'
+import { color } from '../../../styles'
 export default class RenderFindItem extends Component {
   props: {
     data: Object,
@@ -116,9 +117,9 @@ export default class RenderFindItem extends Component {
   }
   render() {
     let date = new Date(this.props.data.lastModfiedTime)
-    let year = date.getFullYear() + '年'
-    let month = date.getMonth() + 1 + '月'
-    let day = date.getDate() + '日'
+    let year = date.getFullYear() + '/'
+    let month = date.getMonth() + 1 + '/'
+    let day = date.getDate() + ''
     let hour = date.getHours() + ':'
     if (hour.length < 3) {
       hour = '0' + hour
@@ -132,6 +133,7 @@ export default class RenderFindItem extends Component {
       this.props.data.size / 1024 / 1024 > 0.1
         ? (this.props.data.size / 1024 / 1024).toFixed(2) + 'MB'
         : (this.props.data.size / 1024).toFixed(2) + 'K'
+    let fontColor = color.font_color_white
     return (
       <View>
         <View style={styles.itemViewStyle}>
@@ -141,39 +143,90 @@ export default class RenderFindItem extends Component {
             }}
           >
             <Image
-              resizeMode={'contain'}
+              resizeMode={'stretch'}
               style={styles.imageStyle}
               source={{ uri: this.props.data.thumbnail }}
             />
           </TouchableOpacity>
 
-          <View>
-            <Text style={styles.restTitleTextStyle} numberOfLines={1}>
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[styles.restTitleTextStyle, { color: fontColor }]}
+              numberOfLines={2}
+            >
               {this.props.data.fileName}
             </Text>
             <View style={styles.viewStyle2}>
               <Image
-                style={styles.imageStyle2}
+                style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
                 source={require('../../../assets/tabBar/tab_user.png')}
               />
-              <Text style={styles.textStyle2} numberOfLines={1}>
+              <Text
+                style={[styles.textStyle2, { color: fontColor }]}
+                numberOfLines={1}
+              >
                 {this.props.data.nickname}
               </Text>
             </View>
             <View style={[styles.viewStyle2, { marginTop: 5 }]}>
               <Image
-                style={styles.imageStyle2}
+                style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
                 source={require('../../../assets/tabBar/find-time.png')}
               />
-              <Text style={styles.textStyle2} numberOfLines={1}>
+              <Text
+                style={[styles.textStyle2, { color: fontColor }]}
+                numberOfLines={1}
+              >
                 {time}
               </Text>
             </View>
           </View>
+          <View
+            style={{
+              width: 100,
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Text
+              style={{ fontSize: 12, textAlign: 'center', color: fontColor }}
+              numberOfLines={1}
+            >
+              {size}
+            </Text>
+            <TouchableOpacity
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                this._downloadFile()
+              }}
+            >
+              <Image
+                style={{ width: 35, height: 35, tintColor: fontColor }}
+                source={require('../../../assets/tabBar/find_download.png')}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: 'center',
+                width: 100,
+                color: fontColor,
+              }}
+              numberOfLines={1}
+            >
+              {this.state.progress}
+            </Text>
+          </View>
         </View>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={styles.downloadStyle}
           onPress={() => {
             this._downloadFile()
@@ -192,7 +245,7 @@ export default class RenderFindItem extends Component {
           <Text style={styles.downloadTextStyle} numberOfLines={1}>
             {this.state.progress}
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity>*/}
         <View style={styles.separateViewStyle} />
       </View>
     )

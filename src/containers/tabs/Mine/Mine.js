@@ -20,7 +20,7 @@ import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
-
+import UserType from '../../../constants/UserType'
 export default class Mine extends Component {
   props: {
     navigation: Object,
@@ -81,10 +81,13 @@ export default class Mine extends Component {
   }
 
   _selectionRender = () => {
-    if (this.props.user.currentUser.userName === 'Customer') {
+    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
       let fontSize = Platform.OS === 'ios' ? 18 : 16
       return (
-        <View opacity={1} style={{ flex: 1, backgroundColor: color.content }}>
+        <View
+          opacity={1}
+          style={{ flex: 1, backgroundColor: color.content_white }}
+        >
           {this._renderHeader(fontSize)}
           {this._renderLine()}
           {this._renderItem({
@@ -102,7 +105,10 @@ export default class Mine extends Component {
   _render = () => {
     let fontSize = Platform.OS === 'ios' ? 18 : 16
     return (
-      <View opacity={1} style={{ flex: 1, backgroundColor: color.content }}>
+      <View
+        opacity={1}
+        style={{ flex: 1, backgroundColor: color.content_white }}
+      >
         {this._renderHeader(fontSize)}
         <ScrollView
           style={{ flex: 1 }}
@@ -133,17 +139,17 @@ export default class Mine extends Component {
     )
   }
   _renderHeader = fontSize => {
+    let allColor = color.font_color_white
     let headerHeight = 80
     let imageWidth = 40
-    let isPro =
-      this.props.user.currentUser.userName === 'Customer' &&
-      this.props.user.currentUser.password === 'Customer'
+    let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
     let headerImage = isPro
       ? require('../../../assets/home/系统默认头像.png')
       : {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
+    let headerTitle = isPro ? 'Customer' : this.props.user.currentUser.userName
     return (
       <View
         style={{
@@ -169,6 +175,7 @@ export default class Mine extends Component {
               width: imageWidth,
               height: imageWidth,
               borderRadius: 8,
+              // tintColor:allColor,
             }}
             source={headerImage}
           />
@@ -176,10 +183,10 @@ export default class Mine extends Component {
         <Text
           style={{
             fontSize: fontSize,
-            color: 'white',
+            color: allColor,
           }}
         >
-          {this.props.user.currentUser.userName}
+          {headerTitle}
         </Text>
       </View>
     )
@@ -187,7 +194,11 @@ export default class Mine extends Component {
   _renderLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 8, backgroundColor: color.theme }}
+        style={{
+          width: '100%',
+          height: 8,
+          backgroundColor: color.item_separate_white,
+        }}
       />
     )
   }
@@ -217,7 +228,7 @@ export default class Mine extends Component {
       imageHeight,
       rightImagePath,
     } = itemOptions
-
+    let allColor = color.font_color_white
     return (
       <View display={this.state.display}>
         <TouchableOpacity
@@ -232,7 +243,11 @@ export default class Mine extends Component {
           onPress={onClick}
         >
           <Image
-            style={{ width: imageWidth, height: imageHeight }}
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              tintColor: allColor,
+            }}
             resizeMode={'contain'}
             source={leftImagePath}
           />
@@ -242,20 +257,28 @@ export default class Mine extends Component {
               flex: 1,
               textAlign: 'left',
               fontSize: fontSize,
-              color: 'white',
+              color: allColor,
               paddingLeft: 5,
             }}
           >
             {title}
           </Text>
           <Image
-            style={{ width: imageWidth, height: imageHeight }}
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              tintColor: allColor,
+            }}
             resizeMode={'contain'}
             source={rightImagePath}
           />
         </TouchableOpacity>
         <View
-          style={{ width: itemWidth, height: 1, backgroundColor: color.theme }}
+          style={{
+            width: itemWidth,
+            height: 1,
+            backgroundColor: color.item_separate_white,
+          }}
         />
       </View>
     )
@@ -265,7 +288,8 @@ export default class Mine extends Component {
     if (
       this.props.user &&
       this.props.user.currentUser &&
-      this.props.user.currentUser.userName
+      (this.props.user.currentUser.userName ||
+        this.props.user.currentUser.userType)
     ) {
       return (
         <Container

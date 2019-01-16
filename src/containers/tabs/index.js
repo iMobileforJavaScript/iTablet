@@ -23,11 +23,12 @@ const Tabs = TabNavigator(
       screen: Home,
       navigationOptions: () => {
         return {
-          tabBarLabel: data => {
+          tabBarLabel: () => {
             return (
               <View style={styles.labelView}>
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   首页
                 </Text>
@@ -53,11 +54,12 @@ const Tabs = TabNavigator(
       screen: Find,
       navigationOptions: () => {
         return {
-          tabBarLabel: data => {
+          tabBarLabel: () => {
             return (
               <View style={styles.labelView}>
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   发现
                 </Text>
@@ -83,11 +85,12 @@ const Tabs = TabNavigator(
       screen: Mine,
       navigationOptions: () => {
         return {
-          tabBarLabel: data => {
+          tabBarLabel: () => {
             return (
               <View style={styles.labelView}>
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   我的
                 </Text>

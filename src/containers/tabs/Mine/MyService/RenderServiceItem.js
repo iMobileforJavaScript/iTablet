@@ -4,6 +4,7 @@ import styles, { textHeight } from './Styles'
 import NavigationService from '../../../NavigationService'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
+// import { color } from '../../../../styles'
 export default class RenderServiceItem extends PureComponent {
   props: {
     onItemPress: () => {},
