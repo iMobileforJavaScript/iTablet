@@ -7,6 +7,10 @@ const blackTheme = {
   themeText: '#FFFFFF',
   themePlaceHolder: '#959595',
 
+  overlay: 'rgba(105, 105, 105, 0.8)',
+  transOverlay: 'rgba(0, 0, 0, 0)',
+  transView: 'rgba(48, 48, 48, 0.85)',
+
   blackBg: '#353537',
 }
 

@@ -622,7 +622,7 @@ function createThemeMap() {
           containerType: 'table',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           column: column,
           height: height,
         })
