@@ -13,7 +13,7 @@ import {
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
 import { scaleSize } from '../../../../utils'
-import RNFS from 'react-native-fs'
+import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 
@@ -32,9 +32,6 @@ class RenderModuleItem extends Component {
       disabled: false,
     }
   }
-
-  componentDidMount() {}
-
   itemAction = async item => {
     this.setState({
       disabled: true,
@@ -85,7 +82,7 @@ class RenderModuleItem extends Component {
     } else if (moduleKey === '专题地图') {
       dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
     } else if (moduleKey === '外业采集') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1449854653/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1605521624/download'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
         dataUrl = 'https://www.supermapol.com/web/datas/1254811966/download'
@@ -110,6 +107,7 @@ class RenderModuleItem extends Component {
         progress: res => {
           let value =
             ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+          // console.warn(value)
           if (value === '100%') {
             this.setState({
               progress: '导入中...',
@@ -125,7 +123,7 @@ class RenderModuleItem extends Component {
           }
         },
       }
-      let result = RNFS.downloadFile(downloadOptions)
+      let result = downloadFile(downloadOptions)
       result.promise
         .then(async result => {
           if (result.statusCode === 200) {
@@ -151,13 +149,14 @@ class RenderModuleItem extends Component {
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
         : `下载${this.state.progress}`
+    // console.warn(progress)
     return this.state.isShowProgressView ? (
       <View
         style={[
           {
             position: 'absolute',
             width: scaleSize(260),
-            height: scaleSize(195),
+            height: scaleSize(260),
             backgroundColor: '#rgba(112, 128, 144,0.9)',
             alignItems: 'center',
             justifyContent: 'center',
@@ -208,6 +207,7 @@ class RenderModuleItem extends Component {
     )
   }
   render() {
+    // const image = require('../../../../assets/home/Frenchgrey/icon_baseimage.png')
     let item = this.props.item
     return (
       <View style={styles.moduleView}>
@@ -218,9 +218,8 @@ class RenderModuleItem extends Component {
           }}
           style={[styles.module]}
         >
-          <View style={styles.baseImage}>
-            <Image source={item.baseImage} style={item.style} />
-          </View>
+          {/* <Image source={image} style={item.img} /> */}
+          <Image source={item.baseImage} style={item.style} />
           <View style={styles.moduleItem}>
             <Image
               resizeMode={'contain'}
@@ -249,6 +248,28 @@ export default class ModuleList extends Component {
       isShowProgressView: false,
     }
   }
+  // UNSAFE_componentWillMount() {
+  //   console.warn('ModuleList WILL MOUNT!')
+  // }
+  // componentDidMount() {
+  //   console.warn('ModuleList DID MOUNT!')
+  // }
+  // UNSAFE_componentWillReceiveProps() {
+  //   console.warn('ModuleList WILL RECEIVE PROPS!')
+  // }
+  // shouldComponentUpdate() {
+  //   return true
+  // }
+  // UNSAFE_componentWillUpdate( ) {
+  //   console.warn('ModuleList WILL UPDATE!')
+  // }
+  // componentDidUpdate( ) {
+  //   console.warn('ModuleList DID UPDATE!')
+  // }
+  // componentWillUnmount() {
+  //   console.warn('ModuleList WILL UNMOUNT!')
+  // }
+
   _renderItem = ({ item }) => {
     return (
       <RenderModuleItem
@@ -262,24 +283,24 @@ export default class ModuleList extends Component {
     return (
       <ScrollView
         style={styles.scrollView}
-        horizontal={true}
+        // horizontal={true}
         showsHorizontalScrollIndicator={false}
       >
         <FlatList
           data={ConstModule}
+          horizontal={true}
           renderItem={this._renderItem}
-          horizontal={false}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps={'always'}
+          showsHorizontalScrollIndicator={false}
         />
       </ScrollView>
     )
   }
   render() {
+    // console.warn('render-list')
     return (
       <View style={styles.container}>
-        {/*{this.props.device.orientation === 'LANDSCAPE' ? (
+        {this.props.device.orientation === 'LANDSCAPE' ? (
           this._renderScrollView()
         ) : (
           <FlatList
@@ -291,16 +312,7 @@ export default class ModuleList extends Component {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps={'always'}
           />
-        )}*/}
-        <FlatList
-          style={styles.flatList}
-          data={ConstModule}
-          renderItem={this._renderItem}
-          horizontal={false}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          keyboardShouldPersistTaps={'always'}
-        />
+        )}
       </View>
     )
   }
@@ -322,28 +334,32 @@ const styles = StyleSheet.create({
     // backgroundColor: 'white',
     // marginLeft: scaleSize(40),
   },
-  baseImage: {
-    position: 'absolute',
-    width: scaleSize(260),
-    height: scaleSize(195),
-    // resizeMode: 'stretch',
-    backgroundColor: '#696969',
-    borderRadius: 5,
-  },
   module: {
-    width: scaleSize(280),
-    height: scaleSize(215),
+    width: scaleSize(260),
+    height: scaleSize(260),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: '#707070',
+    borderRadius: scaleSize(4),
+    elevation: 6,
+    shadowOffset: { width: 0, height: 0 },
+    shadowColor: 'black',
+    shadowOpacity: 1,
+    shadowRadius: scaleSize(4),
   },
+  // img:{
+  //   position:"absolute",
+  //   width: scaleSize(260),
+  //   height: scaleSize(260),
+  // },
   moduleImage: {
     width: scaleSize(100),
-    height: scaleSize(80),
+    height: scaleSize(100),
   },
   moduleView: {
-    width: scaleSize(280),
-    height: scaleSize(215),
+    width: scaleSize(300),
+    height: scaleSize(300),
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
@@ -353,14 +369,15 @@ const styles = StyleSheet.create({
   moduleItem: {
     alignItems: 'center',
     justifyContent: 'center',
+    flex: 1,
   },
   title: {
-    width: scaleSize(150),
-    height: scaleSize(40),
-    fontSize: scaleSize(25),
+    width: scaleSize(130),
+    height: scaleSize(32),
+    fontSize: scaleSize(24),
     color: '#FFFFFF',
     textAlign: 'center',
-    marginTop: scaleSize(10),
+    marginTop: scaleSize(13),
   },
   scrollView: {
     // position:"absolute",

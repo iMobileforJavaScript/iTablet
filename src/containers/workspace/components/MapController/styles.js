@@ -4,8 +4,8 @@ import { scaleSize } from '../../../../utils'
 export default StyleSheet.create({
   container: {
     position: 'absolute',
-    left: scaleSize(20),
-    bottom: scaleSize(120),
+    left: scaleSize(34),
+    bottom: scaleSize(135),
     flexDirection: 'column',
     backgroundColor: 'transparent',
     // padding: scaleSize(20),
@@ -23,7 +23,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(4),
   },
   separator: {
-    marginTop: scaleSize(20),
+    marginTop: scaleSize(25),
     // backgroundColor:"red",
     // top:scaleSize(-80),
     // position:'absolute',
@@ -39,7 +39,7 @@ export default StyleSheet.create({
     height: scaleSize(50),
     borderRadius: scaleSize(4),
     // backgroundColor: 'white',
-    marginBottom: 20,
+    marginBottom: scaleSize(25),
   },
   shadow: {
     elevation: 20,

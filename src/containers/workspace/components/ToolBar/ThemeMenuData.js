@@ -13,8 +13,18 @@ function showDatasetsList() {
     getdata.reverse()
     for (let i = 0; i < getdata.length; i++) {
       let datalist = getdata[i]
+      datalist.list.forEach(item => {
+        if (item.geoCoordSysType && item.prjCoordSysType) {
+          item.info = {
+            infoType: 'dataset',
+            geoCoordSysType: item.geoCoordSysType,
+            prjCoordSysType: item.prjCoordSysType,
+          }
+        }
+      })
       data[i] = {
-        title: '数据源: ' + datalist.datasource.alias,
+        title: datalist.datasource.alias,
+        image: require('../../../../assets/mapToolbar/list_type_udb.png'),
         data: datalist.list,
       }
     }
@@ -26,7 +36,7 @@ function showDatasetsList() {
           containerType: 'list',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           height:
             _toolbarParams.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[3]
@@ -51,6 +61,12 @@ function showExpressionList() {
     getdata => {
       let dataset = getdata.dataset
       let allExpressions = getdata.list
+      allExpressions.forEach(item => {
+        item.info = {
+          infoType: 'fieldType',
+          fieldType: item.fieldType,
+        }
+      })
       let data = [
         {
           title: dataset.datasetName,
@@ -66,7 +82,7 @@ function showExpressionList() {
             containerType: 'list',
             isFullScreen: true,
             isTouchProgress: false,
-            isSelectlist: false,
+            showMenuDialog: false,
             height:
               _toolbarParams.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
@@ -265,6 +281,13 @@ async function showLocalDatasetsList() {
     extension: 'udb',
     type: 'file',
   })
+  customerUDBs.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+    item.info = {
+      infoType: 'mtime',
+      lastModifiedDate: item.mtime,
+    }
+  })
 
   let userUDBPath, userUDBs
   if (_toolbarParams.user && _toolbarParams.user.currentUser.userName) {
@@ -277,14 +300,23 @@ async function showLocalDatasetsList() {
       extension: 'udb',
       type: 'file',
     })
+    userUDBs.forEach(item => {
+      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
+      }
+    })
 
     data = [
       {
         title: Const.PUBLIC_DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: customerUDBs,
       },
       {
         title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: userUDBs,
       },
     ]
@@ -292,6 +324,7 @@ async function showLocalDatasetsList() {
     data = [
       {
         title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: customerUDBs,
       },
     ]
@@ -305,7 +338,7 @@ async function showLocalDatasetsList() {
         containerType: 'list',
         isFullScreen: true,
         isTouchProgress: false,
-        isSelectlist: false,
+        showMenuDialog: false,
         height:
           _toolbarParams.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
@@ -370,9 +403,12 @@ function getThemeMapParam(type, params) {
   if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
   buttons = [
     ToolbarBtnType.THEME_CANCEL,
-    ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_FLEX,
-    ToolbarBtnType.THEME_COMMIT,
+    // ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.MENU,
+    // ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.MENU_FLEX,
+    // ToolbarBtnType.THEME_COMMIT,
+    ToolbarBtnType.MENU_COMMIT,
   ]
   return { data, buttons }
 }
@@ -1368,8 +1404,10 @@ function getThemeFourMenu() {
   let buttons = [
     ToolbarBtnType.THEME_CANCEL,
     ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_FLEX,
-    ToolbarBtnType.THEME_COMMIT,
+    // ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.MENU_FLEX,
+    // ToolbarBtnType.THEME_COMMIT,
+    ToolbarBtnType.MENU_COMMIT,
   ]
   return buttons
 }
@@ -1378,7 +1416,8 @@ function getThemeThreeMenu() {
   let buttons = [
     ToolbarBtnType.THEME_CANCEL,
     ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_COMMIT,
+    // ToolbarBtnType.THEME_COMMIT,
+    ToolbarBtnType.MENU_COMMIT,
   ]
   return buttons
 }

@@ -306,6 +306,11 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
+      item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
+      }
       list.push(item)
     })
     data = [
@@ -314,6 +319,7 @@ function openMap() {
           _params.user && _params.user.currentUser.userName
             ? '公共地图'
             : '地图',
+        image: require('../../../../assets/mapToolbar/list_type_maps.png'),
         data: list,
       },
     ]
@@ -323,10 +329,16 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
+        item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
         userList.push(item)
       })
       data.push({
         title: '地图',
+        image: require('../../../../assets/mapToolbar/list_type_maps.png'),
         data: userFileList,
       })
     }
@@ -528,8 +540,12 @@ function create() {
   if (GLOBAL.Type === constants.COLLECTION) {
     openWorkspace()
   }
-  if (GLOBAL.Type === constants.MAP_EDIT) {
+  if (
+    GLOBAL.Type === constants.MAP_EDIT ||
+    GLOBAL.Type === constants.MAP_THEME
+  ) {
     SMap.removeAllLayer()
+    SMap.closeDatasource(-1) // 关闭所有数据源
   }
 }
 
@@ -544,6 +560,9 @@ function showHistory() {
   ) {
     latestMap = _params.map.latestMap[userName][GLOBAL.Type]
   }
+  latestMap.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+  })
   let data = [
     {
       title: Const.HISTORY,
@@ -622,7 +641,7 @@ function createThemeMap() {
           containerType: 'table',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           column: column,
           height: height,
         })

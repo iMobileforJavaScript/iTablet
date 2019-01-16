@@ -631,14 +631,14 @@ export default class MapView extends React.Component {
     let headerBtnData = [
       {
         key: 'search',
-        image: require('../../../../assets/header/icon_search.png'),
+        image: require('../../../../assets/header/Frenchgrey/icon_search.png'),
         action: () => {
           this.toolBox.setVisible(true, 'list')
         },
       },
       {
         key: 'audio',
-        image: require('../../../../assets/header/icon_audio.png'),
+        image: require('../../../../assets/header/Frenchgrey/icon_audio.png'),
         action: () => {
           this.toolBox.setVisible(true, 'table')
         },
@@ -647,7 +647,6 @@ export default class MapView extends React.Component {
     headerBtnData.forEach(({ key, image, action }) => {
       arr.push(
         <MTBtn
-          style={styles.headerBtnSeparator}
           key={key}
           textColor={'white'}
           size={MTBtn.Size.SMALL}

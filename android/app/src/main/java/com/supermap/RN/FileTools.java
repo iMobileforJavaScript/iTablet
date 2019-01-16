@@ -33,7 +33,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipException;
@@ -177,6 +180,17 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    /**
+     * 读取文件的修改时间
+     */
+    private static String getLastModifiedTime(File file){
+        Calendar cal = Calendar.getInstance();
+        long time = file.lastModified();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy年MM月dd日  HH:mm:ss", Locale.CHINA);
+        cal.setTimeInMillis(time);
+        return formatter.format(cal.getTime());
+    }
+
     @ReactMethod
     public void getPathListByFilter(String path, ReadableMap filter, Promise promise) {
         try {
@@ -188,6 +202,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                 for (int i = 0; i < files.length; i++) {
                     String p = files[i].getAbsolutePath().replace(SDCARD, "");
                     String n = files[i].getName();
+                    String mtime = getLastModifiedTime(files[i]);
                     int lastDot = n.lastIndexOf(".");
                     String name, extension = "";
                     if (lastDot > 0) {
@@ -233,6 +248,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                     WritableMap map = Arguments.createMap();
                     map.putString("path", p);
                     map.putString("name", n);
+                    map.putString("mtime", mtime);
                     map.putBoolean("isDirectory", isDirectory);
                     array.pushMap(map);
                 }

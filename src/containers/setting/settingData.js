@@ -27,7 +27,7 @@ async function getMap3DSettings() {
         },
         {
           name: '地形缩放比例',
-          value: 1,
+          value: true,
           isShow: true,
           index: 0,
         },

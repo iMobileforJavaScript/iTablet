@@ -32,30 +32,35 @@ const layerAdd = [
     ],
   },
 ]
+
 const BotMap = [
   {
     title: 'Google',
     data: [
       {
         title: 'Google RoadMap',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 0)
         },
       },
       {
         title: 'Google Staelite',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 1)
         },
       },
       {
         title: 'Google Terrain',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 2)
         },
       },
       {
         title: 'Google Hybrid',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 3)
         },
@@ -73,6 +78,7 @@ const BotMap = [
       // },
       {
         title: '全球矢量地图',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.TD, 0)
         },
@@ -85,6 +91,7 @@ const BotMap = [
       // },
       {
         title: '全球影像地图服务',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.TDYXM, 0)
         },
@@ -102,6 +109,7 @@ const BotMap = [
     data: [
       {
         title: 'Baidu Map',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Baidu, 0)
         },
@@ -113,18 +121,21 @@ const BotMap = [
     data: [
       {
         title: 'Standard',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 0)
         },
       },
       {
         title: 'CycleMap',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 1)
         },
       },
       {
         title: 'Transport',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 2)
         },
@@ -136,6 +147,7 @@ const BotMap = [
     data: [
       {
         title: 'quanguo',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.SuperMapCloud, 0)
         },
@@ -143,6 +155,7 @@ const BotMap = [
     ],
   },
 ]
+
 const openData = [
   {
     title: '地图',
@@ -181,10 +194,11 @@ const line = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
         selectName: '线宽',
@@ -244,12 +258,13 @@ const point = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '大小',
         selectKey: '大小',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -283,12 +298,13 @@ const point = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '旋转角度',
         selectKey: '旋转角度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -300,12 +316,13 @@ const point = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '透明度',
         selectKey: '点透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -385,10 +402,11 @@ const region = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
         selectName: '透明度',
@@ -402,7 +420,7 @@ const region = [
   //   action: () => {
   //     GLOBAL.toolBox.setState({
   //       isTouchProgress: true,
-  //       isSelectlist: false,
+  //       showMenuDialog: false,
   //       buttons: [
   //         ToolbarBtnType.CANCEL,
   //         ToolbarBtnType.MENUS,
@@ -419,12 +437,13 @@ const grid = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '透明度',
         selectKey: '栅格透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -436,12 +455,13 @@ const grid = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '对比度',
         selectKey: '栅格对比度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -453,12 +473,13 @@ const grid = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '亮度',
         selectKey: '栅格亮度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -466,4 +487,187 @@ const grid = [
     selectKey: '栅格亮度',
   },
 ]
-export { layerAdd, BotMap, openData, line, point, region, grid }
+
+//单值
+const uniqueMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getUniqueColorScheme(
+          ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
+//分段
+const rangeMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '分段方法',
+    selectKey: '分段方法',
+    btntitle: '分段方法',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeMode(
+          ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
+          '分段方法',
+        )
+    },
+  },
+  {
+    key: '分段个数',
+    selectKey: '分段个数',
+    btntitle: '分段个数',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeParameter(
+          ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
+          '分段个数',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
+//统一标签
+const labelMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '背景形状',
+    selectKey: '背景形状',
+    btntitle: '背景形状',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelBackShape(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE,
+          '背景形状',
+        )
+    },
+  },
+  {
+    key: '背景颜色',
+    selectKey: '背景颜色',
+    btntitle: '背景颜色',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelBackColor(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
+          '背景颜色',
+        )
+    },
+  },
+  // {
+  //   key: '字体',
+  //   btntitle: '字体',
+  //   action: () => {
+  //     this.setSelectedMenu('字体')
+  //     this.setDialogVisible(false)
+
+  //     const toolRef = this.props.getToolBarRef()
+  //     if (toolRef) {
+  //       toolRef.getLabelFontName(
+  //         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+  //       )
+  //     }
+  //   },
+  // },
+  {
+    key: '字号',
+    selectKey: '字号',
+    btntitle: '字号',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontSize(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+          '字号',
+        )
+    },
+  },
+  {
+    key: '旋转角度',
+    selectKey: '旋转角度',
+    btntitle: '旋转角度',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontRotation(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+          '旋转角度',
+        )
+    },
+  },
+  {
+    key: '颜色',
+    selectKey: '颜色',
+    btntitle: '颜色',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontColor(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR,
+          '颜色',
+        )
+    },
+  },
+]
+
+export {
+  layerAdd,
+  BotMap,
+  openData,
+  line,
+  point,
+  region,
+  grid,
+  uniqueMenuInfo,
+  rangeMenuInfo,
+  labelMenuInfo,
+}

@@ -23,6 +23,9 @@ import {
   Map3DBaseMapList,
   ConstInfo,
   Const,
+  uniqueMenuInfo,
+  rangeMenuInfo,
+  labelMenuInfo,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -48,8 +51,9 @@ import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 import ShareData from './ShareData'
-import SelectList from './SelectList'
+import MenuDialog from './MenuDialog'
 import styles from './styles'
+import { color } from '../../../../styles'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -147,7 +151,7 @@ export default class ToolBar extends React.PureComponent {
       buttons: [],
       bottom: new Animated.Value(-props.device.height),
       boxHeight: new Animated.Value(this.height),
-      isSelectlist: false,
+      showMenuDialog: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       isTouchProgress: false,
@@ -261,7 +265,8 @@ export default class ToolBar extends React.PureComponent {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
         ]
         break
       case ConstToolType.GRID_STYLE:
@@ -276,7 +281,8 @@ export default class ToolBar extends React.PureComponent {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
         ]
         break
       case ConstToolType.POINTCOLOR_SET:
@@ -284,7 +290,8 @@ export default class ToolBar extends React.PureComponent {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
         ]
         break
       case ConstToolType.REGIONBEFORECOLOR_SET:
@@ -292,7 +299,8 @@ export default class ToolBar extends React.PureComponent {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
         ]
         break
       case ConstToolType.REGIONAFTERCOLOR_SET:
@@ -300,7 +308,8 @@ export default class ToolBar extends React.PureComponent {
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.FLEX,
+          // ToolbarBtnType.FLEX,
+          ToolbarBtnType.MENU_FLEX,
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
@@ -421,21 +430,6 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
-          {
-            key: 'fly',
-            title: '飞行轨迹',
-            action: () => {
-              // this.isShow=!this.isShow
-              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
-              //   containerType: 'list',
-              //   isFullScreen:true,
-              this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
-              // })
-              // this.getflylist()
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_symbolFly.png'),
-          },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
         break
@@ -486,425 +480,609 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
-  getThemeExpress = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[5],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
+  getThemeExpress = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
 
-    if (this.state.type === type) {
-      return
-    }
-
-    this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
-      GLOBAL.currentLayer.name,
-    )
-    let selectedExpression
-    let param = {
-      LayerName: GLOBAL.currentLayer.name,
-    }
-    if (type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
-      selectedExpression = await SThemeCartography.getUniqueExpression(param)
-    } else if (type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
-      selectedExpression = await SThemeCartography.getRangeExpression(param)
-    } else if (type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION) {
-      selectedExpression = await SThemeCartography.getUniformLabelExpression(
-        param,
+    let setData = async function() {
+      this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+        GLOBAL.currentLayer.name,
       )
-    }
-    let dataset = this.expressionData.dataset
-    let allExpressions = this.expressionData.list
-    if (selectedExpression) {
-      for (let i = 0; i < allExpressions.length; i++) {
-        if (allExpressions[i].expression === selectedExpression) {
-          allExpressions[i].isSelected = true
-        } else {
-          allExpressions[i].isSelected = false
+      let selectedExpression
+      let param = {
+        LayerName: GLOBAL.currentLayer.name,
+      }
+      if (type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
+        selectedExpression = await SThemeCartography.getUniqueExpression(param)
+      } else if (type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+        selectedExpression = await SThemeCartography.getRangeExpression(param)
+      } else if (
+        type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+      ) {
+        selectedExpression = await SThemeCartography.getUniformLabelExpression(
+          param,
+        )
+      }
+      let dataset = this.expressionData.dataset
+      let allExpressions = this.expressionData.list
+      if (selectedExpression) {
+        for (let i = 0; i < allExpressions.length; i++) {
+          if (allExpressions[i].expression === selectedExpression) {
+            allExpressions[i].isSelected = true
+          } else {
+            allExpressions[i].isSelected = false
+          }
         }
       }
+      allExpressions.forEach(item => {
+        item.info = {
+          infoType: 'fieldType',
+          fieldType: item.fieldType,
+        }
+      })
+      let datalist = [
+        {
+          title: dataset.datasetName,
+          datasetType: dataset.datasetType,
+          data: allExpressions,
+        },
+      ]
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'list',
+          data: datalist,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5]
+          this.scrollListToLocation()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
     }
-    let datalist = [
-      {
-        title: dataset.datasetName,
-        datasetType: dataset.datasetType,
-        data: allExpressions,
-      },
-    ]
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'list',
-        data: datalist,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[5]
-        this.scrollListToLocation()
-      },
-    )
   }
 
-  getUniqueColorScheme = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[5],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    if (this.state.type === type) {
-      return
-    }
-
-    let list = await ThemeMenuData.getUniqueColorScheme()
-    let datalist = [
-      {
-        title: '颜色方案',
-        data: list,
-      },
-    ]
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'list',
-        data: datalist,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getUniqueColorScheme = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[5]
-        this.scrollListToLocation()
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let list = await ThemeMenuData.getUniqueColorScheme()
+      let datalist = [
+        {
+          title: '颜色方案',
+          data: list,
+        },
+      ]
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'list',
+          data: datalist,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5]
+          this.scrollListToLocation()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getRangeColorScheme = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[5],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    if (this.state.type === type) {
-      return
-    }
-
-    let list = await ThemeMenuData.getRangeColorScheme()
-    let datalist = [
-      {
-        title: '颜色方案',
-        data: list,
-      },
-    ]
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'list',
-        data: datalist,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getRangeColorScheme = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[5]
-        this.scrollListToLocation()
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let list = await ThemeMenuData.getRangeColorScheme()
+      let datalist = [
+        {
+          title: '颜色方案',
+          data: list,
+        },
+      ]
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'list',
+          data: datalist,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5]
+          this.scrollListToLocation()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getColorGradientType = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[3]
-          : ConstToolType.THEME_HEIGHT[5],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    if (this.state.type === type) {
-      return
-    }
-
-    let list = await ThemeMenuData.getColorGradientType()
-    let datalist = [
-      {
-        title: '颜色方案',
-        data: list,
-      },
-    ]
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'list',
-        data: datalist,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getColorGradientType = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
-            : ConstToolType.THEME_HEIGHT[5]
-        this.scrollListToLocation()
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let list = await ThemeMenuData.getColorGradientType()
+      let datalist = [
+        {
+          title: '颜色方案',
+          data: list,
+        },
+      ]
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'list',
+          data: datalist,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5]
+          this.scrollListToLocation()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getRangeMode = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[0]
-          : ConstToolType.THEME_HEIGHT[2],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    let date = await ThemeMenuData.getRangeMode()
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'table',
-        column: 4,
-        tableType: 'normal',
-        data: date,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getRangeMode = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2]
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[2],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getRangeMode()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column: 4,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getRangeParameter = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: 0,
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = false
+  getRangeParameter = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
 
-    this.setState(
-      {
-        isFullScreen: true,
-        selectName: 'range_parameter',
-        isTouchProgress: true,
-        isSelectlist: false,
-        type: type,
-        buttons: ThemeMenuData.getThemeThreeMenu(),
-      },
-      () => {
-        this.height = 0
-      },
-    )
+    let setData = async function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          selectName: name || 'range_parameter',
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          buttons: ThemeMenuData.getThemeThreeMenu(),
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getLabelBackShape = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[0]
-          : ConstToolType.THEME_HEIGHT[2],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    let date = await ThemeMenuData.getLabelBackShape()
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'table',
-        column: 4,
-        tableType: 'normal',
-        data: date,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getLabelBackShape = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2]
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[2],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getLabelBackShape()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column: 4,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getLabelBackColor = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[7]
-          : ConstToolType.THEME_HEIGHT[3],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    let date = await ThemeMenuData.getLabelColor()
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'colortable',
-        column: 8,
-        tableType: 'scroll',
-        data: date,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getLabelBackColor = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[7]
-            : ConstToolType.THEME_HEIGHT[3]
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[3],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getLabelColor()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[7]
+              : ConstToolType.THEME_HEIGHT[3]
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getLabelFontName = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[2]
-          : ConstToolType.THEME_HEIGHT[3],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    let date = await ThemeMenuData.getLabelFontName()
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'table',
-        column: 4,
-        tableType: 'normal',
-        data: date,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getLabelFontName = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[2]
-            : ConstToolType.THEME_HEIGHT[3]
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[3],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getLabelFontName()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column: 4,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[2]
+              : ConstToolType.THEME_HEIGHT[3]
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getLabelFontRotation = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: ConstToolType.THEME_HEIGHT[0],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
+  getLabelFontRotation = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: ConstToolType.THEME_HEIGHT[0],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
 
-    let date = await ThemeMenuData.getLabelFontRotation()
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'table',
-        column: 4,
-        tableType: 'normal',
-        data: date,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height = ConstToolType.THEME_HEIGHT[0]
-      },
-    )
+    let setData = async function() {
+      let date = await ThemeMenuData.getLabelFontRotation()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column: 4,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height = ConstToolType.THEME_HEIGHT[0]
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getLabelFontSize = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: 0,
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = false
+  getLabelFontSize = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
 
-    this.setState(
-      {
-        isFullScreen: true,
-        selectName: 'fontsize',
-        isTouchProgress: true,
-        isSelectlist: false,
-        type: type,
-        buttons: ThemeMenuData.getThemeThreeMenu(),
-      },
-      () => {
-        this.height = 0
-      },
-    )
+    let setData = function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          buttons: ThemeMenuData.getThemeThreeMenu(),
+          selectName: name || 'fontsize',
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
-  getLabelFontColor = async type => {
-    Animated.timing(this.state.boxHeight, {
-      toValue:
-        this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.THEME_HEIGHT[7]
-          : ConstToolType.THEME_HEIGHT[3],
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = true
-
-    let date = await ThemeMenuData.getLabelColor()
-    this.setState(
-      {
-        isFullScreen: false,
-        isTouchProgress: false,
-        isSelectlist: false,
-        containerType: 'colortable',
-        column: 8,
-        tableType: 'scroll',
-        data: date,
-        type: type,
-        buttons: ThemeMenuData.getThemeFourMenu(),
-      },
-      () => {
-        this.height =
+  getLabelFontColor = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[7]
-            : ConstToolType.THEME_HEIGHT[3]
-      },
-    )
+            : ConstToolType.THEME_HEIGHT[3],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getLabelColor()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[7]
+              : ConstToolType.THEME_HEIGHT[3]
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
   }
 
   getflylist = async () => {
@@ -914,10 +1092,11 @@ export default class ToolBar extends React.PureComponent {
       let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       return { data, buttons }
     } catch (error) {
+      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let data = []
       Toast.show('当前场景无飞行轨迹')
+      return { data, buttons }
     }
-    this.isShow = false
-    this.isBoxShow = true
   }
 
   getWorkspaceList = async () => {
@@ -1044,7 +1223,7 @@ export default class ToolBar extends React.PureComponent {
           isFullScreen: false,
         },
         () => {
-          this.height = ConstToolType.HEIGHT[1]
+          this.height = ConstToolType.HEIGHT[2]
           this.showToolbar()
         },
       )
@@ -1161,7 +1340,7 @@ export default class ToolBar extends React.PureComponent {
 
       this.setState(
         {
-          isSelectlist: false,
+          showMenuDialog: params.showMenuDialog || false,
           type: type,
           tableType: params.tableType || 'normal',
           data: params.data || data,
@@ -1181,6 +1360,7 @@ export default class ToolBar extends React.PureComponent {
               : type === ConstToolType.MAP_SYMBOL
                 ? tabs
                 : table,
+          themeType: params && params.themeType ? params.themeType : '',
         },
         () => {
           // if (!showViewFirst) {
@@ -1348,9 +1528,9 @@ export default class ToolBar extends React.PureComponent {
         this.showToolbar(false)
         if (
           this.state.isTouchProgress === true ||
-          this.state.isSelectlist === true
+          this.state.showMenuDialog === true
         ) {
-          this.setState({ isTouchProgress: false, isSelectlist: false })
+          this.setState({ isTouchProgress: false, showMenuDialog: false })
         }
         this.props.existFullMap && this.props.existFullMap()
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
@@ -1466,49 +1646,79 @@ export default class ToolBar extends React.PureComponent {
   }
 
   menu = () => {
-    Animated.timing(this.state.boxHeight, {
-      toValue: this.isBoxShow ? 0 : this.height,
-      duration: Const.ANIMATED_DURATION,
-    }).start()
-    this.isBoxShow = !this.isBoxShow
-
-    if (this.state.isSelectlist === false) {
-      this.setState({ isFullScreen: true, isSelectlist: true })
-    } else {
-      this.setState({ isFullScreen: false, isSelectlist: false })
-    }
-    this.setState({ isTouchProgress: false })
-
-    if (GLOBAL.Type === constants.MAP_EDIT) {
-      if (GLOBAL.showFlex) {
-        GLOBAL.showFlex = false
-        this.setState({
-          buttons: [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.PLACEHOLDER,
-          ],
-        })
-      } else {
-        GLOBAL.showFlex = true
-        this.setState({
-          buttons: [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.FLEX,
-          ],
-        })
+    let showBox = function() {
+      if (
+        this.state.type.indexOf('MAP_THEME_PARAM') < 0 ||
+        (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow)
+      ) {
+        Animated.timing(this.state.boxHeight, {
+          toValue: this.state.showMenuDialog ? this.height : 0,
+          duration: Const.ANIMATED_DURATION,
+        }).start()
+        // this.isBoxShow = !this.isBoxShow
+        this.isBoxShow = this.state.showMenuDialog
       }
+    }.bind(this)
+
+    let setData = function() {
+      if (
+        GLOBAL.Type === constants.MAP_EDIT ||
+        this.state.type.indexOf('MAP_THEME_PARAM') >= 0
+      ) {
+        if (GLOBAL.showFlex) {
+          GLOBAL.showFlex = false
+          this.setState({
+            isFullScreen: !this.state.showMenuDialog,
+            showMenuDialog: !this.state.showMenuDialog,
+            isTouchProgress: false,
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              // this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ? ToolbarBtnType.MENU_FLEX : ToolbarBtnType.FLEX,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+          })
+        } else {
+          GLOBAL.showFlex = true
+          this.setState({
+            isFullScreen: !this.state.showMenuDialog,
+            showMenuDialog: !this.state.showMenuDialog,
+            isTouchProgress: false,
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              // this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ? ToolbarBtnType.MENU_FLEX : ToolbarBtnType.FLEX,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+          })
+        }
+      }
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
     }
   }
 
   menus = () => {
-    if (this.state.isSelectlist === false) {
-      this.setState({ isSelectlist: true })
+    if (this.state.showMenuDialog === false) {
+      this.setState({ showMenuDialog: true })
     } else {
-      this.setState({ isSelectlist: false })
+      this.setState({ showMenuDialog: false })
     }
     this.setState({ isTouchProgress: false })
+  }
+
+  menuCommit = () => {
+    this.menuDialog && this.menuDialog.callCurrentAction()
   }
 
   commit = (type = this.originType) => {
@@ -1535,10 +1745,11 @@ export default class ToolBar extends React.PureComponent {
     // this.props.existFullMap && this.props.existFullMap()
   }
 
-  showThemeBox = (autoFullScreen = false) => {
+  showMenuBox = (autoFullScreen = false) => {
     if (autoFullScreen) {
       this.setState(
         {
+          showMenuDialog: false,
           isFullScreen: !this.isBoxShow,
         },
         () => {
@@ -1556,14 +1767,16 @@ export default class ToolBar extends React.PureComponent {
           duration: Const.ANIMATED_DURATION,
         }).start()
         this.setState({
+          showMenuDialog: false,
           isFullScreen: false,
         })
-      } else {
+      } else if (this.state.data && this.state.data.length > 0) {
         Animated.timing(this.state.boxHeight, {
           toValue: this.height,
           duration: Const.ANIMATED_DURATION,
         }).start()
         this.setState({
+          showMenuDialog: false,
           isFullScreen: false,
         })
       }
@@ -1741,6 +1954,12 @@ export default class ToolBar extends React.PureComponent {
           item.datasetName,
         )
         let dataset = data.dataset
+        data.list.forEach(item => {
+          item.info = {
+            infoType: 'fieldType',
+            fieldType: item.fieldType,
+          }
+        })
         let datalist = [
           {
             title: dataset.datasetName,
@@ -1754,7 +1973,7 @@ export default class ToolBar extends React.PureComponent {
             themeDatasetName: item.datasetName,
             isFullScreen: true,
             isTouchProgress: false,
-            isSelectlist: false,
+            showMenuDialog: false,
             containerType: 'list',
             data: datalist,
             buttons: [ToolbarBtnType.THEME_CANCEL],
@@ -1954,8 +2173,18 @@ export default class ToolBar extends React.PureComponent {
         }
         for (let i = 0; i < getdata.length; i++) {
           let datalist = getdata[i]
+          datalist.list.forEach(item => {
+            if (item.geoCoordSysType && item.prjCoordSysType) {
+              item.info = {
+                infoType: 'dataset',
+                geoCoordSysType: item.geoCoordSysType,
+                prjCoordSysType: item.prjCoordSysType,
+              }
+            }
+          })
           alldata[i + 1] = {
-            title: '数据源: ' + datalist.datasource.alias,
+            title: datalist.datasource.alias,
+            image: require('../../../../assets/mapToolbar/list_type_udb.png'),
             data: datalist.list,
           }
         }
@@ -1963,7 +2192,7 @@ export default class ToolBar extends React.PureComponent {
           containerType: 'list',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           listSelectable: false, //单选框
           height:
             this.props.device.orientation === 'LANDSCAPE'
@@ -2065,6 +2294,13 @@ export default class ToolBar extends React.PureComponent {
               type: 'file',
             },
           )
+          customerUDBs.forEach(item => {
+            item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+            item.info = {
+              infoType: 'mtime',
+              lastModifiedDate: item.mtime,
+            }
+          })
 
           let userUDBPath, userUDBs
           if (this.props.user && this.props.user.currentUser.userName) {
@@ -2077,6 +2313,13 @@ export default class ToolBar extends React.PureComponent {
               extension: 'udb',
               type: 'file',
             })
+            userUDBs.forEach(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
 
             data = [
               {
@@ -2085,6 +2328,7 @@ export default class ToolBar extends React.PureComponent {
               },
               {
                 title: Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                 data: userUDBs,
               },
             ]
@@ -2092,6 +2336,7 @@ export default class ToolBar extends React.PureComponent {
             data = [
               {
                 title: Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                 data: customerUDBs,
               },
             ]
@@ -2099,7 +2344,7 @@ export default class ToolBar extends React.PureComponent {
 
           this.setVisible(true, ConstToolType.MAP_THEME_ADD_DATASET, {
             containerType: 'list',
-            isFullScreen: false,
+            isFullScreen: true,
             height:
               this.props.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
@@ -2169,9 +2414,19 @@ export default class ToolBar extends React.PureComponent {
         let arr = item.name.split('.')
         let alias = arr[0]
         SThemeCartography.getUDBName(this.path).then(list => {
+          list.forEach(item => {
+            if (item.geoCoordSysType && item.prjCoordSysType) {
+              item.info = {
+                infoType: 'dataset',
+                geoCoordSysType: item.geoCoordSysType,
+                prjCoordSysType: item.prjCoordSysType,
+              }
+            }
+          })
           let dataList = [
             {
-              title: '数据源：' + alias,
+              title: alias,
+              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
               data: list,
             },
           ]
@@ -2189,7 +2444,7 @@ export default class ToolBar extends React.PureComponent {
         //   containerType: 'list',
         //   isFullScreen: true,
         //   isTouchProgress: false,
-        //   isSelectlist: false,
+        //   showMenuDialog: false,
         //   listSelectable: false, //单选框
         //   height: this.props.device.orientation === 'LANDSCAPE' ?
         //     ConstToolType.THEME_HEIGHT[3] :
@@ -2504,6 +2759,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
+        underlayColor={color.gray}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
@@ -2640,17 +2896,18 @@ export default class ToolBar extends React.PureComponent {
   }
 
   showMenuAlertDialog = type => {
-    let menutoolRef =
-      this.props.getMenuAlertDialogRef && this.props.getMenuAlertDialogRef()
-    if (menutoolRef && type !== '') {
-      menutoolRef.setMenuType(type)
-    }
+    // let menutoolRef =
+    //   this.props.getMenuAlertDialogRef && this.props.getMenuAlertDialogRef()
+    // if (menutoolRef && type !== '') {
+    //   menutoolRef.setMenuType(type)
+    // }
     this.props.showFullMap && this.props.showFullMap(true)
-    menutoolRef && menutoolRef.showMenuDialog()
+    // menutoolRef && menutoolRef.showMenuDialog()
 
     this.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
       isFullScreen: false,
       height: ConstToolType.THEME_HEIGHT[1],
+      themeType: type,
     })
   }
 
@@ -2720,23 +2977,46 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
-  renderSelectList = () => {
+  renderMenuDialog = () => {
     let list
-    switch (this.props.currentLayer.type) {
-      case 1:
-        list = point
-        break
-      case 3:
-        list = line
-        break
-      case 5:
-        list = region
-        break
-      case 83:
-        list = grid
-        break
+    if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
+      if (this.state.themeType === constants.THEME_UNIQUE_STYLE) {
+        list = uniqueMenuInfo
+      } else if (this.state.themeType === constants.THEME_RANGE_STYLE) {
+        list = rangeMenuInfo
+      } else if (this.state.themeType === constants.THEME_UNIFY_LABEL) {
+        list = labelMenuInfo
+      }
     }
-    return <SelectList list={list} selectKey={this.state.selectKey} />
+    if (!list) {
+      switch (this.props.currentLayer.type) {
+        case 1:
+          list = point
+          break
+        case 3:
+          list = line
+          break
+        case 5:
+          list = region
+          break
+        case 83:
+          list = grid
+          break
+      }
+    }
+    return (
+      <MenuDialog
+        ref={ref => (this.menuDialog = ref)}
+        list={list}
+        selectKey={this.state.selectKey}
+        onSelect={item => {
+          this.setState({
+            selectKey: item.selectKey,
+            selectName: item.name,
+          })
+        }}
+      />
+    )
   }
 
   renderView = () => {
@@ -2787,7 +3067,7 @@ export default class ToolBar extends React.PureComponent {
   renderBottomBtn = (item, index) => {
     return (
       <TouchableOpacity
-        key={index}
+        key={item.type + '-' + index}
         onPress={() => item.action(item)}
         style={styles.button}
       >
@@ -2800,6 +3080,7 @@ export default class ToolBar extends React.PureComponent {
     let btns = []
     if (this.state.buttons.length === 0) return null
     this.state.buttons.forEach((type, index) => {
+      if (!type) return
       let image,
         action = () => {}
       switch (type) {
@@ -2983,17 +3264,28 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_MENU:
           //专题图-菜单
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
-          action = this.showAlertDialog
+          // action = this.showAlertDialog
+          action = this.menu
           break
-        case ToolbarBtnType.THEME_FLEX:
-          //专题图-显示与隐藏
-          image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
-          action = this.showThemeBox
-          break
+        // case ToolbarBtnType.THEME_FLEX:
+        //   //专题图-显示与隐藏
+        //   image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
+        //   action = this.showMenuBox
+        //   break
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.close
+          break
+        case ToolbarBtnType.MENU_FLEX:
+          //菜单框-显示与隐藏
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
+          action = this.showMenuBox
+          break
+        case ToolbarBtnType.MENU_COMMIT:
+          //菜单框-提交
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.menuCommit
           break
       }
 
@@ -3003,6 +3295,7 @@ export default class ToolBar extends React.PureComponent {
         btns.push(
           this.renderBottomBtn(
             {
+              key: type,
               image: image,
               action: () => action(),
             },
@@ -3068,7 +3361,9 @@ export default class ToolBar extends React.PureComponent {
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
-        {this.state.isFullScreen && !this.state.isTouchProgress && (
+        {this.state.isFullScreen &&
+          !this.state.isTouchProgress &&
+          !this.state.showMenuDialog && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
@@ -3078,9 +3373,10 @@ export default class ToolBar extends React.PureComponent {
         {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
-        {this.state.isSelectlist && (
-          <View style={styles.list}>{this.renderSelectList()}</View>
-        )}
+        {/*{this.state.showMenuDialog && (*/}
+        {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
+        {/*)}*/}
+        {this.state.showMenuDialog && this.renderMenuDialog()}
         <View style={styles.containers}>
           {this.renderView()}
           {this.renderBottomBtns()}

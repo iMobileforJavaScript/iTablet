@@ -12,12 +12,14 @@ import Tabs, {
   MyOnlineMap,
   ScanOnlineMap,
   MyLocalData,
+  Personal,
+  ToggleAccount,
+  Setting,
+  AboutITablet,
+  Login,
 } from './tabs'
 
-//我的
-// import Register from './register&getBack/register'
 import GetBack from './register&getBack/GetBack'
-import Personal from './personal'
 
 //地图功能页面
 import MTDataCollection from './mtDataCollection'
@@ -245,8 +247,23 @@ export default StackNavigator(
         header: null,
       },
     },
+    /******************************** Mine **********************/
     Register: {
       screen: Register,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    Login: {
+      screen: Login,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    ToggleAccount: {
+      screen: ToggleAccount,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
@@ -296,6 +313,21 @@ export default StackNavigator(
     },
     Personal: {
       screen: Personal,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    /**************************** Home ***************************/
+    AboutITablet: {
+      screen: AboutITablet,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    Setting: {
+      screen: Setting,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
