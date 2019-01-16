@@ -384,13 +384,13 @@ export default class LayerManager_item extends React.Component {
     let icon
     switch (type) {
       case ThemeType.UNIQUE: // 单值专题图
-        icon = require('../../../../assets/map/icon-theme.unique.png')
+        icon = require('../../../../assets/map/layers_theme_unique_style_black.png')
         break
       case ThemeType.RANGE: // 分段专题图
-        icon = require('../../../../assets/map/icon-theme-range.png')
+        icon = require('../../../../assets/map/layers_theme_range_style_black.png')
         break
       case ThemeType.LABEL: // 标签专题图
-        icon = require('../../../../assets/map/icon-theme-label.png')
+        icon = require('../../../../assets/map/layers_theme_unify_label_style_black.png')
         break
       default:
         icon = require('../../../../assets/public/mapLoad.png')

@@ -108,7 +108,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
-    if (!GLOBAL.currentLayer || !GLOBAL.currentLayer.themeType) {
+    if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show('提示: 请先选择专题图层。')
       return
     }
@@ -277,42 +277,46 @@ export default class FunctionToolbar extends React.Component {
     }
     SScene.checkoutListener('startLabelOperate')
     GLOBAL.Map3DSymbol = true
-    SScene.getLayerList().then(() => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
-          containerType: 'table',
-          isFullScreen: true,
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.HEIGHT[0]
-              : ConstToolType.HEIGHT[2],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        })
-      }
-    })
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+        containerType: 'table',
+        isFullScreen: true,
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.HEIGHT[0]
+            : ConstToolType.HEIGHT[2],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
   }
 
   showMap3DTool = async () => {
     SScene.checkoutListener('startMeasure')
-    SScene.getLayerList().then(() => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-          containerType: 'table',
-          isFullScreen: true,
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.HEIGHT[0]
-              : ConstToolType.HEIGHT[1],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        })
-      }
-    })
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+        containerType: 'table',
+        isFullScreen: false,
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.HEIGHT[0]
+            : ConstToolType.HEIGHT[1],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
+  }
+
+  showMap3DFly = async () => {
+    SScene.checkoutListener('startMeasure')
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      toolRef.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
+    }
   }
 
   showCollection = () => {
@@ -482,6 +486,13 @@ export default class FunctionToolbar extends React.Component {
                 type: 'file',
               },
             )
+            customerUDBs.forEach(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
 
             let userUDBPath, userUDBs
             if (this.props.user && this.props.user.currentUser.userName) {
@@ -494,14 +505,23 @@ export default class FunctionToolbar extends React.Component {
                 extension: 'udb',
                 type: 'file',
               })
+              userUDBs.forEach(item => {
+                item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+                item.info = {
+                  infoType: 'mtime',
+                  lastModifiedDate: item.mtime,
+                }
+              })
 
               data = [
                 {
                   title: Const.PUBLIC_DATA_SOURCE,
+                  image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: customerUDBs,
                 },
                 {
                   title: Const.DATA_SOURCE,
+                  image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: userUDBs,
                 },
               ]
@@ -509,6 +529,7 @@ export default class FunctionToolbar extends React.Component {
               data = [
                 {
                   title: Const.DATA_SOURCE,
+                  image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: customerUDBs,
                 },
               ]
@@ -547,8 +568,18 @@ export default class FunctionToolbar extends React.Component {
       getdata.reverse()
       for (let i = 0; i < getdata.length; i++) {
         let datalist = getdata[i]
+        datalist.list.forEach(item => {
+          if (item.geoCoordSysType && item.prjCoordSysType) {
+            item.info = {
+              infoType: 'dataset',
+              geoCoordSysType: item.geoCoordSysType,
+              prjCoordSysType: item.prjCoordSysType,
+            }
+          }
+        })
         data[i + 1] = {
-          title: '数据源: ' + datalist.datasource.alias,
+          title: datalist.datasource.alias,
+          image: require('../../../../assets/mapToolbar/list_type_udb.png'),
           data: datalist.list,
         }
       }
@@ -705,6 +736,20 @@ export default class FunctionToolbar extends React.Component {
             title: '工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            // key: 'fly',
+            title: '飞行轨迹',
+            action: () => {
+              // this.isShow=!this.isShow
+              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
+              //   containerType: 'list',
+              //   isFullScreen:true,
+              this.showMap3DFly(ConstToolType.MAP3D_TOOL_FLYLIST)
+              // })
+              // this.getflylist()
+            },
+            image: require('../../../../assets/function/icon_symbolFly.png'),
           },
           {
             title: '更多',
@@ -930,6 +975,7 @@ export default class FunctionToolbar extends React.Component {
         key={index}
         title={item.title}
         textColor={'black'}
+        textStyle={{ fontSize: scaleSize(18) }}
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}

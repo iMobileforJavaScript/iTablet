@@ -27,6 +27,8 @@ let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
 let _arrOnlineData = [{}]
+let _previousUserName = ''
+// let _callBackIos
 export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
@@ -36,6 +38,15 @@ export default class MyOnlineData extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
+    if (this.props.user.currentUser.userName !== _previousUserName) {
+      SOnlineService.cancelDownload()
+      _iLoadOnlineDataCount = 1
+      _iDataListTotal = -1
+      _arrOnlineData = [{}]
+      _iDownloadingIndex = -1
+      // _callBackIos=undefined
+    }
+    _previousUserName = this.props.user.currentUser.userName
     this.state = {
       data: _arrOnlineData,
       isRefreshing: false,
@@ -62,8 +73,12 @@ export default class MyOnlineData extends Component {
       'com.supermap.RN.Mapcontrol.online_service_downloadfailure'
     let downloadedType = 'com.supermap.RN.Mapcontrol.online_service_downloaded'
     if (Platform.OS === 'ios') {
-      let callBackIos = SOnlineService.objCallBack()
-      this.downloadingListener = callBackIos.addListener(
+      let _callBackIos
+      if (_callBackIos === undefined) {
+        _callBackIos = SOnlineService.objCallBack()
+      }
+
+      this.downloadingListener = _callBackIos.addListener(
         downloadingEventType,
         obj => {
           let progress = obj.progress
@@ -71,7 +86,7 @@ export default class MyOnlineData extends Component {
           this._changeModalProgressState(result)
         },
       )
-      this.downloadFailureListener = callBackIos.addListener(
+      this.downloadFailureListener = _callBackIos.addListener(
         downloadFailureType,
         () => {
           let result = '下载失败'
@@ -79,7 +94,7 @@ export default class MyOnlineData extends Component {
           this._resetDownloadIndex(-1)
         },
       )
-      this.downloadedListener = callBackIos.addListener(downloadedType, () => {
+      this.downloadedListener = _callBackIos.addListener(downloadedType, () => {
         let result = '下载完成'
         this._changeModalProgressState(result)
         this._resetDownloadIndex(-1)
@@ -306,6 +321,7 @@ export default class MyOnlineData extends Component {
     }
   }
   _changeModalProgressState = progress => {
+    // console.warn(_iDownloadingIndex)
     if (_iDownloadingIndex >= 0) {
       let newData = [...this.state.data]
       newData[_iDownloadingIndex].downloadingProgress = progress
@@ -318,12 +334,17 @@ export default class MyOnlineData extends Component {
         this.state.data[this.index].isDownloading &&
         !this.state.isRefreshing
       ) {
-        // console.warn("progress:"+progress)
+        // console.warn('progress:' + progress)
         this.modalRef._changeDownloadingState(progress)
       }
-      if (progress === '下载完成' || progress === '下载失败') {
+      if (
+        progress === '下载完成' ||
+        progress === '下载失败' ||
+        progress === '已下载'
+      ) {
         this._setFinalDownloadingProgressState(_iDownloadingIndex, progress)
         if (progress === '下载完成') {
+          // console.warn('unzip')
           this._unZipFile()
         }
       }
@@ -385,17 +406,18 @@ export default class MyOnlineData extends Component {
         ConstPath.RelativePath.ExternalData +
         objContent.fileName
       let filePath = await FileTools.appendingHomeDirectory(path)
-      let isFileExist = await FileTools.fileIsExist(path)
+      let isFileExist = await FileTools.fileIsExist(filePath)
+      this._resetDownloadIndex(this.index)
       if (isFileExist) {
-        Toast.show('下载完成')
-        this._changeModalProgressState('下载完成')
+        Toast.show('已下载')
+        this._changeModalProgressState('已下载')
         return
       }
       this.downloadingFileName = objContent.fileName.substring(
         0,
         objContent.fileName.length - 4,
       )
-      this._resetDownloadIndex(this.index)
+
       if (this.modalRef) {
         this.modalRef._changeDownloadingState('下载中...')
       }
@@ -552,7 +574,6 @@ export default class MyOnlineData extends Component {
   }
   _renderModal = () => {
     if (this.state.modalIsVisible) {
-      // console.warn("MyData---renderModal")
       return (
         <PopupModal
           ref={ref => (this.modalRef = ref)}

@@ -5,9 +5,11 @@ import { ModuleList } from './components'
 import styles from './styles'
 import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
-import { SScene, SMap } from 'imobile_for_reactnative'
+import { SScene, SMap, SOnlineService } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
 import ConstPath from '../../../constants/ConstPath'
+import HomePopupModal from './HomePopupModal'
+import NavigationService from '../../NavigationService'
 // import Orientation from '../../../constants/Orientation'
 export default class Home extends Component {
   props: {
@@ -18,12 +20,16 @@ export default class Home extends Component {
     device: Object,
     importSceneWorkspace: () => {},
     importWorkspace: () => {},
+    closeWorkspace: () => {},
+    openWorkspace: () => {},
+    setUser: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
       isDownloaded: false,
+      modalIsVisible: false,
     }
   }
   _onImportWorkspace = async (fileDirPath, item, isExist) => {
@@ -102,7 +108,7 @@ export default class Home extends Component {
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
-        <TouchableOpacity style={styles.moreImg}>
+        <TouchableOpacity>
           <Image
             resizeMode={'contain'}
             source={moreImg}
@@ -113,9 +119,76 @@ export default class Home extends Component {
       </View>
     )
   }
+  _closeModal = () => {
+    this.setState({ modalIsVisible: false })
+  }
+
+  _onLogin = () => {
+    this._closeModal()
+    NavigationService.navigate('Mine')
+  }
+  _onRegister = () => {
+    this._closeModal()
+    NavigationService.navigate('Register')
+  }
+
+  _onSetting = () => {
+    this._closeModal()
+    NavigationService.navigate('Setting')
+  }
+
+  _onAbout = () => {
+    this._closeModal()
+    NavigationService.navigate('AboutITablet')
+  }
+
+  _onToggleAccount = () => {
+    this._closeModal()
+    NavigationService.navigate('ToggleAccount')
+  }
+
+  _onLogout = () => {
+    SOnlineService.logout()
+    this.props.closeWorkspace(async () => {
+      let customPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+      )
+      this.props.setUser()
+      NavigationService.navigate('Mine')
+      this._closeModal()
+      this.props.openWorkspace({ server: customPath })
+    })
+  }
+
+  _renderModal = () => {
+    let isLogin = this.props.currentUser.userName !== undefined
+    return (
+      <HomePopupModal
+        isLogin={isLogin}
+        onLogin={this._onLogin}
+        onRegister={this._onRegister}
+        onToggleAccount={this._onToggleAccount}
+        onLogout={this._onLogout}
+        onSetting={this._onSetting}
+        onAbout={this._onAbout}
+        modalVisible={this.state.modalIsVisible}
+        onCloseModal={this._closeModal}
+        topNavigatorBarImageId={this.topNavigatorBarImageId}
+      />
+    )
+  }
 
   render() {
-    let userImg = require('../../../assets/home/icon_mine_select.png')
+    let isLogin =
+      this.props.currentUser.userName &&
+      (this.props.currentUser.userName !== 'Customer' &&
+        this.props.currentUser.password !== 'Customer')
+    let userImg = isLogin
+      ? {
+        uri:
+            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+      }
+      : require('../../../assets/home/系统默认头像.png')
     let moreImg = require('../../../assets/home/icon_else_selected.png')
     return (
       <Container
@@ -125,36 +198,26 @@ export default class Home extends Component {
           headerLeft: (
             <TouchableOpacity
               style={styles.userView}
-              onPress={async () => {
-                // try {
-                //   Toast.show('准备导入')
-                // let userName = 'Customer'
-                // let filepath = await FileTools.appendingHomeDirectory(
-                //     ConstPath.UserPath +
-                //       userName +
-                //       '/' +
-                //       ConstPath.RelativePath.Temp +
-                //       'OlympicGreen_android/OlympicGreen_android.sxwu',
-                //   )
-                //   Toast.show('开始导入')
-                //   this.props.importSceneWorkspace({
-                //     server: filepath,
-                //   })
-                // } catch (error) {
-                // console.warn(error)
-                //  Toast.show(error)
-                // }
+              onPress={() => {
+                this.topNavigatorBarImageId = 'left'
+                this.setState({ modalIsVisible: true })
               }}
             >
               <Image source={userImg} style={styles.userImg} />
             </TouchableOpacity>
           ),
           headerRight: (
-            <TouchableOpacity style={styles.moreImg}>
+            <TouchableOpacity
+              onPress={() => {
+                this.topNavigatorBarImageId = 'right'
+                this.setState({ modalIsVisible: true })
+              }}
+              // style={{ flex: 1, marginRight: scaleSize(18.5) }}
+            >
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
-                style={styles.moreImg}
+                style={styles.moreView}
               />
             </TouchableOpacity>
           ),
@@ -164,7 +227,6 @@ export default class Home extends Component {
         }}
         style={styles.container}
       >
-        {/*{this.headRender()}*/}
         <View
           style={{
             flex: 1,
@@ -179,6 +241,7 @@ export default class Home extends Component {
             styles={styles.modulelist}
             device={this.props.device}
           />
+          {this._renderModal()}
         </View>
       </Container>
     )

@@ -53,6 +53,7 @@ import constants from '../../constants'
 import ShareData from './ShareData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
+import { color } from '../../../../styles'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -429,21 +430,6 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
-          {
-            key: 'fly',
-            title: '飞行轨迹',
-            action: () => {
-              // this.isShow=!this.isShow
-              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
-              //   containerType: 'list',
-              //   isFullScreen:true,
-              this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
-              // })
-              // this.getflylist()
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_symbolFly.png'),
-          },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
         break
@@ -536,6 +522,12 @@ export default class ToolBar extends React.PureComponent {
           }
         }
       }
+      allExpressions.forEach(item => {
+        item.info = {
+          infoType: 'fieldType',
+          fieldType: item.fieldType,
+        }
+      })
       let datalist = [
         {
           title: dataset.datasetName,
@@ -1100,10 +1092,11 @@ export default class ToolBar extends React.PureComponent {
       let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
       return { data, buttons }
     } catch (error) {
+      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let data = []
       Toast.show('当前场景无飞行轨迹')
+      return { data, buttons }
     }
-    this.isShow = false
-    this.isBoxShow = true
   }
 
   getWorkspaceList = async () => {
@@ -1230,7 +1223,7 @@ export default class ToolBar extends React.PureComponent {
           isFullScreen: false,
         },
         () => {
-          this.height = ConstToolType.HEIGHT[1]
+          this.height = ConstToolType.HEIGHT[2]
           this.showToolbar()
         },
       )
@@ -1961,6 +1954,12 @@ export default class ToolBar extends React.PureComponent {
           item.datasetName,
         )
         let dataset = data.dataset
+        data.list.forEach(item => {
+          item.info = {
+            infoType: 'fieldType',
+            fieldType: item.fieldType,
+          }
+        })
         let datalist = [
           {
             title: dataset.datasetName,
@@ -2174,8 +2173,18 @@ export default class ToolBar extends React.PureComponent {
         }
         for (let i = 0; i < getdata.length; i++) {
           let datalist = getdata[i]
+          datalist.list.forEach(item => {
+            if (item.geoCoordSysType && item.prjCoordSysType) {
+              item.info = {
+                infoType: 'dataset',
+                geoCoordSysType: item.geoCoordSysType,
+                prjCoordSysType: item.prjCoordSysType,
+              }
+            }
+          })
           alldata[i + 1] = {
-            title: '数据源: ' + datalist.datasource.alias,
+            title: datalist.datasource.alias,
+            image: require('../../../../assets/mapToolbar/list_type_udb.png'),
             data: datalist.list,
           }
         }
@@ -2285,6 +2294,13 @@ export default class ToolBar extends React.PureComponent {
               type: 'file',
             },
           )
+          customerUDBs.forEach(item => {
+            item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+            item.info = {
+              infoType: 'mtime',
+              lastModifiedDate: item.mtime,
+            }
+          })
 
           let userUDBPath, userUDBs
           if (this.props.user && this.props.user.currentUser.userName) {
@@ -2297,6 +2313,13 @@ export default class ToolBar extends React.PureComponent {
               extension: 'udb',
               type: 'file',
             })
+            userUDBs.forEach(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
 
             data = [
               {
@@ -2305,6 +2328,7 @@ export default class ToolBar extends React.PureComponent {
               },
               {
                 title: Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                 data: userUDBs,
               },
             ]
@@ -2312,6 +2336,7 @@ export default class ToolBar extends React.PureComponent {
             data = [
               {
                 title: Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                 data: customerUDBs,
               },
             ]
@@ -2319,7 +2344,7 @@ export default class ToolBar extends React.PureComponent {
 
           this.setVisible(true, ConstToolType.MAP_THEME_ADD_DATASET, {
             containerType: 'list',
-            isFullScreen: false,
+            isFullScreen: true,
             height:
               this.props.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
@@ -2389,9 +2414,19 @@ export default class ToolBar extends React.PureComponent {
         let arr = item.name.split('.')
         let alias = arr[0]
         SThemeCartography.getUDBName(this.path).then(list => {
+          list.forEach(item => {
+            if (item.geoCoordSysType && item.prjCoordSysType) {
+              item.info = {
+                infoType: 'dataset',
+                geoCoordSysType: item.geoCoordSysType,
+                prjCoordSysType: item.prjCoordSysType,
+              }
+            }
+          })
           let dataList = [
             {
-              title: '数据源：' + alias,
+              title: alias,
+              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
               data: list,
             },
           ]
@@ -2724,6 +2759,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
+        underlayColor={color.gray}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
