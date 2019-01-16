@@ -2,23 +2,23 @@ import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../utils'
 export default StyleSheet.create({
   container: {
-    backgroundColor: '#333333',
+    backgroundColor: '#F0F0F0',
   },
   section: {
     flex: 1,
     flexDirection: 'row',
-    height: scaleSize(60),
-    backgroundColor: '#4F4F4F',
+    height: scaleSize(80),
+    backgroundColor: '#505050',
     paddingLeft: scaleSize(20),
     alignItems: 'center',
   },
   row: {
     flex: 1,
     flexDirection: 'row',
-    height: scaleSize(60),
-    backgroundColor: '#333333',
-    paddingLeft: scaleSize(60),
-    paddingRight: scaleSize(30),
+    height: scaleSize(80),
+    backgroundColor: '#F0F0F0',
+    paddingLeft: scaleSize(70),
+    paddingRight: scaleSize(80),
     alignItems: 'center',
     justifyContent: 'space-between',
   },
@@ -27,15 +27,23 @@ export default StyleSheet.create({
     height: scaleSize(40),
   },
   sectionsTitle: {
-    color: 'white',
-    fontSize: scaleSize(24),
+    color: '#F0F0F0',
+    fontSize: scaleSize(26),
+    marginLeft: scaleSize(25),
   },
   itemName: {
-    color: 'white',
-    fontSize: scaleSize(20),
+    color: '#303030',
+    fontSize: scaleSize(26),
   },
   itemValue: {
-    color: '#C4C4C4',
+    color: '#A0A0A0',
     marginRight: scaleSize(15),
+    fontSize: scaleSize(22),
+  },
+  itemSeparator: {
+    width: scaleSize(688),
+    height: scaleSize(1),
+    backgroundColor: '#A0A0A0',
+    marginLeft: scaleSize(16),
   },
 })

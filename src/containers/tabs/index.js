@@ -39,8 +39,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/tab_home_selected.png')
-                  : require('../../assets/tabBar/tab_home.png')
+                  ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
+                  : require('../../assets/tabBar/Frenchgrey/tab_home.png')
               }
               style={styles.icon}
             />
@@ -69,8 +69,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/tab_find_selected.png')
-                  : require('../../assets/tabBar/tab_find.png')
+                  ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
+                  : require('../../assets/tabBar/Frenchgrey/tab_find.png')
               }
               style={styles.icon}
             />
@@ -99,8 +99,8 @@ const Tabs = TabNavigator(
               resizeMode="contain"
               source={
                 focused
-                  ? require('../../assets/tabBar/tab_user_selected.png')
-                  : require('../../assets/tabBar/tab_user.png')
+                  ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
+                  : require('../../assets/tabBar/Frenchgrey/tab_user.png')
               }
               style={styles.icon}
             />
@@ -126,16 +126,19 @@ const Tabs = TabNavigator(
       style: {
         backgroundColor: color.theme, // TabBar 背景色
         // height: Platform.OS === 'android' ? 50 : 49,
-        height: scaleSize(90),
+        height: scaleSize(96),
         borderTopColor: color.border,
         borderTopWidth: 1,
       },
       tabStyle: {
         flexDirection: 'column',
         justifyContent: 'space-around',
+        marginTop: scaleSize(4.5),
+        // flex:1,
       },
       labelStyle: {
-        fontSize: Platform.OS === 'android' ? 16 : 12, // 文字大小
+        // fontSize: Platform.OS === 'android' ? 16 : 12, // 文字大小
+        // backgroundColor:"red",
       },
     },
   },
@@ -148,21 +151,21 @@ const styles = StyleSheet.create({
   tabText: {
     color: color.gray2,
     fontSize: scaleSize(20),
-    marginTop: scaleSize(1),
+    // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   selectedTabText: {
     color: color.blue2,
     fontSize: scaleSize(20),
-    marginTop: scaleSize(1),
+    // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: scaleSize(60),
+    height: scaleSize(60),
   },
   labelView: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 5,
+    marginTop: Platform.OS === 'android' ? scaleSize(6) : 0,
   },
 })
 export default Tabs

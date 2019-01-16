@@ -22,18 +22,20 @@ export default StyleSheet.create({
     marginTop: scaleSize(50),
   },
   userImg: {
-    width: scaleSize(28),
+    width: scaleSize(30),
     // flex:1,
-    height: scaleSize(28),
+    height: scaleSize(30),
   },
   userView: {
-    width: scaleSize(45),
+    width: scaleSize(60),
     // flex:6,
-    height: scaleSize(45),
-    borderRadius: scaleSize(30),
+    height: scaleSize(60),
+    borderRadius: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
-    // backgroundColor: '#4C4C4C',
+    backgroundColor: '#4C4C4C',
+    marginLeft: scaleSize(45),
+    // backgroundColor:"red",
   },
   headTitle: {
     flex: 6.5,
@@ -46,10 +48,13 @@ export default StyleSheet.create({
     fontSize: scaleSize(30),
     // fontFamily: 'CenturyGothic',
   },
+  moreView: {
+    flex: 1,
+    marginRight: scaleSize(50),
+  },
   moreImg: {
-    // width: scaleSize(10),
-    height: scaleSize(30),
-    marginRight: scaleSize(10),
+    width: scaleSize(60),
+    height: scaleSize(60),
   },
   modulelist: {
     flex: 1,

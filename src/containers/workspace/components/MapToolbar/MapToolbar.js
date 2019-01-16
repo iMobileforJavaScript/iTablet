@@ -208,7 +208,7 @@ export default class MapToolbar extends React.Component {
         key={item.key}
         title={item.title}
         textColor={'white'}
-        textStyle={{ fontSize: scaleSize(22) }}
+        textStyle={{ fontSize: scaleSize(20) }}
         selected={this.state.currentIndex === index}
         image={item.image}
         selectedImage={item.selectedImage}
@@ -262,7 +262,7 @@ export default class MapToolbar extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    height: scaleSize(95),
+    height: scaleSize(96),
     width: '100%',
     backgroundColor: color.theme,
     alignSelf: 'center',

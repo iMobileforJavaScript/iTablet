@@ -87,27 +87,37 @@ export default class setting extends Component {
     )
   }
   renderListItem = ({ item, index }) => {
+    let itemSeparator = true
+    if (this.state.data[item.index].data.length - 1 === index) {
+      itemSeparator = false
+    }
     if (item.isShow) {
       if (typeof item.value === 'boolean') {
         return (
-          <View style={styles.row}>
-            <Text style={styles.itemName} />
-            <Switch
-              style={styles.switch}
-              trackColor={item.value ? 'white' : '#4F4F4F'}
-              thumbColor={'#4F4F4F'}
-              value={item.value}
-              onValueChange={value => {
-                this._onValueChange(value, item, index)
-              }}
-            />
+          <View>
+            <View style={styles.row}>
+              <Text style={styles.itemName} />
+              <Switch
+                style={styles.switch}
+                trackColor={'black'}
+                thumbColor={'white'}
+                value={item.value}
+                onValueChange={value => {
+                  this._onValueChange(value, item, index)
+                }}
+              />
+            </View>
+            {itemSeparator ? <View style={styles.itemSeparator} /> : <View />}
           </View>
         )
       } else {
         return (
-          <View style={styles.row}>
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemValue}>{item.value}</Text>
+          <View>
+            <View style={styles.row}>
+              <Text style={styles.itemName}>{item.name}</Text>
+              <Text style={styles.itemValue}>{item.value}</Text>
+            </View>
+            {itemSeparator ? <View style={styles.itemSeparator} /> : <View />}
           </View>
         )
       }
@@ -115,12 +125,15 @@ export default class setting extends Component {
       return <View />
     }
   }
-
+  _renderItemSeparator = () => {
+    return <View style={styles.itemSeparator} />
+  }
   renderSelection = () => {
     return (
       <SectionList
         sections={this.state.data}
         renderItem={this.renderListItem}
+        // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
         onRefresh={this.getdata}
