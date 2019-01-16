@@ -9,7 +9,8 @@ export default StyleSheet.create({
   },
   head: {
     height: scaleSize(60),
-    backgroundColor: color.theme,
+    // backgroundColor: color.theme,
+    backgroundColor: '#505050',
   },
   wrapper: {
     flexDirection: 'row',
@@ -32,7 +33,8 @@ export default StyleSheet.create({
   text: {
     // flex:1,
     textAlign: 'center',
-    color: color.themeText,
+    // color: color.themeText,
+    color: '#303030',
   },
   selectText: {
     color: color.themeText,
@@ -46,6 +48,7 @@ export default StyleSheet.create({
   },
   border: {
     flex: 1,
-    borderColor: color.borderLight,
+    // borderColor: color.borderLight,
+    borderColor: '#A0A0A0',
   },
 })

@@ -122,6 +122,13 @@ export default class ToolBarSectionList extends React.Component {
               style={styles.section_dataset_type}
             />
           )}
+          {section.image && (
+            <Image
+              source={section.image}
+              resizeMode={'contain'}
+              style={styles.section_dataset_type}
+            />
+          )}
           <Text style={[styles.sectionTitle, this.props.sectionTitleStyle]}>
             {section.title}
           </Text>
@@ -158,16 +165,53 @@ export default class ToolBarSectionList extends React.Component {
             />
           </TouchableOpacity>
         )}
-        {(item.title || item.name) && (
-          <Text style={styles.itemTitle}>{item.title || item.name}</Text>
-        )}
-        {item.datasetType && item.datasetName && this.getDatasetItem(item)}
-        {item.expression && this.getExpressionItem(item)}
-        {item.colorSchemeName &&
-          item.colorScheme &&
-          this.getColorSchemeItem(item)}
+        {item.image && this.getImg(item)}
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}
+        >
+          {(item.name || item.title) && (
+            <Text style={item.image ? styles.imageItemTitle : styles.itemTitle}>
+              {item.name || item.title}
+            </Text>
+          )}
+          {item.datasetType && item.datasetName && this.getDatasetItem(item)}
+          {item.expression && this.getExpressionItem(item)}
+          {item.colorSchemeName &&
+            item.colorScheme &&
+            this.getColorSchemeItem(item)}
+          {item.info && this.getInfo(item)}
+        </View>
       </TouchableOpacity>
     )
+  }
+
+  getImg = item => {
+    return (
+      <Image
+        source={item.image}
+        resizeMode={'contain'}
+        style={styles.headerImg}
+      />
+    )
+  }
+
+  getInfo = item => {
+    // let lastModifiedDate = DateUtil.formatDate(item.StatResult.mtime.getTime(), "yyyy-MM-dd hh:mm:ss")
+    // type 根据类型返回固定的信息
+    // item.info = {
+    //   infoType: 'mtime',
+    //   lastModifiedDate: item.mtime,
+    // }
+    let info
+    if (item.info.infoType === 'mtime') {
+      info = '最后修改时间：' + item.info.lastModifiedDate
+    } else {
+      return
+    }
+    return <Text style={styles.itemInfo}>{info}</Text>
   }
 
   /**颜色方案Item */
@@ -200,9 +244,9 @@ export default class ToolBarSectionList extends React.Component {
       // justifyContent: 'center',
       textAlignVertical: 'center',
       fontSize: size.fontSize.fontSizeMd,
-      height: scaleSize(70),
-      backgroundColor: color.grayLight,
-      color: color.black,
+      height: scaleSize(80),
+      backgroundColor: color.gray,
+      color: color.white,
     }
     return (
       <Text style={item.isSelected ? itemSelectedStyle : styles.itemTitle}>
@@ -218,7 +262,7 @@ export default class ToolBarSectionList extends React.Component {
         <Image
           source={this.getDatasetTypeImg(item)}
           resizeMode={'contain'}
-          style={styles.dataset_type}
+          style={styles.dataset_type_img}
         />
         <Text style={styles.dataset_title}>{item.datasetName}</Text>
       </View>
@@ -267,6 +311,11 @@ export default class ToolBarSectionList extends React.Component {
     }
   }
 
+  /**行与行之间的分隔线组件 */
+  renderItemSeparator = () => {
+    return <View style={styles.separateViewStyle} />
+  }
+
   render() {
     return (
       <SectionList
@@ -277,6 +326,7 @@ export default class ToolBarSectionList extends React.Component {
         renderSectionHeader={this.renderSection}
         keyExtractor={(item, index) => index}
         getItemLayout={this.getItemLayout}
+        ItemSeparatorComponent={this.renderItemSeparator}
       />
     )
   }
@@ -309,6 +359,7 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.themeText,
+    textAlignVertical: 'center',
   },
   selectImgView: {
     width: scaleSize(80),
@@ -325,13 +376,13 @@ const styles = StyleSheet.create({
     height: scaleSize(50),
     marginLeft: scaleSize(30),
   },
-  dataset_type: {
+  dataset_type_img: {
     width: scaleSize(50),
     height: scaleSize(50),
     marginLeft: scaleSize(50),
   },
   dataset_title: {
-    marginLeft: scaleSize(20),
+    marginLeft: scaleSize(30),
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',
@@ -354,5 +405,33 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.themeText,
+  },
+  separateViewStyle: {
+    flexDirection: 'column',
+    width: '100%',
+    height: scaleSize(1),
+    backgroundColor: color.subTheme,
+  },
+  itemInfo: {
+    marginLeft: scaleSize(30),
+    marginTop: scaleSize(4),
+    fontSize: scaleSize(15),
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    textAlignVertical: 'center',
+    color: color.gray,
+  },
+  headerImg: {
+    marginLeft: scaleSize(50),
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
+  imageItemTitle: {
+    marginLeft: scaleSize(30),
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    color: color.themeText,
+    textAlignVertical: 'center',
   },
 })

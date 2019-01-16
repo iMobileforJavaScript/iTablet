@@ -3,6 +3,9 @@ import Mine from './Mine'
 import { setUser } from '../../../models/user'
 import { closeWorkspace, openWorkspace } from '../../../models/map'
 import Register from './Register'
+import Login from './Login'
+import Personal from './Personal'
+import ToggleAccount from './ToggleAccount'
 
 import MyService from './MyService'
 import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
@@ -32,4 +35,7 @@ export {
   MyService,
   MyOnlineMap,
   ScanOnlineMap,
+  Personal,
+  ToggleAccount,
+  Login,
 }
