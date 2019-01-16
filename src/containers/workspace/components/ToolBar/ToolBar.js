@@ -49,6 +49,7 @@ import constants from '../../constants'
 import ShareData from './ShareData'
 import SelectList from './SelectList'
 import styles from './styles'
+import { color } from '../../../../styles'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -1925,7 +1926,8 @@ export default class ToolBar extends React.PureComponent {
         for (let i = 0; i < getdata.length; i++) {
           let datalist = getdata[i]
           alldata[i + 1] = {
-            title: '数据源: ' + datalist.datasource.alias,
+            title: datalist.datasource.alias,
+            image: require('../../../../assets/mapToolbar/list_type_udb.png'),
             data: datalist.list,
           }
         }
@@ -2035,6 +2037,13 @@ export default class ToolBar extends React.PureComponent {
               type: 'file',
             },
           )
+          customerUDBs.forEach(item => {
+            item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+            item.info = {
+              infoType: 'mtime',
+              lastModifiedDate: item.mtime,
+            }
+          })
 
           let userUDBPath, userUDBs
           if (this.props.user && this.props.user.currentUser.userName) {
@@ -2047,6 +2056,13 @@ export default class ToolBar extends React.PureComponent {
               extension: 'udb',
               type: 'file',
             })
+            userUDBs.forEach(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
 
             data = [
               {
@@ -2055,6 +2071,7 @@ export default class ToolBar extends React.PureComponent {
               },
               {
                 title: Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                 data: userUDBs,
               },
             ]
@@ -2062,6 +2079,7 @@ export default class ToolBar extends React.PureComponent {
             data = [
               {
                 title: Const.DATA_SOURCE,
+                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                 data: customerUDBs,
               },
             ]
@@ -2141,7 +2159,8 @@ export default class ToolBar extends React.PureComponent {
         SThemeCartography.getUDBName(this.path).then(list => {
           let dataList = [
             {
-              title: '数据源：' + alias,
+              title: alias,
+              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
               data: list,
             },
           ]
@@ -2473,6 +2492,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
+        underlayColor={color.gray}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />

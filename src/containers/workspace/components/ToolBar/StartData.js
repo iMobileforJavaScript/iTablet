@@ -306,6 +306,11 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
+      item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
+      }
       list.push(item)
     })
     data = [
@@ -314,6 +319,7 @@ function openMap() {
           _params.user && _params.user.currentUser.userName
             ? '公共地图'
             : '地图',
+        image: require('../../../../assets/mapToolbar/list_type_maps.png'),
         data: list,
       },
     ]
@@ -323,10 +329,16 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
+        item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
         userList.push(item)
       })
       data.push({
         title: '地图',
+        image: require('../../../../assets/mapToolbar/list_type_maps.png'),
         data: userFileList,
       })
     }
