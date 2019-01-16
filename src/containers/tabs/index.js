@@ -136,8 +136,8 @@ const Tabs = TabNavigator(
       tabStyle: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-        marginTop: scaleSize(4.5),
-        // flex:1,
+        marginTop: scaleSize(2),
+        flex: 1,
       },
       labelStyle: {
         // fontSize: Platform.OS === 'android' ? 16 : 12, // 文字大小
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   labelView: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: Platform.OS === 'android' ? scaleSize(6) : 0,
+    marginTop: Platform.OS === 'android' ? scaleSize(2) : 0,
   },
 })
 export default Tabs

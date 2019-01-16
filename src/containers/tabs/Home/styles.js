@@ -22,9 +22,9 @@ export default StyleSheet.create({
     marginTop: scaleSize(50),
   },
   userImg: {
-    width: scaleSize(30),
+    width: scaleSize(60),
     // flex:1,
-    height: scaleSize(30),
+    height: scaleSize(60),
   },
   userView: {
     width: scaleSize(60),

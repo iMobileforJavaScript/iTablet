@@ -540,8 +540,12 @@ function create() {
   if (GLOBAL.Type === constants.COLLECTION) {
     openWorkspace()
   }
-  if (GLOBAL.Type === constants.MAP_EDIT) {
+  if (
+    GLOBAL.Type === constants.MAP_EDIT ||
+    GLOBAL.Type === constants.MAP_THEME
+  ) {
     SMap.removeAllLayer()
+    SMap.closeDatasource(-1) // 关闭所有数据源
   }
 }
 
@@ -556,6 +560,9 @@ function showHistory() {
   ) {
     latestMap = _params.map.latestMap[userName][GLOBAL.Type]
   }
+  latestMap.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+  })
   let data = [
     {
       title: Const.HISTORY,
@@ -634,7 +641,7 @@ function createThemeMap() {
           containerType: 'table',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           column: column,
           height: height,
         })

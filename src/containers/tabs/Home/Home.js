@@ -108,7 +108,7 @@ export default class Home extends Component {
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
-        <TouchableOpacity style={styles.moreImg}>
+        <TouchableOpacity>
           <Image
             resizeMode={'contain'}
             source={moreImg}
@@ -186,7 +186,7 @@ export default class Home extends Component {
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
       : require('../../../assets/home/系统默认头像.png')
-    let moreImg = require('../../../assets/Mine/工具条-更多-白.png')
+    let moreImg = require('../../../assets/home/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -214,7 +214,7 @@ export default class Home extends Component {
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
-                style={styles.userImg}
+                style={styles.moreView}
               />
             </TouchableOpacity>
           ),
