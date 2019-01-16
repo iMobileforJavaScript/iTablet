@@ -43,6 +43,28 @@ export default class MT_layerManager extends React.Component {
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
+      data: [
+        { title: '我的图层', data: this.props.layers },
+        { title: '我的底图', data: [] },
+        { title: '切换底图', data: layerManagerData },
+      ],
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
+    ) {
+      this.setState({
+        data: [
+          { title: '我的图层', data: this.props.layers },
+          {
+            title: '我的底图',
+            data: [this.props.layers[this.props.layers.length - 1]],
+          },
+          { title: '切换底图', data: layerManagerData },
+        ],
+      })
     }
   }
 
@@ -499,16 +521,16 @@ export default class MT_layerManager extends React.Component {
               color: color.black,
             }}
           >
-            {item.title}
+            {item.caption}
           </Text>
         </TouchableOpacity>
       )
     }
   }
 
-  onPress = ({ item }) => {
-    item.action()
-    this.props.getLayers()
+  onPress = async ({ item }) => {
+    await item.action()
+    await this.props.getLayers()
   }
 
   renderSection = ({ section }) => {
@@ -540,11 +562,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderList = () => {
-    let data = [
-      { title: '我的图层', data: this.props.layers },
-      { title: '我的底图', data: [] },
-      { title: '切换底图', data: layerManagerData },
-    ]
     return (
       <View style={{ flex: 1 }}>
         <SectionList
@@ -554,7 +571,7 @@ export default class MT_layerManager extends React.Component {
             this.getData()
           }}
           ref={ref => (this.listView = ref)}
-          sections={data}
+          sections={this.state.data}
           renderItem={this._renderItem}
           renderSectionHeader={this.renderSection}
           getItemLayout={this.getItemLayout}

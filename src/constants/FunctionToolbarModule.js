@@ -146,67 +146,67 @@ const BotMap = [
 
 const layerManagerData = [
   {
-    title: 'Google RoadMap',
+    caption: 'Google RoadMap',
     action: () => {
       OpenData(ConstOnline.Google, 0)
     },
   },
   {
-    title: 'Google Staelite',
+    caption: 'Google Staelite',
     action: () => {
       OpenData(ConstOnline.Google, 1)
     },
   },
   {
-    title: 'Google Terrain',
+    caption: 'Google Terrain',
     action: () => {
       OpenData(ConstOnline.Google, 2)
     },
   },
   {
-    title: 'Google Hybrid',
+    caption: 'Google Hybrid',
     action: () => {
       OpenData(ConstOnline.Google, 3)
     },
   },
   {
-    title: '全球矢量地图',
+    caption: '全球矢量地图',
     action: () => {
       OpenData(ConstOnline.TD, 0)
     },
   },
   {
-    title: '全球影像地图服务',
+    caption: '全球影像地图服务',
     action: () => {
       OpenData(ConstOnline.TDYXM, 0)
     },
   },
   {
-    title: 'Baidu Map',
+    caption: 'Baidu Map',
     action: () => {
       OpenData(ConstOnline.Baidu, 0)
     },
   },
   {
-    title: 'Standard',
+    caption: 'Standard',
     action: () => {
       OpenData(ConstOnline.OSM, 0)
     },
   },
   {
-    title: 'CycleMap',
+    caption: 'CycleMap',
     action: () => {
       OpenData(ConstOnline.OSM, 1)
     },
   },
   {
-    title: 'Transport',
+    caption: 'Transport',
     action: () => {
       OpenData(ConstOnline.OSM, 2)
     },
   },
   {
-    title: 'quanguo',
+    caption: 'quanguo',
     action: () => {
       OpenData(ConstOnline.SuperMapCloud, 0)
     },
