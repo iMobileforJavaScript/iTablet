@@ -528,6 +528,12 @@ export default class ToolBar extends React.PureComponent {
         }
       }
     }
+    allExpressions.forEach(item => {
+      item.info = {
+        infoType: 'fieldType',
+        fieldType: item.fieldType,
+      }
+    })
     let datalist = [
       {
         title: dataset.datasetName,
@@ -1743,6 +1749,12 @@ export default class ToolBar extends React.PureComponent {
           item.datasetName,
         )
         let dataset = data.dataset
+        data.list.forEach(item => {
+          item.info = {
+            infoType: 'fieldType',
+            fieldType: item.fieldType,
+          }
+        })
         let datalist = [
           {
             title: dataset.datasetName,
@@ -1956,6 +1968,15 @@ export default class ToolBar extends React.PureComponent {
         }
         for (let i = 0; i < getdata.length; i++) {
           let datalist = getdata[i]
+          datalist.list.forEach(item => {
+            if (item.geoCoordSysType && item.prjCoordSysType) {
+              item.info = {
+                infoType: 'dataset',
+                geoCoordSysType: item.geoCoordSysType,
+                prjCoordSysType: item.prjCoordSysType,
+              }
+            }
+          })
           alldata[i + 1] = {
             title: datalist.datasource.alias,
             image: require('../../../../assets/mapToolbar/list_type_udb.png'),
@@ -2188,6 +2209,15 @@ export default class ToolBar extends React.PureComponent {
         let arr = item.name.split('.')
         let alias = arr[0]
         SThemeCartography.getUDBName(this.path).then(list => {
+          list.forEach(item => {
+            if (item.geoCoordSysType && item.prjCoordSysType) {
+              item.info = {
+                infoType: 'dataset',
+                geoCoordSysType: item.geoCoordSysType,
+                prjCoordSysType: item.prjCoordSysType,
+              }
+            }
+          })
           let dataList = [
             {
               title: alias,
@@ -3089,16 +3119,14 @@ export default class ToolBar extends React.PureComponent {
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

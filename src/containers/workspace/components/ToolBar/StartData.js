@@ -556,6 +556,9 @@ function showHistory() {
   ) {
     latestMap = _params.map.latestMap[userName][GLOBAL.Type]
   }
+  latestMap.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+  })
   let data = [
     {
       title: Const.HISTORY,
