@@ -5,6 +5,7 @@ const blackTheme = {
   border: '#505052',
   subTheme: '#48484b',
   themeText: '#FFFFFF',
+  themeText2: '#303030',
   themePlaceHolder: '#959595',
 
   overlay: 'rgba(105, 105, 105, 0.8)',
@@ -12,6 +13,8 @@ const blackTheme = {
   transView: 'rgba(48, 48, 48, 0.85)',
 
   blackBg: '#353537',
+  bgW: '#F0F0F0',
+  bgG: '#A0A0A0',
 }
 
 let styles

@@ -87,8 +87,8 @@ export default class SymbolList extends React.Component {
             // count: Platform.OS === 'ios' ? 5 : 4,
             imageSize: 50,
             count: 5,
-            legendBackgroundColor: dataUtil.colorRgba(color.subTheme),
-            textColor: dataUtil.colorRgba(color.themeText),
+            legendBackgroundColor: dataUtil.colorRgba(color.bgW),
+            textColor: dataUtil.colorRgba(color.themeText2),
           }}
           onSymbolClick={this._onSymbolClick}
         />
@@ -101,12 +101,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: color.subTheme,
+    backgroundColor: color.bgW,
   },
   table: {
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.subTheme,
+    backgroundColor: color.bgW,
   },
 })
