@@ -189,7 +189,6 @@ export default class Home extends Component {
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
       : require('../../../assets/home/系统默认头像.png')
-    // require('../../../assets/home/icon_mine_select.png')
     let moreImg = require('../../../assets/Mine/工具条-更多-白.png')
     return (
       <Container
@@ -211,7 +210,7 @@ export default class Home extends Component {
             <TouchableOpacity
               onPress={() => {
                 this.topNavigatorBarImageId = 'right'
-                // this.setState({ modalIsVisible: true })
+                this.setState({ modalIsVisible: true })
               }}
               // style={{ flex: 1, marginRight: scaleSize(18.5) }}
             >
@@ -228,7 +227,6 @@ export default class Home extends Component {
         }}
         style={styles.container}
       >
-        {/*{this.headRender()}*/}
         <View
           style={{
             flex: 1,
