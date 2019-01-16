@@ -347,25 +347,42 @@ export default class MT_layerManager extends React.Component {
         this.props.navigation.navigate('MapView')
       }
     } else if (GLOBAL.Type === constants.MAP_THEME) {
+      let curThemeType
       switch (data.themeType) {
         case ThemeType.UNIQUE:
-          this.props.navigation.navigate('MapView')
-          Toast.show('当前图层为:' + data.name)
-          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIQUE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
           break
         case ThemeType.RANGE:
-          this.props.navigation.navigate('MapView')
-          Toast.show('当前图层为:' + data.name)
-          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_RANGE_STYLE
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
           break
         case ThemeType.LABEL:
-          this.props.navigation.navigate('MapView')
-          Toast.show('当前图层为:' + data.name)
-          GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+          // this.props.navigation.navigate('MapView')
+          // Toast.show('当前图层为:' + data.name)
+          curThemeType = constants.THEME_UNIFY_LABEL
+          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
           break
         default:
           Toast.show('提示:请选择专题图层')
           break
+      }
+      if (curThemeType) {
+        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+          containerType: 'list',
+          isFullScreen: true,
+          themeType: curThemeType,
+          isTouchProgress: false,
+          showMenuDialog: true,
+        })
+        GLOBAL.toolBox.showFullMap()
+        this.props.navigation.navigate('MapView')
+        Toast.show('当前图层为:' + data.name)
       }
     }
   }

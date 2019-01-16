@@ -36,7 +36,7 @@ function showDatasetsList() {
           containerType: 'list',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           height:
             _toolbarParams.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[3]
@@ -82,7 +82,7 @@ function showExpressionList() {
             containerType: 'list',
             isFullScreen: true,
             isTouchProgress: false,
-            isSelectlist: false,
+            showMenuDialog: false,
             height:
               _toolbarParams.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
@@ -338,7 +338,7 @@ async function showLocalDatasetsList() {
         containerType: 'list',
         isFullScreen: true,
         isTouchProgress: false,
-        isSelectlist: false,
+        showMenuDialog: false,
         height:
           _toolbarParams.device.orientation === 'LANDSCAPE'
             ? ConstToolType.THEME_HEIGHT[3]
@@ -403,9 +403,12 @@ function getThemeMapParam(type, params) {
   if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
   buttons = [
     ToolbarBtnType.THEME_CANCEL,
-    ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_FLEX,
-    ToolbarBtnType.THEME_COMMIT,
+    // ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.MENU,
+    // ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.MENU_FLEX,
+    // ToolbarBtnType.THEME_COMMIT,
+    ToolbarBtnType.MENU_COMMIT,
   ]
   return { data, buttons }
 }
@@ -1401,8 +1404,10 @@ function getThemeFourMenu() {
   let buttons = [
     ToolbarBtnType.THEME_CANCEL,
     ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_FLEX,
-    ToolbarBtnType.THEME_COMMIT,
+    // ToolbarBtnType.THEME_FLEX,
+    ToolbarBtnType.MENU_FLEX,
+    // ToolbarBtnType.THEME_COMMIT,
+    ToolbarBtnType.MENU_COMMIT,
   ]
   return buttons
 }
@@ -1411,7 +1416,8 @@ function getThemeThreeMenu() {
   let buttons = [
     ToolbarBtnType.THEME_CANCEL,
     ToolbarBtnType.THEME_MENU,
-    ToolbarBtnType.THEME_COMMIT,
+    // ToolbarBtnType.THEME_COMMIT,
+    ToolbarBtnType.MENU_COMMIT,
   ]
   return buttons
 }

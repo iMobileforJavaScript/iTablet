@@ -5,9 +5,16 @@ const blackTheme = {
   border: '#505052',
   subTheme: '#48484b',
   themeText: '#FFFFFF',
+  themeText2: '#303030',
   themePlaceHolder: '#959595',
 
+  overlay: 'rgba(105, 105, 105, 0.8)',
+  transOverlay: 'rgba(0, 0, 0, 0)',
+  transView: 'rgba(48, 48, 48, 0.85)',
+
   blackBg: '#353537',
+  bgW: '#F0F0F0',
+  bgG: '#A0A0A0',
 }
 
 let styles
@@ -47,7 +54,6 @@ export default {
   grayLight2: '#BCC3CE',
   // border: '#e0e0e0',
   title2: '#454545',
-  content: '#555555',
   background2: '#f5f7fa',
   statusBarColor: 'white',
   blue1: '#4BA0FF',
@@ -60,4 +66,13 @@ export default {
   USUAL_PURPLE: '#871F78',
 
   green1: '#1afa29',
+
+  /** 深色版*/
+  content: '#555555',
+  /** 浅色版*/
+  item_separate_white: '#727272',
+  content_white: '#F0F0F0',
+  font_color_white: '#303030',
+  image_bg_white: '#727272',
+  theme_white: '#303030',
 }

@@ -75,8 +75,8 @@ class SymbolTabs extends React.Component {
         style={[styles.container, this.props.style]}
         renderTabBar={() => (
           <DefaultTabBar
-            activeBackgroundColor={color.theme}
-            activeTextColor={'white'}
+            activeBackgroundColor={color.bgW}
+            activeTextColor={color.themeText2}
             inactiveTextColor={'white'}
             textStyle={{
               fontSize: size.fontSize.fontSizeSm,
@@ -120,8 +120,8 @@ class SymbolTabs extends React.Component {
         style={[styles.container, this.props.style]}
         renderTabBar={() => (
           <DefaultTabBar
-            activeBackgroundColor={color.theme}
-            activeTextColor={'white'}
+            activeBackgroundColor={color.bgW}
+            activeTextColor={color.themeText2}
             inactiveTextColor={'white'}
             textStyle={{
               fontSize: size.fontSize.fontSizeSm,
@@ -206,7 +206,7 @@ class SymbolTabs extends React.Component {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 0,
-    // backgroundColor: color.subTheme,
+    backgroundColor: color.bgW,
   },
   temple: {
     paddingHorizontal: scaleSize(30),

@@ -150,6 +150,7 @@ export default class ToolBarSectionList extends React.Component {
           styles.item,
           this.props.itemStyle,
           item.backgroundColor && { backgroundColor: item.backgroundColor },
+          item.isSelected ? styles.itemSelected : styles.item,
         ]}
         onPress={() => this.itemAction({ item, index, section })}
       >
@@ -166,7 +167,7 @@ export default class ToolBarSectionList extends React.Component {
           </TouchableOpacity>
         )}
         {item.image && this.getImg(item)}
-        {item.datasetType && this.getDatasetImage(item)}
+        {item.datasetType && item.datasetName && this.getDatasetImage(item)}
         <View
           style={{
             flexDirection: 'column',
@@ -178,7 +179,7 @@ export default class ToolBarSectionList extends React.Component {
               {item.name || item.title}
             </Text>
           )}
-          {item.datasetName && this.getDatasetItem(item)}
+          {item.datasetType && item.datasetName && this.getDatasetItem(item)}
           {item.expression && this.getExpressionItem(item)}
           {item.colorSchemeName &&
             item.colorScheme &&
@@ -230,9 +231,10 @@ export default class ToolBarSectionList extends React.Component {
     }
     return (
       <Text
-        style={
-          item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo
-        }
+        style={[
+          item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
+          item.isSelected ? { color: color.grayLight } : { color: color.gray },
+        ]}
       >
         {info}
       </Text>
@@ -261,23 +263,7 @@ export default class ToolBarSectionList extends React.Component {
 
   /**字段表达式Item */
   getExpressionItem = item => {
-    const itemSelectedStyle = {
-      width: this.props.device.width,
-      paddingLeft: scaleSize(60),
-      // textAlign: 'center',
-      // alignItems: 'center',
-      // justifyContent: 'center',
-      textAlignVertical: 'center',
-      fontSize: size.fontSize.fontSizeMd,
-      height: scaleSize(80),
-      backgroundColor: color.gray,
-      color: color.white,
-    }
-    return (
-      <Text style={item.isSelected ? itemSelectedStyle : styles.itemTitle}>
-        {item.expression}
-      </Text>
-    )
+    return <Text style={styles.itemTitle}>{item.expression}</Text>
   }
 
   /**数据集类型字段Item */
@@ -469,5 +455,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: color.themeText,
     textAlignVertical: 'center',
+  },
+  itemSelected: {
+    height: scaleSize(80),
+    backgroundColor: color.gray,
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 })

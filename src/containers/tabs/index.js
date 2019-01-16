@@ -35,7 +35,8 @@ const Tabs = TabNavigator(
                   style={styles.icon}
                 />
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   首页
                 </Text>
@@ -74,7 +75,8 @@ const Tabs = TabNavigator(
                   style={styles.icon}
                 />
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   发现
                 </Text>
@@ -113,7 +115,8 @@ const Tabs = TabNavigator(
                   style={styles.icon}
                 />
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   我的
                 </Text>

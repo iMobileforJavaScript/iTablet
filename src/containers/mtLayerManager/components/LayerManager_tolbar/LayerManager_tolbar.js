@@ -41,7 +41,7 @@ export default class LayerManager_tolbar extends React.Component {
       data: [],
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
-      isSelectlist: false,
+      showMenuDialog: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       layerdata: props.layerdata,

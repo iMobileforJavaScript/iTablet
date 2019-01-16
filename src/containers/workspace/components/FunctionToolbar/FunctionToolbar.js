@@ -108,7 +108,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
-    if (!GLOBAL.currentLayer || !GLOBAL.currentLayer.themeType) {
+    if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show('提示: 请先选择专题图层。')
       return
     }
@@ -136,21 +136,32 @@ export default class FunctionToolbar extends React.Component {
         return
     }
 
-    const menuRef = this.props.getMenuAlertDialogRef()
-    if (menuRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      menuRef.setMenuType(type)
-      menuRef.showMenuDialog()
+    if (GLOBAL.toolBox) {
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+        containerType: 'list',
+        isFullScreen: true,
+        isTouchProgress: false,
+        themeType: type,
+        showMenuDialog: true,
+      })
+      GLOBAL.toolBox.showFullMap()
     }
 
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        isFullScreen: false,
-        containerType: 'list',
-        height: ConstToolType.THEME_HEIGHT[1],
-      })
-    }
+    // const menuRef = this.props.getMenuAlertDialogRef()
+    // if (menuRef) {
+    //   this.props.showFullMap && this.props.showFullMap(true)
+    //   menuRef.setMenuType(type)
+    //   menuRef.showMenuDialog()
+    // }
+    //
+    // const toolRef = this.props.getToolRef()
+    // if (toolRef) {
+    //   toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+    //     isFullScreen: false,
+    //     containerType: 'list',
+    //     height: ConstToolType.THEME_HEIGHT[1],
+    //   })
+    // }
   }
 
   map3Dstart = () => {
@@ -580,7 +591,7 @@ export default class FunctionToolbar extends React.Component {
           containerType: 'list',
           isFullScreen: true,
           isTouchProgress: false,
-          isSelectlist: false,
+          showMenuDialog: false,
           listSelectable: false, //单选框
           height:
             this.props.device.orientation === 'LANDSCAPE'
