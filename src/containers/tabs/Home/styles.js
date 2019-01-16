@@ -33,7 +33,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#4C4C4C',
+    // backgroundColor: '#4C4C4C',
     marginLeft: scaleSize(45),
     // backgroundColor:"red",
   },
