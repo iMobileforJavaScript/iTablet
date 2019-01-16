@@ -266,42 +266,46 @@ export default class FunctionToolbar extends React.Component {
     }
     SScene.checkoutListener('startLabelOperate')
     GLOBAL.Map3DSymbol = true
-    SScene.getLayerList().then(() => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
-          containerType: 'table',
-          isFullScreen: true,
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.HEIGHT[0]
-              : ConstToolType.HEIGHT[2],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        })
-      }
-    })
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+        containerType: 'table',
+        isFullScreen: true,
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.HEIGHT[0]
+            : ConstToolType.HEIGHT[2],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
   }
 
   showMap3DTool = async () => {
     SScene.checkoutListener('startMeasure')
-    SScene.getLayerList().then(() => {
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        // TODO 根据符号类型改变ToolBox内容
-        toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
-          containerType: 'table',
-          isFullScreen: true,
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.HEIGHT[0]
-              : ConstToolType.HEIGHT[1],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        })
-      }
-    })
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox内容
+      toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
+        containerType: 'table',
+        isFullScreen: false,
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.HEIGHT[0]
+            : ConstToolType.HEIGHT[1],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
+  }
+
+  showMap3DFly = async () => {
+    SScene.checkoutListener('startMeasure')
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      toolRef.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
+    }
   }
 
   showCollection = () => {
@@ -720,6 +724,20 @@ export default class FunctionToolbar extends React.Component {
             },
             image: require('../../../../assets/function/icon_more.png'),
           },
+          {
+            // key: 'fly',
+            title: '飞行轨迹',
+            action: () => {
+              // this.isShow=!this.isShow
+              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
+              //   containerType: 'list',
+              //   isFullScreen:true,
+              this.showMap3DFly(ConstToolType.MAP3D_TOOL_FLYLIST)
+              // })
+              // this.getflylist()
+            },
+            image: require('../../../../assets/function/icon_symbolFly.png'),
+          },
         ]
         break
       case MAP_THEME:
@@ -937,6 +955,7 @@ export default class FunctionToolbar extends React.Component {
         key={index}
         title={item.title}
         textColor={'black'}
+        textStyle={{ fontSize: scaleSize(18) }}
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}

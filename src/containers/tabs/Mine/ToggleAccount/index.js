@@ -1,7 +1,6 @@
 import { connect } from 'react-redux'
-import Personal from './Personal'
-import { setUser } from '../../models/user'
-import { openWorkspace, closeWorkspace } from '../../models/map'
+import ToggleAccount from './ToggleAccount'
+import { setUser } from '../../../../models/user'
 
 const mapStateToProps = state => ({
   user: state.user.toJS(),
@@ -9,11 +8,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setUser,
-  openWorkspace,
-  closeWorkspace,
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Personal)
+)(ToggleAccount)

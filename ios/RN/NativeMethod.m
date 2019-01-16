@@ -18,46 +18,65 @@ RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName resol
     }
     NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData"];
     
-    NSMutableArray* templateList = [NSMutableArray array];
-    BOOL flag = YES;
-    if ([[NSFileManager defaultManager] fileExistsAtPath:templatePath isDirectory:&flag]) {
-      NSArray* tempsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:templatePath error:nil];
-      for (NSString* fileName in tempsArray) {
-        NSString* tempPath = [templatePath stringByAppendingPathComponent:fileName];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:tempPath isDirectory:&flag]) {
-          NSArray* tempArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:tempPath error:nil];
-          
-          for (NSString* tempFileName in tempArray) {
-            NSString* extension = [tempFileName pathExtension].lowercaseString;
-            if ([extension isEqualToString:@"smw"] || [extension isEqualToString:@"sxwu"] ||
-                [extension isEqualToString:@"sxw"] || [extension isEqualToString:@"smwu"]) {
-              NSMutableDictionary* templateInfo = [[NSMutableDictionary alloc] init];
-              [templateInfo setObject:fileName forKey:@"name"];
-              [templateInfo setObject:[NSString stringWithFormat:@"%@/%@", tempPath, tempFileName] forKey:@"path"];
-              
-              [templateList addObject:templateInfo];
-              break;
-            }
-          }
-        } else {
-          NSString* extension = [fileName pathExtension].lowercaseString;
-          if ([extension isEqualToString:@"smw"] || [extension isEqualToString:@"sxwu"] ||
-              [extension isEqualToString:@"sxw"] || [extension isEqualToString:@"smwu"]) {
-            NSMutableDictionary* templateInfo = [[NSMutableDictionary alloc] init];
-            [templateInfo setObject:fileName forKey:@"name"];
-            [templateInfo setObject:[NSString stringWithFormat:@"%@/%@", tempPath, fileName] forKey:@"path"];
-            
-            [templateList addObject:templateInfo];
-            break;
-          }
-        }
-      }
-    }
+    NSMutableArray* templateList = [NativeMethod getTemplate:templatePath];
     
     resolve(templateList);
   } @catch (NSException *exception) {
     reject(@"zipFile", exception.reason, nil);
   }
+}
+
++ (NSMutableArray *)getTemplate:(NSString *)path {
+  NSMutableArray* templateList = [NSMutableArray array];
+  BOOL flag = YES;
+  if ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&flag]) {
+    NSArray* tempsArray = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+    NSMutableDictionary* templateInfo = [[NSMutableDictionary alloc] init];
+    BOOL hasTemplate = NO;
+    
+    for (NSString* fileName in tempsArray) {
+      if (templateInfo == nil) {
+        templateInfo = [[NSMutableDictionary alloc] init];
+      }
+      NSString* tempPath = [path stringByAppendingPathComponent:fileName];
+      BOOL exist = [[NSFileManager defaultManager] fileExistsAtPath:tempPath isDirectory:&flag];
+      if (!exist) continue;
+      if (flag) {
+        NSArray* subList = [NativeMethod getTemplate:tempPath];
+        if (subList.count > 0) {
+          [templateList addObjectsFromArray:subList];
+        }
+      } else {
+        NSString* extension = [fileName pathExtension].lowercaseString;
+        NSString* name = [fileName stringByDeletingPathExtension];
+        
+        if ([extension isEqualToString:@"smw"] || [extension isEqualToString:@"sxwu"] ||
+            [extension isEqualToString:@"sxw"] || [extension isEqualToString:@"smwu"]) {
+          
+          if ([name containsString:@"~["] && [name containsString:@"]"]) continue; // 防止错误的工作空间文件
+          
+          [templateInfo setObject:name forKey:@"name"];
+          [templateInfo setObject:tempPath forKey:@"path"];
+          
+          if (hasTemplate) { // 已有模板文件，且包含工作空间文件
+            [templateList addObject:templateInfo];
+            hasTemplate = NO;
+            templateInfo = nil;
+            break;
+          }
+        } else if ([extension isEqualToString:@"xml"]) { // 判断是否有模板文件
+          hasTemplate = YES;
+          if ([templateInfo objectForKey:@"name"]) { // 已有模板文件，且包含工作空间文件
+            [templateList addObject:templateInfo];
+            hasTemplate = NO;
+            templateInfo = nil;
+            break;
+          }
+        }
+      }
+    }
+  }
+  return templateList;
 }
 
 @end

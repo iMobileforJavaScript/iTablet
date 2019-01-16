@@ -143,20 +143,19 @@ export default class Map3DToolBar extends React.Component {
     })
   }
 
-  openWorkspace = async item => {
-    await SScene.openScence(item.name).then(() => {
-      SScene.setListener().then(() => {
-        SScene.getAttribute()
-        SScene.setCircleFly()
-        SScene.addLayer3D(
-          'http://t0.tianditu.com/img_c/wmts',
-          'l3dBingMaps',
-          'bingmap',
-          'JPG_PNG',
-          96.0,
-          true,
-        )
-      })
+  openWorkspace = item => {
+    SScene.openScence(item.name).then(() => {
+      SScene.setListener()
+      SScene.getAttribute()
+      SScene.setCircleFly()
+      SScene.addLayer3D(
+        'http://t0.tianditu.com/img_c/wmts',
+        'l3dBingMaps',
+        'bingmap',
+        'JPG_PNG',
+        96.0,
+        true,
+      )
       GLOBAL.openWorkspace = true
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)

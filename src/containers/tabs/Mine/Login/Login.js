@@ -11,7 +11,6 @@ import {
   View,
   KeyboardAvoidingView,
   TouchableOpacity,
-  NativeModules,
   ScrollView,
 } from 'react-native'
 import { Toast } from '../../../../utils/index'
@@ -26,7 +25,6 @@ import styles, {
 import ConstPath from '../../../../constants/ConstPath'
 import NavigationService from '../../../NavigationService'
 import color from '../../../../styles/color'
-const nativeFileTools = NativeModules.FileTools
 export default class Login extends React.Component {
   props: {
     navigation: Object,
@@ -43,6 +41,7 @@ export default class Login extends React.Component {
       titlePhoneBg: titleOnBlurBackgroundColor,
       behavior: 'padding',
       isChangeOrientation: false,
+      isFirstLogin: this.props.navigation === undefined,
     }
   }
 
@@ -62,7 +61,7 @@ export default class Login extends React.Component {
         isCreate = fileCreated && isCreate
       }
       if (isCreate) {
-        nativeFileTools.initUserDefaultData(userName).then(result => {
+        FileTools.initUserDefaultData(userName).then(result => {
           !result && Toast.show('初始化用户数据失败')
         })
       } else {
@@ -78,6 +77,9 @@ export default class Login extends React.Component {
       userName: 'Customer',
       password: 'Customer',
     })
+    if (!this.state.isFirstLogin) {
+      NavigationService.navigate('Mine')
+    }
   }
 
   _login = async () => {
@@ -115,13 +117,28 @@ export default class Login extends React.Component {
       }
 
       if (typeof result === 'boolean' && result) {
-        this.initUserDirectories(userName)
+        let isAccountExist
+        for (let i = 0; i < this.props.user.users.length; i++) {
+          isAccountExist =
+            this.props.user.users[i].userName === userName &&
+            this.props.user.users[i].password === password
+          if (isAccountExist) {
+            break
+          }
+        }
+        if (!isAccountExist) {
+          this.initUserDirectories(userName)
+        }
         // Toast.show('登录成功')
         this.container.setLoading(false)
         this.props.setUser({
           userName: userName,
           password: password,
+          isEmail: isEmail,
         })
+        if (!this.state.isFirstLogin) {
+          NavigationService.navigate('Mine')
+        }
       } else {
         this.props.setUser({
           userName: '',
@@ -227,7 +244,7 @@ export default class Login extends React.Component {
         style={styles.container}
         headerProps={{
           title: 'iTablet登录',
-          withoutBack: true,
+          withoutBack: this.state.isFirstLogin,
           navigation: this.props.navigation,
         }}
       >
@@ -308,20 +325,22 @@ export default class Login extends React.Component {
                 >
                   注册
                 </Text>
-                <Text
-                  style={{
-                    paddingRight: 5,
-                    width: 100,
-                    lineHeight: 40,
-                    textAlign: 'right',
-                    color: '#c0c0c0',
-                  }}
-                  onPress={() => {
-                    NavigationService.navigate('GetBack')
-                  }}
-                >
-                  忘记密码
-                </Text>
+                {this.state.isFirstLogin ? (
+                  <Text
+                    style={{
+                      paddingRight: 5,
+                      width: 100,
+                      lineHeight: 40,
+                      textAlign: 'right',
+                      color: '#c0c0c0',
+                    }}
+                    onPress={() => {
+                      NavigationService.navigate('GetBack')
+                    }}
+                  >
+                    忘记密码
+                  </Text>
+                ) : null}
               </View>
               <TouchableOpacity
                 accessible={true}
@@ -336,13 +355,13 @@ export default class Login extends React.Component {
               {/*<View style={{marginTop: 5}}/>*/}
               <TouchableOpacity
                 accessible={true}
-                accessibilityLabel={'试用'}
+                accessibilityLabel={'游客'}
                 style={styles.probationStyle}
                 onPress={() => {
                   this._probation()
                 }}
               >
-                <Text style={[styles.titleContainerStyle]}>试用</Text>
+                <Text style={[styles.titleContainerStyle]}>游客</Text>
               </TouchableOpacity>
               <View style={{ flex: 1, height: 200 }} />
             </View>

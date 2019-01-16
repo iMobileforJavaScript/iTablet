@@ -5,7 +5,7 @@ import { scaleSize } from '../../utils'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.theme,
+    backgroundColor: '#rgba(240, 240, 240 ,0)',
   },
   header: {
     flex: 1,
