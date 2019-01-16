@@ -38,24 +38,28 @@ const BotMap = [
     data: [
       {
         title: 'Google RoadMap',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 0)
         },
       },
       {
         title: 'Google Staelite',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 1)
         },
       },
       {
         title: 'Google Terrain',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 2)
         },
       },
       {
         title: 'Google Hybrid',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Google, 3)
         },
@@ -73,6 +77,7 @@ const BotMap = [
       // },
       {
         title: '全球矢量地图',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.TD, 0)
         },
@@ -85,6 +90,7 @@ const BotMap = [
       // },
       {
         title: '全球影像地图服务',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.TDYXM, 0)
         },
@@ -102,6 +108,7 @@ const BotMap = [
     data: [
       {
         title: 'Baidu Map',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.Baidu, 0)
         },
@@ -113,18 +120,21 @@ const BotMap = [
     data: [
       {
         title: 'Standard',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 0)
         },
       },
       {
         title: 'CycleMap',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 1)
         },
       },
       {
         title: 'Transport',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 2)
         },
@@ -136,6 +146,7 @@ const BotMap = [
     data: [
       {
         title: 'quanguo',
+        image: require('../assets/mapToolbar/list_type_map.png'),
         action: () => {
           OpenData(ConstOnline.SuperMapCloud, 0)
         },

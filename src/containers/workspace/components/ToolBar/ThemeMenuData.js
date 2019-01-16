@@ -14,7 +14,8 @@ function showDatasetsList() {
     for (let i = 0; i < getdata.length; i++) {
       let datalist = getdata[i]
       data[i] = {
-        title: '数据源: ' + datalist.datasource.alias,
+        title: datalist.datasource.alias,
+        image: require('../../../../assets/mapToolbar/list_type_udb.png'),
         data: datalist.list,
       }
     }
@@ -265,6 +266,13 @@ async function showLocalDatasetsList() {
     extension: 'udb',
     type: 'file',
   })
+  customerUDBs.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+    item.info = {
+      infoType: 'mtime',
+      lastModifiedDate: item.mtime,
+    }
+  })
 
   let userUDBPath, userUDBs
   if (_toolbarParams.user && _toolbarParams.user.currentUser.userName) {
@@ -277,14 +285,23 @@ async function showLocalDatasetsList() {
       extension: 'udb',
       type: 'file',
     })
+    userUDBs.forEach(item => {
+      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
+      }
+    })
 
     data = [
       {
         title: Const.PUBLIC_DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: customerUDBs,
       },
       {
         title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: userUDBs,
       },
     ]
@@ -292,6 +309,7 @@ async function showLocalDatasetsList() {
     data = [
       {
         title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
         data: customerUDBs,
       },
     ]
