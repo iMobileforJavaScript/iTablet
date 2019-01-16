@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { TouchableOpacity, View, Text } from 'react-native'
+// import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Layer3DItem extends Component {
@@ -9,15 +10,27 @@ export default class Layer3DItem extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      item: props.item,
+      name: props.item.name,
       visible: props.item.visible,
-      select: props.item.selectable,
+      selectable: props.item.selectable,
     }
   }
 
-  changeSelect = async () => {}
+  changeSelect = async () => {
+    let oldVisible = this.state.visible
+    let newVisible = !oldVisible
+    // await SScene.setVisible(this.state.name,newVisible)
+    this.setState({ visible: newVisible })
+    // console.log(this.state.visible)
+  }
 
-  changeVisible = async () => {}
+  changeVisible = async () => {
+    let oldselectable = this.state.selectable
+    let newselectable = !oldselectable
+    //   await SScene.setSelectable(this.state.name,newselectable)
+    this.setState({ selectable: newselectable })
+    // console.log(this.state.selectable)
+  }
 
   more = async () => {}
 
@@ -38,7 +51,7 @@ export default class Layer3DItem extends Component {
             <View />
           </TouchableOpacity>
           <View style={styles.type} />
-          <Text style={styles.itemName}>{this.state.item.name}</Text>
+          <Text style={styles.itemName}>{this.state.name}</Text>
           <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <View style={styles.moreImg} />
           </TouchableOpacity>

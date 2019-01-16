@@ -475,6 +475,13 @@ export default class FunctionToolbar extends React.Component {
                 type: 'file',
               },
             )
+            customerUDBs.forEach(item => {
+              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.info = {
+                infoType: 'mtime',
+                lastModifiedDate: item.mtime,
+              }
+            })
 
             let userUDBPath, userUDBs
             if (this.props.user && this.props.user.currentUser.userName) {
@@ -487,14 +494,23 @@ export default class FunctionToolbar extends React.Component {
                 extension: 'udb',
                 type: 'file',
               })
+              userUDBs.forEach(item => {
+                item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+                item.info = {
+                  infoType: 'mtime',
+                  lastModifiedDate: item.mtime,
+                }
+              })
 
               data = [
                 {
                   title: Const.PUBLIC_DATA_SOURCE,
+                  image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: customerUDBs,
                 },
                 {
                   title: Const.DATA_SOURCE,
+                  image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: userUDBs,
                 },
               ]
@@ -502,6 +518,7 @@ export default class FunctionToolbar extends React.Component {
               data = [
                 {
                   title: Const.DATA_SOURCE,
+                  image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
                   data: customerUDBs,
                 },
               ]
@@ -540,8 +557,18 @@ export default class FunctionToolbar extends React.Component {
       getdata.reverse()
       for (let i = 0; i < getdata.length; i++) {
         let datalist = getdata[i]
+        datalist.list.forEach(item => {
+          if (item.geoCoordSysType && item.prjCoordSysType) {
+            item.info = {
+              infoType: 'dataset',
+              geoCoordSysType: item.geoCoordSysType,
+              prjCoordSysType: item.prjCoordSysType,
+            }
+          }
+        })
         data[i + 1] = {
-          title: '数据源: ' + datalist.datasource.alias,
+          title: datalist.datasource.alias,
+          image: require('../../../../assets/mapToolbar/list_type_udb.png'),
           data: datalist.list,
         }
       }
