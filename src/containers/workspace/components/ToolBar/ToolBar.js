@@ -2124,7 +2124,7 @@ export default class ToolBar extends React.PureComponent {
 
           this.setVisible(true, ConstToolType.MAP_THEME_ADD_DATASET, {
             containerType: 'list',
-            isFullScreen: false,
+            isFullScreen: true,
             height:
               this.props.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
