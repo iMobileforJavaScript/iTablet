@@ -421,21 +421,6 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
-          {
-            key: 'fly',
-            title: '飞行轨迹',
-            action: () => {
-              // this.isShow=!this.isShow
-              // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
-              //   containerType: 'list',
-              //   isFullScreen:true,
-              this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
-              // })
-              // this.getflylist()
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_symbolFly.png'),
-          },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
         break
@@ -3069,16 +3054,14 @@ export default class ToolBar extends React.PureComponent {
       <Animated.View
         style={[containerStyle, { bottom: this.state.bottom }, height]}
       >
-        {this.state.isFullScreen &&
-          !this.state.isTouchProgress && (
+        {this.state.isFullScreen && !this.state.isTouchProgress && (
           <TouchableOpacity
             activeOpacity={1}
             onPress={this.overlayOnPress}
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {this.state.isSelectlist && (

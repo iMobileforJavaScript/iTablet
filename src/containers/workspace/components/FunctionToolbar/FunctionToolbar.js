@@ -700,13 +700,6 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '更多',
-            action: async () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
-            },
-            image: require('../../../../assets/function/icon_more.png'),
-          },
-          {
             // key: 'fly',
             title: '飞行轨迹',
             action: () => {
@@ -719,6 +712,13 @@ export default class FunctionToolbar extends React.Component {
               // this.getflylist()
             },
             image: require('../../../../assets/function/icon_symbolFly.png'),
+          },
+          {
+            title: '更多',
+            action: async () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
+            image: require('../../../../assets/function/icon_more.png'),
           },
         ]
         break

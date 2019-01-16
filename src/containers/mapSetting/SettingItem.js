@@ -23,11 +23,8 @@ export default class MapSetting extends Component {
               <Text style={styles.itemName}>{this.props.data.name}</Text>
               <Switch
                 style={styles.switch}
-                trackColor={{
-                  false: color.reverseTheme,
-                  true: '#00BFFF',
-                }}
-                thumbColor={color.theme}
+                trackColor={{ false: 'white', true: '#505050' }}
+                thumbColor={'white'}
                 ios_backgroundColor={
                   this.props.data.value ? color.theme : color.border
                 }
