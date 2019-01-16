@@ -50,7 +50,7 @@ export default StyleSheet.create({
   },
   moreView: {
     flex: 1,
-    marginRight: scaleSize(50),
+    // marginRight: scaleSize(50),
   },
   moreImg: {
     width: scaleSize(60),

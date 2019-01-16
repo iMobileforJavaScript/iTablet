@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-import { scaleSize } from '../../../utils'
+// import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
 import { SScene, SMap, SOnlineService } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
@@ -189,7 +189,7 @@ export default class Home extends Component {
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
       : require('../../../assets/home/系统默认头像.png')
-    let moreImg = require('../../../assets/home/icon_else_selected.png')
+    let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -221,9 +221,9 @@ export default class Home extends Component {
               />
             </TouchableOpacity>
           ),
-          headerStyle: {
-            height: scaleSize(80),
-          },
+          // headerStyle: {
+          //   height: scaleSize(80),
+          // },
         }}
         style={styles.container}
       >
