@@ -34,7 +34,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     // backgroundColor: '#4C4C4C',
-    marginLeft: scaleSize(45),
+    marginLeft: 20,
     // backgroundColor:"red",
   },
   headTitle: {
@@ -50,7 +50,7 @@ export default StyleSheet.create({
   },
   moreView: {
     flex: 1,
-    // marginRight: scaleSize(50),
+    marginRight: 20,
   },
   moreImg: {
     width: scaleSize(60),

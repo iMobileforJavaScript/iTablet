@@ -206,17 +206,31 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerRight: (
+            // <TouchableOpacity
+            //   onPress={() => {
+            //     this.topNavigatorBarImageId = 'right'
+            //     this.setState({ modalIsVisible: true })
+            //   }}
+            //   // style={{ flex: 1, marginRight: scaleSize(18.5) }}
+            // >
+            //   <Image
+            //     resizeMode={'contain'}
+            //     source={moreImg}
+            //     style={styles.moreView}
+            //   />
+            // </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 this.topNavigatorBarImageId = 'right'
                 this.setState({ modalIsVisible: true })
               }}
               // style={{ flex: 1, marginRight: scaleSize(18.5) }}
+              style={styles.moreView}
             >
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
-                style={styles.moreView}
+                style={styles.moreImg}
               />
             </TouchableOpacity>
           ),
