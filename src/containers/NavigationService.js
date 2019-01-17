@@ -31,10 +31,19 @@ function goBack(key, immediate) {
   })()
 }
 
+function reset(routeName, params) {
+  let resetAction = NavigationActions.popToTop({
+    routeName,
+    params,
+  })
+  _navigator.dispatch(resetAction)
+}
+
 // add other navigation functions that you need and export them
 
 export default {
   navigate,
   setTopLevelNavigator,
   goBack,
+  reset,
 }

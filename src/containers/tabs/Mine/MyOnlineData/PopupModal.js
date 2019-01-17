@@ -43,7 +43,9 @@ export default class PopupModal extends PureComponent {
     if (progress === '下载完成' || progress === '下载失败') {
       isClick = true
     }
-    this.setState({ progress: progress, isClick: isClick })
+    if (this.state.progress !== progress) {
+      this.setState({ progress: progress, isClick: isClick })
+    }
   }
 
   _onClose() {
