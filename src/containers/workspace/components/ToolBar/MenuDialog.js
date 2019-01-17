@@ -21,6 +21,7 @@ export default class MenuDialog extends React.PureComponent {
     selectKey?: '', // 当前选中的key
     viewableItems?: number, // 可见范围item的数量
     autoSelect?: boolean, // 松手自动选择
+    device?: Object,
     onSelect?: () => {}, // 选中item的回调
   }
 
@@ -76,7 +77,11 @@ export default class MenuDialog extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)) {
+    if (this.props.device.orientation !== prevProps.device.orientation) {
+      this.moveToIndex()
+    } else if (
+      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
+    ) {
       this.setState({ data: this.props.data.concat() || [] })
     } else if (this.props.selectKey !== prevProps.selectKey) {
       let index = this.getIndexByKey(this.props.data, this.props.selectKey)
@@ -94,10 +99,12 @@ export default class MenuDialog extends React.PureComponent {
     }
   }
 
-  moveToIndex = (index = -1) => {
+  moveToIndex = index => {
     let curIndex
 
-    if (index < 0) {
+    if (index === undefined) {
+      curIndex = this.state.currentIndex
+    } else if (index < 0) {
       curIndex = 0
     } else if (index > this.state.data.length - 1) {
       curIndex = this.state.data.length - 1

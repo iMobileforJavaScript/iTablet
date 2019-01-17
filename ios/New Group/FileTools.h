@@ -10,15 +10,11 @@
 #import "React/RCTBridgeModule.h"
 #import <ZipArchive/ZipArchive.h>
 
-@interface FileTools : NSObject<RCTBridgeModule, SSZipArchiveDelegate>
-@property(nonatomic) id<SSZipArchiveDelegate> zipArchiveDelegate;
-
+@interface FileTools : NSObject<RCTBridgeModule>
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;
 +(BOOL)zipFiles:(NSArray *)archivePaths targetPath:(NSString *)targetPath;
 +(BOOL)unZipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;
 +(BOOL)deleteFile:(NSString *)path;
 +(BOOL)createFileDirectories:(NSString*)path;
 +(BOOL)copyFile:(NSString *)fromPath targetPath:(NSString *)toPath;
-+(BOOL)initUserDefaultData:(NSString *)userName;
-+(NSString*)getLastModifiedTime:(NSDate*) nsDate;
 @end
