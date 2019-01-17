@@ -162,7 +162,8 @@ export default class Home extends Component {
         if (this.container) {
           this.container.setLoading(false)
         }
-        NavigationService.navigate('Mine')
+        // NavigationService.navigate('Mine')
+        NavigationService.reset('Home')
         this.props.openWorkspace({ server: customPath })
       })
     } catch (e) {

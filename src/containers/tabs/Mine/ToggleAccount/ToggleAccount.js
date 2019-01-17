@@ -59,8 +59,8 @@ export default class ToggleAccount extends Component {
               if (this.containerRef) {
                 this.containerRef.setLoading(false)
               }
-
-              NavigationService.navigate('Mine')
+              NavigationService.reset('Mine')
+              // NavigationService.navigate('Mine')
             } catch (e) {
               if (this.containerRef) {
                 this.containerRef.setLoading(false)

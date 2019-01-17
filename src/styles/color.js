@@ -1,4 +1,27 @@
-const blackTheme = {
+const DARK_THEME = 'darkTheme'
+const LIGHT_THEME = 'lightTheme'
+
+export { DARK_THEME, LIGHT_THEME }
+
+const darkTheme = {
+  theme: '#2D2D2F',
+  reverseTheme: '#FFFFFF',
+  borderLight: '#C1C0B9',
+  border: '#505052',
+  subTheme: '#48484b',
+  themeText: '#FFFFFF',
+  themeText2: '#303030',
+  themePlaceHolder: '#959595',
+
+  overlay: 'rgba(105, 105, 105, 0.8)',
+  transOverlay: 'rgba(0, 0, 0, 0)',
+  transView: 'rgba(48, 48, 48, 0.85)',
+  blackBg: '#353537',
+  bgW: '#F0F0F0',
+  bgG: '#A0A0A0',
+}
+
+const lightTheme = {
   theme: '#2D2D2F',
   reverseTheme: '#FFFFFF',
   borderLight: '#C1C0B9',
@@ -18,9 +41,12 @@ const blackTheme = {
 
 let styles
 switch (GLOBAL.themeStyle) {
-  case 'blackTheme':
+  case DARK_THEME:
+    styles = darkTheme
+    break
+  case LIGHT_THEME:
   default:
-    styles = blackTheme
+    styles = lightTheme
     break
 }
 

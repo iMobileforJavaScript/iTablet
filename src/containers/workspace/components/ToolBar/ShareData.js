@@ -11,6 +11,10 @@ import ToolbarBtnType from './ToolbarBtnType'
 let _params = {}
 let isSharing = false
 
+function setParams(params) {
+  _params = params
+}
+
 function getShareData(type, params) {
   let data = [],
     buttons = []
@@ -104,7 +108,10 @@ function showMapList(type) {
       _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
         containerType: 'list',
         isFullScreen: true,
-        height: ConstToolType.HEIGHT[3],
+        height:
+          _params.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.HEIGHT[3],
         listSelectable: true,
         data,
         shareTo: type,
@@ -200,4 +207,5 @@ async function shareToSuperMapOnline(list = [], name = '') {
 export default {
   getShareData,
   shareToSuperMapOnline,
+  setParams,
 }

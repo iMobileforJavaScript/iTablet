@@ -209,7 +209,7 @@ export default class MyLocalData extends Component {
                 paddingLeft: 10,
                 fontSize: 18,
                 fontWeight: 'bold',
-                backgroundColor: color.item_separate_white,
+                backgroundColor: 'transparent',
               },
             ]}
           >

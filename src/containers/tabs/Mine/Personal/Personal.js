@@ -36,7 +36,8 @@ export default class Personal extends Component {
           this.container.setLoading(false)
         }
         this.props.setUser()
-        NavigationService.goBack()
+        // NavigationService.goBack()
+        NavigationService.reset('Mine')
         await this.props.openWorkspace({ server: customPath })
       })
     } catch (e) {

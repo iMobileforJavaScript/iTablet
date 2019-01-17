@@ -13,7 +13,7 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
-#import "RNSplashScreen.h"
+//#import "RNSplashScreen.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate

@@ -22,13 +22,13 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_COLLECTION_START:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[0]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[0]
-        column = 8
-      }
+      // if (orientation === 'PORTRAIT') {
+      height = ConstToolType.HEIGHT[0]
+      column = 4
+      // } else {
+      //   height = ConstToolType.HEIGHT[0]
+      //   column = 8
+      // }
       break
     case ConstToolType.MAP_3D_START:
       if (orientation === 'PORTRAIT') {
@@ -64,13 +64,13 @@ function getToorbarHeight(orientation, type) {
       }
       break
     case ConstToolType.MAP_THEME_START:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.THEME_HEIGHT[0]
-        column = 4
-      } else {
-        height = ConstToolType.THEME_HEIGHT[0]
-        column = 8
-      }
+      // if (orientation === 'PORTRAIT') {
+      height = ConstToolType.THEME_HEIGHT[0]
+      column = 4
+      // } else {
+      //   height = ConstToolType.THEME_HEIGHT[0]
+      //   column = 8
+      // }
       break
     case ConstToolType.MAP_THEME_CREATE:
       if (orientation === 'PORTRAIT') {
@@ -146,13 +146,13 @@ function getToorbarHeight(orientation, type) {
       height = ConstToolType.HEIGHT[0]
       break
     case ConstToolType.MAP_EDIT_START:
-      if (orientation === 'PORTRAIT') {
-        height = ConstToolType.HEIGHT[0]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[0]
-        column = 8
-      }
+      // if (orientation === 'PORTRAIT') {
+      height = ConstToolType.HEIGHT[0]
+      column = 4
+      // } else {
+      //   height = ConstToolType.HEIGHT[0]
+      //   column = 8
+      // }
       break
     case ConstToolType.MAP_STYLE:
       // if (orientation === 'PORTRAIT') {
@@ -230,7 +230,7 @@ function getToorbarHeight(orientation, type) {
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.HEIGHT[3]
       } else {
-        height = ConstToolType.HEIGHT[2]
+        height = ConstToolType.THEME_HEIGHT[4]
       }
       break
     case ConstToolType.MAP_EDIT_DEFAULT:
@@ -249,6 +249,11 @@ function getToorbarHeight(orientation, type) {
       break
     case ConstToolType.MAP_EDIT_REGION:
       height = ConstToolType.HEIGHT[2]
+      break
+    case ConstToolType.MAP_SHARE:
+    case ConstToolType.MAP_MORE:
+      height = ConstToolType.HEIGHT[0]
+      column = 4
       break
     case ConstToolType.MAP3D_IMPORTWORKSPACE:
       if (orientation === 'PORTRAIT') {

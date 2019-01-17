@@ -79,7 +79,8 @@ export default class Login extends React.Component {
       userType: UserType.PROBATION_USER,
     })
     if (!this.state.isFirstLogin) {
-      NavigationService.navigate('Mine')
+      // NavigationService.navigate('Mine')
+      NavigationService.reset('Mine')
     }
   }
 
@@ -139,7 +140,8 @@ export default class Login extends React.Component {
           // userType:UserType.COMMON_USER,
         })
         if (!this.state.isFirstLogin) {
-          NavigationService.navigate('Mine')
+          // NavigationService.navigate('Mine')
+          NavigationService.reset('Mine')
         }
       } else {
         this.props.setUser({
@@ -321,7 +323,7 @@ export default class Login extends React.Component {
                     width: 100,
                     lineHeight: 40,
                     textAlign: 'left',
-                    color: '#c0c0c0',
+                    color: color.font_color_white,
                   }}
                   onPress={() => {
                     NavigationService.navigate('Register')
@@ -336,7 +338,7 @@ export default class Login extends React.Component {
                       width: 100,
                       lineHeight: 40,
                       textAlign: 'right',
-                      color: '#c0c0c0',
+                      color: color.font_color_white,
                     }}
                     onPress={() => {
                       NavigationService.navigate('GetBack')
