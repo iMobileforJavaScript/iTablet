@@ -123,8 +123,8 @@ export default class Map3DToolBar extends Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
-        initIndex={3}
-        type={this.type}
+        initIndex={1}
+        type={'MAP_3D'}
       />
     )
   }
