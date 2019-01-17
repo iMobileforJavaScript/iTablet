@@ -217,17 +217,25 @@ export default class LayerManager_tolbar extends React.Component {
           this.listAction({ section })
         }}
       >
-        <Text
+        <View
           style={{
             width: '100%',
             height: scaleSize(86),
             backgroundColor: color.content_white,
-            textAlign: 'center',
-            lineHeight: 60,
+            justifyContent: 'center',
+            alignItems: 'center',
           }}
         >
-          {section.title}
-        </Text>
+          <Text
+            style={{
+              textAlign: 'center',
+              lineHeight: 60,
+              backgroundColor: 'transparent',
+            }}
+          >
+            {section.title}
+          </Text>
+        </View>
         <View
           style={{
             width: '100%',
