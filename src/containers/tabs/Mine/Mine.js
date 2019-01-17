@@ -95,7 +95,7 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: '本地数据',
-            leftImagePath: require('../../../assets/Mine/个人主页-本地数据.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
           })}
         </View>
@@ -124,17 +124,17 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: '本地数据',
-            leftImagePath: require('../../../assets/Mine/个人主页-本地数据.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
             title: '我的数据',
-            leftImagePath: require('../../../assets/Mine/个人主页-我的数据.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_online_data.png'),
             onClick: this.goToMyOnlineData,
           })}
           {this._renderItem({
             title: '我的服务',
-            leftImagePath: require('../../../assets/Mine/个人主页-我的服务.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
             onClick: this.goToMyService,
           })}
         </ScrollView>
@@ -147,7 +147,7 @@ export default class Mine extends Component {
     let imageWidth = 40
     let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
     let headerImage = isPro
-      ? require('../../../assets/home/系统默认头像.png')
+      ? require('../../../assets/home/system_default_header_image.png')
       : {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
@@ -219,7 +219,7 @@ export default class Mine extends Component {
       fontSize: Platform.OS === 'ios' ? 18 : 16,
       imageWidth: 25,
       imageHeight: 25,
-      rightImagePath: require('../../../assets/Mine/个人主页-箭头.png'),
+      rightImagePath: require('../../../assets/Mine/mine_my_arrow.png'),
     },
   ) => {
     const { title, leftImagePath, onClick } = itemRequire

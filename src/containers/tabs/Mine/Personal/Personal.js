@@ -98,7 +98,7 @@ export default class Personal extends Component {
       let isCustomer =
         this.props.user.currentUser.userType === UserType.PROBATION_USER
       let image = isCustomer
-        ? require('../../../../assets/home/系统默认头像.png')
+        ? require('../../../../assets/home/system_default_header_image.png')
         : {
           uri:
               'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',

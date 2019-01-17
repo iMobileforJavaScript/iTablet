@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, View, Text, Image } from 'react-native'
-// import { SScene } from 'imobile_for_reactnative'
+import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native'
+import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Layer3DItem extends Component {
@@ -18,18 +18,17 @@ export default class Layer3DItem extends Component {
 
   changeSelect = async () => {
     let newState = this.state
-    newState.visible = !this.state.visible
-    // await SScene.setVisible(this.state.name,newVisible)
+    newState.selectable = !this.state.selectable
+    await SScene.setVisible(this.state.name, newState.selectable)
     this.setState(newState)
     // console.log(this.state.visible,this.state.selectable)
   }
 
   changeVisible = async () => {
     let newState = this.state
-    newState.selectable = !this.state.selectable
-    // await SScene.setVisible(this.state.name,newVisible)
+    newState.visible = !this.state.visible
+    await SScene.setVisible(this.state.name, newState.visible)
     this.setState(newState)
-    // console.log(this.state.visible,this.state.selectable)
   }
 
   more = async () => {}
@@ -42,7 +41,7 @@ export default class Layer3DItem extends Component {
     let visibleImg = this.state.visible
       ? require('../../assets/map/Frenchgrey/icon_visible_selected.png')
       : require('../../assets/map/Frenchgrey/icon_visible.png')
-    let moreImg = require('../../assets/map/Frenchgrey/icon_more.png')
+    // let moreImg = require('../../assets/map/Frenchgrey/icon_more.png')
     let typeImg = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
     // console.log(this.state.visible, this.state.selectable)
     // console.log(selectImg, visibleImg)
@@ -52,16 +51,17 @@ export default class Layer3DItem extends Component {
           <TouchableOpacity onPress={this.changeSelect}>
             <Image source={selectImg} style={styles.selectImg} />
           </TouchableOpacity>
-
           <TouchableOpacity onPress={this.changeVisible}>
             <Image source={visibleImg} style={styles.visibleImg} />
           </TouchableOpacity>
 
           <Image source={typeImg} style={styles.type} />
-          <Text style={styles.itemName}>{this.state.name}</Text>
-          <TouchableOpacity style={styles.moreView} onPress={this.more}>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <Text style={styles.itemName}>{this.state.name}</Text>
+          </ScrollView>
+          {/* <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <Image source={moreImg} style={styles.moreImg} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.itemSeparator} />
       </View>

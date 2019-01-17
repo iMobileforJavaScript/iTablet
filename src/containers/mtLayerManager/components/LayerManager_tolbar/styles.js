@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize, screen } from '../../../../utils/index'
-import { zIndexLevel } from '../../../../styles/index'
+import { zIndexLevel, color, size } from '../../../../styles/index'
 import { ConstToolType } from '../../../../constants/index'
 // 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
@@ -25,7 +25,29 @@ export default StyleSheet.create({
     width: '100%',
     maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: '#2D2D2F',
     // zIndex: zIndexLevel.FOUR,
+  },
+  item: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    backgroundColor: color.content_white,
+    paddingBottom: scaleSize(30),
+  },
+  title: {
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.themeText2,
+    // width: scaleSize(160),
+  },
+  textInputStyle: {
+    paddingVertical: 0,
+    borderBottomWidth: scaleSize(1),
+    borderColor: color.themeText2,
+    marginTop: scaleSize(30),
+    height: scaleSize(50),
+    width: '80%',
+    color: color.themeText2,
+    fontSize: size.fontSize.fontSizeXs,
+    textAlign: 'center',
   },
 })

@@ -58,7 +58,6 @@ export default class RenderFindItem extends Component {
         Toast.show('正在下载...')
         return
       }
-      Toast.show('开始下载')
       this.setState({ progress: '下载中...', isDownloading: true })
       let dataId = this.props.data.id
       let dataUrl =
@@ -103,7 +102,22 @@ export default class RenderFindItem extends Component {
             if (result.statusCode === 200) {
               Toast.show('下载成功')
               this.setState({ progress: '下载完成', isDownloading: false })
-              await FileTools.unZipFile(filePath, fileDir)
+              if (this.props.data.type === 'WORKSPACE') {
+                let savePath =
+                  appHome +
+                  ConstPath.UserPath +
+                  userName +
+                  '/' +
+                  ConstPath.RelativePath.ExternalData +
+                  fileName
+                let result = await FileTools.unZipFile(
+                  filePath,
+                  savePath.substring(0, savePath.length - 4),
+                )
+                if (result === false) {
+                  Toast.show('网络数据已损坏，无法正常使用')
+                }
+              }
               FileTools.deleteFile(filePath)
             }
           })
@@ -179,7 +193,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/find-time.png')}
+                source={require('../../../assets/tabBar/find_time.png')}
               />
               <Text
                 style={[styles.textStyle2, { color: fontColor }]}

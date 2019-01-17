@@ -38,14 +38,19 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
       
       
       NSString* fullPath = [path stringByAppendingPathComponent:fileName];
-      
+      NSString* strModeDate;
       if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
-        
+        NSError *error = nil;
+        NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:fullPath error:&error];
+        if(fileAttributes != nil){
+          NSDate* fileModDate = [fileAttributes objectForKey:NSFileModificationDate];
+          strModeDate = [FileTools getLastModifiedTime:fileModDate];
+        }
         NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
         NSString* extension = [tt pathExtension];
         NSString* fileName = [tt lastPathComponent];
         if(([filterEx containsString:extension] && ([fileName containsString:filterKey] || [filterKey isEqualToString:@""])) || (flag && [type isEqualToString:@"Directory"])) {
-          [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
+          [array addObject:@{@"name":fileName,@"path":tt,@"mtime":strModeDate,@"isDirectory":@(flag)}];
         }
         
       }
@@ -337,6 +342,13 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 //  return isUnZip;
   
   return YES;
+}
+
++(NSString*)getLastModifiedTime:(NSDate*) nsDate{
+  NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+  [fmt setDateFormat:@"yyyy/MM/dd hh:mm:ss"];
+  NSString *string=[fmt stringFromDate:nsDate];
+  return string;
 }
 
 RCT_REMAP_METHOD(createDirectory,createDirectoryPath:(NSString*)path getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){

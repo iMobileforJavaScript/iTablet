@@ -3,23 +3,22 @@ import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
 
-function OpenData(data, index) {
-  (async function() {
-    let layers = await SMap.getLayersByType()
-    // Layer index = 0 为顶层
-    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-      await SMap.removeLayer(layers.length - i)
+async function OpenData(data, index) {
+  let layers = await SMap.getLayersByType()
+  // Layer index = 0 为顶层
+  for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+    await SMap.removeLayer(layers.length - i)
+  }
+  if (data instanceof Array) {
+    for (let i = data.length - 1; i >= 0; i--) {
+      await SMap.openDatasource(data[i].DSParams, index, false)
     }
-    if (data instanceof Array) {
-      for (let i = data.length - 1; i >= 0; i--) {
-        await SMap.openDatasource(data[i].DSParams, index, false)
-      }
-      GLOBAL.BaseMapSize = data.length
-    } else {
-      await SMap.openDatasource(data.DSParams, index, false)
-      GLOBAL.BaseMapSize = 1
-    }
-  }.bind(this)())
+    GLOBAL.BaseMapSize = data.length
+  } else {
+    await SMap.openDatasource(data.DSParams, index, false)
+    GLOBAL.BaseMapSize = 1
+  }
+  return true
 }
 
 const layerAdd = [
@@ -153,6 +152,75 @@ const BotMap = [
         },
       },
     ],
+  },
+]
+
+const layerManagerData = [
+  {
+    caption: 'Google RoadMap',
+    action: () => {
+      return OpenData(ConstOnline.Google, 0)
+    },
+  },
+  {
+    caption: 'Google Staelite',
+    action: () => {
+      return OpenData(ConstOnline.Google, 1)
+    },
+  },
+  {
+    caption: 'Google Terrain',
+    action: () => {
+      return OpenData(ConstOnline.Google, 2)
+    },
+  },
+  {
+    caption: 'Google Hybrid',
+    action: () => {
+      return OpenData(ConstOnline.Google, 3)
+    },
+  },
+  {
+    caption: '全球矢量地图',
+    action: () => {
+      return OpenData(ConstOnline.TD, 0)
+    },
+  },
+  {
+    caption: '全球影像地图服务',
+    action: () => {
+      return OpenData(ConstOnline.TDYXM, 0)
+    },
+  },
+  {
+    caption: 'Baidu Map',
+    action: () => {
+      return OpenData(ConstOnline.Baidu, 0)
+    },
+  },
+  {
+    caption: 'Standard',
+    action: () => {
+      return OpenData(ConstOnline.OSM, 0)
+    },
+  },
+  {
+    caption: 'CycleMap',
+    action: () => {
+      return OpenData(ConstOnline.OSM, 1)
+    },
+  },
+  {
+    caption: 'Transport',
+    action: () => {
+      return OpenData(ConstOnline.OSM, 2)
+    },
+  },
+  {
+    caption: 'quanguo',
+    action: () => {
+      return OpenData(ConstOnline.SuperMapCloud, 0)
+    },
   },
 ]
 
@@ -662,6 +730,7 @@ const labelMenuInfo = [
 export {
   layerAdd,
   BotMap,
+  layerManagerData,
   openData,
   line,
   point,
