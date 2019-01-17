@@ -32,7 +32,7 @@ export default StyleSheet.create({
     marginTop: scaleSize(30),
     height: scaleSize(50),
     width: scaleSize(300),
-    color: color.themeText2,
+    color: color.themeText,
     fontSize: size.fontSize.fontSizeXs,
     textAlign: 'center',
   },
