@@ -78,16 +78,16 @@ class RenderModuleItem extends Component {
     let moduleKey = item.key
     let dataUrl
     if (moduleKey === '地图制图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/456143933/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1333580434/download'
     } else if (moduleKey === '专题地图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/717499323/download'
     } else if (moduleKey === '外业采集') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1605521624/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1435593818/download'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
-        dataUrl = 'https://www.supermapol.com/web/datas/1254811966/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/785640414/download'
       } else if (Platform.OS === 'ios') {
-        dataUrl = 'https://www.supermapol.com/web/datas/595812366/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/2014161764/download'
       }
     }
     let cachePath = this.downloadData.cachePath

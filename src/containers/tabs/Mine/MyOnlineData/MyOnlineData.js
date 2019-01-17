@@ -40,6 +40,8 @@ export default class MyOnlineData extends Component {
     this.screenWidth = Dimensions.get('window').width
     if (this.props.user.currentUser.userName !== _previousUserName) {
       SOnlineService.cancelDownload()
+      this._removeListener()
+      _callBackIos = undefined
       _iLoadOnlineDataCount = 1
       _iDataListTotal = -1
       _arrOnlineData = [{}]
@@ -346,7 +348,7 @@ export default class MyOnlineData extends Component {
         if (progress === '下载完成' || progress === '已下载') {
           this._unZipFile()
         }
-        this._removeListener()
+        // this._removeListener()
       }
     }
   }

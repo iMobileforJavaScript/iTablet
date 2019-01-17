@@ -2143,48 +2143,11 @@ export default class ToolBar extends React.PureComponent {
         })
         this.scrollListToLocation()
       }.bind(this)())
-      // NavigationService.navigate('WorkspaceFlieList', {
-      //   cb: async path => {
-      //     this.path = path
-      //     let list = await SMap.getUDBName(path)
-      //     let datalist = [
-      //       {
-      //         title: '数据集',
-      //         data: list,
-      //       },
-      //     ]
-      //     this.setState({
-      //       data: datalist,
-      //       type: ConstToolType.MAP_ADD_DATASET,
-      //     })
-      //   },
-      // })
-    } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
+    } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
-        let path = await FileTools.appendingHomeDirectory(item.path)
-        let udbName = this.basename(path)
-        let udbpath = {
-          server: path,
-          alias: udbName,
-          engineType: 219,
-        }
-        //只添加数据源
-        await SMap.openDatasource(udbpath, '')
-        let alldata = []
-        let getdata = await SThemeCartography.getAllDatasetNames()
-        getdata.reverse() //反序
-        alldata[0] = {
-          title: '选择数据源',
-          data: [
-            {
-              title: '选择目录',
-              theme_add_udb: true,
-            },
-          ],
-        }
-        for (let i = 0; i < getdata.length; i++) {
-          let datalist = getdata[i]
-          datalist.list.forEach(item => {
+        this.path = await FileTools.appendingHomeDirectory(item.path)
+        SThemeCartography.getUDBName(this.path).then(list => {
+          list.forEach(item => {
             if (item.geoCoordSysType && item.prjCoordSysType) {
               item.info = {
                 infoType: 'dataset',
@@ -2193,44 +2156,28 @@ export default class ToolBar extends React.PureComponent {
               }
             }
           })
-          alldata[i + 1] = {
-            title: datalist.datasource.alias,
-            image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-            data: datalist.list,
-          }
-        }
-        this.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
-          containerType: 'list',
-          isFullScreen: true,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          listSelectable: false, //单选框
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-          data: alldata,
-          buttons: [ToolbarBtnType.THEME_CANCEL],
+          let arr = item.name.split('.')
+          let alias = arr[0]
+          let dataList = [
+            {
+              title: alias,
+              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+              data: list,
+            },
+          ]
+          this.setState({
+            listSelectable: false, //单选框
+            buttons: [
+              ToolbarBtnType.THEME_CANCEL,
+              // ToolbarBtnType.THEME_COMMIT,
+            ],
+            data: dataList,
+            type: ConstToolType.MAP_THEME_ADD_DATASET,
+          })
+          // this.setLastState()
         })
         this.scrollListToLocation()
       }.bind(this)())
-      // NavigationService.navigate('WorkspaceFlieList', {
-      //   cb: async path => {
-      //     this.path = path
-      //     let list = await SMap.getUDBName(path)
-      //     let datalist = [
-      //       {
-      //         title: '数据集',
-      //         data: list,
-      //       },
-      //     ]
-      //     this.setState({
-      //       data: datalist,
-      //       type: ConstToolType.MAP_ADD_DATASET,
-      //     })
-      //   },
-      // })
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
         let udbName = this.basename(this.path)
@@ -2290,121 +2237,13 @@ export default class ToolBar extends React.PureComponent {
       // 切换地图
       this.changeMap(item)
       this.props.getMapSetting()
-    } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
-      //专题图添加数据源
-      if (item.theme_add_udb) {
-        (async function() {
-          let data = []
-          let customerUDBPath = await FileTools.appendingHomeDirectory(
-            ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
-          )
-          let customerUDBs = await FileTools.getPathListByFilter(
-            customerUDBPath,
-            {
-              extension: 'udb',
-              type: 'file',
-            },
-          )
-          customerUDBs.forEach(item => {
-            item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
-            item.info = {
-              infoType: 'mtime',
-              lastModifiedDate: item.mtime,
-            }
-          })
-
-          let userUDBPath, userUDBs
-          if (this.props.user && this.props.user.currentUser.userName) {
-            userUDBPath =
-              (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
-              this.props.user.currentUser.userName +
-              '/' +
-              ConstPath.RelativePath.Datasource
-            userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
-              extension: 'udb',
-              type: 'file',
-            })
-            userUDBs.forEach(item => {
-              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
-              item.info = {
-                infoType: 'mtime',
-                lastModifiedDate: item.mtime,
-              }
-            })
-
-            data = [
-              {
-                title: Const.PUBLIC_DATA_SOURCE,
-                data: customerUDBs,
-              },
-              {
-                title: Const.DATA_SOURCE,
-                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-                data: userUDBs,
-              },
-            ]
-          } else {
-            data = [
-              {
-                title: Const.DATA_SOURCE,
-                image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
-                data: customerUDBs,
-              },
-            ]
-          }
-
-          this.setVisible(true, ConstToolType.MAP_THEME_ADD_DATASET, {
-            containerType: 'list',
-            isFullScreen: true,
-            height:
-              this.props.device.orientation === 'LANDSCAPE'
-                ? ConstToolType.THEME_HEIGHT[3]
-                : ConstToolType.THEME_HEIGHT[5],
-            data,
-            buttons: [ToolbarBtnType.THEME_CANCEL],
-          })
-        }.bind(this)())
-        // NavigationService.navigate('WorkspaceFlieList', {
-        //   cb: async path => {
-        //     let udbName = this.basename(path)
-        //     let udbpath = {
-        //       server: path,
-        //       alias: udbName,
-        //       engineType: 219,
-        //     }
-        //     //只添加数据源
-        //     await SMap.openDatasource(udbpath, '')
-        //     let alldata = []
-        //     let getdata = await SThemeCartography.getAllDatasetNames()
-        //     getdata.reverse() //反序
-        //     alldata[0] = {
-        //       title: '选择数据源',
-        //       data: [
-        //         {
-        //           title: '选择目录',
-        //           theme_add_udb: true,
-        //         },
-        //       ],
-        //     }
-        //     for (let i = 0; i < getdata.length; i++) {
-        //       let datalist = getdata[i]
-        //       alldata[i + 1] = {
-        //         title: '数据源: ' + datalist.datasource.alias,
-        //         data: datalist.list,
-        //       }
-        //     }
-        //     this.setState({
-        //       data: alldata,
-        //     })
-        //     this.scrollListToLocation()
-        //   },
-        // })
-      } else if (item.datasetName) {
+    } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
+      //专题图添加数据集
+      if (item.datasetName) {
         let params = {
           DatasourceName: item.datasourceName,
           DatasetName: item.datasetName,
         }
-        // 添加数据集
         let result = SMap.addDatasetToMap(params)
         Toast.show(
           result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
@@ -2446,24 +2285,6 @@ export default class ToolBar extends React.PureComponent {
             type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
           })
         })
-        // let getdata = await SThemeCartography.getDatasetsByDatasource({Alias: alias})
-        // let dataList = [{
-        //   title: '数据源：' + alias,
-        //   data: getdata[0].list,
-        // }]
-        // this.setVisible(true, ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS, {
-        //   containerType: 'list',
-        //   isFullScreen: true,
-        //   isTouchProgress: false,
-        //   showMenuDialog: false,
-        //   listSelectable: false, //单选框
-        //   height: this.props.device.orientation === 'LANDSCAPE' ?
-        //     ConstToolType.THEME_HEIGHT[3] :
-        //     ConstToolType.THEME_HEIGHT[5],
-        //   column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-        //   data: dataList,
-        //   buttons: [ToolbarBtnType.THEME_CANCEL],
-        // })
         this.scrollListToLocation()
       }.bind(this)())
     }

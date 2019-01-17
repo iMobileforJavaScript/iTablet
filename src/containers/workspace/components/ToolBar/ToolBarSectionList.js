@@ -74,13 +74,16 @@ export default class ToolBarSectionList extends React.Component {
         sections[i].data[index].isSelected = !isSelected
         if (!isSelected) {
           selectList.push(
-            sections[i].data[index].title || sections[i].data[index].name,
+            sections[i].data[index].title ||
+              sections[i].data[index].name ||
+              sections[i].data[index].datasetName,
           )
         } else {
           for (let j = 0; j < selectList.length; j++) {
             if (
               selectList[j].title === sections[i].data[index].title ||
-              selectList[j].name === sections[i].data[index].name
+              selectList[j].name === sections[i].data[index].name ||
+              selectList[j].datasetName === sections[i].data[index].datasetName
             ) {
               selectList.splice(j, 1)
             }
@@ -195,7 +198,12 @@ export default class ToolBarSectionList extends React.Component {
       <Image
         source={item.image}
         resizeMode={'contain'}
-        style={styles.headerImg}
+        style={[
+          styles.headerImg,
+          this.props.listSelectable
+            ? { marginLeft: scaleSize(10) }
+            : { marginLeft: scaleSize(50) },
+        ]}
       />
     )
   }
@@ -218,14 +226,14 @@ export default class ToolBarSectionList extends React.Component {
     // }
     let info
     if (item.info.infoType === 'mtime') {
-      info = '最后修改时间：' + item.info.lastModifiedDate
+      info = '最后修改时间: ' + item.info.lastModifiedDate
     } else if (item.info.infoType === 'fieldType') {
-      info = '字段类型：' + item.info.fieldType
+      info = '字段类型: ' + item.info.fieldType
     } else if (item.info.infoType === 'dataset') {
       let geoCoordSysType = item.info.geoCoordSysType
       let prjCoordSysType = item.info.prjCoordSysType
       info =
-        '地理坐标系：' + geoCoordSysType + '， 投影坐标系：' + prjCoordSysType
+        '地理坐标系: ' + geoCoordSysType + ', 投影坐标系: ' + prjCoordSysType
     } else {
       return
     }
@@ -235,6 +243,8 @@ export default class ToolBarSectionList extends React.Component {
           item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
           item.isSelected ? { color: color.grayLight } : { color: color.gray },
         ]}
+        numberOfLines={1}
+        ellipsizeMode="tail"
       >
         {info}
       </Text>
@@ -276,7 +286,12 @@ export default class ToolBarSectionList extends React.Component {
       <Image
         source={this.getDatasetTypeImg(item)}
         resizeMode={'contain'}
-        style={styles.dataset_type_img}
+        style={[
+          styles.dataset_type_img,
+          this.props.listSelectable
+            ? { marginLeft: scaleSize(10) }
+            : { marginLeft: scaleSize(50) },
+        ]}
       />
     )
   }
