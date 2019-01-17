@@ -544,8 +544,10 @@ function create() {
     GLOBAL.Type === constants.MAP_EDIT ||
     GLOBAL.Type === constants.MAP_THEME
   ) {
-    SMap.removeAllLayer()
-    SMap.closeDatasource(-1) // 关闭所有数据源
+    (async function() {
+      await SMap.removeAllLayer() // 移除所有图层
+      await SMap.closeDatasource(-1) // 关闭所有数据源
+    }.bind(this)())
   }
 }
 

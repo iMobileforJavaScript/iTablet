@@ -42,6 +42,7 @@
 		0A15464A21D36FB800347720 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15464921D36FB800347720 /* SuperMap.framework */; };
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A16C42C21AC0F9100A515FA /* Customer.smwu in Resources */ = {isa = PBXBuildFile; fileRef = 0A16C42B21AC0ACF00A515FA /* Customer.smwu */; };
+		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
@@ -450,6 +451,7 @@
 		0A15464921D36FB800347720 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A16C42B21AC0ACF00A515FA /* Customer.smwu */ = {isa = PBXFileReference; lastKnownFileType = file; path = Customer.smwu; sourceTree = "<group>"; };
+		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
@@ -697,6 +699,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				0A177FBC21F0A8B900EA39D6 /* resources.bundle */,
 				0A16C42B21AC0ACF00A515FA /* Customer.smwu */,
 			);
 			path = assets;
@@ -1419,6 +1422,7 @@
 				0A0A2039212FA22300BEBC1C /* 关系图－当前.png in Resources */,
 				0A0A203A212FA22300BEBC1C /* 关系图－选中.png in Resources */,
 				0A0A2047212FA22300BEBC1C /* 热点图－当前.png in Resources */,
+				0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */,
 				0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */,
 				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
 				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,

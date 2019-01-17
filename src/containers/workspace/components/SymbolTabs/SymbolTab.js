@@ -61,7 +61,7 @@ export default class SymbolTab extends React.Component {
             // width: 600,
             textSize: 15,
             lineSpacing: 10,
-            imageSize: 50,
+            imageSize: 40,
             // count: 5,
             legendBackgroundColor: dataUtil.colorRgba(color.bgW),
             textColor: dataUtil.colorRgba(color.font_color_white),
