@@ -179,7 +179,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/find-time.png')}
+                source={require('../../../assets/tabBar/find_time.png')}
               />
               <Text
                 style={[styles.textStyle2, { color: fontColor }]}

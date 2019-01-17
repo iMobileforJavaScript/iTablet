@@ -178,19 +178,30 @@ export default class ToolBar extends React.PureComponent {
       })
     }
     if (this.props.device.orientation !== prevProps.device.orientation) {
-      if (!this.isShow) return
+      if (!(this.isShow && this.isBoxShow)) {
+        return
+      }
       this.state.type &&
         this.changeHeight(this.props.device.orientation, this.state.type)
     }
   }
 
   changeHeight = async (orientation, type) => {
+    if (!(this.isShow && this.isBoxShow)) {
+      this.showToolbar()
+      return
+    }
     let data = ToolbarHeight.getToorbarHeight(orientation, type)
     this.height = data.height
     this.setState({
       column: data.column,
     })
     this.showToolbar()
+    // if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
+    //   this.isBoxShow && this.showToolbar()
+    // } else {
+    //   this.isShow && this.showToolbar()
+    // }
   }
 
   getOriginType = () => {
@@ -3010,6 +3021,7 @@ export default class ToolBar extends React.PureComponent {
         data={list}
         selectKey={this.state.selectKey}
         autoSelect={true}
+        device={this.props.device}
         onSelect={item => {
           this.setState({
             selectKey: item.selectKey,

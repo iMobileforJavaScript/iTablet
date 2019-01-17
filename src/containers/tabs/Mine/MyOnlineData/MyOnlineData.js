@@ -629,7 +629,7 @@ export default class MyOnlineData extends Component {
                 tintColor: color.font_color_white,
               }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/个人主页-我的数据.png')}
+              source={require('../../../../assets/Mine/mine_my_online_data.png')}
             />
             <Text
               style={{
@@ -651,7 +651,7 @@ export default class MyOnlineData extends Component {
                 tintColor: color.font_color_white,
               }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/工具条-更多-白.png')}
+              source={require('../../../../assets/Mine/mine_more_white.png')}
             />
           </View>
           <View
