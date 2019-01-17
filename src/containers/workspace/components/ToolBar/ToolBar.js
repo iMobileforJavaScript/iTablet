@@ -1251,8 +1251,8 @@ export default class ToolBar extends React.PureComponent {
         () => {
           this.height =
             this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.HEIGHT[2]
-              : ConstToolType.HEIGHT[3]
+              ? ConstToolType.HEIGHT[1]
+              : ConstToolType.HEIGHT[2]
           this.showToolbar()
         },
       )
