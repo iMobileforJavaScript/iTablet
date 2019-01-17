@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-import { scaleSize } from '../../../utils'
+// import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
 import { SScene, SMap, SOnlineService } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
@@ -148,16 +148,28 @@ export default class Home extends Component {
   }
 
   _onLogout = () => {
-    SOnlineService.logout()
-    this.props.closeWorkspace(async () => {
-      let customPath = await FileTools.appendingHomeDirectory(
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
-      )
-      this.props.setUser()
-      NavigationService.navigate('Mine')
-      this._closeModal()
-      this.props.openWorkspace({ server: customPath })
-    })
+    if (this.container) {
+      this.container.setLoading(true, '注销中...')
+    }
+    try {
+      SOnlineService.logout()
+      this.props.closeWorkspace(async () => {
+        let customPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+        )
+        this.props.setUser()
+        this._closeModal()
+        if (this.container) {
+          this.container.setLoading(false)
+        }
+        NavigationService.navigate('Mine')
+        this.props.openWorkspace({ server: customPath })
+      })
+    } catch (e) {
+      if (this.container) {
+        this.container.setLoading(false)
+      }
+    }
   }
 
   _renderModal = () => {
@@ -180,16 +192,17 @@ export default class Home extends Component {
 
   render() {
     let isLogin =
-      this.props.currentUser.userName &&
-      (this.props.currentUser.userName !== 'Customer' &&
-        this.props.currentUser.password !== 'Customer')
+      this.props.currentUser.userName !== undefined &&
+      this.props.currentUser.password !== undefined
     let userImg = isLogin
       ? {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
-      : require('../../../assets/home/系统默认头像.png')
-    let moreImg = require('../../../assets/home/icon_else_selected.png')
+      : this.props.currentUser.userType !== undefined
+        ? require('../../../assets/home/system_default_header_image.png')
+        : require('../../../assets/tabBar/tab_user.png')
+    let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -207,23 +220,37 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerRight: (
+            // <TouchableOpacity
+            //   onPress={() => {
+            //     this.topNavigatorBarImageId = 'right'
+            //     this.setState({ modalIsVisible: true })
+            //   }}
+            //   // style={{ flex: 1, marginRight: scaleSize(18.5) }}
+            // >
+            //   <Image
+            //     resizeMode={'contain'}
+            //     source={moreImg}
+            //     style={styles.moreView}
+            //   />
+            // </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 this.topNavigatorBarImageId = 'right'
                 this.setState({ modalIsVisible: true })
               }}
               // style={{ flex: 1, marginRight: scaleSize(18.5) }}
+              style={styles.moreView}
             >
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
-                style={styles.moreView}
+                style={styles.moreImg}
               />
             </TouchableOpacity>
           ),
-          headerStyle: {
-            height: scaleSize(80),
-          },
+          // headerStyle: {
+          //   height: scaleSize(80),
+          // },
         }}
         style={styles.container}
       >

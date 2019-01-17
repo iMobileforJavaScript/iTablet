@@ -25,6 +25,7 @@ import styles, {
 import ConstPath from '../../../../constants/ConstPath'
 import NavigationService from '../../../NavigationService'
 import color from '../../../../styles/color'
+import UserType from '../../../../constants/UserType'
 export default class Login extends React.Component {
   props: {
     navigation: Object,
@@ -75,7 +76,7 @@ export default class Login extends React.Component {
   _probation = () => {
     this.props.setUser({
       userName: 'Customer',
-      password: 'Customer',
+      userType: UserType.PROBATION_USER,
     })
     if (!this.state.isFirstLogin) {
       NavigationService.navigate('Mine')
@@ -135,6 +136,7 @@ export default class Login extends React.Component {
           userName: userName,
           password: password,
           isEmail: isEmail,
+          // userType:UserType.COMMON_USER,
         })
         if (!this.state.isFirstLogin) {
           NavigationService.navigate('Mine')
@@ -143,6 +145,7 @@ export default class Login extends React.Component {
         this.props.setUser({
           userName: '',
           password: '',
+          // userType:UserType.COMMON_USER,
         })
         Toast.show('登录失败')
         this.container.setLoading(false)
@@ -153,6 +156,7 @@ export default class Login extends React.Component {
       this.props.setUser({
         userName: '',
         password: '',
+        // userType:UserType.COMMON_USER,
       })
     }
   }
@@ -278,8 +282,8 @@ export default class Login extends React.Component {
                       flex: 1,
                       height: '100%',
                       alignItems: 'center',
-                      borderTopLeftRadius: 4,
-                      borderBottomLeftRadius: 4,
+                      borderTopLeftRadius: 2,
+                      borderBottomLeftRadius: 2,
                       borderTopRightRadius: 0,
                       borderBottomRightRadius: 0,
                       borderColor: color.theme,
@@ -300,8 +304,8 @@ export default class Login extends React.Component {
                     alignItems: 'center',
                     borderTopLeftRadius: 0,
                     borderBottomLeftRadius: 0,
-                    borderTopRightRadius: 4,
-                    borderBottomRightRadius: 4,
+                    borderTopRightRadius: 2,
+                    borderBottomRightRadius: 2,
                     justifyContent: 'center',
                     backgroundColor: this.state.titlePhoneBg,
                   }}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import { TouchableOpacity, View, Text } from 'react-native'
-// import { SScene } from 'imobile_for_reactnative'
+import { TouchableOpacity, View, Text, Image, ScrollView } from 'react-native'
+import { SScene } from 'imobile_for_reactnative'
 import styles from './styles'
 
 export default class Layer3DItem extends Component {
@@ -17,43 +17,50 @@ export default class Layer3DItem extends Component {
   }
 
   changeSelect = async () => {
-    let oldVisible = this.state.visible
-    let newVisible = !oldVisible
-    // await SScene.setVisible(this.state.name,newVisible)
-    this.setState({ visible: newVisible })
-    // console.log(this.state.visible)
+    let newState = this.state
+    newState.selectable = !this.state.selectable
+    await SScene.setVisible(this.state.name, newState.selectable)
+    this.setState(newState)
+    // console.log(this.state.visible,this.state.selectable)
   }
 
   changeVisible = async () => {
-    let oldselectable = this.state.selectable
-    let newselectable = !oldselectable
-    //   await SScene.setSelectable(this.state.name,newselectable)
-    this.setState({ selectable: newselectable })
-    // console.log(this.state.selectable)
+    let newState = this.state
+    newState.visible = !this.state.visible
+    await SScene.setVisible(this.state.name, newState.visible)
+    this.setState(newState)
   }
 
   more = async () => {}
 
   render() {
+    let selectImg = this.state.selectable
+      ? require('../../assets/map/Frenchgrey/icon_selectable_selected.png')
+      : require('../../assets/map/Frenchgrey/icon_selectable.png')
+    // let typeImg=require("")
+    let visibleImg = this.state.visible
+      ? require('../../assets/map/Frenchgrey/icon_visible_selected.png')
+      : require('../../assets/map/Frenchgrey/icon_visible.png')
+    let moreImg = require('../../assets/map/Frenchgrey/icon_more.png')
+    let typeImg = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
+    // console.log(this.state.visible, this.state.selectable)
+    // console.log(selectImg, visibleImg)
     return (
       <View>
         <View style={styles.row}>
-          <TouchableOpacity
-            style={styles.selectImg}
-            onPress={this.changeSelect}
-          >
-            <View />
+          <TouchableOpacity onPress={this.changeSelect}>
+            <Image source={selectImg} style={styles.selectImg} />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.visibleImg}
-            onPress={this.changeVisible}
-          >
-            <View />
+          <TouchableOpacity onPress={this.changeVisible}>
+            <Image source={visibleImg} style={styles.visibleImg} />
           </TouchableOpacity>
-          <View style={styles.type} />
-          <Text style={styles.itemName}>{this.state.name}</Text>
+
+          <Image source={typeImg} style={styles.type} />
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <Text style={styles.itemName}>{this.state.name}</Text>
+          </ScrollView>
           <TouchableOpacity style={styles.moreView} onPress={this.more}>
-            <View style={styles.moreImg} />
+            <Image source={moreImg} style={styles.moreImg} />
           </TouchableOpacity>
         </View>
         <View style={styles.itemSeparator} />

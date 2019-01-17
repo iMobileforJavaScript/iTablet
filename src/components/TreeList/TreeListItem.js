@@ -15,7 +15,7 @@ import {
   Image,
 } from 'react-native'
 import { scaleSize } from '../../utils'
-import { size } from '../../styles'
+import { size, color } from '../../styles'
 
 const ROW_HEIGHT = scaleSize(40)
 export default class TreeListItem extends React.Component {
@@ -23,7 +23,11 @@ export default class TreeListItem extends React.Component {
     key: string,
     data: Object,
     index: number,
+    textSize?: number,
+    textColor?: string,
     children: Object,
+    separator?: boolean,
+    separatorStyle?: Object,
     // childrenData: Array,
     style: Object,
     childrenStyle: Object,
@@ -36,6 +40,8 @@ export default class TreeListItem extends React.Component {
 
   static defaultProps = {
     defaultShowChildren: false,
+    separator: false,
+    textColor: 'white',
   }
 
   constructor(props) {
@@ -56,13 +62,13 @@ export default class TreeListItem extends React.Component {
     if (this.props.data.$ && this.props.data.$.type) {
       switch (this.props.data.$.type) {
         case 'Region':
-          icon = require('../../assets/map/layertype_georegion.png')
+          icon = require('../../assets/map/icon-shallow-polygon_black.png')
           break
         case 'Line':
-          icon = require('../../assets/map/layertype_line.png')
+          icon = require('../../assets/map/icon-shallow-line_black.png')
           break
         case 'Point':
-          icon = require('../../assets/map/layertype_point.png')
+          icon = require('../../assets/map/icon-shallow-dot_black.png')
           break
       }
     }
@@ -114,7 +120,14 @@ export default class TreeListItem extends React.Component {
             style={[styles.icon, this.props.iconStyle]}
           />
         )}
-        <Text style={[styles.title, icon && { marginLeft: scaleSize(20) }]}>
+        <Text
+          style={[
+            styles.title,
+            icon && { marginLeft: scaleSize(20) },
+            this.props.textColor && { color: this.props.textColor },
+            this.props.textSize && { color: this.props.textSize },
+          ]}
+        >
           {this.props.data.name ||
             this.props.data.$.code + ' ' + this.props.data.$.name}
         </Text>
@@ -149,6 +162,9 @@ export default class TreeListItem extends React.Component {
     return (
       <Animated.View style={[styles.children, this.props.childrenStyle]}>
         {children}
+        {this.props.separator && (
+          <View style={[styles.separator, this.props.separatorStyle]} />
+        )}
       </Animated.View>
     )
   }
@@ -226,5 +242,10 @@ const styles = StyleSheet.create({
   icon: {
     height: scaleSize(40),
     width: scaleSize(40),
+  },
+  separator: {
+    height: 1,
+    width: '100%',
+    backgroundColor: color.bgG,
   },
 })

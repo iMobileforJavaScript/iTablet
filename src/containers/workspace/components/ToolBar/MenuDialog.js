@@ -2,40 +2,67 @@ import React from 'react'
 import {
   TouchableHighlight,
   Text,
-  FlatList,
   StyleSheet,
   View,
   Image,
   PanResponder,
+  Dimensions,
 } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { size, color } from '../../../../styles'
 
 const ITEM_HEIGHT = scaleSize(80)
 const ARROW_HEIGHT = scaleSize(30)
+const BOTTOM_HEIGHT = scaleSize(95)
 
 export default class MenuDialog extends React.PureComponent {
   props: {
-    list: Array, // 数据
+    data: Array, // 数据
     selectKey?: '', // 当前选中的key
     viewableItems?: number, // 可见范围item的数量
+    autoSelect?: boolean, // 松手自动选择
+    device?: Object,
     onSelect?: () => {}, // 选中item的回调
   }
 
   static defaultProps = {
     list: [],
     viewableItems: 3,
+    autoSelect: false,
   }
 
   constructor(props) {
     super(props)
-    let data = [].concat(props.list)
-    data.unshift({})
-    data.push({})
-    let lastIndex = this.getIndexByKey(data, props.selectKey)
+    // let data = [].concat(props.data)
+    // data.unshift({})
+    // data.push({})
+    this.lastIndex = this.getIndexByKey(props.data, props.selectKey)
+    // this.currentIndex = this.lastIndex
     this.state = {
-      lastIndex: lastIndex,
-      data: data,
+      // lastIndex: lastIndex,
+      currentIndex: this.lastIndex,
+      data: props.data,
+    }
+
+    this.selectedViewTop =
+      (Dimensions.get('window').height - BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
+    this.moveViewHeight =
+      ITEM_HEIGHT * this.state.data.length + ARROW_HEIGHT * 2
+
+    this._previousTop =
+      this.selectedViewTop -
+      (this.state.currentIndex * ITEM_HEIGHT + ARROW_HEIGHT)
+    this._moveViewBgStyles = {
+      style: {
+        top: this._previousTop,
+        width: scaleSize(330),
+      },
+    }
+    this._moveViewStyles = {
+      style: {
+        top: this._previousTop,
+        width: scaleSize(330),
+      },
     }
 
     this._panResponder = PanResponder.create({
@@ -46,45 +73,66 @@ export default class MenuDialog extends React.PureComponent {
       onPanResponderTerminate: this._handlePanResponderEnd,
     })
 
-    this.offset = lastIndex * ITEM_HEIGHT
+    this.offset = this.state.currentIndex * ITEM_HEIGHT
   }
 
   componentDidUpdate(prevProps) {
-    if (JSON.stringify(prevProps.list) !== JSON.stringify(this.props.list)) {
-      this.setState({ data: this.props.list.concat() || [] })
+    if (this.props.device.orientation !== prevProps.device.orientation) {
+      this.moveToIndex()
+    } else if (
+      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
+    ) {
+      this.setState({ data: this.props.data.concat() || [] })
     } else if (this.props.selectKey !== prevProps.selectKey) {
-      let data = [].concat(this.props.list)
-      data.unshift({})
-      data.push({})
-      let index = this.getIndexByKey(data, this.props.selectKey)
-      this.setState({
-        lastIndex: index,
-        data,
-      })
-      this.selectList &&
-        this.selectList.scrollToIndex({ index: index, viewOffset: ITEM_HEIGHT })
-      this.onSelect(this.state.data[index])
+      let index = this.getIndexByKey(this.props.data, this.props.selectKey)
+      this.moveToIndex(index)
     }
   }
 
   componentDidMount() {
     let curIndex = this.getIndexByKey(this.state.data, this.props.selectKey)
+    this.moveToIndex(curIndex)
+
     if (this.state.data.length > curIndex) {
-      this.selectList &&
-        this.selectList.scrollToIndex({
-          index: curIndex,
-          viewOffset: ITEM_HEIGHT,
-          animated: false,
-        })
-      this.setState({ lastIndex: curIndex })
+      this.lastIndex = curIndex
       this.onSelect(this.state.data[curIndex])
     }
   }
 
+  moveToIndex = index => {
+    let curIndex
+
+    if (index === undefined) {
+      curIndex = this.state.currentIndex
+    } else if (index < 0) {
+      curIndex = 0
+    } else if (index > this.state.data.length - 1) {
+      curIndex = this.state.data.length - 1
+    } else {
+      curIndex = index
+    }
+    this.selectedViewTop =
+      (Dimensions.get('window').height - BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
+    this.moveViewHeight =
+      ITEM_HEIGHT * this.state.data.length + ARROW_HEIGHT * 2
+
+    this._previousTop =
+      this.selectedViewTop - (curIndex * ITEM_HEIGHT + ARROW_HEIGHT)
+
+    this._moveViewBgStyles.style.top = this._previousTop
+    this._moveViewStyles.style.top = this._moveViewBgStyles.style.top
+
+    this.setState({
+      currentIndex: curIndex,
+    })
+
+    this._updateNativeStyles()
+  }
+
   getIndexByKey = (data = [], key) => {
-    if (!key) return 1
-    if (data.length - 2 > 0) {
-      for (let i = 1; i < data.length - 1; i++) {
+    if (!key) return 0
+    if (data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
         if (data[i].selectKey === key) {
           return i
         }
@@ -101,83 +149,82 @@ export default class MenuDialog extends React.PureComponent {
     return true
   }
 
-  _handlePanResponderMove = () => {
-    // TODO 调整滑动
-    // let speed = gestureState.dy, rate
-    // if ((this.offset - gestureState.dy) < 0) {
-    //   // rate = Math.ceil((Math.abs(this.offset - gestureState.dy) - ITEM_HEIGHT) / ITEM_HEIGHT) + 1
-    //   rate = Math.ceil(Math.abs(this.offset - gestureState.dy) / ITEM_HEIGHT) + 1
-    //   speed = gestureState.dy / rate
-    // } else if ((this.offset - gestureState.dy) > ITEM_HEIGHT * this.state.data.length) {
-    //   // rate = Math.ceil((this.offset - gestureState.dy - ITEM_HEIGHT * (this.props.list.length - 1)) / ITEM_HEIGHT) + 1
-    //   rate = Math.ceil((this.offset - gestureState.dy - ITEM_HEIGHT * this.state.data.length) / ITEM_HEIGHT) + 1
-    //   speed = gestureState.dy / rate
-    // }
-    //
-    // let currentOffset = this.offset - speed
-    // // if (Platform.OS === 'android') { // Android滑倒上下边界则不移动
-    // if (currentOffset < ITEM_HEIGHT) {
-    //   currentOffset = ITEM_HEIGHT
-    // } else if (currentOffset > ITEM_HEIGHT * (this.state.data.length - 1)) {
-    //   currentOffset = ITEM_HEIGHT * (this.state.data.length - 1)
-    // }
-    // // }
-    // // this.selectList && this.selectList.scrollToOffset({offset: currentOffset, animated: true})
-    // this.offset = currentOffset
+  _handlePanResponderMove = (evt, gestureState) => {
+    let y = this._previousTop + gestureState.dy
+    if (y > this.selectedViewTop - ARROW_HEIGHT) {
+      // 向下滑动
+      y = this.selectedViewTop - ARROW_HEIGHT
+    } else if (
+      y <
+      this.selectedViewTop - this.moveViewHeight + ITEM_HEIGHT + ARROW_HEIGHT
+    ) {
+      // 向上滑动
+      y =
+        this.selectedViewTop - this.moveViewHeight + ITEM_HEIGHT + ARROW_HEIGHT
+    }
+
+    this._moveViewBgStyles.style.top = y
+    this._moveViewStyles.style.top = this._moveViewBgStyles.style.top
+
+    let currentIndex =
+      ((this.selectedViewTop - y - ARROW_HEIGHT) / ITEM_HEIGHT).toFixed() -
+      1 +
+      1
+    if (this.state.currentIndex !== currentIndex) {
+      this.setState({
+        currentIndex,
+      })
+    }
+
+    this._updateNativeStyles()
   }
 
   _handlePanResponderEnd = (evt, gestureState) => {
-    let currentIndex = this.state.lastIndex
-    let dy = gestureState.dy < 0 ? Math.abs(gestureState.dy) : gestureState.dy
-    let moveIndex = (dy / ITEM_HEIGHT).toFixed() - 1 + 1
-    if (gestureState.dy > 0 && currentIndex > 1) {
-      currentIndex -= moveIndex
-      if (currentIndex < 1) {
-        currentIndex = 1
-      }
-    } else if (
-      gestureState.dy < 0 &&
-      currentIndex < this.state.data.length - 2
-    ) {
-      currentIndex += moveIndex
-      if (currentIndex > this.state.data.length - 2) {
-        currentIndex = this.state.data.length - 2
-      }
-    }
+    let y = this._previousTop + gestureState.dy
 
-    // this.selectList && this.selectList.scrollToIndex({index: currentIndex, viewOffset: ITEM_HEIGHT, animated: true})
-    this.offset = (currentIndex - 1) * ITEM_HEIGHT
-    this.selectList.scrollToOffset({ offset: this.offset, animated: true })
-    if (this.state.lastIndex !== currentIndex) {
-      this.setState({
-        lastIndex: currentIndex,
-        data: this.state.data.concat(),
-      })
+    // if ((y + this.moveViewHeight - ARROW_HEIGHT) >= (this.selectedViewTop + ITEM_HEIGHT)) {
+    //   y = this.selectedViewTop + ARROW_HEIGHT + ITEM_HEIGHT - this.moveViewHeight
+    // } else if (y - ARROW_HEIGHT <= this.selectedViewTop) {
+    //   y = this.selectedViewTop
+    // }
+
+    if (y > this.selectedViewTop - ARROW_HEIGHT) {
+      // 向下滑动
+      y = this.selectedViewTop - ARROW_HEIGHT
+    } else if (
+      y <
+      this.selectedViewTop - this.moveViewHeight + ITEM_HEIGHT + ARROW_HEIGHT
+    ) {
+      // 向上滑动
+      y =
+        this.selectedViewTop - this.moveViewHeight + ITEM_HEIGHT + ARROW_HEIGHT
+    }
+    this._previousTop = y
+
+    if (this.lastIndex !== this.state.currentIndex) {
+      this.lastIndex = this.state.currentIndex
+
+      this.moveToIndex(this.state.currentIndex)
+
+      if (this.props.autoSelect) {
+        this.onSelect(this.state.data[this.state.currentIndex])
+        this.callCurrentAction()
+      }
     }
   }
 
   scroll = moveIndex => {
-    let currentIndex = this.state.lastIndex + moveIndex
-    if (currentIndex < 1) {
-      currentIndex = 1
-    } else if (currentIndex > this.state.data.length - 2) {
-      currentIndex = this.state.data.length - 2
-    }
-    if (currentIndex === this.state.lastIndex) return
-    this.setState({
-      lastIndex: currentIndex,
-      data: this.state.data.concat(),
-    })
-    this.selectList.scrollToIndex({
-      index: currentIndex,
-      viewOffset: ITEM_HEIGHT,
-      animated: true,
-    })
+    this.moveToIndex(this.state.currentIndex + moveIndex)
+  }
+
+  _updateNativeStyles = () => {
+    this.moveViewBg && this.moveViewBg.setNativeProps(this._moveViewBgStyles)
+    this.moveView && this.moveView.setNativeProps(this._moveViewStyles)
   }
 
   callCurrentAction = () => {
-    if (this.state.data.length > this.state.lastIndex) {
-      let item = this.state.data[this.state.lastIndex]
+    if (this.state.data.length > this.state.currentIndex) {
+      let item = this.state.data[this.state.currentIndex]
       item && item.action && item.action(item)
     }
   }
@@ -192,8 +239,6 @@ export default class MenuDialog extends React.PureComponent {
         lastIndex: index,
         data: this.state.data.concat(),
       })
-      this.selectList &&
-        this.selectList.scrollToIndex({ index: index, viewOffset: ITEM_HEIGHT })
     }
     item.action && item.action(item)
     this.onSelect(item)
@@ -209,7 +254,15 @@ export default class MenuDialog extends React.PureComponent {
           style={styles.item}
           onPress={() => this.itemAction({ item, index })}
         >
-          <Text style={styles.text}>{item.key}</Text>
+          <Text
+            style={
+              index === this.state.currentIndex
+                ? styles.textHightlight
+                : styles.text
+            }
+          >
+            {item.key}
+          </Text>
         </TouchableHighlight>
       )
     } else {
@@ -217,75 +270,70 @@ export default class MenuDialog extends React.PureComponent {
     }
   }
 
-  _getItemLayout = (data, index) => {
-    return {
-      length: ITEM_HEIGHT,
-      offset: ITEM_HEIGHT * index, // + Math.floor(this.props.viewableItems / 2)
-      index,
-    }
-  }
-
   renderList = () => {
-    return (
-      <View
-        style={[
-          styles.selectList,
-          { height: ITEM_HEIGHT * this.props.viewableItems + ARROW_HEIGHT * 2 },
-        ]}
-      >
-        {this.state.lastIndex !== 1 ? (
-          <TouchableHighlight
-            key={'up'}
-            onPress={() => this.scroll(-1)}
-            style={styles.arrowView}
-          >
-            <Image
-              resizeMode={'contain'}
-              style={styles.arrowImg}
-              source={require('../../../../assets/public/arrow_up.png')}
-            />
-          </TouchableHighlight>
-        ) : (
-          <View key={'up_placeholder'} style={styles.arrowView} />
-        )}
-        <View
-          key={'selected_view'}
-          style={[
-            styles.selectedView,
-            { position: 'absolute', top: ITEM_HEIGHT + scaleSize(30) },
-          ]}
-        />
-        <FlatList
-          key={'list'}
-          ref={ref => (this.selectList = ref)}
-          data={this.state.data}
-          showsVerticalScrollIndicator={false}
-          renderItem={this._renderItem}
-          getItemLayout={this._getItemLayout}
-        />
-        {this.state.lastIndex !== this.state.data.length - 2 ? (
-          <TouchableHighlight
-            key={'down'}
-            onPress={() => this.scroll(1)}
-            style={styles.arrowView}
-          >
-            <Image
-              resizeMode={'contain'}
-              style={styles.arrowImg}
-              source={require('../../../../assets/public/arrow_down.png')}
-            />
-          </TouchableHighlight>
-        ) : (
-          <View key={'down_placeholder'} style={styles.arrowView} />
-        )}
-      </View>
-    )
+    let data = []
+    this.state.data.forEach((item, index) => {
+      data.push(this._renderItem({ item, index }))
+    })
+    return data
   }
 
   render() {
+    this.selectedViewTop =
+      (Dimensions.get('window').height - BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
     return (
       <View style={styles.overlay} {...this._panResponder.panHandlers}>
-        {this.renderList()}
+        <View style={styles.dialogView}>
+          <View
+            ref={ref => (this.moveViewBg = ref)}
+            style={[
+              styles.moveViewBg,
+              { top: this.state.top },
+              { height: this.moveViewHeight },
+            ]}
+          />
+          <View
+            key={'selected_view'}
+            style={[styles.selectedView, { top: this.selectedViewTop }]}
+          />
+          <View
+            ref={ref => (this.moveView = ref)}
+            style={[
+              styles.moveView,
+              {
+                top: this.state.top,
+                height: this.moveViewHeight,
+              },
+              // { height: ITEM_HEIGHT * this.props.viewableItems + ARROW_HEIGHT * 2 },
+            ]}
+          >
+            <TouchableHighlight
+              key={'up'}
+              onPress={() => this.scroll(-1)}
+              style={styles.arrowView}
+            >
+              <Image
+                resizeMode={'contain'}
+                style={styles.arrowImg}
+                source={require('../../../../assets/public/arrow_up.png')}
+              />
+            </TouchableHighlight>
+
+            {this.renderList()}
+
+            <TouchableHighlight
+              key={'down'}
+              onPress={() => this.scroll(1)}
+              style={styles.arrowView}
+            >
+              <Image
+                resizeMode={'contain'}
+                style={styles.arrowImg}
+                source={require('../../../../assets/public/arrow_down.png')}
+              />
+            </TouchableHighlight>
+          </View>
+        </View>
       </View>
     )
   }
@@ -298,15 +346,38 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: color.transOverlay,
   },
-  selectList: {
+  dialogView: {
+    height: '100%',
+    width: scaleSize(330),
+    flexDirection: 'column',
+    backgroundColor: color.transOverlay,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moveViewBg: {
+    position: 'absolute',
     minHeight: scaleSize(300),
     width: scaleSize(330),
     flexDirection: 'column',
     backgroundColor: color.transView,
   },
+  moveView: {
+    position: 'absolute',
+    minHeight: scaleSize(300),
+    width: scaleSize(330),
+    flexDirection: 'column',
+    backgroundColor: color.transOverlay,
+  },
   text: {
     color: 'white',
     fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+  textHightlight: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: size.fontSize.fontSizeXl,
     backgroundColor: 'transparent',
     textAlign: 'center',
   },
@@ -319,8 +390,7 @@ const styles = StyleSheet.create({
     width: scaleSize(330),
   },
   selectedView: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'absolute',
     height: ITEM_HEIGHT,
     backgroundColor: '#4680DF',
     minWidth: scaleSize(100),

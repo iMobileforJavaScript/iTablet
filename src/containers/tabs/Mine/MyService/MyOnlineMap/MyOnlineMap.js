@@ -187,7 +187,9 @@ export default class MyOnlineMap extends Component {
   _renderSectionHeader = section => {
     let title = section.section.title
     if (title !== undefined) {
-      return <Text style={styles.titleTextStyle}>{title}</Text>
+      return (
+        <Text style={[styles.titleTextStyle, { lineHeight: 40 }]}>{title}</Text>
+      )
     }
     return <View />
   }

@@ -4,7 +4,7 @@ import { Container } from '../../../../components'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import { color } from '../../../../styles'
-// import { Toast } from '../../utils'
+import UserType from '../../../../constants/UserType'
 import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
@@ -23,12 +23,18 @@ export default class Personal extends Component {
   }
 
   _logout = () => {
+    if (this.container) {
+      this.container.setLoading(true, '注销中...')
+    }
     try {
       SOnlineService.logout()
       this.props.closeWorkspace(async () => {
         let customPath = await FileTools.appendingHomeDirectory(
           ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
         )
+        if (this.container) {
+          this.container.setLoading(false)
+        }
         this.props.setUser()
         NavigationService.goBack()
         await this.props.openWorkspace({ server: customPath })
@@ -36,6 +42,9 @@ export default class Personal extends Component {
     } catch (e) {
       // Toast.show('退出登录失败')
       this.props.setUser()
+      if (this.container) {
+        this.container.setLoading(false)
+      }
     }
   }
 
@@ -47,10 +56,16 @@ export default class Personal extends Component {
     if (key !== '头像') {
       return (
         <View style={{ width: '100%' }}>
-          <View style={{ width: '100%', height: 1 }} />
           <View
             style={{
-              backgroundColor: color.content,
+              width: '100%',
+              height: 1,
+              backgroundColor: color.item_separate_white,
+            }}
+          />
+          <View
+            style={{
+              backgroundColor: color.content_white,
               width: '100%',
               height: itemHeight,
               flexDirection: 'row',
@@ -61,7 +76,7 @@ export default class Personal extends Component {
               style={{
                 marginLeft: marginLeft,
                 fontSize: fontSize,
-                color: 'white',
+                color: color.font_color_white,
               }}
             >
               {key}
@@ -71,7 +86,7 @@ export default class Personal extends Component {
               style={{
                 marginRight: marginRight,
                 fontSize: fontSize,
-                color: 'white',
+                color: color.font_color_white,
               }}
             >
               {value}
@@ -81,10 +96,9 @@ export default class Personal extends Component {
       )
     } else {
       let isCustomer =
-        this.props.user.currentUser.userName === 'Customer' &&
-        this.props.user.currentUser.password === 'Customer'
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
       let image = isCustomer
-        ? require('../../../../assets/home/系统默认头像.png')
+        ? require('../../../../assets/home/system_default_header_image.png')
         : {
           uri:
               'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
@@ -94,7 +108,7 @@ export default class Personal extends Component {
           <View style={{ width: '100%', height: 1 }} />
           <View
             style={{
-              backgroundColor: color.content,
+              backgroundColor: color.content_white,
               width: '100%',
               height: itemHeight + 10,
               flexDirection: 'row',
@@ -105,7 +119,7 @@ export default class Personal extends Component {
               style={{
                 marginLeft: marginLeft,
                 fontSize: fontSize,
-                color: 'white',
+                color: color.font_color_white,
               }}
             >
               {key}
@@ -139,7 +153,11 @@ export default class Personal extends Component {
   _renderLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+        style={{
+          width: '100%',
+          height: 8,
+          backgroundColor: color.item_separate_white,
+        }}
       />
     )
   }
@@ -155,7 +173,9 @@ export default class Personal extends Component {
           NavigationService.navigate('ToggleAccount')
         }}
       >
-        <Text style={{ fontSize: 18, color: 'white' }}>切换账号</Text>
+        <Text style={{ fontSize: 18, color: color.font_color_white }}>
+          切换账号
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -169,7 +189,9 @@ export default class Personal extends Component {
         style={styles.item2}
         onPress={this._logout}
       >
-        <Text style={{ fontSize: 18, color: 'white' }}>退出登录</Text>
+        <Text style={{ fontSize: 18, color: color.font_color_white }}>
+          退出登录
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -192,6 +214,7 @@ export default class Personal extends Component {
           {this._renderToggleAccount()}
           {this._renderLine()}
           {this._renderLogout()}
+          {/*{this._renderLine()}*/}
         </ScrollView>
       </Container>
     )

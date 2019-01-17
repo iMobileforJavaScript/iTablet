@@ -2,28 +2,29 @@ import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 export const itemWidth = '100%'
 export const itemHeight = 140
-export const imageWidth = 120
+export const imageWidth = 100
 export const imageHeight = 100
 export const textHeight = 40
 const smallFontSize = 16
 const largeFontSize = 20
+const paddingLeft = 15
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.theme,
+    backgroundColor: color.content_white,
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content,
+    backgroundColor: color.content_white,
   },
   titleTextStyle: {
     width: itemWidth,
     lineHeight: textHeight,
     fontSize: smallFontSize,
-    color: '#c0c0c0',
-    paddingLeft: 10,
+    color: color.font_color_white,
+    paddingLeft: paddingLeft,
     textAlign: 'left',
-    backgroundColor: color.theme,
+    backgroundColor: color.content_white,
   },
   itemViewStyle: {
     width: itemWidth,
@@ -31,25 +32,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 15,
     alignItems: 'center',
-    backgroundColor: color.content,
+    backgroundColor: color.content_white,
   },
   imageStyle: {
     width: imageWidth,
     height: imageHeight,
-    backgroundColor: '#c0c0c0',
+    backgroundColor: color.image_bg_white,
   },
   restTitleTextStyle: {
     width: itemWidth,
     fontSize: largeFontSize,
     fontWeight: 'bold',
-    color: 'white',
-    paddingLeft: 10,
+    color: color.font_color_white,
+    paddingLeft: paddingLeft,
     textAlign: 'left',
   },
   separateViewStyle: {
     width: itemWidth,
     height: 8,
-    backgroundColor: color.theme,
+    backgroundColor: color.item_separate_white,
   },
 })
 export default styles

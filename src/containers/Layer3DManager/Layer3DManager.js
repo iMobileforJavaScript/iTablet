@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Container } from '../../components'
 import { MapToolbar } from '../../containers/workspace/components'
 import Layer3DItem from './Layer3DItem'
+import { SScene } from 'imobile_for_reactnative'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
 export default class Map3DToolBar extends Component {
@@ -26,51 +27,43 @@ export default class Map3DToolBar extends Component {
   //   }
 
   componentDidMount() {
-    let data = [
-      {
-        title: '我的图层',
-        data: [
-          {
-            name: 'heihei',
-            type: '111',
-            visible: true,
-            selectable: true,
-            isShow: true,
-          },
-        ],
-        visible: true,
-        index: 0,
-      },
-      {
-        title: '我的底图',
-        data: [
-          {
-            name: 'xixi',
-            type: '222',
-            visible: true,
-            selectable: true,
-            isShow: true,
-          },
-        ],
-        visible: true,
-        index: 1,
-      },
-      {
-        title: '我的标注',
-        data: [
-          {
-            name: 'haha',
-            type: '333',
-            visible: true,
-            selectable: true,
-            isShow: true,
-          },
-        ],
-        visible: true,
-        index: 2,
-      },
-    ]
-    this.setState({ data: data })
+    SScene.getLayerList().then(result => {
+      let basemaplist = [],
+        layerlist = [],
+        ablelist = []
+      for (let index = 0; index < result.length; index++) {
+        const element = result[index]
+        let item = { ...element, isShow: true }
+        if (item.name === 'bingmap') {
+          basemaplist.push(item)
+        } else if (item.name === 'NodeAnimation') {
+          ablelist.push(item)
+        } else {
+          layerlist.push(item)
+        }
+      }
+      let data = [
+        {
+          title: '我的图层',
+          data: layerlist,
+          visible: true,
+          index: 0,
+        },
+        {
+          title: '我的底图',
+          data: basemaplist,
+          visible: true,
+          index: 1,
+        },
+        {
+          title: '我的标注',
+          data: ablelist,
+          visible: true,
+          index: 2,
+        },
+      ]
+      this.setState({ data: data })
+    })
   }
 
   renderListItem = ({ item }) => {
@@ -130,8 +123,8 @@ export default class Map3DToolBar extends Component {
     return (
       <MapToolbar
         navigation={this.props.navigation}
-        initIndex={3}
-        type={this.type}
+        initIndex={1}
+        type={'MAP_3D'}
       />
     )
   }

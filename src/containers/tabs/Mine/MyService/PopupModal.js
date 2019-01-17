@@ -42,7 +42,11 @@ export default class PopupModal extends PureComponent {
   _renderSeparatorLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+        style={{
+          width: '100%',
+          height: 4,
+          backgroundColor: color.item_separate_white,
+        }}
       />
     )
   }
@@ -55,7 +59,7 @@ export default class PopupModal extends PureComponent {
     }
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content }}
+        style={{ backgroundColor: color.content_white }}
         onPress={async () => {
           this._onClose()
           let result = await SOnlineService.changeServiceVisibilityWithServiceId(
@@ -89,7 +93,7 @@ export default class PopupModal extends PureComponent {
   _deleteButton = title => {
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content }}
+        style={{ backgroundColor: color.content_white }}
         onPress={async () => {
           this._onClose()
           let result = await SOnlineService.deleteServiceWithServiceId(

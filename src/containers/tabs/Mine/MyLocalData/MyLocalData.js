@@ -165,19 +165,7 @@ export default class MyLocalData extends Component {
     let title = info.section.title
     if (title !== undefined) {
       return (
-        <Text
-          style={[
-            {
-              color: 'white',
-              lineHeight: 60,
-              paddingLeft: 10,
-              fontSize: 18,
-              fontWeight: 'bold',
-              width: '100%',
-              height: 50,
-              backgroundColor: '#2D2D2F',
-            },
-          ]}
+        <TouchableOpacity
           onPress={() => {
             let sectionData = [...this.state.sectionData]
             for (let i = 0; i < sectionData.length; i++) {
@@ -189,9 +177,27 @@ export default class MyLocalData extends Component {
             }
             this.setState({ sectionData: sectionData })
           }}
+          style={{
+            width: '100%',
+            height: 60,
+            backgroundColor: color.item_separate_white,
+            justifyContent: 'center',
+          }}
         >
-          {title}
-        </Text>
+          <Text
+            style={[
+              {
+                color: color.font_color_white,
+                paddingLeft: 10,
+                fontSize: 18,
+                fontWeight: 'bold',
+                backgroundColor: color.item_separate_white,
+              },
+            ]}
+          >
+            {title}
+          </Text>
+        </TouchableOpacity>
       )
     }
     return <View />
@@ -217,20 +223,25 @@ export default class MyLocalData extends Component {
           style={{
             width: '100%',
             flexDirection: 'row',
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
             alignItems: 'center',
             height: itemHeight,
           }}
         >
           <Image
-            style={{ width: imageWidth, height: imageHeight, marginLeft: 10 }}
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              marginLeft: 10,
+              tintColor: color.font_color_white,
+            }}
             resizeMode={'contain'}
-            source={require('../../../../assets/Mine/个人主页-我的数据.png')}
+            source={require('../../../../assets/Mine/mine_my_online_data.png')}
           />
           <Text
             numberOfLines={1}
             style={{
-              color: 'white',
+              color: color.font_color_white,
               paddingLeft: 15,
               fontSize: 16,
               flex: 1,
@@ -239,9 +250,14 @@ export default class MyLocalData extends Component {
             {txtInfo}
           </Text>
           <Image
-            style={{ width: imageWidth, height: imageHeight, marginRight: 10 }}
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              marginRight: 10,
+              tintColor: color.font_color_white,
+            }}
             resizeMode={'contain'}
-            source={require('../../../../assets/Mine/工具条-更多-白.png')}
+            source={require('../../../../assets/Mine/mine_more_white.png')}
           />
         </View>
         <View
@@ -249,7 +265,7 @@ export default class MyLocalData extends Component {
           style={{
             width: '100%',
             height: separatorLineHeight,
-            backgroundColor: color.theme,
+            backgroundColor: color.item_separate_white,
           }}
         />
       </TouchableOpacity>
@@ -348,7 +364,7 @@ export default class MyLocalData extends Component {
         <SectionList
           style={{
             flex: 1,
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
           }}
           sections={this.state.sectionData}
           initialNumToRender={20}

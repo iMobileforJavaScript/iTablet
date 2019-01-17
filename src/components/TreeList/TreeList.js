@@ -14,6 +14,10 @@ export default class TreeList extends React.Component {
   props: {
     data: Array,
     numColumns?: number,
+    itemTextColor?: string,
+    itemTextSize?: number,
+    separator?: boolean,
+    separatorStyle?: any,
     style?: Object,
     cellStyle?: Object,
     rowStyle?: Object,
@@ -52,6 +56,10 @@ export default class TreeList extends React.Component {
         index={index}
         key={'row-' + index}
         style={[styles.row]}
+        textColor={this.props.itemTextColor}
+        textSize={this.props.itemTextSize}
+        separatorStyle={this.props.separatorStyle}
+        separator={this.props.separator}
         childrenStyle={[styles.children]}
         // childrenData={row.childGroups}
         keyExtractor={data => data.path}
@@ -71,6 +79,10 @@ export default class TreeList extends React.Component {
         index={index}
         key={'row-' + (data.path || (data.$ && data.$.name) || index)}
         style={[styles.row]}
+        textColor={this.props.itemTextColor}
+        textSize={this.props.itemTextSize}
+        separatorStyle={this.props.separatorStyle}
+        separator={this.props.separator}
         childrenStyle={[styles.children]}
         iconStyle={this.props.iconStyle}
         // childrenData={item.childGroups}

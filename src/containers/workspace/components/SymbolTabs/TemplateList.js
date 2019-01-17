@@ -2,6 +2,7 @@ import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { TreeList } from '../../../../components'
 import { Toast } from '../../../../utils'
+import { color } from '../../../../styles'
 // import { ConstToolType } from '../../../../constants'
 
 import { ThemeType } from 'imobile_for_reactnative'
@@ -133,6 +134,9 @@ export default class TemplateList extends React.Component {
     return (
       <TreeList
         style={[styles.container, this.props.style]}
+        itemTextColor={color.themeText2}
+        itemTextSize={color.themeText2}
+        separator={true}
         // data={this.props.template.template.symbols}
         data={this.state.data}
         onPress={this.action}
@@ -144,5 +148,6 @@ export default class TemplateList extends React.Component {
 const styles = StyleSheet.create({
   container: {
     borderWidth: 0,
+    backgroundColor: color.bgW,
   },
 })
