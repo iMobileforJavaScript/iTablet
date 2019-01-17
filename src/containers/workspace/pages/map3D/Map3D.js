@@ -40,13 +40,12 @@ export default class Map3D extends React.Component {
     this.isExample = params.isExample || false
     this.mapName = params.mapName || null
     this.state = {
-      path: params.path,
       title: '',
       popShow: false,
       inputText: '',
       placeholder: false,
     }
-    this.path = params.path || ''
+    this.name = params.name || ''
     this.type = params.type || 'MAP_3D'
   }
 
@@ -90,21 +89,25 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    if (!this.path) {
+    if (!this.name) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
       return
     }
     try {
-      let data = { server: this.path }
-      let result = await SScene.openWorkspace(data)
-      let mapList = await SScene.getMapList()
-      result &&
-        SScene.openMap(mapList[0].name).then(() => {
-          this.initListener()
-          GLOBAL.openWorkspace = true
-        })
-      this.container.setLoading(false)
+      SScene.openScence(this.name).then(() => {
+        SScene.addLayer3D(
+          'http://t0.tianditu.com/img_c/wmts',
+          'l3dBingMaps',
+          'bingmap',
+          'JPG_PNG',
+          96.0,
+          true,
+        )
+        this.initListener()
+        GLOBAL.openWorkspace = true
+        this.container.setLoading(false)
+      })
     } catch (e) {
       this.container.setLoading(false)
     }

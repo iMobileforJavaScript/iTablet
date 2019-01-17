@@ -5,7 +5,8 @@ import { color } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.subTheme,
+    // backgroundColor: color.subTheme,
+    backgroundColor: '#F0F0F0',
   },
   head: {
     height: scaleSize(60),
@@ -27,7 +28,8 @@ export default StyleSheet.create({
     backgroundColor: color.USUAL_BLUE,
   },
   headerText: {
-    color: color.themeText,
+    // color: color.themeText,
+    color: '#F0F0F0',
     textAlign: 'center',
   },
   text: {

@@ -6,9 +6,9 @@
 
 import * as React from 'react'
 import {
-  FlatList,
   TouchableOpacity,
   Text,
+  SectionList,
   View,
   Platform,
   BackHandler,
@@ -19,7 +19,7 @@ import { Toast, scaleSize } from '../../utils'
 import { MapToolbar } from '../workspace/components'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType } from '../../constants'
+import { ConstToolType, layerManagerData } from '../../constants'
 import { color, size } from '../../styles'
 // import NavigationService from '../../containers/NavigationService'
 
@@ -43,6 +43,28 @@ export default class MT_layerManager extends React.Component {
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
+      data: [
+        { title: '我的图层', data: this.props.layers },
+        { title: '我的底图', data: [] },
+        { title: '切换底图', data: layerManagerData },
+      ],
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
+    ) {
+      this.setState({
+        data: [
+          { title: '我的图层', data: this.props.layers },
+          {
+            title: '我的底图',
+            data: [this.props.layers[this.props.layers.length - 1]],
+          },
+          { title: '切换底图', data: layerManagerData },
+        ],
+      })
     }
   }
 
@@ -51,6 +73,16 @@ export default class MT_layerManager extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.setRefreshing(true)
     this.getData()
+    this.setState({
+      data: [
+        { title: '我的图层', data: this.props.layers },
+        {
+          title: '我的底图',
+          data: [this.props.layers[this.props.layers.length - 1]],
+        },
+        { title: '切换底图', data: layerManagerData },
+      ],
+    })
   }
 
   componentWillUnmount() {
@@ -390,12 +422,12 @@ export default class MT_layerManager extends React.Component {
   onToolPress = async ({ data }) => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
-        height: ConstToolType.THEME_HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[3],
         layerdata: data,
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.THEME_HEIGHT[1],
+        height: ConstToolType.TOOLBAR_HEIGHT[2],
         layerdata: data,
       })
     }
@@ -460,40 +492,99 @@ export default class MT_layerManager extends React.Component {
     return true
   }
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item, section }) => {
     // sectionID = sectionID || 0
+    if (section.title === '我的图层') {
+      return (
+        <LayerManager_item
+          key={item.id}
+          // sectionID={sectionID}
+          // rowID={item.index}
+          ref={ref => {
+            if (!this.itemRefs) {
+              this.itemRefs = {}
+            }
+            this.itemRefs[item.name] = ref
+            return this.itemRefs[item.name]
+          }}
+          layer={item.layer}
+          // map={this.map}
+          data={item}
+          isClose={this.state.currentOpenItemName !== item.name}
+          mapControl={this.mapControl}
+          setLayerVisible={this.setLayerVisible}
+          onOpen={data => {
+            // data, sectionID, rowID
+            if (this.state.currentOpenItemName !== data.name) {
+              let item = this.itemRefs[this.state.currentOpenItemName]
+              item && item.close()
+            }
+            this.setState({
+              currentOpenItemName: data.name,
+            })
+          }}
+          onPress={this.onPressRow}
+          onArrowPress={this.getChildList}
+          onToolPress={this.onToolPress}
+        />
+      )
+    } else {
+      if (item) {
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              this.onPress({ item })
+            }}
+            style={{
+              height: scaleSize(80),
+              justifyContent: 'center',
+            }}
+          >
+            <Text
+              style={{
+                marginLeft: scaleSize(50),
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: scaleSize(24),
+                color: color.black,
+              }}
+            >
+              {item.caption}
+            </Text>
+          </TouchableOpacity>
+        )
+      } else {
+        return true
+      }
+    }
+  }
+
+  onPress = async ({ item }) => {
+    await item.action()
+    this.props.getLayers()
+  }
+
+  renderSection = ({ section }) => {
     return (
-      <LayerManager_item
-        key={item.id}
-        // sectionID={sectionID}
-        // rowID={item.index}
-        ref={ref => {
-          if (!this.itemRefs) {
-            this.itemRefs = {}
-          }
-          this.itemRefs[item.name] = ref
-          return this.itemRefs[item.name]
+      <TouchableOpacity
+        style={{
+          height: scaleSize(80),
+          backgroundColor: color.content,
+          justifyContent: 'center',
         }}
-        layer={item.layer}
-        // map={this.map}
-        data={item}
-        isClose={this.state.currentOpenItemName !== item.name}
-        mapControl={this.mapControl}
-        setLayerVisible={this.setLayerVisible}
-        onOpen={data => {
-          // data, sectionID, rowID
-          if (this.state.currentOpenItemName !== data.name) {
-            let item = this.itemRefs[this.state.currentOpenItemName]
-            item && item.close()
-          }
-          this.setState({
-            currentOpenItemName: data.name,
-          })
-        }}
-        onPress={this.onPressRow}
-        onArrowPress={this.getChildList}
-        onToolPress={this.onToolPress}
-      />
+      >
+        <Text
+          style={{
+            marginLeft: scaleSize(50),
+            justifyContent: 'center',
+            alignItems: 'center',
+            fontSize: size.fontSize.fontSizeXXl,
+            color: color.white,
+          }}
+        >
+          {section.title}
+        </Text>
+      </TouchableOpacity>
     )
   }
 
@@ -504,34 +595,16 @@ export default class MT_layerManager extends React.Component {
   renderList = () => {
     return (
       <View style={{ flex: 1 }}>
-        <TouchableOpacity
-          style={{
-            height: scaleSize(60),
-            backgroundColor: color.content,
-            justifyContent: 'center',
-          }}
-        >
-          <Text
-            style={{
-              marginLeft: scaleSize(50),
-              justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: size.fontSize.fontSizeXXl,
-              color: color.white,
-            }}
-          >
-            我的图层
-          </Text>
-        </TouchableOpacity>
-        <FlatList
+        <SectionList
           refreshing={this.state.refreshing}
           onRefresh={() => {
             this.setRefreshing(true)
             this.getData()
           }}
           ref={ref => (this.listView = ref)}
-          data={this.props.layers}
+          sections={this.state.data}
           renderItem={this._renderItem}
+          renderSectionHeader={this.renderSection}
           getItemLayout={this.getItemLayout}
           keyExtractor={(item, index) => index.toString()}
         />

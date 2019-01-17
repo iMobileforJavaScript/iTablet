@@ -255,6 +255,13 @@ function getToorbarHeight(orientation, type) {
       height = ConstToolType.HEIGHT[0]
       column = 4
       break
+    case ConstToolType.MAP3D_IMPORTWORKSPACE:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[2]
+      } else {
+        height = ConstToolType.HEIGHT[1]
+      }
+      break
     default:
       height = 0
   }
