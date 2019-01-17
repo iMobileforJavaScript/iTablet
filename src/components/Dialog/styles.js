@@ -41,7 +41,7 @@ export default StyleSheet.create({
   },
   btns: {
     marginTop: scaleSize(30),
-    marginHorizontal: scaleSize(60),
+    marginHorizontal: scaleSize(40),
     height: scaleSize(80),
     flexDirection: 'row',
     justifyContent: 'space-between',
