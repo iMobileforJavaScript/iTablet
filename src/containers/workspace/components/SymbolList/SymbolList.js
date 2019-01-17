@@ -88,7 +88,7 @@ export default class SymbolList extends React.Component {
             imageSize: 50,
             count: 5,
             legendBackgroundColor: dataUtil.colorRgba(color.bgW),
-            textColor: dataUtil.colorRgba(color.themeText2),
+            textColor: dataUtil.colorRgba(color.font_color_white),
           }}
           onSymbolClick={this._onSymbolClick}
         />

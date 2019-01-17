@@ -152,7 +152,7 @@ const styles = StyleSheet.create({
   listItemName: {
     height: scaleSize(32),
     width: scaleSize(160),
-    color: color.themeText2,
+    color: color.font_color_white,
     fontSize: size.fontSize.fontSizeSm,
   },
   listItemSubTitle: {
