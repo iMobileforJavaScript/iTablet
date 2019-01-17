@@ -8,6 +8,7 @@ import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
 import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -219,7 +220,7 @@ export default class LayerManager_tolbar extends React.Component {
         <Text
           style={{
             width: '100%',
-            height: 60,
+            height: scaleSize(86),
             backgroundColor: color.content_white,
             textAlign: 'center',
             lineHeight: 60,
@@ -230,7 +231,7 @@ export default class LayerManager_tolbar extends React.Component {
         <View
           style={{
             width: '100%',
-            height: 4,
+            height: scaleSize(6),
             backgroundColor: color.item_separate_white,
           }}
         />
