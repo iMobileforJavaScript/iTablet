@@ -3007,8 +3007,9 @@ export default class ToolBar extends React.PureComponent {
     return (
       <MenuDialog
         ref={ref => (this.menuDialog = ref)}
-        list={list}
+        data={list}
         selectKey={this.state.selectKey}
+        autoSelect={true}
         onSelect={item => {
           this.setState({
             selectKey: item.selectKey,
