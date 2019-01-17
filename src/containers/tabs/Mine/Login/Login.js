@@ -75,6 +75,7 @@ export default class Login extends React.Component {
   /**试用*/
   _probation = () => {
     this.props.setUser({
+      userName: 'Customer',
       userType: UserType.PROBATION_USER,
     })
     if (!this.state.isFirstLogin) {

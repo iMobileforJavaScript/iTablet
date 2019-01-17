@@ -67,9 +67,12 @@ export default class Mine extends Component {
   }
 
   goToMyLocalData = () => {
-    // this.setState({display:'none'})
+    let userName =
+      this.props.user.currentUser.userType === UserType.PROBATION_USER
+        ? 'Customer'
+        : this.props.user.currentUser.userName
     NavigationService.navigate('MyLocalData', {
-      userName: this.props.user.currentUser.userName,
+      userName: userName,
     })
   }
   goToMyOnlineData = async () => {

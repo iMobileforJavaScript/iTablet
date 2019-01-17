@@ -21,7 +21,8 @@ export default class ToggleAccount extends Component {
 
   _renderItem = info => {
     let userName = info.item.userName
-    if (userName) {
+    let password = info.item.password
+    if (userName && password) {
       let itemHeight = 60
       let fontSize = 18
       let imageWidth = itemHeight - 10
@@ -34,7 +35,7 @@ export default class ToggleAccount extends Component {
           onPress={async () => {
             try {
               let isEmail = info.item.isEmail
-              let password = info.item.password
+
               if (
                 this.props.user.currentUser.userName === userName &&
                 this.props.user.currentUser.password === password

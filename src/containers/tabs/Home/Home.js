@@ -179,7 +179,9 @@ export default class Home extends Component {
   }
 
   render() {
-    let isLogin = this.props.currentUser.userName !== undefined
+    let isLogin =
+      this.props.currentUser.userName !== undefined &&
+      this.props.currentUser.password !== undefined
     let userImg = isLogin
       ? {
         uri:

@@ -12,6 +12,7 @@ import RNFS from 'react-native-fs'
 import { FileTools } from '../../../native'
 import ConstPath from '../../../constants/ConstPath'
 import { color } from '../../../styles'
+import UserType from '../../../constants/UserType'
 export default class RenderFindItem extends Component {
   props: {
     data: Object,
@@ -49,8 +50,9 @@ export default class RenderFindItem extends Component {
     if (
       this.props.user &&
       this.props.user.currentUser &&
-      this.props.user.currentUser.userName &&
-      this.props.user.currentUser.userName !== ''
+      (this.props.user.currentUser.userType === UserType.PROBATION_USER ||
+        (this.props.user.currentUser.userName &&
+          this.props.user.currentUser.userName !== ''))
     ) {
       if (this.state.isDownloading) {
         Toast.show('正在下载...')
@@ -63,10 +65,14 @@ export default class RenderFindItem extends Component {
         'https://www.supermapol.com/web/datas/' + dataId + '/download'
       let fileName = this.props.data.fileName
       let appHome = await FileTools.appendingHomeDirectory()
+      let userName =
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
+          ? 'Customer'
+          : this.props.user.currentUser.userName
       let fileDir =
         appHome +
         ConstPath.UserPath +
-        this.props.user.currentUser.userName +
+        userName +
         '/' +
         ConstPath.RelativePath.ExternalData
       let exists = await RNFS.exists(fileDir)
