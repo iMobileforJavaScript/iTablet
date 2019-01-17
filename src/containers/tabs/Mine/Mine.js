@@ -124,7 +124,7 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: '本地数据',
-            leftImagePath: require('../../../assets/Mine/个人主页-我的底图.png'),
+            leftImagePath: require('../../../assets/Mine/个人主页-本地数据.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
