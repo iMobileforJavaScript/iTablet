@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 import { ListSeparator } from '../../../../components'
 import constants from '../../constants'
@@ -208,7 +208,7 @@ export default class MapToolbar extends React.Component {
         key={item.key}
         title={item.title}
         textColor={'white'}
-        textStyle={{ fontSize: scaleSize(20) }}
+        textStyle={{ fontSize: setSpText(9) }}
         selected={this.state.currentIndex === index}
         image={item.image}
         selectedImage={item.selectedImage}

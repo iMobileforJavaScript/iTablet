@@ -1,7 +1,7 @@
 import { TabNavigator } from 'react-navigation'
 import React from 'react'
 import { Image, StyleSheet, View, Text } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 import { color } from '../../styles'
 import Home, { Setting, AboutITablet } from './Home'
 import Mine, {
@@ -185,12 +185,12 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: color.gray2,
-    fontSize: scaleSize(20),
+    fontSize: setSpText(10),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   selectedTabText: {
     color: color.blue2,
-    fontSize: scaleSize(20),
+    fontSize: setSpText(10),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   icon: {
