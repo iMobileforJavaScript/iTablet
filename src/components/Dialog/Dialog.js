@@ -68,7 +68,7 @@ export default class Dialog extends PureComponent {
       <View style={styles.btns}>
         <TouchableOpacity
           activeOpacity={this.props.activeOpacity}
-          style={[styles.confirmBtnStyle, this.props.style]}
+          style={[styles.confirmBtnStyle, this.props.confirmBtnStyle]}
           onPress={this.confirm}
         >
           <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
@@ -77,7 +77,7 @@ export default class Dialog extends PureComponent {
         </TouchableOpacity>
         <TouchableOpacity
           activeOpacity={this.props.activeOpacity}
-          style={[styles.cancelBtnStyle, this.props.style]}
+          style={[styles.cancelBtnStyle, this.props.cancelBtnStyle]}
           onPress={this.cancel}
         >
           <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>

@@ -157,12 +157,12 @@ export default class LayerManager_tolbar extends React.Component {
       this.dialog.setDialogVisible(true)
     } else if (section.title === '上移') {
       (async function() {
-        await SMap.moveUpLayer(this.state.layerdata.caption)
+        await SMap.moveUpLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
     } else if (section.title === '下移') {
       (async function() {
-        await SMap.moveDownLayer(this.state.layerdata.caption)
+        await SMap.moveDownLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
     } else if (section.title === '取消') {
@@ -266,10 +266,7 @@ export default class LayerManager_tolbar extends React.Component {
   cancel = () => {
     if (this.state.layerName !== '') {
       (async function() {
-        await SMap.renameLayer(
-          this.state.layerdata.caption,
-          this.state.layerName,
-        )
+        await SMap.renameLayer(this.state.layerdata.name, this.state.layerName)
         await this.props.getLayers()
       }.bind(this)())
     }
@@ -283,7 +280,6 @@ export default class LayerManager_tolbar extends React.Component {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
-        style={styles.container}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'取消'}
@@ -300,7 +296,7 @@ export default class LayerManager_tolbar extends React.Component {
                 layerName: text,
               })
             }}
-            placeholderTextColor={color.themeText}
+            placeholderTextColor={color.themeText2}
             // defaultValue={this.state.mapName}
             // value={this.state.mapName}
             placeholder={'请输入图层名称'}
