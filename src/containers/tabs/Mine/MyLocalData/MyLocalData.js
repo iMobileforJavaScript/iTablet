@@ -77,7 +77,7 @@ export default class MyLocalData extends Component {
     return arrFilterFile
   }
   _setSectionDataState = async () => {
-    let sectionData = await this._constructSectionData()
+    let sectionData = await this._constructSectionData2()
     this.setState({ sectionData: sectionData })
   }
 
@@ -159,6 +159,24 @@ export default class MyLocalData extends Component {
     }
     // console.warn(sectionData)
     return sectionData
+  }
+
+  _constructSectionData2 = async () => {
+    this.homePath = await this._getHomePath()
+    this.path =
+      this.homePath +
+      ConstPath.UserPath +
+      this.state.userName +
+      '/' +
+      ConstPath.RelativePath.ExternalData
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+    )
+    let titleWorkspace = '工作空间类型'
+    return [{ title: titleWorkspace, data: newData, isShowItem: true }]
   }
 
   _renderSectionHeader = info => {
