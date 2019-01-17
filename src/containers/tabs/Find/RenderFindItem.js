@@ -58,7 +58,6 @@ export default class RenderFindItem extends Component {
         Toast.show('正在下载...')
         return
       }
-      // Toast.show('开始下载')
       this.setState({ progress: '下载中...', isDownloading: true })
       let dataId = this.props.data.id
       let dataUrl =
