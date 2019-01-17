@@ -82,7 +82,7 @@ export default class MyOnlineData extends Component {
           downloadingEventType,
           obj => {
             let progress = obj.progress
-            let result = '下载' + progress.toFixed(2) + '%'
+            let result = '下载' + progress.toFixed(0) + '%'
             this._changeModalProgressState(result)
           },
         )

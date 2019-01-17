@@ -17,7 +17,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     height: scaleSize(80),
     backgroundColor: '#F0F0F0',
-    paddingLeft: scaleSize(50),
+    paddingLeft: scaleSize(30),
     paddingRight: scaleSize(30),
     alignItems: 'center',
     // justifyContent: 'space-between',
@@ -25,7 +25,7 @@ export default StyleSheet.create({
   selection: {
     width: scaleSize(40),
     height: scaleSize(40),
-    marginLeft: scaleSize(51),
+    marginLeft: scaleSize(10),
   },
   sectionsTitle: {
     color: '#F0F0F0',

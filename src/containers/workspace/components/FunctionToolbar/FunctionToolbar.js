@@ -12,7 +12,7 @@ import {
   ConstInfo,
   ConstPath,
 } from '../../../../constants'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import styles from './styles'
 import {
@@ -1006,7 +1006,7 @@ export default class FunctionToolbar extends React.Component {
         key={index}
         title={item.title}
         textColor={'black'}
-        textStyle={{ fontSize: scaleSize(18) }}
+        textStyle={{ fontSize: setSpText(9) }}
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}
