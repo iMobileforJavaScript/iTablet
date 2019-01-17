@@ -1,4 +1,5 @@
 import NavigationService from '../containers/NavigationService'
+import { Platform } from 'react-native'
 import constants from '../containers/workspace/constants'
 import { FileTools } from '../native'
 import ConstToolType from './ConstToolType'
@@ -83,6 +84,8 @@ export default [
     },
     action: () => {
       GLOBAL.Type = ConstToolType.MAP_3D
+      let name =
+        Platform.OS === 'android' ? 'OlympicGreen_android' : 'OlympicGreen_ios'
       // let customerPath
       // let default3DDataPath
       // if (Platform.OS === 'android') {
@@ -107,7 +110,7 @@ export default [
       // } else {
       //   ssPath = await FileTools.appendingHomeDirectory(customerPath)
       // }
-      NavigationService.navigate('Map3D', {})
+      NavigationService.navigate('Map3D', { name: name })
     },
   },
   // {
