@@ -23,10 +23,14 @@ export default {
   CLEAR_CURRENT_LABEL: 'clearCurrentLabel',
   CLOSE_CIRCLE: 'closeCircle',
   SHARE: 'SHARE',
+
   //专题制图
   THEME_CANCEL: 'theme_cancel',
   THEME_MENU: 'theme_menu',
   THEME_FLEX: 'theme_flex',
   THEME_COMMIT: 'theme_commit',
   MAP3DSHARE: 'map3dshare',
+
+  MENU_COMMIT: 'menu_commit',
+  MENU_FLEX: 'menu_flex',
 }

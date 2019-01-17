@@ -21,23 +21,21 @@ export default class ToggleAccount extends Component {
 
   _renderItem = info => {
     let userName = info.item.userName
-    if (userName) {
+    let password = info.item.password
+    if (userName && password) {
       let itemHeight = 60
       let fontSize = 18
       let imageWidth = itemHeight - 10
-      let imageSource =
-        userName === 'Customer'
-          ? require('../../../../assets/home/系统默认头像.png')
-          : {
-            uri:
-                'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
-          }
+      let imageSource = {
+        uri:
+          'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+      }
       return (
         <TouchableOpacity
           onPress={async () => {
             try {
               let isEmail = info.item.isEmail
-              let password = info.item.password
+
               if (
                 this.props.user.currentUser.userName === userName &&
                 this.props.user.currentUser.password === password
@@ -74,14 +72,20 @@ export default class ToggleAccount extends Component {
             width: '100%',
             flexDirection: 'row',
             alignItems: 'center',
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
           }}
         >
           <Image
             style={{ height: imageWidth, width: imageWidth, marginLeft: 10 }}
             source={imageSource}
           />
-          <Text style={{ fontSize: fontSize, color: 'white', marginLeft: 10 }}>
+          <Text
+            style={{
+              fontSize: fontSize,
+              color: color.font_color_white,
+              marginLeft: 10,
+            }}
+          >
             {userName}
           </Text>
         </TouchableOpacity>
@@ -99,15 +103,15 @@ export default class ToggleAccount extends Component {
     return (
       <View
         style={{
-          height: 4 + itemHeight,
+          height: 8 + itemHeight,
           width: '100%',
         }}
       >
         <View
           style={{
-            height: 4,
+            height: 8,
             width: '100%',
-            backgroundColor: color.theme,
+            backgroundColor: color.item_separate_white,
           }}
         />
         <TouchableOpacity
@@ -119,10 +123,12 @@ export default class ToggleAccount extends Component {
             width: '100%',
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
           }}
         >
-          <Text style={{ fontSize: fontSize, color: 'white' }}>添加账号</Text>
+          <Text style={{ fontSize: fontSize, color: color.font_color_white }}>
+            添加账号
+          </Text>
         </TouchableOpacity>
       </View>
     )
@@ -138,7 +144,7 @@ export default class ToggleAccount extends Component {
         }}
       >
         <FlatList
-          style={{ flex: 1, backgroundColor: color.theme }}
+          style={{ flex: 1, backgroundColor: color.content_white }}
           data={this.state.data}
           renderItem={this._renderItem}
           keyExtractor={this._keyExtractor}

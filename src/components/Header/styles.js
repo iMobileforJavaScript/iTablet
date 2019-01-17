@@ -104,7 +104,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     flexDirection: 'row',
-    right: scaleSize(25),
+    right: scaleSize(30),
     backgroundColor: 'transparent',
     // backgroundColor:"red",
   },

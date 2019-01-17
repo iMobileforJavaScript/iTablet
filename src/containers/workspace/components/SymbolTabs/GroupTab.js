@@ -50,6 +50,9 @@ export default class GroupTab extends React.Component {
     return (
       <TreeList
         style={styles.container}
+        itemTextColor={color.themeText2}
+        itemTextSize={color.themeText2}
+        separator={true}
         data={this.state.data}
         onPress={this._onPress}
       />
@@ -61,6 +64,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: scaleSize(30),
-    backgroundColor: color.theme,
+    backgroundColor: color.bgW,
+  },
+  separatorStyle: {
+    height: 1,
+    width: '100%',
+    backgroundColor: color.bgG,
   },
 })

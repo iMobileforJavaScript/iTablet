@@ -11,6 +11,7 @@ import {
   ActivityIndicator,
   SectionList,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
@@ -181,14 +182,28 @@ export default class MyService extends Component {
     let title = section.section.title
     if (title !== undefined) {
       return (
-        <Text
-          style={[styles.titleTextStyle, { fontSize: 18, fontWeight: 'bold' }]}
+        <TouchableOpacity
+          style={{
+            backgroundColor: color.item_separate_white,
+            justifyContent: 'center',
+            width: '100%',
+            height: 40,
+          }}
           onPress={() => {
             this._isShowRenderItem(section.section.isShowItem, title)
           }}
         >
-          {title}
-        </Text>
+          <Text
+            style={{
+              color: color.font_color_white,
+              fontSize: 18,
+              fontWeight: 'bold',
+              paddingLeft: 15,
+            }}
+          >
+            {title}
+          </Text>
+        </TouchableOpacity>
       )
     }
     return <View />
@@ -222,7 +237,7 @@ export default class MyService extends Component {
         <Text
           style={[
             styles.titleTextStyle,
-            { backgroundColor: color.content, textAlign: 'center' },
+            { backgroundColor: color.content_white, textAlign: 'center' },
           ]}
         >
           没有服务
@@ -432,7 +447,7 @@ export default class MyService extends Component {
             height: 50,
             justifyContent: 'center',
             alignItems: 'center',
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
           }}
         >
           <ActivityIndicator
@@ -451,7 +466,7 @@ export default class MyService extends Component {
               lineHeight: 20,
               fontSize: 12,
               textAlign: 'center',
-              color: 'white',
+              color: color.font_color_white,
             }}
           >
             加载中...
@@ -467,7 +482,7 @@ export default class MyService extends Component {
               lineHeight: 30,
               fontSize: 12,
               textAlign: 'center',
-              backgroundColor: color.content,
+              backgroundColor: color.content_white,
             }}
           >
             -----这是底线-----
@@ -517,9 +532,9 @@ export default class MyService extends Component {
                 refreshing={this.state.isRefreshing}
                 onRefresh={this._onRefresh}
                 colors={['orange', 'red']}
-                tintColor={'white'}
+                tintColor={'orange'}
                 title={'刷新中...'}
-                titleColor={'white'}
+                titleColor={'orange'}
                 enabled={true}
               />
             }

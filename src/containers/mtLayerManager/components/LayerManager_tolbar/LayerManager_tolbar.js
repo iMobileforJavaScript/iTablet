@@ -43,7 +43,7 @@ export default class LayerManager_tolbar extends React.Component {
       data: [],
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
-      isSelectlist: false,
+      showMenuDialog: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       layerdata: props.layerdata,
@@ -155,6 +155,16 @@ export default class LayerManager_tolbar extends React.Component {
       this.setVisible(false)
     } else if (section.title === '重命名') {
       this.dialog.setDialogVisible(true)
+    } else if (section.title === '上移') {
+      (async function() {
+        await SMap.moveUpLayer(this.state.layerdata.caption)
+        await this.props.getLayers()
+      }.bind(this)())
+    } else if (section.title === '下移') {
+      (async function() {
+        await SMap.moveDownLayer(this.state.layerdata.caption)
+        await this.props.getLayers()
+      }.bind(this)())
     } else if (section.title === '取消') {
       this.setVisible(false)
     } else if (section.title === '新建专题图') {
@@ -210,7 +220,7 @@ export default class LayerManager_tolbar extends React.Component {
           style={{
             width: '100%',
             height: 60,
-            backgroundColor: '#555555',
+            backgroundColor: color.content_white,
             textAlign: 'center',
             lineHeight: 60,
           }}
@@ -218,7 +228,11 @@ export default class LayerManager_tolbar extends React.Component {
           {section.title}
         </Text>
         <View
-          style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }}
+          style={{
+            width: '100%',
+            height: 4,
+            backgroundColor: color.item_separate_white,
+          }}
         />
       </TouchableOpacity>
     )

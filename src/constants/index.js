@@ -18,6 +18,9 @@ import {
   region,
   grid,
   layerManagerData,
+  uniqueMenuInfo,
+  rangeMenuInfo,
+  labelMenuInfo,
 } from './FunctionToolbarModule'
 
 import {
@@ -51,4 +54,7 @@ export {
   pointColorSet,
   regionBeforeColorSet,
   regionAfterColorSet,
+  uniqueMenuInfo,
+  rangeMenuInfo,
+  labelMenuInfo,
 }

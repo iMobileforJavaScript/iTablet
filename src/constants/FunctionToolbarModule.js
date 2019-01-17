@@ -3,23 +3,22 @@ import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
 
-function OpenData(data, index) {
-  (async function() {
-    let layers = await SMap.getLayersByType()
-    // Layer index = 0 为顶层
-    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-      await SMap.removeLayer(layers.length - i)
+async function OpenData(data, index) {
+  let layers = await SMap.getLayersByType()
+  // Layer index = 0 为顶层
+  for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+    await SMap.removeLayer(layers.length - i)
+  }
+  if (data instanceof Array) {
+    for (let i = data.length - 1; i >= 0; i--) {
+      await SMap.openDatasource(data[i].DSParams, index, false)
     }
-    if (data instanceof Array) {
-      for (let i = data.length - 1; i >= 0; i--) {
-        await SMap.openDatasource(data[i].DSParams, index, false)
-      }
-      GLOBAL.BaseMapSize = data.length
-    } else {
-      await SMap.openDatasource(data.DSParams, index, false)
-      GLOBAL.BaseMapSize = 1
-    }
-  }.bind(this)())
+    GLOBAL.BaseMapSize = data.length
+  } else {
+    await SMap.openDatasource(data.DSParams, index, false)
+    GLOBAL.BaseMapSize = 1
+  }
+  return true
 }
 
 const layerAdd = [
@@ -32,6 +31,7 @@ const layerAdd = [
     ],
   },
 ]
+
 const BotMap = [
   {
     title: 'Google',
@@ -159,67 +159,67 @@ const layerManagerData = [
   {
     caption: 'Google RoadMap',
     action: () => {
-      OpenData(ConstOnline.Google, 0)
+      return OpenData(ConstOnline.Google, 0)
     },
   },
   {
     caption: 'Google Staelite',
     action: () => {
-      OpenData(ConstOnline.Google, 1)
+      return OpenData(ConstOnline.Google, 1)
     },
   },
   {
     caption: 'Google Terrain',
     action: () => {
-      OpenData(ConstOnline.Google, 2)
+      return OpenData(ConstOnline.Google, 2)
     },
   },
   {
     caption: 'Google Hybrid',
     action: () => {
-      OpenData(ConstOnline.Google, 3)
+      return OpenData(ConstOnline.Google, 3)
     },
   },
   {
     caption: '全球矢量地图',
     action: () => {
-      OpenData(ConstOnline.TD, 0)
+      return OpenData(ConstOnline.TD, 0)
     },
   },
   {
     caption: '全球影像地图服务',
     action: () => {
-      OpenData(ConstOnline.TDYXM, 0)
+      return OpenData(ConstOnline.TDYXM, 0)
     },
   },
   {
     caption: 'Baidu Map',
     action: () => {
-      OpenData(ConstOnline.Baidu, 0)
+      return OpenData(ConstOnline.Baidu, 0)
     },
   },
   {
     caption: 'Standard',
     action: () => {
-      OpenData(ConstOnline.OSM, 0)
+      return OpenData(ConstOnline.OSM, 0)
     },
   },
   {
     caption: 'CycleMap',
     action: () => {
-      OpenData(ConstOnline.OSM, 1)
+      return OpenData(ConstOnline.OSM, 1)
     },
   },
   {
     caption: 'Transport',
     action: () => {
-      OpenData(ConstOnline.OSM, 2)
+      return OpenData(ConstOnline.OSM, 2)
     },
   },
   {
     caption: 'quanguo',
     action: () => {
-      OpenData(ConstOnline.SuperMapCloud, 0)
+      return OpenData(ConstOnline.SuperMapCloud, 0)
     },
   },
 ]
@@ -262,10 +262,11 @@ const line = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
         selectName: '线宽',
@@ -325,12 +326,13 @@ const point = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '大小',
         selectKey: '大小',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -364,12 +366,13 @@ const point = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '旋转角度',
         selectKey: '旋转角度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -381,12 +384,13 @@ const point = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '透明度',
         selectKey: '点透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -466,10 +470,11 @@ const region = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
         selectName: '透明度',
@@ -483,7 +488,7 @@ const region = [
   //   action: () => {
   //     GLOBAL.toolBox.setState({
   //       isTouchProgress: true,
-  //       isSelectlist: false,
+  //       showMenuDialog: false,
   //       buttons: [
   //         ToolbarBtnType.CANCEL,
   //         ToolbarBtnType.MENUS,
@@ -500,12 +505,13 @@ const grid = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '透明度',
         selectKey: '栅格透明度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -517,12 +523,13 @@ const grid = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '对比度',
         selectKey: '栅格对比度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -534,12 +541,13 @@ const grid = [
     action: () => {
       GLOBAL.toolBox.setState({
         isTouchProgress: true,
-        isSelectlist: false,
+        showMenuDialog: false,
         selectName: '亮度',
         selectKey: '栅格亮度',
         buttons: [
           ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENUS,
+          // ToolbarBtnType.MENUS,
+          ToolbarBtnType.MENU,
           ToolbarBtnType.PLACEHOLDER,
         ],
       })
@@ -547,6 +555,178 @@ const grid = [
     selectKey: '栅格亮度',
   },
 ]
+
+//单值
+const uniqueMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getUniqueColorScheme(
+          ConstToolType.MAP_THEME_PARAM_UNIQUE_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
+//分段
+const rangeMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '分段方法',
+    selectKey: '分段方法',
+    btntitle: '分段方法',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeMode(
+          ConstToolType.MAP_THEME_PARAM_RANGE_MODE,
+          '分段方法',
+        )
+    },
+  },
+  {
+    key: '分段个数',
+    selectKey: '分段个数',
+    btntitle: '分段个数',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeParameter(
+          ConstToolType.MAP_THEME_PARAM_RANGE_PARAM,
+          '分段个数',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_RANGE_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
+//统一标签
+const labelMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '背景形状',
+    selectKey: '背景形状',
+    btntitle: '背景形状',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelBackShape(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE,
+          '背景形状',
+        )
+    },
+  },
+  {
+    key: '背景颜色',
+    selectKey: '背景颜色',
+    btntitle: '背景颜色',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelBackColor(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
+          '背景颜色',
+        )
+    },
+  },
+  // {
+  //   key: '字体',
+  //   btntitle: '字体',
+  //   action: () => {
+  //     this.setSelectedMenu('字体')
+  //     this.setDialogVisible(false)
+
+  //     const toolRef = this.props.getToolBarRef()
+  //     if (toolRef) {
+  //       toolRef.getLabelFontName(
+  //         ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTNAME,
+  //       )
+  //     }
+  //   },
+  // },
+  {
+    key: '字号',
+    selectKey: '字号',
+    btntitle: '字号',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontSize(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FONTSIZE,
+          '字号',
+        )
+    },
+  },
+  {
+    key: '旋转角度',
+    selectKey: '旋转角度',
+    btntitle: '旋转角度',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontRotation(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_ROTATION,
+          '旋转角度',
+        )
+    },
+  },
+  {
+    key: '颜色',
+    selectKey: '颜色',
+    btntitle: '颜色',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getLabelFontColor(
+          ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR,
+          '颜色',
+        )
+    },
+  },
+]
+
 export {
   layerAdd,
   BotMap,
@@ -556,4 +736,7 @@ export {
   point,
   region,
   grid,
+  uniqueMenuInfo,
+  rangeMenuInfo,
+  labelMenuInfo,
 }

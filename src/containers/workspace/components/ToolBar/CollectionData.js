@@ -301,9 +301,9 @@ async function createCollector(type) {
     let datasourcePath = await FileTools.appendingHomeDirectory(
       _params.user && _params.user.currentUser && _params.user.currentUser.name
         ? ConstPath.UserPath +
-          _params.user.currentUser.name +
-          '/' +
-          ConstPath.RelativePath.Datasource
+            _params.user.currentUser.name +
+            '/' +
+            ConstPath.RelativePath.Datasource
         : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
     )
 

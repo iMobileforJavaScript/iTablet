@@ -150,6 +150,7 @@ export default class ToolBarSectionList extends React.Component {
           styles.item,
           this.props.itemStyle,
           item.backgroundColor && { backgroundColor: item.backgroundColor },
+          item.isSelected ? styles.itemSelected : styles.item,
         ]}
         onPress={() => this.itemAction({ item, index, section })}
       >
@@ -166,6 +167,7 @@ export default class ToolBarSectionList extends React.Component {
           </TouchableOpacity>
         )}
         {item.image && this.getImg(item)}
+        {item.datasetType && item.datasetName && this.getDatasetImage(item)}
         <View
           style={{
             flexDirection: 'column',
@@ -200,18 +202,43 @@ export default class ToolBarSectionList extends React.Component {
 
   getInfo = item => {
     // let lastModifiedDate = DateUtil.formatDate(item.StatResult.mtime.getTime(), "yyyy-MM-dd hh:mm:ss")
-    // type 根据类型返回固定的信息
+    // type 根据类型返回信息
     // item.info = {
     //   infoType: 'mtime',
     //   lastModifiedDate: item.mtime,
     // }
+    //  item.info = {
+    //    infoType: 'fieldType',
+    //    fieldType: item.fieldType,
+    //  }
+    // item.info = {
+    //   infoType: 'dataset',
+    //   geoCoordSysType: item.geoCoordSysType,
+    //   prjCoordSysType: item.prjCoordSysType,
+    // }
     let info
     if (item.info.infoType === 'mtime') {
       info = '最后修改时间：' + item.info.lastModifiedDate
+    } else if (item.info.infoType === 'fieldType') {
+      info = '字段类型：' + item.info.fieldType
+    } else if (item.info.infoType === 'dataset') {
+      let geoCoordSysType = item.info.geoCoordSysType
+      let prjCoordSysType = item.info.prjCoordSysType
+      info =
+        '地理坐标系：' + geoCoordSysType + '， 投影坐标系：' + prjCoordSysType
     } else {
       return
     }
-    return <Text style={styles.itemInfo}>{info}</Text>
+    return (
+      <Text
+        style={[
+          item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
+          item.isSelected ? { color: color.grayLight } : { color: color.gray },
+        ]}
+      >
+        {info}
+      </Text>
+    )
   }
 
   /**颜色方案Item */
@@ -236,36 +263,21 @@ export default class ToolBarSectionList extends React.Component {
 
   /**字段表达式Item */
   getExpressionItem = item => {
-    const itemSelectedStyle = {
-      width: this.props.device.width,
-      paddingLeft: scaleSize(60),
-      // textAlign: 'center',
-      // alignItems: 'center',
-      // justifyContent: 'center',
-      textAlignVertical: 'center',
-      fontSize: size.fontSize.fontSizeMd,
-      height: scaleSize(80),
-      backgroundColor: color.gray,
-      color: color.white,
-    }
-    return (
-      <Text style={item.isSelected ? itemSelectedStyle : styles.itemTitle}>
-        {item.expression}
-      </Text>
-    )
+    return <Text style={styles.itemTitle}>{item.expression}</Text>
   }
 
   /**数据集类型字段Item */
   getDatasetItem = item => {
+    return <Text style={styles.dataset_title}>{item.datasetName}</Text>
+  }
+  /**数据集类型字段Item */
+  getDatasetImage = item => {
     return (
-      <View style={styles.item}>
-        <Image
-          source={this.getDatasetTypeImg(item)}
-          resizeMode={'contain'}
-          style={styles.dataset_type_img}
-        />
-        <Text style={styles.dataset_title}>{item.datasetName}</Text>
-      </View>
+      <Image
+        source={this.getDatasetTypeImg(item)}
+        resizeMode={'contain'}
+        style={styles.dataset_type_img}
+      />
     )
   }
 
@@ -327,6 +339,7 @@ export default class ToolBarSectionList extends React.Component {
         keyExtractor={(item, index) => index}
         getItemLayout={this.getItemLayout}
         ItemSeparatorComponent={this.renderItemSeparator}
+        renderSectionFooter={this.renderItemSeparator}
       />
     )
   }
@@ -412,8 +425,17 @@ const styles = StyleSheet.create({
     height: scaleSize(1),
     backgroundColor: color.subTheme,
   },
-  itemInfo: {
+  imgItemInfo: {
     marginLeft: scaleSize(30),
+    marginTop: scaleSize(4),
+    fontSize: scaleSize(15),
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    textAlignVertical: 'center',
+    color: color.gray,
+  },
+  itemInfo: {
+    marginLeft: scaleSize(60),
     marginTop: scaleSize(4),
     fontSize: scaleSize(15),
     height: scaleSize(30),
@@ -433,5 +455,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     color: color.themeText,
     textAlignVertical: 'center',
+  },
+  itemSelected: {
+    height: scaleSize(80),
+    backgroundColor: color.gray,
+    alignItems: 'center',
+    flexDirection: 'row',
   },
 })

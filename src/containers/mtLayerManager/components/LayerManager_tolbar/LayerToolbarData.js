@@ -19,6 +19,14 @@ const layersetting = [
     title: '重命名',
     data: [],
   },
+  {
+    title: '上移',
+    data: [],
+  },
+  {
+    title: '下移',
+    data: [],
+  },
   // {
   //   title: '复制',
   //   data: [],
@@ -68,6 +76,14 @@ const layerThemeSetting = [
   },
   {
     title: '重命名',
+    data: [],
+  },
+  {
+    title: '上移',
+    data: [],
+  },
+  {
+    title: '下移',
     data: [],
   },
   {

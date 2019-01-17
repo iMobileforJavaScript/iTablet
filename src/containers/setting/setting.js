@@ -99,8 +99,8 @@ export default class setting extends Component {
               <Text style={styles.itemName} />
               <Switch
                 style={styles.switch}
-                trackColor={'black'}
-                thumbColor={'white'}
+                trackColor={{ false: 'white', true: '#505050' }}
+                thumbColor={item.value ? 'white' : '#505050'}
                 value={item.value}
                 onValueChange={value => {
                   this._onValueChange(value, item, index)
