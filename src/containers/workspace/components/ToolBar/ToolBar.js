@@ -190,7 +190,11 @@ export default class ToolBar extends React.PureComponent {
     this.setState({
       column: data.column,
     })
-    this.showToolbar()
+    if (this.state.type.indexOf('MAP_THEME_PARAM') >= 0) {
+      this.isBoxShow && this.showToolbar()
+    } else {
+      this.isShow && this.showToolbar()
+    }
   }
 
   getOriginType = () => {
