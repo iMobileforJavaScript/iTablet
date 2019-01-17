@@ -18,7 +18,7 @@ export default StyleSheet.create({
     height: scaleSize(80),
     backgroundColor: '#F0F0F0',
     paddingLeft: scaleSize(50),
-    // paddingRight: scaleSize(80),
+    paddingRight: scaleSize(30),
     alignItems: 'center',
     // justifyContent: 'space-between',
   },
@@ -36,6 +36,7 @@ export default StyleSheet.create({
     color: '#303030',
     fontSize: scaleSize(26),
     marginLeft: scaleSize(15),
+    // marginRight:scaleSize(30),
   },
   itemValue: {
     color: '#A0A0A0',
