@@ -1006,7 +1006,7 @@ export default class FunctionToolbar extends React.Component {
         key={index}
         title={item.title}
         textColor={'black'}
-        textStyle={{ fontSize: setSpText(10) }}
+        textStyle={{ fontSize: setSpText(9) }}
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}
