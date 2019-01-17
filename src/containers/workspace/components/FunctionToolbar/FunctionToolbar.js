@@ -400,6 +400,12 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
+    let isAnyOpenedDS = true //是否有打开的数据源
+    isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+    if (!isAnyOpenedDS) {
+      Toast.show('请先添加数据源')
+      return
+    }
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -555,55 +561,80 @@ export default class FunctionToolbar extends React.Component {
       ToolbarBtnType.THEME_CANCEL,
       // ToolbarBtnType.THEME_COMMIT,
     ]
-    data[0] = {
-      title: '选择数据源',
-      data: [
-        {
-          title: '选择目录',
-          theme_add_udb: true,
-        },
-      ],
-    }
-    SThemeCartography.getAllDatasetNames().then(getdata => {
-      getdata.reverse()
-      for (let i = 0; i < getdata.length; i++) {
-        let datalist = getdata[i]
-        datalist.list.forEach(item => {
-          if (item.geoCoordSysType && item.prjCoordSysType) {
-            item.info = {
-              infoType: 'dataset',
-              geoCoordSysType: item.geoCoordSysType,
-              prjCoordSysType: item.prjCoordSysType,
-            }
-          }
-        })
-        data[i + 1] = {
-          title: datalist.datasource.alias,
-          image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-          data: datalist.list,
-        }
-      }
-
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
-          containerType: 'list',
-          isFullScreen: true,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          listSelectable: false, //单选框
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-          data,
-          buttons: buttons,
-        })
-        toolRef.scrollListToLocation()
+    let customerUDBPath = await FileTools.appendingHomeDirectory(
+      ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+    )
+    let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+      extension: 'udb',
+      type: 'file',
+    })
+    customerUDBs.forEach(item => {
+      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
       }
     })
+
+    let userUDBPath, userUDBs
+    if (this.props.user && this.props.user.currentUser.userName) {
+      userUDBPath =
+        (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativePath.Datasource
+      userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+      userUDBs.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+      })
+
+      data = [
+        {
+          title: Const.PUBLIC_DATA_SOURCE,
+          data: customerUDBs,
+        },
+        {
+          title: Const.DATA_SOURCE,
+          image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+          data: userUDBs,
+        },
+      ]
+    } else {
+      data = [
+        {
+          title: Const.DATA_SOURCE,
+          image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+          data: customerUDBs,
+        },
+      ]
+    }
+
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
+        containerType: 'list',
+        isFullScreen: true,
+        isTouchProgress: false,
+        showMenuDialog: false,
+        listSelectable: false, //单选框
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        data,
+        buttons: buttons,
+      })
+      toolRef.scrollListToLocation()
+    }
   }
 
   Tagging = async () => {

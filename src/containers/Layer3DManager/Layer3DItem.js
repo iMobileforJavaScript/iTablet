@@ -41,7 +41,7 @@ export default class Layer3DItem extends Component {
     let visibleImg = this.state.visible
       ? require('../../assets/map/Frenchgrey/icon_visible_selected.png')
       : require('../../assets/map/Frenchgrey/icon_visible.png')
-    let moreImg = require('../../assets/map/Frenchgrey/icon_more.png')
+    // let moreImg = require('../../assets/map/Frenchgrey/icon_more.png')
     let typeImg = require('../../assets/map/Frenchgrey/icon_vectorfile.png')
     // console.log(this.state.visible, this.state.selectable)
     // console.log(selectImg, visibleImg)
@@ -59,9 +59,9 @@ export default class Layer3DItem extends Component {
           <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
             <Text style={styles.itemName}>{this.state.name}</Text>
           </ScrollView>
-          <TouchableOpacity style={styles.moreView} onPress={this.more}>
+          {/* <TouchableOpacity style={styles.moreView} onPress={this.more}>
             <Image source={moreImg} style={styles.moreImg} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.itemSeparator} />
       </View>

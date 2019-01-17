@@ -4,7 +4,14 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, Modal, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  Modal,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native'
 
 import styles from './styles'
 
@@ -50,6 +57,10 @@ export default class Dialog extends PureComponent {
   //控制Modal框是否可以展示
   setDialogVisible(visible) {
     visible !== this.state.visible && this.setState({ visible: visible })
+  }
+
+  getState = () => {
+    return this.state
   }
 
   confirm = () => {
@@ -103,7 +114,11 @@ export default class Dialog extends PureComponent {
       >
         <View style={[styles.container, this.props.backgroundStyle]}>
           {this.props.header}
-          <View style={[styles.dialogStyle, this.props.style]}>
+          <KeyboardAvoidingView
+            style={[styles.dialogStyle, this.props.style]}
+            contentContainerStyle={[styles.dialogStyle, this.props.style]}
+            behavior={Platform.OS === 'ios' && 'position'}
+          >
             {this.props.title && (
               <Text style={[styles.title, this.props.titleStyle]}>
                 {this.props.title}
@@ -116,7 +131,7 @@ export default class Dialog extends PureComponent {
             )}
             {this.props.children}
             {this.renderBtns()}
-          </View>
+          </KeyboardAvoidingView>
         </View>
       </Modal>
     )
@@ -131,7 +146,11 @@ export default class Dialog extends PureComponent {
           style={[styles.nonModalContainer, this.props.backgroundStyle]}
         >
           {this.props.header}
-          <View style={[styles.dialogStyle, this.props.style]}>
+          <KeyboardAvoidingView
+            style={[styles.dialogStyle, this.props.style]}
+            contentContainerStyle={[styles.dialogStyle, this.props.style]}
+            behavior={Platform.OS === 'ios' && 'position'}
+          >
             {this.props.title && (
               <Text style={[styles.title, this.props.titleStyle]}>
                 {this.props.title}
@@ -144,7 +163,7 @@ export default class Dialog extends PureComponent {
             )}
             {this.props.children}
             {this.renderBtns()}
-          </View>
+          </KeyboardAvoidingView>
         </View>
       )
     } else {

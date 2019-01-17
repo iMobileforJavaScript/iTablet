@@ -24,7 +24,7 @@ export default class MapSetting extends Component {
               <Switch
                 style={styles.switch}
                 trackColor={{ false: 'white', true: '#505050' }}
-                thumbColor={'white'}
+                thumbColor={this.props.data.value ? 'white' : '#505050'}
                 ios_backgroundColor={
                   this.props.data.value ? color.theme : color.border
                 }

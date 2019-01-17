@@ -105,7 +105,12 @@ export default class LayerAttributeTable extends React.Component {
         widthArr:
           this.props.widthArr.length > 0 ? this.props.widthArr : widthArr,
         tableData: dataList,
+        tableHead: this.props.tableHead,
       })
+      this.scrollView &&
+        this.scrollView.scrollTo({ x: 0, y: 0, animated: false })
+      this.scrollView2 &&
+        this.scrollView2.scrollTo({ x: 0, y: 0, animated: false })
     }
   }
 
@@ -321,6 +326,7 @@ export default class LayerAttributeTable extends React.Component {
           />
         </Table>
         <ScrollView
+          ref={ref => (this.scrollView = ref)}
           style={styles.dataWrapper}
           refreshControl={
             <RefreshControl
@@ -389,7 +395,11 @@ export default class LayerAttributeTable extends React.Component {
 
   renderScrollTable = () => {
     return (
-      <ScrollView style={{ flex: 1 }} horizontal={true}>
+      <ScrollView
+        ref={ref => (this.scrollView = ref)}
+        style={{ flex: 1 }}
+        horizontal={true}
+      >
         <View>
           <Table borderStyle={styles.border}>
             <Row
@@ -400,7 +410,10 @@ export default class LayerAttributeTable extends React.Component {
               textStyle={styles.headerText}
             />
           </Table>
-          <ScrollView style={styles.dataWrapper}>
+          <ScrollView
+            ref={ref => (this.scrollView2 = ref)}
+            style={styles.dataWrapper}
+          >
             <Table borderStyle={styles.border}>
               {this.state.tableData.map((rowData, index) => {
                 // let data = rowData && rowData[1].data && rowData[1].data.fieldInfo || {}
