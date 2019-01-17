@@ -73,6 +73,16 @@ export default class MT_layerManager extends React.Component {
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.setRefreshing(true)
     this.getData()
+    this.setState({
+      data: [
+        { title: '我的图层', data: this.props.layers },
+        {
+          title: '我的底图',
+          data: [this.props.layers[this.props.layers.length - 1]],
+        },
+        { title: '切换底图', data: layerManagerData },
+      ],
+    })
   }
 
   componentWillUnmount() {
@@ -395,12 +405,12 @@ export default class MT_layerManager extends React.Component {
   onToolPress = async ({ data }) => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
-        height: ConstToolType.THEME_HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[1],
         layerdata: data,
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.THEME_HEIGHT[1],
+        height: ConstToolType.TOOLBAR_HEIGHT[0],
         layerdata: data,
       })
     }
@@ -502,29 +512,33 @@ export default class MT_layerManager extends React.Component {
         />
       )
     } else {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            this.onPress({ item })
-          }}
-          style={{
-            height: scaleSize(80),
-            justifyContent: 'center',
-          }}
-        >
-          <Text
+      if (item) {
+        return (
+          <TouchableOpacity
+            onPress={() => {
+              this.onPress({ item })
+            }}
             style={{
-              marginLeft: scaleSize(50),
+              height: scaleSize(80),
               justifyContent: 'center',
-              alignItems: 'center',
-              fontSize: scaleSize(24),
-              color: color.black,
             }}
           >
-            {item.caption}
-          </Text>
-        </TouchableOpacity>
-      )
+            <Text
+              style={{
+                marginLeft: scaleSize(50),
+                justifyContent: 'center',
+                alignItems: 'center',
+                fontSize: scaleSize(24),
+                color: color.black,
+              }}
+            >
+              {item.caption}
+            </Text>
+          </TouchableOpacity>
+        )
+      } else {
+        return true
+      }
     }
   }
 

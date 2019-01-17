@@ -40,7 +40,7 @@ export default StyleSheet.create({
     color: color.themeText,
   },
   btns: {
-    marginTop: scaleSize(30),
+    // marginTop: scaleSize(30),
     marginHorizontal: scaleSize(60),
     height: scaleSize(80),
     flexDirection: 'row',
