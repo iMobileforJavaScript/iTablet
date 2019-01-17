@@ -3014,6 +3014,7 @@ export default class ToolBar extends React.PureComponent {
         data={list}
         selectKey={this.state.selectKey}
         autoSelect={true}
+        device={this.props.device}
         onSelect={item => {
           this.setState({
             selectKey: item.selectKey,
