@@ -89,7 +89,7 @@ export default StyleSheet.create({
     color: color.themeText2,
     // width: scaleSize(160),
     textAlign: 'center',
-    backgroundColor: color.subTheme,
+    backgroundColor: 'transparent',
   },
   input: {
     flex: 1,

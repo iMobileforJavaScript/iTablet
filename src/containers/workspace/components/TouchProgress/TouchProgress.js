@@ -20,7 +20,10 @@ const positionWidth = screen.deviceWidth //设备的宽度
 export default class TouchProgress extends Component {
   render() {
     return (
-      <View style={styles.box} {...this._panResponder.panHandlers}>
+      <View
+        style={[styles.box, { width: '100%' }]}
+        {...this._panResponder.panHandlers}
+      >
         <View style={styles.container}>
           <View style={styles.line}>
             <View
@@ -428,7 +431,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: scaleSize(40),
     justifyContent: 'center',
-    width: '100%',
     left: 0,
     top: 0,
   },
