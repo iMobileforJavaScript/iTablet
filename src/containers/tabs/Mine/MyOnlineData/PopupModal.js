@@ -57,7 +57,11 @@ export default class PopupModal extends PureComponent {
   _renderSeparatorLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+        style={{
+          width: '100%',
+          height: 4,
+          backgroundColor: color.item_separate_white,
+        }}
       />
     )
   }
@@ -75,7 +79,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
           onPress={async () => {
             if (title === '发布服务') {
               this.props.onPublishService()
@@ -122,7 +126,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
           onPress={async () => {
             this.props.onChangeDataVisibility()
           }}
@@ -158,7 +162,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
           onPress={() => {
             if (this.props.data.isDownloading === true) {
               if (progress.indexOf('%') !== -1) {
@@ -199,7 +203,7 @@ export default class PopupModal extends PureComponent {
   _deleteButton = title => {
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content }}
+        style={{ backgroundColor: color.content_white }}
         onPress={async () => {
           this.props.onDeleteData()
         }}

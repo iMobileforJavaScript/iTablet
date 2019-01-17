@@ -54,7 +54,6 @@ export default {
   grayLight2: '#BCC3CE',
   // border: '#e0e0e0',
   title2: '#454545',
-  content: '#555555',
   background2: '#f5f7fa',
   statusBarColor: 'white',
   blue1: '#4BA0FF',
@@ -67,4 +66,13 @@ export default {
   USUAL_PURPLE: '#871F78',
 
   green1: '#1afa29',
+
+  /** 深色版*/
+  content: '#555555',
+  /** 浅色版*/
+  item_separate_white: '#727272',
+  content_white: '#F0F0F0',
+  font_color_white: '#303030',
+  image_bg_white: '#727272',
+  theme_white: '#303030',
 }

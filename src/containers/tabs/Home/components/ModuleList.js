@@ -342,7 +342,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#707070',
     borderRadius: scaleSize(4),
-    elevation: 6,
+    elevation: 2,
     shadowOffset: { width: 0, height: 0 },
     shadowColor: 'black',
     shadowOpacity: 1,

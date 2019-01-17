@@ -749,7 +749,7 @@ export default class FunctionToolbar extends React.Component {
               // })
               // this.getflylist()
             },
-            image: require('../../../../assets/function/icon_symbolFly.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_symbolFly.png'),
           },
           {
             title: '更多',

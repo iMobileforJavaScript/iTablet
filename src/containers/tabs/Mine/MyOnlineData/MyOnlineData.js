@@ -28,7 +28,7 @@ let _iDataListTotal = -1
 let _iDownloadingIndex = -1
 let _arrOnlineData = [{}]
 let _previousUserName = ''
-// let _callBackIos
+let _callBackIos
 export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
@@ -64,7 +64,7 @@ export default class MyOnlineData extends Component {
   }
 
   componentWillUnmount() {
-    this._removeListener()
+    // this._removeListener()
   }
   _addListener = () => {
     let downloadingEventType =
@@ -73,32 +73,34 @@ export default class MyOnlineData extends Component {
       'com.supermap.RN.Mapcontrol.online_service_downloadfailure'
     let downloadedType = 'com.supermap.RN.Mapcontrol.online_service_downloaded'
     if (Platform.OS === 'ios') {
-      let _callBackIos
+      // let _callBackIos
       if (_callBackIos === undefined) {
         _callBackIos = SOnlineService.objCallBack()
+        this.downloadingListener = _callBackIos.addListener(
+          downloadingEventType,
+          obj => {
+            let progress = obj.progress
+            let result = '下载' + progress.toFixed(2) + '%'
+            this._changeModalProgressState(result)
+          },
+        )
+        this.downloadFailureListener = _callBackIos.addListener(
+          downloadFailureType,
+          () => {
+            let result = '下载失败'
+            this._changeModalProgressState(result)
+            this._resetDownloadIndex(-1)
+          },
+        )
+        this.downloadedListener = _callBackIos.addListener(
+          downloadedType,
+          () => {
+            let result = '下载完成'
+            this._changeModalProgressState(result)
+            this._resetDownloadIndex(-1)
+          },
+        )
       }
-
-      this.downloadingListener = _callBackIos.addListener(
-        downloadingEventType,
-        obj => {
-          let progress = obj.progress
-          let result = '下载' + progress.toFixed(2) + '%'
-          this._changeModalProgressState(result)
-        },
-      )
-      this.downloadFailureListener = _callBackIos.addListener(
-        downloadFailureType,
-        () => {
-          let result = '下载失败'
-          this._changeModalProgressState(result)
-          this._resetDownloadIndex(-1)
-        },
-      )
-      this.downloadedListener = _callBackIos.addListener(downloadedType, () => {
-        let result = '下载完成'
-        this._changeModalProgressState(result)
-        this._resetDownloadIndex(-1)
-      })
     }
     if (Platform.OS === 'android') {
       this.downloadingListener = DeviceEventEmitter.addListener(
@@ -321,7 +323,6 @@ export default class MyOnlineData extends Component {
     }
   }
   _changeModalProgressState = progress => {
-    // console.warn(_iDownloadingIndex)
     if (_iDownloadingIndex >= 0) {
       let newData = [...this.state.data]
       newData[_iDownloadingIndex].downloadingProgress = progress
@@ -334,7 +335,6 @@ export default class MyOnlineData extends Component {
         this.state.data[this.index].isDownloading &&
         !this.state.isRefreshing
       ) {
-        // console.warn('progress:' + progress)
         this.modalRef._changeDownloadingState(progress)
       }
       if (
@@ -343,10 +343,10 @@ export default class MyOnlineData extends Component {
         progress === '已下载'
       ) {
         this._setFinalDownloadingProgressState(_iDownloadingIndex, progress)
-        if (progress === '下载完成') {
-          // console.warn('unzip')
+        if (progress === '下载完成' || progress === '已下载') {
           this._unZipFile()
         }
+        this._removeListener()
       }
     }
   }
@@ -611,7 +611,7 @@ export default class MyOnlineData extends Component {
           onPress={() => {
             this._onClickItemEvent(item)
           }}
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
         >
           <View
             style={{
@@ -622,7 +622,12 @@ export default class MyOnlineData extends Component {
             }}
           >
             <Image
-              style={{ width: imageWidth, height: imageHeight, marginLeft: 10 }}
+              style={{
+                width: imageWidth,
+                height: imageHeight,
+                marginLeft: 10,
+                tintColor: color.font_color_white,
+              }}
               resizeMode={'contain'}
               source={require('../../../../assets/Mine/个人主页-我的数据.png')}
             />
@@ -632,7 +637,7 @@ export default class MyOnlineData extends Component {
                 // lineHeight: itemHeight,
                 textAlign: 'left',
                 fontSize: 18,
-                color: 'white',
+                color: color.font_color_white,
                 paddingLeft: 10,
               }}
             >
@@ -643,6 +648,7 @@ export default class MyOnlineData extends Component {
                 width: imageWidth,
                 height: imageHeight,
                 marginRight: 10,
+                tintColor: color.font_color_white,
               }}
               resizeMode={'contain'}
               source={require('../../../../assets/Mine/工具条-更多-白.png')}
@@ -690,15 +696,15 @@ export default class MyOnlineData extends Component {
                 refreshing={this.state.isRefreshing}
                 onRefresh={this._onRefresh}
                 colors={['orange', 'red']}
-                titleColor={'white'}
-                tintColor={'white'}
+                titleColor={'orange'}
+                tintColor={'orange'}
                 title={'刷新中...'}
                 enabled={true}
               />
             }
             onEndReachedThreshold={0.8}
             onEndReached={this._onLoadData}
-            ListFooterComponent={this._footView}
+            // ListFooterComponent={this._footView}
           />
           {this._renderModal()}
         </View>
