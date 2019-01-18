@@ -1100,10 +1100,10 @@ export default class ToolBar extends React.PureComponent {
     try {
       let flydata = await SScene.getFlyRouteNames()
       let data = [{ title: '飞行轨迹列表', data: flydata }]
-      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
       return { data, buttons }
     } catch (error) {
-      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
       let data = []
       Toast.show('当前场景无飞行轨迹')
       return { data, buttons }
@@ -1885,6 +1885,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   endFly = () => {
+    SScene.checkoutListener('startTouchAttribute')
     SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
