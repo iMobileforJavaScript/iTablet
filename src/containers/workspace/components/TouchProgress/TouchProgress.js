@@ -15,7 +15,8 @@ import {
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
 
-const positionWidth = screen.deviceWidth //设备的宽度
+const IMAGE_SIZE = scaleSize(25)
+const MARGIN = scaleSize(30)
 
 export default class TouchProgress extends Component {
   render() {
@@ -24,8 +25,13 @@ export default class TouchProgress extends Component {
         style={[styles.box, { width: '100%' }]}
         {...this._panResponder.panHandlers}
       >
-        <View style={styles.container}>
-          <View style={styles.line}>
+        <View style={[styles.container, { width: '100%' }]}>
+          <View
+            style={[
+              styles.line,
+              { width: screen.getScreenWidth() - MARGIN * 2 },
+            ]}
+          >
             <View
               style={[styles.backline]}
               ref={ref => (this.backLine = ref)}
@@ -39,7 +45,9 @@ export default class TouchProgress extends Component {
           </View>
         </View>
         {this.state.tips !== '' && (
-          <Text style={[styles.tips]}>{this.state.tips}</Text>
+          <View style={styles.tips}>
+            <Text style={[styles.tipsText]}>{this.state.tips}</Text>
+          </View>
         )}
       </View>
     )
@@ -51,6 +59,10 @@ export default class TouchProgress extends Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (this.screenWidth !== screen.getScreenWidth()) {
+      this._initialization()
+      this.screenWidth = screen.getScreenWidth()
+    }
     if (
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
@@ -75,7 +87,8 @@ export default class TouchProgress extends Component {
 
   constructor(props) {
     super(props)
-    this._previousLeft = 0
+    this.screenWidth = screen.getScreenWidth()
+    this._previousLeft = MARGIN - IMAGE_SIZE / 2
     this._panBtnStyles = {
       style: {
         left: this._previousLeft,
@@ -133,68 +146,57 @@ export default class TouchProgress extends Component {
       (await SCartography.getGridBrightness(this.props.currentLayer.name)) + 100
     let gridContrast =
       (await SCartography.getGridContrast(this.props.currentLayer.name)) + 100
+
+    let progressWidth = screen.getScreenWidth() - MARGIN * 2
+    let panBtnDevLeft = MARGIN - IMAGE_SIZE / 2 // 图片相对左边偏差
+
     switch (layerType) {
       case 1:
         if (this.props.selectName === '大小') {
           this._panBtnStyles.style.left =
-            (pointSize * (positionWidth - scaleSize(60))) / 100
-          this._previousLeft =
-            (pointSize * (positionWidth - scaleSize(60))) / 100
-          this._BackLine.style.width =
-            (pointSize * (positionWidth - scaleSize(60))) / 100
+            (pointSize * progressWidth) / 100 + panBtnDevLeft
+          this._previousLeft = (pointSize * progressWidth) / 100
+          this._BackLine.style.width = (pointSize * progressWidth) / 100
         } else if (this.props.selectName === '透明度') {
           this._panBtnStyles.style.left =
-            (pointAlpha * (positionWidth - scaleSize(60))) / 100
-          this._previousLeft =
-            (pointAlpha * (positionWidth - scaleSize(60))) / 100
-          this._BackLine.style.width =
-            (pointAlpha * (positionWidth - scaleSize(60))) / 100
+            (pointAlpha * progressWidth) / 100 + panBtnDevLeft
+          this._previousLeft = (pointAlpha * progressWidth) / 100
+          this._BackLine.style.width = (pointAlpha * progressWidth) / 100
         } else if (this.props.selectName === '旋转角度') {
           this._panBtnStyles.style.left =
-            (pointAngle * (positionWidth - scaleSize(60))) / 360
-          this._previousLeft =
-            (pointAngle * (positionWidth - scaleSize(60))) / 360
-          this._BackLine.style.width =
-            (pointAngle * (positionWidth - scaleSize(60))) / 360
+            (pointAngle * progressWidth) / 360 + panBtnDevLeft
+          this._previousLeft = (pointAngle * progressWidth) / 360
+          this._BackLine.style.width = (pointAngle * progressWidth) / 360
         }
         break
       case 3:
         this._panBtnStyles.style.left =
-          (lineWidth * (positionWidth - scaleSize(60))) / 20
-        this._previousLeft = (lineWidth * (positionWidth - scaleSize(60))) / 20
-        this._BackLine.style.width =
-          (lineWidth * (positionWidth - scaleSize(60))) / 20
+          (lineWidth * progressWidth) / 20 + panBtnDevLeft
+        this._previousLeft = (lineWidth * progressWidth) / 20
+        this._BackLine.style.width = (lineWidth * progressWidth) / 20
         break
       case 5:
         this._panBtnStyles.style.left =
-          (fillOpaque * (positionWidth - scaleSize(60))) / 100
-        this._previousLeft =
-          (fillOpaque * (positionWidth - scaleSize(60))) / 100
-        this._BackLine.style.width =
-          (fillOpaque * (positionWidth - scaleSize(60))) / 100
+          (fillOpaque * progressWidth) / 100 + panBtnDevLeft
+        this._previousLeft = (fillOpaque * progressWidth) / 100
+        this._BackLine.style.width = (fillOpaque * progressWidth) / 100
         break
       case 83:
         if (this.props.selectName === '透明度') {
           this._panBtnStyles.style.left =
-            (gridOpaque * (positionWidth - scaleSize(60))) / 100
-          this._previousLeft =
-            (gridOpaque * (positionWidth - scaleSize(60))) / 100
-          this._BackLine.style.width =
-            (gridOpaque * (positionWidth - scaleSize(60))) / 100
+            (gridOpaque * progressWidth) / 100 + panBtnDevLeft
+          this._previousLeft = (gridOpaque * progressWidth) / 100
+          this._BackLine.style.width = (gridOpaque * progressWidth) / 100
         } else if (this.props.selectName === '对比度') {
           this._panBtnStyles.style.left =
-            (gridBright * (positionWidth - scaleSize(60))) / 200
-          this._previousLeft =
-            (gridBright * (positionWidth - scaleSize(60))) / 200
-          this._BackLine.style.width =
-            (gridBright * (positionWidth - scaleSize(60))) / 200
+            (gridBright * progressWidth) / 200 + panBtnDevLeft
+          this._previousLeft = (gridBright * progressWidth) / 200
+          this._BackLine.style.width = (gridBright * progressWidth) / 200
         } else if (this.props.selectName === '亮度') {
           this._panBtnStyles.style.left =
-            (gridContrast * (positionWidth - scaleSize(60))) / 200
-          this._previousLeft =
-            (gridContrast * (positionWidth - scaleSize(60))) / 200
-          this._BackLine.style.width =
-            (gridContrast * (positionWidth - scaleSize(60))) / 200
+            (gridContrast * progressWidth) / 200 + panBtnDevLeft
+          this._previousLeft = (gridContrast * progressWidth) / 200
+          this._BackLine.style.width = (gridContrast * progressWidth) / 200
         }
         break
     }
@@ -210,11 +212,9 @@ export default class TouchProgress extends Component {
               LayerName: this.props.currentLayer.name,
             })
             this._panBtnStyles.style.left =
-              (ragngeCount * (positionWidth - scaleSize(60))) / 32
-            this._previousLeft =
-              (ragngeCount * (positionWidth - scaleSize(60))) / 32
-            this._BackLine.style.width =
-              (ragngeCount * (positionWidth - scaleSize(60))) / 32
+              (ragngeCount * progressWidth) / 32 + panBtnDevLeft
+            this._previousLeft = (ragngeCount * progressWidth) / 32
+            this._BackLine.style.width = (ragngeCount * progressWidth) / 32
             this.setState({
               tips: '分段个数    ' + parseInt(ragngeCount),
             })
@@ -226,11 +226,9 @@ export default class TouchProgress extends Component {
               LayerName: this.props.currentLayer.name,
             })
             this._panBtnStyles.style.left =
-              (fontsize * (positionWidth - scaleSize(60))) / 20
-            this._previousLeft =
-              (fontsize * (positionWidth - scaleSize(60))) / 20
-            this._BackLine.style.width =
-              (fontsize * (positionWidth - scaleSize(60))) / 20
+              (fontsize * progressWidth) / 20 + panBtnDevLeft
+            this._previousLeft = (fontsize * progressWidth) / 20
+            this._BackLine.style.width = (fontsize * progressWidth) / 20
             this.setState({
               tips: '字号    ' + parseInt(fontsize),
             })
@@ -253,35 +251,42 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
+    let progressWidth = screen.getScreenWidth() - MARGIN * 2
     let x = this._previousLeft + gestureState.dx
-    this._panBtnStyles.style.left = x
-    if (this._panBtnStyles.style.left <= 0) this._panBtnStyles.style.left = 0
-    if (this._panBtnStyles.style.left >= positionWidth - scaleSize(45))
-      this._panBtnStyles.style.left = positionWidth - scaleSize(45)
+    this._panBtnStyles.style.left = x + MARGIN - IMAGE_SIZE / 2
+    if (this._panBtnStyles.style.left <= -IMAGE_SIZE / 2)
+      this._panBtnStyles.style.left = MARGIN - IMAGE_SIZE / 2
+    if (
+      this._panBtnStyles.style.left >=
+      progressWidth + MARGIN - IMAGE_SIZE / 2
+    )
+      this._panBtnStyles.style.left = progressWidth + MARGIN - IMAGE_SIZE / 2
 
     this._BackLine.style.width = x
     if (this._BackLine.style.width <= 0) this._BackLine.style.width = 0
-    if (this._BackLine.style.width >= positionWidth - scaleSize(45))
-      this._BackLine.style.width = positionWidth - scaleSize(45)
+    if (this._BackLine.style.width >= progressWidth)
+      this._BackLine.style.width = progressWidth
     this._updateNativeStyles()
     this._updateBackLine()
   }
 
   _handlePanResponderEnd = (evt, gestureState) => {
+    let progressWidth = screen.getScreenWidth() - MARGIN * 2
     let x = this._previousLeft + gestureState.dx
     if (x <= 0) x = 0
-    if (x >= positionWidth - scaleSize(45)) x = positionWidth - scaleSize(45)
+    if (x >= progressWidth + MARGIN - IMAGE_SIZE / 2)
+      x = progressWidth + MARGIN - IMAGE_SIZE / 2
     this._previousLeft = x
 
     let layerType = this.props.currentLayer.type
-    let lineWidth = (x / (positionWidth - scaleSize(60))) * 20
-    let pointSize = (x / (positionWidth - scaleSize(60))) * 100
-    let pointAlpha = (x / (positionWidth - scaleSize(60))) * 100
-    let pointAngle = (x / (positionWidth - scaleSize(60))) * 360
-    let fillOpaqueRate = (x / (positionWidth - scaleSize(60))) * 100
-    let gridStyle = (x / (positionWidth - scaleSize(60))) * 200
-    let range_parameter = (x / (positionWidth - scaleSize(60))) * 32
-    let fontsize = (x / (positionWidth - scaleSize(60))) * 20
+    let lineWidth = (x / progressWidth) * 20
+    let pointSize = (x / progressWidth) * 100
+    let pointAlpha = (x / progressWidth) * 100
+    let pointAngle = (x / progressWidth) * 360
+    let fillOpaqueRate = (x / progressWidth) * 100
+    let gridStyle = (x / progressWidth) * 200
+    let range_parameter = (x / progressWidth) * 32
+    let fontsize = (x / progressWidth) * 20
     switch (layerType) {
       case 1:
         if (this.props.selectName === '大小') {
@@ -431,8 +436,9 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     height: scaleSize(40),
     justifyContent: 'center',
-    left: 0,
-    top: 0,
+    alignItems: 'center',
+    // left: 0,
+    // top: 0,
   },
   pointer: {
     position: 'absolute',
@@ -442,11 +448,11 @@ const styles = StyleSheet.create({
   line: {
     // top: '55%',
     justifyContent: 'center',
-    position: 'absolute',
+    // position: 'absolute',
     height: scaleSize(7),
-    width: '95%',
+    // width: '95%',
     backgroundColor: '#rgba(96,122,137,1)',
-    marginLeft: scaleSize(20),
+    // marginHorizontal: scaleSize(30),
   },
   backline: {
     backgroundColor: '#rgba(0,157,249,1)',
@@ -454,19 +460,23 @@ const styles = StyleSheet.create({
     width: 0,
   },
   image: {
-    height: scaleSize(50),
-    width: scaleSize(50),
+    height: IMAGE_SIZE,
+    width: IMAGE_SIZE,
   },
   tips: {
     marginTop: scaleSize(10),
-    fontSize: scaleSize(22),
-    // fontFamily 字体
-    fontWeight: 'bold',
-    color: 'white',
     paddingLeft: scaleSize(20),
     paddingRight: scaleSize(20),
     paddingTop: scaleSize(5),
     paddingBottom: scaleSize(5),
     backgroundColor: 'rgba(110,110,110,0.85)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tipsText: {
+    fontSize: scaleSize(22),
+    // fontFamily 字体
+    fontWeight: 'bold',
+    color: 'white',
   },
 })

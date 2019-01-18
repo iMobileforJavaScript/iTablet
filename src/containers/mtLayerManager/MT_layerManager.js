@@ -71,7 +71,7 @@ export default class MT_layerManager extends React.Component {
   componentDidMount() {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.setRefreshing(true)
+    // this.setRefreshing(true)
     this.getData()
     this.setState({
       data: [
