@@ -45,8 +45,8 @@ function getMapMore(type, params) {
         //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
         // },
         {
-          key: constants.SHARE,
-          title: constants.SHARE,
+          key: constants.MAP3DSHARE,
+          title: constants.MAP3DSHARE,
           size: 'large',
           action: shareMap3D,
           image: require('../../../../assets/mapTools/icon_share.png'),

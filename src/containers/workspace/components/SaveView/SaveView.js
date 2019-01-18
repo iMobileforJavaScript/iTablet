@@ -59,7 +59,12 @@ export default class MT_layerManager extends React.Component {
     super(props)
     this.state = {
       visible: false,
+      title: '是否保存当前地图？',
     }
+  }
+
+  setTtile = title => {
+    this.setState({ title: title })
   }
 
   save = () => {
@@ -116,7 +121,7 @@ export default class MT_layerManager extends React.Component {
         >
           <View style={styles.container}>
             <View style={styles.item}>
-              <Text style={styles.title}>是否保存当前地图？</Text>
+              <Text style={styles.title}>{this.state.title}</Text>
             </View>
             <Button
               style={styles.item}
