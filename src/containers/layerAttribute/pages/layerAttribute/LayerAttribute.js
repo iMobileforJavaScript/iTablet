@@ -246,7 +246,9 @@ export default class LayerAttribute extends React.Component {
             </View>
           )
         ) : (
-          <View style={styles.infoView} />
+          <View style={styles.infoView}>
+            <Text style={styles.info}>请选择图层</Text>
+          </View>
         )}
       </Container>
     )

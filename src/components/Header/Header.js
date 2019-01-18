@@ -29,6 +29,7 @@ class NavigationHeader extends Component {
     count?: any,
     darkBackBtn?: boolean, // 黑色透明背景，返回按钮
     headerCenter?: any,
+    backImg?: any, // 返回按钮图片
   }
 
   static defaultProps = {
@@ -89,9 +90,11 @@ class NavigationHeader extends Component {
       navigation,
       count,
       headerCenter,
+      backImg,
     } = this.props
 
-    let backBtnSource = require('../../assets/public/Frenchgrey/icon-back-white.png')
+    let backBtnSource =
+      backImg || require('../../assets/public/Frenchgrey/icon-back-white.png')
     // backBtnType === 'white'
     //   ? require('../../assets/public/icon-back-white.png')
     //   : require('../../assets/public/icon-back-gray.png')
