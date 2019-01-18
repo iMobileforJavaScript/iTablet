@@ -14,6 +14,7 @@ import { size, color } from '../../../../styles'
 const ITEM_HEIGHT = scaleSize(80)
 const ARROW_HEIGHT = scaleSize(30)
 const BOTTOM_HEIGHT = scaleSize(95)
+const VIEW_WIDTH = scaleSize(360)
 
 export default class MenuDialog extends React.PureComponent {
   props: {
@@ -55,13 +56,13 @@ export default class MenuDialog extends React.PureComponent {
     this._moveViewBgStyles = {
       style: {
         top: this._previousTop,
-        width: scaleSize(330),
+        width: VIEW_WIDTH,
       },
     }
     this._moveViewStyles = {
       style: {
         top: this._previousTop,
-        width: scaleSize(330),
+        width: VIEW_WIDTH,
       },
     }
 
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
   },
   dialogView: {
     height: '100%',
-    width: scaleSize(330),
+    width: VIEW_WIDTH,
     flexDirection: 'column',
     backgroundColor: color.transOverlay,
     justifyContent: 'center',
@@ -357,14 +358,14 @@ const styles = StyleSheet.create({
   moveViewBg: {
     position: 'absolute',
     minHeight: scaleSize(300),
-    width: scaleSize(330),
+    width: VIEW_WIDTH,
     flexDirection: 'column',
     backgroundColor: color.transView,
   },
   moveView: {
     position: 'absolute',
     minHeight: scaleSize(300),
-    width: scaleSize(330),
+    width: VIEW_WIDTH,
     flexDirection: 'column',
     backgroundColor: color.transOverlay,
   },
@@ -387,14 +388,14 @@ const styles = StyleSheet.create({
     height: ITEM_HEIGHT,
     backgroundColor: 'transparent',
     minWidth: scaleSize(100),
-    width: scaleSize(330),
+    width: VIEW_WIDTH,
   },
   selectedView: {
     position: 'absolute',
     height: ITEM_HEIGHT,
     backgroundColor: '#4680DF',
     minWidth: scaleSize(100),
-    width: scaleSize(330),
+    width: VIEW_WIDTH,
   },
   arrowView: {
     height: ARROW_HEIGHT,
