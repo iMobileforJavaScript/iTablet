@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: scaleSize(18),
+    fontSize: scaleSize(20),
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',
