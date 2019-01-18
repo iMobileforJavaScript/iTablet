@@ -8,7 +8,7 @@ import {
   PanResponder,
   Dimensions,
 } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, screen } from '../../../../utils'
 import { size, color } from '../../../../styles'
 
 const ITEM_HEIGHT = scaleSize(80)
@@ -22,25 +22,20 @@ export default class MenuDialog extends React.PureComponent {
     selectKey?: '', // 当前选中的key
     viewableItems?: number, // 可见范围item的数量
     autoSelect?: boolean, // 松手自动选择
-    device?: Object,
     onSelect?: () => {}, // 选中item的回调
   }
 
   static defaultProps = {
-    list: [],
+    data: [],
     viewableItems: 3,
     autoSelect: false,
   }
 
   constructor(props) {
     super(props)
-    // let data = [].concat(props.data)
-    // data.unshift({})
-    // data.push({})
+    this.screenWidth = screen.getScreenWidth()
     this.lastIndex = this.getIndexByKey(props.data, props.selectKey)
-    // this.currentIndex = this.lastIndex
     this.state = {
-      // lastIndex: lastIndex,
       currentIndex: this.lastIndex,
       data: props.data,
     }
@@ -78,8 +73,9 @@ export default class MenuDialog extends React.PureComponent {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.device.orientation !== prevProps.device.orientation) {
+    if (this.screenWidth !== screen.getScreenWidth()) {
       this.moveToIndex()
+      this.screenWidth = screen.getScreenWidth()
     } else if (
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
     ) {
@@ -182,12 +178,6 @@ export default class MenuDialog extends React.PureComponent {
 
   _handlePanResponderEnd = (evt, gestureState) => {
     let y = this._previousTop + gestureState.dy
-
-    // if ((y + this.moveViewHeight - ARROW_HEIGHT) >= (this.selectedViewTop + ITEM_HEIGHT)) {
-    //   y = this.selectedViewTop + ARROW_HEIGHT + ITEM_HEIGHT - this.moveViewHeight
-    // } else if (y - ARROW_HEIGHT <= this.selectedViewTop) {
-    //   y = this.selectedViewTop
-    // }
 
     if (y > this.selectedViewTop - ARROW_HEIGHT) {
       // 向下滑动

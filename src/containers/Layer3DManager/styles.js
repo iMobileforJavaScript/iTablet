@@ -25,7 +25,7 @@ export default StyleSheet.create({
   selection: {
     width: scaleSize(40),
     height: scaleSize(40),
-    marginLeft: scaleSize(10),
+    // marginLeft: scaleSize(10),
   },
   sectionsTitle: {
     color: '#F0F0F0',
@@ -44,10 +44,11 @@ export default StyleSheet.create({
     fontSize: scaleSize(22),
   },
   itemSeparator: {
-    width: scaleSize(688),
+    // width: scaleSize(688),
+    flex: 1,
     height: scaleSize(1),
     backgroundColor: '#A0A0A0',
-    marginLeft: scaleSize(16),
+    // marginLeft: scaleSize(16),
   },
   selectImg: {
     width: scaleSize(60),

@@ -13,7 +13,7 @@ import {
   Text,
   View,
 } from 'react-native'
-import { constUtil, scaleSize, setSpText } from '../../utils'
+import { constUtil, scaleSize } from '../../utils'
 import { size } from '../../styles'
 
 // const ICON_HEIGHT =0.75* 0.1 * constUtil.WIDTH
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: setSpText(10),
+    fontSize: scaleSize(20),
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',

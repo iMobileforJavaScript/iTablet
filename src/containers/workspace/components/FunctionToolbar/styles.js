@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
+import { color } from '../../../../styles'
 
 export default StyleSheet.create({
   container: {
     position: 'absolute',
     top: 95,
     right: scaleSize(20),
-    backgroundColor: '#rgba(240, 240, 240 ,0)',
+    backgroundColor: color.content_white,
     borderRadius: scaleSize(4),
     elevation: 20,
     shadowOffset: { width: 0, height: 0 },

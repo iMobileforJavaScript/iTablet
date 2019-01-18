@@ -208,6 +208,7 @@ export default class LayerAttribute extends React.Component {
           title: '属性表',
           navigation: this.props.navigation,
           // backAction: this.back,
+          backImg: require('../../../../assets/mapTools/icon_close.png'),
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
@@ -246,7 +247,9 @@ export default class LayerAttribute extends React.Component {
             </View>
           )
         ) : (
-          <View style={styles.infoView} />
+          <View style={styles.infoView}>
+            <Text style={styles.info}>请选择图层</Text>
+          </View>
         )}
       </Container>
     )
