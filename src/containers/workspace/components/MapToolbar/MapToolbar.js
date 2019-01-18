@@ -269,6 +269,6 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    alignItems: 'flex-start',
+    alignItems: 'center',
   },
 })

@@ -56,6 +56,7 @@ export default {
   HISTORY: '历史记录',
   BASE_MAP: '切换底图',
   ADD: '添加',
+  MAP3DSHARE: '分享场景',
 
   THEME_CLOSE: '关闭地图',
   THEME_SAVE: '保存地图',

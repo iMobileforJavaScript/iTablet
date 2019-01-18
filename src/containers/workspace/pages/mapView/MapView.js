@@ -37,7 +37,7 @@ import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
-
+const SAVE_TITLE = '是否保存当前地图'
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
@@ -159,6 +159,7 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     this.container && this.container.setLoading(true, '地图加载中')
     this.setState({
       showMap: true,

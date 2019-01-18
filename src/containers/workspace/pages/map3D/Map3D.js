@@ -18,7 +18,7 @@ import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
-
+const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
     editLayer: Object,
@@ -50,6 +50,7 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
@@ -59,6 +60,7 @@ export default class Map3D extends React.Component {
   }
 
   componentWillUnmount() {
+    // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.attributeListener && this.attributeListener.remove()

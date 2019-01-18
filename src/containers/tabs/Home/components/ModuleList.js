@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
-import { scaleSize, setSpText } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -342,11 +342,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#707070',
     borderRadius: scaleSize(4),
-    elevation: 2,
-    shadowOffset: { width: 0, height: 0 },
-    shadowColor: 'black',
-    shadowOpacity: 1,
-    shadowRadius: scaleSize(4),
+    // elevation: 2,
+    // shadowOffset: { width: 0, height: 0 },
+    // shadowColor: 'black',
+    // shadowOpacity: 1,
+    // shadowRadius: scaleSize(4),
   },
   // img:{
   //   position:"absolute",
@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
   title: {
     width: scaleSize(130),
     height: scaleSize(32),
-    fontSize: setSpText(12),
+    fontSize: scaleSize(25),
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: scaleSize(13),
