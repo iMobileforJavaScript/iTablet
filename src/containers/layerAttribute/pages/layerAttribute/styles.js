@@ -24,11 +24,12 @@ export default StyleSheet.create({
     backgroundColor: '#rgba(255, 255, 255, 0.5)',
   },
   infoView: {
-    flex: 1,
+    // flex: 1,
     alignItems: 'center',
     // backgroundColor: color.subTheme,
     backgroundColor: '#F0F0F0',
     width: '100%',
+    height: '100%',
   },
   info: {
     fontSize: size.fontSize.fontSizeLg,
