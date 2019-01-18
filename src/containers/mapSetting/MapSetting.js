@@ -223,6 +223,7 @@ export default class MapSetting extends Component {
           title: title,
           navigation: this.props.navigation,
           // backAction: this.back,
+          backImg: require('../../assets/mapTools/icon_close.png'),
         }}
         bottomBar={this.renderToolBar()}
       >

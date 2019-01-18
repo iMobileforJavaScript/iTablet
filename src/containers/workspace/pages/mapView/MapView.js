@@ -1007,7 +1007,6 @@ export default class MapView extends React.Component {
           headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
-          backImg: require('../../../../assets/mapTools/icon_close.png'),
         }}
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}

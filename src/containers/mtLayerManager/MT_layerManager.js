@@ -634,6 +634,7 @@ export default class MT_layerManager extends React.Component {
           title: title,
           navigation: this.props.navigation,
           // backAction: this.back,
+          backImg: require('../../assets/mapTools/icon_close.png'),
         }}
         bottomBar={this.renderToolBar()}
       >

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-import { scaleSize, dataUtil } from '../../../../utils'
+import { scaleSize, dataUtil, screen } from '../../../../utils'
 // import { ConstToolType } from '../../../../constants'
 import { SMSymbolTable, SMCollectorType } from 'imobile_for_reactnative'
 import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
@@ -15,6 +15,29 @@ export default class SymbolTab extends React.Component {
 
   static defaultProps = {
     data: [],
+  }
+
+  constructor(props) {
+    super(props)
+    this.screenWidth = screen.getScreenWidth()
+    let screenHeight = screen.getScreenHeight()
+    this.state = {
+      column: this.screenWidth > screenHeight ? 8 : 5,
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.screenWidth > screen.getScreenWidth()) {
+      this.setState({
+        column: 5,
+      })
+      this.screenWidth = screen.getScreenWidth()
+    } else if (this.screenWidth < screen.getScreenWidth()) {
+      this.setState({
+        column: 8,
+      })
+      this.screenWidth = screen.getScreenWidth()
+    }
   }
 
   _onSymbolClick = data => {
@@ -48,8 +71,6 @@ export default class SymbolTab extends React.Component {
   }
 
   render() {
-    // let count = Platform.OS === 'ios' ? 4 : 5
-    // let imageSize = Platform.OS === 'ios' ? 55 : 50
     return (
       <View style={styles.container}>
         <SMSymbolTable
@@ -62,7 +83,7 @@ export default class SymbolTab extends React.Component {
             textSize: 15,
             lineSpacing: 10,
             imageSize: 40,
-            // count: 5,
+            count: this.state.column,
             legendBackgroundColor: dataUtil.colorRgba(color.bgW),
             textColor: dataUtil.colorRgba(color.font_color_white),
           }}

@@ -11,7 +11,7 @@ function getScreenWidth() {
   deviceWidth = Dimensions.get('window').width
   return deviceWidth
 }
-function getScreenHight() {
+function getScreenHeight() {
   deviceHeight = Dimensions.get('window').height
   return deviceHeight
 }
@@ -45,7 +45,7 @@ export function setSpText(size) {
 
 export default {
   getScreenWidth,
-  getScreenHight,
+  getScreenHeight,
   deviceWidth,
   deviceHeight,
   px2dp,
