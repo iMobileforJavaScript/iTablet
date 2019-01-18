@@ -29,6 +29,8 @@ class NavigationHeader extends Component {
     count?: any,
     darkBackBtn?: boolean, // 黑色透明背景，返回按钮
     headerCenter?: any,
+    /** 转态栏是否可见*/
+    statusVisible?: boolean,
   }
 
   static defaultProps = {

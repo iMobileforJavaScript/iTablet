@@ -20,6 +20,7 @@ export default class PopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+    this.fontSize = Platform.OS === 'ios' ? 18 : 16
     this.state = {
       isClick: true,
       progress: this.props.data.downloadingProgress,
@@ -96,7 +97,7 @@ export default class PopupModal extends PureComponent {
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: this.fontSize,
             }}
             numberOfLines={1}
           >
@@ -139,7 +140,7 @@ export default class PopupModal extends PureComponent {
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: this.fontSize,
             }}
           >
             {title}
@@ -189,7 +190,7 @@ export default class PopupModal extends PureComponent {
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: this.fontSize,
             }}
           >
             {progress}
@@ -216,7 +217,7 @@ export default class PopupModal extends PureComponent {
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: this.fontSize,
           }}
         >
           {title}
