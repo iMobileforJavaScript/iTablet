@@ -127,7 +127,7 @@ export default class layerSelectionAttribute extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '属性表',
+          title: '属性',
           navigation: this.props.navigation,
         }}
       >

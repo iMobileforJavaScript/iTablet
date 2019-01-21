@@ -662,11 +662,11 @@ export default class MT_layerManager extends React.Component {
   render() {
     let title
     if (GLOBAL.Type === constants.MAP_EDIT) {
-      title = '地图制图'
+      title = '图层'
     } else if (GLOBAL.Type === constants.MAP_THEME) {
-      title = '专题制图'
+      title = '图层'
     } else {
-      title = '地图管理'
+      title = '图层'
     }
     return (
       <Container

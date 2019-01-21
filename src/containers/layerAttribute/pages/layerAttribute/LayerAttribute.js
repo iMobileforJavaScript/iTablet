@@ -205,7 +205,7 @@ export default class LayerAttribute extends React.Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '属性表',
+          title: '属性',
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
