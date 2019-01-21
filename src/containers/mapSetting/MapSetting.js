@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
-import constants from '../workspace/constants'
+// import { MAP_MODULE } from '../../constants'
+// import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
 import { SectionList, View, Platform, BackHandler } from 'react-native'
@@ -173,30 +173,31 @@ export default class MapSetting extends Component {
   }
 
   render() {
-    let title = ''
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
-        break
-    }
+    // let title = ''
+    // switch (GLOBAL.Type) {
+    //   case constants.COLLECTION:
+    //     title = MAP_MODULE.MAP_COLLECTION
+    //     break
+    //   case constants.MAP_EDIT:
+    //     title = MAP_MODULE.MAP_EDIT
+    //     break
+    //   case constants.MAP_3D:
+    //     title = MAP_MODULE.MAP_3D
+    //     break
+    //   case constants.MAP_THEME:
+    //     title = MAP_MODULE.MAP_THEME
+    //     break
+    // }
     return (
       <Container
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
+          title: '设置',
           navigation: this.props.navigation,
           // backAction: this.back,
-          backImg: require('../../assets/mapTools/icon_close.png'),
+          // backImg: require('../../assets/mapTools/icon_close.png'),
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
       >

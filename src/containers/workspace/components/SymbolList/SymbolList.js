@@ -8,12 +8,14 @@ export default class SymbolList extends React.Component {
   props: {
     setCurrentSymbol?: () => {},
     layerData: Object,
+    device: Object,
   }
 
   constructor(props) {
     super(props)
     this.state = {
       data: [],
+      column: props.device.orientation === 'LANDSCAPE' ? 8 : 4,
     }
   }
 
@@ -30,6 +32,11 @@ export default class SymbolList extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    if (this.props.device.orientation !== prevProps.device.orientation) {
+      this.setState({
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
     if (
       JSON.stringify(prevProps.layerData.type) !==
       JSON.stringify(this.props.layerData.type)
@@ -86,7 +93,7 @@ export default class SymbolList extends React.Component {
             // imageSize: Platform.OS === 'ios' ? scaleSize(60) : scaleSize(150),
             // count: Platform.OS === 'ios' ? 5 : 4,
             imageSize: 50,
-            count: 5,
+            count: this.state.column,
             legendBackgroundColor: dataUtil.colorRgba(color.bgW),
             textColor: dataUtil.colorRgba(color.font_color_white),
           }}

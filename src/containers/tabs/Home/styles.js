@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../utils'
+import { scaleSize, setSpText } from '../../../utils'
 import { color } from '../../../styles'
 // const SCREEN_WIDTH = Dimensions.get('window').width
 export default StyleSheet.create({
@@ -45,12 +45,12 @@ export default StyleSheet.create({
     textAlign: 'center',
     justifyContent: 'center',
     textAlignVertical: 'center',
-    fontSize: scaleSize(30),
+    fontSize: setSpText(30),
     // fontFamily: 'CenturyGothic',
   },
   moreView: {
     flex: 1,
-    // marginRight: 20,
+    marginRight: scaleSize(10),
   },
   moreImg: {
     width: scaleSize(60),

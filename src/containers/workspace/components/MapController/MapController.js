@@ -99,9 +99,10 @@ export default class MapController extends React.Component {
     clearInterval(this.timer)
   }
 
-  location = () => {
+  location = async () => {
     if (this.props.type === 'MAP_3D') {
-      SScene.setHeading()
+      await SScene.setHeading()
+      await SScene.resetCamera()
       this.setCompass(0)
       return
     }
@@ -124,7 +125,7 @@ export default class MapController extends React.Component {
               key={'controller_minus'}
               textColor={'black'}
               size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/mapEdit/icon_compass.png')}
+              image={require('../../../../assets/mapEdit/Frenchgrey/icon_compass.png')}
               onPress={this.location}
             />
           </Animated.View>

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 
 export default StyleSheet.create({
@@ -29,7 +29,7 @@ export default StyleSheet.create({
     backgroundColor: color.grayLight,
   },
   title: {
-    fontSize: scaleSize(28),
+    fontSize: setSpText(28),
     color: color.title,
   },
   content: {

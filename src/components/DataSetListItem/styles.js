@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../styles'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 
 export default StyleSheet.create({
   container: {
@@ -81,7 +81,7 @@ export default StyleSheet.create({
     width: scaleSize(20),
   },
   title: {
-    fontSize: scaleSize(30),
+    fontSize: setSpText(30),
     marginLeft: scaleSize(30),
   },
   textMarginRight: {

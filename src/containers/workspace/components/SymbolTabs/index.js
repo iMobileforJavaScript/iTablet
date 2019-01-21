@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import DefaultTabBar from './DefaultTabBar'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import GroupTab from './GroupTab'
@@ -79,7 +79,8 @@ class SymbolTabs extends React.Component {
             activeTextColor={color.themeText2}
             inactiveTextColor={'white'}
             textStyle={{
-              fontSize: size.fontSize.fontSizeSm,
+              // fontSize: size.fontSize.fontSizeSm,
+              fontSize: setSpText(22),
               backgroundColor: 'transparent',
             }}
             tabStyle={{
@@ -96,12 +97,14 @@ class SymbolTabs extends React.Component {
           data={this.props.symbol.latestSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
           showToolbar={this.props.showToolbar}
+          device={this.props.device}
         />
         <SymbolTab
           tabLabel="符号"
           data={this.props.symbol.currentSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
           showToolbar={this.props.showToolbar}
+          device={this.props.device}
         />
         <GroupTab
           tabLabel="分组"

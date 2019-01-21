@@ -8,7 +8,7 @@
 import * as React from 'react'
 import { View, StyleSheet, Image, TouchableOpacity, Text } from 'react-native'
 import PropTypes from 'prop-types'
-import { scaleSize } from '../utils'
+import { scaleSize, setSpText } from '../utils'
 import { color } from '../styles'
 
 export default class ImageButton extends React.Component {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   iconTitle: {
     marginTop: scaleSize(10),
-    fontSize: scaleSize(20),
+    fontSize: setSpText(20),
     color: color.blue2,
     backgroundColor: 'transparent',
   },
