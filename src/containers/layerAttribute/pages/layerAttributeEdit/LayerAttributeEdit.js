@@ -223,7 +223,7 @@ export default class LayerAttributeEdit extends React.Component {
         ref={ref => (this.container = ref)}
         initWithLoading
         headerProps={{
-          title: '属性表',
+          title: '属性',
           navigation: this.props.navigation,
         }}
       >
