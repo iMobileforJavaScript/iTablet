@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
-import { scaleSize, dataUtil, screen } from '../../../../utils'
+import { scaleSize, dataUtil } from '../../../../utils'
 // import { ConstToolType } from '../../../../constants'
 import { SMSymbolTable, SMCollectorType } from 'imobile_for_reactnative'
 import CollectionData from '../../../../containers/workspace/components/ToolBar/CollectionData'
@@ -11,6 +11,7 @@ export default class SymbolTab extends React.Component {
     data?: Array,
     setCurrentSymbol?: () => {},
     showToolbar?: () => {},
+    device?: () => {},
   }
 
   static defaultProps = {
@@ -19,24 +20,16 @@ export default class SymbolTab extends React.Component {
 
   constructor(props) {
     super(props)
-    this.screenWidth = screen.getScreenWidth()
-    let screenHeight = screen.getScreenHeight()
     this.state = {
-      column: this.screenWidth > screenHeight ? 8 : 5,
+      column: props.device.orientation === 'LANDSCAPE' ? 8 : 4,
     }
   }
 
-  componentDidUpdate() {
-    if (this.screenWidth > screen.getScreenWidth()) {
+  componentDidUpdate(prevProps) {
+    if (this.props.device.orientation !== prevProps.device.orientation) {
       this.setState({
-        column: 5,
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
-      this.screenWidth = screen.getScreenWidth()
-    } else if (this.screenWidth < screen.getScreenWidth()) {
-      this.setState({
-        column: 8,
-      })
-      this.screenWidth = screen.getScreenWidth()
     }
   }
 

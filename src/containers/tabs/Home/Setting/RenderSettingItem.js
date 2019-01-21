@@ -13,7 +13,11 @@ export default class RenderSettingItem extends Component {
     }
   }
 
-  async componentDidMount() {
+  componentDidMount() {
+    this.initSwitchValue()
+  }
+
+  async initSwitchValue() {
     let result = await AsyncStorage.getItem('StatusBarVisible')
     let visible = result === 'true'
     this.setState({ isOpenSwitch: visible })
@@ -38,9 +42,9 @@ export default class RenderSettingItem extends Component {
             style={{ marginRight: 15 }}
             value={this.state.isOpenSwitch}
             trackColor={{ false: color.white, true: color.blue1 }}
-            onValueChange={value => {
+            onValueChange={async value => {
               let visibleValue = '' + value
-              AsyncStorage.setItem('StatusBarVisible', visibleValue)
+              await AsyncStorage.setItem('StatusBarVisible', visibleValue)
               this.setState({ isOpenSwitch: value })
               StatusBar.setHidden(value, 'slide')
             }}

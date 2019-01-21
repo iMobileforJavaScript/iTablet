@@ -34,7 +34,7 @@ export default [
       GLOBAL.Type = constants.MAP_EDIT
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       GLOBAL.showMenu = true
-      GLOBAL.showFlex = true
+      // GLOBAL.showFlex = true
 
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath

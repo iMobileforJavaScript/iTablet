@@ -86,7 +86,8 @@ export default class Container extends PureComponent {
   _initStatusBarVisible = async () => {
     let result = await AsyncStorage.getItem('StatusBarVisible')
     let statusBarVisible = result === 'true'
-    this.setState({ statusBarVisible }) /** 初始化状态栏可不可见*/
+    // this.setState({ statusBarVisible }) /** 初始化状态栏可不可见*/
+    StatusBar.setHidden(statusBarVisible)
   }
 
   setLoading = (loading, info, extra = {}) => {
