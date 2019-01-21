@@ -1502,9 +1502,29 @@ export default class ToolBar extends React.PureComponent {
   themeCommit = (type = this.state.type) => {
     (async function() {
       if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
-        this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
+        let result = true
+        let datasetNames =
+          (this.toolBarSectionList &&
+            this.toolBarSectionList.getSelectList()) ||
+          []
+        if (datasetNames.length === 0) {
+          Toast.show('请先选择要添加的数据集')
+          return
+        }
+        result = await SMap.addLayers(
+          datasetNames,
+          this.state.themeDatasourceAlias,
+        )
+        result &&
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        if (result) {
+          this.setVisible(false)
+          Toast.show('添加成功')
+        } else {
+          Toast.show('添加失败')
+        }
       } else {
         this.close()
       }
@@ -2179,11 +2199,9 @@ export default class ToolBar extends React.PureComponent {
             },
           ]
           this.setState({
-            listSelectable: false, //单选框
-            buttons: [
-              ToolbarBtnType.THEME_CANCEL,
-              // ToolbarBtnType.THEME_COMMIT,
-            ],
+            themeDatasourceAlias: alias,
+            listSelectable: true, //单选框
+            buttons: [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT],
             data: dataList,
             type: ConstToolType.MAP_THEME_ADD_DATASET,
           })
@@ -3122,7 +3140,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.close
+          action = this.themeCommit
           break
         case ToolbarBtnType.MENU_FLEX:
           //菜单框-显示与隐藏
