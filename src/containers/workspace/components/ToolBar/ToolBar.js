@@ -1781,7 +1781,6 @@ export default class ToolBar extends React.PureComponent {
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
-      this.isBoxShow = !this.isBoxShow
       if (
         this.state.selectKey === '线宽' ||
         this.state.selectKey === '大小' ||
@@ -1795,11 +1794,13 @@ export default class ToolBar extends React.PureComponent {
       ) {
         // 显示指滑进度条
         this.setState({
-          isTouchProgress: this.isBoxShow,
-          showMenuDialog: !this.isBoxShow,
-          isFullScreen: this.isBoxShow,
+          isTouchProgress: !this.state.isTouchProgress,
+          showMenuDialog: false,
+          isFullScreen: !this.state.isTouchProgress,
         })
+        this.isBoxShow = false
       } else {
+        this.isBoxShow = !this.isBoxShow
         Animated.timing(this.state.boxHeight, {
           toValue: this.isBoxShow ? this.height : 0,
           duration: Const.ANIMATED_DURATION,

@@ -307,9 +307,15 @@ export default class TouchProgress extends Component {
     let newValue
 
     if (GLOBAL.Type === constants.MAP_THEME) {
-      if (this.props.selectName === 'range_parameter') {
+      if (
+        this.props.selectName === 'range_parameter' ||
+        this.props.selectName === '分段个数'
+      ) {
         newValue = value * 32
-      } else if (this.props.selectName === 'fontsize') {
+      } else if (
+        this.props.selectName === 'fontsize' ||
+        this.props.selectName === '字号'
+      ) {
         newValue = value * 20
       }
     }
@@ -354,14 +360,20 @@ export default class TouchProgress extends Component {
     let layerType = this.props.currentLayer.type
     let tips = ''
     if (GLOBAL.Type === constants.MAP_THEME) {
-      if (this.props.selectName === 'range_parameter') {
+      if (
+        this.props.selectName === 'range_parameter' ||
+        this.props.selectName === '分段个数'
+      ) {
         tips = '分段个数    ' + parseInt(value)
         let Params = {
           LayerName: this.props.currentLayer.name,
           RangeParameter: value,
         }
         await SThemeCartography.modifyThemeRangeMap(Params)
-      } else if (this.props.selectName === 'fontsize') {
+      } else if (
+        this.props.selectName === 'fontsize' ||
+        this.props.selectName === '字号'
+      ) {
         tips = '字号    ' + parseInt(value)
         let _params = {
           LayerName: this.props.currentLayer.name,
@@ -491,11 +503,21 @@ export default class TouchProgress extends Component {
   setTips = value => {
     let layerType = this.props.currentLayer.type
     let tips = ''
-
     if (GLOBAL.Type === constants.MAP_THEME) {
-      if (this.props.selectName === 'range_parameter') {
+      if (
+        this.props.selectName === 'range_parameter' ||
+        this.props.selectName === '分段个数'
+      ) {
+        if (value < 0) {
+          value = 0
+        } else if (value > 100) {
+          value = 100
+        }
         tips = '分段个数    ' + parseInt(value)
-      } else if (this.props.selectName === 'fontsize') {
+      } else if (
+        this.props.selectName === 'fontsize' ||
+        this.props.selectName === '字号'
+      ) {
         tips = '字号    ' + parseInt(value)
       }
     }
@@ -504,19 +526,23 @@ export default class TouchProgress extends Component {
       switch (layerType) {
         case 1: {
           if (this.props.selectName === '大小') {
-            if (value <= 1) {
+            if (value < 1) {
               value = 1
-            } else if (value >= 100) {
+            } else if (value > 100) {
               value = 100
             }
             tips = '大小    ' + parseInt(value) + 'mm'
           } else if (this.props.selectName === '透明度') {
-            if (value >= 100) {
+            if (value < 0) {
+              value = 0
+            } else if (value > 100) {
               value = 100
             }
             tips = '透明度    ' + parseInt(value) + '%'
           } else if (this.props.selectName === '旋转角度') {
-            if (value >= 360) {
+            if (value < 0) {
+              value = 0
+            } else if (value > 360) {
               value = 360
             }
             tips = '旋转角度    ' + parseInt(value) + '°'
@@ -531,7 +557,9 @@ export default class TouchProgress extends Component {
           break
         }
         case 5: {
-          if (value >= 100) {
+          if (value < 0) {
+            value = 0
+          } else if (value >= 100) {
             value = 100
           }
           tips = '透明度    ' + parseInt(value) + '%'
@@ -539,12 +567,16 @@ export default class TouchProgress extends Component {
         }
         case 83: {
           if (this.props.selectName === '透明度') {
-            if (value >= 100) {
+            if (value < 0) {
+              value = 0
+            } else if (value >= 100) {
               value = 100
             }
             tips = '透明度    ' + parseInt(value) + '%'
           } else if (this.props.selectName === '对比度') {
-            if (value <= 100) {
+            if (value < 0) {
+              value = 0
+            } else if (value <= 100) {
               let gridBrigh = -(100 - value)
               tips = '对比度    ' + parseInt(gridBrigh) + '%'
             } else if (value > 100) {
@@ -555,7 +587,9 @@ export default class TouchProgress extends Component {
               tips = '对比度    ' + parseInt(gridBrigh) + '%'
             }
           } else if (this.props.selectName === '亮度') {
-            if (value <= 100) {
+            if (value < 0) {
+              value = 0
+            } else if (value <= 100) {
               let gridContrast = -(100 - value)
               tips = '亮度    ' + parseInt(gridContrast) + '%'
             } else if (value > 100) {
