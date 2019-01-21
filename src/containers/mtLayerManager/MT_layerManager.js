@@ -45,6 +45,7 @@ export default class MT_layerManager extends React.Component {
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
+      selectLayer: '',
     }
   }
 
@@ -424,6 +425,9 @@ export default class MT_layerManager extends React.Component {
         Toast.show('当前图层为:' + data.name)
       }
     }
+    this.setState({
+      selectLayer: data.caption,
+    })
   }
 
   onToolPress = async ({ data }) => {
@@ -531,6 +535,7 @@ export default class MT_layerManager extends React.Component {
                 currentOpenItemName: data.name,
               })
             }}
+            selectLayer={this.state.selectLayer}
             onPress={this.onPressRow}
             onArrowPress={this.getChildList}
             onToolPress={this.onToolPress}
@@ -657,11 +662,11 @@ export default class MT_layerManager extends React.Component {
   render() {
     let title
     if (GLOBAL.Type === constants.MAP_EDIT) {
-      title = '地图制图'
+      title = '图层'
     } else if (GLOBAL.Type === constants.MAP_THEME) {
-      title = '专题制图'
+      title = '图层'
     } else {
-      title = '地图管理'
+      title = '图层'
     }
     return (
       <Container
