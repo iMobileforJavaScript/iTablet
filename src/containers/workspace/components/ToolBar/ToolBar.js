@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, scaleSize, jsonUtil, setSpText } from '../../../../utils'
 import {
   MTBtn,
   TableList,
@@ -440,6 +440,12 @@ export default class ToolBar extends React.PureComponent {
             },
             size: 'large',
             image: require('../../../../assets/function/icon_analystSuerface.png'),
+          },
+          {
+            key: 'symbol',
+            title: '标注',
+            action: this.showMap3DSymbol,
+            image: require('../../../../assets/function/Frenchgrey/icon_function_Tagging.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -1138,6 +1144,25 @@ export default class ToolBar extends React.PureComponent {
     } catch (error) {
       Toast.show('无场景列表')
     }
+  }
+
+  showMap3DSymbol = async () => {
+    if (!GLOBAL.openWorkspace) {
+      Toast.show('请打开场景')
+      return
+    }
+    SScene.checkoutListener('startLabelOperate')
+    GLOBAL.Map3DSymbol = true
+    // TODO 根据符号类型改变ToolBox内容
+    this.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+      containerType: 'table',
+      isFullScreen: true,
+      height:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[2],
+      column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+    })
   }
 
   importMap3Dworkspace = async () => {
@@ -2774,7 +2799,8 @@ export default class ToolBar extends React.PureComponent {
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
-        size={MTBtn.Size.NORMAL}
+        textStyle={{ fontSize: setSpText(20) }}
+        // size={MTBtn.Size.NORMAL}
         image={item.image}
         background={item.background}
         onPress={() => {

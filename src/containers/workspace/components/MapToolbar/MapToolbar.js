@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 import { ListSeparator } from '../../../../components'
 import constants from '../../constants'
@@ -51,8 +51,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'MapView',
             title: '地图',
-            image: require('../../../../assets/mapToolbar/icon_map.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
             btnClick: () => {
               this.props.navigation && this.props.navigation.navigate('MapView')
             },
@@ -60,8 +60,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'LayerManager',
             title: '图层',
-            image: require('../../../../assets/mapToolbar/icon_layer.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerManager')
@@ -70,8 +70,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'LayerAttribute',
             title: '属性',
-            image: require('../../../../assets/mapToolbar/icon_attribute.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerAttribute')
@@ -94,8 +94,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'scene',
             title: '场景',
-            image: require('../../../../assets/mapToolbar/icon_map.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_scene.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_scene_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('Map3D', {
@@ -106,8 +106,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'Layer3DManager',
             title: '图层',
-            image: require('../../../../assets/mapToolbar/icon_layer.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('Map3DLayerManager', {
@@ -118,8 +118,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'LayerAttribute',
             title: '属性',
-            image: require('../../../../assets/mapToolbar/icon_attribute.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerAttribute', {
@@ -150,8 +150,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'MapView',
             title: '地图',
-            image: require('../../../../assets/mapToolbar/icon_map.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_map_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
             btnClick: () => {
               this.props.navigation && this.props.navigation.navigate('MapView')
             },
@@ -159,8 +159,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'LayerManager',
             title: '图层',
-            image: require('../../../../assets/mapToolbar/icon_layer.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_layer_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerManager', {
@@ -171,8 +171,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'LayerAttribute',
             title: '属性',
-            image: require('../../../../assets/mapToolbar/icon_attribute.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_attribute_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('LayerAttribute', {
@@ -208,7 +208,7 @@ export default class MapToolbar extends React.Component {
         key={item.key}
         title={item.title}
         textColor={'white'}
-        textStyle={{ fontSize: scaleSize(20) }}
+        textStyle={{ fontSize: setSpText(20) }}
         selected={this.state.currentIndex === index}
         image={item.image}
         selectedImage={item.selectedImage}

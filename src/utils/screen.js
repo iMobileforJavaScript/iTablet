@@ -42,7 +42,7 @@ export function setSpText(size) {
   // size = Math.round(((size * scale + 0.5) * pixelRatio) / fontScale)
   size = Math.round(size * scale + 0.5)
   if (Platform.OS === 'ios') {
-    size * 1.3
+    return (size * 1.25) / defaultPixel
   }
   return size / defaultPixel
 }

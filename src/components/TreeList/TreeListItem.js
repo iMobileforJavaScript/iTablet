@@ -14,7 +14,7 @@ import {
   Easing,
   Image,
 } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 import { size, color } from '../../styles'
 
 const ROW_HEIGHT = scaleSize(40)
@@ -231,7 +231,8 @@ const styles = StyleSheet.create({
   },
   title: {
     color: 'white',
-    fontSize: size.fontSize.fontSizeSm,
+    // fontSize: size.fontSize.fontSizeSm,
+    fontSize: setSpText(20),
     backgroundColor: 'transparent',
   },
   arrowImg: {
