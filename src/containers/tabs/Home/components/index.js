@@ -6,6 +6,18 @@ import BtnbarLoad from './Btnbar_load'
 import ExampleMapList from './ExampleMapList'
 import OffLineList from './OffLineList'
 import ModuleList from './ModuleList'
+// import connect from "react-redux/es/connect/connect"
+// import { setUser } from "../../../../models/user"
+// const mapStateToProps = state => ({
+//   currentUser: state.user.toJS().currentUser,
+// })
+// const mapDispatchToProps = {
+//   setUser,
+// }
+// export default connect(
+//   mapStateToProps,
+//   mapDispatchToProps,
+// )(ModuleList)
 
 export {
   BtnbarHome,

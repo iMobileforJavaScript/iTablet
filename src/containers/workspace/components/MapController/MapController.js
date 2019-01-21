@@ -99,9 +99,10 @@ export default class MapController extends React.Component {
     clearInterval(this.timer)
   }
 
-  location = () => {
+  location = async () => {
     if (this.props.type === 'MAP_3D') {
-      SScene.setHeading()
+      await SScene.setHeading()
+      await SScene.resetCamera()
       this.setCompass(0)
       return
     }

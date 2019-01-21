@@ -42,6 +42,12 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  btn1: {
+    height: scaleSize(50),
+    width: scaleSize(100),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   btn_image: {
     height: scaleSize(40),
     width: scaleSize(40),
@@ -49,6 +55,10 @@ export default StyleSheet.create({
   btn_image_samll: {
     height: scaleSize(30),
     width: scaleSize(30),
+  },
+  more_image: {
+    height: scaleSize(60),
+    width: scaleSize(60),
   },
   btnImage: {
     // height: scaleSize(40),

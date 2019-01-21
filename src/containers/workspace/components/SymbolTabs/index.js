@@ -97,12 +97,14 @@ class SymbolTabs extends React.Component {
           data={this.props.symbol.latestSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
           showToolbar={this.props.showToolbar}
+          device={this.props.device}
         />
         <SymbolTab
           tabLabel="符号"
           data={this.props.symbol.currentSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
           showToolbar={this.props.showToolbar}
+          device={this.props.device}
         />
         <GroupTab
           tabLabel="分组"

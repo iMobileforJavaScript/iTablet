@@ -61,10 +61,10 @@ export default class Home extends Component {
           sxwu: 'sxwu',
         })
         if (arrFilePath.length === 0) {
+          await FileTools.copyFile(fileDirPath, toPath)
           if (isExist) {
             item.action && item.action(this.props.currentUser)
           }
-          await FileTools.copyFile(fileDirPath, toPath)
           let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
             smwu: 'smwu',
             sxwu: 'sxwu',
