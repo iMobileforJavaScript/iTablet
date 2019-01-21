@@ -44,6 +44,7 @@ export default class HomePopupModal extends PureComponent {
     )
   }
   _renderItem = (label, onClick: () => {}) => {
+    let fontSize = Platform.OS === 'ios' ? 18 : 16
     return (
       <View style={{ width: '100%' }}>
         <TouchableOpacity
@@ -59,7 +60,7 @@ export default class HomePopupModal extends PureComponent {
             onClick()
           }}
         >
-          <Text style={{ fontSize: 16, color: color.font_color_white }}>
+          <Text style={{ fontSize: fontSize, color: color.font_color_white }}>
             {label}
           </Text>
         </TouchableOpacity>

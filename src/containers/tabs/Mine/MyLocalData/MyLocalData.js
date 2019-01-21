@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, SectionList, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  Text,
+  SectionList,
+  TouchableOpacity,
+  Image,
+  Platform,
+} from 'react-native'
 import Container from '../../../../components/Container'
 import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
@@ -176,7 +183,13 @@ export default class MyLocalData extends Component {
       newData,
     )
     let titleWorkspace = '工作空间类型'
-    return [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    }
+    return sectionData
   }
 
   _renderSectionHeader = info => {
@@ -227,6 +240,7 @@ export default class MyLocalData extends Component {
     let imageWidth = 30,
       imageHeight = 30
     let separatorLineHeight = 1
+    let fontSize = Platform.OS === 'ios' ? 18 : 16
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
       <TouchableOpacity
@@ -261,7 +275,7 @@ export default class MyLocalData extends Component {
             style={{
               color: color.font_color_white,
               paddingLeft: 15,
-              fontSize: 16,
+              fontSize: fontSize,
               flex: 1,
             }}
           >

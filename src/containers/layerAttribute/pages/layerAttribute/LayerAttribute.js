@@ -208,6 +208,7 @@ export default class LayerAttribute extends React.Component {
           title: '属性表',
           navigation: this.props.navigation,
           // backAction: this.back,
+          backImg: require('../../../../assets/mapTools/icon_close.png'),
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}

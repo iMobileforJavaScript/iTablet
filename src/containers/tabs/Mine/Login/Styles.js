@@ -1,8 +1,8 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 let itemWidth = '70%'
 const itemHeight = 40
-const fontSize = 16
+const fontSize = Platform.OS === 'ios' ? 18 : 16
 const titleOnFocusBackgroundColor = color.item_separate_white
 const titleOnBlurBackgroundColor = color.content_white
 let styles = StyleSheet.create({

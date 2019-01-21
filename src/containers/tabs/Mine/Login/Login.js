@@ -80,7 +80,7 @@ export default class Login extends React.Component {
     })
     if (!this.state.isFirstLogin) {
       // NavigationService.navigate('Mine')
-      NavigationService.reset('Mine')
+      NavigationService.reset('Tabs')
     }
   }
 
@@ -140,8 +140,7 @@ export default class Login extends React.Component {
           // userType:UserType.COMMON_USER,
         })
         if (!this.state.isFirstLogin) {
-          // NavigationService.navigate('Mine')
-          NavigationService.reset('Mine')
+          NavigationService.reset('Tabs')
         }
       } else {
         this.props.setUser({

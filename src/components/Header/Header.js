@@ -30,6 +30,9 @@ class NavigationHeader extends Component {
     darkBackBtn?: boolean, // 黑色透明背景，返回按钮
     headerCenter?: any,
     backImg?: any, // 返回按钮图片
+
+    /** 转态栏是否可见*/
+    statusVisible?: boolean,
   }
 
   static defaultProps = {

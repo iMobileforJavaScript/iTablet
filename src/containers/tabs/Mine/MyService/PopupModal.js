@@ -19,6 +19,7 @@ export default class PopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+    this.fontSize = Platform.OS === 'ios' ? 18 : 16
   }
 
   _onClose = () => {
@@ -57,6 +58,7 @@ export default class PopupModal extends PureComponent {
     } else {
       title = '设为私有服务'
     }
+
     return (
       <TouchableOpacity
         style={{ backgroundColor: color.content_white }}
@@ -80,7 +82,7 @@ export default class PopupModal extends PureComponent {
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: this.fontSize,
           }}
         >
           {title}
@@ -114,7 +116,7 @@ export default class PopupModal extends PureComponent {
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: this.fontSize,
           }}
         >
           {title}
