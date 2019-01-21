@@ -30,7 +30,8 @@ export default class Map3DToolBar extends Component {
     SScene.getLayerList().then(result => {
       let basemaplist = [],
         layerlist = [],
-        ablelist = []
+        ablelist = [],
+        terrainList = []
       for (let index = 0; index < result.length; index++) {
         const element = result[index]
         let item = { ...element, isShow: true }
@@ -60,6 +61,12 @@ export default class Map3DToolBar extends Component {
           data: ablelist,
           visible: true,
           index: 2,
+        },
+        {
+          title: '我的地形',
+          data: terrainList,
+          visible: true,
+          index: 3,
         },
       ]
       this.setState({ data: data })

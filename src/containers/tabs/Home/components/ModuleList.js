@@ -166,7 +166,7 @@ class RenderModuleItem extends Component {
       >
         <Text
           style={{
-            fontSize: scaleSize(25),
+            fontSize: setSpText(25),
             fontWeight: 'bold',
             // fontStyle:'italic',
             color: 'white',

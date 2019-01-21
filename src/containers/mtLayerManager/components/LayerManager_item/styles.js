@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { constUtil, scaleSize } from '../../../../utils'
+import { constUtil, scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 
 export default StyleSheet.create({
@@ -69,7 +69,7 @@ export default StyleSheet.create({
     marginLeft: scaleSize(30),
   },
   text: {
-    fontSize: scaleSize(24),
+    fontSize: setSpText(24),
     color: color.black,
     backgroundColor: 'transparent',
   },

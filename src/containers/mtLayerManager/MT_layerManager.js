@@ -16,7 +16,7 @@ import {
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize } from '../../utils'
+import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar } from '../workspace/components'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
@@ -553,7 +553,7 @@ export default class MT_layerManager extends React.Component {
                   marginLeft: scaleSize(50),
                   justifyContent: 'center',
                   alignItems: 'center',
-                  fontSize: scaleSize(24),
+                  fontSize: setSpText(24),
                   color: color.black,
                 }}
               >

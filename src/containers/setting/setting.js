@@ -96,7 +96,7 @@ export default class setting extends Component {
         return (
           <View>
             <View style={styles.row}>
-              <Text style={styles.itemName} />
+              <Text style={styles.switchText}>{item.name}</Text>
               <Switch
                 style={styles.switch}
                 trackColor={{ false: 'white', true: '#505050' }}

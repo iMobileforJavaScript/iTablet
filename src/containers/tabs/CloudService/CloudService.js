@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native'
 import { Container, EmptyView, MTBtn } from '../../../components'
-import { scaleSize } from '../../../utils'
+import { scaleSize, setSpText } from '../../../utils'
 import NavigationService from '../../NavigationService'
 // import{ Dialog} from '../../../components'
 const SCREEN_WIDTH = Dimensions.get('window').width
@@ -166,7 +166,7 @@ const styles = StyleSheet.create({
   itemTitle: {
     width: IMAGE_WIDTH,
     height: scaleSize(60),
-    fontSize: scaleSize(40),
+    fontSize: setSpText(40),
     color: 'black',
     textAlignVertical: 'center',
   },
@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
   upLoadtime: {
     width: scaleSize(540),
     height: scaleSize(45),
-    fontSize: scaleSize(25),
+    fontSize: setSpText(25),
     textAlignVertical: 'center',
   },
   itmeBtn1: {

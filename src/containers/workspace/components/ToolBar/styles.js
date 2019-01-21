@@ -13,6 +13,7 @@ export default StyleSheet.create({
     right: 0,
     height: screen.deviceHeight,
     backgroundColor: '#rgba(0, 0, 0, 0)',
+    // backgroundColor:"pink",
     zIndex: zIndexLevel.FOUR,
   },
   wrapContainer: {
@@ -39,6 +40,7 @@ export default StyleSheet.create({
     maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
     backgroundColor: color.theme,
+    // backgroundColor:"red",
     // zIndex: zIndexLevel.FOUR,
   },
   // box: {

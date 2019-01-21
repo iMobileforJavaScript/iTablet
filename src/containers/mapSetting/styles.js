@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 // import { color } from '../../styles'
 export default StyleSheet.create({
   container: {
@@ -31,19 +31,19 @@ export default StyleSheet.create({
   sectionsTitle: {
     // color: color.themeText,
     color: '#F0F0F0',
-    fontSize: scaleSize(26),
+    fontSize: setSpText(26),
     marginLeft: scaleSize(25),
   },
   itemName: {
     color: '#303030',
     // color: color.themeText,
-    fontSize: scaleSize(26),
+    fontSize: setSpText(26),
   },
   itemValue: {
     // color: '#C4C4C4',
     color: '#A0A0A0',
     marginRight: scaleSize(15),
-    fontSize: scaleSize(22),
+    fontSize: setSpText(22),
   },
   itemSeparator: {
     width: scaleSize(688),
