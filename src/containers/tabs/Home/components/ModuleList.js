@@ -12,7 +12,7 @@ import {
   Alert,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -166,7 +166,7 @@ class RenderModuleItem extends Component {
       >
         <Text
           style={{
-            fontSize: scaleSize(25),
+            fontSize: setSpText(25),
             fontWeight: 'bold',
             // fontStyle:'italic',
             color: 'white',
@@ -373,7 +373,7 @@ const styles = StyleSheet.create({
   title: {
     width: scaleSize(130),
     height: scaleSize(32),
-    fontSize: scaleSize(25),
+    fontSize: setSpText(25),
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: scaleSize(13),

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, scaleSize, jsonUtil, setSpText } from '../../../../utils'
 import {
   MTBtn,
   TableList,
@@ -454,6 +454,12 @@ export default class ToolBar extends React.PureComponent {
             },
             size: 'large',
             image: require('../../../../assets/function/icon_analystSuerface.png'),
+          },
+          {
+            key: 'symbol',
+            title: '标注',
+            action: this.showMap3DSymbol,
+            image: require('../../../../assets/function/Frenchgrey/icon_function_Tagging.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -1156,6 +1162,25 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  showMap3DSymbol = async () => {
+    if (!GLOBAL.openWorkspace) {
+      Toast.show('请打开场景')
+      return
+    }
+    SScene.checkoutListener('startLabelOperate')
+    GLOBAL.Map3DSymbol = true
+    // TODO 根据符号类型改变ToolBox内容
+    this.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+      containerType: 'table',
+      isFullScreen: true,
+      height:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[2],
+      column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+    })
+  }
+
   importMap3Dworkspace = async () => {
     // let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
     // let userName = this.props.user.currentUser.userName || 'Customer'
@@ -1525,9 +1550,29 @@ export default class ToolBar extends React.PureComponent {
   themeCommit = (type = this.state.type) => {
     (async function() {
       if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
-        this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
+        let result = true
+        let datasetNames =
+          (this.toolBarSectionList &&
+            this.toolBarSectionList.getSelectList()) ||
+          []
+        if (datasetNames.length === 0) {
+          Toast.show('请先选择要添加的数据集')
+          return
+        }
+        result = await SMap.addLayers(
+          datasetNames,
+          this.state.themeDatasourceAlias,
+        )
+        result &&
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        if (result) {
+          this.setVisible(false)
+          Toast.show('添加成功')
+        } else {
+          Toast.show('添加失败')
+        }
       } else {
         this.close()
       }
@@ -2207,11 +2252,9 @@ export default class ToolBar extends React.PureComponent {
             },
           ]
           this.setState({
-            listSelectable: false, //单选框
-            buttons: [
-              ToolbarBtnType.THEME_CANCEL,
-              // ToolbarBtnType.THEME_COMMIT,
-            ],
+            themeDatasourceAlias: alias,
+            listSelectable: true, //单选框
+            buttons: [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT],
             data: dataList,
             type: ConstToolType.MAP_THEME_ADD_DATASET,
           })
@@ -2819,7 +2862,8 @@ export default class ToolBar extends React.PureComponent {
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
-        size={MTBtn.Size.NORMAL}
+        textStyle={{ fontSize: setSpText(20) }}
+        // size={MTBtn.Size.NORMAL}
         image={item.image}
         background={item.background}
         onPress={() => {
@@ -3155,7 +3199,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.close
+          action = this.themeCommit
           break
         case ToolbarBtnType.MENU_FLEX:
           //菜单框-显示与隐藏

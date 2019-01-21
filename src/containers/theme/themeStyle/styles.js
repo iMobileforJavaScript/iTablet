@@ -1,13 +1,13 @@
 import { StyleSheet } from 'react-native'
-import { constUtil, scaleSize } from '../../../utils/index'
-import { size } from '../../../styles/index'
+import { constUtil, scaleSize, setSpText } from '../../../utils/index'
+// import { size } from '../../../styles/index'
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
     backgroundColor: constUtil.USUAL_GREEN,
-    paddingTop:10,
+    paddingTop: 10,
   },
   content: {
     flex: 1,
@@ -24,15 +24,17 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    fontSize: size.fontSize.fontSizeLg,
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: setSpText(24),
   },
   row: {
     paddingVertical: scaleSize(15),
     paddingHorizontal: scaleSize(30),
     backgroundColor: 'white',
   },
-  rowTitle:{
-    fontSize: size.fontSize.fontSizeLg,
+  rowTitle: {
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: setSpText(24),
   },
   rowMarginTop: {
     marginTop: scaleSize(30),

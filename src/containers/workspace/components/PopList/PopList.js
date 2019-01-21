@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { StyleSheet } from 'react-native'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize, setSpText } from '../../../../utils'
 import { Action, DatasetType } from 'imobile_for_reactnative'
 import { PopBtnSectionList } from '../../../../components'
 import { Const } from '../../../../constants'
@@ -12,13 +12,13 @@ import { bufferAnalyst, overlayAnalyst } from '../../util'
 import constants from '../../constants'
 
 const textstyles1 = {
-  fontSize: scaleSize(26),
+  fontSize: setSpText(26),
   backgroundColor: 'transparent',
   width: scaleSize(120),
   textAlign: 'center',
 }
 const textstyles2 = {
-  fontSize: scaleSize(26),
+  fontSize: setSpText(26),
   backgroundColor: 'transparent',
   width: scaleSize(130),
   textAlign: 'center',

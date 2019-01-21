@@ -35,10 +35,10 @@ export default StyleSheet.create({
   compassView: {
     // top:scaleSize(-80),
     // position:'absolute',
-    width: scaleSize(50),
-    height: scaleSize(50),
+    width: scaleSize(60),
+    height: scaleSize(60),
     borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
+    backgroundColor: 'white',
     marginBottom: scaleSize(25),
   },
   shadow: {
