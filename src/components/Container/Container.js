@@ -4,7 +4,13 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, ScrollView, Animated } from 'react-native'
+import {
+  View,
+  ScrollView,
+  Animated,
+  StatusBar,
+  AsyncStorage,
+} from 'react-native'
 import Header from '../Header'
 import Loading from './Loading'
 import { scaleSize } from '../../utils'
@@ -44,6 +50,7 @@ export default class Container extends PureComponent {
     this.state = {
       top: new Animated.Value(0),
       bottom: new Animated.Value(0),
+      statusBarVisible: false,
     }
     this.headerVisible = true
     this.bottomVisible = true
@@ -71,8 +78,16 @@ export default class Container extends PureComponent {
     this.bottomVisible = visible
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    this._initStatusBarVisible()
     this.props.initWithLoading && this.setLoading(true)
+  }
+
+  _initStatusBarVisible = async () => {
+    let result = await AsyncStorage.getItem('StatusBarVisible')
+    let statusBarVisible = result === 'true'
+    // this.setState({ statusBarVisible }) /** 初始化状态栏可不可见*/
+    StatusBar.setHidden(statusBarVisible)
   }
 
   setLoading = (loading, info, extra = {}) => {
@@ -125,20 +140,22 @@ export default class Container extends PureComponent {
     // 是否为flex布局的header
     let fixHeader =
       this.props.headerProps && this.props.headerProps.type === 'fix'
-
     return (
-      <ContainerView style={[styles.container, this.props.style]}>
-        {!fixHeader && this.renderHeader(fixHeader)}
-        {/*<View style={{ flex: 1 }}>{this.props.children}</View>*/}
-        {this.props.children}
-        {fixHeader && this.renderHeader(fixHeader)}
-        {this.renderBottom()}
-        <Loading
-          ref={ref => (this.loading = ref)}
-          info={this.props.dialogInfo}
-          initLoading={this.props.initWithLoading}
-        />
-      </ContainerView>
+      <View style={{ flex: 1 }}>
+        <StatusBar animated={true} hidden={this.state.statusBarVisible} />
+        <ContainerView style={[styles.container, this.props.style]}>
+          {!fixHeader && this.renderHeader(fixHeader)}
+          {/*<View style={{ flex: 1 }}>{this.props.children}</View>*/}
+          {this.props.children}
+          {fixHeader && this.renderHeader(fixHeader)}
+          {this.renderBottom()}
+          <Loading
+            ref={ref => (this.loading = ref)}
+            info={this.props.dialogInfo}
+            initLoading={this.props.initWithLoading}
+          />
+        </ContainerView>
+      </View>
     )
   }
 }

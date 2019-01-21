@@ -100,23 +100,20 @@ export default class RenderFindItem extends Component {
         ret.promise
           .then(async result => {
             if (result.statusCode === 200) {
-              Toast.show('下载成功')
               this.setState({ progress: '下载完成', isDownloading: false })
-              if (this.props.data.type === 'WORKSPACE') {
-                let savePath =
-                  appHome +
-                  ConstPath.UserPath +
-                  userName +
-                  '/' +
-                  ConstPath.RelativePath.ExternalData +
-                  fileName
-                let result = await FileTools.unZipFile(
-                  filePath,
-                  savePath.substring(0, savePath.length - 4),
-                )
-                if (result === false) {
-                  Toast.show('网络数据已损坏，无法正常使用')
-                }
+              let savePath =
+                appHome +
+                ConstPath.UserPath +
+                userName +
+                '/' +
+                ConstPath.RelativePath.ExternalData +
+                fileName
+              let result = await FileTools.unZipFile(
+                filePath,
+                savePath.substring(0, savePath.length - 4),
+              )
+              if (result === false) {
+                Toast.show('网络数据已损坏，无法正常使用')
               }
               FileTools.deleteFile(filePath)
             }

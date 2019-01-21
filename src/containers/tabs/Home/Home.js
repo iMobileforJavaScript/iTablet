@@ -61,10 +61,10 @@ export default class Home extends Component {
           sxwu: 'sxwu',
         })
         if (arrFilePath.length === 0) {
+          await FileTools.copyFile(fileDirPath, toPath)
           if (isExist) {
             item.action && item.action(this.props.currentUser)
           }
-          await FileTools.copyFile(fileDirPath, toPath)
           let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
             smwu: 'smwu',
             sxwu: 'sxwu',
@@ -134,6 +134,7 @@ export default class Home extends Component {
 
   _onSetting = () => {
     this._closeModal()
+    // StatusBar.setHidden(true,'slide')
     NavigationService.navigate('Setting')
   }
 
@@ -163,7 +164,7 @@ export default class Home extends Component {
           this.container.setLoading(false)
         }
         // NavigationService.navigate('Mine')
-        NavigationService.reset('Home')
+        NavigationService.reset('Tabs')
         this.props.openWorkspace({ server: customPath })
       })
     } catch (e) {
@@ -221,25 +222,11 @@ export default class Home extends Component {
             </TouchableOpacity>
           ),
           headerRight: (
-            // <TouchableOpacity
-            //   onPress={() => {
-            //     this.topNavigatorBarImageId = 'right'
-            //     this.setState({ modalIsVisible: true })
-            //   }}
-            //   // style={{ flex: 1, marginRight: scaleSize(18.5) }}
-            // >
-            //   <Image
-            //     resizeMode={'contain'}
-            //     source={moreImg}
-            //     style={styles.moreView}
-            //   />
-            // </TouchableOpacity>
             <TouchableOpacity
               onPress={() => {
                 this.topNavigatorBarImageId = 'right'
                 this.setState({ modalIsVisible: true })
               }}
-              // style={{ flex: 1, marginRight: scaleSize(18.5) }}
               style={styles.moreView}
             >
               <Image
@@ -249,9 +236,6 @@ export default class Home extends Component {
               />
             </TouchableOpacity>
           ),
-          // headerStyle: {
-          //   height: scaleSize(80),
-          // },
         }}
         style={styles.container}
       >

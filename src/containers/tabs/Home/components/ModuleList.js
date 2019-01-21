@@ -274,7 +274,6 @@ export default class ModuleList extends Component {
     return (
       <RenderModuleItem
         item={item}
-        currentUser={this.props.currentUser}
         importWorkspace={this.props.importWorkspace}
       />
     )

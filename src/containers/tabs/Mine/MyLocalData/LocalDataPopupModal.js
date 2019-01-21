@@ -15,6 +15,7 @@ export default class LocalDataPopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+    this.fontSize = Platform.OS === 'ios' ? 18 : 16
   }
 
   _onRequestClose = () => {
@@ -52,6 +53,7 @@ export default class LocalDataPopupModal extends PureComponent {
             backgroundColor: color.content_white,
             textAlign: 'center',
             lineHeight: 60,
+            fontSize: this.fontSize,
           }}
         >
           导入数据
@@ -74,6 +76,7 @@ export default class LocalDataPopupModal extends PureComponent {
             backgroundColor: color.content_white,
             textAlign: 'center',
             lineHeight: 60,
+            fontSize: this.fontSize,
           }}
         >
           删除

@@ -12,6 +12,7 @@ import {
   View,
   Platform,
   BackHandler,
+  Image,
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
@@ -43,11 +44,7 @@ export default class MT_layerManager extends React.Component {
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
-      data: [
-        { title: '我的图层', data: this.props.layers },
-        { title: '我的底图', data: [] },
-        { title: '切换底图', data: layerManagerData },
-      ],
+      data: [],
     }
   }
 
@@ -57,12 +54,21 @@ export default class MT_layerManager extends React.Component {
     ) {
       this.setState({
         data: [
-          { title: '我的图层', data: this.props.layers },
+          {
+            title: '我的图层',
+            data: this.props.layers,
+            visible: true,
+          },
           {
             title: '我的底图',
             data: [this.props.layers[this.props.layers.length - 1]],
+            visible: true,
           },
-          { title: '切换底图', data: layerManagerData },
+          {
+            title: '切换底图',
+            data: layerManagerData,
+            visible: true,
+          },
         ],
       })
     }
@@ -75,12 +81,13 @@ export default class MT_layerManager extends React.Component {
     this.getData()
     this.setState({
       data: [
-        { title: '我的图层', data: this.props.layers },
+        { title: '我的图层', data: this.props.layers, visible: true },
         {
           title: '我的底图',
           data: [this.props.layers[this.props.layers.length - 1]],
+          visible: true,
         },
-        { title: '切换底图', data: layerManagerData },
+        { title: '切换底图', data: layerManagerData, visible: true },
       ],
     })
   }
@@ -494,68 +501,72 @@ export default class MT_layerManager extends React.Component {
 
   _renderItem = ({ item, section }) => {
     // sectionID = sectionID || 0
-    if (section.title === '我的图层') {
-      return (
-        <LayerManager_item
-          key={item.id}
-          // sectionID={sectionID}
-          // rowID={item.index}
-          ref={ref => {
-            if (!this.itemRefs) {
-              this.itemRefs = {}
-            }
-            this.itemRefs[item.name] = ref
-            return this.itemRefs[item.name]
-          }}
-          layer={item.layer}
-          // map={this.map}
-          data={item}
-          isClose={this.state.currentOpenItemName !== item.name}
-          mapControl={this.mapControl}
-          setLayerVisible={this.setLayerVisible}
-          onOpen={data => {
-            // data, sectionID, rowID
-            if (this.state.currentOpenItemName !== data.name) {
-              let item = this.itemRefs[this.state.currentOpenItemName]
-              item && item.close()
-            }
-            this.setState({
-              currentOpenItemName: data.name,
-            })
-          }}
-          onPress={this.onPressRow}
-          onArrowPress={this.getChildList}
-          onToolPress={this.onToolPress}
-        />
-      )
-    } else {
-      if (item) {
+    if (section.visible) {
+      if (section.title === '我的图层') {
         return (
-          <TouchableOpacity
-            onPress={() => {
-              this.onPress({ item })
+          <LayerManager_item
+            key={item.id}
+            // sectionID={sectionID}
+            // rowID={item.index}
+            ref={ref => {
+              if (!this.itemRefs) {
+                this.itemRefs = {}
+              }
+              this.itemRefs[item.name] = ref
+              return this.itemRefs[item.name]
             }}
-            style={{
-              height: scaleSize(80),
-              justifyContent: 'center',
+            layer={item.layer}
+            // map={this.map}
+            data={item}
+            isClose={this.state.currentOpenItemName !== item.name}
+            mapControl={this.mapControl}
+            setLayerVisible={this.setLayerVisible}
+            onOpen={data => {
+              // data, sectionID, rowID
+              if (this.state.currentOpenItemName !== data.name) {
+                let item = this.itemRefs[this.state.currentOpenItemName]
+                item && item.close()
+              }
+              this.setState({
+                currentOpenItemName: data.name,
+              })
             }}
-          >
-            <Text
-              style={{
-                marginLeft: scaleSize(50),
-                justifyContent: 'center',
-                alignItems: 'center',
-                fontSize: scaleSize(24),
-                color: color.black,
-              }}
-            >
-              {item.caption}
-            </Text>
-          </TouchableOpacity>
+            onPress={this.onPressRow}
+            onArrowPress={this.getChildList}
+            onToolPress={this.onToolPress}
+          />
         )
       } else {
-        return true
+        if (item) {
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                this.onPress({ item })
+              }}
+              style={{
+                height: scaleSize(80),
+                justifyContent: 'center',
+              }}
+            >
+              <Text
+                style={{
+                  marginLeft: scaleSize(50),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  fontSize: scaleSize(24),
+                  color: color.black,
+                }}
+              >
+                {item.caption}
+              </Text>
+            </TouchableOpacity>
+          )
+        } else {
+          return true
+        }
       }
+    } else {
+      return <View />
     }
   }
 
@@ -564,18 +575,42 @@ export default class MT_layerManager extends React.Component {
     this.props.getLayers()
   }
 
+  refreshList = section => {
+    let newData = this.state.data
+    section.visible = !section.visible
+    newData[section.index] = section
+    this.setState({
+      data: newData.concat(),
+    })
+  }
+
   renderSection = ({ section }) => {
+    let image = section.visible
+      ? (image = require('../../assets/mapEdit/icon_spread.png'))
+      : (image = require('../../assets/mapEdit/icon_packUP.png'))
     return (
       <TouchableOpacity
         style={{
           height: scaleSize(80),
           backgroundColor: color.content,
-          justifyContent: 'center',
+          flexDirection: 'row',
+          alignItems: 'center',
+        }}
+        onPress={() => {
+          this.refreshList(section)
         }}
       >
+        <Image
+          source={image}
+          style={{
+            width: scaleSize(40),
+            height: scaleSize(40),
+            marginLeft: scaleSize(20),
+          }}
+        />
         <Text
           style={{
-            marginLeft: scaleSize(50),
+            marginLeft: scaleSize(25),
             justifyContent: 'center',
             alignItems: 'center',
             fontSize: size.fontSize.fontSizeXXl,
