@@ -36,6 +36,7 @@ export default class LayerManager_item extends React.Component {
     child: Array,
     sectionID: number,
     rowID: number,
+    selectLayer: Object,
 
     setLayerVisible: () => {},
   }
@@ -485,10 +486,16 @@ export default class LayerManager_item extends React.Component {
     ) : this.props.data.groupName ? (
       <View style={styles.btn} />
     ) : null
+    let select = 'transparent'
+    if (this.props.selectLayer === this.props.data.caption) {
+      select = '#rgba(0,157,249,1)'
+    } else {
+      select = 'transparent'
+    }
     return (
       <TouchableOpacity
         activeOpacity={1}
-        style={styles.rowOne}
+        style={[styles.rowOne, { backgroundColor: select }]}
         onPress={this._pop_row}
       >
         <View style={styles.btn_container}>
@@ -512,7 +519,7 @@ export default class LayerManager_item extends React.Component {
               />
             </TouchableOpacity>
           )}
-          <View style={styles.btn}>
+          <View style={styles.btn1}>
             <Image
               resizeMode={'contain'}
               style={[
@@ -531,7 +538,7 @@ export default class LayerManager_item extends React.Component {
         <TouchableOpacity style={styles.btn} onPress={this._tool_row}>
           <Image
             resizeMode={'contain'}
-            style={styles.btn_image}
+            style={styles.more_image}
             source={require('../../../../assets/function/icon_shallow_more_black.png')}
           />
         </TouchableOpacity>

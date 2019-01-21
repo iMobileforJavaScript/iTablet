@@ -45,6 +45,7 @@ export default class MT_layerManager extends React.Component {
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
+      selectLayer: '',
     }
   }
 
@@ -424,6 +425,9 @@ export default class MT_layerManager extends React.Component {
         Toast.show('当前图层为:' + data.name)
       }
     }
+    this.setState({
+      selectLayer: data.caption,
+    })
   }
 
   onToolPress = async ({ data }) => {
@@ -531,6 +535,7 @@ export default class MT_layerManager extends React.Component {
                 currentOpenItemName: data.name,
               })
             }}
+            selectLayer={this.state.selectLayer}
             onPress={this.onPressRow}
             onArrowPress={this.getChildList}
             onToolPress={this.onToolPress}
