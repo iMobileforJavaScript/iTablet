@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container, Dialog } from '../../../../components'
+import { Container, Dialog, InputDialog } from '../../../../components'
 import {
   FunctionToolbar,
   MapToolbar,
@@ -239,6 +239,10 @@ export default class Map3D extends React.Component {
     this.dialog.setDialogVisible(false)
   }
 
+  setInputDialogVisible = (visible, params = {}) => {
+    this.InputDialog && this.InputDialog.setDialogVisible(visible, params)
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -258,6 +262,7 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={() => this.dialog}
+        setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         setAttributes={this.props.setAttributes}
       />
@@ -296,6 +301,10 @@ export default class Map3D extends React.Component {
     )
   }
 
+  renderInputDialog = () => {
+    return <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
+  }
+
   render() {
     return (
       <Container
@@ -314,6 +323,7 @@ export default class Map3D extends React.Component {
         {this.renderFunctionToolbar()}
         {this.renderTool()}
         {this.renderDialog()}
+        {this.renderInputDialog()}
       </Container>
     )
   }
