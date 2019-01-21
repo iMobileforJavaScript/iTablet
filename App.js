@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform, StatusBar } from 'react-native'
+import { View, AppState, StyleSheet, Platform } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -23,7 +23,7 @@ import {
 import { setMapSetting } from './src/models/setting'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
-import { FileTools, SPUtils }  from './src/native'
+import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { SaveView, constants } from './src/containers/workspace/components'
@@ -102,13 +102,6 @@ class AppRoot extends Component {
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
       await this.initOrientation()
-      //状态栏
-      let statusBar = false
-      statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
-      StatusBar.setHidden(!statusBar)
-      StatusBar.setBackgroundColor('#2D2D2F')
-      StatusBar.setTranslucent(false)
-      StatusBar.setBarStyle('default')
     }).bind(this)()
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
