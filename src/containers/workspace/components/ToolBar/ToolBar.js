@@ -65,7 +65,6 @@ const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
 
-export const BUTTON_HEIGHT = scaleSize(95)
 let isSharing = false
 
 export default class ToolBar extends React.PureComponent {
@@ -178,7 +177,7 @@ export default class ToolBar extends React.PureComponent {
       })
     }
     if (this.props.device.orientation !== prevProps.device.orientation) {
-      if (!(this.isShow && this.isBoxShow)) {
+      if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
         return
       }
       this.state.type &&
@@ -278,13 +277,15 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.GRID_STYLE:
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.LINECOLOR_SET:
@@ -294,6 +295,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.POINTCOLOR_SET:
@@ -303,6 +305,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.REGIONBEFORECOLOR_SET:
@@ -312,6 +315,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.REGIONAFTERCOLOR_SET:
@@ -321,6 +325,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
@@ -803,7 +808,8 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: true,
           showMenuDialog: false,
           type: type,
-          buttons: ThemeMenuData.getThemeThreeMenu(),
+          // buttons: ThemeMenuData.getThemeThreeMenu(),
+          buttons: ThemeMenuData.getThemeFourMenu(),
           selectKey: key,
           data: [],
         },
@@ -1026,7 +1032,8 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: true,
           showMenuDialog: false,
           type: type,
-          buttons: ThemeMenuData.getThemeThreeMenu(),
+          // buttons: ThemeMenuData.getThemeThreeMenu(),
+          buttons: ThemeMenuData.getThemeFourMenu(),
           selectName: name || 'fontsize',
           selectKey: key,
           data: [],
@@ -1332,12 +1339,17 @@ export default class ToolBar extends React.PureComponent {
       this.showMap3DTool(type)
       return
     }
-    if (this.isShow === isShow && type === this.state.type) return
+    // console.warn(0)
+    // if (this.isShow === isShow && type === this.state.type) return
+    // console.warn(1)
     if (
+      this.isShow !== isShow ||
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column
+      params.column !== this.state.column ||
+      params.buttons !== this.state.buttons ||
+      params.selectKey !== this.state.selectKey
     ) {
       let { data, buttons } = this.getData(type)
       params.createThemeByLayer &&
@@ -1372,6 +1384,8 @@ export default class ToolBar extends React.PureComponent {
                 ? tabs
                 : table,
           themeType: params && params.themeType ? params.themeType : '',
+          selectKey: params && params.selectKey ? params.selectKey : '',
+          selectName: params && params.selectName ? params.selectName : '',
         },
         () => {
           // if (!showViewFirst) {
@@ -1503,7 +1517,7 @@ export default class ToolBar extends React.PureComponent {
     (async function() {
       if (GLOBAL.Type === constants.MAP_EDIT) {
         GLOBAL.showMenu = true
-        GLOBAL.showFlex = true
+        // GLOBAL.showFlex = true
         this.setState({ selectKey: '' })
       }
       GLOBAL.currentToolbarType = ''
@@ -1657,6 +1671,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   menu = () => {
+    let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
       if (
         this.state.type.indexOf('MAP_THEME_PARAM') < 0 ||
@@ -1676,46 +1691,50 @@ export default class ToolBar extends React.PureComponent {
         GLOBAL.Type === constants.MAP_EDIT ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0
       ) {
-        if (GLOBAL.showFlex) {
-          GLOBAL.showFlex = false
-          this.setState({
-            isFullScreen: !this.state.showMenuDialog,
-            showMenuDialog: !this.state.showMenuDialog,
-            isTouchProgress: false,
-            buttons: [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
-              // this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ? ToolbarBtnType.MENU_FLEX : ToolbarBtnType.FLEX,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.MENU_COMMIT,
-            ],
-          })
-        } else {
-          GLOBAL.showFlex = true
-          this.setState({
-            isFullScreen: !this.state.showMenuDialog,
-            showMenuDialog: !this.state.showMenuDialog,
-            isTouchProgress: false,
-            buttons: [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
-              // this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ? ToolbarBtnType.MENU_FLEX : ToolbarBtnType.FLEX,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.MENU_COMMIT,
-            ],
-          })
-        }
+        // GLOBAL.showFlex =  !GLOBAL.showFlex
+        this.isBoxShow = !this.isBoxShow
+        this.setState({
+          isFullScreen,
+          showMenuDialog,
+          isTouchProgress,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
       }
     }.bind(this)
 
-    if (!this.state.showMenuDialog) {
-      // 先滑出box，再显示Menu
-      showBox()
-      setTimeout(setData, Const.ANIMATED_DURATION_2)
-    } else {
-      // 先隐藏Menu，再滑进box
+    if (
+      this.state.selectKey === '线宽' ||
+      this.state.selectKey === '大小' ||
+      this.state.selectKey === '旋转角度' ||
+      this.state.selectKey === '透明度' ||
+      this.state.selectKey === '对比度' ||
+      this.state.selectKey === '亮度' ||
+      this.state.selectKey === '分段个数' ||
+      this.state.selectKey === '旋转角度' ||
+      this.state.selectKey === '字号'
+    ) {
+      isFullScreen = true
+      showMenuDialog = !this.state.showMenuDialog
+      isTouchProgress = this.state.showMenuDialog
       setData()
-      showBox()
+    } else {
+      (isFullScreen = !this.state.showMenuDialog),
+      (showMenuDialog = !this.state.showMenuDialog),
+      (isTouchProgress = false)
+      if (!this.state.showMenuDialog) {
+        // 先滑出box，再显示Menu
+        showBox()
+        setTimeout(setData, Const.ANIMATED_DURATION_2)
+      } else {
+        // 先隐藏Menu，再滑进box
+        setData()
+        showBox()
+      }
     }
   }
 
@@ -1756,42 +1775,41 @@ export default class ToolBar extends React.PureComponent {
     // this.props.existFullMap && this.props.existFullMap()
   }
 
-  showMenuBox = (autoFullScreen = false) => {
-    if (autoFullScreen) {
-      this.setState(
-        {
-          showMenuDialog: false,
-          isFullScreen: !this.isBoxShow,
-        },
-        () => {
-          Animated.timing(this.state.boxHeight, {
-            toValue: this.isBoxShow ? 0 : this.height,
-            duration: Const.ANIMATED_DURATION,
-          }).start()
-          this.isBoxShow = !this.isBoxShow
-        },
-      )
-    } else {
-      if (this.isBoxShow) {
-        Animated.timing(this.state.boxHeight, {
-          toValue: 0,
-          duration: Const.ANIMATED_DURATION,
-        }).start()
+  showMenuBox = () => {
+    if (
+      GLOBAL.Type === constants.MAP_EDIT ||
+      this.state.type.indexOf('MAP_THEME_PARAM') >= 0
+    ) {
+      // GLOBAL.showFlex = !GLOBAL.showFlex
+      this.isBoxShow = !this.isBoxShow
+      if (
+        this.state.selectKey === '线宽' ||
+        this.state.selectKey === '大小' ||
+        this.state.selectKey === '旋转角度' ||
+        this.state.selectKey === '透明度' ||
+        this.state.selectKey === '对比度' ||
+        this.state.selectKey === '亮度' ||
+        this.state.selectKey === '分段个数' ||
+        this.state.selectKey === '旋转角度' ||
+        this.state.selectKey === '字号'
+      ) {
+        // 显示指滑进度条
         this.setState({
-          showMenuDialog: false,
-          isFullScreen: false,
+          isTouchProgress: this.isBoxShow,
+          showMenuDialog: !this.isBoxShow,
+          isFullScreen: this.isBoxShow,
         })
-      } else if (this.state.data && this.state.data.length > 0) {
+      } else {
         Animated.timing(this.state.boxHeight, {
-          toValue: this.height,
+          toValue: this.isBoxShow ? this.height : 0,
           duration: Const.ANIMATED_DURATION,
         }).start()
+
         this.setState({
           showMenuDialog: false,
           isFullScreen: false,
         })
       }
-      this.isBoxShow = !this.isBoxShow
     }
   }
 
@@ -2760,7 +2778,12 @@ export default class ToolBar extends React.PureComponent {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.props.currentLayer} />
+    return (
+      <SymbolList
+        device={this.props.device}
+        layerData={this.props.currentLayer}
+      />
+    )
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -2847,7 +2870,7 @@ export default class ToolBar extends React.PureComponent {
         onSelect={item => {
           this.setState({
             selectKey: item.selectKey,
-            selectName: item.name,
+            selectName: item.selectName || item.key,
           })
         }}
       />
@@ -3120,7 +3143,8 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.MENU_COMMIT:
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.menuCommit
+          // action = this.menuCommit
+          action = this.close
           break
       }
 
@@ -3167,7 +3191,7 @@ export default class ToolBar extends React.PureComponent {
     }
     if (GLOBAL.Type === constants.MAP_EDIT) {
       GLOBAL.showMenu = true
-      GLOBAL.showFlex = true
+      // GLOBAL.showFlex = true
       this.setState({ selectKey: '' })
     }
   }

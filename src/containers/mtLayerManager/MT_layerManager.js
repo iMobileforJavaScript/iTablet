@@ -607,6 +607,7 @@ export default class MT_layerManager extends React.Component {
           renderSectionHeader={this.renderSection}
           getItemLayout={this.getItemLayout}
           keyExtractor={(item, index) => index.toString()}
+          initialNumToRender={15}
         />
       </View>
     )
@@ -634,7 +635,8 @@ export default class MT_layerManager extends React.Component {
           title: title,
           navigation: this.props.navigation,
           // backAction: this.back,
-          backImg: require('../../assets/mapTools/icon_close.png'),
+          // backImg: require('../../assets/mapTools/icon_close.png'),
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
       >
