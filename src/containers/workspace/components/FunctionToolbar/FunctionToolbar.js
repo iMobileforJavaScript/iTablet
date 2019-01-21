@@ -708,7 +708,7 @@ export default class FunctionToolbar extends React.Component {
             key: constants.ADD,
             title: constants.ADD,
             size: 'large',
-            action: this.add,
+            action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           // {
