@@ -4,19 +4,12 @@ import { Container } from '../../components'
 // import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import {
-  SectionList,
-  StatusBar,
-  View,
-  Platform,
-  BackHandler,
-} from 'react-native'
+import { SectionList, View, Platform, BackHandler } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
-import { SPUtils } from '../../native'
 
 export default class MapSetting extends Component {
   props: {
@@ -58,21 +51,15 @@ export default class MapSetting extends Component {
   }
 
   getData = async () => {
-    let statusBar = false
-    // let navigationBar = false
     let isAntialias = true
     let isVisibleScalesEnabled = false
 
-    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
-    // navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
     isAntialias = await SMap.isAntialias()
     isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
-    newData[0].data[0].value = statusBar
-    // newData[0].data[1].value = navigationBar
-    newData[1].data[0].value = isAntialias
-    newData[2].data[0].value = isVisibleScalesEnabled
+    newData[0].data[0].value = isAntialias
+    newData[1].data[0].value = isVisibleScalesEnabled
 
     this.setState({
       data: newData,
@@ -94,13 +81,6 @@ export default class MapSetting extends Component {
 
   setLoading = (loading = false, info, extra) => {
     this.container && this.container.setLoading(loading, info, extra)
-  }
-
-  setStatusBarHidden = hidden => {
-    StatusBar.setHidden(hidden, 'fade')
-    StatusBar.setBackgroundColor('#2D2D2F')
-    StatusBar.setTranslucent(false)
-    StatusBar.setBarStyle('default')
   }
 
   setSaveViewVisible = visible => {
@@ -140,13 +120,6 @@ export default class MapSetting extends Component {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
-      case '显示状态栏':
-        SPUtils.putBoolean('MapSetting', '显示状态栏', value)
-        this.setStatusBarHidden(!value)
-        break
-      case '显示导航栏':
-        SPUtils.putBoolean('MapSetting', '显示导航栏', value)
-        break
       case '地图反走样':
         SMap.setAntialias(value)
         break

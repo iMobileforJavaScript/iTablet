@@ -1513,6 +1513,18 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  themeCommit = (type = this.state.type) => {
+    (async function() {
+      if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
+        this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
+      } else {
+        this.close()
+      }
+    }.bind(this)())
+  }
+
   close = (type = this.state.type) => {
     (async function() {
       if (GLOBAL.Type === constants.MAP_EDIT) {
