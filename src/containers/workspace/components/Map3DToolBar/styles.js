@@ -21,14 +21,6 @@ export default StyleSheet.create({
     height: scaleSize(15),
   },
   text: {
-    // width:"100%",
-    // height: scaleSize(60),
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // textAlign:"center",
-    // textAlignVertical:"center",
-
     fontSize: setSpText(22),
     color: 'white',
   },
@@ -75,6 +67,7 @@ export default StyleSheet.create({
   },
   row: {
     flex: 1,
+    height: scaleSize(61),
     flexDirection: 'row',
   },
   analystView: {
