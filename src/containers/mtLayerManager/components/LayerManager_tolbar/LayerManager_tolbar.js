@@ -336,12 +336,7 @@ export default class LayerManager_tolbar extends React.Component {
             style={styles.overlay}
           />
         }
-        <TouchableHighlight
-          underlayColor={color.headerBackground}
-          style={styles.containers}
-        >
-          {this.renderView()}
-        </TouchableHighlight>
+        <View style={styles.containers}>{this.renderView()}</View>
         {this.renderDialog()}
       </Animated.View>
     )
