@@ -96,7 +96,7 @@ export default class setting extends Component {
         return (
           <View>
             <View style={styles.row}>
-              <Text style={styles.itemName} />
+              <Text style={styles.switchText}>{item.name}</Text>
               <Switch
                 style={styles.switch}
                 trackColor={{ false: 'white', true: '#505050' }}
@@ -160,6 +160,7 @@ export default class setting extends Component {
         headerProps={{
           title: '设置',
           navigation: this.props.navigation,
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}

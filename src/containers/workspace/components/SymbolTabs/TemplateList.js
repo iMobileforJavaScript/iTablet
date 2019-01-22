@@ -78,56 +78,56 @@ export default class TemplateList extends React.Component {
       }
     }
     // 设置对应图层为可编辑
-    if (layer) {
-      // switch (type) {
-      //   case 'Region':
-      //     toolbarType = ConstToolType.MAP_COLLECTION_REGION
-      //     break
-      //   case 'Line':
-      //     toolbarType = ConstToolType.MAP_COLLECTION_LINE
-      //     break
-      //   case 'Point':
-      //     toolbarType = ConstToolType.MAP_COLLECTION_POINT
-      //     break
-      //   // default:
-      //   //   actionType = Action.PAN
-      // }
-      // this.props.showToolbar(true, toolbarType, {
-      //   isFullScreen: false,
-      //   height: ConstToolType.HEIGHT[0],
-      // })
-      // this.props.showToolbar(true, toolbarType, {
-      //   isFullScreen: false,
-      //   height: ConstToolType.HEIGHT[0],
-      //   cb: () => {
-      //     this.props.setCurrentTemplateList(data)
-      //     let tempSymbol = Object.assign(
-      //       {},
-      //       data.$,
-      //       { field: data.fields[0].field },
-      //       { layerPath: layer.path },
-      //     )
-      //     this.props.setCurrentTemplateInfo(tempSymbol)
-      //   },
-      // })
-      // this.props.setEditLayer(layer, () => {
-      //   SMap.setAction(actionType)
-      // })
+    // if (layer) {
+    // switch (type) {
+    //   case 'Region':
+    //     toolbarType = ConstToolType.MAP_COLLECTION_REGION
+    //     break
+    //   case 'Line':
+    //     toolbarType = ConstToolType.MAP_COLLECTION_LINE
+    //     break
+    //   case 'Point':
+    //     toolbarType = ConstToolType.MAP_COLLECTION_POINT
+    //     break
+    //   // default:
+    //   //   actionType = Action.PAN
+    // }
+    // this.props.showToolbar(true, toolbarType, {
+    //   isFullScreen: false,
+    //   height: ConstToolType.HEIGHT[0],
+    // })
+    // this.props.showToolbar(true, toolbarType, {
+    //   isFullScreen: false,
+    //   height: ConstToolType.HEIGHT[0],
+    //   cb: () => {
+    //     this.props.setCurrentTemplateList(data)
+    //     let tempSymbol = Object.assign(
+    //       {},
+    //       data.$,
+    //       { field: data.fields[0].field },
+    //       { layerPath: layer.path },
+    //     )
+    //     this.props.setCurrentTemplateInfo(tempSymbol)
+    //   },
+    // })
+    // this.props.setEditLayer(layer, () => {
+    //   SMap.setAction(actionType)
+    // })
 
-      this.props.setCurrentTemplateList(data)
-      let tempSymbol = Object.assign(
-        {},
-        data.$,
-        { field: data.fields[0].field },
-        { layerPath: layer.path },
-      )
-      this.props.setCurrentTemplateInfo(tempSymbol)
+    this.props.setCurrentTemplateList(data)
+    let tempSymbol = Object.assign(
+      {},
+      data.$,
+      { field: data.fields[0].field },
+      { layerPath: (layer && layer.path) || '' },
+    )
+    this.props.setCurrentTemplateInfo(tempSymbol)
 
-      // let tempSymbol = Object.assign({}, data, { layerPath: layer.path })
-      // this.props.setCurrentTemplateInfo(tempSymbol)
+    // let tempSymbol = Object.assign({}, data, { layerPath: layer.path })
+    // this.props.setCurrentTemplateInfo(tempSymbol)
 
-      this.props.goToPage && this.props.goToPage(1)
-    }
+    this.props.goToPage && this.props.goToPage(1)
+    // }
   }
 
   render() {

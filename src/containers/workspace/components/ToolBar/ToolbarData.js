@@ -17,6 +17,7 @@ function setParams(params) {
   CollectionData.setParams(params)
   StartData.setParams(params)
   ShareData.setParams(params)
+  MoreData.setParams(params)
 }
 
 function getTabBarData(type, params = {}) {

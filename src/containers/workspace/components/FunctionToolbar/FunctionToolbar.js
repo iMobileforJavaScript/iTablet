@@ -12,7 +12,7 @@ import {
   ConstInfo,
   ConstPath,
 } from '../../../../constants'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import styles from './styles'
 import {
@@ -72,7 +72,7 @@ export default class FunctionToolbar extends React.Component {
     this.state = {
       type: props.type,
       data: data,
-      right: new Animated.Value(scaleSize(20)),
+      right: new Animated.Value(scaleSize(31)),
     }
     this.visible = true
   }
@@ -80,7 +80,7 @@ export default class FunctionToolbar extends React.Component {
   setVisible = visible => {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
-      toValue: visible ? scaleSize(20) : scaleSize(-200),
+      toValue: visible ? scaleSize(31) : scaleSize(-200),
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
@@ -708,7 +708,7 @@ export default class FunctionToolbar extends React.Component {
             key: constants.ADD,
             title: constants.ADD,
             size: 'large',
-            action: this.add,
+            action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           // {
@@ -758,11 +758,11 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          {
-            title: '标注',
-            action: this.showMap3DSymbol,
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
-          },
+          // {
+          //   title: '标注',
+          //   action: this.showMap3DSymbol,
+          //   image: require('../../../../assets/function/icon_function_Tagging.png'),
+          // },
           {
             title: '工具',
             action: this.showMap3DTool,
@@ -770,7 +770,7 @@ export default class FunctionToolbar extends React.Component {
           },
           {
             // key: 'fly',
-            title: '飞行轨迹',
+            title: '飞行',
             action: () => {
               // this.isShow=!this.isShow
               // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
@@ -783,11 +783,11 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/Frenchgrey/icon_symbolFly.png'),
           },
           {
-            title: '更多',
+            title: '分享',
             action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
-            image: require('../../../../assets/function/icon_more.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_share.png'),
           },
         ]
         break
@@ -1006,7 +1006,7 @@ export default class FunctionToolbar extends React.Component {
         key={index}
         title={item.title}
         textColor={'black'}
-        textStyle={{ fontSize: scaleSize(18) }}
+        textStyle={{ fontSize: setSpText(20) }}
         size={MTBtn.Size.NORMAL}
         image={item.image}
         onPress={item.action}

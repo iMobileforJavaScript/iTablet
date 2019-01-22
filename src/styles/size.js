@@ -1,5 +1,5 @@
 import { Dimensions, Platform } from 'react-native'
-import { scaleSize } from '../utils'
+import { setSpText } from '../utils'
 
 const screen = {
   width: Dimensions.get('window').width,
@@ -7,12 +7,12 @@ const screen = {
   statusBarHeight: Platform.OS === 'ios' ? 20 : 0,
 }
 const fontSize = {
-  fontSizeXXl: scaleSize(28),
-  fontSizeXl: scaleSize(26),
-  fontSizeLg: scaleSize(24),
-  fontSizeMd: scaleSize(22),
-  fontSizeSm: scaleSize(20),
-  fontSizeXs: scaleSize(18),
+  fontSizeXXl: setSpText(28),
+  fontSizeXl: setSpText(26),
+  fontSizeLg: setSpText(24),
+  fontSizeMd: setSpText(22),
+  fontSizeSm: setSpText(20),
+  fontSizeXs: setSpText(18),
 }
 
 const layoutSize = {

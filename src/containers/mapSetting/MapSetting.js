@@ -1,22 +1,15 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
-import { MAP_MODULE } from '../../constants'
-import constants from '../workspace/constants'
+// import { MAP_MODULE } from '../../constants'
+// import constants from '../workspace/constants'
 // import NavigationService from '../NavigationService'
 import { MapToolbar } from '../workspace/components'
-import {
-  SectionList,
-  StatusBar,
-  View,
-  Platform,
-  BackHandler,
-} from 'react-native'
+import { SectionList, View, Platform, BackHandler } from 'react-native'
 import styles from './styles'
 import { getMapSettings } from './settingData'
 import SettingSection from './SettingSection'
 import SettingItem from './SettingItem'
 import { SMap } from 'imobile_for_reactnative'
-import { SPUtils } from '../../native'
 
 export default class MapSetting extends Component {
   props: {
@@ -58,21 +51,18 @@ export default class MapSetting extends Component {
   }
 
   getData = async () => {
-    let statusBar = false
-    // let navigationBar = false
     let isAntialias = true
+    let isOverlapDisplayed = false
     let isVisibleScalesEnabled = false
 
-    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
-    // navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
     isAntialias = await SMap.isAntialias()
+    isOverlapDisplayed = await SMap.isOverlapDisplayed()
     isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
-    newData[0].data[0].value = statusBar
-    // newData[0].data[1].value = navigationBar
-    newData[1].data[0].value = isAntialias
-    newData[2].data[0].value = isVisibleScalesEnabled
+    newData[0].data[0].value = isAntialias
+    newData[0].data[1].value = isOverlapDisplayed
+    newData[1].data[0].value = isVisibleScalesEnabled
 
     this.setState({
       data: newData,
@@ -94,13 +84,6 @@ export default class MapSetting extends Component {
 
   setLoading = (loading = false, info, extra) => {
     this.container && this.container.setLoading(loading, info, extra)
-  }
-
-  setStatusBarHidden = hidden => {
-    StatusBar.setHidden(hidden, 'fade')
-    StatusBar.setBackgroundColor('#2D2D2F')
-    StatusBar.setTranslucent(false)
-    StatusBar.setBarStyle('default')
   }
 
   setSaveViewVisible = visible => {
@@ -140,15 +123,11 @@ export default class MapSetting extends Component {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
-      case '显示状态栏':
-        SPUtils.putBoolean('MapSetting', '显示状态栏', value)
-        this.setStatusBarHidden(!value)
-        break
-      case '显示导航栏':
-        SPUtils.putBoolean('MapSetting', '显示导航栏', value)
-        break
-      case '地图反走样':
+      case '反走样地图':
         SMap.setAntialias(value)
+        break
+      case '显示压盖对象':
+        SMap.setOverlapDisplayed(value)
         break
       case '固定比例尺':
         SMap.setVisibleScalesEnabled(value)
@@ -200,30 +179,31 @@ export default class MapSetting extends Component {
   }
 
   render() {
-    let title = ''
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
-        break
-    }
+    // let title = ''
+    // switch (GLOBAL.Type) {
+    //   case constants.COLLECTION:
+    //     title = MAP_MODULE.MAP_COLLECTION
+    //     break
+    //   case constants.MAP_EDIT:
+    //     title = MAP_MODULE.MAP_EDIT
+    //     break
+    //   case constants.MAP_3D:
+    //     title = MAP_MODULE.MAP_3D
+    //     break
+    //   case constants.MAP_THEME:
+    //     title = MAP_MODULE.MAP_THEME
+    //     break
+    // }
     return (
       <Container
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
+          title: '设置',
           navigation: this.props.navigation,
           // backAction: this.back,
-          backImg: require('../../assets/mapTools/icon_close.png'),
+          // backImg: require('../../assets/mapTools/icon_close.png'),
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
       >

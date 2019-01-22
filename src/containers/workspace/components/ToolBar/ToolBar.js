@@ -1,5 +1,5 @@
 import React from 'react'
-import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, scaleSize, jsonUtil, setSpText } from '../../../../utils'
 import {
   MTBtn,
   TableList,
@@ -41,7 +41,7 @@ import {
   Action,
   SCollector,
   SThemeCartography,
-  SOnlineService,
+  // SOnlineService,
   SMCollectorType,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
@@ -50,7 +50,7 @@ import ToolbarBtnType from './ToolbarBtnType'
 import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
-import ShareData from './ShareData'
+// import ShareData from './ShareData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -65,8 +65,7 @@ const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
 
-export const BUTTON_HEIGHT = scaleSize(95)
-let isSharing = false
+// let isSharing = false
 
 export default class ToolBar extends React.PureComponent {
   props: {
@@ -167,6 +166,15 @@ export default class ToolBar extends React.PureComponent {
     this.isBoxShow = true
   }
 
+  componentDidMount() {
+    ToolbarData.setParams({
+      setToolbarVisible: this.setVisible,
+      setLastState: this.setLastState,
+      scrollListToLocation: this.scrollListToLocation,
+      ...this.props,
+    })
+  }
+
   componentDidUpdate(prevProps) {
     if (JSON.stringify(prevProps) !== JSON.stringify(this.props)) {
       // 实时更新params
@@ -178,7 +186,7 @@ export default class ToolBar extends React.PureComponent {
       })
     }
     if (this.props.device.orientation !== prevProps.device.orientation) {
-      if (!(this.isShow && this.isBoxShow)) {
+      if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
         return
       }
       this.state.type &&
@@ -278,13 +286,15 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.GRID_STYLE:
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.MENU,
-          ToolbarBtnType.PLACEHOLDER,
+          ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.LINECOLOR_SET:
@@ -294,6 +304,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.POINTCOLOR_SET:
@@ -303,6 +314,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.REGIONBEFORECOLOR_SET:
@@ -312,6 +324,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.REGIONAFTERCOLOR_SET:
@@ -321,6 +334,7 @@ export default class ToolBar extends React.PureComponent {
           ToolbarBtnType.MENU,
           // ToolbarBtnType.FLEX,
           ToolbarBtnType.MENU_FLEX,
+          ToolbarBtnType.MENU_COMMIT,
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
@@ -440,6 +454,12 @@ export default class ToolBar extends React.PureComponent {
             },
             size: 'large',
             image: require('../../../../assets/function/icon_analystSuerface.png'),
+          },
+          {
+            key: 'symbol',
+            title: '标注',
+            action: this.showMap3DSymbol,
+            image: require('../../../../assets/function/Frenchgrey/icon_function_Tagging.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -803,7 +823,8 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: true,
           showMenuDialog: false,
           type: type,
-          buttons: ThemeMenuData.getThemeThreeMenu(),
+          // buttons: ThemeMenuData.getThemeThreeMenu(),
+          buttons: ThemeMenuData.getThemeFourMenu(),
           selectKey: key,
           data: [],
         },
@@ -1026,7 +1047,8 @@ export default class ToolBar extends React.PureComponent {
           isTouchProgress: true,
           showMenuDialog: false,
           type: type,
-          buttons: ThemeMenuData.getThemeThreeMenu(),
+          // buttons: ThemeMenuData.getThemeThreeMenu(),
+          buttons: ThemeMenuData.getThemeFourMenu(),
           selectName: name || 'fontsize',
           selectKey: key,
           data: [],
@@ -1138,6 +1160,25 @@ export default class ToolBar extends React.PureComponent {
     } catch (error) {
       Toast.show('无场景列表')
     }
+  }
+
+  showMap3DSymbol = async () => {
+    if (!GLOBAL.openWorkspace) {
+      Toast.show('请打开场景')
+      return
+    }
+    SScene.checkoutListener('startLabelOperate')
+    GLOBAL.Map3DSymbol = true
+    // TODO 根据符号类型改变ToolBox内容
+    this.setVisible(true, ConstToolType.MAP3D_SYMBOL, {
+      containerType: 'table',
+      isFullScreen: true,
+      height:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[2],
+      column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+    })
   }
 
   importMap3Dworkspace = async () => {
@@ -1332,12 +1373,17 @@ export default class ToolBar extends React.PureComponent {
       this.showMap3DTool(type)
       return
     }
-    if (this.isShow === isShow && type === this.state.type) return
+    // console.warn(0)
+    // if (this.isShow === isShow && type === this.state.type) return
+    // console.warn(1)
     if (
+      this.isShow !== isShow ||
       this.state.type !== type ||
       params.isFullScreen !== this.state.isFullScreen ||
       params.height !== this.height ||
-      params.column !== this.state.column
+      params.column !== this.state.column ||
+      params.buttons !== this.state.buttons ||
+      params.selectKey !== this.state.selectKey
     ) {
       let { data, buttons } = this.getData(type)
       params.createThemeByLayer &&
@@ -1372,6 +1418,8 @@ export default class ToolBar extends React.PureComponent {
                 ? tabs
                 : table,
           themeType: params && params.themeType ? params.themeType : '',
+          selectKey: params && params.selectKey ? params.selectKey : '',
+          selectName: params && params.selectName ? params.selectName : '',
         },
         () => {
           // if (!showViewFirst) {
@@ -1499,11 +1547,43 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  themeCommit = () => {
+    (async function() {
+      if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
+        let result = true
+        let datasetNames =
+          (this.toolBarSectionList &&
+            this.toolBarSectionList.getSelectList()) ||
+          []
+        if (datasetNames.length === 0) {
+          Toast.show('请先选择要添加的数据集')
+          return
+        }
+        result = await SMap.addLayers(
+          datasetNames,
+          this.state.themeDatasourceAlias,
+        )
+        result &&
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        if (result) {
+          this.setVisible(false)
+          Toast.show('添加成功')
+        } else {
+          Toast.show('添加失败')
+        }
+      } else {
+        this.close()
+      }
+    }.bind(this)())
+  }
+
   close = (type = this.state.type) => {
     (async function() {
       if (GLOBAL.Type === constants.MAP_EDIT) {
         GLOBAL.showMenu = true
-        GLOBAL.showFlex = true
+        // GLOBAL.showFlex = true
         this.setState({ selectKey: '' })
       }
       GLOBAL.currentToolbarType = ''
@@ -1657,6 +1737,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   menu = () => {
+    let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
       if (
         this.state.type.indexOf('MAP_THEME_PARAM') < 0 ||
@@ -1676,46 +1757,50 @@ export default class ToolBar extends React.PureComponent {
         GLOBAL.Type === constants.MAP_EDIT ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0
       ) {
-        if (GLOBAL.showFlex) {
-          GLOBAL.showFlex = false
-          this.setState({
-            isFullScreen: !this.state.showMenuDialog,
-            showMenuDialog: !this.state.showMenuDialog,
-            isTouchProgress: false,
-            buttons: [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
-              // this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ? ToolbarBtnType.MENU_FLEX : ToolbarBtnType.FLEX,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.MENU_COMMIT,
-            ],
-          })
-        } else {
-          GLOBAL.showFlex = true
-          this.setState({
-            isFullScreen: !this.state.showMenuDialog,
-            showMenuDialog: !this.state.showMenuDialog,
-            isTouchProgress: false,
-            buttons: [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
-              // this.state.type.indexOf('MAP_THEME_PARAM') >= 0 ? ToolbarBtnType.MENU_FLEX : ToolbarBtnType.FLEX,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.MENU_COMMIT,
-            ],
-          })
-        }
+        // GLOBAL.showFlex =  !GLOBAL.showFlex
+        this.isBoxShow = !this.isBoxShow
+        this.setState({
+          isFullScreen,
+          showMenuDialog,
+          isTouchProgress,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
       }
     }.bind(this)
 
-    if (!this.state.showMenuDialog) {
-      // 先滑出box，再显示Menu
-      showBox()
-      setTimeout(setData, Const.ANIMATED_DURATION_2)
-    } else {
-      // 先隐藏Menu，再滑进box
+    if (
+      this.state.selectKey === '线宽' ||
+      this.state.selectKey === '大小' ||
+      this.state.selectKey === '旋转角度' ||
+      this.state.selectKey === '透明度' ||
+      this.state.selectKey === '对比度' ||
+      this.state.selectKey === '亮度' ||
+      this.state.selectKey === '分段个数' ||
+      this.state.selectKey === '旋转角度' ||
+      this.state.selectKey === '字号'
+    ) {
+      isFullScreen = true
+      showMenuDialog = !this.state.showMenuDialog
+      isTouchProgress = this.state.showMenuDialog
       setData()
-      showBox()
+    } else {
+      (isFullScreen = !this.state.showMenuDialog),
+      (showMenuDialog = !this.state.showMenuDialog),
+      (isTouchProgress = false)
+      if (!this.state.showMenuDialog) {
+        // 先滑出box，再显示Menu
+        showBox()
+        setTimeout(setData, Const.ANIMATED_DURATION_2)
+      } else {
+        // 先隐藏Menu，再滑进box
+        setData()
+        showBox()
+      }
     }
   }
 
@@ -1756,42 +1841,42 @@ export default class ToolBar extends React.PureComponent {
     // this.props.existFullMap && this.props.existFullMap()
   }
 
-  showMenuBox = (autoFullScreen = false) => {
-    if (autoFullScreen) {
-      this.setState(
-        {
-          showMenuDialog: false,
-          isFullScreen: !this.isBoxShow,
-        },
-        () => {
-          Animated.timing(this.state.boxHeight, {
-            toValue: this.isBoxShow ? 0 : this.height,
-            duration: Const.ANIMATED_DURATION,
-          }).start()
-          this.isBoxShow = !this.isBoxShow
-        },
-      )
-    } else {
-      if (this.isBoxShow) {
-        Animated.timing(this.state.boxHeight, {
-          toValue: 0,
-          duration: Const.ANIMATED_DURATION,
-        }).start()
+  showMenuBox = () => {
+    if (
+      GLOBAL.Type === constants.MAP_EDIT ||
+      this.state.type.indexOf('MAP_THEME_PARAM') >= 0
+    ) {
+      // GLOBAL.showFlex = !GLOBAL.showFlex
+      if (
+        this.state.selectKey === '线宽' ||
+        this.state.selectKey === '大小' ||
+        this.state.selectKey === '旋转角度' ||
+        this.state.selectKey === '透明度' ||
+        this.state.selectKey === '对比度' ||
+        this.state.selectKey === '亮度' ||
+        this.state.selectKey === '分段个数' ||
+        this.state.selectKey === '旋转角度' ||
+        this.state.selectKey === '字号'
+      ) {
+        // 显示指滑进度条
         this.setState({
+          isTouchProgress: !this.state.isTouchProgress,
           showMenuDialog: false,
-          isFullScreen: false,
+          isFullScreen: !this.state.isTouchProgress,
         })
-      } else if (this.state.data && this.state.data.length > 0) {
+        this.isBoxShow = false
+      } else {
+        this.isBoxShow = !this.isBoxShow
         Animated.timing(this.state.boxHeight, {
-          toValue: this.height,
+          toValue: this.isBoxShow ? this.height : 0,
           duration: Const.ANIMATED_DURATION,
         }).start()
+
         this.setState({
           showMenuDialog: false,
           isFullScreen: false,
         })
       }
-      this.isBoxShow = !this.isBoxShow
     }
   }
 
@@ -2167,11 +2252,9 @@ export default class ToolBar extends React.PureComponent {
             },
           ]
           this.setState({
-            listSelectable: false, //单选框
-            buttons: [
-              ToolbarBtnType.THEME_CANCEL,
-              // ToolbarBtnType.THEME_COMMIT,
-            ],
+            themeDatasourceAlias: alias,
+            listSelectable: true, //单选框
+            buttons: [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT],
             data: dataList,
             type: ConstToolType.MAP_THEME_ADD_DATASET,
           })
@@ -2240,21 +2323,21 @@ export default class ToolBar extends React.PureComponent {
       this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
       //专题图添加数据集
-      if (item.datasetName) {
-        let params = {
-          DatasourceName: item.datasourceName,
-          DatasetName: item.datasetName,
-        }
-        let result = SMap.addDatasetToMap(params)
-        Toast.show(
-          result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
-        )
-        // 重新加载图层
-        this.props.getLayers({
-          type: -1,
-          currentLayerIndex: 0,
-        })
-      }
+      // if (item.datasetName) {
+      //   let params = {
+      //     DatasourceName: item.datasourceName,
+      //     DatasetName: item.datasetName,
+      //   }
+      //   let result = SMap.addDatasetToMap(params)
+      //   Toast.show(
+      //     result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
+      //   )
+      //   // 重新加载图层
+      //   this.props.getLayers({
+      //     type: -1,
+      //     currentLayerIndex: 0,
+      //   })
+      // }
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
       //地图制图，专题制图：导入数据
       this.importData(item)
@@ -2760,7 +2843,12 @@ export default class ToolBar extends React.PureComponent {
   }
 
   renderSymbol = () => {
-    return <SymbolList layerData={this.props.currentLayer} />
+    return (
+      <SymbolList
+        device={this.props.device}
+        layerData={this.props.currentLayer}
+      />
+    )
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -2774,7 +2862,8 @@ export default class ToolBar extends React.PureComponent {
         key={rowIndex + '-' + cellIndex}
         title={item.title}
         textColor={'white'}
-        size={MTBtn.Size.NORMAL}
+        textStyle={{ fontSize: setSpText(20) }}
+        // size={MTBtn.Size.NORMAL}
         image={item.image}
         background={item.background}
         onPress={() => {
@@ -2847,7 +2936,7 @@ export default class ToolBar extends React.PureComponent {
         onSelect={item => {
           this.setState({
             selectKey: item.selectKey,
-            selectName: item.name,
+            selectName: item.selectName || item.key,
           })
         }}
       />
@@ -3006,87 +3095,87 @@ export default class ToolBar extends React.PureComponent {
             })
           }
           break
-        case ToolbarBtnType.SHARE:
-          image = require('../../../../assets/mapTools/icon_share.png')
-          action = () => {
-            if (!this.props.user.currentUser.userName) {
-              Toast.show('请登陆后再分享')
-              return
-            }
-            if (isSharing) {
-              Toast.show('分享中，请稍后')
-              return
-            }
-            if (this.shareTo === constants.SUPERMAP_ONLINE) {
-              let list =
-                (this.toolBarSectionList &&
-                  this.toolBarSectionList.getSelectList()) ||
-                []
-              this.props.setInputDialogVisible(true, {
-                placeholder: '请输入分享数据名称',
-                confirmAction: value => {
-                  ShareData.shareToSuperMapOnline(list, value)
-                  this.props.setInputDialogVisible(false)
-                },
-              })
-            }
-            // this.close()
-          }
-          break
-        case ToolbarBtnType.MAP3DSHARE:
-          image = require('../../../../assets/mapTools/icon_share.png')
-          action = () => {
-            try {
-              let isSharing = false
-              if (!this.props.user.currentUser.userName) {
-                Toast.show('请登陆后再分享')
-                return
-              }
-              if (isSharing) {
-                Toast.show('分享中，请稍后')
-                return
-              }
-              if (this.shareTo === constants.SUPERMAP_ONLINE) {
-                let list =
-                  (this.toolBarSectionList &&
-                    this.toolBarSectionList.getSelectList()) ||
-                  []
-                if (list.length > 0) {
-                  isSharing = true
-                  for (let index = 0; index < list.length; index++) {
-                    this.props.exportmap3DWorkspace(
-                      { name: list[index] },
-                      async (result, zipPath) => {
-                        if (result) {
-                          await SOnlineService.uploadFile(
-                            zipPath,
-                            list[index],
-                            {
-                              onResult: async result => {
-                                Toast.show(
-                                  result
-                                    ? ConstInfo.SHARE_SUCCESS
-                                    : ConstInfo.SHARE_FAILED,
-                                )
-                                FileTools.deleteFile(zipPath)
-                                isSharing = false
-                              },
-                            },
-                          )
-                        } else {
-                          Toast.show('上传失败')
-                        }
-                      },
-                    )
-                  }
-                }
-              }
-            } catch (error) {
-              Toast.show('分享失败')
-            }
-            // this.close()
-          }
-          break
+        // case ToolbarBtnType.SHARE:
+        //   image = require('../../../../assets/mapTools/icon_share.png')
+        //   action = () => {
+        //     if (!this.props.user.currentUser.userName) {
+        //       Toast.show('请登陆后再分享')
+        //       return
+        //     }
+        //     if (isSharing) {
+        //       Toast.show('分享中，请稍后')
+        //       return
+        //     }
+        //     if (this.shareTo === constants.SUPERMAP_ONLINE) {
+        //       let list =
+        //         (this.toolBarSectionList &&
+        //           this.toolBarSectionList.getSelectList()) ||
+        //         []
+        //       this.props.setInputDialogVisible(true, {
+        //         placeholder: '请输入分享数据名称',
+        //         confirmAction: value => {
+        //           ShareData.shareToSuperMapOnline(list, value)
+        //           this.props.setInputDialogVisible(false)
+        //         },
+        //       })
+        //     }
+        //     // this.close()
+        //   }
+        //   break
+        // case ToolbarBtnType.MAP3DSHARE:
+        //   image = require('../../../../assets/mapTools/icon_share.png')
+        //   action = () => {
+        //     try {
+        //       let isSharing = false
+        //       if (!this.props.user.currentUser.userName) {
+        //         Toast.show('请登陆后再分享')
+        //         return
+        //       }
+        //       if (isSharing) {
+        //         Toast.show('分享中，请稍后')
+        //         return
+        //       }
+        //       if (this.shareTo === constants.SUPERMAP_ONLINE) {
+        //         let list =
+        //           (this.toolBarSectionList &&
+        //             this.toolBarSectionList.getSelectList()) ||
+        //           []
+        //         if (list.length > 0) {
+        //           isSharing = true
+        //           for (let index = 0; index < list.length; index++) {
+        //             this.props.exportmap3DWorkspace(
+        //               { name: list[index] },
+        //               async (result, zipPath) => {
+        //                 if (result) {
+        //                   await SOnlineService.uploadFile(
+        //                     zipPath,
+        //                     list[index],
+        //                     {
+        //                       onResult: async result => {
+        //                         Toast.show(
+        //                           result
+        //                             ? ConstInfo.SHARE_SUCCESS
+        //                             : ConstInfo.SHARE_FAILED,
+        //                         )
+        //                         FileTools.deleteFile(zipPath)
+        //                         isSharing = false
+        //                       },
+        //                     },
+        //                   )
+        //                 } else {
+        //                   Toast.show('上传失败')
+        //                 }
+        //               },
+        //             )
+        //           }
+        //         }
+        //       }
+        //     } catch (error) {
+        //       Toast.show('分享失败')
+        //     }
+        //     // this.close()
+        //   }
+        //   break
         case ToolbarBtnType.CLOSE_CIRCLE:
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.closeCircle
@@ -3110,7 +3199,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.close
+          action = this.themeCommit
           break
         case ToolbarBtnType.MENU_FLEX:
           //菜单框-显示与隐藏
@@ -3120,7 +3209,8 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.MENU_COMMIT:
           //菜单框-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.menuCommit
+          // action = this.menuCommit
+          action = this.close
           break
       }
 
@@ -3167,7 +3257,7 @@ export default class ToolBar extends React.PureComponent {
     }
     if (GLOBAL.Type === constants.MAP_EDIT) {
       GLOBAL.showMenu = true
-      GLOBAL.showFlex = true
+      // GLOBAL.showFlex = true
       this.setState({ selectKey: '' })
     }
   }
@@ -3205,8 +3295,7 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress selectName={this.state.selectName} />
         )}
         {/*{this.state.showMenuDialog && (*/}

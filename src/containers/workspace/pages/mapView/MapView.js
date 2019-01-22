@@ -1004,7 +1004,7 @@ export default class MapView extends React.Component {
         headerProps={{
           title: this.mapName,
           navigation: this.props.navigation,
-          headerRight: this.renderHeaderBtns(),
+          // headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
         }}

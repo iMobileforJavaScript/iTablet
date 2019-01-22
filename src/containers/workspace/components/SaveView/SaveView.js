@@ -7,8 +7,8 @@
 import * as React from 'react'
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from '../../../../components'
-import { scaleSize } from '../../../../utils'
-import { color, size, zIndexLevel } from '../../../../styles'
+import { scaleSize, setSpText } from '../../../../utils'
+import { color, zIndexLevel } from '../../../../styles'
 
 const styles = StyleSheet.create({
   overlay: {
@@ -36,7 +36,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
-    fontSize: size.fontSize.fontSizeLg,
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: setSpText(24),
     color: color.themeText,
   },
 })

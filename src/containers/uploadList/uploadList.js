@@ -10,7 +10,7 @@ import {
 } from 'react-native'
 import { Container, EmptyView, TextBtn } from '../../components'
 import { FileTools } from '../../native'
-import { Toast, scaleSize } from '../../utils'
+import { Toast, scaleSize, setSpText } from '../../utils'
 import { ConstPath } from '../../constants'
 
 import { color } from '../../styles'
@@ -209,10 +209,10 @@ const styles = StyleSheet.create({
   },
   item: {
     marginLeft: scaleSize(30),
-    fontSize: scaleSize(30),
+    fontSize: setSpText(30),
   },
   back: {
-    fontSize: scaleSize(30),
+    fontSize: setSpText(30),
     color: '#1296db',
     paddingTop: scaleSize(30),
     paddingBottom: scaleSize(30),

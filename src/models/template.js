@@ -277,7 +277,10 @@ export const setCurrentTemplateList = (
   cb = () => {},
 ) => async dispatch => {
   try {
-    let list = [{ ...params.$, field: params.fields[0].field }]
+    let list = []
+    if (params.$.datasetName && params.$.type !== 'Unknown') {
+      list = [{ ...params.$, field: params.fields[0].field }]
+    }
     let getData = function(data) {
       if (!data.feature || data.feature.length === 0) return
       for (let i = 0; i < data.feature.length; i++) {

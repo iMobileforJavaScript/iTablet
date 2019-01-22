@@ -1,40 +1,9 @@
 function getMapSettings() {
   let data = [
     {
-      title: '基本设置',
-      visible: true,
-      index: 0,
-      data: [
-        // {
-        //   name: '图层名称',
-        //   value: '',
-        //   isShow: true,
-        //   sectionIndex: 0,
-        // },
-        // {
-        //   name: '显示专题图图例',
-        //   value: true,
-        //   isShow: true,
-        //   sectionIndex: 0,
-        // },
-        {
-          name: '显示状态栏',
-          value: false,
-          isShow: true,
-          sectionIndex: 0,
-        },
-        // {
-        //   name: '显示导航栏',
-        //   value: false,
-        //   isShow: true,
-        //   sectionIndex: 0,
-        // },
-      ],
-    },
-    {
       title: '效果设置',
       visible: true,
-      index: 1,
+      index: 0,
       data: [
         // {
         //   name: '旋转角度',
@@ -84,24 +53,24 @@ function getMapSettings() {
         //   isShow: true,
         //   sectionIndex: 1,
         // },
-        // {
-        //   name: '显示压盖对象',
-        //   value: false,
-        //   isShow: true,
-        //   sectionIndex: 1,
-        // },
         {
-          name: '地图反走样',
+          name: '反走样地图',
           value: false,
           isShow: true,
-          sectionIndex: 1,
+          sectionIndex: 0,
+        },
+        {
+          name: '显示压盖对象',
+          value: false,
+          isShow: true,
+          sectionIndex: 0,
         },
       ],
     },
     {
       title: '范围设置',
       visible: true,
-      index: 2,
+      index: 1,
       data: [
         // {
         //   name: '中心点',
@@ -131,7 +100,7 @@ function getMapSettings() {
           name: '固定比例尺',
           value: false,
           isShow: true,
-          sectionIndex: 2,
+          sectionIndex: 1,
         },
       ],
     },

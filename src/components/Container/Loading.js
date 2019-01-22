@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 export const NORMAL = 'NORMAL'
 
 const INFO = '加载中'
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
   title: {
     // height: scaleSize(30),
     width: scaleSize(130),
-    fontSize: scaleSize(20),
+    fontSize: setSpText(20),
     color: 'white',
     textAlign: 'center',
   },

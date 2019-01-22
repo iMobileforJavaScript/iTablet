@@ -1,9 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize, screen } from '../../../../utils'
 import { color, zIndexLevel, size } from '../../../../styles'
-import { ConstToolType } from '../../../../constants'
-// 地图按钮栏默认高度
-export const BUTTON_HEIGHT = scaleSize(105)
+import { ConstToolType, Const } from '../../../../constants'
 
 export default StyleSheet.create({
   fullContainer: {
@@ -13,6 +11,7 @@ export default StyleSheet.create({
     right: 0,
     height: screen.deviceHeight,
     backgroundColor: '#rgba(0, 0, 0, 0)',
+    // backgroundColor:"pink",
     zIndex: zIndexLevel.FOUR,
   },
   wrapContainer: {
@@ -36,20 +35,21 @@ export default StyleSheet.create({
   containers: {
     flexDirection: 'column',
     width: '100%',
-    maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
-    minHeight: BUTTON_HEIGHT,
+    maxHeight: ConstToolType.HEIGHT[3] + Const.BOTTOM_HEIGHT,
+    minHeight: Const.BOTTOM_HEIGHT,
     backgroundColor: color.theme,
+    // backgroundColor:"red",
     // zIndex: zIndexLevel.FOUR,
   },
   // box: {
   //   position: 'absolute',
   //   left: 0,
   //   right: 0,
-  //   bottom: BUTTON_HEIGHT,
+  //   bottom: Const.BOTTOM_HEIGHT,
   // },
   buttonz: {
     flexDirection: 'row',
-    height: BUTTON_HEIGHT,
+    height: Const.BOTTOM_HEIGHT,
     paddingHorizontal: scaleSize(20),
     backgroundColor: color.theme,
     justifyContent: 'space-between',
@@ -95,7 +95,7 @@ export default StyleSheet.create({
     // flex: 1,
   },
   tabsView: {
-    height: ConstToolType.HEIGHT[3] - BUTTON_HEIGHT,
+    height: ConstToolType.HEIGHT[3] - Const.BOTTOM_HEIGHT,
   },
   table: {
     flex: 1,

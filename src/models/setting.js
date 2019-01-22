@@ -2,7 +2,6 @@ import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
-import { SPUtils } from '../native'
 import { getMapSettings } from '../containers/mapSetting/settingData'
 
 // Constants
@@ -66,21 +65,18 @@ export const setMapSetting = (cb = () => {}) => async dispatch => {
 
 export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
   try {
-    let statusBar = false
-    // let navigationBar = false
     let isAntialias = true
+    let isOverlapDisplayed = false
     let isVisibleScalesEnabled = false
 
-    statusBar = await SPUtils.getBoolean('MapSetting', '显示状态栏', false)
-    // navigationBar = await SPUtils.getBoolean('MapSetting', '显示导航栏', false)
     isAntialias = await SMap.isAntialias()
+    isOverlapDisplayed = await SMap.isOverlapDisplayed()
     isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
-    newData[0].data[0].value = statusBar
-    // newData[0].data[1].value = navigationBar
-    newData[1].data[0].value = isAntialias
-    newData[2].data[0].value = isVisibleScalesEnabled
+    newData[0].data[0].value = isAntialias
+    newData[0].data[1].value = isOverlapDisplayed
+    newData[1].data[0].value = isVisibleScalesEnabled
 
     await dispatch({
       type: MAP_SETTING,

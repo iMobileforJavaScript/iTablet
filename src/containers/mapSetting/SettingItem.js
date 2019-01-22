@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { color } from '../../styles'
 import { View, Text, Switch } from 'react-native'
 import styles from './styles'
 export default class MapSetting extends Component {
@@ -26,7 +25,7 @@ export default class MapSetting extends Component {
                 trackColor={{ false: 'white', true: '#505050' }}
                 thumbColor={this.props.data.value ? 'white' : '#505050'}
                 ios_backgroundColor={
-                  this.props.data.value ? color.theme : color.border
+                  this.props.data.value ? '#505050' : '#F0F0F0'
                 }
                 value={this.props.data.value}
                 onValueChange={value => {

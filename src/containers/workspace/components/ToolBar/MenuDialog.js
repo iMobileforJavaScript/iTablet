@@ -10,10 +10,10 @@ import {
 } from 'react-native'
 import { scaleSize, screen } from '../../../../utils'
 import { size, color } from '../../../../styles'
+import { Const } from '../../../../constants'
 
 const ITEM_HEIGHT = scaleSize(80)
 const ARROW_HEIGHT = scaleSize(30)
-const BOTTOM_HEIGHT = scaleSize(95)
 const VIEW_WIDTH = scaleSize(360)
 
 export default class MenuDialog extends React.PureComponent {
@@ -41,7 +41,7 @@ export default class MenuDialog extends React.PureComponent {
     }
 
     this.selectedViewTop =
-      (Dimensions.get('window').height - BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
+      (Dimensions.get('window').height - Const.BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
     this.moveViewHeight =
       ITEM_HEIGHT * this.state.data.length + ARROW_HEIGHT * 2
 
@@ -80,7 +80,8 @@ export default class MenuDialog extends React.PureComponent {
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
     ) {
       this.setState({ data: this.props.data.concat() || [] })
-    } else if (this.props.selectKey !== prevProps.selectKey) {
+    }
+    if (this.props.selectKey !== prevProps.selectKey) {
       let index = this.getIndexByKey(this.props.data, this.props.selectKey)
       this.moveToIndex(index)
     }
@@ -109,7 +110,7 @@ export default class MenuDialog extends React.PureComponent {
       curIndex = index
     }
     this.selectedViewTop =
-      (Dimensions.get('window').height - BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
+      (Dimensions.get('window').height - Const.BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
     this.moveViewHeight =
       ITEM_HEIGHT * this.state.data.length + ARROW_HEIGHT * 2
 
@@ -142,8 +143,12 @@ export default class MenuDialog extends React.PureComponent {
     return true
   }
 
-  _handleMoveShouldSetPanResponder = () => {
-    return true
+  _handleMoveShouldSetPanResponder = (evt, gestureState) => {
+    if (Math.abs(gestureState.dy) < 1) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
@@ -192,15 +197,12 @@ export default class MenuDialog extends React.PureComponent {
     }
     this._previousTop = y
 
-    if (this.lastIndex !== this.state.currentIndex) {
-      this.lastIndex = this.state.currentIndex
+    this.moveToIndex(this.state.currentIndex)
+    this.lastIndex = this.state.currentIndex
 
-      this.moveToIndex(this.state.currentIndex)
-
-      if (this.props.autoSelect) {
-        this.onSelect(this.state.data[this.state.currentIndex])
-        this.callCurrentAction()
-      }
+    if (this.props.autoSelect) {
+      this.onSelect(this.state.data[this.state.currentIndex])
+      this.callCurrentAction()
     }
   }
 
@@ -231,8 +233,8 @@ export default class MenuDialog extends React.PureComponent {
         data: this.state.data.concat(),
       })
     }
-    item.action && item.action(item)
     this.onSelect(item)
+    item.action && item.action(item)
   }
 
   _renderItem = ({ item, index }) => {
@@ -271,7 +273,7 @@ export default class MenuDialog extends React.PureComponent {
 
   render() {
     this.selectedViewTop =
-      (Dimensions.get('window').height - BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
+      (Dimensions.get('window').height - Const.BOTTOM_HEIGHT - ITEM_HEIGHT) / 2
     return (
       <View style={styles.overlay} {...this._panResponder.panHandlers}>
         <View style={styles.dialogView}>
