@@ -144,6 +144,7 @@ export default class Map3DToolBar extends Component {
         headerProps={{
           title: '图层',
           navigation: this.props.navigation,
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}

@@ -160,6 +160,7 @@ export default class setting extends Component {
         headerProps={{
           title: '设置',
           navigation: this.props.navigation,
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
