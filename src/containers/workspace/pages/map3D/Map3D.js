@@ -206,12 +206,12 @@ export default class Map3D extends React.Component {
   }
 
   confirm = async () => {
-    if (
-      this.state.inputText.indexOf(' ') > -1 ||
-      this.state.inputText === '' ||
-      this.state.inputText == null
-    ) {
+    // eslint-disable-next-line
+    const content = /[@#\$%\^&\*]+/g
+    let result = content.test(this.state.inputText)
+    if (result || this.state.inputText === '' || this.state.inputText == null) {
       this.setState({
+        inputText: null,
         placeholder: true,
       })
       return
@@ -295,7 +295,7 @@ export default class Map3D extends React.Component {
           />
         </View>
         {this.state.placeholder && (
-          <Text style={styles.placeholder}>文本内容不能为空</Text>
+          <Text style={styles.placeholder}>文本内容含有非法字符请重新输入</Text>
         )}
       </Dialog>
     )
