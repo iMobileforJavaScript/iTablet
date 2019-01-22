@@ -219,7 +219,8 @@ export default class LayerManager_tolbar extends React.Component {
       >
         <View
           style={{
-            width: '100%',
+            marginLeft: scaleSize(50),
+            marginRight: scaleSize(50),
             height: scaleSize(86),
             backgroundColor: color.content_white,
             justifyContent: 'center',
@@ -229,20 +230,12 @@ export default class LayerManager_tolbar extends React.Component {
           <Text
             style={{
               textAlign: 'center',
-              lineHeight: 60,
               backgroundColor: 'transparent',
             }}
           >
             {section.title}
           </Text>
         </View>
-        <View
-          style={{
-            width: '100%',
-            height: scaleSize(6),
-            backgroundColor: color.item_separate_white,
-          }}
-        />
       </TouchableOpacity>
     )
   }
