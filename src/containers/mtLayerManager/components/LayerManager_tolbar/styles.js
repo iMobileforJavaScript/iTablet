@@ -27,7 +27,7 @@ export default StyleSheet.create({
     maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
     backgroundColor: color.content_white,
-    borderRadius: scaleSize(40),
+    borderRadius: scaleSize(20),
   },
   item: {
     flexDirection: 'column',
