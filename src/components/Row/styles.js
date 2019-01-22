@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native'
 import { color, size } from '../../styles'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 
 export default StyleSheet.create({
   container: {
@@ -64,7 +64,7 @@ export default StyleSheet.create({
   },
   radioTitle: {
     marginLeft: scaleSize(10),
-    fontSize: scaleSize(28),
+    fontSize: setSpText(28),
     backgroundColor: 'transparent',
   },
   inputView: {
@@ -140,7 +140,7 @@ export default StyleSheet.create({
   numberTitle: {
     flex: 1,
     marginLeft: scaleSize(10),
-    fontSize: scaleSize(28),
+    fontSize: setSpText(28),
     backgroundColor: 'transparent',
     fontWeight: 'bold',
     textAlign: 'center',
@@ -157,7 +157,7 @@ export default StyleSheet.create({
   },
   textBtnTitle: {
     marginVertical: scaleSize(8),
-    fontSize: scaleSize(28),
+    fontSize: setSpText(28),
     backgroundColor: 'transparent',
   },
 

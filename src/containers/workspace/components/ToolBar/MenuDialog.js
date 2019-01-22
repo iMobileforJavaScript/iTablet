@@ -80,7 +80,8 @@ export default class MenuDialog extends React.PureComponent {
       JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
     ) {
       this.setState({ data: this.props.data.concat() || [] })
-    } else if (this.props.selectKey !== prevProps.selectKey) {
+    }
+    if (this.props.selectKey !== prevProps.selectKey) {
       let index = this.getIndexByKey(this.props.data, this.props.selectKey)
       this.moveToIndex(index)
     }
@@ -142,8 +143,12 @@ export default class MenuDialog extends React.PureComponent {
     return true
   }
 
-  _handleMoveShouldSetPanResponder = () => {
-    return true
+  _handleMoveShouldSetPanResponder = (evt, gestureState) => {
+    if (Math.abs(gestureState.dy) < 1) {
+      return false
+    } else {
+      return true
+    }
   }
 
   _handlePanResponderMove = (evt, gestureState) => {

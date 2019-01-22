@@ -1,16 +1,16 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
 export default StyleSheet.create({
   sectionHeader: {
-    fontSize: scaleSize(28),
+    fontSize: setSpText(28),
     fontWeight: 'bold',
     backgroundColor: color.theme,
     color: 'white',
   },
   item: {
     padding: scaleSize(5),
-    fontSize: scaleSize(22),
+    fontSize: setSpText(22),
     paddingLeft: scaleSize(20),
     height: scaleSize(50),
     backgroundColor: color.theme,
@@ -21,15 +21,7 @@ export default StyleSheet.create({
     height: scaleSize(15),
   },
   text: {
-    // width:"100%",
-    // height: scaleSize(60),
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // textAlign:"center",
-    // textAlignVertical:"center",
-
-    fontSize: scaleSize(22),
+    fontSize: setSpText(22),
     color: 'white',
   },
   key: {
@@ -58,7 +50,7 @@ export default StyleSheet.create({
   name: {
     width: scaleSize(200),
     height: scaleSize(40),
-    fontSize: scaleSize(24),
+    fontSize: setSpText(24),
     color: 'white',
     textAlign: 'center',
     // backgroundColor:"blue",
@@ -68,13 +60,14 @@ export default StyleSheet.create({
     // width: scaleSize(300),
     flex: 1,
     height: scaleSize(40),
-    fontSize: scaleSize(24),
+    fontSize: setSpText(24),
     color: 'white',
     textAlign: 'center',
     // backgroundColor:"white",
   },
   row: {
     flex: 1,
+    height: scaleSize(61),
     flexDirection: 'row',
   },
   analystView: {

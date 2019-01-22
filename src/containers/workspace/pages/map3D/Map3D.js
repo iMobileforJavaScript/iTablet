@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container, Dialog } from '../../../../components'
+import { Container, Dialog, InputDialog } from '../../../../components'
 import {
   FunctionToolbar,
   MapToolbar,
@@ -206,12 +206,12 @@ export default class Map3D extends React.Component {
   }
 
   confirm = async () => {
-    if (
-      this.state.inputText.indexOf(' ') > -1 ||
-      this.state.inputText === '' ||
-      this.state.inputText == null
-    ) {
+    // eslint-disable-next-line
+    const content = /[@#\$%\^&\*]+/g
+    let result = content.test(this.state.inputText)
+    if (result || this.state.inputText === '' || this.state.inputText == null) {
       this.setState({
+        inputText: null,
         placeholder: true,
       })
       return
@@ -239,6 +239,10 @@ export default class Map3D extends React.Component {
     this.dialog.setDialogVisible(false)
   }
 
+  setInputDialogVisible = (visible, params = {}) => {
+    this.InputDialog && this.InputDialog.setDialogVisible(visible, params)
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -258,6 +262,7 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={() => this.dialog}
+        setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         setAttributes={this.props.setAttributes}
       />
@@ -290,10 +295,14 @@ export default class Map3D extends React.Component {
           />
         </View>
         {this.state.placeholder && (
-          <Text style={styles.placeholder}>文本内容不能为空</Text>
+          <Text style={styles.placeholder}>文本内容含有非法字符请重新输入</Text>
         )}
       </Dialog>
     )
+  }
+
+  renderInputDialog = () => {
+    return <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
   }
 
   render() {
@@ -314,6 +323,7 @@ export default class Map3D extends React.Component {
         {this.renderFunctionToolbar()}
         {this.renderTool()}
         {this.renderDialog()}
+        {this.renderInputDialog()}
       </Container>
     )
   }

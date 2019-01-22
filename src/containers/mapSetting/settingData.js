@@ -1,36 +1,5 @@
 function getMapSettings() {
   let data = [
-    // {
-    //   title: '基本设置',
-    //   visible: true,
-    //   index: 0,
-    //   data: [
-    //     {
-    //       name: '图层名称',
-    //       value: '',
-    //       isShow: true,
-    //       sectionIndex: 0,
-    //     },
-    //     {
-    //       name: '显示专题图图例',
-    //       value: true,
-    //       isShow: true,
-    //       sectionIndex: 0,
-    //     },
-    //     {
-    //       name: '显示状态栏',
-    //       value: false,
-    //       isShow: true,
-    //       sectionIndex: 0,
-    //     },
-    //     {
-    //       name: '显示导航栏',
-    //       value: false,
-    //       isShow: true,
-    //       sectionIndex: 0,
-    //     },
-    //   ],
-    // },
     {
       title: '效果设置',
       visible: true,
@@ -84,14 +53,14 @@ function getMapSettings() {
         //   isShow: true,
         //   sectionIndex: 1,
         // },
-        // {
-        //   name: '显示压盖对象',
-        //   value: false,
-        //   isShow: true,
-        //   sectionIndex: 1,
-        // },
         {
-          name: '地图反走样',
+          name: '反走样地图',
+          value: false,
+          isShow: true,
+          sectionIndex: 0,
+        },
+        {
+          name: '显示压盖对象',
           value: false,
           isShow: true,
           sectionIndex: 0,

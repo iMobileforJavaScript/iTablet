@@ -52,13 +52,16 @@ export default class MapSetting extends Component {
 
   getData = async () => {
     let isAntialias = true
+    let isOverlapDisplayed = false
     let isVisibleScalesEnabled = false
 
     isAntialias = await SMap.isAntialias()
+    isOverlapDisplayed = await SMap.isOverlapDisplayed()
     isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
     newData[0].data[0].value = isAntialias
+    newData[0].data[1].value = isOverlapDisplayed
     newData[1].data[0].value = isVisibleScalesEnabled
 
     this.setState({
@@ -120,8 +123,11 @@ export default class MapSetting extends Component {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
-      case '地图反走样':
+      case '反走样地图':
         SMap.setAntialias(value)
+        break
+      case '显示压盖对象':
+        SMap.setOverlapDisplayed(value)
         break
       case '固定比例尺':
         SMap.setVisibleScalesEnabled(value)

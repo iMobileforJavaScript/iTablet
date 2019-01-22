@@ -4,7 +4,7 @@ import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
 import { Toast } from '../utils'
-import { ConstPath } from '../constants'
+import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 // import xml2js from 'react-native-xml2js'
 // let parser = new xml2js.Parser()
@@ -230,42 +230,55 @@ export const exportWorkspace = (params, cb = () => {}) => async (
     return false
   }
   isExporting = true
-  let userName = getState().user.toJS().currentUser.userName || 'Customer'
-  let workspace = getState().map.toJS().workspace
-  let path = params.outPath,
-    fileName = '',
-    fileNameWithoutExtention = '',
-    parentPath = '',
-    zipPath = ''
-  let result = false
-  if (!path) {
-    fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
-    fileNameWithoutExtention = fileName.substr(0, fileName.lastIndexOf('.'))
-    parentPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath +
-        userName +
-        '/' +
-        ConstPath.RelativePath.Temp +
-        fileNameWithoutExtention,
-    )
-    path = parentPath + '/' + fileName
+  let exportResult = false
+  let zipResult = false
+  try {
+    let userName = getState().user.toJS().currentUser.userName || 'Customer'
+    let workspace = getState().map.toJS().workspace
+    let path = params.outPath,
+      fileName = '',
+      fileNameWithoutExtention = '',
+      parentPath = '',
+      zipPath = ''
+    let exportResult = false
+    if (!path) {
+      fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
+      fileNameWithoutExtention = fileName.substr(0, fileName.lastIndexOf('.'))
+      parentPath = await FileTools.appendingHomeDirectory(
+        ConstPath.UserPath +
+          userName +
+          '/' +
+          ConstPath.RelativePath.Temp +
+          fileNameWithoutExtention,
+      )
+      path = parentPath + '/' + fileName
+    }
+    // 导出工作空间
+    if (params.maps && params.maps.length > 0) {
+      let fileReplace =
+        params.fileReplace === undefined ? true : params.fileReplace
+      exportResult = await SMap.exportWorkspace(params.maps, path, fileReplace)
+    }
+    // 压缩工作空间
+    if (exportResult) {
+      zipPath = parentPath + '.zip'
+      zipResult = await FileTools.zipFile(parentPath, zipPath)
+    }
+    // 删除导出的工作空间
+    await FileTools.deleteFile(parentPath)
+    isExporting = false
+    cb && cb(exportResult && zipResult, zipPath)
+  } catch (e) {
+    isExporting = false
+    if (!exportResult) {
+      Toast.show(ConstInfo.EXPORT_WORKSPACE_FAILED)
+    } else if (!zipResult) {
+      Toast.show(ConstInfo.ZIP_FAILED)
+    }
+    cb && cb(exportResult && zipResult, '')
   }
-  // 导出工作空间
-  if (params.maps && params.maps.length > 0) {
-    let fileReplace =
-      params.fileReplace === undefined ? true : params.fileReplace
-    result = await SMap.exportWorkspace(params.maps, path, fileReplace)
-  }
-  // 压缩工作空间
-  if (result) {
-    zipPath = parentPath + '.zip'
-    result = await FileTools.zipFile(parentPath, zipPath)
-  }
-  // 删除导出的工作空间
-  await FileTools.deleteFile(parentPath)
-  isExporting = false
-  cb && cb(result, zipPath)
 }
+
 //导出工作空间
 export const exportmap3DWorkspace = (params, cb = () => {}) => async (
   dispatch,
