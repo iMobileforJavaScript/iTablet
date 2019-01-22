@@ -50,4 +50,6 @@ export default {
 
   ADD_SUCCESS: '添加成功',
   ADD_FAILED: '添加成功',
+
+  READING_DATA: '读取数据中',
 }

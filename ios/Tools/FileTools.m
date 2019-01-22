@@ -279,15 +279,22 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
   
   // 初始化用户工作空间
-  NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
-  NSString* wsPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/" ];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", wsPath, @""]];
-  if (srclic) {
-    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
-    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-        NSLog(@"拷贝数据失败");
-    }
+  NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
+  NSString* defaultDataPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/DefaultData/" ];
+  NSString* wsName = @"Workspace.sxwu";
+  
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", defaultDataPath, @""]];
+//  if (srclic) {
+//    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
+//    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+//      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+//        NSLog(@"拷贝数据失败");
+//    }
+//  }
+  
+  if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@%@", defaultDataPath, @"Workspace/", wsName] isDirectory:nil]) {
+    if(![FileTools unZipFile:srclic targetPath:defaultDataPath])
+      NSLog(@"拷贝数据失败");
   }
   
   //创建用户目录

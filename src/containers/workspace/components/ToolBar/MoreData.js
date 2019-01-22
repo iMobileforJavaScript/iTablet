@@ -1,8 +1,9 @@
 /**
  * 获取地图更多
  */
-import { ConstToolType, ConstInfo } from '../../../../constants'
+import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
 import { Toast } from '../../../../utils'
+import { FileTools } from '../../../../native'
 // import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 
@@ -135,28 +136,47 @@ function shareMap() {
 
 /** 导出地图 **/
 function exportMap() {
-  if (!_params.map.currentMap.name) {
-    Toast.show(ConstInfo.PLEASE_SAVE_MAP)
-    return
-  }
-  if (exporting) {
-    Toast.show(ConstInfo.WAITING_FOR_EXPORTING_MAP)
-    return
-  }
-  Toast.show(ConstInfo.EXPORTING_MAP)
-  _params.exportWorkspace(
-    {
-      maps: [_params.map.currentMap.name],
-    },
-    (result, path) => {
-      Toast.show(
-        result && path
-          ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
-          : ConstInfo.EXPORT_WORKSPACE_FAILED,
-      )
-      exporting = false
-    },
-  )
+  (async function() {
+    if (!_params.map.currentMap.name) {
+      Toast.show(ConstInfo.PLEASE_SAVE_MAP)
+      return
+    }
+    if (exporting) {
+      Toast.show(ConstInfo.WAITING_FOR_EXPORTING_MAP)
+      return
+    }
+    Toast.show(ConstInfo.EXPORTING_MAP)
+    let userName = _params.user.currentUser.userName || 'Customer'
+    let mapName = _params.map.currentMap.name
+    let fileName = _params.map.workspace.server.substr(
+      _params.map.workspace.server.lastIndexOf('/') + 1,
+    )
+    let fileNameWithoutExtension = fileName.substr(0, fileName.lastIndexOf('.'))
+    let outPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
+        fileNameWithoutExtension +
+        '/' +
+        fileName,
+    )
+    _params.exportWorkspace(
+      {
+        maps: [mapName],
+        outPath,
+        fileReplace: true,
+      },
+      (result, path) => {
+        Toast.show(
+          result && path
+            ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+            : ConstInfo.EXPORT_WORKSPACE_FAILED,
+        )
+        exporting = false
+      },
+    )
+  }.bind(this)())
 }
 
 function shareMap3D() {
