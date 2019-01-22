@@ -41,7 +41,7 @@ import {
   Action,
   SCollector,
   SThemeCartography,
-  SOnlineService,
+  // SOnlineService,
   SMCollectorType,
 } from 'imobile_for_reactnative'
 import SymbolTabs from '../SymbolTabs'
@@ -50,7 +50,7 @@ import ToolbarBtnType from './ToolbarBtnType'
 import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
-import ShareData from './ShareData'
+// import ShareData from './ShareData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -65,7 +65,7 @@ const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
 const DEFAULT_FULL_SCREEN = true
 
-let isSharing = false
+// let isSharing = false
 
 export default class ToolBar extends React.PureComponent {
   props: {
@@ -164,6 +164,15 @@ export default class ToolBar extends React.PureComponent {
     }
     this.isShow = false
     this.isBoxShow = true
+  }
+
+  componentDidMount() {
+    ToolbarData.setParams({
+      setToolbarVisible: this.setVisible,
+      setLastState: this.setLastState,
+      scrollListToLocation: this.scrollListToLocation,
+      ...this.props,
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -1541,9 +1550,29 @@ export default class ToolBar extends React.PureComponent {
   themeCommit = (type = this.state.type) => {
     (async function() {
       if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
-        this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
+        let result = true
+        let datasetNames =
+          (this.toolBarSectionList &&
+            this.toolBarSectionList.getSelectList()) ||
+          []
+        if (datasetNames.length === 0) {
+          Toast.show('请先选择要添加的数据集')
+          return
+        }
+        result = await SMap.addLayers(
+          datasetNames,
+          this.state.themeDatasourceAlias,
+        )
+        result &&
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        if (result) {
+          this.setVisible(false)
+          Toast.show('添加成功')
+        } else {
+          Toast.show('添加失败')
+        }
       } else {
         this.close()
       }
@@ -2223,11 +2252,9 @@ export default class ToolBar extends React.PureComponent {
             },
           ]
           this.setState({
-            listSelectable: false, //单选框
-            buttons: [
-              ToolbarBtnType.THEME_CANCEL,
-              // ToolbarBtnType.THEME_COMMIT,
-            ],
+            themeDatasourceAlias: alias,
+            listSelectable: true, //单选框
+            buttons: [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT],
             data: dataList,
             type: ConstToolType.MAP_THEME_ADD_DATASET,
           })
@@ -3068,87 +3095,87 @@ export default class ToolBar extends React.PureComponent {
             })
           }
           break
-        case ToolbarBtnType.SHARE:
-          image = require('../../../../assets/mapTools/icon_share.png')
-          action = () => {
-            if (!this.props.user.currentUser.userName) {
-              Toast.show('请登陆后再分享')
-              return
-            }
-            if (isSharing) {
-              Toast.show('分享中，请稍后')
-              return
-            }
-            if (this.shareTo === constants.SUPERMAP_ONLINE) {
-              let list =
-                (this.toolBarSectionList &&
-                  this.toolBarSectionList.getSelectList()) ||
-                []
-              this.props.setInputDialogVisible(true, {
-                placeholder: '请输入分享数据名称',
-                confirmAction: value => {
-                  ShareData.shareToSuperMapOnline(list, value)
-                  this.props.setInputDialogVisible(false)
-                },
-              })
-            }
-            // this.close()
-          }
-          break
-        case ToolbarBtnType.MAP3DSHARE:
-          image = require('../../../../assets/mapTools/icon_share.png')
-          action = () => {
-            try {
-              let isSharing = false
-              if (!this.props.user.currentUser.userName) {
-                Toast.show('请登陆后再分享')
-                return
-              }
-              if (isSharing) {
-                Toast.show('分享中，请稍后')
-                return
-              }
-              if (this.shareTo === constants.SUPERMAP_ONLINE) {
-                let list =
-                  (this.toolBarSectionList &&
-                    this.toolBarSectionList.getSelectList()) ||
-                  []
-                if (list.length > 0) {
-                  isSharing = true
-                  for (let index = 0; index < list.length; index++) {
-                    this.props.exportmap3DWorkspace(
-                      { name: list[index] },
-                      async (result, zipPath) => {
-                        if (result) {
-                          await SOnlineService.uploadFile(
-                            zipPath,
-                            list[index],
-                            {
-                              onResult: async result => {
-                                Toast.show(
-                                  result
-                                    ? ConstInfo.SHARE_SUCCESS
-                                    : ConstInfo.SHARE_FAILED,
-                                )
-                                FileTools.deleteFile(zipPath)
-                                isSharing = false
-                              },
-                            },
-                          )
-                        } else {
-                          Toast.show('上传失败')
-                        }
-                      },
-                    )
-                  }
-                }
-              }
-            } catch (error) {
-              Toast.show('分享失败')
-            }
-            // this.close()
-          }
-          break
+        // case ToolbarBtnType.SHARE:
+        //   image = require('../../../../assets/mapTools/icon_share.png')
+        //   action = () => {
+        //     if (!this.props.user.currentUser.userName) {
+        //       Toast.show('请登陆后再分享')
+        //       return
+        //     }
+        //     if (isSharing) {
+        //       Toast.show('分享中，请稍后')
+        //       return
+        //     }
+        //     if (this.shareTo === constants.SUPERMAP_ONLINE) {
+        //       let list =
+        //         (this.toolBarSectionList &&
+        //           this.toolBarSectionList.getSelectList()) ||
+        //         []
+        //       this.props.setInputDialogVisible(true, {
+        //         placeholder: '请输入分享数据名称',
+        //         confirmAction: value => {
+        //           ShareData.shareToSuperMapOnline(list, value)
+        //           this.props.setInputDialogVisible(false)
+        //         },
+        //       })
+        //     }
+        //     // this.close()
+        //   }
+        //   break
+        // case ToolbarBtnType.MAP3DSHARE:
+        //   image = require('../../../../assets/mapTools/icon_share.png')
+        //   action = () => {
+        //     try {
+        //       let isSharing = false
+        //       if (!this.props.user.currentUser.userName) {
+        //         Toast.show('请登陆后再分享')
+        //         return
+        //       }
+        //       if (isSharing) {
+        //         Toast.show('分享中，请稍后')
+        //         return
+        //       }
+        //       if (this.shareTo === constants.SUPERMAP_ONLINE) {
+        //         let list =
+        //           (this.toolBarSectionList &&
+        //             this.toolBarSectionList.getSelectList()) ||
+        //           []
+        //         if (list.length > 0) {
+        //           isSharing = true
+        //           for (let index = 0; index < list.length; index++) {
+        //             this.props.exportmap3DWorkspace(
+        //               { name: list[index] },
+        //               async (result, zipPath) => {
+        //                 if (result) {
+        //                   await SOnlineService.uploadFile(
+        //                     zipPath,
+        //                     list[index],
+        //                     {
+        //                       onResult: async result => {
+        //                         Toast.show(
+        //                           result
+        //                             ? ConstInfo.SHARE_SUCCESS
+        //                             : ConstInfo.SHARE_FAILED,
+        //                         )
+        //                         FileTools.deleteFile(zipPath)
+        //                         isSharing = false
+        //                       },
+        //                     },
+        //                   )
+        //                 } else {
+        //                   Toast.show('上传失败')
+        //                 }
+        //               },
+        //             )
+        //           }
+        //         }
+        //       }
+        //     } catch (error) {
+        //       Toast.show('分享失败')
+        //     }
+        //     // this.close()
+        //   }
+        //   break
         case ToolbarBtnType.CLOSE_CIRCLE:
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.closeCircle
@@ -3172,7 +3199,7 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.THEME_COMMIT:
           //专题图-提交
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
-          action = this.close
+          action = this.themeCommit
           break
         case ToolbarBtnType.MENU_FLEX:
           //菜单框-显示与隐藏

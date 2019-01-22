@@ -94,7 +94,7 @@ export default class TemplateTab extends React.Component {
         <View style={styles.listItemContent}>
           <Text
             style={styles.listItemName}
-            numberOfLines={1}
+            numberOfLines={2}
             ellipsizeMode={'tail'}
           >
             {item.name}
@@ -133,16 +133,17 @@ const styles = StyleSheet.create({
     backgroundColor: color.bgW,
   },
   listItem: {
-    height: scaleSize(60),
+    height: scaleSize(64),
     // width: 100,
     justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: color.bgW,
     paddingHorizontal: scaleSize(30),
     flexDirection: 'row',
   },
   listItemImg: {
-    height: scaleSize(60),
-    width: scaleSize(60),
+    height: scaleSize(64),
+    width: scaleSize(64),
   },
   listItemContent: {
     flex: 1,
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   listItemName: {
-    height: scaleSize(32),
+    minHeight: scaleSize(32),
     width: scaleSize(160),
     color: color.font_color_white,
     fontSize: size.fontSize.fontSizeSm,

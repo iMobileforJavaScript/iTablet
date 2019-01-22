@@ -545,6 +545,7 @@ function create() {
     GLOBAL.Type === constants.MAP_THEME
   ) {
     (async function() {
+      await _params.setCurrentMap()
       await SMap.removeAllLayer() // 移除所有图层
       await SMap.closeDatasource(-1) // 关闭所有数据源
     }.bind(this)())
