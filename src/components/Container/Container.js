@@ -4,13 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import {
-  View,
-  ScrollView,
-  Animated,
-  StatusBar,
-  AsyncStorage,
-} from 'react-native'
+import { View, ScrollView, Animated, StatusBar } from 'react-native'
 import Header from '../Header'
 import Loading from './Loading'
 import { scaleSize } from '../../utils'
@@ -50,7 +44,6 @@ export default class Container extends PureComponent {
     this.state = {
       top: new Animated.Value(0),
       bottom: new Animated.Value(0),
-      statusBarVisible: false,
     }
     this.headerVisible = true
     this.bottomVisible = true
@@ -78,16 +71,8 @@ export default class Container extends PureComponent {
     this.bottomVisible = visible
   }
 
-  async componentDidMount() {
-    this._initStatusBarVisible()
+  componentDidMount() {
     this.props.initWithLoading && this.setLoading(true)
-  }
-
-  _initStatusBarVisible = async () => {
-    let result = await AsyncStorage.getItem('StatusBarVisible')
-    let statusBarVisible = result === 'true'
-    // this.setState({ statusBarVisible }) /** 初始化状态栏可不可见*/
-    StatusBar.setHidden(statusBarVisible)
   }
 
   setLoading = (loading, info, extra = {}) => {
@@ -142,7 +127,7 @@ export default class Container extends PureComponent {
       this.props.headerProps && this.props.headerProps.type === 'fix'
     return (
       <View style={{ flex: 1 }}>
-        <StatusBar animated={true} hidden={this.state.statusBarVisible} />
+        <StatusBar animated={true} hidden={false} />
         <ContainerView style={[styles.container, this.props.style]}>
           {!fixHeader && this.renderHeader(fixHeader)}
           {/*<View style={{ flex: 1 }}>{this.props.children}</View>*/}

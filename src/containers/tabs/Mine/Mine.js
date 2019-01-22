@@ -94,7 +94,7 @@ export default class Mine extends Component {
           {this._renderHeader(fontSize)}
           {this._renderLine()}
           {this._renderItem({
-            title: '本地数据',
+            title: '导入数据',
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
           })}
