@@ -3,7 +3,14 @@ import { Container } from '../../components'
 import { MapToolbar } from '../../containers/workspace/components'
 import Layer3DItem from './Layer3DItem'
 import { SScene } from 'imobile_for_reactnative'
-import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  SectionList,
+  Image,
+  TouchableHighlight,
+} from 'react-native'
 import styles from './styles'
 export default class Map3DToolBar extends Component {
   props: {
@@ -75,7 +82,15 @@ export default class Map3DToolBar extends Component {
 
   renderListItem = ({ item }) => {
     if (item.isShow) {
-      return <Layer3DItem item={item} />
+      return (
+        <TouchableHighlight
+          activeOpacity={0.7}
+          underlayColor="#4680DF"
+          onPress={() => {}}
+        >
+          <Layer3DItem item={item} />
+        </TouchableHighlight>
+      )
     } else {
       return <View />
     }

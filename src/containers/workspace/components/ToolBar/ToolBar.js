@@ -1144,6 +1144,7 @@ export default class ToolBar extends React.PureComponent {
       if (result) {
         let fileList = await FileTools.getPathListByFilter(path, {
           extension: 'pxp',
+          type: 'file',
         })
         for (let index = 0; index < fileList.length; index++) {
           let element = fileList[index]
@@ -1266,6 +1267,7 @@ export default class ToolBar extends React.PureComponent {
   showMap3DTool = async type => {
     if (type === ConstToolType.MAP3D_TOOL_FLYLIST) {
       let { data, buttons } = await this.getflylist()
+      this.props.showFullMap && this.props.showFullMap(true)
       this.setState(
         {
           type: type,
@@ -1287,13 +1289,13 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
-          isFullScreen: false,
+          isFullScreen: true,
         },
         () => {
           this.height =
             this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.HEIGHT[1]
-              : ConstToolType.HEIGHT[2]
+              ? ConstToolType.HEIGHT[2]
+              : ConstToolType.HEIGHT[3]
           this.showToolbar()
         },
       )
@@ -1334,6 +1336,7 @@ export default class ToolBar extends React.PureComponent {
               break
             case ConstToolType.MAP3D_CIRCLEFLY:
               this.height = ConstToolType.HEIGHT[0]
+              this.props.showFullMap && this.props.showFullMap(true)
               this.showToolbar()
               break
             default:
