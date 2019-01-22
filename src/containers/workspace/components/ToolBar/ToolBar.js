@@ -1547,9 +1547,9 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
-  themeCommit = (type = this.state.type) => {
+  themeCommit = () => {
     (async function() {
-      if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
+      if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
         let result = true
         let datasetNames =
           (this.toolBarSectionList &&
@@ -2323,21 +2323,21 @@ export default class ToolBar extends React.PureComponent {
       this.props.getMapSetting()
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_DATASET) {
       //专题图添加数据集
-      if (item.datasetName) {
-        let params = {
-          DatasourceName: item.datasourceName,
-          DatasetName: item.datasetName,
-        }
-        let result = SMap.addDatasetToMap(params)
-        Toast.show(
-          result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
-        )
-        // 重新加载图层
-        this.props.getLayers({
-          type: -1,
-          currentLayerIndex: 0,
-        })
-      }
+      // if (item.datasetName) {
+      //   let params = {
+      //     DatasourceName: item.datasourceName,
+      //     DatasetName: item.datasetName,
+      //   }
+      //   let result = SMap.addDatasetToMap(params)
+      //   Toast.show(
+      //     result === true ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED,
+      //   )
+      //   // 重新加载图层
+      //   this.props.getLayers({
+      //     type: -1,
+      //     currentLayerIndex: 0,
+      //   })
+      // }
     } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
       //地图制图，专题制图：导入数据
       this.importData(item)

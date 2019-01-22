@@ -216,7 +216,7 @@ export default class Map3DToolBar extends React.Component {
       )
     } else if (
       (item.name === 'DESCRIPTION' && item.value !== '') ||
-      item.name === 'NAME'
+      (item.name === 'NAME' && item.value !== '')
     ) {
       return (
         <TouchableOpacity style={styles.row}>
