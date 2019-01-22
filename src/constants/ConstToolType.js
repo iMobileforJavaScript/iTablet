@@ -145,10 +145,8 @@ export default {
     scaleSize(250),
     scaleSize(330),
     scaleSize(430),
-    scaleSize(530),
-    scaleSize(630),
-    scaleSize(730),
-    scaleSize(830),
-    scaleSize(930),
+    scaleSize(516),
+    scaleSize(602),
+    scaleSize(688),
   ],
 }
