@@ -1,12 +1,5 @@
 import React, { Component } from 'react'
-import {
-  StyleSheet,
-  View,
-  PanResponder,
-  Image,
-  Text,
-  Platform,
-} from 'react-native'
+import { StyleSheet, View, PanResponder, Image, Text } from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import {
   SCartography,
@@ -652,8 +645,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   container: {
-    marginTop: Platform.OS === 'ios' ? 20 : 0,
-    backgroundColor: '#rgba(110, 110, 110,1)',
+    // marginTop: Platform.OS === 'ios' ? 20 : 0,
+    // backgroundColor: '#rgba(110, 110, 110, 1)',
+    marginTop: 20,
+    backgroundColor: '#rgba(0, 0, 0, 0)',
     flexDirection: 'column',
     height: scaleSize(40),
     justifyContent: 'center',
