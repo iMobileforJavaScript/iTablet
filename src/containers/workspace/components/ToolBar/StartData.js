@@ -51,13 +51,13 @@ function getStart(type, params) {
           action: showHistory,
           image: require('../../../../assets/mapTools/icon_history_white.png'),
         },
-        {
-          key: constants.BASE_MAP,
-          title: constants.BASE_MAP,
-          size: 'large',
-          action: changeBaseLayer,
-          image: require('../../../../assets/mapTools/icon_base.png'),
-        },
+        // {
+        //   key: constants.BASE_MAP,
+        //   title: constants.BASE_MAP,
+        //   size: 'large',
+        //   action: changeBaseLayer,
+        //   image: require('../../../../assets/mapTools/icon_base.png'),
+        // },
         // {
         //   key: constants.ADD,
         //   title: constants.ADD,
@@ -72,6 +72,21 @@ function getStart(type, params) {
         //   action: outPutMap,
         //   image: require('../../../../assets/mapTools/icon_share.png'),
         // },
+        {
+          key: constants.SAVE,
+          title: constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => saveMap('TempMap'),
+          image: require('../../../../assets/mapTools/icon_save.png'),
+        },
+        {
+          key: constants.SAVE_AS,
+          title: constants.SAVE_AS,
+          size: 'large',
+          action: saveMapAs,
+          image: require('../../../../assets/mapTools/icon_save_as.png'),
+        },
       ]
       break
     case ConstToolType.MAP_3D_START:
@@ -151,13 +166,13 @@ function getStart(type, params) {
           action: showHistory,
           image: require('../../../../assets/mapTools/icon_history_white.png'),
         },
-        {
-          key: constants.BASE_MAP,
-          title: constants.BASE_MAP,
-          size: 'large',
-          action: changeBaseLayer,
-          image: require('../../../../assets/mapTools/icon_base.png'),
-        },
+        // {
+        //   key: constants.BASE_MAP,
+        //   title: constants.BASE_MAP,
+        //   size: 'large',
+        //   action: changeBaseLayer,
+        //   image: require('../../../../assets/mapTools/icon_base.png'),
+        // },
         // {
         //   key: constants.ADD,
         //   title: constants.ADD,
@@ -165,6 +180,21 @@ function getStart(type, params) {
         //   action: add,
         //   image: require('../../../../assets/mapTools/icon_add_white.png'),
         // },
+        {
+          key: constants.SAVE,
+          title: constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => saveMap('TempMap'),
+          image: require('../../../../assets/mapTools/icon_save.png'),
+        },
+        {
+          key: constants.SAVE_AS,
+          title: constants.SAVE_AS,
+          size: 'large',
+          action: saveMapAs,
+          image: require('../../../../assets/mapTools/icon_save_as.png'),
+        },
       ]
       break
     case ConstToolType.MAP_THEME_START:
@@ -197,13 +227,13 @@ function getStart(type, params) {
           action: showHistory,
           image: require('../../../../assets/mapTools/icon_history_white.png'),
         },
-        {
-          key: constants.BASE_MAP,
-          title: constants.THEME_BASE_MAP,
-          size: 'large',
-          action: changeBaseLayer,
-          image: require('../../../../assets/mapTools/icon_base.png'),
-        },
+        // {
+        //   key: constants.BASE_MAP,
+        //   title: constants.THEME_BASE_MAP,
+        //   size: 'large',
+        //   action: changeBaseLayer,
+        //   image: require('../../../../assets/mapTools/icon_base.png'),
+        // },
         // {
         //   key: constants.ADD,
         //   title: constants.ADD,
@@ -212,6 +242,21 @@ function getStart(type, params) {
         //   image: require('../../../../assets/mapTools/icon_free_line.png'),
         //   selectedImage: require('../../../../assets/mapTools/icon_free_line.png'),
         // },
+        {
+          key: constants.SAVE,
+          title: constants.SAVE,
+          size: 'large',
+          // TODO 保存地图
+          action: () => saveMap('TempMap'),
+          image: require('../../../../assets/mapTools/icon_save.png'),
+        },
+        {
+          key: constants.SAVE_AS,
+          title: constants.SAVE_AS,
+          size: 'large',
+          action: saveMapAs,
+          image: require('../../../../assets/mapTools/icon_save_as.png'),
+        },
       ]
       break
   }
@@ -700,6 +745,19 @@ function createThemeMap() {
 //       break
 //   }
 // }
+
+/** 保存地图 **/
+function saveMap() {
+  if (!_params.setSaveViewVisible) return
+  GLOBAL.isBackHome = false
+  _params.setSaveViewVisible(true)
+}
+
+/** 另存地图 **/
+function saveMapAs() {
+  if (!_params.setSaveMapDialogVisible) return
+  _params.setSaveMapDialogVisible(true)
+}
 
 export default {
   getStart,

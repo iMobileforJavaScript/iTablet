@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
+import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
@@ -183,7 +184,7 @@ export default class setting extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '设置',
+          title: MAP_MODULE.MAP_3D,
           navigation: this.props.navigation,
           withoutBack: true,
         }}

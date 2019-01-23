@@ -23,6 +23,7 @@ export default class ToolBarSectionList extends React.Component {
     sections: Array,
     renderItem?: () => {},
     renderSectionHeader?: () => {},
+    renderItemSeparator?: () => {},
     keyExtractor: () => {},
     itemAction?: () => {},
     headerAction?: () => {},
@@ -340,6 +341,9 @@ export default class ToolBarSectionList extends React.Component {
 
   /**行与行之间的分隔线组件 */
   renderItemSeparator = () => {
+    if (this.props.renderItemSeparator) {
+      return this.props.renderItemSeparator()
+    }
     return <View style={styles.separateViewStyle} />
   }
 

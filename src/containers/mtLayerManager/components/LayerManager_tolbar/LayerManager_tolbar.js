@@ -4,6 +4,7 @@ import { ConstToolType } from '../../../../constants/index'
 import { layersetting, layerThemeSetting } from './LayerToolbarData'
 import {
   View,
+  Image,
   TouchableOpacity,
   Animated,
   Text,
@@ -15,7 +16,7 @@ import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
 import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -212,8 +213,14 @@ export default class LayerManager_tolbar extends React.Component {
       <ToolBarSectionList
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
+        renderItemSeparator={() => this.renderItemSeparator()}
       />
     )
+  }
+
+  /**行与行之间的分隔线组件 */
+  renderItemSeparator = () => {
+    return <View style={styles.separateViewStyle} />
   }
 
   renderHeader = ({ section }) => {
@@ -228,12 +235,23 @@ export default class LayerManager_tolbar extends React.Component {
           style={{
             height: scaleSize(86),
             backgroundColor: color.content_white,
-            justifyContent: 'center',
+            flexDirection: 'row',
             alignItems: 'center',
           }}
         >
+          <Image
+            resizeMode={'contain'}
+            style={{
+              marginLeft: scaleSize(60),
+              height: scaleSize(60),
+              width: scaleSize(60),
+            }}
+            source={section.image}
+          />
           <Text
             style={{
+              fontSize: setSpText(24),
+              marginLeft: scaleSize(60),
               textAlign: 'center',
               backgroundColor: 'transparent',
             }}

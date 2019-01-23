@@ -44,6 +44,7 @@ export default StyleSheet.create({
   dataWrapper: {
     flex: 1,
     marginTop: -1,
+    backgroundColor: color.content_white,
   },
   textInput: {
     textAlign: 'center',

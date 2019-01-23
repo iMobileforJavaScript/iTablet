@@ -17,7 +17,6 @@ import { scaleSize, setSpText } from '../../../../utils'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
-
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -40,6 +39,7 @@ class RenderModuleItem extends Component {
       this.setState({
         disabled: true,
       })
+
       let fileName
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
@@ -57,27 +57,50 @@ class RenderModuleItem extends Component {
         }
       }
       let homePath = await FileTools.appendingHomeDirectory()
+      let tmpCurrentUser = await AsyncStorage.getItem('TmpCurrentUser')
+      let objTmpCurrentUser = tmpCurrentUser
+        ? JSON.parse(tmpCurrentUser)
+        : JSON.parse('{}')
+      let currentUserName = objTmpCurrentUser.userName
+        ? objTmpCurrentUser.userName
+        : 'Customer'
+      let toPath =
+        homePath +
+        ConstPath.UserPath +
+        currentUserName +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
+        fileName
+
       let cachePath = homePath + ConstPath.CachePath
       let fileDirPath = cachePath + fileName
       let arrFile = await FileTools.getFilterFiles(fileDirPath)
-      let isDownloaded = true
       if (arrFile.length === 0) {
-        this.downloadData = {
+        let downloadData = {
           fileName: fileName,
           cachePath: cachePath,
+          copyFilePath: toPath,
           itemData: item,
         }
-        this._showAlert(item)
+        this._showAlert(downloadData)
+        // this._downloadModuleData()
       } else {
-        this.setState({
-          isShowProgressView: true,
-          progress: '导入中...',
+        let arrFilePath = await FileTools.getFilterFiles(toPath, {
+          smwu: 'smwu',
+          sxwu: 'sxwu',
         })
-        await this.props.importWorkspace(fileDirPath, item, isDownloaded)
+        if (arrFilePath.length === 0) {
+          this.setState({
+            isShowProgressView: true,
+            progress: '导入中...',
+          })
+          await this.props.importWorkspace(fileDirPath, toPath, true)
+        }
         this.setState({
           disabled: false,
           isShowProgressView: false,
         })
+        item.action && item.action(JSON.parse(tmpCurrentUser))
       }
     } catch (e) {
       this.setState({
@@ -87,8 +110,8 @@ class RenderModuleItem extends Component {
     }
   }
 
-  _downloadModuleData = async () => {
-    let item = this.downloadData.itemData
+  _downloadModuleData = async downloadData => {
+    let item = downloadData.itemData
     let moduleKey = item.key
     let dataUrl
     if (moduleKey === '地图制图') {
@@ -104,8 +127,8 @@ class RenderModuleItem extends Component {
         dataUrl = 'https://www.supermapol.com/web/datas/2014161764/download'
       }
     }
-    let cachePath = this.downloadData.cachePath
-    let fileDirPath = cachePath + this.downloadData.fileName
+    let cachePath = downloadData.cachePath
+    let fileDirPath = cachePath + downloadData.fileName
     try {
       this.setState({
         progress: '0%',
@@ -141,9 +164,13 @@ class RenderModuleItem extends Component {
         .then(async result => {
           if (result.statusCode === 200) {
             await FileTools.unZipFile(fileCachePath, cachePath)
-            FileTools.deleteFile(fileDirPath + '.zip')
-            await this.props.importWorkspace(fileDirPath, item, false)
+
+            await this.props.importWorkspace(
+              fileDirPath,
+              downloadData.copyFilePath,
+            )
             this.setState({ isShowProgressView: false, disabled: false })
+            FileTools.deleteFile(fileDirPath + '.zip')
           }
         })
         .catch(() => {
@@ -191,8 +218,8 @@ class RenderModuleItem extends Component {
     )
   }
 
-  sureDown = () => {
-    this._downloadModuleData()
+  sureDown = downloadData => {
+    this._downloadModuleData(downloadData)
     this.setState({
       disabled: false,
     })
@@ -200,18 +227,19 @@ class RenderModuleItem extends Component {
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  cancelDown = () => {
+  cancelDown = downloadData => {
+    let item = downloadData.itemData
     this.setState({
       disabled: false,
     })
-    this.props.item.action && this.props.item.action(this.props.currentUser)
+    item.action && item.action(this.props.currentUser)
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  _showAlert = () => {
+  _showAlert = downloadData => {
     this.props.showDialog && this.props.showDialog(true)
     this.props.getMoudleItem &&
-      this.props.getMoudleItem(this.sureDown, this.cancelDown)
+      this.props.getMoudleItem(this.sureDown, this.cancelDown, downloadData)
   }
   render() {
     let item = this.props.item

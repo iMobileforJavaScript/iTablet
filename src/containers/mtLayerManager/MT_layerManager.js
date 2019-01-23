@@ -20,7 +20,7 @@ import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar } from '../workspace/components'
 import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, layerManagerData } from '../../constants'
+import { ConstToolType, layerManagerData, MAP_MODULE } from '../../constants'
 import { color, size } from '../../styles'
 // import NavigationService from '../../containers/NavigationService'
 
@@ -433,12 +433,12 @@ export default class MT_layerManager extends React.Component {
   onToolPress = async ({ data }) => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[3],
+        height: ConstToolType.TOOLBAR_HEIGHT[2],
         layerdata: data,
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[1],
         layerdata: data,
       })
     }
@@ -695,12 +695,19 @@ export default class MT_layerManager extends React.Component {
 
   render() {
     let title
-    if (GLOBAL.Type === constants.MAP_EDIT) {
-      title = '地图制图'
-    } else if (GLOBAL.Type === constants.MAP_THEME) {
-      title = '专题制图'
-    } else {
-      title = '外业采集'
+    switch (GLOBAL.Type) {
+      case constants.COLLECTION:
+        title = MAP_MODULE.MAP_COLLECTION
+        break
+      case constants.MAP_EDIT:
+        title = MAP_MODULE.MAP_EDIT
+        break
+      case constants.MAP_3D:
+        title = MAP_MODULE.MAP_3D
+        break
+      case constants.MAP_THEME:
+        title = MAP_MODULE.MAP_THEME
+        break
     }
     return (
       <Container

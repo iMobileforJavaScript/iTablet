@@ -5,8 +5,8 @@ import { size } from '../../../../styles'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // alignItems: 'center',
+    // justifyContent: 'center',
     backgroundColor: '#F0F0F0',
     width: '100%',
   },

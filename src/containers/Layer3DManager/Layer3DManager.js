@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
+import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import Layer3DItem from './Layer3DItem'
 import { SScene } from 'imobile_for_reactnative'
@@ -160,7 +161,7 @@ export default class Map3DToolBar extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '图层',
+          title: MAP_MODULE.MAP_3D,
           navigation: this.props.navigation,
           withoutBack: true,
         }}
