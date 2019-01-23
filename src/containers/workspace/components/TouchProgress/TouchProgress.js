@@ -86,7 +86,6 @@ export default class TouchProgress extends Component {
   _initStatusBarVisible = async () => {
     let result = await AsyncStorage.getItem('StatusBarVisible')
     let invisible = result === 'true'
-    SThemeCartography.setStatusBarVisible(invisible)
     let android_statusHeight = invisible ? 0 : StatusBar.currentHeight
     this.statusBarHeight = Platform.OS === 'ios' ? 20 : android_statusHeight //获取状态栏高度
   }
