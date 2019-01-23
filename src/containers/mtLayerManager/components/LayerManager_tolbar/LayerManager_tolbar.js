@@ -213,8 +213,14 @@ export default class LayerManager_tolbar extends React.Component {
       <ToolBarSectionList
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
+        renderItemSeparator={() => this.renderItemSeparator()}
       />
     )
+  }
+
+  /**行与行之间的分隔线组件 */
+  renderItemSeparator = () => {
+    return <View style={styles.separateViewStyle} />
   }
 
   renderHeader = ({ section }) => {
