@@ -13,6 +13,7 @@ import { FileTools } from '../../../native'
 import ConstPath from '../../../constants/ConstPath'
 import { color } from '../../../styles'
 import UserType from '../../../constants/UserType'
+
 export default class RenderFindItem extends Component {
   props: {
     data: Object,
