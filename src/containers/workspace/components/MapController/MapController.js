@@ -158,8 +158,8 @@ export default class MapController extends React.Component {
       <Animated.View
         style={[styles.container, this.props.style, { left: this.state.left }]}
       >
-        {this.renderCompass()}
         <View style={[styles.topView, styles.shadow]}>
+          {this.renderCompass()}
           <MTBtn
             style={styles.btn}
             key={'controller_plus'}

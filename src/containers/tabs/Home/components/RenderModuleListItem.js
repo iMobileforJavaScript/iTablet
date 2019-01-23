@@ -1,25 +1,20 @@
 import React, { Component } from 'react'
 import {
-  View,
+  Alert,
+  Image,
+  Platform,
+  StyleSheet,
   Text,
   TouchableOpacity,
-  Image,
-  FlatList,
-  // Dimensions,
-  StyleSheet,
-  ScrollView,
-  Platform,
-  Alert,
-  AsyncStorage,
+  View,
 } from 'react-native'
-import { ConstModule, ConstPath } from '../../../../constants'
-import { scaleSize, setSpText } from '../../../../utils'
-// import RenderModuleListItem from './RenderModuleListItem'
+import FileTools from '../../../../native/FileTools'
+import ConstPath from '../../../../constants/ConstPath'
 import { downloadFile } from 'react-native-fs'
-import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
+import { scaleSize, setSpText } from '../../../../utils'
 
-class RenderModuleItem extends Component {
+export default class RenderModuleListItem extends Component {
   props: {
     item: Object,
     currentUser: Object,
@@ -35,7 +30,6 @@ class RenderModuleItem extends Component {
     }
   }
   itemAction = async item => {
-    // console.warn(JSON.stringify(this.props.currentUser))
     try {
       this.setState({
         disabled: true,
@@ -87,6 +81,72 @@ class RenderModuleItem extends Component {
       })
     }
   }
+
+  /* _onImportWorkspace = async (fileDirPath, item, isExist) => {
+     try {
+       if (fileDirPath !== undefined) {
+         let currentUserName = this.props.currentUser.userName
+         let homePath = await FileTools.appendingHomeDirectory()
+         let toPath
+         let lastIndexOf = fileDirPath.lastIndexOf('/')
+         let fileName = fileDirPath.substring(lastIndexOf + 1)
+         if (currentUserName === undefined) {
+           currentUserName = ''
+           toPath =
+             homePath +
+             ConstPath.CustomerPath +
+             ConstPath.RelativePath.ExternalData +
+             fileName
+         } else {
+           toPath =
+             homePath +
+             ConstPath.UserPath +
+             currentUserName +
+             '/' +
+             ConstPath.RelativePath.ExternalData +
+             fileName
+         }
+         let arrFilePath = await FileTools.getFilterFiles(toPath, {
+           smwu: 'smwu',
+           sxwu: 'sxwu',
+         })
+         if (arrFilePath.length === 0) {
+           await FileTools.copyFile(fileDirPath, toPath)
+           let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
+             smwu: 'smwu',
+             sxwu: 'sxwu',
+           })
+           let filePath = arrFilePath[0].filePath
+           let is3D = await SScene.is3DWorkspace({ server: filePath })
+           if (is3D === true) {
+             let result = await this.props.importSceneWorkspace({
+               server: filePath,
+             })
+             if (result === true) {
+               // Toast.show('导入3D成功')
+             } else {
+               Toast.show('导入3D失败')
+             }
+           } else {
+             let result = await SMap.importWorkspaceInfo({
+               server: filePath,
+               type: 9,
+             })
+             if (result.length === 0) {
+               Toast.show('导入失败')
+             }
+           }
+           if (isExist) {
+             item.action && item.action(this.props.currentUser)
+           }
+         } else if (isExist === true) {
+           item.action && item.action(this.props.currentUser)
+         }
+       }
+     } catch (e) {
+       Toast.show('导入失败')
+     }
+   }*/
 
   _downloadModuleData = async () => {
     let item = this.downloadData.itemData
@@ -258,104 +318,6 @@ class RenderModuleItem extends Component {
     )
   }
 }
-
-export default class ModuleList extends Component {
-  props: {
-    device: Object,
-    currentUser: Object,
-    importWorkspace: () => {},
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      isShowProgressView: false,
-    }
-    this.testCount = 1
-  }
-  // UNSAFE_componentWillMount() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL MOUNT!-----'+this.testCount)
-  // }
-  // componentDidMount() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList DID MOUNT!-----'+(this.testCount))
-  // }
-  // UNSAFE_componentWillReceiveProps() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL RECEIVE PROPS!----'+(this.testCount))
-  // }
-  // shouldComponentUpdate() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList should MOUNT!----'+(this.testCount))
-  //   return true
-  // }
-  // UNSAFE_componentWillUpdate( ) {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL UPDATE!----'+(this.testCount))
-  // }
-  // componentDidUpdate( ) {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList DID UPDATE!----'+(this.testCount))
-  // }
-  // componentWillUnmount() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL UNMOUNT!-----'+(this.testCount))
-  // }
-
-  _renderItem = ({ item }) => {
-    return (
-      <RenderModuleItem
-        item={item}
-        importWorkspace={this.props.importWorkspace}
-        currentUser={this.props.currentUser}
-      />
-    )
-  }
-  _renderScrollView = () => {
-    return (
-      <ScrollView
-        style={styles.scrollView}
-        // horizontal={true}
-        showsHorizontalScrollIndicator={false}
-      >
-        <FlatList
-          data={ConstModule}
-          horizontal={true}
-          renderItem={this._renderItem}
-          keyboardShouldPersistTaps={'always'}
-          showsHorizontalScrollIndicator={false}
-        />
-      </ScrollView>
-    )
-  }
-  render() {
-    AsyncStorage.setItem(
-      'TmpCurrentUser',
-      JSON.stringify(this.props.currentUser),
-    )
-    this.testCount = this.testCount + 1
-    // console.warn('render-list-----'+JSON.stringify(this.props.currentUser))
-    return (
-      <View style={styles.container}>
-        {this.props.device.orientation === 'LANDSCAPE' ? (
-          this._renderScrollView()
-        ) : (
-          <FlatList
-            style={styles.flatList}
-            data={ConstModule}
-            renderItem={this._renderItem}
-            horizontal={false}
-            numColumns={2}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps={'always'}
-          />
-        )}
-      </View>
-    )
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

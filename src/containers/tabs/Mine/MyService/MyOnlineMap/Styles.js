@@ -5,7 +5,7 @@ export const itemHeight = 140
 export const imageWidth = 120
 export const imageHeight = 100
 export const textHeight = 40
-const largeFontSize = 20
+const largeFontSize = 18
 const paddingLeft = 15
 const styles = StyleSheet.create({
   haveDataViewStyle: {
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   separateViewStyle: {
     width: itemWidth,
-    height: 8,
+    height: 1,
     backgroundColor: color.item_separate_white,
   },
 })

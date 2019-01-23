@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  AsyncStorage,
+  StatusBar,
+} from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
@@ -32,6 +39,17 @@ export default class Home extends Component {
       modalIsVisible: false,
     }
   }
+
+  componentDidMount() {
+    this._initStatusBarVisible()
+  }
+
+  _initStatusBarVisible = async () => {
+    let result = await AsyncStorage.getItem('StatusBarVisible')
+    let statusBarVisible = result === 'true'
+    // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
+    StatusBar.setHidden(statusBarVisible)
+  }
   _onImportWorkspace = async (fileDirPath, item, isExist) => {
     try {
       if (fileDirPath !== undefined) {
@@ -62,9 +80,6 @@ export default class Home extends Component {
         })
         if (arrFilePath.length === 0) {
           await FileTools.copyFile(fileDirPath, toPath)
-          if (isExist) {
-            item.action && item.action(this.props.currentUser)
-          }
           let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
             smwu: 'smwu',
             sxwu: 'sxwu',
@@ -88,6 +103,9 @@ export default class Home extends Component {
             if (result.length === 0) {
               Toast.show('导入失败')
             }
+          }
+          if (isExist) {
+            item.action && item.action(this.props.currentUser)
           }
         } else if (isExist === true) {
           item.action && item.action(this.props.currentUser)

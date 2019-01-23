@@ -45,7 +45,7 @@ export default class PopupModal extends PureComponent {
       <View
         style={{
           width: '100%',
-          height: 4,
+          height: 1,
           backgroundColor: color.item_separate_white,
         }}
       />
@@ -127,10 +127,11 @@ export default class PopupModal extends PureComponent {
   }
 
   render() {
+    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let visible = this.props.modalVisible
     return (
       <Modal
-        animationType={'slide'}
+        animationType={animationType}
         transparent={true}
         visible={visible}
         style={{ flex: 1 }}

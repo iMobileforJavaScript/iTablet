@@ -108,6 +108,7 @@ export default class Map3D extends React.Component {
         )
         this.initListener()
         GLOBAL.openWorkspace = true
+        GLOBAL.sceneName = this.name
         this.container.setLoading(false)
       })
     } catch (e) {
@@ -262,6 +263,7 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={() => this.dialog}
+        showFullMap={this.showFullMap}
         setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         setAttributes={this.props.setAttributes}

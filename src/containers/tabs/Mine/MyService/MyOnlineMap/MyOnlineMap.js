@@ -12,6 +12,7 @@ import styles, { textHeight } from './Styles'
 import NavigationService from '../../../../NavigationService'
 import { FetchUtils } from '../../../../../utils'
 import Toast from '../../../../../utils/Toast'
+import color from '../../../../../styles/color'
 export default class MyOnlineMap extends Component {
   props: {
     navigation: Object,
@@ -188,7 +189,19 @@ export default class MyOnlineMap extends Component {
     let title = section.section.title
     if (title !== undefined) {
       return (
-        <Text style={[styles.titleTextStyle, { lineHeight: 40 }]}>{title}</Text>
+        <Text
+          style={[
+            styles.titleTextStyle,
+            {
+              fontWeight: 'bold',
+              lineHeight: 40,
+              backgroundColor: color.itemColorGray,
+              color: color.fontColorWhite,
+            },
+          ]}
+        >
+          {title}
+        </Text>
       )
     }
     return <View />

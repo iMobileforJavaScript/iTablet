@@ -14,6 +14,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  NetInfo,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
@@ -231,7 +232,12 @@ export default class MyOnlineData extends Component {
         newData.push(objContent)
       }
     } catch (e) {
-      Toast.show('登录失效，请重新登录')
+      let result = await NetInfo.getConnectionInfo()
+      if (result.type === 'unknown' || result.type === 'none') {
+        Toast.show('网络错误')
+      } else {
+        Toast.show('登录失效，请重新登录')
+      }
     }
     return newData
   }
@@ -397,6 +403,9 @@ export default class MyOnlineData extends Component {
     _arrOnlineData = newData
     this.setState({ data: _arrOnlineData })
   }
+  setLoading = (visible, info) => {
+    this.container && this.container.setLoading(visible, info)
+  }
   _onDownloadFile = async () => {
     try {
       let objContent = this.state.data[this.index]
@@ -432,6 +441,7 @@ export default class MyOnlineData extends Component {
     }
   }
   _onPublishService = async () => {
+    this.setLoading(true, '发布服务中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -455,9 +465,12 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _onDeleteService = async () => {
+    this.setLoading(true, '删除服务中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -488,9 +501,12 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _onChangeDataVisibility = async () => {
+    this.setLoading(true, '改变数据可见性中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -532,9 +548,12 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _onDeleteData = async () => {
+    this.setLoading(true, '删除数据中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -572,6 +591,8 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _renderModal = () => {
@@ -608,6 +629,8 @@ export default class MyOnlineData extends Component {
       let imageWidth = 30,
         imageHeight = 30
       let itemWidth = '100%'
+      let fontColor = color.fontColorBlack
+      let imageColor = fontColor
       return (
         <TouchableOpacity
           onPress={() => {
@@ -628,7 +651,7 @@ export default class MyOnlineData extends Component {
                 width: imageWidth,
                 height: imageHeight,
                 marginLeft: 10,
-                tintColor: color.font_color_white,
+                tintColor: imageColor,
               }}
               resizeMode={'contain'}
               source={require('../../../../assets/Mine/mine_my_online_data.png')}
@@ -639,7 +662,7 @@ export default class MyOnlineData extends Component {
                 // lineHeight: itemHeight,
                 textAlign: 'left',
                 fontSize: 18,
-                color: color.font_color_white,
+                color: fontColor,
                 paddingLeft: 10,
               }}
             >
@@ -650,7 +673,7 @@ export default class MyOnlineData extends Component {
                 width: imageWidth,
                 height: imageHeight,
                 marginRight: 10,
-                tintColor: color.font_color_white,
+                tintColor: imageColor,
               }}
               resizeMode={'contain'}
               source={require('../../../../assets/Mine/mine_more_white.png')}
@@ -658,9 +681,9 @@ export default class MyOnlineData extends Component {
           </View>
           <View
             style={{
-              height: 2,
+              height: 1,
               width: itemWidth,
-              backgroundColor: color.theme,
+              backgroundColor: color.itemColorGray,
             }}
           />
         </TouchableOpacity>

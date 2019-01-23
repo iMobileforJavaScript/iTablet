@@ -10,11 +10,18 @@ export default StyleSheet.create({
   },
   item: {
     padding: scaleSize(5),
-    fontSize: setSpText(22),
+    fontSize: setSpText(24),
     paddingLeft: scaleSize(20),
     height: scaleSize(50),
     backgroundColor: color.theme,
     color: 'white',
+  },
+  itemTime: {
+    height: scaleSize(30),
+    color: '#A3A3A3',
+    paddingLeft: scaleSize(20),
+    fontSize: setSpText(16),
+    justifyContent: 'center',
   },
   Separator: {
     flex: 1,
@@ -81,8 +88,45 @@ export default StyleSheet.create({
   container: {
     flex: 1,
   },
+  sceneHead: {
+    flex: 1,
+  },
+  sceneView: {
+    // flex:1,
+    height: scaleSize(80),
+    flexDirection: 'row',
+    // justifyContent:"center",
+    alignItems: 'center',
+    backgroundColor: color.subTheme,
+  },
+  sceneTitle: {
+    fontSize: setSpText(28),
+    color: '#F0F0F0',
+    paddingLeft: scaleSize(30),
+  },
   sceneItem: {
     flex: 1,
-    marginTop: scaleSize(20),
+    height: scaleSize(81),
+    // marginTop: scaleSize(20),
+    flexDirection: 'row',
+    // justifyContent:"center",
+    alignItems: 'center',
+  },
+  sceneImg: {
+    width: scaleSize(55),
+    height: scaleSize(55),
+    marginLeft: scaleSize(30),
+  },
+  sceneItemImg: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+    marginLeft: scaleSize(50),
+  },
+  sceneItemcontent: {
+    flex: 1,
+    height: scaleSize(80),
+    marginLeft: scaleSize(15),
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
 })
