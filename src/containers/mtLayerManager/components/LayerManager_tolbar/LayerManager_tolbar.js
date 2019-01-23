@@ -16,7 +16,7 @@ import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
 import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -244,6 +244,7 @@ export default class LayerManager_tolbar extends React.Component {
           />
           <Text
             style={{
+              fontSize: setSpText(24),
               marginLeft: scaleSize(60),
               textAlign: 'center',
               backgroundColor: 'transparent',
