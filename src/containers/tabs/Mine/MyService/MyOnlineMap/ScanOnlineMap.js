@@ -5,7 +5,14 @@
 */
 
 import * as React from 'react'
-import { WebView, Dimensions, View } from 'react-native'
+import {
+  WebView,
+  Dimensions,
+  View,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+} from 'react-native'
 import { Container } from '../../../../../components'
 import Toast from '../../../../../utils/Toast'
 export default class ScanOnlineMap extends React.Component {
@@ -15,6 +22,10 @@ export default class ScanOnlineMap extends React.Component {
 
   constructor(props) {
     super(props)
+    if (Platform.OS === 'android') {
+      UIManager.setLayoutAnimationEnabledExperimental &&
+        UIManager.setLayoutAnimationEnabledExperimental(true)
+    }
     this.state = {
       isLoadingEnd: false,
       headerType: '',
@@ -22,7 +33,7 @@ export default class ScanOnlineMap extends React.Component {
       mapUrl: this.props.navigation.getParam('mapUrl', ''),
       cookie: this.props.navigation.getParam('cookie', ''),
       isLoadWebView: false,
-      progressWidth: Dimensions.get('window').width * 0.4,
+      progressWidth: Dimensions.get('window').width * 0.2,
     }
   }
   componentDidMount() {
@@ -88,37 +99,44 @@ export default class ScanOnlineMap extends React.Component {
   _onLoadStart = () => {
     this.progressViewWidth = this.state.progressWidth
     this.objProgressWidth = setInterval(() => {
-      //  帧动画
-      requestAnimationFrame(() => {
-        let screenWidth = Dimensions.get('window').width
-        if (this.progressViewRef) {
-          let prevProgressWidth = this.progressViewWidth
-          let currentPorWidth
-          if (prevProgressWidth >= screenWidth - 300) {
-            currentPorWidth = prevProgressWidth + 1
-            if (currentPorWidth >= screenWidth - 50) {
-              currentPorWidth = screenWidth - 50
-              this.progressViewWidth = currentPorWidth
-              return
-            }
-          } else {
-            currentPorWidth = prevProgressWidth * 1.01
-          }
-          this.progressViewWidth = currentPorWidth
-          this.progressViewRef.setNativeProps({
-            style: {
-              height: 2,
-              width: currentPorWidth,
-              backgroundColor: '#1c84c0',
-              borderBottomRightRadius: 1,
-              borderTopRightRadius: 1,
-              borderBottomLeftRadius: 0,
-              borderTopLeftRadius: 0,
-            },
-          })
-        }
+      LayoutAnimation.configureNext({
+        duration: 120,
+        create: {
+          type: LayoutAnimation.Types.linear,
+          property: LayoutAnimation.Properties.scaleX,
+        },
+        update: {
+          type: LayoutAnimation.Types.linear,
+        },
       })
-    }, 100)
+      let screenWidth = Dimensions.get('window').width
+      if (this.progressViewRef) {
+        let prevProgressWidth = this.progressViewWidth
+        let currentPorWidth
+        if (prevProgressWidth >= screenWidth - 200) {
+          currentPorWidth = prevProgressWidth + 1
+          if (currentPorWidth >= screenWidth - 50) {
+            currentPorWidth = screenWidth - 50
+            this.progressViewWidth = currentPorWidth
+            return
+          }
+        } else {
+          currentPorWidth = prevProgressWidth * 1.1
+        }
+        this.progressViewWidth = currentPorWidth
+        this.progressViewRef.setNativeProps({
+          style: {
+            height: 2,
+            width: currentPorWidth,
+            backgroundColor: '#1c84c0',
+            borderBottomRightRadius: 1,
+            borderTopRightRadius: 1,
+            borderBottomLeftRadius: 0,
+            borderTopLeftRadius: 0,
+          },
+        })
+      }
+    }, 120)
   }
   _loadWebView = uri => {
     if (this.state.isLoadWebView) {

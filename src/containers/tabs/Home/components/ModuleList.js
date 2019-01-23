@@ -10,9 +10,11 @@ import {
   ScrollView,
   Platform,
   Alert,
+  AsyncStorage,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
 import { scaleSize, setSpText } from '../../../../utils'
+// import RenderModuleListItem from './RenderModuleListItem'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -33,39 +35,52 @@ class RenderModuleItem extends Component {
     }
   }
   itemAction = async item => {
-    this.setState({
-      disabled: true,
-    })
-    let fileName
-    let moduleKey = item.key
-    if (moduleKey === '地图制图') {
-      fileName = '湖南'
-    } else if (moduleKey === '专题地图') {
-      fileName = '北京'
-    } else if (moduleKey === '外业采集') {
-      fileName = '地理国情普查'
-    } else if (moduleKey === '三维场景') {
-      if (Platform.OS === 'android') {
-        fileName = 'OlympicGreen_android'
-      } else if (Platform.OS === 'ios') {
-        fileName = 'OlympicGreen_ios'
+    // console.warn(JSON.stringify(this.props.currentUser))
+    try {
+      this.setState({
+        disabled: true,
+      })
+      let fileName
+      let moduleKey = item.key
+      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
+      if (moduleKey === '地图制图') {
+        fileName = '湖南'
+      } else if (moduleKey === '专题地图') {
+        fileName = '北京'
+      } else if (moduleKey === '外业采集') {
+        fileName = '地理国情普查'
+      } else if (moduleKey === '三维场景') {
+        if (Platform.OS === 'android') {
+          fileName = 'OlympicGreen_android'
+        } else if (Platform.OS === 'ios') {
+          fileName = 'OlympicGreen_ios'
+        }
       }
-    }
-    let homePath = await FileTools.appendingHomeDirectory()
-    let cachePath = homePath + ConstPath.CachePath
-    let fileDirPath = cachePath + fileName
-    let arrFile = await FileTools.getFilterFiles(fileDirPath)
-    let isDownloaded = true
-    if (arrFile.length === 0) {
-      this.downloadData = {
-        fileName: fileName,
-        cachePath: cachePath,
-        itemData: item,
+      let homePath = await FileTools.appendingHomeDirectory()
+      let cachePath = homePath + ConstPath.CachePath
+      let fileDirPath = cachePath + fileName
+      let arrFile = await FileTools.getFilterFiles(fileDirPath)
+      let isDownloaded = true
+      if (arrFile.length === 0) {
+        this.downloadData = {
+          fileName: fileName,
+          cachePath: cachePath,
+          itemData: item,
+        }
+        this._showAlert(item)
+        // this._downloadModuleData()
+      } else {
+        this.setState({
+          isShowProgressView: true,
+          progress: '导入中...',
+        })
+        await this.props.importWorkspace(fileDirPath, item, isDownloaded)
+        this.setState({
+          disabled: false,
+          isShowProgressView: false,
+        })
       }
-      // this._showAlert(item.key)
-      this._downloadModuleData()
-    } else {
-      await this.props.importWorkspace(fileDirPath, item, isDownloaded)
+    } catch (e) {
       this.setState({
         disabled: false,
         isShowProgressView: false,
@@ -181,10 +196,10 @@ class RenderModuleItem extends Component {
       <View />
     )
   }
-  _showAlert = moduleName => {
+  _showAlert = item => {
     Alert.alert(
       '下载',
-      `${moduleName}没有数据`,
+      `${item.key}没有数据`,
       [
         {
           text: '取消',
@@ -202,12 +217,21 @@ class RenderModuleItem extends Component {
           },
           style: 'destructive',
         },
+        {
+          text: '进入模块',
+          onPress: () => {
+            item.action && item.action(this.props.currentUser)
+            this.setState({
+              disabled: false,
+            })
+          },
+          style: 'default',
+        },
       ],
-      { cancelable: true },
+      { cancelable: false },
     )
   }
   render() {
-    // const image = require('../../../../assets/home/Frenchgrey/icon_baseimage.png')
     let item = this.props.item
     return (
       <View style={styles.moduleView}>
@@ -247,27 +271,36 @@ export default class ModuleList extends Component {
     this.state = {
       isShowProgressView: false,
     }
+    this.testCount = 1
   }
   // UNSAFE_componentWillMount() {
-  //   console.warn('ModuleList WILL MOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL MOUNT!-----'+this.testCount)
   // }
   // componentDidMount() {
-  //   console.warn('ModuleList DID MOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList DID MOUNT!-----'+(this.testCount))
   // }
   // UNSAFE_componentWillReceiveProps() {
-  //   console.warn('ModuleList WILL RECEIVE PROPS!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL RECEIVE PROPS!----'+(this.testCount))
   // }
   // shouldComponentUpdate() {
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList should MOUNT!----'+(this.testCount))
   //   return true
   // }
   // UNSAFE_componentWillUpdate( ) {
-  //   console.warn('ModuleList WILL UPDATE!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL UPDATE!----'+(this.testCount))
   // }
   // componentDidUpdate( ) {
-  //   console.warn('ModuleList DID UPDATE!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList DID UPDATE!----'+(this.testCount))
   // }
   // componentWillUnmount() {
-  //   console.warn('ModuleList WILL UNMOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL UNMOUNT!-----'+(this.testCount))
   // }
 
   _renderItem = ({ item }) => {
@@ -275,6 +308,7 @@ export default class ModuleList extends Component {
       <RenderModuleItem
         item={item}
         importWorkspace={this.props.importWorkspace}
+        currentUser={this.props.currentUser}
       />
     )
   }
@@ -296,7 +330,12 @@ export default class ModuleList extends Component {
     )
   }
   render() {
-    // console.warn('render-list')
+    AsyncStorage.setItem(
+      'TmpCurrentUser',
+      JSON.stringify(this.props.currentUser),
+    )
+    this.testCount = this.testCount + 1
+    // console.warn('render-list-----'+JSON.stringify(this.props.currentUser))
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (

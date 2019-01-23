@@ -17,6 +17,7 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../../utils/index'
 import styles from './Styles'
+import color from '../../../styles/color'
 
 export default class Find extends Component {
   props: {
@@ -185,7 +186,12 @@ export default class Find extends Component {
   _selectRender = () => {
     if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
       return (
-        <View style={styles.noDataViewStyle}>
+        <View
+          style={[
+            styles.noDataViewStyle,
+            { backgroundColor: color.contentColorWhite },
+          ]}
+        >
           <View
             style={{
               height: 2,
@@ -199,7 +205,10 @@ export default class Find extends Component {
 
     return (
       <FlatList
-        style={styles.haveDataViewStyle}
+        style={[
+          styles.haveDataViewStyle,
+          { backgroundColor: color.contentColorWhite },
+        ]}
         data={this.state.data}
         renderItem={data => {
           return <RenderFindItem user={this.props.user} data={data.item} />
@@ -228,7 +237,7 @@ export default class Find extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '用户数据',
+          title: '发现',
           withoutBack: true,
           navigation: this.props.navigation,
         }}

@@ -150,7 +150,12 @@ export default class RenderFindItem extends Component {
       this.props.data.size / 1024 / 1024 > 0.1
         ? (this.props.data.size / 1024 / 1024).toFixed(2) + 'MB'
         : (this.props.data.size / 1024).toFixed(2) + 'K'
-    let fontColor = color.font_color_white
+    let fontColor = color.fontColorBlack
+    let index = this.props.data.fileName.lastIndexOf('.')
+    let titleName =
+      index === -1
+        ? this.props.data.fileName
+        : this.props.data.fileName.substring(0, index)
     return (
       <View>
         <View style={styles.itemViewStyle}>
@@ -171,7 +176,7 @@ export default class RenderFindItem extends Component {
               style={[styles.restTitleTextStyle, { color: fontColor }]}
               numberOfLines={2}
             >
-              {this.props.data.fileName}
+              {titleName}
             </Text>
             <View style={styles.viewStyle2}>
               <Image
@@ -243,27 +248,12 @@ export default class RenderFindItem extends Component {
             </Text>
           </View>
         </View>
-        {/* <TouchableOpacity
-          style={styles.downloadStyle}
-          onPress={() => {
-            this._downloadFile()
-          }}
-        >
-          <Text
-            style={[
-              styles.downloadTextStyle,
-              { width: 100, right: 80, textAlign: 'left' },
-            ]}
-            numberOfLines={1}
-          >
-            大小:
-            {size}
-          </Text>
-          <Text style={styles.downloadTextStyle} numberOfLines={1}>
-            {this.state.progress}
-          </Text>
-        </TouchableOpacity>*/}
-        <View style={styles.separateViewStyle} />
+        <View
+          style={[
+            styles.separateViewStyle,
+            { backgroundColor: color.itemColorGray },
+          ]}
+        />
       </View>
     )
   }

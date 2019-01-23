@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  AsyncStorage,
 } from 'react-native'
 import Container from '../../../../components/Container'
 import { ConstPath, ConstInfo } from '../../../../constants'
@@ -14,8 +15,12 @@ import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
 import { color } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
+// import {  } from 'react-native-fs'
+import UserType from '../../../../constants/UserType'
+
 export default class MyLocalData extends Component {
   props: {
+    user: Object,
     navigation: Object,
     importWorkspace: () => {},
   }
@@ -26,6 +31,8 @@ export default class MyLocalData extends Component {
       sectionData: [],
       userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
+      textValue: '扫描文件:',
+      textDisplay: 'flex',
     }
   }
   componentDidMount() {
@@ -41,7 +48,12 @@ export default class MyLocalData extends Component {
    * fileType 文件类型 {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
    * arrFilterFile 添加到arrFilterFile数组中保存
    * */
-  _setFilterDatas = async (fullFileDir, fileType, arrFilterFile) => {
+  _setFilterDatas = async (
+    fullFileDir,
+    fileType,
+    arrFilterFile,
+    isShowText,
+  ) => {
     try {
       let isRecordFile = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
@@ -72,10 +84,19 @@ export default class MyLocalData extends Component {
                 directory: fullFileDir,
               })
               isRecordFile = true
+              if (isShowText === true) {
+                let textValue = '扫描文件:' + fullFileDir
+                this.setState({ textValue: textValue })
+              }
             }
           }
         } else if (isFile === 'directory') {
-          await this._setFilterDatas(newPath, fileType, arrFilterFile)
+          await this._setFilterDatas(
+            newPath,
+            fileType,
+            arrFilterFile,
+            isShowText,
+          )
         }
       }
     } catch (e) {
@@ -84,105 +105,209 @@ export default class MyLocalData extends Component {
     return arrFilterFile
   }
   _setSectionDataState = async () => {
-    let sectionData = await this._constructSectionData2()
-    this.setState({ sectionData: sectionData })
+    try {
+      let result = await AsyncStorage.getItem('ExternalSectionData')
+      let newSectionData
+      if (result !== null) {
+        this.setState({ textDisplay: 'none' })
+        newSectionData = await this._constructAllUserSectionData()
+      } else {
+        /** 第一次进入*/
+        let userSectionData
+        if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+          userSectionData = []
+        } else {
+          userSectionData = await this._constructUserSectionData()
+        }
+        this.setState({ sectionData: userSectionData })
+
+        let customerSectionData = await this._constructCustomerSectionData()
+        let newSectionData = userSectionData.concat(customerSectionData)
+        this.setState({ sectionData: newSectionData })
+      }
+
+      let externalSectionData = []
+      if (result !== null) {
+        externalSectionData = JSON.parse(result)
+      } else {
+        externalSectionData = await this._constructExternalSectionData()
+        AsyncStorage.setItem(
+          'ExternalSectionData',
+          JSON.stringify(externalSectionData),
+        )
+      }
+      let newSectionData2 = newSectionData.concat(externalSectionData)
+      this.setState({ sectionData: newSectionData2, textDisplay: 'none' })
+    } catch (e) {
+      this.setState({ textDisplay: 'none' })
+    }
   }
 
-  _constructSectionData = async () => {
+  _setFilterExternalDatas = async (fullFileDir, fileType, arrFilterFile) => {
+    try {
+      let isRecordFile = false
+      let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
+      for (let i = 0; i < arrDirContent.length; i++) {
+        if (fullFileDir.indexOf(ConstPath.AppPath) !== -1) {
+          continue
+        }
+        let fileContent = arrDirContent[i]
+        let isFile = fileContent.type
+        let fileName = fileContent.name
+
+        let newPath = fullFileDir + '/' + fileName
+        if (isFile === 'file' && !isRecordFile) {
+          if (
+            (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
+            (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
+            (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
+            (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
+            (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+          ) {
+            if (
+              !(
+                fileName.indexOf('~[') !== -1 &&
+                fileName.indexOf(']') !== -1 &&
+                fileName.indexOf('@') !== -1
+              )
+            ) {
+              let textValue = '扫描文件:' + fullFileDir
+              this.setState({ textValue: textValue })
+              fileName = fileName.substring(0, fileName.length - 5)
+              arrFilterFile.push({
+                filePath: newPath,
+                fileName: fileName,
+                directory: fullFileDir,
+              })
+              isRecordFile = true
+            }
+          }
+        } else if (isFile === 'directory') {
+          await this._setFilterExternalDatas(newPath, fileType, arrFilterFile)
+        }
+      }
+    } catch (e) {
+      Toast.show('没有数据')
+    }
+    return arrFilterFile
+  }
+  /** 构造除iTablet目录以外的数据*/
+  _constructExternalSectionData = async () => {
     this.homePath = await this._getHomePath()
-    this.path =
-      this.homePath +
-      ConstPath.UserPath +
-      this.state.userName +
-      '/' +
-      ConstPath.RelativePath.ExternalData
     let newData = []
-    await this._setFilterDatas(
-      this.path,
+    await this._setFilterExternalDatas(
+      this.homePath,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
     )
-    // console.warn(newData)
-    // {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
-    let smwuData = []
-    let sxwuData = []
-    let sxwData = []
-    let smwData = []
-    // let udbData=[]
-    for (let i = 0; i < newData.length; i++) {
-      let data = newData[i]
-      if (data.filePath.indexOf('smwu') !== -1) {
-        smwuData.push(data)
-      } else if (data.filePath.indexOf('sxwu') !== -1) {
-        sxwuData.push(data)
-      } else if (data.filePath.indexOf('sxw') !== -1) {
-        sxwData.push(data)
-      } else if (data.filePath.indexOf('smw') !== -1) {
-        smwData.push(data)
-      }
-      // else if(data.fileType === 'sxwu'){
-      //   udbData.push(data)
-      // }
-    }
-    let sectionData = [
-      { title: '文件类型:smwu', data: smwuData, isShowItem: true },
-      { title: '文件类型:sxwu', data: sxwuData, isShowItem: true },
-      { title: '文件类型:sxw', data: sxwData, isShowItem: true },
-      { title: '文件类型:smw', data: smwData, isShowItem: true },
-    ]
 
-    if (smwuData.length === 0) {
-      for (let i = 0; i < sectionData.length; i++) {
-        if (sectionData[i].title === '文件类型:smwu') {
-          sectionData.splice(i, 1)
-          break
-        }
-      }
+    let titleWorkspace = '外部数据'
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
     }
-
-    if (sxwuData.length === 0) {
-      for (let i = 0; i < sectionData.length; i++) {
-        if (sectionData[i].title === '文件类型:sxwu') {
-          sectionData.splice(i, 1)
-          break
-        }
-      }
-    }
-    if (sxwData.length === 0) {
-      for (let i = 0; i < sectionData.length; i++) {
-        if (sectionData[i].title === '文件类型:sxw') {
-          sectionData.splice(i, 1)
-          break
-        }
-      }
-    }
-    if (smwData.length === 0) {
-      for (let i = 0; i < sectionData.length; i++) {
-        if (sectionData[i].title === '文件类型:smw') {
-          sectionData.splice(i, 1)
-          break
-        }
-      }
-    }
-    // console.warn(sectionData)
     return sectionData
   }
-
-  _constructSectionData2 = async () => {
+  /** 构造游客以及当前用户数据*/
+  _constructAllUserSectionData = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + ConstPath.UserPath2
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    let titleWorkspace = '用户数据'
+    let titleWorkspace2 = '游客数据'
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      let arrUserData = []
+      let arrCustomerData = []
+      let userName =
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
+          ? '/null23132/'
+          : this.props.user.currentUser.userName
+      for (let i = 0; i < newData.length; i++) {
+        let objData = newData[i]
+        if (
+          objData.filePath.indexOf(ConstPath.RelativePath.ExternalData) !== -1
+        ) {
+          if (objData.filePath.indexOf(userName) !== -1) {
+            arrUserData.push(objData)
+          } else if (objData.filePath.indexOf('Customer') !== -1) {
+            arrCustomerData.push(objData)
+          }
+        }
+      }
+      if (arrUserData.length === 0) {
+        if (arrCustomerData.length === 0) {
+          sectionData = []
+        } else {
+          sectionData = [
+            { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
+          ]
+        }
+      } else {
+        if (arrCustomerData.length === 0) {
+          sectionData = [
+            { title: titleWorkspace, data: arrUserData, isShowItem: true },
+          ]
+        } else {
+          sectionData = [
+            { title: titleWorkspace, data: arrUserData, isShowItem: true },
+            { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
+          ]
+        }
+      }
+    }
+    return sectionData
+  }
+  /** 构造当前用户数据*/
+  _constructUserSectionData = async () => {
     this.homePath = await this._getHomePath()
     this.path =
       this.homePath +
       ConstPath.UserPath +
       this.state.userName +
       '/' +
-      ConstPath.RelativePath.ExternalData
+      ConstPath.RelativePath.ExternalData2
     let newData = []
     await this._setFilterDatas(
       this.path,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
+      true,
     )
-    let titleWorkspace = '工作空间类型'
+    let titleWorkspace = '用户数据'
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    }
+    return sectionData
+  }
+  /** 构造游客数据*/
+  _constructCustomerSectionData = async () => {
+    this.homePath = await this._getHomePath()
+    this.path =
+      this.homePath +
+      ConstPath.CustomerPath +
+      ConstPath.RelativePath.ExternalData2
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      true,
+    )
+    let titleWorkspace = '游客数据'
     let sectionData
     if (newData.length === 0) {
       sectionData = []
@@ -195,6 +320,11 @@ export default class MyLocalData extends Component {
   _renderSectionHeader = info => {
     let title = info.section.title
     if (title !== undefined) {
+      let imageSource = info.section.isShowItem
+        ? require('../../../../assets/Mine/local_data_open.png')
+        : require('../../../../assets/Mine/local_data_close.png')
+      let imageWidth = 20
+      let height = 40
       return (
         <TouchableOpacity
           onPress={() => {
@@ -210,17 +340,28 @@ export default class MyLocalData extends Component {
           }}
           style={{
             width: '100%',
-            height: 60,
-            backgroundColor: color.item_separate_white,
-            justifyContent: 'center',
+            height: height,
+            backgroundColor: color.contentColorGray,
+            alignItems: 'center',
+            flexDirection: 'row',
           }}
         >
+          <Image
+            resizeMode={'contain'}
+            style={{
+              tintColor: color.fontColorWhite,
+              marginLeft: 10,
+              width: imageWidth,
+              height: imageWidth,
+            }}
+            source={imageSource}
+          />
           <Text
             style={[
               {
-                color: color.font_color_white,
+                color: color.fontColorWhite,
                 paddingLeft: 10,
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: 'bold',
                 backgroundColor: 'transparent',
               },
@@ -244,18 +385,19 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
       <TouchableOpacity
-        display={display}
+        style={{ display: display }}
         onPress={() => {
           this.itemInfo = info
           this.setState({ modalIsVisible: true })
         }}
       >
         <View
-          display={display}
+          // display={display}
           style={{
+            // display:display,
             width: '100%',
             flexDirection: 'row',
-            backgroundColor: color.content_white,
+            backgroundColor: color.contentColorWhite,
             alignItems: 'center',
             height: itemHeight,
           }}
@@ -264,7 +406,7 @@ export default class MyLocalData extends Component {
             style={{
               width: imageWidth,
               height: imageHeight,
-              marginLeft: 10,
+              marginLeft: 20,
               tintColor: color.font_color_white,
             }}
             resizeMode={'contain'}
@@ -293,11 +435,14 @@ export default class MyLocalData extends Component {
           />
         </View>
         <View
-          display={display}
+          /** 也可以在外面设置*/
+          // display={display}
           style={{
+            /** 也可以在style设置*/
+            // display:display,
             width: '100%',
             height: separatorLineHeight,
-            backgroundColor: color.item_separate_white,
+            backgroundColor: color.itemColorGray,
           }}
         />
       </TouchableOpacity>
@@ -314,8 +459,17 @@ export default class MyLocalData extends Component {
 
   _onDeleteData = async () => {
     try {
+      this.setLoading(true, '删除数据中...')
       if (this.itemInfo !== undefined) {
-        let result = await FileTools.deleteFile(this.itemInfo.item.directory)
+        let directory = this.itemInfo.item.directory
+
+        let isExist = await FileTools.fileIsExist(directory)
+        let result
+        if (isExist === true) {
+          result = await FileTools.deleteFile(this.itemInfo.item.directory)
+        } else {
+          result = true
+        }
         if (result === true) {
           Toast.show('删除成功')
           let sectionData = [...this.state.sectionData]
@@ -323,15 +477,25 @@ export default class MyLocalData extends Component {
             let data = sectionData[i]
             if (data.title === this.itemInfo.section.title) {
               data.data.splice(this.itemInfo.index, 1)
+              if (data.title === '外部数据') {
+                AsyncStorage.setItem(
+                  'ExternalSectionData',
+                  JSON.stringify(data),
+                )
+              }
               break
             }
           }
           this.setState({ sectionData: sectionData, modalIsVisible: false })
+        } else {
+          this._closeModal()
         }
       }
     } catch (e) {
       Toast.show('删除失败')
       this._closeModal()
+    } finally {
+      this.setLoading(false)
     }
   }
 
@@ -384,21 +548,34 @@ export default class MyLocalData extends Component {
   }
 
   render() {
+    let sectionData = this.state.sectionData
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '本地数据',
+          title: '导入数据',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
       >
+        <Text
+          numberOfLines={2}
+          ellipsizeMode={'head'}
+          style={{
+            width: '100%',
+            backgroundColor: color.content_white,
+            display: this.state.textDisplay,
+            fontSize: 10,
+          }}
+        >
+          {this.state.textValue}
+        </Text>
         <SectionList
           style={{
             flex: 1,
             backgroundColor: color.content_white,
           }}
-          sections={this.state.sectionData}
+          sections={sectionData}
           initialNumToRender={20}
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}

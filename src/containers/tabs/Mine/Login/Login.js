@@ -248,7 +248,7 @@ export default class Login extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: 'iTablet登录',
+          title: 'SuperMap iTablet登录',
           withoutBack: this.state.isFirstLogin,
           navigation: this.props.navigation,
         }}

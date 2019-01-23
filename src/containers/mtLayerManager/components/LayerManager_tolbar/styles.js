@@ -22,12 +22,9 @@ export default StyleSheet.create({
   },
   containers: {
     flexDirection: 'column',
-    marginLeft: scaleSize(20),
-    marginRight: scaleSize(20),
     maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
     backgroundColor: color.content_white,
-    borderRadius: scaleSize(20),
   },
   item: {
     flexDirection: 'column',
@@ -50,5 +47,12 @@ export default StyleSheet.create({
     color: color.themeText2,
     fontSize: size.fontSize.fontSizeXs,
     textAlign: 'center',
+  },
+  separateViewStyle: {
+    flexDirection: 'column',
+    marginLeft: scaleSize(40),
+    marginRight: scaleSize(40),
+    height: scaleSize(1),
+    backgroundColor: color.bgG,
   },
 })

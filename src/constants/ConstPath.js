@@ -18,6 +18,7 @@ const RelativePath = {
   License: 'License/',
   Log: 'Log/',
   ExternalData: 'ExternalData/',
+  ExternalData2: 'ExternalData',
   Data: Data,
   Datasource: Data + 'Datasource/',
   Template: Data + 'Template/',
@@ -54,6 +55,7 @@ export default {
   CachePath: AppPath + 'Cache/',
   SampleDataPath: AppPath + '/SampleData/', // 存放示例数据
   UserPath: AppPath + 'User/', // 存放用户数据
+  UserPath2: AppPath + 'User', // 存放用户数据
   Common: AppPath + 'Common/', // 公共数据
   // 游客目录
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据

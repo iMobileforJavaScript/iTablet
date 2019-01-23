@@ -433,12 +433,12 @@ export default class MT_layerManager extends React.Component {
   onToolPress = async ({ data }) => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[3],
+        height: ConstToolType.TOOLBAR_HEIGHT[2],
         layerdata: data,
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[1],
         layerdata: data,
       })
     }
@@ -648,8 +648,42 @@ export default class MT_layerManager extends React.Component {
           getItemLayout={this.getItemLayout}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={15}
+          ItemSeparatorComponent={this.renderItemSeparator}
+          renderSectionFooter={this.renderSectionSeparator}
         />
       </View>
+    )
+  }
+
+  /**行与行之间的分隔线组件 */
+  renderItemSeparator = ({ section }) => {
+    if (section.visible) {
+      return (
+        <View
+          style={{
+            flexDirection: 'column',
+            width: '100%',
+            height: scaleSize(1),
+            backgroundColor: color.bgG,
+          }}
+        />
+      )
+    } else {
+      return <View />
+    }
+  }
+
+  /**标题之间的分隔线组件 */
+  renderSectionSeparator = () => {
+    return (
+      <View
+        style={{
+          flexDirection: 'column',
+          width: '100%',
+          height: scaleSize(1),
+          backgroundColor: color.bgG,
+        }}
+      />
     )
   }
 
