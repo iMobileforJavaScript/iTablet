@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   Platform,
+  AsyncStorage,
 } from 'react-native'
 import Container from '../../../../components/Container'
 import { ConstPath, ConstInfo } from '../../../../constants'
@@ -14,7 +15,9 @@ import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
 import { color } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
+// import {  } from 'react-native-fs'
 import UserType from '../../../../constants/UserType'
+
 export default class MyLocalData extends Component {
   props: {
     user: Object,
@@ -45,18 +48,19 @@ export default class MyLocalData extends Component {
    * fileType 文件类型 {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
    * arrFilterFile 添加到arrFilterFile数组中保存
    * */
-  _setFilterDatas = async (fullFileDir, fileType, arrFilterFile) => {
+  _setFilterDatas = async (
+    fullFileDir,
+    fileType,
+    arrFilterFile,
+    isShowText,
+  ) => {
     try {
       let isRecordFile = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
       for (let i = 0; i < arrDirContent.length; i++) {
-        // console.warn(fullFileDir)
-        let textValue = '扫描文件:' + fullFileDir
-        this.setState({ textValue: textValue })
         let fileContent = arrDirContent[i]
         let isFile = fileContent.type
         let fileName = fileContent.name
-
         let newPath = fullFileDir + '/' + fileName
         if (isFile === 'file' && !isRecordFile) {
           if (
@@ -80,10 +84,19 @@ export default class MyLocalData extends Component {
                 directory: fullFileDir,
               })
               isRecordFile = true
+              if (isShowText === true) {
+                let textValue = '扫描文件:' + fullFileDir
+                this.setState({ textValue: textValue })
+              }
             }
           }
         } else if (isFile === 'directory') {
-          await this._setFilterDatas(newPath, fileType, arrFilterFile)
+          await this._setFilterDatas(
+            newPath,
+            fileType,
+            arrFilterFile,
+            isShowText,
+          )
         }
       }
     } catch (e) {
@@ -92,21 +105,42 @@ export default class MyLocalData extends Component {
     return arrFilterFile
   }
   _setSectionDataState = async () => {
-    let userSectionData
-    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      userSectionData = []
-    } else {
-      userSectionData = await this._constructUserSectionData()
+    try {
+      let result = await AsyncStorage.getItem('ExternalSectionData')
+      let newSectionData
+      if (result !== null) {
+        this.setState({ textDisplay: 'none' })
+        newSectionData = await this._constructAllUserSectionData()
+      } else {
+        /** 第一次进入*/
+        let userSectionData
+        if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+          userSectionData = []
+        } else {
+          userSectionData = await this._constructUserSectionData()
+        }
+        this.setState({ sectionData: userSectionData })
+
+        let customerSectionData = await this._constructCustomerSectionData()
+        let newSectionData = userSectionData.concat(customerSectionData)
+        this.setState({ sectionData: newSectionData })
+      }
+
+      let externalSectionData = []
+      if (result !== null) {
+        externalSectionData = JSON.parse(result)
+      } else {
+        externalSectionData = await this._constructExternalSectionData()
+        AsyncStorage.setItem(
+          'ExternalSectionData',
+          JSON.stringify(externalSectionData),
+        )
+      }
+      let newSectionData2 = newSectionData.concat(externalSectionData)
+      this.setState({ sectionData: newSectionData2, textDisplay: 'none' })
+    } catch (e) {
+      this.setState({ textDisplay: 'none' })
     }
-    this.setState({ sectionData: userSectionData })
-
-    let customerSectionData = await this._constructCustomerSectionData()
-    let newSectionData = userSectionData.concat(customerSectionData)
-    this.setState({ sectionData: newSectionData })
-
-    let externalSectionData = await this._constructExternalSectionData()
-    let newSectionData2 = newSectionData.concat(externalSectionData)
-    this.setState({ sectionData: newSectionData2, textDisplay: 'none' })
   }
 
   _setFilterExternalDatas = async (fullFileDir, fileType, arrFilterFile) => {
@@ -114,16 +148,9 @@ export default class MyLocalData extends Component {
       let isRecordFile = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
       for (let i = 0; i < arrDirContent.length; i++) {
-        // if(fullFileDir.indexOf(ConstPath.UserPath + this.state.userName + '/' + ConstPath.RelativePath.ExternalData) !== -1 ||
-        //   fullFileDir.indexOf(ConstPath.UserPath + 'Customer/' + ConstPath.RelativePath.ExternalData) !== -1 ||
-        //   fullFileDir.indexOf(ConstPath.CachePath) !== -1){
-        //   continue
-        // }
         if (fullFileDir.indexOf(ConstPath.AppPath) !== -1) {
           continue
         }
-        let textValue = '扫描文件:' + fullFileDir
-        this.setState({ textValue: textValue })
         let fileContent = arrDirContent[i]
         let isFile = fileContent.type
         let fileName = fileContent.name
@@ -144,6 +171,8 @@ export default class MyLocalData extends Component {
                 fileName.indexOf('@') !== -1
               )
             ) {
+              let textValue = '扫描文件:' + fullFileDir
+              this.setState({ textValue: textValue })
               fileName = fileName.substring(0, fileName.length - 5)
               arrFilterFile.push({
                 filePath: newPath,
@@ -162,14 +191,9 @@ export default class MyLocalData extends Component {
     }
     return arrFilterFile
   }
+  /** 构造除iTablet目录以外的数据*/
   _constructExternalSectionData = async () => {
     this.homePath = await this._getHomePath()
-    // this.path =
-    //   this.homePath +
-    //   ConstPath.UserPath +
-    //   this.state.userName +
-    //   '/' +
-    //   ConstPath.RelativePath.ExternalData
     let newData = []
     await this._setFilterExternalDatas(
       this.homePath,
@@ -186,7 +210,65 @@ export default class MyLocalData extends Component {
     }
     return sectionData
   }
-
+  /** 构造游客以及当前用户数据*/
+  _constructAllUserSectionData = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + ConstPath.UserPath2
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    let titleWorkspace = '用户数据'
+    let titleWorkspace2 = '游客数据'
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      let arrUserData = []
+      let arrCustomerData = []
+      let userName =
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
+          ? '/null23132/'
+          : this.props.user.currentUser.userName
+      for (let i = 0; i < newData.length; i++) {
+        let objData = newData[i]
+        if (
+          objData.filePath.indexOf(ConstPath.RelativePath.ExternalData) !== -1
+        ) {
+          if (objData.filePath.indexOf(userName) !== -1) {
+            arrUserData.push(objData)
+          } else if (objData.filePath.indexOf('Customer') !== -1) {
+            arrCustomerData.push(objData)
+          }
+        }
+      }
+      if (arrUserData.length === 0) {
+        if (arrCustomerData.length === 0) {
+          sectionData = []
+        } else {
+          sectionData = [
+            { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
+          ]
+        }
+      } else {
+        if (arrCustomerData.length === 0) {
+          sectionData = [
+            { title: titleWorkspace, data: arrUserData, isShowItem: true },
+          ]
+        } else {
+          sectionData = [
+            { title: titleWorkspace, data: arrUserData, isShowItem: true },
+            { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
+          ]
+        }
+      }
+    }
+    return sectionData
+  }
+  /** 构造当前用户数据*/
   _constructUserSectionData = async () => {
     this.homePath = await this._getHomePath()
     this.path =
@@ -194,12 +276,13 @@ export default class MyLocalData extends Component {
       ConstPath.UserPath +
       this.state.userName +
       '/' +
-      ConstPath.RelativePath.ExternalData
+      ConstPath.RelativePath.ExternalData2
     let newData = []
     await this._setFilterDatas(
       this.path,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
+      true,
     )
     let titleWorkspace = '用户数据'
     let sectionData
@@ -210,18 +293,19 @@ export default class MyLocalData extends Component {
     }
     return sectionData
   }
-
+  /** 构造游客数据*/
   _constructCustomerSectionData = async () => {
     this.homePath = await this._getHomePath()
     this.path =
       this.homePath +
       ConstPath.CustomerPath +
-      ConstPath.RelativePath.ExternalData
+      ConstPath.RelativePath.ExternalData2
     let newData = []
     await this._setFilterDatas(
       this.path,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
+      true,
     )
     let titleWorkspace = '游客数据'
     let sectionData
@@ -236,6 +320,11 @@ export default class MyLocalData extends Component {
   _renderSectionHeader = info => {
     let title = info.section.title
     if (title !== undefined) {
+      let imageSource = info.section.isShowItem
+        ? require('../../../../assets/Mine/local_data_open.png')
+        : require('../../../../assets/Mine/local_data_close.png')
+      let imageWidth = 20
+      let height = 40
       return (
         <TouchableOpacity
           onPress={() => {
@@ -251,18 +340,28 @@ export default class MyLocalData extends Component {
           }}
           style={{
             width: '100%',
-            height: 60,
-            backgroundColor: color.item_separate_white,
+            height: height,
+            backgroundColor: color.contentColorGray,
             alignItems: 'center',
             flexDirection: 'row',
           }}
         >
+          <Image
+            resizeMode={'contain'}
+            style={{
+              tintColor: color.fontColorWhite,
+              marginLeft: 10,
+              width: imageWidth,
+              height: imageWidth,
+            }}
+            source={imageSource}
+          />
           <Text
             style={[
               {
-                color: color.white,
+                color: color.fontColorWhite,
                 paddingLeft: 10,
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: 'bold',
                 backgroundColor: 'transparent',
               },
@@ -298,7 +397,7 @@ export default class MyLocalData extends Component {
             // display:display,
             width: '100%',
             flexDirection: 'row',
-            backgroundColor: color.content_white,
+            backgroundColor: color.contentColorWhite,
             alignItems: 'center',
             height: itemHeight,
           }}
@@ -307,7 +406,7 @@ export default class MyLocalData extends Component {
             style={{
               width: imageWidth,
               height: imageHeight,
-              marginLeft: 10,
+              marginLeft: 20,
               tintColor: color.font_color_white,
             }}
             resizeMode={'contain'}
@@ -343,7 +442,7 @@ export default class MyLocalData extends Component {
             // display:display,
             width: '100%',
             height: separatorLineHeight,
-            backgroundColor: color.item_separate_white,
+            backgroundColor: color.itemColorGray,
           }}
         />
       </TouchableOpacity>
@@ -360,8 +459,17 @@ export default class MyLocalData extends Component {
 
   _onDeleteData = async () => {
     try {
+      this.setLoading(true, '删除数据中...')
       if (this.itemInfo !== undefined) {
-        let result = await FileTools.deleteFile(this.itemInfo.item.directory)
+        let directory = this.itemInfo.item.directory
+
+        let isExist = await FileTools.fileIsExist(directory)
+        let result
+        if (isExist === true) {
+          result = await FileTools.deleteFile(this.itemInfo.item.directory)
+        } else {
+          result = true
+        }
         if (result === true) {
           Toast.show('删除成功')
           let sectionData = [...this.state.sectionData]
@@ -369,15 +477,25 @@ export default class MyLocalData extends Component {
             let data = sectionData[i]
             if (data.title === this.itemInfo.section.title) {
               data.data.splice(this.itemInfo.index, 1)
+              if (data.title === '外部数据') {
+                AsyncStorage.setItem(
+                  'ExternalSectionData',
+                  JSON.stringify(data),
+                )
+              }
               break
             }
           }
           this.setState({ sectionData: sectionData, modalIsVisible: false })
+        } else {
+          this._closeModal()
         }
       }
     } catch (e) {
       Toast.show('删除失败')
       this._closeModal()
+    } finally {
+      this.setLoading(false)
     }
   }
 
@@ -430,6 +548,7 @@ export default class MyLocalData extends Component {
   }
 
   render() {
+    let sectionData = this.state.sectionData
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -444,8 +563,7 @@ export default class MyLocalData extends Component {
           ellipsizeMode={'head'}
           style={{
             width: '100%',
-            height: 30,
-            backgroundColor: color.item_separate_white,
+            backgroundColor: color.content_white,
             display: this.state.textDisplay,
             fontSize: 10,
           }}
@@ -457,7 +575,7 @@ export default class MyLocalData extends Component {
             flex: 1,
             backgroundColor: color.content_white,
           }}
-          sections={this.state.sectionData}
+          sections={sectionData}
           initialNumToRender={20}
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}

@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   separateViewStyle: {
     width: itemWidth,
-    height: 8,
+    height: 1,
     backgroundColor: color.item_separate_white,
   },
 })

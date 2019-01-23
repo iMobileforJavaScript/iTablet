@@ -41,6 +41,7 @@ export default class Mine extends Component {
   }
   componentDidUpdate(previousProps) {
     if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
       this.props.user.currentUser.userName !== undefined &&
       this.props.user.currentUser.userName !== '' &&
       this.props.user.currentUser.userName !==
@@ -123,7 +124,7 @@ export default class Mine extends Component {
         >
           {this._renderLine()}
           {this._renderItem({
-            title: '本地数据',
+            title: '导入数据',
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
           })}

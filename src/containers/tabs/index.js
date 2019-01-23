@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabText: {
-    color: color.gray2,
+    color: color.fontColorWhite,
     fontSize: setSpText(20),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
