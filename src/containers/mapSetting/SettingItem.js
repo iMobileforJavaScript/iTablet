@@ -7,6 +7,7 @@ export default class MapSetting extends Component {
     onPress: () => {},
     mapSetting: any,
     index: number,
+    device: Object,
   }
 
   _onValueChange = (value, item, index) => {
@@ -33,7 +34,15 @@ export default class MapSetting extends Component {
                 }}
               />
             </View>
-            <View style={styles.itemSeparator} />
+            <View
+              style={[
+                styles.itemSeparator,
+                {
+                  width: 0.956 * this.props.device.width,
+                  marginLeft: 0.022 * this.props.device.width,
+                },
+              ]}
+            />
           </View>
         )
       } else {
@@ -43,7 +52,15 @@ export default class MapSetting extends Component {
               <Text style={styles.itemName}>{this.props.data.name}</Text>
               <Text style={styles.itemValue}>{this.props.data.value}</Text>
             </View>
-            <View style={styles.itemSeparator} />
+            <View
+              style={[
+                styles.itemSeparator,
+                {
+                  width: 0.956 * this.props.device.width,
+                  marginLeft: 0.022 * this.props.device.width,
+                },
+              ]}
+            />
           </View>
         )
       }

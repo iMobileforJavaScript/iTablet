@@ -17,6 +17,7 @@ export default class setting extends Component {
     data: Array,
     setSettingData: () => {},
     settingData: any,
+    device: Object,
   }
   constructor(props) {
     super(props)
@@ -107,7 +108,19 @@ export default class setting extends Component {
                 }}
               />
             </View>
-            {itemSeparator ? <View style={styles.itemSeparator} /> : <View />}
+            {itemSeparator ? (
+              <View
+                style={[
+                  styles.itemSeparator,
+                  {
+                    width: 0.956 * this.props.device.width,
+                    marginLeft: 0.022 * this.props.device.width,
+                  },
+                ]}
+              />
+            ) : (
+              <View />
+            )}
           </View>
         )
       } else {
@@ -117,7 +130,19 @@ export default class setting extends Component {
               <Text style={styles.itemName}>{item.name}</Text>
               <Text style={styles.itemValue}>{item.value}</Text>
             </View>
-            {itemSeparator ? <View style={styles.itemSeparator} /> : <View />}
+            {itemSeparator ? (
+              <View
+                style={[
+                  styles.itemSeparator,
+                  {
+                    width: 0.956 * this.props.device.width,
+                    marginLeft: 0.022 * this.props.device.width,
+                  },
+                ]}
+              />
+            ) : (
+              <View />
+            )}
           </View>
         )
       }

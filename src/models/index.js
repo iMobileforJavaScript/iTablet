@@ -7,4 +7,16 @@ import symbol from './symbol'
 import collection from './collection'
 import template from './template'
 import device from './device'
-export { nav, layers, map, setting, user, symbol, collection, template, device }
+import down from './down'
+export {
+  nav,
+  layers,
+  map,
+  setting,
+  user,
+  symbol,
+  collection,
+  template,
+  device,
+  down,
+}

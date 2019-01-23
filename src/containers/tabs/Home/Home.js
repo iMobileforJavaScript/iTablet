@@ -18,11 +18,13 @@ export default class Home extends Component {
     currentUser: Object,
     setShow: () => {},
     device: Object,
+    downList: any,
     importSceneWorkspace: () => {},
     importWorkspace: () => {},
     closeWorkspace: () => {},
     openWorkspace: () => {},
     setUser: () => {},
+    setDownInformation: () => {},
   }
 
   constructor(props) {
@@ -32,6 +34,7 @@ export default class Home extends Component {
       modalIsVisible: false,
     }
   }
+
   _onImportWorkspace = async (fileDirPath, item, isExist) => {
     try {
       if (fileDirPath !== undefined) {
@@ -249,9 +252,11 @@ export default class Home extends Component {
         >
           <ModuleList
             importWorkspace={this._onImportWorkspace}
+            setDownInformation={this.props.setDownInformation}
             currentUser={this.props.currentUser}
             styles={styles.modulelist}
             device={this.props.device}
+            downList={this.props.downList}
           />
           {this._renderModal()}
         </View>

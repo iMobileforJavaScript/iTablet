@@ -18,6 +18,7 @@ export default class MapSetting extends Component {
     setMapSetting: () => {},
     closeMap: () => {},
     mapSetting: any,
+    device: Object,
   }
 
   constructor(props) {
@@ -147,6 +148,7 @@ export default class MapSetting extends Component {
   renderListItem = ({ item, index }) => {
     return (
       <SettingItem
+        device={this.props.device}
         data={item}
         index={index}
         onPress={data => this._onValueChange(data)}
