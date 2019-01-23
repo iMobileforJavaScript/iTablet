@@ -150,7 +150,7 @@ export default [
 
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
-      if (user.userName) {
+      if (user && user.userName) {
         userPath = ConstPath.UserPath + user.userName + '/'
       }
       let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace

@@ -64,21 +64,21 @@ function getMapMore(type, params) {
         //   size: 'large',
         //   image: require('../../../../assets/mapTools/icon_close.png'),
         // },
-        {
-          key: constants.SAVE,
-          title: constants.SAVE,
-          size: 'large',
-          // TODO 保存地图
-          action: () => saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_save.png'),
-        },
-        {
-          key: constants.SAVE_AS,
-          title: constants.SAVE_AS,
-          size: 'large',
-          action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_save_as.png'),
-        },
+        // {
+        //   key: constants.SAVE,
+        //   title: constants.SAVE,
+        //   size: 'large',
+        //   // TODO 保存地图
+        //   action: () => saveMap('TempMap'),
+        //   image: require('../../../../assets/mapTools/icon_save.png'),
+        // },
+        // {
+        //   key: constants.SAVE_AS,
+        //   title: constants.SAVE_AS,
+        //   size: 'large',
+        //   action: saveMapAs,
+        //   image: require('../../../../assets/mapTools/icon_save_as.png'),
+        // },
         {
           key: constants.EXPORT_MAP,
           title: constants.EXPORT_MAP,
@@ -108,18 +108,18 @@ function getMapMore(type, params) {
 //   _params.closeMap()
 // }
 
-/** 保存地图 **/
-function saveMap() {
-  if (!_params.setSaveViewVisible) return
-  GLOBAL.isBackHome = false
-  _params.setSaveViewVisible(true)
-}
-
-/** 另存地图 **/
-function saveMapAs() {
-  if (!_params.setSaveMapDialogVisible) return
-  _params.setSaveMapDialogVisible(true)
-}
+// /** 保存地图 **/
+// function saveMap() {
+//   if (!_params.setSaveViewVisible) return
+//   GLOBAL.isBackHome = false
+//   _params.setSaveViewVisible(true)
+// }
+//
+// /** 另存地图 **/
+// function saveMapAs() {
+//   if (!_params.setSaveMapDialogVisible) return
+//   _params.setSaveMapDialogVisible(true)
+// }
 
 /** 分享 **/
 function shareMap() {

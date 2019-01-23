@@ -47,7 +47,7 @@ export default class LayerAttributeTable extends React.Component {
     widthArr: Array,
     colHeight: number,
     type: string,
-    data: Object,
+    data: Object, // data为数组，横向显示；data为对象，纵向显示
     headStyle?: Object,
     rowStyle?: Object,
     NormalrowStyle: Object,
@@ -165,6 +165,7 @@ export default class LayerAttributeTable extends React.Component {
             {
               index: 1,
               key: item.name,
+              value: item.value,
               data: item,
               type: dataUtil.getType(item.value),
             },
@@ -299,7 +300,12 @@ export default class LayerAttributeTable extends React.Component {
             heightArr={this.state.colHeight}
             textStyle={styles.text}
           />
-          {/*<Rows data={this.state.tableData} flexArr={[1, 1]} style={styles.row} textStyle={styles.text}/>*/}
+          <Rows
+            data={this.state.tableData}
+            flexArr={[1, 1]}
+            style={styles.row}
+            textStyle={styles.text}
+          />
         </TableWrapper>
       )
     } else {
@@ -332,18 +338,19 @@ export default class LayerAttributeTable extends React.Component {
             <RefreshControl
               refreshing={this.state.refreshing}
               onRefresh={() => {
-                this.setState({ refreshing: true }, () => {
-                  this.props.refresh &&
+                this.props.refresh &&
+                  this.setState({ refreshing: true }, () => {
                     this.props.refresh(() => {
                       this.setState({ refreshing: false })
                     })
-                })
+                  })
               }}
             />
           }
         >
           <Table borderStyle={styles.border}>
             {this.state.tableData.map((rowData, index) => {
+              let _rowData = rowData.arr ? rowData.arr : rowData
               return (
                 <TouchableOpacity
                   activeOpacity={0.8}
@@ -359,7 +366,7 @@ export default class LayerAttributeTable extends React.Component {
                     style={[styles.row, this.props.NormalrowStyle]}
                     borderColor={color.borderLight}
                   >
-                    {rowData.arr.map((cellData, cellIndex) => {
+                    {_rowData.map((cellData, cellIndex) => {
                       // let isSystemField =
                       //   cellIndex !== 0 &&
                       //   cellData.key.toLowerCase().indexOf('id') === 0
@@ -373,12 +380,19 @@ export default class LayerAttributeTable extends React.Component {
                       //         : cellData
                       //       : this.renderInput(cellData, index)
                       // }
+                      let value = cellData
+                      if (
+                        cellData instanceof Object &&
+                        !(cellData instanceof Array)
+                      ) {
+                        value = cellData.value
+                      }
 
                       return (
                         <Cell
                           key={cellIndex}
                           borderColor={color.borderLight}
-                          data={cellData}
+                          data={value}
                           textStyle={styles.text}
                         />
                       )
@@ -394,6 +408,13 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   renderScrollTable = () => {
+    if (
+      !this.state.tableData[0] ||
+      !this.state.tableData[0].data ||
+      !this.state.tableData[0].arr
+    ) {
+      return null
+    }
     return (
       <ScrollView
         ref={ref => (this.scrollView = ref)}
@@ -413,6 +434,19 @@ export default class LayerAttributeTable extends React.Component {
           <ScrollView
             ref={ref => (this.scrollView2 = ref)}
             style={styles.dataWrapper}
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.refreshing}
+                onRefresh={() => {
+                  this.props.refresh &&
+                    this.setState({ refreshing: true }, () => {
+                      this.props.refresh(() => {
+                        this.setState({ refreshing: false })
+                      })
+                    })
+                }}
+              />
+            }
           >
             <Table borderStyle={styles.border}>
               {this.state.tableData.map((rowData, index) => {
