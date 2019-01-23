@@ -545,9 +545,33 @@ function create() {
     GLOBAL.Type === constants.MAP_THEME
   ) {
     (async function() {
-      await _params.setCurrentMap()
-      await SMap.removeAllLayer() // 移除所有图层
-      await SMap.closeDatasource(-1) // 关闭所有数据源
+      await _params.closeMap()
+
+      let userPath =
+        ConstPath.UserPath +
+        (_params.user.currentUser.userName || 'Customer') +
+        '/'
+      let fillLibPath = await FileTools.appendingHomeDirectory(
+        userPath +
+          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+          'Workspace.bru',
+      )
+      let lineLibPath = await FileTools.appendingHomeDirectory(
+        userPath +
+          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+          'Workspace.lsl',
+      )
+      let markerLibPath = await FileTools.appendingHomeDirectory(
+        userPath +
+          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+          'Workspace.sym',
+      )
+      await SMap.importSymbolLibrary(fillLibPath) // 导入面符号库
+      await SMap.importSymbolLibrary(lineLibPath) // 导入线符号库
+      await SMap.importSymbolLibrary(markerLibPath) // 导入点符号库
+      // await _params.setCurrentMap()
+      // await SMap.removeAllLayer() // 移除所有图层
+      // await SMap.closeDatasource(-1) // 关闭所有数据源
     }.bind(this)())
   }
 }

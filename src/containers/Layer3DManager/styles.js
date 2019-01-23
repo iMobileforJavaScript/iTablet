@@ -16,7 +16,7 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: scaleSize(80),
-    backgroundColor: '#F0F0F0',
+    backgroundColor: 'transparent',
     paddingLeft: scaleSize(30),
     paddingRight: scaleSize(30),
     alignItems: 'center',

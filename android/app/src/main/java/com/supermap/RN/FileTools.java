@@ -341,12 +341,16 @@ public class FileTools extends ReactContextBaseJavaModule {
 
 
     @ReactMethod
-    public static void deleteFile(String zippath, Promise promise) {
+    public static void deleteFile(String path, Promise promise) {
         try {
-            File file = new File(zippath);
+            File file = new File(path);
             boolean result = false;
             if (file.exists()) {
-                result = file.delete();
+                if (file.isDirectory()) {
+                    result = deleteDirectory(path);
+                } else {
+                    result = deleteFile(path);
+                }
             }
             promise.resolve(result);
         }catch (Exception e){
@@ -535,21 +539,27 @@ public class FileTools extends ReactContextBaseJavaModule {
         userName = userName == null || userName.equals("") ? "Customer" : userName;
 
         // 初始化用户工作空间
-        String downloadsPath = SDCARD + "/iTablet/User/" + userName + "/ExternalData/";
-        String dataPath = SDCARD + "/iTablet/User/" + userName + "/Data/";
-//        String dataPath2 = SDCARD + "/iTablet/User/" + userName + "/Data/Scene/";
-        String originName = "Customer.smwu";
-//        String originName2 = "OlympicGreen_android.zip";
-        String wsName = "Workspace.smwu";
-//        String ssName = "OlympicGreen_android.zip";
-        if (!Utils.fileIsExit(dataPath + wsName)) {
-            Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath, originName, wsName);
+        String userPath = SDCARD + "/iTablet/User/" + userName + "/";
+        String downloadsPath = userPath + "ExternalData/";
+        String dataPath = userPath + "Data/";
+
+        String defaultData = "DefaultData";
+        String defaultDataPath = SDCARD + "/iTablet/User/" + userName + "/" + defaultData + "/";
+//        String originName = "Customer.smwu";
+        String originName = "Workspace.zip";
+        String defaultDataZip = "DefaultData.zip";
+        String wsName = "Workspace.sxwu";
+
+        if (!Utils.fileIsExit(defaultDataPath + wsName)) {
+            Utils.copyAssetFileToSDcard(context.getApplicationContext(), userPath, originName, defaultDataZip);
+            if (Utils.fileIsExit(userPath + defaultDataZip)) {
+                FileTools.unZipFile(userPath + defaultDataZip, defaultDataPath);
+            }
         }
-//        if (!Utils.fileIsExit(dataPath2 + ssName)) {
-//            Utils.copyAssetFileToSDcard(context.getApplicationContext(), dataPath2, originName2, ssName);
-//            Decompressor.UnZipFolder(dataPath2 + originName2, dataPath2);
-//            Utils.deleteFile(dataPath2 + originName2);
-//        }
+        File defaultDataFile = new File(userPath + defaultDataZip);
+        if (defaultDataFile.exists()) {
+            defaultDataFile.delete();
+        }
 
         //创建用户目录
         createDirectory(dataPath + "Attribute");
@@ -681,6 +691,59 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         return false;
 
+    }
+
+
+
+    public static boolean deleteFile(String path) {
+        File file = new File(path);
+        boolean result = false;
+        if (file.exists()) {
+            if (!file.isDirectory())
+                result = file.delete();
+        }
+        return result;
+    }
+
+    public static boolean deleteDirectory(String path) {
+        // 如果path不以文件分隔符结尾，自动添加文件分隔符
+        if (!path.endsWith(File.separator))
+            path = path + File.separator;
+        File pathFile = new File(path);
+        // 如果path对应的文件不存在，或者不是一个目录，则退出
+        if ((!pathFile.exists()) || (!pathFile.isDirectory())) {
+            System.out.println("删除目录失败：" + path + "不存在！");
+            return false;
+        }
+        boolean flag = true;
+        // 删除文件夹中的所有文件包括子目录
+        File[] files = pathFile.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            // 删除子文件
+            if (files[i].isFile()) {
+                flag = deleteFile(files[i].getAbsolutePath());
+                if (!flag)
+                    break;
+            }
+            // 删除子目录
+            else if (files[i].isDirectory()) {
+                flag = deleteDirectory(files[i]
+                        .getAbsolutePath());
+                if (!flag)
+                    break;
+            }
+        }
+        if (!flag) {
+            System.out.println("删除目录失败！");
+            return false;
+        }
+        // 删除当前目录
+        if (pathFile.delete()) {
+            System.out.println("删除目录" + path + "成功！");
+            return true;
+        } else {
+            return false;
+        }
     }
 }
 

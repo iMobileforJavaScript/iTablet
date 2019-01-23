@@ -2,7 +2,14 @@ import React from 'react'
 import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
 import { layersetting, layerThemeSetting } from './LayerToolbarData'
-import { View, TouchableOpacity, Animated, Text, TextInput } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Animated,
+  Text,
+  TextInput,
+  TouchableHighlight,
+} from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
@@ -47,7 +54,7 @@ export default class LayerManager_tolbar extends React.Component {
       showMenuDialog: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
-      layerdata: props.layerdata,
+      layerdata: props.layerdata || '',
       layerName: '',
     }
     this.isShow = false
@@ -211,15 +218,18 @@ export default class LayerManager_tolbar extends React.Component {
 
   renderHeader = ({ section }) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
+      <TouchableHighlight
         onPress={() => {
           this.listAction({ section })
+        }}
+        underlayColor={color.headerBackground}
+        style={{
+          borderRadius: scaleSize(20),
         }}
       >
         <View
           style={{
-            width: '100%',
+            borderRadius: scaleSize(20),
             height: scaleSize(86),
             backgroundColor: color.content_white,
             justifyContent: 'center',
@@ -229,21 +239,13 @@ export default class LayerManager_tolbar extends React.Component {
           <Text
             style={{
               textAlign: 'center',
-              lineHeight: 60,
               backgroundColor: 'transparent',
             }}
           >
             {section.title}
           </Text>
         </View>
-        <View
-          style={{
-            width: '100%',
-            height: scaleSize(6),
-            backgroundColor: color.item_separate_white,
-          }}
-        />
-      </TouchableOpacity>
+      </TouchableHighlight>
     )
   }
 
@@ -270,6 +272,9 @@ export default class LayerManager_tolbar extends React.Component {
 
   confirm = () => {
     this.dialog.setDialogVisible(false)
+    this.setState({
+      layerName: '',
+    })
   }
 
   cancel = () => {
@@ -280,6 +285,7 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
     }
     this.dialog.setDialogVisible(false)
+    this.setVisible(false)
     this.setState({
       layerName: '',
     })
@@ -289,6 +295,7 @@ export default class LayerManager_tolbar extends React.Component {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
+        showDialog={true}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'取消'}
@@ -306,8 +313,9 @@ export default class LayerManager_tolbar extends React.Component {
               })
             }}
             placeholderTextColor={color.themeText2}
-            // defaultValue={this.state.mapName}
-            // value={this.state.mapName}
+            defaultValue={
+              this.state.layerdata ? this.state.layerdata.caption : ''
+            }
             placeholder={'请输入图层名称'}
             keyboardAppearance="dark"
             style={styles.textInputStyle}

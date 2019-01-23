@@ -237,21 +237,23 @@ export const exportWorkspace = (params, cb = () => {}) => async (
     let workspace = getState().map.toJS().workspace
     let path = params.outPath,
       fileName = '',
-      fileNameWithoutExtention = '',
+      fileNameWithoutExtension = '',
       parentPath = '',
       zipPath = ''
     let exportResult = false
     if (!path) {
       fileName = workspace.server.substr(workspace.server.lastIndexOf('/') + 1)
-      fileNameWithoutExtention = fileName.substr(0, fileName.lastIndexOf('.'))
+      fileNameWithoutExtension = fileName.substr(0, fileName.lastIndexOf('.'))
       parentPath = await FileTools.appendingHomeDirectory(
         ConstPath.UserPath +
           userName +
           '/' +
           ConstPath.RelativePath.Temp +
-          fileNameWithoutExtention,
+          fileNameWithoutExtension,
       )
       path = parentPath + '/' + fileName
+    } else {
+      parentPath = path.substr(0, path.lastIndexOf('/'))
     }
     // 导出工作空间
     if (params.maps && params.maps.length > 0) {
