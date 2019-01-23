@@ -57,6 +57,7 @@ export default class MapView extends React.Component {
     map: PropTypes.object,
     collection: PropTypes.object,
     device: PropTypes.object,
+    online: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -83,6 +84,7 @@ export default class MapView extends React.Component {
     closeMap: PropTypes.func,
     saveMap: PropTypes.func,
     getMapSetting: PropTypes.func,
+    setSharing: PropTypes.func,
   }
 
   constructor(props) {
@@ -919,6 +921,7 @@ export default class MapView extends React.Component {
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
         setMapType={this.setMapType}
+        online={this.props.online}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}

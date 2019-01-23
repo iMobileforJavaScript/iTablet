@@ -39,6 +39,7 @@
 		0A0A204C212FA22300BEBC1C /* 背景尾加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */; };
 		0A0A204D212FA22300BEBC1C /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2033212FA22300BEBC1C /* 选中.png */; };
 		0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0D938621E74B0B0041B997 /* libSplashScreen.a */; };
+		0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A11D99D21F885A400AFE6D6 /* libART.a */; };
 		0A15464A21D36FB800347720 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15464921D36FB800347720 /* SuperMap.framework */; };
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
@@ -143,6 +144,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 3D7682761D8E76B80014119E;
 			remoteInfo = SplashScreen;
+		};
+		0A11D99C21F885A400AFE6D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0CF68AC11AF0540F00FF9E5C;
+			remoteInfo = ART;
+		};
+		0A11D99E21F885A400AFE6D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 323A12871E5F266B004975B8;
+			remoteInfo = "ART-tvOS";
 		};
 		0A15465521D710BD00347720 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -448,6 +463,7 @@
 		0A0A2031212FA22300BEBC1C /* 背景头加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景头加一个.png"; sourceTree = "<group>"; };
 		0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景尾加一个.png"; sourceTree = "<group>"; };
 		0A0A2033212FA22300BEBC1C /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
+		0A11D99721F885A400AFE6D6 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		0A15464921D36FB800347720 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
@@ -516,6 +532,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */,
 				0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */,
 				0A15466921D719A500347720 /* libSupermap.a in Frameworks */,
 				0A8F7C3921C35DF60003595E /* libRCTOrientation.a in Frameworks */,
@@ -684,6 +701,15 @@
 			isa = PBXGroup;
 			children = (
 				0A0D938621E74B0B0041B997 /* libSplashScreen.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0A11D99821F885A400AFE6D6 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A11D99D21F885A400AFE6D6 /* libART.a */,
+				0A11D99F21F885A400AFE6D6 /* libART-tvOS.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -877,6 +903,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0A11D99721F885A400AFE6D6 /* ART.xcodeproj */,
 				0A15465121D710BD00347720 /* Supermap.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -1031,6 +1058,10 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
+					ProductGroup = 0A11D99821F885A400AFE6D6 /* Products */;
+					ProjectRef = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
+				},
+				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1144,6 +1175,20 @@
 			fileType = archive.ar;
 			path = libSplashScreen.a;
 			remoteRef = 0A0D938521E74B0B0041B997 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A11D99D21F885A400AFE6D6 /* libART.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libART.a;
+			remoteRef = 0A11D99C21F885A400AFE6D6 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A11D99F21F885A400AFE6D6 /* libART-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libART-tvOS.a";
+			remoteRef = 0A11D99E21F885A400AFE6D6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A15465621D710BD00347720 /* libSupermap.a */ = {

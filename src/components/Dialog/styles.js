@@ -19,10 +19,10 @@ export default StyleSheet.create({
     zIndex: zIndexLevel.FOUR,
   },
   dialogStyle: {
-    width: scaleSize(350),
+    width: scaleSize(400),
     borderRadius: scaleSize(16),
     backgroundColor: color.content_white,
-    paddingVertical: scaleSize(30),
+    paddingVertical: scaleSize(10),
   },
   title: {
     fontSize: size.fontSize.fontSizeLg,

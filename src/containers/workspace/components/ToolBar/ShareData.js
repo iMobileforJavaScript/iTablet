@@ -209,6 +209,12 @@ async function shareToSuperMapOnline(list = [], name = '') {
       return
     }
     Toast.show('开始分享')
+    _params.setToolbarVisible && _params.setToolbarVisible(false)
+    _params.setSharing({
+      module: GLOBAL.Type,
+      name: name,
+      progress: 0,
+    })
     _params.exportWorkspace(
       {
         maps: list,
@@ -225,11 +231,28 @@ async function shareToSuperMapOnline(list = [], name = '') {
 
         SOnlineService.deleteData(dataName).then(async () => {
           await SOnlineService.uploadFile(path, dataName, {
-            // onProgress: progress => {
-            //   console.warn(progress)
-            // },
+            onProgress: progress => {
+              _params.setSharing({
+                module: GLOBAL.Type,
+                name: dataName,
+                progress: (progress > 95 ? 95 : progress) / 100,
+              })
+            },
             onResult: async () => {
               let result = await SOnlineService.publishService(dataName)
+              if (result) {
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                  progress: 1,
+                })
+              }
+              setTimeout(() => {
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                })
+              }, 2000)
               Toast.show(
                 result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
               )

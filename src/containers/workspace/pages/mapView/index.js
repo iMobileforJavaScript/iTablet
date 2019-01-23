@@ -32,6 +32,7 @@ import {
   setOverlaySetting,
   getMapSetting,
 } from '../../../../models/setting'
+import { setSharing } from '../../../../models/online'
 import { setCollectionInfo } from '../../../../models/collection'
 
 const mapStateToProps = state => ({
@@ -52,6 +53,7 @@ const mapStateToProps = state => ({
   collection: state.collection.toJS(),
   template: state.template.toJS(),
   device: state.device.toJS().device,
+  online: state.online.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -80,6 +82,7 @@ const mapDispatchToProps = {
   getSymbolTemplates,
   saveMap,
   getMapSetting,
+  setSharing,
 }
 
 export default connect(

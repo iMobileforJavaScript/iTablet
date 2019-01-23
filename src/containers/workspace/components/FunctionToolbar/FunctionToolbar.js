@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
-import { MTBtn } from '../../../../components'
+import { MTBtn, PieProgress } from '../../../../components'
 import {
   ConstToolType,
   Const,
@@ -40,6 +40,8 @@ export default class FunctionToolbar extends React.Component {
     hide?: boolean,
     direction?: string,
     separator?: number,
+    shareProgress?: number,
+    online?: Object,
     type: string,
     data?: Array,
     Label: () => {},
@@ -75,6 +77,18 @@ export default class FunctionToolbar extends React.Component {
       right: new Animated.Value(scaleSize(31)),
     }
     this.visible = true
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(this.props.online.share) !==
+      JSON.stringify(prevProps.online.share)
+    ) {
+      let data = prevProps.data || this.getData(prevProps.type)
+      this.setState({
+        data,
+      })
+    }
   }
 
   setVisible = visible => {
@@ -1004,18 +1018,32 @@ export default class FunctionToolbar extends React.Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <MTBtn
-        style={styles.btn}
-        key={index}
-        title={item.title}
-        textColor={'black'}
-        textStyle={{ fontSize: setSpText(20) }}
-        size={MTBtn.Size.NORMAL}
-        image={item.image}
-        onPress={item.action}
-        activeOpacity={0.5}
-        // separator={scaleSize(2)}
-      />
+      <View>
+        <MTBtn
+          style={styles.btn}
+          key={index}
+          title={item.title}
+          textColor={'black'}
+          textStyle={{ fontSize: setSpText(20) }}
+          size={MTBtn.Size.NORMAL}
+          image={item.image}
+          onPress={item.action}
+          activeOpacity={0.5}
+          // separator={scaleSize(2)}
+        />
+        {item.title === '分享' &&
+          this.props.online.share[0] &&
+          GLOBAL.Type === this.props.online.share[0].module &&
+          this.props.online.share[0].progress !== undefined && (
+          <PieProgress
+            ref={ref => (this.shareProgress = ref)}
+            size={scaleSize(18)}
+            style={styles.progress}
+            progress={this.props.online.share[0].progress}
+            indeterminate={false}
+          />
+        )}
+      </View>
     )
   }
 
