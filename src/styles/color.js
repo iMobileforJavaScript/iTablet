@@ -33,7 +33,7 @@ const lightTheme = {
 
   overlay: 'rgba(105, 105, 105, 0.8)',
   transOverlay: 'rgba(0, 0, 0, 0)',
-  transView: 'rgba(48, 48, 48, 0.85)',
+  transView: 'rgba(240, 240, 240, 0.85)',
   blackBg: '#353537',
   bgW: '#F0F0F0',
   bgG: '#A0A0A0',

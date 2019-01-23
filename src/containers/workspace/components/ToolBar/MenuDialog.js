@@ -308,7 +308,7 @@ export default class MenuDialog extends React.PureComponent {
               <Image
                 resizeMode={'contain'}
                 style={styles.arrowImg}
-                source={require('../../../../assets/public/arrow_up.png')}
+                source={require('../../../../assets/public/icon_arrow_up.png')}
               />
             </TouchableHighlight>
 
@@ -322,7 +322,7 @@ export default class MenuDialog extends React.PureComponent {
               <Image
                 resizeMode={'contain'}
                 style={styles.arrowImg}
-                source={require('../../../../assets/public/arrow_down.png')}
+                source={require('../../../../assets/public/icon_arrow_down.png')}
               />
             </TouchableHighlight>
           </View>
@@ -362,13 +362,13 @@ const styles = StyleSheet.create({
     backgroundColor: color.transOverlay,
   },
   text: {
-    color: 'white',
+    color: color.font_color_white,
     fontSize: size.fontSize.fontSizeLg,
     backgroundColor: 'transparent',
     textAlign: 'center',
   },
   textHightlight: {
-    color: 'white',
+    color: color.font_color_white,
     fontWeight: 'bold',
     fontSize: size.fontSize.fontSizeXl,
     backgroundColor: 'transparent',

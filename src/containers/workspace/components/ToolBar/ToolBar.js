@@ -3165,7 +3165,7 @@ export default class ToolBar extends React.PureComponent {
           action = this.clearCurrentLabel
           break
         case ToolbarBtnType.MAP_SYMBOL:
-          image = require('../../../../assets/mapEdit/icon-theme-white.png')
+          image = require('../../../../assets/mapEdit/icon_function_symbol.png')
           action = this.showSymbol
           break
         case ToolbarBtnType.CHANGE_COLLECTION:

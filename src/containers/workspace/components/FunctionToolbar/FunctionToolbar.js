@@ -93,7 +93,10 @@ export default class FunctionToolbar extends React.Component {
       ConstToolType.MAP_EDIT_START === type ||
       ConstToolType.MAP_COLLECTION_START === type
     ) {
-      height = ConstToolType.HEIGHT[0]
+      height =
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[2]
     } else {
       height = ConstToolType.HEIGHT[2]
     }
@@ -101,7 +104,7 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
         containerType: 'table',
-        column: 4,
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
         height: height,
       })
     }
@@ -741,11 +744,11 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_remove.png'),
           // },
           {
-            title: '更多',
+            title: '分享',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_more.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -787,7 +790,7 @@ export default class FunctionToolbar extends React.Component {
             action: async () => {
               this.showMore(ConstToolType.MAP_MORE_MAP3D)
             },
-            image: require('../../../../assets/function/Frenchgrey/icon_share.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -825,14 +828,14 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
-            key: '更多',
-            title: '更多',
+            key: '分享',
+            title: '分享',
             size: 'large',
             selectMode: 'flash',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_theme_more.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -853,7 +856,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '编辑',
             action: this.showEdit,
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
+            image: require('../../../../assets/function/icon_edit.png'),
           },
           {
             title: '工具',
@@ -861,11 +864,11 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '更多',
+            title: '分享',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_more.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
