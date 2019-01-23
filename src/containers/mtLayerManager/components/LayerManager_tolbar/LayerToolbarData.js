@@ -18,14 +18,17 @@ const layersetting = [
   {
     title: '重命名',
     data: [],
+    image: require('../../../../assets/mapToolbar/list_type_udb.png'),
   },
   {
     title: '上移',
     data: [],
+    image: require('../../../../assets/mapToolbar/list_type_udb.png'),
   },
   {
     title: '下移',
     data: [],
+    image: require('../../../../assets/mapToolbar/list_type_udb.png'),
   },
   // {
   //   title: '复制',

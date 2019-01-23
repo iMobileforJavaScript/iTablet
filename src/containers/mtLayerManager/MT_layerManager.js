@@ -648,8 +648,42 @@ export default class MT_layerManager extends React.Component {
           getItemLayout={this.getItemLayout}
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={15}
+          ItemSeparatorComponent={this.renderItemSeparator}
+          renderSectionFooter={this.renderSectionSeparator}
         />
       </View>
+    )
+  }
+
+  /**行与行之间的分隔线组件 */
+  renderItemSeparator = ({ section }) => {
+    if (section.visible) {
+      return (
+        <View
+          style={{
+            flexDirection: 'column',
+            width: '100%',
+            height: scaleSize(1),
+            backgroundColor: color.bgG,
+          }}
+        />
+      )
+    } else {
+      return <View />
+    }
+  }
+
+  /**标题之间的分隔线组件 */
+  renderSectionSeparator = () => {
+    return (
+      <View
+        style={{
+          flexDirection: 'column',
+          width: '100%',
+          height: scaleSize(1),
+          backgroundColor: color.bgG,
+        }}
+      />
     )
   }
 

@@ -12,6 +12,7 @@ import { Const } from '../../../../constants/index'
 import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
+import { color } from '../../../../styles'
 
 const LAYER_GROUP = 'layerGroup'
 
@@ -487,10 +488,13 @@ export default class LayerManager_item extends React.Component {
       <View style={styles.btn} />
     ) : null
     let select = 'transparent'
+    let selectcolor = color.black
     if (this.props.selectLayer === this.props.data.caption) {
       select = '#rgba(0,157,249,1)'
+      selectcolor = color.white
     } else {
       select = 'transparent'
+      selectcolor = color.black
     }
     return (
       <TouchableOpacity
@@ -533,7 +537,7 @@ export default class LayerManager_item extends React.Component {
           </View>
         </View>
         <View style={styles.text_container}>
-          <Text style={styles.text}>{name}</Text>
+          <Text style={[styles.text, { color: selectcolor }]}>{name}</Text>
         </View>
         <TouchableOpacity style={styles.btn} onPress={this._tool_row}>
           <Image

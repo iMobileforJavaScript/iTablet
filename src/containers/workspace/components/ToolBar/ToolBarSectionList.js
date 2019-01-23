@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: '100%',
     height: scaleSize(1),
-    backgroundColor: color.subTheme,
+    backgroundColor: color.bgG,
   },
   imgItemInfo: {
     marginLeft: scaleSize(30),
