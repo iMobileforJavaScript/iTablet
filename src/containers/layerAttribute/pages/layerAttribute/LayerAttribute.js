@@ -17,6 +17,7 @@ import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
   props: {
+    nav: Object,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -52,9 +53,12 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    let mapTabs = this.props.nav.routes[this.props.nav.index]
     if (
       JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
+        JSON.stringify(this.props.currentLayer) ||
+      (mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
+        JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
     ) {
       this.getAttribute()
     }

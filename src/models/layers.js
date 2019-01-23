@@ -86,23 +86,28 @@ export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
   cb && cb(layers)
 }
 
-export const getAttributes = (
-  layerPath = '',
-  cb = () => {},
-) => async dispatch => {
+export const getAttributes = (layerPath, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
   try {
+    if (!layerPath && getState().layers.toJS().currentLayer.path) {
+      layerPath = getState().layers.toJS().currentLayer.path
+    }
     let attribute = await SMap.getLayerAttribute(layerPath)
     await dispatch({
       type: GET_ATTRIBUTES,
       payload: attribute || [],
     })
     cb && cb(attribute)
+    return attribute
   } catch (e) {
     await dispatch({
       type: GET_ATTRIBUTES,
       payload: [],
     })
     cb && cb()
+    return e
   }
 }
 
