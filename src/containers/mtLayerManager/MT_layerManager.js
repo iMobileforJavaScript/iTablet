@@ -433,12 +433,12 @@ export default class MT_layerManager extends React.Component {
   onToolPress = async ({ data }) => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[3],
+        height: ConstToolType.TOOLBAR_HEIGHT[2],
         layerdata: data,
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[1],
         layerdata: data,
       })
     }

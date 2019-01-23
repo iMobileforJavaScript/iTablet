@@ -18,17 +18,17 @@ const layersetting = [
   {
     title: '重命名',
     data: [],
-    image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+    image: require('../../../../assets/layerToolbar/layer_rename.png'),
   },
   {
     title: '上移',
     data: [],
-    image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
   },
   {
     title: '下移',
     data: [],
-    image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
   // {
   //   title: '复制',
@@ -41,11 +41,13 @@ const layersetting = [
   {
     title: '移除',
     data: [],
+    image: require('../../../../assets/layerToolbar/layer_remove.png'),
   },
-  {
-    title: '取消',
-    data: [],
-  },
+  // {
+  //   title: '取消',
+  //   data: [],
+  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+  // },
 ]
 
 const layerThemeSetting = [
@@ -76,26 +78,32 @@ const layerThemeSetting = [
   {
     title: '新建专题图',
     data: [],
+    image: require('../../../../assets/layerToolbar/layer_theme.png'),
   },
   {
     title: '重命名',
     data: [],
+    image: require('../../../../assets/layerToolbar/layer_rename.png'),
   },
   {
     title: '上移',
     data: [],
+    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
   },
   {
     title: '下移',
     data: [],
+    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
   {
     title: '移除',
     data: [],
+    image: require('../../../../assets/layerToolbar/layer_remove.png'),
   },
-  {
-    title: '取消',
-    data: [],
-  },
+  // {
+  //   title: '取消',
+  //   data: [],
+  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+  // },
 ]
 export { layersetting, layerThemeSetting }

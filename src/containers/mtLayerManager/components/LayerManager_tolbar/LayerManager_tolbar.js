@@ -4,6 +4,7 @@ import { ConstToolType } from '../../../../constants/index'
 import { layersetting, layerThemeSetting } from './LayerToolbarData'
 import {
   View,
+  Image,
   TouchableOpacity,
   Animated,
   Text,
@@ -228,12 +229,22 @@ export default class LayerManager_tolbar extends React.Component {
           style={{
             height: scaleSize(86),
             backgroundColor: color.content_white,
-            justifyContent: 'center',
+            flexDirection: 'row',
             alignItems: 'center',
           }}
         >
+          <Image
+            resizeMode={'contain'}
+            style={{
+              marginLeft: scaleSize(60),
+              height: scaleSize(60),
+              width: scaleSize(60),
+            }}
+            source={section.image}
+          />
           <Text
             style={{
+              marginLeft: scaleSize(60),
               textAlign: 'center',
               backgroundColor: 'transparent',
             }}
