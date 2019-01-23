@@ -9,10 +9,11 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-  Alert,
+  AsyncStorage,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
 import { scaleSize, setSpText } from '../../../../utils'
+// import RenderModuleListItem from './RenderModuleListItem'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -22,6 +23,8 @@ class RenderModuleItem extends Component {
     item: Object,
     currentUser: Object,
     importWorkspace: () => {},
+    showDialog: () => {},
+    getMoudleItem: () => {},
   }
 
   constructor(props) {
@@ -33,39 +36,50 @@ class RenderModuleItem extends Component {
     }
   }
   itemAction = async item => {
-    this.setState({
-      disabled: true,
-    })
-    let fileName
-    let moduleKey = item.key
-    if (moduleKey === '地图制图') {
-      fileName = '湖南'
-    } else if (moduleKey === '专题地图') {
-      fileName = '北京'
-    } else if (moduleKey === '外业采集') {
-      fileName = '地理国情普查'
-    } else if (moduleKey === '三维场景') {
-      if (Platform.OS === 'android') {
-        fileName = 'OlympicGreen_android'
-      } else if (Platform.OS === 'ios') {
-        fileName = 'OlympicGreen_ios'
+    try {
+      this.setState({
+        disabled: true,
+      })
+      let fileName
+      let moduleKey = item.key
+      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
+      if (moduleKey === '地图制图') {
+        fileName = '湖南'
+      } else if (moduleKey === '专题地图') {
+        fileName = '北京'
+      } else if (moduleKey === '外业采集') {
+        fileName = '地理国情普查'
+      } else if (moduleKey === '三维场景') {
+        if (Platform.OS === 'android') {
+          fileName = 'OlympicGreen_android'
+        } else if (Platform.OS === 'ios') {
+          fileName = 'OlympicGreen_ios'
+        }
       }
-    }
-    let homePath = await FileTools.appendingHomeDirectory()
-    let cachePath = homePath + ConstPath.CachePath
-    let fileDirPath = cachePath + fileName
-    let arrFile = await FileTools.getFilterFiles(fileDirPath)
-    let isDownloaded = true
-    if (arrFile.length === 0) {
-      this.downloadData = {
-        fileName: fileName,
-        cachePath: cachePath,
-        itemData: item,
+      let homePath = await FileTools.appendingHomeDirectory()
+      let cachePath = homePath + ConstPath.CachePath
+      let fileDirPath = cachePath + fileName
+      let arrFile = await FileTools.getFilterFiles(fileDirPath)
+      let isDownloaded = true
+      if (arrFile.length === 0) {
+        this.downloadData = {
+          fileName: fileName,
+          cachePath: cachePath,
+          itemData: item,
+        }
+        this._showAlert(item)
+      } else {
+        this.setState({
+          isShowProgressView: true,
+          progress: '导入中...',
+        })
+        await this.props.importWorkspace(fileDirPath, item, isDownloaded)
+        this.setState({
+          disabled: false,
+          isShowProgressView: false,
+        })
       }
-      // this._showAlert(item.key)
-      this._downloadModuleData()
-    } else {
-      await this.props.importWorkspace(fileDirPath, item, isDownloaded)
+    } catch (e) {
       this.setState({
         disabled: false,
         isShowProgressView: false,
@@ -107,7 +121,6 @@ class RenderModuleItem extends Component {
         progress: res => {
           let value =
             ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-          // console.warn(value)
           if (value === '100%') {
             this.setState({
               progress: '导入中...',
@@ -149,7 +162,6 @@ class RenderModuleItem extends Component {
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
         : `下载${this.state.progress}`
-    // console.warn(progress)
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -168,10 +180,7 @@ class RenderModuleItem extends Component {
           style={{
             fontSize: setSpText(25),
             fontWeight: 'bold',
-            // fontStyle:'italic',
             color: 'white',
-            // textShadowColor: '#fff',
-            // textShadowRadius: 4,
           }}
         >
           {progress}
@@ -181,33 +190,30 @@ class RenderModuleItem extends Component {
       <View />
     )
   }
-  _showAlert = moduleName => {
-    Alert.alert(
-      '下载',
-      `${moduleName}没有数据`,
-      [
-        {
-          text: '取消',
-          onPress: () => {
-            this.setState({
-              disabled: false,
-            })
-          },
-          style: 'cancel',
-        },
-        {
-          text: '确认',
-          onPress: () => {
-            this._downloadModuleData()
-          },
-          style: 'destructive',
-        },
-      ],
-      { cancelable: true },
-    )
+
+  sureDown = () => {
+    this._downloadModuleData()
+    this.setState({
+      disabled: false,
+    })
+
+    this.props.showDialog && this.props.showDialog(false)
+  }
+
+  cancelDown = () => {
+    this.setState({
+      disabled: false,
+    })
+    this.props.item.action && this.props.item.action(this.props.currentUser)
+    this.props.showDialog && this.props.showDialog(false)
+  }
+
+  _showAlert = () => {
+    this.props.showDialog && this.props.showDialog(true)
+    this.props.getMoudleItem &&
+      this.props.getMoudleItem(this.sureDown, this.cancelDown)
   }
   render() {
-    // const image = require('../../../../assets/home/Frenchgrey/icon_baseimage.png')
     let item = this.props.item
     return (
       <View style={styles.moduleView}>
@@ -240,6 +246,8 @@ export default class ModuleList extends Component {
     device: Object,
     currentUser: Object,
     importWorkspace: () => {},
+    showDialog: () => {},
+    getMoudleItem: () => {},
   }
 
   constructor(props) {
@@ -247,34 +255,47 @@ export default class ModuleList extends Component {
     this.state = {
       isShowProgressView: false,
     }
+    this.testCount = 1
   }
   // UNSAFE_componentWillMount() {
-  //   console.warn('ModuleList WILL MOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL MOUNT!-----'+this.testCount)
   // }
   // componentDidMount() {
-  //   console.warn('ModuleList DID MOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList DID MOUNT!-----'+(this.testCount))
   // }
   // UNSAFE_componentWillReceiveProps() {
-  //   console.warn('ModuleList WILL RECEIVE PROPS!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL RECEIVE PROPS!----'+(this.testCount))
   // }
   // shouldComponentUpdate() {
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList should MOUNT!----'+(this.testCount))
   //   return true
   // }
   // UNSAFE_componentWillUpdate( ) {
-  //   console.warn('ModuleList WILL UPDATE!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL UPDATE!----'+(this.testCount))
   // }
   // componentDidUpdate( ) {
-  //   console.warn('ModuleList DID UPDATE!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList DID UPDATE!----'+(this.testCount))
   // }
   // componentWillUnmount() {
-  //   console.warn('ModuleList WILL UNMOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL UNMOUNT!-----'+(this.testCount))
   // }
 
   _renderItem = ({ item }) => {
     return (
       <RenderModuleItem
         item={item}
+        ref={ref => (this.moduleItem = ref)}
         importWorkspace={this.props.importWorkspace}
+        currentUser={this.props.currentUser}
+        showDialog={this.props.showDialog}
+        getMoudleItem={this.props.getMoudleItem}
       />
     )
   }
@@ -296,7 +317,12 @@ export default class ModuleList extends Component {
     )
   }
   render() {
-    // console.warn('render-list')
+    AsyncStorage.setItem(
+      'TmpCurrentUser',
+      JSON.stringify(this.props.currentUser),
+    )
+    this.testCount = this.testCount + 1
+    // console.warn('render-list-----'+JSON.stringify(this.props.currentUser))
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (

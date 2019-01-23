@@ -162,6 +162,7 @@ export default class Map3DToolBar extends React.Component {
         true,
       )
       GLOBAL.openWorkspace = true
+      GLOBAL.sceneName = item.name
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
     })

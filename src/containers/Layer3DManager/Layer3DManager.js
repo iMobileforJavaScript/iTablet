@@ -34,6 +34,10 @@ export default class Map3DToolBar extends Component {
   //   }
 
   componentDidMount() {
+    this.refreshData()
+  }
+
+  refreshData = () => {
     SScene.getLayerList().then(result => {
       let basemaplist = [],
         layerlist = [],
@@ -135,12 +139,11 @@ export default class Map3DToolBar extends Component {
         // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
-        onRefresh={this.getdata}
+        onRefresh={this.refreshData}
         refreshing={false}
       />
     )
   }
-
   renderToolBar = () => {
     return (
       <MapToolbar

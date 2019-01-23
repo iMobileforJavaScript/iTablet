@@ -37,8 +37,8 @@ export default class HomePopupModal extends PureComponent {
       <View
         style={{
           width: '100%',
-          height: 4,
-          backgroundColor: color.item_separate_white,
+          height: 1,
+          backgroundColor: color.itemColorBlack,
         }}
       />
     )
@@ -60,7 +60,7 @@ export default class HomePopupModal extends PureComponent {
             onClick()
           }}
         >
-          <Text style={{ fontSize: fontSize, color: color.font_color_white }}>
+          <Text style={{ fontSize: fontSize, color: color.fontColorBlack }}>
             {label}
           </Text>
         </TouchableOpacity>
@@ -83,8 +83,9 @@ export default class HomePopupModal extends PureComponent {
             }}
           >
             {this._renderSeparatorLine()}
-            {this._renderItem('切换账号', this.props.onToggleAccount)}
+            {this._renderItem('切换', this.props.onToggleAccount)}
             {this._renderItem('退出', this.props.onLogout)}
+            {this._renderItem('注册', this.props.onRegister)}
           </View>
         )
       } else {
@@ -124,9 +125,10 @@ export default class HomePopupModal extends PureComponent {
   }
 
   render() {
+    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     return (
       <Modal
-        animationType={'slide'}
+        animationType={animationType}
         transparent={true}
         onRequestClose={this._onRequestClose}
         supportedOrientations={[

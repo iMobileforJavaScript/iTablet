@@ -23,7 +23,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(4),
   },
   separator: {
-    marginTop: scaleSize(25),
+    marginBottom: scaleSize(30),
     // backgroundColor:"red",
     // top:scaleSize(-80),
     // position:'absolute',

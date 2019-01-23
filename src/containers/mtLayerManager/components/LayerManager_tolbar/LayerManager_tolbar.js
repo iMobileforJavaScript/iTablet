@@ -223,13 +223,9 @@ export default class LayerManager_tolbar extends React.Component {
           this.listAction({ section })
         }}
         underlayColor={color.headerBackground}
-        style={{
-          borderRadius: scaleSize(20),
-        }}
       >
         <View
           style={{
-            borderRadius: scaleSize(20),
             height: scaleSize(86),
             backgroundColor: color.content_white,
             justifyContent: 'center',

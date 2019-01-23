@@ -155,7 +155,7 @@ const Tabs = TabNavigator(
       style: {
         backgroundColor: color.theme, // TabBar 背景色
         // height: Platform.OS === 'android' ? 50 : 49,
-        height: scaleSize(110),
+        height: scaleSize(96),
         borderTopColor: color.border,
         borderTopWidth: 1,
         // alignItems:"center",
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabText: {
-    color: color.gray2,
+    color: color.fontColorWhite,
     fontSize: setSpText(20),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },

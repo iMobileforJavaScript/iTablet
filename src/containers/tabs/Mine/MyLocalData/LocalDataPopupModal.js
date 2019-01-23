@@ -32,7 +32,7 @@ export default class LocalDataPopupModal extends PureComponent {
       <View
         style={{
           width: '100%',
-          height: 4,
+          height: 1,
           backgroundColor: color.item_separate_white,
         }}
       />
@@ -86,9 +86,10 @@ export default class LocalDataPopupModal extends PureComponent {
     )
   }
   render() {
+    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     return (
       <Modal
-        animationType={'slide'}
+        animationType={animationType}
         transparent={true}
         onRequestClose={this._onRequestClose}
         supportedOrientations={[

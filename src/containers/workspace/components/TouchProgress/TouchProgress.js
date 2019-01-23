@@ -1,5 +1,14 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, PanResponder, Image, Text } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  PanResponder,
+  Image,
+  Text,
+  Platform,
+  StatusBar,
+  AsyncStorage,
+} from 'react-native'
 import { screen, scaleSize } from '../../../../utils'
 import {
   SCartography,
@@ -71,6 +80,14 @@ export default class TouchProgress extends Component {
       onPanResponderRelease: this._handlePanResponderEnd,
       onPanResponderTerminate: this._handlePanResponderEnd,
     })
+    this._initStatusBarVisible()
+  }
+
+  _initStatusBarVisible = async () => {
+    let result = await AsyncStorage.getItem('StatusBarVisible')
+    let invisible = result === 'true'
+    let android_statusHeight = invisible ? 0 : StatusBar.currentHeight
+    this.statusBarHeight = Platform.OS === 'ios' ? 20 : android_statusHeight //获取状态栏高度
   }
 
   _updateNativeStyles = () => {
@@ -604,12 +621,22 @@ export default class TouchProgress extends Component {
   }
 
   render() {
+    let container = {
+      marginTop: this.statusBarHeight,
+      backgroundColor: '#rgba(110, 110, 110, 1)',
+      flexDirection: 'column',
+      height: scaleSize(40),
+      justifyContent: 'center',
+      alignItems: 'center',
+      // left: 0,
+      // top: 0,
+    }
     return (
       <View
         style={[styles.box, { width: '100%' }]}
         {...this._panResponder.panHandlers}
       >
-        <View style={[styles.container, { width: '100%' }]}>
+        <View style={[container, { width: '100%' }]}>
           <View
             style={[
               styles.line,

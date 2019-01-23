@@ -524,68 +524,78 @@ export default class ToolBar extends React.PureComponent {
     }.bind(this)
 
     let setData = async function() {
-      this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
-        GLOBAL.currentLayer.name,
-      )
-      let selectedExpression
-      let param = {
-        LayerName: GLOBAL.currentLayer.name,
-      }
-      if (type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
-        selectedExpression = await SThemeCartography.getUniqueExpression(param)
-      } else if (type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
-        selectedExpression = await SThemeCartography.getRangeExpression(param)
-      } else if (
-        type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
-      ) {
-        selectedExpression = await SThemeCartography.getUniformLabelExpression(
-          param,
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+        this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+          GLOBAL.currentLayer.name,
         )
-      }
-      let dataset = this.expressionData.dataset
-      let allExpressions = this.expressionData.list
-      if (selectedExpression) {
-        for (let i = 0; i < allExpressions.length; i++) {
-          if (allExpressions[i].expression === selectedExpression) {
-            allExpressions[i].isSelected = true
-          } else {
-            allExpressions[i].isSelected = false
+        let selectedExpression
+        let param = {
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        if (type === ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION) {
+          selectedExpression = await SThemeCartography.getUniqueExpression(
+            param,
+          )
+        } else if (type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION) {
+          selectedExpression = await SThemeCartography.getRangeExpression(param)
+        } else if (
+          type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
+        ) {
+          selectedExpression = await SThemeCartography.getUniformLabelExpression(
+            param,
+          )
+        }
+        let dataset = this.expressionData.dataset
+        let allExpressions = this.expressionData.list
+        if (selectedExpression) {
+          for (let i = 0; i < allExpressions.length; i++) {
+            if (allExpressions[i].expression === selectedExpression) {
+              allExpressions[i].isSelected = true
+            } else {
+              allExpressions[i].isSelected = false
+            }
           }
         }
+        allExpressions.forEach(item => {
+          item.info = {
+            infoType: 'fieldType',
+            fieldType: item.fieldType,
+          }
+        })
+        let datalist = [
+          {
+            title: dataset.datasetName,
+            datasetType: dataset.datasetType,
+            data: allExpressions,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            containerType: 'list',
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeFourMenu(),
+            selectName: name,
+            selectKey: key,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
       }
-      allExpressions.forEach(item => {
-        item.info = {
-          infoType: 'fieldType',
-          fieldType: item.fieldType,
-        }
-      })
-      let datalist = [
-        {
-          title: dataset.datasetName,
-          datasetType: dataset.datasetType,
-          data: allExpressions,
-        },
-      ]
-      this.setState(
-        {
-          isFullScreen: false,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          containerType: 'list',
-          data: datalist,
-          type: type,
-          buttons: ThemeMenuData.getThemeFourMenu(),
-          selectName: name,
-          selectKey: key,
-        },
-        () => {
-          this.height =
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5]
-          this.scrollListToLocation()
-        },
-      )
     }.bind(this)
 
     if (!this.state.showMenuDialog) {
@@ -612,33 +622,42 @@ export default class ToolBar extends React.PureComponent {
     }.bind(this)
 
     let setData = async function() {
-      let list = await ThemeMenuData.getUniqueColorScheme()
-      let datalist = [
-        {
-          title: '颜色方案',
-          data: list,
-        },
-      ]
-      this.setState(
-        {
-          isFullScreen: false,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          containerType: 'list',
-          data: datalist,
-          type: type,
-          buttons: ThemeMenuData.getThemeFourMenu(),
-          selectName: name,
-          selectKey: key,
-        },
-        () => {
-          this.height =
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5]
-          this.scrollListToLocation()
-        },
-      )
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+        let list = await ThemeMenuData.getUniqueColorScheme()
+        let datalist = [
+          {
+            title: '颜色方案',
+            data: list,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            containerType: 'list',
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeFourMenu(),
+            selectName: name,
+            selectKey: key,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      }
     }.bind(this)
 
     if (!this.state.showMenuDialog) {
@@ -665,33 +684,42 @@ export default class ToolBar extends React.PureComponent {
     }.bind(this)
 
     let setData = async function() {
-      let list = await ThemeMenuData.getRangeColorScheme()
-      let datalist = [
-        {
-          title: '颜色方案',
-          data: list,
-        },
-      ]
-      this.setState(
-        {
-          isFullScreen: false,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          containerType: 'list',
-          data: datalist,
-          type: type,
-          buttons: ThemeMenuData.getThemeFourMenu(),
-          selectName: name,
-          selectKey: key,
-        },
-        () => {
-          this.height =
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5]
-          this.scrollListToLocation()
-        },
-      )
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+        let list = await ThemeMenuData.getRangeColorScheme()
+        let datalist = [
+          {
+            title: '颜色方案',
+            data: list,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            containerType: 'list',
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeFourMenu(),
+            selectName: name,
+            selectKey: key,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      }
     }.bind(this)
 
     if (!this.state.showMenuDialog) {
@@ -718,33 +746,42 @@ export default class ToolBar extends React.PureComponent {
     }.bind(this)
 
     let setData = async function() {
-      let list = await ThemeMenuData.getColorGradientType()
-      let datalist = [
-        {
-          title: '颜色方案',
-          data: list,
-        },
-      ]
-      this.setState(
-        {
-          isFullScreen: false,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          containerType: 'list',
-          data: datalist,
-          type: type,
-          buttons: ThemeMenuData.getThemeFourMenu(),
-          selectName: name,
-          selectKey: key,
-        },
-        () => {
-          this.height =
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5]
-          this.scrollListToLocation()
-        },
-      )
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+        let list = await ThemeMenuData.getColorGradientType()
+        let datalist = [
+          {
+            title: '颜色方案',
+            data: list,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            containerType: 'list',
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeFourMenu(),
+            selectName: name,
+            selectKey: key,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      }
     }.bind(this)
 
     if (!this.state.showMenuDialog) {
@@ -2049,45 +2086,55 @@ export default class ToolBar extends React.PureComponent {
     ) {
       //跳转到专题图字段选择列表
       (async function() {
-        let data = await SThemeCartography.getThemeExpressionByDatasetName(
-          item.datasourceName,
-          item.datasetName,
-        )
-        let dataset = data.dataset
-        data.list.forEach(item => {
-          item.info = {
-            infoType: 'fieldType',
-            fieldType: item.fieldType,
-          }
-        })
-        let datalist = [
-          {
-            title: dataset.datasetName,
-            datasetType: dataset.datasetType,
-            data: data.list,
-          },
-        ]
-        this.setState(
-          {
-            themeDatasourceAlias: item.datasourceName,
-            themeDatasetName: item.datasetName,
-            isFullScreen: true,
-            isTouchProgress: false,
-            showMenuDialog: false,
-            containerType: 'list',
-            data: datalist,
-            buttons: [ToolbarBtnType.THEME_CANCEL],
-            type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
-          },
-          () => {
-            this.height =
-              this.props.device.orientation === 'LANDSCAPE'
-                ? ConstToolType.THEME_HEIGHT[3]
-                : ConstToolType.THEME_HEIGHT[5]
-          },
-        )
+        try {
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          let data = await SThemeCartography.getThemeExpressionByDatasetName(
+            item.datasourceName,
+            item.datasetName,
+          )
+          let dataset = data.dataset
+          data.list.forEach(item => {
+            item.info = {
+              infoType: 'fieldType',
+              fieldType: item.fieldType,
+            }
+          })
+          let datalist = [
+            {
+              title: dataset.datasetName,
+              datasetType: dataset.datasetType,
+              data: data.list,
+            },
+          ]
+          this.setState(
+            {
+              themeDatasourceAlias: item.datasourceName,
+              themeDatasetName: item.datasetName,
+              isFullScreen: true,
+              isTouchProgress: false,
+              showMenuDialog: false,
+              containerType: 'list',
+              data: datalist,
+              buttons: [ToolbarBtnType.THEME_CANCEL],
+              type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
+            },
+            () => {
+              this.scrollListToLocation()
+              this.height =
+                this.props.device.orientation === 'LANDSCAPE'
+                  ? ConstToolType.THEME_HEIGHT[3]
+                  : ConstToolType.THEME_HEIGHT[5]
+
+              this.props.setContainerLoading &&
+                this.props.setContainerLoading(false)
+            },
+          )
+        } catch (e) {
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(false)
+        }
       }.bind(this)())
-      this.scrollListToLocation()
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
@@ -2216,6 +2263,8 @@ export default class ToolBar extends React.PureComponent {
       item.action && item.action()
     } else if (this.state.type === ConstToolType.MAP_ADD_LAYER) {
       (async function() {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
         this.path = await FileTools.appendingHomeDirectory(item.path)
         SMap.getUDBName(this.path).then(list => {
           let dataList = [
@@ -2224,16 +2273,28 @@ export default class ToolBar extends React.PureComponent {
               data: list,
             },
           ]
-          this.setState({
-            data: dataList,
-            type: ConstToolType.MAP_ADD_DATASET,
-          })
+          this.setState(
+            {
+              data: dataList,
+              type: ConstToolType.MAP_ADD_DATASET,
+            },
+            () => {
+              this.scrollListToLocation()
+              this.props.setContainerLoading &&
+                this.props.setContainerLoading(false)
+            },
+            () => {
+              this.props.setContainerLoading &&
+                this.props.setContainerLoading(false)
+            },
+          )
           // this.setLastState()
         })
-        this.scrollListToLocation()
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
         this.path = await FileTools.appendingHomeDirectory(item.path)
         SThemeCartography.getUDBName(this.path).then(list => {
           list.forEach(item => {
@@ -2254,16 +2315,29 @@ export default class ToolBar extends React.PureComponent {
               data: list,
             },
           ]
-          this.setState({
-            themeDatasourceAlias: alias,
-            listSelectable: true, //单选框
-            buttons: [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT],
-            data: dataList,
-            type: ConstToolType.MAP_THEME_ADD_DATASET,
-          })
+          this.setState(
+            {
+              themeDatasourceAlias: alias,
+              listSelectable: true, //单选框
+              buttons: [
+                ToolbarBtnType.THEME_CANCEL,
+                ToolbarBtnType.THEME_COMMIT,
+              ],
+              data: dataList,
+              type: ConstToolType.MAP_THEME_ADD_DATASET,
+            },
+            () => {
+              this.scrollListToLocation()
+              this.props.setContainerLoading &&
+                this.props.setContainerLoading(false)
+            },
+            () => {
+              this.props.setContainerLoading &&
+                this.props.setContainerLoading(false)
+            },
+          )
           // this.setLastState()
         })
-        this.scrollListToLocation()
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
@@ -2347,32 +2421,47 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP_THEME_START_OPENDS) {
       //专题制图：开始->新建地图->数据源列表(->数据集列表)
       (async function() {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
         this.path = await FileTools.appendingHomeDirectory(item.path)
         let arr = item.name.split('.')
         let alias = arr[0]
-        SThemeCartography.getUDBName(this.path).then(list => {
-          list.forEach(item => {
-            if (item.geoCoordSysType && item.prjCoordSysType) {
-              item.info = {
-                infoType: 'dataset',
-                geoCoordSysType: item.geoCoordSysType,
-                prjCoordSysType: item.prjCoordSysType,
+        SThemeCartography.getUDBName(this.path).then(
+          list => {
+            list.forEach(item => {
+              if (item.geoCoordSysType && item.prjCoordSysType) {
+                item.info = {
+                  infoType: 'dataset',
+                  geoCoordSysType: item.geoCoordSysType,
+                  prjCoordSysType: item.prjCoordSysType,
+                }
               }
-            }
-          })
-          let dataList = [
-            {
-              title: alias,
-              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-              data: list,
-            },
-          ]
-          this.setState({
-            data: dataList,
-            type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
-          })
-        })
-        this.scrollListToLocation()
+            })
+            let dataList = [
+              {
+                title: alias,
+                image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+                data: list,
+              },
+            ]
+            this.setState(
+              {
+                data: dataList,
+                type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
+              },
+              () => {
+                this.scrollListToLocation()
+
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+            )
+          },
+          () => {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+          },
+        )
       }.bind(this)())
     }
   }

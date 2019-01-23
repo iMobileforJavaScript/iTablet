@@ -184,7 +184,7 @@ export default class MyService extends Component {
       return (
         <TouchableOpacity
           style={{
-            backgroundColor: color.item_separate_white,
+            backgroundColor: color.contentColorGray,
             justifyContent: 'center',
             width: '100%',
             height: 40,
@@ -195,7 +195,7 @@ export default class MyService extends Component {
         >
           <Text
             style={{
-              color: color.font_color_white,
+              color: color.fontColorWhite,
               fontSize: 18,
               fontWeight: 'bold',
               paddingLeft: 15,

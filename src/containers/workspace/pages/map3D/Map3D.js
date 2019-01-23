@@ -35,6 +35,7 @@ export default class Map3D extends React.Component {
 
   constructor(props) {
     super(props)
+    GLOBAL.sceneName = ''
     const params = this.props.navigation.state.params
     this.operationType = params.operationType || constants.MAP_3D
     this.isExample = params.isExample || false
@@ -98,14 +99,6 @@ export default class Map3D extends React.Component {
     }
     try {
       SScene.openScence(this.name).then(() => {
-        SScene.addLayer3D(
-          'http://t0.tianditu.com/img_c/wmts',
-          'l3dBingMaps',
-          'bingmap',
-          'JPG_PNG',
-          96.0,
-          true,
-        )
         this.initListener()
         GLOBAL.openWorkspace = true
         GLOBAL.sceneName = this.name
@@ -114,6 +107,14 @@ export default class Map3D extends React.Component {
     } catch (e) {
       this.container.setLoading(false)
     }
+    await SScene.addLayer3D(
+      'http://t0.tianditu.com/img_c/wmts',
+      'l3dBingMaps',
+      'bingmap',
+      'JPG_PNG',
+      96.0,
+      true,
+    )
   }
 
   _onGetInstance = sceneControl => {
@@ -170,6 +171,7 @@ export default class Map3D extends React.Component {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
     }
+    GLOBAL.sceneName = ''
   }
 
   setLoading = (loading = false, info, extra) => {

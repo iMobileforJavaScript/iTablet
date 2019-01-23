@@ -38,7 +38,7 @@ export default [
 
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
-      if (user.userName) {
+      if (user && user.userName) {
         userPath = ConstPath.UserPath + user.userName + '/'
       }
       let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
@@ -82,35 +82,33 @@ export default [
       right: 0,
       bottom: 0,
     },
-    action: () => {
+    action: async () => {
       GLOBAL.Type = ConstToolType.MAP_3D
-      let name =
-        Platform.OS === 'android' ? 'OlympicGreen_android' : 'OlympicGreen_ios'
-      // let customerPath
-      // let default3DDataPath
-      // if (Platform.OS === 'android') {
-      //   default3DDataPath = 'OlympicGreen_android/OlympicGreen_android.sxwu'
-      // } else {
-      //   default3DDataPath = 'OlympicGreen_ios/OlympicGreen_ios.sxwu'
+      // if (user && user.userName) {
+      //   let path = await FileTools.appendingHomeDirectory(
+      //     ConstPath.UserPath + user.userName,
+      //   )
+      //   await SScene.setCustomerDirectory(path)
       // }
-      // customerPath =
-      //   ConstPath.CustomerPath +
-      //   ConstPath.RelativeFilePath.Scene +
-      //   default3DDataPath
-
-      // let ssPath = await FileTools.appendingHomeDirectory(customerPath)
-      // if (user.userName) {
-      //   const userWSPath =
-      //     ConstPath.UserPath +
-      //     user.userName +
-      //     '/' +
-      //     ConstPath.RelativeFilePath.Scene +
-      //     default3DDataPath
-      //   ssPath = await FileTools.appendingHomeDirectory(userWSPath)
-      // } else {
-      //   ssPath = await FileTools.appendingHomeDirectory(customerPath)
-      // }
-      NavigationService.navigate('Map3D', { name: name })
+      let fileName = ''
+      if (Platform.OS === 'android') {
+        fileName = 'OlympicGreen_android'
+      } else {
+        fileName = 'OlympicGreen_ios'
+      }
+      let homePath = await FileTools.appendingHomeDirectory()
+      let cachePath = homePath + ConstPath.CachePath
+      let fileDirPath = cachePath + fileName
+      let arrFile = await FileTools.getFilterFiles(fileDirPath)
+      if (arrFile.length === 0) {
+        NavigationService.navigate('Map3D', {})
+      } else {
+        let name =
+          Platform.OS === 'android'
+            ? 'OlympicGreen_android'
+            : 'OlympicGreen_ios'
+        NavigationService.navigate('Map3D', { name: name })
+      }
     },
   },
   // {
@@ -150,7 +148,7 @@ export default [
 
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
-      if (user.userName) {
+      if (user && user.userName) {
         userPath = ConstPath.UserPath + user.userName + '/'
       }
       let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
@@ -201,7 +199,7 @@ export default [
 
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
-      if (user.userName) {
+      if (user && user.userName) {
         userPath = ConstPath.UserPath + user.userName + '/'
       }
       let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace

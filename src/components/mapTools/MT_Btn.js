@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   largeImage: {
-    height: scaleSize(70),
-    width: scaleSize(70),
+    height: scaleSize(65),
+    width: scaleSize(65),
     alignSelf: 'center',
     // borderRadius: 5,
   },

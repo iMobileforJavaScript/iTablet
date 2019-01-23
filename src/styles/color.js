@@ -37,6 +37,18 @@ const lightTheme = {
   blackBg: '#353537',
   bgW: '#F0F0F0',
   bgG: '#A0A0A0',
+
+  fontColorWhite: '#F0F0F0',
+  fontColorBlack: '#303030',
+  fontColorGray: '#727272',
+
+  itemColorWhite: '#F0F0F0',
+  itemColorBlack: '#303030',
+  itemColorGray: '#727272',
+
+  contentColorWhite: '#F0F0F0',
+  contentColorBlack: '#303030',
+  contentColorGray: '#727272',
 }
 
 let styles

@@ -22,12 +22,9 @@ export default StyleSheet.create({
   },
   containers: {
     flexDirection: 'column',
-    marginLeft: scaleSize(20),
-    marginRight: scaleSize(20),
     maxHeight: ConstToolType.HEIGHT[3] + BUTTON_HEIGHT,
     minHeight: BUTTON_HEIGHT,
     backgroundColor: color.content_white,
-    borderRadius: scaleSize(20),
   },
   item: {
     flexDirection: 'column',

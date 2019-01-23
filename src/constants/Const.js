@@ -60,5 +60,5 @@ export default {
   ANIMATED_DURATION_2: 400,
 
   // 底部Bottom
-  BOTTOM_HEIGHT: scaleSize(105),
+  BOTTOM_HEIGHT: scaleSize(96),
 }

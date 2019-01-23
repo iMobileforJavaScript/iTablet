@@ -23,7 +23,7 @@ export default class MapController extends React.Component {
     super(props)
     this.deg = 0
     this.state = {
-      left: new Animated.Value(scaleSize(20)),
+      left: new Animated.Value(scaleSize(34)),
       compass: new Animated.Value(0),
     }
   }
@@ -146,7 +146,7 @@ export default class MapController extends React.Component {
           key={'controller_location'}
           textColor={'black'}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapTool/icon_location.png')}
+          image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
           onPress={this.location}
         />
       )
@@ -158,6 +158,7 @@ export default class MapController extends React.Component {
       <Animated.View
         style={[styles.container, this.props.style, { left: this.state.left }]}
       >
+        {this.renderLocation()}
         <View style={[styles.topView, styles.shadow]}>
           {this.renderCompass()}
           <MTBtn
@@ -165,7 +166,7 @@ export default class MapController extends React.Component {
             key={'controller_plus'}
             textColor={'black'}
             size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/icon_plus.png')}
+            image={require('../../../../assets/mapTool/Frenchgrey/icon_plus.png')}
             onPress={this.plus}
             onPressIn={this.map3Dplus}
             onPressOut={this.cloestimer}
@@ -175,13 +176,12 @@ export default class MapController extends React.Component {
             key={'controller_minus'}
             textColor={'black'}
             size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/icon_minus.png')}
+            image={require('../../../../assets/mapTool/Frenchgrey/icon_minus.png')}
             onPress={this.minus}
             onPressIn={this.map3Dminus}
             onPressOut={this.cloestimer}
           />
         </View>
-        {this.renderLocation()}
       </Animated.View>
     )
   }

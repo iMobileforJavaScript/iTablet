@@ -9,7 +9,7 @@ import { View, Text, Dimensions, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
+import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
@@ -17,6 +17,7 @@ import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
   props: {
+    nav: Object,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -52,9 +53,12 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    let mapTabs = this.props.nav.routes[this.props.nav.index]
     if (
       JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
+        JSON.stringify(this.props.currentLayer) ||
+      (mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
+        JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
     ) {
       this.getAttribute()
     }
@@ -107,7 +111,7 @@ export default class LayerAttribute extends React.Component {
 
   getAttribute = () => {
     if (!this.props.currentLayer.path) return
-    this.container.setLoading(true)
+    this.setLoading(true, ConstInfo.LOADING_DATA)
     ;(async function() {
       try {
         this.props.getAttributes(this.props.currentLayer.path)
@@ -115,9 +119,9 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             showTable: true,
           })
-        this.container.setLoading(false)
+        this.setLoading(false)
       } catch (e) {
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }

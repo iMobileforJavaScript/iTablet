@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  AsyncStorage,
+  StatusBar,
+} from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
@@ -11,6 +18,7 @@ import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 // import Orientation from '../../../constants/Orientation'
+import { Dialog } from '../../../components'
 export default class Home extends Component {
   props: {
     nav: Object,
@@ -35,6 +43,16 @@ export default class Home extends Component {
     }
   }
 
+  componentDidMount() {
+    this._initStatusBarVisible()
+  }
+
+  _initStatusBarVisible = async () => {
+    let result = await AsyncStorage.getItem('StatusBarVisible')
+    let statusBarVisible = result === 'true'
+    // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
+    StatusBar.setHidden(statusBarVisible)
+  }
   _onImportWorkspace = async (fileDirPath, item, isExist) => {
     try {
       if (fileDirPath !== undefined) {
@@ -65,9 +83,6 @@ export default class Home extends Component {
         })
         if (arrFilePath.length === 0) {
           await FileTools.copyFile(fileDirPath, toPath)
-          if (isExist) {
-            item.action && item.action(this.props.currentUser)
-          }
           let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
             smwu: 'smwu',
             sxwu: 'sxwu',
@@ -91,6 +106,9 @@ export default class Home extends Component {
             if (result.length === 0) {
               Toast.show('导入失败')
             }
+          }
+          if (isExist) {
+            item.action && item.action(this.props.currentUser)
           }
         } else if (isExist === true) {
           item.action && item.action(this.props.currentUser)
@@ -177,6 +195,36 @@ export default class Home extends Component {
     }
   }
 
+  showDialog = value => {
+    this.dialog.setDialogVisible(value)
+  }
+
+  getMoudleItem = (confirm, cancel) => {
+    this.dialogConfirm = confirm
+    this.dialogCancel = cancel
+  }
+
+  confirm = () => {
+    let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
+    confirm && confirm()
+  }
+
+  cancel = () => {
+    let cancel = this.dialogCancel ? this.dialogCancel : () => {}
+    cancel && cancel()
+  }
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        type={'modal'}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+        title={'是否下载在线地图数据'}
+      />
+    )
+  }
+
   _renderModal = () => {
     let isLogin = this.props.currentUser.userName !== undefined
     return (
@@ -251,14 +299,18 @@ export default class Home extends Component {
           }}
         >
           <ModuleList
+            ref={ref => (this.modulelist = ref)}
             importWorkspace={this._onImportWorkspace}
             setDownInformation={this.props.setDownInformation}
             currentUser={this.props.currentUser}
             styles={styles.modulelist}
             device={this.props.device}
             downList={this.props.downList}
+            showDialog={this.showDialog}
+            getMoudleItem={this.getMoudleItem}
           />
           {this._renderModal()}
+          {this.renderDialog()}
         </View>
       </Container>
     )

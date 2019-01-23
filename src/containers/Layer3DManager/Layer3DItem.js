@@ -19,7 +19,7 @@ export default class Layer3DItem extends Component {
   changeSelect = async () => {
     let newState = this.state
     newState.selectable = !this.state.selectable
-    await SScene.setVisible(this.state.name, newState.selectable)
+    await SScene.setSelectable(this.state.name, newState.selectable)
     this.setState(newState)
     // console.log(this.state.visible,this.state.selectable)
   }
