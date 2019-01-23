@@ -230,12 +230,24 @@ function showCollection(type) {
   let { data, buttons } = getCollectionData(type, _params)
   if (!_params.setToolbarVisible) return
   // _params.setLastState()
+  let column = 4
+  let rows = Math.ceil(data.length / column) - 1 + 1
+  let height
+  switch (rows) {
+    case 2:
+      height = ConstToolType.HEIGHT[2]
+      break
+    case 1:
+    default:
+      height = ConstToolType.HEIGHT[0]
+      break
+  }
   _params.setToolbarVisible(true, type, {
     isFullScreen: false,
-    height: ConstToolType.HEIGHT[0],
+    height,
     data: data,
     buttons: buttons,
-    column: data.length,
+    column,
     cb: () => {
       _params.setLastState()
       createCollector(type)

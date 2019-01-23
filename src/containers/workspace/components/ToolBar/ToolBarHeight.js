@@ -1,4 +1,5 @@
 import { ConstToolType } from '../../../../constants'
+import { SMCollectorType } from 'imobile_for_reactnative'
 
 function getToorbarHeight(orientation, type) {
   let height, column
@@ -245,6 +246,49 @@ function getToorbarHeight(orientation, type) {
       } else {
         height = ConstToolType.HEIGHT[1]
       }
+      break
+    case ConstToolType.MAP_COLLECTION_REGION:
+    case ConstToolType.MAP_COLLECTION_LINE:
+    case ConstToolType.MAP_COLLECTION_POINT:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[0]
+      } else {
+        height = ConstToolType.HEIGHT[0]
+      }
+      column = 4
+      break
+    case SMCollectorType.REGION_GPS_POINT:
+    case SMCollectorType.LINE_GPS_POINT:
+    case SMCollectorType.POINT_GPS:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[2]
+        column = 4
+      } else {
+        height = ConstToolType.HEIGHT[0]
+        column = 5
+      }
+      break
+    case SMCollectorType.LINE_GPS_PATH:
+    case SMCollectorType.REGION_GPS_PATH:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[2]
+        column = 4
+      } else {
+        height = ConstToolType.HEIGHT[0]
+        column = 6
+      }
+      break
+    case SMCollectorType.LINE_HAND_PATH:
+    case SMCollectorType.LINE_HAND_POINT:
+    case SMCollectorType.REGION_HAND_POINT:
+    case SMCollectorType.REGION_HAND_PATH:
+    case SMCollectorType.POINT_HAND:
+      if (orientation === 'PORTRAIT') {
+        height = ConstToolType.HEIGHT[0]
+      } else {
+        height = ConstToolType.HEIGHT[0]
+      }
+      column = 4
       break
     default:
       height = 0

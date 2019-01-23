@@ -189,7 +189,8 @@ export default class ToolBar extends React.PureComponent {
       if (!(this.isShow && this.isBoxShow) || this.state.isTouchProgress) {
         return
       }
-      this.state.type &&
+      // 点采集，GPS打点类型为0
+      (this.state.type || this.state.type === 0) &&
         this.changeHeight(this.props.device.orientation, this.state.type)
     }
   }
@@ -1707,22 +1708,24 @@ export default class ToolBar extends React.PureComponent {
     SCollector.stopCollect()
     let toolbarType
     switch (this.lastState.type) {
+      case SMCollectorType.REGION_GPS_POINT:
+      case SMCollectorType.REGION_GPS_PATH:
+      case SMCollectorType.REGION_HAND_PATH:
       case SMCollectorType.REGION_HAND_POINT:
         toolbarType = ConstToolType.MAP_COLLECTION_REGION
         break
+      case SMCollectorType.LINE_GPS_POINT:
+      case SMCollectorType.LINE_GPS_PATH:
       case SMCollectorType.LINE_HAND_POINT:
-        toolbarType = ConstToolType.MAP_COLLECTION_LINE
-        break
-      case SMCollectorType.POINT_HAND:
-        toolbarType = ConstToolType.MAP_COLLECTION_POINT
-        break
-      case SMCollectorType.REGION_HAND_PATH:
-        toolbarType = ConstToolType.MAP_COLLECTION_REGION
-        break
       case SMCollectorType.LINE_HAND_PATH:
         toolbarType = ConstToolType.MAP_COLLECTION_LINE
         break
+      case SMCollectorType.POINT_GPS:
+      case SMCollectorType.POINT_HAND:
+        toolbarType = ConstToolType.MAP_COLLECTION_POINT
+        break
     }
+
     this.setVisible(true, toolbarType, {
       isFullScreen: false,
       height: ConstToolType.HEIGHT[0],
