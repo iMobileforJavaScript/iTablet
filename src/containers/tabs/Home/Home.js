@@ -50,65 +50,33 @@ export default class Home extends Component {
     // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
     StatusBar.setHidden(statusBarVisible)
   }
-  _onImportWorkspace = async (fileDirPath, item, isExist) => {
+  _onImportWorkspace = async (fileDirPath, toPath) => {
     try {
       if (fileDirPath !== undefined) {
-        let currentUserName = this.props.currentUser.userName
-        let homePath = await FileTools.appendingHomeDirectory()
-        let toPath
-        let lastIndexOf = fileDirPath.lastIndexOf('/')
-        let fileName = fileDirPath.substring(lastIndexOf + 1)
-        if (currentUserName === undefined) {
-          currentUserName = ''
-          toPath =
-            homePath +
-            ConstPath.CustomerPath +
-            ConstPath.RelativePath.ExternalData +
-            fileName
-        } else {
-          toPath =
-            homePath +
-            ConstPath.UserPath +
-            currentUserName +
-            '/' +
-            ConstPath.RelativePath.ExternalData +
-            fileName
-        }
-        let arrFilePath = await FileTools.getFilterFiles(toPath, {
+        await FileTools.copyFile(fileDirPath, toPath)
+        let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
           smwu: 'smwu',
           sxwu: 'sxwu',
         })
-        if (arrFilePath.length === 0) {
-          await FileTools.copyFile(fileDirPath, toPath)
-          let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
-            smwu: 'smwu',
-            sxwu: 'sxwu',
+        let filePath = arrFilePath[0].filePath
+        let is3D = await SScene.is3DWorkspace({ server: filePath })
+        if (is3D === true) {
+          let result = await this.props.importSceneWorkspace({
+            server: filePath,
           })
-          let filePath = arrFilePath[0].filePath
-          let is3D = await SScene.is3DWorkspace({ server: filePath })
-          if (is3D === true) {
-            let result = await this.props.importSceneWorkspace({
-              server: filePath,
-            })
-            if (result === true) {
-              // Toast.show('导入3D成功')
-            } else {
-              Toast.show('导入3D失败')
-            }
+          if (result === true) {
+            // Toast.show('导入3D成功')
           } else {
-            let result = await SMap.importWorkspaceInfo({
-              server: filePath,
-              type: 9,
-            })
-            if (result.length === 0) {
-              Toast.show('导入失败')
-            }
+            Toast.show('导入3D失败')
           }
-          if (isExist) {
-            item.action && item.action(this.props.currentUser)
+        } else {
+          let result = await SMap.importWorkspaceInfo({
+            server: filePath,
+            type: 9,
+          })
+          if (result.length === 0) {
+            Toast.show('导入失败')
           }
-        } else if (isExist === true) {
-          item.action && item.action(this.props.currentUser)
         }
       }
     } catch (e) {
