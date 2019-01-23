@@ -1,8 +1,10 @@
 const AppPath = '/iTablet/'
 const Data = 'Data/'
+const DefaultData = 'DefaultData/'
 const Collection = 'Collection'
 const MapEdit = 'MapEdit'
 const MapTheme = 'Map/MapTheme'
+const Workspace = 'Workspace.sxwu' // 工作空间
 
 const Module = {
   Collection,
@@ -28,7 +30,11 @@ const RelativePath = {
 }
 
 const RelativeFilePath = {
-  Workspace: Data + 'Workspace.smwu', // 工作空间
+  WorkspaceFile: Workspace,
+  // Workspace: Data + 'Workspace.smwu', // 工作空间
+  DefaultData: DefaultData, // 默认数据文件夹目录
+  DefaultWorkspaceDir: DefaultData + 'Workspace/', // 工作空间默认数据文件夹目录
+  Workspace: DefaultData + 'Workspace/Workspace.sxwu', // 工作空间
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
   Map: Data + 'Map/',
