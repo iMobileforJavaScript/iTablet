@@ -52,4 +52,5 @@ export default {
   ADD_FAILED: '添加成功',
 
   READING_DATA: '读取数据中',
+  LOADING_DATA: '数据加载中',
 }

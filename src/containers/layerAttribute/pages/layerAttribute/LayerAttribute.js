@@ -9,7 +9,7 @@ import { View, Text, Dimensions, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
+import { ConstInfo } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
@@ -111,7 +111,7 @@ export default class LayerAttribute extends React.Component {
 
   getAttribute = () => {
     if (!this.props.currentLayer.path) return
-    this.container.setLoading(true)
+    this.setLoading(true, ConstInfo.LOADING_DATA)
     ;(async function() {
       try {
         this.props.getAttributes(this.props.currentLayer.path)
@@ -119,9 +119,9 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             showTable: true,
           })
-        this.container.setLoading(false)
+        this.setLoading(false)
       } catch (e) {
-        this.container.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
   }
