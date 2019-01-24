@@ -15,10 +15,10 @@ const layersetting = [
   //   title: '图层属性',
   //   data: [],
   // },
-  // {
-  //   title: '重命名',
-  //   data: [],
-  // },
+  {
+    title: '重命名',
+    data: [],
+  },
   // {
   //   title: '复制',
   //   data: [],
@@ -55,10 +55,6 @@ const layerThemeSetting = [
   //   data: [],
   // },
   // {
-  //   title: '重命名',
-  //   data: [],
-  // },
-  // {
   //   title: '复制',
   //   data: [],
   // },
@@ -68,6 +64,10 @@ const layerThemeSetting = [
   // },
   {
     title: '新建专题图',
+    data: [],
+  },
+  {
+    title: '重命名',
     data: [],
   },
   {

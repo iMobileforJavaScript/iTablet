@@ -141,4 +141,14 @@ export default {
     scaleSize(700),
     scaleSize(300),
   ],
+  TOOLBAR_HEIGHT: [
+    scaleSize(250),
+    scaleSize(330),
+    scaleSize(450),
+    scaleSize(550),
+    scaleSize(650),
+    scaleSize(750),
+    scaleSize(850),
+    scaleSize(950),
+  ],
 }
