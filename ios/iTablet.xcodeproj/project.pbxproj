@@ -40,6 +40,9 @@
 		0A0A204D212FA22300BEBC1C /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2033212FA22300BEBC1C /* 选中.png */; };
 		0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0D938621E74B0B0041B997 /* libSplashScreen.a */; };
 		0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A11D99D21F885A400AFE6D6 /* libART.a */; };
+		0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */; };
+		0A11D9E721F9641700AFE6D6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E621F9641700AFE6D6 /* icon.png */; };
+		0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E821F9641D00AFE6D6 /* logo.png */; };
 		0A15464A21D36FB800347720 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15464921D36FB800347720 /* SuperMap.framework */; };
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
@@ -464,6 +467,9 @@
 		0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景尾加一个.png"; sourceTree = "<group>"; };
 		0A0A2033212FA22300BEBC1C /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
 		0A11D99721F885A400AFE6D6 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
+		0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		0A11D9E621F9641700AFE6D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
+		0A11D9E821F9641D00AFE6D6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0A15464921D36FB800347720 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
@@ -725,6 +731,8 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
+				0A11D9E621F9641700AFE6D6 /* icon.png */,
+				0A11D9E821F9641D00AFE6D6 /* logo.png */,
 				0A177FE821F7092D00EA39D6 /* Workspace.zip */,
 				0A177FBC21F0A8B900EA39D6 /* resources.bundle */,
 			);
@@ -821,6 +829,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				13B07FB11A68108700A75B9A /* LaunchScreen.xib */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */,
 			);
 			name = iTablet;
 			sourceTree = "<group>";
@@ -1036,7 +1045,7 @@
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = XNCQ9DLG8J;
+						DevelopmentTeam = URZW253WPZ;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
@@ -1453,12 +1462,14 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				0A0A2048212FA22300BEBC1C /* 热点图－选中.png in Resources */,
 				0A0A2049212FA22300BEBC1C /* 聚合图－当前.png in Resources */,
+				0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */,
 				0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */,
 				0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */,
 				0A0A204D212FA22300BEBC1C /* 选中.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */,
 				0A0A203C212FA22300BEBC1C /* 图表－选中.png in Resources */,
+				0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */,
 				D877B55B21338D850044AE61 /* Trial_License.slm in Resources */,
 				0A0A2040212FA22300BEBC1C /* 实时数据－按下.png in Resources */,
 				0A0A2044212FA22300BEBC1C /* 时空数据－按下.png in Resources */,
@@ -1470,6 +1481,7 @@
 				0A0A2038212FA22300BEBC1C /* 停止－按下.png in Resources */,
 				0A0A2037212FA22300BEBC1C /* 停止－当前.png in Resources */,
 				0A0A203F212FA22300BEBC1C /* 实时数据－当前.png in Resources */,
+				0A11D9E721F9641700AFE6D6 /* icon.png in Resources */,
 				0A0A204A212FA22300BEBC1C /* 聚合图－选中.png in Resources */,
 				0A0A2042212FA22300BEBC1C /* 密度图－选中.png in Resources */,
 				0A0A204B212FA22300BEBC1C /* 背景头加一个.png in Resources */,
@@ -1574,7 +1586,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = XNCQ9DLG8J;
+				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
@@ -1609,7 +1621,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.supermap.iTablet-ii";
+				PRODUCT_BUNDLE_IDENTIFIER = com.supermap.iTablet;
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1627,7 +1639,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = XNCQ9DLG8J;
+				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
@@ -1662,7 +1674,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.supermap.iTablet-ii";
+				PRODUCT_BUNDLE_IDENTIFIER = com.supermap.iTablet;
 				PRODUCT_NAME = iTablet;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";

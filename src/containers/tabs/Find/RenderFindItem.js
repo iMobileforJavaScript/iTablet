@@ -151,7 +151,7 @@ export default class RenderFindItem extends Component {
       this.props.data.size / 1024 / 1024 > 0.1
         ? (this.props.data.size / 1024 / 1024).toFixed(2) + 'MB'
         : (this.props.data.size / 1024).toFixed(2) + 'K'
-    let fontColor = color.fontColorBlack
+    let fontColor = color.fontColorGray
     let index = this.props.data.fileName.lastIndexOf('.')
     let titleName =
       index === -1

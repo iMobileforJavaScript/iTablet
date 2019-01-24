@@ -26,7 +26,7 @@ export default StyleSheet.create({
     // width: scaleSize(18),
     // height: scaleSize(18),
     position: 'absolute',
-    right: scaleSize(8),
+    right: scaleSize(4),
     top: scaleSize(4),
   },
 })
