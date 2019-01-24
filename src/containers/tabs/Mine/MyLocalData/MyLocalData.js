@@ -122,15 +122,17 @@ export default class MyLocalData extends Component {
         this.setState({ sectionData: userSectionData })
 
         let customerSectionData = await this._constructCustomerSectionData()
-        let newSectionData = userSectionData.concat(customerSectionData)
+        newSectionData = userSectionData.concat(customerSectionData)
         this.setState({ sectionData: newSectionData })
       }
 
       let externalSectionData = []
       if (result !== null) {
         externalSectionData = JSON.parse(result)
+        // console.warn('externalSectionData:'+JSON.stringify(externalSectionData))
       } else {
         externalSectionData = await this._constructExternalSectionData()
+        // console.warn('第一次 externalSectionData:'+JSON.stringify(externalSectionData))
         AsyncStorage.setItem(
           'ExternalSectionData',
           JSON.stringify(externalSectionData),
