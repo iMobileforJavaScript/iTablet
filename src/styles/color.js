@@ -47,8 +47,10 @@ const lightTheme = {
   itemColorGray: '#727272',
 
   contentColorWhite: '#F0F0F0',
+  contentColorWhite2: 'rgba(240,240,240, 0.85)',
   contentColorBlack: '#303030',
   contentColorGray: '#727272',
+  rowSeparator: '#979797',
 }
 
 let styles
