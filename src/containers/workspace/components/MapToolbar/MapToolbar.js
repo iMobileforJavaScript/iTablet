@@ -80,8 +80,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'MapSetting',
             title: '设置',
-            image: require('../../../../assets/mapToolbar/icon_setting.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('MapSetting')
@@ -130,8 +130,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'Setting',
             title: '设置',
-            image: require('../../../../assets/mapToolbar/icon_setting.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
             btnClick: () => {
               // this._map3Dchange()
               // let file=["/storage/emulated/0/iTablet/data/local/Changchun"]
@@ -183,8 +183,8 @@ export default class MapToolbar extends React.Component {
           {
             key: 'MapSetting',
             title: '设置',
-            image: require('../../../../assets/mapToolbar/icon_setting.png'),
-            selectedImage: require('../../../../assets/mapToolbar/icon_setting_selected.png'),
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
             btnClick: () => {
               this.props.navigation &&
                 this.props.navigation.navigate('MapSetting', {

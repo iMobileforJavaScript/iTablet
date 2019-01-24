@@ -24,6 +24,7 @@ export default class Map3D extends React.Component {
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
+    online: Object,
     setEditLayer: () => {},
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
@@ -51,6 +52,7 @@ export default class Map3D extends React.Component {
   }
 
   componentDidMount() {
+    // console.log(this.props.online)
     GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
@@ -189,6 +191,7 @@ export default class Map3D extends React.Component {
         type={this.type}
         showFullMap={this.showFullMap}
         device={this.props.device}
+        online={this.props.online}
       />
     )
   }
