@@ -53,9 +53,12 @@ export default class Home extends Component {
     // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
     StatusBar.setHidden(statusBarVisible)
   }
-  _onImportWorkspace = async (fileDirPath, toPath) => {
+  _onImportWorkspace = async (fileDirPath, toPath, isFisrtImportWorkspace) => {
     try {
       if (fileDirPath !== undefined) {
+        if (isFisrtImportWorkspace === true) {
+          this.container && this.container.setLoading(true, '导入数据中...')
+        }
         await FileTools.copyFile(fileDirPath, toPath)
         let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
           smwu: 'smwu',
@@ -84,6 +87,10 @@ export default class Home extends Component {
       }
     } catch (e) {
       Toast.show('导入失败')
+    } finally {
+      if (isFisrtImportWorkspace === true) {
+        this.container && this.container.setLoading(false)
+      }
     }
   }
   headRender() {
