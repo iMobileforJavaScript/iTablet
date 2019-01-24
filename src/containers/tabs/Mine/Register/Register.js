@@ -240,7 +240,7 @@ export default class Register extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: 'iTablet注册',
+          title: '注册',
           navigation: this.props.navigation,
         }}
       >

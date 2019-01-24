@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   separateViewStyle: {
     width: '100%',
-    height: 4,
+    height: 2,
   },
 })
 export default styles

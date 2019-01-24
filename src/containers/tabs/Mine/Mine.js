@@ -299,7 +299,7 @@ export default class Mine extends Component {
         <Container
           ref={ref => (this.container = ref)}
           headerProps={{
-            title: '我的iTablet',
+            title: '我的',
             withoutBack: true,
             navigation: this.props.navigation,
           }}
