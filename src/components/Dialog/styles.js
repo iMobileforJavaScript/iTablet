@@ -19,10 +19,16 @@ export default StyleSheet.create({
     zIndex: zIndexLevel.FOUR,
   },
   dialogStyle: {
-    width: scaleSize(400),
-    borderRadius: scaleSize(16),
+    width: scaleSize(350),
+    borderRadius: scaleSize(4),
     backgroundColor: color.content_white,
+    // backgroundColor: 'transparent',
     paddingVertical: scaleSize(10),
+  },
+  opacityView: {
+    position: 'absolute',
+    width: scaleSize(350),
+    borderRadius: scaleSize(4),
   },
   title: {
     fontSize: size.fontSize.fontSizeLg,

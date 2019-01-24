@@ -116,6 +116,7 @@ export default class Map3D extends React.Component {
       'JPG_PNG',
       96.0,
       true,
+      '',
     )
   }
 
@@ -286,7 +287,7 @@ export default class Map3D extends React.Component {
         cancelAction={this.cancel}
       >
         <View style={styles.item}>
-          <Text style={styles.title}>文本内容</Text>
+          {/* <Text style={styles.title}>文本内容</Text> */}
           <TextInput
             underlineColorAndroid={'transparent'}
             accessible={true}

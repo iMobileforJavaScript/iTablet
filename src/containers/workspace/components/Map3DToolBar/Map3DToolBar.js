@@ -160,6 +160,7 @@ export default class Map3DToolBar extends React.Component {
         'JPG_PNG',
         96.0,
         true,
+        '',
       )
       GLOBAL.openWorkspace = true
       GLOBAL.sceneName = item.name

@@ -18,6 +18,8 @@ export default class Map3DToolBar extends Component {
     navigation: Object,
     type: string,
     data: Array,
+    refreshLayer3dList: () => {},
+    layer3dList: Array,
   }
   constructor(props) {
     super(props)
@@ -35,6 +37,7 @@ export default class Map3DToolBar extends Component {
   //   }
 
   componentDidMount() {
+    // console.log(this.props.refreshLayer3dList, this.props.layer3dList)
     this.refreshData()
   }
 

@@ -28,18 +28,19 @@ class RenderModuleItem extends Component {
 
   constructor(props) {
     super(props)
+    this.downloading = false
     this.state = {
       isShowProgressView: false,
       progress: '',
       disabled: false,
+      dialogCheck: false,
     }
   }
   itemAction = async item => {
     try {
-      this.setState({
-        disabled: true,
-      })
-
+      // this.setState({
+      //   disabled: true,
+      // })
       let fileName
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
@@ -82,7 +83,14 @@ class RenderModuleItem extends Component {
           copyFilePath: toPath,
           itemData: item,
         }
-        this._showAlert(downloadData)
+        if (this.state.dialogCheck) {
+          item.action && item.action(currentUserName)
+        } else if (this.downloading) {
+          item.action && item.action(currentUserName)
+        } else {
+          item.action && item.action(currentUserName)
+          this._showAlert(downloadData, currentUserName)
+        }
         // this._downloadModuleData()
       } else {
         let arrFilePath = await FileTools.getFilterFiles(toPath, {
@@ -111,6 +119,7 @@ class RenderModuleItem extends Component {
   }
 
   _downloadModuleData = async downloadData => {
+    this.downloading = true
     let item = downloadData.itemData
     let moduleKey = item.key
     let dataUrl
@@ -133,7 +142,7 @@ class RenderModuleItem extends Component {
       this.setState({
         progress: '0%',
         isShowProgressView: true,
-        disabled: true,
+        // disabled: true,
       })
       let fileCachePath = fileDirPath + '.zip'
       FileTools.deleteFile(fileCachePath)
@@ -148,13 +157,14 @@ class RenderModuleItem extends Component {
             this.setState({
               progress: '导入中...',
               isShowProgressView: true,
-              disabled: true,
+              // disabled: true,
             })
+            this.downloading = false
           } else if (value !== this.state.progress) {
             this.setState({
               progress: value,
               isShowProgressView: true,
-              disabled: true,
+              // disabled: true,
             })
           }
         },
@@ -177,6 +187,7 @@ class RenderModuleItem extends Component {
           Toast.show('下载失败')
           FileTools.deleteFile(fileCachePath)
           this.setState({ isShowProgressView: false, disabled: false })
+          this.downloading = false
         })
     } catch (e) {
       Toast.show('网络错误，下载失败')
@@ -218,28 +229,39 @@ class RenderModuleItem extends Component {
     )
   }
 
-  sureDown = downloadData => {
+  sureDown = (downloadData, dialogCheck) => {
+    // let item = downloadData.itemData
     this._downloadModuleData(downloadData)
     this.setState({
       disabled: false,
+      dialogCheck: dialogCheck,
     })
-
+    // item.action && item.action(currentUserName)
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  cancelDown = downloadData => {
-    let item = downloadData.itemData
+  cancelDown = dialogCheck => {
+    // let item = downloadData.itemData
     this.setState({
       disabled: false,
+      dialogCheck: dialogCheck,
     })
-    item.action && item.action(this.props.currentUser)
+    // item.action && item.action(currentUserName)
     this.props.showDialog && this.props.showDialog(false)
   }
 
-  _showAlert = downloadData => {
-    this.props.showDialog && this.props.showDialog(true)
+  _showAlert = (downloadData, currentUserName) => {
+    setTimeout(() => {
+      this.props.showDialog && this.props.showDialog(true)
+    }, 1500)
     this.props.getMoudleItem &&
-      this.props.getMoudleItem(this.sureDown, this.cancelDown, downloadData)
+      this.props.getMoudleItem(
+        this.sureDown,
+        this.cancelDown,
+        downloadData,
+        currentUserName,
+        this.state.dialogCheck,
+      )
   }
   render() {
     let item = this.props.item
