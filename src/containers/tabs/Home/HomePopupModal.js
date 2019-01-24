@@ -125,7 +125,8 @@ export default class HomePopupModal extends PureComponent {
   }
 
   render() {
-    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    let animationType = 'fade'
     return (
       <Modal
         animationType={animationType}

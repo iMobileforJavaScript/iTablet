@@ -39,13 +39,17 @@ export default class PopupModal extends PureComponent {
     // console.warn("PopupModal_componentWillUnmount")
   }
   _changeDownloadingState = progress => {
-    this.bIsCallBackProps = false
-    let isClick = false
-    if (progress === '下载完成' || progress === '下载失败') {
-      isClick = true
-    }
-    if (this.state.progress !== progress) {
-      this.setState({ progress: progress, isClick: isClick })
+    try {
+      this.bIsCallBackProps = false
+      let isClick = false
+      if (progress === '下载完成' || progress === '下载失败') {
+        isClick = true
+      }
+      if (this.state.progress !== progress) {
+        this.setState({ progress: progress, isClick: isClick })
+      }
+    } catch (e) {
+      this.setState({ progress: '下载失败', isClick: true })
     }
   }
 
@@ -228,7 +232,8 @@ export default class PopupModal extends PureComponent {
   }
 
   render() {
-    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    let animationType = 'fade'
     let visible = this.props.modalVisible
     return (
       <Modal

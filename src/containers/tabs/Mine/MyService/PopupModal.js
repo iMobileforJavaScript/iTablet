@@ -127,7 +127,8 @@ export default class PopupModal extends PureComponent {
   }
 
   render() {
-    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    // let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
+    let animationType = 'fade'
     let visible = this.props.modalVisible
     return (
       <Modal

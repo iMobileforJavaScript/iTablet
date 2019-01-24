@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import Toast from '../../../../utils/Toast'
+
 export default class AboutITablet extends Component {
   props: {
     navigation: Object,
@@ -17,6 +18,7 @@ export default class AboutITablet extends Component {
     super(props)
     this.state = {
       progressWidth: Dimensions.get('window').width * 0.4,
+      isLoadWebView: false,
     }
     if (Platform.OS === 'android') {
       UIManager.setLayoutAnimationEnabledExperimental &&
@@ -37,6 +39,11 @@ export default class AboutITablet extends Component {
       </View>
     )
   }
+
+  componentDidMount() {
+    this.setState({ isLoadWebView: true })
+  }
+
   _onLoadStart = () => {
     LayoutAnimation.configureNext({
       duration: 150,
@@ -81,6 +88,10 @@ export default class AboutITablet extends Component {
   }
 
   render() {
+    let source =
+      Platform.OS === 'ios'
+        ? require('../../../../assets/LegalStatement.html')
+        : { uri: `file:///android_asset/html/LegalStatement.html` }
     return (
       <Container
         headerProps={{
@@ -88,34 +99,39 @@ export default class AboutITablet extends Component {
           navigation: this.props.navigation,
         }}
       >
-        <WebView
-          style={{ flex: 1, paddingTop: 0 }}
-          // source={{uri:'https://sso.supermap.com/agreement.html?service=http://www.supermapol.com'}}
-          source={require('./LegalStatement.html')}
-          automaticallyAdjustContentInsets={true}
-          scalesPageToFit={true}
-          startInLoadingState={true}
-          renderLoading={this._renderLoading}
-          /**ios*/
-          contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
-          /**android*/
-          javaScriptEnabled={true}
-          domStorageEnabled={true}
-          mixedContentMode={'always'}
-          thirdPartyCookiesEnabled={true}
-          allowFileAccess={true}
-          allowUniversalAccessFromFileURLs={true}
-          onError={() => {
-            Toast.show('加载失败')
-          }}
-          onLoadStart={this._onLoadStart}
-          onLoadEnd={() => {
-            // this.setState({isLoadingEnd:true,headerType:''})
-            if (this.objProgressWidth !== undefined) {
-              clearInterval(this.objProgressWidth)
-            }
-          }}
-        />
+        {this.state.isLoadWebView ? (
+          <WebView
+            style={{ flex: 1, paddingTop: 0 }}
+            source={source}
+            /** 保证release版本时，可加载到html*/
+            originWhitelist={['*']}
+            automaticallyAdjustContentInsets={true}
+            scalesPageToFit={true}
+            startInLoadingState={true}
+            renderLoading={this._renderLoading}
+            /**ios*/
+            contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
+            /**android*/
+            javaScriptEnabled={true}
+            domStorageEnabled={true}
+            mixedContentMode={'always'}
+            thirdPartyCookiesEnabled={true}
+            allowFileAccess={true}
+            allowUniversalAccessFromFileURLs={true}
+            onError={() => {
+              Toast.show('加载失败')
+            }}
+            onLoadStart={this._onLoadStart}
+            onLoadEnd={() => {
+              // this.setState({isLoadingEnd:true,headerType:''})
+              if (this.objProgressWidth !== undefined) {
+                clearInterval(this.objProgressWidth)
+              }
+            }}
+          />
+        ) : (
+          <View style={{ flex: 1, paddingTop: 0 }} />
+        )}
       </Container>
     )
   }
