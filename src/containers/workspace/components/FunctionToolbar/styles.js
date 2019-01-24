@@ -22,4 +22,11 @@ export default StyleSheet.create({
     paddingHorizontal: scaleSize(5),
     paddingBottom: scaleSize(10),
   },
+  progress: {
+    // width: scaleSize(18),
+    // height: scaleSize(18),
+    position: 'absolute',
+    right: scaleSize(8),
+    top: scaleSize(4),
+  },
 })

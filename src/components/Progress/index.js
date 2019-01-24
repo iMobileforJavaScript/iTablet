@@ -1,3 +1,4 @@
 import Progress from './Progress'
+import PieProgress from './PieProgress'
 
-export default Progress
+export { Progress, PieProgress }

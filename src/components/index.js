@@ -32,7 +32,7 @@ import {
   ColorBtn,
 } from './mapTools'
 import LayerItem from './LayerItem'
-import Progress from './Progress'
+import { Progress, PieProgress } from './Progress'
 import TableList from './TableList'
 import TreeList from './TreeList'
 import SaveDialog from './SaveDialog'
@@ -78,6 +78,7 @@ export {
   DataSetListSection,
   PanAudioButton,
   Progress,
+  PieProgress,
   TableList,
   TreeList,
   SaveDialog,

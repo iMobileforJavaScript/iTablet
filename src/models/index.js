@@ -8,6 +8,7 @@ import collection from './collection'
 import template from './template'
 import device from './device'
 import down from './down'
+import online from './online'
 export {
   nav,
   layers,
@@ -19,4 +20,5 @@ export {
   template,
   device,
   down,
+  online,
 }
