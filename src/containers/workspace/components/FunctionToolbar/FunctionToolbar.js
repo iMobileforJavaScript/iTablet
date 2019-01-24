@@ -215,7 +215,7 @@ export default class FunctionToolbar extends React.Component {
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[0],
+            : ConstToolType.HEIGHT[2],
         column: 4,
       })
     }
@@ -510,7 +510,7 @@ export default class FunctionToolbar extends React.Component {
               },
             )
             customerUDBs.forEach(item => {
-              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
               item.info = {
                 infoType: 'mtime',
                 lastModifiedDate: item.mtime,
@@ -529,7 +529,7 @@ export default class FunctionToolbar extends React.Component {
                 type: 'file',
               })
               userUDBs.forEach(item => {
-                item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+                item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
                 item.info = {
                   infoType: 'mtime',
                   lastModifiedDate: item.mtime,
@@ -586,7 +586,7 @@ export default class FunctionToolbar extends React.Component {
       type: 'file',
     })
     customerUDBs.forEach(item => {
-      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
@@ -605,7 +605,7 @@ export default class FunctionToolbar extends React.Component {
         type: 'file',
       })
       userUDBs.forEach(item => {
-        item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+        item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,

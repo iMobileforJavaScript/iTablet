@@ -45,8 +45,8 @@ const MapTabs = TabNavigator(
         // height: Platform.OS === 'android' ? 50 : 49,
         // height: scaleSize(96),
         height: 0,
-        borderTopColor: color.border,
-        borderTopWidth: 1,
+        // borderTopColor: color.border,
+        // borderTopWidth: 1,
       },
       tabStyle: {
         flexDirection: 'column',
@@ -92,8 +92,8 @@ const Map3DTabs = TabNavigator(
         // height: Platform.OS === 'android' ? 50 : 49,
         // height: scaleSize(96),
         height: 0,
-        borderTopColor: color.border,
-        borderTopWidth: 1,
+        // borderTopColor: color.border,
+        // borderTopWidth: 1,
       },
       tabStyle: {
         flexDirection: 'column',

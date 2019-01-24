@@ -351,7 +351,7 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
-      item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+      item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
@@ -374,7 +374,7 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
-        item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
@@ -633,7 +633,7 @@ function showHistory() {
     latestMap = _params.map.latestMap[userName][GLOBAL.Type]
   }
   latestMap.forEach(item => {
-    item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+    item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
   })
   let data = [
     {

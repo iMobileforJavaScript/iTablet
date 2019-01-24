@@ -187,7 +187,7 @@ export default class Map3DToolBar extends React.Component {
           style={styles.sceneItem}
         >
           <Image
-            source={require('../../../../assets/mapToolbar/list_type_map.png')}
+            source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
             style={styles.sceneItemImg}
           />
           <View style={styles.sceneItemcontent}>

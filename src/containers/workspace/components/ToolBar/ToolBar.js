@@ -2770,7 +2770,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
-        underlayColor={color.gray}
+        underlayColor={color.content_white}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
@@ -3077,7 +3077,12 @@ export default class ToolBar extends React.PureComponent {
         box = this.renderTable()
     }
     return (
-      <Animated.View style={{ height: this.state.boxHeight }}>
+      <Animated.View
+        style={{
+          height: this.state.boxHeight,
+          backgroundColor: color.content_white,
+        }}
+      >
         {box}
       </Animated.View>
     )
