@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from 'react-native'
 // import * as Util from '../../../../utils/constUtil'
 import { scaleSize, constUtil as Util } from '../../../../utils'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 const FUNCTIONHEIGHT = scaleSize(143) + (Platform.OS === 'ios' ? 20 : 0)
 export default StyleSheet.create({
   container: {
@@ -17,18 +17,27 @@ export default StyleSheet.create({
     bottom: 0.75 * 1.4 * 0.1 * Util.WIDTH + 5,
     backgroundColor: 'white',
   },
-  measure: {
+  measureResultContainer: {
     position: 'absolute',
-    left: 0.35 * Util.WIDTH,
-    top: 5,
-    // left: 0,
-    // bottom: 0.75 * 1.4 * 0.1 * Util.WIDTH + 5,
-    borderRadius: 5,
-    backgroundColor: 'white',
-    // zIndex:10,
-    borderStyle: 'solid',
-    borderColor: Util.USUAL_SEPARATORCOLOR,
-    borderWidth: 1,
+    left: 0,
+    right: 0,
+    top: 20,
+    backgroundColor: 'transparent',
+    height: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  measureResultView: {
+    minWidth: scaleSize(120),
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: color.transView,
+  },
+  measureResultText: {
+    fontSize: size.fontSize.fontSizeLg,
+    color: color.fontColorBlack,
   },
   mapMenu: {
     width: '100%',

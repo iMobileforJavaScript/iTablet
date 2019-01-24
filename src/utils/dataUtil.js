@@ -159,6 +159,21 @@ function ChineseToNumber(chnStr) {
   return rtn + section
 }
 
+function angleTransfer(value = 0) {
+  let degrees,
+    minutes,
+    seconds,
+    temp = value
+  degrees = temp.toFixed() - 1 + 1
+
+  temp = (temp - degrees) * 60
+  minutes = Math.floor(temp)
+
+  temp = (temp - minutes) * 60
+  seconds = temp
+  return degrees + '°' + minutes + "'" + seconds + '"'
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -170,4 +185,5 @@ export default {
   colorHex,
   ChineseToNumber,
   checkColor,
+  angleTransfer,
 }

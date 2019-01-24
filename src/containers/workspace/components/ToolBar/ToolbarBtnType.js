@@ -33,4 +33,6 @@ export default {
 
   MENU_COMMIT: 'menu_commit',
   MENU_FLEX: 'menu_flex',
+
+  MEASURE_CLEAR: 'measure_clear',
 }

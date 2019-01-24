@@ -3,6 +3,7 @@
  */
 import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
+import { dataUtil } from '../../../../utils'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 
@@ -21,27 +22,27 @@ function getMapTool(type, params) {
   switch (type) {
     case ConstToolType.MAP_TOOL:
       data = [
-        // {
-        //   key: 'distanceComput',
-        //   title: '距离量算',
-        //   action: this.showBox,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_point.png'),
-        // },
-        // {
-        //   key: 'coverComput',
-        //   title: '面积量算',
-        //   action: this.showBox,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_words.png'),
-        // },
-        // {
-        //   key: 'azimuthComput',
-        //   title: '方位角量算',
-        //   action: this.showBox,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_point_line.png'),
-        // },
+        {
+          key: 'distanceComput',
+          title: '距离量算',
+          action: measureLength,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point.png'),
+        },
+        {
+          key: 'coverComput',
+          title: '面积量算',
+          action: measureArea,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_words.png'),
+        },
+        {
+          key: 'azimuthComput',
+          title: '方位角量算',
+          action: measureAngle,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_point_line.png'),
+        },
         {
           key: 'pointSelect',
           title: '点选',
@@ -122,8 +123,17 @@ function getMapTool(type, params) {
       ]
       buttons = [
         ToolbarBtnType.CANCEL,
-        ToolbarBtnType.FLEX,
         ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.PLACEHOLDER,
+      ]
+      break
+    case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
+    case ConstToolType.MAP_TOOL_MEASURE_AREA:
+    case ConstToolType.MAP_TOOL_MEASURE_ANGLE:
+      buttons = [
+        ToolbarBtnType.CANCEL,
+        ToolbarBtnType.PLACEHOLDER,
+        ToolbarBtnType.MEASURE_CLEAR,
       ]
       break
     case ConstToolType.MAP_TOOL_POINT_SELECT:
@@ -174,6 +184,80 @@ function pointSelect() {
   })
 }
 
+/** 距离量算 **/
+function measureLength() {
+  select()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  _params.showMeasureResult(true, 0)
+  SMap.measureLength(obj => {
+    _params.showMeasureResult(true, obj.curResult + 'm')
+  })
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
+
+  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+    containerType: 'table',
+    column: 4,
+    isFullScreen: false,
+    height: 0,
+  })
+}
+
+/**  面积量算  **/
+function measureArea() {
+  select()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  _params.showMeasureResult(true, 0)
+  SMap.measureArea(obj => {
+    _params.showMeasureResult(true, obj.curResult + '㎡')
+  })
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_AREA
+
+  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+    containerType: 'table',
+    column: 4,
+    isFullScreen: false,
+    height: 0,
+  })
+}
+
+/**  角度量算  **/
+function measureAngle() {
+  select()
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  _params.showMeasureResult(true, 0)
+  SMap.measureAngle(obj => {
+    _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle))
+  })
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_ANGLE
+
+  _params.setToolbarVisible(true, GLOBAL.currentToolbarType, {
+    containerType: 'table',
+    column: 4,
+    isFullScreen: false,
+    height: 0,
+  })
+}
+
+function clearMeasure(type = GLOBAL.currentToolbarType) {
+  if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
+    switch (type) {
+      case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
+        SMap.setAction(Action.MEASURELENGTH)
+        break
+      case ConstToolType.MAP_TOOL_MEASURE_AREA:
+        SMap.setAction(Action.MEASUREAREA)
+        break
+      case ConstToolType.MAP_TOOL_MEASURE_ANGLE:
+        SMap.setAction(Action.MEASUREANGLE)
+        break
+    }
+  }
+}
+
 export default {
   getMapTool,
+  clearMeasure,
 }
