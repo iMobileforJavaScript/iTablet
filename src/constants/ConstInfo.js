@@ -12,8 +12,8 @@ export default {
   EXPORT_WORKSPACE_FAILED: '地图导出失败',
   ZIP_FAILED: '压缩文件失败',
 
-  MAP_SYMBOL_COLLECTION_CREATING: '正在新建普通采集',
-  MAP_SYMBOL_COLLECTION_CREATED: '符号采集已创建',
+  MAP_SYMBOL_COLLECTION_CREATING: '正在创建',
+  MAP_SYMBOL_COLLECTION_CREATED: '创建已完成',
   MAP_OPENING: '正在打开地图',
   MAP_CHANGING: '正在切换地图',
   MAP_ALREADY_OPENED: '该地图已打开',

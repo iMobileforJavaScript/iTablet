@@ -51,6 +51,7 @@ import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 // import ShareData from './ShareData'
+import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -114,6 +115,7 @@ export default class ToolBar extends React.PureComponent {
     exportmap3DWorkspace: () => {},
     importSceneWorkspace: () => {},
     getMapSetting: () => {},
+    showMeasureResult: () => {},
   }
 
   static defaultProps = {
@@ -1622,6 +1624,12 @@ export default class ToolBar extends React.PureComponent {
 
   close = (type = this.state.type) => {
     (async function() {
+      if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
+        // 去掉量算监听
+        SMap.removeMeasureListener()
+      }
+      this.props.showMeasureResult(false)
+
       if (GLOBAL.Type === constants.MAP_EDIT) {
         GLOBAL.showMenu = true
         // GLOBAL.showFlex = true
@@ -3306,6 +3314,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           // action = this.menuCommit
           action = this.close
+          break
+        case ToolbarBtnType.MEASURE_CLEAR:
+          //量算-清除
+          image = require('../../../../assets/mapEdit/icon_clear.png')
+          action = () => MapToolData.clearMeasure(this.state.type)
           break
       }
 
