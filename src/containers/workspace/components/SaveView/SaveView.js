@@ -7,8 +7,8 @@
 import * as React from 'react'
 import { Modal, View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { Button } from '../../../../components'
-import { scaleSize, setSpText } from '../../../../utils'
-import { color, zIndexLevel } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
+import { color, zIndexLevel, size } from '../../../../styles'
 
 const styles = StyleSheet.create({
   overlay: {
@@ -25,20 +25,35 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#rgba(80, 80, 80, 1)',
+    backgroundColor: 'transparent',
+  },
+  topContainer: {
+    flexDirection: 'column',
+    backgroundColor: color.contentColorWhite,
   },
   item: {
     flex: 1,
-    backgroundColor: color.content,
-    height: scaleSize(60),
+    backgroundColor: color.contentColorWhite,
+    height: scaleSize(80),
     borderRadius: 0,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  separator: {
+    // flex: 1,
+    marginHorizontal: scaleSize(16),
+    height: scaleSize(1),
+    backgroundColor: color.rowSeparator,
+  },
   title: {
     // fontSize: size.fontSize.fontSizeLg,
-    fontSize: setSpText(24),
-    color: color.themeText,
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.bgG,
+  },
+  btnTitle: {
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: size.fontSize.fontSizeXl,
+    color: color.contentColorBlack,
   },
 })
 
@@ -121,26 +136,30 @@ export default class MT_layerManager extends React.Component {
           onPress={this.cancel}
         >
           <View style={styles.container}>
-            <View style={styles.item}>
-              <Text style={styles.title}>{this.state.title}</Text>
+            <View style={styles.topContainer}>
+              <View style={styles.item}>
+                <Text style={styles.title}>{this.state.title}</Text>
+              </View>
+              <View style={styles.separator} />
+              <Button
+                style={styles.item}
+                titleStyle={styles.btnTitle}
+                title="保存"
+                onPress={this.save}
+                activeOpacity={0.5}
+              />
+              <View style={styles.separator} />
+              <Button
+                style={[styles.item, { marginTop: scaleSize(1) }]}
+                titleStyle={styles.btnTitle}
+                title="不保存"
+                onPress={this.notSave}
+                activeOpacity={0.5}
+              />
             </View>
             <Button
-              style={styles.item}
-              titleStyle={styles.title}
-              title="保存"
-              onPress={this.save}
-              activeOpacity={0.5}
-            />
-            <Button
-              style={[styles.item, { marginTop: scaleSize(1) }]}
-              titleStyle={styles.title}
-              title="不保存"
-              onPress={this.notSave}
-              activeOpacity={0.5}
-            />
-            <Button
-              style={[styles.item, { marginTop: scaleSize(10) }]}
-              titleStyle={styles.title}
+              style={[styles.item, { marginTop: scaleSize(15) }]}
+              titleStyle={styles.btnTitle}
               title="取消"
               onPress={this.cancel}
               activeOpacity={0.5}
