@@ -30,6 +30,7 @@ export default class Map3D extends React.Component {
     setCurrentAttribute: () => {},
     setAttributes: () => {},
     exportmap3DWorkspace: () => {},
+    refreshLayer3dList: () => {},
     user: Object,
     device: Object,
   }
@@ -110,6 +111,7 @@ export default class Map3D extends React.Component {
         GLOBAL.openWorkspace = true
         GLOBAL.sceneName = this.name
         this.container.setLoading(false)
+        this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       })
     } catch (e) {
       this.container.setLoading(false)

@@ -78,4 +78,8 @@ export default StyleSheet.create({
     width: scaleSize(60),
     height: scaleSize(60),
   },
+  itemBtn: {
+    flex: 1,
+    // backgroundColor:"#4680DF",
+  },
 })
