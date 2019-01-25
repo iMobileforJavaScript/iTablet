@@ -17,6 +17,7 @@ import { scaleSize, setSpText } from '../../../../utils'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
+import FetchUtils from '../../../../utils/FetchUtils'
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -82,14 +83,15 @@ class RenderModuleItem extends Component {
           cachePath: cachePath,
           copyFilePath: toPath,
           itemData: item,
+          tmpCurrentUser: objTmpCurrentUser,
         }
         if (this.state.dialogCheck) {
-          item.action && item.action(currentUserName)
+          item.action && item.action(tmpCurrentUser)
         } else if (this.downloading) {
-          item.action && item.action(currentUserName)
+          item.action && item.action(tmpCurrentUser)
         } else {
-          item.action && item.action(currentUserName)
-          this._showAlert(downloadData, currentUserName)
+          item.action && item.action(tmpCurrentUser)
+          this._showAlert(downloadData, tmpCurrentUser)
         }
         // this._downloadModuleData()
       } else {
@@ -98,10 +100,10 @@ class RenderModuleItem extends Component {
           sxwu: 'sxwu',
         })
         if (arrFilePath.length === 0) {
-          this.setState({
-            isShowProgressView: true,
-            progress: '导入中...',
-          })
+          // this.setState({
+          //   isShowProgressView: true,
+          //   progress: '导入中...',
+          // })
           await this.props.importWorkspace(fileDirPath, toPath, true)
         }
         this.setState({
@@ -120,22 +122,11 @@ class RenderModuleItem extends Component {
 
   _downloadModuleData = async downloadData => {
     this.downloading = true
-    let item = downloadData.itemData
-    let moduleKey = item.key
-    let dataUrl
-    if (moduleKey === '地图制图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1333580434/download'
-    } else if (moduleKey === '专题地图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/717499323/download'
-    } else if (moduleKey === '外业采集') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1435593818/download'
-    } else if (moduleKey === '三维场景') {
-      if (Platform.OS === 'android') {
-        dataUrl = 'https://www.supermapol.com/web/datas/785640414/download'
-      } else if (Platform.OS === 'ios') {
-        dataUrl = 'https://www.supermapol.com/web/datas/2014161764/download'
-      }
-    }
+    let keyword = downloadData.fileName + '_示范数据'
+    let dataUrl = await FetchUtils.getFindUserZipDataUrl(
+      'xiezhiyan123',
+      keyword,
+    )
     let cachePath = downloadData.cachePath
     let fileDirPath = cachePath + downloadData.fileName
     try {
@@ -145,7 +136,7 @@ class RenderModuleItem extends Component {
         // disabled: true,
       })
       let fileCachePath = fileDirPath + '.zip'
-      FileTools.deleteFile(fileCachePath)
+      await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
         fromUrl: dataUrl,
         toFile: fileCachePath,
@@ -246,7 +237,7 @@ class RenderModuleItem extends Component {
       disabled: false,
       dialogCheck: dialogCheck,
     })
-    // item.action && item.action(currentUserName)
+    // item.action && item.action(downloadData.tmpCurrentUser)
     this.props.showDialog && this.props.showDialog(false)
   }
 

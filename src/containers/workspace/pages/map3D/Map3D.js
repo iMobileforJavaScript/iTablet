@@ -101,6 +101,7 @@ export default class Map3D extends React.Component {
     }
     try {
       SScene.openScence(this.name).then(() => {
+        SScene.setNavigationControlVisible(false)
         this.initListener()
         GLOBAL.openWorkspace = true
         GLOBAL.sceneName = this.name

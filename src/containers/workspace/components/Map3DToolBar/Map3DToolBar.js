@@ -150,6 +150,7 @@ export default class Map3DToolBar extends React.Component {
       return
     }
     SScene.openScence(item.name).then(() => {
+      SScene.setNavigationControlVisible(false)
       SScene.setListener()
       SScene.getAttribute()
       SScene.setCircleFly()
@@ -192,7 +193,7 @@ export default class Map3DToolBar extends React.Component {
             style={styles.sceneItemImg}
           />
           <View style={styles.sceneItemcontent}>
-            <Text style={styles.item}>{item.name}</Text>
+            <Text style={[styles.workspaceItem]}>{item.name}</Text>
             <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
           </View>
         </TouchableOpacity>
@@ -270,6 +271,7 @@ export default class Map3DToolBar extends React.Component {
             <Text style={styles.sceneTitle}>场景</Text>
           </View>
           <FlatList
+            style={{ backgroundColor: '#F0F0F0' }}
             data={this.state.data}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => index}

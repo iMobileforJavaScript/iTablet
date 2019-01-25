@@ -59,7 +59,7 @@ export default StyleSheet.create({
     width: scaleSize(60),
     height: scaleSize(60),
     // backgroundColor: 'blue',
-    marginLeft: scaleSize(15),
+    marginLeft: scaleSize(10),
   },
   type: {
     width: scaleSize(60),

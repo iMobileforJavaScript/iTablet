@@ -339,89 +339,7 @@ export default class ToolBar extends React.PureComponent {
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
-        data = [
-          {
-            key: 'map3DPoint',
-            title: '兴趣点',
-            action: () => {
-              try {
-                SScene.startDrawFavorite({
-                  callback: () => {
-                    this.showToolbar()
-                  },
-                })
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
-              } catch (error) {
-                Toast.show('兴趣点失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_favorite.png'),
-          },
-          {
-            key: 'map3DText',
-            title: '文字',
-            action: () => {
-              try {
-                SScene.startDrawText({
-                  callback: result => {
-                    this.showToolbar()
-                    let dialog = this.props.dialog()
-                    dialog.setDialogVisible(true)
-                    this.point = result
-                  },
-                })
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
-              } catch (error) {
-                Toast.show('添加文字失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_text.png'),
-          },
-          {
-            key: 'map3DPiontLine',
-            title: '点绘线',
-            action: () => {
-              try {
-                SScene.startDrawLine()
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
-              } catch (error) {
-                Toast.show('点绘线失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_pointLine.png'),
-          },
-          {
-            key: 'map3DPointSurface',
-            title: '点绘面',
-            action: () => {
-              try {
-                SScene.startDrawArea()
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
-              } catch (error) {
-                Toast.show('点绘面失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_pointSuerface.png'),
-          },
-          {
-            key: 'closeAllLable',
-            title: '清除标注',
-            action: () => {
-              try {
-                SScene.closeAllLabel()
-                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
-              } catch (error) {
-                Toast.show('清除失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/mapEdit/icon_clear.png'),
-          },
-        ]
+        data = []
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
         break
       case ConstToolType.MAP3D_TOOL:
@@ -457,10 +375,115 @@ export default class ToolBar extends React.PureComponent {
             image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
           {
-            key: 'symbol',
-            title: '标注',
-            action: this.showMap3DSymbol,
-            image: require('../../../../assets/function/Frenchgrey/icon_function_Tagging.png'),
+            key: 'map3DPoint',
+            title: '兴趣点',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.startDrawFavorite({
+                  callback: () => {
+                    this.showToolbar()
+                  },
+                })
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
+              } catch (error) {
+                Toast.show('兴趣点失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_favorite.png'),
+          },
+          {
+            key: 'map3DText',
+            title: '文字',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.startDrawText({
+                  callback: result => {
+                    this.showToolbar()
+                    let dialog = this.props.dialog()
+                    dialog.setDialogVisible(true)
+                    this.point = result
+                  },
+                })
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
+              } catch (error) {
+                Toast.show('添加文字失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_text.png'),
+          },
+          {
+            key: 'map3DPiontLine',
+            title: '点绘线',
+            action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
+              SScene.checkoutListener('startLabelOperate')
+              GLOBAL.Map3DSymbol = true
+              try {
+                SScene.startDrawLine()
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
+              } catch (error) {
+                Toast.show('点绘线失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_pointLine.png'),
+          },
+          {
+            key: 'map3DPointSurface',
+            title: '点绘面',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.startDrawArea()
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('点绘面失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_pointSuerface.png'),
+          },
+          {
+            key: 'closeAllLable',
+            title: '清除标注',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.closeAllLabel()
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('清除失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]

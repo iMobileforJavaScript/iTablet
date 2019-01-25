@@ -16,6 +16,14 @@ export default StyleSheet.create({
     backgroundColor: color.theme,
     color: 'white',
   },
+  workspaceItem: {
+    padding: scaleSize(5),
+    fontSize: setSpText(24),
+    paddingLeft: scaleSize(20),
+    height: scaleSize(50),
+    backgroundColor: color.bgW,
+    color: color.themeText2,
+  },
   itemTime: {
     height: scaleSize(30),
     color: '#A3A3A3',
