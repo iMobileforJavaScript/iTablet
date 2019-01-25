@@ -403,6 +403,19 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  showMore = async type => {
+    this.hideThemeMenuDialog()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, type, {
+        isFullScreen: true,
+        column: 4,
+        height: ConstToolType.HEIGHT[0],
+      })
+    }
+  }
+
   showMap3Dshare = async () => {
     this.hideThemeMenuDialog()
     const toolRef = this.props.getToolRef()

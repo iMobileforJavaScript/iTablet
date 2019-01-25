@@ -351,6 +351,10 @@ export default class ToolBar extends React.PureComponent {
             key: 'distanceMeasure',
             title: '距离量算',
             action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
               SScene.setMeasureLineAnalyst({
                 callback: result => {
                   this.Map3DToolBar &&
@@ -366,6 +370,10 @@ export default class ToolBar extends React.PureComponent {
             key: 'suerfaceMeasure',
             title: '面积量算',
             action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
                   this.Map3DToolBar &&
@@ -488,13 +496,27 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
-          // {
-          //   key: 'action3d',
-          //   title: '选择',
-          //   action: () => {},
-          //   size: 'large',
-          //   image: require('../../../../assets/mapEdit/icon_action3d.png'),
-          // },
+          {
+            key: 'action3d',
+            title: '选择',
+            action: () => {
+              try {
+                if (GLOBAL.action3d === 'PAN3D') {
+                  SScene.setAction('PANSELECT3D')
+                  GLOBAL.action3d = 'PANSELECT3D'
+                  Toast.show('当前场景操作状态为可选')
+                } else {
+                  SScene.setAction('PAN3D')
+                  GLOBAL.action3d = 'PAN3D'
+                  Toast.show('当前场景操作状态为不可选')
+                }
+              } catch (error) {
+                Toast.show('操作失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_action3d.png'),
+          },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
         break
@@ -1199,7 +1221,7 @@ export default class ToolBar extends React.PureComponent {
       let buttons = []
       return { data, buttons }
     } catch (error) {
-      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      let buttons = []
       let data = []
       Toast.show('当前场景无飞行轨迹')
       return { data, buttons }
@@ -1742,6 +1764,7 @@ export default class ToolBar extends React.PureComponent {
   closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     GLOBAL.Map3DSymbol = false
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -1749,6 +1772,7 @@ export default class ToolBar extends React.PureComponent {
 
   closeTool = () => {
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2041,6 +2065,7 @@ export default class ToolBar extends React.PureComponent {
   closeAnalyst = () => {
     SScene.closeAnalysis()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2063,6 +2088,7 @@ export default class ToolBar extends React.PureComponent {
 
   endFly = () => {
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
