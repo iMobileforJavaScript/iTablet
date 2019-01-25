@@ -41,6 +41,7 @@ export default class ToolBarSectionList extends React.Component {
     this.state = {
       selectList: [],
       sections: props.sections,
+      sectionSelected: true,
     }
   }
 
@@ -99,6 +100,15 @@ export default class ToolBarSectionList extends React.Component {
     })
   }
 
+  sectionSelect = section => {
+    if (section.expressionType) {
+      let selected = !this.state.sectionSelected
+      this.setState({
+        sectionSelected: selected,
+      })
+    }
+  }
+
   getSelectList = () => {
     return this.state.selectList
   }
@@ -111,6 +121,9 @@ export default class ToolBarSectionList extends React.Component {
     if (this.props.renderSectionHeader) {
       return this.props.renderSectionHeader({ section })
     }
+    let selectImg = this.state.sectionSelected
+      ? require('../../../../assets/mapTools/icon_multi_selected.png')
+      : require('../../../../assets/mapTools/icon_multi_unselected.png')
     return (
       <TouchableHighlight
         activeOpacity={this.props.activeOpacity}
@@ -118,7 +131,13 @@ export default class ToolBarSectionList extends React.Component {
         style={[styles.sectionHeader, this.props.sectionStyle]}
         onPress={() => this.headerAction({ section })}
       >
-        <View style={{ flexDirection: 'row' }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
           {section.datasetType && (
             <Image
               source={this.getSectionDatasetTypeImg(section)}
@@ -136,6 +155,28 @@ export default class ToolBarSectionList extends React.Component {
           <Text style={[styles.sectionTitle, this.props.sectionTitleStyle]}>
             {section.title}
           </Text>
+          {section.expressionType && (
+            <TouchableOpacity
+              style={
+                (styles.selectImgView,
+                {
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  position: 'absolute',
+                  right: scaleSize(30),
+                  height: scaleSize(80),
+                })
+              }
+              onPress={() => this.sectionSelect(section)}
+            >
+              <Image
+                source={selectImg}
+                resizeMode={'contain'}
+                style={styles.selectImg}
+              />
+              <Text style={[styles.sectionSelectedTitle]}>隐藏系统字段</Text>
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableHighlight>
     )
@@ -144,6 +185,10 @@ export default class ToolBarSectionList extends React.Component {
   renderItem = ({ item, index, section }) => {
     if (this.props.renderItem) {
       return this.props.renderItem({ item, index, section })
+    }
+    if (item.isSystemField && this.state.sectionSelected) {
+      //隐藏系统字段
+      return
     }
     let selectImg = item.isSelected
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
@@ -402,10 +447,21 @@ export default class ToolBarSectionList extends React.Component {
   }
 
   /**行与行之间的分隔线组件 */
-  renderItemSeparator = () => {
+  renderSeparator = ({ leadingItem, section }) => {
     if (this.props.renderItemSeparator) {
       return this.props.renderItemSeparator()
     }
+    if (
+      section.expressionType &&
+      leadingItem.isSystemField &&
+      this.state.sectionSelected
+    )
+      return null
+    return <View style={styles.separateViewStyle} />
+  }
+
+  /**行与行之间的分隔线组件 */
+  renderSectionFooter = () => {
     return <View style={styles.separateViewStyle} />
   }
 
@@ -419,8 +475,8 @@ export default class ToolBarSectionList extends React.Component {
         renderSectionHeader={this.renderSection}
         keyExtractor={(item, index) => index}
         getItemLayout={this.getItemLayout}
-        ItemSeparatorComponent={this.renderItemSeparator}
-        renderSectionFooter={this.renderItemSeparator}
+        ItemSeparatorComponent={this.renderSeparator}
+        renderSectionFooter={this.renderSectionFooter}
       />
     )
   }
@@ -553,5 +609,13 @@ const styles = StyleSheet.create({
     backgroundColor: color.item_separate_white,
     alignItems: 'center',
     flexDirection: 'row',
+  },
+  sectionSelectedTitle: {
+    marginLeft: scaleSize(10),
+    fontSize: size.fontSize.fontSizeLg,
+    fontWeight: 'bold',
+    color: color.section_text,
+    textAlign: 'center',
+    textAlignVertical: 'center',
   },
 })

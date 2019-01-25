@@ -543,7 +543,7 @@ export default class ToolBar extends React.PureComponent {
       })
   }
 
-  /**刷新字段表达式列表 */
+  /**点击item切换专题字段，刷新字段表达式列表 */
   refreshThemeExpression = async selectedExpression => {
     let dataset = this.expressionData.dataset
     let allExpressions = this.expressionData.list
@@ -559,6 +559,7 @@ export default class ToolBar extends React.PureComponent {
       {
         title: dataset.datasetName,
         datasetType: dataset.datasetType,
+        expressionType: true,
         data: allExpressions,
       },
     ]
@@ -624,6 +625,7 @@ export default class ToolBar extends React.PureComponent {
           {
             title: dataset.datasetName,
             datasetType: dataset.datasetType,
+            expressionType: true,
             data: allExpressions,
           },
         ]
@@ -2180,6 +2182,7 @@ export default class ToolBar extends React.PureComponent {
             {
               title: dataset.datasetName,
               datasetType: dataset.datasetType,
+              expressionType: true,
               data: data.list,
             },
           ]
@@ -2224,7 +2227,7 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              UniqueExpression: item.title,
+              UniqueExpression: item.expression,
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
             }
@@ -2235,9 +2238,9 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.title,
+              RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2248,7 +2251,7 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              LabelExpression: item.title,
+              LabelExpression: item.expression,
               LabelBackShape: 'NONE',
               FontName: '宋体',
               // FontSize: '15.0',
@@ -2297,7 +2300,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: item.datasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2843,7 +2846,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
-        underlayColor={color.content_white}
+        underlayColor={color.item_separate_white}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
