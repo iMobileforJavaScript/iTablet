@@ -6,6 +6,7 @@ import {
   openWorkspace,
   closeWorkspace,
 } from '../../../models/map'
+import { setDownInformation } from '../../../models/down'
 import { importWorkspace } from '../../../models/template'
 import { setUser } from '../../../models/user'
 import AboutITablet from './AboutITablet'
@@ -14,6 +15,7 @@ const mapStateToProps = state => ({
   latestMap: state.map.toJS().latestMap,
   currentUser: state.user.toJS().currentUser,
   device: state.device.toJS().device,
+  downList: state.down.toJS().downList,
 })
 const mapDispatchToProps = {
   importSceneWorkspace,
@@ -22,6 +24,7 @@ const mapDispatchToProps = {
   openWorkspace,
   closeWorkspace,
   setUser,
+  setDownInformation,
 }
 
 export default connect(

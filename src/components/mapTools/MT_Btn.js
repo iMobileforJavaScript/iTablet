@@ -182,8 +182,8 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   largeImage: {
-    height: scaleSize(70),
-    width: scaleSize(70),
+    height: scaleSize(65),
+    width: scaleSize(65),
     alignSelf: 'center',
     // borderRadius: 5,
   },
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     // marginTop: scaleSize(5),
   },
   normalText: {
-    fontSize: scaleSize(18),
+    fontSize: scaleSize(20),
     backgroundColor: 'transparent',
     // width: scaleSize(100),
     textAlign: 'center',

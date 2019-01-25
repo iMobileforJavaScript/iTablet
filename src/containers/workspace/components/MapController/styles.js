@@ -23,7 +23,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(4),
   },
   separator: {
-    marginTop: scaleSize(25),
+    marginBottom: scaleSize(30),
     // backgroundColor:"red",
     // top:scaleSize(-80),
     // position:'absolute',
@@ -35,11 +35,11 @@ export default StyleSheet.create({
   compassView: {
     // top:scaleSize(-80),
     // position:'absolute',
-    width: scaleSize(50),
-    height: scaleSize(50),
+    width: scaleSize(60),
+    height: scaleSize(60),
     borderRadius: scaleSize(4),
-    // backgroundColor: 'white',
-    marginBottom: scaleSize(25),
+    backgroundColor: 'white',
+    // marginBottom: scaleSize(25),
   },
   shadow: {
     elevation: 20,

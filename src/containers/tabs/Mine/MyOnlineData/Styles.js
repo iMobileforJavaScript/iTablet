@@ -10,11 +10,11 @@ const largeFontSize = 18
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.blackBg,
+    backgroundColor: color.content_white,
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content,
+    backgroundColor: color.content_white,
   },
   titleTextStyle: {
     width: itemWidth,
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
     width: itemWidth - 30 - imageWidth,
     fontSize: largeFontSize,
     fontWeight: 'bold',
-    color: 'white',
+    color: color.font_color_white,
     paddingLeft: 10,
     textAlign: 'left',
     flexWrap: 'wrap',
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
   separateViewStyle: {
     width: itemWidth,
     height: 8,
-    backgroundColor: color.theme,
+    backgroundColor: color.item_separate_white,
   },
 })
 export default styles

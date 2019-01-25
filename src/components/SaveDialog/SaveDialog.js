@@ -75,6 +75,10 @@ export default class SaveDialog extends PureComponent {
     }
   }
 
+  getState = () => {
+    return this.dialog && this.dialog.getState()
+  }
+
   confirm = () => {
     this.props.confirmAction &&
       this.props.confirmAction({

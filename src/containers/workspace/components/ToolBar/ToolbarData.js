@@ -11,10 +11,13 @@ import ThemeMenuData from './ThemeMenuData'
 
 // let _params = {}
 
+// 更新类中的数据
 function setParams(params) {
   // _params = params
   CollectionData.setParams(params)
   StartData.setParams(params)
+  ShareData.setParams(params)
+  MoreData.setParams(params)
 }
 
 function getTabBarData(type, params = {}) {

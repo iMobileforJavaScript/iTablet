@@ -1,3 +1,4 @@
+import { scaleSize } from '../utils'
 export default {
   UNIQUE: '单值专题图',
   RANGE: '分段设色专题图',
@@ -57,4 +58,7 @@ export default {
   // 时间
   ANIMATED_DURATION: 300,
   ANIMATED_DURATION_2: 400,
+
+  // 底部Bottom
+  BOTTOM_HEIGHT: scaleSize(96),
 }

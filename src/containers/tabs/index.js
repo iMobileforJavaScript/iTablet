@@ -1,8 +1,7 @@
 import { TabNavigator } from 'react-navigation'
 import React from 'react'
-import { Platform, Image, StyleSheet, View, Text } from 'react-native'
-
-import { scaleSize } from '../../utils'
+import { Image, StyleSheet, View, Text } from 'react-native'
+import { scaleSize, setSpText } from '../../utils'
 import { color } from '../../styles'
 import Home, { Setting, AboutITablet } from './Home'
 import Mine, {
@@ -26,25 +25,35 @@ const Tabs = TabNavigator(
           tabBarLabel: data => {
             return (
               <View style={styles.labelView}>
+                <Image
+                  resizeMode="contain"
+                  source={
+                    data.focused
+                      ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
+                      : require('../../assets/tabBar/Frenchgrey/tab_home.png')
+                  }
+                  style={styles.icon}
+                />
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   首页
                 </Text>
               </View>
             )
           },
-          tabBarIcon: ({ focused }: any) => (
-            <Image
-              resizeMode="contain"
-              source={
-                focused
-                  ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
-                  : require('../../assets/tabBar/Frenchgrey/tab_home.png')
-              }
-              style={styles.icon}
-            />
-          ),
+          // tabBarIcon: ({ focused }: any) => (
+          //   <Image
+          //     resizeMode="contain"
+          //     source={
+          //       focused
+          //         ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
+          //         : require('../../assets/tabBar/Frenchgrey/tab_home.png')
+          //     }
+          //     style={styles.icon}
+          //   />
+          // ),
           header: null,
         }
       },
@@ -56,25 +65,35 @@ const Tabs = TabNavigator(
           tabBarLabel: data => {
             return (
               <View style={styles.labelView}>
+                <Image
+                  resizeMode="contain"
+                  source={
+                    data.focused
+                      ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
+                      : require('../../assets/tabBar/Frenchgrey/tab_find.png')
+                  }
+                  style={styles.icon}
+                />
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   发现
                 </Text>
               </View>
             )
           },
-          tabBarIcon: ({ focused }: any) => (
-            <Image
-              resizeMode="contain"
-              source={
-                focused
-                  ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
-                  : require('../../assets/tabBar/Frenchgrey/tab_find.png')
-              }
-              style={styles.icon}
-            />
-          ),
+          // tabBarIcon: ({ focused }: any) => (
+          //   <Image
+          //     resizeMode="contain"
+          //     source={
+          //       focused
+          //         ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
+          //         : require('../../assets/tabBar/Frenchgrey/tab_find.png')
+          //     }
+          //     style={styles.icon}
+          //   />
+          // ),
           header: null,
         }
       },
@@ -86,25 +105,35 @@ const Tabs = TabNavigator(
           tabBarLabel: data => {
             return (
               <View style={styles.labelView}>
+                <Image
+                  resizeMode="contain"
+                  source={
+                    data.focused
+                      ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
+                      : require('../../assets/tabBar/Frenchgrey/tab_user.png')
+                  }
+                  style={styles.icon}
+                />
                 <Text
-                  style={data.focused ? styles.selectedTabText : styles.tabText}
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
                 >
                   我的
                 </Text>
               </View>
             )
           },
-          tabBarIcon: ({ focused }: any) => (
-            <Image
-              resizeMode="contain"
-              source={
-                focused
-                  ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
-                  : require('../../assets/tabBar/Frenchgrey/tab_user.png')
-              }
-              style={styles.icon}
-            />
-          ),
+          // tabBarIcon: ({ focused }: any) => (
+          // <Image
+          //   resizeMode="contain"
+          //   source={
+          //     focused
+          //       ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
+          //       : require('../../assets/tabBar/Frenchgrey/tab_user.png')
+          //   }
+          //   style={styles.icon}
+          // />
+          // ),
           header: null,
         }
       },
@@ -119,7 +148,7 @@ const Tabs = TabNavigator(
     tabBarOptions: {
       activeTintColor: color.blue2, // 文字和图片选中颜色
       inactiveTintColor: '#999', // 文字和图片未选中颜色
-      showIcon: true, // android 默认不显示 icon, 需要设置为 true 才会显示
+      showIcon: false, // android 默认不显示 icon, 需要设置为 true 才会显示
       indicatorStyle: {
         height: 0, // 如TabBar下面显示有一条线，可以设高度为0后隐藏
       },
@@ -129,14 +158,20 @@ const Tabs = TabNavigator(
         height: scaleSize(96),
         borderTopColor: color.border,
         borderTopWidth: 1,
+        // alignItems:"center",
+        justifyContent: 'center',
       },
       tabStyle: {
         flexDirection: 'column',
         justifyContent: 'space-around',
-        marginTop: scaleSize(4.5),
-        // flex:1,
+        alignContent: 'center',
+        // marginTop: scaleSize(2),
+        height: scaleSize(96),
+        flex: 1,
+        // backgroundColor: "blue"
       },
       labelStyle: {
+        // backgroundColor:"white",
         // fontSize: Platform.OS === 'android' ? 16 : 12, // 文字大小
         // backgroundColor:"red",
       },
@@ -149,23 +184,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   tabText: {
-    color: color.gray2,
-    fontSize: scaleSize(20),
+    color: color.fontColorWhite,
+    fontSize: setSpText(20),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   selectedTabText: {
     color: color.blue2,
-    fontSize: scaleSize(20),
+    fontSize: setSpText(20),
     // paddingTop:Platform.OS === 'android' ?  scaleSize(3) : 0,
   },
   icon: {
     width: scaleSize(60),
     height: scaleSize(60),
+    // backgroundColor: "pink"
   },
   labelView: {
-    flexDirection: 'row',
+    // marginTop: Platform.OS === 'android' ? scaleSize(2) : 0,
+    // backgroundColor: "red",
+    flex: 1,
+    flexDirection: 'column',
     justifyContent: 'center',
-    marginTop: Platform.OS === 'android' ? scaleSize(6) : 0,
+    alignItems: 'center',
   },
 })
 export default Tabs

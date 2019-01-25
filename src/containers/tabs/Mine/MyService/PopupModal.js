@@ -19,6 +19,7 @@ export default class PopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+    this.fontSize = Platform.OS === 'ios' ? 18 : 16
   }
 
   _onClose = () => {
@@ -42,7 +43,11 @@ export default class PopupModal extends PureComponent {
   _renderSeparatorLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+        style={{
+          width: '100%',
+          height: 1,
+          backgroundColor: color.item_separate_white,
+        }}
       />
     )
   }
@@ -53,9 +58,10 @@ export default class PopupModal extends PureComponent {
     } else {
       title = '设为私有服务'
     }
+
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content }}
+        style={{ backgroundColor: color.content_white }}
         onPress={async () => {
           this._onClose()
           let result = await SOnlineService.changeServiceVisibilityWithServiceId(
@@ -76,7 +82,7 @@ export default class PopupModal extends PureComponent {
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: this.fontSize,
           }}
         >
           {title}
@@ -89,7 +95,7 @@ export default class PopupModal extends PureComponent {
   _deleteButton = title => {
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content }}
+        style={{ backgroundColor: color.content_white }}
         onPress={async () => {
           this._onClose()
           let result = await SOnlineService.deleteServiceWithServiceId(
@@ -110,7 +116,7 @@ export default class PopupModal extends PureComponent {
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: this.fontSize,
           }}
         >
           {title}
@@ -121,10 +127,11 @@ export default class PopupModal extends PureComponent {
   }
 
   render() {
+    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let visible = this.props.modalVisible
     return (
       <Modal
-        animationType={'slide'}
+        animationType={animationType}
         transparent={true}
         visible={visible}
         style={{ flex: 1 }}

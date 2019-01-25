@@ -1,16 +1,18 @@
 /**
  * 获取地图更多
  */
-import {
-  ConstToolType,
-  // ConstInfo,
-} from '../../../../constants'
-// import { Toast } from '../../../../utils'
+import { ConstToolType, ConstInfo, ConstPath } from '../../../../constants'
+import { Toast } from '../../../../utils'
+import { FileTools } from '../../../../native'
 // import NavigationService from '../../../NavigationService'
 import constants from '../../constants'
 
 let _params = {}
-// let exporting = false
+let exporting = false
+
+function setParams(params) {
+  _params = params
+}
 
 function getMapMore(type, params) {
   let data = [],
@@ -45,8 +47,8 @@ function getMapMore(type, params) {
         //   selectedImage: require('../../../../assets/mapTools/icon_point_line.png'),
         // },
         {
-          key: constants.SHARE,
-          title: constants.SHARE,
+          key: constants.MAP3DSHARE,
+          title: constants.MAP3DSHARE,
           size: 'large',
           action: shareMap3D,
           image: require('../../../../assets/mapTools/icon_share.png'),
@@ -55,35 +57,35 @@ function getMapMore(type, params) {
       break
     default:
       data = [
-        {
-          key: constants.CLOSE,
-          title: constants.CLOSE,
-          action: closeMap,
-          size: 'large',
-          image: require('../../../../assets/mapTools/icon_close.png'),
-        },
-        {
-          key: constants.SAVE,
-          title: constants.SAVE,
-          size: 'large',
-          // TODO 保存地图
-          action: () => saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_save.png'),
-        },
-        {
-          key: constants.SAVE_AS,
-          title: constants.SAVE_AS,
-          size: 'large',
-          action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_save_as.png'),
-        },
         // {
-        //   key: constants.EXPORT_MAP,
-        //   title: constants.EXPORT_MAP,
+        //   key: constants.CLOSE,
+        //   title: constants.CLOSE,
+        //   action: closeMap,
         //   size: 'large',
-        //   action: exportMap,
-        //   image: require('../../../../assets/mapTools/icon_share.png'),
+        //   image: require('../../../../assets/mapTools/icon_close.png'),
         // },
+        // {
+        //   key: constants.SAVE,
+        //   title: constants.SAVE,
+        //   size: 'large',
+        //   // TODO 保存地图
+        //   action: () => saveMap('TempMap'),
+        //   image: require('../../../../assets/mapTools/icon_save.png'),
+        // },
+        // {
+        //   key: constants.SAVE_AS,
+        //   title: constants.SAVE_AS,
+        //   size: 'large',
+        //   action: saveMapAs,
+        //   image: require('../../../../assets/mapTools/icon_save_as.png'),
+        // },
+        {
+          key: constants.EXPORT_MAP,
+          title: constants.EXPORT_MAP,
+          size: 'large',
+          action: exportMap,
+          image: require('../../../../assets/mapTools/icon_export.png'),
+        },
         {
           key: constants.SHARE,
           title: constants.SHARE,
@@ -101,23 +103,23 @@ function getMapMore(type, params) {
 /*******************************************操作分割线*********************************************/
 
 /** 关闭地图 **/
-function closeMap() {
-  if (!_params.closeMap) return
-  _params.closeMap()
-}
+// function closeMap() {
+//   if (!_params.closeMap) return
+//   _params.closeMap()
+// }
 
-/** 保存地图 **/
-function saveMap() {
-  if (!_params.setSaveViewVisible) return
-  GLOBAL.isBackHome = false
-  _params.setSaveViewVisible(true)
-}
-
-/** 另存地图 **/
-function saveMapAs() {
-  if (!_params.setSaveMapDialogVisible) return
-  _params.setSaveMapDialogVisible(true)
-}
+// /** 保存地图 **/
+// function saveMap() {
+//   if (!_params.setSaveViewVisible) return
+//   GLOBAL.isBackHome = false
+//   _params.setSaveViewVisible(true)
+// }
+//
+// /** 另存地图 **/
+// function saveMapAs() {
+//   if (!_params.setSaveMapDialogVisible) return
+//   _params.setSaveMapDialogVisible(true)
+// }
 
 /** 分享 **/
 function shareMap() {
@@ -133,26 +135,49 @@ function shareMap() {
 }
 
 /** 导出地图 **/
-// function exportMap() {
-//   if (exporting) {
-//     Toast.show(ConstInfo.EXPORTING_MAP)
-//     return
-//   }
-//   Toast.show('开始分享')
-//   _params.exportWorkspace(
-//     {
-//       maps: [_params.map.currentMap],
-//     },
-//     (result, path) => {
-//       Toast.show(
-//         result
-//           ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
-//           : ConstInfo.EXPORT_WORKSPACE_FAILED,
-//       )
-//       exporting = false
-//     },
-//   )
-// }
+function exportMap() {
+  (async function() {
+    if (!_params.map.currentMap.name) {
+      Toast.show(ConstInfo.PLEASE_SAVE_MAP)
+      return
+    }
+    if (exporting) {
+      Toast.show(ConstInfo.WAITING_FOR_EXPORTING_MAP)
+      return
+    }
+    Toast.show(ConstInfo.EXPORTING_MAP)
+    let userName = _params.user.currentUser.userName || 'Customer'
+    let mapName = _params.map.currentMap.name
+    let fileName = _params.map.workspace.server.substr(
+      _params.map.workspace.server.lastIndexOf('/') + 1,
+    )
+    let fileNameWithoutExtension = fileName.substr(0, fileName.lastIndexOf('.'))
+    let outPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
+        fileNameWithoutExtension +
+        '/' +
+        fileName,
+    )
+    _params.exportWorkspace(
+      {
+        maps: [mapName],
+        outPath,
+        fileReplace: true,
+      },
+      (result, path) => {
+        Toast.show(
+          result && path
+            ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+            : ConstInfo.EXPORT_WORKSPACE_FAILED,
+        )
+        exporting = false
+      },
+    )
+  }.bind(this)())
+}
 
 function shareMap3D() {
   if (!_params.setToolbarVisible) return
@@ -167,5 +192,6 @@ function shareMap3D() {
 }
 
 export default {
+  setParams,
   getMapMore,
 }

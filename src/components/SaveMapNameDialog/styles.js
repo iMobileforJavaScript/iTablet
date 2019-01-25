@@ -18,7 +18,8 @@ export default StyleSheet.create({
   },
   title: {
     fontSize: size.fontSize.fontSizeSm,
-    color: color.title,
+    color: color.themeText,
+    backgroundColor: 'transparent',
     width: scaleSize(160),
   },
   textInputStyle: {
@@ -26,6 +27,7 @@ export default StyleSheet.create({
     borderRadius: scaleSize(8),
     borderWidth: scaleSize(1),
     borderColor: color.gray3,
+    color: color.themeText,
   },
   separator: {
     width: '100%',

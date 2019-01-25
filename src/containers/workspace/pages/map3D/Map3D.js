@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
-import { Container, Dialog } from '../../../../components'
+import { Container, Dialog, InputDialog } from '../../../../components'
 import {
   FunctionToolbar,
   MapToolbar,
@@ -18,12 +18,13 @@ import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
-
+const SAVE_TITLE = '是否保存当前场景'
 export default class Map3D extends React.Component {
   props: {
     editLayer: Object,
     latestMap: Object,
     navigation: Object,
+    online: Object,
     setEditLayer: () => {},
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
@@ -35,22 +36,24 @@ export default class Map3D extends React.Component {
 
   constructor(props) {
     super(props)
+    GLOBAL.sceneName = ''
     const params = this.props.navigation.state.params
     this.operationType = params.operationType || constants.MAP_3D
     this.isExample = params.isExample || false
     this.mapName = params.mapName || null
     this.state = {
-      path: params.path,
       title: '',
       popShow: false,
       inputText: '',
       placeholder: false,
     }
-    this.path = params.path || ''
+    this.name = params.name || ''
     this.type = params.type || 'MAP_3D'
   }
 
   componentDidMount() {
+    // console.log(this.props.online)
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
@@ -60,6 +63,7 @@ export default class Map3D extends React.Component {
   }
 
   componentWillUnmount() {
+    // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.attributeListener && this.attributeListener.remove()
@@ -90,24 +94,29 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
-    if (!this.path) {
+    if (!this.name) {
       this.container.setLoading(false)
       Toast.show('无场景显示')
       return
     }
     try {
-      let data = { server: this.path }
-      let result = await SScene.openWorkspace(data)
-      let mapList = await SScene.getMapList()
-      result &&
-        SScene.openMap(mapList[0].name).then(() => {
-          this.initListener()
-          GLOBAL.openWorkspace = true
-        })
-      this.container.setLoading(false)
+      SScene.openScence(this.name).then(() => {
+        this.initListener()
+        GLOBAL.openWorkspace = true
+        GLOBAL.sceneName = this.name
+        this.container.setLoading(false)
+      })
     } catch (e) {
       this.container.setLoading(false)
     }
+    await SScene.addLayer3D(
+      'http://t0.tianditu.com/img_c/wmts',
+      'l3dBingMaps',
+      'bingmap',
+      'JPG_PNG',
+      96.0,
+      true,
+    )
   }
 
   _onGetInstance = sceneControl => {
@@ -164,6 +173,7 @@ export default class Map3D extends React.Component {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()
     }
+    GLOBAL.sceneName = ''
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -181,6 +191,7 @@ export default class Map3D extends React.Component {
         type={this.type}
         showFullMap={this.showFullMap}
         device={this.props.device}
+        online={this.props.online}
       />
     )
   }
@@ -201,12 +212,12 @@ export default class Map3D extends React.Component {
   }
 
   confirm = async () => {
-    if (
-      this.state.inputText.indexOf(' ') > -1 ||
-      this.state.inputText === '' ||
-      this.state.inputText == null
-    ) {
+    // eslint-disable-next-line
+    const content = /[@#\$%\^&\*]+/g
+    let result = content.test(this.state.inputText)
+    if (result || this.state.inputText === '' || this.state.inputText == null) {
       this.setState({
+        inputText: null,
         placeholder: true,
       })
       return
@@ -234,6 +245,10 @@ export default class Map3D extends React.Component {
     this.dialog.setDialogVisible(false)
   }
 
+  setInputDialogVisible = (visible, params = {}) => {
+    this.InputDialog && this.InputDialog.setDialogVisible(visible, params)
+  }
+
   renderToolBar = () => {
     return (
       <MapToolbar
@@ -253,6 +268,8 @@ export default class Map3D extends React.Component {
         existFullMap={() => this.showFullMap(false)}
         confirmDialog={this.confirm}
         dialog={() => this.dialog}
+        showFullMap={this.showFullMap}
+        setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         setAttributes={this.props.setAttributes}
       />
@@ -285,10 +302,14 @@ export default class Map3D extends React.Component {
           />
         </View>
         {this.state.placeholder && (
-          <Text style={styles.placeholder}>文本内容不能为空</Text>
+          <Text style={styles.placeholder}>文本内容含有非法字符请重新输入</Text>
         )}
       </Dialog>
     )
+  }
+
+  renderInputDialog = () => {
+    return <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
   }
 
   render() {
@@ -309,6 +330,7 @@ export default class Map3D extends React.Component {
         {this.renderFunctionToolbar()}
         {this.renderTool()}
         {this.renderDialog()}
+        {this.renderInputDialog()}
       </Container>
     )
   }

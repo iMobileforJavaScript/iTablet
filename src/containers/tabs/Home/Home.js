@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, Image } from 'react-native'
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  AsyncStorage,
+  StatusBar,
+} from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
-import { scaleSize } from '../../../utils'
+// import { scaleSize } from '../../../utils'
 import Toast from '../../../utils/Toast'
 import { SScene, SMap, SOnlineService } from 'imobile_for_reactnative'
 import FileTools from '../../../native/FileTools'
@@ -11,6 +18,7 @@ import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 // import Orientation from '../../../constants/Orientation'
+import { Dialog } from '../../../components'
 export default class Home extends Component {
   props: {
     nav: Object,
@@ -18,11 +26,13 @@ export default class Home extends Component {
     currentUser: Object,
     setShow: () => {},
     device: Object,
+    downList: any,
     importSceneWorkspace: () => {},
     importWorkspace: () => {},
     closeWorkspace: () => {},
     openWorkspace: () => {},
     setUser: () => {},
+    setDownInformation: () => {},
   }
 
   constructor(props) {
@@ -32,65 +42,44 @@ export default class Home extends Component {
       modalIsVisible: false,
     }
   }
-  _onImportWorkspace = async (fileDirPath, item, isExist) => {
+
+  componentDidMount() {
+    this._initStatusBarVisible()
+  }
+
+  _initStatusBarVisible = async () => {
+    let result = await AsyncStorage.getItem('StatusBarVisible')
+    let statusBarVisible = result === 'true'
+    // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
+    StatusBar.setHidden(statusBarVisible)
+  }
+  _onImportWorkspace = async (fileDirPath, toPath) => {
     try {
       if (fileDirPath !== undefined) {
-        let currentUserName = this.props.currentUser.userName
-        let homePath = await FileTools.appendingHomeDirectory()
-        let toPath
-        let lastIndexOf = fileDirPath.lastIndexOf('/')
-        let fileName = fileDirPath.substring(lastIndexOf + 1)
-        if (currentUserName === undefined) {
-          currentUserName = ''
-          toPath =
-            homePath +
-            ConstPath.CustomerPath +
-            ConstPath.RelativePath.ExternalData +
-            fileName
-        } else {
-          toPath =
-            homePath +
-            ConstPath.UserPath +
-            currentUserName +
-            '/' +
-            ConstPath.RelativePath.ExternalData +
-            fileName
-        }
-        let arrFilePath = await FileTools.getFilterFiles(toPath, {
+        await FileTools.copyFile(fileDirPath, toPath)
+        let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
           smwu: 'smwu',
           sxwu: 'sxwu',
         })
-        if (arrFilePath.length === 0) {
-          if (isExist) {
-            item.action && item.action(this.props.currentUser)
-          }
-          await FileTools.copyFile(fileDirPath, toPath)
-          let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
-            smwu: 'smwu',
-            sxwu: 'sxwu',
+        let filePath = arrFilePath[0].filePath
+        let is3D = await SScene.is3DWorkspace({ server: filePath })
+        if (is3D === true) {
+          let result = await this.props.importSceneWorkspace({
+            server: filePath,
           })
-          let filePath = arrFilePath[0].filePath
-          let is3D = await SScene.is3DWorkspace({ server: filePath })
-          if (is3D === true) {
-            let result = await this.props.importSceneWorkspace({
-              server: filePath,
-            })
-            if (result === true) {
-              // Toast.show('导入3D成功')
-            } else {
-              Toast.show('导入3D失败')
-            }
+          if (result === true) {
+            // Toast.show('导入3D成功')
           } else {
-            let result = await SMap.importWorkspaceInfo({
-              server: filePath,
-              type: 9,
-            })
-            if (result.length === 0) {
-              Toast.show('导入失败')
-            }
+            Toast.show('导入3D失败')
           }
-        } else if (isExist === true) {
-          item.action && item.action(this.props.currentUser)
+        } else {
+          let result = await SMap.importWorkspaceInfo({
+            server: filePath,
+            type: 9,
+          })
+          if (result.length === 0) {
+            Toast.show('导入失败')
+          }
         }
       }
     } catch (e) {
@@ -108,7 +97,7 @@ export default class Home extends Component {
           <Image source={userImg} style={styles.userImg} />
         </TouchableOpacity>
         <Text style={styles.headTitle}>{title}</Text>
-        <TouchableOpacity style={styles.moreImg}>
+        <TouchableOpacity>
           <Image
             resizeMode={'contain'}
             source={moreImg}
@@ -134,6 +123,7 @@ export default class Home extends Component {
 
   _onSetting = () => {
     this._closeModal()
+    // StatusBar.setHidden(true,'slide')
     NavigationService.navigate('Setting')
   }
 
@@ -148,16 +138,60 @@ export default class Home extends Component {
   }
 
   _onLogout = () => {
-    SOnlineService.logout()
-    this.props.closeWorkspace(async () => {
-      let customPath = await FileTools.appendingHomeDirectory(
-        ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
-      )
-      this.props.setUser()
-      NavigationService.navigate('Mine')
-      this._closeModal()
-      this.props.openWorkspace({ server: customPath })
-    })
+    if (this.container) {
+      this.container.setLoading(true, '注销中...')
+    }
+    try {
+      SOnlineService.logout()
+      this.props.closeWorkspace(async () => {
+        let customPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
+        )
+        this.props.setUser()
+        this._closeModal()
+        if (this.container) {
+          this.container.setLoading(false)
+        }
+        // NavigationService.navigate('Mine')
+        NavigationService.reset('Tabs')
+        this.props.openWorkspace({ server: customPath })
+      })
+    } catch (e) {
+      if (this.container) {
+        this.container.setLoading(false)
+      }
+    }
+  }
+
+  showDialog = value => {
+    this.dialog.setDialogVisible(value)
+  }
+
+  getMoudleItem = (confirm, cancel, downloadData) => {
+    this.dialogConfirm = confirm
+    this.dialogCancel = cancel
+    this.downloadData = downloadData
+  }
+
+  confirm = () => {
+    let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
+    confirm && confirm(this.downloadData)
+  }
+
+  cancel = () => {
+    let cancel = this.dialogCancel ? this.dialogCancel : () => {}
+    cancel && cancel(this.downloadData)
+  }
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        type={'modal'}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+        title={'是否下载在线地图数据'}
+      />
+    )
   }
 
   _renderModal = () => {
@@ -180,16 +214,17 @@ export default class Home extends Component {
 
   render() {
     let isLogin =
-      this.props.currentUser.userName &&
-      (this.props.currentUser.userName !== 'Customer' &&
-        this.props.currentUser.password !== 'Customer')
+      this.props.currentUser.userName !== undefined &&
+      this.props.currentUser.password !== undefined
     let userImg = isLogin
       ? {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
-      : require('../../../assets/home/系统默认头像.png')
-    let moreImg = require('../../../assets/Mine/工具条-更多-白.png')
+      : this.props.currentUser.userType !== undefined
+        ? require('../../../assets/home/system_default_header_image.png')
+        : require('../../../assets/tabBar/tab_user.png')
+    let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -212,18 +247,15 @@ export default class Home extends Component {
                 this.topNavigatorBarImageId = 'right'
                 this.setState({ modalIsVisible: true })
               }}
-              // style={{ flex: 1, marginRight: scaleSize(18.5) }}
+              style={styles.moreView}
             >
               <Image
                 resizeMode={'contain'}
                 source={moreImg}
-                style={styles.userImg}
+                style={styles.moreImg}
               />
             </TouchableOpacity>
           ),
-          headerStyle: {
-            height: scaleSize(80),
-          },
         }}
         style={styles.container}
       >
@@ -236,12 +268,18 @@ export default class Home extends Component {
           }}
         >
           <ModuleList
+            ref={ref => (this.modulelist = ref)}
             importWorkspace={this._onImportWorkspace}
+            setDownInformation={this.props.setDownInformation}
             currentUser={this.props.currentUser}
             styles={styles.modulelist}
             device={this.props.device}
+            downList={this.props.downList}
+            showDialog={this.showDialog}
+            getMoudleItem={this.getMoudleItem}
           />
           {this._renderModal()}
+          {this.renderDialog()}
         </View>
       </Container>
     )

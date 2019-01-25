@@ -14,6 +14,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  NetInfo,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
@@ -28,7 +29,7 @@ let _iDataListTotal = -1
 let _iDownloadingIndex = -1
 let _arrOnlineData = [{}]
 let _previousUserName = ''
-// let _callBackIos
+let _callBackIos
 export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
@@ -40,6 +41,8 @@ export default class MyOnlineData extends Component {
     this.screenWidth = Dimensions.get('window').width
     if (this.props.user.currentUser.userName !== _previousUserName) {
       SOnlineService.cancelDownload()
+      this._removeListener()
+      _callBackIos = undefined
       _iLoadOnlineDataCount = 1
       _iDataListTotal = -1
       _arrOnlineData = [{}]
@@ -64,7 +67,7 @@ export default class MyOnlineData extends Component {
   }
 
   componentWillUnmount() {
-    this._removeListener()
+    // this._removeListener()
   }
   _addListener = () => {
     let downloadingEventType =
@@ -73,32 +76,34 @@ export default class MyOnlineData extends Component {
       'com.supermap.RN.Mapcontrol.online_service_downloadfailure'
     let downloadedType = 'com.supermap.RN.Mapcontrol.online_service_downloaded'
     if (Platform.OS === 'ios') {
-      let _callBackIos
+      // let _callBackIos
       if (_callBackIos === undefined) {
         _callBackIos = SOnlineService.objCallBack()
+        this.downloadingListener = _callBackIos.addListener(
+          downloadingEventType,
+          obj => {
+            let progress = obj.progress
+            let result = '下载' + progress.toFixed(0) + '%'
+            this._changeModalProgressState(result)
+          },
+        )
+        this.downloadFailureListener = _callBackIos.addListener(
+          downloadFailureType,
+          () => {
+            let result = '下载失败'
+            this._changeModalProgressState(result)
+            this._resetDownloadIndex(-1)
+          },
+        )
+        this.downloadedListener = _callBackIos.addListener(
+          downloadedType,
+          () => {
+            let result = '下载完成'
+            this._changeModalProgressState(result)
+            this._resetDownloadIndex(-1)
+          },
+        )
       }
-
-      this.downloadingListener = _callBackIos.addListener(
-        downloadingEventType,
-        obj => {
-          let progress = obj.progress
-          let result = '下载' + progress.toFixed(2) + '%'
-          this._changeModalProgressState(result)
-        },
-      )
-      this.downloadFailureListener = _callBackIos.addListener(
-        downloadFailureType,
-        () => {
-          let result = '下载失败'
-          this._changeModalProgressState(result)
-          this._resetDownloadIndex(-1)
-        },
-      )
-      this.downloadedListener = _callBackIos.addListener(downloadedType, () => {
-        let result = '下载完成'
-        this._changeModalProgressState(result)
-        this._resetDownloadIndex(-1)
-      })
     }
     if (Platform.OS === 'android') {
       this.downloadingListener = DeviceEventEmitter.addListener(
@@ -227,7 +232,12 @@ export default class MyOnlineData extends Component {
         newData.push(objContent)
       }
     } catch (e) {
-      Toast.show('登录失效，请重新登录')
+      let result = await NetInfo.getConnectionInfo()
+      if (result.type === 'unknown' || result.type === 'none') {
+        Toast.show('网络错误')
+      } else {
+        Toast.show('登录失效，请重新登录')
+      }
     }
     return newData
   }
@@ -321,7 +331,6 @@ export default class MyOnlineData extends Component {
     }
   }
   _changeModalProgressState = progress => {
-    // console.warn(_iDownloadingIndex)
     if (_iDownloadingIndex >= 0) {
       let newData = [...this.state.data]
       newData[_iDownloadingIndex].downloadingProgress = progress
@@ -334,7 +343,6 @@ export default class MyOnlineData extends Component {
         this.state.data[this.index].isDownloading &&
         !this.state.isRefreshing
       ) {
-        // console.warn('progress:' + progress)
         this.modalRef._changeDownloadingState(progress)
       }
       if (
@@ -343,10 +351,10 @@ export default class MyOnlineData extends Component {
         progress === '已下载'
       ) {
         this._setFinalDownloadingProgressState(_iDownloadingIndex, progress)
-        if (progress === '下载完成') {
-          // console.warn('unzip')
+        if (progress === '下载完成' || progress === '已下载') {
           this._unZipFile()
         }
+        // this._removeListener()
       }
     }
   }
@@ -395,6 +403,9 @@ export default class MyOnlineData extends Component {
     _arrOnlineData = newData
     this.setState({ data: _arrOnlineData })
   }
+  setLoading = (visible, info) => {
+    this.container && this.container.setLoading(visible, info)
+  }
   _onDownloadFile = async () => {
     try {
       let objContent = this.state.data[this.index]
@@ -430,6 +441,7 @@ export default class MyOnlineData extends Component {
     }
   }
   _onPublishService = async () => {
+    this.setLoading(true, '发布服务中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -453,9 +465,12 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _onDeleteService = async () => {
+    this.setLoading(true, '删除服务中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -486,9 +501,12 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _onChangeDataVisibility = async () => {
+    this.setLoading(true, '改变数据可见性中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -530,9 +548,12 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _onDeleteData = async () => {
+    this.setLoading(true, '删除数据中...')
     this.setState({ modalIsVisible: false })
     try {
       let newData = [...this.state.data]
@@ -570,6 +591,8 @@ export default class MyOnlineData extends Component {
     } catch (e) {
       this._resetIndex()
       Toast.show('网络错误')
+    } finally {
+      this.setLoading(false)
     }
   }
   _renderModal = () => {
@@ -606,12 +629,14 @@ export default class MyOnlineData extends Component {
       let imageWidth = 30,
         imageHeight = 30
       let itemWidth = '100%'
+      let fontColor = color.fontColorBlack
+      let imageColor = fontColor
       return (
         <TouchableOpacity
           onPress={() => {
             this._onClickItemEvent(item)
           }}
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
         >
           <View
             style={{
@@ -622,9 +647,14 @@ export default class MyOnlineData extends Component {
             }}
           >
             <Image
-              style={{ width: imageWidth, height: imageHeight, marginLeft: 10 }}
+              style={{
+                width: imageWidth,
+                height: imageHeight,
+                marginLeft: 10,
+                tintColor: imageColor,
+              }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/个人主页-我的数据.png')}
+              source={require('../../../../assets/Mine/mine_my_online_data.png')}
             />
             <Text
               style={{
@@ -632,7 +662,7 @@ export default class MyOnlineData extends Component {
                 // lineHeight: itemHeight,
                 textAlign: 'left',
                 fontSize: 18,
-                color: 'white',
+                color: fontColor,
                 paddingLeft: 10,
               }}
             >
@@ -643,16 +673,17 @@ export default class MyOnlineData extends Component {
                 width: imageWidth,
                 height: imageHeight,
                 marginRight: 10,
+                tintColor: imageColor,
               }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/工具条-更多-白.png')}
+              source={require('../../../../assets/Mine/mine_more_white.png')}
             />
           </View>
           <View
             style={{
-              height: 2,
+              height: 1,
               width: itemWidth,
-              backgroundColor: color.theme,
+              backgroundColor: color.itemColorGray,
             }}
           />
         </TouchableOpacity>
@@ -690,15 +721,15 @@ export default class MyOnlineData extends Component {
                 refreshing={this.state.isRefreshing}
                 onRefresh={this._onRefresh}
                 colors={['orange', 'red']}
-                titleColor={'white'}
-                tintColor={'white'}
+                titleColor={'orange'}
+                tintColor={'orange'}
                 title={'刷新中...'}
                 enabled={true}
               />
             }
             onEndReachedThreshold={0.8}
             onEndReached={this._onLoadData}
-            ListFooterComponent={this._footView}
+            // ListFooterComponent={this._footView}
           />
           {this._renderModal()}
         </View>

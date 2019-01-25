@@ -23,7 +23,7 @@ export default class MapController extends React.Component {
     super(props)
     this.deg = 0
     this.state = {
-      left: new Animated.Value(scaleSize(20)),
+      left: new Animated.Value(scaleSize(34)),
       compass: new Animated.Value(0),
     }
   }
@@ -99,9 +99,10 @@ export default class MapController extends React.Component {
     clearInterval(this.timer)
   }
 
-  location = () => {
+  location = async () => {
     if (this.props.type === 'MAP_3D') {
-      SScene.setHeading()
+      await SScene.setHeading()
+      await SScene.resetCamera()
       this.setCompass(0)
       return
     }
@@ -124,7 +125,7 @@ export default class MapController extends React.Component {
               key={'controller_minus'}
               textColor={'black'}
               size={MTBtn.Size.NORMAL}
-              image={require('../../../../assets/mapEdit/icon_compass.png')}
+              image={require('../../../../assets/mapEdit/Frenchgrey/icon_compass.png')}
               onPress={this.location}
             />
           </Animated.View>
@@ -145,7 +146,7 @@ export default class MapController extends React.Component {
           key={'controller_location'}
           textColor={'black'}
           size={MTBtn.Size.NORMAL}
-          image={require('../../../../assets/mapTool/icon_location.png')}
+          image={require('../../../../assets/mapTool/Frenchgrey/icon_location.png')}
           onPress={this.location}
         />
       )
@@ -157,14 +158,15 @@ export default class MapController extends React.Component {
       <Animated.View
         style={[styles.container, this.props.style, { left: this.state.left }]}
       >
-        {this.renderCompass()}
+        {this.renderLocation()}
         <View style={[styles.topView, styles.shadow]}>
+          {this.renderCompass()}
           <MTBtn
             style={styles.btn}
             key={'controller_plus'}
             textColor={'black'}
             size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/icon_plus.png')}
+            image={require('../../../../assets/mapTool/Frenchgrey/icon_plus.png')}
             onPress={this.plus}
             onPressIn={this.map3Dplus}
             onPressOut={this.cloestimer}
@@ -174,13 +176,12 @@ export default class MapController extends React.Component {
             key={'controller_minus'}
             textColor={'black'}
             size={MTBtn.Size.NORMAL}
-            image={require('../../../../assets/mapTool/icon_minus.png')}
+            image={require('../../../../assets/mapTool/Frenchgrey/icon_minus.png')}
             onPress={this.minus}
             onPressIn={this.map3Dminus}
             onPressOut={this.cloestimer}
           />
         </View>
-        {this.renderLocation()}
       </Animated.View>
     )
   }

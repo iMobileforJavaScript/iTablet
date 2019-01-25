@@ -9,14 +9,16 @@ import { View, Text, Dimensions, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
-// import { ConstToolType } from '../../../../constants'
+import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
+import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
 import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
   props: {
+    nav: Object,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -52,9 +54,12 @@ export default class LayerAttribute extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    let mapTabs = this.props.nav.routes[this.props.nav.index]
     if (
       JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
+        JSON.stringify(this.props.currentLayer) ||
+      (mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
+        JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
     ) {
       this.getAttribute()
     }
@@ -105,9 +110,9 @@ export default class LayerAttribute extends React.Component {
       })
   }
 
-  getAttribute = () => {
+  getAttribute = (cb = () => {}) => {
     if (!this.props.currentLayer.path) return
-    this.container.setLoading(true)
+    this.setLoading(true, ConstInfo.LOADING_DATA)
     ;(async function() {
       try {
         this.props.getAttributes(this.props.currentLayer.path)
@@ -115,9 +120,11 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             showTable: true,
           })
-        this.container.setLoading(false)
+        this.setLoading(false)
+        cb && cb()
       } catch (e) {
-        this.container.setLoading(false)
+        this.setLoading(false)
+        cb && cb()
       }
     }.bind(this)())
   }
@@ -200,14 +207,69 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
+  renderMapLayerAttribute = () => {
+    if (!this.props.attributes || !this.props.attributes.data) return null
+    if (this.props.attributes.data.length > 1) {
+      return (
+        <LayerAttributeTable
+          ref={ref => (this.table = ref)}
+          data={this.props.attributes.data}
+          tableHead={this.props.attributes.head}
+          // data={this.state.attribute}
+          // tableHead={this.state.tableHead}
+          // tableTitle={this.state.tableTitle}
+          // NormalrowStyle={{width:scaleSize(720)}}
+          type={
+            this.props.attributes.data.length > 1
+              ? LayerAttributeTable.Type.EDIT_ATTRIBUTE
+              : LayerAttributeTable.Type.ATTRIBUTE
+          }
+          selectRow={this.selectRow}
+          refresh={this.getAttribute}
+        />
+      )
+    } else {
+      return (
+        <LayerAttributeTable
+          ref={ref => (this.table = ref)}
+          data={this.props.attributes.data[0]}
+          hasIndex={false}
+          tableTitle={this.props.attributes.head}
+          // colHeight={this.state.colHeight}
+          widthArr={[100, 100]}
+          tableHead={['名称', '属性值']}
+          // tableHead={this.state.tableHead}
+          refresh={this.getAttribute}
+        />
+      )
+    }
+  }
+
   render() {
+    let title = ''
+    switch (GLOBAL.Type) {
+      case constants.COLLECTION:
+        title = MAP_MODULE.MAP_COLLECTION
+        break
+      case constants.MAP_EDIT:
+        title = MAP_MODULE.MAP_EDIT
+        break
+      case constants.MAP_3D:
+        title = MAP_MODULE.MAP_3D
+        break
+      case constants.MAP_THEME:
+        title = MAP_MODULE.MAP_THEME
+        break
+    }
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '属性表',
+          title: title,
           navigation: this.props.navigation,
           // backAction: this.back,
+          // backImg: require('../../../../assets/mapTools/icon_close.png'),
+          withoutBack: true,
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
@@ -228,17 +290,7 @@ export default class LayerAttribute extends React.Component {
                 selectRow={this.selectRow}
               />
             ) : (
-              <LayerAttributeTable
-                ref={ref => (this.table = ref)}
-                data={this.props.attributes.data}
-                tableHead={this.props.attributes.head}
-                // data={this.state.attribute}
-                // tableHead={this.state.tableHead}
-                // tableTitle={this.state.tableTitle}
-                // NormalrowStyle={{width:scaleSize(720)}}
-                type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-                selectRow={this.selectRow}
-              />
+              this.renderMapLayerAttribute()
             )
           ) : (
             <View style={styles.infoView}>
@@ -246,7 +298,9 @@ export default class LayerAttribute extends React.Component {
             </View>
           )
         ) : (
-          <View style={styles.infoView} />
+          <View style={styles.infoView}>
+            <Text style={styles.info}>请选择图层</Text>
+          </View>
         )}
       </Container>
     )

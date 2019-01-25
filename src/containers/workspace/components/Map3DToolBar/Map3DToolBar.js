@@ -6,6 +6,7 @@ import {
   Text,
   SectionList,
   FlatList,
+  Image,
 } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
@@ -144,6 +145,10 @@ export default class Map3DToolBar extends React.Component {
   }
 
   openWorkspace = item => {
+    if (item.name === GLOBAL.sceneName) {
+      Toast.show('场景已打开,请勿重复打开场景')
+      return
+    }
     SScene.openScence(item.name).then(() => {
       SScene.setListener()
       SScene.getAttribute()
@@ -157,6 +162,7 @@ export default class Map3DToolBar extends React.Component {
         true,
       )
       GLOBAL.openWorkspace = true
+      GLOBAL.sceneName = item.name
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
     })
@@ -180,7 +186,14 @@ export default class Map3DToolBar extends React.Component {
           }}
           style={styles.sceneItem}
         >
-          <Text style={styles.item}>{item.name}</Text>
+          <Image
+            source={require('../../../../assets/mapToolbar/list_type_map.png')}
+            style={styles.sceneItemImg}
+          />
+          <View style={styles.sceneItemcontent}>
+            <Text style={styles.item}>{item.name}</Text>
+            <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
+          </View>
         </TouchableOpacity>
       )
     }
@@ -216,7 +229,7 @@ export default class Map3DToolBar extends React.Component {
       )
     } else if (
       (item.name === 'DESCRIPTION' && item.value !== '') ||
-      item.name === 'NAME'
+      (item.name === 'NAME' && item.value !== '')
     ) {
       return (
         <TouchableOpacity style={styles.row}>
@@ -236,7 +249,6 @@ export default class Map3DToolBar extends React.Component {
   render() {
     if (
       this.props.type === 'MAP3D_ATTRIBUTE' ||
-      this.props.type === 'MAP3D_WORKSPACE_LIST' ||
       this.props.type === 'MAP3D_IMPORTWORKSPACE'
     ) {
       return (
@@ -245,6 +257,23 @@ export default class Map3DToolBar extends React.Component {
           renderItem={this.renderItem}
           keyExtractor={(item, index) => index}
         />
+      )
+    } else if (this.props.type === 'MAP3D_WORKSPACE_LIST') {
+      return (
+        <View style={styles.sceneHead}>
+          <View style={styles.sceneView}>
+            <Image
+              source={require('../../../../assets/mapToolbar/list_type_maps.png')}
+              style={styles.sceneImg}
+            />
+            <Text style={styles.sceneTitle}>场景</Text>
+          </View>
+          <FlatList
+            data={this.state.data}
+            renderItem={this.renderItem}
+            keyExtractor={(item, index) => index}
+          />
+        </View>
       )
     } else if (this.props.type === 'MAP3D_TOOL_DISTANCEMEASURE') {
       return (

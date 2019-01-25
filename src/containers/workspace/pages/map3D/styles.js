@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { StyleSheet, Platform } from 'react-native'
+import { scaleSize, setSpText } from '../../../../utils'
 import { color } from '../../../../styles'
+const FUNCTIONHEIGHT = scaleSize(143) + (Platform.OS === 'ios' ? 20 : 0)
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -23,7 +24,7 @@ export default StyleSheet.create({
   },
   functionToolbar: {
     position: 'absolute',
-    top: scaleSize(143),
+    top: FUNCTIONHEIGHT,
     right: scaleSize(31),
     backgroundColor: color.white,
   },
@@ -35,19 +36,19 @@ export default StyleSheet.create({
     height: scaleSize(80),
   },
   title: {
-    fontSize: scaleSize(22),
+    fontSize: setSpText(22),
     color: '#333333',
     width: scaleSize(160),
   },
   placeholder: {
     marginLeft: scaleSize(160),
-    fontSize: scaleSize(18),
+    fontSize: setSpText(18),
     color: 'red',
     width: scaleSize(160),
   },
   textInputStyle: {
     flex: 1,
-    fontSize: scaleSize(20),
+    fontSize: setSpText(20),
     borderRadius: scaleSize(8),
     borderWidth: scaleSize(1),
     borderColor: '#808080',

@@ -34,10 +34,17 @@ export default class HomePopupModal extends PureComponent {
 
   _renderSeparatorLine = () => {
     return (
-      <View style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }} />
+      <View
+        style={{
+          width: '100%',
+          height: 1,
+          backgroundColor: color.itemColorBlack,
+        }}
+      />
     )
   }
   _renderItem = (label, onClick: () => {}) => {
+    let fontSize = Platform.OS === 'ios' ? 18 : 16
     return (
       <View style={{ width: '100%' }}>
         <TouchableOpacity
@@ -45,7 +52,7 @@ export default class HomePopupModal extends PureComponent {
           style={{
             width: '100%',
             height: 60,
-            backgroundColor: color.content,
+            backgroundColor: color.content_white,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -53,7 +60,9 @@ export default class HomePopupModal extends PureComponent {
             onClick()
           }}
         >
-          <Text>{label}</Text>
+          <Text style={{ fontSize: fontSize, color: color.fontColorBlack }}>
+            {label}
+          </Text>
         </TouchableOpacity>
         {this._renderSeparatorLine()}
       </View>
@@ -74,8 +83,9 @@ export default class HomePopupModal extends PureComponent {
             }}
           >
             {this._renderSeparatorLine()}
-            {this._renderItem('切换账号', this.props.onToggleAccount)}
+            {this._renderItem('切换', this.props.onToggleAccount)}
             {this._renderItem('退出', this.props.onLogout)}
+            {this._renderItem('注册', this.props.onRegister)}
           </View>
         )
       } else {
@@ -115,9 +125,10 @@ export default class HomePopupModal extends PureComponent {
   }
 
   render() {
+    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     return (
       <Modal
-        animationType={'slide'}
+        animationType={animationType}
         transparent={true}
         onRequestClose={this._onRequestClose}
         supportedOrientations={[

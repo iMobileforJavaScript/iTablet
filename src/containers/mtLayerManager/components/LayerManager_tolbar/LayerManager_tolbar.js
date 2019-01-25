@@ -2,12 +2,21 @@ import React from 'react'
 import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
 import { layersetting, layerThemeSetting } from './LayerToolbarData'
-import { View, TouchableOpacity, Animated, Text, TextInput } from 'react-native'
+import {
+  View,
+  Image,
+  TouchableOpacity,
+  Animated,
+  Text,
+  TextInput,
+  TouchableHighlight,
+} from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
 import { SMap } from 'imobile_for_reactnative'
 import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
+import { scaleSize, setSpText } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -43,10 +52,10 @@ export default class LayerManager_tolbar extends React.Component {
       data: [],
       bottom: new Animated.Value(-screen.deviceHeight),
       boxHeight: new Animated.Value(this.height),
-      isSelectlist: false,
+      showMenuDialog: false,
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
-      layerdata: props.layerdata,
+      layerdata: props.layerdata || '',
       layerName: '',
     }
     this.isShow = false
@@ -155,6 +164,16 @@ export default class LayerManager_tolbar extends React.Component {
       this.setVisible(false)
     } else if (section.title === '重命名') {
       this.dialog.setDialogVisible(true)
+    } else if (section.title === '上移') {
+      (async function() {
+        await SMap.moveUpLayer(this.state.layerdata.name)
+        await this.props.getLayers()
+      }.bind(this)())
+    } else if (section.title === '下移') {
+      (async function() {
+        await SMap.moveDownLayer(this.state.layerdata.name)
+        await this.props.getLayers()
+      }.bind(this)())
     } else if (section.title === '取消') {
       this.setVisible(false)
     } else if (section.title === '新建专题图') {
@@ -194,33 +213,53 @@ export default class LayerManager_tolbar extends React.Component {
       <ToolBarSectionList
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
+        renderItemSeparator={() => this.renderItemSeparator()}
       />
     )
   }
 
+  /**行与行之间的分隔线组件 */
+  renderItemSeparator = () => {
+    return <View style={styles.separateViewStyle} />
+  }
+
   renderHeader = ({ section }) => {
     return (
-      <TouchableOpacity
-        activeOpacity={0.8}
+      <TouchableHighlight
         onPress={() => {
           this.listAction({ section })
         }}
+        underlayColor={color.headerBackground}
       >
-        <Text
+        <View
           style={{
-            width: '100%',
-            height: 60,
-            backgroundColor: '#555555',
-            textAlign: 'center',
-            lineHeight: 60,
+            height: scaleSize(86),
+            backgroundColor: color.content_white,
+            flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
-          {section.title}
-        </Text>
-        <View
-          style={{ width: '100%', height: 4, backgroundColor: '#2D2D2F' }}
-        />
-      </TouchableOpacity>
+          <Image
+            resizeMode={'contain'}
+            style={{
+              marginLeft: scaleSize(60),
+              height: scaleSize(60),
+              width: scaleSize(60),
+            }}
+            source={section.image}
+          />
+          <Text
+            style={{
+              fontSize: setSpText(24),
+              marginLeft: scaleSize(60),
+              textAlign: 'center',
+              backgroundColor: 'transparent',
+            }}
+          >
+            {section.title}
+          </Text>
+        </View>
+      </TouchableHighlight>
     )
   }
 
@@ -247,19 +286,20 @@ export default class LayerManager_tolbar extends React.Component {
 
   confirm = () => {
     this.dialog.setDialogVisible(false)
+    this.setState({
+      layerName: '',
+    })
   }
 
   cancel = () => {
     if (this.state.layerName !== '') {
       (async function() {
-        await SMap.renameLayer(
-          this.state.layerdata.caption,
-          this.state.layerName,
-        )
+        await SMap.renameLayer(this.state.layerdata.name, this.state.layerName)
         await this.props.getLayers()
       }.bind(this)())
     }
     this.dialog.setDialogVisible(false)
+    this.setVisible(false)
     this.setState({
       layerName: '',
     })
@@ -269,7 +309,7 @@ export default class LayerManager_tolbar extends React.Component {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
-        style={styles.container}
+        showDialog={true}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
         confirmBtnTitle={'取消'}
@@ -286,9 +326,10 @@ export default class LayerManager_tolbar extends React.Component {
                 layerName: text,
               })
             }}
-            placeholderTextColor={color.themeText}
-            // defaultValue={this.state.mapName}
-            // value={this.state.mapName}
+            placeholderTextColor={color.themeText2}
+            defaultValue={
+              this.state.layerdata ? this.state.layerdata.caption : ''
+            }
             placeholder={'请输入图层名称'}
             keyboardAppearance="dark"
             style={styles.textInputStyle}

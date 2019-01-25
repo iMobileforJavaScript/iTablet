@@ -1,13 +1,13 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 let itemWidth = '70%'
 const itemHeight = 40
-const fontSize = 16
-const titleOnFocusBackgroundColor = '#303030'
-const titleOnBlurBackgroundColor = '#F0F0F0'
+const fontSize = Platform.OS === 'ios' ? 18 : 16
+const titleOnFocusBackgroundColor = color.item_separate_white
+const titleOnBlurBackgroundColor = color.content_white
 let styles = StyleSheet.create({
   container: {
-    backgroundColor: '#F0F0F0',
+    backgroundColor: color.content_white,
   },
   keyboardAvoidingStyle: {
     padding: 9,
@@ -25,11 +25,11 @@ let styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 6,
-    borderColor: color.theme,
+    borderColor: color.item_separate_white,
     borderWidth: 2,
   },
   titleContainerStyle: {
-    color: '#A9A9A9',
+    color: color.font_color_white,
     fontSize: fontSize,
     textAlign: 'center',
   },
@@ -45,7 +45,7 @@ let styles = StyleSheet.create({
   loginStyle: {
     height: itemHeight,
     width: '50%',
-    backgroundColor: '#303030',
+    backgroundColor: color.item_separate_white,
     marginTop: 20,
     borderRadius: 4,
     alignItems: 'center',

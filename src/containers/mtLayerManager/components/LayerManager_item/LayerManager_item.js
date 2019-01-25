@@ -12,6 +12,7 @@ import { Const } from '../../../../constants/index'
 import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
+import { color } from '../../../../styles'
 
 const LAYER_GROUP = 'layerGroup'
 
@@ -36,6 +37,7 @@ export default class LayerManager_item extends React.Component {
     child: Array,
     sectionID: number,
     rowID: number,
+    selectLayer: Object,
 
     setLayerVisible: () => {},
   }
@@ -384,13 +386,13 @@ export default class LayerManager_item extends React.Component {
     let icon
     switch (type) {
       case ThemeType.UNIQUE: // 单值专题图
-        icon = require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png')
+        icon = require('../../../../assets/map/layers_theme_unique_style_black.png')
         break
       case ThemeType.RANGE: // 分段专题图
-        icon = require('../../../../assets/mapTools/icon_function_theme_create_range_style.png')
+        icon = require('../../../../assets/map/layers_theme_range_style_black.png')
         break
       case ThemeType.LABEL: // 标签专题图
-        icon = require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png')
+        icon = require('../../../../assets/map/layers_theme_unify_label_style_black.png')
         break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
@@ -485,10 +487,19 @@ export default class LayerManager_item extends React.Component {
     ) : this.props.data.groupName ? (
       <View style={styles.btn} />
     ) : null
+    let select = 'transparent'
+    let selectcolor = color.black
+    if (this.props.selectLayer === this.props.data.caption) {
+      select = '#rgba(0,157,249,1)'
+      selectcolor = color.white
+    } else {
+      select = 'transparent'
+      selectcolor = color.black
+    }
     return (
       <TouchableOpacity
         activeOpacity={1}
-        style={styles.rowOne}
+        style={[styles.rowOne, { backgroundColor: select }]}
         onPress={this._pop_row}
       >
         <View style={styles.btn_container}>
@@ -512,7 +523,7 @@ export default class LayerManager_item extends React.Component {
               />
             </TouchableOpacity>
           )}
-          <View style={styles.btn}>
+          <View style={styles.btn1}>
             <Image
               resizeMode={'contain'}
               style={[
@@ -526,12 +537,12 @@ export default class LayerManager_item extends React.Component {
           </View>
         </View>
         <View style={styles.text_container}>
-          <Text style={styles.text}>{name}</Text>
+          <Text style={[styles.text, { color: selectcolor }]}>{name}</Text>
         </View>
         <TouchableOpacity style={styles.btn} onPress={this._tool_row}>
           <Image
             resizeMode={'contain'}
-            style={styles.btn_image}
+            style={styles.more_image}
             source={require('../../../../assets/function/icon_shallow_more_black.png')}
           />
         </TouchableOpacity>

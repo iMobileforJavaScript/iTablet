@@ -20,6 +20,7 @@ export default class PopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+    this.fontSize = Platform.OS === 'ios' ? 18 : 16
     this.state = {
       isClick: true,
       progress: this.props.data.downloadingProgress,
@@ -43,7 +44,9 @@ export default class PopupModal extends PureComponent {
     if (progress === '下载完成' || progress === '下载失败') {
       isClick = true
     }
-    this.setState({ progress: progress, isClick: isClick })
+    if (this.state.progress !== progress) {
+      this.setState({ progress: progress, isClick: isClick })
+    }
   }
 
   _onClose() {
@@ -57,7 +60,11 @@ export default class PopupModal extends PureComponent {
   _renderSeparatorLine = () => {
     return (
       <View
-        style={{ width: '100%', height: 4, backgroundColor: color.theme }}
+        style={{
+          width: '100%',
+          height: 1,
+          backgroundColor: color.item_separate_white,
+        }}
       />
     )
   }
@@ -75,7 +82,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
           onPress={async () => {
             if (title === '发布服务') {
               this.props.onPublishService()
@@ -90,7 +97,7 @@ export default class PopupModal extends PureComponent {
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: this.fontSize,
             }}
             numberOfLines={1}
           >
@@ -122,7 +129,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
           onPress={async () => {
             this.props.onChangeDataVisibility()
           }}
@@ -133,7 +140,7 @@ export default class PopupModal extends PureComponent {
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: this.fontSize,
             }}
           >
             {title}
@@ -158,7 +165,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content }}
+          style={{ backgroundColor: color.content_white }}
           onPress={() => {
             if (this.props.data.isDownloading === true) {
               if (progress.indexOf('%') !== -1) {
@@ -183,7 +190,7 @@ export default class PopupModal extends PureComponent {
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
-              fontSize: 16,
+              fontSize: this.fontSize,
             }}
           >
             {progress}
@@ -199,7 +206,7 @@ export default class PopupModal extends PureComponent {
   _deleteButton = title => {
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content }}
+        style={{ backgroundColor: color.content_white }}
         onPress={async () => {
           this.props.onDeleteData()
         }}
@@ -210,7 +217,7 @@ export default class PopupModal extends PureComponent {
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
-            fontSize: 16,
+            fontSize: this.fontSize,
           }}
         >
           {title}
@@ -221,10 +228,11 @@ export default class PopupModal extends PureComponent {
   }
 
   render() {
+    let animationType = Platform.OS === 'ios' ? 'slide' : 'fade'
     let visible = this.props.modalVisible
     return (
       <Modal
-        animationType={'slide'}
+        animationType={animationType}
         transparent={true}
         visible={visible}
         style={{ flex: 1 }}

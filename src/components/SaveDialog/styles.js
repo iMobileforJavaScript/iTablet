@@ -22,6 +22,7 @@ export default StyleSheet.create({
   title: {
     fontSize: size.fontSize.fontSizeSm,
     color: color.themeText,
+    backgroundColor: 'transparent',
     // width: scaleSize(160),
   },
   textInputStyle: {
@@ -30,7 +31,7 @@ export default StyleSheet.create({
     borderColor: color.gray3,
     marginTop: scaleSize(30),
     height: scaleSize(50),
-    width: '80%',
+    width: scaleSize(300),
     color: color.themeText,
     fontSize: size.fontSize.fontSizeXs,
     textAlign: 'center',

@@ -37,7 +37,7 @@ import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler } from 'react-native'
 import styles from './styles'
-
+const SAVE_TITLE = '是否保存当前地图'
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
@@ -57,6 +57,7 @@ export default class MapView extends React.Component {
     map: PropTypes.object,
     collection: PropTypes.object,
     device: PropTypes.object,
+    online: PropTypes.object,
 
     setEditLayer: PropTypes.func,
     setSelection: PropTypes.func,
@@ -83,6 +84,7 @@ export default class MapView extends React.Component {
     closeMap: PropTypes.func,
     saveMap: PropTypes.func,
     getMapSetting: PropTypes.func,
+    setSharing: PropTypes.func,
   }
 
   constructor(props) {
@@ -159,6 +161,7 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
     this.container && this.container.setLoading(true, '地图加载中')
     this.setState({
       showMap: true,
@@ -659,6 +662,21 @@ export default class MapView extends React.Component {
   }
 
   back = () => {
+    if (Platform.OS === 'android') {
+      if (this.toolBox && this.toolBox.getState().isShow) {
+        this.toolBox.close()
+        return true
+      } else if (this.SaveDialog && this.SaveDialog.getState().visible) {
+        this.SaveDialog.setDialogVisible(false)
+        return true
+      } else if (
+        GLOBAL.removeObjectDialog &&
+        GLOBAL.removeObjectDialog.getState().visible
+      ) {
+        GLOBAL.removeObjectDialog.setDialogVisible(false)
+        return true
+      }
+    }
     if (
       Platform.OS === 'android' &&
       this.toolBox &&
@@ -903,6 +921,7 @@ export default class MapView extends React.Component {
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
         setMapType={this.setMapType}
+        online={this.props.online}
         save={() => {
           //this.saveMapWithNoWorkspace()
         }}
@@ -988,7 +1007,7 @@ export default class MapView extends React.Component {
         headerProps={{
           title: this.mapName,
           navigation: this.props.navigation,
-          headerRight: this.renderHeaderBtns(),
+          // headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
         }}

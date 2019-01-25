@@ -1,5 +1,5 @@
 import { StyleSheet, Platform } from 'react-native'
-import { scaleSize } from '../../utils'
+import { scaleSize, setSpText } from '../../utils'
 import { color } from '../../styles'
 
 export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
@@ -65,7 +65,7 @@ export default StyleSheet.create({
     zIndex: 10001,
     width: 60,
     padding: 5,
-    marginLeft: scaleSize(10),
+    marginLeft: scaleSize(20),
     justifyContent: 'center',
     // alignItems: 'flex-start',
   },
@@ -91,8 +91,8 @@ export default StyleSheet.create({
     position: 'absolute',
     zIndex: 10001,
     width: 60,
-    padding: 5,
-    marginLeft: scaleSize(25),
+    // padding: 5,
+    marginLeft: scaleSize(35),
     alignItems: 'flex-start',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -102,10 +102,11 @@ export default StyleSheet.create({
     zIndex: 10001,
     height: scaleSize(60),
     alignItems: 'center',
-    justifyContent: 'space-around',
+    // justifyContent: 'space-around',
+    justifyContent: 'center',
     flexDirection: 'row',
     right: scaleSize(25),
-    backgroundColor: 'transparent',
+    // backgroundColor: 'transparent',
     // backgroundColor:"red",
   },
   headerTitleView: {
@@ -120,7 +121,7 @@ export default StyleSheet.create({
     // fontSize: 18,
     // color: '#222222',
     color: 'white',
-    fontSize: scaleSize(36),
+    fontSize: setSpText(36),
     // fontWeight: 'bold',
     backgroundColor: 'rgba(255, 255, 255, 0)',
   },

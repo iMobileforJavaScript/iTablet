@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
+import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import {
   View,
@@ -17,6 +18,7 @@ export default class setting extends Component {
     data: Array,
     setSettingData: () => {},
     settingData: any,
+    device: Object,
   }
   constructor(props) {
     super(props)
@@ -96,18 +98,30 @@ export default class setting extends Component {
         return (
           <View>
             <View style={styles.row}>
-              <Text style={styles.itemName} />
+              <Text style={styles.switchText}>{item.name}</Text>
               <Switch
                 style={styles.switch}
-                trackColor={'black'}
-                thumbColor={'white'}
+                trackColor={{ false: 'white', true: '#505050' }}
+                thumbColor={item.value ? 'white' : '#505050'}
                 value={item.value}
                 onValueChange={value => {
                   this._onValueChange(value, item, index)
                 }}
               />
             </View>
-            {itemSeparator ? <View style={styles.itemSeparator} /> : <View />}
+            {itemSeparator ? (
+              <View
+                style={[
+                  styles.itemSeparator,
+                  {
+                    width: 0.956 * this.props.device.width,
+                    marginLeft: 0.022 * this.props.device.width,
+                  },
+                ]}
+              />
+            ) : (
+              <View />
+            )}
           </View>
         )
       } else {
@@ -117,7 +131,19 @@ export default class setting extends Component {
               <Text style={styles.itemName}>{item.name}</Text>
               <Text style={styles.itemValue}>{item.value}</Text>
             </View>
-            {itemSeparator ? <View style={styles.itemSeparator} /> : <View />}
+            {itemSeparator ? (
+              <View
+                style={[
+                  styles.itemSeparator,
+                  {
+                    width: 0.956 * this.props.device.width,
+                    marginLeft: 0.022 * this.props.device.width,
+                  },
+                ]}
+              />
+            ) : (
+              <View />
+            )}
           </View>
         )
       }
@@ -158,8 +184,9 @@ export default class setting extends Component {
         style={styles.container}
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '设置',
+          title: MAP_MODULE.MAP_3D,
           navigation: this.props.navigation,
+          withoutBack: true,
         }}
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}

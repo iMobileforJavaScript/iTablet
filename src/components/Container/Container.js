@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, ScrollView, Animated } from 'react-native'
+import { View, ScrollView, Animated, StatusBar } from 'react-native'
 import Header from '../Header'
 import Loading from './Loading'
 import { scaleSize } from '../../utils'
@@ -125,20 +125,22 @@ export default class Container extends PureComponent {
     // 是否为flex布局的header
     let fixHeader =
       this.props.headerProps && this.props.headerProps.type === 'fix'
-
     return (
-      <ContainerView style={[styles.container, this.props.style]}>
-        {!fixHeader && this.renderHeader(fixHeader)}
-        {/*<View style={{ flex: 1 }}>{this.props.children}</View>*/}
-        {this.props.children}
-        {fixHeader && this.renderHeader(fixHeader)}
-        {this.renderBottom()}
-        <Loading
-          ref={ref => (this.loading = ref)}
-          info={this.props.dialogInfo}
-          initLoading={this.props.initWithLoading}
-        />
-      </ContainerView>
+      <View style={{ flex: 1 }}>
+        <StatusBar animated={true} hidden={false} />
+        <ContainerView style={[styles.container, this.props.style]}>
+          {!fixHeader && this.renderHeader(fixHeader)}
+          {/*<View style={{ flex: 1 }}>{this.props.children}</View>*/}
+          {this.props.children}
+          {fixHeader && this.renderHeader(fixHeader)}
+          {this.renderBottom()}
+          <Loading
+            ref={ref => (this.loading = ref)}
+            info={this.props.dialogInfo}
+            initLoading={this.props.initWithLoading}
+          />
+        </ContainerView>
+      </View>
     )
   }
 }

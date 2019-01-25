@@ -75,13 +75,13 @@ export default class TemplateTab extends React.Component {
     let icon
     switch (item.type) {
       case 'Region':
-        icon = require('../../../../assets/map/layertype_georegion.png')
+        icon = require('../../../../assets/map/icon-shallow-polygon_black.png')
         break
       case 'Line':
-        icon = require('../../../../assets/map/layertype_line.png')
+        icon = require('../../../../assets/map/icon-shallow-line_black.png')
         break
       case 'Point':
-        icon = require('../../../../assets/map/layertype_point.png')
+        icon = require('../../../../assets/map/icon-shallow-dot_black.png')
         break
     }
     return (
@@ -94,7 +94,7 @@ export default class TemplateTab extends React.Component {
         <View style={styles.listItemContent}>
           <Text
             style={styles.listItemName}
-            numberOfLines={1}
+            numberOfLines={2}
             ellipsizeMode={'tail'}
           >
             {item.name}
@@ -130,19 +130,20 @@ export default class TemplateTab extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.theme,
+    backgroundColor: color.bgW,
   },
   listItem: {
-    height: scaleSize(60),
+    height: scaleSize(64),
     // width: 100,
     justifyContent: 'center',
-    backgroundColor: color.theme,
+    alignItems: 'center',
+    backgroundColor: color.bgW,
     paddingHorizontal: scaleSize(30),
     flexDirection: 'row',
   },
   listItemImg: {
-    height: scaleSize(60),
-    width: scaleSize(60),
+    height: scaleSize(64),
+    width: scaleSize(64),
   },
   listItemContent: {
     flex: 1,
@@ -150,15 +151,15 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
   },
   listItemName: {
-    height: scaleSize(32),
+    minHeight: scaleSize(32),
     width: scaleSize(160),
-    color: color.themeText,
+    color: color.font_color_white,
     fontSize: size.fontSize.fontSizeSm,
   },
   listItemSubTitle: {
     height: scaleSize(32),
     width: scaleSize(160),
-    color: color.themeText,
+    color: color.themeText2,
     fontSize: size.fontSize.fontSizeSm,
   },
 })

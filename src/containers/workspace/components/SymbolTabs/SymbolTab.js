@@ -11,10 +11,26 @@ export default class SymbolTab extends React.Component {
     data?: Array,
     setCurrentSymbol?: () => {},
     showToolbar?: () => {},
+    device?: () => {},
   }
 
   static defaultProps = {
     data: [],
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      column: props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.device.orientation !== prevProps.device.orientation) {
+      this.setState({
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
   }
 
   _onSymbolClick = data => {
@@ -48,8 +64,6 @@ export default class SymbolTab extends React.Component {
   }
 
   render() {
-    // let count = Platform.OS === 'ios' ? 4 : 5
-    // let imageSize = Platform.OS === 'ios' ? 55 : 50
     return (
       <View style={styles.container}>
         <SMSymbolTable
@@ -61,10 +75,10 @@ export default class SymbolTab extends React.Component {
             // width: 600,
             textSize: 15,
             lineSpacing: 10,
-            imageSize: 50,
-            // count: 5,
-            legendBackgroundColor: dataUtil.colorRgba(color.theme),
-            textColor: dataUtil.colorRgba(color.themeText),
+            imageSize: 40,
+            count: this.state.column,
+            legendBackgroundColor: dataUtil.colorRgba(color.bgW),
+            textColor: dataUtil.colorRgba(color.font_color_white),
           }}
           onSymbolClick={this._onSymbolClick}
         />
@@ -77,12 +91,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    backgroundColor: color.theme,
+    backgroundColor: color.bgW,
   },
   table: {
     flex: 1,
     paddingHorizontal: scaleSize(30),
     alignItems: 'center',
-    backgroundColor: color.theme,
+    backgroundColor: color.bgW,
   },
 })

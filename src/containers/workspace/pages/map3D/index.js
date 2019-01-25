@@ -10,7 +10,7 @@ import {
   exportmap3DWorkspace,
   importSceneWorkspace,
 } from '../../../../models/map'
-
+import { setSharing } from '../../../../models/online'
 const mapStateToProps = state => ({
   editLayer: state.layers.toJS().editLayer,
   latestMap: state.map.toJS().latestMap,
@@ -20,6 +20,7 @@ const mapStateToProps = state => ({
   currentLayer: state.layers.toJS().currentLayer,
   attributes: state.layers.toJS().attributes,
   device: state.device.toJS().device,
+  online: state.online.toJS(),
 })
 
 const mapDispatchToProps = {
@@ -29,6 +30,7 @@ const mapDispatchToProps = {
   setAttributes,
   exportmap3DWorkspace,
   importSceneWorkspace,
+  setSharing,
 }
 
 export default connect(

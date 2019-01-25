@@ -2,19 +2,20 @@ import { Dimensions, StyleSheet } from 'react-native'
 import { color } from '../../../styles'
 export const itemWidth = Dimensions.get('window').width
 export const itemHeight = 140
-export const imageWidth = 120
-export const imageHeight = 120
+export const imageWidth = 90
+export const imageHeight = 90
 export const textHeight = 40
 const smallFontSize = 12
 const largeFontSize = 18
+const paddingLeft = 15
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content,
+    backgroundColor: color.content_white,
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content,
+    backgroundColor: color.content_white,
   },
 
   itemViewStyle: {
@@ -23,28 +24,31 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 10,
     alignItems: 'center',
-    backgroundColor: color.content,
+    backgroundColor: color.content_white,
   },
   imageStyle: {
     width: imageWidth,
     height: imageHeight,
+    backgroundColor: color.image_bg_white,
   },
   restTitleTextStyle: {
-    width: itemWidth - 30 - imageWidth,
+    width: '100%',
     fontSize: largeFontSize,
     fontWeight: 'bold',
-    color: 'white',
-    paddingLeft: 10,
+    // color: 'white',
+    paddingLeft: paddingLeft,
     textAlign: 'left',
     flexWrap: 'wrap',
+    marginRight: 100,
   },
 
   viewStyle2: {
-    width: itemWidth - 30 - imageWidth,
+    width: '100%',
     height: 20,
     flexDirection: 'row',
-    paddingLeft: 10,
+    paddingLeft: paddingLeft,
     marginTop: 10,
+    marginRight: 100,
   },
   imageStyle2: {
     width: 20,
@@ -52,33 +56,14 @@ const styles = StyleSheet.create({
   },
   textStyle2: {
     textAlign: 'left',
-    color: 'white',
+    // color: 'white',
     lineHeight: 20,
     fontSize: smallFontSize,
     paddingLeft: 5,
   },
-  downloadStyle: {
-    width: 200,
-    height: 40,
-    position: 'absolute',
-    bottom: 0,
-    right: 0,
-    justifyContent: 'flex-end',
-    flexDirection: 'row',
-    backgroundColor: color.content,
-  },
-  downloadTextStyle: {
-    width: 80,
-    lineHeight: 30,
-    textAlign: 'center',
-    position: 'absolute',
-    bottom: 10,
-    color: 'white',
-  },
   separateViewStyle: {
     width: '100%',
-    height: 8,
-    backgroundColor: color.theme,
+    height: 4,
   },
 })
 export default styles

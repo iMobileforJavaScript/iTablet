@@ -11,6 +11,9 @@ import NavigationService from '../../NavigationService'
 import RNFS from 'react-native-fs'
 import { FileTools } from '../../../native'
 import ConstPath from '../../../constants/ConstPath'
+import { color } from '../../../styles'
+import UserType from '../../../constants/UserType'
+
 export default class RenderFindItem extends Component {
   props: {
     data: Object,
@@ -48,24 +51,28 @@ export default class RenderFindItem extends Component {
     if (
       this.props.user &&
       this.props.user.currentUser &&
-      this.props.user.currentUser.userName &&
-      this.props.user.currentUser.userName !== ''
+      (this.props.user.currentUser.userType === UserType.PROBATION_USER ||
+        (this.props.user.currentUser.userName &&
+          this.props.user.currentUser.userName !== ''))
     ) {
       if (this.state.isDownloading) {
         Toast.show('正在下载...')
         return
       }
-      Toast.show('开始下载')
       this.setState({ progress: '下载中...', isDownloading: true })
       let dataId = this.props.data.id
       let dataUrl =
         'https://www.supermapol.com/web/datas/' + dataId + '/download'
       let fileName = this.props.data.fileName
       let appHome = await FileTools.appendingHomeDirectory()
+      let userName =
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
+          ? 'Customer'
+          : this.props.user.currentUser.userName
       let fileDir =
         appHome +
         ConstPath.UserPath +
-        this.props.user.currentUser.userName +
+        userName +
         '/' +
         ConstPath.RelativePath.ExternalData
       let exists = await RNFS.exists(fileDir)
@@ -94,9 +101,21 @@ export default class RenderFindItem extends Component {
         ret.promise
           .then(async result => {
             if (result.statusCode === 200) {
-              Toast.show('下载成功')
               this.setState({ progress: '下载完成', isDownloading: false })
-              await FileTools.unZipFile(filePath, fileDir)
+              let savePath =
+                appHome +
+                ConstPath.UserPath +
+                userName +
+                '/' +
+                ConstPath.RelativePath.ExternalData +
+                fileName
+              let result = await FileTools.unZipFile(
+                filePath,
+                savePath.substring(0, savePath.length - 4),
+              )
+              if (result === false) {
+                Toast.show('网络数据已损坏，无法正常使用')
+              }
               FileTools.deleteFile(filePath)
             }
           })
@@ -116,9 +135,9 @@ export default class RenderFindItem extends Component {
   }
   render() {
     let date = new Date(this.props.data.lastModfiedTime)
-    let year = date.getFullYear() + '年'
-    let month = date.getMonth() + 1 + '月'
-    let day = date.getDate() + '日'
+    let year = date.getFullYear() + '/'
+    let month = date.getMonth() + 1 + '/'
+    let day = date.getDate() + ''
     let hour = date.getHours() + ':'
     if (hour.length < 3) {
       hour = '0' + hour
@@ -132,6 +151,12 @@ export default class RenderFindItem extends Component {
       this.props.data.size / 1024 / 1024 > 0.1
         ? (this.props.data.size / 1024 / 1024).toFixed(2) + 'MB'
         : (this.props.data.size / 1024).toFixed(2) + 'K'
+    let fontColor = color.fontColorBlack
+    let index = this.props.data.fileName.lastIndexOf('.')
+    let titleName =
+      index === -1
+        ? this.props.data.fileName
+        : this.props.data.fileName.substring(0, index)
     return (
       <View>
         <View style={styles.itemViewStyle}>
@@ -141,59 +166,95 @@ export default class RenderFindItem extends Component {
             }}
           >
             <Image
-              resizeMode={'contain'}
+              resizeMode={'stretch'}
               style={styles.imageStyle}
               source={{ uri: this.props.data.thumbnail }}
             />
           </TouchableOpacity>
 
-          <View>
-            <Text style={styles.restTitleTextStyle} numberOfLines={1}>
-              {this.props.data.fileName}
+          <View style={{ flex: 1 }}>
+            <Text
+              style={[styles.restTitleTextStyle, { color: fontColor }]}
+              numberOfLines={2}
+            >
+              {titleName}
             </Text>
             <View style={styles.viewStyle2}>
               <Image
-                style={styles.imageStyle2}
+                style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
                 source={require('../../../assets/tabBar/tab_user.png')}
               />
-              <Text style={styles.textStyle2} numberOfLines={1}>
+              <Text
+                style={[styles.textStyle2, { color: fontColor }]}
+                numberOfLines={1}
+              >
                 {this.props.data.nickname}
               </Text>
             </View>
             <View style={[styles.viewStyle2, { marginTop: 5 }]}>
               <Image
-                style={styles.imageStyle2}
+                style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/find-time.png')}
+                source={require('../../../assets/tabBar/find_time.png')}
               />
-              <Text style={styles.textStyle2} numberOfLines={1}>
+              <Text
+                style={[styles.textStyle2, { color: fontColor }]}
+                numberOfLines={1}
+              >
                 {time}
               </Text>
             </View>
           </View>
-        </View>
-        <TouchableOpacity
-          style={styles.downloadStyle}
-          onPress={() => {
-            this._downloadFile()
-          }}
-        >
-          <Text
-            style={[
-              styles.downloadTextStyle,
-              { width: 100, right: 80, textAlign: 'left' },
-            ]}
-            numberOfLines={1}
+          <View
+            style={{
+              width: 100,
+              height: '100%',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
-            大小:
-            {size}
-          </Text>
-          <Text style={styles.downloadTextStyle} numberOfLines={1}>
-            {this.state.progress}
-          </Text>
-        </TouchableOpacity>
-        <View style={styles.separateViewStyle} />
+            <Text
+              style={{ fontSize: 12, textAlign: 'center', color: fontColor }}
+              numberOfLines={1}
+            >
+              {size}
+            </Text>
+            <TouchableOpacity
+              style={{
+                width: 50,
+                height: 50,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+              onPress={() => {
+                this._downloadFile()
+              }}
+            >
+              <Image
+                style={{ width: 35, height: 35, tintColor: fontColor }}
+                source={require('../../../assets/tabBar/find_download.png')}
+              />
+            </TouchableOpacity>
+            <Text
+              style={{
+                fontSize: 12,
+                textAlign: 'center',
+                width: 100,
+                color: fontColor,
+              }}
+              numberOfLines={1}
+            >
+              {this.state.progress}
+            </Text>
+          </View>
+        </View>
+        <View
+          style={[
+            styles.separateViewStyle,
+            { backgroundColor: color.itemColorGray },
+          ]}
+        />
       </View>
     )
   }

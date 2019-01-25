@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { color } from '../../styles'
 import { View, Text, Switch } from 'react-native'
 import styles from './styles'
 export default class MapSetting extends Component {
@@ -8,6 +7,7 @@ export default class MapSetting extends Component {
     onPress: () => {},
     mapSetting: any,
     index: number,
+    device: Object,
   }
 
   _onValueChange = (value, item, index) => {
@@ -23,13 +23,10 @@ export default class MapSetting extends Component {
               <Text style={styles.itemName}>{this.props.data.name}</Text>
               <Switch
                 style={styles.switch}
-                trackColor={{
-                  false: color.reverseTheme,
-                  true: '#00BFFF',
-                }}
-                thumbColor={color.theme}
+                trackColor={{ false: 'white', true: '#505050' }}
+                thumbColor={this.props.data.value ? 'white' : '#505050'}
                 ios_backgroundColor={
-                  this.props.data.value ? color.theme : color.border
+                  this.props.data.value ? '#505050' : '#F0F0F0'
                 }
                 value={this.props.data.value}
                 onValueChange={value => {
@@ -37,7 +34,15 @@ export default class MapSetting extends Component {
                 }}
               />
             </View>
-            <View style={styles.itemSeparator} />
+            <View
+              style={[
+                styles.itemSeparator,
+                {
+                  width: 0.956 * this.props.device.width,
+                  marginLeft: 0.022 * this.props.device.width,
+                },
+              ]}
+            />
           </View>
         )
       } else {
@@ -47,7 +52,15 @@ export default class MapSetting extends Component {
               <Text style={styles.itemName}>{this.props.data.name}</Text>
               <Text style={styles.itemValue}>{this.props.data.value}</Text>
             </View>
-            <View style={styles.itemSeparator} />
+            <View
+              style={[
+                styles.itemSeparator,
+                {
+                  width: 0.956 * this.props.device.width,
+                  marginLeft: 0.022 * this.props.device.width,
+                },
+              ]}
+            />
           </View>
         )
       }

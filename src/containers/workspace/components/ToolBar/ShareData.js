@@ -1,15 +1,19 @@
 /**
  * 获取地图分享数据
  */
-import { SMap, SOnlineService, SScene } from 'imobile_for_reactnative'
+import { SOnlineService, SScene } from 'imobile_for_reactnative'
 import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
-import ToolbarBtnType from './ToolbarBtnType'
+// import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}
 let isSharing = false
+
+function setParams(params) {
+  _params = params
+}
 
 function getShareData(type, params) {
   let data = [],
@@ -23,7 +27,8 @@ function getShareData(type, params) {
           key: constants.SUPERMAP_ONLINE,
           title: constants.SUPERMAP_ONLINE,
           action: () => {
-            showMap3DList(constants.SUPERMAP_ONLINE)
+            // showMap3DList(constants.SUPERMAP_ONLINE)
+            showSaveDialog(ConstToolType.MAP_SHARE_MAP3D)
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_share_online.png'),
@@ -58,7 +63,8 @@ function getShareData(type, params) {
           key: constants.SUPERMAP_ONLINE,
           title: constants.SUPERMAP_ONLINE,
           action: () => {
-            showMapList(constants.SUPERMAP_ONLINE)
+            // showMapList(constants.SUPERMAP_ONLINE)
+            showSaveDialog(constants.SUPERMAP_ONLINE)
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_share_online.png'),
@@ -91,62 +97,104 @@ function getShareData(type, params) {
   return { data, buttons }
 }
 
-function showMapList(type) {
-  let data = []
-  SMap.getMaps().then(list => {
-    data = [
-      {
-        title: '地图',
-        data: list,
-      },
-    ]
-    _params.setToolbarVisible &&
-      _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
-        containerType: 'list',
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[3],
-        listSelectable: true,
-        data,
-        shareTo: type,
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.PLACEHOLDER,
-          ToolbarBtnType.SHARE,
-        ],
+function showSaveDialog(type) {
+  if (!_params.user.currentUser.userName) {
+    Toast.show('请登陆后再分享')
+    return
+  }
+  if (type !== ConstToolType.MAP_SHARE_MAP3D && !_params.map.currentMap.name) {
+    Toast.show(ConstInfo.PLEASE_SAVE_MAP)
+    return
+  }
+  if (isSharing) {
+    Toast.show('分享中，请稍后')
+    return
+  }
+  if (type === constants.SUPERMAP_ONLINE) {
+    let list = [_params.map.currentMap.name]
+    _params.setInputDialogVisible &&
+      _params.setInputDialogVisible(true, {
+        placeholder: '请输入分享数据名称',
+        confirmAction: value => {
+          shareToSuperMapOnline(list, value)
+          _params.setInputDialogVisible(false)
+        },
       })
-  })
+  } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
+    SScene.getMapList().then(list => {
+      let data = [list[0].name]
+      _params.setInputDialogVisible &&
+        _params.setInputDialogVisible(true, {
+          placeholder: '请输入分享数据名称',
+          confirmAction: value => {
+            share3DToSuperMapOnline(data, value)
+            _params.setInputDialogVisible(false)
+          },
+        })
+    })
+  }
 }
 
-function showMap3DList(type) {
-  let data = []
-  let arr = []
-  SScene.getMapList().then(list => {
-    for (let index = 0; index < list.length; index++) {
-      const element = list[index]
-      arr.push({ title: element.name })
-    }
-    data = [
-      {
-        title: '场景',
-        data: arr,
-      },
-    ]
-    _params.setToolbarVisible &&
-      _params.setToolbarVisible(true, ConstToolType.MAP3D_SHARE, {
-        containerType: 'list',
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[3],
-        listSelectable: true,
-        data,
-        shareTo: type,
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.PLACEHOLDER,
-          ToolbarBtnType.MAP3DSHARE,
-        ],
-      })
-  })
-}
+// function showMapList(type) {
+//   let data = []
+//   SMap.getMaps().then(list => {
+//     data = [
+//       {
+//         title: '地图',
+//         data: list,
+//       },
+//     ]
+//     _params.setToolbarVisible &&
+//       _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
+//         containerType: 'list',
+//         isFullScreen: true,
+//         height:
+//           _params.device.orientation === 'LANDSCAPE'
+//             ? ConstToolType.THEME_HEIGHT[4]
+//             : ConstToolType.HEIGHT[3],
+//         listSelectable: true,
+//         data,
+//         shareTo: type,
+//         buttons: [
+//           ToolbarBtnType.CANCEL,
+//           ToolbarBtnType.PLACEHOLDER,
+//           ToolbarBtnType.SHARE,
+//         ],
+//       })
+//   })
+// }
+
+// function showMap3DList(type) {
+//   let data = []
+//   let arr = []
+//   SScene.getMapList().then(list => {
+//     for (let index = 0; index < list.length; index++) {
+//       const element = list[index]
+//       arr.push({ title: element.name })
+//     }
+//     data = [
+//       {
+//         title: '场景',
+//         data: arr,
+//       },
+//     ]
+//     _params.setToolbarVisible &&
+//       _params.setToolbarVisible(true, ConstToolType.MAP3D_SHARE, {
+//         containerType: 'list',
+//         isFullScreen: true,
+//         height: ConstToolType.HEIGHT[3],
+//         listSelectable: true,
+//         data,
+//         shareTo: type,
+//         buttons: [
+//           ToolbarBtnType.CANCEL,
+//           ToolbarBtnType.PLACEHOLDER,
+//           ToolbarBtnType.MAP3DSHARE,
+//         ],
+//       })
+//   })
+// }
+
 /**
  * 分享到SuperMap Online
  */
@@ -161,6 +209,12 @@ async function shareToSuperMapOnline(list = [], name = '') {
       return
     }
     Toast.show('开始分享')
+    _params.setToolbarVisible && _params.setToolbarVisible(false)
+    _params.setSharing({
+      module: GLOBAL.Type,
+      name: name,
+      progress: 0,
+    })
     _params.exportWorkspace(
       {
         maps: list,
@@ -177,11 +231,28 @@ async function shareToSuperMapOnline(list = [], name = '') {
 
         SOnlineService.deleteData(dataName).then(async () => {
           await SOnlineService.uploadFile(path, dataName, {
-            // onProgress: progress => {
-            //   console.warn(progress)
-            // },
+            onProgress: progress => {
+              _params.setSharing({
+                module: GLOBAL.Type,
+                name: dataName,
+                progress: (progress > 95 ? 95 : progress) / 100,
+              })
+            },
             onResult: async () => {
               let result = await SOnlineService.publishService(dataName)
+              if (result) {
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                  progress: 1,
+                })
+              }
+              setTimeout(() => {
+                _params.setSharing({
+                  module: GLOBAL.Type,
+                  name: dataName,
+                })
+              }, 2000)
               Toast.show(
                 result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
               )
@@ -197,7 +268,50 @@ async function shareToSuperMapOnline(list = [], name = '') {
   }
 }
 
+/**
+ * 分享3D到SuperMap Online
+ */
+async function share3DToSuperMapOnline(list = [], name = '') {
+  try {
+    let isSharing = false
+    if (!_params.user.currentUser.userName) {
+      Toast.show('请登陆后再分享')
+      return
+    }
+    if (isSharing) {
+      Toast.show('分享中，请稍后')
+      return
+    }
+    if (list.length > 0) {
+      isSharing = true
+      for (let index = 0; index < list.length; index++) {
+        _params.exportmap3DWorkspace(
+          { name: list[index] },
+          async (result, zipPath) => {
+            if (result) {
+              await SOnlineService.uploadFile(zipPath, name || list[index], {
+                onResult: async result => {
+                  Toast.show(
+                    result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+                  )
+                  FileTools.deleteFile(zipPath)
+                  isSharing = false
+                },
+              })
+            } else {
+              Toast.show('上传失败')
+            }
+          },
+        )
+      }
+    }
+  } catch (error) {
+    Toast.show('分享失败')
+  }
+}
+
 export default {
   getShareData,
   shareToSuperMapOnline,
+  setParams,
 }

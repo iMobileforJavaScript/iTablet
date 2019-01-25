@@ -4,10 +4,13 @@
 export default {
   CLOSE_MAP_SUCCESS: '地图保存成功',
   CLOSE_MAP_FAILED: '地图已存在',
+  PLEASE_SAVE_MAP: '请先保存地图',
 
-  EXPORTING_MAP: '正在导出地图，请稍后',
+  EXPORTING_MAP: '开始导出地图',
+  WAITING_FOR_EXPORTING_MAP: '正在导出地图，请稍后',
   EXPORT_WORKSPACE_SUCCESS: '地图导出成功',
   EXPORT_WORKSPACE_FAILED: '地图导出失败',
+  ZIP_FAILED: '压缩文件失败',
 
   MAP_SYMBOL_COLLECTION_CREATING: '正在新建普通采集',
   MAP_SYMBOL_COLLECTION_CREATED: '符号采集已创建',
@@ -47,4 +50,7 @@ export default {
 
   ADD_SUCCESS: '添加成功',
   ADD_FAILED: '添加成功',
+
+  READING_DATA: '读取数据中',
+  LOADING_DATA: '数据加载中',
 }

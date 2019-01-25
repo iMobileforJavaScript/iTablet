@@ -4,6 +4,7 @@ import styles, { textHeight } from './Styles'
 import NavigationService from '../../../NavigationService'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
+// import { color } from '../../../../styles'
 export default class RenderServiceItem extends PureComponent {
   props: {
     onItemPress: () => {},
@@ -58,29 +59,41 @@ export default class RenderServiceItem extends PureComponent {
             </Text>
             <View style={{ flex: 1 }} />
             <Text
-              onPress={() => {
-                if (this.props.onItemPress) {
-                  this.props.onItemPress(
-                    this.props.isPublish,
-                    this.props.itemId,
-                    this.props.restTitle,
-                    this.props.index,
-                  )
-                }
-              }}
               numberOfLines={1}
               style={[
                 styles.restTitleTextStyle,
                 {
                   lineHeight: textHeight,
                   textAlign: 'right',
-                  paddingRight: scaleSize(20),
+                  paddingRight: scaleSize(25),
                 },
               ]}
+            />
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              if (this.props.onItemPress) {
+                this.props.onItemPress(
+                  this.props.isPublish,
+                  this.props.itemId,
+                  this.props.restTitle,
+                  this.props.index,
+                )
+              }
+            }}
+            style={{ width: 50, height: '100%' }}
+          >
+            <Text
+              style={{
+                position: 'absolute',
+                bottom: 2,
+                right: 0,
+                fontSize: 30,
+              }}
             >
               ...
             </Text>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.separateViewStyle} />
       </View>

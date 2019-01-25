@@ -13,11 +13,11 @@ import {
   RefreshControl,
   Dimensions,
 } from 'react-native'
-import { SOnlineService } from 'imobile_for_reactnative'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../../utils/index'
 import styles from './Styles'
-
+import color from '../../../styles/color'
+import FetchUtils from '../../../utils/FetchUtils'
 export default class Find extends Component {
   props: {
     navigation: Object,
@@ -35,7 +35,8 @@ export default class Find extends Component {
     }
     this.loadCount = 1
     this.flatListData = []
-    this.userDataCount = -1
+    this.allUserDataCount = -1
+    this.currentLoadDataCount = 0
   }
   componentDidMount() {
     this._loadFirstUserData()
@@ -76,14 +77,16 @@ export default class Find extends Component {
   _loadUserData = async currentPage => {
     let arrObjContent = []
     try {
-      let strUserData = await SOnlineService.getAllUserDataList(currentPage)
-      let objUserData = JSON.parse(strUserData)
-      this.userDataCount = objUserData.total
+      let objUserData = await this.getAllUserZipData(currentPage)
+      this.currentLoadDataCount = currentPage * 9
+      this.allUserDataCount = objUserData.total
       let objArrUserDataContent = objUserData.content
       let contentLength = objArrUserDataContent.length
       for (let i = 0; i < contentLength; i++) {
         let objContent = objArrUserDataContent[i]
-        arrObjContent.push(objContent)
+        if (objContent.type === 'WORKSPACE') {
+          arrObjContent.push(objContent)
+        }
       }
       if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
         this.flatListData = this.flatListData.concat(arrObjContent)
@@ -95,6 +98,13 @@ export default class Find extends Component {
     }
     return arrObjContent
   }
+
+  getAllUserZipData = currentPage => {
+    let time = new Date().getTime()
+    let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&tags=%5B%22%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
+    return FetchUtils.getObjJson(uri)
+  }
+
   _onRefresh = async () => {
     try {
       if (!this.state.isRefresh) {
@@ -124,7 +134,10 @@ export default class Find extends Component {
   }
 
   _footView() {
-    if (this.userDataCount >= this.state.data.length) {
+    if (
+      this.allUserDataCount >= this.state.data.length &&
+      this.allUserDataCount > this.currentLoadDataCount
+    ) {
       return (
         <View
           style={{
@@ -150,7 +163,7 @@ export default class Find extends Component {
               lineHeight: 20,
               fontSize: 12,
               textAlign: 'center',
-              color: 'white',
+              color: 'orange',
             }}
           >
             加载中...
@@ -185,7 +198,12 @@ export default class Find extends Component {
   _selectRender = () => {
     if (this.state.data.length === 1 && this.state.data[0].id === undefined) {
       return (
-        <View style={styles.noDataViewStyle}>
+        <View
+          style={[
+            styles.noDataViewStyle,
+            { backgroundColor: color.contentColorWhite },
+          ]}
+        >
           <View
             style={{
               height: 2,
@@ -199,7 +217,10 @@ export default class Find extends Component {
 
     return (
       <FlatList
-        style={styles.haveDataViewStyle}
+        style={[
+          styles.haveDataViewStyle,
+          { backgroundColor: color.contentColorWhite },
+        ]}
         data={this.state.data}
         renderItem={data => {
           return <RenderFindItem user={this.props.user} data={data.item} />
@@ -209,8 +230,8 @@ export default class Find extends Component {
             refreshing={this.state.isRefresh}
             onRefresh={this._onRefresh}
             colors={['orange', 'red']}
-            tintColor={'white'}
-            titleColor={'white'}
+            tintColor={'orange'}
+            titleColor={'orange'}
             title={'刷新中...'}
             enabled={true}
           />
@@ -228,7 +249,7 @@ export default class Find extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '用户数据',
+          title: '发现',
           withoutBack: true,
           navigation: this.props.navigation,
         }}

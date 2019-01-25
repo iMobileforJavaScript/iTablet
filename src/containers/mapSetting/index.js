@@ -6,6 +6,7 @@ import { closeMap } from '../../models/map'
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
   mapSetting: state.setting.toJS().mapSetting,
+  device: state.device.toJS().device,
 })
 
 const mapDispatchToProps = {

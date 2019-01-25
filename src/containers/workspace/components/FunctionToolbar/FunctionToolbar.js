@@ -5,14 +5,14 @@
  */
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
-import { MTBtn } from '../../../../components'
+import { MTBtn, PieProgress } from '../../../../components'
 import {
   ConstToolType,
   Const,
   ConstInfo,
   ConstPath,
 } from '../../../../constants'
-import { scaleSize, Toast } from '../../../../utils'
+import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import styles from './styles'
 import {
@@ -40,6 +40,8 @@ export default class FunctionToolbar extends React.Component {
     hide?: boolean,
     direction?: string,
     separator?: number,
+    shareProgress?: number,
+    online?: Object,
     type: string,
     data?: Array,
     Label: () => {},
@@ -72,15 +74,27 @@ export default class FunctionToolbar extends React.Component {
     this.state = {
       type: props.type,
       data: data,
-      right: new Animated.Value(scaleSize(20)),
+      right: new Animated.Value(scaleSize(31)),
     }
     this.visible = true
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(this.props.online.share) !==
+      JSON.stringify(prevProps.online.share)
+    ) {
+      let data = prevProps.data || this.getData(prevProps.type)
+      this.setState({
+        data,
+      })
+    }
   }
 
   setVisible = visible => {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
-      toValue: visible ? scaleSize(20) : scaleSize(-200),
+      toValue: visible ? scaleSize(31) : scaleSize(-200),
       duration: Const.ANIMATED_DURATION,
     }).start()
     this.visible = visible
@@ -93,7 +107,10 @@ export default class FunctionToolbar extends React.Component {
       ConstToolType.MAP_EDIT_START === type ||
       ConstToolType.MAP_COLLECTION_START === type
     ) {
-      height = ConstToolType.HEIGHT[0]
+      height =
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.HEIGHT[0]
+          : ConstToolType.HEIGHT[2]
     } else {
       height = ConstToolType.HEIGHT[2]
     }
@@ -101,14 +118,14 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
         containerType: 'table',
-        column: 4,
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
         height: height,
       })
     }
   }
 
   showMenuAlertDialog = () => {
-    if (!GLOBAL.currentLayer || !GLOBAL.currentLayer.themeType) {
+    if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show('提示: 请先选择专题图层。')
       return
     }
@@ -136,21 +153,32 @@ export default class FunctionToolbar extends React.Component {
         return
     }
 
-    const menuRef = this.props.getMenuAlertDialogRef()
-    if (menuRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      menuRef.setMenuType(type)
-      menuRef.showMenuDialog()
+    if (GLOBAL.toolBox) {
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+        containerType: 'list',
+        isFullScreen: true,
+        isTouchProgress: false,
+        themeType: type,
+        showMenuDialog: true,
+      })
+      GLOBAL.toolBox.showFullMap()
     }
 
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        isFullScreen: false,
-        containerType: 'list',
-        height: ConstToolType.THEME_HEIGHT[1],
-      })
-    }
+    // const menuRef = this.props.getMenuAlertDialogRef()
+    // if (menuRef) {
+    //   this.props.showFullMap && this.props.showFullMap(true)
+    //   menuRef.setMenuType(type)
+    //   menuRef.showMenuDialog()
+    // }
+    //
+    // const toolRef = this.props.getToolRef()
+    // if (toolRef) {
+    //   toolRef.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+    //     isFullScreen: false,
+    //     containerType: 'list',
+    //     height: ConstToolType.THEME_HEIGHT[1],
+    //   })
+    // }
   }
 
   map3Dstart = () => {
@@ -188,7 +216,7 @@ export default class FunctionToolbar extends React.Component {
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
             : ConstToolType.HEIGHT[0],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        column: 4,
       })
     }
   }
@@ -389,6 +417,12 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
+    let isAnyOpenedDS = true //是否有打开的数据源
+    isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+    if (!isAnyOpenedDS) {
+      Toast.show('请先添加数据源')
+      return
+    }
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -418,7 +452,7 @@ export default class FunctionToolbar extends React.Component {
 
   mapStyle = () => {
     const toolRef = this.props.getToolRef()
-    if (this.props.layers.themeType <= 0)
+    if (this.props.layers.themeType <= 0) {
       if (
         this.props.layers.type === 1 ||
         this.props.layers.type === 3 ||
@@ -434,6 +468,7 @@ export default class FunctionToolbar extends React.Component {
               column: 4,
               height: ConstToolType.HEIGHT[4],
             })
+            Toast.show('当前图层无法设置风格')
           } else {
             this.props.showFullMap && this.props.showFullMap(true)
             toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
@@ -444,7 +479,12 @@ export default class FunctionToolbar extends React.Component {
             })
           }
         }
+      } else {
+        Toast.show('当前图层无法设置风格')
       }
+    } else {
+      Toast.show('当前图层无法设置风格')
+    }
   }
 
   remove = () => {}
@@ -544,46 +584,80 @@ export default class FunctionToolbar extends React.Component {
       ToolbarBtnType.THEME_CANCEL,
       // ToolbarBtnType.THEME_COMMIT,
     ]
-    data[0] = {
-      title: '选择数据源',
-      data: [
-        {
-          title: '选择目录',
-          theme_add_udb: true,
-        },
-      ],
-    }
-    SThemeCartography.getAllDatasetNames().then(getdata => {
-      getdata.reverse()
-      for (let i = 0; i < getdata.length; i++) {
-        let datalist = getdata[i]
-        data[i + 1] = {
-          title: datalist.datasource.alias,
-          image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-          data: datalist.list,
-        }
-      }
-
-      const toolRef = this.props.getToolRef()
-      if (toolRef) {
-        this.props.showFullMap && this.props.showFullMap(true)
-        toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
-          containerType: 'list',
-          isFullScreen: true,
-          isTouchProgress: false,
-          isSelectlist: false,
-          listSelectable: false, //单选框
-          height:
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[3]
-              : ConstToolType.THEME_HEIGHT[5],
-          column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
-          data,
-          buttons: buttons,
-        })
-        toolRef.scrollListToLocation()
+    let customerUDBPath = await FileTools.appendingHomeDirectory(
+      ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+    )
+    let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+      extension: 'udb',
+      type: 'file',
+    })
+    customerUDBs.forEach(item => {
+      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
       }
     })
+
+    let userUDBPath, userUDBs
+    if (this.props.user && this.props.user.currentUser.userName) {
+      userUDBPath =
+        (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativePath.Datasource
+      userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+        extension: 'udb',
+        type: 'file',
+      })
+      userUDBs.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+      })
+
+      data = [
+        {
+          title: Const.PUBLIC_DATA_SOURCE,
+          data: customerUDBs,
+        },
+        {
+          title: Const.DATA_SOURCE,
+          image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+          data: userUDBs,
+        },
+      ]
+    } else {
+      data = [
+        {
+          title: Const.DATA_SOURCE,
+          image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+          data: customerUDBs,
+        },
+      ]
+    }
+
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
+        containerType: 'list',
+        isFullScreen: true,
+        isTouchProgress: false,
+        showMenuDialog: false,
+        listSelectable: false, //单选框
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        data,
+        buttons: buttons,
+      })
+      toolRef.scrollListToLocation()
+    }
   }
 
   Tagging = async () => {
@@ -657,7 +731,7 @@ export default class FunctionToolbar extends React.Component {
             key: constants.ADD,
             title: constants.ADD,
             size: 'large',
-            action: this.add,
+            action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
           // {
@@ -690,11 +764,11 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_remove.png'),
           // },
           {
-            title: '更多',
+            title: '分享',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_more.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -707,26 +781,19 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_base_map.png'),
           },
-          {
-            title: '标注',
-            action: this.showMap3DSymbol,
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
-          },
+          // {
+          //   title: '标注',
+          //   action: this.showMap3DSymbol,
+          //   image: require('../../../../assets/function/icon_function_Tagging.png'),
+          // },
           {
             title: '工具',
             action: this.showMap3DTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '更多',
-            action: async () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
-            },
-            image: require('../../../../assets/function/icon_more.png'),
-          },
-          {
             // key: 'fly',
-            title: '飞行轨迹',
+            title: '飞行',
             action: () => {
               // this.isShow=!this.isShow
               // this.setVisible(true, ConstToolType.MAP3D_TOOL_FLYLIST, {
@@ -736,7 +803,14 @@ export default class FunctionToolbar extends React.Component {
               // })
               // this.getflylist()
             },
-            image: require('../../../../assets/function/icon_symbolFly.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_symbolFly.png'),
+          },
+          {
+            title: '分享',
+            action: async () => {
+              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -774,14 +848,14 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
-            key: '更多',
-            title: '更多',
+            key: '分享',
+            title: '分享',
             size: 'large',
             selectMode: 'flash',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_function_theme_more.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -802,7 +876,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '编辑',
             action: this.showEdit,
-            image: require('../../../../assets/function/icon_function_Tagging.png'),
+            image: require('../../../../assets/function/icon_edit.png'),
           },
           {
             title: '工具',
@@ -810,11 +884,11 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
           {
-            title: '更多',
+            title: '分享',
             action: () => {
               this.showMore(ConstToolType.MAP_MORE)
             },
-            image: require('../../../../assets/function/icon_more.png'),
+            image: require('../../../../assets/function/icon_function_share.png'),
           },
         ]
         break
@@ -950,18 +1024,32 @@ export default class FunctionToolbar extends React.Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <MTBtn
-        style={styles.btn}
-        key={index}
-        title={item.title}
-        textColor={'black'}
-        textStyle={{ fontSize: scaleSize(18) }}
-        size={MTBtn.Size.NORMAL}
-        image={item.image}
-        onPress={item.action}
-        activeOpacity={0.5}
-        // separator={scaleSize(2)}
-      />
+      <View>
+        <MTBtn
+          style={styles.btn}
+          key={index}
+          title={item.title}
+          textColor={'black'}
+          textStyle={{ fontSize: setSpText(20) }}
+          size={MTBtn.Size.NORMAL}
+          image={item.image}
+          onPress={item.action}
+          activeOpacity={0.5}
+          // separator={scaleSize(2)}
+        />
+        {item.title === '分享' &&
+          this.props.online.share[0] &&
+          GLOBAL.Type === this.props.online.share[0].module &&
+          this.props.online.share[0].progress !== undefined && (
+          <PieProgress
+            ref={ref => (this.shareProgress = ref)}
+            size={scaleSize(18)}
+            style={styles.progress}
+            progress={this.props.online.share[0].progress}
+            indeterminate={false}
+          />
+        )}
+      </View>
     )
   }
 

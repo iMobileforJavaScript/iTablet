@@ -4,6 +4,7 @@ import { setSettingData } from '../../models/setting'
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
   settingData: state.setting.toJS().settingData,
+  device: state.device.toJS().device,
 })
 const mapDispatchToProps = {
   setSettingData,

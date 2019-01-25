@@ -9,19 +9,21 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-  Alert,
+  AsyncStorage,
 } from 'react-native'
 import { ConstModule, ConstPath } from '../../../../constants'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
+// import RenderModuleListItem from './RenderModuleListItem'
 import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
-
 class RenderModuleItem extends Component {
   props: {
     item: Object,
     currentUser: Object,
     importWorkspace: () => {},
+    showDialog: () => {},
+    getMoudleItem: () => {},
   }
 
   constructor(props) {
@@ -33,39 +35,74 @@ class RenderModuleItem extends Component {
     }
   }
   itemAction = async item => {
-    this.setState({
-      disabled: true,
-    })
-    let fileName
-    let moduleKey = item.key
-    if (moduleKey === '地图制图') {
-      fileName = '湖南'
-    } else if (moduleKey === '专题地图') {
-      fileName = '北京'
-    } else if (moduleKey === '外业采集') {
-      fileName = '地理国情普查'
-    } else if (moduleKey === '三维场景') {
-      if (Platform.OS === 'android') {
-        fileName = 'OlympicGreen_android'
-      } else if (Platform.OS === 'ios') {
-        fileName = 'OlympicGreen_ios'
+    try {
+      this.setState({
+        disabled: true,
+      })
+
+      let fileName
+      let moduleKey = item.key
+      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
+      if (moduleKey === '地图制图') {
+        fileName = '湖南'
+      } else if (moduleKey === '专题地图') {
+        fileName = '北京'
+      } else if (moduleKey === '外业采集') {
+        fileName = '地理国情普查'
+      } else if (moduleKey === '三维场景') {
+        if (Platform.OS === 'android') {
+          fileName = 'OlympicGreen_android'
+        } else if (Platform.OS === 'ios') {
+          fileName = 'OlympicGreen_ios'
+        }
       }
-    }
-    let homePath = await FileTools.appendingHomeDirectory()
-    let cachePath = homePath + ConstPath.CachePath
-    let fileDirPath = cachePath + fileName
-    let arrFile = await FileTools.getFilterFiles(fileDirPath)
-    let isDownloaded = true
-    if (arrFile.length === 0) {
-      this.downloadData = {
-        fileName: fileName,
-        cachePath: cachePath,
-        itemData: item,
+      let homePath = await FileTools.appendingHomeDirectory()
+      let tmpCurrentUser = await AsyncStorage.getItem('TmpCurrentUser')
+      let objTmpCurrentUser = tmpCurrentUser
+        ? JSON.parse(tmpCurrentUser)
+        : JSON.parse('{}')
+      let currentUserName = objTmpCurrentUser.userName
+        ? objTmpCurrentUser.userName
+        : 'Customer'
+      let toPath =
+        homePath +
+        ConstPath.UserPath +
+        currentUserName +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
+        fileName
+
+      let cachePath = homePath + ConstPath.CachePath
+      let fileDirPath = cachePath + fileName
+      let arrFile = await FileTools.getFilterFiles(fileDirPath)
+      if (arrFile.length === 0) {
+        let downloadData = {
+          fileName: fileName,
+          cachePath: cachePath,
+          copyFilePath: toPath,
+          itemData: item,
+        }
+        this._showAlert(downloadData)
+        // this._downloadModuleData()
+      } else {
+        let arrFilePath = await FileTools.getFilterFiles(toPath, {
+          smwu: 'smwu',
+          sxwu: 'sxwu',
+        })
+        if (arrFilePath.length === 0) {
+          this.setState({
+            isShowProgressView: true,
+            progress: '导入中...',
+          })
+          await this.props.importWorkspace(fileDirPath, toPath, true)
+        }
+        this.setState({
+          disabled: false,
+          isShowProgressView: false,
+        })
+        item.action && item.action(JSON.parse(tmpCurrentUser))
       }
-      // this._showAlert(item.key)
-      this._downloadModuleData()
-    } else {
-      await this.props.importWorkspace(fileDirPath, item, isDownloaded)
+    } catch (e) {
       this.setState({
         disabled: false,
         isShowProgressView: false,
@@ -73,25 +110,25 @@ class RenderModuleItem extends Component {
     }
   }
 
-  _downloadModuleData = async () => {
-    let item = this.downloadData.itemData
+  _downloadModuleData = async downloadData => {
+    let item = downloadData.itemData
     let moduleKey = item.key
     let dataUrl
     if (moduleKey === '地图制图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/456143933/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1333580434/download'
     } else if (moduleKey === '专题地图') {
-      dataUrl = 'https://www.supermapol.com/web/datas/139937185/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/717499323/download'
     } else if (moduleKey === '外业采集') {
-      dataUrl = 'https://www.supermapol.com/web/datas/1605521624/download'
+      dataUrl = 'https://www.supermapol.com/web/datas/1435593818/download'
     } else if (moduleKey === '三维场景') {
       if (Platform.OS === 'android') {
-        dataUrl = 'https://www.supermapol.com/web/datas/1254811966/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/785640414/download'
       } else if (Platform.OS === 'ios') {
-        dataUrl = 'https://www.supermapol.com/web/datas/595812366/download'
+        dataUrl = 'https://www.supermapol.com/web/datas/2014161764/download'
       }
     }
-    let cachePath = this.downloadData.cachePath
-    let fileDirPath = cachePath + this.downloadData.fileName
+    let cachePath = downloadData.cachePath
+    let fileDirPath = cachePath + downloadData.fileName
     try {
       this.setState({
         progress: '0%',
@@ -107,7 +144,6 @@ class RenderModuleItem extends Component {
         progress: res => {
           let value =
             ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-          // console.warn(value)
           if (value === '100%') {
             this.setState({
               progress: '导入中...',
@@ -128,9 +164,13 @@ class RenderModuleItem extends Component {
         .then(async result => {
           if (result.statusCode === 200) {
             await FileTools.unZipFile(fileCachePath, cachePath)
-            FileTools.deleteFile(fileDirPath + '.zip')
-            await this.props.importWorkspace(fileDirPath, item, false)
+
+            await this.props.importWorkspace(
+              fileDirPath,
+              downloadData.copyFilePath,
+            )
             this.setState({ isShowProgressView: false, disabled: false })
+            FileTools.deleteFile(fileDirPath + '.zip')
           }
         })
         .catch(() => {
@@ -149,7 +189,6 @@ class RenderModuleItem extends Component {
       this.state.progress.indexOf('%') === -1
         ? this.state.progress
         : `下载${this.state.progress}`
-    // console.warn(progress)
     return this.state.isShowProgressView ? (
       <View
         style={[
@@ -166,12 +205,9 @@ class RenderModuleItem extends Component {
       >
         <Text
           style={{
-            fontSize: scaleSize(25),
+            fontSize: setSpText(25),
             fontWeight: 'bold',
-            // fontStyle:'italic',
             color: 'white',
-            // textShadowColor: '#fff',
-            // textShadowRadius: 4,
           }}
         >
           {progress}
@@ -181,33 +217,31 @@ class RenderModuleItem extends Component {
       <View />
     )
   }
-  _showAlert = moduleName => {
-    Alert.alert(
-      '下载',
-      `${moduleName}没有数据`,
-      [
-        {
-          text: '取消',
-          onPress: () => {
-            this.setState({
-              disabled: false,
-            })
-          },
-          style: 'cancel',
-        },
-        {
-          text: '确认',
-          onPress: () => {
-            this._downloadModuleData()
-          },
-          style: 'destructive',
-        },
-      ],
-      { cancelable: true },
-    )
+
+  sureDown = downloadData => {
+    this._downloadModuleData(downloadData)
+    this.setState({
+      disabled: false,
+    })
+
+    this.props.showDialog && this.props.showDialog(false)
+  }
+
+  cancelDown = downloadData => {
+    let item = downloadData.itemData
+    this.setState({
+      disabled: false,
+    })
+    item.action && item.action(this.props.currentUser)
+    this.props.showDialog && this.props.showDialog(false)
+  }
+
+  _showAlert = downloadData => {
+    this.props.showDialog && this.props.showDialog(true)
+    this.props.getMoudleItem &&
+      this.props.getMoudleItem(this.sureDown, this.cancelDown, downloadData)
   }
   render() {
-    // const image = require('../../../../assets/home/Frenchgrey/icon_baseimage.png')
     let item = this.props.item
     return (
       <View style={styles.moduleView}>
@@ -240,6 +274,8 @@ export default class ModuleList extends Component {
     device: Object,
     currentUser: Object,
     importWorkspace: () => {},
+    showDialog: () => {},
+    getMoudleItem: () => {},
   }
 
   constructor(props) {
@@ -247,35 +283,47 @@ export default class ModuleList extends Component {
     this.state = {
       isShowProgressView: false,
     }
+    this.testCount = 1
   }
   // UNSAFE_componentWillMount() {
-  //   console.warn('ModuleList WILL MOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL MOUNT!-----'+this.testCount)
   // }
   // componentDidMount() {
-  //   console.warn('ModuleList DID MOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList DID MOUNT!-----'+(this.testCount))
   // }
   // UNSAFE_componentWillReceiveProps() {
-  //   console.warn('ModuleList WILL RECEIVE PROPS!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL RECEIVE PROPS!----'+(this.testCount))
   // }
   // shouldComponentUpdate() {
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList should MOUNT!----'+(this.testCount))
   //   return true
   // }
   // UNSAFE_componentWillUpdate( ) {
-  //   console.warn('ModuleList WILL UPDATE!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL UPDATE!----'+(this.testCount))
   // }
   // componentDidUpdate( ) {
-  //   console.warn('ModuleList DID UPDATE!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList DID UPDATE!----'+(this.testCount))
   // }
   // componentWillUnmount() {
-  //   console.warn('ModuleList WILL UNMOUNT!')
+  //   this.testCount = this.testCount+1
+  //   console.warn('ModuleList WILL UNMOUNT!-----'+(this.testCount))
   // }
 
   _renderItem = ({ item }) => {
     return (
       <RenderModuleItem
         item={item}
-        currentUser={this.props.currentUser}
+        ref={ref => (this.moduleItem = ref)}
         importWorkspace={this.props.importWorkspace}
+        currentUser={this.props.currentUser}
+        showDialog={this.props.showDialog}
+        getMoudleItem={this.props.getMoudleItem}
       />
     )
   }
@@ -297,7 +345,12 @@ export default class ModuleList extends Component {
     )
   }
   render() {
-    // console.warn('render-list')
+    AsyncStorage.setItem(
+      'TmpCurrentUser',
+      JSON.stringify(this.props.currentUser),
+    )
+    this.testCount = this.testCount + 1
+    // console.warn('render-list-----'+JSON.stringify(this.props.currentUser))
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (
@@ -342,11 +395,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#707070',
     borderRadius: scaleSize(4),
-    elevation: 6,
-    shadowOffset: { width: 0, height: 0 },
-    shadowColor: 'black',
-    shadowOpacity: 1,
-    shadowRadius: scaleSize(4),
+    // elevation: 2,
+    // shadowOffset: { width: 0, height: 0 },
+    // shadowColor: 'black',
+    // shadowOpacity: 1,
+    // shadowRadius: scaleSize(4),
   },
   // img:{
   //   position:"absolute",
@@ -374,7 +427,7 @@ const styles = StyleSheet.create({
   title: {
     width: scaleSize(130),
     height: scaleSize(32),
-    fontSize: scaleSize(24),
+    fontSize: setSpText(25),
     color: '#FFFFFF',
     textAlign: 'center',
     marginTop: scaleSize(13),
