@@ -488,7 +488,7 @@ export default class ToolBar extends React.PureComponent {
       })
   }
 
-  /**刷新字段表达式列表 */
+  /**点击item切换专题字段，刷新字段表达式列表 */
   refreshThemeExpression = async selectedExpression => {
     let dataset = this.expressionData.dataset
     let allExpressions = this.expressionData.list
@@ -504,6 +504,7 @@ export default class ToolBar extends React.PureComponent {
       {
         title: dataset.datasetName,
         datasetType: dataset.datasetType,
+        expressionType: true,
         data: allExpressions,
       },
     ]
@@ -2166,7 +2167,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: this.state.themeDatasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2226,7 +2227,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: item.datasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
