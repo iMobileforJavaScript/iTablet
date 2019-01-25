@@ -106,4 +106,16 @@ const layerThemeSetting = [
   //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
   // },
 ]
-export { layersetting, layerThemeSetting }
+const layer3dSetting = [
+  {
+    title: '设置图层可选',
+    data: [],
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+  },
+  {
+    title: '设置图层不可选',
+    data: [],
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+  },
+]
+export { layersetting, layerThemeSetting, layer3dSetting }

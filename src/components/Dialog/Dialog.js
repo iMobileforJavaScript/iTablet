@@ -37,6 +37,8 @@ export default class Dialog extends PureComponent {
     cancelTitleStyle?: StyleSheet,
     showBtns?: boolean,
     header?: any,
+    opacity: any,
+    opacityStyle: Object,
   }
 
   static defaultProps = {
@@ -114,6 +116,17 @@ export default class Dialog extends PureComponent {
       >
         <View style={[styles.container, this.props.backgroundStyle]}>
           {this.props.header}
+          {this.props.opacity ? (
+            <View
+              style={[
+                styles.opacityView,
+                this.props.opacityStyle,
+                { opacity: this.props.opacity },
+              ]}
+            />
+          ) : (
+            <View />
+          )}
           <KeyboardAvoidingView
             style={[styles.dialogStyle, this.props.style]}
             contentContainerStyle={[styles.dialogStyle, this.props.style]}

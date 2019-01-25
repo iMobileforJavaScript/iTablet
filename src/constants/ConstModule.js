@@ -130,8 +130,8 @@ export default [
   //   },
   // },
   {
-    key: '专题地图',
-    title: '专题地图',
+    key: '专题制图',
+    title: '专题制图',
     baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_thematicmap.png'),
     style: {

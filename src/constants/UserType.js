@@ -20,7 +20,7 @@ const ALL_MODULE_VIP_USER = 'all_module_vip_user'
  */
 const COLLECTION_IVP_USER = 'collection_vip_user'
 /**
- *  专题地图vip用户
+ *  专题制图vip用户
  *
  */
 const THEME_MAP_VIP_USER = 'theme_map_vip_user'

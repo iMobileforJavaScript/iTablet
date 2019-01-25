@@ -13,11 +13,15 @@ import {
   TouchableHighlight,
 } from 'react-native'
 import styles from './styles'
+import { LayerManager_tolbar } from '../mtLayerManager/components'
 export default class Map3DToolBar extends Component {
   props: {
     navigation: Object,
     type: string,
     data: Array,
+    refreshLayer3dList: () => {},
+    layer3dList: Array,
+    device: Object,
   }
   constructor(props) {
     super(props)
@@ -35,6 +39,7 @@ export default class Map3DToolBar extends Component {
   //   }
 
   componentDidMount() {
+    // console.log(this.props.refreshLayer3dList, this.props.layer3dList)
     this.refreshData()
   }
 
@@ -57,20 +62,20 @@ export default class Map3DToolBar extends Component {
       }
       let data = [
         {
-          title: '我的图层',
-          data: layerlist,
+          title: '我的标注',
+          data: ablelist,
           visible: true,
           index: 0,
         },
         {
-          title: '我的底图',
-          data: basemaplist,
+          title: '我的图层',
+          data: layerlist,
           visible: true,
           index: 1,
         },
         {
-          title: '我的标注',
-          data: ablelist,
+          title: '我的底图',
+          data: basemaplist,
           visible: true,
           index: 2,
         },
@@ -93,7 +98,11 @@ export default class Map3DToolBar extends Component {
           underlayColor="#4680DF"
           onPress={() => {}}
         >
-          <Layer3DItem item={item} />
+          <Layer3DItem
+            item={item}
+            getlayer3dToolbar={this.getlayer3dToolbar}
+            device={this.props.device}
+          />
         </TouchableHighlight>
       )
     } else {
@@ -118,7 +127,11 @@ export default class Map3DToolBar extends Component {
     )
   }
 
-  renderItemSeparatorComponent = () => {}
+  // renderItemSeparatorComponent = () => {}
+
+  getlayer3dToolbar = () => {
+    return this.layer3dToolbar
+  }
 
   refreshList = section => {
     let newData = this.state.data
@@ -155,6 +168,10 @@ export default class Map3DToolBar extends Component {
     )
   }
 
+  renderLayerToolbar = () => {
+    return <LayerManager_tolbar ref={ref => (this.layer3dToolbar = ref)} />
+  }
+
   render() {
     return (
       <Container
@@ -168,6 +185,7 @@ export default class Map3DToolBar extends Component {
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
+        {this.renderLayerToolbar()}
         {this.renderSelection()}
       </Container>
     )

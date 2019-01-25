@@ -1,7 +1,11 @@
 import React from 'react'
 import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
-import { layersetting, layerThemeSetting } from './LayerToolbarData'
+import {
+  layersetting,
+  layerThemeSetting,
+  layer3dSetting,
+} from './LayerToolbarData'
 import {
   View,
   Image,
@@ -13,7 +17,7 @@ import {
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SScene } from 'imobile_for_reactnative'
 import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize, setSpText } from '../../../../utils'
@@ -40,6 +44,7 @@ export default class LayerManager_tolbar extends React.Component {
 
   constructor(props) {
     super(props)
+    this.layer3d = {}
     this.height =
       props.containerProps.height >= 0
         ? props.containerProps.height
@@ -70,6 +75,9 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.MAP_THEME_STYLE:
         data = layerThemeSetting
+        break
+      case ConstToolType.MAP3D_LAYER3DSELECT:
+        data = layer3dSetting
         break
     }
     return data
@@ -204,7 +212,21 @@ export default class LayerManager_tolbar extends React.Component {
       } else {
         Toast.show('不支持由该图层创建专题图')
       }
+    } else if (section.title === '设置图层可选') {
+      SScene.setSelectable(this.layer3d.name, true).then(result => {
+        result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
+      })
+    } else if (section.title === '设置图层不可选') {
+      SScene.setSelectable(this.layer3d.name, false).then(result => {
+        result
+          ? Toast.show('设置图层不可选成功')
+          : Toast.show('设置图层不可选失败')
+      })
     }
+  }
+
+  getLayer3dItem = layer3d => {
+    this.layer3d = layer3d
   }
 
   renderList = () => {
@@ -272,6 +294,9 @@ export default class LayerManager_tolbar extends React.Component {
             box = this.renderList()
             break
           case ConstToolType.MAP_THEME_STYLE:
+            box = this.renderList()
+            break
+          case ConstToolType.MAP3D_LAYER3DSELECT:
             box = this.renderList()
             break
         }

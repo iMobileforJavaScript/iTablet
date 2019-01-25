@@ -46,7 +46,7 @@ const initialState = fromJS({
   currentSymbol: {},
   latestSymbols: [],
   currentSymbols: [],
-  maxLength: 40,
+  maxLength: 10,
 })
 
 export default handleActions(

@@ -39,7 +39,7 @@ export default class RenderModuleListItem extends Component {
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === '地图制图') {
         fileName = '湖南'
-      } else if (moduleKey === '专题地图') {
+      } else if (moduleKey === '专题制图') {
         fileName = '北京'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查'
@@ -154,7 +154,7 @@ export default class RenderModuleListItem extends Component {
     let dataUrl
     if (moduleKey === '地图制图') {
       dataUrl = 'https://www.supermapol.com/web/datas/1333580434/download'
-    } else if (moduleKey === '专题地图') {
+    } else if (moduleKey === '专题制图') {
       dataUrl = 'https://www.supermapol.com/web/datas/717499323/download'
     } else if (moduleKey === '外业采集') {
       dataUrl = 'https://www.supermapol.com/web/datas/1435593818/download'

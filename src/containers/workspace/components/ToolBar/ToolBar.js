@@ -247,7 +247,8 @@ export default class ToolBar extends React.PureComponent {
         break
       case ConstToolType.MAP3D_BASE:
         data = Map3DBaseMapList.baseListData
-        buttons = [ToolbarBtnType.CANCEL]
+        // buttons = [ToolbarBtnType.CANCEL]
+        buttons = []
         break
       case ConstToolType.MAP3D_ADD_LAYER:
         data = Map3DBaseMapList.layerListdata
@@ -342,12 +343,60 @@ export default class ToolBar extends React.PureComponent {
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
+        data = []
+        buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
+        break
+      case ConstToolType.MAP3D_TOOL:
         data = [
+          {
+            key: 'distanceMeasure',
+            title: '距离量算',
+            action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
+              SScene.setMeasureLineAnalyst({
+                callback: result => {
+                  this.Map3DToolBar &&
+                    this.Map3DToolBar.setAnalystResult(result)
+                },
+              })
+              this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_analystLien.png'),
+          },
+          {
+            key: 'suerfaceMeasure',
+            title: '面积量算',
+            action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
+              SScene.setMeasureSquareAnalyst({
+                callback: result => {
+                  this.Map3DToolBar &&
+                    this.Map3DToolBar.setAnalystResult(result)
+                },
+              })
+              this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_analystSuerface.png'),
+          },
           {
             key: 'map3DPoint',
             title: '兴趣点',
             action: () => {
               try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
                 SScene.startDrawFavorite({
                   callback: () => {
                     this.showToolbar()
@@ -366,6 +415,12 @@ export default class ToolBar extends React.PureComponent {
             title: '文字',
             action: () => {
               try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
                 SScene.startDrawText({
                   callback: result => {
                     this.showToolbar()
@@ -386,6 +441,12 @@ export default class ToolBar extends React.PureComponent {
             key: 'map3DPiontLine',
             title: '点绘线',
             action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
+              SScene.checkoutListener('startLabelOperate')
+              GLOBAL.Map3DSymbol = true
               try {
                 SScene.startDrawLine()
                 this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
@@ -401,6 +462,12 @@ export default class ToolBar extends React.PureComponent {
             title: '点绘面',
             action: () => {
               try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
                 SScene.startDrawArea()
                 this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
               } catch (error) {
@@ -415,6 +482,12 @@ export default class ToolBar extends React.PureComponent {
             title: '清除标注',
             action: () => {
               try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
                 SScene.closeAllLabel()
                 // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
               } catch (error) {
@@ -424,46 +497,26 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
-        ]
-        buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
-        break
-      case ConstToolType.MAP3D_TOOL:
-        data = [
           {
-            key: 'distanceMeasure',
-            title: '距离量算',
+            key: 'action3d',
+            title: '选择',
             action: () => {
-              SScene.setMeasureLineAnalyst({
-                callback: result => {
-                  this.Map3DToolBar &&
-                    this.Map3DToolBar.setAnalystResult(result)
-                },
-              })
-              this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
+              try {
+                if (GLOBAL.action3d === 'PAN3D') {
+                  SScene.setAction('PANSELECT3D')
+                  GLOBAL.action3d = 'PANSELECT3D'
+                  Toast.show('当前场景操作状态为可选')
+                } else {
+                  SScene.setAction('PAN3D')
+                  GLOBAL.action3d = 'PAN3D'
+                  Toast.show('当前场景操作状态为不可选')
+                }
+              } catch (error) {
+                Toast.show('操作失败')
+              }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_analystLien.png'),
-          },
-          {
-            key: 'suerfaceMeasure',
-            title: '面积量算',
-            action: () => {
-              SScene.setMeasureSquareAnalyst({
-                callback: result => {
-                  this.Map3DToolBar &&
-                    this.Map3DToolBar.setAnalystResult(result)
-                },
-              })
-              this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_analystSuerface.png'),
-          },
-          {
-            key: 'symbol',
-            title: '标注',
-            action: this.showMap3DSymbol,
-            image: require('../../../../assets/function/Frenchgrey/icon_function_Tagging.png'),
+            image: require('../../../../assets/mapEdit/icon_action3d.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -491,7 +544,7 @@ export default class ToolBar extends React.PureComponent {
       })
   }
 
-  /**刷新字段表达式列表 */
+  /**点击item切换专题字段，刷新字段表达式列表 */
   refreshThemeExpression = async selectedExpression => {
     let dataset = this.expressionData.dataset
     let allExpressions = this.expressionData.list
@@ -507,6 +560,7 @@ export default class ToolBar extends React.PureComponent {
       {
         title: dataset.datasetName,
         datasetType: dataset.datasetType,
+        expressionType: true,
         data: allExpressions,
       },
     ]
@@ -572,6 +626,7 @@ export default class ToolBar extends React.PureComponent {
           {
             title: dataset.datasetName,
             datasetType: dataset.datasetType,
+            expressionType: true,
             data: allExpressions,
           },
         ]
@@ -1163,10 +1218,11 @@ export default class ToolBar extends React.PureComponent {
     try {
       let flydata = await SScene.getFlyRouteNames()
       let data = [{ title: '飞行轨迹列表', data: flydata }]
-      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      // let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      let buttons = []
       return { data, buttons }
     } catch (error) {
-      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      let buttons = []
       let data = []
       Toast.show('当前场景无飞行轨迹')
       return { data, buttons }
@@ -1175,7 +1231,8 @@ export default class ToolBar extends React.PureComponent {
 
   getWorkspaceList = async () => {
     try {
-      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      // let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let buttons = []
       let data = []
       let userName = this.props.user.currentUser.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
@@ -1268,8 +1325,10 @@ export default class ToolBar extends React.PureComponent {
         () => {
           if (list.length > 2) {
             this.height = ConstToolType.HEIGHT[2]
+          } else if (list.length === 1) {
+            this.height = scaleSize(61)
           } else {
-            this.height = ConstToolType.HEIGHT[1]
+            this.height = scaleSize(122)
           }
           this.showToolbar()
         },
@@ -1315,10 +1374,13 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
-          isFullScreen: false,
+          isFullScreen: true,
         },
         () => {
-          this.height = ConstToolType.HEIGHT[2]
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[2]
+              : ConstToolType.HEIGHT[3]
           this.showToolbar()
         },
       )
@@ -1629,8 +1691,9 @@ export default class ToolBar extends React.PureComponent {
         // 去掉量算监听
         SMap.removeMeasureListener()
       }
-      this.props.showMeasureResult(false)
-
+      if (GLOBAL.Type !== constants.MAP_3D) {
+        this.props.showMeasureResult(false)
+      }
       if (GLOBAL.Type === constants.MAP_EDIT) {
         GLOBAL.showMenu = true
         // GLOBAL.showFlex = true
@@ -1702,6 +1765,7 @@ export default class ToolBar extends React.PureComponent {
   closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     GLOBAL.Map3DSymbol = false
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -1709,6 +1773,7 @@ export default class ToolBar extends React.PureComponent {
 
   closeTool = () => {
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2001,6 +2066,7 @@ export default class ToolBar extends React.PureComponent {
   closeAnalyst = () => {
     SScene.closeAnalysis()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2023,6 +2089,7 @@ export default class ToolBar extends React.PureComponent {
 
   endFly = () => {
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -2116,6 +2183,7 @@ export default class ToolBar extends React.PureComponent {
             {
               title: dataset.datasetName,
               datasetType: dataset.datasetType,
+              expressionType: true,
               data: data.list,
             },
           ]
@@ -2160,7 +2228,7 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              UniqueExpression: item.title,
+              UniqueExpression: item.expression,
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
             }
@@ -2171,9 +2239,9 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.title,
+              RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2184,7 +2252,7 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              LabelExpression: item.title,
+              LabelExpression: item.expression,
               LabelBackShape: 'NONE',
               FontName: '宋体',
               // FontSize: '15.0',
@@ -2233,7 +2301,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: item.datasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2796,7 +2864,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
-        underlayColor={color.content_white}
+        underlayColor={color.item_separate_white}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
@@ -3380,6 +3448,9 @@ export default class ToolBar extends React.PureComponent {
       this.setState({
         isFullScreen: false,
       })
+    } else if (this.state.type === ConstToolType.MAP3D_WORKSPACE_LIST) {
+      this.showToolbarAndBox(false)
+      this.props.existFullMap && this.props.existFullMap()
     } else {
       this.setVisible(false)
     }

@@ -321,8 +321,8 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: false,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[1],
+            ? ConstToolType.HEIGHT[2]
+            : ConstToolType.HEIGHT[2],
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
@@ -409,6 +409,20 @@ export default class FunctionToolbar extends React.Component {
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
+        isFullScreen: true,
+        column: 4,
+        height: ConstToolType.HEIGHT[0],
+      })
+    }
+  }
+
+  showMap3Dshare = async () => {
+    this.hideThemeMenuDialog()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_SHARE_MAP3D, {
+        containerType: 'table',
         isFullScreen: true,
         column: 4,
         height: ConstToolType.HEIGHT[0],
@@ -777,6 +791,13 @@ export default class FunctionToolbar extends React.Component {
           //   action: this.showMap3DSymbol,
           //   image: require('../../../../assets/function/icon_function_Tagging.png'),
           // },
+          // {
+          //   key: constants.ADD,
+          //   title: constants.ADD,
+          //   size: 'large',
+          //   action: () => {},
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             title: '工具',
             action: this.showMap3DTool,
@@ -799,7 +820,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '分享',
             action: async () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+              this.showMap3Dshare()
             },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
