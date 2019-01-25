@@ -118,7 +118,7 @@ export default class Map3D extends React.Component {
       'JPG_PNG',
       96.0,
       true,
-      '',
+      'c768f9fd3e388eb0d155405f8d8c6999',
     )
   }
 
