@@ -37,6 +37,7 @@ export default class Map3D extends React.Component {
   constructor(props) {
     super(props)
     GLOBAL.sceneName = ''
+    GLOBAL.openWorkspace = false
     const params = this.props.navigation.state.params
     this.operationType = params.operationType || constants.MAP_3D
     this.isExample = params.isExample || false

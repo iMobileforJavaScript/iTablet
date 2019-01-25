@@ -488,6 +488,13 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
+          {
+            key: 'action3d',
+            title: '选择',
+            action: () => {},
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_action3d.png'),
+          },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
         break
