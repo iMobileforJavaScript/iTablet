@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class MT_layerManager extends React.Component {
+export default class SaveView extends React.Component {
   props: {
     save?: () => {},
     notSave?: () => {},

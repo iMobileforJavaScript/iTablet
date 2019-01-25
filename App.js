@@ -31,7 +31,7 @@ import { scaleSize, Toast } from './src/utils'
 import { ConstPath, ConstInfo, ConstToolType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene } from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 const { persistor, store } = ConfigStore()
 
@@ -244,18 +244,23 @@ class AppRoot extends Component {
     }
   }
 
-  saveMap = () => {
+  saveMap = async () => {
     if (GLOBAL.Type===ConstToolType.MAP_3D){
       this.map3dBackAction()
       GLOBAL.openWorkspace&&Toast.show("保存成功")
       return
     }
     let mapName = ''
-    if (this.props.map.currentMap.name) {
+    if (this.props.map.currentMap.name) { // 获取当前打开的地图xml的名称
       mapName = this.props.map.currentMap.name
-      mapName = mapName.substr(0, mapName.lastIndexOf('.'))
-    } else if (this.props.layers.length > 0) {
-      mapName = this.props.collection.datasourceName
+      mapName = mapName.substr(0, mapName.lastIndexOf('.')) || this.props.map.currentMap.name
+    } else {
+      let mapInfo = await SMap.getMapInfo()
+      if (mapInfo && mapInfo.name) { // 获取MapControl中的地图名称
+        mapName = mapInfo.name
+      } else if (this.props.layers.length > 0) { // 获取数据源名称作为地图名称
+        mapName = this.props.collection.datasourceName
+      }
     }
     let addition = {}
     if (this.props.map.currentMap.Template) {
@@ -359,6 +364,7 @@ class AppRoot extends Component {
             // this.backAction = null
           }}
         />
+        <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )
   }

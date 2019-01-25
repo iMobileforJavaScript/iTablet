@@ -319,8 +319,11 @@ async function createCollector(type) {
         : ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
     )
 
+    let mapInfo = await SMap.getMapInfo()
+
     let datasourceName =
       (_params.map && _params.map.currentMap.name) ||
+      mapInfo.name ||
       'Collection-' + new Date().getTime()
     params = {
       datasourcePath: _params.collection.datasourceParentPath || datasourcePath,
