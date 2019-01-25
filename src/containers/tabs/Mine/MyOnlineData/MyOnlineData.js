@@ -316,18 +316,23 @@ export default class MyOnlineData extends Component {
     this.setState({ modalIsVisible: false })
   }
   _unZipFile = async () => {
-    if (_iDownloadingIndex >= 0) {
-      let objContent = this.state.data[_iDownloadingIndex]
-      let path =
-        ConstPath.UserPath +
-        this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativePath.ExternalData +
-        objContent.fileName
-      let filePath = await FileTools.appendingHomeDirectory(path)
-      let savePath = filePath.substring(0, filePath.length - 4)
-      await FileTools.unZipFile(filePath, savePath)
-      FileTools.deleteFile(filePath)
+    let filePath
+    try {
+      if (_iDownloadingIndex >= 0) {
+        let objContent = this.state.data[_iDownloadingIndex]
+        let path =
+          ConstPath.UserPath +
+          this.props.user.currentUser.userName +
+          '/' +
+          ConstPath.RelativePath.ExternalData +
+          objContent.fileName
+        filePath = await FileTools.appendingHomeDirectory(path)
+        let savePath = filePath.substring(0, filePath.length - 4)
+        await FileTools.unZipFile(filePath, savePath)
+        FileTools.deleteFile(filePath)
+      }
+    } catch (e) {
+      filePath && FileTools.deleteFile(filePath)
     }
   }
   _changeModalProgressState = progress => {

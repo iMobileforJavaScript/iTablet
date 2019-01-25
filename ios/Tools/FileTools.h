@@ -20,4 +20,5 @@
 +(BOOL)createFileDirectories:(NSString*)path;
 +(BOOL)copyFile:(NSString *)fromPath targetPath:(NSString *)toPath;
 +(BOOL)initUserDefaultData:(NSString *)userName;
++(NSString*)getLastModifiedTime:(NSDate*) nsDate;
 @end

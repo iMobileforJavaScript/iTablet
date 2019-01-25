@@ -38,14 +38,19 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
       
       
       NSString* fullPath = [path stringByAppendingPathComponent:fileName];
-      
+      NSString* strModeDate;
       if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
-        
+        NSError *error = nil;
+        NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:fullPath error:&error];
+        if(fileAttributes != nil){
+          NSDate* fileModDate = [fileAttributes objectForKey:NSFileModificationDate];
+          strModeDate = [FileTools getLastModifiedTime:fileModDate];
+        }
         NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
         NSString* extension = [tt pathExtension];
         NSString* fileName = [tt lastPathComponent];
         if(([filterEx containsString:extension] && ([fileName containsString:filterKey] || [filterKey isEqualToString:@""])) || (flag && [type isEqualToString:@"Directory"])) {
-          [array addObject:@{@"name":fileName,@"path":tt,@"isDirectory":@(flag)}];
+          [array addObject:@{@"name":fileName,@"path":tt,@"mtime":strModeDate,@"isDirectory":@(flag)}];
         }
         
       }
@@ -274,15 +279,22 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
   
   // 初始化用户工作空间
-  NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Customer" ofType:@"smwu"];
-  NSString* wsPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/" ];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", wsPath, @""]];
-  if (srclic) {
-    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
-    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-        NSLog(@"拷贝数据失败");
-    }
+  NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
+  NSString* defaultDataPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/DefaultData/" ];
+  NSString* wsName = @"Workspace.sxwu";
+  
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", defaultDataPath, @""]];
+//  if (srclic) {
+//    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
+//    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+//      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+//        NSLog(@"拷贝数据失败");
+//    }
+//  }
+  
+  if (![[NSFileManager defaultManager] fileExistsAtPath:[NSString stringWithFormat:@"%@%@%@", defaultDataPath, @"Workspace/", wsName] isDirectory:nil]) {
+    if(![FileTools unZipFile:srclic targetPath:defaultDataPath])
+      NSLog(@"拷贝数据失败");
   }
   
   //创建用户目录
@@ -337,6 +349,13 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 //  return isUnZip;
   
   return YES;
+}
+
++(NSString*)getLastModifiedTime:(NSDate*) nsDate{
+  NSDateFormatter *fmt = [[NSDateFormatter alloc] init];
+  [fmt setDateFormat:@"yyyy/MM/dd hh:mm:ss"];
+  NSString *string=[fmt stringFromDate:nsDate];
+  return string;
 }
 
 RCT_REMAP_METHOD(createDirectory,createDirectoryPath:(NSString*)path getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){

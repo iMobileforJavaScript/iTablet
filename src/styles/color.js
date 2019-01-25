@@ -47,8 +47,10 @@ const lightTheme = {
   itemColorGray: '#727272',
 
   contentColorWhite: '#F0F0F0',
+  contentColorWhite2: 'rgba(240,240,240, 0.85)',
   contentColorBlack: '#303030',
   contentColorGray: '#727272',
+  rowSeparator: '#979797',
 }
 
 let styles
@@ -107,9 +109,12 @@ export default {
   /** 深色版*/
   content: '#555555',
   /** 浅色版*/
-  item_separate_white: '#727272',
-  content_white: '#F0F0F0',
-  font_color_white: '#303030',
+  item_separate_white: '#A0A0A0', //分割线
+  content_white: '#F0F0F0', //列表项目背景
+  font_color_white: '#303030', //列表项目文字颜色
   image_bg_white: '#727272',
   theme_white: '#303030',
+  section_bg: '#505050', //列表一级标题背景
+  section_text: '#F0F0F0', //列表一级标题文字
+  bottomz: '#303030', //底部工具栏背景
 }

@@ -1,4 +1,4 @@
-import { Dimensions, PixelRatio, Platform } from 'react-native'
+import { Dimensions, PixelRatio } from 'react-native'
 // const pixelRatio = PixelRatio.get() //iphone6的像素密度
 const dp2px = dp => PixelRatio.getPixelSizeForLayoutSize(dp) // DP to PX
 const px2dp = px => PixelRatio.roundToNearestPixel(px) // PX to DP
@@ -41,9 +41,9 @@ export function scaleSize(size) {
 export function setSpText(size) {
   // size = Math.round(((size * scale + 0.5) * pixelRatio) / fontScale)
   size = Math.round(size * scale + 0.5)
-  if (Platform.OS === 'ios') {
-    return (size * 1.25) / defaultPixel
-  }
+  // if (Platform.OS === 'ios') {
+  //   return (size * 1.25) / defaultPixel
+  // }
   return size / defaultPixel
 }
 

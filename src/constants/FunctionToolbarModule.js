@@ -1,4 +1,4 @@
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, DatasetType } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
@@ -38,28 +38,28 @@ const BotMap = [
     data: [
       {
         title: 'Google RoadMap',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.Google, 0)
         },
       },
       {
         title: 'Google Staelite',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.Google, 1)
         },
       },
       {
         title: 'Google Terrain',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.Google, 2)
         },
       },
       {
         title: 'Google Hybrid',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.Google, 3)
         },
@@ -77,7 +77,7 @@ const BotMap = [
       // },
       {
         title: '全球矢量地图',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.TD, 0)
         },
@@ -90,7 +90,7 @@ const BotMap = [
       // },
       {
         title: '全球影像地图服务',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.TDYXM, 0)
         },
@@ -108,7 +108,7 @@ const BotMap = [
     data: [
       {
         title: 'Baidu Map',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.Baidu, 0)
         },
@@ -120,21 +120,21 @@ const BotMap = [
     data: [
       {
         title: 'Standard',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 0)
         },
       },
       {
         title: 'CycleMap',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 1)
         },
       },
       {
         title: 'Transport',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.OSM, 2)
         },
@@ -146,7 +146,7 @@ const BotMap = [
     data: [
       {
         title: 'quanguo',
-        image: require('../assets/mapToolbar/list_type_map.png'),
+        image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.SuperMapCloud, 0)
         },
@@ -161,66 +161,88 @@ const layerManagerData = [
     action: () => {
       return OpenData(ConstOnline.Google, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Google Staelite',
     action: () => {
       return OpenData(ConstOnline.Google, 1)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Google Terrain',
     action: () => {
       return OpenData(ConstOnline.Google, 2)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Google Hybrid',
     action: () => {
       return OpenData(ConstOnline.Google, 3)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: '全球矢量地图',
     action: () => {
       return OpenData(ConstOnline.TD, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: '全球影像地图服务',
     action: () => {
       return OpenData(ConstOnline.TDYXM, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Baidu Map',
     action: () => {
       return OpenData(ConstOnline.Baidu, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Standard',
     action: () => {
       return OpenData(ConstOnline.OSM, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'CycleMap',
     action: () => {
       return OpenData(ConstOnline.OSM, 1)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Transport',
     action: () => {
       return OpenData(ConstOnline.OSM, 2)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'quanguo',
     action: () => {
       return OpenData(ConstOnline.SuperMapCloud, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
 ]
 

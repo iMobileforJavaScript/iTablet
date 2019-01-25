@@ -51,6 +51,7 @@ import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 // import ShareData from './ShareData'
+import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -114,6 +115,7 @@ export default class ToolBar extends React.PureComponent {
     exportmap3DWorkspace: () => {},
     importSceneWorkspace: () => {},
     getMapSetting: () => {},
+    showMeasureResult: () => {},
   }
 
   static defaultProps = {
@@ -244,7 +246,8 @@ export default class ToolBar extends React.PureComponent {
         break
       case ConstToolType.MAP3D_BASE:
         data = Map3DBaseMapList.baseListData
-        buttons = [ToolbarBtnType.CANCEL]
+        // buttons = [ToolbarBtnType.CANCEL]
+        buttons = []
         break
       case ConstToolType.MAP3D_ADD_LAYER:
         data = Map3DBaseMapList.layerListdata
@@ -339,89 +342,7 @@ export default class ToolBar extends React.PureComponent {
         ]
         break
       case ConstToolType.MAP3D_SYMBOL:
-        data = [
-          {
-            key: 'map3DPoint',
-            title: '兴趣点',
-            action: () => {
-              try {
-                SScene.startDrawFavorite({
-                  callback: () => {
-                    this.showToolbar()
-                  },
-                })
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
-              } catch (error) {
-                Toast.show('兴趣点失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_favorite.png'),
-          },
-          {
-            key: 'map3DText',
-            title: '文字',
-            action: () => {
-              try {
-                SScene.startDrawText({
-                  callback: result => {
-                    this.showToolbar()
-                    let dialog = this.props.dialog()
-                    dialog.setDialogVisible(true)
-                    this.point = result
-                  },
-                })
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
-              } catch (error) {
-                Toast.show('添加文字失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_text.png'),
-          },
-          {
-            key: 'map3DPiontLine',
-            title: '点绘线',
-            action: () => {
-              try {
-                SScene.startDrawLine()
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
-              } catch (error) {
-                Toast.show('点绘线失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_pointLine.png'),
-          },
-          {
-            key: 'map3DPointSurface',
-            title: '点绘面',
-            action: () => {
-              try {
-                SScene.startDrawArea()
-                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
-              } catch (error) {
-                Toast.show('点绘面失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/function/icon_pointSuerface.png'),
-          },
-          {
-            key: 'closeAllLable',
-            title: '清除标注',
-            action: () => {
-              try {
-                SScene.closeAllLabel()
-                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
-              } catch (error) {
-                Toast.show('清除失败')
-              }
-            },
-            size: 'large',
-            image: require('../../../../assets/mapEdit/icon_clear.png'),
-          },
-        ]
+        data = []
         buttons = [ToolbarBtnType.CLOSE_SYMBOL, ToolbarBtnType.FLEX]
         break
       case ConstToolType.MAP3D_TOOL:
@@ -457,10 +378,115 @@ export default class ToolBar extends React.PureComponent {
             image: require('../../../../assets/function/icon_analystSuerface.png'),
           },
           {
-            key: 'symbol',
-            title: '标注',
-            action: this.showMap3DSymbol,
-            image: require('../../../../assets/function/Frenchgrey/icon_function_Tagging.png'),
+            key: 'map3DPoint',
+            title: '兴趣点',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.startDrawFavorite({
+                  callback: () => {
+                    this.showToolbar()
+                  },
+                })
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINT)
+              } catch (error) {
+                Toast.show('兴趣点失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_favorite.png'),
+          },
+          {
+            key: 'map3DText',
+            title: '文字',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.startDrawText({
+                  callback: result => {
+                    this.showToolbar()
+                    let dialog = this.props.dialog()
+                    dialog.setDialogVisible(true)
+                    this.point = result
+                  },
+                })
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_TEXT)
+              } catch (error) {
+                Toast.show('添加文字失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_text.png'),
+          },
+          {
+            key: 'map3DPiontLine',
+            title: '点绘线',
+            action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
+              SScene.checkoutListener('startLabelOperate')
+              GLOBAL.Map3DSymbol = true
+              try {
+                SScene.startDrawLine()
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTLINE)
+              } catch (error) {
+                Toast.show('点绘线失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_pointLine.png'),
+          },
+          {
+            key: 'map3DPointSurface',
+            title: '点绘面',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.startDrawArea()
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('点绘面失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/function/icon_pointSuerface.png'),
+          },
+          {
+            key: 'closeAllLable',
+            title: '清除标注',
+            action: () => {
+              try {
+                if (!GLOBAL.openWorkspace) {
+                  Toast.show('请打开场景')
+                  return
+                }
+                SScene.checkoutListener('startLabelOperate')
+                GLOBAL.Map3DSymbol = true
+                SScene.closeAllLabel()
+                // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
+              } catch (error) {
+                Toast.show('清除失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -1160,7 +1186,8 @@ export default class ToolBar extends React.PureComponent {
     try {
       let flydata = await SScene.getFlyRouteNames()
       let data = [{ title: '飞行轨迹列表', data: flydata }]
-      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      // let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      let buttons = []
       return { data, buttons }
     } catch (error) {
       let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
@@ -1172,7 +1199,8 @@ export default class ToolBar extends React.PureComponent {
 
   getWorkspaceList = async () => {
     try {
-      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      // let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let buttons = []
       let data = []
       let userName = this.props.user.currentUser.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
@@ -1265,8 +1293,10 @@ export default class ToolBar extends React.PureComponent {
         () => {
           if (list.length > 2) {
             this.height = ConstToolType.HEIGHT[2]
+          } else if (list.length === 1) {
+            this.height = scaleSize(61)
           } else {
-            this.height = ConstToolType.HEIGHT[1]
+            this.height = scaleSize(122)
           }
           this.showToolbar()
         },
@@ -1312,10 +1342,13 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
-          isFullScreen: false,
+          isFullScreen: true,
         },
         () => {
-          this.height = ConstToolType.HEIGHT[2]
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[2]
+              : ConstToolType.HEIGHT[3]
           this.showToolbar()
         },
       )
@@ -1622,6 +1655,13 @@ export default class ToolBar extends React.PureComponent {
 
   close = (type = this.state.type) => {
     (async function() {
+      if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
+        // 去掉量算监听
+        SMap.removeMeasureListener()
+      }
+      if (GLOBAL.Type !== constants.MAP_3D) {
+        this.props.showMeasureResult(false)
+      }
       if (GLOBAL.Type === constants.MAP_EDIT) {
         GLOBAL.showMenu = true
         // GLOBAL.showFlex = true
@@ -2770,7 +2810,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
-        underlayColor={color.gray}
+        underlayColor={color.content_white}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
@@ -3077,7 +3117,12 @@ export default class ToolBar extends React.PureComponent {
         box = this.renderTable()
     }
     return (
-      <Animated.View style={{ height: this.state.boxHeight }}>
+      <Animated.View
+        style={{
+          height: this.state.boxHeight,
+          backgroundColor: color.content_white,
+        }}
+      >
         {box}
       </Animated.View>
     )
@@ -3307,6 +3352,11 @@ export default class ToolBar extends React.PureComponent {
           // action = this.menuCommit
           action = this.close
           break
+        case ToolbarBtnType.MEASURE_CLEAR:
+          //量算-清除
+          image = require('../../../../assets/mapEdit/icon_clear.png')
+          action = () => MapToolData.clearMeasure(this.state.type)
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -3344,6 +3394,9 @@ export default class ToolBar extends React.PureComponent {
       this.setState({
         isFullScreen: false,
       })
+    } else if (this.state.type === ConstToolType.MAP3D_WORKSPACE_LIST) {
+      this.showToolbarAndBox(false)
+      this.props.existFullMap && this.props.existFullMap()
     } else {
       this.setVisible(false)
     }

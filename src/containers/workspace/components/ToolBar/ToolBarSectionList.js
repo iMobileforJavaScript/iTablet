@@ -1,6 +1,6 @@
 import React from 'react'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, setSpText } from '../../../../utils'
 import {
   StyleSheet,
   TouchableOpacity,
@@ -121,7 +121,7 @@ export default class ToolBarSectionList extends React.Component {
         <View style={{ flexDirection: 'row' }}>
           {section.datasetType && (
             <Image
-              source={this.getDatasetTypeImg(section)}
+              source={this.getSectionDatasetTypeImg(section)}
               resizeMode={'contain'}
               style={styles.section_dataset_type}
             />
@@ -146,8 +146,8 @@ export default class ToolBarSectionList extends React.Component {
       return this.props.renderItem({ item, index, section })
     }
     let selectImg = item.isSelected
-      ? require('../../../../assets/mapTools/icon_multi_selected.png')
-      : require('../../../../assets/mapTools/icon_multi_unselected.png')
+      ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
+      : require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
     return (
       <TouchableOpacity
         style={[
@@ -156,6 +156,7 @@ export default class ToolBarSectionList extends React.Component {
           item.backgroundColor && { backgroundColor: item.backgroundColor },
           item.isSelected ? styles.itemSelected : styles.item,
         ]}
+        activeOpacity={0.2}
         onPress={() => this.itemAction({ item, index, section })}
       >
         {this.props.listSelectable && (
@@ -242,10 +243,12 @@ export default class ToolBarSectionList extends React.Component {
       <Text
         style={[
           item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
-          item.isSelected ? { color: color.grayLight } : { color: color.gray },
+          item.isSelected
+            ? { color: color.content_white }
+            : { color: color.item_separate_white },
         ]}
-        numberOfLines={1}
         ellipsizeMode="tail"
+        numberOfLines={1}
       >
         {info}
       </Text>
@@ -279,9 +282,16 @@ export default class ToolBarSectionList extends React.Component {
 
   /**数据集类型字段Item */
   getDatasetItem = item => {
-    return <Text style={styles.dataset_title}>{item.datasetName}</Text>
+    let dataset_title
+    if (item.isSelected) {
+      dataset_title = styles.dataset_title_selected
+    } else {
+      dataset_title = styles.dataset_title
+    }
+    return <Text style={dataset_title}>{item.datasetName}</Text>
   }
-  /**数据集类型字段Item */
+
+  /**数据集类型Image */
   getDatasetImage = item => {
     return (
       <Image
@@ -297,7 +307,7 @@ export default class ToolBarSectionList extends React.Component {
     )
   }
 
-  getDatasetTypeImg = item => {
+  getSectionDatasetTypeImg = item => {
     let img
     switch (item.datasetType) {
       case 'POINT':
@@ -325,7 +335,59 @@ export default class ToolBarSectionList extends React.Component {
         img = require('../../../../assets/mapToolbar/dataset_type_network.png')
         break
       default:
-        img = require('../../../../assets/mapToolbar/dataset_type_else.png')
+        img = require('../../../../assets/mapToolbar/list_type_map.png')
+        break
+    }
+    return img
+  }
+
+  getDatasetTypeImg = item => {
+    let img
+    switch (item.datasetType) {
+      case 'POINT':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_point.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_point_black.png'))
+        break
+      case 'LINE':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_line.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_line_black.png'))
+        break
+      case 'REGION':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_region.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_region_black.png'))
+        break
+      case 'TEXT':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_text.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_text_black.png'))
+        break
+      case 'IMAGE':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_image.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_image_black.png'))
+        break
+      case 'CAD':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_cad.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_cad_black.png'))
+        break
+      case 'GRID':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_grid.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_grid_black.png'))
+        break
+      case 'NETWORK':
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/dataset_type_network.png'))
+          : (img = require('../../../../assets/mapToolbar/dataset_type_network_black.png'))
+        break
+      default:
+        item.isSelected
+          ? (img = require('../../../../assets/mapToolbar/list_type_map.png'))
+          : (img = require('../../../../assets/mapToolbar/list_type_map_black.png'))
         break
     }
     return img
@@ -366,7 +428,7 @@ export default class ToolBarSectionList extends React.Component {
 
 const styles = StyleSheet.create({
   sectionHeader: {
-    backgroundColor: color.subTheme,
+    backgroundColor: color.section_bg,
     height: scaleSize(80),
     alignItems: 'center',
     flexDirection: 'row',
@@ -375,13 +437,13 @@ const styles = StyleSheet.create({
     marginLeft: scaleSize(30),
     fontSize: size.fontSize.fontSizeLg,
     fontWeight: 'bold',
-    color: color.themeText,
+    color: color.section_text,
     textAlign: 'center',
     textAlignVertical: 'center',
   },
   item: {
     height: scaleSize(80),
-    backgroundColor: color.theme,
+    backgroundColor: color.content_white,
     alignItems: 'center',
     flexDirection: 'row',
   },
@@ -390,7 +452,7 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',
-    color: color.themeText,
+    color: color.font_color_white,
     textAlignVertical: 'center',
   },
   selectImgView: {
@@ -418,7 +480,14 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',
-    color: color.themeText,
+    color: color.font_color_white,
+  },
+  dataset_title_selected: {
+    marginLeft: scaleSize(30),
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    color: color.content_white,
   },
   colorScheme: {
     width: scaleSize(420),
@@ -436,31 +505,35 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',
-    color: color.themeText,
+    color: color.font_color_white,
   },
   separateViewStyle: {
     flexDirection: 'column',
+    // marginLeft: scaleSize(20),
+    // marginRight: scaleSize(20),
     width: '100%',
     height: scaleSize(1),
-    backgroundColor: color.bgG,
+    backgroundColor: color.item_separate_white,
   },
   imgItemInfo: {
+    width: scaleSize(520),
     marginLeft: scaleSize(30),
     marginTop: scaleSize(4),
-    fontSize: scaleSize(15),
+    fontSize: setSpText(16),
     height: scaleSize(30),
     backgroundColor: 'transparent',
     textAlignVertical: 'center',
-    color: color.gray,
+    color: color.item_separate_white,
   },
   itemInfo: {
+    width: scaleSize(520),
     marginLeft: scaleSize(60),
     marginTop: scaleSize(4),
-    fontSize: scaleSize(15),
+    fontSize: setSpText(16),
     height: scaleSize(30),
     backgroundColor: 'transparent',
     textAlignVertical: 'center',
-    color: color.gray,
+    color: color.item_separate_white,
   },
   headerImg: {
     marginLeft: scaleSize(50),
@@ -472,12 +545,12 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',
-    color: color.themeText,
+    color: color.font_color_white,
     textAlignVertical: 'center',
   },
   itemSelected: {
     height: scaleSize(80),
-    backgroundColor: color.gray,
+    backgroundColor: color.item_separate_white,
     alignItems: 'center',
     flexDirection: 'row',
   },
