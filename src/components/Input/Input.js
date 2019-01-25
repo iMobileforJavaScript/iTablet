@@ -56,6 +56,14 @@ export default class InputDialog extends PureComponent {
     })
   }
 
+  focus = () => {
+    this.textInput && this.textInput.focus()
+  }
+
+  blur = () => {
+    this.textInput && this.textInput.blur()
+  }
+
   renderClearBtn = () => {
     return (
       <TouchableOpacity
@@ -76,6 +84,7 @@ export default class InputDialog extends PureComponent {
     return (
       <View style={[styles.inputContainer, this.props.style]}>
         <TextInput
+          ref={ref => (this.textInput = ref)}
           accessible={this.props.accessible}
           accessibilityLabel={this.props.accessibilityLabel}
           style={[styles.input, this.props.inputStyle]}

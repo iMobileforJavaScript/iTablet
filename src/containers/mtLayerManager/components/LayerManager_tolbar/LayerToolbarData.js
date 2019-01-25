@@ -96,7 +96,17 @@ const layerThemeSetting = [
     image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
   {
-    title: '移除',
+    title: '重命名',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_rename.png'),
+  },
+  {
+    title: '上移',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+  },
+  {
+    title: '下移',
     data: [],
     image: require('../../../../assets/layerToolbar/layer_remove.png'),
   },
@@ -117,5 +127,10 @@ const layer3dSetting = [
     data: [],
     image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
+  // {
+  //   title: '取消',
+  //   data: [],
+  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+  // },
 ]
 export { layersetting, layerThemeSetting, layer3dSetting }

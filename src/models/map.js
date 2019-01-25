@@ -120,29 +120,25 @@ export const saveMap = (params = {}, cb = () => {}) => async (
   getState,
 ) => {
   try {
-    // if (!params.mapName) return
-    let mapName = await SMap.saveMapName(
-      params.mapName,
-      params.nModule || '',
-      params.addition,
-      params.isNew,
-    )
+    let mapName = params.mapName
     let userName = getState().user.toJS().currentUser.userName || 'Customer'
-    // let path = await FileTools.appendingHomeDirectory(
-    //   ConstPath.UserPath +
-    //     userName +
-    //     '/' +
-    //     ConstPath.RelativePath.Map +
-    //     mapName +
-    //     '.xml',
-    // )
-    let path =
-      ConstPath.UserPath +
-      userName +
-      '/' +
-      ConstPath.RelativePath.Map +
-      mapName +
-      '.xml'
+    let path = ''
+    if (!params.notSaveToXML) {
+      mapName = await SMap.saveMapName(
+        params.mapName,
+        params.nModule || '',
+        params.addition,
+        params.isNew,
+      )
+      path =
+        ConstPath.UserPath +
+        userName +
+        '/' +
+        ConstPath.RelativePath.Map +
+        mapName +
+        '.xml'
+    }
+
     if (!params.isNew) {
       await dispatch({
         type: SET_CURRENT_MAP,

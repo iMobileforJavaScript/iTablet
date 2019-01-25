@@ -110,7 +110,7 @@ export default class CollectionToolbar extends React.Component {
       SCollector.setStyle(geoStyle)
       //
       // let style = await SCollector.getStyle()
-      SCollector.setDataset()
+      // SCollector.setDataset()
     }.bind(this)())
   }
 
