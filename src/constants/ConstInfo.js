@@ -53,4 +53,6 @@ export default {
 
   READING_DATA: '读取数据中',
   LOADING_DATA: '数据加载中',
+
+  PLEASE_INPUT_NAME: '请输入名称',
 }
