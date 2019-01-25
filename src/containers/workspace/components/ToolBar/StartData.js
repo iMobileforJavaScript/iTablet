@@ -119,6 +119,7 @@ function getStart(type, params) {
               ConstToolType.MAP3D_WORKSPACE_LIST,
               {
                 containerType: 'list',
+                isFullScreen: true,
               },
             )
           },
@@ -351,7 +352,7 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
-      item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+      item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
@@ -374,7 +375,7 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
-        item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
@@ -633,7 +634,7 @@ function showHistory() {
     latestMap = _params.map.latestMap[userName][GLOBAL.Type]
   }
   latestMap.forEach(item => {
-    item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+    item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
   })
   let data = [
     {
@@ -658,6 +659,7 @@ function changeBaseLayer(type) {
       _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
         containerType: 'list',
         isFullScreen: true,
+        height: ConstToolType.HEIGHT[2],
       })
       break
     default:

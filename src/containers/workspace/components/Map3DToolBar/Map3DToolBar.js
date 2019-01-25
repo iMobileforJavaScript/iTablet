@@ -79,10 +79,25 @@ export default class Map3DToolBar extends React.Component {
     if (this.props.type === 'MAP3D_BASE') {
       if (item.show) {
         return (
+          // <TouchableOpacity
+          //   onPress={() => this.changeBaseMap(item.url, item.type, item.name)}
+          // >
+          //   <Text style={styles.item}>{item.title}</Text>
+          // </TouchableOpacity>
+
           <TouchableOpacity
-            onPress={() => this.changeBaseMap(item.url, item.type, item.name)}
+            onPress={() => {
+              this.changeBaseMap(item.url, item.type, item.name)
+            }}
+            style={styles.sceneItem}
           >
-            <Text style={styles.item}>{item.title}</Text>
+            <Image
+              source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+              style={styles.sceneItemImg}
+            />
+            <View style={styles.sceneItemcontent}>
+              <Text style={[styles.workspaceItem]}>{item.title}</Text>
+            </View>
           </TouchableOpacity>
         )
       } else {
@@ -102,8 +117,15 @@ export default class Map3DToolBar extends React.Component {
           onPress={() => {
             this.props.setfly(index)
           }}
+          style={styles.sceneItem}
         >
-          <Text style={styles.item}>{item.title}</Text>
+          <Image
+            source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+            style={styles.sceneItemImg}
+          />
+          <View style={styles.sceneItemcontent}>
+            <Text style={[styles.workspaceItem]}>{item.title}</Text>
+          </View>
         </TouchableOpacity>
       )
     }
@@ -113,20 +135,29 @@ export default class Map3DToolBar extends React.Component {
   renderListSectionHeader = ({ section }) => {
     if (this.props.type === 'MAP3D_BASE') {
       return (
-        <TouchableOpacity
-          onPress={() => {
-            this.refreshList(section)
-          }}
-        >
-          <Text style={styles.sectionHeader}>{section.title}</Text>
-        </TouchableOpacity>
+        <View style={styles.sceneView}>
+          <Image
+            source={require('../../../../assets/mapToolbar/list_type_maps.png')}
+            style={styles.sceneImg}
+          />
+          <Text style={styles.sceneTitle}>{section.title}</Text>
+        </View>
       )
     }
     if (this.props.type === 'MAP3D_ADD_LAYER') {
       return <View />
     }
     if (this.props.type === 'MAP3D_TOOL_FLYLIST') {
-      return <Text style={styles.sectionHeader}>{section.title}</Text>
+      // return <Text style={styles.sectionHeader}>{section.title}</Text>
+      return (
+        <View style={styles.sceneView}>
+          <Image
+            source={require('../../../../assets/mapToolbar/list_type_maps.png')}
+            style={styles.sceneImg}
+          />
+          <Text style={styles.sceneTitle}>{section.title}</Text>
+        </View>
+      )
     }
   }
 
@@ -189,7 +220,7 @@ export default class Map3DToolBar extends React.Component {
           style={styles.sceneItem}
         >
           <Image
-            source={require('../../../../assets/mapToolbar/list_type_map.png')}
+            source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
             style={styles.sceneItemImg}
           />
           <View style={styles.sceneItemcontent}>

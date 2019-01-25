@@ -35,7 +35,7 @@ import { Toast, scaleSize, jsonUtil } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
-import { Platform, BackHandler } from 'react-native'
+import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
 const SAVE_TITLE = '是否保存当前地图'
 export default class MapView extends React.Component {
@@ -965,6 +965,23 @@ export default class MapView extends React.Component {
     this.fullMap = isFull
   }
 
+  /** 显示量算结果 **/
+  showMeasureResult = (isShow, result = '') => {
+    if (
+      isShow !== this.state.measureShow ||
+      isShow !== this.state.measureResult
+    ) {
+      this.setState({
+        measureShow: isShow,
+        measureResult: isShow ? result : '',
+      })
+    } else {
+      this.setState({
+        measureResult: '',
+      })
+    }
+  }
+
   renderMenuDialog = () => {
     return (
       <MenuAlertDialog
@@ -974,6 +991,18 @@ export default class MapView extends React.Component {
         showFullMap={this.showFullMap}
         getToolBarRef={() => this.toolBox}
       />
+    )
+  }
+
+  renderMeasureLabel = () => {
+    return (
+      <View style={styles.measureResultContainer}>
+        <View style={styles.measureResultView}>
+          <Text style={styles.measureResultText}>
+            {this.state.measureResult}
+          </Text>
+        </View>
+      </View>
     )
   }
 
@@ -995,6 +1024,7 @@ export default class MapView extends React.Component {
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
+        showMeasureResult={this.showMeasureResult}
         {...this.props}
       />
     )
@@ -1025,6 +1055,7 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
+        {this.state.measureShow && this.renderMeasureLabel()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}

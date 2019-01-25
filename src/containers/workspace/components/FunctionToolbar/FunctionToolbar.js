@@ -215,7 +215,7 @@ export default class FunctionToolbar extends React.Component {
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[0],
+            : ConstToolType.HEIGHT[2],
         column: 4,
       })
     }
@@ -511,7 +511,7 @@ export default class FunctionToolbar extends React.Component {
               },
             )
             customerUDBs.forEach(item => {
-              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
               item.info = {
                 infoType: 'mtime',
                 lastModifiedDate: item.mtime,
@@ -530,7 +530,7 @@ export default class FunctionToolbar extends React.Component {
                 type: 'file',
               })
               userUDBs.forEach(item => {
-                item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+                item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
                 item.info = {
                   infoType: 'mtime',
                   lastModifiedDate: item.mtime,
@@ -587,7 +587,7 @@ export default class FunctionToolbar extends React.Component {
       type: 'file',
     })
     customerUDBs.forEach(item => {
-      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
@@ -606,7 +606,7 @@ export default class FunctionToolbar extends React.Component {
         type: 'file',
       })
       userUDBs.forEach(item => {
-        item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+        item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
@@ -737,14 +737,6 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_function_Tagging.png'),
           //   selectMode: 'flash',
           // },
-          // {
-          //   key: '工具',
-          //   title: '工具',
-          //   action: this.showTool,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_tool.png'),
-          //   selectMode: 'flash',
-          // },
           {
             key: '风格',
             title: '风格',
@@ -752,6 +744,11 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_style.png'),
             selectMode: 'flash',
+          },
+          {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
           },
           // {
           //   title: '撤销',
@@ -781,13 +778,13 @@ export default class FunctionToolbar extends React.Component {
           //   action: this.showMap3DSymbol,
           //   image: require('../../../../assets/function/icon_function_Tagging.png'),
           // },
-          {
-            key: constants.ADD,
-            title: constants.ADD,
-            size: 'large',
-            action: () => {},
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   key: constants.ADD,
+          //   title: constants.ADD,
+          //   size: 'large',
+          //   action: () => {},
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             title: '工具',
             action: this.showMap3DTool,
@@ -850,6 +847,11 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
             key: '分享',
             title: '分享',
             size: 'large',
@@ -868,7 +870,7 @@ export default class FunctionToolbar extends React.Component {
             key: '开始',
             title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
             title: '采集',

@@ -51,6 +51,7 @@ import ThemeMenuData from './ThemeMenuData'
 import ToolBarSectionList from './ToolBarSectionList'
 import constants from '../../constants'
 // import ShareData from './ShareData'
+import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
@@ -114,6 +115,7 @@ export default class ToolBar extends React.PureComponent {
     exportmap3DWorkspace: () => {},
     importSceneWorkspace: () => {},
     getMapSetting: () => {},
+    showMeasureResult: () => {},
   }
 
   static defaultProps = {
@@ -244,7 +246,8 @@ export default class ToolBar extends React.PureComponent {
         break
       case ConstToolType.MAP3D_BASE:
         data = Map3DBaseMapList.baseListData
-        buttons = [ToolbarBtnType.CANCEL]
+        // buttons = [ToolbarBtnType.CANCEL]
+        buttons = []
         break
       case ConstToolType.MAP3D_ADD_LAYER:
         data = Map3DBaseMapList.layerListdata
@@ -1183,7 +1186,8 @@ export default class ToolBar extends React.PureComponent {
     try {
       let flydata = await SScene.getFlyRouteNames()
       let data = [{ title: '飞行轨迹列表', data: flydata }]
-      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      // let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      let buttons = []
       return { data, buttons }
     } catch (error) {
       let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
@@ -1195,7 +1199,8 @@ export default class ToolBar extends React.PureComponent {
 
   getWorkspaceList = async () => {
     try {
-      let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      // let buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      let buttons = []
       let data = []
       let userName = this.props.user.currentUser.userName || 'Customer'
       let path = await FileTools.appendingHomeDirectory(
@@ -1288,8 +1293,10 @@ export default class ToolBar extends React.PureComponent {
         () => {
           if (list.length > 2) {
             this.height = ConstToolType.HEIGHT[2]
+          } else if (list.length === 1) {
+            this.height = scaleSize(61)
           } else {
-            this.height = ConstToolType.HEIGHT[1]
+            this.height = scaleSize(122)
           }
           this.showToolbar()
         },
@@ -1335,10 +1342,13 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           containerType: 'list',
-          isFullScreen: false,
+          isFullScreen: true,
         },
         () => {
-          this.height = ConstToolType.HEIGHT[2]
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[2]
+              : ConstToolType.HEIGHT[3]
           this.showToolbar()
         },
       )
@@ -1645,6 +1655,13 @@ export default class ToolBar extends React.PureComponent {
 
   close = (type = this.state.type) => {
     (async function() {
+      if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
+        // 去掉量算监听
+        SMap.removeMeasureListener()
+      }
+      if (GLOBAL.Type !== constants.MAP_3D) {
+        this.props.showMeasureResult(false)
+      }
       if (GLOBAL.Type === constants.MAP_EDIT) {
         GLOBAL.showMenu = true
         // GLOBAL.showFlex = true
@@ -2793,7 +2810,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
-        underlayColor={color.gray}
+        underlayColor={color.content_white}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />
@@ -3100,7 +3117,12 @@ export default class ToolBar extends React.PureComponent {
         box = this.renderTable()
     }
     return (
-      <Animated.View style={{ height: this.state.boxHeight }}>
+      <Animated.View
+        style={{
+          height: this.state.boxHeight,
+          backgroundColor: color.content_white,
+        }}
+      >
         {box}
       </Animated.View>
     )
@@ -3330,6 +3352,11 @@ export default class ToolBar extends React.PureComponent {
           // action = this.menuCommit
           action = this.close
           break
+        case ToolbarBtnType.MEASURE_CLEAR:
+          //量算-清除
+          image = require('../../../../assets/mapEdit/icon_clear.png')
+          action = () => MapToolData.clearMeasure(this.state.type)
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -3367,6 +3394,9 @@ export default class ToolBar extends React.PureComponent {
       this.setState({
         isFullScreen: false,
       })
+    } else if (this.state.type === ConstToolType.MAP3D_WORKSPACE_LIST) {
+      this.showToolbarAndBox(false)
+      this.props.existFullMap && this.props.existFullMap()
     } else {
       this.setVisible(false)
     }
