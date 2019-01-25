@@ -119,6 +119,7 @@ function getStart(type, params) {
               ConstToolType.MAP3D_WORKSPACE_LIST,
               {
                 containerType: 'list',
+                isFullScreen: true,
               },
             )
           },
@@ -658,6 +659,7 @@ function changeBaseLayer(type) {
       _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
         containerType: 'list',
         isFullScreen: true,
+        height: ConstToolType.HEIGHT[2],
       })
       break
     default:

@@ -259,7 +259,12 @@ export const exportWorkspace = (params, cb = () => {}) => async (
     if (params.maps && params.maps.length > 0) {
       let fileReplace =
         params.fileReplace === undefined ? true : params.fileReplace
-      exportResult = await SMap.exportWorkspace(params.maps, path, fileReplace)
+      exportResult = await SMap.exportWorkspace(
+        params.maps,
+        path,
+        fileReplace,
+        params.extra,
+      )
     }
     // 压缩工作空间
     if (exportResult) {

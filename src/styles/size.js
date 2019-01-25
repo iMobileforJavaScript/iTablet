@@ -7,6 +7,7 @@ const screen = {
   statusBarHeight: Platform.OS === 'ios' ? 20 : 0,
 }
 const fontSize = {
+  fontSizeXXXl: setSpText(30),
   fontSizeXXl: setSpText(28),
   fontSizeXl: setSpText(26),
   fontSizeLg: setSpText(24),

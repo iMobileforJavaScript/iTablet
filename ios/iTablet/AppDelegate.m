@@ -27,7 +27,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.115"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.113"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -57,6 +57,7 @@ static NSString* g_sampleCodeName = @"#";;
   self.allowRotation = NO;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   
+  [NSThread sleepForTimeInterval:1];
 //  [RNSplashScreen show];
   return YES;
 }

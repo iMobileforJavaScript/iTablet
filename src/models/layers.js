@@ -1,7 +1,7 @@
 import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, SScene } from 'imobile_for_reactnative'
 // Constants
 // --------------------------------------------------
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
@@ -12,7 +12,7 @@ export const SET_ANALYST_LAYER = 'SET_ANALYST_LAYER'
 export const GET_LAYERS = 'GET_LAYERS'
 export const GET_ATTRIBUTES = 'GET_ATTRIBUTES'
 export const SET_ATTRIBUTES = 'SET_ATTRIBUTES'
-
+export const GET_LAYER3DLIST = 'GET_LAYER3DLIST'
 // Actions
 // --------------------------------------------------
 
@@ -119,6 +119,56 @@ export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
   cb && cb(data)
 }
 
+export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
+  let result = await SScene.getLayerList()
+  let basemaplist = [],
+    layerlist = [],
+    ablelist = [],
+    terrainList = []
+  for (let index = 0; index < result.length; index++) {
+    const element = result[index]
+    let item = { ...element, isShow: true }
+    if (item.name === 'bingmap') {
+      basemaplist.push(item)
+    } else if (item.name === 'NodeAnimation') {
+      ablelist.push(item)
+    } else {
+      layerlist.push(item)
+    }
+  }
+  let data = [
+    {
+      title: '我的图层',
+      data: layerlist,
+      visible: true,
+      index: 0,
+    },
+    {
+      title: '我的底图',
+      data: basemaplist,
+      visible: true,
+      index: 1,
+    },
+    {
+      title: '我的标注',
+      data: ablelist,
+      visible: true,
+      index: 2,
+    },
+    {
+      title: '我的地形',
+      data: terrainList,
+      visible: true,
+      index: 3,
+    },
+  ]
+  await dispatch({
+    type: GET_LAYER3DLIST,
+    payload: data || {},
+  })
+  cb && cb(data)
+}
+
 const initialState = fromJS({
   layers: [],
   editLayer: {},
@@ -130,6 +180,7 @@ const initialState = fromJS({
   },
   currentLayer: {},
   analystLayer: {},
+  layer3dList: [],
 })
 
 export default handleActions(
@@ -208,6 +259,13 @@ export default handleActions(
       return state
         .setIn(['attributes'], fromJS(attributes))
         .setIn(['currentAttribute'], fromJS(currentAttribute))
+    },
+    [`${GET_LAYER3DLIST}`]: (state, { payload }) => {
+      let layer3dList = state.toJS().layer3dList
+      if (payload.length > 0) {
+        layer3dList = payload
+      }
+      return state.setIn(['layer3dList'], fromJS(layer3dList))
     },
     [REHYDRATE]: () => {
       // return payload && payload.layers ? fromJS(payload.layers) : state

@@ -59,4 +59,61 @@ export default StyleSheet.create({
   modulelist: {
     flex: 1,
   },
+  dialogBackground: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'transparent',
+  },
+  dialogHeaderView: {
+    flex: 1,
+    //  backgroundColor:"pink",
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dialogHeaderImg: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    opacity: 0.85,
+    // marginLeft:scaleSize(145),
+    // marginTop:scaleSize(21),
+  },
+  promptTtile: {
+    fontSize: setSpText(24),
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+  },
+  opacityView: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: color.content_white,
+  },
+  btnTitle: {
+    fontSize: setSpText(20),
+    color: '#303030',
+    // borderWidth:scaleSize(1),
+    // borderColor:color.bgG,
+  },
+  checkView: {
+    position: 'absolute',
+    flex: 1,
+    flexDirection: 'row',
+    // justifyContent:"center",
+    alignItems: 'center',
+    //  backgroundColor:"red",
+    // marginTop:scaleSize(60),
+    // bottom:scaleSize(120),
+    top: scaleSize(110),
+    left: scaleSize(0),
+    paddingLeft: scaleSize(40),
+  },
+  checkImg: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+  },
+  dialogCheck: {
+    fontSize: setSpText(18),
+    color: color.theme_white,
+  },
 })

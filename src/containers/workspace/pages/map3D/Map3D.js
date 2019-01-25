@@ -37,6 +37,7 @@ export default class Map3D extends React.Component {
   constructor(props) {
     super(props)
     GLOBAL.sceneName = ''
+    GLOBAL.openWorkspace = false
     const params = this.props.navigation.state.params
     this.operationType = params.operationType || constants.MAP_3D
     this.isExample = params.isExample || false
@@ -101,6 +102,7 @@ export default class Map3D extends React.Component {
     }
     try {
       SScene.openScence(this.name).then(() => {
+        SScene.setNavigationControlVisible(false)
         this.initListener()
         GLOBAL.openWorkspace = true
         GLOBAL.sceneName = this.name
@@ -116,6 +118,7 @@ export default class Map3D extends React.Component {
       'JPG_PNG',
       96.0,
       true,
+      '',
     )
   }
 
@@ -286,7 +289,7 @@ export default class Map3D extends React.Component {
         cancelAction={this.cancel}
       >
         <View style={styles.item}>
-          <Text style={styles.title}>文本内容</Text>
+          {/* <Text style={styles.title}>文本内容</Text> */}
           <TextInput
             underlineColorAndroid={'transparent'}
             accessible={true}

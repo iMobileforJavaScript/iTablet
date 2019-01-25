@@ -50,6 +50,7 @@ import UpLoadList from './uploadList'
 import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
+import InputPage from './InputPage'
 
 export default StackNavigator(
   {
@@ -243,6 +244,12 @@ export default StackNavigator(
     },
     TouchProgress: {
       screen: TouchProgress,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    InputPage: {
+      screen: InputPage,
       navigationOptions: {
         header: null,
       },
