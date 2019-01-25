@@ -6,6 +6,7 @@ import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
+import NavigationService from '../../../NavigationService'
 // import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}
@@ -110,29 +111,44 @@ function showSaveDialog(type) {
     Toast.show('分享中，请稍后')
     return
   }
-  if (type === constants.SUPERMAP_ONLINE) {
-    let list = [_params.map.currentMap.name]
-    _params.setInputDialogVisible &&
-      _params.setInputDialogVisible(true, {
-        placeholder: '请输入分享数据名称',
-        confirmAction: value => {
-          shareToSuperMapOnline(list, value)
-          _params.setInputDialogVisible(false)
-        },
-      })
-  } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
-    SScene.getMapList().then(list => {
-      let data = [list[0].name]
-      _params.setInputDialogVisible &&
-        _params.setInputDialogVisible(true, {
-          placeholder: '请输入分享数据名称',
-          confirmAction: value => {
-            share3DToSuperMapOnline(data, value)
-            _params.setInputDialogVisible(false)
-          },
-        })
-    })
-  }
+  NavigationService.navigate('InputPage', {
+    headerTitle: '分享',
+    placeholder: ConstInfo.PLEASE_INPUT_NAME,
+    cb: async value => {
+      if (type === constants.SUPERMAP_ONLINE) {
+        let list = [_params.map.currentMap.name]
+        shareToSuperMapOnline(list, value)
+      } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
+        let list = await SScene.getMapList()
+        let data = [list[0].name]
+        share3DToSuperMapOnline(data, value)
+      }
+      NavigationService.goBack()
+    },
+  })
+  // if (type === constants.SUPERMAP_ONLINE) {
+  //   let list = [_params.map.currentMap.name]
+  //   _params.setInputDialogVisible &&
+  //     _params.setInputDialogVisible(true, {
+  //       placeholder: '请输入分享数据名称',
+  //       confirmAction: value => {
+  //         shareToSuperMapOnline(list, value)
+  //         _params.setInputDialogVisible(false)
+  //       },
+  //     })
+  // } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
+  //   SScene.getMapList().then(list => {
+  //     let data = [list[0].name]
+  //     _params.setInputDialogVisible &&
+  //       _params.setInputDialogVisible(true, {
+  //         placeholder: '请输入分享数据名称',
+  //         confirmAction: value => {
+  //           share3DToSuperMapOnline(data, value)
+  //           _params.setInputDialogVisible(false)
+  //         },
+  //       })
+  //   })
+  // }
 }
 
 // function showMapList(type) {
