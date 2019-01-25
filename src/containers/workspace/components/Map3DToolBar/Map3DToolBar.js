@@ -185,6 +185,7 @@ export default class Map3DToolBar extends React.Component {
       SScene.setListener()
       SScene.getAttribute()
       SScene.setCircleFly()
+      SScene.setAction('PAN3D')
       SScene.addLayer3D(
         'http://t0.tianditu.com/img_c/wmts',
         'l3dBingMaps',
@@ -194,6 +195,7 @@ export default class Map3DToolBar extends React.Component {
         true,
         '',
       )
+      GLOBAL.action3d = 'PAN3D'
       GLOBAL.openWorkspace = true
       GLOBAL.sceneName = item.name
       this.props.existFullMap && this.props.existFullMap(true)
