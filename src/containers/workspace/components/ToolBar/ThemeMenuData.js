@@ -71,6 +71,7 @@ function showExpressionList() {
         {
           title: dataset.datasetName,
           datasetType: dataset.datasetType,
+          expressionType: true,
           data: allExpressions,
         },
       ]

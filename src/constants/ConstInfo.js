@@ -5,6 +5,7 @@ export default {
   CLOSE_MAP_SUCCESS: '地图保存成功',
   CLOSE_MAP_FAILED: '地图已存在',
   PLEASE_SAVE_MAP: '请先保存地图',
+  SAVING_MAP: '正在保存地图',
 
   EXPORTING_MAP: '开始导出地图',
   WAITING_FOR_EXPORTING_MAP: '正在导出地图，请稍后',

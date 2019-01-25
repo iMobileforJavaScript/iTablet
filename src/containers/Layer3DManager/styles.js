@@ -56,8 +56,8 @@ export default StyleSheet.create({
     // backgroundColor: 'pink',
   },
   visibleImg: {
-    width: scaleSize(60),
-    height: scaleSize(60),
+    width: scaleSize(50),
+    height: scaleSize(50),
     // backgroundColor: 'blue',
     marginLeft: scaleSize(10),
   },

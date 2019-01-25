@@ -593,31 +593,45 @@ function create() {
     (async function() {
       await _params.closeMap()
 
-      let userPath =
-        ConstPath.UserPath +
-        (_params.user.currentUser.userName || 'Customer') +
-        '/'
-      let fillLibPath = await FileTools.appendingHomeDirectory(
-        userPath +
-          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
-          'Workspace.bru',
-      )
-      let lineLibPath = await FileTools.appendingHomeDirectory(
-        userPath +
-          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
-          'Workspace.lsl',
-      )
-      let markerLibPath = await FileTools.appendingHomeDirectory(
-        userPath +
-          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
-          'Workspace.sym',
-      )
-      await SMap.importSymbolLibrary(fillLibPath) // 导入面符号库
-      await SMap.importSymbolLibrary(lineLibPath) // 导入线符号库
-      await SMap.importSymbolLibrary(markerLibPath) // 导入点符号库
-      // await _params.setCurrentMap()
-      // await SMap.removeAllLayer() // 移除所有图层
-      // await SMap.closeDatasource(-1) // 关闭所有数据源
+      NavigationService.navigate('InputPage', {
+        headerTitle: '新建',
+        placeholder: ConstInfo.PLEASE_INPUT_NAME,
+        cb: async value => {
+          let userPath =
+            ConstPath.UserPath +
+            (_params.user.currentUser.userName || 'Customer') +
+            '/'
+          let fillLibPath = await FileTools.appendingHomeDirectory(
+            userPath +
+              ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+              'Workspace.bru',
+          )
+          let lineLibPath = await FileTools.appendingHomeDirectory(
+            userPath +
+              ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+              'Workspace.lsl',
+          )
+          let markerLibPath = await FileTools.appendingHomeDirectory(
+            userPath +
+              ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+              'Workspace.sym',
+          )
+          await SMap.importSymbolLibrary(fillLibPath) // 导入面符号库
+          await SMap.importSymbolLibrary(lineLibPath) // 导入线符号库
+          await SMap.importSymbolLibrary(markerLibPath) // 导入点符号库
+          // await _params.setCurrentMap()
+          // await SMap.removeAllLayer() // 移除所有图层
+          // await SMap.closeDatasource(-1) // 关闭所有数据源
+
+          await _params.saveMap({
+            mapName: value,
+            nModule: GLOBAL.Type,
+            notSaveToXML: true,
+          })
+
+          NavigationService.goBack()
+        },
+      })
     }.bind(this)())
   }
 }
@@ -757,8 +771,42 @@ function saveMap() {
 
 /** 另存地图 **/
 function saveMapAs() {
-  if (!_params.setSaveMapDialogVisible) return
-  _params.setSaveMapDialogVisible(true)
+  // if (!_params.setSaveMapDialogVisible) return
+  // _params.setSaveMapDialogVisible(true)
+  NavigationService.navigate('InputPage', {
+    value: _params.map.currentMap.name || '',
+    headerTitle: '地图另存',
+    placeholder: ConstInfo.PLEASE_INPUT_NAME,
+    cb: async value => {
+      let addition = {}
+      if (
+        _params.map &&
+        _params.map.currentMap &&
+        _params.map.currentMap.Template
+      ) {
+        addition.Template = this.props.map.currentMap.Template
+      }
+      _params.setToolbarVisible &&
+        _params.setToolbarVisible(true, ConstInfo.SAVING_MAP)
+      _params.saveMap &&
+        _params.saveMap({ mapName: value, addition, isNew: true }).then(
+          result => {
+            _params.setToolbarVisible && _params.setToolbarVisible(false)
+            if (result) {
+              NavigationService.goBack()
+              setTimeout(() => {
+                Toast.show(ConstInfo.CLOSE_MAP_SUCCESS)
+              }, 1000)
+            } else {
+              Toast.show(ConstInfo.CLOSE_MAP_FAILED)
+            }
+          },
+          () => {
+            _params.setToolbarVisible && _params.setToolbarVisible(false)
+          },
+        )
+    },
+  })
 }
 
 export default {

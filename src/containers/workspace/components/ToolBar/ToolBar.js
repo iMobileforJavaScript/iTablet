@@ -116,6 +116,7 @@ export default class ToolBar extends React.PureComponent {
     importSceneWorkspace: () => {},
     getMapSetting: () => {},
     showMeasureResult: () => {},
+    saveMap: () => {},
   }
 
   static defaultProps = {
@@ -351,6 +352,10 @@ export default class ToolBar extends React.PureComponent {
             key: 'distanceMeasure',
             title: '距离量算',
             action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
               SScene.setMeasureLineAnalyst({
                 callback: result => {
                   this.Map3DToolBar &&
@@ -366,6 +371,10 @@ export default class ToolBar extends React.PureComponent {
             key: 'suerfaceMeasure',
             title: '面积量算',
             action: () => {
+              if (!GLOBAL.openWorkspace) {
+                Toast.show('请打开场景')
+                return
+              }
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
                   this.Map3DToolBar &&
@@ -488,6 +497,27 @@ export default class ToolBar extends React.PureComponent {
             size: 'large',
             image: require('../../../../assets/mapEdit/icon_clear.png'),
           },
+          {
+            key: 'action3d',
+            title: '选择',
+            action: () => {
+              try {
+                if (GLOBAL.action3d === 'PAN3D') {
+                  SScene.setAction('PANSELECT3D')
+                  GLOBAL.action3d = 'PANSELECT3D'
+                  Toast.show('当前场景操作状态为可选')
+                } else {
+                  SScene.setAction('PAN3D')
+                  GLOBAL.action3d = 'PAN3D'
+                  Toast.show('当前场景操作状态为不可选')
+                }
+              } catch (error) {
+                Toast.show('操作失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/icon_action3d.png'),
+          },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
         break
@@ -514,7 +544,7 @@ export default class ToolBar extends React.PureComponent {
       })
   }
 
-  /**刷新字段表达式列表 */
+  /**点击item切换专题字段，刷新字段表达式列表 */
   refreshThemeExpression = async selectedExpression => {
     let dataset = this.expressionData.dataset
     let allExpressions = this.expressionData.list
@@ -530,6 +560,7 @@ export default class ToolBar extends React.PureComponent {
       {
         title: dataset.datasetName,
         datasetType: dataset.datasetType,
+        expressionType: true,
         data: allExpressions,
       },
     ]
@@ -595,6 +626,7 @@ export default class ToolBar extends React.PureComponent {
           {
             title: dataset.datasetName,
             datasetType: dataset.datasetType,
+            expressionType: true,
             data: allExpressions,
           },
         ]
@@ -1190,7 +1222,7 @@ export default class ToolBar extends React.PureComponent {
       let buttons = []
       return { data, buttons }
     } catch (error) {
-      let buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      let buttons = []
       let data = []
       Toast.show('当前场景无飞行轨迹')
       return { data, buttons }
@@ -1733,6 +1765,7 @@ export default class ToolBar extends React.PureComponent {
   closeSymbol = () => {
     SScene.clearAllLabel()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     GLOBAL.Map3DSymbol = false
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -1740,6 +1773,7 @@ export default class ToolBar extends React.PureComponent {
 
   closeTool = () => {
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2032,6 +2066,7 @@ export default class ToolBar extends React.PureComponent {
   closeAnalyst = () => {
     SScene.closeAnalysis()
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2054,6 +2089,7 @@ export default class ToolBar extends React.PureComponent {
 
   endFly = () => {
     SScene.checkoutListener('startTouchAttribute')
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     SScene.flyStop()
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -2147,6 +2183,7 @@ export default class ToolBar extends React.PureComponent {
             {
               title: dataset.datasetName,
               datasetType: dataset.datasetType,
+              expressionType: true,
               data: data.list,
             },
           ]
@@ -2191,7 +2228,7 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              UniqueExpression: item.title,
+              UniqueExpression: item.expression,
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
             }
@@ -2202,9 +2239,9 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.title,
+              RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2215,7 +2252,7 @@ export default class ToolBar extends React.PureComponent {
             params = {
               DatasourceAlias: this.state.themeDatasourceAlias,
               DatasetName: this.state.themeDatasetName,
-              LabelExpression: item.title,
+              LabelExpression: item.expression,
               LabelBackShape: 'NONE',
               FontName: '宋体',
               // FontSize: '15.0',
@@ -2264,7 +2301,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: item.datasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '6.0',
+              RangeParameter: '11.0',
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
@@ -2598,38 +2635,55 @@ export default class ToolBar extends React.PureComponent {
         //   return
         // }
 
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(
-            true,
-            ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
-          )
-        await this.props.closeMap()
-        this.props.setCollectionInfo() // 清空当前模板
-        this.props.setCurrentTemplateInfo() // 清空当前模板
-        this.props.setTemplate() // 清空模板
+        NavigationService.navigate('InputPage', {
+          headerTitle: '新建',
+          placeholder: ConstInfo.PLEASE_INPUT_NAME,
+          cb: async value => {
+            GLOBAL.Loading &&
+              GLOBAL.Loading.setLoading(
+                true,
+                ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+              )
+            await this.props.closeMap()
+            this.props.setCollectionInfo() // 清空当前模板
+            this.props.setCurrentTemplateInfo() // 清空当前模板
+            this.props.setTemplate() // 清空模板
 
-        // 重新打开工作空间，防止Resource被删除或破坏
-        const customerPath =
-          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-        let wsPath
-        if (this.props.user.currentUser.userName) {
-          const userWSPath =
-            ConstPath.UserPath +
-            this.props.user.currentUser.userName +
-            '/' +
-            ConstPath.RelativeFilePath.Workspace
-          wsPath = await FileTools.appendingHomeDirectory(userWSPath)
-        } else {
-          wsPath = await FileTools.appendingHomeDirectory(customerPath)
-        }
-        await this.props.openWorkspace({ server: wsPath })
-        await SMap.openDatasource(
-          ConstOnline['Google'].DSParams,
-          ConstOnline['Google'].layerIndex,
-        )
-        await this.props.getLayers()
-        this.props.setContainerLoading && this.props.setContainerLoading(false)
-        Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+            // 重新打开工作空间，防止Resource被删除或破坏
+            const customerPath =
+              ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+            let wsPath
+            if (this.props.user.currentUser.userName) {
+              const userWSPath =
+                ConstPath.UserPath +
+                this.props.user.currentUser.userName +
+                '/' +
+                ConstPath.RelativeFilePath.Workspace
+              wsPath = await FileTools.appendingHomeDirectory(userWSPath)
+            } else {
+              wsPath = await FileTools.appendingHomeDirectory(customerPath)
+            }
+            await this.props.openWorkspace({ server: wsPath })
+            await SMap.openDatasource(
+              ConstOnline['Google'].DSParams,
+              ConstOnline['Google'].layerIndex,
+            )
+            await this.props.getLayers()
+
+            this.props.saveMap &&
+              (await this.props.saveMap({
+                mapName: value,
+                nModule: GLOBAL.Type,
+                notSaveToXML: true,
+              }))
+
+            GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+            NavigationService.goBack()
+            setTimeout(() => {
+              Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+            }, 1000)
+          },
+        })
 
         // this.props.closeWorkspace().then(async () => {
         //   try {
@@ -2810,7 +2864,7 @@ export default class ToolBar extends React.PureComponent {
           }
         }}
         headerAction={this.headerAction}
-        underlayColor={color.content_white}
+        underlayColor={color.item_separate_white}
         keyExtractor={(item, index) => index}
         device={this.props.device}
       />

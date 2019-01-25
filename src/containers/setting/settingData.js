@@ -20,6 +20,12 @@ async function getMap3DSettings() {
           index: 0,
         },
         {
+          name: '场景操作状态',
+          value: GLOBAL.action3d ? GLOBAL.action3d : 'NULL',
+          isShow: true,
+          index: 0,
+        },
+        {
           name: '视图模式',
           value: '球面',
           isShow: true,

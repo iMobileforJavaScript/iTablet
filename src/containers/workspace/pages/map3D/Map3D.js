@@ -37,6 +37,8 @@ export default class Map3D extends React.Component {
   constructor(props) {
     super(props)
     GLOBAL.sceneName = ''
+    GLOBAL.openWorkspace = false
+    GLOBAL.action3d = ''
     const params = this.props.navigation.state.params
     this.operationType = params.operationType || constants.MAP_3D
     this.isExample = params.isExample || false
@@ -74,6 +76,8 @@ export default class Map3D extends React.Component {
     SScene.setListener().then(() => {
       SScene.getAttribute()
       SScene.setCircleFly()
+      SScene.setAction('PAN3D')
+      GLOBAL.action3d = 'PAN3D'
     })
   }
 
@@ -117,7 +121,7 @@ export default class Map3D extends React.Component {
       'JPG_PNG',
       96.0,
       true,
-      '',
+      'c768f9fd3e388eb0d155405f8d8c6999',
     )
   }
 

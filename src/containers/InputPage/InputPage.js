@@ -6,7 +6,6 @@
 import * as React from 'react'
 import { View } from 'react-native'
 import { Container, Input, TextBtn } from '../../components'
-import { Toast } from '../../utils'
 import { color } from '../../styles'
 import styles from './styles'
 
@@ -29,7 +28,7 @@ export default class InputPage extends React.Component {
   }
 
   confirm = () => {
-    Toast.show(this.state.value)
+    this.input && this.input.blur()
     this.cb && this.cb(this.state.value)
   }
 
@@ -52,6 +51,7 @@ export default class InputPage extends React.Component {
       >
         <View style={styles.subContainer}>
           <Input
+            ref={ref => (this.input = ref)}
             accessible={true}
             accessibilityLabel={'输入框'}
             inputStyle={styles.input}
