@@ -4,6 +4,7 @@ import {
   ConstInfo,
   ConstPath,
   Const,
+  ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -591,12 +592,16 @@ function create() {
     GLOBAL.Type === constants.MAP_THEME
   ) {
     (async function() {
-      await _params.closeMap()
-
       NavigationService.navigate('InputPage', {
         headerTitle: '新建',
         placeholder: ConstInfo.PLEASE_INPUT_NAME,
         cb: async value => {
+          GLOBAL.Loading &&
+            GLOBAL.Loading.setLoading(
+              true,
+              ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+            )
+          await _params.closeMap()
           let userPath =
             ConstPath.UserPath +
             (_params.user.currentUser.userName || 'Customer') +
@@ -623,11 +628,20 @@ function create() {
           // await SMap.removeAllLayer() // 移除所有图层
           // await SMap.closeDatasource(-1) // 关闭所有数据源
 
-          await _params.saveMap({
-            mapName: value,
-            nModule: GLOBAL.Type,
-            notSaveToXML: true,
-          })
+          await SMap.openDatasource(
+            ConstOnline['Google'].DSParams,
+            ConstOnline['Google'].layerIndex,
+          )
+          _params.getLayers && (await _params.getLayers())
+
+          _params.saveMap &&
+            (await _params.saveMap({
+              mapName: value,
+              nModule: GLOBAL.Type,
+              notSaveToXML: true,
+            }))
+
+          GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
 
           NavigationService.goBack()
         },
