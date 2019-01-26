@@ -108,8 +108,8 @@ android {
         applicationId "com.supermap.itablet"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         ndk {
             abiFilters "armeabi-v7a"
         }
