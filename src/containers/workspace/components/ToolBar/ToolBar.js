@@ -653,6 +653,7 @@ export default class ToolBar extends React.PureComponent {
             this.scrollListToLocation()
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
+            this.updateOverlayerView()
           },
         )
       } catch (e) {
@@ -715,6 +716,7 @@ export default class ToolBar extends React.PureComponent {
 
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
+            this.updateOverlayerView()
           },
         )
       } catch (e) {
@@ -777,6 +779,7 @@ export default class ToolBar extends React.PureComponent {
 
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
+            this.updateOverlayerView()
           },
         )
       } catch (e) {
@@ -839,6 +842,7 @@ export default class ToolBar extends React.PureComponent {
 
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
+            this.updateOverlayerView()
           },
         )
       } catch (e) {
@@ -890,6 +894,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[0]
               : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -929,6 +934,7 @@ export default class ToolBar extends React.PureComponent {
         },
         () => {
           this.height = 0
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -977,6 +983,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[0]
               : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -1025,6 +1032,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[7]
               : ConstToolType.THEME_HEIGHT[3]
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -1073,6 +1081,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[2]
               : ConstToolType.THEME_HEIGHT[3]
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -1115,6 +1124,7 @@ export default class ToolBar extends React.PureComponent {
         },
         () => {
           this.height = ConstToolType.THEME_HEIGHT[0]
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -1154,6 +1164,7 @@ export default class ToolBar extends React.PureComponent {
         },
         () => {
           this.height = 0
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -1202,6 +1213,7 @@ export default class ToolBar extends React.PureComponent {
             this.props.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[7]
               : ConstToolType.THEME_HEIGHT[3]
+          this.updateOverlayerView()
         },
       )
     }.bind(this)
@@ -1334,6 +1346,7 @@ export default class ToolBar extends React.PureComponent {
             this.height = scaleSize(122)
           }
           this.showToolbar()
+          this.updateOverlayerView()
         },
       )
     JSON.stringify(data) === '{}' &&
@@ -1362,6 +1375,7 @@ export default class ToolBar extends React.PureComponent {
         // this.createCollector(type)
         this.height = ConstToolType.HEIGHT[0]
         this.showToolbar()
+        this.updateOverlayerView()
       },
     )
   }
@@ -1385,6 +1399,7 @@ export default class ToolBar extends React.PureComponent {
               ? ConstToolType.HEIGHT[2]
               : ConstToolType.HEIGHT[3]
           this.showToolbar()
+          this.updateOverlayerView()
         },
       )
     } else if (type === ConstToolType.MAP3D_WORKSPACE_LIST) {
@@ -1403,6 +1418,7 @@ export default class ToolBar extends React.PureComponent {
               ? ConstToolType.HEIGHT[2]
               : ConstToolType.HEIGHT[3]
           this.showToolbar()
+          this.updateOverlayerView()
         },
       )
     } else if (type === ConstToolType.MAP3D_IMPORTWORKSPACE) {
@@ -1421,6 +1437,7 @@ export default class ToolBar extends React.PureComponent {
               ? ConstToolType.HEIGHT[2]
               : ConstToolType.HEIGHT[3]
           this.showToolbar()
+          this.updateOverlayerView()
         },
       )
     } else {
@@ -1450,6 +1467,7 @@ export default class ToolBar extends React.PureComponent {
               this.showToolbar()
               break
           }
+          this.updateOverlayerView()
         },
       )
     }
@@ -1457,6 +1475,27 @@ export default class ToolBar extends React.PureComponent {
 
   /** 拍照 **/
   takePhoto = () => {}
+
+  /**
+   * 设置遮罩层的显隐
+   * @param visible
+   */
+  setOverlayViewVisible = visible => {
+    GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(visible)
+  }
+
+  //更新遮盖层状态
+  updateOverlayerView = () => {
+    if (this.isShow) {
+      if (this.state.isTouchProgress || this.state.showMenuDialog) {
+        this.setOverlayViewVisible(false)
+      } else {
+        this.setOverlayViewVisible(this.state.isFullScreen)
+      }
+    } else {
+      this.setOverlayViewVisible(false)
+    }
+  }
 
   /**
    * 设置是否显示
@@ -1470,6 +1509,7 @@ export default class ToolBar extends React.PureComponent {
    * }
    **/
   setVisible = (isShow, type = this.state.type, params = {}) => {
+    this.setOverlayViewVisible(isShow)
     if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
       SScene.stopCircleFly()
       // SScene.clearCirclePoint()
@@ -1539,6 +1579,7 @@ export default class ToolBar extends React.PureComponent {
           if (params.cb) {
             setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
           }
+          this.updateOverlayerView()
         },
       )
     } else {
@@ -1646,9 +1687,14 @@ export default class ToolBar extends React.PureComponent {
       duration: 200,
     }).start()
     this.isBoxShow = false
-    this.setState({
-      isFullScreen: false,
-    })
+    this.setState(
+      {
+        isFullScreen: false,
+      },
+      () => {
+        this.updateOverlayerView()
+      },
+    )
 
     const menutoolRef = this.props.getMenuAlertDialogRef()
     if (menutoolRef) {
@@ -1737,7 +1783,12 @@ export default class ToolBar extends React.PureComponent {
           this.state.isTouchProgress === true ||
           this.state.showMenuDialog === true
         ) {
-          this.setState({ isTouchProgress: false, showMenuDialog: false })
+          this.setState(
+            { isTouchProgress: false, showMenuDialog: false },
+            () => {
+              this.updateOverlayerView()
+            },
+          )
         }
         this.props.existFullMap && this.props.existFullMap()
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
@@ -1879,17 +1930,22 @@ export default class ToolBar extends React.PureComponent {
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
-        this.setState({
-          isFullScreen,
-          showMenuDialog,
-          isTouchProgress,
-          buttons: [
-            ToolbarBtnType.CANCEL,
-            ToolbarBtnType.MENU,
-            ToolbarBtnType.MENU_FLEX,
-            ToolbarBtnType.MENU_COMMIT,
-          ],
-        })
+        this.setState(
+          {
+            isFullScreen,
+            showMenuDialog,
+            isTouchProgress,
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+          },
+          () => {
+            this.updateOverlayerView()
+          },
+        )
       }
     }.bind(this)
 
@@ -1926,11 +1982,17 @@ export default class ToolBar extends React.PureComponent {
 
   menus = () => {
     if (this.state.showMenuDialog === false) {
-      this.setState({ showMenuDialog: true })
+      this.setState({ showMenuDialog: true }, () => {
+        this.updateOverlayerView()
+      })
     } else {
-      this.setState({ showMenuDialog: false })
+      this.setState({ showMenuDialog: false }, () => {
+        this.updateOverlayerView()
+      })
     }
-    this.setState({ isTouchProgress: false })
+    this.setState({ isTouchProgress: false }, () => {
+      this.updateOverlayerView()
+    })
   }
 
   menuCommit = () => {
@@ -1979,11 +2041,16 @@ export default class ToolBar extends React.PureComponent {
         this.state.selectKey === '字号'
       ) {
         // 显示指滑进度条
-        this.setState({
-          isTouchProgress: !this.state.isTouchProgress,
-          showMenuDialog: false,
-          isFullScreen: !this.state.isTouchProgress,
-        })
+        this.setState(
+          {
+            isTouchProgress: !this.state.isTouchProgress,
+            showMenuDialog: false,
+            isFullScreen: !this.state.isTouchProgress,
+          },
+          () => {
+            this.updateOverlayerView()
+          },
+        )
         this.isBoxShow = false
       } else {
         this.isBoxShow = !this.isBoxShow
@@ -1992,10 +2059,15 @@ export default class ToolBar extends React.PureComponent {
           duration: Const.ANIMATED_DURATION,
         }).start()
 
-        this.setState({
-          showMenuDialog: false,
-          isFullScreen: false,
-        })
+        this.setState(
+          {
+            showMenuDialog: false,
+            isFullScreen: false,
+          },
+          () => {
+            this.updateOverlayerView()
+          },
+        )
       }
     }
   }
@@ -2012,6 +2084,7 @@ export default class ToolBar extends React.PureComponent {
             duration: Const.ANIMATED_DURATION,
           }).start()
           this.isBoxShow = !this.isBoxShow
+          this.updateOverlayerView()
         },
       )
     } else {
@@ -2211,6 +2284,7 @@ export default class ToolBar extends React.PureComponent {
 
               this.props.setContainerLoading &&
                 this.props.setContainerLoading(false)
+              this.updateOverlayerView()
             },
           )
         } catch (e) {
@@ -3449,9 +3523,14 @@ export default class ToolBar extends React.PureComponent {
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = false
-      this.setState({
-        isFullScreen: false,
-      })
+      this.setState(
+        {
+          isFullScreen: false,
+        },
+        () => {
+          this.updateOverlayerView()
+        },
+      )
     } else if (this.state.type === ConstToolType.MAP3D_WORKSPACE_LIST) {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()

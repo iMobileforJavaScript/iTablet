@@ -13,6 +13,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
+  OverlayView,
 } from '../../components'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
@@ -188,6 +189,11 @@ export default class Map3D extends React.Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
+  //遮盖层
+  renderOverLayer = () => {
+    return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
+  }
+
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
@@ -336,6 +342,7 @@ export default class Map3D extends React.Component {
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
+        {this.renderOverLayer()}
         {this.renderTool()}
         {this.renderDialog()}
         {this.renderInputDialog()}
