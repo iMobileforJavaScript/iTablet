@@ -151,20 +151,20 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
   }
   let data = [
     {
-      title: '我的图层',
-      data: layerlist,
+      title: '我的标注',
+      data: ablelist,
       visible: true,
       index: 0,
     },
     {
-      title: '我的底图',
-      data: basemaplist,
+      title: '我的图层',
+      data: layerlist,
       visible: true,
       index: 1,
     },
     {
-      title: '我的标注',
-      data: ablelist,
+      title: '我的底图',
+      data: basemaplist,
       visible: true,
       index: 2,
     },
