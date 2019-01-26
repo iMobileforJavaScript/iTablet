@@ -322,7 +322,13 @@ export default class ToolBarSectionList extends React.Component {
 
   /**字段表达式Item */
   getExpressionItem = item => {
-    return <Text style={styles.itemTitle}>{item.expression}</Text>
+    return (
+      <Text
+        style={item.isSelected ? styles.selected_itemTitle : styles.itemTitle}
+      >
+        {item.expression}
+      </Text>
+    )
   }
 
   /**数据集类型字段Item */
@@ -509,6 +515,14 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.font_color_white,
+    textAlignVertical: 'center',
+  },
+  selected_itemTitle: {
+    marginLeft: scaleSize(60),
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    color: color.content_white,
     textAlignVertical: 'center',
   },
   selectImgView: {
