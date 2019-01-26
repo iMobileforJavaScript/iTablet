@@ -12,6 +12,8 @@ export default class Color_Btn extends React.Component {
   props: {
     onPress: () => {},
     background: string,
+    device: Object,
+    numColumns?: number,
   }
 
   constructor(props) {
@@ -23,6 +25,8 @@ export default class Color_Btn extends React.Component {
   }
 
   render() {
+    let column =
+      this.props.device.orientation === 'LANDSCAPE' ? 12 : this.props.numColumns
     return (
       <TouchableHighlight
         ref={ref => (this.mtBtn = ref)}
@@ -38,7 +42,7 @@ export default class Color_Btn extends React.Component {
             <Text
               style={[
                 { height: scaleSize(80) },
-                { width: scaleSize(80) },
+                { width: this.props.device.width / column },
                 { backgroundColor: this.props.background },
               ]}
             />
@@ -56,7 +60,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: scaleSize(85),
-    width: scaleSize(85),
+    // width: scaleSize(85),
   },
   inner: {
     flex: 1,

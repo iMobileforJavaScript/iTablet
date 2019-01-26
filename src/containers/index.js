@@ -26,7 +26,7 @@ import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
 import { ChooseDatasource, NewDSet } from './newDSet'
-// import MTLayerManager from './mtLayerManager'
+import MTLayerManager from './mtLayerManager'
 import Map3DLayerManager from './Layer3DManager'
 import AnalystParams from './analystParams'
 import AddLayer from './addLayer'
@@ -79,12 +79,12 @@ export default StackNavigator(
       },
     },
 
-    // LayerManager: {
-    //   screen: MTLayerManager,
-    //   navigationOptions: {
-    //     header: null,
-    //   },
-    // },
+    LayerManager: {
+      screen: MTLayerManager,
+      navigationOptions: {
+        header: null,
+      },
+    },
     Map3DLayerManager: {
       screen: Map3DLayerManager,
       navigationOptions: {
