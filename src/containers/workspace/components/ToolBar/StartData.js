@@ -336,16 +336,18 @@ function openMap() {
     let customerPath =
       (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
       ConstPath.RelativeFilePath.Map
-    let fileList = await FileTools.getPathListByFilter(customerPath, {
-      extension: 'xml',
-      type: 'file',
-    })
+    // let fileList = await FileTools.getPathListByFilter(customerPath, {
+    //   extension: 'xml',
+    //   type: 'file',
+    // })
+    let fileList = await FileTools.getMaps(customerPath)
     let userFileList
     if (_params.user && _params.user.currentUser.userName) {
-      userFileList = await FileTools.getPathListByFilter(path, {
-        extension: 'xml',
-        type: 'file',
-      })
+      // userFileList = await FileTools.getPathListByFilter(path, {
+      //   extension: 'xml',
+      //   type: 'file',
+      // })
+      userFileList = await FileTools.getMaps(path)
     }
 
     let list = []
@@ -353,10 +355,13 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
-      item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+      item.image = item.isTemplate
+        ? require('../../../../assets/mapToolbar/list_type_template_black.png')
+        : require('../../../../assets/mapToolbar/list_type_map_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
+        isTemplate: item.isTemplate,
       }
       list.push(item)
     })
@@ -376,10 +381,13 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
-        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+        item.image = item.isTemplate
+          ? require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+          : require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
+          isTemplate: item.isTemplate,
         }
         userList.push(item)
       })

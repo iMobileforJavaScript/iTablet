@@ -20,7 +20,7 @@ RCT_REMAP_METHOD(getHomeDirectory,getHomeDirectoryWithresolver:(RCTPromiseResolv
   }
 }
 
-RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*)filter getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*)filter resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   BOOL flag = YES;
   NSFileManager* fileMgr = [NSFileManager defaultManager];
   NSMutableArray* array = [NSMutableArray array];
@@ -59,6 +59,89 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
   }
   
   resolve(array);
+}
+
+RCT_REMAP_METHOD(getMaps, getMapsPath:(NSString*)path filter:(NSDictionary*)filter resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    BOOL flag = YES;
+    BOOL templateFlag = YES;
+    NSFileManager* fileMgr = [NSFileManager defaultManager];
+    NSMutableArray* array = [NSMutableArray array];
+    
+    NSString* templatePath = [NSString stringWithFormat:@"%@/%@", [path stringByDeletingLastPathComponent], @"Template"];
+    NSArray* templateArray;
+    if ([fileMgr fileExistsAtPath:templatePath isDirectory:&templateFlag]) {
+      templateArray = [fileMgr contentsOfDirectoryAtPath:templatePath error:nil];
+    }
+    
+    if ([fileMgr fileExistsAtPath:path isDirectory:&flag]) {
+      NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
+      
+      NSString* filterEx = @"xml";
+      NSString* filterName = filter[@"name"];
+      if (filterName == nil) filterName = @"";
+      for (NSString* fileName in tempArray) {
+        NSString* fullPath = [path stringByAppendingPathComponent:fileName];
+        NSString* strModeDate;
+        if ([fileMgr fileExistsAtPath:fullPath isDirectory:&flag]) {
+          NSError *error = nil;
+          NSDictionary *fileAttributes = [fileMgr attributesOfItemAtPath:fullPath error:&error];
+          if(fileAttributes != nil){
+            NSDate* fileModDate = [fileAttributes objectForKey:NSFileModificationDate];
+            strModeDate = [FileTools getLastModifiedTime:fileModDate];
+          }
+          NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
+          NSString* extension = [tt pathExtension];
+          NSString* fileName = [tt lastPathComponent];
+          if([filterEx containsString:extension] && ([fileName containsString:filterName] || [filterName isEqualToString:@""])) {
+            BOOL isTemplate = NO;
+//            for (NSString* templateFileName in templateArray) {
+//              NSString* _fileName = [fileName stringByDeletingPathExtension];
+//              NSString* expFileName = [_fileName stringByAppendingPathExtension:@"exp"];
+//              NSString* expPath = [NSString stringWithFormat:@"%@/%@", [fullPath stringByDeletingLastPathComponent], expFileName];
+//              NSDictionary* expInfo;
+//              if ([fileMgr fileExistsAtPath:expPath]) {
+//                expInfo = [FileTools readLocalFileWithPath:expPath];
+//                NSString* templateName = [expInfo objectForKey:@"Template"];
+//
+//                if (templateName && [templateFileName isEqualToString:[templateName lastPathComponent]]) {
+//                  isTemplate = YES;
+//                  break;
+//                }
+//              }
+//            }
+            
+            NSString* _fileName = [fileName stringByDeletingPathExtension];
+            NSString* expFileName = [_fileName stringByAppendingPathExtension:@"exp"];
+            NSString* expPath = [NSString stringWithFormat:@"%@/%@", [fullPath stringByDeletingLastPathComponent], expFileName];
+            NSDictionary* expInfo;
+            
+            
+            if ([fileMgr fileExistsAtPath:expPath]) {
+              expInfo = [FileTools readLocalFileWithPath:expPath];
+              NSString* templateRelativePath = [expInfo objectForKey:@"Template"];
+              NSString* templateFullPath = [NSString stringWithFormat:@"%@%@%@", [NSHomeDirectory() stringByAppendingString:@"/Documents/"], @"iTablet/User/", templateRelativePath];
+              
+              if (templateRelativePath && [fileMgr fileExistsAtPath:templateFullPath]) {
+                isTemplate = YES;
+              }
+            }
+            
+            [array addObject:@{
+                               @"name":fileName,
+                               @"path":tt,
+                               @"mtime":strModeDate,
+                               @"isTemplate":@(isTemplate),
+                               }];
+          }
+        }
+      }
+    }
+    
+    resolve(array);
+  } @catch (NSException *exception) {
+    reject(@"getMaps", exception.reason, nil);
+  }
 }
 
 RCT_REMAP_METHOD(getDirectoryContent, path:(NSString*)path getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
@@ -365,4 +448,12 @@ RCT_REMAP_METHOD(createDirectory,createDirectoryPath:(NSString*)path getHomeDire
   resolve(@(b));
   
 }
+
++ (NSDictionary *)readLocalFileWithPath:(NSString *)path {
+  // 将文件数据化
+  NSData *data = [[NSData alloc] initWithContentsOfFile:path];
+  // 对数据进行JSON格式化并返回字典形式
+  return [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
+}
+
 @end
