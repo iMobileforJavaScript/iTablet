@@ -3,15 +3,7 @@ import { Container } from '../../components'
 import { MAP_MODULE } from '../../constants'
 import { MapToolbar } from '../../containers/workspace/components'
 import Layer3DItem from './Layer3DItem'
-import { SScene } from 'imobile_for_reactnative'
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  SectionList,
-  Image,
-  TouchableHighlight,
-} from 'react-native'
+import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
 export default class Map3DToolBar extends Component {
@@ -20,13 +12,16 @@ export default class Map3DToolBar extends Component {
     type: string,
     data: Array,
     refreshLayer3dList: () => {},
+    setCurrentLayer3d: () => {},
     layer3dList: Array,
     device: Object,
+    currentLayer3d: Object,
   }
   constructor(props) {
     super(props)
     this.state = {
-      data: [],
+      data: this.props.layer3dList,
+      toHeightItem: {},
     }
   }
   // eslint-disable-next-line
@@ -38,72 +33,35 @@ export default class Map3DToolBar extends Component {
   //     }
   //   }
 
-  componentDidMount() {
-    // console.log(this.props.refreshLayer3dList, this.props.layer3dList)
-    this.refreshData()
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.layer3dList !== this.state.data) {
+      this.setState({ data: nextProps.layer3dList })
+    }
   }
 
-  refreshData = () => {
-    SScene.getLayerList().then(result => {
-      let basemaplist = [],
-        layerlist = [],
-        ablelist = [],
-        terrainList = []
-      for (let index = 0; index < result.length; index++) {
-        const element = result[index]
-        let item = { ...element, isShow: true }
-        if (item.name === 'bingmap') {
-          basemaplist.push(item)
-        } else if (item.name === 'NodeAnimation') {
-          ablelist.push(item)
-        } else {
-          layerlist.push(item)
-        }
-      }
-      let data = [
-        {
-          title: '我的标注',
-          data: ablelist,
-          visible: true,
-          index: 0,
-        },
-        {
-          title: '我的图层',
-          data: layerlist,
-          visible: true,
-          index: 1,
-        },
-        {
-          title: '我的底图',
-          data: basemaplist,
-          visible: true,
-          index: 2,
-        },
-        {
-          title: '我的地形',
-          data: terrainList,
-          visible: true,
-          index: 3,
-        },
-      ]
-      this.setState({ data: data })
-    })
-  }
-
-  renderListItem = ({ item }) => {
+  renderListItem = ({ item, index }) => {
+    let itembtnStyle =
+      this.state.toHeightItem.index === index &&
+      this.state.toHeightItem.itemName === item.name
+        ? { backgroundColor: '#4680DF' }
+        : { backgroundColor: 'transparent' }
     if (item.isShow) {
       return (
-        <TouchableHighlight
-          activeOpacity={0.7}
-          underlayColor="#4680DF"
-          onPress={() => {}}
+        <TouchableOpacity
+          style={[styles.itemBtn, itembtnStyle]}
+          onPress={() => {
+            this.setState({
+              toHeightItem: { itemName: item.name, index: index },
+            })
+            this.props.setCurrentLayer3d && this.props.setCurrentLayer3d(item)
+          }}
         >
           <Layer3DItem
             item={item}
             getlayer3dToolbar={this.getlayer3dToolbar}
             device={this.props.device}
           />
-        </TouchableHighlight>
+        </TouchableOpacity>
       )
     } else {
       return <View />
@@ -153,7 +111,7 @@ export default class Map3DToolBar extends Component {
         // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}
-        onRefresh={this.refreshData}
+        onRefresh={this.props.refreshLayer3dList}
         refreshing={false}
       />
     )

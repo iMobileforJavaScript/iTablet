@@ -116,6 +116,7 @@ export default class ToolBar extends React.PureComponent {
     importSceneWorkspace: () => {},
     getMapSetting: () => {},
     showMeasureResult: () => {},
+    refreshLayer3dList: () => {},
     saveMap: () => {},
   }
 
@@ -511,6 +512,8 @@ export default class ToolBar extends React.PureComponent {
                   GLOBAL.action3d = 'PAN3D'
                   Toast.show('当前场景操作状态为不可选')
                 }
+                this.showToolbar(!this.isShow)
+                this.props.existFullMap && this.props.existFullMap()
               } catch (error) {
                 Toast.show('操作失败')
               }
@@ -3084,6 +3087,7 @@ export default class ToolBar extends React.PureComponent {
         showToolbar={this.showToolbar}
         existFullMap={this.props.existFullMap}
         importSceneWorkspace={this.props.importSceneWorkspace}
+        refreshLayer3dList={this.props.refreshLayer3dList}
       />
     )
   }
