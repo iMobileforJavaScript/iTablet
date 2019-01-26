@@ -37,6 +37,7 @@ const lightTheme = {
   blackBg: '#353537',
   bgW: '#F0F0F0',
   bgG: '#A0A0A0',
+  switch: '#4680DF',
 
   fontColorWhite: '#F0F0F0',
   fontColorBlack: '#303030',

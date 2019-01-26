@@ -6,6 +6,7 @@ import Layer3DItem from './Layer3DItem'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
+// import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
     navigation: Object,
@@ -33,6 +34,12 @@ export default class Map3DToolBar extends Component {
   //     }
   //   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.layer3dList !== this.state.data) {
+      this.setState({ data: nextProps.layer3dList })
+    }
+  }
+
   renderListItem = ({ item, index }) => {
     let itembtnStyle =
       this.state.toHeightItem.index === index &&
@@ -43,11 +50,13 @@ export default class Map3DToolBar extends Component {
       return (
         <TouchableOpacity
           style={[styles.itemBtn, itembtnStyle]}
-          onPress={() => {
+          onPress={async () => {
             this.setState({
               toHeightItem: { itemName: item.name, index: index },
             })
             this.props.setCurrentLayer3d && this.props.setCurrentLayer3d(item)
+            // let data2 = await SScene.getAttributeByName(item.name)
+            // console.log(data2)
           }}
         >
           <Layer3DItem

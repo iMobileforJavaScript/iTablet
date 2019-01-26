@@ -4,6 +4,7 @@ import {
   ConstInfo,
   ConstPath,
   Const,
+  ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -335,16 +336,18 @@ function openMap() {
     let customerPath =
       (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
       ConstPath.RelativeFilePath.Map
-    let fileList = await FileTools.getPathListByFilter(customerPath, {
-      extension: 'xml',
-      type: 'file',
-    })
+    // let fileList = await FileTools.getPathListByFilter(customerPath, {
+    //   extension: 'xml',
+    //   type: 'file',
+    // })
+    let fileList = await FileTools.getMaps(customerPath)
     let userFileList
     if (_params.user && _params.user.currentUser.userName) {
-      userFileList = await FileTools.getPathListByFilter(path, {
-        extension: 'xml',
-        type: 'file',
-      })
+      // userFileList = await FileTools.getPathListByFilter(path, {
+      //   extension: 'xml',
+      //   type: 'file',
+      // })
+      userFileList = await FileTools.getMaps(path)
     }
 
     let list = []
@@ -352,10 +355,13 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
-      item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+      item.image = item.isTemplate
+        ? require('../../../../assets/mapToolbar/list_type_template_black.png')
+        : require('../../../../assets/mapToolbar/list_type_map_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
+        isTemplate: item.isTemplate,
       }
       list.push(item)
     })
@@ -375,10 +381,13 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
-        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+        item.image = item.isTemplate
+          ? require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+          : require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
+          isTemplate: item.isTemplate,
         }
         userList.push(item)
       })
@@ -591,12 +600,16 @@ function create() {
     GLOBAL.Type === constants.MAP_THEME
   ) {
     (async function() {
-      await _params.closeMap()
-
       NavigationService.navigate('InputPage', {
         headerTitle: '新建',
         placeholder: ConstInfo.PLEASE_INPUT_NAME,
         cb: async value => {
+          GLOBAL.Loading &&
+            GLOBAL.Loading.setLoading(
+              true,
+              ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+            )
+          await _params.closeMap()
           let userPath =
             ConstPath.UserPath +
             (_params.user.currentUser.userName || 'Customer') +
@@ -623,11 +636,20 @@ function create() {
           // await SMap.removeAllLayer() // 移除所有图层
           // await SMap.closeDatasource(-1) // 关闭所有数据源
 
-          await _params.saveMap({
-            mapName: value,
-            nModule: GLOBAL.Type,
-            notSaveToXML: true,
-          })
+          await SMap.openDatasource(
+            ConstOnline['Google'].DSParams,
+            ConstOnline['Google'].layerIndex,
+          )
+          _params.getLayers && (await _params.getLayers())
+
+          _params.saveMap &&
+            (await _params.saveMap({
+              mapName: value,
+              nModule: GLOBAL.Type,
+              notSaveToXML: true,
+            }))
+
+          GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
 
           NavigationService.goBack()
         },

@@ -180,6 +180,21 @@ async function getFilterFiles(
   return arrFilterFile
 }
 
+/**
+ * 获取指定路径下的地图（xml），含是否是模版地图
+ * @param path
+ * @param filter
+ * @returns {Promise.<*>}
+ */
+async function getMaps(path = '', filter = {}) {
+  try {
+    if (!path) return []
+    return await FileTools.getMaps(path, filter)
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
   getHomeDirectory,
   appendingHomeDirectory,
@@ -199,4 +214,5 @@ export default {
   copyFile,
   initUserDefaultData,
   getFilterFiles,
+  getMaps,
 }
