@@ -12,6 +12,7 @@ import Tabs, {
   MyOnlineMap,
   ScanOnlineMap,
   MyLocalData,
+  MyData,
   Personal,
   ToggleAccount,
   Setting,
@@ -285,6 +286,13 @@ export default StackNavigator(
     },
     MyLocalData: {
       screen: MyLocalData,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyData: {
+      screen: MyData,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
