@@ -25,8 +25,10 @@ export default class MapSetting extends Component {
               <Switch
                 style={styles.switch}
                 trackColor={{ false: color.bgG, true: color.switch }}
-                thumbColor={this.data.value ? color.bgW : color.bgW}
-                ios_backgroundColor={this.data.value ? color.switch : color.bgG}
+                thumbColor={this.props.data.value ? color.bgW : color.bgW}
+                ios_backgroundColor={
+                  this.props.data.value ? color.switch : color.bgG
+                }
                 value={this.props.data.value}
                 onValueChange={value => {
                   this._onValueChange(value, this.props.data, this.props.index)
