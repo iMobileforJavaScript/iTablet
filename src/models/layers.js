@@ -285,7 +285,7 @@ export default handleActions(
       let currentLayer3d = state.toJS().currentLayer3d
       if (JSON.stringify(payload) !== '{}') {
         currentLayer3d = payload
-        Toast.show('当前图层为：' + currentLayer3d.name)
+        Toast.show('当前图层为 ' + currentLayer3d.name)
       }
       return state.setIn(['currentLayer3d'], fromJS(currentLayer3d))
     },

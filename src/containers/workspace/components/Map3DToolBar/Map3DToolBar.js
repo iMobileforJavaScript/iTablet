@@ -68,6 +68,7 @@ export default class Map3DToolBar extends React.Component {
         Toast.show('底图不存在')
         break
     }
+    this.props.refreshLayer3dList && this.props.refreshLayer3dList()
   }
 
   setAnalystResult = data => {
@@ -187,15 +188,15 @@ export default class Map3DToolBar extends React.Component {
       SScene.getAttribute()
       SScene.setCircleFly()
       SScene.setAction('PAN3D')
-      SScene.addLayer3D(
-        'http://t0.tianditu.com/img_c/wmts',
-        'l3dBingMaps',
-        'bingmap',
-        'JPG_PNG',
-        96.0,
-        true,
-        '',
-      )
+      // SScene.addLayer3D(
+      //   'http://t0.tianditu.com/img_c/wmts',
+      //   'l3dBingMaps',
+      //   'bingmap',
+      //   'JPG_PNG',
+      //   96.0,
+      //   true,
+      //   '',
+      // )
       GLOBAL.action3d = 'PAN3D'
       GLOBAL.openWorkspace = true
       GLOBAL.sceneName = item.name

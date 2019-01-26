@@ -33,6 +33,12 @@ export default class Map3DToolBar extends Component {
   //     }
   //   }
 
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.layer3dList !== this.state.data) {
+      this.setState({ data: nextProps.layer3dList })
+    }
+  }
+
   renderListItem = ({ item, index }) => {
     let itembtnStyle =
       this.state.toHeightItem.index === index &&
