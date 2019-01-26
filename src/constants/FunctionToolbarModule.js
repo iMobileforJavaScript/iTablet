@@ -1,4 +1,4 @@
-import { SMap } from 'imobile_for_reactnative'
+import { SMap, DatasetType } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
@@ -161,66 +161,88 @@ const layerManagerData = [
     action: () => {
       return OpenData(ConstOnline.Google, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Google Staelite',
     action: () => {
       return OpenData(ConstOnline.Google, 1)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Google Terrain',
     action: () => {
       return OpenData(ConstOnline.Google, 2)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Google Hybrid',
     action: () => {
       return OpenData(ConstOnline.Google, 3)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: '全球矢量地图',
     action: () => {
       return OpenData(ConstOnline.TD, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: '全球影像地图服务',
     action: () => {
       return OpenData(ConstOnline.TDYXM, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Baidu Map',
     action: () => {
       return OpenData(ConstOnline.Baidu, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Standard',
     action: () => {
       return OpenData(ConstOnline.OSM, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'CycleMap',
     action: () => {
       return OpenData(ConstOnline.OSM, 1)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'Transport',
     action: () => {
       return OpenData(ConstOnline.OSM, 2)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
   {
     caption: 'quanguo',
     action: () => {
       return OpenData(ConstOnline.SuperMapCloud, 0)
     },
+    type: DatasetType.IMAGE,
+    themeType: -1,
   },
 ]
 

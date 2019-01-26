@@ -359,6 +359,7 @@ export default class MyOnlineData extends Component {
         if (progress === '下载完成' || progress === '已下载') {
           this._unZipFile()
         }
+        // this._removeListener()
       }
     }
   }

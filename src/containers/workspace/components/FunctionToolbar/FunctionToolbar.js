@@ -466,7 +466,7 @@ export default class FunctionToolbar extends React.Component {
 
   mapStyle = () => {
     const toolRef = this.props.getToolRef()
-    if (this.props.layers.themeType <= 0)
+    if (this.props.layers.themeType <= 0) {
       if (
         this.props.layers.type === 1 ||
         this.props.layers.type === 3 ||
@@ -482,6 +482,7 @@ export default class FunctionToolbar extends React.Component {
               column: 4,
               height: ConstToolType.HEIGHT[4],
             })
+            Toast.show('当前图层无法设置风格')
           } else {
             this.props.showFullMap && this.props.showFullMap(true)
             toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
@@ -492,7 +493,12 @@ export default class FunctionToolbar extends React.Component {
             })
           }
         }
+      } else {
+        Toast.show('当前图层无法设置风格')
       }
+    } else {
+      Toast.show('当前图层无法设置风格')
+    }
   }
 
   remove = () => {}

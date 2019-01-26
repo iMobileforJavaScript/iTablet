@@ -4,6 +4,7 @@ import {
   setEditLayer,
   setCurrentAttribute,
   setAttributes,
+  refreshLayer3dList,
 } from '../../../../models/layers'
 import {
   setLatestMap,
@@ -31,6 +32,7 @@ const mapDispatchToProps = {
   exportmap3DWorkspace,
   importSceneWorkspace,
   setSharing,
+  refreshLayer3dList,
 }
 
 export default connect(

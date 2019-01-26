@@ -116,6 +116,8 @@ export default class ToolBar extends React.PureComponent {
     importSceneWorkspace: () => {},
     getMapSetting: () => {},
     showMeasureResult: () => {},
+    refreshLayer3dList: () => {},
+    saveMap: () => {},
   }
 
   static defaultProps = {
@@ -510,6 +512,8 @@ export default class ToolBar extends React.PureComponent {
                   GLOBAL.action3d = 'PAN3D'
                   Toast.show('当前场景操作状态为不可选')
                 }
+                this.showToolbar(!this.isShow)
+                this.props.existFullMap && this.props.existFullMap()
               } catch (error) {
                 Toast.show('操作失败')
               }
@@ -2634,38 +2638,55 @@ export default class ToolBar extends React.PureComponent {
         //   return
         // }
 
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(
-            true,
-            ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
-          )
-        await this.props.closeMap()
-        this.props.setCollectionInfo() // 清空当前模板
-        this.props.setCurrentTemplateInfo() // 清空当前模板
-        this.props.setTemplate() // 清空模板
+        NavigationService.navigate('InputPage', {
+          headerTitle: '新建',
+          placeholder: ConstInfo.PLEASE_INPUT_NAME,
+          cb: async value => {
+            GLOBAL.Loading &&
+              GLOBAL.Loading.setLoading(
+                true,
+                ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+              )
+            await this.props.closeMap()
+            this.props.setCollectionInfo() // 清空当前模板
+            this.props.setCurrentTemplateInfo() // 清空当前模板
+            this.props.setTemplate() // 清空模板
 
-        // 重新打开工作空间，防止Resource被删除或破坏
-        const customerPath =
-          ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-        let wsPath
-        if (this.props.user.currentUser.userName) {
-          const userWSPath =
-            ConstPath.UserPath +
-            this.props.user.currentUser.userName +
-            '/' +
-            ConstPath.RelativeFilePath.Workspace
-          wsPath = await FileTools.appendingHomeDirectory(userWSPath)
-        } else {
-          wsPath = await FileTools.appendingHomeDirectory(customerPath)
-        }
-        await this.props.openWorkspace({ server: wsPath })
-        await SMap.openDatasource(
-          ConstOnline['Google'].DSParams,
-          ConstOnline['Google'].layerIndex,
-        )
-        await this.props.getLayers()
-        this.props.setContainerLoading && this.props.setContainerLoading(false)
-        Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+            // 重新打开工作空间，防止Resource被删除或破坏
+            const customerPath =
+              ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+            let wsPath
+            if (this.props.user.currentUser.userName) {
+              const userWSPath =
+                ConstPath.UserPath +
+                this.props.user.currentUser.userName +
+                '/' +
+                ConstPath.RelativeFilePath.Workspace
+              wsPath = await FileTools.appendingHomeDirectory(userWSPath)
+            } else {
+              wsPath = await FileTools.appendingHomeDirectory(customerPath)
+            }
+            await this.props.openWorkspace({ server: wsPath })
+            await SMap.openDatasource(
+              ConstOnline['Google'].DSParams,
+              ConstOnline['Google'].layerIndex,
+            )
+            await this.props.getLayers()
+
+            this.props.saveMap &&
+              (await this.props.saveMap({
+                mapName: value,
+                nModule: GLOBAL.Type,
+                notSaveToXML: true,
+              }))
+
+            GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+            NavigationService.goBack()
+            setTimeout(() => {
+              Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+            }, 1000)
+          },
+        })
 
         // this.props.closeWorkspace().then(async () => {
         //   try {
@@ -3066,6 +3087,7 @@ export default class ToolBar extends React.PureComponent {
         showToolbar={this.showToolbar}
         existFullMap={this.props.existFullMap}
         importSceneWorkspace={this.props.importSceneWorkspace}
+        refreshLayer3dList={this.props.refreshLayer3dList}
       />
     )
   }

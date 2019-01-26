@@ -18,6 +18,7 @@ export default class Map3DToolBar extends React.Component {
     showToolbar: () => {},
     existFullMap: () => {},
     importSceneWorkspace: () => {},
+    refreshLayer3dList: () => {},
   }
   constructor(props) {
     super(props)
@@ -198,6 +199,7 @@ export default class Map3DToolBar extends React.Component {
       GLOBAL.action3d = 'PAN3D'
       GLOBAL.openWorkspace = true
       GLOBAL.sceneName = item.name
+      this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
     })

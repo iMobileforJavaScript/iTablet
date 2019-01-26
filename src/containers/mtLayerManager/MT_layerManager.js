@@ -18,10 +18,11 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar } from '../workspace/components'
-import { Action, SMap, ThemeType } from 'imobile_for_reactnative'
+import { Action, SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType, layerManagerData, MAP_MODULE } from '../../constants'
 import { color, size } from '../../styles'
+const LAYER_GROUP = 'layerGroup'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -503,6 +504,70 @@ export default class MT_layerManager extends React.Component {
     return true
   }
 
+  getStyleIconByType = item => {
+    if (item.themeType > 0) {
+      return this.getThemeIconByType(item.themeType)
+    } else {
+      return this.getLayerIconByType(item.type)
+    }
+  }
+
+  getThemeIconByType = type => {
+    let icon
+    switch (type) {
+      case ThemeType.UNIQUE: // 单值专题图
+        icon = require('../../assets/map/layers_theme_unique_style_black.png')
+        break
+      case ThemeType.RANGE: // 分段专题图
+        icon = require('../../assets/map/layers_theme_range_style_black.png')
+        break
+      case ThemeType.LABEL: // 标签专题图
+        icon = require('../../assets/map/layers_theme_unify_label_style_black.png')
+        break
+      default:
+        icon = require('../../assets/public/mapLoad.png')
+        break
+    }
+    return icon
+  }
+
+  getLayerIconByType = type => {
+    let icon
+    switch (type) {
+      case LAYER_GROUP:
+        icon = require('../../assets/map/icon-directory.png')
+        break
+      case DatasetType.POINT: // 点数据集
+        icon = require('../../assets/map/icon-shallow-dot_black.png')
+        break
+      case DatasetType.LINE: // 线数据集
+        icon = require('../../assets/map/icon-shallow-line_black.png')
+        break
+      case DatasetType.REGION: // 多边形数据集
+        icon = require('../../assets/map/icon-shallow-polygon_black.png')
+        break
+      case DatasetType.TEXT: // 文本数据集
+        icon = require('../../assets/map/icon-shallow-text_black.png')
+        break
+      case DatasetType.IMAGE: // 影像数据集
+        icon = require('../../assets/map/icon-shallow-image_black.png')
+        break
+      case DatasetType.CAD: // 复合数据集
+        icon = require('../../assets/map/icon-cad.png')
+        break
+      case DatasetType.Network: // 复合数据集
+        icon = require('../../assets/map/icon-network.png')
+        break
+      case DatasetType.GRID: // GRID数据集
+        icon = require('../../assets/map/icon-grid_black.png')
+        break
+      default:
+        icon = require('../../assets/public/mapLoad.png')
+        break
+    }
+    return icon
+  }
+
   _renderItem = ({ item, section }) => {
     // sectionID = sectionID || 0
     if (section.visible) {
@@ -543,6 +608,7 @@ export default class MT_layerManager extends React.Component {
         )
       } else {
         if (item) {
+          let image = this.getStyleIconByType(item)
           return (
             <TouchableOpacity
               onPress={() => {
@@ -550,9 +616,28 @@ export default class MT_layerManager extends React.Component {
               }}
               style={{
                 height: scaleSize(80),
-                justifyContent: 'center',
+                flexDirection: 'row',
+                alignItems: 'center',
               }}
             >
+              <View
+                style={{
+                  height: scaleSize(50),
+                  width: scaleSize(100),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={{
+                    marginLeft: scaleSize(30),
+                    width: scaleSize(40),
+                    height: scaleSize(40),
+                  }}
+                  source={image}
+                />
+              </View>
               <Text
                 style={{
                   marginLeft: scaleSize(50),
