@@ -13,6 +13,7 @@ import ToolBar from './ToolBar'
 import SymbolTabs from './SymbolTabs'
 import MenuAlertDialog from './MenuAlertDialog'
 import SaveView from './SaveView'
+import OverlayView from './OverlayView'
 
 export {
   PopList,
@@ -30,4 +31,5 @@ export {
   SaveView,
   constants,
   MenuAlertDialog,
+  OverlayView,
 }

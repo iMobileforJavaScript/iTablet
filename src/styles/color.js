@@ -37,6 +37,7 @@ const lightTheme = {
   blackBg: '#353537',
   bgW: '#F0F0F0',
   bgG: '#A0A0A0',
+  switch: '#4680DF',
 
   fontColorWhite: '#F0F0F0',
   fontColorBlack: '#303030',
@@ -117,4 +118,5 @@ export default {
   section_bg: '#505050', //列表一级标题背景
   section_text: '#F0F0F0', //列表一级标题文字
   bottomz: '#303030', //底部工具栏背景
+  overlay_tint: 'rgba(48,48,48,0.85)', //遮罩颜色为#303030,85%不透明度
 }

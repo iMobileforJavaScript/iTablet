@@ -97,7 +97,7 @@ export default {
       engineType: 223,
       alias: 'GoogleMaps',
     },
-    layerIndex: 0,
+    layerIndex: 3,
     mapName: 'GOOGLE地图',
   },
   OSM: {

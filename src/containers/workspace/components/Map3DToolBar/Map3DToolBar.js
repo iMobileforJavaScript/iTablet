@@ -18,6 +18,7 @@ export default class Map3DToolBar extends React.Component {
     showToolbar: () => {},
     existFullMap: () => {},
     importSceneWorkspace: () => {},
+    refreshLayer3dList: () => {},
   }
   constructor(props) {
     super(props)
@@ -67,6 +68,7 @@ export default class Map3DToolBar extends React.Component {
         Toast.show('底图不存在')
         break
     }
+    this.props.refreshLayer3dList && this.props.refreshLayer3dList()
   }
 
   setAnalystResult = data => {
@@ -193,11 +195,12 @@ export default class Map3DToolBar extends React.Component {
         'JPG_PNG',
         96.0,
         true,
-        '',
+        'c768f9fd3e388eb0d155405f8d8c6999',
       )
       GLOBAL.action3d = 'PAN3D'
       GLOBAL.openWorkspace = true
       GLOBAL.sceneName = item.name
+      this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
     })

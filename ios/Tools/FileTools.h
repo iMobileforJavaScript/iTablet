@@ -21,4 +21,5 @@
 +(BOOL)copyFile:(NSString *)fromPath targetPath:(NSString *)toPath;
 +(BOOL)initUserDefaultData:(NSString *)userName;
 +(NSString*)getLastModifiedTime:(NSDate*) nsDate;
++ (NSDictionary *)readLocalFileWithPath:(NSString *)path;
 @end

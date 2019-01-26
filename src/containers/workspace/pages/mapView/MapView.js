@@ -21,6 +21,7 @@ import {
   ToolBar,
   MenuAlertDialog,
   AlertDialog,
+  OverlayView,
 } from '../../components'
 import constants from '../../constants'
 import {
@@ -944,6 +945,11 @@ export default class MapView extends React.Component {
     )
   }
 
+  //遮盖层
+  renderOverLayer = () => {
+    return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
+  }
+
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
     return (
@@ -1053,6 +1059,7 @@ export default class MapView extends React.Component {
         )}
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
+        {!this.isExample && this.renderOverLayer()}
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
