@@ -218,37 +218,55 @@ public class FileTools extends ReactContextBaseJavaModule {
                     }
                     boolean isDirectory = files[i].isDirectory();
 
-                    String type = "Directory";
-                    if (filter.toHashMap().containsKey("type")) {
-                        type = filter.getString("type");
-                    }
-
-                    if (!filter.toHashMap().containsKey("name")) {
-                        String filterName = filter.getString("name").toLowerCase().trim();
-                        // 判断文件名
-                        if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
-                            continue;
-                        }
-                    }
-
-                    boolean isExist = false;
+                    // 匹配后缀
                     if (filter.toHashMap().containsKey("extension")) {
-                        String filterType = filter.getString("extension").toLowerCase();
-                        String[] extensions = filterType.split(",");
-                        for (int j = 0; j < extensions.length; j++) {
-                            String mExtension = extensions[j].trim();
-                            // 判断文件类型
-                            if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
-                                isExist = true;
-                                break;
-                            } else {
-                                isExist = false;
-                            }
-                        }
+                         String[] exArr = filter.getString("extension").toLowerCase().split(",");
+                         boolean hasFile = false;
+                         for (int j = 0; j < exArr.length; j++) {
+                             if (extension.toLowerCase().equals(exArr[j].trim())) {
+                                 hasFile = true;
+                                 break;
+                             }
+                         }
+                         if (!hasFile) continue;
                     }
-                    if (!isExist) {
-                        continue;
-                    }
+                    // 匹配名称
+                    if (filter.toHashMap().containsKey("name") && !name.toLowerCase().contains(filter.getString("name").toLowerCase().trim())) continue;
+                    // 匹配类型
+                    if (filter.toHashMap().containsKey("type") && filter.getString("type").equals("Directory") != isDirectory) continue;
+
+
+//                    String type = "Directory";
+//                    if (filter.toHashMap().containsKey("type")) {
+//                        type = filter.getString("type");
+//                    }
+//
+//                    if (!filter.toHashMap().containsKey("name")) {
+//                        String filterName = filter.getString("name").toLowerCase().trim();
+//                        // 判断文件名
+//                        if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
+//                            continue;
+//                        }
+//                    }
+//
+//                    boolean isExist = false;
+//                    if (filter.toHashMap().containsKey("extension")) {
+//                        String filterType = filter.getString("extension").toLowerCase();
+//                        String[] extensions = filterType.split(",");
+//                        for (int j = 0; j < extensions.length; j++) {
+//                            String mExtension = extensions[j].trim();
+//                            // 判断文件类型
+//                            if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
+//                                isExist = true;
+//                                break;
+//                            } else {
+//                                isExist = false;
+//                            }
+//                        }
+//                    }
+//                    if (!isExist) {
+//                        continue;
+//                    }
 
                     WritableMap map = Arguments.createMap();
                     map.putString("path", p);
