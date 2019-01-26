@@ -65,11 +65,8 @@ async function getPathList(path) {
  * @param filter  {name: 文件名, extension: 后缀， type: 文件类型(file | Directory)}
  * @returns {Promise}
  */
-async function getPathListByFilter(
-  path,
-  { name = '', extension = '', type = 'Directory' },
-) {
-  return await FileTools.getPathListByFilter(path, { name, extension, type })
+async function getPathListByFilter(path, filter = {}) {
+  return await FileTools.getPathListByFilter(path, filter)
 }
 
 /**

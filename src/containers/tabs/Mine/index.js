@@ -11,6 +11,7 @@ import MyService from './MyService'
 import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
 
 import MyLocalData from './MyLocalData'
+import MyData from './MyData'
 import MyOnlineData from './MyOnlineData'
 
 const mapStateToProps = state => ({
@@ -32,6 +33,7 @@ export {
   Register,
   MyOnlineData,
   MyLocalData,
+  MyData,
   MyService,
   MyOnlineMap,
   ScanOnlineMap,
