@@ -3,6 +3,7 @@ package com.supermap.RN;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Handler;
 
 import java.util.Stack;
 
@@ -76,14 +77,17 @@ public class appManager {
     /**
      * 退出应用程序
      */
-    public void AppExit(Context context) {
+    public void AppExit(final Context context) {
         try {
 //            android.os.Process.killProcess(android.os.Process.myPid());
             finishAllActivity();
-            ActivityManager activityMgr= (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-            activityMgr.restartPackage(context.getPackageName());
-            System.exit(0);
-
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
+            }, 1000);//1秒后执行Runnable中的run方法
         } catch (Exception e) {
             System.out.println(e);
         }
