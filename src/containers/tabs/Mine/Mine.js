@@ -106,6 +106,26 @@ export default class Mine extends Component {
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
           })}
+          {this._renderItem({
+            title: Const.DATA,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.DATA),
+          })}
+          {this._renderItem({
+            title: Const.MAP,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.MAP),
+          })}
+          {this._renderItem({
+            title: Const.SCENE,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.SCENE),
+          })}
+          {this._renderItem({
+            title: Const.SYMBOL,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.SYMBOL),
+          })}
         </View>
       )
     } else {
@@ -136,14 +156,14 @@ export default class Mine extends Component {
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
-            title: Const.MAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => this.goToMyData(Const.MAP),
-          })}
-          {this._renderItem({
             title: Const.DATA,
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: () => this.goToMyData(Const.DATA),
+          })}
+          {this._renderItem({
+            title: Const.MAP,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.MAP),
           })}
           {this._renderItem({
             title: Const.SCENE,
@@ -155,16 +175,16 @@ export default class Mine extends Component {
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
           })}
-          {this._renderItem({
-            title: '我的数据',
-            leftImagePath: require('../../../assets/Mine/mine_my_online_data.png'),
-            onClick: this.goToMyOnlineData,
-          })}
-          {this._renderItem({
-            title: '我的服务',
-            leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
-            onClick: this.goToMyService,
-          })}
+          {/*{this._renderItem({*/}
+          {/*title: '我的数据',*/}
+          {/*leftImagePath: require('../../../assets/Mine/mine_my_online_data.png'),*/}
+          {/*onClick: this.goToMyOnlineData,*/}
+          {/*})}*/}
+          {/*{this._renderItem({*/}
+          {/*title: '我的服务',*/}
+          {/*leftImagePath: require('../../../assets/Mine/mine_my_service.png'),*/}
+          {/*onClick: this.goToMyService,*/}
+          {/*})}*/}
         </ScrollView>
       </View>
     )

@@ -5,11 +5,12 @@ export default class MyDataPopupModal extends PureComponent {
   props: {
     modalVisible: boolean,
     onCloseModal: () => {},
-    onDeleteData: () => {},
+    data: Object,
   }
 
   defaultProps: {
     modalVisible: false,
+    data: [],
   }
 
   constructor(props) {
@@ -38,11 +39,20 @@ export default class MyDataPopupModal extends PureComponent {
     )
   }
 
-  _onDeleteButton = () => {
+  _renderList = () => {
+    let list = []
+    this.props.data.forEach(item => {
+      list.push(this._renderBtn(item))
+    })
+    return list
+  }
+
+  _renderBtn = item => {
     return (
       <TouchableOpacity
+        key={item.title}
         onPress={() => {
-          this.props.onDeleteData()
+          item.action && item.action()
         }}
       >
         <Text
@@ -55,7 +65,7 @@ export default class MyDataPopupModal extends PureComponent {
             fontSize: this.fontSize,
           }}
         >
-          删除
+          {item.title}
         </Text>
         {this._renderSeparatorLine()}
       </TouchableOpacity>
@@ -97,7 +107,7 @@ export default class MyDataPopupModal extends PureComponent {
             }}
           >
             {this._renderSeparatorLine()}
-            {this._onDeleteButton()}
+            {this._renderList()}
           </View>
         </TouchableOpacity>
       </Modal>

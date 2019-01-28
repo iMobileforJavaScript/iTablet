@@ -366,7 +366,7 @@ export default class ToolBar extends React.PureComponent {
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_analystLien.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_analystLien.png'),
           },
           {
             key: 'suerfaceMeasure',
@@ -385,7 +385,7 @@ export default class ToolBar extends React.PureComponent {
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_analystSuerface.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_analystSuerface.png'),
           },
           {
             key: 'map3DPoint',
@@ -409,7 +409,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_favorite.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_favorite.png'),
           },
           {
             key: 'map3DText',
@@ -436,7 +436,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_text.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_text.png'),
           },
           {
             key: 'map3DPiontLine',
@@ -456,7 +456,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_pointLine.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_pointLine.png'),
           },
           {
             key: 'map3DPointSurface',
@@ -476,7 +476,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/function/icon_pointSuerface.png'),
+            image: require('../../../../assets/function/Frenchgrey/icon_pointSuerface.png'),
           },
           {
             key: 'closeAllLable',
@@ -496,7 +496,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/mapEdit/icon_clear.png'),
+            image: require('../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
           },
           {
             key: 'action3d',
@@ -519,7 +519,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/mapEdit/icon_action3d.png'),
+            image: require('../../../../assets/mapEdit/Frenchgrey/icon_action3d.png'),
           },
         ]
         buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
@@ -3127,7 +3127,7 @@ export default class ToolBar extends React.PureComponent {
         style={[styles.cell, { width: this.props.device.width / column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
-        textColor={'white'}
+        textColor={color.font_color_white}
         textStyle={{ fontSize: setSpText(20) }}
         // size={MTBtn.Size.NORMAL}
         image={item.image}
