@@ -33,6 +33,7 @@ import {
   getMapSetting,
 } from '../../../../models/setting'
 import { setSharing } from '../../../../models/online'
+import { setCurrentSymbols } from '../../../../models/symbol'
 import { setCollectionInfo } from '../../../../models/collection'
 
 const mapStateToProps = state => ({
@@ -83,6 +84,7 @@ const mapDispatchToProps = {
   saveMap,
   getMapSetting,
   setSharing,
+  setCurrentSymbols,
 }
 
 export default connect(
