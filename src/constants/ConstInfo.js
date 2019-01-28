@@ -60,4 +60,9 @@ export default {
   DELETE_SUCCESS: '删除成功',
   DELETE_FAILED: '删除失败',
   DELETING_DATA: '删除数据中...',
+
+  UPLOAD_START: '开始上传',
+  UPLOAD_SUCCESS: '上传成功',
+  UPLOAD_FAILED: '上传失败',
+  UPLOADING_DATA: '正在上传...',
 }
