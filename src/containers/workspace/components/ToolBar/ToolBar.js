@@ -1588,6 +1588,7 @@ export default class ToolBar extends React.PureComponent {
         setTimeout(() => params.cb(), Const.ANIMATED_DURATION_2)
       }
       !isShow && this.props.existFullMap && this.props.existFullMap()
+      this.updateOverlayerView()
     }
   }
 
@@ -1809,6 +1810,7 @@ export default class ToolBar extends React.PureComponent {
           SMap.setAction(actionType)
         }
       }, Const.ANIMATED_DURATION_2)
+      this.updateOverlayerView()
     }.bind(this)())
   }
 
