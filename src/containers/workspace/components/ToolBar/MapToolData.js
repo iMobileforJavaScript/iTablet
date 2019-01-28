@@ -121,11 +121,11 @@ function getMapTool(type, params) {
         //   image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
         // },
       ]
-      buttons = [
-        ToolbarBtnType.CANCEL,
-        ToolbarBtnType.PLACEHOLDER,
-        ToolbarBtnType.PLACEHOLDER,
-      ]
+      // buttons = [
+      //   ToolbarBtnType.CANCEL,
+      //   ToolbarBtnType.PLACEHOLDER,
+      //   ToolbarBtnType.PLACEHOLDER,
+      // ]
       break
     case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
     case ConstToolType.MAP_TOOL_MEASURE_AREA:
