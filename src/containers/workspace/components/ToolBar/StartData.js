@@ -36,21 +36,21 @@ function getStart(type, params) {
           title: constants.OPEN,
           action: openMap,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
           key: constants.CREATE,
           title: constants.CREATE,
           size: 'large',
           action: create,
-          image: require('../../../../assets/mapTools/icon_create.png'),
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
         },
         {
           key: constants.HISTORY,
           title: constants.HISTORY,
           size: 'large',
           action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
+          image: require('../../../../assets/mapTools/icon_history_black.png'),
         },
         // {
         //   key: constants.BASE_MAP,
@@ -79,14 +79,14 @@ function getStart(type, params) {
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_save.png'),
+          image: require('../../../../assets/mapTools/icon_save_black.png'),
         },
         {
           key: constants.SAVE_AS,
           title: constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_save_as.png'),
+          image: require('../../../../assets/mapTools/icon_save_as_black.png'),
         },
       ]
       break
@@ -125,7 +125,7 @@ function getStart(type, params) {
             )
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         // {
         //   key: constants.BASE_MAP,
@@ -134,7 +134,7 @@ function getStart(type, params) {
         //   action: () => {
         //     changeBaseLayer('MAP_3D')
         //   },
-        //   image: require('../../../../assets/mapTools/icon_base.png'),
+        //   image: require('../../../../assets/mapTools/icon_base_black.png'),
         // },
       ]
       break
@@ -152,21 +152,21 @@ function getStart(type, params) {
           title: constants.OPEN,
           action: openMap,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
           key: constants.CREATE,
           title: constants.CREATE,
           size: 'large',
           action: openTemplate,
-          image: require('../../../../assets/mapTools/icon_create.png'),
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
         },
         {
           key: constants.HISTORY,
           title: constants.HISTORY,
           size: 'large',
           action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
+          image: require('../../../../assets/mapTools/icon_history_black.png'),
         },
         // {
         //   key: constants.BASE_MAP,
@@ -188,14 +188,14 @@ function getStart(type, params) {
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_save.png'),
+          image: require('../../../../assets/mapTools/icon_save_black.png'),
         },
         {
           key: constants.SAVE_AS,
           title: constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_save_as.png'),
+          image: require('../../../../assets/mapTools/icon_save_as_black.png'),
         },
       ]
       break
@@ -213,21 +213,21 @@ function getStart(type, params) {
           title: constants.THEME_OPEN,
           action: openMap,
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_open.png'),
+          image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
           key: constants.CREATE,
           title: constants.THEME_CREATE,
           size: 'large',
           action: createThemeMap,
-          image: require('../../../../assets/mapTools/icon_create.png'),
+          image: require('../../../../assets/mapTools/icon_create_black.png'),
         },
         {
           key: constants.HISTORY,
           title: constants.HISTORY,
           size: 'large',
           action: showHistory,
-          image: require('../../../../assets/mapTools/icon_history_white.png'),
+          image: require('../../../../assets/mapTools/icon_history_black.png'),
         },
         // {
         //   key: constants.BASE_MAP,
@@ -250,14 +250,14 @@ function getStart(type, params) {
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
-          image: require('../../../../assets/mapTools/icon_save.png'),
+          image: require('../../../../assets/mapTools/icon_save_black.png'),
         },
         {
           key: constants.SAVE_AS,
           title: constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
-          image: require('../../../../assets/mapTools/icon_save_as.png'),
+          image: require('../../../../assets/mapTools/icon_save_as_black.png'),
         },
       ]
       break

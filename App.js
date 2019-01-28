@@ -119,7 +119,7 @@ class AppRoot extends Component {
     if (appState === 'active') {
       if (this.props.user.currentUser && this.props.user.currentUser.userName) {
         (async function () {
-          let result = await new OnlineService().login(
+          let result = await SOnlineService.login(
             this.props.user.currentUser.userName,
             this.props.user.currentUser.password,
           )
