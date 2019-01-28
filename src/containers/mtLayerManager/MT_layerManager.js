@@ -367,25 +367,29 @@ export default class MT_layerManager extends React.Component {
 
   onPressRow = async ({ data }) => {
     this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
-    if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
-      SMap.setLayerEditable(data.path, true)
-      if (data.type === 83) {
-        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-          containerType: 'list',
-          isFullScreen: false,
-          height: ConstToolType.HEIGHT[4],
-        })
-        GLOBAL.toolBox.showFullMap()
-        this.props.navigation.navigate('MapView')
-      } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-          containerType: 'symbol',
-          isFullScreen: false,
-          column: 4,
-          height: ConstToolType.THEME_HEIGHT[3],
-        })
-        GLOBAL.toolBox.showFullMap()
-        this.props.navigation.navigate('MapView')
+    if (GLOBAL.Type === constants.MAP_EDIT) {
+      if (data.themeType <= 0) {
+        SMap.setLayerEditable(data.path, true)
+        if (data.type === 83) {
+          GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
+            containerType: 'list',
+            isFullScreen: false,
+            height: ConstToolType.HEIGHT[4],
+          })
+          GLOBAL.toolBox.showFullMap()
+          this.props.navigation.navigate('MapView')
+        } else if (data.type === 1 || data.type === 3 || data.type === 5) {
+          GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+            containerType: 'symbol',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.THEME_HEIGHT[3],
+          })
+          GLOBAL.toolBox.showFullMap()
+          this.props.navigation.navigate('MapView')
+        } else {
+          Toast.show('当前图层无法设置风格')
+        }
       } else {
         Toast.show('当前图层无法设置风格')
       }
@@ -427,8 +431,6 @@ export default class MT_layerManager extends React.Component {
         this.props.navigation.navigate('MapView')
         Toast.show('当前图层为:' + data.name)
       }
-    } else {
-      Toast.show('当前图层无法设置风格')
     }
     this.setState({
       selectLayer: data.caption,
@@ -440,12 +442,34 @@ export default class MT_layerManager extends React.Component {
       selectLayer: data.caption,
     })
     if (GLOBAL.Type === constants.MAP_THEME) {
-      this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
+      let themeType
+      switch (data.themeType) {
+        case ThemeType.UNIQUE:
+          themeType = ConstToolType.MAP_THEME_STYLES
+          break
+        case ThemeType.RANGE:
+          themeType = ConstToolType.MAP_THEME_STYLES
+          break
+        case ThemeType.LABEL:
+          themeType = ConstToolType.MAP_THEME_STYLES
+          break
+        default:
+          themeType = ConstToolType.MAP_THEME_STYLE
+          break
+      }
+      this.toolBox.setVisible(true, themeType, {
         height: ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
       })
-    } else {
+    }
+    if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        layerdata: data,
+      })
+    }
+    if (GLOBAL.Type === constants.COLLECTION) {
+      this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
         height: ConstToolType.TOOLBAR_HEIGHT[4],
         layerdata: data,
       })
@@ -782,7 +806,11 @@ export default class MT_layerManager extends React.Component {
 
   renderTool = () => {
     return (
-      <LayerManager_tolbar ref={ref => (this.toolBox = ref)} {...this.props} />
+      <LayerManager_tolbar
+        ref={ref => (this.toolBox = ref)}
+        {...this.props}
+        onPress={this.onPressRow}
+      />
     )
   }
 
