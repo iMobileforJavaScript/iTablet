@@ -152,12 +152,12 @@ const layer3dSetting = [
   {
     title: '设置图层可选',
     data: [],
-    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
   {
     title: '设置图层不可选',
     data: [],
-    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
   },
   // {
   //   title: '取消',

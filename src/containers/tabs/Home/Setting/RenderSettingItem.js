@@ -25,10 +25,6 @@ export default class RenderSettingItem extends Component {
 
   render() {
     let isOpenSwitch = this.state.isOpenSwitch
-    let falseColor = color.white
-    let trueColor = color.theme
-    let thumbColor = isOpenSwitch ? color.white : color.theme
-    let ios_backgroundColor = color.white
     return (
       <View style={{ width: '100%' }}>
         <View
@@ -46,9 +42,9 @@ export default class RenderSettingItem extends Component {
           <Switch
             style={{ marginRight: 15 }}
             value={isOpenSwitch}
-            thumbColor={thumbColor}
-            ios_backgroundColor={ios_backgroundColor}
-            trackColor={{ false: falseColor, true: trueColor }}
+            trackColor={{ false: color.bgG, true: color.switch }}
+            thumbColor={isOpenSwitch ? color.bgW : color.bgW}
+            ios_backgroundColor={isOpenSwitch ? color.switch : color.bgW}
             onValueChange={async value => {
               let visibleValue = '' + value
               await AsyncStorage.setItem('StatusBarVisible', visibleValue)
