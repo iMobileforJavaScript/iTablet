@@ -41,6 +41,17 @@ export default StyleSheet.create({
     // backgroundColor:"red",
     // zIndex: zIndexLevel.FOUR,
   },
+  containers_border: {
+    flexDirection: 'column',
+    width: '100%',
+    maxHeight: ConstToolType.HEIGHT[3] + Const.BOTTOM_HEIGHT,
+    minHeight: Const.BOTTOM_HEIGHT,
+    backgroundColor: color.theme,
+    borderTopColor: color.item_separate_white,
+    borderTopWidth: scaleSize(2),
+    // backgroundColor:"red",
+    // zIndex: zIndexLevel.FOUR,
+  },
   // box: {
   //   position: 'absolute',
   //   left: 0,

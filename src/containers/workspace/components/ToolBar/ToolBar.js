@@ -3595,7 +3595,16 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <View style={styles.containers}>
+        <View
+          style={[
+            styles.containers,
+            !(
+              this.state.isFullScreen &&
+              !this.state.isTouchProgress &&
+              !this.state.showMenuDialog
+            ) && styles.containers_border,
+          ]}
+        >
           {this.renderView()}
           {this.renderBottomBtns()}
         </View>
