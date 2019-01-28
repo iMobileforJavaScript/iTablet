@@ -382,7 +382,7 @@ function openMap() {
         item.title = name
         item.name = name.split('.')[0]
         item.image = item.isTemplate
-          ? require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+          ? require('../../../../assets/mapToolbar/list_type_template_black.png')
           : require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',

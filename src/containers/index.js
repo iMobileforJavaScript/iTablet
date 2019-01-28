@@ -12,6 +12,7 @@ import Tabs, {
   MyOnlineMap,
   ScanOnlineMap,
   MyLocalData,
+  MyData,
   Personal,
   ToggleAccount,
   Setting,
@@ -26,7 +27,7 @@ import MTDataCollection from './mtDataCollection'
 import MTDataManagement from './mtDataManagement'
 import NewDSource from './newDSource'
 import { ChooseDatasource, NewDSet } from './newDSet'
-// import MTLayerManager from './mtLayerManager'
+import MTLayerManager from './mtLayerManager'
 import Map3DLayerManager from './Layer3DManager'
 import AnalystParams from './analystParams'
 import AddLayer from './addLayer'
@@ -79,12 +80,12 @@ export default StackNavigator(
       },
     },
 
-    // LayerManager: {
-    //   screen: MTLayerManager,
-    //   navigationOptions: {
-    //     header: null,
-    //   },
-    // },
+    LayerManager: {
+      screen: MTLayerManager,
+      navigationOptions: {
+        header: null,
+      },
+    },
     Map3DLayerManager: {
       screen: Map3DLayerManager,
       navigationOptions: {
@@ -285,6 +286,13 @@ export default StackNavigator(
     },
     MyLocalData: {
       screen: MyLocalData,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyData: {
+      screen: MyData,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

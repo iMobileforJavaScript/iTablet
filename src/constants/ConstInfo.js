@@ -56,4 +56,8 @@ export default {
   LOADING_DATA: '数据加载中',
 
   PLEASE_INPUT_NAME: '请输入名称',
+  PLEASE_CHOOSE_DELETE_OBJ: '请选择删除对象',
+  DELETE_SUCCESS: '删除成功',
+  DELETE_FAILED: '删除失败',
+  DELETING_DATA: '删除数据中...',
 }

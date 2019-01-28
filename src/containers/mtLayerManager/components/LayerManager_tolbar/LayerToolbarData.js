@@ -1,8 +1,9 @@
 const layersetting = [
-  // {
-  //   title: '设置为当前图层',
-  //   data: [],
-  // },
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
   // {
   //   title: '可见比例尺范围',
   //   data: [],
@@ -30,6 +31,16 @@ const layersetting = [
     data: [],
     image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
+  {
+    title: '置顶',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+  },
+  {
+    title: '置底',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+  },
   // {
   //   title: '复制',
   //   data: [],
@@ -51,10 +62,11 @@ const layersetting = [
 ]
 
 const layerThemeSetting = [
-  // {
-  //   title: '设置为当前图层',
-  //   data: [],
-  // },
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
   // {
   //   title: '可见比例尺范围',
   //   data: [],
@@ -96,17 +108,17 @@ const layerThemeSetting = [
     image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
   {
-    title: '重命名',
+    title: '置顶',
     data: [],
-    image: require('../../../../assets/layerToolbar/layer_rename.png'),
+    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
   },
   {
-    title: '上移',
+    title: '置底',
     data: [],
-    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
   },
   {
-    title: '下移',
+    title: '移除',
     data: [],
     image: require('../../../../assets/layerToolbar/layer_remove.png'),
   },

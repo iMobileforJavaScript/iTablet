@@ -3147,6 +3147,8 @@ export default class ToolBar extends React.PureComponent {
         onPress={() => {
           this.itemaction(item)
         }}
+        device={this.props.device}
+        numColumns={this.state.column}
       />
     )
   }
