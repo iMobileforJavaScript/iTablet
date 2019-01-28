@@ -51,7 +51,7 @@ function getMapMore(type, params) {
           title: constants.MAP3DSHARE,
           size: 'large',
           action: shareMap3D,
-          image: require('../../../../assets/mapTools/icon_share.png'),
+          image: require('../../../../assets/mapTools/icon_share_black.png'),
         },
       ]
       break
@@ -84,14 +84,14 @@ function getMapMore(type, params) {
           title: constants.EXPORT_MAP,
           size: 'large',
           action: exportMap,
-          image: require('../../../../assets/mapTools/icon_export.png'),
+          image: require('../../../../assets/mapTools/icon_export_black.png'),
         },
         {
           key: constants.SHARE,
           title: constants.SHARE,
           size: 'large',
           action: shareMap,
-          image: require('../../../../assets/mapTools/icon_share.png'),
+          image: require('../../../../assets/mapTools/icon_share_black.png'),
         },
       ]
       break

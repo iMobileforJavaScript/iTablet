@@ -11,7 +11,6 @@ import { scaleSize } from '../utils'
 import PropTypes from 'prop-types'
 
 export default class ListSeparator extends React.Component {
-
   static propTypes = {
     height: PropTypes.number,
     width: PropTypes.number,
@@ -26,21 +25,25 @@ export default class ListSeparator extends React.Component {
   render() {
     if (this.props.mode === 'vertical') {
       return (
-        <View style={[
-          styles.vSeparator,
-          this.props.color && { backgroundColor: this.props.color },
-          this.props.height && { height: this.props.height },
-          this.props.width && { width: this.props.width },
-        ]} />
+        <View
+          style={[
+            styles.vSeparator,
+            this.props.color && { backgroundColor: this.props.color },
+            this.props.height && { height: this.props.height },
+            this.props.width && { width: this.props.width },
+          ]}
+        />
       )
     } else {
       return (
-        <View style={[
-          styles.hSeparator,
-          this.props.color && { backgroundColor: this.props.color },
-          this.props.height && { height: this.props.height },
-          this.props.width && { width: this.props.width },
-        ]} />
+        <View
+          style={[
+            styles.hSeparator,
+            this.props.color && { backgroundColor: this.props.color },
+            this.props.height && { height: this.props.height },
+            this.props.width && { width: this.props.width },
+          ]}
+        />
       )
     }
   }
@@ -51,16 +54,16 @@ const styles = StyleSheet.create({
     flex: 1,
     height: scaleSize(1),
     marginHorizontal: 0,
-    backgroundColor: color.background,
+    backgroundColor: color.bgG,
   },
   vSeparator: {
     // flex: 1,
     width: scaleSize(1),
-    backgroundColor: color.background,
+    backgroundColor: color.bgG,
   },
 })
 
 ListSeparator.mode = {
-  VERTICAL: 'vertical',     // 纵向的分割线
+  VERTICAL: 'vertical', // 纵向的分割线
   HORIZONTAL: 'horizontal', // 横向的分割线
 }

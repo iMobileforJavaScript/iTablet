@@ -32,7 +32,7 @@ function getShareData(type, params) {
             showSaveDialog(ConstToolType.MAP_SHARE_MAP3D)
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_share_online.png'),
+          image: require('../../../../assets/mapTools/icon_share_online_black.png'),
         },
       ]
       break
@@ -68,7 +68,7 @@ function getShareData(type, params) {
             showSaveDialog(constants.SUPERMAP_ONLINE)
           },
           size: 'large',
-          image: require('../../../../assets/mapTools/icon_share_online.png'),
+          image: require('../../../../assets/mapTools/icon_share_online_black.png'),
         },
         // {
         //   key: constants.FRIEND,

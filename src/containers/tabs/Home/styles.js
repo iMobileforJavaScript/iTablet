@@ -71,6 +71,12 @@ export default StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
   },
+  // exitChildrenView:{
+  //   flex: 1,
+  //    backgroundColor:"pink",
+  //   flexDirection: 'column',
+  //   alignItems: 'center',
+  // },
   dialogHeaderImg: {
     width: scaleSize(60),
     height: scaleSize(60),

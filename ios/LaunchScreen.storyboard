@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14113" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="ipad10_5" orientation="portrait">
+    <device id="retina5_5" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
@@ -15,12 +15,12 @@
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="834" height="1112"/>
+                    <view key="view" contentMode="scaleToFill" ambiguous="YES" id="Ze5-6b-2t3">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="北京超图股份软件有限公司" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7f8-VG-Uue">
-                                <rect key="frame" x="89" y="1006" width="656" height="20"/>
+                            <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="北京超图股份软件有限公司" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="7f8-VG-Uue">
+                                <rect key="frame" x="89" y="657" width="846" height="22"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="WZ6-3Q-7Lf"/>
                                 </constraints>
@@ -38,8 +38,8 @@
                                     </mask>
                                 </variation>
                             </textField>
-                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="版权所有@2005-2019" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MhD-89-Kaw">
-                                <rect key="frame" x="89" y="978" width="656" height="20"/>
+                            <textField opaque="NO" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="版权所有@2005-2019" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MhD-89-Kaw">
+                                <rect key="frame" x="89" y="627" width="846" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="KBg-Pb-ncd"/>
                                 </constraints>
@@ -57,8 +57,8 @@
                                     </mask>
                                 </variation>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon.png" highlightedImage="icon.png" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LuF-pC-3Z1">
-                                <rect key="frame" x="102" y="175" width="630" height="195"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="icon.png" highlightedImage="icon.png" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="LuF-pC-3Z1">
+                                <rect key="frame" x="197" y="100" width="630" height="91"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="195" id="nu8-9y-jel"/>
                                     <constraint firstAttribute="height" constant="91" id="qlN-JE-gfd"/>
@@ -83,8 +83,8 @@
                                     </mask>
                                 </variation>
                             </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo.png" highlightedImage="logo.png" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QbB-L5-emw">
-                                <rect key="frame" x="251" y="400" width="333" height="69"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="logo.png" highlightedImage="logo.png" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="QbB-L5-emw">
+                                <rect key="frame" x="346" y="199" width="333" height="39"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="333" id="OG1-yf-RRH"/>
                                     <constraint firstAttribute="height" constant="39" id="iYm-3Q-Kps"/>
@@ -126,7 +126,7 @@
                             <constraint firstItem="MhD-89-Kaw" firstAttribute="trailing" secondItem="7f8-VG-Uue" secondAttribute="trailing" id="IFh-5Q-KgB"/>
                             <constraint firstItem="MhD-89-Kaw" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="89" id="IGv-83-SSp"/>
                             <constraint firstItem="LuF-pC-3Z1" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="115" id="L24-1m-A7J"/>
-                            <constraint firstItem="LuF-pC-3Z1" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="95" id="LWR-WM-nXL"/>
+                            <constraint firstItem="LuF-pC-3Z1" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="80" id="LWR-WM-nXL"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="7f8-VG-Uue" secondAttribute="bottom" constant="86" id="Ml9-9S-ISe"/>
                             <constraint firstItem="QbB-L5-emw" firstAttribute="centerX" secondItem="MhD-89-Kaw" secondAttribute="centerX" id="NNT-0f-l94"/>
                             <constraint firstItem="LuF-pC-3Z1" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Ob4-4U-aML"/>
@@ -139,11 +139,11 @@
                                 <variation key="heightClass=regular-widthClass=compact" constant="100"/>
                             </constraint>
                             <constraint firstItem="MhD-89-Kaw" firstAttribute="centerX" secondItem="7f8-VG-Uue" secondAttribute="centerX" id="S9c-mD-cHG"/>
-                            <constraint firstItem="LuF-pC-3Z1" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="155" id="SmT-My-kVC"/>
+                            <constraint firstItem="LuF-pC-3Z1" firstAttribute="top" secondItem="Bcu-3y-fUS" secondAttribute="top" constant="100" id="SmT-My-kVC"/>
                             <constraint firstItem="MhD-89-Kaw" firstAttribute="leading" secondItem="7f8-VG-Uue" secondAttribute="leading" id="U5w-vG-XXr"/>
                             <constraint firstItem="7f8-VG-Uue" firstAttribute="top" secondItem="MhD-89-Kaw" secondAttribute="bottom" constant="1" id="WLQ-TG-lv0"/>
                             <constraint firstItem="QbB-L5-emw" firstAttribute="centerX" secondItem="MhD-89-Kaw" secondAttribute="centerX" id="Xn6-la-FWL"/>
-                            <constraint firstItem="QbB-L5-emw" firstAttribute="top" secondItem="LuF-pC-3Z1" secondAttribute="bottom" constant="30" id="Yx2-Ky-bpw"/>
+                            <constraint firstItem="QbB-L5-emw" firstAttribute="top" secondItem="LuF-pC-3Z1" secondAttribute="bottom" id="Yx2-Ky-bpw"/>
                             <constraint firstItem="QbB-L5-emw" firstAttribute="leading" secondItem="Bcu-3y-fUS" secondAttribute="leading" constant="117" id="ad5-yi-Ux3"/>
                             <constraint firstItem="QbB-L5-emw" firstAttribute="top" secondItem="LuF-pC-3Z1" secondAttribute="bottom" constant="8" symbolic="YES" id="b3V-9V-dJX"/>
                             <constraint firstItem="Bcu-3y-fUS" firstAttribute="bottom" secondItem="7f8-VG-Uue" secondAttribute="bottom" constant="57" id="c77-NF-tLl"/>

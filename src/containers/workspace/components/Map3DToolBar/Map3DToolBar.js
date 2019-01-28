@@ -90,6 +90,9 @@ export default class Map3DToolBar extends React.Component {
           <TouchableOpacity
             onPress={() => {
               this.changeBaseMap(item.url, item.type, item.name)
+              this.props.existFullMap && this.props.existFullMap(true)
+              this.props.showToolbar && this.props.showToolbar(false)
+              GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
             }}
             style={styles.sceneItem}
           >
@@ -122,7 +125,7 @@ export default class Map3DToolBar extends React.Component {
           style={styles.sceneItem}
         >
           <Image
-            source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+            source={require('../../../../assets/function/Frenchgrey/icon_symbolFly.png')}
             style={styles.sceneItemImg}
           />
           <View style={styles.sceneItemcontent}>
@@ -154,7 +157,7 @@ export default class Map3DToolBar extends React.Component {
       return (
         <View style={styles.sceneView}>
           <Image
-            source={require('../../../../assets/mapToolbar/list_type_maps.png')}
+            source={require('../../../../assets/function/Frenchgrey/icon_symbolFly_white.png')}
             style={styles.sceneImg}
           />
           <Text style={styles.sceneTitle}>{section.title}</Text>
@@ -203,6 +206,7 @@ export default class Map3DToolBar extends React.Component {
       this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
+      GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
     })
   }
 

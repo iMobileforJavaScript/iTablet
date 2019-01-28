@@ -312,14 +312,13 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DTool = async () => {
-    SScene.checkoutListener('startMeasure')
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       // TODO 根据符号类型改变ToolBox内容
       toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
         containerType: 'table',
-        isFullScreen: false,
+        isFullScreen: true,
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[2]

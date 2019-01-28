@@ -7,12 +7,13 @@ import {
   Image,
   Platform,
 } from 'react-native'
-import Container from '../../../../components/Container'
+import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import MyDataPopupModal from './MyDataPopupModal'
 import { color } from '../../../../styles'
+import NavigationService from '../../../NavigationService'
 
 import UserType from '../../../../constants/UserType'
 
@@ -20,7 +21,8 @@ export default class MyLocalData extends Component {
   props: {
     user: Object,
     navigation: Object,
-    importWorkspace: () => {},
+    upload: Object,
+    uploading: () => {},
   }
 
   constructor(props) {
@@ -40,75 +42,13 @@ export default class MyLocalData extends Component {
     this.getData()
   }
 
-  /**
-   * 深度遍历fullFileDir目录下的fileType数据
-   * fullFileDir 文件目录
-   * fileType 文件类型 {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
-   * arrFilterFile 添加到arrFilterFile数组中保存
-   * */
-  _setFilterDatas = async (
-    fullFileDir,
-    fileType,
-    arrFilterFile,
-    isShowText,
-  ) => {
-    try {
-      let isRecordFile = false
-      let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
-      for (let i = 0; i < arrDirContent.length; i++) {
-        let fileContent = arrDirContent[i]
-        let isFile = fileContent.type
-        let fileName = fileContent.name
-        let newPath = fullFileDir + '/' + fileName
-        if (isFile === 'file' && !isRecordFile) {
-          if (
-            (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
-            (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
-            (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
-            (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
-            (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
-          ) {
-            if (
-              !(
-                fileName.indexOf('~[') !== -1 &&
-                fileName.indexOf(']') !== -1 &&
-                fileName.indexOf('@') !== -1
-              )
-            ) {
-              fileName = fileName.substring(0, fileName.length - 5)
-              arrFilterFile.push({
-                filePath: newPath,
-                fileName: fileName,
-                directory: fullFileDir,
-              })
-              isRecordFile = true
-              if (isShowText === true) {
-                let textValue = '扫描文件:' + fullFileDir
-                this.setState({ textValue: textValue })
-              }
-            }
-          }
-        } else if (isFile === 'directory') {
-          await this._setFilterDatas(
-            newPath,
-            fileType,
-            arrFilterFile,
-            isShowText,
-          )
-        }
-      }
-    } catch (e) {
-      Toast.show('没有数据')
-    }
-    return arrFilterFile
-  }
-
   getData = async () => {
     try {
-      let userName =
+      let userPath = await FileTools.appendingHomeDirectory(
         this.props.user.currentUser.userType === UserType.PROBATION_USER
-          ? '/null23132/'
-          : this.props.user.currentUser.userName
+          ? ConstPath.CustomerPath
+          : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
+      )
       let isLogin =
         this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
         this.props.user.currentUser.userName
@@ -116,9 +56,6 @@ export default class MyLocalData extends Component {
       let data = []
       if (isLogin) {
         // 获取用户数据
-        let userPath = await FileTools.appendingHomeDirectory(
-          ConstPath.UserPath + userName + '/',
-        )
         let userData = await this.getSectionData(userPath)
         data.push({
           title: '我的数据',
@@ -266,7 +203,7 @@ export default class MyLocalData extends Component {
     let itemHeight = 60
     let imageWidth = 30,
       imageHeight = 30
-    let separatorLineHeight = 1
+    // let separatorLineHeight = 1
     let fontSize = Platform.OS === 'ios' ? 18 : 16
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img
@@ -332,17 +269,6 @@ export default class MyLocalData extends Component {
             source={require('../../../../assets/Mine/mine_more_white.png')}
           />
         </View>
-        <View
-          /** 也可以在外面设置*/
-          // display={display}
-          style={{
-            /** 也可以在style设置*/
-            // display:display,
-            width: '100%',
-            height: separatorLineHeight,
-            backgroundColor: color.itemColorGray,
-          }}
-        />
       </TouchableOpacity>
     )
   }
@@ -353,6 +279,88 @@ export default class MyLocalData extends Component {
 
   _closeModal = () => {
     this.setState({ modalIsVisible: false })
+  }
+
+  _onUploadData = async () => {
+    try {
+      if (this.itemInfo !== undefined && this.itemInfo !== null) {
+        let fileName = this.itemInfo.item.name.substring(
+          0,
+          this.itemInfo.item.name.lastIndexOf('.'),
+        )
+        let targetPath =
+          (await FileTools.appendingHomeDirectory()) +
+          (this.props.user.currentUser.userType === UserType.PROBATION_USER
+            ? ConstPath.CustomerPath + ConstPath.RelativePath.Temp
+            : ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.Temp) +
+          fileName +
+          '.zip'
+
+        this.setLoading(true, ConstInfo.UPLOAD_START)
+
+        let archivePaths = []
+        switch (this.state.title) {
+          case Const.MAP: {
+            let mapPath = await FileTools.appendingHomeDirectory(
+              this.itemInfo.item.path,
+            )
+            let mapExpPath =
+              mapPath.substring(0, mapPath.lastIndexOf('.')) + '.exp'
+            archivePaths = [mapPath, mapExpPath]
+            break
+          }
+          case Const.DATA: {
+            let udbPath = await FileTools.appendingHomeDirectory(
+              this.itemInfo.item.path,
+            )
+            let uddPath =
+              udbPath.substring(0, udbPath.lastIndexOf('.')) + '.udd'
+            archivePaths = [udbPath, uddPath]
+            break
+          }
+          case Const.SCENE: {
+            let scenePath = await FileTools.appendingHomeDirectory(
+              this.itemInfo.item.path,
+            )
+            let pxpPath = scenePath + '.pxp'
+            archivePaths = [scenePath, pxpPath]
+            break
+          }
+          case Const.SYMBOL: {
+            let symbolPath = await FileTools.appendingHomeDirectory(
+              this.itemInfo.item.path,
+            )
+            archivePaths = [symbolPath]
+            break
+          }
+        }
+
+        this.props.uploading({
+          archivePaths,
+          targetPath,
+          name: fileName,
+          onProgress: () => {
+            // console.warn('onProgress: ' + progress)
+          },
+          onResult: result => {
+            Toast.show(
+              result || result === undefined
+                ? ConstInfo.UPLOAD_SUCCESS
+                : ConstInfo.UPLOAD_FAILED,
+            )
+            // console.warn('onResult: ' + result)
+          },
+        })
+      }
+    } catch (e) {
+      Toast.show(ConstInfo.DELETE_FAILED)
+      this._closeModal()
+    } finally {
+      this.setLoading(false)
+    }
   }
 
   _onDeleteData = async () => {
@@ -409,13 +417,13 @@ export default class MyLocalData extends Component {
   /** 删除数据源 **/
   _deleteDatasource = async () => {
     if (!this.itemInfo) return false
-    let mapPath = await FileTools.appendingHomeDirectory(
+    let udbPath = await FileTools.appendingHomeDirectory(
       this.itemInfo.item.path,
     )
-    let mapExpPath = mapPath.substring(0, mapPath.lastIndexOf('.')) + '.udd'
+    let uddPath = udbPath.substring(0, udbPath.lastIndexOf('.')) + '.udd'
 
-    let result = await FileTools.deleteFile(mapPath)
-    result = result && (await FileTools.deleteFile(mapExpPath))
+    let result = await FileTools.deleteFile(udbPath)
+    result = result && (await FileTools.deleteFile(uddPath))
 
     return result
   }
@@ -423,13 +431,13 @@ export default class MyLocalData extends Component {
   /** 删除场景 **/
   _deleteScene = async () => {
     if (!this.itemInfo) return false
-    let mapPath = await FileTools.appendingHomeDirectory(
+    let scenePath = await FileTools.appendingHomeDirectory(
       this.itemInfo.item.path,
     )
-    let mapExpPath = mapPath + '.pxp'
+    let pxpPath = scenePath + '.pxp'
 
-    let result = await FileTools.deleteFile(mapPath)
-    result = result && (await FileTools.deleteFile(mapExpPath))
+    let result = await FileTools.deleteFile(scenePath)
+    result = result && (await FileTools.deleteFile(pxpPath))
 
     return result
   }
@@ -437,11 +445,11 @@ export default class MyLocalData extends Component {
   /** 删除符号 **/
   _deleteSymbol = async () => {
     if (!this.itemInfo) return false
-    let mapPath = await FileTools.appendingHomeDirectory(
+    let symbolPath = await FileTools.appendingHomeDirectory(
       this.itemInfo.item.path,
     )
 
-    let result = await FileTools.deleteFile(mapPath)
+    let result = await FileTools.deleteFile(symbolPath)
 
     return result
   }
@@ -450,7 +458,17 @@ export default class MyLocalData extends Component {
     if (this.state.modalIsVisible) {
       return (
         <MyDataPopupModal
-          onDeleteData={this._onDeleteData}
+          // onDeleteData={this._onDeleteData}
+          data={[
+            // {
+            //   title: '上传',
+            //   action: this._onUploadData,
+            // },
+            {
+              title: '删除',
+              action: this._onDeleteData,
+            },
+          ]}
           onCloseModal={this._closeModal}
           modalVisible={this.state.modalIsVisible}
         />
@@ -458,8 +476,53 @@ export default class MyLocalData extends Component {
     }
   }
 
+  goToMyOnlineData = async () => {
+    NavigationService.navigate('MyOnlineData')
+  }
+
+  goToMyService = () => {
+    NavigationService.navigate('MyService')
+  }
+
+  _renderHeaderBtn = () => {
+    let btn = null
+    if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
+      this.props.user.currentUser.userName &&
+      (this.state.title === Const.MAP || this.state.title === Const.DATA)
+    ) {
+      let title =
+        this.state.title === Const.MAP ? Const.ONLINE_MAP : Const.ONLINE_DATA
+      let action =
+        this.state.title === Const.MAP
+          ? this.goToMyService
+          : this.goToMyOnlineData
+      btn = (
+        <TextBtn
+          btnText={title}
+          textStyle={{
+            color: 'white',
+            fontSize: 17,
+          }}
+          btnClick={action}
+        />
+      )
+    }
+    return btn
+  }
+
   setLoading = (visible, info) => {
     this.container && this.container.setLoading(visible, info)
+  }
+
+  _renderSectionSeparatorComponent = () => {
+    return <ListSeparator color={color.contentColorWhite} height={5} />
+  }
+
+  _renderItemSeparatorComponent = ({ section }) => {
+    return section.isShowItem ? (
+      <ListSeparator color={color.itemColorGray} height={1} />
+    ) : null
   }
 
   render() {
@@ -471,6 +534,7 @@ export default class MyLocalData extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderBtn(),
         }}
       >
         <Text
@@ -495,6 +559,8 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
         />
         {this._showMyDataPopupModal()}
       </Container>
