@@ -12,6 +12,7 @@ import {
 } from 'react-native'
 import styles from './styles'
 import settingData from './settingData'
+import { color } from '../../styles'
 export default class setting extends Component {
   props: {
     navigation: Object,
@@ -101,8 +102,9 @@ export default class setting extends Component {
               <Text style={styles.switchText}>{item.name}</Text>
               <Switch
                 style={styles.switch}
-                trackColor={{ false: 'white', true: '#505050' }}
-                thumbColor={item.value ? 'white' : '#505050'}
+                trackColor={{ false: color.bgG, true: color.switch }}
+                thumbColor={item.value ? color.bgW : color.bgW}
+                ios_backgroundColor={item.value ? '#505050' : '#F0F0F0'}
                 value={item.value}
                 onValueChange={value => {
                   this._onValueChange(value, item, index)

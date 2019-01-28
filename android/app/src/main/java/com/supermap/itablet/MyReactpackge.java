@@ -5,6 +5,7 @@ import com.facebook.react.bridge.JavaScriptModule;
 import com.facebook.react.bridge.NativeModule;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.ViewManager;
+import com.supermap.RN.AppUtils;
 import com.supermap.RN.NativeMethod;
 import com.supermap.RN.FileTools;
 import com.supermap.RN.SPUtils;
@@ -25,6 +26,7 @@ public class MyReactpackge implements  ReactPackage {
         modules.add(new FileTools(reactContext));
         modules.add(new NativeMethod(reactContext));
         modules.add(new SPUtils(reactContext));
+        modules.add(new AppUtils(reactContext));
         return modules;
     }
 

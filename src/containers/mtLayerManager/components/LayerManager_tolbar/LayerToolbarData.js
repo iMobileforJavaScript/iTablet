@@ -1,8 +1,9 @@
 const layersetting = [
-  // {
-  //   title: '设置为当前图层',
-  //   data: [],
-  // },
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
   // {
   //   title: '可见比例尺范围',
   //   data: [],
@@ -30,6 +31,16 @@ const layersetting = [
     data: [],
     image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
+  {
+    title: '置顶',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+  },
+  {
+    title: '置底',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+  },
   // {
   //   title: '复制',
   //   data: [],
@@ -51,10 +62,11 @@ const layersetting = [
 ]
 
 const layerThemeSetting = [
-  // {
-  //   title: '设置为当前图层',
-  //   data: [],
-  // },
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
   // {
   //   title: '可见比例尺范围',
   //   data: [],
@@ -96,6 +108,16 @@ const layerThemeSetting = [
     image: require('../../../../assets/layerToolbar/layer_movedown.png'),
   },
   {
+    title: '置顶',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+  },
+  {
+    title: '置底',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+  },
+  {
     title: '移除',
     data: [],
     image: require('../../../../assets/layerToolbar/layer_remove.png'),
@@ -106,4 +128,21 @@ const layerThemeSetting = [
   //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
   // },
 ]
-export { layersetting, layerThemeSetting }
+const layer3dSetting = [
+  {
+    title: '设置图层可选',
+    data: [],
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+  },
+  {
+    title: '设置图层不可选',
+    data: [],
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+  },
+  // {
+  //   title: '取消',
+  //   data: [],
+  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+  // },
+]
+export { layersetting, layerThemeSetting, layer3dSetting }

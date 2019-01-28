@@ -65,11 +65,8 @@ async function getPathList(path) {
  * @param filter  {name: 文件名, extension: 后缀， type: 文件类型(file | Directory)}
  * @returns {Promise}
  */
-async function getPathListByFilter(
-  path,
-  { name = '', extension = '', type = 'Directory' },
-) {
-  return await FileTools.getPathListByFilter(path, { name, extension, type })
+async function getPathListByFilter(path, filter = {}) {
+  return await FileTools.getPathListByFilter(path, filter)
 }
 
 /**
@@ -180,6 +177,21 @@ async function getFilterFiles(
   return arrFilterFile
 }
 
+/**
+ * 获取指定路径下的地图（xml），含是否是模版地图
+ * @param path
+ * @param filter
+ * @returns {Promise.<*>}
+ */
+async function getMaps(path = '', filter = {}) {
+  try {
+    if (!path) return []
+    return await FileTools.getMaps(path, filter)
+  } catch (e) {
+    return e
+  }
+}
+
 export default {
   getHomeDirectory,
   appendingHomeDirectory,
@@ -199,4 +211,5 @@ export default {
   copyFile,
   initUserDefaultData,
   getFilterFiles,
+  getMaps,
 }

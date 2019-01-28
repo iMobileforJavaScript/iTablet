@@ -21,6 +21,7 @@ const RelativePath = {
   ExternalData2: 'ExternalData',
   Data: Data,
   Datasource: Data + 'Datasource/',
+  Scene: Data + 'Scene/',
   Template: Data + 'Template/',
   Symbol: Data + 'Symbol/',
   Attribute: Data + 'Attribute/',

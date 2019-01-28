@@ -20,7 +20,7 @@ import { color } from './styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
-import UserType from '../../../constants/UserType'
+import { UserType, Const } from '../../../constants'
 export default class Mine extends Component {
   props: {
     navigation: Object,
@@ -76,6 +76,13 @@ export default class Mine extends Component {
       userName: userName,
     })
   }
+
+  goToMyData = title => {
+    NavigationService.navigate('MyData', {
+      title,
+    })
+  }
+
   goToMyOnlineData = async () => {
     NavigationService.navigate('MyOnlineData')
   }
@@ -95,7 +102,7 @@ export default class Mine extends Component {
           {this._renderHeader(fontSize)}
           {this._renderLine()}
           {this._renderItem({
-            title: '导入数据',
+            title: Const.IMPORT,
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
           })}
@@ -124,9 +131,29 @@ export default class Mine extends Component {
         >
           {this._renderLine()}
           {this._renderItem({
-            title: '导入数据',
+            title: Const.IMPORT,
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: this.goToMyLocalData,
+          })}
+          {this._renderItem({
+            title: Const.MAP,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.MAP),
+          })}
+          {this._renderItem({
+            title: Const.DATA,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.DATA),
+          })}
+          {this._renderItem({
+            title: Const.SCENE,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.SCENE),
+          })}
+          {this._renderItem({
+            title: Const.SYMBOL,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            onClick: () => this.goToMyData(Const.SYMBOL),
           })}
           {this._renderItem({
             title: '我的数据',
@@ -195,6 +222,7 @@ export default class Mine extends Component {
       </View>
     )
   }
+
   _renderLine = () => {
     return (
       <View
@@ -206,6 +234,7 @@ export default class Mine extends Component {
       />
     )
   }
+
   _renderItem = (
     itemRequire = {
       title: '',

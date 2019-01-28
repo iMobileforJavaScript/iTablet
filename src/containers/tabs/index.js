@@ -7,6 +7,7 @@ import Home, { Setting, AboutITablet } from './Home'
 import Mine, {
   MyService,
   MyLocalData,
+  MyData,
   MyOnlineData,
   Register,
   MyOnlineMap,
@@ -212,6 +213,7 @@ export {
   /**Mine*/
   MyService,
   MyLocalData,
+  MyData,
   MyOnlineData,
   Register,
   MyOnlineMap,

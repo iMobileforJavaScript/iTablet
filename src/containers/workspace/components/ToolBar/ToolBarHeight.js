@@ -153,35 +153,37 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.LINECOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[1]
         column = 8
+      } else {
+        height = ConstToolType.HEIGHT[2]
+        column = 4
       }
       break
     case ConstToolType.POINTCOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
-        column = 4
-      } else {
-        height = ConstToolType.HEIGHT[1]
         column = 8
+      } else {
+        height = ConstToolType.HEIGHT[2]
+        column = 4
       }
       break
     case ConstToolType.REGIONBEFORECOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
+        column = 8
       } else {
-        height = ConstToolType.HEIGHT[1]
+        height = ConstToolType.HEIGHT[2]
+        column = 4
       }
       break
     case ConstToolType.REGIONAFTERCOLOR_SET:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[3]
-        column = 4
+        column = 8
       } else {
         height = ConstToolType.HEIGHT[1]
-        column = 8
+        column = 4
       }
       break
     case ConstToolType.GRID_STYLE:

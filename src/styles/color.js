@@ -37,6 +37,7 @@ const lightTheme = {
   blackBg: '#353537',
   bgW: '#F0F0F0',
   bgG: '#A0A0A0',
+  switch: '#4680DF',
 
   fontColorWhite: '#F0F0F0',
   fontColorBlack: '#303030',
@@ -109,9 +110,13 @@ export default {
   /** 深色版*/
   content: '#555555',
   /** 浅色版*/
-  item_separate_white: '#727272',
-  content_white: '#F0F0F0',
-  font_color_white: '#303030',
+  item_separate_white: '#A0A0A0', //分割线
+  content_white: '#F0F0F0', //列表项目背景
+  font_color_white: '#303030', //列表项目文字颜色
   image_bg_white: '#727272',
   theme_white: '#303030',
+  section_bg: '#505050', //列表一级标题背景
+  section_text: '#F0F0F0', //列表一级标题文字
+  bottomz: '#303030', //底部工具栏背景
+  overlay_tint: 'rgba(48,48,48,0.85)', //遮罩颜色为#303030,85%不透明度
 }

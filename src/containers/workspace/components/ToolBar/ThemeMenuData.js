@@ -71,6 +71,7 @@ function showExpressionList() {
         {
           title: dataset.datasetName,
           datasetType: dataset.datasetType,
+          expressionType: true,
           data: allExpressions,
         },
       ]
@@ -282,7 +283,7 @@ async function showLocalDatasetsList() {
     type: 'file',
   })
   customerUDBs.forEach(item => {
-    item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+    item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
     item.info = {
       infoType: 'mtime',
       lastModifiedDate: item.mtime,
@@ -301,7 +302,7 @@ async function showLocalDatasetsList() {
       type: 'file',
     })
     userUDBs.forEach(item => {
-      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,

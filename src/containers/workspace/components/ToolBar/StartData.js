@@ -4,6 +4,7 @@ import {
   ConstInfo,
   ConstPath,
   Const,
+  ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -119,21 +120,22 @@ function getStart(type, params) {
               ConstToolType.MAP3D_WORKSPACE_LIST,
               {
                 containerType: 'list',
+                isFullScreen: true,
               },
             )
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open.png'),
         },
-        {
-          key: constants.BASE_MAP,
-          title: constants.BASE_MAP,
-          size: 'large',
-          action: () => {
-            changeBaseLayer('MAP_3D')
-          },
-          image: require('../../../../assets/mapTools/icon_base.png'),
-        },
+        // {
+        //   key: constants.BASE_MAP,
+        //   title: constants.BASE_MAP,
+        //   size: 'large',
+        //   action: () => {
+        //     changeBaseLayer('MAP_3D')
+        //   },
+        //   image: require('../../../../assets/mapTools/icon_base.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_COLLECTION_START:
@@ -334,16 +336,18 @@ function openMap() {
     let customerPath =
       (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
       ConstPath.RelativeFilePath.Map
-    let fileList = await FileTools.getPathListByFilter(customerPath, {
-      extension: 'xml',
-      type: 'file',
-    })
+    // let fileList = await FileTools.getPathListByFilter(customerPath, {
+    //   extension: 'xml',
+    //   type: 'file',
+    // })
+    let fileList = await FileTools.getMaps(customerPath)
     let userFileList
     if (_params.user && _params.user.currentUser.userName) {
-      userFileList = await FileTools.getPathListByFilter(path, {
-        extension: 'xml',
-        type: 'file',
-      })
+      // userFileList = await FileTools.getPathListByFilter(path, {
+      //   extension: 'xml',
+      //   type: 'file',
+      // })
+      userFileList = await FileTools.getMaps(path)
     }
 
     let list = []
@@ -351,10 +355,13 @@ function openMap() {
       let name = item.name
       item.title = name
       item.name = name.split('.')[0]
-      item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+      item.image = item.isTemplate
+        ? require('../../../../assets/mapToolbar/list_type_template_black.png')
+        : require('../../../../assets/mapToolbar/list_type_map_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
+        isTemplate: item.isTemplate,
       }
       list.push(item)
     })
@@ -374,10 +381,13 @@ function openMap() {
         let name = item.name
         item.title = name
         item.name = name.split('.')[0]
-        item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+        item.image = item.isTemplate
+          ? require('../../../../assets/mapToolbar/list_type_template_black.png')
+          : require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
+          isTemplate: item.isTemplate,
         }
         userList.push(item)
       })
@@ -590,33 +600,60 @@ function create() {
     GLOBAL.Type === constants.MAP_THEME
   ) {
     (async function() {
-      await _params.closeMap()
+      NavigationService.navigate('InputPage', {
+        headerTitle: '新建',
+        placeholder: ConstInfo.PLEASE_INPUT_NAME,
+        cb: async value => {
+          GLOBAL.Loading &&
+            GLOBAL.Loading.setLoading(
+              true,
+              ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+            )
+          await _params.closeMap()
+          let userPath =
+            ConstPath.UserPath +
+            (_params.user.currentUser.userName || 'Customer') +
+            '/'
+          let fillLibPath = await FileTools.appendingHomeDirectory(
+            userPath +
+              ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+              'Workspace.bru',
+          )
+          let lineLibPath = await FileTools.appendingHomeDirectory(
+            userPath +
+              ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+              'Workspace.lsl',
+          )
+          let markerLibPath = await FileTools.appendingHomeDirectory(
+            userPath +
+              ConstPath.RelativeFilePath.DefaultWorkspaceDir +
+              'Workspace.sym',
+          )
+          await SMap.importSymbolLibrary(fillLibPath) // 导入面符号库
+          await SMap.importSymbolLibrary(lineLibPath) // 导入线符号库
+          await SMap.importSymbolLibrary(markerLibPath) // 导入点符号库
+          // await _params.setCurrentMap()
+          // await SMap.removeAllLayer() // 移除所有图层
+          // await SMap.closeDatasource(-1) // 关闭所有数据源
 
-      let userPath =
-        ConstPath.UserPath +
-        (_params.user.currentUser.userName || 'Customer') +
-        '/'
-      let fillLibPath = await FileTools.appendingHomeDirectory(
-        userPath +
-          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
-          'Workspace.bru',
-      )
-      let lineLibPath = await FileTools.appendingHomeDirectory(
-        userPath +
-          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
-          'Workspace.lsl',
-      )
-      let markerLibPath = await FileTools.appendingHomeDirectory(
-        userPath +
-          ConstPath.RelativeFilePath.DefaultWorkspaceDir +
-          'Workspace.sym',
-      )
-      await SMap.importSymbolLibrary(fillLibPath) // 导入面符号库
-      await SMap.importSymbolLibrary(lineLibPath) // 导入线符号库
-      await SMap.importSymbolLibrary(markerLibPath) // 导入点符号库
-      // await _params.setCurrentMap()
-      // await SMap.removeAllLayer() // 移除所有图层
-      // await SMap.closeDatasource(-1) // 关闭所有数据源
+          await SMap.openDatasource(
+            ConstOnline['Google'].DSParams,
+            ConstOnline['Google'].layerIndex,
+          )
+          _params.getLayers && (await _params.getLayers())
+
+          _params.saveMap &&
+            (await _params.saveMap({
+              mapName: value,
+              nModule: GLOBAL.Type,
+              notSaveToXML: true,
+            }))
+
+          GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+
+          NavigationService.goBack()
+        },
+      })
     }.bind(this)())
   }
 }
@@ -633,7 +670,7 @@ function showHistory() {
     latestMap = _params.map.latestMap[userName][GLOBAL.Type]
   }
   latestMap.forEach(item => {
-    item.image = require('../../../../assets/mapToolbar/list_type_map.png')
+    item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
   })
   let data = [
     {
@@ -649,26 +686,27 @@ function showHistory() {
 }
 
 /** 切换底图 **/
-function changeBaseLayer(type) {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
+// function changeBaseLayer(type) {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
 
-  switch (type) {
-    case 'MAP_3D':
-      _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
-        containerType: 'list',
-        isFullScreen: true,
-      })
-      break
-    default:
-      _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-        isFullScreen: true,
-      })
-      break
-  }
-}
+//   switch (type) {
+//     case 'MAP_3D':
+//       _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
+//         containerType: 'list',
+//         isFullScreen: true,
+//         height: ConstToolType.HEIGHT[2],
+//       })
+//       break
+//     default:
+//       _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
+//         containerType: 'list',
+//         height: ConstToolType.HEIGHT[3],
+//         isFullScreen: true,
+//       })
+//       break
+//   }
+// }
 
 // /** 导出成图片 **/
 // function outPutMap() {
@@ -755,8 +793,42 @@ function saveMap() {
 
 /** 另存地图 **/
 function saveMapAs() {
-  if (!_params.setSaveMapDialogVisible) return
-  _params.setSaveMapDialogVisible(true)
+  // if (!_params.setSaveMapDialogVisible) return
+  // _params.setSaveMapDialogVisible(true)
+  NavigationService.navigate('InputPage', {
+    value: _params.map.currentMap.name || '',
+    headerTitle: '地图另存',
+    placeholder: ConstInfo.PLEASE_INPUT_NAME,
+    cb: async value => {
+      let addition = {}
+      if (
+        _params.map &&
+        _params.map.currentMap &&
+        _params.map.currentMap.Template
+      ) {
+        addition.Template = this.props.map.currentMap.Template
+      }
+      _params.setToolbarVisible &&
+        _params.setToolbarVisible(true, ConstInfo.SAVING_MAP)
+      _params.saveMap &&
+        _params.saveMap({ mapName: value, addition, isNew: true }).then(
+          result => {
+            _params.setToolbarVisible && _params.setToolbarVisible(false)
+            if (result) {
+              NavigationService.goBack()
+              setTimeout(() => {
+                Toast.show(ConstInfo.CLOSE_MAP_SUCCESS)
+              }, 1000)
+            } else {
+              Toast.show(ConstInfo.CLOSE_MAP_FAILED)
+            }
+          },
+          () => {
+            _params.setToolbarVisible && _params.setToolbarVisible(false)
+          },
+        )
+    },
+  })
 }
 
 export default {

@@ -38,6 +38,7 @@ import TreeList from './TreeList'
 import SaveDialog from './SaveDialog'
 import SaveMapNameDialog from './SaveMapNameDialog'
 import ColorTableList from './ColorTableList'
+import Input from './Input'
 
 export {
   Container,
@@ -85,4 +86,5 @@ export {
   SaveMapNameDialog,
   ColorTableList,
   ColorBtn,
+  Input,
 }

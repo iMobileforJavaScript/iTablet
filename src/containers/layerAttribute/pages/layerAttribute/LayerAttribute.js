@@ -208,6 +208,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   renderMapLayerAttribute = () => {
+    // console.log(this.props.attributes.data)
     if (!this.props.attributes || !this.props.attributes.data) return null
     if (this.props.attributes.data.length > 1) {
       return (

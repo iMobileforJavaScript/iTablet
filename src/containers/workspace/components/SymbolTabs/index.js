@@ -153,7 +153,7 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <TemplateTab
-          tabLabel="模板"
+          tabLabel="符号"
           style={styles.temple}
           user={this.props.user}
           showToolbar={this.props.showToolbar}

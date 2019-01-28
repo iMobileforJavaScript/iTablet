@@ -8,6 +8,7 @@ import ConstModule, { MAP_MODULE } from './ConstModule'
 import ConstToolType from './ConstToolType'
 import Map3DBaseMapList from './Map3DBaseMapList'
 import ConstInfo from './ConstInfo'
+import UserType from './UserType'
 
 import {
   layerAdd,
@@ -57,4 +58,5 @@ export {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  UserType,
 }

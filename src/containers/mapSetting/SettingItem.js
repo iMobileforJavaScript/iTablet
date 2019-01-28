@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { View, Text, Switch } from 'react-native'
 import styles from './styles'
+import { color } from '../../styles'
 export default class MapSetting extends Component {
   props: {
     data: Array,
@@ -23,10 +24,10 @@ export default class MapSetting extends Component {
               <Text style={styles.itemName}>{this.props.data.name}</Text>
               <Switch
                 style={styles.switch}
-                trackColor={{ false: 'white', true: '#505050' }}
-                thumbColor={this.props.data.value ? 'white' : '#505050'}
+                trackColor={{ false: color.bgG, true: color.switch }}
+                thumbColor={this.props.data.value ? color.bgW : color.bgW}
                 ios_backgroundColor={
-                  this.props.data.value ? '#505050' : '#F0F0F0'
+                  this.props.data.value ? color.switch : color.bgG
                 }
                 value={this.props.data.value}
                 onValueChange={value => {

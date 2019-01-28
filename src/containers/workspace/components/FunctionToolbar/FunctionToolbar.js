@@ -33,6 +33,7 @@ const MAP_3D = 'MAP_3D'
 const MAP_EDIT = 'MAP_EDIT'
 const MAP_THEME = 'MAP_THEME'
 export { COLLECTION, NETWORK, EDIT }
+import NavigationService from '../../../NavigationService'
 
 export default class FunctionToolbar extends React.Component {
   props: {
@@ -215,7 +216,7 @@ export default class FunctionToolbar extends React.Component {
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[0],
+            : ConstToolType.HEIGHT[2],
         column: 4,
       })
     }
@@ -311,7 +312,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DTool = async () => {
-    SScene.checkoutListener('startMeasure')
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -321,8 +321,8 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: false,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[1],
+            ? ConstToolType.HEIGHT[2]
+            : ConstToolType.HEIGHT[2],
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
@@ -416,6 +416,20 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  showMap3Dshare = async () => {
+    this.hideThemeMenuDialog()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      toolRef.setVisible(true, ConstToolType.MAP_SHARE_MAP3D, {
+        containerType: 'table',
+        isFullScreen: true,
+        column: 4,
+        height: ConstToolType.HEIGHT[0],
+      })
+    }
+  }
+
   showThemeCreate = async () => {
     let isAnyOpenedDS = true //是否有打开的数据源
     isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
@@ -452,7 +466,7 @@ export default class FunctionToolbar extends React.Component {
 
   mapStyle = () => {
     const toolRef = this.props.getToolRef()
-    if (this.props.layers.themeType <= 0)
+    if (this.props.layers.themeType <= 0) {
       if (
         this.props.layers.type === 1 ||
         this.props.layers.type === 3 ||
@@ -478,7 +492,14 @@ export default class FunctionToolbar extends React.Component {
             })
           }
         }
+      } else {
+        NavigationService.navigate('LayerManager')
+        Toast.show('当前图层无法设置风格,请重新选择图层')
       }
+    } else {
+      NavigationService.navigate('LayerManager')
+      Toast.show('当前图层无法设置风格,请重新选择图层')
+    }
   }
 
   remove = () => {}
@@ -510,7 +531,7 @@ export default class FunctionToolbar extends React.Component {
               },
             )
             customerUDBs.forEach(item => {
-              item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+              item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
               item.info = {
                 infoType: 'mtime',
                 lastModifiedDate: item.mtime,
@@ -529,7 +550,7 @@ export default class FunctionToolbar extends React.Component {
                 type: 'file',
               })
               userUDBs.forEach(item => {
-                item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+                item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
                 item.info = {
                   infoType: 'mtime',
                   lastModifiedDate: item.mtime,
@@ -586,7 +607,7 @@ export default class FunctionToolbar extends React.Component {
       type: 'file',
     })
     customerUDBs.forEach(item => {
-      item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
       item.info = {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
@@ -605,7 +626,7 @@ export default class FunctionToolbar extends React.Component {
         type: 'file',
       })
       userUDBs.forEach(item => {
-        item.image = require('../../../../assets/mapToolbar/list_type_udb.png')
+        item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
@@ -736,14 +757,6 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_function_Tagging.png'),
           //   selectMode: 'flash',
           // },
-          // {
-          //   key: '工具',
-          //   title: '工具',
-          //   action: this.showTool,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_tool.png'),
-          //   selectMode: 'flash',
-          // },
           {
             key: '风格',
             title: '风格',
@@ -751,6 +764,11 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             image: require('../../../../assets/function/icon_function_style.png'),
             selectMode: 'flash',
+          },
+          {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
           },
           // {
           //   title: '撤销',
@@ -773,12 +791,19 @@ export default class FunctionToolbar extends React.Component {
             title: '开始',
             action: this.map3Dstart,
             size: 'large',
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_function_start.png'),
           },
           // {
           //   title: '标注',
           //   action: this.showMap3DSymbol,
           //   image: require('../../../../assets/function/icon_function_Tagging.png'),
+          // },
+          // {
+          //   key: constants.ADD,
+          //   title: constants.ADD,
+          //   size: 'large',
+          //   action: () => {},
+          //   image: require('../../../../assets/function/icon_function_add.png'),
           // },
           {
             title: '工具',
@@ -802,7 +827,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '分享',
             action: async () => {
-              this.showMore(ConstToolType.MAP_MORE_MAP3D)
+              this.showMap3Dshare()
             },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
@@ -842,6 +867,11 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_param.png'),
           },
           {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
             key: '分享',
             title: '分享',
             size: 'large',
@@ -860,7 +890,7 @@ export default class FunctionToolbar extends React.Component {
             key: '开始',
             title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
-            image: require('../../../../assets/function/icon_function_base_map.png'),
+            image: require('../../../../assets/function/icon_function_start.png'),
           },
           {
             title: '采集',

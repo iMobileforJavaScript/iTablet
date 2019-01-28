@@ -47,7 +47,7 @@ export default {
   CREATE: 'CREATE',
   LOAD: 'LOAD',
 
-  CREATE_SYMBOL_COLLECTION: '新建普通采集',
+  CREATE_SYMBOL_COLLECTION: '普通创建',
   MODULE: '模板',
   INFORMATION: '数据',
   HISTORY: '历史记录',
@@ -61,4 +61,11 @@ export default {
 
   // 底部Bottom
   BOTTOM_HEIGHT: scaleSize(96),
+
+  // Mine
+  IMPORT: '导入',
+  MAP: '地图',
+  DATA: '数据',
+  SCENE: '场景',
+  SYMBOL: '符号',
 }

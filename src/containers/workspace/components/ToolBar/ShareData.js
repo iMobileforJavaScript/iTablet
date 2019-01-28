@@ -1,11 +1,12 @@
 /**
  * 获取地图分享数据
  */
-import { SOnlineService, SScene } from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import { ConstToolType, ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
+import NavigationService from '../../../NavigationService'
 // import ToolbarBtnType from './ToolbarBtnType'
 // const Fs = require('react-native-fs')
 let _params = {}
@@ -110,29 +111,44 @@ function showSaveDialog(type) {
     Toast.show('分享中，请稍后')
     return
   }
-  if (type === constants.SUPERMAP_ONLINE) {
-    let list = [_params.map.currentMap.name]
-    _params.setInputDialogVisible &&
-      _params.setInputDialogVisible(true, {
-        placeholder: '请输入分享数据名称',
-        confirmAction: value => {
-          shareToSuperMapOnline(list, value)
-          _params.setInputDialogVisible(false)
-        },
-      })
-  } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
-    SScene.getMapList().then(list => {
-      let data = [list[0].name]
-      _params.setInputDialogVisible &&
-        _params.setInputDialogVisible(true, {
-          placeholder: '请输入分享数据名称',
-          confirmAction: value => {
-            share3DToSuperMapOnline(data, value)
-            _params.setInputDialogVisible(false)
-          },
-        })
-    })
-  }
+  NavigationService.navigate('InputPage', {
+    headerTitle: '分享',
+    placeholder: ConstInfo.PLEASE_INPUT_NAME,
+    cb: async value => {
+      if (type === constants.SUPERMAP_ONLINE) {
+        let list = [_params.map.currentMap.name]
+        shareToSuperMapOnline(list, value)
+      } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
+        let list = await SScene.getMapList()
+        let data = [list[0].name]
+        share3DToSuperMapOnline(data, value)
+      }
+      NavigationService.goBack()
+    },
+  })
+  // if (type === constants.SUPERMAP_ONLINE) {
+  //   let list = [_params.map.currentMap.name]
+  //   _params.setInputDialogVisible &&
+  //     _params.setInputDialogVisible(true, {
+  //       placeholder: '请输入分享数据名称',
+  //       confirmAction: value => {
+  //         shareToSuperMapOnline(list, value)
+  //         _params.setInputDialogVisible(false)
+  //       },
+  //     })
+  // } else if (type === ConstToolType.MAP_SHARE_MAP3D) {
+  //   SScene.getMapList().then(list => {
+  //     let data = [list[0].name]
+  //     _params.setInputDialogVisible &&
+  //       _params.setInputDialogVisible(true, {
+  //         placeholder: '请输入分享数据名称',
+  //         confirmAction: value => {
+  //           share3DToSuperMapOnline(data, value)
+  //           _params.setInputDialogVisible(false)
+  //         },
+  //       })
+  //   })
+  // }
 }
 
 // function showMapList(type) {
@@ -215,9 +231,22 @@ async function shareToSuperMapOnline(list = [], name = '') {
       name: name,
       progress: 0,
     })
+
+    let layers = await SMap.getLayersByType()
+    let notExportMapIndexes = []
+    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+      notExportMapIndexes.push(layers.length - i)
+    }
+    let notExport = {
+      [_params.map.currentMap.name]: notExportMapIndexes,
+    }
+
     _params.exportWorkspace(
       {
         maps: list,
+        extra: {
+          notExport,
+        },
       },
       (result, path) => {
         Toast.show(
@@ -282,20 +311,41 @@ async function share3DToSuperMapOnline(list = [], name = '') {
       Toast.show('分享中，请稍后')
       return
     }
+    _params.setToolbarVisible && _params.setToolbarVisible(false)
     if (list.length > 0) {
       isSharing = true
       for (let index = 0; index < list.length; index++) {
+        let dataName = name || list[index]
+        _params.setSharing({
+          module: GLOBAL.Type,
+          name: dataName,
+          progress: 0,
+        })
         _params.exportmap3DWorkspace(
           { name: list[index] },
           async (result, zipPath) => {
             if (result) {
-              await SOnlineService.uploadFile(zipPath, name || list[index], {
-                onResult: async result => {
+              await SOnlineService.uploadFile(zipPath, dataName, {
+                onProgress: progress => {
+                  _params.setSharing({
+                    module: GLOBAL.Type,
+                    name: dataName,
+                    progress: progress / 100,
+                  })
+                },
+                onResult: async () => {
                   Toast.show(
-                    result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+                    // result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+                    ConstInfo.SHARE_SUCCESS,
                   )
                   FileTools.deleteFile(zipPath)
                   isSharing = false
+                  setTimeout(() => {
+                    _params.setSharing({
+                      module: GLOBAL.Type,
+                      name: dataName,
+                    })
+                  }, 2000)
                 },
               })
             } else {

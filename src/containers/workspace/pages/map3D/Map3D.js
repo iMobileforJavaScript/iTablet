@@ -13,6 +13,7 @@ import {
   MapToolbar,
   MapController,
   ToolBar,
+  OverlayView,
 } from '../../components'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
@@ -30,6 +31,7 @@ export default class Map3D extends React.Component {
     setCurrentAttribute: () => {},
     setAttributes: () => {},
     exportmap3DWorkspace: () => {},
+    refreshLayer3dList: () => {},
     user: Object,
     device: Object,
   }
@@ -37,6 +39,8 @@ export default class Map3D extends React.Component {
   constructor(props) {
     super(props)
     GLOBAL.sceneName = ''
+    GLOBAL.openWorkspace = false
+    GLOBAL.action3d = ''
     const params = this.props.navigation.state.params
     this.operationType = params.operationType || constants.MAP_3D
     this.isExample = params.isExample || false
@@ -74,6 +78,8 @@ export default class Map3D extends React.Component {
     SScene.setListener().then(() => {
       SScene.getAttribute()
       SScene.setCircleFly()
+      SScene.setAction('PAN3D')
+      GLOBAL.action3d = 'PAN3D'
     })
   }
 
@@ -101,10 +107,12 @@ export default class Map3D extends React.Component {
     }
     try {
       SScene.openScence(this.name).then(() => {
+        SScene.setNavigationControlVisible(false)
         this.initListener()
         GLOBAL.openWorkspace = true
         GLOBAL.sceneName = this.name
         this.container.setLoading(false)
+        this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       })
     } catch (e) {
       this.container.setLoading(false)
@@ -116,6 +124,7 @@ export default class Map3D extends React.Component {
       'JPG_PNG',
       96.0,
       true,
+      'c768f9fd3e388eb0d155405f8d8c6999',
     )
   }
 
@@ -178,6 +187,11 @@ export default class Map3D extends React.Component {
 
   setLoading = (loading = false, info, extra) => {
     this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  //遮盖层
+  renderOverLayer = () => {
+    return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
   }
 
   renderFunctionToolbar = () => {
@@ -286,7 +300,7 @@ export default class Map3D extends React.Component {
         cancelAction={this.cancel}
       >
         <View style={styles.item}>
-          <Text style={styles.title}>文本内容</Text>
+          {/* <Text style={styles.title}>文本内容</Text> */}
           <TextInput
             underlineColorAndroid={'transparent'}
             accessible={true}
@@ -328,6 +342,7 @@ export default class Map3D extends React.Component {
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
+        {this.renderOverLayer()}
         {this.renderTool()}
         {this.renderDialog()}
         {this.renderInputDialog()}

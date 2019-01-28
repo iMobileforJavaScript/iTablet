@@ -6,6 +6,7 @@ import {
   Image,
   AsyncStorage,
   StatusBar,
+  NativeModules,
 } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
@@ -19,6 +20,7 @@ import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 // import Orientation from '../../../constants/Orientation'
 import { Dialog } from '../../../components'
+const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
     nav: Object,
@@ -40,6 +42,7 @@ export default class Home extends Component {
     this.state = {
       isDownloaded: false,
       modalIsVisible: false,
+      dialogCheck: false,
     }
   }
 
@@ -174,30 +177,115 @@ export default class Home extends Component {
     this.dialog.setDialogVisible(value)
   }
 
-  getMoudleItem = (confirm, cancel, downloadData) => {
+  getMoudleItem = (
+    confirm,
+    cancel,
+    downloadData,
+    currentUserName,
+    dialogCheck,
+  ) => {
     this.dialogConfirm = confirm
     this.dialogCancel = cancel
     this.downloadData = downloadData
+    this.currentUserName = currentUserName
+    this.setState({ dialogCheck: dialogCheck })
+  }
+
+  getExit = () => {
+    return this.exit
+  }
+
+  exitConfirm = async () => {
+    try {
+      // await this._onLogout()
+      await appUtilsModule.AppExit()
+    } catch (error) {
+      Toast.show('退出失败')
+    }
   }
 
   confirm = () => {
     let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
-    confirm && confirm(this.downloadData)
+    confirm && confirm(this.downloadData, this.state.dialogCheck)
   }
 
   cancel = () => {
     let cancel = this.dialogCancel ? this.dialogCancel : () => {}
-    cancel && cancel(this.downloadData)
+    cancel && cancel(this.state.dialogCheck)
   }
+
+  renderDialogChildren = () => {
+    let Img = this.state.dialogCheck
+      ? require('../../../assets/home/Frenchgrey/icon_check_selected.png')
+      : require('../../../assets/home/Frenchgrey/icon_check.png')
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>是否下载示例数据 ？</Text>
+        <TouchableOpacity
+          style={styles.checkView}
+          onPress={() => {
+            let newdialogCheck = !this.state.dialogCheck
+            this.setState({ dialogCheck: newdialogCheck })
+          }}
+        >
+          <Image source={Img} style={styles.checkImg} />
+          <Text style={styles.dialogCheck}>不再提示</Text>
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  renderExitDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>确定退出iTablet ？</Text>
+      </View>
+    )
+  }
+
   renderDialog = () => {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
         type={'modal'}
         confirmAction={this.confirm}
+        confirmBtnTitle={'下载'}
+        cancelBtnTitle={'取消'}
+        // backgroundStyle={styles.dialogBackground}
+        opacity={0.85}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+        confirmTitleStyle={styles.btnTitle}
+        cancelTitleStyle={styles.btnTitle}
         cancelAction={this.cancel}
-        title={'是否下载在线地图数据'}
-      />
+      >
+        {this.renderDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderExitDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.exit = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={this.exitConfirm}
+        opacity={0.85}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        {this.renderExitDialogChildren()}
+      </Dialog>
     )
   }
 
@@ -215,6 +303,7 @@ export default class Home extends Component {
         modalVisible={this.state.modalIsVisible}
         onCloseModal={this._closeModal}
         topNavigatorBarImageId={this.topNavigatorBarImageId}
+        getExit={this.getExit}
       />
     )
   }
@@ -287,6 +376,7 @@ export default class Home extends Component {
           />
           {this._renderModal()}
           {this.renderDialog()}
+          {this.renderExitDialog()}
         </View>
       </Container>
     )

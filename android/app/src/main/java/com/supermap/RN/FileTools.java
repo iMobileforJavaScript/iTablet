@@ -36,12 +36,17 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipException;
 //import java.util.zip.ZipOutputStream;
 import org.apache.tools.zip.ZipOutputStream;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class FileTools extends ReactContextBaseJavaModule {
     public static final String REACT_CLASS = "FileTools";
@@ -213,12 +218,93 @@ public class FileTools extends ReactContextBaseJavaModule {
                     }
                     boolean isDirectory = files[i].isDirectory();
 
-                    String type = "Directory";
-                    if (filter.toHashMap().containsKey("type")) {
-                        type = filter.getString("type");
+                    // 匹配后缀
+                    if (filter.toHashMap().containsKey("extension")) {
+                         String[] exArr = filter.getString("extension").toLowerCase().split(",");
+                         boolean hasFile = false;
+                         for (int j = 0; j < exArr.length; j++) {
+                             if (extension.toLowerCase().equals(exArr[j].trim())) {
+                                 hasFile = true;
+                                 break;
+                             }
+                         }
+                         if (!hasFile) continue;
                     }
+                    // 匹配名称
+                    if (filter.toHashMap().containsKey("name") && !name.toLowerCase().contains(filter.getString("name").toLowerCase().trim())) continue;
+                    // 匹配类型
+                    if (filter.toHashMap().containsKey("type") && filter.getString("type").equals("Directory") != isDirectory) continue;
 
-                    if (!filter.toHashMap().containsKey("name")) {
+
+//                    String type = "Directory";
+//                    if (filter.toHashMap().containsKey("type")) {
+//                        type = filter.getString("type");
+//                    }
+//
+//                    if (!filter.toHashMap().containsKey("name")) {
+//                        String filterName = filter.getString("name").toLowerCase().trim();
+//                        // 判断文件名
+//                        if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
+//                            continue;
+//                        }
+//                    }
+//
+//                    boolean isExist = false;
+//                    if (filter.toHashMap().containsKey("extension")) {
+//                        String filterType = filter.getString("extension").toLowerCase();
+//                        String[] extensions = filterType.split(",");
+//                        for (int j = 0; j < extensions.length; j++) {
+//                            String mExtension = extensions[j].trim();
+//                            // 判断文件类型
+//                            if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
+//                                isExist = true;
+//                                break;
+//                            } else {
+//                                isExist = false;
+//                            }
+//                        }
+//                    }
+//                    if (!isExist) {
+//                        continue;
+//                    }
+
+                    WritableMap map = Arguments.createMap();
+                    map.putString("path", p);
+                    map.putString("name", n);
+                    map.putString("mtime", mtime);
+                    map.putBoolean("isDirectory", isDirectory);
+                    array.pushMap(map);
+                }
+            }
+            promise.resolve(array);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void getMaps(String path, ReadableMap filter, Promise promise) {
+        try {
+            File file = new File(path);
+
+            File[] files = file.listFiles();
+            WritableArray array = Arguments.createArray();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    String p = files[i].getAbsolutePath().replace(SDCARD, "");
+                    String n = files[i].getName();
+                    String mtime = getLastModifiedTime(files[i]);
+                    int lastDot = n.lastIndexOf(".");
+                    String name, extension = "";
+                    if (lastDot > 0) {
+                        name = n.substring(0, lastDot).toLowerCase();
+                        extension = n.substring(lastDot + 1).toLowerCase();
+                    } else {
+                        name = n;
+                    }
+                    boolean isDirectory = files[i].isDirectory();
+
+                    if (filter != null && filter.toHashMap().containsKey("name") && !filter.getString("name").equals("")) {
                         String filterName = filter.getString("name").toLowerCase().trim();
                         // 判断文件名
                         if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
@@ -226,22 +312,27 @@ public class FileTools extends ReactContextBaseJavaModule {
                         }
                     }
 
-                    boolean isExist = false;
-                    if (filter.toHashMap().containsKey("extension")) {
-                        String filterType = filter.getString("extension").toLowerCase();
-                        String[] extensions = filterType.split(",");
-                        for (int j = 0; j < extensions.length; j++) {
-                            String mExtension = extensions[j].trim();
-                            // 判断文件类型
-                            if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
-                                isExist = true;
-                                break;
-                            } else {
-                                isExist = false;
+                    boolean isTemplate = false;
+
+                    String filterType = "xml";
+                    if (!isDirectory && extension.contains(filterType)) {
+
+                        String expFileName = n.substring(0, lastDot) + ".exp";
+
+                        String expFilePath = files[i].getAbsolutePath().substring(0, files[i].getAbsolutePath().lastIndexOf("/") + 1) + expFileName;
+
+                        Map<String, Object> expInfo = FileTools.readLocalFile(expFilePath);
+
+                        if (expInfo != null && expInfo.get("Template") != null) {
+                            String templateRelativePath = expInfo.get("Template").toString();
+                            String templateFullPath = SDCARD + "/iTablet/User/" + templateRelativePath;
+
+                            File templateFile = new File(templateFullPath);
+                            if (templateFile.exists() && templateFile.isFile()) {
+                                isTemplate = true;
                             }
                         }
-                    }
-                    if (!isExist) {
+                    } else {
                         continue;
                     }
 
@@ -249,7 +340,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                     map.putString("path", p);
                     map.putString("name", n);
                     map.putString("mtime", mtime);
-                    map.putBoolean("isDirectory", isDirectory);
+                    map.putBoolean("isTemplate", isTemplate);
                     array.pushMap(map);
                 }
             }
@@ -743,6 +834,43 @@ public class FileTools extends ReactContextBaseJavaModule {
             return true;
         } else {
             return false;
+        }
+    }
+
+    /**
+     * 读取文件中的JSON数据，转成Map对象
+     * @param path
+     * @return
+     */
+    public static Map<String, Object> readLocalFile(String path) {
+        try {
+            InputStream inputStream = new FileInputStream(new File(path));
+            InputStreamReader isr = new InputStreamReader(inputStream,"UTF-8");
+            BufferedReader br = new BufferedReader(isr);
+            String line;
+            StringBuilder builder = new StringBuilder();
+            while((line = br.readLine()) != null){
+                builder.append(line);
+            }
+            br.close();
+            isr.close();
+            JSONObject jsonObj = new JSONObject(builder.toString());
+
+            Iterator<String> keyIter = jsonObj.keys();
+            String key;
+            Object value;
+            Map<String, Object> valueMap = new HashMap<>();
+            while (keyIter.hasNext())
+            {
+                key = keyIter.next();
+                value = jsonObj.get(key);
+                valueMap.put(key, value);
+            }
+            return valueMap;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 }

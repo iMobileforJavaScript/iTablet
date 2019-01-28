@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
 import { color } from '../../../styles'
+
 export default class HomePopupModal extends PureComponent {
   props: {
     modalVisible: Boolean,
@@ -12,6 +13,7 @@ export default class HomePopupModal extends PureComponent {
     onToggleAccount: () => {},
     onSetting: () => {},
     onAbout: () => {},
+    getExit: () => {},
     topNavigatorBarImageId: String,
   }
 
@@ -21,6 +23,14 @@ export default class HomePopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
+  }
+
+  closeApp = async () => {
+    this._onCloseModal()
+    let exitDialog = this.props.getExit && this.props.getExit()
+    if (exitDialog) {
+      exitDialog.setDialogVisible(true)
+    }
   }
 
   _onRequestClose = () => {
@@ -84,8 +94,8 @@ export default class HomePopupModal extends PureComponent {
           >
             {this._renderSeparatorLine()}
             {this._renderItem('切换', this.props.onToggleAccount)}
-            {this._renderItem('退出', this.props.onLogout)}
             {this._renderItem('注册', this.props.onRegister)}
+            {this._renderItem('退出登录', this.props.onLogout)}
           </View>
         )
       } else {
@@ -119,6 +129,7 @@ export default class HomePopupModal extends PureComponent {
           {this._renderSeparatorLine()}
           {this._renderItem('关于iTablet', this.props.onAbout)}
           {this._renderItem('设置', this.props.onSetting)}
+          {this._renderItem('退出', this.closeApp)}
         </View>
       )
     }

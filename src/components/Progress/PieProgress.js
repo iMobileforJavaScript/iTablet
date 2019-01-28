@@ -10,6 +10,7 @@ import { Pie } from 'react-native-progress'
 import { scaleSize } from '../../utils'
 
 const styles = StyleSheet.create({
+  container: {},
   img: {
     position: 'absolute',
     top: 0,
@@ -36,7 +37,10 @@ export default class PieProgress extends Component {
       <View
         style={[
           styles.container,
-          { width: this.props.size, height: this.props.size },
+          {
+            width: this.props.size + scaleSize(1),
+            height: this.props.size + scaleSize(1),
+          },
           this.props.style,
         ]}
         onLayout={this._onLayout}

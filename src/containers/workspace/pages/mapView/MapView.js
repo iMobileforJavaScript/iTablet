@@ -21,6 +21,7 @@ import {
   ToolBar,
   MenuAlertDialog,
   AlertDialog,
+  OverlayView,
 } from '../../components'
 import constants from '../../constants'
 import {
@@ -35,9 +36,9 @@ import { Toast, scaleSize, jsonUtil } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
-import { Platform, BackHandler } from 'react-native'
+import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
-const SAVE_TITLE = '是否保存当前地图'
+const SAVE_TITLE = '是否保存当前地图?'
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
@@ -944,6 +945,11 @@ export default class MapView extends React.Component {
     )
   }
 
+  //遮盖层
+  renderOverLayer = () => {
+    return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
+  }
+
   /** 地图控制器，放大缩小等功能 **/
   renderMapController = () => {
     return (
@@ -965,6 +971,23 @@ export default class MapView extends React.Component {
     this.fullMap = isFull
   }
 
+  /** 显示量算结果 **/
+  showMeasureResult = (isShow, result = '') => {
+    if (
+      isShow !== this.state.measureShow ||
+      isShow !== this.state.measureResult
+    ) {
+      this.setState({
+        measureShow: isShow,
+        measureResult: isShow ? result : '',
+      })
+    } else {
+      this.setState({
+        measureResult: '',
+      })
+    }
+  }
+
   renderMenuDialog = () => {
     return (
       <MenuAlertDialog
@@ -974,6 +997,18 @@ export default class MapView extends React.Component {
         showFullMap={this.showFullMap}
         getToolBarRef={() => this.toolBox}
       />
+    )
+  }
+
+  renderMeasureLabel = () => {
+    return (
+      <View style={styles.measureResultContainer}>
+        <View style={styles.measureResultView}>
+          <Text style={styles.measureResultText}>
+            {this.state.measureResult}
+          </Text>
+        </View>
+      </View>
     )
   }
 
@@ -995,6 +1030,7 @@ export default class MapView extends React.Component {
         setSaveMapDialogVisible={this.setSaveMapDialogVisible}
         setContainerLoading={this.setLoading}
         setInputDialogVisible={this.setInputDialogVisible}
+        showMeasureResult={this.showMeasureResult}
         {...this.props}
       />
     )
@@ -1023,8 +1059,10 @@ export default class MapView extends React.Component {
         )}
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
+        {!this.isExample && this.renderOverLayer()}
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
+        {this.state.measureShow && this.renderMeasureLabel()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
@@ -1049,7 +1087,7 @@ export default class MapView extends React.Component {
         <AlertDialog
           ref={ref => (this.AlertDialog = ref)}
           childrens={this.closeInfo}
-          Alerttitle={'是否保存当前地图'}
+          Alerttitle={'是否保存当前地图?'}
         />
         <SaveDialog
           ref={ref => (this.SaveDialog = ref)}

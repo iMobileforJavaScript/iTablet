@@ -1,20 +1,25 @@
 import React from 'react'
 import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType } from '../../../../constants/index'
-import { layersetting, layerThemeSetting } from './LayerToolbarData'
+import NavigationService from '../../../NavigationService'
+import {
+  layersetting,
+  layerThemeSetting,
+  layer3dSetting,
+} from './LayerToolbarData'
 import {
   View,
   Image,
   TouchableOpacity,
   Animated,
   Text,
-  TextInput,
+  // TextInput,
   TouchableHighlight,
 } from 'react-native'
 import ToolBarSectionList from '../../../workspace/components/ToolBar/ToolBarSectionList'
 import styles from './styles'
-import { SMap } from 'imobile_for_reactnative'
-import { Dialog } from '../../../../components'
+import { SMap, SScene } from 'imobile_for_reactnative'
+// import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize, setSpText } from '../../../../utils'
 
@@ -29,6 +34,7 @@ export default class LayerManager_tolbar extends React.Component {
     existFullMap: () => {},
     layerdata?: Object,
     getLayers: () => {}, // 更新数据（包括其他界面）
+    setCurrentLayer: () => {},
   }
 
   static defaultProps = {
@@ -40,6 +46,7 @@ export default class LayerManager_tolbar extends React.Component {
 
   constructor(props) {
     super(props)
+    this.layer3d = {}
     this.height =
       props.containerProps.height >= 0
         ? props.containerProps.height
@@ -56,7 +63,7 @@ export default class LayerManager_tolbar extends React.Component {
       listSelectable: false, // 列表是否可以选择（例如地图）
       isTouch: true,
       layerdata: props.layerdata || '',
-      layerName: '',
+      // layerName: '',
     }
     this.isShow = false
     this.isBoxShow = true
@@ -70,6 +77,9 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.MAP_THEME_STYLE:
         data = layerThemeSetting
+        break
+      case ConstToolType.MAP3D_LAYER3DSELECT:
+        data = layer3dSetting
         break
     }
     return data
@@ -163,7 +173,21 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       this.setVisible(false)
     } else if (section.title === '重命名') {
-      this.dialog.setDialogVisible(true)
+      NavigationService.navigate('InputPage', {
+        headerTitle: '图层名称',
+        value: this.state.layerdata ? this.state.layerdata.caption : '',
+        cb: async value => {
+          if (value !== '') {
+            (async function() {
+              await SMap.renameLayer(this.state.layerdata.name, value)
+              await this.props.getLayers()
+            }.bind(this)())
+          }
+          await this.setVisible(false)
+          NavigationService.goBack()
+        },
+      })
+      // this.dialog.setDialogVisible(true)
     } else if (section.title === '上移') {
       (async function() {
         await SMap.moveUpLayer(this.state.layerdata.name)
@@ -174,7 +198,22 @@ export default class LayerManager_tolbar extends React.Component {
         await SMap.moveDownLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
-    } else if (section.title === '取消') {
+    } else if (section.title === '置顶') {
+      (async function() {
+        await SMap.moveToTop(this.state.layerdata.name)
+        await this.props.getLayers()
+      }.bind(this)())
+      this.setVisible(false)
+    } else if (section.title === '置底') {
+      (async function() {
+        await SMap.moveToBottom(this.state.layerdata.name)
+        await this.props.getLayers()
+      }.bind(this)())
+      this.setVisible(false)
+    } else if (section.title === '设置为当前图层') {
+      this.props.setCurrentLayer &&
+        this.props.setCurrentLayer(this.state.layerdata)
+      Toast.show('当前图层为' + this.state.layerdata.caption)
       this.setVisible(false)
     } else if (section.title === '新建专题图') {
       let themeType = this.state.layerdata.themeType
@@ -204,7 +243,21 @@ export default class LayerManager_tolbar extends React.Component {
       } else {
         Toast.show('不支持由该图层创建专题图')
       }
+    } else if (section.title === '设置图层可选') {
+      SScene.setSelectable(this.layer3d.name, true).then(result => {
+        result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
+      })
+    } else if (section.title === '设置图层不可选') {
+      SScene.setSelectable(this.layer3d.name, false).then(result => {
+        result
+          ? Toast.show('设置图层不可选成功')
+          : Toast.show('设置图层不可选失败')
+      })
     }
+  }
+
+  getLayer3dItem = layer3d => {
+    this.layer3d = layer3d
   }
 
   renderList = () => {
@@ -274,6 +327,9 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_THEME_STYLE:
             box = this.renderList()
             break
+          case ConstToolType.MAP3D_LAYER3DSELECT:
+            box = this.renderList()
+            break
         }
         break
     }
@@ -284,60 +340,60 @@ export default class LayerManager_tolbar extends React.Component {
     )
   }
 
-  confirm = () => {
-    this.dialog.setDialogVisible(false)
-    this.setState({
-      layerName: '',
-    })
-  }
+  // confirm = () => {
+  //   this.dialog.setDialogVisible(false)
+  //   this.setState({
+  //     layerName: '',
+  //   })
+  // }
+  //
+  // cancel = () => {
+  //   if (this.state.layerName !== '') {
+  //     (async function() {
+  //       await SMap.renameLayer(this.state.layerdata.name, this.state.layerName)
+  //       await this.props.getLayers()
+  //     }.bind(this)())
+  //   }
+  //   this.dialog.setDialogVisible(false)
+  //   this.setVisible(false)
+  //   this.setState({
+  //     layerName: '',
+  //   })
+  // }
 
-  cancel = () => {
-    if (this.state.layerName !== '') {
-      (async function() {
-        await SMap.renameLayer(this.state.layerdata.name, this.state.layerName)
-        await this.props.getLayers()
-      }.bind(this)())
-    }
-    this.dialog.setDialogVisible(false)
-    this.setVisible(false)
-    this.setState({
-      layerName: '',
-    })
-  }
-
-  renderDialog = () => {
-    return (
-      <Dialog
-        ref={ref => (this.dialog = ref)}
-        showDialog={true}
-        confirmAction={this.confirm}
-        cancelAction={this.cancel}
-        confirmBtnTitle={'取消'}
-        cancelBtnTitle={'确认'}
-      >
-        <View style={styles.item}>
-          <Text style={styles.title}>图层名称</Text>
-          <TextInput
-            underlineColorAndroid={'transparent'}
-            accessible={true}
-            accessibilityLabel={'图层名称'}
-            onChangeText={text => {
-              this.setState({
-                layerName: text,
-              })
-            }}
-            placeholderTextColor={color.themeText2}
-            defaultValue={
-              this.state.layerdata ? this.state.layerdata.caption : ''
-            }
-            placeholder={'请输入图层名称'}
-            keyboardAppearance="dark"
-            style={styles.textInputStyle}
-          />
-        </View>
-      </Dialog>
-    )
-  }
+  // renderDialog = () => {
+  //   return (
+  //     <Dialog
+  //       ref={ref => (this.dialog = ref)}
+  //       showDialog={true}
+  //       confirmAction={this.confirm}
+  //       cancelAction={this.cancel}
+  //       confirmBtnTitle={'取消'}
+  //       cancelBtnTitle={'确认'}
+  //     >
+  //       <View style={styles.item}>
+  //         <Text style={styles.title}>图层名称</Text>
+  //         <TextInput
+  //           underlineColorAndroid={'transparent'}
+  //           accessible={true}
+  //           accessibilityLabel={'图层名称'}
+  //           onChangeText={text => {
+  //             this.setState({
+  //               layerName: text,
+  //             })
+  //           }}
+  //           placeholderTextColor={color.themeText2}
+  //           defaultValue={
+  //             this.state.layerdata ? this.state.layerdata.caption : ''
+  //           }
+  //           placeholder={'请输入图层名称'}
+  //           keyboardAppearance="dark"
+  //           style={styles.textInputStyle}
+  //         />
+  //       </View>
+  //     </Dialog>
+  //   )
+  // }
 
   render() {
     let containerStyle = styles.fullContainer
@@ -351,7 +407,7 @@ export default class LayerManager_tolbar extends React.Component {
           />
         }
         <View style={styles.containers}>{this.renderView()}</View>
-        {this.renderDialog()}
+        {/*{this.renderDialog()}*/}
       </Animated.View>
     )
   }
