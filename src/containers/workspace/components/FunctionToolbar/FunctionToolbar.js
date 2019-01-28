@@ -311,7 +311,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DTool = async () => {
-    SScene.checkoutListener('startMeasure')
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
