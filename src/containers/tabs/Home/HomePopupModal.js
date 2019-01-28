@@ -93,8 +93,8 @@ export default class HomePopupModal extends PureComponent {
             }}
           >
             {this._renderSeparatorLine()}
-            {this._renderItem('切换', this.props.onToggleAccount)}
-            {this._renderItem('注册', this.props.onRegister)}
+            {this._renderItem('切换账号', this.props.onToggleAccount)}
+            {/*{this._renderItem('注册', this.props.onRegister)}*/}
             {this._renderItem('退出登录', this.props.onLogout)}
           </View>
         )
