@@ -19,7 +19,7 @@ import { size } from '../../styles'
 // const ICON_HEIGHT =0.75* 0.1 * constUtil.WIDTH
 // const CONTAINER_HEIGHT = 1.4 * ICON_HEIGHT
 // const CONTAINER_WIDTH = CONTAINER_HEIGHT
-const BTN_UNDERCOLOR = constUtil.UNDERLAYCOLOR
+const BTN_UNDERCOLOR = constUtil.UNDERLAYCOLOR_TINT
 
 export default class MT_Btn extends React.Component {
   props: {

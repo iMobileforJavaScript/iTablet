@@ -125,8 +125,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
     },
     {
       //分段风格
@@ -134,8 +134,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
       action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
     },
     // {
     //   //自定义风格
@@ -161,8 +161,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
     },
     // {
     //   //单值标签
@@ -212,8 +212,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
     },
     {
       //分段风格
@@ -221,8 +221,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
     },
     // {
     //   //自定义风格
@@ -248,8 +248,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
     },
     // {
     //   //单值标签
@@ -367,8 +367,8 @@ function getThemeMapStartCreate(type, params) {
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: showLocalDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
     },
     {
       //分段风格
@@ -376,8 +376,8 @@ function getThemeMapStartCreate(type, params) {
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
       action: showLocalDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
     },
     {
       //统一标签
@@ -385,8 +385,8 @@ function getThemeMapStartCreate(type, params) {
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showLocalDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label.png'),
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
     },
   ]
   return { data, buttons }
@@ -433,8 +433,8 @@ function getRangeMode() {
       title: '等距分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_equalinterval.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_equalinterval.png'),
+      image: require('../../../../assets/mapTools/range_mode_equalinterval_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_equalinterval_black.png'),
     },
     {
       // 平方根分段
@@ -442,8 +442,8 @@ function getRangeMode() {
       title: '平方根分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+      image: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
     },
     {
       // 标准差分段
@@ -451,8 +451,8 @@ function getRangeMode() {
       title: '标准差分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_stddeviation.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation.png'),
+      image: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
     },
     {
       // 对数分段
@@ -460,8 +460,8 @@ function getRangeMode() {
       title: '对数分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_logarithm.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_logarithm.png'),
+      image: require('../../../../assets/mapTools/range_mode_logarithm_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_logarithm_black.png'),
     },
     {
       // 等计数分段
@@ -469,8 +469,8 @@ function getRangeMode() {
       title: '等计数分段',
       action: setRangeMode,
       size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_quantile.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_quantile.png'),
+      image: require('../../../../assets/mapTools/range_mode_quantile_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_quantile_black.png'),
     },
     // {
     //   // 自定义分段
@@ -497,48 +497,48 @@ function getLabelBackShape() {
       title: '空背景',
       action: setLabelBackShape,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_backshape_none_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_none_black.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_DIAMOND,
       title: '菱形背景',
       action: setLabelBackShape,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_diamond.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_backshape_diamond_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_diamond_black.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ROUNDRECT,
       title: '圆角矩形背景',
       action: setLabelBackShape,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_roundrect_black.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_RECT,
       title: '矩形背景',
       action: setLabelBackShape,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_backshape_rect_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_rect_black.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_ELLIPSE,
       title: '椭圆形背景',
       action: setLabelBackShape,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_ellipse_black.png'),
     },
     {
       key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_TRIANGLE,
       title: '三角形背景',
       action: setLabelBackShape,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_backshape_triangle_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_backshape_triangle_black.png'),
     },
     // {
     //   key: constants.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_MARKER,
@@ -671,32 +671,32 @@ function getLabelFontRotation() {
       title: '左旋转90°',
       action: setLabelFontRotation,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_rotation_left.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_left.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_rotation_left_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_left_black.png'),
     },
     {
       key: '-90',
       title: '右旋转90°',
       action: setLabelFontRotation,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_rotation_right.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_right.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_rotation_right_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_right_black.png'),
     },
     {
       key: '180',
       title: '上下旋转',
       action: setLabelFontRotation,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_rotation_updown.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_updown.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_rotation_updown_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_updown_black.png'),
     },
     {
       key: '-180',
       title: '左右旋转',
       action: setLabelFontRotation,
       size: 'large',
-      image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright.png'),
-      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_leftright.png'),
+      image: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
+      selectedImage: require('../../../../assets/mapTools/uniformlabel_rotation_leftright_black.png'),
     },
   ]
   return data

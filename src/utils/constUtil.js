@@ -13,6 +13,7 @@ const USUAL_LINEWIDTH = 2 / PixelRatio.get()
 
 const USUAL_SEPARATORCOLOR = 'rgba(59,55,56,0.3)'
 const UNDERLAYCOLOR = 'rgba(255,255,255,0.1)'
+const UNDERLAYCOLOR_TINT = '#D3D3D3' //浅色版按钮按下背景
 const USUAL_GREEN = '#F5FCFF'
 const USUAL_BLUE = '#2196f3'
 const USUAL_PURPLE = '#871F78'
@@ -42,4 +43,5 @@ export {
   HEADER_HEIGHT,
   HEADER_COLOR,
   SEPARATOR,
+  UNDERLAYCOLOR_TINT,
 }

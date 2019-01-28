@@ -3127,7 +3127,7 @@ export default class ToolBar extends React.PureComponent {
         style={[styles.cell, { width: this.props.device.width / column }]}
         key={rowIndex + '-' + cellIndex}
         title={item.title}
-        textColor={'white'}
+        textColor={color.font_color_white}
         textStyle={{ fontSize: setSpText(20) }}
         // size={MTBtn.Size.NORMAL}
         image={item.image}
