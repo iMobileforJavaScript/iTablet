@@ -90,6 +90,9 @@ export default class Map3DToolBar extends React.Component {
           <TouchableOpacity
             onPress={() => {
               this.changeBaseMap(item.url, item.type, item.name)
+              this.props.existFullMap && this.props.existFullMap(true)
+              this.props.showToolbar && this.props.showToolbar(false)
+              GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
             }}
             style={styles.sceneItem}
           >
@@ -203,6 +206,7 @@ export default class Map3DToolBar extends React.Component {
       this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       this.props.existFullMap && this.props.existFullMap(true)
       this.props.showToolbar && this.props.showToolbar(false)
+      GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
     })
   }
 
