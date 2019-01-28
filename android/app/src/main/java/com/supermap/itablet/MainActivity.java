@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
+import com.supermap.RN.appManager;
 import com.supermap.data.Environment;
 import com.supermap.RN.FileTools;
 import com.supermap.file.Utils;
@@ -39,6 +40,7 @@ public class MainActivity extends ReactActivity {
         if(!isTablet(this)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
+        appManager.getAppManager().addActivity(this);
 
     }
     @Override
