@@ -47,6 +47,8 @@ export default class MyLocalData extends Component {
    * fullFileDir 文件目录
    * fileType 文件类型 {smwu:'smwu',sxwu:'sxwu',sxw:'sxw',smw:'smw',udb:'udb'}
    * arrFilterFile 添加到arrFilterFile数组中保存
+   *
+   *            注：文件类型中，udb单独使用，不可与其他文件类型混用
    * */
   _setFilterDatas = async (
     fullFileDir,
@@ -58,6 +60,10 @@ export default class MyLocalData extends Component {
       let isRecordFile = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
       for (let i = 0; i < arrDirContent.length; i++) {
+        if (isShowText === true) {
+          let textValue = '扫描文件:' + fullFileDir
+          this._setTextState(textValue)
+        }
         let fileContent = arrDirContent[i]
         let isFile = fileContent.type
         let fileName = fileContent.name
@@ -84,10 +90,6 @@ export default class MyLocalData extends Component {
                 directory: fullFileDir,
               })
               isRecordFile = true
-              if (isShowText === true) {
-                let textValue = '扫描文件:' + fullFileDir
-                this.setState({ textValue: textValue })
-              }
             }
           }
         } else if (isFile === 'directory') {
@@ -104,45 +106,56 @@ export default class MyLocalData extends Component {
     }
     return arrFilterFile
   }
-  _setSectionDataState = async () => {
+
+  _setTextState = textValue => {
     try {
-      let result = await AsyncStorage.getItem('ExternalSectionData')
-      let newSectionData
-      if (result !== null) {
-        this.setState({ textDisplay: 'none' })
-        newSectionData = await this._constructAllUserSectionData()
-      } else {
-        /** 第一次进入*/
-        let userSectionData
-        if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-          userSectionData = []
-        } else {
-          userSectionData = await this._constructUserSectionData()
-        }
-        this.setState({ sectionData: userSectionData })
-
-        let customerSectionData = await this._constructCustomerSectionData()
-        newSectionData = userSectionData.concat(customerSectionData)
-        this.setState({ sectionData: newSectionData })
-      }
-
-      let externalSectionData = []
-      if (result !== null) {
-        externalSectionData = JSON.parse(result)
-        // console.warn('externalSectionData:'+JSON.stringify(externalSectionData))
-      } else {
-        externalSectionData = await this._constructExternalSectionData()
-        // console.warn('第一次 externalSectionData:'+JSON.stringify(externalSectionData))
-        AsyncStorage.setItem(
-          'ExternalSectionData',
-          JSON.stringify(externalSectionData),
-        )
-      }
-      let newSectionData2 = newSectionData.concat(externalSectionData)
-      this.setState({ sectionData: newSectionData2, textDisplay: 'none' })
+      new Promise(() => {
+        this.setState({ textValue: textValue })
+      })
     } catch (e) {
-      this.setState({ textDisplay: 'none' })
+      //
     }
+  }
+
+  _setSectionDataState = async () => {
+    let rootDirWorkspaceData = await this._constructRootDirSectionData()
+    this.setState({ sectionData: rootDirWorkspaceData, textDisplay: 'none' })
+    // try {
+    //
+    //   let result = await AsyncStorage.getItem('ExternalSectionData')
+    //   let newSectionData
+    //   if (result !== null) {
+    //     this.setState({ textDisplay: 'none' })
+    //     newSectionData = await this._constructAllUserSectionData()
+    //   } else {
+    //     /** 第一次进入*/
+    //     let userSectionData
+    //     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+    //       userSectionData = []
+    //     } else {
+    //       userSectionData = await this._constructUserSectionData()
+    //     }
+    //     // this.setState({ sectionData: userSectionData })
+    //     let customerSectionData = await this._constructCustomerSectionData()
+    //     newSectionData = userSectionData.concat(customerSectionData)
+    //     this.setState({ sectionData: newSectionData })
+    //   }
+    //
+    //   let externalSectionData = []
+    //   if (result !== null) {
+    //     externalSectionData = JSON.parse(result)
+    //   } else {
+    //     externalSectionData = await this._constructExternalSectionData()
+    //     AsyncStorage.setItem(
+    //       'ExternalSectionData',
+    //       JSON.stringify(externalSectionData),
+    //     )
+    //   }
+    //   let newSectionData2 = newSectionData.concat(externalSectionData)
+    //   this.setState({ sectionData: newSectionData2, textDisplay: 'none' })
+    // } catch (e) {
+    //   this.setState({ textDisplay: 'none' })
+    // }
   }
 
   _setFilterExternalDatas = async (fullFileDir, fileType, arrFilterFile) => {
@@ -174,7 +187,7 @@ export default class MyLocalData extends Component {
               )
             ) {
               let textValue = '扫描文件:' + fullFileDir
-              this.setState({ textValue: textValue })
+              this._setTextState(textValue)
               fileName = fileName.substring(0, fileName.length - 5)
               arrFilterFile.push({
                 filePath: newPath,
@@ -193,6 +206,27 @@ export default class MyLocalData extends Component {
     }
     return arrFilterFile
   }
+
+  /** 构造根目录下的工作空间数据*/
+  _constructRootDirSectionData = async () => {
+    this.homePath = await this._getHomePath()
+    let newData = []
+    await this._setFilterDatas(
+      this.homePath,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      true,
+    )
+    let titleWorkspace = '工作空间'
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    }
+    return sectionData
+  }
+
   /** 构造除iTablet目录以外的数据*/
   _constructExternalSectionData = async () => {
     this.homePath = await this._getHomePath()

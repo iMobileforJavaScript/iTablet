@@ -1,16 +1,43 @@
 import Toast from './Toast'
 
 export default class FetchUtils {
-  /* 获取url的json串对象*/
-  static getObjJson = url => {
-    return new Promise((resolve, reject) => {
-      fetch(url)
-        .then(response => response.json())
-        .then(result => {
-          resolve(result)
+  /*
+   *获取url的json串对象
+   */
+  static getObjJson = (url, timeout) => {
+    try {
+      if (!timeout) {
+        return new Promise(resolve => {
+          fetch(url)
+            .then(response => response.json())
+            .then(result => {
+              resolve(result)
+            })
+            .catch(() => ({}))
         })
-        .catch(error => reject(error))
-    })
+      } else {
+        const request = new Promise(resolve => {
+          fetch(url)
+            .then(response => response.json())
+            .then(result => {
+              resolve(result)
+            })
+            .catch(() => ({}))
+        })
+        const timeoutRequest = new Promise((resolve, reject) => {
+          setTimeout(reject, timeout, 'Request time out')
+        })
+
+        return Promise.race([request, timeoutRequest]).then(
+          res => {
+            return res
+          },
+          () => ({}),
+        )
+      }
+    } catch (e) {
+      return {}
+    }
   }
   /** 获取用户数据的下载url*/
   static getFindUserZipDataUrl = async (nickname, keyword) => {
