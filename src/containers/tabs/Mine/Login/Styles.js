@@ -3,11 +3,11 @@ import { color } from '../../../../styles'
 let itemWidth = '70%'
 const itemHeight = 40
 const fontSize = Platform.OS === 'ios' ? 18 : 16
-const titleOnFocusBackgroundColor = color.item_separate_white
-const titleOnBlurBackgroundColor = color.content_white
+const titleOnFocusBackgroundColor = color.itemColorBlack
+const titleOnBlurBackgroundColor = color.itemColorWhite
 let styles = StyleSheet.create({
   container: {
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   keyboardAvoidingStyle: {
     padding: 9,
@@ -24,12 +24,10 @@ let styles = StyleSheet.create({
     height: itemHeight - 8,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 6,
-    borderColor: color.item_separate_white,
-    borderWidth: 2,
   },
   titleContainerStyle: {
-    color: color.font_color_white,
+    // color: color.fontColorWhite,
+    color: color.fontColorGray,
     fontSize: fontSize,
     textAlign: 'center',
   },
@@ -45,7 +43,7 @@ let styles = StyleSheet.create({
   loginStyle: {
     height: itemHeight,
     width: '50%',
-    backgroundColor: color.item_separate_white,
+    backgroundColor: color.itemColorBlack,
     marginTop: 20,
     borderRadius: 4,
     alignItems: 'center',

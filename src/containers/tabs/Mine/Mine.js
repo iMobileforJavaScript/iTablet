@@ -39,6 +39,16 @@ export default class Mine extends Component {
     this.goToMyOnlineData = this.goToMyOnlineData.bind(this)
     this.goToMyLocalData = this.goToMyLocalData.bind(this)
   }
+
+  // componentDidMount(){
+  //   if(this.props.user && this.props.user.currentUser && !this.props.user.currentUser.password){
+  //     this.props.setUser({
+  //       userName: 'Customer',
+  //       userType: UserType.PROBATION_USER,
+  //     })
+  //   }
+  // }
+
   componentDidUpdate(previousProps) {
     if (
       this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
@@ -61,6 +71,10 @@ export default class Mine extends Component {
       )
       this.props.openWorkspace({ server: userPath })
     })
+  }
+
+  goToLogin = () => {
+    NavigationService.navigate('Login')
   }
 
   goToPersonal = () => {
@@ -211,7 +225,9 @@ export default class Mine extends Component {
         }}
       >
         <TouchableOpacity
-          onPress={this.goToPersonal}
+          onPress={() => {
+            this.goToPersonal()
+          }}
           activeOpacity={1}
           style={{
             width: headerHeight,
@@ -231,14 +247,23 @@ export default class Mine extends Component {
             source={headerImage}
           />
         </TouchableOpacity>
-        <Text
-          style={{
-            fontSize: fontSize,
-            color: allColor,
-          }}
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          // onPress={()=>{
+          //   if(headerTitle === 'Customer'){
+          //     this.goToLogin()
+          //   }
+          // }}
         >
-          {headerTitle}
-        </Text>
+          <Text
+            style={{
+              fontSize: fontSize,
+              color: allColor,
+            }}
+          >
+            {headerTitle}
+          </Text>
+        </TouchableOpacity>
       </View>
     )
   }
@@ -249,7 +274,7 @@ export default class Mine extends Component {
         style={{
           width: '100%',
           height: 8,
-          backgroundColor: color.item_separate_white,
+          backgroundColor: color.separateColorGray,
         }}
       />
     )
@@ -281,7 +306,8 @@ export default class Mine extends Component {
       imageHeight,
       rightImagePath,
     } = itemOptions
-    let allColor = color.font_color_white
+    let imageColor = color.imageColorBlack
+    let txtColor = color.fontColorBlack
     return (
       <View display={this.state.display}>
         <TouchableOpacity
@@ -299,7 +325,7 @@ export default class Mine extends Component {
             style={{
               width: imageWidth,
               height: imageHeight,
-              tintColor: allColor,
+              tintColor: imageColor,
             }}
             resizeMode={'contain'}
             source={leftImagePath}
@@ -310,7 +336,7 @@ export default class Mine extends Component {
               flex: 1,
               textAlign: 'left',
               fontSize: fontSize,
-              color: allColor,
+              color: txtColor,
               paddingLeft: 5,
             }}
           >
@@ -318,9 +344,9 @@ export default class Mine extends Component {
           </Text>
           <Image
             style={{
-              width: imageWidth,
-              height: imageHeight,
-              tintColor: allColor,
+              width: imageWidth - 5,
+              height: imageHeight - 5,
+              tintColor: imageColor,
             }}
             resizeMode={'contain'}
             source={rightImagePath}
@@ -328,9 +354,11 @@ export default class Mine extends Component {
         </TouchableOpacity>
         <View
           style={{
-            width: itemWidth,
+            flex: 1,
             height: 1,
-            backgroundColor: color.item_separate_white,
+            backgroundColor: color.separateColorGray,
+            marginLeft: 5,
+            marginRight: 5,
           }}
         />
       </View>
@@ -357,6 +385,7 @@ export default class Mine extends Component {
         </Container>
       )
     } else {
+      // return <View/>
       return <Login setUser={this.props.setUser} user={this.props.user} />
     }
   }

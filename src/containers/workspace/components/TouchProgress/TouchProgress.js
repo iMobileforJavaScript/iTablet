@@ -273,42 +273,42 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
-    let progressWidth = screen.getScreenWidth() - MARGIN * 2
-    let x = this._previousLeft + gestureState.dx
-    this._panBtnStyles.style.left = x + MARGIN - IMAGE_SIZE / 2
-    if (this._panBtnStyles.style.left <= -IMAGE_SIZE / 2)
-      this._panBtnStyles.style.left = MARGIN - IMAGE_SIZE / 2
-    if (
-      this._panBtnStyles.style.left >=
-      progressWidth + MARGIN - IMAGE_SIZE / 2
-    )
-      this._panBtnStyles.style.left = progressWidth + MARGIN - IMAGE_SIZE / 2
-
-    this._BackLine.style.width = x
-    if (this._BackLine.style.width <= 0) this._BackLine.style.width = 0
-    if (this._BackLine.style.width >= progressWidth)
-      this._BackLine.style.width = progressWidth
-    this._updateNativeStyles()
-    this._updateBackLine()
-
-    let value = this.dealData(x / progressWidth)
-    value !== undefined && this.setTips(value)
-  }
-
-  _handlePanResponderEnd = (evt, gestureState) => {
-    if (gestureState.dy > 50 || gestureState.dy < -50) {
+    if (gestureState.dx === 0 && gestureState.dy !== 0) {
       this.showMenu()
     } else {
       let progressWidth = screen.getScreenWidth() - MARGIN * 2
       let x = this._previousLeft + gestureState.dx
-      if (x <= 0) x = 0
-      if (x >= progressWidth + MARGIN - IMAGE_SIZE / 2)
-        x = progressWidth + MARGIN - IMAGE_SIZE / 2
-      this._previousLeft = x
+      this._panBtnStyles.style.left = x + MARGIN - IMAGE_SIZE / 2
+      if (this._panBtnStyles.style.left <= -IMAGE_SIZE / 2)
+        this._panBtnStyles.style.left = MARGIN - IMAGE_SIZE / 2
+      if (
+        this._panBtnStyles.style.left >=
+        progressWidth + MARGIN - IMAGE_SIZE / 2
+      )
+        this._panBtnStyles.style.left = progressWidth + MARGIN - IMAGE_SIZE / 2
+
+      this._BackLine.style.width = x
+      if (this._BackLine.style.width <= 0) this._BackLine.style.width = 0
+      if (this._BackLine.style.width >= progressWidth)
+        this._BackLine.style.width = progressWidth
+      this._updateNativeStyles()
+      this._updateBackLine()
 
       let value = this.dealData(x / progressWidth)
-      value !== undefined && this.setData(value)
+      value !== undefined && this.setTips(value)
     }
+  }
+
+  _handlePanResponderEnd = (evt, gestureState) => {
+    let progressWidth = screen.getScreenWidth() - MARGIN * 2
+    let x = this._previousLeft + gestureState.dx
+    if (x <= 0) x = 0
+    if (x >= progressWidth + MARGIN - IMAGE_SIZE / 2)
+      x = progressWidth + MARGIN - IMAGE_SIZE / 2
+    this._previousLeft = x
+
+    let value = this.dealData(x / progressWidth)
+    value !== undefined && this.setData(value)
   }
 
   /**

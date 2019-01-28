@@ -49,7 +49,7 @@ export default class Register extends React.Component {
     try {
       let result
       let isEmail = this.state.onEmailTitleFocus
-      if (isEmail) {
+      if (!isEmail) {
         if (!this.txtEmail) {
           Toast.show('请输入QQ邮箱')
           return
@@ -228,7 +228,7 @@ export default class Register extends React.Component {
   }
 
   _onSelectTitle = () => {
-    if (this.state.onEmailTitleFocus) {
+    if (!this.state.onEmailTitleFocus) {
       return this._renderEmail()
     } else {
       return this._renderPhone()
@@ -284,7 +284,7 @@ export default class Register extends React.Component {
                     },
                   ]}
                 >
-                  <Text style={[styles.titleContainerStyle]}>邮箱注册</Text>
+                  <Text style={[styles.titleContainerStyle]}>手机注册</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -302,7 +302,7 @@ export default class Register extends React.Component {
                     backgroundColor: this.state.titlePhoneBg,
                   }}
                 >
-                  <Text style={[styles.titleContainerStyle]}>手机注册</Text>
+                  <Text style={[styles.titleContainerStyle]}>邮箱注册</Text>
                 </TouchableOpacity>
               </View>
               {this._onSelectTitle()}

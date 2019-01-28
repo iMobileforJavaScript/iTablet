@@ -95,7 +95,7 @@ export default class AboutITablet extends Component {
     return (
       <Container
         headerProps={{
-          title: '关于iTablet',
+          title: '关于 SuperMap iTablet',
           navigation: this.props.navigation,
         }}
       >

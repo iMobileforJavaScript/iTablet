@@ -12,7 +12,7 @@ export default StyleSheet.create({
     left: 0,
     right: 0,
     height: screen.deviceHeight,
-    backgroundColor: '#rgba(105, 105, 105, 0.8)',
+    backgroundColor: '#rgba(0, 0, 0, 0)',
     zIndex: zIndexLevel.FOUR,
   },
   overlay: {
