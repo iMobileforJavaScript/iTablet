@@ -5,17 +5,88 @@ import {
   SectionList,
   TouchableOpacity,
   Image,
-  Platform,
+  StyleSheet,
 } from 'react-native'
 import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import MyDataPopupModal from './MyDataPopupModal'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 
 import UserType from '../../../../constants/UserType'
+
+const styles = StyleSheet.create({
+  topContainer: {
+    flexDirection: 'column',
+    backgroundColor: color.contentColorWhite,
+  },
+  section: {
+    flex: 1,
+    height: scaleSize(80),
+    backgroundColor: color.contentColorGray,
+    alignItems: 'center',
+    flexDirection: 'row',
+  },
+  sectionText: {
+    flex: 1,
+    color: color.fontColorWhite,
+    paddingLeft: 10,
+    fontSize: size.fontSize.fontSizeXl,
+    fontWeight: 'bold',
+    backgroundColor: 'transparent',
+  },
+  sectionImg: {
+    tintColor: color.fontColorWhite,
+    marginLeft: 10,
+    width: scaleSize(30),
+    height: scaleSize(30),
+  },
+  item: {
+    flex: 1,
+    flexDirection: 'row',
+    backgroundColor: color.contentColorWhite,
+    alignItems: 'center',
+    height: scaleSize(80),
+  },
+  itemText: {
+    color: color.fontColorBlack,
+    paddingLeft: 15,
+    fontSize: size.fontSize.fontSizeXl,
+    flex: 1,
+  },
+  img: {
+    width: scaleSize(30),
+    height: scaleSize(30),
+    marginLeft: 20,
+    tintColor: color.fontColorBlack,
+  },
+  separator: {
+    // flex: 1,
+    marginHorizontal: scaleSize(16),
+    height: scaleSize(1),
+    backgroundColor: color.rowSeparator,
+  },
+  title: {
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.bgG,
+  },
+  moreView: {
+    height: '100%',
+    marginRight: 10,
+    width: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  moreImg: {
+    flex: 1,
+    height: scaleSize(40),
+    width: scaleSize(40),
+  },
+})
 
 export default class MyLocalData extends Component {
   props: {
@@ -129,9 +200,6 @@ export default class MyLocalData extends Component {
           break
       }
       let data = await FileTools.getPathListByFilter(path, filter)
-      if (this.state.title === Const.SYMBOL) {
-        // 符号去重
-      }
       return data || []
     } catch (e) {
       return null
@@ -144,8 +212,7 @@ export default class MyLocalData extends Component {
       let imageSource = info.section.isShowItem
         ? require('../../../../assets/Mine/local_data_open.png')
         : require('../../../../assets/Mine/local_data_close.png')
-      let imageWidth = 20
-      let height = 40
+      // let isShowMore = info.section.title !== '公共数据'
       return (
         <TouchableOpacity
           onPress={() => {
@@ -159,37 +226,30 @@ export default class MyLocalData extends Component {
             }
             this.setState({ sectionData: sectionData })
           }}
-          style={{
-            width: '100%',
-            height: height,
-            backgroundColor: color.contentColorGray,
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}
+          style={styles.section}
         >
           <Image
             resizeMode={'contain'}
-            style={{
-              tintColor: color.fontColorWhite,
-              marginLeft: 10,
-              width: imageWidth,
-              height: imageWidth,
-            }}
+            style={styles.sectionImg}
             source={imageSource}
           />
-          <Text
-            style={[
-              {
-                color: color.fontColorWhite,
-                paddingLeft: 10,
-                fontSize: 20,
-                fontWeight: 'bold',
-                backgroundColor: 'transparent',
-              },
-            ]}
-          >
-            {title}
-          </Text>
+          <Text style={styles.sectionText}>{title}</Text>
+          {/*{*/}
+          {/*isShowMore &&*/}
+          {/*<TouchableOpacity*/}
+          {/*style={styles.moreView}*/}
+          {/*onPress={() => {*/}
+          {/*this.itemInfo = info*/}
+          {/*this.setState({ modalIsVisible: true })*/}
+          {/*}}*/}
+          {/*>*/}
+          {/*<Image*/}
+          {/*style={styles.moreImg}*/}
+          {/*resizeMode={'contain'}*/}
+          {/*source={require('../../../../assets/Mine/icon_more_gray.png')}*/}
+          {/*/>*/}
+          {/*</TouchableOpacity>*/}
+          {/*}*/}
         </TouchableOpacity>
       )
     }
@@ -197,16 +257,10 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
-    // let name = info.item.name
-    // let txtInfo = name.lastIndexOf('.') > 0 ? name.substring(0, name.lastIndexOf('.')) : name
     let txtInfo = info.item.name
-    let itemHeight = 60
-    let imageWidth = 30,
-      imageHeight = 30
-    // let separatorLineHeight = 1
-    let fontSize = Platform.OS === 'ios' ? 18 : 16
     let display = info.section.isShowItem ? 'flex' : 'none'
-    let img
+    let img,
+      isShowMore = info.section.title !== '公共数据'
     switch (this.state.title) {
       case Const.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
@@ -222,52 +276,30 @@ export default class MyLocalData extends Component {
       <TouchableOpacity
         style={{ display: display }}
         onPress={() => {
-          this.itemInfo = info
-          this.setState({ modalIsVisible: true })
+          // this.itemInfo = info
+          // this.setState({ modalIsVisible: true })
         }}
       >
-        <View
-          // display={display}
-          style={{
-            // display:display,
-            width: '100%',
-            flexDirection: 'row',
-            backgroundColor: color.contentColorWhite,
-            alignItems: 'center',
-            height: itemHeight,
-          }}
-        >
-          <Image
-            style={{
-              width: imageWidth,
-              height: imageHeight,
-              marginLeft: 20,
-              tintColor: color.font_color_white,
-            }}
-            resizeMode={'contain'}
-            source={img}
-          />
-          <Text
-            numberOfLines={1}
-            style={{
-              color: color.font_color_white,
-              paddingLeft: 15,
-              fontSize: fontSize,
-              flex: 1,
-            }}
-          >
+        <View style={styles.item}>
+          <Image style={styles.img} resizeMode={'contain'} source={img} />
+          <Text numberOfLines={1} style={styles.itemText}>
             {txtInfo}
           </Text>
-          <Image
-            style={{
-              width: imageWidth,
-              height: imageHeight,
-              marginRight: 10,
-              tintColor: color.font_color_white,
-            }}
-            resizeMode={'contain'}
-            source={require('../../../../assets/Mine/mine_more_white.png')}
-          />
+          {isShowMore && (
+            <TouchableOpacity
+              style={styles.moreView}
+              onPress={() => {
+                this.itemInfo = info
+                this.setState({ modalIsVisible: true })
+              }}
+            >
+              <Image
+                style={styles.moreImg}
+                resizeMode={'contain'}
+                source={require('../../../../assets/Mine/icon_more_gray.png')}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </TouchableOpacity>
     )
@@ -342,16 +374,13 @@ export default class MyLocalData extends Component {
           archivePaths,
           targetPath,
           name: fileName,
-          onProgress: () => {
-            // console.warn('onProgress: ' + progress)
-          },
-          onResult: result => {
+          onProgress: () => {},
+          onResult: (result, name) => {
             Toast.show(
-              result || result === undefined
+              name + ' ' + result || result === undefined
                 ? ConstInfo.UPLOAD_SUCCESS
                 : ConstInfo.UPLOAD_FAILED,
             )
-            // console.warn('onResult: ' + result)
           },
         })
       }
@@ -454,18 +483,43 @@ export default class MyLocalData extends Component {
     return result
   }
 
+  getUploadingData = () => {
+    if (
+      this.itemInfo &&
+      this.itemInfo.item &&
+      this.itemInfo.item.path &&
+      this.props.upload &&
+      this.props.upload.length > 0
+    ) {
+      let path = this.itemInfo.item.path
+      for (let i = 0; i < this.props.upload.length; i++) {
+        for (let j = 0; j < this.props.upload[i].archivePaths.length; j++) {
+          if (this.props.upload[i].archivePaths[j].indexOf(path) >= 0) {
+            return this.props.upload[i]
+          }
+        }
+      }
+    }
+    return null
+  }
+
   _showMyDataPopupModal = () => {
     if (this.state.modalIsVisible) {
+      let title = '上传数据'
+      let uploadingData = this.getUploadingData()
+      if (uploadingData && uploadingData.progress >= 0) {
+        title += '  ' + uploadingData.progress + '%'
+      }
       return (
         <MyDataPopupModal
           // onDeleteData={this._onDeleteData}
           data={[
-            // {
-            //   title: '上传',
-            //   action: this._onUploadData,
-            // },
             {
-              title: '删除',
+              title: title,
+              action: this._onUploadData,
+            },
+            {
+              title: '删除数据',
               action: this._onDeleteData,
             },
           ]}
@@ -516,7 +570,7 @@ export default class MyLocalData extends Component {
   }
 
   _renderSectionSeparatorComponent = () => {
-    return <ListSeparator color={color.contentColorWhite} height={5} />
+    return <ListSeparator color={color.contentColorWhite} height={1} />
   }
 
   _renderItemSeparatorComponent = ({ section }) => {

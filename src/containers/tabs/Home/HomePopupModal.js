@@ -127,7 +127,7 @@ export default class HomePopupModal extends PureComponent {
           }}
         >
           {this._renderSeparatorLine()}
-          {this._renderItem('关于iTablet', this.props.onAbout)}
+          {this._renderItem('关于 SuperMap iTablet', this.props.onAbout)}
           {this._renderItem('设置', this.props.onSetting)}
           {this._renderItem('退出', this.closeApp)}
         </View>

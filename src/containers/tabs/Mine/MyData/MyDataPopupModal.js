@@ -1,21 +1,62 @@
 import React, { PureComponent } from 'react'
-import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
-import { color } from '../../../../styles'
+import {
+  Modal,
+  Platform,
+  TouchableOpacity,
+  StyleSheet,
+  View,
+} from 'react-native'
+import { color, size } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
+import { Button } from '../../../../components'
+
+const styles = StyleSheet.create({
+  topContainer: {
+    flexDirection: 'column',
+    backgroundColor: color.contentColorWhite,
+  },
+  item: {
+    flex: 1,
+    backgroundColor: color.contentColorWhite,
+    height: scaleSize(80),
+    borderRadius: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  separator: {
+    // flex: 1,
+    marginHorizontal: scaleSize(16),
+    height: scaleSize(1),
+    backgroundColor: color.rowSeparator,
+  },
+  title: {
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.bgG,
+  },
+  btnTitle: {
+    // fontSize: size.fontSize.fontSizeLg,
+    fontSize: size.fontSize.fontSizeXl,
+    color: color.contentColorBlack,
+  },
+})
+
 export default class MyDataPopupModal extends PureComponent {
   props: {
+    hasCancel: boolean,
     modalVisible: boolean,
     onCloseModal: () => {},
     data: Object,
   }
 
-  defaultProps: {
+  static defaultProps = {
+    hasCancel: true,
     modalVisible: false,
     data: [],
   }
 
   constructor(props) {
     super(props)
-    this.fontSize = Platform.OS === 'ios' ? 18 : 16
   }
 
   _onRequestClose = () => {
@@ -23,52 +64,56 @@ export default class MyDataPopupModal extends PureComponent {
       this._onCloseModal()
     }
   }
+
   _onCloseModal = () => {
-    this.props.onCloseModal()
+    this.props.onCloseModal && this.props.onCloseModal()
   }
 
-  _renderSeparatorLine = () => {
-    return (
-      <View
-        style={{
-          width: '100%',
-          height: 1,
-          backgroundColor: color.item_separate_white,
-        }}
-      />
-    )
+  _renderSeparatorLine = info => {
+    let key = info
+      ? 'separator_' + info.item.title + '_' + info.index
+      : new Date().getTime()
+    return <View key={key} style={styles.separator} />
   }
 
   _renderList = () => {
     let list = []
-    this.props.data.forEach(item => {
+    this.props.data.forEach((item, index) => {
       list.push(this._renderBtn(item))
+      if (index < this.props.data.length - 1) {
+        list.push(this._renderSeparatorLine({ item, index }))
+      }
     })
-    return list
+    return <View style={styles.topContainer}>{list}</View>
+  }
+
+  _renderCancelBtn = () => {
+    return (
+      <Button
+        style={[styles.item, { marginTop: scaleSize(15) }]}
+        titleStyle={styles.btnTitle}
+        title={'取消'}
+        key={'取消'}
+        onPress={() => {
+          this._onCloseModal()
+        }}
+        activeOpacity={0.5}
+      />
+    )
   }
 
   _renderBtn = item => {
     return (
-      <TouchableOpacity
+      <Button
+        style={styles.item}
+        titleStyle={styles.btnTitle}
+        title={item.title}
         key={item.title}
         onPress={() => {
           item.action && item.action()
         }}
-      >
-        <Text
-          style={{
-            width: '100%',
-            height: 60,
-            backgroundColor: color.content_white,
-            textAlign: 'center',
-            lineHeight: 60,
-            fontSize: this.fontSize,
-          }}
-        >
-          {item.title}
-        </Text>
-        {this._renderSeparatorLine()}
-      </TouchableOpacity>
+        activeOpacity={0.5}
+      />
     )
   }
 
@@ -108,6 +153,7 @@ export default class MyDataPopupModal extends PureComponent {
           >
             {this._renderSeparatorLine()}
             {this._renderList()}
+            {this.props.hasCancel && this._renderCancelBtn()}
           </View>
         </TouchableOpacity>
       </Modal>
