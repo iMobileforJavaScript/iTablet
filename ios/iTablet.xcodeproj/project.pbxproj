@@ -47,6 +47,7 @@
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
+		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
@@ -168,6 +169,55 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = Supermap;
+		};
+		0A270C7B21F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF34489A14EB99A700D8449F;
+			remoteInfo = LibUGC;
+		};
+		0A270C7D21F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
+			remoteInfo = LibUGC_Base;
+		};
+		0A270C7F21F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B46016F1A08700A19B73;
+			remoteInfo = LibUGC_2D;
+		};
+		0A270C8121F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
+			remoteInfo = LibUGC_3D;
+		};
+		0A270C8321F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 03BDDAED1714098D003EC801;
+			remoteInfo = Object_3D;
+		};
+		0A270C8521F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 00F6D375175F20A9008963A0;
+			remoteInfo = Objects_iOS;
+		};
+		0A270C8721F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 005EF27D175F5F96005433E1;
+			remoteInfo = Super23D;
 		};
 		0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -474,6 +524,9 @@
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
+		0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
+		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
+		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
@@ -751,6 +804,20 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		0A270C7121F9E0A500AFE9EB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0A270C7C21F9E0A600AFE9EB /* libLibUGC.a */,
+				0A270C7E21F9E0A600AFE9EB /* libLibUGC_Base.a */,
+				0A270C8021F9E0A600AFE9EB /* libLibUGC_2D.a */,
+				0A270C8221F9E0A600AFE9EB /* libLibUGC_3D.a */,
+				0A270C8421F9E0A600AFE9EB /* libObject_3D.a */,
+				0A270C8621F9E0A600AFE9EB /* libObjects_iOS.a */,
+				0A270C8821F9E0A600AFE9EB /* Super23D.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		0A442232211444D50087C8FE /* tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -912,6 +979,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */,
 				0A11D99721F885A400AFE6D6 /* ART.xcodeproj */,
 				0A15465121D710BD00347720 /* Supermap.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -979,6 +1047,8 @@
 		D83ED3B621704BA600683BB3 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				0A64601821FEB82C00928DAD /* AppUtils.h */,
+				0A64601921FEB82C00928DAD /* AppUtils.m */,
 				D83ED3B721704BA600683BB3 /* FileTools.h */,
 				D83ED3B821704BA600683BB3 /* FileTools.m */,
 			);
@@ -1069,6 +1139,10 @@
 				{
 					ProductGroup = 0A11D99821F885A400AFE6D6 /* Products */;
 					ProjectRef = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
+				},
+				{
+					ProductGroup = 0A270C7121F9E0A500AFE9EB /* Products */;
+					ProjectRef = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
@@ -1205,6 +1279,55 @@
 			fileType = archive.ar;
 			path = libSupermap.a;
 			remoteRef = 0A15465521D710BD00347720 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C7C21F9E0A600AFE9EB /* libLibUGC.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC.a;
+			remoteRef = 0A270C7B21F9E0A600AFE9EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C7E21F9E0A600AFE9EB /* libLibUGC_Base.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_Base.a;
+			remoteRef = 0A270C7D21F9E0A600AFE9EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C8021F9E0A600AFE9EB /* libLibUGC_2D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_2D.a;
+			remoteRef = 0A270C7F21F9E0A600AFE9EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C8221F9E0A600AFE9EB /* libLibUGC_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libLibUGC_3D.a;
+			remoteRef = 0A270C8121F9E0A600AFE9EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C8421F9E0A600AFE9EB /* libObject_3D.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObject_3D.a;
+			remoteRef = 0A270C8321F9E0A600AFE9EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C8621F9E0A600AFE9EB /* libObjects_iOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libObjects_iOS.a;
+			remoteRef = 0A270C8521F9E0A600AFE9EB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0A270C8821F9E0A600AFE9EB /* Super23D.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = Super23D.app;
+			remoteRef = 0A270C8721F9E0A600AFE9EB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A8EEDCC21104B4100F206BB /* libjsinspector.a */ = {
@@ -1549,6 +1672,7 @@
 				0A9573C821C0B8EE00B5853A /* NativeMethod.m in Sources */,
 				0A0A2036212FA22300BEBC1C /* VisualViewController.m in Sources */,
 				D83ED3B921704BA600683BB3 /* FileTools.m in Sources */,
+				0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
