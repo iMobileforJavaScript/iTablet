@@ -152,6 +152,7 @@ export default class RenderFindItem extends Component {
         ? (this.props.data.size / 1024 / 1024).toFixed(2) + 'MB'
         : (this.props.data.size / 1024).toFixed(2) + 'K'
     let fontColor = color.fontColorGray
+    let titleFontColor = color.fontColorBlack
     let index = this.props.data.fileName.lastIndexOf('.')
     let titleName =
       index === -1
@@ -174,7 +175,7 @@ export default class RenderFindItem extends Component {
 
           <View style={{ flex: 1 }}>
             <Text
-              style={[styles.restTitleTextStyle, { color: fontColor }]}
+              style={[styles.restTitleTextStyle, { color: titleFontColor }]}
               numberOfLines={2}
             >
               {titleName}

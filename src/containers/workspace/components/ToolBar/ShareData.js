@@ -269,6 +269,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
             },
             onResult: async () => {
               let result = await SOnlineService.publishService(dataName)
+              // SOnlineService.changeServiceVisibility()
               if (result) {
                 _params.setSharing({
                   module: GLOBAL.Type,

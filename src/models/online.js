@@ -60,7 +60,7 @@ export const uploading = (params = {}, cb = () => {}) => async dispatch => {
           },
         })
         FileTools.deleteFile(params.targetPath)
-        params.onResult && params.onResult(result)
+        params.onResult && params.onResult(result, params.name)
       },
     }))
   await dispatch({

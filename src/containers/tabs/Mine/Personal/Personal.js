@@ -156,7 +156,7 @@ export default class Personal extends Component {
       <View
         style={{
           width: '100%',
-          height: 8,
+          height: 4,
           backgroundColor: color.item_separate_white,
         }}
       />

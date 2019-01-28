@@ -90,7 +90,7 @@ export default class Login extends React.Component {
     let userName = ''
     let password = ''
     try {
-      if (isEmail) {
+      if (!isEmail) {
         if (!this.txtEmail) {
           Toast.show('请输入邮箱或昵称')
           return
@@ -236,7 +236,7 @@ export default class Login extends React.Component {
     }
   }
   _onSelectTitle = () => {
-    if (this.state.onEmailTitleFocus) {
+    if (!this.state.onEmailTitleFocus) {
       return this._renderEmail()
     } else {
       return this._renderPhone()
@@ -273,7 +273,16 @@ export default class Login extends React.Component {
             showsVerticalScrollIndicator={false}
           >
             <View style={styles.keyboardAvoidingStyle}>
-              <View style={styles.titleStyle}>
+              <View
+                style={[
+                  styles.titleStyle,
+                  {
+                    borderRadius: 6,
+                    borderColor: color.itemColorBlack,
+                    borderWidth: 2,
+                  },
+                ]}
+              >
                 <TouchableOpacity
                   onPress={() => {
                     this._onEmailPress()
@@ -283,17 +292,17 @@ export default class Login extends React.Component {
                       flex: 1,
                       height: '100%',
                       alignItems: 'center',
-                      borderTopLeftRadius: 2,
-                      borderBottomLeftRadius: 2,
+                      borderTopLeftRadius: 1,
+                      borderBottomLeftRadius: 1,
                       borderTopRightRadius: 0,
                       borderBottomRightRadius: 0,
-                      borderColor: color.theme,
+                      borderColor: color.borderColorBlack,
                       justifyContent: 'center',
                       backgroundColor: this.state.titleEmailDefaultBg,
                     },
                   ]}
                 >
-                  <Text style={[styles.titleContainerStyle]}>邮箱登录</Text>
+                  <Text style={[styles.titleContainerStyle]}>手机登录</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -305,13 +314,16 @@ export default class Login extends React.Component {
                     alignItems: 'center',
                     borderTopLeftRadius: 0,
                     borderBottomLeftRadius: 0,
-                    borderTopRightRadius: 2,
-                    borderBottomRightRadius: 2,
+                    borderTopRightRadius: 1,
+                    borderBottomRightRadius: 1,
+                    borderRadius: 6,
+                    // borderWidth:2,
+                    borderColor: color.borderColorBlack,
                     justifyContent: 'center',
                     backgroundColor: this.state.titlePhoneBg,
                   }}
                 >
-                  <Text style={[styles.titleContainerStyle]}>手机登录</Text>
+                  <Text style={[styles.titleContainerStyle]}>邮箱登录</Text>
                 </TouchableOpacity>
               </View>
               {this._onSelectTitle()}

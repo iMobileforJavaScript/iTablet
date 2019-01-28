@@ -41,17 +41,23 @@ const lightTheme = {
 
   fontColorWhite: '#F0F0F0',
   fontColorBlack: '#303030',
-  fontColorGray: '#727272',
+  fontColorGray: '#A0A0A0',
 
   itemColorWhite: '#F0F0F0',
   itemColorBlack: '#303030',
-  itemColorGray: '#727272',
+  itemColorGray: '#505050',
 
   contentColorWhite: '#F0F0F0',
   contentColorWhite2: 'rgba(240,240,240, 0.85)',
   contentColorBlack: '#303030',
-  contentColorGray: '#727272',
-  rowSeparator: '#979797',
+  contentColorGray: '#505050',
+
+  borderColorBlack: '#303030',
+
+  separateColorGray: '#A0A0A0',
+
+  imageColorBlack: '#303030',
+  // rowSeparator: '#979797',
 }
 
 let styles

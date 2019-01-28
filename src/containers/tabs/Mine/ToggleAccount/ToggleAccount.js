@@ -103,13 +103,13 @@ export default class ToggleAccount extends Component {
     return (
       <View
         style={{
-          height: 8 + itemHeight,
+          height: 4 + itemHeight,
           width: '100%',
         }}
       >
         <View
           style={{
-            height: 8,
+            height: 4,
             width: '100%',
             backgroundColor: color.item_separate_white,
           }}

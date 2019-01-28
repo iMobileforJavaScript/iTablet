@@ -167,8 +167,23 @@ export default class LayerManager_tolbar extends React.Component {
       () => {
         this.showToolbarAndBox(isShow)
         !isShow && this.props.existFullMap && this.props.existFullMap()
+        this.updateOverlayerView()
       },
     )
+  }
+
+  /**
+   * 设置遮罩层的显隐
+   * @param visible
+   */
+  setOverlayViewVisible = visible => {
+    GLOBAL.LayerManagerOverlayView &&
+      GLOBAL.LayerManagerOverlayView.setVisible(visible)
+  }
+
+  //更新遮盖层状态
+  updateOverlayerView = () => {
+    this.setOverlayViewVisible(this.isShow)
   }
 
   mapStyle = async () => {
