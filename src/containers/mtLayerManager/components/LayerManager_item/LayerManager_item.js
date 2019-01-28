@@ -32,6 +32,7 @@ export default class LayerManager_item extends React.Component {
     setEditable: () => {},
     onArrowPress: () => {},
     onPress: () => {},
+    onAllPress: () => {},
     onToolPress: () => {},
     onOpen: () => {},
     child: Array,
@@ -328,6 +329,14 @@ export default class LayerManager_item extends React.Component {
     } else return
   }
 
+  _all_pop_row = async () => {
+    if (this.props.onAllPress) {
+      await this.props.onAllPress({
+        data: this.props.data,
+      })
+    } else return
+  }
+
   _tool_row = async () => {
     if (this.props.onToolPress) {
       await this.props.onToolPress({
@@ -500,7 +509,7 @@ export default class LayerManager_item extends React.Component {
       <TouchableOpacity
         activeOpacity={1}
         style={[styles.rowOne, { backgroundColor: select }]}
-        onPress={this._pop_row}
+        onPress={this._all_pop_row}
       >
         <View style={styles.btn_container}>
           {this.props.data.type === LAYER_GROUP ? (
@@ -523,7 +532,7 @@ export default class LayerManager_item extends React.Component {
               />
             </TouchableOpacity>
           )}
-          <View style={styles.btn1}>
+          <TouchableOpacity style={styles.btn1} onPress={this._pop_row}>
             <Image
               resizeMode={'contain'}
               style={[
@@ -534,7 +543,7 @@ export default class LayerManager_item extends React.Component {
               ]}
               source={this.state.image}
             />
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.text_container}>
           <Text style={[styles.text, { color: selectcolor }]}>{name}</Text>

@@ -17,8 +17,8 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     height: scaleSize(80),
-    alignItems: 'center',
-    marginTop: scaleSize(10),
-    marginBottom: scaleSize(10),
+    alignItems: 'flex-start',
+    marginTop: scaleSize(6),
+    // marginBottom: scaleSize(10),
   },
 })

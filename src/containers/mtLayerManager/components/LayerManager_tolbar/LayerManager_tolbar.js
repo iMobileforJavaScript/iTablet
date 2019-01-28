@@ -34,6 +34,7 @@ export default class LayerManager_tolbar extends React.Component {
     existFullMap: () => {},
     layerdata?: Object,
     getLayers: () => {}, // 更新数据（包括其他界面）
+    setCurrentLayer: () => {},
   }
 
   static defaultProps = {
@@ -182,6 +183,7 @@ export default class LayerManager_tolbar extends React.Component {
               await this.props.getLayers()
             }.bind(this)())
           }
+          await this.setVisible(false)
           NavigationService.goBack()
         },
       })
@@ -196,7 +198,22 @@ export default class LayerManager_tolbar extends React.Component {
         await SMap.moveDownLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
-    } else if (section.title === '取消') {
+    } else if (section.title === '置顶') {
+      (async function() {
+        await SMap.moveToTop(this.state.layerdata.name)
+        await this.props.getLayers()
+      }.bind(this)())
+      this.setVisible(false)
+    } else if (section.title === '置底') {
+      (async function() {
+        await SMap.moveToBottom(this.state.layerdata.name)
+        await this.props.getLayers()
+      }.bind(this)())
+      this.setVisible(false)
+    } else if (section.title === '设置为当前图层') {
+      this.props.setCurrentLayer &&
+        this.props.setCurrentLayer(this.state.layerdata)
+      Toast.show('当前图层为' + this.state.layerdata.caption)
       this.setVisible(false)
     } else if (section.title === '新建专题图') {
       let themeType = this.state.layerdata.themeType

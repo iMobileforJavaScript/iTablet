@@ -6,6 +6,7 @@ import {
   Image,
   AsyncStorage,
   StatusBar,
+  NativeModules,
 } from 'react-native'
 import { Container } from '../../../components'
 import { ModuleList } from './components'
@@ -19,6 +20,7 @@ import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
 // import Orientation from '../../../constants/Orientation'
 import { Dialog } from '../../../components'
+const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
     nav: Object,
@@ -189,6 +191,19 @@ export default class Home extends Component {
     this.setState({ dialogCheck: dialogCheck })
   }
 
+  getExit = () => {
+    return this.exit
+  }
+
+  exitConfirm = async () => {
+    try {
+      // await this._onLogout()
+      await appUtilsModule.AppExit()
+    } catch (error) {
+      Toast.show('退出失败')
+    }
+  }
+
   confirm = () => {
     let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
     confirm && confirm(this.downloadData, this.state.dialogCheck)
@@ -224,6 +239,18 @@ export default class Home extends Component {
     )
   }
 
+  renderExitDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>确定退出iTablet ？</Text>
+      </View>
+    )
+  }
+
   renderDialog = () => {
     return (
       <Dialog
@@ -245,6 +272,23 @@ export default class Home extends Component {
     )
   }
 
+  renderExitDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.exit = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={this.exitConfirm}
+        opacity={0.85}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        {this.renderExitDialogChildren()}
+      </Dialog>
+    )
+  }
+
   _renderModal = () => {
     let isLogin = this.props.currentUser.userName !== undefined
     return (
@@ -259,6 +303,7 @@ export default class Home extends Component {
         modalVisible={this.state.modalIsVisible}
         onCloseModal={this._closeModal}
         topNavigatorBarImageId={this.topNavigatorBarImageId}
+        getExit={this.getExit}
       />
     )
   }
@@ -331,6 +376,7 @@ export default class Home extends Component {
           />
           {this._renderModal()}
           {this.renderDialog()}
+          {this.renderExitDialog()}
         </View>
       </Container>
     )

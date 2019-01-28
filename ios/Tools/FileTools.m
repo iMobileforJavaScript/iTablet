@@ -28,12 +28,13 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
   if ([fileMgr fileExistsAtPath:path isDirectory:&flag]) {
     NSArray* tempArray = [fileMgr contentsOfDirectoryAtPath:path error:nil];
     
-    NSString* filterKey = filter[@"name"];
+    NSString* filterName = filter[@"name"];
     NSString* filterEx = filter[@"extension"];
-    NSString* type = @"Directory";
-    if (filter[@"type"]) {
-      type = [filter[@"type"] isEqualToString:@""] ? @"Directory" : filter[@"type"];
-    }
+    NSString* type = filter[@"type"];
+//    NSString* type = @"Directory";
+//    if (filter[@"type"]) {
+//      type = [filter[@"type"] isEqualToString:@""] ? @"Directory" : filter[@"type"];
+//    }
     for (NSString* fileName in tempArray) {
       
       
@@ -49,9 +50,39 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
         NSString* tt = [fullPath stringByReplacingOccurrencesOfString:[NSHomeDirectory() stringByAppendingString:@"/Documents"] withString:@""];
         NSString* extension = [tt pathExtension];
         NSString* fileName = [tt lastPathComponent];
-        if(([filterEx containsString:extension] && ([fileName containsString:filterKey] || [filterKey isEqualToString:@""])) || (flag && [type isEqualToString:@"Directory"])) {
-          [array addObject:@{@"name":fileName,@"path":tt,@"mtime":strModeDate,@"isDirectory":@(flag)}];
+        
+        // 匹配后缀
+        if (filterEx != nil) {
+          NSArray* exArr = [filterEx componentsSeparatedByString:@","];
+          BOOL hasFile = NO;
+          for (int i = 0; i < exArr.count; i++) {
+            NSString* tempEx = [[exArr[i] lowercaseString] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+            if ([tempEx isEqualToString:[extension lowercaseString]]) {
+              hasFile = YES;
+              break;
+            }
+          }
+          if (!hasFile) continue;
         }
+        // 匹配名称
+        if (filterName != nil && ![filterName.lowercaseString containsString:[fileName.lowercaseString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]]) continue;
+        // 匹配类型
+        if (type != nil && ([type isEqualToString:@"Directory"] != flag)) continue;
+        
+        [array addObject:@{@"name":fileName,@"path":tt,@"mtime":strModeDate,@"isDirectory":@(flag)}];
+        
+//        if(
+//           (
+//            filterEx != nil && [filterEx containsString:extension] &&
+//            (
+//             filterName == nil ||
+//             [filterName containsString:fileName] ||
+//             [filterName isEqualToString:@""]
+//             )
+//            ) ||
+//           (flag && [type isEqualToString:@"Directory"])) {
+//          [array addObject:@{@"name":fileName,@"path":tt,@"mtime":strModeDate,@"isDirectory":@(flag)}];
+//        }
         
       }
       

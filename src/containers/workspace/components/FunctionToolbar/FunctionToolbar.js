@@ -33,6 +33,7 @@ const MAP_3D = 'MAP_3D'
 const MAP_EDIT = 'MAP_EDIT'
 const MAP_THEME = 'MAP_THEME'
 export { COLLECTION, NETWORK, EDIT }
+import NavigationService from '../../../NavigationService'
 
 export default class FunctionToolbar extends React.Component {
   props: {
@@ -311,7 +312,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DTool = async () => {
-    SScene.checkoutListener('startMeasure')
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -482,7 +482,6 @@ export default class FunctionToolbar extends React.Component {
               column: 4,
               height: ConstToolType.HEIGHT[4],
             })
-            Toast.show('当前图层无法设置风格')
           } else {
             this.props.showFullMap && this.props.showFullMap(true)
             toolRef.setVisible(true, ConstToolType.MAP_STYLE, {
@@ -494,10 +493,12 @@ export default class FunctionToolbar extends React.Component {
           }
         }
       } else {
-        Toast.show('当前图层无法设置风格')
+        NavigationService.navigate('LayerManager')
+        Toast.show('当前图层无法设置风格,请重新选择图层')
       }
     } else {
-      Toast.show('当前图层无法设置风格')
+      NavigationService.navigate('LayerManager')
+      Toast.show('当前图层无法设置风格,请重新选择图层')
     }
   }
 

@@ -3147,6 +3147,8 @@ export default class ToolBar extends React.PureComponent {
         onPress={() => {
           this.itemaction(item)
         }}
+        device={this.props.device}
+        numColumns={this.state.column}
       />
     )
   }
@@ -3534,6 +3536,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (this.state.type === ConstToolType.MAP3D_WORKSPACE_LIST) {
       this.showToolbarAndBox(false)
       this.props.existFullMap && this.props.existFullMap()
+      GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
     } else {
       this.setVisible(false)
     }

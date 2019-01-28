@@ -127,15 +127,15 @@ function getStart(type, params) {
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
-        {
-          key: constants.BASE_MAP,
-          title: constants.BASE_MAP,
-          size: 'large',
-          action: () => {
-            changeBaseLayer('MAP_3D')
-          },
-          image: require('../../../../assets/mapTools/icon_base_black.png'),
-        },
+        // {
+        //   key: constants.BASE_MAP,
+        //   title: constants.BASE_MAP,
+        //   size: 'large',
+        //   action: () => {
+        //     changeBaseLayer('MAP_3D')
+        //   },
+        //   image: require('../../../../assets/mapTools/icon_base_black.png'),
+        // },
       ]
       break
     case ConstToolType.MAP_COLLECTION_START:
@@ -382,7 +382,7 @@ function openMap() {
         item.title = name
         item.name = name.split('.')[0]
         item.image = item.isTemplate
-          ? require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
+          ? require('../../../../assets/mapToolbar/list_type_template_black.png')
           : require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
@@ -686,27 +686,27 @@ function showHistory() {
 }
 
 /** 切换底图 **/
-function changeBaseLayer(type) {
-  if (!_params.setToolbarVisible) return
-  _params.showFullMap && _params.showFullMap(true)
+// function changeBaseLayer(type) {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
 
-  switch (type) {
-    case 'MAP_3D':
-      _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
-        containerType: 'list',
-        isFullScreen: true,
-        height: ConstToolType.HEIGHT[2],
-      })
-      break
-    default:
-      _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-        isFullScreen: true,
-      })
-      break
-  }
-}
+//   switch (type) {
+//     case 'MAP_3D':
+//       _params.setToolbarVisible(true, ConstToolType.MAP3D_BASE, {
+//         containerType: 'list',
+//         isFullScreen: true,
+//         height: ConstToolType.HEIGHT[2],
+//       })
+//       break
+//     default:
+//       _params.setToolbarVisible(true, ConstToolType.MAP_BASE, {
+//         containerType: 'list',
+//         height: ConstToolType.HEIGHT[3],
+//         isFullScreen: true,
+//       })
+//       break
+//   }
+// }
 
 // /** 导出成图片 **/
 // function outPutMap() {

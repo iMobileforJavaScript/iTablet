@@ -359,14 +359,14 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
+  onAllPressRow = async ({ data }) => {
+    this.setState({
+      selectLayer: data.caption,
+    })
+  }
+
   onPressRow = async ({ data }) => {
-    this.index = await SMap.getLayerIndexByName(data.caption)
-    this.props.setCurrentLayer &&
-      this.props.setCurrentLayer(data, () => {
-        if (GLOBAL.Type !== constants.MAP_THEME) {
-          Toast.show('当前图层为' + data.caption)
-        }
-      })
+    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
     if (GLOBAL.Type === constants.MAP_EDIT && data.themeType <= 0) {
       SMap.setLayerEditable(data.path, true)
       if (data.type === 83) {
@@ -386,6 +386,8 @@ export default class MT_layerManager extends React.Component {
         })
         GLOBAL.toolBox.showFullMap()
         this.props.navigation.navigate('MapView')
+      } else {
+        Toast.show('当前图层无法设置风格')
       }
     } else if (GLOBAL.Type === constants.MAP_THEME) {
       let curThemeType
@@ -425,6 +427,8 @@ export default class MT_layerManager extends React.Component {
         this.props.navigation.navigate('MapView')
         Toast.show('当前图层为:' + data.name)
       }
+    } else {
+      Toast.show('当前图层无法设置风格')
     }
     this.setState({
       selectLayer: data.caption,
@@ -432,14 +436,17 @@ export default class MT_layerManager extends React.Component {
   }
 
   onToolPress = async ({ data }) => {
+    this.setState({
+      selectLayer: data.caption,
+    })
     if (GLOBAL.Type === constants.MAP_THEME) {
       this.toolBox.setVisible(true, ConstToolType.MAP_THEME_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[2],
+        height: ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
       })
     } else {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[1],
+        height: ConstToolType.TOOLBAR_HEIGHT[4],
         layerdata: data,
       })
     }
@@ -602,6 +609,7 @@ export default class MT_layerManager extends React.Component {
             }}
             selectLayer={this.state.selectLayer}
             onPress={this.onPressRow}
+            onAllPress={this.onAllPressRow}
             onArrowPress={this.getChildList}
             onToolPress={this.onToolPress}
           />

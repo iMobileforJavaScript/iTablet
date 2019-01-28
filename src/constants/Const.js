@@ -61,4 +61,13 @@ export default {
 
   // 底部Bottom
   BOTTOM_HEIGHT: scaleSize(96),
+
+  // Mine
+  IMPORT: '导入',
+  MAP: '地图',
+  DATA: '数据',
+  SCENE: '场景',
+  SYMBOL: '符号',
+  ONLINE_DATA: '在线数据',
+  ONLINE_MAP: '在线地图',
 }

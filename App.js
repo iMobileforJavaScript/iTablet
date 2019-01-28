@@ -117,21 +117,21 @@ class AppRoot extends Component {
 
   handleStateChange = appState => {
     if (appState === 'active') {
-      // if (this.props.user.currentUser && this.props.user.currentUser.userName) {
-      //   (async function () {
-      //     let result = await new OnlineService().login(
-      //       this.props.user.currentUser.userName,
-      //       this.props.user.currentUser.password,
-      //     )
-      //     if (!(typeof result === 'boolean' && result)) {
-      //       Toast.show('请重新登录')
-      //       this.props.setUser({
-      //         userName: '',
-      //         password: '',
-      //       })
-      //     }
-      //   }).bind(this)()
-      // }
+      if (this.props.user.currentUser && this.props.user.currentUser.userName) {
+        (async function () {
+          let result = await new OnlineService().login(
+            this.props.user.currentUser.userName,
+            this.props.user.currentUser.password,
+          )
+          if (!(typeof result === 'boolean' && result)) {
+            Toast.show('请重新登录')
+            this.props.setUser({
+              userName: '',
+              password: '',
+            })
+          }
+        }).bind(this)()
+      }
     }
   }
 
