@@ -195,9 +195,10 @@ export default class Home extends Component {
     return this.exit
   }
 
-  exitConfirm = () => {
+  exitConfirm = async () => {
     try {
-      appUtilsModule.AppExit()
+      // await this._onLogout()
+      await appUtilsModule.AppExit()
     } catch (error) {
       Toast.show('退出失败')
     }
