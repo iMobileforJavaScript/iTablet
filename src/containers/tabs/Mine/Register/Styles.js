@@ -3,11 +3,11 @@ import { color } from '../../../../styles'
 const itemWidth = '70%'
 const itemHeight = 40
 const fontSize = Platform.OS === 'ios' ? 18 : 16
-const titleOnFocusBackgroundColor = color.item_separate_white
-const titleOnBlurBackgroundColor = color.content_white
+const titleOnFocusBackgroundColor = color.itemColorBlack
+const titleOnBlurBackgroundColor = color.itemColorWhite
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   keyboardAvoidingStyle: {
     padding: 9,
@@ -23,12 +23,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 6,
-    borderColor: color.item_separate_white,
+    borderColor: color.borderColorBlack,
     borderWidth: 2,
   },
   titleContainerStyle: {
     fontSize: fontSize,
-    color: color.font_color_white,
+    color: color.fontColorGray,
     textAlign: 'center',
   },
   textInputStyle: {
@@ -36,14 +36,14 @@ const styles = StyleSheet.create({
     height: itemHeight,
     fontSize: fontSize,
     borderBottomColor: color.borderLight,
-    color: color.font_color_white,
+    color: color.fontColorGray,
     borderBottomWidth: 1,
     marginTop: 10,
   },
   registerStyle: {
     height: itemHeight,
     width: '50%',
-    backgroundColor: color.item_separate_white,
+    backgroundColor: color.itemColorBlack,
     marginTop: 40,
     borderRadius: 4,
     alignItems: 'center',
@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   verifyCodeLTextStyle: {
     flex: 1,
     fontSize: fontSize,
-    color: color.theme_white,
+    color: color.fontColorBlack,
     height: itemHeight,
   },
   verifyCodeRTextStyle: {

@@ -93,8 +93,8 @@ export default class HomePopupModal extends PureComponent {
             }}
           >
             {this._renderSeparatorLine()}
-            {this._renderItem('切换', this.props.onToggleAccount)}
-            {this._renderItem('注册', this.props.onRegister)}
+            {this._renderItem('切换账号', this.props.onToggleAccount)}
+            {/*{this._renderItem('注册', this.props.onRegister)}*/}
             {this._renderItem('退出登录', this.props.onLogout)}
           </View>
         )
@@ -127,7 +127,7 @@ export default class HomePopupModal extends PureComponent {
           }}
         >
           {this._renderSeparatorLine()}
-          {this._renderItem('关于iTablet', this.props.onAbout)}
+          {this._renderItem('关于SuperMap iTablet', this.props.onAbout)}
           {this._renderItem('设置', this.props.onSetting)}
           {this._renderItem('退出', this.closeApp)}
         </View>

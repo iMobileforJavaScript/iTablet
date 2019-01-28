@@ -118,8 +118,15 @@ export default class MyLocalData extends Component {
   }
 
   _setSectionDataState = async () => {
-    let rootDirWorkspaceData = await this._constructRootDirSectionData()
-    this.setState({ sectionData: rootDirWorkspaceData, textDisplay: 'none' })
+    let rootDirWorkspaceData = await this._constructExternalSectionData()
+    if (rootDirWorkspaceData && rootDirWorkspaceData.length === 0) {
+      this.setState({
+        sectionData: rootDirWorkspaceData,
+        textValue: '扫描结束，未发现可用数据',
+      })
+    } else {
+      this.setState({ sectionData: rootDirWorkspaceData, textDisplay: 'none' })
+    }
     // try {
     //
     //   let result = await AsyncStorage.getItem('ExternalSectionData')
@@ -166,6 +173,8 @@ export default class MyLocalData extends Component {
         if (fullFileDir.indexOf(ConstPath.AppPath) !== -1) {
           continue
         }
+        let textValue = '扫描文件:' + fullFileDir
+        this._setTextState(textValue)
         let fileContent = arrDirContent[i]
         let isFile = fileContent.type
         let fileName = fileContent.name
@@ -186,8 +195,6 @@ export default class MyLocalData extends Component {
                 fileName.indexOf('@') !== -1
               )
             ) {
-              let textValue = '扫描文件:' + fullFileDir
-              this._setTextState(textValue)
               fileName = fileName.substring(0, fileName.length - 5)
               arrFilterFile.push({
                 filePath: newPath,
@@ -235,9 +242,10 @@ export default class MyLocalData extends Component {
       this.homePath,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
+      true,
     )
 
-    let titleWorkspace = '外部数据'
+    let titleWorkspace = '工作空间'
     let sectionData
     if (newData.length === 0) {
       sectionData = []
@@ -361,6 +369,7 @@ export default class MyLocalData extends Component {
         : require('../../../../assets/Mine/local_data_close.png')
       let imageWidth = 20
       let height = 40
+      let fontSize = 18
       return (
         <TouchableOpacity
           onPress={() => {
@@ -397,7 +406,7 @@ export default class MyLocalData extends Component {
               {
                 color: color.fontColorWhite,
                 paddingLeft: 10,
-                fontSize: 20,
+                fontSize: fontSize,
                 fontWeight: 'bold',
                 backgroundColor: 'transparent',
               },
@@ -601,6 +610,7 @@ export default class MyLocalData extends Component {
             width: '100%',
             backgroundColor: color.content_white,
             display: this.state.textDisplay,
+            paddingLeft: 10,
             fontSize: 10,
           }}
         >
