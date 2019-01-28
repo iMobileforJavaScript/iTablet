@@ -318,7 +318,7 @@ export default class FunctionToolbar extends React.Component {
       // TODO 根据符号类型改变ToolBox内容
       toolRef.setVisible(true, ConstToolType.MAP3D_TOOL, {
         containerType: 'table',
-        isFullScreen: false,
+        isFullScreen: true,
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[2]

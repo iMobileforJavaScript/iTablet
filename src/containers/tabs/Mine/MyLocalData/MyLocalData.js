@@ -8,7 +8,7 @@ import {
   Platform,
   AsyncStorage,
 } from 'react-native'
-import Container from '../../../../components/Container'
+import { Container, ListSeparator } from '../../../../components'
 import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -425,7 +425,7 @@ export default class MyLocalData extends Component {
     let itemHeight = 60
     let imageWidth = 30,
       imageHeight = 30
-    let separatorLineHeight = 1
+    // let separatorLineHeight = 1
     let fontSize = Platform.OS === 'ios' ? 18 : 16
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
@@ -479,17 +479,6 @@ export default class MyLocalData extends Component {
             source={require('../../../../assets/Mine/mine_more_white.png')}
           />
         </View>
-        <View
-          /** 也可以在外面设置*/
-          // display={display}
-          style={{
-            /** 也可以在style设置*/
-            // display:display,
-            width: '100%',
-            height: separatorLineHeight,
-            backgroundColor: color.itemColorGray,
-          }}
-        />
       </TouchableOpacity>
     )
   }
@@ -592,6 +581,16 @@ export default class MyLocalData extends Component {
     this.container && this.container.setLoading(visible, info)
   }
 
+  _renderSectionSeparatorComponent = () => {
+    return <ListSeparator color={color.contentColorWhite} height={5} />
+  }
+
+  _renderItemSeparatorComponent = ({ section }) => {
+    return section.isShowItem ? (
+      <ListSeparator color={color.itemColorGray} height={1} />
+    ) : null
+  }
+
   render() {
     let sectionData = this.state.sectionData
     return (
@@ -626,6 +625,8 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
         />
         {this._showLocalDataPopupModal()}
       </Container>
