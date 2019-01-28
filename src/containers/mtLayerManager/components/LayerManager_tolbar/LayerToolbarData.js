@@ -71,7 +71,7 @@ const layerThemeSetting = [
   {
     title: '新建专题图',
     data: [],
-    image: require('../../../../assets/layerToolbar/layer_theme.png'),
+    image: require('../../../../assets/layerToolbar/theme_new.png'),
   },
   {
     title: '重命名',
@@ -114,7 +114,7 @@ const layerThemeSettings = [
   {
     title: '修改专题图',
     data: [],
-    image: require('../../../../assets/layerToolbar/layer_theme.png'),
+    image: require('../../../../assets/layerToolbar/theme_modify.png'),
   },
   {
     title: '重命名',
