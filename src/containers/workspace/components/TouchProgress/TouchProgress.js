@@ -25,6 +25,7 @@ export default class TouchProgress extends Component {
     currentLayer: Object,
     selectName: '',
     value: '',
+    showMenu: () => {},
   }
 
   componentDidUpdate(prevProps) {
@@ -295,15 +296,30 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderEnd = (evt, gestureState) => {
-    let progressWidth = screen.getScreenWidth() - MARGIN * 2
-    let x = this._previousLeft + gestureState.dx
-    if (x <= 0) x = 0
-    if (x >= progressWidth + MARGIN - IMAGE_SIZE / 2)
-      x = progressWidth + MARGIN - IMAGE_SIZE / 2
-    this._previousLeft = x
+    if (gestureState.dy > 50 || gestureState.dy < -50) {
+      this.showMenu()
+    } else {
+      let progressWidth = screen.getScreenWidth() - MARGIN * 2
+      let x = this._previousLeft + gestureState.dx
+      if (x <= 0) x = 0
+      if (x >= progressWidth + MARGIN - IMAGE_SIZE / 2)
+        x = progressWidth + MARGIN - IMAGE_SIZE / 2
+      this._previousLeft = x
 
-    let value = this.dealData(x / progressWidth)
-    value !== undefined && this.setData(value)
+      let value = this.dealData(x / progressWidth)
+      value !== undefined && this.setData(value)
+    }
+  }
+
+  /**
+   * 上下滑动唤出菜单
+   * @param value
+   * @returns {*}
+   */
+  showMenu = async () => {
+    if (this.props.showMenu) {
+      await this.props.showMenu()
+    } else return
   }
 
   /**

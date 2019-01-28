@@ -3586,7 +3586,10 @@ export default class ToolBar extends React.PureComponent {
           />
         )}
         {this.state.isTouchProgress && this.state.isFullScreen && (
-          <TouchProgress selectName={this.state.selectName} />
+          <TouchProgress
+            selectName={this.state.selectName}
+            showMenu={this.menu}
+          />
         )}
         {/*{this.state.showMenuDialog && (*/}
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}

@@ -8,10 +8,11 @@ const layersetting = [
   //   title: '可见比例尺范围',
   //   data: [],
   // },
-  // {
-  //   title: '图层风格',
-  //   data: [],
-  // },
+  {
+    title: '图层风格',
+    data: [],
+    image: require('../../../../assets/function/icon_function_style.png'),
+  },
   // {
   //   title: '图层属性',
   //   data: [],
@@ -67,26 +68,6 @@ const layerThemeSetting = [
     data: [],
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
-  // {
-  //   title: '可见比例尺范围',
-  //   data: [],
-  // },
-  // {
-  //   title: '图层风格',
-  //   data: [],
-  // },
-  // {
-  //   title: '图层属性',
-  //   data: [],
-  // },
-  // {
-  //   title: '复制',
-  //   data: [],
-  // },
-  // {
-  //   title: '插入复制的图层',
-  //   data: [],
-  // },
   {
     title: '新建专题图',
     data: [],
@@ -122,12 +103,51 @@ const layerThemeSetting = [
     data: [],
     image: require('../../../../assets/layerToolbar/layer_remove.png'),
   },
-  // {
-  //   title: '取消',
-  //   data: [],
-  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-  // },
 ]
+
+const layerThemeSettings = [
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
+  {
+    title: '修改专题图',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_theme.png'),
+  },
+  {
+    title: '重命名',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_rename.png'),
+  },
+  {
+    title: '上移',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+  },
+  {
+    title: '下移',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+  },
+  {
+    title: '置顶',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+  },
+  {
+    title: '置底',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+  },
+  {
+    title: '移除',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_remove.png'),
+  },
+]
+
 const layer3dSetting = [
   {
     title: '设置图层可选',
@@ -145,4 +165,49 @@ const layer3dSetting = [
   //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
   // },
 ]
-export { layersetting, layerThemeSetting, layer3dSetting }
+
+const layerCollectionSetting = [
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
+  {
+    title: '重命名',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_rename.png'),
+  },
+  {
+    title: '上移',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_moveup.png'),
+  },
+  {
+    title: '下移',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_movedown.png'),
+  },
+  {
+    title: '置顶',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_top.png'),
+  },
+  {
+    title: '置底',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_move_bottom.png'),
+  },
+  {
+    title: '移除',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_remove.png'),
+  },
+]
+
+export {
+  layersetting,
+  layerThemeSetting,
+  layer3dSetting,
+  layerCollectionSetting,
+  layerThemeSettings,
+}

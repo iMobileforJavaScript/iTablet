@@ -6,6 +6,8 @@ import {
   layersetting,
   layerThemeSetting,
   layer3dSetting,
+  layerCollectionSetting,
+  layerThemeSettings,
 } from './LayerToolbarData'
 import {
   View,
@@ -35,6 +37,7 @@ export default class LayerManager_tolbar extends React.Component {
     layerdata?: Object,
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
+    onPress: () => {},
   }
 
   static defaultProps = {
@@ -78,8 +81,14 @@ export default class LayerManager_tolbar extends React.Component {
       case ConstToolType.MAP_THEME_STYLE:
         data = layerThemeSetting
         break
+      case ConstToolType.MAP_THEME_STYLES:
+        data = layerThemeSettings
+        break
       case ConstToolType.MAP3D_LAYER3DSELECT:
         data = layer3dSetting
+        break
+      case ConstToolType.COLLECTION:
+        data = layerCollectionSetting
         break
     }
     return data
@@ -162,6 +171,14 @@ export default class LayerManager_tolbar extends React.Component {
     )
   }
 
+  mapStyle = async () => {
+    if (this.props.onPress) {
+      await this.props.onPress({
+        data: this.state.layerdata,
+      })
+    } else return
+  }
+
   listAction = ({ section }) => {
     if (section.action) {
       section.action && section.action()
@@ -171,6 +188,9 @@ export default class LayerManager_tolbar extends React.Component {
         await SMap.removeLayer(this.state.layerdata.name)
         await this.props.getLayers()
       }.bind(this)())
+      this.setVisible(false)
+    } else if (section.title === '图层风格') {
+      this.mapStyle()
       this.setVisible(false)
     } else if (section.title === '重命名') {
       NavigationService.navigate('InputPage', {
@@ -214,6 +234,9 @@ export default class LayerManager_tolbar extends React.Component {
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
       Toast.show('当前图层为' + this.state.layerdata.caption)
+      this.setVisible(false)
+    } else if (section.title === '修改专题图') {
+      this.mapStyle()
       this.setVisible(false)
     } else if (section.title === '新建专题图') {
       let themeType = this.state.layerdata.themeType
@@ -327,7 +350,13 @@ export default class LayerManager_tolbar extends React.Component {
           case ConstToolType.MAP_THEME_STYLE:
             box = this.renderList()
             break
+          case ConstToolType.MAP_THEME_STYLES:
+            box = this.renderList()
+            break
           case ConstToolType.MAP3D_LAYER3DSELECT:
+            box = this.renderList()
+            break
+          case ConstToolType.COLLECTION:
             box = this.renderList()
             break
         }
