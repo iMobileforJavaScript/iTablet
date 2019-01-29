@@ -16,6 +16,7 @@ import {
 import { setEditLayer } from '../../../../models/layers'
 import TemplateList from './TemplateList'
 import TemplateTab from './TemplateTab'
+import { SMap } from 'imobile_for_reactnative'
 
 const mapStateToProps = state => ({
   symbol: state.symbol.toJS(),
@@ -62,6 +63,75 @@ class SymbolTabs extends React.Component {
   constructor(props) {
     super(props)
     this.state = {}
+  }
+
+  componentDidMount() {
+    if (this.props.map.currentMap && this.props.map.currentMap.Template) {
+      this.initTemplate()
+    } else {
+      this.initSymbols()
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.map.currentMap) !==
+        JSON.stringify(this.props.map.currentMap) &&
+      this.props.map.currentMap.name
+    ) {
+      if (this.props.map.currentMap && this.props.map.currentMap.Template) {
+        this.initTemplate()
+      } else {
+        this.initSymbols()
+      }
+    }
+  }
+
+  initSymbols = () => {
+    SMap.getSymbolGroups().then(result => {
+      let symbols = []
+
+      let initSymbols = async function(data) {
+        SMap.findSymbolsByGroups(data[0].type, data[0].path).then(result => {
+          symbols = result
+          if (symbols && symbols.length > 0) {
+            this.props.setCurrentSymbols &&
+              this.props.setCurrentSymbols(symbols)
+          } else {
+            if (data[0].childGroups && data[0].childGroups.length > 0) {
+              initSymbols(data[0].childGroups)
+            }
+          }
+        })
+      }.bind(this)
+
+      if (result.length > 0) {
+        initSymbols(result)
+      }
+    })
+  }
+
+  initTemplate = () => {
+    if (
+      this.props.template.template.symbols &&
+      this.props.template.template.symbols.length > 0
+    ) {
+      let dealData = function(list) {
+        let mList = []
+        for (let i = 0; i < list.length; i++) {
+          if (list[i].feature && list[i].feature.length > 0) {
+            list[i].id = list[i].code
+            list[i].childGroups = []
+            list[i].childGroups = dealData(list[i].feature)
+            mList.push(list[i])
+          }
+        }
+        return mList
+      }
+      let data = dealData(this.props.template.template.symbols)
+
+      this.props.setCurrentTemplateList(data[0])
+    }
   }
 
   goToPage = index => {
@@ -184,21 +254,7 @@ class SymbolTabs extends React.Component {
   }
 
   render() {
-    // if (this.props.template.template && this.props.template.template.path) {
     if (this.props.map.currentMap && this.props.map.currentMap.Template) {
-      // return (
-      //   <TemplateList
-      //     style={styles.temple}
-      //     user={this.props.user}
-      //     showToolbar={this.props.showToolbar}
-      //     template={this.props.template.template}
-      //     layers={this.props.layers}
-      //     setCurrentTemplateInfo={this.props.setCurrentTemplateInfo}
-      //     setEditLayer={this.props.setEditLayer}
-      //     getSymbolTemplates={this.props.getSymbolTemplates}
-      //     setCurrentSymbol={this.props.setCurrentSymbol}
-      //   />
-      // )
       return this.renderTempleTab()
     } else {
       return this.renderTabs()

@@ -117,7 +117,9 @@ export default class ToolBar extends React.PureComponent {
     getMapSetting: () => {},
     showMeasureResult: () => {},
     refreshLayer3dList: () => {},
+    setCurrentSymbols: () => {},
     saveMap: () => {},
+    measureShow: () => {},
   }
 
   static defaultProps = {
@@ -357,10 +359,13 @@ export default class ToolBar extends React.PureComponent {
                 Toast.show('请打开场景')
                 return
               }
+              SScene.checkoutListener('startMeasure')
               SScene.setMeasureLineAnalyst({
                 callback: result => {
                   this.Map3DToolBar &&
                     this.Map3DToolBar.setAnalystResult(result)
+                  this.props.measureShow &&
+                    this.props.measureShow(true, result + 'm')
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_DISTANCEMEASURE)
@@ -376,10 +381,11 @@ export default class ToolBar extends React.PureComponent {
                 Toast.show('请打开场景')
                 return
               }
+              SScene.checkoutListener('startMeasure')
               SScene.setMeasureSquareAnalyst({
                 callback: result => {
-                  this.Map3DToolBar &&
-                    this.Map3DToolBar.setAnalystResult(result)
+                  this.props.measureShow &&
+                    this.props.measureShow(true, result + '㎡')
                 },
               })
               this.showAnalystResult(ConstToolType.MAP3D_TOOL_SUERFACEMEASURE)
@@ -1373,7 +1379,7 @@ export default class ToolBar extends React.PureComponent {
       },
       () => {
         // this.createCollector(type)
-        this.height = ConstToolType.HEIGHT[0]
+        this.height = 0
         this.showToolbar()
         this.updateOverlayerView()
       },
@@ -2143,6 +2149,7 @@ export default class ToolBar extends React.PureComponent {
 
   closeAnalyst = () => {
     SScene.closeAnalysis()
+    this.props.measureShow(false, '')
     SScene.checkoutListener('startTouchAttribute')
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
@@ -2153,11 +2160,11 @@ export default class ToolBar extends React.PureComponent {
     switch (this.state.type) {
       case ConstToolType.MAP3D_TOOL_SUERFACEMEASURE:
         SScene.clearSquareAnalyst()
-        this.Map3DToolBar.setAnalystResult(0)
+        this.props.measureShow(true, '0㎡')
         break
       case ConstToolType.MAP3D_TOOL_DISTANCEMEASURE:
         SScene.clearLineAnalyst()
-        this.Map3DToolBar.setAnalystResult(0)
+        this.props.measureShow(true, '0m')
         break
       default:
         SScene.clear()
@@ -2806,6 +2813,7 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      await this.props.setCurrentSymbols()
       this.props
         .importWorkspace({ ...item, module: moduleName })
         .then(async ({ mapsInfo, msg }) => {
@@ -2893,6 +2901,7 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      await this.props.setCurrentSymbols()
       let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {
         Toast.show(ConstInfo.CHANGE_MAP_TO + mapInfo.name)
@@ -3581,7 +3590,9 @@ export default class ToolBar extends React.PureComponent {
           !this.state.showMenuDialog && (
           <TouchableOpacity
             activeOpacity={1}
-            onPress={this.overlayOnPress}
+            onPress={() => {
+              this.overlayOnPress()
+            }}
             style={styles.themeoverlay}
           />
         )}
@@ -3595,7 +3606,16 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <View style={styles.containers}>
+        <View
+          style={[
+            styles.containers,
+            !(
+              this.state.isFullScreen &&
+              !this.state.isTouchProgress &&
+              !this.state.showMenuDialog
+            ) && styles.containers_border,
+          ]}
+        >
           {this.renderView()}
           {this.renderBottomBtns()}
         </View>

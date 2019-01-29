@@ -329,7 +329,6 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DFly = async () => {
-    SScene.checkoutListener('startMeasure')
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       toolRef.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
@@ -409,6 +408,7 @@ export default class FunctionToolbar extends React.Component {
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, type, {
+        containerType: 'table',
         isFullScreen: true,
         column: 4,
         height: ConstToolType.HEIGHT[0],
@@ -778,7 +778,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '分享',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE)
+              this.showMore(ConstToolType.MAP_SHARE)
             },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
@@ -877,7 +877,7 @@ export default class FunctionToolbar extends React.Component {
             size: 'large',
             selectMode: 'flash',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE)
+              this.showMore(ConstToolType.MAP_SHARE)
             },
             image: require('../../../../assets/function/icon_function_share.png'),
           },
@@ -910,7 +910,7 @@ export default class FunctionToolbar extends React.Component {
           {
             title: '分享',
             action: () => {
-              this.showMore(ConstToolType.MAP_MORE)
+              this.showMore(ConstToolType.MAP_SHARE)
             },
             image: require('../../../../assets/function/icon_function_share.png'),
           },

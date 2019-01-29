@@ -26,7 +26,7 @@ export const setCurrentSymbols = (
 ) => async dispatch => {
   await dispatch({
     type: SET_CURRENT_SYMBOLS,
-    payload: params,
+    payload: params || [],
   })
   cb && cb()
 }

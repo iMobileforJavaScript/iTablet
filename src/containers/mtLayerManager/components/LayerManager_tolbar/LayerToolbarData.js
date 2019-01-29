@@ -155,9 +155,14 @@ const layer3dSetting = [
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
-    title: '设置图层对象可选状态',
+    title: '设置图层可选',
     data: [],
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+  },
+  {
+    title: '设置图层不可选',
+    data: [],
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
 ]
 

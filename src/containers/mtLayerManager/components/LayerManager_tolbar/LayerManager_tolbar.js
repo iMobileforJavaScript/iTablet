@@ -38,6 +38,7 @@ export default class LayerManager_tolbar extends React.Component {
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
     onPress: () => {},
+    getOverlayView: () => {},
   }
 
   static defaultProps = {
@@ -167,8 +168,23 @@ export default class LayerManager_tolbar extends React.Component {
       () => {
         this.showToolbarAndBox(isShow)
         !isShow && this.props.existFullMap && this.props.existFullMap()
+        this.updateOverlayerView()
       },
     )
+  }
+
+  /**
+   * 设置遮罩层的显隐
+   * @param visible
+   */
+  setOverlayViewVisible = visible => {
+    GLOBAL.LayerManagerOverlayView &&
+      GLOBAL.LayerManagerOverlayView.setVisible(visible)
+  }
+
+  //更新遮盖层状态
+  updateOverlayerView = () => {
+    this.setOverlayViewVisible(this.isShow)
   }
 
   mapStyle = async () => {
@@ -270,21 +286,18 @@ export default class LayerManager_tolbar extends React.Component {
       } else {
         Toast.show('不支持由该图层创建专题图')
       }
-    } else if (section.title === '设置图层对象可选状态') {
-      SScene.setSelectable(
-        this.layer3dItem.name,
-        this.layer3dItem.selectable,
-      ).then(
-        result => {
-          this.layer3dItem.selectable
-            ? result && Toast.show('当前图层不可选')
-            : result && Toast.show('当前图层可选')
-          this.setItemSelectable(!this.layer3dItem.selectable)
-        },
-        () => {
-          Toast.show('操作失败')
-        },
-      )
+    } else if (section.title === '设置图层可选') {
+      SScene.setSelectable(this.layer3dItem.name, true).then(result => {
+        result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
+        // this.overlayView&&this.overlayView.setVisible(false)
+      })
+    } else if (section.title === '设置图层不可选') {
+      SScene.setSelectable(this.layer3dItem.name, false).then(result => {
+        result
+          ? Toast.show('设置图层不可选成功')
+          : Toast.show('设置图层不可选失败')
+        // this.overlayView&&this.overlayView.setVisible(false)
+      })
     }
   }
 
@@ -292,11 +305,13 @@ export default class LayerManager_tolbar extends React.Component {
     layer3dItem,
     cb = () => {},
     setItemSelectable = () => {},
+    overlayView = {},
   ) => {
     // console.log(layer3dItem)
     this.layer3dItem = layer3dItem
     this.cb = cb
     this.setItemSelectable = setItemSelectable
+    this.overlayView = overlayView
   }
 
   renderList = () => {
@@ -447,7 +462,15 @@ export default class LayerManager_tolbar extends React.Component {
         {
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => this.setVisible(false)}
+            onPress={() => {
+              this.setVisible(false)
+              let overlayView = this.props.getOverlayView
+                ? this.props.getOverlayView()
+                : null
+              if (overlayView) {
+                overlayView.setVisible(false)
+              }
+            }}
             style={styles.overlay}
           />
         }
