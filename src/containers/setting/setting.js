@@ -104,7 +104,7 @@ export default class setting extends Component {
                 style={styles.switch}
                 trackColor={{ false: color.bgG, true: color.switch }}
                 thumbColor={item.value ? color.bgW : color.bgW}
-                ios_backgroundColor={item.value ? color.switch : color.bgW}
+                ios_backgroundColor={item.value ? color.switch : color.bgG}
                 value={item.value}
                 onValueChange={value => {
                   this._onValueChange(value, item, index)

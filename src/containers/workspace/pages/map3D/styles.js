@@ -1,6 +1,6 @@
 import { StyleSheet, Platform } from 'react-native'
 import { scaleSize, setSpText } from '../../../../utils'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 const FUNCTIONHEIGHT = scaleSize(143) + (Platform.OS === 'ios' ? 20 : 0)
 export default StyleSheet.create({
   container: {
@@ -54,5 +54,27 @@ export default StyleSheet.create({
     borderWidth: scaleSize(1),
     borderColor: '#808080',
     color: '#333333',
+  },
+  measureResultContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 20,
+    backgroundColor: 'transparent',
+    height: scaleSize(80),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  measureResultView: {
+    minWidth: scaleSize(120),
+    height: scaleSize(80),
+    paddingHorizontal: scaleSize(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: color.transView,
+  },
+  measureResultText: {
+    fontSize: size.fontSize.fontSizeLg,
+    color: color.fontColorBlack,
   },
 })
