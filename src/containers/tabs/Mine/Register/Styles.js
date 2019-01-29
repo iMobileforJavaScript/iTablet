@@ -1,8 +1,7 @@
 import { StyleSheet } from 'react-native'
 import { color, size } from '../../../../styles'
-import { scaleSize } from '../../../../utils'
 const itemWidth = '70%'
-const itemHeight = scaleSize(54)
+const itemHeight = 40
 const fontSize = size.fontSize.fontSizeXl
 const titleOnFocusBackgroundColor = color.itemColorBlack
 const titleOnBlurBackgroundColor = color.itemColorWhite
@@ -18,7 +17,7 @@ const styles = StyleSheet.create({
   titleStyle: {
     flexDirection: 'row',
     width: itemWidth,
-    height: itemHeight,
+    height: itemHeight - 8,
     marginTop: 20,
     marginBottom: 20,
     alignItems: 'center',

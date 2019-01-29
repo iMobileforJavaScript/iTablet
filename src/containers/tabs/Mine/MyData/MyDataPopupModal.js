@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     marginHorizontal: scaleSize(16),
     height: scaleSize(1),
-    backgroundColor: color.rowSeparator,
+    backgroundColor: color.separateColorGray,
   },
   title: {
     // fontSize: size.fontSize.fontSizeLg,

@@ -14,7 +14,6 @@ import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
 import { color, size } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
-// import {  } from 'react-native-fs'
 import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
 
@@ -467,6 +466,7 @@ export default class MyLocalData extends Component {
 
   _renderItem = info => {
     let txtInfo = info.item.fileName
+    let path = info.item.directory.substring(this.homePath.length)
     let itemHeight = scaleSize(80)
     let imageWidth = scaleSize(30),
       imageHeight = scaleSize(30)
@@ -504,17 +504,34 @@ export default class MyLocalData extends Component {
             resizeMode={'contain'}
             source={require('../../../../assets/Mine/mine_my_online_data.png')}
           />
-          <Text
-            numberOfLines={1}
-            style={{
-              color: fontColor,
-              paddingLeft: 15,
-              fontSize: fontSize,
-              flex: 1,
-            }}
-          >
-            {txtInfo}
-          </Text>
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                marginTop: scaleSize(5),
+                color: fontColor,
+                paddingLeft: 15,
+                fontSize: fontSize,
+              }}
+            >
+              {txtInfo}
+            </Text>
+            <Text
+              ellipsizeMode={'middle'}
+              numberOfLines={1}
+              style={{
+                marginTop: scaleSize(5),
+                color: color.fontColorGray,
+                paddingLeft: 15,
+                fontSize: 10,
+                height: 15,
+                marginRight: 20,
+              }}
+            >
+              {`路径:${path}`}
+            </Text>
+          </View>
+
           <Image
             style={{
               width: imageWidth,

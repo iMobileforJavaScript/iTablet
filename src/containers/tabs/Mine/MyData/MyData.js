@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     marginHorizontal: scaleSize(16),
     height: scaleSize(1),
-    backgroundColor: color.rowSeparator,
+    backgroundColor: color.separateColorGray,
   },
   title: {
     // fontSize: size.fontSize.fontSizeLg,
@@ -104,7 +104,7 @@ export default class MyLocalData extends Component {
       // userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
       textValue: '扫描文件:',
-      textDisplay: 'flex',
+      textDisplay: 'none',
       title: (params && params.title) || '',
     }
   }
