@@ -73,7 +73,7 @@ export default class AboutITablet extends Component {
         </View>
         <View style={styles.informationView}>
           <Text style={styles.information}>
-            Copyright 1997-2018 SuperMap Software Co.,Ltd.All rights reserved
+            Copyright 1997-2019 SuperMap Software Co.,Ltd.All rights reserved
           </Text>
         </View>
       </Container>
