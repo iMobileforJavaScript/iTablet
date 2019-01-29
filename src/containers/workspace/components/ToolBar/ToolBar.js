@@ -496,6 +496,9 @@ export default class ToolBar extends React.PureComponent {
                 SScene.checkoutListener('startLabelOperate')
                 GLOBAL.Map3DSymbol = true
                 SScene.closeAllLabel()
+                this.showToolbar(!this.isShow)
+                this.props.existFullMap && this.props.existFullMap()
+                GLOBAL.OverlayView.setVisible(false)
                 // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
               } catch (error) {
                 Toast.show('清除失败')
@@ -1835,6 +1838,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   closeTool = () => {
+    GLOBAL.OverlayView.setVisible(false)
     SScene.checkoutListener('startTouchAttribute')
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)

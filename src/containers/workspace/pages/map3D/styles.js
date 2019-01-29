@@ -41,13 +41,15 @@ export default StyleSheet.create({
     width: scaleSize(160),
   },
   placeholder: {
+    marginTop: scaleSize(15),
     marginLeft: scaleSize(30),
     fontSize: setSpText(18),
     color: 'red',
     // width: scaleSize(160),
   },
   textInputStyle: {
-    height: scaleSize(60),
+    marginTop: scaleSize(25),
+    height: scaleSize(70),
     flex: 1,
     fontSize: setSpText(20),
     borderRadius: scaleSize(8),
