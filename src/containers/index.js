@@ -52,7 +52,7 @@ import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
-
+import protocol from './tabs/Home/AboutITablet/protocol'
 export default StackNavigator(
   {
     Tabs: {
@@ -343,6 +343,13 @@ export default StackNavigator(
     },
     Setting: {
       screen: Setting,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    Protocol: {
+      screen: protocol,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

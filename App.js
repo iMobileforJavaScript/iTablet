@@ -266,22 +266,32 @@ class AppRoot extends Component {
     if (this.props.map.currentMap.Template) {
       addition.Template = this.props.map.currentMap.Template
     }
-    this.saveMapName(mapName, '', addition, this.closeMapHandler)
+    await this.saveMapName(mapName, '', addition, this.closeMapHandler)
   }
 
   // 导出(保存)工作空间中地图到模块
   saveMapName = async (mapName = '', nModule = '', addition = {}, cb = () => {}) => {
     try {
       this.setSaveMapViewLoading(true, '正在保存地图')
-      this.props.saveMap({mapName, nModule, addition}).then(result => {
+      let result = await this.props.saveMap({mapName, nModule, addition})
+      //   .then(result => {
+      //   this.setSaveMapViewLoading(false)
+      //   Toast.show(
+      //     result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      //   )
+      //   cb && cb()
+      // }, () => {
+      //   this.setSaveMapViewLoading(false)
+      // })
+      if (result) {
         this.setSaveMapViewLoading(false)
         Toast.show(
           result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
         )
         cb && cb()
-      }, () => {
+      } else {
         this.setSaveMapViewLoading(false)
-      })
+      }
     } catch (e) {
       this.setSaveMapViewLoading(false)
     }
@@ -292,7 +302,7 @@ class AppRoot extends Component {
   }
 
   closeMapHandler = async () => {
-    if (GLOBAL.Type===ConstToolType.MAP_3D){
+    if (GLOBAL.Type === ConstToolType.MAP_3D){
       this.map3dBackAction()
       return
     }

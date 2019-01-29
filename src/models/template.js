@@ -131,7 +131,18 @@ export const importWorkspace = (params, cb = () => {}) => async (
     } else {
       // 关闭所有地图
       await SMap.closeMap()
-      let data = { server: params.path, type }
+
+      let data
+      if (params && params.mapName) {
+        data = {
+          server: params.path,
+          type,
+          name_for_map: params.mapName,
+          name_for_data: params.mapName,
+        }
+      } else {
+        data = { server: params.path, type }
+      }
       mapsInfo = await SMap.importWorkspaceInfo(data, params.module)
       payload = params
     }

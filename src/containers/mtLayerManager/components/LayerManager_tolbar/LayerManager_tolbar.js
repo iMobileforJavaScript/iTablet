@@ -1,5 +1,4 @@
 import React from 'react'
-import { screen, Toast } from '../../../../utils/index'
 import { ConstToolType, layerManagerData } from '../../../../constants/index'
 import NavigationService from '../../../NavigationService'
 import {
@@ -24,7 +23,7 @@ import styles from './styles'
 import { SMap, SScene } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
-import { scaleSize, setSpText } from '../../../../utils'
+import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'

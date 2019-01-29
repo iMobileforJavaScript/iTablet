@@ -59,7 +59,7 @@ export default class Map3D extends React.Component {
 
   componentDidMount() {
     // console.log(this.props.online)
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
@@ -69,7 +69,7 @@ export default class Map3D extends React.Component {
   }
 
   componentWillUnmount() {
-    // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
+    // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.attributeListener && this.attributeListener.remove()
