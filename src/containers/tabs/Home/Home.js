@@ -8,7 +8,7 @@ import {
   StatusBar,
   NativeModules,
 } from 'react-native'
-import { Container } from '../../../components'
+import { Container, Dialog } from '../../../components'
 import { ModuleList } from './components'
 import styles from './styles'
 // import { scaleSize } from '../../../utils'
@@ -18,8 +18,7 @@ import FileTools from '../../../native/FileTools'
 import ConstPath from '../../../constants/ConstPath'
 import HomePopupModal from './HomePopupModal'
 import NavigationService from '../../NavigationService'
-// import Orientation from '../../../constants/Orientation'
-import { Dialog } from '../../../components'
+import UserType from '../../../constants/UserType'
 const appUtilsModule = NativeModules.AppUtils
 export default class Home extends Component {
   props: {
@@ -152,12 +151,17 @@ export default class Home extends Component {
       this.container.setLoading(true, '注销中...')
     }
     try {
-      SOnlineService.logout()
+      if (this.props.currentUser.userType !== UserType.PROBATION_USER) {
+        SOnlineService.logout()
+      }
       this.props.closeWorkspace(async () => {
         let customPath = await FileTools.appendingHomeDirectory(
           ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
         )
-        this.props.setUser()
+        this.props.setUser({
+          userName: 'Customer',
+          userType: UserType.PROBATION_USER,
+        })
         this._closeModal()
         if (this.container) {
           this.container.setLoading(false)
@@ -290,7 +294,7 @@ export default class Home extends Component {
   }
 
   _renderModal = () => {
-    let isLogin = this.props.currentUser.userName !== undefined
+    let isLogin = this.props.currentUser.password !== undefined
     return (
       <HomePopupModal
         isLogin={isLogin}

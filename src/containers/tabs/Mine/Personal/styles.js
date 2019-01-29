@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
 
 export default StyleSheet.create({
   container: {
@@ -7,16 +8,16 @@ export default StyleSheet.create({
     // justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   header: {
     flexDirection: 'column',
     // marginTop: 30,
   },
   item2: {
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
     width: '100%',
-    height: 50,
+    height: scaleSize(80),
     alignItems: 'center',
     justifyContent: 'center',
   },

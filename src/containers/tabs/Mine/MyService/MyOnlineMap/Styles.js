@@ -1,26 +1,27 @@
 import { StyleSheet } from 'react-native'
-import { color } from '../../../../../styles'
+import { color, size } from '../../../../../styles'
+import { scaleSize } from '../../../../../utils'
 export const itemWidth = '100%'
 export const itemHeight = 140
 export const imageWidth = 120
 export const imageHeight = 100
 export const textHeight = 40
-const largeFontSize = 18
+const largeFontSize = size.fontSize.fontSizeXl
 const paddingLeft = 15
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   titleTextStyle: {
     width: itemWidth,
-    lineHeight: 60,
+    lineHeight: scaleSize(80),
     fontSize: largeFontSize,
-    color: color.font_color_white,
+    color: color.fontColorBlack,
     paddingLeft: paddingLeft,
     textAlign: 'left',
     backgroundColor: color.item_separate_white,
@@ -42,14 +43,14 @@ const styles = StyleSheet.create({
     width: itemWidth,
     fontSize: largeFontSize,
     fontWeight: 'bold',
-    color: color.font_color_white,
+    color: color.fontColorBlack,
     paddingLeft: paddingLeft,
     textAlign: 'left',
   },
   separateViewStyle: {
     width: itemWidth,
     height: 1,
-    backgroundColor: color.item_separate_white,
+    backgroundColor: color.separateColorGray,
   },
 })
 export default styles

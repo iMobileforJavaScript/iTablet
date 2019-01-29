@@ -193,28 +193,28 @@ function getCollectionData(type, params) {
     title: constants.UNDO,
     action: () => undo(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_undo_white.png'),
+    image: require('../../../../assets/mapTools/icon_undo_black.png'),
   })
   data.push({
     key: constants.REDO,
     title: constants.REDO,
     action: () => redo(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_recover_white.png'),
+    image: require('../../../../assets/mapTools/icon_recover_black.png'),
   })
   data.push({
     key: constants.CANCEL,
     title: constants.CANCEL,
     action: () => cancel(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_close_white.png'),
+    image: require('../../../../assets/mapTools/icon_close_black.png'),
   })
   data.push({
     key: constants.SUBMIT,
     title: constants.SUBMIT,
     action: () => collectionSubmit(type),
     size: 'large',
-    image: require('../../../../assets/mapTools/icon_submit_white.png'),
+    image: require('../../../../assets/mapTools/icon_submit_black.png'),
   })
   buttons = [
     ToolbarBtnType.CANCEL,

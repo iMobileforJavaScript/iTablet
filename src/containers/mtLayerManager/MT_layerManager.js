@@ -744,7 +744,9 @@ export default class MT_layerManager extends React.Component {
         <View
           style={{
             flexDirection: 'column',
-            width: '100%',
+            // width: '100%',
+            marginLeft: scaleSize(30),
+            marginRight: scaleSize(30),
             height: scaleSize(1),
             backgroundColor: color.bgG,
           }}

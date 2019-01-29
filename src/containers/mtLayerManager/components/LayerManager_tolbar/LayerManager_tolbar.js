@@ -39,6 +39,7 @@ export default class LayerManager_tolbar extends React.Component {
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
     onPress: () => {},
+    getOverlayView: () => {},
   }
 
   static defaultProps = {
@@ -261,6 +262,10 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       this.setVisible(false)
     } else if (section.title === '设置为当前图层') {
+      if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {
+        this.cb && this.cb(this.layer3dItem)
+        return
+      }
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
       Toast.show('当前图层为' + this.state.layerdata.caption)
@@ -297,20 +302,31 @@ export default class LayerManager_tolbar extends React.Component {
         Toast.show('不支持由该图层创建专题图')
       }
     } else if (section.title === '设置图层可选') {
-      SScene.setSelectable(this.layer3d.name, true).then(result => {
+      SScene.setSelectable(this.layer3dItem.name, true).then(result => {
         result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
+        // this.overlayView&&this.overlayView.setVisible(false)
       })
     } else if (section.title === '设置图层不可选') {
-      SScene.setSelectable(this.layer3d.name, false).then(result => {
+      SScene.setSelectable(this.layer3dItem.name, false).then(result => {
         result
           ? Toast.show('设置图层不可选成功')
           : Toast.show('设置图层不可选失败')
+        // this.overlayView&&this.overlayView.setVisible(false)
       })
     }
   }
 
-  getLayer3dItem = layer3d => {
-    this.layer3d = layer3d
+  getLayer3dItem = (
+    layer3dItem,
+    cb = () => {},
+    setItemSelectable = () => {},
+    overlayView = {},
+  ) => {
+    // console.log(layer3dItem)
+    this.layer3dItem = layer3dItem
+    this.cb = cb
+    this.setItemSelectable = setItemSelectable
+    this.overlayView = overlayView
   }
 
   renderList = () => {
@@ -467,7 +483,15 @@ export default class LayerManager_tolbar extends React.Component {
         {
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => this.setVisible(false)}
+            onPress={() => {
+              this.setVisible(false)
+              let overlayView = this.props.getOverlayView
+                ? this.props.getOverlayView()
+                : null
+              if (overlayView) {
+                overlayView.setVisible(false)
+              }
+            }}
             style={styles.overlay}
           />
         }

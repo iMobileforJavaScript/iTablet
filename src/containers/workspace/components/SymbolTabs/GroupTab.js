@@ -33,10 +33,7 @@ export default class GroupTab extends React.Component {
 
   _onPress = ({ data }) => {
     SMap.findSymbolsByGroups(data.type, data.path).then(result => {
-      let symbols = []
-      result.forEach(item => {
-        symbols.push(item)
-      })
+      let symbols = result
       this.props.setCurrentSymbols && this.props.setCurrentSymbols(symbols)
       if (symbols.length > 0) {
         this.props.goToPage && this.props.goToPage(1)
