@@ -520,6 +520,7 @@ export default class ToolBar extends React.PureComponent {
                 }
                 this.showToolbar(!this.isShow)
                 this.props.existFullMap && this.props.existFullMap()
+                GLOBAL.OverlayView.setVisible(false)
               } catch (error) {
                 Toast.show('操作失败')
               }
