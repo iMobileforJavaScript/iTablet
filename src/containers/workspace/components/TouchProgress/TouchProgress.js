@@ -16,7 +16,6 @@ import {
   ThemeType,
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
-
 const IMAGE_SIZE = scaleSize(25)
 const MARGIN = scaleSize(30)
 
@@ -273,8 +272,10 @@ export default class TouchProgress extends Component {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
-    if (gestureState.dx === 0 && gestureState.dy !== 0) {
-      this.showMenu()
+    if (Math.abs(gestureState.dy) > Math.abs(gestureState.dx)) {
+      if (Math.abs(gestureState.dy) > 20) {
+        this.showMenu()
+      }
     } else {
       let progressWidth = screen.getScreenWidth() - MARGIN * 2
       let x = this._previousLeft + gestureState.dx
@@ -644,6 +645,11 @@ export default class TouchProgress extends Component {
       height: scaleSize(40),
       justifyContent: 'center',
       alignItems: 'center',
+      shadowOffset: { width: 0, height: 0 },
+      shadowColor: 'black',
+      shadowOpacity: 1,
+      shadowRadius: 2,
+      elevation: 20,
       // left: 0,
       // top: 0,
     }
