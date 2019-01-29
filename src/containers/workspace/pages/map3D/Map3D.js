@@ -15,7 +15,7 @@ import {
   ToolBar,
   OverlayView,
 } from '../../components'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
@@ -297,7 +297,11 @@ export default class Map3D extends React.Component {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
-        style={{ marginVertical: 15 }}
+        style={{
+          marginVertical: 15,
+          width: scaleSize(420),
+          height: scaleSize(250),
+        }}
         type={'modal'}
         confirmAction={this.confirm}
         cancelAction={this.cancel}

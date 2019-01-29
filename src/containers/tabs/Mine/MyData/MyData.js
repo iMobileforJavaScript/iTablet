@@ -644,7 +644,8 @@ export default class MyLocalData extends Component {
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          renderSectionFooter={this._renderSectionSeparatorComponent}
         />
         {this._showMyDataPopupModal()}
       </Container>

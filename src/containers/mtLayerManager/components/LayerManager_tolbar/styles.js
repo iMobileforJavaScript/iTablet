@@ -50,8 +50,8 @@ export default StyleSheet.create({
   },
   separateViewStyle: {
     flexDirection: 'column',
-    marginLeft: scaleSize(40),
-    marginRight: scaleSize(40),
+    left: scaleSize(30),
+    right: scaleSize(30),
     height: scaleSize(1),
     backgroundColor: color.bgG,
   },

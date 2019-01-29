@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Text, Platform, BackHandler } from 'react-native'
+import { View, Text, Platform, BackHandler, Dimensions } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
@@ -73,27 +73,19 @@ export default class LayerAttribute extends React.Component {
   }
 
   getMap3DAttribute = async () => {
-    let data = await SScene.getLableAttributeList()
     let list = []
+    let data = await SScene.getLableAttributeList()
     for (let index = 0; index < data.length; index++) {
-      let item = [
-        {
-          fieldInfo: { caption: 'id' },
-          name: 'id',
-          value: data[index].id,
-        },
-        {
-          fieldInfo: { caption: 'name' },
-          name: 'name',
-          value: data[index].name,
-        },
-        {
-          fieldInfo: { caption: 'description' },
-          name: 'description',
-          value: data[index].description,
-        },
-      ]
-      list.push(item)
+      let arr = []
+      Object.keys(data[index]).forEach(key => {
+        let item = {
+          fieldInfo: { caption: key },
+          name: key,
+          value: data[index][key],
+        }
+        arr.push(item)
+      })
+      list.push(arr)
     }
     this.props.setAttributes(list)
     !this.state.showTable &&
@@ -176,8 +168,41 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
+  renderMap3dLayerAttribute = () => {
+    if (!this.props.attributes || !this.props.attributes.data) return null
+    if (this.props.attributes.data.length > 1) {
+      return (
+        <LayerAttributeTable
+          ref={ref => (this.table = ref)}
+          data={this.props.attributes.data}
+          tableHead={this.props.attributes.head}
+          // data={this.state.attribute}
+          // tableHead={this.state.tableHead}
+          // tableTitle={this.state.tableTitle}
+          refresh={this.getMap3DAttribute}
+          NormalrowStyle={{ width: Dimensions.get('window').width }}
+          type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
+          selectRow={this.selectRow}
+        />
+      )
+    } else {
+      return (
+        <LayerAttributeTable
+          ref={ref => (this.table = ref)}
+          data={this.props.attributes.data[0]}
+          hasIndex={false}
+          tableTitle={this.props.attributes.head}
+          // colHeight={this.state.colHeight}
+          widthArr={[100, 100]}
+          tableHead={['名称', '属性值']}
+          // tableHead={this.state.tableHead}
+          refresh={this.getAttribute}
+        />
+      )
+    }
+  }
+
   renderMapLayerAttribute = () => {
-    // console.log(this.props.attributes.data)
     if (!this.props.attributes || !this.props.attributes.data) return null
     if (this.props.attributes.data.length > 1) {
       return (
@@ -246,7 +271,11 @@ export default class LayerAttribute extends React.Component {
       >
         {this.state.showTable ? (
           this.props.attributes.head.length > 0 ? (
-            this.renderMapLayerAttribute()
+            this.type === 'MAP_3D' ? (
+              this.renderMap3dLayerAttribute()
+            ) : (
+              this.renderMapLayerAttribute()
+            )
           ) : (
             <View style={styles.infoView}>
               <Text style={styles.info}>当前图层属性不可见</Text>
