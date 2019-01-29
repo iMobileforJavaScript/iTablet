@@ -117,7 +117,7 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: Const.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
@@ -127,17 +127,17 @@ export default class Mine extends Component {
           })}
           {this._renderItem({
             title: Const.MAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
             onClick: () => this.goToMyData(Const.MAP),
           })}
           {this._renderItem({
             title: Const.SCENE,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
             onClick: () => this.goToMyData(Const.SCENE),
           })}
           {this._renderItem({
             title: Const.SYMBOL,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
           })}
         </View>
@@ -166,7 +166,7 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: Const.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
@@ -176,17 +176,17 @@ export default class Mine extends Component {
           })}
           {this._renderItem({
             title: Const.MAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
             onClick: () => this.goToMyData(Const.MAP),
           })}
           {this._renderItem({
             title: Const.SCENE,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
             onClick: () => this.goToMyData(Const.SCENE),
           })}
           {this._renderItem({
             title: Const.SYMBOL,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
           })}
           {/*{this._renderItem({*/}
