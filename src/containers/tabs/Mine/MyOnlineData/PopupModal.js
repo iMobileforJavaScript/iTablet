@@ -1,8 +1,9 @@
 import React, { PureComponent } from 'react'
 import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
+import { scaleSize } from '../../../../utils'
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -20,7 +21,7 @@ export default class PopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
-    this.fontSize = Platform.OS === 'ios' ? 18 : 16
+    this.fontSize = this.fontSize = size.fontSize.fontSizeXl
     this.state = {
       isClick: true,
       progress: this.props.data.downloadingProgress,
@@ -67,7 +68,7 @@ export default class PopupModal extends PureComponent {
         style={{
           width: '100%',
           height: 1,
-          backgroundColor: color.item_separate_white,
+          backgroundColor: color.separateColorGray,
         }}
       />
     )
@@ -86,7 +87,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content_white }}
+          style={{ backgroundColor: color.itemColorWhite }}
           onPress={async () => {
             if (title === '发布服务') {
               this.props.onPublishService()
@@ -97,7 +98,7 @@ export default class PopupModal extends PureComponent {
         >
           <Text
             style={{
-              lineHeight: 60,
+              lineHeight: scaleSize(80),
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
@@ -133,14 +134,14 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content_white }}
+          style={{ backgroundColor: color.itemColorWhite }}
           onPress={async () => {
             this.props.onChangeDataVisibility()
           }}
         >
           <Text
             style={{
-              lineHeight: 60,
+              lineHeight: scaleSize(80),
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
@@ -169,7 +170,7 @@ export default class PopupModal extends PureComponent {
       }
       return (
         <TouchableOpacity
-          style={{ backgroundColor: color.content_white }}
+          style={{ backgroundColor: color.itemColorWhite }}
           onPress={() => {
             if (this.props.data.isDownloading === true) {
               if (progress.indexOf('%') !== -1) {
@@ -190,7 +191,7 @@ export default class PopupModal extends PureComponent {
         >
           <Text
             style={{
-              lineHeight: 60,
+              lineHeight: scaleSize(80),
               width: screenWidth,
               position: 'relative',
               textAlign: 'center',
@@ -210,14 +211,14 @@ export default class PopupModal extends PureComponent {
   _deleteButton = title => {
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content_white }}
+        style={{ backgroundColor: color.itemColorWhite }}
         onPress={async () => {
           this.props.onDeleteData()
         }}
       >
         <Text
           style={{
-            lineHeight: 60,
+            lineHeight: scaleSize(80),
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
@@ -251,7 +252,7 @@ export default class PopupModal extends PureComponent {
         ]}
       >
         <TouchableOpacity
-          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
+          style={{ flex: 1, backgroundColor: color.modalBgColor }}
           activeOpacity={1}
           onPress={() => {
             this._onClose()

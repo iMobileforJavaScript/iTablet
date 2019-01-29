@@ -88,7 +88,7 @@ export default class RenderServiceItem extends PureComponent {
                 position: 'absolute',
                 bottom: 2,
                 right: 0,
-                fontSize: 30,
+                fontSize: 28,
               }}
             >
               ...

@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { View, Text, TouchableOpacity, Image, FlatList } from 'react-native'
 import Container from '../../../../components/Container'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../../utils/Toast'
+import { scaleSize } from '../../../../utils'
 export default class ToggleAccount extends Component {
   props: {
     navigation: Object,
@@ -23,9 +24,9 @@ export default class ToggleAccount extends Component {
     let userName = info.item.userName
     let password = info.item.password
     if (userName && password) {
-      let itemHeight = 60
-      let fontSize = 18
-      let imageWidth = itemHeight - 10
+      let itemHeight = scaleSize(80)
+      let fontSize = size.fontSize.fontSizeXl
+      let imageWidth = itemHeight - scaleSize(10)
       let imageSource = {
         uri:
           'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
@@ -82,7 +83,7 @@ export default class ToggleAccount extends Component {
           <Text
             style={{
               fontSize: fontSize,
-              color: color.font_color_white,
+              color: color.fontColorBlack,
               marginLeft: 10,
             }}
           >
@@ -98,8 +99,8 @@ export default class ToggleAccount extends Component {
   }
 
   _renderAddAccount = () => {
-    let itemHeight = 60
-    let fontSize = 18
+    let itemHeight = scaleSize(80)
+    let fontSize = size.fontSize.fontSizeXl
     return (
       <View
         style={{
@@ -126,7 +127,7 @@ export default class ToggleAccount extends Component {
             backgroundColor: color.content_white,
           }}
         >
-          <Text style={{ fontSize: fontSize, color: color.font_color_white }}>
+          <Text style={{ fontSize: fontSize, color: color.fontColorBlack }}>
             添加账号
           </Text>
         </TouchableOpacity>

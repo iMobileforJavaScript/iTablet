@@ -140,7 +140,7 @@ export default class MyDataPopupModal extends PureComponent {
           onPress={() => {
             this._onCloseModal()
           }}
-          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
+          style={{ flex: 1, backgroundColor: color.modalBgColor }}
         >
           <View
             style={{

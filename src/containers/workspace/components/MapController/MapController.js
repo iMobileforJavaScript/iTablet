@@ -118,7 +118,9 @@ export default class MapController extends React.Component {
     })
     if (this.props.type === 'MAP_3D') {
       return (
-        <View style={[styles.compassView, this.props.compassStyle]}>
+        <View
+          style={[styles.compassView, this.props.compassStyle, styles.shadow]}
+        >
           <Animated.View style={{ transform: [{ rotate: spin }] }}>
             <MTBtn
               style={styles.compass}
@@ -159,8 +161,8 @@ export default class MapController extends React.Component {
         style={[styles.container, this.props.style, { left: this.state.left }]}
       >
         {this.renderLocation()}
+        {this.renderCompass()}
         <View style={[styles.topView, styles.shadow]}>
-          {this.renderCompass()}
           <MTBtn
             style={styles.btn}
             key={'controller_plus'}

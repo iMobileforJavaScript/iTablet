@@ -11,11 +11,11 @@ const paddingLeft = 15
 const styles = StyleSheet.create({
   haveDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   noDataViewStyle: {
     flex: 1,
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   titleTextStyle: {
     width: itemWidth,
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     color: color.font_color_white,
     paddingLeft: paddingLeft,
     textAlign: 'left',
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   itemViewStyle: {
     width: itemWidth,
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     padding: 15,
     alignItems: 'center',
-    backgroundColor: color.content_white,
+    backgroundColor: color.contentColorWhite,
   },
   imageStyle: {
     width: imageWidth,

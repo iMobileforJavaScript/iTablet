@@ -57,7 +57,9 @@ const lightTheme = {
   separateColorGray: '#A0A0A0',
 
   imageColorBlack: '#303030',
-  // rowSeparator: '#979797',
+  imageColorWhite: '#F0F0F0',
+
+  modalBgColor: 'rgba(48, 48, 48, 0.85)',
 }
 
 let styles
