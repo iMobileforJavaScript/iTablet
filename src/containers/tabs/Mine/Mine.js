@@ -15,12 +15,13 @@ import {
 import { Container } from '../../../components'
 import { FileTools } from '../../../native'
 import NavigationService from '../../NavigationService'
-import Login from './Login'
-import { color } from './styles'
+// import Login from './Login'
+import { color, size } from '../../../styles'
 import ConstPath from '../../../constants/ConstPath'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
 import { UserType, Const } from '../../../constants'
+import { scaleSize } from '../../../utils'
 export default class Mine extends Component {
   props: {
     navigation: Object,
@@ -40,14 +41,18 @@ export default class Mine extends Component {
     this.goToMyLocalData = this.goToMyLocalData.bind(this)
   }
 
-  // componentDidMount(){
-  //   if(this.props.user && this.props.user.currentUser && !this.props.user.currentUser.password){
-  //     this.props.setUser({
-  //       userName: 'Customer',
-  //       userType: UserType.PROBATION_USER,
-  //     })
-  //   }
-  // }
+  componentDidMount() {
+    if (
+      this.props.user &&
+      this.props.user.currentUser &&
+      !this.props.user.currentUser.password
+    ) {
+      this.props.setUser({
+        userName: 'Customer',
+        userType: UserType.PROBATION_USER,
+      })
+    }
+  }
 
   componentDidUpdate(previousProps) {
     if (
@@ -107,39 +112,49 @@ export default class Mine extends Component {
 
   _selectionRender = () => {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      let fontSize = Platform.OS === 'ios' ? 18 : 16
+      // let fontSize = Platform.OS === 'ios' ? 18 : 16
+      let fontSize = size.fontSize.fontSizeXl
       return (
         <View
           opacity={1}
-          style={{ flex: 1, backgroundColor: color.content_white }}
+          style={{ flex: 1, backgroundColor: color.contentColorWhite }}
         >
           {this._renderHeader(fontSize)}
-          {this._renderLine()}
-          {this._renderItem({
-            title: Const.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: this.goToMyLocalData,
-          })}
-          {this._renderItem({
-            title: Const.DATA,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => this.goToMyData(Const.DATA),
-          })}
-          {this._renderItem({
-            title: Const.MAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => this.goToMyData(Const.MAP),
-          })}
-          {this._renderItem({
-            title: Const.SCENE,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => this.goToMyData(Const.SCENE),
-          })}
-          {this._renderItem({
-            title: Const.SYMBOL,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => this.goToMyData(Const.SYMBOL),
-          })}
+          <ScrollView
+            style={{ flex: 1 }}
+            // contentContainerStyle={{ alignItems:'center' }}
+            showsHorizontalScrollIndicator={false}
+            showsVerticalScrollIndicator={false}
+            overScrollMode={'always'}
+            bounces={true}
+          >
+            {this._renderLine()}
+            {this._renderItem({
+              title: Const.IMPORT,
+              leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+              onClick: this.goToMyLocalData,
+            })}
+            {this._renderItem({
+              title: Const.DATA,
+              leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+              onClick: () => this.goToMyData(Const.DATA),
+            })}
+            {this._renderItem({
+              title: Const.MAP,
+              leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+              onClick: () => this.goToMyData(Const.MAP),
+            })}
+            {this._renderItem({
+              title: Const.SCENE,
+              leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+              onClick: () => this.goToMyData(Const.SCENE),
+            })}
+            {this._renderItem({
+              title: Const.SYMBOL,
+              leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
+              onClick: () => this.goToMyData(Const.SYMBOL),
+            })}
+          </ScrollView>
         </View>
       )
     } else {
@@ -203,10 +218,10 @@ export default class Mine extends Component {
       </View>
     )
   }
-  _renderHeader = fontSize => {
+  _renderHeader = () => {
     let allColor = color.font_color_white
-    let headerHeight = 80
-    let imageWidth = 40
+    let headerHeight = scaleSize(120)
+    let imageWidth = scaleSize(70)
     let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
     let headerImage = isPro
       ? require('../../../assets/home/system_default_header_image.png')
@@ -214,7 +229,7 @@ export default class Mine extends Component {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
-    let headerTitle = isPro ? 'Customer' : this.props.user.currentUser.userName
+    let headerTitle = isPro ? '立即登录' : this.props.user.currentUser.userName
     return (
       <View
         style={{
@@ -226,7 +241,9 @@ export default class Mine extends Component {
       >
         <TouchableOpacity
           onPress={() => {
-            this.goToPersonal()
+            if (headerTitle !== '立即登录') {
+              this.goToPersonal()
+            }
           }}
           activeOpacity={1}
           style={{
@@ -242,22 +259,21 @@ export default class Mine extends Component {
               width: imageWidth,
               height: imageWidth,
               borderRadius: 8,
-              // tintColor:allColor,
             }}
             source={headerImage}
           />
         </TouchableOpacity>
         <TouchableOpacity
           style={{ flex: 1 }}
-          // onPress={()=>{
-          //   if(headerTitle === 'Customer'){
-          //     this.goToLogin()
-          //   }
-          // }}
+          onPress={() => {
+            if (headerTitle === '立即登录') {
+              this.goToLogin()
+            }
+          }}
         >
           <Text
             style={{
-              fontSize: fontSize,
+              fontSize: size.fontSize.fontSizeXXl,
               color: allColor,
             }}
           >
@@ -272,8 +288,9 @@ export default class Mine extends Component {
     return (
       <View
         style={{
-          width: '100%',
-          height: 8,
+          marginLeft: 10,
+          marginRight: 10,
+          height: 1,
           backgroundColor: color.separateColorGray,
         }}
       />
@@ -290,10 +307,10 @@ export default class Mine extends Component {
     },
     itemOptions = {
       itemWidth: '100%',
-      itemHeight: 60,
-      fontSize: Platform.OS === 'ios' ? 18 : 16,
-      imageWidth: 25,
-      imageHeight: 25,
+      itemHeight: scaleSize(90),
+      fontSize: size.fontSize.fontSizeXl,
+      imageWidth: scaleSize(45),
+      imageHeight: scaleSize(45),
       rightImagePath: require('../../../assets/Mine/mine_my_arrow.png'),
     },
   ) => {
@@ -309,7 +326,10 @@ export default class Mine extends Component {
     let imageColor = color.imageColorBlack
     let txtColor = color.fontColorBlack
     return (
-      <View display={this.state.display}>
+      <View
+        style={{ marginLeft: 15, marginRight: 15, flex: 1 }}
+        display={this.state.display}
+      >
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -337,7 +357,7 @@ export default class Mine extends Component {
               textAlign: 'left',
               fontSize: fontSize,
               color: txtColor,
-              paddingLeft: 5,
+              paddingLeft: 15,
             }}
           >
             {title}
@@ -385,8 +405,8 @@ export default class Mine extends Component {
         </Container>
       )
     } else {
-      // return <View/>
-      return <Login setUser={this.props.setUser} user={this.props.user} />
+      return <View />
+      // return <Login setUser={this.props.setUser} user={this.props.user} />
     }
   }
 }

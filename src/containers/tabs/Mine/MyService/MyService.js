@@ -16,9 +16,11 @@ import {
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
 import { SOnlineService } from 'imobile_for_reactnative'
-import styles, { color } from './Styles'
+import styles from './Styles'
+import { color, size } from '../../../../styles'
 import PopupModal from './PopupModal'
 import Toast from '../../../../utils/Toast'
+import { scaleSize } from '../../../../utils'
 
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -181,13 +183,15 @@ export default class MyService extends Component {
   _renderSectionHeader(section) {
     let title = section.section.title
     if (title !== undefined) {
+      let height = scaleSize(80)
+      let fontSize = size.fontSize.fontSizeXl
       return (
         <TouchableOpacity
           style={{
             backgroundColor: color.contentColorGray,
             justifyContent: 'center',
             width: '100%',
-            height: 40,
+            height: height,
           }}
           onPress={() => {
             this._isShowRenderItem(section.section.isShowItem, title)
@@ -196,7 +200,7 @@ export default class MyService extends Component {
           <Text
             style={{
               color: color.fontColorWhite,
-              fontSize: 18,
+              fontSize: fontSize,
               fontWeight: 'bold',
               paddingLeft: 15,
             }}

@@ -5,7 +5,6 @@ import {
   SectionList,
   TouchableOpacity,
   Image,
-  Platform,
   AsyncStorage,
 } from 'react-native'
 import { Container, ListSeparator } from '../../../../components'
@@ -13,10 +12,11 @@ import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
 // import {  } from 'react-native-fs'
 import UserType from '../../../../constants/UserType'
+import { scaleSize } from '../../../../utils'
 
 export default class MyLocalData extends Component {
   props: {
@@ -32,7 +32,7 @@ export default class MyLocalData extends Component {
       userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
       textValue: '扫描文件:',
-      textDisplay: 'flex',
+      textDisplay: 'none',
     }
   }
   componentDidMount() {
@@ -118,53 +118,94 @@ export default class MyLocalData extends Component {
   }
 
   _setSectionDataState = async () => {
-    let rootDirWorkspaceData = await this._constructExternalSectionData()
-    if (rootDirWorkspaceData && rootDirWorkspaceData.length === 0) {
+    try {
+      let result = await AsyncStorage.getItem('ExternalSectionData')
+      let newSectionData
+      if (result !== null) {
+        this.setState({ textDisplay: 'none' })
+      }
+      let userSectionData
+      if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+        userSectionData = []
+      } else {
+        userSectionData = await this._constructUserSectionData()
+      }
+      // this.setState({ sectionData: userSectionData })
+      let customerSectionData = await this._constructCustomerSectionData()
+      newSectionData = userSectionData.concat(customerSectionData)
       this.setState({
-        sectionData: rootDirWorkspaceData,
-        textValue: '扫描结束，未发现可用数据',
+        sectionData: [
+          { title: '工作空间', data: newSectionData, isShowItem: true },
+        ],
       })
-    } else {
-      this.setState({ sectionData: rootDirWorkspaceData, textDisplay: 'none' })
+      let externalSectionData = []
+      if (result !== null) {
+        externalSectionData = JSON.parse(result)
+      } else {
+        externalSectionData = await this._constructExternalSectionData()
+        AsyncStorage.setItem(
+          'ExternalSectionData',
+          JSON.stringify(externalSectionData),
+        )
+      }
+      let newSectionData2 = newSectionData.concat(externalSectionData)
+      this.setState({
+        sectionData: [
+          { title: '工作空间', data: newSectionData2, isShowItem: true },
+        ],
+        textDisplay: 'none',
+      })
+    } catch (e) {
+      this.setState({ textDisplay: 'none' })
     }
-    // try {
-    //
-    //   let result = await AsyncStorage.getItem('ExternalSectionData')
-    //   let newSectionData
-    //   if (result !== null) {
-    //     this.setState({ textDisplay: 'none' })
-    //     newSectionData = await this._constructAllUserSectionData()
-    //   } else {
-    //     /** 第一次进入*/
-    //     let userSectionData
-    //     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-    //       userSectionData = []
-    //     } else {
-    //       userSectionData = await this._constructUserSectionData()
-    //     }
-    //     // this.setState({ sectionData: userSectionData })
-    //     let customerSectionData = await this._constructCustomerSectionData()
-    //     newSectionData = userSectionData.concat(customerSectionData)
-    //     this.setState({ sectionData: newSectionData })
-    //   }
-    //
-    //   let externalSectionData = []
-    //   if (result !== null) {
-    //     externalSectionData = JSON.parse(result)
-    //   } else {
-    //     externalSectionData = await this._constructExternalSectionData()
-    //     AsyncStorage.setItem(
-    //       'ExternalSectionData',
-    //       JSON.stringify(externalSectionData),
-    //     )
-    //   }
-    //   let newSectionData2 = newSectionData.concat(externalSectionData)
-    //   this.setState({ sectionData: newSectionData2, textDisplay: 'none' })
-    // } catch (e) {
-    //   this.setState({ textDisplay: 'none' })
-    // }
   }
 
+  _setSectionDataState2 = async () => {
+    try {
+      let result = await AsyncStorage.getItem('ExternalSectionData')
+      let newSectionData
+      if (result !== null) {
+        this.setState({ textDisplay: 'none' })
+        newSectionData = await this._constructAllUserSectionData()
+      } else {
+        /** 第一次进入*/
+        let userSectionData
+        if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+          userSectionData = []
+        } else {
+          userSectionData = await this._constructUserSectionData()
+        }
+        // this.setState({ sectionData: userSectionData })
+        let customerSectionData = await this._constructCustomerSectionData()
+        newSectionData = userSectionData.concat(customerSectionData)
+        this.setState({
+          sectionData: [
+            { title: '工作空间', data: newSectionData, isShowItem: true },
+          ],
+        })
+      }
+
+      let externalSectionData = []
+      if (result !== null) {
+        externalSectionData = JSON.parse(result)
+      } else {
+        externalSectionData = await this._constructExternalSectionData()
+        AsyncStorage.setItem(
+          'ExternalSectionData',
+          JSON.stringify(externalSectionData),
+        )
+      }
+      let newSectionData2 = newSectionData.concat(externalSectionData)
+      this.setState({
+        sectionData: [
+          { title: '工作空间', data: newSectionData2, isShowItem: true },
+        ],
+        textDisplay: 'none',
+      })
+    } catch (e) {
+      this.setState({ textDisplay: 'none' })
+    }
+  }
   _setFilterExternalDatas = async (fullFileDir, fileType, arrFilterFile) => {
     try {
       let isRecordFile = false
@@ -224,14 +265,15 @@ export default class MyLocalData extends Component {
       newData,
       true,
     )
-    let titleWorkspace = '工作空间'
-    let sectionData
-    if (newData.length === 0) {
-      sectionData = []
-    } else {
-      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
-    }
-    return sectionData
+    return newData
+    // let titleWorkspace = '工作空间'
+    // let sectionData
+    // if (newData.length === 0) {
+    //   sectionData = []
+    // } else {
+    //   sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    // }
+    // return sectionData
   }
 
   /** 构造除iTablet目录以外的数据*/
@@ -244,15 +286,15 @@ export default class MyLocalData extends Component {
       newData,
       true,
     )
-
-    let titleWorkspace = '工作空间'
-    let sectionData
-    if (newData.length === 0) {
-      sectionData = []
-    } else {
-      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
-    }
-    return sectionData
+    return newData
+    // let titleWorkspace = '工作空间'
+    // let sectionData
+    // if (newData.length === 0) {
+    //   sectionData = []
+    // } else {
+    //   sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    // }
+    // return sectionData
   }
   /** 构造游客以及当前用户数据*/
   _constructAllUserSectionData = async () => {
@@ -265,52 +307,53 @@ export default class MyLocalData extends Component {
       newData,
       false,
     )
-    let titleWorkspace = '用户数据'
-    let titleWorkspace2 = '游客数据'
-    let sectionData
-    if (newData.length === 0) {
-      sectionData = []
-    } else {
-      let arrUserData = []
-      let arrCustomerData = []
-      let userName =
-        this.props.user.currentUser.userType === UserType.PROBATION_USER
-          ? '/null23132/'
-          : this.props.user.currentUser.userName
-      for (let i = 0; i < newData.length; i++) {
-        let objData = newData[i]
-        if (
-          objData.filePath.indexOf(ConstPath.RelativePath.ExternalData) !== -1
-        ) {
-          if (objData.filePath.indexOf(userName) !== -1) {
-            arrUserData.push(objData)
-          } else if (objData.filePath.indexOf('Customer') !== -1) {
-            arrCustomerData.push(objData)
-          }
-        }
-      }
-      if (arrUserData.length === 0) {
-        if (arrCustomerData.length === 0) {
-          sectionData = []
-        } else {
-          sectionData = [
-            { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
-          ]
-        }
-      } else {
-        if (arrCustomerData.length === 0) {
-          sectionData = [
-            { title: titleWorkspace, data: arrUserData, isShowItem: true },
-          ]
-        } else {
-          sectionData = [
-            { title: titleWorkspace, data: arrUserData, isShowItem: true },
-            { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
-          ]
-        }
-      }
-    }
-    return sectionData
+    return newData
+    // let titleWorkspace = '用户数据'
+    // let titleWorkspace2 = '游客数据'
+    // let sectionData
+    // if (newData.length === 0) {
+    //   sectionData = []
+    // } else {
+    //   let arrUserData = []
+    //   let arrCustomerData = []
+    //   let userName =
+    //     this.props.user.currentUser.userType === UserType.PROBATION_USER
+    //       ? '/null23132/'
+    //       : this.props.user.currentUser.userName
+    //   for (let i = 0; i < newData.length; i++) {
+    //     let objData = newData[i]
+    //     if (
+    //       objData.filePath.indexOf(ConstPath.RelativePath.ExternalData) !== -1
+    //     ) {
+    //       if (objData.filePath.indexOf(userName) !== -1) {
+    //         arrUserData.push(objData)
+    //       } else if (objData.filePath.indexOf('Customer') !== -1) {
+    //         arrCustomerData.push(objData)
+    //       }
+    //     }
+    //   }
+    //   if (arrUserData.length === 0) {
+    //     if (arrCustomerData.length === 0) {
+    //       sectionData = []
+    //     } else {
+    //       sectionData = [
+    //         { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
+    //       ]
+    //     }
+    //   } else {
+    //     if (arrCustomerData.length === 0) {
+    //       sectionData = [
+    //         { title: titleWorkspace, data: arrUserData, isShowItem: true },
+    //       ]
+    //     } else {
+    //       sectionData = [
+    //         { title: titleWorkspace, data: arrUserData, isShowItem: true },
+    //         { title: titleWorkspace2, data: arrCustomerData, isShowItem: true },
+    //       ]
+    //     }
+    //   }
+    // }
+    // return sectionData
   }
   /** 构造当前用户数据*/
   _constructUserSectionData = async () => {
@@ -326,16 +369,17 @@ export default class MyLocalData extends Component {
       this.path,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
-      true,
+      false,
     )
-    let titleWorkspace = '用户数据'
-    let sectionData
-    if (newData.length === 0) {
-      sectionData = []
-    } else {
-      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
-    }
-    return sectionData
+    return newData
+    // let titleWorkspace = '用户数据'
+    // let sectionData
+    // if (newData.length === 0) {
+    //   sectionData = []
+    // } else {
+    //   sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    // }
+    // return sectionData
   }
   /** 构造游客数据*/
   _constructCustomerSectionData = async () => {
@@ -349,16 +393,17 @@ export default class MyLocalData extends Component {
       this.path,
       { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
-      true,
+      false,
     )
-    let titleWorkspace = '游客数据'
-    let sectionData
-    if (newData.length === 0) {
-      sectionData = []
-    } else {
-      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
-    }
-    return sectionData
+    return newData
+    // let titleWorkspace = '游客数据'
+    // let sectionData
+    // if (newData.length === 0) {
+    //   sectionData = []
+    // } else {
+    //   sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    // }
+    // return sectionData
   }
 
   _renderSectionHeader = info => {
@@ -367,9 +412,9 @@ export default class MyLocalData extends Component {
       let imageSource = info.section.isShowItem
         ? require('../../../../assets/Mine/local_data_open.png')
         : require('../../../../assets/Mine/local_data_close.png')
-      let imageWidth = 20
-      let height = 40
-      let fontSize = 18
+      let imageWidth = scaleSize(30)
+      let height = scaleSize(80)
+      let fontSize = size.fontSize.fontSizeXl
       return (
         <TouchableOpacity
           onPress={() => {
@@ -394,7 +439,7 @@ export default class MyLocalData extends Component {
           <Image
             resizeMode={'contain'}
             style={{
-              tintColor: color.fontColorWhite,
+              tintColor: color.imageColorWhite,
               marginLeft: 10,
               width: imageWidth,
               height: imageWidth,
@@ -405,7 +450,7 @@ export default class MyLocalData extends Component {
             style={[
               {
                 color: color.fontColorWhite,
-                paddingLeft: 10,
+                paddingLeft: 15,
                 fontSize: fontSize,
                 fontWeight: 'bold',
                 backgroundColor: 'transparent',
@@ -422,11 +467,13 @@ export default class MyLocalData extends Component {
 
   _renderItem = info => {
     let txtInfo = info.item.fileName
-    let itemHeight = 60
-    let imageWidth = 30,
-      imageHeight = 30
+    let itemHeight = scaleSize(80)
+    let imageWidth = scaleSize(30),
+      imageHeight = scaleSize(30)
     // let separatorLineHeight = 1
-    let fontSize = Platform.OS === 'ios' ? 18 : 16
+    let fontSize = size.fontSize.fontSizeXl
+    let imageColor = color.imageColorBlack
+    let fontColor = color.fontColorBlack
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
       <TouchableOpacity
@@ -452,7 +499,7 @@ export default class MyLocalData extends Component {
               width: imageWidth,
               height: imageHeight,
               marginLeft: 20,
-              tintColor: color.font_color_white,
+              tintColor: imageColor,
             }}
             resizeMode={'contain'}
             source={require('../../../../assets/Mine/mine_my_online_data.png')}
@@ -460,7 +507,7 @@ export default class MyLocalData extends Component {
           <Text
             numberOfLines={1}
             style={{
-              color: color.font_color_white,
+              color: fontColor,
               paddingLeft: 15,
               fontSize: fontSize,
               flex: 1,
@@ -473,7 +520,7 @@ export default class MyLocalData extends Component {
               width: imageWidth,
               height: imageHeight,
               marginRight: 10,
-              tintColor: color.font_color_white,
+              tintColor: imageColor,
             }}
             resizeMode={'contain'}
             source={require('../../../../assets/Mine/mine_more_white.png')}

@@ -19,10 +19,12 @@ import {
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import Container from '../../../../components/Container/index'
-import styles, { color } from './Styles'
+import styles from './Styles'
+import { color, size } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
 import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
+import { scaleSize } from '../../../../utils'
 
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
@@ -630,12 +632,13 @@ export default class MyOnlineData extends Component {
     if (dataName !== undefined) {
       let length = dataName.length - 4
       let newDataName = dataName.substring(0, length)
-      let itemHeight = 60
-      let imageWidth = 30,
-        imageHeight = 30
+      let itemHeight = scaleSize(80)
+      let imageWidth = scaleSize(30),
+        imageHeight = scaleSize(30)
       let itemWidth = '100%'
       let fontColor = color.fontColorBlack
       let imageColor = fontColor
+      let fontSize = size.fontSize.fontSizeXl
       return (
         <TouchableOpacity
           onPress={() => {
@@ -655,7 +658,7 @@ export default class MyOnlineData extends Component {
               style={{
                 width: imageWidth,
                 height: imageHeight,
-                marginLeft: 10,
+                marginLeft: 20,
                 tintColor: imageColor,
               }}
               resizeMode={'contain'}
@@ -666,17 +669,17 @@ export default class MyOnlineData extends Component {
                 flex: 1,
                 // lineHeight: itemHeight,
                 textAlign: 'left',
-                fontSize: 18,
+                fontSize: fontSize,
                 color: fontColor,
-                paddingLeft: 10,
+                paddingLeft: 15,
               }}
             >
               {newDataName}
             </Text>
             <Image
               style={{
-                width: imageWidth,
-                height: imageHeight,
+                width: scaleSize(40),
+                height: scaleSize(40),
                 marginRight: 10,
                 tintColor: imageColor,
               }}

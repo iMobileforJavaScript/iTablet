@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
-import { color } from '../../../styles'
+import { color, size } from '../../../styles'
+import { scaleSize } from '../../../utils'
 
 export default class HomePopupModal extends PureComponent {
   props: {
@@ -48,21 +49,22 @@ export default class HomePopupModal extends PureComponent {
         style={{
           width: '100%',
           height: 1,
-          backgroundColor: color.itemColorBlack,
+          backgroundColor: color.separateColorGray,
         }}
       />
     )
   }
   _renderItem = (label, onClick: () => {}) => {
-    let fontSize = Platform.OS === 'ios' ? 18 : 16
+    let fontSize = size.fontSize.fontSizeXl
+    let height = scaleSize(80)
     return (
       <View style={{ width: '100%' }}>
         <TouchableOpacity
           activeOpacity={0.9}
           style={{
             width: '100%',
-            height: 60,
-            backgroundColor: color.content_white,
+            height: height,
+            backgroundColor: color.contentColorWhite,
             justifyContent: 'center',
             alignItems: 'center',
           }}
@@ -92,7 +94,6 @@ export default class HomePopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._renderSeparatorLine()}
             {this._renderItem('切换账号', this.props.onToggleAccount)}
             {/*{this._renderItem('注册', this.props.onRegister)}*/}
             {this._renderItem('退出登录', this.props.onLogout)}
@@ -109,7 +110,6 @@ export default class HomePopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._renderSeparatorLine()}
             {this._renderItem('登录', this.props.onLogin)}
             {this._renderItem('注册', this.props.onRegister)}
           </View>
@@ -126,7 +126,6 @@ export default class HomePopupModal extends PureComponent {
             right: 0,
           }}
         >
-          {this._renderSeparatorLine()}
           {this._renderItem('关于 SuperMap iTablet', this.props.onAbout)}
           {this._renderItem('设置', this.props.onSetting)}
           {this._renderItem('退出', this.closeApp)}
@@ -158,7 +157,7 @@ export default class HomePopupModal extends PureComponent {
           onPress={() => {
             this._onCloseModal()
           }}
-          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
+          style={{ flex: 1, backgroundColor: color.modalBgColor }}
         >
           {this._selectRender()}
         </TouchableOpacity>
