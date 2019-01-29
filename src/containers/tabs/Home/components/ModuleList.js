@@ -46,16 +46,16 @@ class RenderModuleItem extends Component {
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === '地图制图') {
-        fileName = '湖南'
+        fileName = '湖南_示范数据'
       } else if (moduleKey === '专题制图') {
-        fileName = '北京'
+        fileName = '北京_示范数据'
       } else if (moduleKey === '外业采集') {
-        fileName = '地理国情普查'
+        fileName = '地理国情普查_示范数据'
       } else if (moduleKey === '三维场景') {
         if (Platform.OS === 'android') {
-          fileName = 'OlympicGreen_android'
+          fileName = 'OlympicGreen_android_示范数据'
         } else if (Platform.OS === 'ios') {
-          fileName = 'OlympicGreen_ios'
+          fileName = 'OlympicGreen_ios_示范数据'
         }
       }
       let homePath = await FileTools.appendingHomeDirectory()
@@ -122,7 +122,7 @@ class RenderModuleItem extends Component {
 
   _downloadModuleData = async downloadData => {
     this.downloading = true
-    let keyword = downloadData.fileName + '_示范数据'
+    let keyword = downloadData.fileName
     let dataUrl = await FetchUtils.getFindUserZipDataUrl(
       'xiezhiyan123',
       keyword,

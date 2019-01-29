@@ -82,6 +82,7 @@ export default class Home extends Component {
             server: filePath,
             type: 9,
           })
+
           if (result.length === 0) {
             Toast.show('导入失败')
           }
