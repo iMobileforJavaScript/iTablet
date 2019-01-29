@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
+  Keyboard,
 } from 'react-native'
 import { Toast } from '../../../../utils/index'
 
@@ -362,6 +363,7 @@ export default class Login extends React.Component {
                 accessibilityLabel={'登录'}
                 style={styles.loginStyle}
                 onPress={() => {
+                  Keyboard.dismiss()
                   this._login()
                 }}
               >

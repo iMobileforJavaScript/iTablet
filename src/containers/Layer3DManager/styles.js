@@ -1,5 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
+import { color } from '../../styles'
 export default StyleSheet.create({
   container: {
     backgroundColor: '#F0F0F0',
@@ -80,5 +81,10 @@ export default StyleSheet.create({
   itemBtn: {
     flex: 1,
     // backgroundColor:"#4680DF",
+  },
+  sectionFooter: {
+    flex: 1,
+    height: scaleSize(1),
+    backgroundColor: color.fontColorGray,
   },
 })

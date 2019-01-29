@@ -528,7 +528,8 @@ export default class MyLocalData extends Component {
                 marginRight: 20,
               }}
             >
-              {`路径:${path}`}
+              {/*{`路径:${path}`}*/}
+              {'路径:' + path}
             </Text>
           </View>
 

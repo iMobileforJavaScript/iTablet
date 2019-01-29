@@ -631,7 +631,7 @@ public class FileTools extends ReactContextBaseJavaModule {
 
         // 初始化用户工作空间
         String userPath = SDCARD + "/iTablet/User/" + userName + "/";
-        String downloadsPath = userPath + "ExternalData/";
+        String externalDataPath = userPath + "ExternalData/";
         String dataPath = userPath + "Data/";
 
         String defaultData = "DefaultData";
@@ -660,31 +660,30 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
         createDirectory(dataPath + "Temp");
-        createDirectory(downloadsPath);
+        createDirectory(externalDataPath);
 
         // 初始化用户数据
-//        String commonPath = SDCARD + "/iTablet/Common/";
-//        String commonZipPath = commonPath + "Template.zip";
-//        String defaultZipData = "Template.zip";
-//        String templatePath = downloadsPath;
-//        String templateFilePath = templatePath + "地理国情普查";
-//
-//        Boolean isUnZip;
-//        if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
-//            if (Utils.fileIsExit(commonZipPath)) {
-//                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
-//                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
-//            } else {
-//                Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, defaultZipData);
-//                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
-//                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
-//            }
-//        } else {
-//            isUnZip = true;
-//        }
-//
-//        return isUnZip;
-        return true;
+        String commonPath = SDCARD + "/iTablet/Common/";
+        String commonZipPath = commonPath + "Template.zip";
+        String defaultZipData = "Template.zip";
+        String templatePath = externalDataPath;
+        String templateFilePath = templatePath + "地理国情普查";
+
+        Boolean isUnZip;
+        if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {
+            if (Utils.fileIsExit(commonZipPath)) {
+                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
+                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
+            } else {
+                Utils.copyAssetFileToSDcard(context.getApplicationContext(), commonPath, defaultZipData);
+                isUnZip = FileTools.unZipFile(commonZipPath, templatePath);
+                System.out.print(isUnZip ? "解压数据成功" : "解压数据失败");
+            }
+        } else {
+            isUnZip = true;
+        }
+
+        return isUnZip;
     }
 
     /**

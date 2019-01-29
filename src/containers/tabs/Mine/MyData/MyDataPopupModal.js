@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     // flex: 1,
-    marginHorizontal: scaleSize(16),
+    marginHorizontal: 0,
     height: scaleSize(1),
     backgroundColor: color.separateColorGray,
   },

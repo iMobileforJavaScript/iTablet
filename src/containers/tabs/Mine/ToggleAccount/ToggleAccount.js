@@ -52,6 +52,7 @@ export default class ToggleAccount extends Component {
                 password: password,
                 isEmail: isEmail,
               })
+              // await SOnlineService.removeCookie()
               if (isEmail === true) {
                 await SOnlineService.login(userName, password)
               } else if (isEmail === false) {

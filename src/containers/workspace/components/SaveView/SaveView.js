@@ -88,6 +88,7 @@ export default class SaveView extends React.Component {
     (async function() {
       this.props.save && (await this.props.save())
       this.setVisible(false)
+
       this.cb && typeof this.cb === 'function' && this.cb()
       this.cb = null
     }.bind(this)())
@@ -97,6 +98,7 @@ export default class SaveView extends React.Component {
     (async function() {
       this.props.notSave && this.props.notSave()
       this.setVisible(false)
+
       this.cb && typeof this.cb === 'function' && this.cb()
       this.cb = null
     }.bind(this)())

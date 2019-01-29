@@ -5,6 +5,7 @@ import {
   ConstPath,
   Const,
   ConstOnline,
+  UserType,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -343,7 +344,11 @@ function openMap() {
     // })
     let fileList = await FileTools.getMaps(customerPath)
     let userFileList
-    if (_params.user && _params.user.currentUser.userName) {
+    if (
+      _params.user &&
+      _params.user.currentUser.userName &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+    ) {
       // userFileList = await FileTools.getPathListByFilter(path, {
       //   extension: 'xml',
       //   type: 'file',
@@ -369,7 +374,9 @@ function openMap() {
     data = [
       {
         title:
-          _params.user && _params.user.currentUser.userName
+          _params.user &&
+          _params.user.currentUser.userName &&
+          this.props.user.currentUser.userType !== UserType.PROBATION_USER
             ? '游客地图'
             : '我的地图',
         image: require('../../../../assets/mapToolbar/list_type_maps.png'),
@@ -393,7 +400,7 @@ function openMap() {
         userList.push(item)
       })
       data.push({
-        title: '地图',
+        title: '我的地图',
         image: require('../../../../assets/mapToolbar/list_type_maps.png'),
         data: userFileList,
       })

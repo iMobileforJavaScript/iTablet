@@ -16,7 +16,6 @@ export default class AboutITablet extends Component {
   componentDidMount() {}
 
   offcial = () => {
-    0
     NavigationService.navigate('Protocol', { type: 'offcial' })
   }
 
@@ -60,15 +59,14 @@ export default class AboutITablet extends Component {
         </View>
         <View style={styles.footerView}>
           <TouchableOpacity style={styles.offcial} onPress={this.offcial}>
-            <Text
+            {/* <Text
               style={[styles.footerItem, { position: 'absolute', right: 0 }]}
             >
               官网
-            </Text>
+            </Text> */}
+            <Text style={[styles.footerItem]}>官网</Text>
           </TouchableOpacity>
-          <View style={styles.separatorView}>
-            <View style={styles.cloumSeparator} />
-          </View>
+          <View style={styles.cloumSeparator} />
           <TouchableOpacity style={styles.protocol} onPress={this.Protocol}>
             <Text style={styles.footerItem}>服务协议</Text>
           </TouchableOpacity>

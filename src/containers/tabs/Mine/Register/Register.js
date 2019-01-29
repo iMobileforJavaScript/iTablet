@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
   ScrollView,
+  Keyboard,
 } from 'react-native'
 import { Toast } from '../../../../utils'
 
@@ -310,6 +311,7 @@ export default class Register extends React.Component {
               <TouchableOpacity
                 style={styles.registerStyle}
                 onPress={() => {
+                  Keyboard.dismiss()
                   this._register()
                 }}
               >

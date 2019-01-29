@@ -14,6 +14,7 @@ export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
     data: Array,
+    device: Object,
     setfly: () => {},
     showToolbar: () => {},
     existFullMap: () => {},
@@ -167,8 +168,19 @@ export default class Map3DToolBar extends React.Component {
   }
 
   renderItemSeparatorComponent = () => {
-    return <View style={styles.Separator} />
+    return (
+      <View
+        style={[
+          styles.Separator,
+          {
+            width: 0.956 * this.props.device.width,
+            marginLeft: 0.022 * this.props.device.width,
+          },
+        ]}
+      />
+    )
   }
+
   refreshList = section => {
     let newData = this.state.data
     for (let index = 0; index < section.data.length; index++) {
@@ -322,6 +334,7 @@ export default class Map3DToolBar extends React.Component {
       return (
         <SectionList
           sections={this.state.data}
+          renderItemSeparatorComponent={this.renderItemSeparatorComponent}
           renderItem={this.renderListItem}
           renderSectionHeader={this.renderListSectionHeader}
           SectionSeparatorComponent={this.renderItemSeparatorComponent}

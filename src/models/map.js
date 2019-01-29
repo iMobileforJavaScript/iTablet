@@ -102,6 +102,7 @@ export const openMap = (params, cb = () => {}) => async (
             moduleName,
           },
         })
+
         cb && cb(mapInfo)
         return mapInfo
       }

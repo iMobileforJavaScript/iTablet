@@ -30,6 +30,7 @@ export default class Personal extends Component {
     try {
       SOnlineService.logout()
       this.props.closeWorkspace(async () => {
+        SOnlineService.removeCookie()
         let customPath = await FileTools.appendingHomeDirectory(
           ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
         )
