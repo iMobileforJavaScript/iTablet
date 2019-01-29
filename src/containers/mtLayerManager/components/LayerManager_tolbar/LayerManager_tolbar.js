@@ -1,6 +1,5 @@
 import React from 'react'
-import { screen, Toast } from '../../../../utils/index'
-import { ConstToolType } from '../../../../constants/index'
+import { ConstToolType, layerManagerData } from '../../../../constants/index'
 import NavigationService from '../../../NavigationService'
 import {
   layersetting,
@@ -8,6 +7,7 @@ import {
   layer3dSetting,
   layerCollectionSetting,
   layerThemeSettings,
+  layereditsetting,
 } from './LayerToolbarData'
 import {
   View,
@@ -23,7 +23,7 @@ import styles from './styles'
 import { SMap, SScene } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
-import { scaleSize, setSpText } from '../../../../utils'
+import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
 
 /** 工具栏类型 **/
 const list = 'list'
@@ -33,8 +33,8 @@ export default class LayerManager_tolbar extends React.Component {
     type?: string,
     containerProps?: Object,
     data: Array,
-    existFullMap: () => {},
     layerdata?: Object,
+    existFullMap: () => {},
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
     onPress: () => {},
@@ -90,6 +90,12 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.COLLECTION:
         data = layerCollectionSetting
+        break
+      case ConstToolType.MAP_EDIT_STYLE:
+        data = layereditsetting
+        break
+      case ConstToolType.MAP_EDIT_MORE_STYLE:
+        data = layerManagerData
         break
     }
     return data
@@ -197,7 +203,10 @@ export default class LayerManager_tolbar extends React.Component {
 
   listAction = ({ section }) => {
     if (section.action) {
-      section.action && section.action()
+      (async function() {
+        await section.action()
+        this.props.getLayers()
+      }.bind(this)())
     }
     if (section.title === '移除') {
       (async function() {
@@ -205,6 +214,11 @@ export default class LayerManager_tolbar extends React.Component {
         await this.props.getLayers()
       }.bind(this)())
       this.setVisible(false)
+    } else if (section.title === '切换底图') {
+      this.setVisible(true, ConstToolType.MAP_EDIT_MORE_STYLE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        layerdata: this.state.layerdata,
+      })
     } else if (section.title === '图层风格') {
       this.mapStyle()
       this.setVisible(false)
@@ -388,6 +402,12 @@ export default class LayerManager_tolbar extends React.Component {
             box = this.renderList()
             break
           case ConstToolType.COLLECTION:
+            box = this.renderList()
+            break
+          case ConstToolType.MAP_EDIT_STYLE:
+            box = this.renderList()
+            break
+          case ConstToolType.MAP_EDIT_MORE_STYLE:
             box = this.renderList()
             break
         }

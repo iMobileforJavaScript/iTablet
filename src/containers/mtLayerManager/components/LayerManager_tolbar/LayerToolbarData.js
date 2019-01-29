@@ -166,6 +166,14 @@ const layer3dSetting = [
   },
 ]
 
+const layereditsetting = [
+  {
+    title: '切换底图',
+    data: [],
+    image: require('../../../../assets/mapTools/icon_open_black.png'),
+  },
+]
+
 const layerCollectionSetting = [
   {
     title: '设置为当前图层',
@@ -210,4 +218,5 @@ export {
   layer3dSetting,
   layerCollectionSetting,
   layerThemeSettings,
+  layereditsetting,
 }

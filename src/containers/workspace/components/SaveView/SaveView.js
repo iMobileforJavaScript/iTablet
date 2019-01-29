@@ -77,39 +77,50 @@ export default class SaveView extends React.Component {
       visible: false,
       title: '是否保存当前地图？',
     }
+    this.cb = () => {}
   }
 
-  setTtile = title => {
+  setTitle = title => {
     this.setState({ title: title })
   }
 
   save = () => {
-    this.props.save && this.props.save()
-    this.setVisible(false)
+    (async function() {
+      this.props.save && (await this.props.save())
+      this.setVisible(false)
+      this.cb && typeof this.cb === 'function' && this.cb()
+      this.cb = null
+    }.bind(this)())
   }
 
   notSave = () => {
-    this.props.notSave && this.props.notSave()
-    this.setVisible(false)
+    (async function() {
+      this.props.notSave && this.props.notSave()
+      this.setVisible(false)
+      this.cb && typeof this.cb === 'function' && this.cb()
+      this.cb = null
+    }.bind(this)())
   }
 
   cancel = () => {
     this.props.cancel && this.props.cancel()
     this.setVisible(false)
+    this.cb = null
   }
 
-  setVisible = (visible, setLoading) => {
+  setVisible = (visible, setLoading, cb) => {
     if (this.state.visible === visible) return
     if (setLoading && typeof setLoading === 'function') {
-      this.setLoading = setLoading
+      this._setLoading = setLoading
     }
     this.setState({
       visible,
     })
+    this.cb = cb || this.cb
   }
 
   setLoading = (loading = false, info, extra) => {
-    this.setLoading && this.setLoading(loading, info, extra)
+    this._setLoading && this._setLoading(loading, info, extra)
   }
 
   getVisible = () => {
@@ -127,6 +138,7 @@ export default class SaveView extends React.Component {
           //点击物理按键需要隐藏对话框
           if (this.props.backHide) {
             this.setVisible(false)
+            this.cb = null
           }
         }}
       >

@@ -163,7 +163,7 @@ export default class MapView extends React.Component {
   }
 
   componentDidMount() {
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     this.container && this.container.setLoading(true, '地图加载中')
     this.setState({
       showMap: true,
@@ -870,10 +870,14 @@ export default class MapView extends React.Component {
    * 下方的保存地图提示组建
    * @param visible
    */
-  setSaveViewVisible = visible => {
+  setSaveViewVisible = (visible, setLoading, cb = () => {}) => {
     // this.SaveMapView && this.SaveMapView.setVisible(visible)
+    let loadingAction = this.setLoading
+    if (setLoading && typeof setLoading === 'function') {
+      loadingAction = setLoading
+    }
     GLOBAL.SaveMapView &&
-      GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
+      GLOBAL.SaveMapView.setVisible(visible, loadingAction, cb)
   }
 
   /**

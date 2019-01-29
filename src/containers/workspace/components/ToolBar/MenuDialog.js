@@ -152,6 +152,10 @@ export default class MenuDialog extends React.PureComponent {
   }
 
   _handlePanResponderMove = (evt, gestureState) => {
+    this.handleMove(evt, gestureState)
+  }
+
+  handleMove = (evt, gestureState) => {
     let y = this._previousTop + gestureState.dy
     if (y > this.selectedViewTop - ARROW_HEIGHT) {
       // 向下滑动
@@ -182,6 +186,10 @@ export default class MenuDialog extends React.PureComponent {
   }
 
   _handlePanResponderEnd = (evt, gestureState) => {
+    this.handleEnd(evt, gestureState)
+  }
+
+  handleEnd = (evt, gestureState) => {
     let y = this._previousTop + gestureState.dy
 
     if (y > this.selectedViewTop - ARROW_HEIGHT) {
@@ -368,7 +376,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   textHightlight: {
-    color: color.font_color_white,
+    color: color.content_white,
     fontWeight: 'bold',
     fontSize: size.fontSize.fontSizeXl,
     backgroundColor: 'transparent',

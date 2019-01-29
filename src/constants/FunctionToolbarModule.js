@@ -157,90 +157,112 @@ const BotMap = [
 
 const layerManagerData = [
   {
-    caption: 'Google RoadMap',
+    title: 'Google RoadMap',
     action: () => {
       return OpenData(ConstOnline.Google, 0)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'Google Staelite',
+    title: 'Google Staelite',
     action: () => {
       return OpenData(ConstOnline.Google, 1)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'Google Terrain',
+    title: 'Google Terrain',
     action: () => {
       return OpenData(ConstOnline.Google, 2)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'Google Hybrid',
+    title: 'Google Hybrid',
     action: () => {
       return OpenData(ConstOnline.Google, 3)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: '全球矢量地图',
+    title: '全球矢量地图',
     action: () => {
       return OpenData(ConstOnline.TD, 0)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: '全球影像地图服务',
+    title: '全球影像地图服务',
     action: () => {
       return OpenData(ConstOnline.TDYXM, 0)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'Baidu Map',
+    title: 'Baidu Map',
     action: () => {
       return OpenData(ConstOnline.Baidu, 0)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'Standard',
+    title: 'Standard',
     action: () => {
       return OpenData(ConstOnline.OSM, 0)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'CycleMap',
+    title: 'CycleMap',
     action: () => {
       return OpenData(ConstOnline.OSM, 1)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'Transport',
+    title: 'Transport',
     action: () => {
       return OpenData(ConstOnline.OSM, 2)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
   {
-    caption: 'quanguo',
+    title: 'quanguo',
     action: () => {
       return OpenData(ConstOnline.SuperMapCloud, 0)
     },
+    data: [],
+    image: require('../assets/map/icon-shallow-image_black.png'),
     type: DatasetType.IMAGE,
     themeType: -1,
   },
