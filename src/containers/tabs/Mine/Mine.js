@@ -66,6 +66,7 @@ export default class Mine extends Component {
       SOnlineService.syncAndroidCookie()
     }
   }
+
   openUserWorkspace = () => {
     this.props.closeWorkspace(async () => {
       let userPath = await FileTools.appendingHomeDirectory(
