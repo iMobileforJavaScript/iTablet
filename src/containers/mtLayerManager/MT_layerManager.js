@@ -731,7 +731,6 @@ export default class MT_layerManager extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={15}
           ItemSeparatorComponent={this.renderItemSeparator}
-          renderSectionFooter={this.renderSectionSeparator}
         />
       </View>
     )
@@ -744,7 +743,6 @@ export default class MT_layerManager extends React.Component {
         <View
           style={{
             flexDirection: 'column',
-            // width: '100%',
             marginLeft: scaleSize(30),
             marginRight: scaleSize(30),
             height: scaleSize(1),
@@ -755,20 +753,6 @@ export default class MT_layerManager extends React.Component {
     } else {
       return <View />
     }
-  }
-
-  /**标题之间的分隔线组件 */
-  renderSectionSeparator = () => {
-    return (
-      <View
-        style={{
-          flexDirection: 'column',
-          width: '100%',
-          height: scaleSize(1),
-          backgroundColor: color.bgG,
-        }}
-      />
-    )
   }
 
   //遮盖层
