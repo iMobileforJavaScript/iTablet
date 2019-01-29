@@ -2760,6 +2760,7 @@ export default class ToolBar extends React.PureComponent {
             GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
             NavigationService.goBack()
             setTimeout(() => {
+              this.setVisible(false)
               Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
             }, 1000)
           },
@@ -2893,6 +2894,10 @@ export default class ToolBar extends React.PureComponent {
             this.props.setContainerLoading(false)
         }
         NavigationService.goBack()
+        setTimeout(() => {
+          this.setVisible(false)
+          Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+        }, 1000)
       },
     })
   }
