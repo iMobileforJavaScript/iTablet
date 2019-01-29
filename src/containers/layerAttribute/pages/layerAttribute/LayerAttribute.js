@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Text, Dimensions, Platform, BackHandler } from 'react-native'
+import { View, Text, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
@@ -63,14 +63,6 @@ export default class LayerAttribute extends React.Component {
     ) {
       this.getAttribute()
     }
-    // else if (
-    //   JSON.stringify(prevProps.currentAttribute) !==
-    //   JSON.stringify(this.props.currentAttribute)
-    // ) {
-    //   this.setState({
-    //     attribute: this.props.currentAttribute,
-    //   })
-    // }
   }
 
   componentWillUnmount() {
@@ -171,29 +163,6 @@ export default class LayerAttribute extends React.Component {
 
   back = () => {
     this.props.navigation.navigate('MapView')
-    // if (GLOBAL.Type === ConstToolType.MAP_3D) {
-    //   NavigationService.goBack()
-    // } else {
-    //   this.backAction = async () => {
-    //     try {
-    //       this.setLoading(true, '正在关闭地图')
-    //       await this.props.closeMap()
-    //       GLOBAL.clearMapData()
-    //       this.setLoading(false)
-    //       NavigationService.goBack()
-    //     } catch (e) {
-    //       this.setLoading(false)
-    //     }
-    //   }
-    //   SMap.mapIsModified().then(async result => {
-    //     if (result) {
-    //       this.setSaveViewVisible(true)
-    //     } else {
-    //       await this.backAction()
-    //       this.backAction = null
-    //     }
-    //   })
-    // }
     return true
   }
 
@@ -277,22 +246,7 @@ export default class LayerAttribute extends React.Component {
       >
         {this.state.showTable ? (
           this.props.attributes.head.length > 0 ? (
-            this.type === 'MAP_3D' ? (
-              <LayerAttributeTable
-                ref={ref => (this.table = ref)}
-                data={this.props.attributes.data}
-                tableHead={this.props.attributes.head}
-                // data={this.state.attribute}
-                // tableHead={this.state.tableHead}
-                // tableTitle={this.state.tableTitle}
-                refresh={this.getMap3DAttribute}
-                NormalrowStyle={{ width: Dimensions.get('window').width }}
-                type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
-                selectRow={this.selectRow}
-              />
-            ) : (
-              this.renderMapLayerAttribute()
-            )
+            this.renderMapLayerAttribute()
           ) : (
             <View style={styles.infoView}>
               <Text style={styles.info}>当前图层属性不可见</Text>

@@ -231,6 +231,10 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       this.setVisible(false)
     } else if (section.title === '设置为当前图层') {
+      if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {
+        this.cb && this.cb(this.layer3dItem)
+        return
+      }
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
       Toast.show('当前图层为' + this.state.layerdata.caption)
@@ -266,21 +270,33 @@ export default class LayerManager_tolbar extends React.Component {
       } else {
         Toast.show('不支持由该图层创建专题图')
       }
-    } else if (section.title === '设置图层可选') {
-      SScene.setSelectable(this.layer3d.name, true).then(result => {
-        result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
-      })
-    } else if (section.title === '设置图层不可选') {
-      SScene.setSelectable(this.layer3d.name, false).then(result => {
-        result
-          ? Toast.show('设置图层不可选成功')
-          : Toast.show('设置图层不可选失败')
-      })
+    } else if (section.title === '设置图层对象可选状态') {
+      SScene.setSelectable(
+        this.layer3dItem.name,
+        this.layer3dItem.selectable,
+      ).then(
+        result => {
+          this.layer3dItem.selectable
+            ? result && Toast.show('当前图层不可选')
+            : result && Toast.show('当前图层可选')
+          this.setItemSelectable(!this.layer3dItem.selectable)
+        },
+        () => {
+          Toast.show('操作失败')
+        },
+      )
     }
   }
 
-  getLayer3dItem = layer3d => {
-    this.layer3d = layer3d
+  getLayer3dItem = (
+    layer3dItem,
+    cb = () => {},
+    setItemSelectable = () => {},
+  ) => {
+    // console.log(layer3dItem)
+    this.layer3dItem = layer3dItem
+    this.cb = cb
+    this.setItemSelectable = setItemSelectable
   }
 
   renderList = () => {

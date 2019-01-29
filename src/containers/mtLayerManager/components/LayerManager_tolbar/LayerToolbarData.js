@@ -150,20 +150,15 @@ const layerThemeSettings = [
 
 const layer3dSetting = [
   {
-    title: '设置图层可选',
+    title: '设置为当前图层',
     data: [],
-    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
-    title: '设置图层不可选',
+    title: '设置图层对象可选状态',
     data: [],
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
   },
-  // {
-  //   title: '取消',
-  //   data: [],
-  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-  // },
 ]
 
 const layerCollectionSetting = [

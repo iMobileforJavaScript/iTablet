@@ -15,9 +15,9 @@ export default StyleSheet.create({
   row: {
     flex: 1,
     flexDirection: 'row',
-    height: scaleSize(80),
+    height: scaleSize(79),
     backgroundColor: 'transparent',
-    paddingLeft: scaleSize(30),
+    paddingLeft: scaleSize(50),
     paddingRight: scaleSize(30),
     alignItems: 'center',
     // justifyContent: 'space-between',
@@ -33,7 +33,6 @@ export default StyleSheet.create({
     marginLeft: scaleSize(25),
   },
   itemName: {
-    color: '#303030',
     fontSize: setSpText(26),
     marginLeft: scaleSize(15),
     // marginRight:scaleSize(30),
@@ -56,16 +55,16 @@ export default StyleSheet.create({
     // backgroundColor: 'pink',
   },
   visibleImg: {
-    width: scaleSize(50),
-    height: scaleSize(50),
+    width: scaleSize(40),
+    height: scaleSize(40),
     // backgroundColor: 'blue',
-    marginLeft: scaleSize(10),
+    // marginLeft: scaleSize(10),
   },
   type: {
     width: scaleSize(60),
     height: scaleSize(60),
     // backgroundColor: '#A0A0A0',
-    marginLeft: scaleSize(15),
+    marginLeft: scaleSize(27),
   },
   moreView: {
     width: scaleSize(60),

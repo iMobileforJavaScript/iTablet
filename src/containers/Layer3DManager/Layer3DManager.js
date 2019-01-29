@@ -54,7 +54,6 @@ export default class Map3DToolBar extends Component {
             this.setState({
               toHeightItem: { itemName: item.name, index: index },
             })
-            this.props.setCurrentLayer3d && this.props.setCurrentLayer3d(item)
             // let data2 = await SScene.getAttributeByName(item.name)
             // console.log(data2)
           }}
@@ -63,6 +62,9 @@ export default class Map3DToolBar extends Component {
             item={item}
             getlayer3dToolbar={this.getlayer3dToolbar}
             device={this.props.device}
+            toHeightItem={this.state.toHeightItem}
+            index={index}
+            setCurrentLayer3d={this.props.setCurrentLayer3d}
           />
         </TouchableOpacity>
       )
