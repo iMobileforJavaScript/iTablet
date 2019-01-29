@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     // flex: 1,
     marginHorizontal: scaleSize(16),
     height: scaleSize(1),
-    backgroundColor: color.rowSeparator,
+    backgroundColor: color.separateColorGray,
   },
   title: {
     // fontSize: size.fontSize.fontSizeLg,
@@ -104,7 +104,7 @@ export default class MyLocalData extends Component {
       // userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
       textValue: '扫描文件:',
-      textDisplay: 'flex',
+      textDisplay: 'none',
       title: (params && params.title) || '',
     }
   }
@@ -250,7 +250,14 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
-    let txtInfo = info.item.name
+    let name = info.item.name
+    let txtInfo =
+      name.lastIndexOf('.') > 0
+        ? name.substring(0, name.lastIndexOf('.'))
+        : name
+    let txtType =
+      name.lastIndexOf('.') > 0 ? name.substring(name.lastIndexOf('.') + 1) : ''
+
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
@@ -258,9 +265,25 @@ export default class MyLocalData extends Component {
       case Const.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
-      case Const.DATA:
-      case Const.SCENE:
       case Const.SYMBOL:
+        if (txtType === 'sym') {
+          // 点
+          img = require('../../../../assets/map/icon-shallow-dot_black.png')
+        } else if (txtType === 'lsl') {
+          // 线
+          img = require('../../../../assets/map/icon-shallow-line_black.png')
+        } else if (txtType === 'bru') {
+          // 面
+          img = require('../../../../assets/map/icon-shallow-polygon_black.png')
+        } else {
+          // 默认
+          img = require('../../../../assets/Mine/mine_my_online_data.png')
+        }
+        break
+      case Const.SCENE:
+        img = require('../../../../assets/mapTools/icon_scene.png')
+        break
+      case Const.DATA:
       default:
         img = require('../../../../assets/Mine/mine_my_online_data.png')
         break

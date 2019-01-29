@@ -1,6 +1,7 @@
 import React, { PureComponent } from 'react'
 import { Modal, Platform, TouchableOpacity, Text, View } from 'react-native'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
+import { scaleSize } from '../../../../utils'
 export default class LocalDataPopupModal extends PureComponent {
   props: {
     modalVisible: boolean,
@@ -15,7 +16,7 @@ export default class LocalDataPopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
-    this.fontSize = Platform.OS === 'ios' ? 18 : 16
+    this.fontSize = size.fontSize.fontSizeXl
   }
 
   _onRequestClose = () => {
@@ -33,13 +34,15 @@ export default class LocalDataPopupModal extends PureComponent {
         style={{
           width: '100%',
           height: 1,
-          backgroundColor: color.item_separate_white,
+          backgroundColor: color.separateColorGray,
         }}
       />
     )
   }
 
   _onImportWorkspace = () => {
+    let height = scaleSize(80)
+    let lineHeight = scaleSize(80)
     return (
       <TouchableOpacity
         onPress={() => {
@@ -49,10 +52,10 @@ export default class LocalDataPopupModal extends PureComponent {
         <Text
           style={{
             width: '100%',
-            height: 60,
+            height: height,
             backgroundColor: color.content_white,
             textAlign: 'center',
-            lineHeight: 60,
+            lineHeight: lineHeight,
             fontSize: this.fontSize,
           }}
         >
@@ -63,6 +66,8 @@ export default class LocalDataPopupModal extends PureComponent {
     )
   }
   _onDeleteButton = () => {
+    let height = scaleSize(80)
+    let lineHeight = scaleSize(80)
     return (
       <TouchableOpacity
         onPress={() => {
@@ -72,10 +77,10 @@ export default class LocalDataPopupModal extends PureComponent {
         <Text
           style={{
             width: '100%',
-            height: 60,
+            height: height,
             backgroundColor: color.content_white,
             textAlign: 'center',
-            lineHeight: 60,
+            lineHeight: lineHeight,
             fontSize: this.fontSize,
           }}
         >
@@ -108,7 +113,7 @@ export default class LocalDataPopupModal extends PureComponent {
           onPress={() => {
             this._onCloseModal()
           }}
-          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
+          style={{ flex: 1, backgroundColor: color.modalBgColor }}
         >
           <View
             style={{
@@ -119,7 +124,6 @@ export default class LocalDataPopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._renderSeparatorLine()}
             {this._onImportWorkspace()}
             {this._onDeleteButton()}
           </View>

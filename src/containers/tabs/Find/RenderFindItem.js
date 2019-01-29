@@ -253,7 +253,7 @@ export default class RenderFindItem extends Component {
         <View
           style={[
             styles.separateViewStyle,
-            { backgroundColor: color.itemColorGray },
+            { backgroundColor: color.separateColorGray },
           ]}
         />
       </View>

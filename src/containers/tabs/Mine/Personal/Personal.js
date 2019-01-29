@@ -3,11 +3,12 @@ import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
 import { Container } from '../../../../components'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import UserType from '../../../../constants/UserType'
 import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import styles from './styles'
+import { scaleSize } from '../../../../utils'
 
 export default class Personal extends Component {
   props: {
@@ -35,7 +36,10 @@ export default class Personal extends Component {
         if (this.container) {
           this.container.setLoading(false)
         }
-        this.props.setUser()
+        this.props.setUser({
+          userName: 'Customer',
+          userType: UserType.PROBATION_USER,
+        })
         // NavigationService.goBack()
         NavigationService.reset('Tabs')
         await this.props.openWorkspace({ server: customPath })
@@ -50,10 +54,10 @@ export default class Personal extends Component {
   }
 
   _renderItem = (key, value) => {
-    let itemHeight = 60
+    let itemHeight = scaleSize(80)
     let marginLeft = 15
     let marginRight = 20
-    let fontSize = 18
+    let fontSize = size.fontSize.fontSizeXl
     if (key !== '头像') {
       return (
         <View style={{ width: '100%' }}>
@@ -61,12 +65,12 @@ export default class Personal extends Component {
             style={{
               width: '100%',
               height: 1,
-              backgroundColor: color.item_separate_white,
+              backgroundColor: color.separateColorGray,
             }}
           />
           <View
             style={{
-              backgroundColor: color.content_white,
+              backgroundColor: color.contentColorWhite,
               width: '100%',
               height: itemHeight,
               flexDirection: 'row',
@@ -77,7 +81,7 @@ export default class Personal extends Component {
               style={{
                 marginLeft: marginLeft,
                 fontSize: fontSize,
-                color: color.font_color_white,
+                color: color.fontColorBlack,
               }}
             >
               {key}
@@ -87,7 +91,7 @@ export default class Personal extends Component {
               style={{
                 marginRight: marginRight,
                 fontSize: fontSize,
-                color: color.font_color_white,
+                color: color.fontColorBlack,
               }}
             >
               {value}
@@ -109,9 +113,9 @@ export default class Personal extends Component {
           <View style={{ width: '100%', height: 1 }} />
           <View
             style={{
-              backgroundColor: color.content_white,
+              backgroundColor: color.contentColorWhite,
               width: '100%',
-              height: itemHeight + 10,
+              height: itemHeight + scaleSize(10),
               flexDirection: 'row',
               alignItems: 'center',
             }}
@@ -120,7 +124,7 @@ export default class Personal extends Component {
               style={{
                 marginLeft: marginLeft,
                 fontSize: fontSize,
-                color: color.font_color_white,
+                color: color.fontColorBlack,
               }}
             >
               {key}
@@ -174,7 +178,12 @@ export default class Personal extends Component {
           NavigationService.navigate('ToggleAccount')
         }}
       >
-        <Text style={{ fontSize: 18, color: color.font_color_white }}>
+        <Text
+          style={{
+            fontSize: size.fontSize.fontSizeXl,
+            color: color.fontColorBlack,
+          }}
+        >
           切换账号
         </Text>
       </TouchableOpacity>
@@ -190,7 +199,12 @@ export default class Personal extends Component {
         style={styles.item2}
         onPress={this._logout}
       >
-        <Text style={{ fontSize: 18, color: color.font_color_white }}>
+        <Text
+          style={{
+            fontSize: size.fontSize.fontSizeXl,
+            color: color.fontColorBlack,
+          }}
+        >
           退出登录
         </Text>
       </TouchableOpacity>

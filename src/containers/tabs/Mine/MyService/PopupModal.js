@@ -2,8 +2,9 @@ import React, { PureComponent } from 'react'
 import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 import Toast from '../../../../utils/Toast'
 
-import { color } from '../../../../styles'
+import { color, size } from '../../../../styles'
 import { SOnlineService } from 'imobile_for_reactnative'
+import { scaleSize } from '../../../../utils'
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -19,7 +20,7 @@ export default class PopupModal extends PureComponent {
 
   constructor(props) {
     super(props)
-    this.fontSize = Platform.OS === 'ios' ? 18 : 16
+    this.fontSize = size.fontSize.fontSizeXl
   }
 
   _onClose = () => {
@@ -46,7 +47,7 @@ export default class PopupModal extends PureComponent {
         style={{
           width: '100%',
           height: 1,
-          backgroundColor: color.item_separate_white,
+          backgroundColor: color.separateColorGray,
         }}
       />
     )
@@ -58,10 +59,10 @@ export default class PopupModal extends PureComponent {
     } else {
       title = '设为私有服务'
     }
-
+    let lineHeight = scaleSize(80)
     return (
       <TouchableOpacity
-        style={{ backgroundColor: color.content_white }}
+        style={{ backgroundColor: color.contentColorWhite }}
         onPress={async () => {
           this._onClose()
           let result = await SOnlineService.changeServiceVisibilityWithServiceId(
@@ -78,7 +79,7 @@ export default class PopupModal extends PureComponent {
       >
         <Text
           style={{
-            lineHeight: 60,
+            lineHeight: lineHeight,
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
@@ -93,6 +94,7 @@ export default class PopupModal extends PureComponent {
   }
 
   _deleteButton = title => {
+    let lineHeight = scaleSize(80)
     return (
       <TouchableOpacity
         style={{ backgroundColor: color.content_white }}
@@ -112,7 +114,7 @@ export default class PopupModal extends PureComponent {
       >
         <Text
           style={{
-            lineHeight: 60,
+            lineHeight: lineHeight,
             width: screenWidth,
             position: 'relative',
             textAlign: 'center',
@@ -146,7 +148,7 @@ export default class PopupModal extends PureComponent {
         ]}
       >
         <TouchableOpacity
-          style={{ flex: 1, backgroundColor: '#rgba(0, 0, 0, 0.3)' }}
+          style={{ flex: 1, backgroundColor: color.modalBgColor }}
           activeOpacity={1}
           onPress={() => {
             this._onClose()
