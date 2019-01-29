@@ -369,8 +369,8 @@ function openMap() {
       {
         title:
           _params.user && _params.user.currentUser.userName
-            ? '公共地图'
-            : '地图',
+            ? '游客地图'
+            : '我的地图',
         image: require('../../../../assets/mapToolbar/list_type_maps.png'),
         data: list,
       },
