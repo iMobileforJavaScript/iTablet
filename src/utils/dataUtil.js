@@ -164,7 +164,7 @@ function angleTransfer(value = 0, decimals = -1) {
     minutes,
     seconds,
     temp = value
-  degrees = temp.toFixed() - 1 + 1
+  degrees = Math.floor(temp)
 
   temp = (temp - degrees) * 60
   minutes = Math.floor(temp)

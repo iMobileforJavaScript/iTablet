@@ -1,137 +1,78 @@
 import React, { Component } from 'react'
-import {
-  WebView,
-  View,
-  Dimensions,
-  Platform,
-  UIManager,
-  LayoutAnimation,
-} from 'react-native'
+import { Text, View, Image, TouchableOpacity } from 'react-native'
 import { Container } from '../../../../components'
-import Toast from '../../../../utils/Toast'
-
+import NavigationService from '../../../NavigationService'
+import styles from './styles'
 export default class AboutITablet extends Component {
   props: {
     navigation: Object,
+    device: Object,
   }
   constructor(props) {
     super(props)
-    this.state = {
-      progressWidth: Dimensions.get('window').width * 0.4,
-      isLoadWebView: false,
-    }
-    if (Platform.OS === 'android') {
-      UIManager.setLayoutAnimationEnabledExperimental &&
-        UIManager.setLayoutAnimationEnabledExperimental(true)
-    }
-  }
-  _renderLoading = () => {
-    return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
-        <View
-          ref={ref => (this.progressViewRef = ref)}
-          style={{
-            height: 2,
-            width: this.state.progressWidth,
-            backgroundColor: '#1c84c0',
-          }}
-        />
-      </View>
-    )
+    this.state = {}
   }
 
-  componentDidMount() {
-    this.setState({ isLoadWebView: true })
-  }
+  componentDidMount() {}
 
-  _onLoadStart = () => {
-    LayoutAnimation.configureNext({
-      duration: 150,
-      create: {
-        type: LayoutAnimation.Types.linear,
-        property: LayoutAnimation.Properties.scaleX,
-      },
-      update: {
-        type: LayoutAnimation.Types.linear,
-      },
-    })
-    this.progressViewWidth = this.state.progressWidth
-    let screenWidth = Dimensions.get('window').width
-    this.objProgressWidth = setInterval(() => {
-      if (this.progressViewRef) {
-        let prevProgressWidth = this.progressViewWidth
-        let currentPorWidth
-        if (prevProgressWidth >= screenWidth - 250) {
-          currentPorWidth = prevProgressWidth + 1
-          if (currentPorWidth >= screenWidth - 50) {
-            currentPorWidth = screenWidth - 50
-            this.progressViewWidth = currentPorWidth
-            return
-          }
-        } else {
-          currentPorWidth = prevProgressWidth * 1.01
-        }
-        this.progressViewWidth = currentPorWidth
-        this.progressViewRef.setNativeProps({
-          style: {
-            height: 2,
-            width: currentPorWidth,
-            backgroundColor: '#1c84c0',
-            borderBottomRightRadius: 1,
-            borderTopRightRadius: 1,
-            borderBottomLeftRadius: 0,
-            borderTopLeftRadius: 0,
-          },
-        })
-      }
-    }, 150)
+  Protocol = () => {
+    NavigationService.navigate('Protocol')
   }
 
   render() {
-    let source =
-      Platform.OS === 'ios'
-        ? require('../../../../assets/LegalStatement.html')
-        : { uri: `file:///android_asset/html/LegalStatement.html` }
+    let iTablet = require('../../../../assets/home/Frenchgrey/icon_about_iTablet.png')
     return (
       <Container
         headerProps={{
           title: '关于 SuperMap iTablet',
           navigation: this.props.navigation,
         }}
+        style={styles.container}
       >
-        {this.state.isLoadWebView ? (
-          <WebView
-            style={{ flex: 1, paddingTop: 0 }}
-            source={source}
-            /** 保证release版本时，可加载到html*/
-            originWhitelist={['*']}
-            automaticallyAdjustContentInsets={true}
-            scalesPageToFit={true}
-            startInLoadingState={true}
-            renderLoading={this._renderLoading}
-            /**ios*/
-            contentInset={{ top: 0, left: 0, bottom: 0, right: 0 }}
-            /**android*/
-            javaScriptEnabled={true}
-            domStorageEnabled={true}
-            mixedContentMode={'always'}
-            thirdPartyCookiesEnabled={true}
-            allowFileAccess={true}
-            allowUniversalAccessFromFileURLs={true}
-            onError={() => {
-              Toast.show('加载失败')
-            }}
-            onLoadStart={this._onLoadStart}
-            onLoadEnd={() => {
-              // this.setState({isLoadingEnd:true,headerType:''})
-              if (this.objProgressWidth !== undefined) {
-                clearInterval(this.objProgressWidth)
-              }
-            }}
+        <View style={styles.header}>
+          <Image style={styles.iTablet} source={iTablet} />
+          <Text style={styles.headerTitle}>SuperMap iTablet</Text>
+          <Text style={styles.version}>v 2.0</Text>
+        </View>
+        <View style={styles.contentView}>
+          <TouchableOpacity style={styles.support}>
+            <Text style={styles.supportTitle}>技术支持与服务</Text>
+            <Text style={styles.phone}>400-8900-866</Text>
+          </TouchableOpacity>
+          <View
+            style={[
+              styles.separator,
+              {
+                width: 0.956 * this.props.device.width,
+                marginLeft: 0.022 * this.props.device.width,
+              },
+            ]}
           />
-        ) : (
-          <View style={{ flex: 1, paddingTop: 0 }} />
-        )}
+          <TouchableOpacity style={styles.consult}>
+            <Text style={styles.consultTitle}>销售咨询</Text>
+            <Text style={styles.phone}>01059896655转6156</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.footerView}>
+          <TouchableOpacity style={styles.offcial}>
+            <Text
+              style={[styles.footerItem, { position: 'absolute', right: 0 }]}
+            >
+              官网
+            </Text>
+          </TouchableOpacity>
+          <View style={styles.separatorView}>
+            <View style={styles.cloumSeparator} />
+          </View>
+          <TouchableOpacity style={styles.protocol} onPress={this.Protocol}>
+            <Text style={styles.footerItem}>服务协议</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.informationView}>
+          <Text style={styles.information}>
+            Copyright 1997-2018 SuperMap Software Co.,Ltd.All rights reserved
+          </Text>
+        </View>
       </Container>
     )
   }

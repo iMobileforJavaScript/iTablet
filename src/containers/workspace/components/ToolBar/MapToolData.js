@@ -191,7 +191,7 @@ function measureLength() {
   _params.showFullMap && _params.showFullMap(true)
   _params.showMeasureResult(true, 0)
   SMap.measureLength(obj => {
-    _params.showMeasureResult(true, obj.curResult + 'm')
+    _params.showMeasureResult(true, obj.curResult.toFixed(6) + 'm')
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_LENGTH
 
@@ -210,7 +210,7 @@ function measureArea() {
   _params.showFullMap && _params.showFullMap(true)
   _params.showMeasureResult(true, 0)
   SMap.measureArea(obj => {
-    _params.showMeasureResult(true, obj.curResult + '㎡')
+    _params.showMeasureResult(true, obj.curResult.toFixed(6) + '㎡')
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_AREA
 

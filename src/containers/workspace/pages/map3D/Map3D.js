@@ -15,7 +15,7 @@ import {
   ToolBar,
   OverlayView,
 } from '../../components'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import constants from '../../constants'
 import NavigationService from '../../../NavigationService'
 import styles from './styles'
@@ -59,7 +59,7 @@ export default class Map3D extends React.Component {
 
   componentDidMount() {
     // console.log(this.props.online)
-    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
+    GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // 三维地图只允许单例
@@ -69,7 +69,7 @@ export default class Map3D extends React.Component {
   }
 
   componentWillUnmount() {
-    // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTtile(SAVE_TITLE)
+    // GLOBAL.SaveMapView&&GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     Platform.OS === 'android' &&
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     this.attributeListener && this.attributeListener.remove()
@@ -297,7 +297,11 @@ export default class Map3D extends React.Component {
     return (
       <Dialog
         ref={ref => (this.dialog = ref)}
-        style={{ marginVertical: 15 }}
+        style={{
+          marginVertical: 15,
+          width: scaleSize(420),
+          height: scaleSize(250),
+        }}
         type={'modal'}
         confirmAction={this.confirm}
         cancelAction={this.cancel}

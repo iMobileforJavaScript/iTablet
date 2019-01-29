@@ -496,6 +496,9 @@ export default class ToolBar extends React.PureComponent {
                 SScene.checkoutListener('startLabelOperate')
                 GLOBAL.Map3DSymbol = true
                 SScene.closeAllLabel()
+                this.showToolbar(!this.isShow)
+                this.props.existFullMap && this.props.existFullMap()
+                GLOBAL.OverlayView.setVisible(false)
                 // this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_POINTSURFACE)
               } catch (error) {
                 Toast.show('清除失败')
@@ -520,6 +523,7 @@ export default class ToolBar extends React.PureComponent {
                 }
                 this.showToolbar(!this.isShow)
                 this.props.existFullMap && this.props.existFullMap()
+                GLOBAL.OverlayView.setVisible(false)
               } catch (error) {
                 Toast.show('操作失败')
               }
@@ -1834,6 +1838,7 @@ export default class ToolBar extends React.PureComponent {
   }
 
   closeTool = () => {
+    GLOBAL.OverlayView.setVisible(false)
     SScene.checkoutListener('startTouchAttribute')
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
@@ -2766,6 +2771,7 @@ export default class ToolBar extends React.PureComponent {
             GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
             NavigationService.goBack()
             setTimeout(() => {
+              this.setVisible(false)
               Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
             }, 1000)
           },
@@ -2805,86 +2811,106 @@ export default class ToolBar extends React.PureComponent {
 
   /** 打开模板工作空间 **/
   openTemplate = async item => {
-    try {
-      this.props.setContainerLoading &&
-        this.props.setContainerLoading(true, '正在打开模板')
-      // 打开模板工作空间
-      let moduleName = ''
-      if (this.props.map.currentMap.name) {
-        await this.props.closeMap()
-      }
-      await this.props.setCurrentSymbols()
-      this.props
-        .importWorkspace({ ...item, module: moduleName })
-        .then(async ({ mapsInfo, msg }) => {
-          if (msg) {
-            this.props.setContainerLoading &&
-              this.props.setContainerLoading(false)
-            Toast.show(msg)
-          } else if (mapsInfo && mapsInfo.length > 0) {
-            // 关闭地图
-            if (this.props.map.currentMap.name) {
-              await this.props.closeMap()
-            }
-            // 打开地图
-            let mapPath =
-              (this.props.user && this.props.user.currentUser.userName
-                ? ConstPath.UserPath +
-                  this.props.user.currentUser.userName +
-                  '/'
-                : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
-            let mapInfo = await this.props.openMap({
-              path: mapPath + mapsInfo[0] + '.xml',
-              name: mapsInfo[0],
+    NavigationService.navigate('InputPage', {
+      value: item.name || '',
+      headerTitle: '新建模板',
+      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      cb: async (value = '') => {
+        try {
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.TEMPLATE_CREATING)
+          // 打开模板工作空间
+          let moduleName = ''
+          if (this.props.map.currentMap.name) {
+            await this.props.closeMap()
+          }
+          await this.props.setCurrentSymbols()
+          this.props
+            .importWorkspace({
+              ...item,
+              module: moduleName,
+              mapName: value.toString().trim(),
             })
-            if (mapInfo) {
-              if (mapInfo.Template) {
+            .then(async ({ mapsInfo, msg }) => {
+              if (msg) {
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+                Toast.show(msg)
+              } else if (mapsInfo && mapsInfo.length > 0) {
+                // 关闭地图
+                if (this.props.map.currentMap.name) {
+                  await this.props.closeMap()
+                }
+                // 打开地图
+                let mapPath =
+                  (this.props.user && this.props.user.currentUser.userName
+                    ? ConstPath.UserPath +
+                      this.props.user.currentUser.userName +
+                      '/'
+                    : ConstPath.CustomerPath) + ConstPath.RelativeFilePath.Map
+                let mapInfo = await this.props.openMap({
+                  path: mapPath + mapsInfo[0] + '.xml',
+                  name: mapsInfo[0],
+                })
+                if (mapInfo) {
+                  if (mapInfo.Template) {
+                    this.props.setContainerLoading(
+                      true,
+                      ConstInfo.TEMPLATE_READING,
+                    )
+                    let templatePath = await FileTools.appendingHomeDirectory(
+                      ConstPath.UserPath + mapInfo.Template,
+                    )
+                    await this.props.getSymbolTemplates({
+                      path: templatePath,
+                      name: item.name,
+                    })
+                  } else {
+                    await this.props.setTemplate()
+                  }
+
+                  await this.props.getLayers(-1, layers => {
+                    this.props.setCurrentLayer(layers.length > 0 && layers[0])
+                  })
+                  this.props.setContainerLoading(false)
+                  this.setVisible(false)
+                } else {
+                  this.props.getLayers(-1, layers => {
+                    this.props.setCurrentLayer(layers.length > 0 && layers[0])
+                  })
+                  Toast.show(ConstInfo.MAP_ALREADY_OPENED)
+                  this.props.setContainerLoading(false)
+                }
+                // 重新加载图层
+                this.props.getLayers({
+                  type: -1,
+                  currentLayerIndex: 0,
+                })
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
-                let templatePath = await FileTools.appendingHomeDirectory(
-                  ConstPath.UserPath + mapInfo.Template,
-                )
-                await this.props.getSymbolTemplates({
-                  path: templatePath,
-                  name: item.name,
+                this.props.getSymbolTemplates(null, () => {
+                  this.setVisible(false)
+                  this.props.setContainerLoading &&
+                    this.props.setContainerLoading(false)
+                  Toast.show(ConstInfo.TEMPLATE_CHANGE_SUCCESS)
                 })
               } else {
-                await this.props.setTemplate()
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+                Toast.show(ConstInfo.TEMPLATE_CHANGE_FAILED)
               }
-
-              await this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              this.props.setContainerLoading(false)
-              this.setVisible(false)
-            } else {
-              this.props.getLayers(-1, layers => {
-                this.props.setCurrentLayer(layers.length > 0 && layers[0])
-              })
-              Toast.show(ConstInfo.MAP_ALREADY_OPENED)
-              this.props.setContainerLoading(false)
-            }
-            // 重新加载图层
-            this.props.getLayers({
-              type: -1,
-              currentLayerIndex: 0,
             })
-            this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
-            this.props.getSymbolTemplates(null, () => {
-              this.setVisible(false)
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-              Toast.show(ConstInfo.TEMPLATE_CHANGE_SUCCESS)
-            })
-          } else {
-            this.props.setContainerLoading &&
-              this.props.setContainerLoading(false)
-            Toast.show(ConstInfo.TEMPLATE_CHANGE_FAILED)
-          }
-        })
-    } catch (error) {
-      Toast.show(ConstInfo.TEMPLATE_CHANGE_FAILED)
-      this.props.setContainerLoading && this.props.setContainerLoading(false)
-    }
+        } catch (error) {
+          Toast.show(ConstInfo.TEMPLATE_CHANGE_FAILED)
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(false)
+        }
+        NavigationService.goBack()
+        setTimeout(() => {
+          this.setVisible(false)
+          Toast.show(ConstInfo.MAP_SYMBOL_COLLECTION_CREATED)
+        }, 1000)
+      },
+    })
   }
 
   /** 切换地图 **/

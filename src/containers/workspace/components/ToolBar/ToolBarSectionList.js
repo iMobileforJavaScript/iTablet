@@ -466,9 +466,9 @@ export default class ToolBarSectionList extends React.Component {
     return <View style={styles.separateViewStyle} />
   }
 
-  /**行与行之间的分隔线组件 */
+  /**Section之间的分隔线组件 */
   renderSectionFooter = () => {
-    return <View style={styles.separateViewStyle} />
+    return <View style={styles.sectionSeparateViewStyle} />
   }
 
   render() {
@@ -576,6 +576,11 @@ const styles = StyleSheet.create({
     height: scaleSize(30),
     backgroundColor: 'transparent',
     color: color.font_color_white,
+  },
+  sectionSeparateViewStyle: {
+    height: scaleSize(1),
+    marginHorizontal: 0,
+    backgroundColor: color.contentColorWhite,
   },
   separateViewStyle: {
     // flexDirection: 'column',
