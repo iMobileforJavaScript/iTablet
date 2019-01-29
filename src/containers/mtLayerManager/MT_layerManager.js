@@ -17,7 +17,7 @@ import {
 import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize, setSpText } from '../../utils'
-import { MapToolbar } from '../workspace/components'
+import { MapToolbar, OverlayView } from '../workspace/components'
 import { Action, SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType, layerManagerData, MAP_MODULE } from '../../constants'
@@ -779,7 +779,9 @@ export default class MT_layerManager extends React.Component {
         <View
           style={{
             flexDirection: 'column',
-            width: '100%',
+            // width: '100%',
+            marginLeft: scaleSize(30),
+            marginRight: scaleSize(30),
             height: scaleSize(1),
             backgroundColor: color.bgG,
           }}
@@ -802,6 +804,11 @@ export default class MT_layerManager extends React.Component {
         }}
       />
     )
+  }
+
+  //遮盖层
+  renderOverLayer = () => {
+    return <OverlayView ref={ref => (GLOBAL.LayerManagerOverlayView = ref)} />
   }
 
   renderTool = () => {
@@ -849,6 +856,7 @@ export default class MT_layerManager extends React.Component {
         {/*addLayerGroup={this._add_layer_group}*/}
         {/*/>*/}
         {this.renderList()}
+        {this.renderOverLayer()}
         {this.renderTool()}
         {/*<SaveDialog*/}
         {/*ref={ref => (this.saveDialog = ref)}*/}

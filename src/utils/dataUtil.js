@@ -159,7 +159,7 @@ function ChineseToNumber(chnStr) {
   return rtn + section
 }
 
-function angleTransfer(value = 0) {
+function angleTransfer(value = 0, decimals = -1) {
   let degrees,
     minutes,
     seconds,
@@ -171,6 +171,9 @@ function angleTransfer(value = 0) {
 
   temp = (temp - minutes) * 60
   seconds = temp
+  if (decimals >= 0) {
+    seconds = seconds.toFixed(decimals)
+  }
   return degrees + '°' + minutes + "'" + seconds + '"'
 }
 

@@ -121,11 +121,11 @@ function getMapTool(type, params) {
         //   image: require('../../../../assets/mapTools/icon_full_amplitude.png'),
         // },
       ]
-      buttons = [
-        ToolbarBtnType.CANCEL,
-        ToolbarBtnType.PLACEHOLDER,
-        ToolbarBtnType.PLACEHOLDER,
-      ]
+      // buttons = [
+      //   ToolbarBtnType.CANCEL,
+      //   ToolbarBtnType.PLACEHOLDER,
+      //   ToolbarBtnType.PLACEHOLDER,
+      // ]
       break
     case ConstToolType.MAP_TOOL_MEASURE_LENGTH:
     case ConstToolType.MAP_TOOL_MEASURE_AREA:
@@ -157,7 +157,7 @@ function getMapTool(type, params) {
           title: constants.CANCEL,
           action: select,
           size: 'large',
-          image: require('../../../../assets/mapEdit/cancel.png'),
+          image: require('../../../../assets/mapEdit/cancel_black.png'),
         },
       ]
       buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.SHOW_ATTRIBUTE]
@@ -229,7 +229,7 @@ function measureAngle() {
   _params.showFullMap && _params.showFullMap(true)
   _params.showMeasureResult(true, 0)
   SMap.measureAngle(obj => {
-    _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle))
+    _params.showMeasureResult(true, dataUtil.angleTransfer(obj.curAngle, 6))
   })
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_MEASURE_ANGLE
 

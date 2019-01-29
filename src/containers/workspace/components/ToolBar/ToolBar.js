@@ -117,6 +117,7 @@ export default class ToolBar extends React.PureComponent {
     getMapSetting: () => {},
     showMeasureResult: () => {},
     refreshLayer3dList: () => {},
+    setCurrentSymbols: () => {},
     saveMap: () => {},
   }
 
@@ -2806,6 +2807,7 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      await this.props.setCurrentSymbols()
       this.props
         .importWorkspace({ ...item, module: moduleName })
         .then(async ({ mapsInfo, msg }) => {
@@ -2893,6 +2895,7 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      await this.props.setCurrentSymbols()
       let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {
         Toast.show(ConstInfo.CHANGE_MAP_TO + mapInfo.name)
@@ -3595,7 +3598,16 @@ export default class ToolBar extends React.PureComponent {
         {/*<View style={styles.list}>{this.renderMenuDialog()}</View>*/}
         {/*)}*/}
         {this.state.showMenuDialog && this.renderMenuDialog()}
-        <View style={styles.containers}>
+        <View
+          style={[
+            styles.containers,
+            !(
+              this.state.isFullScreen &&
+              !this.state.isTouchProgress &&
+              !this.state.showMenuDialog
+            ) && styles.containers_border,
+          ]}
+        >
           {this.renderView()}
           {this.renderBottomBtns()}
         </View>

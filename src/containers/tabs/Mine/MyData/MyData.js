@@ -127,35 +127,16 @@ export default class MyLocalData extends Component {
       let data = []
       if (isLogin) {
         // 获取用户数据
-        let userData = await this.getSectionData(userPath)
-        data.push({
-          title: '我的数据',
-          data: userData,
-          isShowItem: true,
-        })
+        let userData = await this.getSectionData(userPath, true)
+        data.push(userData)
       }
 
       // 获取游客数据
       let customerPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath,
       )
-      let customerData = await this.getSectionData(customerPath)
-      data.push({
-        title: '游客数据',
-        data: customerData,
-        isShowItem: true,
-      })
-
-      // 获取公共数据
-      let publicPath = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath,
-      )
-      let publicData = await this.getSectionData(publicPath)
-      data.push({
-        title: '公共数据',
-        data: publicData,
-        isShowItem: true,
-      })
+      let customerData = await this.getSectionData(customerPath, false)
+      data.push(customerData)
 
       this.setState({ sectionData: data, textDisplay: 'none' })
     } catch (e) {
@@ -166,11 +147,13 @@ export default class MyLocalData extends Component {
   /**
    * 获取每个Section中的数据
    * @param path 目标文件的上一级目录
+   * @param isUser 是否是用户数据
    * @returns {Promise.<*>}
    */
-  getSectionData = async path => {
+  getSectionData = async (path, isUser = false) => {
     try {
-      let filter
+      let filter,
+        title = '我的数据'
       switch (this.state.title) {
         case Const.MAP:
           path += ConstPath.RelativePath.Map
@@ -178,6 +161,7 @@ export default class MyLocalData extends Component {
             extension: 'xml',
             type: 'file',
           }
+          title = isUser ? '我的地图' : '游客地图'
           break
         case Const.DATA:
           path += ConstPath.RelativePath.Datasource
@@ -185,22 +169,31 @@ export default class MyLocalData extends Component {
             extension: 'udb',
             type: 'file',
           }
+          title = isUser ? '我的数据' : '游客数据'
           break
         case Const.SCENE:
           path += ConstPath.RelativePath.Scene
           filter = {
             type: 'Directory',
           }
+          title = isUser ? '我的场景' : '游客场景'
           break
         case Const.SYMBOL:
           path += ConstPath.RelativePath.Symbol
           filter = {
             type: 'file',
           }
+          title = isUser ? '我的符号' : '游客符号'
           break
       }
       let data = await FileTools.getPathListByFilter(path, filter)
-      return data || []
+
+      let sectionData = {
+        title,
+        data: data || [],
+        isShowItem: true,
+      }
+      return sectionData
     } catch (e) {
       return null
     }
@@ -257,17 +250,40 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
-    let txtInfo = info.item.name
+    let name = info.item.name
+    let txtInfo =
+      name.lastIndexOf('.') > 0
+        ? name.substring(0, name.lastIndexOf('.'))
+        : name
+    let txtType =
+      name.lastIndexOf('.') > 0 ? name.substring(name.lastIndexOf('.') + 1) : ''
+
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
-      isShowMore = info.section.title !== '公共数据'
+      isShowMore = true
     switch (this.state.title) {
       case Const.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
-      case Const.DATA:
-      case Const.SCENE:
       case Const.SYMBOL:
+        if (txtType === 'sym') {
+          // 点
+          img = require('../../../../assets/map/icon-shallow-dot_black.png')
+        } else if (txtType === 'lsl') {
+          // 线
+          img = require('../../../../assets/map/icon-shallow-line_black.png')
+        } else if (txtType === 'bru') {
+          // 面
+          img = require('../../../../assets/map/icon-shallow-polygon_black.png')
+        } else {
+          // 默认
+          img = require('../../../../assets/Mine/mine_my_online_data.png')
+        }
+        break
+      case Const.SCENE:
+        img = require('../../../../assets/mapTools/icon_scene.png')
+        break
+      case Const.DATA:
       default:
         img = require('../../../../assets/Mine/mine_my_online_data.png')
         break
