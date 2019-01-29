@@ -207,6 +207,7 @@ export default class LayerManager_tolbar extends React.Component {
       (async function() {
         await section.action()
         this.props.getLayers()
+        this.setVisible(false)
       }.bind(this)())
     }
     if (section.title === '移除') {
