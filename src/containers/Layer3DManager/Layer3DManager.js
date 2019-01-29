@@ -6,6 +6,7 @@ import Layer3DItem from './Layer3DItem'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
+import { OverlayView } from '../workspace/components'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
@@ -54,7 +55,6 @@ export default class Map3DToolBar extends Component {
             this.setState({
               toHeightItem: { itemName: item.name, index: index },
             })
-            this.props.setCurrentLayer3d && this.props.setCurrentLayer3d(item)
             // let data2 = await SScene.getAttributeByName(item.name)
             // console.log(data2)
           }}
@@ -63,12 +63,20 @@ export default class Map3DToolBar extends Component {
             item={item}
             getlayer3dToolbar={this.getlayer3dToolbar}
             device={this.props.device}
+            toHeightItem={this.state.toHeightItem}
+            index={index}
+            getOverlayView={this.getOverlayView}
+            setCurrentLayer3d={this.props.setCurrentLayer3d}
           />
         </TouchableOpacity>
       )
     } else {
       return <View />
     }
+  }
+
+  getOverlayView = () => {
+    return this.OverlayView
   }
 
   renderListSectionHeader = ({ section }) => {
@@ -130,7 +138,16 @@ export default class Map3DToolBar extends Component {
   }
 
   renderLayerToolbar = () => {
-    return <LayerManager_tolbar ref={ref => (this.layer3dToolbar = ref)} />
+    return (
+      <LayerManager_tolbar
+        ref={ref => (this.layer3dToolbar = ref)}
+        getOverlayView={this.getOverlayView}
+      />
+    )
+  }
+
+  renderOverLayer = () => {
+    return <OverlayView ref={ref => (this.OverlayView = ref)} />
   }
 
   render() {
@@ -148,6 +165,7 @@ export default class Map3DToolBar extends Component {
       >
         {this.renderLayerToolbar()}
         {this.renderSelection()}
+        {this.renderOverLayer()}
       </Container>
     )
   }

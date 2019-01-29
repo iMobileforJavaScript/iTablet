@@ -50,6 +50,8 @@ export default class Map3D extends React.Component {
       popShow: false,
       inputText: '',
       placeholder: false,
+      measureShow: false,
+      measureResult: '',
     }
     this.name = params.name || ''
     this.type = params.type || 'MAP_3D'
@@ -286,6 +288,7 @@ export default class Map3D extends React.Component {
         setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
         setAttributes={this.props.setAttributes}
+        measureShow={this.measureShow}
       />
     )
   }
@@ -326,6 +329,22 @@ export default class Map3D extends React.Component {
     return <InputDialog ref={ref => (this.InputDialog = ref)} label="名称" />
   }
 
+  measureShow = (value, result) => {
+    this.setState({ measureShow: value, measureResult: result })
+  }
+
+  renderMeasureLabel = () => {
+    return (
+      <View style={styles.measureResultContainer}>
+        <View style={styles.measureResultView}>
+          <Text style={styles.measureResultText}>
+            {this.state.measureResult}
+          </Text>
+        </View>
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -346,6 +365,7 @@ export default class Map3D extends React.Component {
         {this.renderTool()}
         {this.renderDialog()}
         {this.renderInputDialog()}
+        {this.state.measureShow && this.renderMeasureLabel()}
       </Container>
     )
   }

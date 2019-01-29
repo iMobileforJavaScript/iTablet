@@ -85,6 +85,8 @@ export default {
   MAP_TOOL_MEASURE_ANGLE: 'MAP_TOOL_MEASURE_ANGLE',
 
   MAP_STYLE: 'MAP_STYLE',
+  MAP_EDIT_STYLE: 'MAP_EDIT_STYLE',
+  MAP_EDIT_MORE_STYLE: 'MAP_EDIT_MORE_STYLE',
   COLLECTION: 'COLLECTION',
   MAP_NULL: 'MAP_NULL',
   GRID_STYLE: 'GRID_STYLE',
@@ -149,6 +151,7 @@ export default {
     scaleSize(300),
   ],
   TOOLBAR_HEIGHT: [
+    scaleSize(86),
     scaleSize(258),
     scaleSize(344),
     scaleSize(430),

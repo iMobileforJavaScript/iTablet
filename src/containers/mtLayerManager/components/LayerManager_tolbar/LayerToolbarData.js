@@ -150,20 +150,28 @@ const layerThemeSettings = [
 
 const layer3dSetting = [
   {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
+  {
     title: '设置图层可选',
     data: [],
-    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
   },
   {
     title: '设置图层不可选',
     data: [],
-    image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+    image: require('../../../../assets/map/Frenchgrey/icon_selectable.png'),
   },
-  // {
-  //   title: '取消',
-  //   data: [],
-  //   image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-  // },
+]
+
+const layereditsetting = [
+  {
+    title: '切换底图',
+    data: [],
+    image: require('../../../../assets/mapTools/icon_open_black.png'),
+  },
 ]
 
 const layerCollectionSetting = [
@@ -210,4 +218,5 @@ export {
   layer3dSetting,
   layerCollectionSetting,
   layerThemeSettings,
+  layereditsetting,
 }

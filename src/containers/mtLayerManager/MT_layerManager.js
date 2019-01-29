@@ -16,11 +16,11 @@ import {
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize, setSpText } from '../../utils'
+import { Toast, scaleSize } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { Action, SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, layerManagerData, MAP_MODULE } from '../../constants'
+import { ConstToolType, MAP_MODULE } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 // import NavigationService from '../../containers/NavigationService'
@@ -66,11 +66,11 @@ export default class MT_layerManager extends React.Component {
             data: [this.props.layers[this.props.layers.length - 1]],
             visible: true,
           },
-          {
-            title: '切换底图',
-            data: layerManagerData,
-            visible: true,
-          },
+          // {
+          //   title: '切换底图',
+          //   data: layerManagerData,
+          //   visible: true,
+          // },
         ],
       })
     }
@@ -89,7 +89,7 @@ export default class MT_layerManager extends React.Component {
           data: [this.props.layers[this.props.layers.length - 1]],
           visible: true,
         },
-        { title: '切换底图', data: layerManagerData, visible: true },
+        // { title: '切换底图', data: layerManagerData, visible: true },
       ],
     })
   }
@@ -437,6 +437,16 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  onToolBasePress = async ({ data }) => {
+    this.setState({
+      selectLayer: data.caption,
+    })
+    this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_STYLE, {
+      height: ConstToolType.TOOLBAR_HEIGHT[0],
+      layerdata: data,
+    })
+  }
+
   onToolPress = async ({ data }) => {
     this.setState({
       selectLayer: data.caption,
@@ -458,19 +468,19 @@ export default class MT_layerManager extends React.Component {
           break
       }
       this.toolBox.setVisible(true, themeType, {
-        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
       })
     }
     if (GLOBAL.Type === constants.MAP_EDIT) {
       this.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[5],
+        height: ConstToolType.TOOLBAR_HEIGHT[6],
         layerdata: data,
       })
     }
     if (GLOBAL.Type === constants.COLLECTION) {
       this.toolBox.setVisible(true, ConstToolType.COLLECTION, {
-        height: ConstToolType.TOOLBAR_HEIGHT[4],
+        height: ConstToolType.TOOLBAR_HEIGHT[5],
         layerdata: data,
       })
     }
@@ -602,7 +612,13 @@ export default class MT_layerManager extends React.Component {
   _renderItem = ({ item, section }) => {
     // sectionID = sectionID || 0
     if (section.visible) {
-      if (section.title === '我的图层') {
+      if (item) {
+        let action
+        if (section.title === '我的图层') {
+          action = this.onToolPress
+        } else {
+          action = this.onToolBasePress
+        }
         return (
           <LayerManager_item
             key={item.id}
@@ -635,66 +651,15 @@ export default class MT_layerManager extends React.Component {
             onPress={this.onPressRow}
             onAllPress={this.onAllPressRow}
             onArrowPress={this.getChildList}
-            onToolPress={this.onToolPress}
+            onToolPress={action}
           />
         )
       } else {
-        if (item) {
-          let image = this.getStyleIconByType(item)
-          return (
-            <TouchableOpacity
-              onPress={() => {
-                this.onPress({ item })
-              }}
-              style={{
-                height: scaleSize(80),
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <View
-                style={{
-                  height: scaleSize(50),
-                  width: scaleSize(100),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}
-              >
-                <Image
-                  resizeMode={'contain'}
-                  style={{
-                    marginLeft: scaleSize(30),
-                    width: scaleSize(40),
-                    height: scaleSize(40),
-                  }}
-                  source={image}
-                />
-              </View>
-              <Text
-                style={{
-                  marginLeft: scaleSize(50),
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  fontSize: setSpText(24),
-                  color: color.black,
-                }}
-              >
-                {item.caption}
-              </Text>
-            </TouchableOpacity>
-          )
-        } else {
-          return true
-        }
+        return <View />
       }
     } else {
       return <View />
     }
-  }
-
-  onPress = async ({ item }) => {
-    await item.action()
-    this.props.getLayers()
   }
 
   refreshList = section => {

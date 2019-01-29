@@ -318,22 +318,6 @@ export default class Map3DToolBar extends React.Component {
           />
         </View>
       )
-    } else if (this.props.type === 'MAP3D_TOOL_DISTANCEMEASURE') {
-      return (
-        <View style={styles.analystView}>
-          <Text style={styles.name}>总距离:</Text>
-          <Text style={styles.result}>{this.state.analystresult + ' 米'}</Text>
-        </View>
-      )
-    } else if (this.props.type === 'MAP3D_TOOL_SUERFACEMEASURE') {
-      return (
-        <View style={styles.analystView}>
-          <Text style={styles.name}>总面积:</Text>
-          <Text style={styles.result}>
-            {this.state.analystresult + ' 平方米'}
-          </Text>
-        </View>
-      )
     } else {
       return (
         <SectionList
