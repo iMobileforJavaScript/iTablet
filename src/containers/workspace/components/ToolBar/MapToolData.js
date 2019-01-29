@@ -157,7 +157,7 @@ function getMapTool(type, params) {
           title: constants.CANCEL,
           action: select,
           size: 'large',
-          image: require('../../../../assets/mapEdit/cancel.png'),
+          image: require('../../../../assets/mapEdit/cancel_black.png'),
         },
       ]
       buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.SHOW_ATTRIBUTE]
