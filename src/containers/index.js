@@ -52,7 +52,7 @@ import { MapTabs, Map3DTabs } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
-import protocol from './tabs/Home/AboutITablet/protocol'
+import protocol from './tabs/Home/AboutITablet/Protocol'
 export default StackNavigator(
   {
     Tabs: {

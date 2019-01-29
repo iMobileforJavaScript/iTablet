@@ -264,6 +264,13 @@ export default class LayerManager_tolbar extends React.Component {
     } else if (section.title === '设置为当前图层') {
       if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {
         this.cb && this.cb(this.layer3dItem)
+        this.setVisible(false)
+        let overlayView = this.props.getOverlayView
+          ? this.props.getOverlayView()
+          : null
+        if (overlayView) {
+          overlayView.setVisible(false)
+        }
         return
       }
       this.props.setCurrentLayer &&
@@ -305,12 +312,26 @@ export default class LayerManager_tolbar extends React.Component {
       SScene.setSelectable(this.layer3dItem.name, true).then(result => {
         result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
         // this.overlayView&&this.overlayView.setVisible(false)
+        this.setVisible(false)
+        let overlayView = this.props.getOverlayView
+          ? this.props.getOverlayView()
+          : null
+        if (overlayView) {
+          overlayView.setVisible(false)
+        }
       })
     } else if (section.title === '设置图层不可选') {
       SScene.setSelectable(this.layer3dItem.name, false).then(result => {
         result
           ? Toast.show('设置图层不可选成功')
           : Toast.show('设置图层不可选失败')
+        this.setVisible(false)
+        let overlayView = this.props.getOverlayView
+          ? this.props.getOverlayView()
+          : null
+        if (overlayView) {
+          overlayView.setVisible(false)
+        }
         // this.overlayView&&this.overlayView.setVisible(false)
       })
     }

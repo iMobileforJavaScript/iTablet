@@ -72,7 +72,7 @@ export default class LayerAttribute extends React.Component {
     this.props.setCurrentAttribute({})
   }
 
-  getMap3DAttribute = async () => {
+  getMap3DAttribute = async (cb = () => {}) => {
     let list = []
     let data = await SScene.getLableAttributeList()
     for (let index = 0; index < data.length; index++) {
@@ -83,7 +83,11 @@ export default class LayerAttribute extends React.Component {
           name: key,
           value: data[index][key],
         }
-        arr.push(item)
+        if (key === 'id') {
+          arr.unshift(item)
+        } else {
+          arr.push(item)
+        }
       })
       list.push(arr)
     }
@@ -92,6 +96,7 @@ export default class LayerAttribute extends React.Component {
       this.setState({
         showTable: true,
       })
+    cb && cb()
   }
 
   getAttribute = (cb = () => {}) => {
@@ -196,7 +201,7 @@ export default class LayerAttribute extends React.Component {
           widthArr={[100, 100]}
           tableHead={['名称', '属性值']}
           // tableHead={this.state.tableHead}
-          refresh={this.getAttribute}
+          refresh={this.getMap3DAttribute}
         />
       )
     }

@@ -16,6 +16,8 @@ export default class protocol extends Component {
   }
   constructor(props) {
     super(props)
+    const params = this.props.navigation.state.params
+    this.type = params.type
     this.state = {
       progressWidth: Dimensions.get('window').width * 0.4,
       isLoadWebView: false,
@@ -88,10 +90,20 @@ export default class protocol extends Component {
   }
 
   render() {
-    let source =
-      Platform.OS === 'ios'
-        ? require('../../../../assets/LegalStatement.html')
-        : { uri: `file:///android_asset/html/LegalStatement.html` }
+    let source
+    switch (this.type) {
+      case 'offcial':
+        source = { uri: `https://www.supermap.com` }
+        break
+      case 'protocol':
+        source = {
+          uri: `https://www.supermapol.com/zh-cn/servicesagreement.html`,
+        }
+        break
+      default:
+        break
+    }
+
     return (
       <Container
         headerProps={{
