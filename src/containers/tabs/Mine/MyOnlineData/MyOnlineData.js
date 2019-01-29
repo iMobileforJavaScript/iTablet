@@ -62,9 +62,10 @@ export default class MyOnlineData extends Component {
       progressWidth: this.screenWidth * 0.6,
     }
     this.pageSize = 20
-    this._addListener()
   }
   componentDidMount() {
+    this._removeListener()
+    this._addListener()
     this._firstLoadData()
   }
 

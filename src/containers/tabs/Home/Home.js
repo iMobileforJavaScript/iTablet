@@ -55,10 +55,10 @@ export default class Home extends Component {
     // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
     StatusBar.setHidden(statusBarVisible)
   }
-  _onImportWorkspace = async (fileDirPath, toPath, isFisrtImportWorkspace) => {
+  _onImportWorkspace = async (fileDirPath, toPath, isFirstImportWorkspace) => {
     try {
       if (fileDirPath !== undefined) {
-        if (isFisrtImportWorkspace === true) {
+        if (isFirstImportWorkspace === true) {
           this.container && this.container.setLoading(true, '导入数据中...')
         }
         await FileTools.copyFile(fileDirPath, toPath)
@@ -91,7 +91,7 @@ export default class Home extends Component {
     } catch (e) {
       Toast.show('导入失败')
     } finally {
-      if (isFisrtImportWorkspace === true) {
+      if (isFirstImportWorkspace === true) {
         this.container && this.container.setLoading(false)
       }
     }
@@ -124,7 +124,8 @@ export default class Home extends Component {
 
   _onLogin = () => {
     this._closeModal()
-    NavigationService.navigate('Mine')
+    NavigationService.navigate('Login')
+    // NavigationService.navigate('Mine')
   }
   _onRegister = () => {
     this._closeModal()
@@ -156,6 +157,7 @@ export default class Home extends Component {
         SOnlineService.logout()
       }
       this.props.closeWorkspace(async () => {
+        SOnlineService.removeCookie()
         let customPath = await FileTools.appendingHomeDirectory(
           ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace,
         )
@@ -322,9 +324,7 @@ export default class Home extends Component {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
-      : this.props.currentUser.userType !== undefined
-        ? require('../../../assets/home/system_default_header_image.png')
-        : require('../../../assets/tabBar/tab_user.png')
+      : require('../../../assets/home/system_default_header_image.png')
     let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Container

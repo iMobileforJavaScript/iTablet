@@ -33,6 +33,7 @@ import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
+import UserType from "./src/constants/UserType";
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -119,16 +120,13 @@ class AppRoot extends Component {
     if (appState === 'active') {
       if (this.props.user.currentUser && this.props.user.currentUser.userName) {
         (async function () {
-          let result = await SOnlineService.login(
-            this.props.user.currentUser.userName,
-            this.props.user.currentUser.password,
-          )
-          if (!(typeof result === 'boolean' && result)) {
-            Toast.show('请重新登录')
-            this.props.setUser({
-              userName: '',
-              password: '',
-            })
+          let isEmail = this.props.user.currentUser.isEmail
+          let userName = this.props.user.currentUser.userName
+          let password = this.props.user.currentUser.password
+          if (isEmail === true) {
+            await SOnlineService.login(userName, password)
+          } else if (isEmail === false) {
+            await SOnlineService.loginWithPhoneNumber(userName, password)
           }
         }).bind(this)()
       }
