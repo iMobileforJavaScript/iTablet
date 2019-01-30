@@ -128,6 +128,7 @@ export default class FunctionToolbar extends React.Component {
   showMenuAlertDialog = () => {
     if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show('提示: 请先选择专题图层。')
+      NavigationService.navigate('LayerManager')
       return
     }
     let type = ''
@@ -151,6 +152,7 @@ export default class FunctionToolbar extends React.Component {
         return
       default:
         Toast.show('提示: 请先选择专题图层。')
+        NavigationService.navigate('LayerManager')
         return
     }
 
