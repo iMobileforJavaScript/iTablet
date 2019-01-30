@@ -24,7 +24,14 @@ export default StyleSheet.create({
     backgroundColor: color.bgW,
     color: color.themeText2,
   },
-  flyItem: {},
+  baseText: {
+    padding: scaleSize(5),
+    fontSize: setSpText(28),
+    paddingLeft: scaleSize(20),
+    height: scaleSize(50),
+    backgroundColor: color.bgW,
+    color: color.themeText2,
+  },
   itemTime: {
     height: scaleSize(30),
     color: '#A3A3A3',
@@ -131,6 +138,18 @@ export default StyleSheet.create({
     width: scaleSize(40),
     height: scaleSize(40),
     marginLeft: scaleSize(50),
+  },
+  baseMapImg: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    marginLeft: scaleSize(50),
+  },
+  baseMapTitle: {
+    flex: 1,
+    height: scaleSize(80),
+    marginLeft: scaleSize(35),
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
   sceneItemcontent: {
     flex: 1,

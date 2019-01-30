@@ -88,7 +88,22 @@ export default class Map3D extends React.Component {
   addAttributeListener = async () => {
     this.attributeListener = await SScene.addAttributeListener({
       callback: result => {
-        this.toolBox.showMap3DAttribute(result)
+        let list = []
+        let arr = []
+        Object.keys(result).forEach(key => {
+          let item = {
+            fieldInfo: { caption: key },
+            name: key,
+            value: result[key],
+          }
+          if (key === 'id') {
+            arr.unshift(item)
+          } else {
+            arr.push(item)
+          }
+        })
+        list.push(arr)
+        this.props.setAttributes(list)
       },
     })
   }

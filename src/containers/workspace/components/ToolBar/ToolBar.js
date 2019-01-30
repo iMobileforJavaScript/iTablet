@@ -532,7 +532,7 @@ export default class ToolBar extends React.PureComponent {
             image: require('../../../../assets/mapEdit/Frenchgrey/icon_action3d.png'),
           },
         ]
-        buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
+        buttons = []
         break
     }
     return { data, buttons }
@@ -1466,11 +1466,13 @@ export default class ToolBar extends React.PureComponent {
             case ConstToolType.MAP3D_TOOL_FLY:
               this.height = ConstToolType.HEIGHT[0]
               this.showToolbar()
+              // this.updateOverlayerView()
               break
             case ConstToolType.MAP3D_CIRCLEFLY:
               this.height = ConstToolType.HEIGHT[0]
               this.props.showFullMap && this.props.showFullMap(true)
               this.showToolbar()
+
               break
             default:
               this.height = 0
@@ -2148,6 +2150,7 @@ export default class ToolBar extends React.PureComponent {
   closeCircle = () => {
     SScene.stopCircleFly()
     SScene.clearCirclePoint()
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2179,8 +2182,8 @@ export default class ToolBar extends React.PureComponent {
 
   endFly = () => {
     SScene.checkoutListener('startTouchAttribute')
-    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     SScene.flyStop()
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }

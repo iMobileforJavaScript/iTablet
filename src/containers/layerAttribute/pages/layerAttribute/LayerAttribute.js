@@ -14,7 +14,7 @@ import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-import { SScene } from 'imobile_for_reactnative'
+// import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
   props: {
@@ -73,25 +73,25 @@ export default class LayerAttribute extends React.Component {
   }
 
   getMap3DAttribute = async (cb = () => {}) => {
-    let list = []
-    let data = await SScene.getLableAttributeList()
-    for (let index = 0; index < data.length; index++) {
-      let arr = []
-      Object.keys(data[index]).forEach(key => {
-        let item = {
-          fieldInfo: { caption: key },
-          name: key,
-          value: data[index][key],
-        }
-        if (key === 'id') {
-          arr.unshift(item)
-        } else {
-          arr.push(item)
-        }
-      })
-      list.push(arr)
-    }
-    this.props.setAttributes(list)
+    // let list = []
+    // let data = await SScene.getLableAttributeList()
+    // for (let index = 0; index < data.length; index++) {
+    //   let arr = []
+    //   Object.keys(data[index]).forEach(key => {
+    //     let item = {
+    //       fieldInfo: { caption: key },
+    //       name: key,
+    //       value: data[index][key],
+    //     }
+    //     if (key === 'id') {
+    //       arr.unshift(item)
+    //     } else {
+    //       arr.push(item)
+    //     }
+    //   })
+    //   list.push(arr)
+    // }
+    // this.props.setAttributes(list)
     !this.state.showTable &&
       this.setState({
         showTable: true,
@@ -184,7 +184,6 @@ export default class LayerAttribute extends React.Component {
           // data={this.state.attribute}
           // tableHead={this.state.tableHead}
           // tableTitle={this.state.tableTitle}
-          refresh={this.getMap3DAttribute}
           NormalrowStyle={{ width: Dimensions.get('window').width }}
           type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
           selectRow={this.selectRow}
@@ -201,7 +200,6 @@ export default class LayerAttribute extends React.Component {
           widthArr={[100, 100]}
           tableHead={['名称', '属性值']}
           // tableHead={this.state.tableHead}
-          refresh={this.getMap3DAttribute}
         />
       )
     }
@@ -283,7 +281,7 @@ export default class LayerAttribute extends React.Component {
             )
           ) : (
             <View style={styles.infoView}>
-              <Text style={styles.info}>当前图层属性不可见</Text>
+              <Text style={styles.info}>请选择图层对象</Text>
             </View>
           )
         ) : (
