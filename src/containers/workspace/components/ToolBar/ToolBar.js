@@ -3201,6 +3201,7 @@ export default class ToolBar extends React.PureComponent {
         existFullMap={this.props.existFullMap}
         importSceneWorkspace={this.props.importSceneWorkspace}
         refreshLayer3dList={this.props.refreshLayer3dList}
+        device={this.props.device}
       />
     )
   }

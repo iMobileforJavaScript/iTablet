@@ -79,6 +79,10 @@ export default class Map3DToolBar extends Component {
     return this.OverlayView
   }
 
+  renderSectionFooter = () => {
+    return <View style={styles.sectionFooter} />
+  }
+
   renderListSectionHeader = ({ section }) => {
     let image = section.visible
       ? (image = require('../../assets/mapEdit/icon_spread.png'))
@@ -119,6 +123,7 @@ export default class Map3DToolBar extends Component {
       <SectionList
         sections={this.state.data}
         renderItem={this.renderListItem}
+        renderSectionFooter={this.renderSectionFooter}
         // ItemSeparatorComponent={this._renderItemSeparator}
         renderSectionHeader={this.renderListSectionHeader}
         keyExtractor={(item, index) => index}

@@ -15,8 +15,12 @@ export default class AboutITablet extends Component {
 
   componentDidMount() {}
 
+  offcial = () => {
+    NavigationService.navigate('Protocol', { type: 'offcial' })
+  }
+
   Protocol = () => {
-    NavigationService.navigate('Protocol')
+    NavigationService.navigate('Protocol', { type: 'protocol' })
   }
 
   render() {
@@ -54,23 +58,22 @@ export default class AboutITablet extends Component {
           </TouchableOpacity>
         </View>
         <View style={styles.footerView}>
-          <TouchableOpacity style={styles.offcial}>
-            <Text
+          <TouchableOpacity style={styles.offcial} onPress={this.offcial}>
+            {/* <Text
               style={[styles.footerItem, { position: 'absolute', right: 0 }]}
             >
               官网
-            </Text>
+            </Text> */}
+            <Text style={[styles.footerItem]}>官网</Text>
           </TouchableOpacity>
-          <View style={styles.separatorView}>
-            <View style={styles.cloumSeparator} />
-          </View>
+          <View style={styles.cloumSeparator} />
           <TouchableOpacity style={styles.protocol} onPress={this.Protocol}>
             <Text style={styles.footerItem}>服务协议</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.informationView}>
           <Text style={styles.information}>
-            Copyright 1997-2018 SuperMap Software Co.,Ltd.All rights reserved
+            Copyright 1997-2019 SuperMap Software Co.,Ltd.All rights reserved
           </Text>
         </View>
       </Container>

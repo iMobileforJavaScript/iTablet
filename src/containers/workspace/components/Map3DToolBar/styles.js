@@ -34,7 +34,8 @@ export default StyleSheet.create({
   },
   Separator: {
     flex: 1,
-    height: scaleSize(15),
+    height: scaleSize(1),
+    backgroundColor: color.fontColorGray,
   },
   text: {
     fontSize: setSpText(22),
