@@ -517,6 +517,7 @@ export default class ToolBar extends React.PureComponent {
                   GLOBAL.action3d = 'PANSELECT3D'
                   Toast.show('当前场景操作状态为可选')
                 } else {
+                  SScene.clearSelection()
                   SScene.setAction('PAN3D')
                   GLOBAL.action3d = 'PAN3D'
                   Toast.show('当前场景操作状态为不可选')
@@ -1371,11 +1372,7 @@ export default class ToolBar extends React.PureComponent {
       {
         type: type,
         data: [],
-        buttons: [
-          ToolbarBtnType.CLOSE_ANALYST,
-          ToolbarBtnType.CLEAR,
-          ToolbarBtnType.FLEX,
-        ],
+        buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
         isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
