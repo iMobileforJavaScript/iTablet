@@ -130,7 +130,7 @@ export default class Login extends React.Component {
           }
         }
         if (!isAccountExist) {
-          this.initUserDirectories(userName)
+          await this.initUserDirectories(userName)
         }
         // Toast.show('登录成功')
         this.container.setLoading(false)
