@@ -56,13 +56,13 @@ export default class Layer3DItem extends Component {
         case 'IMAGEFILE':
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DCHANGE, {
             isFullScreen: true,
-            height: scaleSize(82),
+            height: scaleSize(87),
           })
           break
         default:
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DSELECT, {
             isFullScreen: true,
-            height: scaleSize(245),
+            height: scaleSize(261),
           })
           break
       }
