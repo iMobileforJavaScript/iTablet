@@ -5,7 +5,7 @@
  */
 import * as React from 'react'
 import { View, FlatList, Animated } from 'react-native'
-import { MTBtn, PieProgress } from '../../../../components'
+import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
   Const,
@@ -25,6 +25,7 @@ import {
 import PropTypes from 'prop-types'
 import constants from '../../constants'
 import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
+import { Bar } from 'react-native-progress'
 
 const COLLECTION = 'COLLECTION'
 const NETWORK = 'NETWORK'
@@ -1051,7 +1052,7 @@ export default class FunctionToolbar extends React.Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <View>
+      <View style={styles.btnView}>
         <MTBtn
           style={styles.btn}
           key={index}
@@ -1068,14 +1069,20 @@ export default class FunctionToolbar extends React.Component {
           this.props.online.share[0] &&
           GLOBAL.Type === this.props.online.share[0].module &&
           this.props.online.share[0].progress !== undefined && (
-          <PieProgress
-            ref={ref => (this.shareProgress = ref)}
-            size={scaleSize(18)}
+          <Bar
             style={styles.progress}
             progress={this.props.online.share[0].progress}
-            indeterminate={false}
+            width={scaleSize(60)}
           />
         )}
+
+        {/*<PieProgress*/}
+        {/*ref={ref => (this.shareProgress = ref)}*/}
+        {/*size={scaleSize(18)}*/}
+        {/*style={styles.progress}*/}
+        {/*progress={this.props.online.share[0].progress}*/}
+        {/*indeterminate={false}*/}
+        {/*/>*/}
       </View>
     )
   }

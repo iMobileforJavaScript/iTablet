@@ -2727,7 +2727,7 @@ export default class ToolBar extends React.PureComponent {
         // }
 
         NavigationService.navigate('InputPage', {
-          headerTitle: '新建',
+          headerTitle: '新建地图',
           placeholder: ConstInfo.PLEASE_INPUT_NAME,
           cb: async value => {
             GLOBAL.Loading &&
@@ -2818,7 +2818,7 @@ export default class ToolBar extends React.PureComponent {
       cb: async (value = '') => {
         try {
           this.props.setContainerLoading &&
-            this.props.setContainerLoading(true, ConstInfo.TEMPLATE_CREATING)
+            this.props.setContainerLoading(true, ConstInfo.MAP_CREATING)
           // 打开模板工作空间
           let moduleName = ''
           if (this.props.map.currentMap.name) {

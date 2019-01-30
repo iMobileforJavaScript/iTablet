@@ -289,9 +289,8 @@ export default class Mine extends Component {
     return (
       <View
         style={{
-          marginLeft: 10,
-          marginRight: 10,
-          height: 1,
+          width: '100%',
+          height: 2,
           backgroundColor: color.separateColorGray,
         }}
       />
@@ -337,8 +336,8 @@ export default class Mine extends Component {
             width: itemWidth,
             height: itemHeight,
             alignItems: 'center',
-            paddingLeft: 10,
-            paddingRight: 10,
+            paddingLeft: scaleSize(16),
+            paddingRight: scaleSize(16),
           }}
           onPress={onClick}
         >

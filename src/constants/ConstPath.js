@@ -54,6 +54,7 @@ export default {
   Audio: AppPath + 'audio/', // 存放语音
 
   CachePath: AppPath + 'Cache/',
+  CachePath2: AppPath + 'Cache',
   SampleDataPath: AppPath + '/SampleData/', // 存放示例数据
   UserPath: AppPath + 'User/', // 存放用户数据
   UserPath2: AppPath + 'User', // 存放用户数据
