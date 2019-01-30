@@ -127,4 +127,6 @@ export default {
   section_text: '#F0F0F0', //列表一级标题文字
   bottomz: '#303030', //底部工具栏背景
   overlay_tint: 'rgba(48,48,48,0.85)', //遮罩颜色为#303030,85%不透明度
+  item_selected_bg: '#4680DF', //列表选中背景
+  item_text_selected: '#F0F0F0', //列表文字选中颜色
 }
