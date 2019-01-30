@@ -1745,6 +1745,28 @@ export default class ToolBar extends React.PureComponent {
     }.bind(this)())
   }
 
+  addBack = (type = this.state.type) => {
+    if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
+      let data = this.lastUdbList,
+        buttons = []
+      buttons = [ToolbarBtnType.THEME_CANCEL]
+      this.setState(
+        {
+          isFullScreen: true,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          listSelectable: false, //单选框
+          data: data,
+          buttons: buttons,
+          type: ConstToolType.MAP_THEME_ADD_UDB,
+        },
+        () => {
+          this.updateOverlayerView()
+        },
+      )
+    }
+  }
+
   close = (type = this.state.type) => {
     (async function() {
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
@@ -2464,6 +2486,7 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
+        this.lastUdbList = this.state.data //保存上次的数据源数据
         this.props.setContainerLoading &&
           this.props.setContainerLoading(true, ConstInfo.READING_DATA)
         this.path = await FileTools.appendingHomeDirectory(item.path)
@@ -2492,6 +2515,7 @@ export default class ToolBar extends React.PureComponent {
               listSelectable: true, //单选框
               buttons: [
                 ToolbarBtnType.THEME_CANCEL,
+                ToolbarBtnType.THEME_ADD_BACK,
                 ToolbarBtnType.THEME_COMMIT,
               ],
               data: dataList,
@@ -3523,6 +3547,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           // action = this.menuCommit
           action = this.close
+          break
+        case ToolbarBtnType.THEME_ADD_BACK:
+          //添加->返回上一级
+          image = require('../../../../assets/public/Frenchgrey/icon-back-white.png')
+          action = this.addBack
           break
         case ToolbarBtnType.MEASURE_CLEAR:
           //量算-清除

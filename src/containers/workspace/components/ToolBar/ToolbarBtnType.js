@@ -29,6 +29,7 @@ export default {
   THEME_MENU: 'theme_menu',
   THEME_FLEX: 'theme_flex',
   THEME_COMMIT: 'theme_commit',
+  THEME_ADD_BACK: 'theme_add_back', //添加->返回上一级
   MAP3DSHARE: 'map3dshare',
 
   MENU_COMMIT: 'menu_commit',
