@@ -290,33 +290,31 @@ export default class MyLocalData extends Component {
     }
     return (
       <TouchableOpacity
-        style={{ display: display }}
+        style={[styles.item, { display: display }]}
         onPress={() => {
           // this.itemInfo = info
           // this.setState({ modalIsVisible: true })
         }}
       >
-        <View style={styles.item}>
-          <Image style={styles.img} resizeMode={'contain'} source={img} />
-          <Text numberOfLines={1} style={styles.itemText}>
-            {txtInfo}
-          </Text>
-          {isShowMore && (
-            <TouchableOpacity
-              style={styles.moreView}
-              onPress={() => {
-                this.itemInfo = info
-                this.setState({ modalIsVisible: true })
-              }}
-            >
-              <Image
-                style={styles.moreImg}
-                resizeMode={'contain'}
-                source={require('../../../../assets/Mine/icon_more_gray.png')}
-              />
-            </TouchableOpacity>
-          )}
-        </View>
+        <Image style={styles.img} resizeMode={'contain'} source={img} />
+        <Text numberOfLines={1} style={styles.itemText}>
+          {txtInfo}
+        </Text>
+        {isShowMore && (
+          <TouchableOpacity
+            style={styles.moreView}
+            onPress={() => {
+              this.itemInfo = info
+              this.setState({ modalIsVisible: true })
+            }}
+          >
+            <Image
+              style={styles.moreImg}
+              resizeMode={'contain'}
+              source={require('../../../../assets/Mine/icon_more_gray.png')}
+            />
+          </TouchableOpacity>
+        )}
       </TouchableOpacity>
     )
   }

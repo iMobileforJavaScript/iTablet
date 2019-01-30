@@ -48,7 +48,7 @@ export default class HomePopupModal extends PureComponent {
       <View
         style={{
           width: '100%',
-          height: 1,
+          height: scaleSize(1),
           backgroundColor: color.separateColorGray,
         }}
       />
@@ -58,7 +58,14 @@ export default class HomePopupModal extends PureComponent {
     let fontSize = size.fontSize.fontSizeXl
     let height = scaleSize(80)
     return (
-      <View style={{ width: '100%' }}>
+      <View
+        style={{
+          width: '100%',
+          backgroundColor: color.contentColorWhite,
+          paddingLeft: scaleSize(16),
+          paddingRight: scaleSize(16),
+        }}
+      >
         <TouchableOpacity
           activeOpacity={0.9}
           style={{
@@ -124,6 +131,7 @@ export default class HomePopupModal extends PureComponent {
             bottom: 0,
             left: 0,
             right: 0,
+            backgroundColor: color.contentColorWhite,
           }}
         >
           {this._renderItem('关于 SuperMap iTablet', this.props.onAbout)}
