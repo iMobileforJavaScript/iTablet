@@ -360,7 +360,11 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  onAllPressRow = async ({ data }) => {
+  onAllPressRow = async () => {
+    return true
+  }
+
+  onThisPress = async ({ data }) => {
     this.setState({
       selectLayer: data.caption,
     })
@@ -439,9 +443,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   onToolBasePress = async ({ data }) => {
-    this.setState({
-      selectLayer: data.caption,
-    })
     this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_STYLE, {
       height: ConstToolType.TOOLBAR_HEIGHT[0],
       layerdata: data,
@@ -449,9 +450,6 @@ export default class MT_layerManager extends React.Component {
   }
 
   onToolPress = async ({ data }) => {
-    this.setState({
-      selectLayer: data.caption,
-    })
     if (GLOBAL.Type === constants.MAP_THEME) {
       let themeType
       switch (data.themeType) {
@@ -766,6 +764,7 @@ export default class MT_layerManager extends React.Component {
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}
+        onThisPress={this.onThisPress}
       />
     )
   }
