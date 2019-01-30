@@ -30,12 +30,13 @@ export default class MyLocalData extends Component {
       sectionData: [],
       userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
+      isFirstLoadingModal: true,
       textValue: '扫描文件:',
       textDisplay: 'none',
     }
   }
   componentDidMount() {
-    this._setSectionDataState()
+    this._setSectionDataState3()
   }
 
   _getHomePath = () => {
@@ -118,11 +119,10 @@ export default class MyLocalData extends Component {
 
   _setSectionDataState = async () => {
     try {
-      let result = await AsyncStorage.getItem('ExternalSectionData')
-      let newSectionData
-      if (result !== null) {
-        this.setState({ textDisplay: 'none' })
-      }
+      // let result = await AsyncStorage.getItem('ExternalSectionData')
+      // if (result !== null) {
+      //   this.setState({ textDisplay: 'none' })
+      // }
       let userSectionData
       if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
         userSectionData = []
@@ -131,13 +131,14 @@ export default class MyLocalData extends Component {
       }
       // this.setState({ sectionData: userSectionData })
       let customerSectionData = await this._constructCustomerSectionData()
-      newSectionData = userSectionData.concat(customerSectionData)
+      let newSectionData = userSectionData.concat(customerSectionData)
       this.setState({
         sectionData: [
           { title: '工作空间', data: newSectionData, isShowItem: true },
         ],
       })
       let externalSectionData = []
+      let result = await AsyncStorage.getItem('ExternalSectionData')
       if (result !== null) {
         externalSectionData = JSON.parse(result)
       } else {
@@ -205,6 +206,53 @@ export default class MyLocalData extends Component {
       this.setState({ textDisplay: 'none' })
     }
   }
+
+  _setSectionDataState3 = async () => {
+    try {
+      let cacheSectionData = await this._constructCacheSectionData()
+      this.setState({
+        sectionData: cacheSectionData,
+        textDisplay: 'none',
+      })
+
+      let userData
+      if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+        userData = []
+      } else {
+        userData = await this._constructUserSectionData()
+      }
+      // this.setState({ sectionData: userSectionData })
+      let customerSectionData = await this._constructCustomerSectionData()
+      let newData = userData.concat(customerSectionData)
+      let newSectionData = cacheSectionData.concat([
+        { title: '外部数据', data: newData, isShowItem: true },
+      ])
+      this.setState({
+        sectionData: newSectionData,
+      })
+      // let externalSectionData = []
+      // let result = await AsyncStorage.getItem('ExternalSectionData')
+      // if (result !== null) {
+      //   externalSectionData = JSON.parse(result)
+      // } else {
+      //   externalSectionData = await this._constructExternalSectionData()
+      //   AsyncStorage.setItem(
+      //     'ExternalSectionData',
+      //     JSON.stringify(externalSectionData),
+      //   )
+      // }
+      // let newData2 = newData.concat(externalSectionData)
+      // let newSectionData2 = cacheSectionData.concat([
+      //   { title: '外部数据', data: newData2, isShowItem: true },
+      // ])
+      // this.setState({
+      //   sectionData: newSectionData2,
+      //   textDisplay: 'none',
+      // })
+    } catch (e) {
+      this.setState({ textDisplay: 'none' })
+    }
+  }
   _setFilterExternalDatas = async (fullFileDir, fileType, arrFilterFile) => {
     try {
       let isRecordFile = false
@@ -249,7 +297,7 @@ export default class MyLocalData extends Component {
         }
       }
     } catch (e) {
-      Toast.show('没有数据')
+      // Toast.show('没有数据')
     }
     return arrFilterFile
   }
@@ -354,6 +402,27 @@ export default class MyLocalData extends Component {
     // }
     // return sectionData
   }
+  /** 构造样例数据数据*/
+  _constructCacheSectionData = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + ConstPath.CachePath2
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    let titleWorkspace = '样例数据'
+    let sectionData
+    if (newData.length === 0) {
+      sectionData = []
+    } else {
+      sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
+    }
+    return sectionData
+  }
+
   /** 构造当前用户数据*/
   _constructUserSectionData = async () => {
     this.homePath = await this._getHomePath()
@@ -468,8 +537,8 @@ export default class MyLocalData extends Component {
     let txtInfo = info.item.fileName
     let path = info.item.directory.substring(this.homePath.length)
     let itemHeight = scaleSize(80)
-    let imageWidth = scaleSize(30),
-      imageHeight = scaleSize(30)
+    let imageWidth = scaleSize(40),
+      imageHeight = scaleSize(40)
     // let separatorLineHeight = 1
     let fontSize = size.fontSize.fontSizeXl
     let imageColor = color.imageColorBlack
@@ -477,73 +546,72 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     return (
       <TouchableOpacity
-        style={{ display: display }}
+        style={{
+          display: display,
+          width: '100%',
+          paddingLeft: scaleSize(16),
+          paddingRight: scaleSize(16),
+          flexDirection: 'row',
+          backgroundColor: color.contentColorWhite,
+          alignItems: 'center',
+          height: itemHeight,
+        }}
         onPress={() => {
           this.itemInfo = info
-          this.setState({ modalIsVisible: true })
+          if (this.state.isFirstLoadingModal) {
+            this.setState({ modalIsVisible: true, isFirstLoadingModal: false })
+          } else {
+            this.setState({ modalIsVisible: true })
+          }
         }}
       >
-        <View
-          // display={display}
+        <Image
           style={{
-            // display:display,
-            width: '100%',
-            flexDirection: 'row',
-            backgroundColor: color.contentColorWhite,
-            alignItems: 'center',
-            height: itemHeight,
+            width: imageWidth,
+            height: imageHeight,
+            marginLeft: 20,
+            tintColor: imageColor,
           }}
-        >
-          <Image
+          resizeMode={'contain'}
+          source={require('../../../../assets/Mine/mine_my_online_data.png')}
+        />
+        <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Text
+            numberOfLines={1}
             style={{
-              width: imageWidth,
-              height: imageHeight,
-              marginLeft: 20,
-              tintColor: imageColor,
+              marginTop: scaleSize(5),
+              color: fontColor,
+              paddingLeft: 15,
+              fontSize: fontSize,
             }}
-            resizeMode={'contain'}
-            source={require('../../../../assets/Mine/mine_my_online_data.png')}
-          />
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text
-              numberOfLines={1}
-              style={{
-                marginTop: scaleSize(5),
-                color: fontColor,
-                paddingLeft: 15,
-                fontSize: fontSize,
-              }}
-            >
-              {txtInfo}
-            </Text>
-            <Text
-              ellipsizeMode={'middle'}
-              numberOfLines={1}
-              style={{
-                marginTop: scaleSize(5),
-                color: color.fontColorGray,
-                paddingLeft: 15,
-                fontSize: 10,
-                height: 15,
-                marginRight: 20,
-              }}
-            >
-              {/*{`路径:${path}`}*/}
-              {'路径:' + path}
-            </Text>
-          </View>
-
-          <Image
+          >
+            {txtInfo}
+          </Text>
+          <Text
+            ellipsizeMode={'middle'}
+            numberOfLines={1}
             style={{
-              width: imageWidth,
-              height: imageHeight,
-              marginRight: 10,
-              tintColor: imageColor,
+              marginTop: scaleSize(5),
+              color: color.fontColorGray,
+              paddingLeft: 15,
+              fontSize: 10,
+              height: 15,
+              marginRight: 20,
             }}
-            resizeMode={'contain'}
-            source={require('../../../../assets/Mine/mine_more_white.png')}
-          />
+          >
+            {`路径:${path}`}
+          </Text>
         </View>
+        <Image
+          style={{
+            width: imageWidth,
+            height: imageHeight,
+            marginRight: 10,
+            // tintColor: imageColor,
+          }}
+          resizeMode={'contain'}
+          source={require('../../../../assets/Mine/icon_more_gray.png')}
+        />
       </TouchableOpacity>
     )
   }
@@ -620,7 +688,7 @@ export default class MyLocalData extends Component {
           }
         }
         this.setLoading(false)
-        this.setState({ modalIsVisible: false })
+        this._closeModal()
       }
     } catch (e) {
       this.setLoading(false)
@@ -630,7 +698,7 @@ export default class MyLocalData extends Component {
   }
 
   _showLocalDataPopupModal = () => {
-    if (this.state.modalIsVisible) {
+    if (!this.state.isFirstLoadingModal) {
       return (
         <LocalDataPopupModal
           onDeleteData={this._onDeleteData}
@@ -652,7 +720,7 @@ export default class MyLocalData extends Component {
 
   _renderItemSeparatorComponent = ({ section }) => {
     return section.isShowItem ? (
-      <ListSeparator color={color.itemColorGray} height={1} />
+      <ListSeparator color={color.separateColorGray} height={scaleSize(1)} />
     ) : null
   }
 
@@ -662,7 +730,7 @@ export default class MyLocalData extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '导入数据',
+          title: '导入',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
@@ -672,7 +740,7 @@ export default class MyLocalData extends Component {
           ellipsizeMode={'head'}
           style={{
             width: '100%',
-            backgroundColor: color.content_white,
+            backgroundColor: color.contentColorWhite,
             display: this.state.textDisplay,
             paddingLeft: 10,
             fontSize: 10,
@@ -683,7 +751,7 @@ export default class MyLocalData extends Component {
         <SectionList
           style={{
             flex: 1,
-            backgroundColor: color.content_white,
+            backgroundColor: color.contentColorWhite,
           }}
           sections={sectionData}
           initialNumToRender={20}

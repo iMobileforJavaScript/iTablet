@@ -357,14 +357,14 @@ const styles = StyleSheet.create({
   },
   moveViewBg: {
     position: 'absolute',
-    minHeight: scaleSize(300),
+    minHeight: scaleSize(200),
     width: VIEW_WIDTH,
     flexDirection: 'column',
     backgroundColor: color.transView,
   },
   moveView: {
     position: 'absolute',
-    minHeight: scaleSize(300),
+    minHeight: scaleSize(200),
     width: VIEW_WIDTH,
     flexDirection: 'column',
     backgroundColor: color.transOverlay,

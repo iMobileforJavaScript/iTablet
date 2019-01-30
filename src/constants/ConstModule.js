@@ -36,21 +36,26 @@ export default [
       GLOBAL.showMenu = true
       // GLOBAL.showFlex = true
 
-      let wsData
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
+      if (user && user.userName) {
+        userPath = ConstPath.UserPath + user.userName + '/'
+      }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+      let wsData,
+        isOpenLastMap = false
 
       if (lastMap) {
-        wsData = {
-          DSParams: lastMap,
-          type: 'LastMap',
+        isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(lastMap.path)
+      }
+
+      if (isOpenLastMap) {
+        data = {
+          type: 'Map',
+          ...lastMap,
         }
       } else {
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
         let moduleMapName = 'Hunan_叠加谷歌晕渲图风格'
         let moduleMapFullName = moduleMapName + '.xml'
         // 地图用相对路径
@@ -63,15 +68,15 @@ export default [
             name: moduleMapName,
           }
         }
-
-        wsData = [
-          {
-            DSParams: { server: wsPath },
-            type: 'Workspace',
-          },
-          data,
-        ]
       }
+
+      wsData = [
+        {
+          DSParams: { server: wsPath },
+          type: 'Workspace',
+        },
+        data,
+      ]
 
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_EDIT,
@@ -157,21 +162,26 @@ export default [
       GLOBAL.Type = constants.MAP_THEME
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
 
-      let wsData
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
+      if (user && user.userName) {
+        userPath = ConstPath.UserPath + user.userName + '/'
+      }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+      let wsData,
+        isOpenLastMap = false
 
       if (lastMap) {
-        wsData = {
-          DSParams: lastMap,
-          type: 'LastMap',
+        isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(lastMap.path)
+      }
+
+      if (isOpenLastMap) {
+        data = {
+          type: 'Map',
+          ...lastMap,
         }
       } else {
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-
         let moduleMapName = 'Beijing'
         let moduleMapFullName = moduleMapName + '.xml'
         // 地图用相对路径
@@ -184,14 +194,14 @@ export default [
             name: moduleMapName,
           }
         }
-        wsData = [
-          {
-            DSParams: { server: wsPath },
-            type: 'Workspace',
-          },
-          data,
-        ]
       }
+      wsData = [
+        {
+          DSParams: { server: wsPath },
+          type: 'Workspace',
+        },
+        data,
+      ]
 
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
@@ -215,33 +225,53 @@ export default [
     },
     action: async (user, lastMap) => {
       let data = ConstOnline['Google']
+      data.layerIndex = 1
       GLOBAL.Type = constants.COLLECTION
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
 
-      let wsData
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
+      if (user && user.userName) {
+        userPath = ConstPath.UserPath + user.userName + '/'
+      }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+      let wsData,
+        isOpenLastMap = false
 
       if (lastMap) {
-        wsData = {
-          DSParams: lastMap,
-          type: 'LastMap',
+        isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(lastMap.path)
+      }
+
+      if (isOpenLastMap) {
+        data = {
+          type: 'Map',
+          ...lastMap,
         }
       } else {
-        let homePath = await FileTools.appendingHomeDirectory()
-        let userPath = ConstPath.CustomerPath
-        if (user && user.userName) {
-          userPath = ConstPath.UserPath + user.userName + '/'
-        }
-        let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+        let moduleMapName = '国情普查_示范数据'
+        let moduleMapFullName = moduleMapName + '.xml'
+        // 地图相对路径
+        let moduleMapPath =
+          userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
 
-        wsData = [
-          {
-            DSParams: { server: wsPath },
-            // layerIndex: 0,
-            type: 'Workspace',
-          },
-          data,
-        ]
+        if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+          data = {
+            type: 'Map',
+            path: moduleMapPath,
+            name: moduleMapName,
+          }
+        }
       }
+
+      wsData = [
+        {
+          DSParams: { server: wsPath },
+          // layerIndex: 0,
+          type: 'Workspace',
+        },
+        data,
+      ]
 
       NavigationService.navigate('MapView', {
         operationType: constants.COLLECTION,

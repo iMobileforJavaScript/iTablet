@@ -360,8 +360,11 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  onAllPressRow = async () => {
-    return true
+  onAllPressRow = async ({ data }) => {
+    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.setState({
+      selectLayer: data.caption,
+    })
   }
 
   onThisPress = async ({ data }) => {
@@ -615,6 +618,10 @@ export default class MT_layerManager extends React.Component {
         let action
         if (section.title === '我的图层') {
           action = this.onToolPress
+          if (
+            item.name === this.props.layers[this.props.layers.length - 1].name
+          )
+            return true
         } else {
           action = this.onToolBasePress
         }

@@ -16,6 +16,7 @@ export default class ListSeparator extends React.Component {
     width: PropTypes.number,
     mode: PropTypes.string,
     color: PropTypes.string,
+    newStyle: PropTypes.object,
   }
 
   static defaultProps = {
@@ -31,6 +32,7 @@ export default class ListSeparator extends React.Component {
             this.props.color && { backgroundColor: this.props.color },
             this.props.height && { height: this.props.height },
             this.props.width && { width: this.props.width },
+            this.props.newStyle,
           ]}
         />
       )
@@ -42,6 +44,7 @@ export default class ListSeparator extends React.Component {
             this.props.color && { backgroundColor: this.props.color },
             this.props.height && { height: this.props.height },
             this.props.width && { width: this.props.width },
+            this.props.newStyle,
           ]}
         />
       )
@@ -55,11 +58,15 @@ const styles = StyleSheet.create({
     height: scaleSize(1),
     marginHorizontal: 0,
     backgroundColor: color.bgG,
+    marginLeft: scaleSize(16),
+    marginRight: scaleSize(16),
   },
   vSeparator: {
     // flex: 1,
     width: scaleSize(1),
     backgroundColor: color.bgG,
+    marginLeft: scaleSize(16),
+    marginRight: scaleSize(16),
   },
 })
 

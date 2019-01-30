@@ -68,7 +68,7 @@ export default class Find extends Component {
     let data = []
     while (currentPage <= totalPage) {
       await this._loadUserData2(currentPage, data)
-      if (data.length >= 9) {
+      if (data.length >= 1) {
         break
       }
       currentPage = currentPage + 1
@@ -101,9 +101,9 @@ export default class Find extends Component {
       this.setState({ progressWidth: currentPorWidth })
     }, 100)
   }
-  _loadUserData2 = async (currentPage, currentSectionData) => {
-    if (!currentSectionData) {
-      currentSectionData = []
+  _loadUserData2 = async (currentPage, currentData) => {
+    if (!currentData) {
+      currentData = []
     }
     let timeout = 3000
     try {
@@ -165,8 +165,7 @@ export default class Find extends Component {
               }
               if (arrMapInfos.length > 0) {
                 objContent.thumbnail = arrMapInfos[0].mapThumbnail
-                // arrObjContent.push(objContent)
-                currentSectionData.push(objContent)
+                currentData.push(objContent)
               }
             }
           }
@@ -175,7 +174,7 @@ export default class Find extends Component {
     } catch (e) {
       // this.setState({ isLoadingData: true })
     }
-    return currentSectionData
+    return currentData
   }
   _loadUserData = async currentPage => {
     let arrObjContent = []

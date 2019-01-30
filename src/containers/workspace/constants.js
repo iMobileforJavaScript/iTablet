@@ -6,6 +6,7 @@ export default {
   DELETE_NODE: '删除节点',
   REDO: '重做',
   CANCEL: '取消',
+  CANCEL_SELECT: '取消选中',
   CREATE_POLYLINE: '绘制直线',
   CREATE_POLYGON: '绘制多边形',
   DELETE: '删除',
