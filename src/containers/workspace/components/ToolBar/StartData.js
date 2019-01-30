@@ -5,7 +5,6 @@ import {
   ConstPath,
   Const,
   ConstOnline,
-  UserType,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -335,54 +334,55 @@ function openMap() {
     //     data,
     //   })
     // })
-    let customerPath =
-      (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
-      ConstPath.RelativeFilePath.Map
-    // let fileList = await FileTools.getPathListByFilter(customerPath, {
+
+    // let customerPath =
+    //   (await FileTools.appendingHomeDirectory(ConstPath.CustomerPath)) +
+    //   ConstPath.RelativeFilePath.Map
+    // // let fileList = await FileTools.getPathListByFilter(customerPath, {
+    // //   extension: 'xml',
+    // //   type: 'file',
+    // // })
+    // let fileList = await FileTools.getMaps(customerPath)
+    let userFileList
+    // if (
+    //   _params.user &&
+    //   _params.user.currentUser.userName &&
+    //   _params.user.currentUser.userType !== UserType.PROBATION_USER
+    // ) {
+    // userFileList = await FileTools.getPathListByFilter(path, {
     //   extension: 'xml',
     //   type: 'file',
     // })
-    let fileList = await FileTools.getMaps(customerPath)
-    let userFileList
-    if (
-      _params.user &&
-      _params.user.currentUser.userName &&
-      _params.user.currentUser.userType !== UserType.PROBATION_USER
-    ) {
-      // userFileList = await FileTools.getPathListByFilter(path, {
-      //   extension: 'xml',
-      //   type: 'file',
-      // })
-      userFileList = await FileTools.getMaps(path)
-    }
+    userFileList = await FileTools.getMaps(path)
+    // }
 
-    let list = []
-    fileList.forEach(item => {
-      let name = item.name
-      item.title = name
-      item.name = name.split('.')[0]
-      item.image = item.isTemplate
-        ? require('../../../../assets/mapToolbar/list_type_template_black.png')
-        : require('../../../../assets/mapToolbar/list_type_map_black.png')
-      item.info = {
-        infoType: 'mtime',
-        lastModifiedDate: item.mtime,
-        isTemplate: item.isTemplate,
-      }
-      list.push(item)
-    })
-    data = [
-      {
-        title:
-          _params.user &&
-          _params.user.currentUser.userName &&
-          _params.user.currentUser.userType !== UserType.PROBATION_USER
-            ? '游客地图'
-            : '我的地图',
-        image: require('../../../../assets/mapToolbar/list_type_maps.png'),
-        data: list,
-      },
-    ]
+    // let list = []
+    // fileList.forEach(item => {
+    //   let name = item.name
+    //   item.title = name
+    //   item.name = name.split('.')[0]
+    //   item.image = item.isTemplate
+    //     ? require('../../../../assets/mapToolbar/list_type_template_black.png')
+    //     : require('../../../../assets/mapToolbar/list_type_map_black.png')
+    //   item.info = {
+    //     infoType: 'mtime',
+    //     lastModifiedDate: item.mtime,
+    //     isTemplate: item.isTemplate,
+    //   }
+    //   list.push(item)
+    // })
+    // data = [
+    //   {
+    //     title:
+    //       _params.user &&
+    //       _params.user.currentUser.userName &&
+    //       _params.user.currentUser.userType !== UserType.PROBATION_USER
+    //         ? '游客地图'
+    //         : '我的地图',
+    //     image: require('../../../../assets/mapToolbar/list_type_maps.png'),
+    //     data: list,
+    //   },
+    // ]
     if (userFileList && userFileList.length > 0) {
       let userList = []
       userFileList.forEach(item => {
