@@ -36,6 +36,7 @@ export default class MT_layerManager extends React.Component {
     setCurrentLayer: () => {},
     getLayers: () => {},
     closeMap: () => {},
+    device: Object,
   }
 
   constructor(props) {
@@ -743,8 +744,8 @@ export default class MT_layerManager extends React.Component {
         <View
           style={{
             flexDirection: 'column',
-            marginLeft: scaleSize(30),
-            marginRight: scaleSize(30),
+            width: 0.956 * this.props.device.width,
+            marginLeft: 0.022 * this.props.device.width,
             height: scaleSize(1),
             backgroundColor: color.bgG,
           }}

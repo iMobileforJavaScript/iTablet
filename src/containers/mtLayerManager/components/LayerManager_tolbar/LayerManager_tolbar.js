@@ -39,6 +39,7 @@ export default class LayerManager_tolbar extends React.Component {
     setCurrentLayer: () => {},
     onPress: () => {},
     getOverlayView: () => {},
+    device: Object,
   }
 
   static defaultProps = {
@@ -356,53 +357,58 @@ export default class LayerManager_tolbar extends React.Component {
       <ToolBarSectionList
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
-        renderItemSeparator={() => this.renderItemSeparator()}
       />
     )
   }
 
-  /**行与行之间的分隔线组件 */
-  renderItemSeparator = () => {
-    return <View style={styles.separateViewStyle} />
-  }
-
   renderHeader = ({ section }) => {
     return (
-      <TouchableHighlight
-        onPress={() => {
-          this.listAction({ section })
-        }}
-        underlayColor={color.headerBackground}
-      >
-        <View
-          style={{
-            height: scaleSize(86),
-            backgroundColor: color.content_white,
-            flexDirection: 'row',
-            alignItems: 'center',
+      <View>
+        <TouchableHighlight
+          onPress={() => {
+            this.listAction({ section })
           }}
+          underlayColor={color.headerBackground}
         >
-          <Image
-            resizeMode={'contain'}
+          <View
             style={{
-              marginLeft: scaleSize(60),
-              height: scaleSize(60),
-              width: scaleSize(60),
-            }}
-            source={section.image}
-          />
-          <Text
-            style={{
-              fontSize: setSpText(24),
-              marginLeft: scaleSize(60),
-              textAlign: 'center',
-              backgroundColor: 'transparent',
+              height: scaleSize(86),
+              backgroundColor: color.content_white,
+              flexDirection: 'row',
+              alignItems: 'center',
             }}
           >
-            {section.title}
-          </Text>
-        </View>
-      </TouchableHighlight>
+            <Image
+              resizeMode={'contain'}
+              style={{
+                marginLeft: scaleSize(60),
+                height: scaleSize(60),
+                width: scaleSize(60),
+              }}
+              source={section.image}
+            />
+            <Text
+              style={{
+                fontSize: setSpText(24),
+                marginLeft: scaleSize(60),
+                textAlign: 'center',
+                backgroundColor: 'transparent',
+              }}
+            >
+              {section.title}
+            </Text>
+          </View>
+        </TouchableHighlight>
+        <View
+          style={{
+            flexDirection: 'column',
+            width: 0.956 * this.props.device.width,
+            marginLeft: 0.022 * this.props.device.width,
+            height: scaleSize(1),
+            backgroundColor: color.bgG,
+          }}
+        />
+      </View>
     )
   }
 
