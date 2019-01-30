@@ -38,6 +38,7 @@ export default class LayerManager_tolbar extends React.Component {
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
     onPress: () => {},
+    onThisPress: () => {},
     getOverlayView: () => {},
     device: Object,
   }
@@ -202,6 +203,14 @@ export default class LayerManager_tolbar extends React.Component {
     } else return
   }
 
+  setThislayer = async () => {
+    if (this.props.onThisPress) {
+      await this.props.onThisPress({
+        data: this.state.layerdata,
+      })
+    } else return
+  }
+
   listAction = ({ section }) => {
     if (section.action) {
       (async function() {
@@ -276,6 +285,7 @@ export default class LayerManager_tolbar extends React.Component {
       }
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
+      this.setThislayer()
       Toast.show('当前图层为' + this.state.layerdata.caption)
       this.setVisible(false)
     } else if (section.title === '修改专题图') {
