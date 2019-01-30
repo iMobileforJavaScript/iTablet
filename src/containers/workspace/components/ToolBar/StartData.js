@@ -738,7 +738,6 @@ function showHistory() {
 function setSaveViewVisible(visible, cb) {
   if (!_params.setSaveViewVisible) return
   GLOBAL.isBackHome = false
-  GLOBAL.isCreateThemeMap = true
   // _params.setSaveViewVisible(visible)
   GLOBAL.SaveMapView && GLOBAL.SaveMapView.setVisible(visible, null, cb)
 }
