@@ -367,6 +367,7 @@ export default class LayerManager_tolbar extends React.Component {
       <ToolBarSectionList
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
+        layerManager={true}
       />
     )
   }
