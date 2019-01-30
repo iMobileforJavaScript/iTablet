@@ -48,7 +48,7 @@ export default {
   LOAD: 'LOAD',
 
   CREATE_SYMBOL_COLLECTION: '普通创建',
-  MODULE: '模板',
+  CREATE_MODULE: '模板创建',
   INFORMATION: '数据',
   HISTORY: '历史记录',
 
