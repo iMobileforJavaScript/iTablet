@@ -238,16 +238,13 @@ export default class ModuleList extends Component {
 
   itemAction = async ({ item, index }) => {
     try {
-      // this.setState({
-      //   disabled: true,
-      // })
       let fileName
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === '地图制图') {
         fileName = '湖南'
       } else if (moduleKey === '专题制图') {
-        fileName = '北京'
+        fileName = '湖北'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'
       } else if (moduleKey === '三维场景') {

@@ -18,6 +18,7 @@ import { Toast } from '../../../utils/index'
 import styles from './Styles'
 import color from '../../../styles/color'
 import FetchUtils from '../../../utils/FetchUtils'
+import { SOnlineService } from 'imobile_for_reactnative'
 export default class Find extends Component {
   props: {
     navigation: Object,
@@ -65,6 +66,7 @@ export default class Find extends Component {
   }
 
   getCurrentLoadData2 = async (currentPage, totalPage) => {
+    await SOnlineService.syncAndroidCookie()
     let data = []
     while (currentPage <= totalPage) {
       await this._loadUserData2(currentPage, data)

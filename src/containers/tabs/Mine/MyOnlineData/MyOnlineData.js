@@ -239,7 +239,7 @@ export default class MyOnlineData extends Component {
       if (result.type === 'unknown' || result.type === 'none') {
         Toast.show('网络错误')
       } else {
-        Toast.show('登录失效，请重新登录')
+        // Toast.show('登录失效，请重新登录')
       }
     }
     return newData
@@ -682,17 +682,17 @@ export default class MyOnlineData extends Component {
                 width: scaleSize(40),
                 height: scaleSize(40),
                 marginRight: 10,
-                tintColor: imageColor,
+                // tintColor: imageColor,
               }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/mine_more_white.png')}
+              source={require('../../../../assets/Mine/icon_more_gray.png')}
             />
           </View>
           <View
             style={{
               height: 1,
               width: itemWidth,
-              backgroundColor: color.itemColorGray,
+              backgroundColor: color.separateColorGray,
             }}
           />
         </TouchableOpacity>
