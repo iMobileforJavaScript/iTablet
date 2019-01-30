@@ -8,6 +8,7 @@ import {
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
+  baseListData,
 } from './LayerToolbarData'
 import {
   View,
@@ -24,7 +25,7 @@ import { SMap, SScene } from 'imobile_for_reactnative'
 // import { Dialog } from '../../../../components'
 import { color } from '../../../../styles'
 import { screen, Toast, scaleSize, setSpText } from '../../../../utils'
-
+import Map3DToolBar from '../../../workspace/components/Map3DToolBar'
 /** 工具栏类型 **/
 const list = 'list'
 
@@ -90,6 +91,9 @@ export default class LayerManager_tolbar extends React.Component {
       case ConstToolType.MAP3D_LAYER3DSELECT:
         data = layer3dSetting
         break
+      case ConstToolType.MAP3D_LAYER3DCHANGE:
+        data = layereditsetting
+        break
       case ConstToolType.COLLECTION:
         data = layerCollectionSetting
         break
@@ -98,6 +102,9 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.MAP_EDIT_MORE_STYLE:
         data = layerManagerData
+        break
+      case ConstToolType.MAP3D_BASE:
+        data = baseListData
         break
     }
     return data
@@ -226,10 +233,17 @@ export default class LayerManager_tolbar extends React.Component {
       }.bind(this)())
       this.setVisible(false)
     } else if (section.title === '切换底图') {
-      this.setVisible(true, ConstToolType.MAP_EDIT_MORE_STYLE, {
-        height: ConstToolType.TOOLBAR_HEIGHT[5],
-        layerdata: this.state.layerdata,
-      })
+      if (this.state.type === ConstToolType.MAP3D_LAYER3DCHANGE) {
+        this.setVisible(true, ConstToolType.MAP3D_BASE, {
+          height: ConstToolType.TOOLBAR_HEIGHT[5],
+          type: ConstToolType.MAP3D_BASE,
+        })
+      } else {
+        this.setVisible(true, ConstToolType.MAP_EDIT_MORE_STYLE, {
+          height: ConstToolType.TOOLBAR_HEIGHT[5],
+          layerdata: this.state.layerdata,
+        })
+      }
     } else if (section.title === '图层风格') {
       this.mapStyle()
       this.setVisible(false)
@@ -361,6 +375,12 @@ export default class LayerManager_tolbar extends React.Component {
     this.overlayView = overlayView
   }
 
+  getLayer3d = () => {
+    return this.layer3dItem
+  }
+  getoverlayView = () => {
+    return this.overlayView
+  }
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -368,6 +388,20 @@ export default class LayerManager_tolbar extends React.Component {
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
         layerManager={true}
+      />
+    )
+  }
+
+  renderMap3DList = () => {
+    return (
+      <Map3DToolBar
+        ref={ref => (this.Map3DToolBar = ref)}
+        data={this.state.data}
+        type={this.state.type}
+        setVisible={this.setVisible}
+        device={this.props.device}
+        getLayer3d={this.getLayer3d}
+        getoverlayView={this.getoverlayView}
       />
     )
   }
@@ -447,6 +481,12 @@ export default class LayerManager_tolbar extends React.Component {
             break
           case ConstToolType.MAP_EDIT_MORE_STYLE:
             box = this.renderList()
+            break
+          case ConstToolType.MAP3D_LAYER3DCHANGE:
+            box = this.renderList()
+            break
+          case ConstToolType.MAP3D_BASE:
+            box = this.renderMap3DList()
             break
         }
         break

@@ -146,6 +146,7 @@ export default class Map3DToolBar extends Component {
       <LayerManager_tolbar
         ref={ref => (this.layer3dToolbar = ref)}
         getOverlayView={this.getOverlayView}
+        device={this.props.device}
       />
     )
   }
