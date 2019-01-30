@@ -90,15 +90,17 @@ export default class protocol extends Component {
   }
 
   render() {
-    let source
+    let source, title
     switch (this.type) {
       case 'offcial':
         source = { uri: `https://www.supermap.com` }
+        title = 'SuperMap'
         break
       case 'protocol':
         source = {
           uri: `https://www.supermapol.com/zh-cn/servicesagreement.html`,
         }
+        title = '服务协议'
         break
       default:
         break
@@ -107,7 +109,7 @@ export default class protocol extends Component {
     return (
       <Container
         headerProps={{
-          title: '关于 SuperMap iTablet',
+          title: title,
           navigation: this.props.navigation,
         }}
       >
