@@ -82,6 +82,7 @@ export default class Home extends Component {
             server: filePath,
             type: 9,
           })
+
           if (result.length === 0) {
             Toast.show('导入失败')
           }
@@ -184,12 +185,14 @@ export default class Home extends Component {
   }
 
   getMoudleItem = (
+    ref,
     confirm,
     cancel,
     downloadData,
     currentUserName,
     dialogCheck,
   ) => {
+    this.moduleItemRef = ref
     this.dialogConfirm = confirm
     this.dialogCancel = cancel
     this.downloadData = downloadData
@@ -212,12 +215,13 @@ export default class Home extends Component {
 
   confirm = () => {
     let confirm = this.dialogConfirm ? this.dialogConfirm : () => {}
-    confirm && confirm(this.downloadData, this.state.dialogCheck)
+    confirm &&
+      confirm(this.moduleItemRef, this.downloadData, this.state.dialogCheck)
   }
 
   cancel = () => {
     let cancel = this.dialogCancel ? this.dialogCancel : () => {}
-    cancel && cancel(this.state.dialogCheck)
+    cancel && cancel(this.moduleItemRef, this.state.dialogCheck)
   }
 
   renderDialogChildren = () => {
@@ -377,6 +381,7 @@ export default class Home extends Component {
             downList={this.props.downList}
             showDialog={this.showDialog}
             getMoudleItem={this.getMoudleItem}
+            latestMap={this.props.latestMap}
           />
           {this._renderModal()}
           {this.renderDialog()}

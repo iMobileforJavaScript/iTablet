@@ -323,7 +323,7 @@ export default class Map3D extends React.Component {
           />
         </View>
         {this.state.placeholder && (
-          <Text style={styles.placeholder}>文本内容含有非法字符请重新输入</Text>
+          <Text style={styles.placeholder}>内容不符合规范请重新输入</Text>
         )}
       </Dialog>
     )

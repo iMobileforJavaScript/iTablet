@@ -414,7 +414,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
-  NSString* downloadsPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData/"];
+  NSString* externalDataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData/"];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Attribute"]];
@@ -424,29 +424,29 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Template"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Temp"]];
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", downloadsPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", externalDataPath, @""]];
   
   // 初始化模板数据
-//  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
-//  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
-//  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", downloadsPath];
-//  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", downloadsPath, @"地理国情普查"];
-//
-//  BOOL isUnZip = NO;
-//  if (![[NSFileManager defaultManager] fileExistsAtPath:downloadsPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
-//    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
-//      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
-//      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-//    } else {
-//      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
-//        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
-//        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
-//      }
-//    }
-//  } else {
-//    isUnZip = YES;
-//  }
-//
+  NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
+  NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
+  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath];
+  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", externalDataPath, @"地理国情普查"];
+
+  BOOL isUnZip = NO;
+  if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
+    if ([[NSFileManager defaultManager] fileExistsAtPath:commonZipPath isDirectory:nil]) {
+      isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
+      NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+    } else {
+      if ([FileTools copyFile:originPath targetPath:commonZipPath]) {
+        isUnZip = [FileTools unZipFile:commonZipPath targetPath:templatePath];
+        NSLog(isUnZip ? @"解压数据成功" : @"解压数据失败");
+      }
+    }
+  } else {
+    isUnZip = YES;
+  }
+
 //   NSString* sceneData = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/OlympicGreen_ios.zip"];
 //   NSString* sceneDir = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/Scene/"];
 //   NSString* srcSceneData = [[NSBundle mainBundle] pathForResource:@"OlympicGreen_ios" ofType:@"zip"];

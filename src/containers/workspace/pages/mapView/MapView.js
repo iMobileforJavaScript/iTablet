@@ -745,6 +745,10 @@ export default class MapView extends React.Component {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
           } else if (this.wsData.type === 'Map') {
             await this._openMap(this.wsData)
+          } else if (this.wsData.type === 'LastMap') {
+            // 打开最近地图
+            // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
+            await this._openLatestMap(this.wsData.DSParams)
           }
         }
 
@@ -827,6 +831,32 @@ export default class MapView extends React.Component {
       }
     } catch (e) {
       this.container.setLoading(false)
+    }
+  }
+
+  _openLatestMap = async item => {
+    try {
+      this.setLoading(true, ConstInfo.MAP_OPENING)
+      await this.props.setCurrentSymbols()
+      let mapInfo = await this.props.openMap({ ...item })
+      if (mapInfo) {
+        if (mapInfo.Template) {
+          this.setLoading(true, ConstInfo.TEMPLATE_READING)
+          let templatePath = await FileTools.appendingHomeDirectory(
+            ConstPath.UserPath + mapInfo.Template,
+          )
+          await this.props.getSymbolTemplates({
+            path: templatePath,
+            name: item.name,
+          })
+        } else {
+          await this.props.setTemplate()
+        }
+      }
+      this.setLoading(false)
+    } catch (e) {
+      Toast.show(ConstInfo.CHANGE_MAP_FAILED)
+      this.setLoading(false)
     }
   }
 

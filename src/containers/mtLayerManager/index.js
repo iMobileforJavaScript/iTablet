@@ -7,6 +7,7 @@ const mapStateToProps = state => ({
   editLayer: state.layers.toJS().editLayer,
   layers: state.layers.toJS().layers,
   map: state.map.toJS(),
+  device: state.device.toJS().device,
   collection: state.collection.toJS(),
 })
 

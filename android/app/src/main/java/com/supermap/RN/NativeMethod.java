@@ -45,10 +45,12 @@ public class NativeMethod extends ReactContextBaseJavaModule {
             if (file.exists() && file.isDirectory()) {
                 File[] tempsArray = file.listFiles();
                 for (int i = 0; i < tempsArray.length; i++) {
+                    if (tempsArray[i].getName().contains("_示范数据")) continue;
                     if (tempsArray[i].isDirectory()) {
                         File[] tempArray = tempsArray[i].listFiles();
                         WritableMap tempInfo = Arguments.createMap();
                         boolean hasTemplates = false;
+                        boolean hasWorkspace = false;
                         for (int j = 0; j < tempArray.length; j++) {
                             String tempFileName = tempArray[j].getName();
                             String suffix = tempFileName.substring(tempFileName.lastIndexOf(".") + 1).toLowerCase();
@@ -56,16 +58,18 @@ public class NativeMethod extends ReactContextBaseJavaModule {
                                 String tempName = tempFileName.substring(0, tempFileName.lastIndexOf("."));
                                 tempInfo.putString("name", tempName);
                                 tempInfo.putString("path", tempArray[j].getAbsolutePath());
+                                hasWorkspace = true;
 
-//                                templateList.pushMap(tempInfo);
                                 if (hasTemplates) break;
                             } else if (suffix.equals("xml")) {
                                 hasTemplates = true;
-                                if (tempInfo.getString("name") != null && !tempInfo.getString("name").equals("")) break;
+//                                if (tempInfo.hasKey("name") && tempInfo.getString("name") != null && !tempInfo.getString("name").equals("")) break;
+                                if (hasWorkspace) break;
                             }
                         }
-
-                        if (hasTemplates && tempInfo.getString("name") != null && !tempInfo.getString("name").equals("")) {
+                        // WritableMap 突然不能获取内部的值？？？
+//                        if (hasTemplates && info.hasKey("name") && info.getString("name") != null && !info.getString("name").equals("")) {
+                        if (hasTemplates && hasWorkspace) {
                             templateList.pushMap(tempInfo);
                         }
                     } else {

@@ -23,7 +23,6 @@ export default class ToolBarSectionList extends React.Component {
     sections: Array,
     renderItem?: () => {},
     renderSectionHeader?: () => {},
-    renderItemSeparator?: () => {},
     keyExtractor: () => {},
     itemAction?: () => {},
     headerAction?: () => {},
@@ -199,7 +198,9 @@ export default class ToolBarSectionList extends React.Component {
           styles.item,
           this.props.itemStyle,
           item.backgroundColor && { backgroundColor: item.backgroundColor },
-          item.isSelected ? styles.itemSelected : styles.item,
+          item.isSelected && !this.props.listSelectable
+            ? styles.itemSelected
+            : styles.item,
         ]}
         activeOpacity={0.2}
         onPress={() => this.itemAction({ item, index, section })}
@@ -288,8 +289,8 @@ export default class ToolBarSectionList extends React.Component {
       <Text
         style={[
           item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
-          item.isSelected
-            ? { color: color.content_white }
+          item.isSelected && !item.datasetType
+            ? { color: color.item_text_selected }
             : { color: color.item_separate_white },
         ]}
         ellipsizeMode="tail"
@@ -334,11 +335,12 @@ export default class ToolBarSectionList extends React.Component {
   /**数据集类型字段Item */
   getDatasetItem = item => {
     let dataset_title
-    if (item.isSelected) {
-      dataset_title = styles.dataset_title_selected
-    } else {
-      dataset_title = styles.dataset_title
-    }
+    // if (item.isSelected) {
+    //   dataset_title = styles.dataset_title_selected
+    // } else {
+    //   dataset_title = styles.dataset_title
+    // }
+    dataset_title = styles.dataset_title
     return <Text style={dataset_title}>{item.datasetName}</Text>
   }
 
@@ -395,50 +397,83 @@ export default class ToolBarSectionList extends React.Component {
   getDatasetTypeImg = item => {
     let img
     switch (item.datasetType) {
+      // case 'POINT':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_point.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_point_black.png'))
+      //   break
+      // case 'LINE':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_line.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_line_black.png'))
+      //   break
+      // case 'REGION':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_region.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_region_black.png'))
+      //   break
+      // case 'TEXT':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_text.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_text_black.png'))
+      //   break
+      // case 'IMAGE':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_image.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_image_black.png'))
+      //   break
+      // case 'CAD':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_cad.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_cad_black.png'))
+      //   break
+      // case 'GRID':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_grid.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_grid_black.png'))
+      //   break
+      // case 'NETWORK':
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/dataset_type_network.png'))
+      //     : (img = require('../../../../assets/mapToolbar/dataset_type_network_black.png'))
+      //   break
+      // default:
+      //   item.isSelected
+      //     ? (img = require('../../../../assets/mapToolbar/list_type_map.png'))
+      //     : (img = require('../../../../assets/mapToolbar/list_type_map_black.png'))
+      //   break
       case 'POINT':
-        item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_point.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_point_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
         break
       case 'LINE':
         item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_line.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_line_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
         break
       case 'REGION':
         item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_region.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_region_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
         break
       case 'TEXT':
-        item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_text.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_text_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_text_black.png')
         break
       case 'IMAGE':
         item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_image.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_image_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_image_black.png')
         break
       case 'CAD':
         item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_cad.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_cad_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
         break
       case 'GRID':
         item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_grid.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_grid_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_grid_black.png')
         break
       case 'NETWORK':
         item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/dataset_type_network.png'))
-          : (img = require('../../../../assets/mapToolbar/dataset_type_network_black.png'))
+        img = require('../../../../assets/mapToolbar/dataset_type_network_black.png')
         break
       default:
-        item.isSelected
-          ? (img = require('../../../../assets/mapToolbar/list_type_map.png'))
-          : (img = require('../../../../assets/mapToolbar/list_type_map_black.png'))
+        img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
     }
     return img
@@ -454,9 +489,6 @@ export default class ToolBarSectionList extends React.Component {
 
   /**行与行之间的分隔线组件 */
   renderSeparator = ({ leadingItem, section }) => {
-    if (this.props.renderItemSeparator) {
-      return this.props.renderItemSeparator()
-    }
     if (
       section.expressionType &&
       leadingItem.isSystemField &&
@@ -522,7 +554,7 @@ const styles = StyleSheet.create({
     fontSize: size.fontSize.fontSizeMd,
     height: scaleSize(30),
     backgroundColor: 'transparent',
-    color: color.content_white,
+    color: color.item_text_selected,
     textAlignVertical: 'center',
   },
   selectImgView: {
@@ -580,14 +612,15 @@ const styles = StyleSheet.create({
   sectionSeparateViewStyle: {
     height: scaleSize(1),
     marginHorizontal: 0,
-    backgroundColor: color.contentColorWhite,
+    backgroundColor: color.item_separate_white,
   },
   separateViewStyle: {
-    // flexDirection: 'column',
-    marginLeft: scaleSize(30),
-    marginRight: scaleSize(30),
+    flex: 1,
+    flexDirection: 'row',
+    // marginLeft: scaleSize(30),
+    // marginRight: scaleSize(30),
     // alignItems: 'center',
-    // width: '100%',
+    width: '100%',
     // width: scaleSize(620),
     height: scaleSize(1),
     backgroundColor: color.item_separate_white,
@@ -627,7 +660,7 @@ const styles = StyleSheet.create({
   },
   itemSelected: {
     height: scaleSize(80),
-    backgroundColor: color.item_separate_white,
+    backgroundColor: color.item_selected_bg,
     alignItems: 'center',
     flexDirection: 'row',
   },

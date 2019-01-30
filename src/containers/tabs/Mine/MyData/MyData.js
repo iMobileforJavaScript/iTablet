@@ -519,24 +519,38 @@ export default class MyLocalData extends Component {
 
   _showMyDataPopupModal = () => {
     if (this.state.modalIsVisible) {
-      let title = '上传数据'
-      let uploadingData = this.getUploadingData()
-      if (uploadingData && uploadingData.progress >= 0) {
-        title += '  ' + uploadingData.progress + '%'
+      let data
+      if (
+        this.props.user.currentUser.userName &&
+        this.props.user.currentUser.userType !== UserType.PROBATION_USER
+      ) {
+        let title = '上传数据'
+        let uploadingData = this.getUploadingData()
+        if (uploadingData && uploadingData.progress >= 0) {
+          title += '  ' + uploadingData.progress + '%'
+        }
+        data = [
+          {
+            title: title,
+            action: this._onUploadData,
+          },
+          {
+            title: '删除数据',
+            action: this._onDeleteData,
+          },
+        ]
+      } else {
+        data = [
+          {
+            title: '删除数据',
+            action: this._onDeleteData,
+          },
+        ]
       }
       return (
         <MyDataPopupModal
           // onDeleteData={this._onDeleteData}
-          data={[
-            {
-              title: title,
-              action: this._onUploadData,
-            },
-            {
-              title: '删除数据',
-              action: this._onDeleteData,
-            },
-          ]}
+          data={data}
           onCloseModal={this._closeModal}
           modalVisible={this.state.modalIsVisible}
         />
@@ -628,7 +642,8 @@ export default class MyLocalData extends Component {
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          renderSectionFooter={this._renderSectionSeparatorComponent}
         />
         {this._showMyDataPopupModal()}
       </Container>

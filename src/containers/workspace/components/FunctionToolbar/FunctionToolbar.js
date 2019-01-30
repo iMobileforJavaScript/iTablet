@@ -806,11 +806,6 @@ export default class FunctionToolbar extends React.Component {
           //   image: require('../../../../assets/function/icon_function_add.png'),
           // },
           {
-            title: '工具',
-            action: this.showMap3DTool,
-            image: require('../../../../assets/function/icon_function_tool.png'),
-          },
-          {
             // key: 'fly',
             title: '飞行',
             action: () => {
@@ -824,6 +819,12 @@ export default class FunctionToolbar extends React.Component {
             },
             image: require('../../../../assets/function/Frenchgrey/icon_symbolFly.png'),
           },
+          {
+            title: '工具',
+            action: this.showMap3DTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+
           {
             title: '分享',
             action: async () => {

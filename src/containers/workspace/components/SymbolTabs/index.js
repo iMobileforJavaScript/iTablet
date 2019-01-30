@@ -67,9 +67,10 @@ class SymbolTabs extends React.Component {
 
   componentDidMount() {
     if (this.props.map.currentMap && this.props.map.currentMap.Template) {
-      this.initTemplate()
+      this.props.template.currentTemplateList.length === 0 &&
+        this.initTemplate()
     } else {
-      this.initSymbols()
+      this.props.symbol.currentSymbols.length === 0 && this.initSymbols()
     }
   }
 
