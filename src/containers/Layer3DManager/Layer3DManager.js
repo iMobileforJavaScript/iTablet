@@ -1,12 +1,11 @@
 import React, { Component } from 'react'
 import { Container } from '../../components'
 import { MAP_MODULE } from '../../constants'
-import { MapToolbar } from '../../containers/workspace/components'
 import Layer3DItem from './Layer3DItem'
 import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
-import { OverlayView } from '../workspace/components'
+import { OverlayView, MapToolbar } from '../workspace/components'
 // import { SScene } from 'imobile_for_reactnative'
 export default class Map3DToolBar extends Component {
   props: {
