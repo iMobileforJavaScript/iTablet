@@ -347,7 +347,7 @@ function openMap() {
     if (
       _params.user &&
       _params.user.currentUser.userName &&
-      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+      _params.user.currentUser.userType !== UserType.PROBATION_USER
     ) {
       // userFileList = await FileTools.getPathListByFilter(path, {
       //   extension: 'xml',
@@ -376,7 +376,7 @@ function openMap() {
         title:
           _params.user &&
           _params.user.currentUser.userName &&
-          this.props.user.currentUser.userType !== UserType.PROBATION_USER
+          _params.user.currentUser.userType !== UserType.PROBATION_USER
             ? '游客地图'
             : '我的地图',
         image: require('../../../../assets/mapToolbar/list_type_maps.png'),
@@ -829,7 +829,7 @@ function saveMapAs() {
         _params.map.currentMap &&
         _params.map.currentMap.Template
       ) {
-        addition.Template = this.props.map.currentMap.Template
+        addition.Template = _params.map.currentMap.Template
       }
       _params.setToolbarVisible &&
         _params.setToolbarVisible(true, ConstInfo.SAVING_MAP)

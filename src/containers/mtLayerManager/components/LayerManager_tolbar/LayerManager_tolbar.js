@@ -38,7 +38,9 @@ export default class LayerManager_tolbar extends React.Component {
     getLayers: () => {}, // 更新数据（包括其他界面）
     setCurrentLayer: () => {},
     onPress: () => {},
+    onThisPress: () => {},
     getOverlayView: () => {},
+    device: Object,
   }
 
   static defaultProps = {
@@ -201,6 +203,14 @@ export default class LayerManager_tolbar extends React.Component {
     } else return
   }
 
+  setThislayer = async () => {
+    if (this.props.onThisPress) {
+      await this.props.onThisPress({
+        data: this.state.layerdata,
+      })
+    } else return
+  }
+
   listAction = ({ section }) => {
     if (section.action) {
       (async function() {
@@ -275,6 +285,7 @@ export default class LayerManager_tolbar extends React.Component {
       }
       this.props.setCurrentLayer &&
         this.props.setCurrentLayer(this.state.layerdata)
+      this.setThislayer()
       Toast.show('当前图层为' + this.state.layerdata.caption)
       this.setVisible(false)
     } else if (section.title === '修改专题图') {
@@ -356,53 +367,57 @@ export default class LayerManager_tolbar extends React.Component {
       <ToolBarSectionList
         sections={this.state.data}
         renderSectionHeader={({ section }) => this.renderHeader({ section })}
-        renderItemSeparator={() => this.renderItemSeparator()}
       />
     )
   }
 
-  /**行与行之间的分隔线组件 */
-  renderItemSeparator = () => {
-    return <View style={styles.separateViewStyle} />
-  }
-
   renderHeader = ({ section }) => {
     return (
-      <TouchableHighlight
-        onPress={() => {
-          this.listAction({ section })
-        }}
-        underlayColor={color.headerBackground}
-      >
-        <View
-          style={{
-            height: scaleSize(86),
-            backgroundColor: color.content_white,
-            flexDirection: 'row',
-            alignItems: 'center',
+      <View>
+        <TouchableHighlight
+          onPress={() => {
+            this.listAction({ section })
           }}
+          underlayColor={color.headerBackground}
         >
-          <Image
-            resizeMode={'contain'}
+          <View
             style={{
-              marginLeft: scaleSize(60),
-              height: scaleSize(60),
-              width: scaleSize(60),
-            }}
-            source={section.image}
-          />
-          <Text
-            style={{
-              fontSize: setSpText(24),
-              marginLeft: scaleSize(60),
-              textAlign: 'center',
-              backgroundColor: 'transparent',
+              height: scaleSize(86),
+              backgroundColor: color.content_white,
+              flexDirection: 'row',
+              alignItems: 'center',
             }}
           >
-            {section.title}
-          </Text>
-        </View>
-      </TouchableHighlight>
+            <Image
+              resizeMode={'contain'}
+              style={{
+                marginLeft: scaleSize(60),
+                height: scaleSize(60),
+                width: scaleSize(60),
+              }}
+              source={section.image}
+            />
+            <Text
+              style={{
+                fontSize: setSpText(24),
+                marginLeft: scaleSize(60),
+                textAlign: 'center',
+                backgroundColor: 'transparent',
+              }}
+            >
+              {section.title}
+            </Text>
+          </View>
+        </TouchableHighlight>
+        <View
+          style={{
+            flexDirection: 'column',
+            width: '100%',
+            height: scaleSize(1),
+            backgroundColor: color.bgG,
+          }}
+        />
+      </View>
     )
   }
 

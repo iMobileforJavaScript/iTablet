@@ -48,11 +48,4 @@ export default StyleSheet.create({
     fontSize: size.fontSize.fontSizeXs,
     textAlign: 'center',
   },
-  separateViewStyle: {
-    flexDirection: 'column',
-    left: scaleSize(30),
-    right: scaleSize(30),
-    height: scaleSize(1),
-    backgroundColor: color.bgG,
-  },
 })
