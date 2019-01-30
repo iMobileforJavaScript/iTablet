@@ -2716,6 +2716,14 @@ export default class ToolBar extends React.PureComponent {
     return arr[0]
   }
 
+  mapMoveToCurrent = async () => {
+    let moveToCurrentResult = await SMap.moveToCurrent()
+    if (!moveToCurrentResult) {
+      await SMap.moveToPoint({ x: 116.21, y: 39.42 })
+    }
+    await SMap.setScale(0.0000060635556556859582)
+  }
+
   headerAction = ({ section }) => {
     (async function() {
       if (section.title === Const.CREATE_SYMBOL_COLLECTION) {
@@ -2761,8 +2769,14 @@ export default class ToolBar extends React.PureComponent {
             await this.props.openWorkspace({ server: wsPath })
             await SMap.openDatasource(
               ConstOnline['Google'].DSParams,
-              ConstOnline['Google'].layerIndex,
+              // ConstOnline['Google'].layerIndex,
+              1,
             )
+
+            if (GLOBAL.Type === constants.COLLECTION) {
+              this.mapMoveToCurrent()
+            }
+
             await this.props.getLayers()
 
             this.props.saveMap &&
@@ -2817,7 +2831,7 @@ export default class ToolBar extends React.PureComponent {
   openTemplate = async item => {
     NavigationService.navigate('InputPage', {
       value: item.name || '',
-      headerTitle: '新建模板',
+      headerTitle: '新建地图',
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async (value = '') => {
         try {

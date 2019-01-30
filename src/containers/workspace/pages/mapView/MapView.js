@@ -839,10 +839,10 @@ export default class MapView extends React.Component {
         } else {
           await this.props.setTemplate()
         }
-        // 加载图层
-        await this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
+        // // 加载图层
+        // await this.props.getLayers(-1, layers => {
+        //   this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        // })
         this.setVisible(false)
       }
     } catch (e) {

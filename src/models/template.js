@@ -411,6 +411,7 @@ export default handleActions(
           name: '',
         },
         currentTemplateInfo: {},
+        currentTemplateList: [],
       })
       return fromJS(data)
     },
