@@ -70,6 +70,52 @@ async function getPathListByFilter(path, filter = {}) {
 }
 
 /**
+ * 获取指定路径下可用地图名
+ * @param path
+ * @param name
+ * @returns {Promise}
+ */
+async function getAvailableMapName(path, name) {
+  let maps = await FileTools.getPathListByFilter(path, {
+    name,
+    extension: 'xml',
+    type: 'file',
+  })
+  let exist = true
+  let _name = name
+
+  function checkName(__name) {
+    let _exist = false
+    let newName = __name
+    for (let i = 0; i < maps.length; i++) {
+      let mapName = maps[i].name
+      if (mapName.indexOf('.') > 0) {
+        mapName = mapName.substring(0, mapName.indexOf('.'))
+      }
+      if (mapName === newName) {
+        _exist = true
+        newName = __name + '_' + (i + 1)
+        break
+      }
+    }
+    return {
+      name: newName,
+      exist: _exist,
+    }
+  }
+
+  if (maps.length > 0) {
+    while (exist) {
+      let result = checkName(_name)
+      exist = result.exist
+      _name = result.name
+    }
+  }
+
+  return _name
+}
+
+/**
  * 判断是否是文件夹
  * @param path
  * @returns {Promise.<Promise|*>}
@@ -212,4 +258,5 @@ export default {
   initUserDefaultData,
   getFilterFiles,
   getMaps,
+  getAvailableMapName,
 }

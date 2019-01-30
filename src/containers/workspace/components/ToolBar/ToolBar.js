@@ -26,6 +26,7 @@ import {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  UserType,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -2762,8 +2763,18 @@ export default class ToolBar extends React.PureComponent {
         //   return
         // }
 
+        let userPath =
+          this.props.user.currentUser.userName &&
+          this.props.user.currentUser.userType !== UserType.PROBATION_USER
+            ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+            : ConstPath.CustomerPath
+        let mapPath = await FileTools.appendingHomeDirectory(
+          userPath + ConstPath.RelativePath.Map,
+        )
+        let newName = await FileTools.getAvailableMapName(mapPath, 'DefaultMap')
         NavigationService.navigate('InputPage', {
           headerTitle: '新建地图',
+          value: newName,
           placeholder: ConstInfo.PLEASE_INPUT_NAME,
           cb: async value => {
             GLOBAL.Loading &&
@@ -2853,8 +2864,20 @@ export default class ToolBar extends React.PureComponent {
 
   /** 打开模板工作空间 **/
   openTemplate = async item => {
+    let userPath =
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+        ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+        : ConstPath.CustomerPath
+    let mapPath = await FileTools.appendingHomeDirectory(
+      userPath + ConstPath.RelativePath.Map,
+    )
+    let newName = await FileTools.getAvailableMapName(
+      mapPath,
+      item.name || 'DefaultName',
+    )
     NavigationService.navigate('InputPage', {
-      value: item.name || '',
+      value: newName,
       headerTitle: '新建地图',
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async (value = '') => {
