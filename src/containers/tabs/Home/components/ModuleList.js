@@ -9,9 +9,10 @@ import {
   StyleSheet,
   ScrollView,
   Platform,
-  AsyncStorage,
 } from 'react-native'
-import { ConstModule, ConstPath } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
+import constants from '../../../../containers/workspace/constants'
+import ConstModule, { MAP_MODULE } from '../../../../constants/ConstModule'
 import { scaleSize, setSpText } from '../../../../utils'
 // import RenderModuleListItem from './RenderModuleListItem'
 import { downloadFile } from 'react-native-fs'
@@ -21,10 +22,10 @@ import FetchUtils from '../../../../utils/FetchUtils'
 class RenderModuleItem extends Component {
   props: {
     item: Object,
-    currentUser: Object,
     importWorkspace: () => {},
     showDialog: () => {},
     getMoudleItem: () => {},
+    itemAction: () => {},
   }
 
   constructor(props) {
@@ -37,155 +38,16 @@ class RenderModuleItem extends Component {
       dialogCheck: false,
     }
   }
-  itemAction = async item => {
-    try {
-      // this.setState({
-      //   disabled: true,
-      // })
-      let fileName
-      let moduleKey = item.key
-      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-      if (moduleKey === '地图制图') {
-        fileName = '湖南'
-      } else if (moduleKey === '专题制图') {
-        fileName = '北京'
-      } else if (moduleKey === '外业采集') {
-        fileName = '地理国情普查_示范数据'
-      } else if (moduleKey === '三维场景') {
-        if (Platform.OS === 'android') {
-          fileName = 'OlympicGreen_android'
-        } else if (Platform.OS === 'ios') {
-          fileName = 'OlympicGreen_ios'
-        }
-      }
-      let homePath = await FileTools.appendingHomeDirectory()
-      let tmpCurrentUser = await AsyncStorage.getItem('TmpCurrentUser')
-      let objTmpCurrentUser = tmpCurrentUser
-        ? JSON.parse(tmpCurrentUser)
-        : JSON.parse('{}')
-      let currentUserName = objTmpCurrentUser.userName
-        ? objTmpCurrentUser.userName
-        : 'Customer'
-      let toPath =
-        homePath +
-        ConstPath.UserPath +
-        currentUserName +
-        '/' +
-        ConstPath.RelativePath.ExternalData +
-        fileName
 
-      let cachePath = homePath + ConstPath.CachePath
-      let fileDirPath = cachePath + fileName
-      let arrFile = await FileTools.getFilterFiles(fileDirPath)
-      if (arrFile.length === 0) {
-        let downloadData = {
-          fileName: fileName,
-          cachePath: cachePath,
-          copyFilePath: toPath,
-          itemData: item,
-          tmpCurrentUser: objTmpCurrentUser,
-        }
-        if (this.state.dialogCheck) {
-          item.action && item.action(tmpCurrentUser)
-        } else if (this.downloading) {
-          item.action && item.action(tmpCurrentUser)
-        } else {
-          item.action && item.action(tmpCurrentUser)
-          this._showAlert(downloadData, tmpCurrentUser)
-        }
-      } else {
-        let arrFilePath = await FileTools.getFilterFiles(toPath, {
-          smwu: 'smwu',
-          sxwu: 'sxwu',
-        })
-        if (arrFilePath.length === 0) {
-          await this.props.importWorkspace(fileDirPath, toPath, true)
-        }
-        this.setState({
-          disabled: false,
-          isShowProgressView: false,
-        })
-        item.action && item.action(JSON.parse(tmpCurrentUser))
-      }
-    } catch (e) {
-      this.setState({
-        disabled: false,
-        isShowProgressView: false,
-      })
-    }
+  setNewState = data => {
+    if (!data) return
+    this.setState(data)
   }
 
-  _downloadModuleData = async downloadData => {
-    this.downloading = true
-    let keyword
-    if (downloadData.fileName.indexOf('_示范数据') !== -1) {
-      keyword = downloadData.fileName
-    } else {
-      keyword = downloadData.fileName + '_示范数据'
-    }
-    let dataUrl = await FetchUtils.getFindUserZipDataUrl(
-      'xiezhiyan123',
-      keyword,
-    )
-    let cachePath = downloadData.cachePath
-    let fileDirPath = cachePath + downloadData.fileName
-    try {
-      this.setState({
-        progress: '0%',
-        isShowProgressView: true,
-        // disabled: true,
-      })
-      let fileCachePath = fileDirPath + '.zip'
-      await FileTools.deleteFile(fileCachePath)
-      let downloadOptions = {
-        fromUrl: dataUrl,
-        toFile: fileCachePath,
-        background: true,
-        progress: res => {
-          let value =
-            ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
-          if (value === '100%') {
-            this.setState({
-              progress: '导入中...',
-              isShowProgressView: true,
-              // disabled: true,
-            })
-            this.downloading = false
-          } else if (value !== this.state.progress) {
-            this.setState({
-              progress: value,
-              isShowProgressView: true,
-              // disabled: true,
-            })
-          }
-        },
-      }
-      let result = downloadFile(downloadOptions)
-      result.promise
-        .then(async result => {
-          if (result.statusCode === 200) {
-            await FileTools.unZipFile(fileCachePath, cachePath)
-
-            await this.props.importWorkspace(
-              fileDirPath,
-              downloadData.copyFilePath,
-            )
-            this.setState({ isShowProgressView: false, disabled: false })
-            FileTools.deleteFile(fileDirPath + '.zip')
-          }
-        })
-        .catch(() => {
-          Toast.show('下载失败')
-          FileTools.deleteFile(fileCachePath)
-          this.setState({ isShowProgressView: false, disabled: false })
-          this.downloading = false
-        })
-    } catch (e) {
-      Toast.show('网络错误，下载失败')
-      FileTools.deleteFile(fileDirPath + '.zip')
-      this.setState({ isShowProgressView: false, disabled: false })
-    }
+  getDialogCheck = () => {
+    return this.state.dialogCheck
   }
+
   _renderProgressView = () => {
     let progress =
       this.state.progress.indexOf('%') === -1
@@ -220,40 +82,6 @@ class RenderModuleItem extends Component {
     )
   }
 
-  sureDown = (downloadData, dialogCheck) => {
-    // let item = downloadData.itemData
-    this._downloadModuleData(downloadData)
-    this.setState({
-      disabled: false,
-      dialogCheck: dialogCheck,
-    })
-    // item.action && item.action(currentUserName)
-    this.props.showDialog && this.props.showDialog(false)
-  }
-
-  cancelDown = dialogCheck => {
-    // let item = downloadData.itemData
-    this.setState({
-      disabled: false,
-      dialogCheck: dialogCheck,
-    })
-    // item.action && item.action(downloadData.tmpCurrentUser)
-    this.props.showDialog && this.props.showDialog(false)
-  }
-
-  _showAlert = (downloadData, currentUserName) => {
-    setTimeout(() => {
-      this.props.showDialog && this.props.showDialog(true)
-    }, 1500)
-    this.props.getMoudleItem &&
-      this.props.getMoudleItem(
-        this.sureDown,
-        this.cancelDown,
-        downloadData,
-        currentUserName,
-        this.state.dialogCheck,
-      )
-  }
   render() {
     let item = this.props.item
     return (
@@ -261,7 +89,7 @@ class RenderModuleItem extends Component {
         <TouchableOpacity
           disabled={this.state.disabled}
           onPress={() => {
-            this.itemAction(item)
+            this.props.itemAction && this.props.itemAction(item)
           }}
           style={[styles.module]}
         >
@@ -286,6 +114,7 @@ export default class ModuleList extends Component {
   props: {
     device: Object,
     currentUser: Object,
+    latestMap: Object,
     importWorkspace: () => {},
     showDialog: () => {},
     getMoudleItem: () => {},
@@ -297,49 +126,232 @@ export default class ModuleList extends Component {
       isShowProgressView: false,
     }
     this.testCount = 1
+    this.moduleItems = []
   }
-  // UNSAFE_componentWillMount() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL MOUNT!-----'+this.testCount)
-  // }
-  // componentDidMount() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList DID MOUNT!-----'+(this.testCount))
-  // }
-  // UNSAFE_componentWillReceiveProps() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL RECEIVE PROPS!----'+(this.testCount))
-  // }
-  // shouldComponentUpdate() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList should MOUNT!----'+(this.testCount))
-  //   return true
-  // }
-  // UNSAFE_componentWillUpdate( ) {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL UPDATE!----'+(this.testCount))
-  // }
-  // componentDidUpdate( ) {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList DID UPDATE!----'+(this.testCount))
-  // }
-  // componentWillUnmount() {
-  //   this.testCount = this.testCount+1
-  //   console.warn('ModuleList WILL UNMOUNT!-----'+(this.testCount))
-  // }
 
-  _renderItem = ({ item }) => {
+  _showAlert = (ref, downloadData, currentUserName) => {
+    setTimeout(() => {
+      this.props.showDialog && this.props.showDialog(true)
+    }, 1500)
+    this.props.getMoudleItem &&
+      this.props.getMoudleItem(
+        ref,
+        this.sureDown,
+        this.cancelDown,
+        downloadData,
+        currentUserName,
+        ref.getDialogCheck(),
+      )
+  }
+
+  _downloadModuleData = async (ref, downloadData) => {
+    this.downloading = true
+    let keyword
+    if (downloadData.fileName.indexOf('_示范数据') !== -1) {
+      keyword = downloadData.fileName
+    } else {
+      keyword = downloadData.fileName + '_示范数据'
+    }
+    let dataUrl = await FetchUtils.getFindUserZipDataUrl(
+      'xiezhiyan123',
+      keyword,
+    )
+    let cachePath = downloadData.cachePath
+    let fileDirPath = cachePath + downloadData.fileName
+    try {
+      ref.setNewState({
+        progress: '0%',
+        isShowProgressView: true,
+        // disabled: true,
+      })
+      let fileCachePath = fileDirPath + '.zip'
+      await FileTools.deleteFile(fileCachePath)
+      let downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: fileCachePath,
+        background: true,
+        progress: res => {
+          let value =
+            ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+          if (value === '100%') {
+            ref.setNewState({
+              progress: '导入中...',
+              isShowProgressView: true,
+              // disabled: true,
+            })
+            this.downloading = false
+          } else if (value !== this.state.progress) {
+            ref.setNewState({
+              progress: value,
+              isShowProgressView: true,
+              // disabled: true,
+            })
+          }
+        },
+      }
+      let result = downloadFile(downloadOptions)
+      result.promise
+        .then(async result => {
+          if (result.statusCode === 200) {
+            await FileTools.unZipFile(fileCachePath, cachePath)
+
+            await this.props.importWorkspace(
+              fileDirPath,
+              downloadData.copyFilePath,
+            )
+            ref.setNewState({ isShowProgressView: false, disabled: false })
+            FileTools.deleteFile(fileDirPath + '.zip')
+          }
+        })
+        .catch(() => {
+          Toast.show('下载失败')
+          FileTools.deleteFile(fileCachePath)
+          ref.setNewState({ isShowProgressView: false, disabled: false })
+          this.downloading = false
+        })
+    } catch (e) {
+      Toast.show('网络错误，下载失败')
+      FileTools.deleteFile(fileDirPath + '.zip')
+      ref.setNewState({ isShowProgressView: false, disabled: false })
+    }
+  }
+
+  sureDown = (ref, downloadData, dialogCheck) => {
+    // let item = downloadData.itemData
+    this._downloadModuleData(ref, downloadData)
+    ref.setNewState({
+      disabled: false,
+      dialogCheck: dialogCheck,
+    })
+    this.props.showDialog && this.props.showDialog(false)
+  }
+
+  cancelDown = (ref, dialogCheck) => {
+    // let item = downloadData.itemData
+    ref.setNewState({
+      disabled: false,
+      dialogCheck: dialogCheck,
+    })
+    // item.action && item.action(downloadData.tmpCurrentUser)
+    this.props.showDialog && this.props.showDialog(false)
+  }
+
+  itemAction = async ({ item, index }) => {
+    try {
+      // this.setState({
+      //   disabled: true,
+      // })
+      let fileName
+      let moduleKey = item.key
+      /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
+      if (moduleKey === '地图制图') {
+        fileName = '湖南'
+      } else if (moduleKey === '专题制图') {
+        fileName = '北京'
+      } else if (moduleKey === '外业采集') {
+        fileName = '地理国情普查_示范数据'
+      } else if (moduleKey === '三维场景') {
+        if (Platform.OS === 'android') {
+          fileName = 'OlympicGreen_android'
+        } else if (Platform.OS === 'ios') {
+          fileName = 'OlympicGreen_ios'
+        }
+      }
+      let homePath = await FileTools.appendingHomeDirectory()
+      let tmpCurrentUser = this.props.currentUser
+      let currentUserName = tmpCurrentUser.userName
+        ? tmpCurrentUser.userName
+        : 'Customer'
+      let toPath =
+        homePath +
+        ConstPath.UserPath +
+        currentUserName +
+        '/' +
+        ConstPath.RelativePath.ExternalData +
+        fileName
+
+      let cachePath = homePath + ConstPath.CachePath
+      let fileDirPath = cachePath + fileName
+      let arrFile = await FileTools.getFilterFiles(fileDirPath)
+      if (arrFile.length === 0) {
+        let downloadData = {
+          fileName: fileName,
+          cachePath: cachePath,
+          copyFilePath: toPath,
+          itemData: item,
+          tmpCurrentUser: tmpCurrentUser,
+        }
+        if (this.state.dialogCheck) {
+          item.action && item.action(tmpCurrentUser)
+        } else if (this.downloading) {
+          item.action && item.action(tmpCurrentUser)
+        } else {
+          item.action && item.action(tmpCurrentUser)
+          this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
+        }
+      } else {
+        let arrFilePath = await FileTools.getFilterFiles(toPath, {
+          smwu: 'smwu',
+          sxwu: 'sxwu',
+        })
+        if (arrFilePath.length === 0) {
+          await this.props.importWorkspace(fileDirPath, toPath, true)
+        }
+        this.moduleItems[index].setNewState({
+          disabled: false,
+          isShowProgressView: false,
+        })
+
+        let module
+        switch (item.title) {
+          case MAP_MODULE.MAP_COLLECTION:
+            module = constants.COLLECTION
+            break
+          case MAP_MODULE.MAP_EDIT:
+            module = constants.MAP_EDIT
+            break
+          case MAP_MODULE.MAP_3D:
+            module = constants.MAP_3D
+            break
+          case MAP_MODULE.MAP_THEME:
+            module = constants.MAP_THEME
+            break
+        }
+        let latestMap
+        if (
+          this.props.latestMap[currentUserName] &&
+          this.props.latestMap[currentUserName][module] &&
+          this.props.latestMap[currentUserName][module].length > 0
+        ) {
+          latestMap = this.props.latestMap[currentUserName][module][0]
+        }
+        item.action && item.action(tmpCurrentUser, latestMap)
+      }
+    } catch (e) {
+      this.moduleItems[index].setNewState({
+        disabled: false,
+        isShowProgressView: false,
+      })
+    }
+  }
+
+  getRef = (data, ref) => {
+    this.moduleItems[data.index] = ref
+  }
+
+  _renderItem = ({ item, index }) => {
     return (
       <RenderModuleItem
         item={item}
-        ref={ref => (this.moduleItem = ref)}
+        ref={ref => this.getRef({ item, index }, ref)}
         importWorkspace={this.props.importWorkspace}
-        currentUser={this.props.currentUser}
         showDialog={this.props.showDialog}
         getMoudleItem={this.props.getMoudleItem}
+        itemAction={() => this.itemAction({ item, index })}
       />
     )
   }
+
   _renderScrollView = () => {
     return (
       <ScrollView
@@ -357,13 +369,8 @@ export default class ModuleList extends Component {
       </ScrollView>
     )
   }
+
   render() {
-    AsyncStorage.setItem(
-      'TmpCurrentUser',
-      JSON.stringify(this.props.currentUser),
-    )
-    this.testCount = this.testCount + 1
-    // console.warn('render-list-----'+JSON.stringify(this.props.currentUser))
     return (
       <View style={styles.container}>
         {this.props.device.orientation === 'LANDSCAPE' ? (

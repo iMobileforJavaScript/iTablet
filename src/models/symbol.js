@@ -21,7 +21,7 @@ export const setCurrentSymbol = (
 }
 
 export const setCurrentSymbols = (
-  params = {},
+  params = [],
   cb = () => {},
 ) => async dispatch => {
   await dispatch({
