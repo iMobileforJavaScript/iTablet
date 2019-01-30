@@ -40,7 +40,8 @@ export default class RenderModuleListItem extends Component {
       if (moduleKey === '地图制图') {
         fileName = '湖南'
       } else if (moduleKey === '专题制图') {
-        fileName = '北京'
+        // fileName = '北京'
+        fileName = '湖北'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查'
       } else if (moduleKey === '三维场景') {

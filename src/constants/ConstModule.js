@@ -52,8 +52,8 @@ export default [
 
       if (isOpenLastMap) {
         data = {
-          DSParams: lastMap,
-          type: 'LastMap',
+          type: 'Map',
+          ...lastMap,
         }
       } else {
         let moduleMapName = 'Hunan_叠加谷歌晕渲图风格'
@@ -178,8 +178,8 @@ export default [
 
       if (isOpenLastMap) {
         data = {
-          DSParams: lastMap,
-          type: 'LastMap',
+          type: 'Map',
+          ...lastMap,
         }
       } else {
         let moduleMapName = 'Beijing'
@@ -245,8 +245,22 @@ export default [
 
       if (isOpenLastMap) {
         data = {
-          DSParams: lastMap,
-          type: 'LastMap',
+          type: 'Map',
+          ...lastMap,
+        }
+      } else {
+        let moduleMapName = '国情普查_示范数据'
+        let moduleMapFullName = moduleMapName + '.xml'
+        // 地图相对路径
+        let moduleMapPath =
+          userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+
+        if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+          data = {
+            type: 'Map',
+            path: moduleMapPath,
+            name: moduleMapName,
+          }
         }
       }
 

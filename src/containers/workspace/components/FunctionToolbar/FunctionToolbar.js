@@ -332,6 +332,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMap3DFly = async () => {
+    SScene.checkoutListener('startMeasure')
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       toolRef.showMap3DTool(ConstToolType.MAP3D_TOOL_FLYLIST)
@@ -594,6 +595,17 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  basename(str) {
+    var idx = str.lastIndexOf('/')
+    idx = idx > -1 ? idx : str.lastIndexOf('\\')
+    if (idx < 0) {
+      return str
+    }
+    let file = str.substring(idx + 1)
+    let arr = file.split('.')
+    return arr[0]
+  }
+
   /**专题图-添加 */
   getThemeMapAdd = async () => {
     let data = [],
@@ -615,6 +627,7 @@ export default class FunctionToolbar extends React.Component {
         infoType: 'mtime',
         lastModifiedDate: item.mtime,
       }
+      item.name = this.basename(item.path)
     })
 
     let userUDBPath, userUDBs
@@ -634,13 +647,14 @@ export default class FunctionToolbar extends React.Component {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
         }
+        item.name = this.basename(item.path)
       })
 
       data = [
-        {
-          title: Const.PUBLIC_DATA_SOURCE,
-          data: customerUDBs,
-        },
+        // {
+        //   title: Const.PUBLIC_DATA_SOURCE,
+        //   data: customerUDBs,
+        // },
         {
           title: Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),

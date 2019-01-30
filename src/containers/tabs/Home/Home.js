@@ -256,7 +256,7 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>确定退出iTablet ？</Text>
+        <Text style={styles.promptTtile}>确定退出SuperMap iTablet ？</Text>
       </View>
     )
   }
@@ -290,7 +290,7 @@ export default class Home extends Component {
         confirmBtnTitle={'确定'}
         cancelBtnTitle={'取消'}
         confirmAction={this.exitConfirm}
-        opacity={0.85}
+        opacity={1}
         opacityStyle={styles.opacityView}
         style={styles.dialogBackground}
       >

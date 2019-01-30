@@ -27,6 +27,7 @@ export default class ToolBarSectionList extends React.Component {
     itemAction?: () => {},
     headerAction?: () => {},
     device: Object,
+    layerManager?: boolean,
   }
 
   static defaultProps = {
@@ -500,6 +501,9 @@ export default class ToolBarSectionList extends React.Component {
 
   /**Section之间的分隔线组件 */
   renderSectionFooter = () => {
+    if (this.props.layerManager) {
+      return null
+    }
     return <View style={styles.sectionSeparateViewStyle} />
   }
 
