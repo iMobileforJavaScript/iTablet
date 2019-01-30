@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   moreView: {
     height: '100%',
     marginRight: 10,
-    width: scaleSize(80),
+    // width: scaleSize(80),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -94,6 +94,7 @@ export default class MyLocalData extends Component {
     navigation: Object,
     upload: Object,
     uploading: () => {},
+    exportWorkspace: () => {},
   }
 
   constructor(props) {
@@ -103,6 +104,7 @@ export default class MyLocalData extends Component {
       sectionData: [],
       // userName: this.props.navigation.getParam('userName', ''),
       modalIsVisible: false,
+      isFirstLoadingModal: true,
       textValue: '扫描文件:',
       textDisplay: 'none',
       title: (params && params.title) || '',
@@ -111,6 +113,7 @@ export default class MyLocalData extends Component {
 
   componentDidMount() {
     this.getData()
+    // this.getData2()
   }
 
   getData = async () => {
@@ -129,15 +132,45 @@ export default class MyLocalData extends Component {
         // 获取用户数据
         let userData = await this.getSectionData(userPath, true)
         data.push(userData)
+      } else {
+        // 获取游客数据
+        let customerPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath,
+        )
+        let customerData = await this.getSectionData(customerPath, false)
+        data.push(customerData)
       }
+      this.setState({ sectionData: data, textDisplay: 'none' })
+    } catch (e) {
+      this.setState({ textDisplay: 'none' })
+    }
+  }
 
-      // 获取游客数据
-      let customerPath = await FileTools.appendingHomeDirectory(
-        ConstPath.CustomerPath,
+  /** 获取FlatList数据*/
+  getData2 = async () => {
+    try {
+      let userPath = await FileTools.appendingHomeDirectory(
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
+          ? ConstPath.CustomerPath
+          : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
       )
-      let customerData = await this.getSectionData(customerPath, false)
-      data.push(customerData)
+      let isLogin =
+        this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
+        this.props.user.currentUser.userName
 
+      let data = []
+      if (isLogin) {
+        // 获取用户数据
+        let userData = await this.getSectionData(userPath, true)
+        data = userData.data
+      } else {
+        // 获取游客数据
+        let customerPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath,
+        )
+        let customerData = await this.getSectionData(customerPath, false)
+        data = customerData.data
+      }
       this.setState({ sectionData: data, textDisplay: 'none' })
     } catch (e) {
       this.setState({ textDisplay: 'none' })
@@ -250,6 +283,8 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
+    this.index = info.index
+
     let name = info.item.name
     let txtInfo =
       name.lastIndexOf('.') > 0
@@ -305,7 +340,14 @@ export default class MyLocalData extends Component {
             style={styles.moreView}
             onPress={() => {
               this.itemInfo = info
-              this.setState({ modalIsVisible: true })
+              if (this.state.isFirstLoadingModal) {
+                this.setState({
+                  modalIsVisible: true,
+                  isFirstLoadingModal: false,
+                })
+              } else {
+                this.setState({ modalIsVisible: true })
+              }
             }}
           >
             <Image
@@ -319,10 +361,96 @@ export default class MyLocalData extends Component {
     )
   }
 
+  _renderItem2 = info => {
+    let name = info.item.name
+    let txtInfo =
+      name.lastIndexOf('.') > 0
+        ? name.substring(0, name.lastIndexOf('.'))
+        : name
+    let txtType =
+      name.lastIndexOf('.') > 0 ? name.substring(name.lastIndexOf('.') + 1) : ''
+    let img,
+      isShowMore = true
+    switch (this.state.title) {
+      case Const.MAP:
+        img = require('../../../../assets/mapToolbar/list_type_map_black.png')
+        break
+      case Const.SYMBOL:
+        if (txtType === 'sym') {
+          // 点
+          img = require('../../../../assets/map/icon-shallow-dot_black.png')
+        } else if (txtType === 'lsl') {
+          // 线
+          img = require('../../../../assets/map/icon-shallow-line_black.png')
+        } else if (txtType === 'bru') {
+          // 面
+          img = require('../../../../assets/map/icon-shallow-polygon_black.png')
+        } else {
+          // 默认
+          img = require('../../../../assets/Mine/mine_my_online_data.png')
+        }
+        break
+      case Const.SCENE:
+        img = require('../../../../assets/mapTools/icon_scene.png')
+        break
+      case Const.DATA:
+      default:
+        img = require('../../../../assets/Mine/mine_my_online_data.png')
+        break
+    }
+    return (
+      <View style={{ width: '100%' }}>
+        <TouchableOpacity
+          style={[styles.item]}
+          onPress={() => {
+            // this.itemInfo = info
+            // this.setState({ modalIsVisible: true })
+          }}
+        >
+          <Image style={styles.img} resizeMode={'contain'} source={img} />
+          <Text numberOfLines={1} style={styles.itemText}>
+            {txtInfo}
+          </Text>
+          {isShowMore && (
+            <TouchableOpacity
+              style={styles.moreView}
+              onPress={() => {
+                this.itemInfo = info
+                if (this.state.isFirstLoadingModal) {
+                  this.setState({
+                    modalIsVisible: true,
+                    isFirstLoadingModal: false,
+                  })
+                } else {
+                  this.setState({ modalIsVisible: true })
+                }
+              }}
+            >
+              <Image
+                style={styles.moreImg}
+                resizeMode={'contain'}
+                source={require('../../../../assets/Mine/icon_more_gray.png')}
+              />
+            </TouchableOpacity>
+          )}
+        </TouchableOpacity>
+        <View
+          style={{
+            width: '100%',
+            height: scaleSize(1),
+            backgroundColor: color.separateColorGray,
+          }}
+        />
+      </View>
+    )
+  }
+
   _keyExtractor = (section, index) => {
     return 'id:' + index
   }
-
+  _keyExtractor2 = (item, index) => {
+    return 'id:' + index
+  }
   _closeModal = () => {
     this.setState({ modalIsVisible: false })
   }
@@ -497,6 +625,18 @@ export default class MyLocalData extends Component {
     return result
   }
 
+  _exportData = async () => {
+    let name = this.state.sectionData[0].data[this.index].name
+    let mapName = name.substring(0, name.length - 4)
+    this.props.exportWorkspace({ maps: [mapName] }, result => {
+      if (result === true) {
+        Toast.show('导出成功')
+      } else {
+        Toast.show('导出失败')
+      }
+    })
+  }
+
   getUploadingData = () => {
     if (
       this.itemInfo &&
@@ -518,7 +658,7 @@ export default class MyLocalData extends Component {
   }
 
   _showMyDataPopupModal = () => {
-    if (this.state.modalIsVisible) {
+    if (!this.state.isFirstLoadingModal) {
       let data
       if (
         this.props.user.currentUser.userName &&
@@ -529,16 +669,33 @@ export default class MyLocalData extends Component {
         if (uploadingData && uploadingData.progress >= 0) {
           title += '  ' + uploadingData.progress + '%'
         }
-        data = [
-          {
-            title: title,
-            action: this._onUploadData,
-          },
-          {
-            title: '删除数据',
-            action: this._onDeleteData,
-          },
-        ]
+        if (this.state.sectionData[0].title.indexOf('我的地图') !== -1) {
+          data = [
+            {
+              title: title,
+              action: this._onUploadData,
+            },
+            {
+              title: '导出数据',
+              action: this._exportData,
+            },
+            {
+              title: '删除数据',
+              action: this._onDeleteData,
+            },
+          ]
+        } else {
+          data = [
+            {
+              title: title,
+              action: this._onUploadData,
+            },
+            {
+              title: '删除数据',
+              action: this._onDeleteData,
+            },
+          ]
+        }
       } else {
         data = [
           {
@@ -598,12 +755,12 @@ export default class MyLocalData extends Component {
   }
 
   _renderSectionSeparatorComponent = () => {
-    return <ListSeparator color={color.contentColorWhite} height={1} />
+    return <ListSeparator color={color.separateColorGray} height={1} />
   }
 
   _renderItemSeparatorComponent = ({ section }) => {
     return section.isShowItem ? (
-      <ListSeparator color={color.itemColorGray} height={1} />
+      <ListSeparator color={color.separateColorGray} height={1} />
     ) : null
   }
 
@@ -634,17 +791,27 @@ export default class MyLocalData extends Component {
         <SectionList
           style={{
             flex: 1,
-            backgroundColor: color.content_white,
+            backgroundColor: color.contentColorWhite,
           }}
           sections={sectionData}
           initialNumToRender={20}
           keyExtractor={this._keyExtractor}
-          renderSectionHeader={this._renderSectionHeader}
+          // renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
           ItemSeparatorComponent={this._renderItemSeparatorComponent}
           // SectionSeparatorComponent={this._renderSectionSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
         />
+        {/* <FlatList
+          style={{
+            flex: 1,
+            backgroundColor: color.contentColorWhite,
+          }}
+          renderItem={this._renderItem2}
+          data={sectionData}
+          initialNumToRender={20}
+          keyExtractor={this._keyExtractor2}
+        />*/}
         {this._showMyDataPopupModal()}
       </Container>
     )

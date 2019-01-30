@@ -6,7 +6,7 @@
 import React, { Component } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import styles from './Styles'
-import { scaleSize, Toast } from '../../../utils/index'
+import { Toast } from '../../../utils/index'
 import NavigationService from '../../NavigationService'
 import RNFS from 'react-native-fs'
 import { FileTools } from '../../../native'
@@ -255,8 +255,6 @@ export default class RenderFindItem extends Component {
             styles.separateViewStyle,
             {
               backgroundColor: color.separateColorGray,
-              paddingLeft: scaleSize(16),
-              paddingRight: scaleSize(16),
             },
           ]}
         />

@@ -90,7 +90,7 @@ export default class MyDataPopupModal extends PureComponent {
   _renderCancelBtn = () => {
     return (
       <Button
-        style={[styles.item, { marginTop: scaleSize(15) }]}
+        style={styles.item}
         titleStyle={styles.btnTitle}
         title={'取消'}
         key={'取消'}
@@ -151,8 +151,8 @@ export default class MyDataPopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._renderSeparatorLine()}
             {this._renderList()}
+            {this._renderSeparatorLine()}
             {this.props.hasCancel && this._renderCancelBtn()}
           </View>
         </TouchableOpacity>

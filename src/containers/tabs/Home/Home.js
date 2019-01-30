@@ -61,7 +61,7 @@ export default class Home extends Component {
         if (isFirstImportWorkspace === true) {
           this.container && this.container.setLoading(true, '导入数据中...')
         }
-        await FileTools.copyFile(fileDirPath, toPath)
+        // await FileTools.copyFile(fileDirPath, toPath)
         let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
           smwu: 'smwu',
           sxwu: 'sxwu',

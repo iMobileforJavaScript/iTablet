@@ -549,12 +549,8 @@ export default class MyLocalData extends Component {
         style={{
           display: display,
           width: '100%',
-          paddingLeft: scaleSize(16),
-          paddingRight: scaleSize(16),
-          flexDirection: 'row',
-          backgroundColor: color.contentColorWhite,
-          alignItems: 'center',
-          height: itemHeight,
+          // paddingLeft: scaleSize(16),
+          // paddingRight: scaleSize(16),
         }}
         onPress={() => {
           this.itemInfo = info
@@ -565,52 +561,68 @@ export default class MyLocalData extends Component {
           }
         }}
       >
-        <Image
+        <View
           style={{
-            width: imageWidth,
-            height: imageHeight,
-            marginLeft: 20,
-            tintColor: imageColor,
+            flexDirection: 'row',
+            backgroundColor: color.contentColorWhite,
+            alignItems: 'center',
+            height: itemHeight,
           }}
-          resizeMode={'contain'}
-          source={require('../../../../assets/Mine/mine_my_online_data.png')}
-        />
-        <View style={{ flex: 1, justifyContent: 'center' }}>
-          <Text
-            numberOfLines={1}
+        >
+          <Image
             style={{
-              marginTop: scaleSize(5),
-              color: fontColor,
-              paddingLeft: 15,
-              fontSize: fontSize,
+              width: imageWidth,
+              height: imageHeight,
+              marginLeft: 20,
+              tintColor: imageColor,
             }}
-          >
-            {txtInfo}
-          </Text>
-          <Text
-            ellipsizeMode={'middle'}
-            numberOfLines={1}
+            resizeMode={'contain'}
+            source={require('../../../../assets/Mine/mine_my_online_data.png')}
+          />
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Text
+              numberOfLines={1}
+              style={{
+                marginTop: scaleSize(5),
+                color: fontColor,
+                paddingLeft: 15,
+                fontSize: fontSize,
+              }}
+            >
+              {txtInfo}
+            </Text>
+            <Text
+              ellipsizeMode={'middle'}
+              numberOfLines={1}
+              style={{
+                marginTop: scaleSize(5),
+                color: color.fontColorGray,
+                paddingLeft: 15,
+                fontSize: 10,
+                height: 15,
+                marginRight: 20,
+              }}
+            >
+              {`路径:${path}`}
+            </Text>
+          </View>
+          <Image
             style={{
-              marginTop: scaleSize(5),
-              color: color.fontColorGray,
-              paddingLeft: 15,
-              fontSize: 10,
-              height: 15,
-              marginRight: 20,
+              width: imageWidth,
+              height: imageHeight,
+              marginRight: 10,
+              // tintColor: imageColor,
             }}
-          >
-            {`路径:${path}`}
-          </Text>
+            resizeMode={'contain'}
+            source={require('../../../../assets/Mine/icon_more_gray.png')}
+          />
         </View>
-        <Image
+        <View
           style={{
-            width: imageWidth,
-            height: imageHeight,
-            marginRight: 10,
-            // tintColor: imageColor,
+            width: '100%',
+            height: scaleSize(1),
+            backgroundColor: color.separateColorGray,
           }}
-          resizeMode={'contain'}
-          source={require('../../../../assets/Mine/icon_more_gray.png')}
         />
       </TouchableOpacity>
     )
@@ -715,7 +727,7 @@ export default class MyLocalData extends Component {
   }
 
   _renderSectionSeparatorComponent = () => {
-    return <ListSeparator color={color.contentColorWhite} height={5} />
+    return <ListSeparator color={color.contentColorWhite} height={1} />
   }
 
   _renderItemSeparatorComponent = ({ section }) => {
@@ -758,8 +770,8 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
-          ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          SectionSeparatorComponent={this._renderSectionSeparatorComponent}
+          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          renderSectionFooter={this._renderSectionSeparatorComponent}
         />
         {this._showLocalDataPopupModal()}
       </Container>

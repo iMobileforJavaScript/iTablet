@@ -62,8 +62,8 @@ export default class HomePopupModal extends PureComponent {
         style={{
           width: '100%',
           backgroundColor: color.contentColorWhite,
-          paddingLeft: scaleSize(16),
-          paddingRight: scaleSize(16),
+          // paddingLeft: scaleSize(16),
+          // paddingRight: scaleSize(16),
         }}
       >
         <TouchableOpacity

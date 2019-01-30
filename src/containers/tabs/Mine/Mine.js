@@ -113,7 +113,6 @@ export default class Mine extends Component {
 
   _selectionRender = () => {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
-      // let fontSize = Platform.OS === 'ios' ? 18 : 16
       let fontSize = size.fontSize.fontSizeXl
       return (
         <View
@@ -123,7 +122,6 @@ export default class Mine extends Component {
           {this._renderHeader(fontSize)}
           <ScrollView
             style={{ flex: 1 }}
-            // contentContainerStyle={{ alignItems:'center' }}
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
             overScrollMode={'always'}
@@ -152,7 +150,7 @@ export default class Mine extends Component {
             })}
             {this._renderItem({
               title: Const.SYMBOL,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
+              leftImagePath: require('../../../assets/function/icon_function_style.png'),
               onClick: () => this.goToMyData(Const.SYMBOL),
             })}
           </ScrollView>
@@ -202,7 +200,7 @@ export default class Mine extends Component {
           })}
           {this._renderItem({
             title: Const.SYMBOL,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
+            leftImagePath: require('../../../assets/function/icon_function_style.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
           })}
           {/*{this._renderItem({*/}
@@ -276,6 +274,7 @@ export default class Mine extends Component {
             style={{
               fontSize: size.fontSize.fontSizeXXl,
               color: allColor,
+              fontWeight: 'bold',
             }}
           >
             {headerTitle}
@@ -326,18 +325,15 @@ export default class Mine extends Component {
     let imageColor = color.imageColorBlack
     let txtColor = color.fontColorBlack
     return (
-      <View
-        style={{ marginLeft: 15, marginRight: 15, flex: 1 }}
-        display={this.state.display}
-      >
+      <View style={{ flex: 1 }} display={this.state.display}>
         <TouchableOpacity
           style={{
             flexDirection: 'row',
             width: itemWidth,
             height: itemHeight,
             alignItems: 'center',
-            paddingLeft: scaleSize(16),
-            paddingRight: scaleSize(16),
+            paddingLeft: 15,
+            paddingRight: 15,
           }}
           onPress={onClick}
         >
@@ -377,8 +373,6 @@ export default class Mine extends Component {
             flex: 1,
             height: 1,
             backgroundColor: color.separateColorGray,
-            marginLeft: 5,
-            marginRight: 5,
           }}
         />
       </View>
