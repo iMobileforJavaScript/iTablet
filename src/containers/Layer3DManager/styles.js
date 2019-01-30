@@ -35,7 +35,7 @@ export default StyleSheet.create({
   },
   itemName: {
     fontSize: setSpText(26),
-    marginLeft: scaleSize(15),
+    marginLeft: scaleSize(55),
     // marginRight:scaleSize(30),
   },
   itemValue: {
@@ -65,7 +65,7 @@ export default StyleSheet.create({
     width: scaleSize(40),
     height: scaleSize(40),
     // backgroundColor: '#A0A0A0',
-    marginLeft: scaleSize(27),
+    marginLeft: scaleSize(55),
   },
   moreView: {
     width: scaleSize(60),

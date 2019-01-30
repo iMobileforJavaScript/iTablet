@@ -20,6 +20,9 @@ export default class Map3DToolBar extends React.Component {
     existFullMap: () => {},
     importSceneWorkspace: () => {},
     refreshLayer3dList: () => {},
+    setVisible: () => {},
+    getLayer3d: () => {},
+    getoverlayView: () => {},
   }
   constructor(props) {
     super(props)
@@ -44,26 +47,38 @@ export default class Map3DToolBar extends React.Component {
         SScene.addTerrainLayer(url, name)
         break
       case 'WMTS':
-        SScene.addLayer3D(url, type, name, 'JPG_PNG', 96.0, true).then(
-          result => {
-            if (result) {
-              Toast.show('添加成功')
-            } else {
-              Toast.show('添加失败')
-            }
-          },
-        )
+        SScene.addLayer3D(
+          url,
+          type,
+          name,
+          'JPG_PNG',
+          96.0,
+          true,
+          'c768f9fd3e388eb0d155405f8d8c6999',
+        ).then(result => {
+          if (result) {
+            Toast.show('添加成功')
+          } else {
+            Toast.show('添加失败')
+          }
+        })
         break
       case 'l3dBingMaps':
-        SScene.addLayer3D(url, type, name, 'JPG_PNG', 96.0, true).then(
-          result => {
-            if (result) {
-              Toast.show('添加成功')
-            } else {
-              Toast.show('添加失败')
-            }
-          },
-        )
+        SScene.addLayer3D(
+          url,
+          type,
+          name,
+          'JPG_PNG',
+          96.0,
+          true,
+          'c768f9fd3e388eb0d155405f8d8c6999',
+        ).then(result => {
+          if (result) {
+            Toast.show('添加成功')
+          } else {
+            Toast.show('添加失败')
+          }
+        })
         break
       default:
         Toast.show('底图不存在')
@@ -90,20 +105,32 @@ export default class Map3DToolBar extends React.Component {
 
           <TouchableOpacity
             onPress={() => {
+              let layer3d = this.props.getLayer3d && this.props.getLayer3d()
+              let overlayView =
+                this.props.getoverlayView && this.props.getoverlayView()
+              if (item.title === layer3d.name) {
+                Toast.show('底图已存在')
+                return
+              }
               this.changeBaseMap(item.url, item.type, item.name)
-              this.props.existFullMap && this.props.existFullMap(true)
-              this.props.showToolbar && this.props.showToolbar(false)
-              GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
+              this.props.setVisible && this.props.setVisible(false)
+              overlayView && overlayView.setVisible(false)
+              // this.props.existFullMap && this.props.existFullMap(true)
+              // this.props.showToolbar && this.props.showToolbar(false)
+              // GLOBAL.OverlayView && GLOBAL.OverlayView.setVisible(false)
             }}
             style={styles.sceneItem}
           >
-            <Image
-              source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
-              style={styles.sceneItemImg}
-            />
-            <View style={styles.sceneItemcontent}>
-              <Text style={[styles.workspaceItem]}>{item.title}</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Image
+                source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+                style={styles.baseMapImg}
+              />
+              <View style={styles.baseMapTitle}>
+                <Text style={[styles.baseText]}>{item.title}</Text>
+              </View>
             </View>
+            {this.renderItemSeparatorComponent()}
           </TouchableOpacity>
         )
       } else {
@@ -125,13 +152,16 @@ export default class Map3DToolBar extends React.Component {
           }}
           style={styles.sceneItem}
         >
-          <Image
-            source={require('../../../../assets/function/Frenchgrey/icon_symbolFly.png')}
-            style={styles.sceneItemImg}
-          />
-          <View style={styles.sceneItemcontent}>
-            <Text style={[styles.workspaceItem]}>{item.title}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={require('../../../../assets/function/Frenchgrey/icon_symbolFly.png')}
+              style={styles.sceneItemImg}
+            />
+            <View style={styles.sceneItemcontent}>
+              <Text style={[styles.workspaceItem]}>{item.title}</Text>
+            </View>
           </View>
+          {this.renderItemSeparatorComponent()}
         </TouchableOpacity>
       )
     }
@@ -141,13 +171,14 @@ export default class Map3DToolBar extends React.Component {
   renderListSectionHeader = ({ section }) => {
     if (this.props.type === 'MAP3D_BASE') {
       return (
-        <View style={styles.sceneView}>
-          <Image
-            source={require('../../../../assets/mapToolbar/list_type_maps.png')}
-            style={styles.sceneImg}
-          />
-          <Text style={styles.sceneTitle}>{section.title}</Text>
-        </View>
+        // <View style={styles.sceneView}>
+        //   <Image
+        //     source={require('../../../../assets/mapToolbar/list_type_maps.png')}
+        //     style={styles.sceneImg}
+        //   />
+        //   <Text style={styles.sceneTitle}>{section.title}</Text>
+        // </View>
+        <View />
       )
     }
     if (this.props.type === 'MAP3D_ADD_LAYER') {
@@ -173,8 +204,8 @@ export default class Map3DToolBar extends React.Component {
         style={[
           styles.Separator,
           {
-            width: 0.956 * this.props.device.width,
-            marginLeft: 0.022 * this.props.device.width,
+            width: this.props.device.width,
+            // marginLeft: 0.022 * this.props.device.width,
           },
         ]}
       />
@@ -240,14 +271,17 @@ export default class Map3DToolBar extends React.Component {
           }}
           style={styles.sceneItem}
         >
-          <Image
-            source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
-            style={styles.sceneItemImg}
-          />
-          <View style={styles.sceneItemcontent}>
-            <Text style={[styles.workspaceItem]}>{item.name}</Text>
-            <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+              style={styles.sceneItemImg}
+            />
+            <View style={styles.sceneItemcontent}>
+              <Text style={[styles.workspaceItem]}>{item.name}</Text>
+              <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
+            </View>
           </View>
+          {this.renderItemSeparatorComponent()}
         </TouchableOpacity>
       )
     }
@@ -323,7 +357,6 @@ export default class Map3DToolBar extends React.Component {
             <Text style={styles.sceneTitle}>场景</Text>
           </View>
           <FlatList
-            style={{ backgroundColor: '#F0F0F0' }}
             data={this.state.data}
             renderItem={this.renderItem}
             keyExtractor={(item, index) => index}
@@ -334,10 +367,10 @@ export default class Map3DToolBar extends React.Component {
       return (
         <SectionList
           sections={this.state.data}
-          renderItemSeparatorComponent={this.renderItemSeparatorComponent}
+          // ItemSeparatorComponent={this.renderItemSeparatorComponent}
           renderItem={this.renderListItem}
           renderSectionHeader={this.renderListSectionHeader}
-          SectionSeparatorComponent={this.renderItemSeparatorComponent}
+          // SectionSeparatorComponent={this.renderItemSeparatorComponent}
           keyExtractor={(item, index) => index}
         />
       )

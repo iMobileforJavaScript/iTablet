@@ -142,7 +142,7 @@ function getMap3DData(type) {
       data = [
         {
           key: 'startFly',
-          title: '开始轨迹',
+          title: '开始飞行',
           action: () => {
             SScene.flyStart()
           },
@@ -188,10 +188,10 @@ function getMap3DData(type) {
         //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
         // },
       ]
-      buttons = [ToolbarBtnType.END_FLY, ToolbarBtnType.FLEX]
+      buttons = [ToolbarBtnType.END_FLY]
       break
     case ConstToolType.MAP3D_TOOL_LEVEL:
-      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.FLEX]
+      buttons = [ToolbarBtnType.CANCEL]
       break
     case ConstToolType.MAP3D_SYMBOL_POINT:
       buttons = [

@@ -230,25 +230,25 @@ export default class MyLocalData extends Component {
       this.setState({
         sectionData: newSectionData,
       })
-      let externalSectionData = []
-      let result = await AsyncStorage.getItem('ExternalSectionData')
-      if (result !== null) {
-        externalSectionData = JSON.parse(result)
-      } else {
-        externalSectionData = await this._constructExternalSectionData()
-        AsyncStorage.setItem(
-          'ExternalSectionData',
-          JSON.stringify(externalSectionData),
-        )
-      }
-      let newData2 = newData.concat(externalSectionData)
-      let newSectionData2 = cacheSectionData.concat([
-        { title: '外部数据', data: newData2, isShowItem: true },
-      ])
-      this.setState({
-        sectionData: newSectionData2,
-        textDisplay: 'none',
-      })
+      // let externalSectionData = []
+      // let result = await AsyncStorage.getItem('ExternalSectionData')
+      // if (result !== null) {
+      //   externalSectionData = JSON.parse(result)
+      // } else {
+      //   externalSectionData = await this._constructExternalSectionData()
+      //   AsyncStorage.setItem(
+      //     'ExternalSectionData',
+      //     JSON.stringify(externalSectionData),
+      //   )
+      // }
+      // let newData2 = newData.concat(externalSectionData)
+      // let newSectionData2 = cacheSectionData.concat([
+      //   { title: '外部数据', data: newData2, isShowItem: true },
+      // ])
+      // this.setState({
+      //   sectionData: newSectionData2,
+      //   textDisplay: 'none',
+      // })
     } catch (e) {
       this.setState({ textDisplay: 'none' })
     }

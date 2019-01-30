@@ -62,6 +62,32 @@ const layersetting = [
   // },
 ]
 
+const baseListData = [
+  {
+    title: '在线底图',
+    index: 0,
+    show: true,
+    data: [
+      // {
+      //   title: 'STK',
+      //   index: 0,
+      //   show: true,
+      //   type: 'terrainLayer',
+      //   name: 'stk',
+      //   url: 'https://assets.agi.com/stk-terrain/world',
+      // },
+      {
+        title: 'bingmap',
+        index: 0,
+        show: true,
+        type: 'l3dBingMaps',
+        name: 'bingmap',
+        url: 'http://t0.tianditu.com/img_c/wmts',
+      },
+    ],
+  },
+]
+
 const layerThemeSetting = [
   {
     title: '设置为当前图层',
@@ -219,4 +245,5 @@ export {
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
+  baseListData,
 }

@@ -517,6 +517,7 @@ export default class ToolBar extends React.PureComponent {
                   GLOBAL.action3d = 'PANSELECT3D'
                   Toast.show('当前场景操作状态为可选')
                 } else {
+                  SScene.clearSelection()
                   SScene.setAction('PAN3D')
                   GLOBAL.action3d = 'PAN3D'
                   Toast.show('当前场景操作状态为不可选')
@@ -532,7 +533,7 @@ export default class ToolBar extends React.PureComponent {
             image: require('../../../../assets/mapEdit/Frenchgrey/icon_action3d.png'),
           },
         ]
-        buttons = [ToolbarBtnType.CLOSE_TOOL, ToolbarBtnType.FLEX]
+        buttons = []
         break
     }
     return { data, buttons }
@@ -1371,11 +1372,7 @@ export default class ToolBar extends React.PureComponent {
       {
         type: type,
         data: [],
-        buttons: [
-          ToolbarBtnType.CLOSE_ANALYST,
-          ToolbarBtnType.CLEAR,
-          ToolbarBtnType.FLEX,
-        ],
+        buttons: [ToolbarBtnType.CLOSE_ANALYST, ToolbarBtnType.CLEAR],
         isFullScreen: false,
         // height: ConstToolType.HEIGHT[0],
         // column: data.length,
@@ -1466,11 +1463,13 @@ export default class ToolBar extends React.PureComponent {
             case ConstToolType.MAP3D_TOOL_FLY:
               this.height = ConstToolType.HEIGHT[0]
               this.showToolbar()
+              // this.updateOverlayerView()
               break
             case ConstToolType.MAP3D_CIRCLEFLY:
               this.height = ConstToolType.HEIGHT[0]
               this.props.showFullMap && this.props.showFullMap(true)
               this.showToolbar()
+
               break
             default:
               this.height = 0
@@ -1743,6 +1742,28 @@ export default class ToolBar extends React.PureComponent {
         this.close()
       }
     }.bind(this)())
+  }
+
+  addBack = (type = this.state.type) => {
+    if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
+      let data = this.lastUdbList,
+        buttons = []
+      buttons = [ToolbarBtnType.THEME_CANCEL]
+      this.setState(
+        {
+          isFullScreen: true,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          listSelectable: false, //单选框
+          data: data,
+          buttons: buttons,
+          type: ConstToolType.MAP_THEME_ADD_UDB,
+        },
+        () => {
+          this.updateOverlayerView()
+        },
+      )
+    }
   }
 
   close = (type = this.state.type) => {
@@ -2152,6 +2173,7 @@ export default class ToolBar extends React.PureComponent {
   closeCircle = () => {
     SScene.stopCircleFly()
     SScene.clearCirclePoint()
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2183,8 +2205,8 @@ export default class ToolBar extends React.PureComponent {
 
   endFly = () => {
     SScene.checkoutListener('startTouchAttribute')
-    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     SScene.flyStop()
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2468,6 +2490,7 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
+        this.lastUdbList = this.state.data //保存上次的数据源数据
         this.props.setContainerLoading &&
           this.props.setContainerLoading(true, ConstInfo.READING_DATA)
         this.path = await FileTools.appendingHomeDirectory(item.path)
@@ -2496,6 +2519,7 @@ export default class ToolBar extends React.PureComponent {
               listSelectable: true, //单选框
               buttons: [
                 ToolbarBtnType.THEME_CANCEL,
+                ToolbarBtnType.THEME_ADD_BACK,
                 ToolbarBtnType.THEME_COMMIT,
               ],
               data: dataList,
@@ -3541,6 +3565,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           // action = this.menuCommit
           action = this.close
+          break
+        case ToolbarBtnType.THEME_ADD_BACK:
+          //添加->返回上一级
+          image = require('../../../../assets/public/Frenchgrey/icon-back-white.png')
+          action = this.addBack
           break
         case ToolbarBtnType.MEASURE_CLEAR:
           //量算-清除

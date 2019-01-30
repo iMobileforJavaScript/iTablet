@@ -496,7 +496,7 @@ export default class LayerManager_item extends React.Component {
         icon = require('../../../../assets/map/icon-shallow-image_black.png')
         break
       case DatasetType.CAD: // 复合数据集
-        icon = require('../../../../assets/map/icon-cad.png')
+        icon = require('../../../../assets/map/icon-cad_black.png')
         break
       case DatasetType.Network: // 复合数据集
         icon = require('../../../../assets/map/icon-network.png')

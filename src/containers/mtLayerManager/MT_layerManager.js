@@ -620,10 +620,60 @@ export default class MT_layerManager extends React.Component {
           action = this.onToolPress
           if (
             item.name === this.props.layers[this.props.layers.length - 1].name
-          )
-            return true
+          ) {
+            if (
+              item.name === 'roadmap@GoogleMaps' ||
+              item.name === 'satellite@GoogleMaps' ||
+              item.name === 'terrain@GoogleMaps' ||
+              item.name === 'hybrid@GoogleMaps' ||
+              item.name === 'vec@TD' ||
+              item.name === 'cva@TDWZ' ||
+              item.name === 'img@TDYXM' ||
+              item.name === 'TrafficMap@BaiduMap' ||
+              item.name === 'Standard@OpenStreetMaps' ||
+              item.name === 'CycleMap@OpenStreetMaps' ||
+              item.name === 'TransportMap@OpenStreetMaps' ||
+              item.name === 'quanguo@SuperMapCloud'
+            )
+              return true
+          }
+          if (
+            this.props.layers.length > 1 &&
+            item.name === this.props.layers[this.props.layers.length - 2].name
+          ) {
+            if (
+              item.name === 'roadmap@GoogleMaps' ||
+              item.name === 'satellite@GoogleMaps' ||
+              item.name === 'terrain@GoogleMaps' ||
+              item.name === 'hybrid@GoogleMaps' ||
+              item.name === 'vec@TD' ||
+              item.name === 'cva@TDWZ' ||
+              item.name === 'img@TDYXM' ||
+              item.name === 'TrafficMap@BaiduMap' ||
+              item.name === 'Standard@OpenStreetMaps' ||
+              item.name === 'CycleMap@OpenStreetMaps' ||
+              item.name === 'TransportMap@OpenStreetMaps' ||
+              item.name === 'quanguo@SuperMapCloud'
+            )
+              return true
+          }
         } else {
           action = this.onToolBasePress
+          if (
+            item.name !== 'roadmap@GoogleMaps' &&
+            item.name !== 'satellite@GoogleMaps' &&
+            item.name !== 'terrain@GoogleMaps' &&
+            item.name !== 'hybrid@GoogleMaps' &&
+            item.name !== 'vec@TD' &&
+            item.name !== 'cva@TDWZ' &&
+            item.name !== 'img@TDYXM' &&
+            item.name !== 'TrafficMap@BaiduMap' &&
+            item.name !== 'Standard@OpenStreetMaps' &&
+            item.name !== 'CycleMap@OpenStreetMaps' &&
+            item.name !== 'TransportMap@OpenStreetMaps' &&
+            item.name !== 'quanguo@SuperMapCloud'
+          )
+            return true
         }
         return (
           <LayerManager_item
@@ -737,6 +787,7 @@ export default class MT_layerManager extends React.Component {
           keyExtractor={(item, index) => index.toString()}
           initialNumToRender={15}
           ItemSeparatorComponent={this.renderItemSeparator}
+          renderSectionFooter={this.renderSectionFooter}
         />
       </View>
     )
@@ -758,6 +809,20 @@ export default class MT_layerManager extends React.Component {
     } else {
       return <View />
     }
+  }
+
+  /**Section之间的分隔线组件 */
+  renderSectionFooter = () => {
+    return (
+      <View
+        style={{
+          flexDirection: 'column',
+          width: '100%',
+          height: scaleSize(1),
+          backgroundColor: color.bgG,
+        }}
+      />
+    )
   }
 
   //遮盖层
