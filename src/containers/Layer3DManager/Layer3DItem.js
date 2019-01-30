@@ -113,8 +113,7 @@ export default class Layer3DItem extends Component {
           style={[
             styles.itemSeparator,
             {
-              width: 0.956 * this.props.device.width,
-              marginLeft: 0.022 * this.props.device.width,
+              width: '100%',
             },
           ]}
         />

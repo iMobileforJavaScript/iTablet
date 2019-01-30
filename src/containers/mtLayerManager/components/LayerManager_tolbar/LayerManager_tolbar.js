@@ -402,8 +402,7 @@ export default class LayerManager_tolbar extends React.Component {
         <View
           style={{
             flexDirection: 'column',
-            width: 0.956 * this.props.device.width,
-            marginLeft: 0.022 * this.props.device.width,
+            width: '100%',
             height: scaleSize(1),
             backgroundColor: color.bgG,
           }}
