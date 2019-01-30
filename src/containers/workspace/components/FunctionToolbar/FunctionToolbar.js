@@ -647,6 +647,7 @@ export default class FunctionToolbar extends React.Component {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
         }
+        item.name = this.basename(item.path)
       })
 
       data = [
