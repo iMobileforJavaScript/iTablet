@@ -556,7 +556,7 @@ function openTemplate() {
           data: [],
         },
         {
-          title: Const.MODULE,
+          title: Const.CREATE_MODULE,
           data: tpList,
         },
       ]
@@ -659,7 +659,8 @@ function create() {
 
           await SMap.openDatasource(
             ConstOnline['Google'].DSParams,
-            ConstOnline['Google'].layerIndex,
+            // ConstOnline['Google'].layerIndex,
+            1,
           )
           _params.getLayers && (await _params.getLayers())
 
@@ -809,9 +810,53 @@ function setSaveViewVisible(visible, cb) {
 
 /** 保存地图 **/
 function saveMap() {
-  if (!_params.setSaveViewVisible) return
-  GLOBAL.isBackHome = false
-  _params.setSaveViewVisible(true)
+  // if (!_params.setSaveViewVisible) return
+  // GLOBAL.isBackHome = false
+  // _params.setSaveViewVisible(true)
+
+  (async function() {
+    try {
+      if (GLOBAL.Type === ConstToolType.MAP_3D) {
+        GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
+        _params.setToolbarVisible && _params.setToolbarVisible(false)
+        return
+      }
+
+      _params.setContainerLoading &&
+        _params.setContainerLoading(true, '正在保存地图')
+      let mapName = ''
+      if (_params.map.currentMap.name) {
+        // 获取当前打开的地图xml的名称
+        mapName = _params.map.currentMap.name
+        mapName =
+          mapName.substr(0, mapName.lastIndexOf('.')) ||
+          _params.map.currentMap.name
+      } else {
+        let mapInfo = await SMap.getMapInfo()
+        if (mapInfo && mapInfo.name) {
+          // 获取MapControl中的地图名称
+          mapName = mapInfo.name
+        } else if (_params.layers.length > 0) {
+          // 获取数据源名称作为地图名称
+          mapName = _params.collection.datasourceName
+        }
+      }
+      let addition = {}
+      if (_params.map.currentMap.Template) {
+        addition.Template = _params.map.currentMap.Template
+      }
+
+      let result = await _params.saveMap({ mapName, addition })
+      _params.setContainerLoading && _params.setContainerLoading(false)
+      result && _params.setToolbarVisible && _params.setToolbarVisible(false)
+      Toast.show(
+        result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.SAVE_MAP_FAILED,
+      )
+    } catch (e) {
+      _params.setContainerLoading && _params.setContainerLoading(false)
+      Toast.show(ConstInfo.SAVE_MAP_FAILED)
+    }
+  })()
 }
 
 /** 另存地图 **/
@@ -840,10 +885,10 @@ function saveMapAs() {
             if (result) {
               NavigationService.goBack()
               setTimeout(() => {
-                Toast.show(ConstInfo.CLOSE_MAP_SUCCESS)
+                Toast.show(ConstInfo.SAVE_MAP_SUCCESS)
               }, 1000)
             } else {
-              Toast.show(ConstInfo.CLOSE_MAP_FAILED)
+              Toast.show(ConstInfo.MAP_EXIST)
             }
           },
           () => {

@@ -348,9 +348,7 @@ export default class MapView extends React.Component {
       this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
-          Toast.show(
-            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-          )
+          Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
           cb && cb()
         },
         () => {
@@ -361,7 +359,7 @@ export default class MapView extends React.Component {
       //   result => {
       //     this.setLoading(false)
       //     Toast.show(
-      //       result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      //       result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST,
       //     )
       //     cb && cb()
       //   },
@@ -380,9 +378,7 @@ export default class MapView extends React.Component {
       this.setLoading(true, '正在保存地图')
       SMap.saveMap(name).then(result => {
         this.setLoading(false)
-        Toast.show(
-          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-        )
+        Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
         cb && cb()
       })
     } catch (e) {
@@ -736,6 +732,10 @@ export default class MapView extends React.Component {
               )
             } else if (item.type === 'Map') {
               await this._openMap(this.wsData[i])
+            } else if (item.type === 'LastMap') {
+              // 打开最近地图
+              // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
+              await this._openLatestMap(this.wsData[i].DSParams)
             }
           }
         } else {

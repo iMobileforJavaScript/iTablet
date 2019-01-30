@@ -2,8 +2,12 @@
  * 中文消息提示
  */
 export default {
-  CLOSE_MAP_SUCCESS: '地图保存成功',
-  CLOSE_MAP_FAILED: '地图已存在',
+  SAVE_SCENE_SUCCESS: '场景保存成功',
+  SAVE_SCENE_FAILED: '场景保存失败',
+
+  SAVE_MAP_SUCCESS: '地图保存成功',
+  SAVE_MAP_FAILED: '地图保存失败',
+  MAP_EXIST: '地图已存在',
   PLEASE_SAVE_MAP: '请先保存地图',
   SAVING_MAP: '正在保存地图',
 
@@ -21,6 +25,7 @@ export default {
   CHANGE_MAP_FAILED: '切换地图失败',
   CHANGE_MAP_TO: '已为您切换到',
   OPEN_MAP_TO: '已为您打开',
+  MAP_CREATING: '正在新建地图',
 
   TEMPLATE_LIST_LOADING: '正在加载模版列表',
   TEMPLATE_CREATING: '正在新建模板',

@@ -245,7 +245,7 @@ class AppRoot extends Component {
   saveMap = async () => {
     if (GLOBAL.Type===ConstToolType.MAP_3D){
       this.map3dBackAction()
-      GLOBAL.openWorkspace&&Toast.show("保存成功")
+      GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
       return
     }
     let mapName = ''
