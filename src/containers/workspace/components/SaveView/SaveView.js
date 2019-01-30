@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   },
   separator: {
     // flex: 1,
-    marginHorizontal: scaleSize(16),
+    // marginHorizontal: scaleSize(16),
     height: scaleSize(1),
     backgroundColor: color.separateColorGray,
   },
@@ -170,14 +170,22 @@ export default class SaveView extends React.Component {
                 onPress={this.notSave}
                 activeOpacity={0.5}
               />
+              <View style={styles.separator} />
+              <Button
+                style={[styles.item, { marginTop: scaleSize(1) }]}
+                titleStyle={styles.btnTitle}
+                title="取消"
+                onPress={this.cancel}
+                activeOpacity={0.5}
+              />
             </View>
-            <Button
-              style={[styles.item, { marginTop: scaleSize(15) }]}
-              titleStyle={styles.btnTitle}
-              title="取消"
-              onPress={this.cancel}
-              activeOpacity={0.5}
-            />
+            {/*<Button*/}
+            {/*style={[styles.item, { marginTop: scaleSize(15) }]}*/}
+            {/*titleStyle={styles.btnTitle}*/}
+            {/*title="取消"*/}
+            {/*onPress={this.cancel}*/}
+            {/*activeOpacity={0.5}*/}
+            {/*/>*/}
           </View>
         </TouchableOpacity>
       </Modal>
