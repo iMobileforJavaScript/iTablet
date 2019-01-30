@@ -142,7 +142,7 @@ function getMap3DData(type) {
       data = [
         {
           key: 'startFly',
-          title: '开始轨迹',
+          title: '开始飞行',
           action: () => {
             SScene.flyStart()
           },

@@ -35,7 +35,8 @@ export default StyleSheet.create({
   Separator: {
     flex: 1,
     height: scaleSize(1),
-    backgroundColor: color.fontColorGray,
+    // backgroundColor: color.fontColorGray,
+    backgroundColor: '#A0A0A0',
   },
   text: {
     fontSize: setSpText(22),
@@ -118,9 +119,8 @@ export default StyleSheet.create({
     flex: 1,
     height: scaleSize(81),
     // marginTop: scaleSize(20),
-    flexDirection: 'row',
+    flexDirection: 'column',
     // justifyContent:"center",
-    alignItems: 'center',
   },
   sceneImg: {
     width: scaleSize(55),

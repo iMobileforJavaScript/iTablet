@@ -102,9 +102,13 @@ export default class Map3D extends React.Component {
   }
 
   _addScene = async () => {
+    this.container.setLoading(true)
     if (!this.name) {
-      this.container.setLoading(false)
-      Toast.show('无场景显示')
+      setTimeout(() => {
+        this.container.setLoading(false)
+        Toast.show('无场景显示')
+      }, 1500)
+
       return
     }
     try {
@@ -113,11 +117,17 @@ export default class Map3D extends React.Component {
         this.initListener()
         GLOBAL.openWorkspace = true
         GLOBAL.sceneName = this.name
-        this.container.setLoading(false)
+        setTimeout(() => {
+          this.container.setLoading(false)
+          // Toast.show('无场景显示')
+        }, 1500)
         this.props.refreshLayer3dList && this.props.refreshLayer3dList()
       })
     } catch (e) {
-      this.container.setLoading(false)
+      setTimeout(() => {
+        this.container.setLoading(false)
+        // Toast.show('无场景显示')
+      }, 1500)
     }
     await SScene.addLayer3D(
       'http://t0.tianditu.com/img_c/wmts',

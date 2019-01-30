@@ -125,13 +125,16 @@ export default class Map3DToolBar extends React.Component {
           }}
           style={styles.sceneItem}
         >
-          <Image
-            source={require('../../../../assets/function/Frenchgrey/icon_symbolFly.png')}
-            style={styles.sceneItemImg}
-          />
-          <View style={styles.sceneItemcontent}>
-            <Text style={[styles.workspaceItem]}>{item.title}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={require('../../../../assets/function/Frenchgrey/icon_symbolFly.png')}
+              style={styles.sceneItemImg}
+            />
+            <View style={styles.sceneItemcontent}>
+              <Text style={[styles.workspaceItem]}>{item.title}</Text>
+            </View>
           </View>
+          {this.renderItemSeparatorComponent()}
         </TouchableOpacity>
       )
     }
@@ -173,8 +176,8 @@ export default class Map3DToolBar extends React.Component {
         style={[
           styles.Separator,
           {
-            width: 0.956 * this.props.device.width,
-            marginLeft: 0.022 * this.props.device.width,
+            width: this.props.device.width,
+            // marginLeft: 0.022 * this.props.device.width,
           },
         ]}
       />
@@ -240,14 +243,17 @@ export default class Map3DToolBar extends React.Component {
           }}
           style={styles.sceneItem}
         >
-          <Image
-            source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
-            style={styles.sceneItemImg}
-          />
-          <View style={styles.sceneItemcontent}>
-            <Text style={[styles.workspaceItem]}>{item.name}</Text>
-            <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Image
+              source={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+              style={styles.sceneItemImg}
+            />
+            <View style={styles.sceneItemcontent}>
+              <Text style={[styles.workspaceItem]}>{item.name}</Text>
+              <Text style={styles.itemTime}>最后修改时间: {item.mtime}</Text>
+            </View>
           </View>
+          {this.renderItemSeparatorComponent()}
         </TouchableOpacity>
       )
     }
@@ -323,9 +329,9 @@ export default class Map3DToolBar extends React.Component {
             <Text style={styles.sceneTitle}>场景</Text>
           </View>
           <FlatList
-            style={{ backgroundColor: '#F0F0F0' }}
             data={this.state.data}
             renderItem={this.renderItem}
+            // ItemSeparatorComponent={this.renderItemSeparatorComponent}
             keyExtractor={(item, index) => index}
           />
         </View>
@@ -334,10 +340,10 @@ export default class Map3DToolBar extends React.Component {
       return (
         <SectionList
           sections={this.state.data}
-          renderItemSeparatorComponent={this.renderItemSeparatorComponent}
+          // ItemSeparatorComponent={this.renderItemSeparatorComponent}
           renderItem={this.renderListItem}
           renderSectionHeader={this.renderListSectionHeader}
-          SectionSeparatorComponent={this.renderItemSeparatorComponent}
+          // SectionSeparatorComponent={this.renderItemSeparatorComponent}
           keyExtractor={(item, index) => index}
         />
       )
