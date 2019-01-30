@@ -348,9 +348,7 @@ export default class MapView extends React.Component {
       this.props.saveMap({ mapName, nModule, addition, isNew }).then(
         result => {
           this.setLoading(false)
-          Toast.show(
-            result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-          )
+          Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
           cb && cb()
         },
         () => {
@@ -361,7 +359,7 @@ export default class MapView extends React.Component {
       //   result => {
       //     this.setLoading(false)
       //     Toast.show(
-      //       result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      //       result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST,
       //     )
       //     cb && cb()
       //   },
@@ -380,9 +378,7 @@ export default class MapView extends React.Component {
       this.setLoading(true, '正在保存地图')
       SMap.saveMap(name).then(result => {
         this.setLoading(false)
-        Toast.show(
-          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
-        )
+        Toast.show(result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.MAP_EXIST)
         cb && cb()
       })
     } catch (e) {
@@ -737,6 +733,11 @@ export default class MapView extends React.Component {
             } else if (item.type === 'Map') {
               await this._openMap(this.wsData[i])
             }
+            // else if (item.type === 'LastMap') {
+            //   // 打开最近地图
+            //   // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
+            //   await this._openLatestMap(this.wsData[i].DSParams)
+            // }
           }
         } else {
           if (this.wsData.type === 'Workspace') {
@@ -745,11 +746,12 @@ export default class MapView extends React.Component {
             await this._openDatasource(this.wsData, this.wsData.layerIndex)
           } else if (this.wsData.type === 'Map') {
             await this._openMap(this.wsData)
-          } else if (this.wsData.type === 'LastMap') {
-            // 打开最近地图
-            // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
-            await this._openLatestMap(this.wsData.DSParams)
           }
+          // else if (this.wsData.type === 'LastMap') {
+          //   // 打开最近地图
+          //   // this.toolBox && this.toolBox.changeMap(this.wsData.DSParams)
+          //   await this._openLatestMap(this.wsData.DSParams)
+          // }
         }
 
         GLOBAL.Type === constants.COLLECTION && this.initCollectorDatasource()
@@ -824,22 +826,7 @@ export default class MapView extends React.Component {
         name: data.name,
       })
       if (mapInfo) {
-        await this.props.getLayers(-1, layers => {
-          this.props.setCurrentLayer(layers.length > 0 && layers[0])
-        })
-        this.setVisible(false)
-      }
-    } catch (e) {
-      this.container.setLoading(false)
-    }
-  }
-
-  _openLatestMap = async item => {
-    try {
-      this.setLoading(true, ConstInfo.MAP_OPENING)
-      await this.props.setCurrentSymbols()
-      let mapInfo = await this.props.openMap({ ...item })
-      if (mapInfo) {
+        // 如果是模板地图，则加载模板
         if (mapInfo.Template) {
           this.setLoading(true, ConstInfo.TEMPLATE_READING)
           let templatePath = await FileTools.appendingHomeDirectory(
@@ -847,16 +834,19 @@ export default class MapView extends React.Component {
           )
           await this.props.getSymbolTemplates({
             path: templatePath,
-            name: item.name,
+            name: data.name,
           })
         } else {
           await this.props.setTemplate()
         }
+        // 加载图层
+        await this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
+        this.setVisible(false)
       }
-      this.setLoading(false)
     } catch (e) {
-      Toast.show(ConstInfo.CHANGE_MAP_FAILED)
-      this.setLoading(false)
+      this.container.setLoading(false)
     }
   }
 

@@ -24,6 +24,22 @@ export default class AboutITablet extends Component {
   }
 
   render() {
+    let marginLeft = {
+      position: 'absolute',
+      left: 0.0417 * this.props.device.width,
+    }
+    let marginRight = {
+      position: 'absolute',
+      right: 0.0417 * this.props.device.width,
+    }
+    let footerBottom = {
+      position: 'absolute',
+      bottom: 0.1355 * this.props.device.height,
+    }
+    let informationBottom = {
+      position: 'absolute',
+      bottom: 0.0852 * this.props.device.height,
+    }
     let iTablet = require('../../../../assets/home/Frenchgrey/icon_about_iTablet.png')
     return (
       <Container
@@ -33,15 +49,42 @@ export default class AboutITablet extends Component {
         }}
         style={styles.container}
       >
-        <View style={styles.header}>
+        <View
+          style={[
+            styles.header,
+            { marginTop: 0.0648 * this.props.device.height },
+          ]}
+        >
           <Image style={styles.iTablet} source={iTablet} />
-          <Text style={styles.headerTitle}>SuperMap iTablet</Text>
+          <Text
+            style={[
+              styles.headerTitle,
+              { marginTop: 0.0231 * this.props.device.height },
+            ]}
+          >
+            SuperMap iTablet
+          </Text>
           <Text style={styles.version}>v 2.0</Text>
         </View>
-        <View style={styles.contentView}>
-          <TouchableOpacity style={styles.support}>
-            <Text style={styles.supportTitle}>技术支持与服务</Text>
-            <Text style={styles.phone}>400-8900-866</Text>
+        <View
+          style={[
+            styles.contentView,
+            {
+              width: this.props.device.width,
+              marginTop: 0.0528 * this.props.device.height,
+            },
+          ]}
+        >
+          <TouchableOpacity
+            style={[
+              styles.support,
+              { height: 0.06 * this.props.device.height },
+            ]}
+          >
+            <Text style={[styles.supportTitle, marginLeft]}>
+              技术支持与服务
+            </Text>
+            <Text style={[styles.phone, marginRight]}>400-8900-866</Text>
           </TouchableOpacity>
           <View
             style={[
@@ -52,26 +95,39 @@ export default class AboutITablet extends Component {
               },
             ]}
           />
-          <TouchableOpacity style={styles.consult}>
-            <Text style={styles.consultTitle}>销售咨询</Text>
-            <Text style={styles.phone}>01059896655转6156</Text>
+          <TouchableOpacity
+            style={[
+              styles.consult,
+              { height: 0.06 * this.props.device.height },
+            ]}
+          >
+            <Text style={[styles.consultTitle, marginLeft]}>销售咨询</Text>
+            <Text style={[styles.phone, marginRight]}>01059896655转6156</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.footerView}>
-          <TouchableOpacity style={styles.offcial} onPress={this.offcial}>
+        <View style={[styles.footerView, footerBottom]}>
+          <TouchableOpacity style={[styles.offcial]} onPress={this.offcial}>
             {/* <Text
               style={[styles.footerItem, { position: 'absolute', right: 0 }]}
             >
               官网
             </Text> */}
-            <Text style={[styles.footerItem]}>官网</Text>
+            <Text style={styles.footerItem}>进入官网</Text>
           </TouchableOpacity>
-          <View style={styles.cloumSeparator} />
-          <TouchableOpacity style={styles.protocol} onPress={this.Protocol}>
+          <View
+            style={[
+              styles.cloumSeparator,
+              {
+                marginLeft: 0.0347 * this.props.device.width,
+                marginRight: 0.0347 * this.props.device.width,
+              },
+            ]}
+          />
+          <TouchableOpacity style={[styles.protocol]} onPress={this.Protocol}>
             <Text style={styles.footerItem}>服务协议</Text>
           </TouchableOpacity>
         </View>
-        <View style={styles.informationView}>
+        <View style={[styles.informationView, informationBottom]}>
           <Text style={styles.information}>
             Copyright 1997-2019 SuperMap Software Co.,Ltd.All rights reserved
           </Text>

@@ -141,7 +141,7 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
   for (let index = 0; index < result.length; index++) {
     const element = result[index]
     let item = { ...element, isShow: true }
-    if (item.name === 'bingmap') {
+    if (item.type === 'IMAGEFILE') {
       basemaplist.push(item)
     } else if (item.name === 'NodeAnimation') {
       ablelist.push(item)

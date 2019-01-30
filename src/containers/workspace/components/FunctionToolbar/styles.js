@@ -18,15 +18,22 @@ export default StyleSheet.create({
   separator: {
     marginTop: scaleSize(10),
   },
+  btnView: {
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
   btn: {
     paddingHorizontal: scaleSize(5),
     paddingBottom: scaleSize(10),
   },
   progress: {
     // width: scaleSize(18),
-    // height: scaleSize(18),
-    position: 'absolute',
-    right: scaleSize(4),
-    top: scaleSize(4),
+    height: 2,
+    // position: 'absolute',
+    // right: scaleSize(0),
+    // left: scaleSize(0),
+    // top: scaleSize(4),
+    bottom: scaleSize(4),
+    borderWidth: 0,
   },
 })

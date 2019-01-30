@@ -144,6 +144,7 @@ class SymbolTabs extends React.Component {
       <ScrollableTabView
         ref={ref => (this.scrollTab = ref)}
         style={[styles.container, this.props.style]}
+        initialPage={1}
         renderTabBar={() => (
           <DefaultTabBar
             activeBackgroundColor={color.bgW}
@@ -192,6 +193,7 @@ class SymbolTabs extends React.Component {
       <ScrollableTabView
         ref={ref => (this.scrollTab = ref)}
         style={[styles.container, this.props.style]}
+        initialPage={1}
         renderTabBar={() => (
           <DefaultTabBar
             activeBackgroundColor={color.bgW}

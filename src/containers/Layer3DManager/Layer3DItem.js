@@ -21,6 +21,7 @@ export default class Layer3DItem extends Component {
       name: props.item.name,
       visible: props.item.visible,
       selectable: props.item.selectable,
+      type: props.item.type,
     }
   }
 
@@ -51,10 +52,20 @@ export default class Layer3DItem extends Component {
       ? this.props.getOverlayView()
       : null
     if (layer3dToolbar) {
-      layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DSELECT, {
-        isFullScreen: true,
-        height: scaleSize(245),
-      })
+      switch (this.state.type) {
+        case 'IMAGEFILE':
+          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DCHANGE, {
+            isFullScreen: true,
+            height: scaleSize(87),
+          })
+          break
+        default:
+          layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DSELECT, {
+            isFullScreen: true,
+            height: scaleSize(261),
+          })
+          break
+      }
       overlayView.setVisible(true)
       layer3dToolbar.getLayer3dItem(
         this.state,

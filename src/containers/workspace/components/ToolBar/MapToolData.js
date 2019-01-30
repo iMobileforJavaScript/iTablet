@@ -153,11 +153,11 @@ function getMapTool(type, params) {
         //   image: require('../../../../assets/mapTools/icon_words.png'),
         // },
         {
-          key: constants.CANCEL,
-          title: constants.CANCEL,
+          key: constants.CANCEL_SELECT,
+          title: constants.CANCEL_SELECT,
           action: select,
           size: 'large',
-          image: require('../../../../assets/mapEdit/cancel_black.png'),
+          image: require('../../../../assets/mapTools/icon_cancel_1.png'),
         },
       ]
       buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.SHOW_ATTRIBUTE]

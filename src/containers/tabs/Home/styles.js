@@ -80,7 +80,7 @@ export default StyleSheet.create({
   dialogHeaderImg: {
     width: scaleSize(60),
     height: scaleSize(60),
-    opacity: 0.85,
+    opacity: 1,
     // marginLeft:scaleSize(145),
     // marginTop:scaleSize(21),
   },
