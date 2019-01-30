@@ -2808,9 +2808,10 @@ export default class ToolBar extends React.PureComponent {
               1,
             )
 
-            if (GLOBAL.Type === constants.COLLECTION) {
-              this.mapMoveToCurrent()
-            }
+            // if (GLOBAL.Type === constants.COLLECTION) {
+            //
+            // }
+            this.mapMoveToCurrent()
 
             await this.props.getLayers()
 
@@ -2951,6 +2952,7 @@ export default class ToolBar extends React.PureComponent {
                   type: -1,
                   currentLayerIndex: 0,
                 })
+                this.mapMoveToCurrent()
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
                 this.props.getSymbolTemplates(null, () => {
                   this.setVisible(false)
