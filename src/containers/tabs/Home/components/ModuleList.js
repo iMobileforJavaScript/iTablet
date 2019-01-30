@@ -259,13 +259,8 @@ export default class ModuleList extends Component {
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
         : 'Customer'
-      let toPath =
-        homePath +
-        ConstPath.UserPath +
-        currentUserName +
-        '/' +
-        ConstPath.RelativePath.ExternalData +
-        fileName
+      // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
+      let toPath = homePath + ConstPath.CachePath + fileName
 
       let cachePath = homePath + ConstPath.CachePath
       let fileDirPath = cachePath + fileName
