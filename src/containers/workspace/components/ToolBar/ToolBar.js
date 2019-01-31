@@ -1782,7 +1782,10 @@ export default class ToolBar extends React.PureComponent {
       }
       GLOBAL.currentToolbarType = ''
       let actionType = Action.PAN
-      if (type === ConstToolType.MAP_ADD_DATASET) {
+      if (
+        type === ConstToolType.MAP_ADD_DATASET ||
+        type === ConstToolType.MAP_THEME_ADD_DATASET
+      ) {
         this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
         })
