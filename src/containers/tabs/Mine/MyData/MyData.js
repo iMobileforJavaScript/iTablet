@@ -697,12 +697,25 @@ export default class MyLocalData extends Component {
           ]
         }
       } else {
-        data = [
-          {
-            title: '删除数据',
-            action: this._onDeleteData,
-          },
-        ]
+        if (this.state.sectionData[0].title.indexOf('地图') !== -1) {
+          data = [
+            {
+              title: '导出数据',
+              action: this._exportData,
+            },
+            {
+              title: '删除数据',
+              action: this._onDeleteData,
+            },
+          ]
+        } else {
+          data = [
+            {
+              title: '删除数据',
+              action: this._onDeleteData,
+            },
+          ]
+        }
       }
       return (
         <MyDataPopupModal

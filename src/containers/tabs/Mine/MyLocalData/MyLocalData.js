@@ -638,6 +638,7 @@ export default class MyLocalData extends Component {
 
   _onDeleteData = async () => {
     try {
+      this._closeModal()
       this.setLoading(true, '删除数据中...')
       if (this.itemInfo !== undefined) {
         let directory = this.itemInfo.item.directory
@@ -666,8 +667,6 @@ export default class MyLocalData extends Component {
             }
           }
           this.setState({ sectionData: sectionData, modalIsVisible: false })
-        } else {
-          this._closeModal()
         }
       }
     } catch (e) {
@@ -680,6 +679,7 @@ export default class MyLocalData extends Component {
 
   _onImportWorkspace = async () => {
     try {
+      this._closeModal()
       if (this.itemInfo !== undefined) {
         this.setLoading(true, ConstInfo.DATA_IMPORTING)
         let filePath = this.itemInfo.item.filePath
@@ -700,7 +700,6 @@ export default class MyLocalData extends Component {
           }
         }
         this.setLoading(false)
-        this._closeModal()
       }
     } catch (e) {
       this.setLoading(false)

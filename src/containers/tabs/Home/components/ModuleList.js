@@ -125,7 +125,6 @@ export default class ModuleList extends Component {
     this.state = {
       isShowProgressView: false,
     }
-    this.testCount = 1
     this.moduleItems = []
   }
 
@@ -289,6 +288,11 @@ export default class ModuleList extends Component {
         if (arrFilePath.length === 0) {
           await this.props.importWorkspace(fileDirPath, toPath, true)
         }
+        // let filePath =  homePath + ConstPath.UserPath + currentUserName +'/Data/Map/'+fileName+'.xml'
+        // let isExist = await FileTools.fileIsExist(filePath)
+        // if(!isExist){
+        //   await this.props.importWorkspace(fileDirPath, toPath, true)
+        // }
         this.moduleItems[index].setNewState({
           disabled: false,
           isShowProgressView: false,
