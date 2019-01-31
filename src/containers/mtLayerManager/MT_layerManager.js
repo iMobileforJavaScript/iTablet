@@ -23,6 +23,7 @@ import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType, MAP_MODULE } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
+import ConstOnline from '../../constants/ConstOnline'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -37,6 +38,7 @@ export default class MT_layerManager extends React.Component {
     getLayers: () => {},
     closeMap: () => {},
     device: Object,
+    currentLayer: Object,
   }
 
   constructor(props) {
@@ -47,11 +49,19 @@ export default class MT_layerManager extends React.Component {
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
-      selectLayer: '',
+      selectLayer: this.props.currentLayer.caption,
     }
   }
 
   componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.currentLayer) !==
+      JSON.stringify(this.props.currentLayer)
+    ) {
+      this.setState({
+        selectLayer: this.props.currentLayer.caption,
+      })
+    }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
@@ -78,6 +88,34 @@ export default class MT_layerManager extends React.Component {
   }
 
   componentDidMount() {
+    if (
+      this.props.layers[this.props.layers.length - 1] !==
+        'roadmap@GoogleMaps' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'satellite@GoogleMaps' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'terrain@GoogleMaps' &&
+      this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
+      this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
+      this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
+      this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'TrafficMap@BaiduMap' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'Standard@OpenStreetMaps' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'CycleMap@OpenStreetMaps' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'TransportMap@OpenStreetMaps' &&
+      this.props.layers[this.props.layers.length - 1] !==
+        'quanguo@SuperMapCloud'
+    ) {
+      (async function() {
+        await SMap.openDatasource(ConstOnline.Google.DSParams, 3, false, false)
+        await this.props.getLayers()
+      }.bind(this)())
+    }
+
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     // this.setRefreshing(true)
@@ -92,6 +130,7 @@ export default class MT_layerManager extends React.Component {
         },
         // { title: '切换底图', data: layerManagerData, visible: true },
       ],
+      selectLayer: this.props.currentLayer.caption,
     })
   }
 
