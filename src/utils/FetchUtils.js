@@ -8,7 +8,7 @@ export default class FetchUtils {
     try {
       if (!timeout) {
         return new Promise(resolve => {
-          fetch(url)
+          fetch(url, {})
             .then(response => response.json())
             .then(result => {
               resolve(result)

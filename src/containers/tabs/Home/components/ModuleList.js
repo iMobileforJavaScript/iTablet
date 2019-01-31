@@ -194,9 +194,9 @@ export default class ModuleList extends Component {
         .then(async result => {
           if (result.statusCode === 200) {
             await FileTools.unZipFile(fileCachePath, cachePath)
-
+            let arrFile = await FileTools.getFilterFiles(fileDirPath)
             await this.props.importWorkspace(
-              fileDirPath,
+              arrFile[0].filePath,
               downloadData.copyFilePath,
             )
             ref.setNewState({ isShowProgressView: false, disabled: false })
