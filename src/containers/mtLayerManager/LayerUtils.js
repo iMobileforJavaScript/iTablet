@@ -3,18 +3,18 @@ import { SMap } from 'imobile_for_reactnative'
 
 function isBaseLayer(name) {
   if (
-    name === 'roadmap@GoogleMaps' ||
-    name === 'satellite@GoogleMaps' ||
-    name === 'terrain@GoogleMaps' ||
-    name === 'hybrid@GoogleMaps' ||
-    name === 'vec@TD' ||
-    name === 'cva@TDWZ' ||
-    name === 'img@TDYXM' ||
-    name === 'TrafficMap@BaiduMap' ||
-    name === 'Standard@OpenStreetMaps' ||
-    name === 'CycleMap@OpenStreetMaps' ||
-    name === 'TransportMap@OpenStreetMaps' ||
-    name === 'quanguo@SuperMapCloud'
+    name.indexOf('roadmap@GoogleMaps') >= 0 ||
+    name.indexOf('satellite@GoogleMaps') >= 0 ||
+    name.indexOf('terrain@GoogleMaps') >= 0 ||
+    name.indexOf('hybrid@GoogleMaps') >= 0 ||
+    name.indexOf('vec@TD') >= 0 ||
+    name.indexOf('cva@TDWZ') >= 0 ||
+    name.indexOf('img@TDYXM') >= 0 ||
+    name.indexOf('TrafficMap@BaiduMap') >= 0 ||
+    name.indexOf('Standard@OpenStreetMaps') >= 0 ||
+    name.indexOf('CycleMap@OpenStreetMaps') >= 0 ||
+    name.indexOf('TransportMap@OpenStreetMaps') >= 0 ||
+    name.indexOf('quanguo@SuperMapCloud') >= 0
   ) {
     return true
   }
@@ -26,18 +26,18 @@ function getBaseLayers(layers = []) {
   for (let i = 0; i < layers.length; i++) {
     let name = layers[i].name
     if (
-      name === 'roadmap@GoogleMaps' ||
-      name === 'satellite@GoogleMaps' ||
-      name === 'terrain@GoogleMaps' ||
-      name === 'hybrid@GoogleMaps' ||
-      name === 'vec@TD' ||
-      name === 'cva@TDWZ' ||
-      name === 'img@TDYXM' ||
-      name === 'TrafficMap@BaiduMap' ||
-      name === 'Standard@OpenStreetMaps' ||
-      name === 'CycleMap@OpenStreetMaps' ||
-      name === 'TransportMap@OpenStreetMaps' ||
-      name === 'quanguo@SuperMapCloud'
+      name.indexOf('roadmap@GoogleMaps') >= 0 ||
+      name.indexOf('satellite@GoogleMaps') >= 0 ||
+      name.indexOf('terrain@GoogleMaps') >= 0 ||
+      name.indexOf('hybrid@GoogleMaps') >= 0 ||
+      name.indexOf('vec@TD') >= 0 ||
+      name.indexOf('cva@TDWZ') >= 0 ||
+      name.indexOf('img@TDYXM') >= 0 ||
+      name.indexOf('TrafficMap@BaiduMap') >= 0 ||
+      name.indexOf('Standard@OpenStreetMaps') >= 0 ||
+      name.indexOf('CycleMap@OpenStreetMaps') >= 0 ||
+      name.indexOf('TransportMap@OpenStreetMaps') >= 0 ||
+      name.indexOf('quanguo@SuperMapCloud') >= 0
     ) {
       arr.push(layers[i])
     }

@@ -86,6 +86,7 @@ export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
       } || {},
   })
   cb && cb(layers)
+  return layers
 }
 
 export const getAttributes = (layerPath, cb = () => {}) => async (

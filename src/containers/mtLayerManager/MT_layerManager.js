@@ -24,6 +24,7 @@ import { ConstToolType, MAP_MODULE } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
+import * as LayerUtils from './LayerUtils'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -54,84 +55,144 @@ export default class MT_layerManager extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    let newState = {}
     if (
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
     ) {
-      this.setState({
-        selectLayer: this.props.currentLayer.caption,
-      })
+      newState.selectLayer = this.props.currentLayer.caption
+      // this.setState({
+      //   selectLayer: this.props.currentLayer.caption,
+      // })
     }
+    // if (
+    //   this.props.layers.length > 0 &&
+    //   !LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].caption)
+    //
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'roadmap@GoogleMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'satellite@GoogleMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'terrain@GoogleMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
+    // // this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
+    // // this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'TrafficMap@BaiduMap' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'Standard@OpenStreetMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'CycleMap@OpenStreetMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'TransportMap@OpenStreetMaps' &&
+    // // this.props.layers[this.props.layers.length - 1] !==
+    // //   'quanguo@SuperMapCloud'
+    //
+    // ) {
+    //   (async function() {
+    //     await SMap.openDatasource(
+    //       ConstOnline.Google.DSParams,
+    //       GLOBAL.Type === constants.COLLECTION ? 1 : ConstOnline.Google.layerIndex,
+    //       false, false)
+    //     await this.props.getLayers()
+    //   }.bind(this)())
+    // }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
-      this.setState({
-        data: [
-          {
-            title: '我的图层',
-            data: this.props.layers,
-            visible: true,
-          },
-          {
-            title: '我的底图',
-            data: [this.props.layers[this.props.layers.length - 1]],
-            visible: true,
-          },
-          // {
-          //   title: '切换底图',
-          //   data: layerManagerData,
-          //   visible: true,
-          // },
-        ],
-      })
+      let baseData = []
+      if (
+        this.props.layers.length > 0 &&
+        LayerUtils.isBaseLayer(
+          this.props.layers[this.props.layers.length - 1].name,
+        )
+      ) {
+        baseData = [this.props.layers[this.props.layers.length - 1]]
+      }
+      newState.data = [
+        {
+          title: '我的图层',
+          data: this.props.layers,
+          visible: true,
+        },
+        {
+          title: '我的底图',
+          data: baseData,
+          visible: true,
+        },
+        // {
+        //   title: '切换底图',
+        //   data: layerManagerData,
+        //   visible: true,
+        // },
+      ]
+      // this.setState({
+      //   data: [
+      //     {
+      //       title: '我的图层',
+      //       data: this.props.layers,
+      //       visible: true,
+      //     },
+      //     {
+      //       title: '我的底图',
+      //       data: baseData,
+      //       visible: true,
+      //     },
+      //     // {
+      //     //   title: '切换底图',
+      //     //   data: layerManagerData,
+      //     //   visible: true,
+      //     // },
+      //   ],
+      // })
+    }
+
+    if (Object.keys(newState).length > 0) {
+
+      this.setState(newState)
     }
   }
 
   componentDidMount() {
-    if (
-      this.props.layers[this.props.layers.length - 1] !==
-        'roadmap@GoogleMaps' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'satellite@GoogleMaps' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'terrain@GoogleMaps' &&
-      this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
-      this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
-      this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
-      this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'TrafficMap@BaiduMap' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'Standard@OpenStreetMaps' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'CycleMap@OpenStreetMaps' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'TransportMap@OpenStreetMaps' &&
-      this.props.layers[this.props.layers.length - 1] !==
-        'quanguo@SuperMapCloud'
-    ) {
-      (async function() {
-        await SMap.openDatasource(ConstOnline.Google.DSParams, 3, false, false)
-        await this.props.getLayers()
-      }.bind(this)())
-    }
-
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
-    // this.setRefreshing(true)
-    this.getData()
-    this.setState({
-      data: [
-        { title: '我的图层', data: this.props.layers, visible: true },
-        {
-          title: '我的底图',
-          data: [this.props.layers[this.props.layers.length - 1]],
-          visible: true,
-        },
-        // { title: '切换底图', data: layerManagerData, visible: true },
-      ],
-      selectLayer: this.props.currentLayer.caption,
-    })
+    ;(async function() {
+      // if (
+      //   this.props.layers.length > 0 &&
+      //     !LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].name)
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'roadmap@GoogleMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'satellite@GoogleMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'terrain@GoogleMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
+      // // this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
+      // // this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'TrafficMap@BaiduMap' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'Standard@OpenStreetMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'CycleMap@OpenStreetMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'TransportMap@OpenStreetMaps' &&
+      // // this.props.layers[this.props.layers.length - 1] !==
+      // //   'quanguo@SuperMapCloud'
+      // ) {
+      //   await SMap.openDatasource(
+      //     ConstOnline.Google.DSParams,
+      //     GLOBAL.Type === constants.COLLECTION ? 1 : ConstOnline.Google.layerIndex,
+      //     false, false)
+      //   // await this.props.getLayers()
+      // }
+
+      // this.setRefreshing(true)
+      this.getData()
+    }.bind(this)())
   }
 
   componentWillUnmount() {
@@ -151,7 +212,7 @@ export default class MT_layerManager extends React.Component {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
-      await this.props.getLayers()
+      let layers = await this.props.getLayers()
       // this.map = await this.mapControl.getMap()
       // let layerNameArr = await this.map.getLayersByType()
       // let layerNameArr = await SMap.getLayersByType()
@@ -162,12 +223,43 @@ export default class MT_layerManager extends React.Component {
       //   }
       // }
       await SMap.setAction(Action.SELECT)
-      // let mapName = await this.map.getName()
 
+      if (
+        layers.length > 0 &&
+        !LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+      ) {
+        await SMap.openDatasource(
+          ConstOnline.Google.DSParams,
+          GLOBAL.Type === constants.COLLECTION
+            ? 1
+            : ConstOnline.Google.layerIndex,
+          false,
+          false,
+        )
+        layers = await this.props.getLayers()
+      }
+
+      let baseMap = []
+      if (
+        layers.length > 0 &&
+        LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+      ) {
+        baseMap = [layers[layers.length - 1]]
+      }
       this.setState({
-        // datasourceList: layerNameArr.concat(),
+        data: [
+          { title: '我的图层', data: layers, visible: true },
+          {
+            title: '我的底图',
+            data: baseMap,
+            visible: true,
+          },
+          // { title: '切换底图', data: layerManagerData, visible: true },
+        ],
+        selectLayer: this.props.currentLayer.caption,
         refreshing: false,
       })
+      // let mapName = await this.map.getName()
     } catch (e) {
       this.setRefreshing(false)
     }
@@ -658,22 +750,23 @@ export default class MT_layerManager extends React.Component {
         if (section.title === '我的图层') {
           action = this.onToolPress
           if (
-            this.props.layers.length > 1 &&
+            this.props.layers.length > 0 &&
             item.name === this.props.layers[this.props.layers.length - 1].name
           ) {
             if (
-              item.name === 'roadmap@GoogleMaps' ||
-              item.name === 'satellite@GoogleMaps' ||
-              item.name === 'terrain@GoogleMaps' ||
-              item.name === 'hybrid@GoogleMaps' ||
-              item.name === 'vec@TD' ||
-              item.name === 'cva@TDWZ' ||
-              item.name === 'img@TDYXM' ||
-              item.name === 'TrafficMap@BaiduMap' ||
-              item.name === 'Standard@OpenStreetMaps' ||
-              item.name === 'CycleMap@OpenStreetMaps' ||
-              item.name === 'TransportMap@OpenStreetMaps' ||
-              item.name === 'quanguo@SuperMapCloud'
+              LayerUtils.isBaseLayer(item.name)
+              // item.name === 'roadmap@GoogleMaps' ||
+              // item.name === 'satellite@GoogleMaps' ||
+              // item.name === 'terrain@GoogleMaps' ||
+              // item.name === 'hybrid@GoogleMaps' ||
+              // item.name === 'vec@TD' ||
+              // item.name === 'cva@TDWZ' ||
+              // item.name === 'img@TDYXM' ||
+              // item.name === 'TrafficMap@BaiduMap' ||
+              // item.name === 'Standard@OpenStreetMaps' ||
+              // item.name === 'CycleMap@OpenStreetMaps' ||
+              // item.name === 'TransportMap@OpenStreetMaps' ||
+              // item.name === 'quanguo@SuperMapCloud'
             )
               return true
           }
@@ -682,36 +775,38 @@ export default class MT_layerManager extends React.Component {
             item.name === this.props.layers[this.props.layers.length - 2].name
           ) {
             if (
-              item.name === 'roadmap@GoogleMaps' ||
-              item.name === 'satellite@GoogleMaps' ||
-              item.name === 'terrain@GoogleMaps' ||
-              item.name === 'hybrid@GoogleMaps' ||
-              item.name === 'vec@TD' ||
-              item.name === 'cva@TDWZ' ||
-              item.name === 'img@TDYXM' ||
-              item.name === 'TrafficMap@BaiduMap' ||
-              item.name === 'Standard@OpenStreetMaps' ||
-              item.name === 'CycleMap@OpenStreetMaps' ||
-              item.name === 'TransportMap@OpenStreetMaps' ||
-              item.name === 'quanguo@SuperMapCloud'
+              LayerUtils.isBaseLayer(item.name)
+              // item.name === 'roadmap@GoogleMaps' ||
+              // item.name === 'satellite@GoogleMaps' ||
+              // item.name === 'terrain@GoogleMaps' ||
+              // item.name === 'hybrid@GoogleMaps' ||
+              // item.name === 'vec@TD' ||
+              // item.name === 'cva@TDWZ' ||
+              // item.name === 'img@TDYXM' ||
+              // item.name === 'TrafficMap@BaiduMap' ||
+              // item.name === 'Standard@OpenStreetMaps' ||
+              // item.name === 'CycleMap@OpenStreetMaps' ||
+              // item.name === 'TransportMap@OpenStreetMaps' ||
+              // item.name === 'quanguo@SuperMapCloud'
             )
               return true
           }
         } else {
           action = this.onToolBasePress
           if (
-            item.name !== 'roadmap@GoogleMaps' &&
-            item.name !== 'satellite@GoogleMaps' &&
-            item.name !== 'terrain@GoogleMaps' &&
-            item.name !== 'hybrid@GoogleMaps' &&
-            item.name !== 'vec@TD' &&
-            item.name !== 'cva@TDWZ' &&
-            item.name !== 'img@TDYXM' &&
-            item.name !== 'TrafficMap@BaiduMap' &&
-            item.name !== 'Standard@OpenStreetMaps' &&
-            item.name !== 'CycleMap@OpenStreetMaps' &&
-            item.name !== 'TransportMap@OpenStreetMaps' &&
-            item.name !== 'quanguo@SuperMapCloud'
+            !LayerUtils.isBaseLayer(item.name)
+            // item.name !== 'roadmap@GoogleMaps' &&
+            // item.name !== 'satellite@GoogleMaps' &&
+            // item.name !== 'terrain@GoogleMaps' &&
+            // item.name !== 'hybrid@GoogleMaps' &&
+            // item.name !== 'vec@TD' &&
+            // item.name !== 'cva@TDWZ' &&
+            // item.name !== 'img@TDYXM' &&
+            // item.name !== 'TrafficMap@BaiduMap' &&
+            // item.name !== 'Standard@OpenStreetMaps' &&
+            // item.name !== 'CycleMap@OpenStreetMaps' &&
+            // item.name !== 'TransportMap@OpenStreetMaps' &&
+            // item.name !== 'quanguo@SuperMapCloud'
           )
             return true
         }

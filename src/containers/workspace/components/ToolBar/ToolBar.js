@@ -2950,14 +2950,18 @@ export default class ToolBar extends React.PureComponent {
                 await this.props.getLayers(-1, async layers => {
                   this.props.setCurrentLayer(layers.length > 0 && layers[0])
 
-                  await LayerUtils.addBaseMap(
-                    layers,
-                    ConstOnline['Google'],
-                    GLOBAL.Type === constants.COLLECTION
-                      ? 1
-                      : ConstOnline['Google'].layerIndex,
-                    false,
-                  )
+                  if (
+                    !LayerUtils.isBaseLayer(layers[layers.length - 1].caption)
+                  ) {
+                    await LayerUtils.addBaseMap(
+                      layers,
+                      ConstOnline['Google'],
+                      GLOBAL.Type === constants.COLLECTION
+                        ? 1
+                        : ConstOnline['Google'].layerIndex,
+                      false,
+                    )
+                  }
 
                   // // 若没有底图，默认添加地图
                   // if (LayerUtils.getBaseLayers(layers).length > 0) {
@@ -3039,14 +3043,16 @@ export default class ToolBar extends React.PureComponent {
           //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
           //       ? 1 : ConstOnline['Google'].layerIndex, false)
           // }
-          await LayerUtils.addBaseMap(
-            layers,
-            ConstOnline['Google'],
-            GLOBAL.Type === constants.COLLECTION
-              ? 1
-              : ConstOnline['Google'].layerIndex,
-            false,
-          )
+          if (!LayerUtils.isBaseLayer(layers[layers.length - 1].caption)) {
+            await LayerUtils.addBaseMap(
+              layers,
+              ConstOnline['Google'],
+              GLOBAL.Type === constants.COLLECTION
+                ? 1
+                : ConstOnline['Google'].layerIndex,
+              false,
+            )
+          }
         })
 
         this.props.setContainerLoading(false)
