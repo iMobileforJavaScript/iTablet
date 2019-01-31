@@ -273,7 +273,7 @@ class AppRoot extends Component {
       //   .then(result => {
       //   this.setSaveMapViewLoading(false)
       //   Toast.show(
-      //     result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+      //     result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.SAVE_MAP_FAILED,
       //   )
       //   cb && cb()
       // }, () => {
@@ -282,7 +282,7 @@ class AppRoot extends Component {
       if (result) {
         this.setSaveMapViewLoading(false)
         Toast.show(
-          result ? ConstInfo.CLOSE_MAP_SUCCESS : ConstInfo.CLOSE_MAP_FAILED,
+          result ? ConstInfo.SAVE_MAP_SUCCESS : ConstInfo.SAVE_MAP_FAILED,
         )
         cb && cb()
       } else {
