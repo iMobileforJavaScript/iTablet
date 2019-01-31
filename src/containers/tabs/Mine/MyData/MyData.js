@@ -642,13 +642,16 @@ export default class MyLocalData extends Component {
       '/' +
       mapName +
       '.smwu'
-    this.props.exportWorkspace({ maps: [mapName], outPath: path }, result => {
-      if (result === true) {
-        Toast.show('导出成功')
-      } else {
-        Toast.show('导出失败')
-      }
-    })
+    this.props.exportWorkspace(
+      { maps: [mapName], outPath: path, isOpenMap: true },
+      result => {
+        if (result === true) {
+          Toast.show('导出成功')
+        } else {
+          Toast.show('导出失败')
+        }
+      },
+    )
   }
 
   getUploadingData = () => {
