@@ -12,14 +12,13 @@ const Module = {
   MapTheme,
 }
 
+// 该目录下的数据会被创建在 '/iTablet/'下，不要轻易加
 const RelativePath = {
   // 对应用户中的相对路径
   Environment: 'Environment/',
   License: 'License/',
   Log: 'Log/',
-  ExportData: 'ExportData/',
   ExternalData: 'ExternalData/',
-  ExternalData2: 'ExternalData',
   Data: Data,
   Datasource: Data + 'Datasource/',
   Scene: Data + 'Scene/',
@@ -32,6 +31,8 @@ const RelativePath = {
 }
 
 const RelativeFilePath = {
+  ExportData: 'ExportData/',
+  ExternalData: 'ExternalData',
   WorkspaceFile: Workspace,
   // Workspace: Data + 'Workspace.smwu', // 工作空间
   DefaultData: DefaultData, // 默认数据文件夹目录
@@ -49,14 +50,14 @@ const RelativeFilePath = {
 export default {
   AppPath,
   // SampleDataPath: AppPath + 'data/sample/', // 存放示例数据
-  LocalDataPath: AppPath + 'data/local/', // 存放用户地图数据
+  // LocalDataPath: AppPath + 'data/local/', // 存放用户地图数据
   // UserPath: AppPath + '/user/', // 存放用户数据
   LicensePath: AppPath + 'license/', // 存放许可文件
-  Audio: AppPath + 'audio/', // 存放语音
+  // Audio: AppPath + 'audio/', // 存放语音
 
   CachePath: AppPath + 'Cache/',
   CachePath2: AppPath + 'Cache',
-  SampleDataPath: AppPath + '/SampleData/', // 存放示例数据
+  // SampleDataPath: AppPath + '/SampleData/', // 存放示例数据
   UserPath: AppPath + 'User/', // 存放用户数据
   UserPath2: AppPath + 'User', // 存放用户数据
   Common: AppPath + 'Common/', // 公共数据

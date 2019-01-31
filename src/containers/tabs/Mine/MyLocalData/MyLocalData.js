@@ -431,7 +431,7 @@ export default class MyLocalData extends Component {
       ConstPath.UserPath +
       this.state.userName +
       '/' +
-      ConstPath.RelativePath.ExternalData2
+      ConstPath.RelativeFilePath.ExternalData
     let newData = []
     await this._setFilterDatas(
       this.path,
@@ -455,7 +455,7 @@ export default class MyLocalData extends Component {
     this.path =
       this.homePath +
       ConstPath.CustomerPath +
-      ConstPath.RelativePath.ExternalData2
+      ConstPath.RelativeFilePath.ExternalData
     let newData = []
     await this._setFilterDatas(
       this.path,

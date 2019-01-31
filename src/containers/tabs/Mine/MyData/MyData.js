@@ -637,7 +637,7 @@ export default class MyLocalData extends Component {
       this.props.user.currentUser.userName +
       '/' +
       ConstPath.RelativePath.ExternalData +
-      ConstPath.RelativePath.ExportData +
+      ConstPath.RelativeFilePath.ExportData +
       mapName +
       '/' +
       mapName +

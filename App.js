@@ -26,14 +26,13 @@ import { setShow }  from './src/models/device'
 import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
 import { Loading } from './src/components'
-import { SaveView, constants } from './src/containers/workspace/components'
+import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
 import { ConstPath, ConstInfo, ConstToolType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
-import UserType from "./src/constants/UserType";
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
