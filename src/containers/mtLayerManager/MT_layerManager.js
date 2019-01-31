@@ -38,6 +38,7 @@ export default class MT_layerManager extends React.Component {
     getLayers: () => {},
     closeMap: () => {},
     device: Object,
+    currentLayer: Object,
   }
 
   constructor(props) {
@@ -48,11 +49,19 @@ export default class MT_layerManager extends React.Component {
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
-      selectLayer: '',
+      selectLayer: this.props.currentLayer.caption,
     }
   }
 
   componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.currentLayer) !==
+      JSON.stringify(this.props.currentLayer)
+    ) {
+      this.setState({
+        selectLayer: this.props.currentLayer.caption,
+      })
+    }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
@@ -121,6 +130,7 @@ export default class MT_layerManager extends React.Component {
         },
         // { title: '切换底图', data: layerManagerData, visible: true },
       ],
+      selectLayer: this.props.currentLayer.caption,
     })
   }
 
