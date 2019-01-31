@@ -638,7 +638,10 @@ export default class MyLocalData extends Component {
       '/' +
       ConstPath.RelativePath.ExternalData +
       ConstPath.RelativePath.ExportData +
-      mapName
+      mapName +
+      '/' +
+      mapName +
+      '.smwu'
     this.props.exportWorkspace({ maps: [mapName], outPath: path }, result => {
       if (result === true) {
         Toast.show('导出成功')
