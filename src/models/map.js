@@ -6,6 +6,7 @@ import { FileTools } from '../native'
 import { Toast } from '../utils'
 import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
+import UserType from '../constants/UserType'
 // import xml2js from 'react-native-xml2js'
 // let parser = new xml2js.Parser()
 // Constants
@@ -256,12 +257,24 @@ export const exportWorkspace = (params, cb = () => {}) => async (
     if (params.maps && params.maps.length > 0) {
       let fileReplace =
         params.fileReplace === undefined ? true : params.fileReplace
-      exportResult = await SMap.exportWorkspace(
-        params.maps,
-        path,
-        fileReplace,
-        params.extra,
-      )
+      if (params.isOpenMap) {
+        let isLogin =
+          getState().user.toJS().currentUser.userType !==
+          UserType.PROBATION_USER
+        exportResult = await SMap.exportWorkspaceByMap(
+          params.maps[0],
+          '',
+          isLogin,
+          path,
+        )
+      } else {
+        exportResult = await SMap.exportWorkspace(
+          params.maps,
+          path,
+          fileReplace,
+          params.extra,
+        )
+      }
     }
     // console.warn(exportResult)
     // 压缩工作空间
