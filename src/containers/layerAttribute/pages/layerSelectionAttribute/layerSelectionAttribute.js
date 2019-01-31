@@ -27,7 +27,7 @@ export default class layerSelectionAttribute extends React.Component {
     this.state = {
       dataSourceList: [],
       openList: {},
-      attribute: {},
+      attributes: {},
       tableTitle: [],
       // tableHead: ['名称', '属性值'],
       tableHead: [],
@@ -61,13 +61,13 @@ export default class layerSelectionAttribute extends React.Component {
     this.container.setLoading(true)
     ;(async function() {
       try {
-        let attribute = await SMap.getSelectionAttributeByLayer(
+        let attributes = await SMap.getSelectionAttributeByLayer(
           this.props.selection.layerInfo.path,
         )
-        if (attribute && attribute.length > 0) {
-          this.props.setCurrentAttribute(attribute[0])
+        if (attributes && attributes.length > 0) {
+          this.props.setCurrentAttribute(attributes[0])
           let tableHead = []
-          attribute[0].forEach(item => {
+          attributes[0].forEach(item => {
             if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
               tableHead.unshift(item.fieldInfo.caption)
             } else {
@@ -75,8 +75,8 @@ export default class layerSelectionAttribute extends React.Component {
             }
           })
           this.setState({
-            attribute: attribute,
-            // attribute: attribute,
+            attributes: attributes,
+            // attributes: attributes,
             tableHead: tableHead,
           })
         }
@@ -122,6 +122,38 @@ export default class layerSelectionAttribute extends React.Component {
     return <MapToolbar navigation={this.props.navigation} initIndex={2} />
   }
 
+  renderTable = () => {
+    if (!this.state.attributes || this.state.attributes.length === 0)
+      return null
+    if (this.state.attributes.length === 1) {
+      return (
+        <LayerAttributeTable
+          ref={ref => (this.table = ref)}
+          data={this.state.attributes[0]}
+          hasIndex={false}
+          tableTitle={this.state.attributes.head}
+          widthArr={[100, 100]}
+          tableHead={['名称', '属性值']}
+          refresh={this.getAttribute}
+        />
+      )
+    } else {
+      return (
+        <LayerAttributeTable
+          ref={ref => (this.table = ref)}
+          data={this.state.attributes}
+          tableHead={['名称', '属性值']}
+          refresh={this.getAttribute}
+          type={
+            this.state.attributes.length > 1
+              ? LayerAttributeTable.Type.EDIT_ATTRIBUTE
+              : LayerAttributeTable.Type.ATTRIBUTE
+          }
+        />
+      )
+    }
+  }
+
   render() {
     return (
       <Container
@@ -131,22 +163,21 @@ export default class layerSelectionAttribute extends React.Component {
           navigation: this.props.navigation,
         }}
       >
-        {/*<LayerAttributeTab*/}
-        {/*edit={this.edit}*/}
-        {/*btns={['edit']}*/}
-        {/*startAudio={() => {*/}
-        {/*GLOBAL.AudioBottomDialog.setVisible(true)*/}
-        {/*}}*/}
+        {/*{this.state.tableHead.length > 0 ? (*/}
+        {/*<LayerAttributeTable*/}
+        {/*ref={ref => (this.table = ref)}*/}
+        {/*data={this.state.attributes}*/}
+        {/*type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}*/}
+        {/*tableTitle={this.state.tableTitle}*/}
+        {/*tableHead={this.state.tableHead}*/}
+        {/*selectRow={this.selectRow}*/}
         {/*/>*/}
-        {this.state.tableHead.length > 0 ? (
-          <LayerAttributeTable
-            ref={ref => (this.table = ref)}
-            data={this.state.attribute}
-            type={LayerAttributeTable.Type.EDIT_ATTRIBUTE}
-            tableTitle={this.state.tableTitle}
-            tableHead={this.state.tableHead}
-            selectRow={this.selectRow}
-          />
+        {/*) : (*/}
+        {/*<View style={{ flex: 1 }} />*/}
+        {/*)}*/}
+
+        {this.state.attributes && this.state.attributes.length > 0 ? (
+          this.renderTable()
         ) : (
           <View style={{ flex: 1 }} />
         )}
