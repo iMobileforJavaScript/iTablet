@@ -31,6 +31,7 @@ import {
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
 import NavigationService from '../../../../containers/NavigationService'
+import * as LayerUtils from '../../../../containers/mtLayerManager/LayerUtils'
 import ToolbarData from './ToolbarData'
 import ToolbarHeight from './ToolBarHeight'
 import EditControlBar from './EditControlBar'
@@ -2934,24 +2935,40 @@ export default class ToolBar extends React.PureComponent {
                   } else {
                     await this.props.setTemplate()
                   }
-
-                  await this.props.getLayers(-1, layers => {
-                    this.props.setCurrentLayer(layers.length > 0 && layers[0])
-                  })
-                  this.props.setContainerLoading(false)
                   this.setVisible(false)
                 } else {
-                  this.props.getLayers(-1, layers => {
-                    this.props.setCurrentLayer(layers.length > 0 && layers[0])
-                  })
+                  // this.props.getLayers(-1, layers => {
+                  //   this.props.setCurrentLayer(layers.length > 0 && layers[0])
+                  // })
                   Toast.show(ConstInfo.MAP_ALREADY_OPENED)
-                  this.props.setContainerLoading(false)
+                  // this.props.setContainerLoading(false)
                 }
-                // 重新加载图层
-                this.props.getLayers({
-                  type: -1,
-                  currentLayerIndex: 0,
+
+                await this.props.getLayers(-1, async layers => {
+                  this.props.setCurrentLayer(layers.length > 0 && layers[0])
+
+                  await LayerUtils.addBaseMap(
+                    layers,
+                    ConstOnline['Google'],
+                    GLOBAL.Type === constants.COLLECTION
+                      ? 1
+                      : ConstOnline['Google'].layerIndex,
+                    false,
+                  )
+
+                  // // 若没有底图，默认添加地图
+                  // if (LayerUtils.getBaseLayers(layers).length > 0) {
+                  //   await SMap.openDatasource(
+                  //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
+                  //       ? 1 : ConstOnline['Google'].layerIndex, false)
+                  // }
                 })
+                this.props.setContainerLoading(false)
+                // // 重新加载图层
+                // this.props.getLayers({
+                //   type: -1,
+                //   currentLayerIndex: 0,
+                // })
                 this.mapMoveToCurrent()
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
                 this.props.getSymbolTemplates(null, () => {
@@ -3011,9 +3028,24 @@ export default class ToolBar extends React.PureComponent {
           await this.props.setTemplate()
         }
 
-        await this.props.getLayers(-1, layers => {
+        await this.props.getLayers(-1, async layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          // 若没有底图，默认添加地图
+          // if (LayerUtils.getBaseLayers(layers).length > 0) {
+          //   await SMap.openDatasource(
+          //     ConstOnline['Google'].DSParams, GLOBAL.Type === constants.COLLECTION
+          //       ? 1 : ConstOnline['Google'].layerIndex, false)
+          // }
+          await LayerUtils.addBaseMap(
+            layers,
+            ConstOnline['Google'],
+            GLOBAL.Type === constants.COLLECTION
+              ? 1
+              : ConstOnline['Google'].layerIndex,
+            false,
+          )
         })
+
         this.props.setContainerLoading(false)
         this.setVisible(false)
       } else {

@@ -619,6 +619,7 @@ export default class MT_layerManager extends React.Component {
         if (section.title === '我的图层') {
           action = this.onToolPress
           if (
+            this.props.layers.length > 1 &&
             item.name === this.props.layers[this.props.layers.length - 1].name
           ) {
             if (
