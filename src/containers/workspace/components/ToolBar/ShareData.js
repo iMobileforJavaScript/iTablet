@@ -290,7 +290,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
               Toast.show(
                 result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
               )
-              // FileTools.deleteFile(path)
+              FileTools.deleteFile(path)
               isSharing = false
             },
           })
