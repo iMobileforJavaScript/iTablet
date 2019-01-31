@@ -50,6 +50,13 @@ function getMapTool(type, params) {
           size: 'large',
           image: require('../../../../assets/mapTools/icon_free_point_select_black.png'),
         },
+        {
+          key: 'pointSelect',
+          title: '全幅',
+          action: viewEntire,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_full_screen.png'),
+        },
         // {
         //   key: 'boxSelect',
         //   title: '框选',
@@ -168,6 +175,10 @@ function getMapTool(type, params) {
 
 function select() {
   SMap.setAction(Action.SELECT)
+}
+
+function viewEntire() {
+  SMap.viewEntire()
 }
 
 function pointSelect() {

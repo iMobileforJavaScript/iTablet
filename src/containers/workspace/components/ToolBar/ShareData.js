@@ -2,7 +2,7 @@
  * 获取地图分享数据
  */
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
-import { ConstToolType, ConstInfo } from '../../../../constants'
+import { ConstToolType, ConstInfo, UserType } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import constants from '../../constants'
 import { FileTools } from '../../../../native'
@@ -217,7 +217,10 @@ function showSaveDialog(type) {
  */
 async function shareToSuperMapOnline(list = [], name = '') {
   try {
-    if (!_params.user.currentUser.userName) {
+    if (
+      !_params.user.currentUser.userName ||
+      _params.user.currentUser.userType === UserType.PROBATION_USER
+    ) {
       Toast.show('请登陆后再分享')
       return
     }

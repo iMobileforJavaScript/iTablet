@@ -273,7 +273,12 @@ export default class ModuleList extends Component {
           itemData: item,
           tmpCurrentUser: tmpCurrentUser,
         }
-        if (this.state.dialogCheck) {
+        // if (this.state.dialogCheck) {
+        if (
+          this.moduleItems &&
+          this.moduleItems[index] &&
+          this.moduleItems[index].getDialogCheck()
+        ) {
           item.action && item.action(tmpCurrentUser)
         } else if (this.downloading) {
           item.action && item.action(tmpCurrentUser)

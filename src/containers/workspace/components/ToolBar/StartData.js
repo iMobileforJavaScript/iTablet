@@ -400,12 +400,12 @@ function openMap() {
         }
         userList.push(item)
       })
-      data.push({
-        title: '我的地图',
-        image: require('../../../../assets/mapToolbar/list_type_maps.png'),
-        data: userFileList,
-      })
     }
+    data.push({
+      title: '我的地图',
+      image: require('../../../../assets/mapToolbar/list_type_maps.png'),
+      data: userFileList || [],
+    })
     _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
       containerType: 'list',
       height: ConstToolType.HEIGHT[3],

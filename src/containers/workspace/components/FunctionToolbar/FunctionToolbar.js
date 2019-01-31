@@ -220,7 +220,7 @@ export default class FunctionToolbar extends React.Component {
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[0]
             : ConstToolType.HEIGHT[2],
-        column: 4,
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
     }
   }
@@ -459,8 +459,11 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
-        column: 4,
-        height: ConstToolType.HEIGHT[0],
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.HEIGHT[0]
+            : ConstToolType.HEIGHT[2],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
         // this.props.device.orientation === 'LANDSCAPE'
         //   ? ConstToolType.HEIGHT[2]
         //   : ConstToolType.HEIGHT[3],
