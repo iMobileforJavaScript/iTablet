@@ -113,6 +113,7 @@ function showSaveDialog(type) {
   }
   NavigationService.navigate('InputPage', {
     headerTitle: '分享',
+    value: _params.map.currentMap.name,
     placeholder: ConstInfo.PLEASE_INPUT_NAME,
     cb: async value => {
       if (type === constants.SUPERMAP_ONLINE) {

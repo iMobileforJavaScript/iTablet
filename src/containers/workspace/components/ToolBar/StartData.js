@@ -5,6 +5,7 @@ import {
   ConstPath,
   Const,
   ConstOnline,
+  UserType,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -621,8 +622,18 @@ function create() {
     GLOBAL.Type === constants.MAP_THEME
   ) {
     (async function() {
+      let userPath =
+        _params.user.currentUser.userName &&
+        _params.user.currentUser.userType !== UserType.PROBATION_USER
+          ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
+          : ConstPath.CustomerPath
+      let mapPath = await FileTools.appendingHomeDirectory(
+        userPath + ConstPath.RelativePath.Map,
+      )
+      let newName = await FileTools.getAvailableMapName(mapPath, 'DefaultMap')
       NavigationService.navigate('InputPage', {
-        headerTitle: '新建',
+        headerTitle: '新建地图',
+        value: newName,
         placeholder: ConstInfo.PLEASE_INPUT_NAME,
         cb: async value => {
           GLOBAL.Loading &&
@@ -860,42 +871,56 @@ function saveMap() {
 
 /** 另存地图 **/
 function saveMapAs() {
-  // if (!_params.setSaveMapDialogVisible) return
-  // _params.setSaveMapDialogVisible(true)
-  NavigationService.navigate('InputPage', {
-    value: _params.map.currentMap.name || '',
-    headerTitle: '地图另存',
-    placeholder: ConstInfo.PLEASE_INPUT_NAME,
-    cb: async value => {
-      let addition = {}
-      if (
-        _params.map &&
-        _params.map.currentMap &&
-        _params.map.currentMap.Template
-      ) {
-        addition.Template = _params.map.currentMap.Template
-      }
-      _params.setToolbarVisible &&
-        _params.setToolbarVisible(true, ConstInfo.SAVING_MAP)
-      _params.saveMap &&
-        _params.saveMap({ mapName: value, addition, isNew: true }).then(
-          result => {
-            _params.setToolbarVisible && _params.setToolbarVisible(false)
-            if (result) {
-              NavigationService.goBack()
-              setTimeout(() => {
-                Toast.show(ConstInfo.SAVE_MAP_SUCCESS)
-              }, 1000)
-            } else {
-              Toast.show(ConstInfo.MAP_EXIST)
-            }
-          },
-          () => {
-            _params.setToolbarVisible && _params.setToolbarVisible(false)
-          },
-        )
-    },
-  })
+  (async function() {
+    // if (!_params.setSaveMapDialogVisible) return
+    // _params.setSaveMapDialogVisible(true)
+    let userPath =
+      _params.user.currentUser.userName &&
+      _params.user.currentUser.userType !== UserType.PROBATION_USER
+        ? ConstPath.UserPath + _params.user.currentUser.userName + '/'
+        : ConstPath.CustomerPath
+    let mapPath = await FileTools.appendingHomeDirectory(
+      userPath + ConstPath.RelativePath.Map,
+    )
+    let newName = await FileTools.getAvailableMapName(
+      mapPath,
+      _params.map.currentMap.name || 'DefaultMap',
+    )
+    NavigationService.navigate('InputPage', {
+      value: newName,
+      headerTitle: '地图另存',
+      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      cb: async value => {
+        let addition = {}
+        if (
+          _params.map &&
+          _params.map.currentMap &&
+          _params.map.currentMap.Template
+        ) {
+          addition.Template = _params.map.currentMap.Template
+        }
+        _params.setToolbarVisible &&
+          _params.setToolbarVisible(true, ConstInfo.SAVING_MAP)
+        _params.saveMap &&
+          _params.saveMap({ mapName: value, addition, isNew: true }).then(
+            result => {
+              _params.setToolbarVisible && _params.setToolbarVisible(false)
+              if (result) {
+                NavigationService.goBack()
+                setTimeout(() => {
+                  Toast.show(ConstInfo.SAVE_MAP_SUCCESS)
+                }, 1000)
+              } else {
+                Toast.show(ConstInfo.MAP_EXIST)
+              }
+            },
+            () => {
+              _params.setToolbarVisible && _params.setToolbarVisible(false)
+            },
+          )
+      },
+    })
+  })()
 }
 
 export default {

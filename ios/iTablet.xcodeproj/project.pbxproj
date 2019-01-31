@@ -39,7 +39,7 @@
 		0A0A204C212FA22300BEBC1C /* 背景尾加一个.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */; };
 		0A0A204D212FA22300BEBC1C /* 选中.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A0A2033212FA22300BEBC1C /* 选中.png */; };
 		0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A0D938621E74B0B0041B997 /* libSplashScreen.a */; };
-		0A0F43C12200322400EAF6A8 /* Template.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A0F43942200322400EAF6A8 /* Template.zip */; };
+		0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A0F43C42201905900EAF6A8 /* Template.zip */; };
 		0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A11D99D21F885A400AFE6D6 /* libART.a */; };
 		0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */; };
 		0A11D9E721F9641700AFE6D6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E621F9641700AFE6D6 /* icon.png */; };
@@ -170,55 +170,6 @@
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = Supermap;
-		};
-		0A270C7B21F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF34489A14EB99A700D8449F;
-			remoteInfo = LibUGC;
-		};
-		0A270C7D21F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B1A016F1978A00A19B73;
-			remoteInfo = LibUGC_Base;
-		};
-		0A270C7F21F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B46016F1A08700A19B73;
-			remoteInfo = LibUGC_2D;
-		};
-		0A270C8121F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = FF33B61816F1F4B100A19B73;
-			remoteInfo = LibUGC_3D;
-		};
-		0A270C8321F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 03BDDAED1714098D003EC801;
-			remoteInfo = Object_3D;
-		};
-		0A270C8521F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 00F6D375175F20A9008963A0;
-			remoteInfo = Objects_iOS;
-		};
-		0A270C8721F9E0A600AFE9EB /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 005EF27D175F5F96005433E1;
-			remoteInfo = Super23D;
 		};
 		0A8EEDCB21104B4100F206BB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -517,7 +468,7 @@
 		0A0A2031212FA22300BEBC1C /* 背景头加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景头加一个.png"; sourceTree = "<group>"; };
 		0A0A2032212FA22300BEBC1C /* 背景尾加一个.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "背景尾加一个.png"; sourceTree = "<group>"; };
 		0A0A2033212FA22300BEBC1C /* 选中.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "选中.png"; sourceTree = "<group>"; };
-		0A0F43942200322400EAF6A8 /* Template.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Template.zip; sourceTree = "<group>"; };
+		0A0F43C42201905900EAF6A8 /* Template.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Template.zip; sourceTree = "<group>"; };
 		0A11D99721F885A400AFE6D6 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A11D9E621F9641700AFE6D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
@@ -526,7 +477,6 @@
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
-		0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = LibUGC.xcodeproj; path = ../../../../sourceCode/UGC/Builds/64_arm_iphone/LibUGC/LibUGC.xcodeproj; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
@@ -786,7 +736,7 @@
 		0A16C40221AC0AB700A515FA /* assets */ = {
 			isa = PBXGroup;
 			children = (
-				0A0F43942200322400EAF6A8 /* Template.zip */,
+				0A0F43C42201905900EAF6A8 /* Template.zip */,
 				0A11D9E621F9641700AFE6D6 /* icon.png */,
 				0A11D9E821F9641D00AFE6D6 /* logo.png */,
 				0A177FE821F7092D00EA39D6 /* Workspace.zip */,
@@ -805,20 +755,6 @@
 				CC5A76B8862342D4B30E22D6 /* libSplashScreen.a */,
 			);
 			name = "Recovered References";
-			sourceTree = "<group>";
-		};
-		0A270C7121F9E0A500AFE9EB /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				0A270C7C21F9E0A600AFE9EB /* libLibUGC.a */,
-				0A270C7E21F9E0A600AFE9EB /* libLibUGC_Base.a */,
-				0A270C8021F9E0A600AFE9EB /* libLibUGC_2D.a */,
-				0A270C8221F9E0A600AFE9EB /* libLibUGC_3D.a */,
-				0A270C8421F9E0A600AFE9EB /* libObject_3D.a */,
-				0A270C8621F9E0A600AFE9EB /* libObjects_iOS.a */,
-				0A270C8821F9E0A600AFE9EB /* Super23D.app */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		0A442232211444D50087C8FE /* tools */ = {
@@ -982,7 +918,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */,
 				0A11D99721F885A400AFE6D6 /* ART.xcodeproj */,
 				0A15465121D710BD00347720 /* Supermap.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
@@ -1144,10 +1079,6 @@
 					ProjectRef = 0A11D99721F885A400AFE6D6 /* ART.xcodeproj */;
 				},
 				{
-					ProductGroup = 0A270C7121F9E0A500AFE9EB /* Products */;
-					ProjectRef = 0A270C7021F9E0A500AFE9EB /* LibUGC.xcodeproj */;
-				},
-				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
 				},
@@ -1282,55 +1213,6 @@
 			fileType = archive.ar;
 			path = libSupermap.a;
 			remoteRef = 0A15465521D710BD00347720 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C7C21F9E0A600AFE9EB /* libLibUGC.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC.a;
-			remoteRef = 0A270C7B21F9E0A600AFE9EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C7E21F9E0A600AFE9EB /* libLibUGC_Base.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_Base.a;
-			remoteRef = 0A270C7D21F9E0A600AFE9EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C8021F9E0A600AFE9EB /* libLibUGC_2D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_2D.a;
-			remoteRef = 0A270C7F21F9E0A600AFE9EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C8221F9E0A600AFE9EB /* libLibUGC_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLibUGC_3D.a;
-			remoteRef = 0A270C8121F9E0A600AFE9EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C8421F9E0A600AFE9EB /* libObject_3D.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObject_3D.a;
-			remoteRef = 0A270C8321F9E0A600AFE9EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C8621F9E0A600AFE9EB /* libObjects_iOS.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libObjects_iOS.a;
-			remoteRef = 0A270C8521F9E0A600AFE9EB /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		0A270C8821F9E0A600AFE9EB /* Super23D.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = Super23D.app;
-			remoteRef = 0A270C8721F9E0A600AFE9EB /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		0A8EEDCC21104B4100F206BB /* libjsinspector.a */ = {
@@ -1591,7 +1473,7 @@
 				0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */,
 				0A0A2035212FA22300BEBC1C /* VisualMain.storyboard in Resources */,
 				0A0A2041212FA22300BEBC1C /* 密度图－当前.png in Resources */,
-				0A0F43C12200322400EAF6A8 /* Template.zip in Resources */,
+				0A0F43C52201905A00EAF6A8 /* Template.zip in Resources */,
 				0A0A204D212FA22300BEBC1C /* 选中.png in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				0A0A203B212FA22300BEBC1C /* 图表－当前.png in Resources */,
@@ -1636,7 +1518,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1644,7 +1526,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};

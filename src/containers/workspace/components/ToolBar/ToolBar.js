@@ -26,6 +26,7 @@ import {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  UserType,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
 import Map3DToolBar from '../Map3DToolBar'
@@ -2743,6 +2744,14 @@ export default class ToolBar extends React.PureComponent {
     return arr[0]
   }
 
+  mapMoveToCurrent = async () => {
+    let moveToCurrentResult = await SMap.moveToCurrent()
+    if (!moveToCurrentResult) {
+      await SMap.moveToPoint({ x: 116.21, y: 39.42 })
+    }
+    await SMap.setScale(0.0000060635556556859582)
+  }
+
   headerAction = ({ section }) => {
     (async function() {
       if (section.title === Const.CREATE_SYMBOL_COLLECTION) {
@@ -2757,8 +2766,18 @@ export default class ToolBar extends React.PureComponent {
         //   return
         // }
 
+        let userPath =
+          this.props.user.currentUser.userName &&
+          this.props.user.currentUser.userType !== UserType.PROBATION_USER
+            ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+            : ConstPath.CustomerPath
+        let mapPath = await FileTools.appendingHomeDirectory(
+          userPath + ConstPath.RelativePath.Map,
+        )
+        let newName = await FileTools.getAvailableMapName(mapPath, 'DefaultMap')
         NavigationService.navigate('InputPage', {
           headerTitle: '新建地图',
+          value: newName,
           placeholder: ConstInfo.PLEASE_INPUT_NAME,
           cb: async value => {
             GLOBAL.Loading &&
@@ -2788,8 +2807,15 @@ export default class ToolBar extends React.PureComponent {
             await this.props.openWorkspace({ server: wsPath })
             await SMap.openDatasource(
               ConstOnline['Google'].DSParams,
-              ConstOnline['Google'].layerIndex,
+              // ConstOnline['Google'].layerIndex,
+              1,
             )
+
+            // if (GLOBAL.Type === constants.COLLECTION) {
+            //
+            // }
+            this.mapMoveToCurrent()
+
             await this.props.getLayers()
 
             this.props.saveMap &&
@@ -2842,9 +2868,21 @@ export default class ToolBar extends React.PureComponent {
 
   /** 打开模板工作空间 **/
   openTemplate = async item => {
+    let userPath =
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+        ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+        : ConstPath.CustomerPath
+    let mapPath = await FileTools.appendingHomeDirectory(
+      userPath + ConstPath.RelativePath.Map,
+    )
+    let newName = await FileTools.getAvailableMapName(
+      mapPath,
+      item.name || 'DefaultName',
+    )
     NavigationService.navigate('InputPage', {
-      value: item.name || '',
-      headerTitle: '新建模板',
+      value: newName,
+      headerTitle: '新建地图',
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async (value = '') => {
         try {
@@ -2917,6 +2955,7 @@ export default class ToolBar extends React.PureComponent {
                   type: -1,
                   currentLayerIndex: 0,
                 })
+                this.mapMoveToCurrent()
                 this.props.setContainerLoading(true, ConstInfo.TEMPLATE_READING)
                 this.props.getSymbolTemplates(null, () => {
                   this.setVisible(false)

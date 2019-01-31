@@ -58,15 +58,15 @@ const styles = StyleSheet.create({
     height: scaleSize(1),
     marginHorizontal: 0,
     backgroundColor: color.bgG,
-    marginLeft: scaleSize(16),
-    marginRight: scaleSize(16),
+    // marginLeft: scaleSize(16),
+    // marginRight: scaleSize(16),
   },
   vSeparator: {
     // flex: 1,
     width: scaleSize(1),
     backgroundColor: color.bgG,
-    marginLeft: scaleSize(16),
-    marginRight: scaleSize(16),
+    // marginLeft: scaleSize(16),
+    // marginRight: scaleSize(16),
   },
 })
 

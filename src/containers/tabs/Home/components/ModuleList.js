@@ -19,6 +19,7 @@ import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
+import { SMap } from 'imobile_for_reactnative'
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -125,7 +126,6 @@ export default class ModuleList extends Component {
     this.state = {
       isShowProgressView: false,
     }
-    this.testCount = 1
     this.moduleItems = []
   }
 
@@ -238,16 +238,12 @@ export default class ModuleList extends Component {
 
   itemAction = async ({ item, index }) => {
     try {
-      // this.setState({
-      //   disabled: true,
-      // })
       let fileName
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
       if (moduleKey === '地图制图') {
         fileName = '湖南'
       } else if (moduleKey === '专题制图') {
-        // fileName = '北京'
         fileName = '湖北'
       } else if (moduleKey === '外业采集') {
         fileName = '地理国情普查_示范数据'
@@ -263,13 +259,8 @@ export default class ModuleList extends Component {
       let currentUserName = tmpCurrentUser.userName
         ? tmpCurrentUser.userName
         : 'Customer'
-      let toPath =
-        homePath +
-        ConstPath.UserPath +
-        currentUserName +
-        '/' +
-        ConstPath.RelativePath.ExternalData +
-        fileName
+      // let toPath = homePath + ConstPath.UserPath + currentUserName + '/' + ConstPath.RelativePath.ExternalData + fileName
+      let toPath = homePath + ConstPath.CachePath + fileName
 
       let cachePath = homePath + ConstPath.CachePath
       let fileDirPath = cachePath + fileName
@@ -291,12 +282,19 @@ export default class ModuleList extends Component {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
       } else {
-        let arrFilePath = await FileTools.getFilterFiles(toPath, {
-          smwu: 'smwu',
-          sxwu: 'sxwu',
-        })
-        if (arrFilePath.length === 0) {
-          await this.props.importWorkspace(fileDirPath, toPath, true)
+        let filePath = arrFile[0].filePath
+        let maps = await SMap.getMapsByFile(filePath)
+        let mapName = maps[0]
+        let filePath2 =
+          homePath +
+          ConstPath.UserPath +
+          currentUserName +
+          '/Data/Map/' +
+          mapName +
+          '.xml'
+        let isExist = await FileTools.fileIsExist(filePath2)
+        if (!isExist) {
+          await this.props.importWorkspace(filePath, toPath, true)
         }
         this.moduleItems[index].setNewState({
           disabled: false,
