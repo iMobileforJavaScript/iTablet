@@ -56,7 +56,7 @@ export default [
           ...lastMap,
         }
       } else {
-        let moduleMapName = 'Hunan_叠加谷歌晕渲图风格'
+        let moduleMapName = '湖南'
         let moduleMapFullName = moduleMapName + '.xml'
         // 地图用相对路径
         let moduleMapPath =
@@ -182,7 +182,7 @@ export default [
           ...lastMap,
         }
       } else {
-        let moduleMapName = 'Beijing'
+        let moduleMapName = 'LandBuild'
         let moduleMapFullName = moduleMapName + '.xml'
         // 地图用相对路径
         let moduleMapPath =
