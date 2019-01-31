@@ -25,11 +25,18 @@ export default class InputPage extends React.Component {
       headerTitle: params && params.headerTitle ? params.headerTitle : '',
       btnTitle: params && params.btnTitle ? params.btnTitle : '确定',
     }
+    this.clickAble = true
   }
 
   confirm = () => {
-    this.input && this.input.blur()
-    this.cb && this.cb(this.state.value)
+    if (this.clickAble) {
+      this.clickAble = false
+      this.input && this.input.blur()
+      this.cb && this.cb(this.state.value)
+      setTimeout(() => {
+        this.clickAble = true
+      }, 1500)
+    }
   }
 
   render() {
