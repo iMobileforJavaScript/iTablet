@@ -65,7 +65,7 @@ RCT_REMAP_METHOD(getPathListByFilter, path:(NSString*)path filter:(NSDictionary*
           if (!hasFile) continue;
         }
         // 匹配名称
-        if (filterName != nil && ![filterName.lowercaseString containsString:[fileName.lowercaseString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]]) continue;
+        if (filterName != nil && ![fileName.lowercaseString containsString:[filterName.lowercaseString.lowercaseString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]]]) continue;
         // 匹配类型
         if (type != nil && ([type isEqualToString:@"Directory"] != flag)) continue;
         
@@ -311,6 +311,8 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
     reject(@"unZipFile", exception.reason, nil);
   }
 }
+
+/****************************************************************************************************************/
 
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath {
   NSFileManager *fileManager = [NSFileManager defaultManager];

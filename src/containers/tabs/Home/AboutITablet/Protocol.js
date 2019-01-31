@@ -27,6 +27,7 @@ export default class protocol extends Component {
         UIManager.setLayoutAnimationEnabledExperimental(true)
     }
   }
+
   _renderLoading = () => {
     return (
       <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -105,7 +106,6 @@ export default class protocol extends Component {
       default:
         break
     }
-
     return (
       <Container
         headerProps={{
