@@ -49,6 +49,14 @@ class RenderModuleItem extends Component {
     return this.state.dialogCheck
   }
 
+  getDownloading = () => {
+    return this.downloading
+  }
+
+  setDownloading = (downloading = false) => {
+    this.downloading = downloading
+  }
+
   _renderProgressView = () => {
     let progress =
       this.state.progress.indexOf('%') === -1
@@ -145,7 +153,8 @@ export default class ModuleList extends Component {
   }
 
   _downloadModuleData = async (ref, downloadData) => {
-    this.downloading = true
+    // this.downloading = true
+    ref.setDownloading(true)
     let keyword
     if (downloadData.fileName.indexOf('_示范数据') !== -1) {
       keyword = downloadData.fileName
@@ -179,7 +188,8 @@ export default class ModuleList extends Component {
               isShowProgressView: true,
               // disabled: true,
             })
-            this.downloading = false
+            // this.downloading = false
+            ref.setDownloading(false)
           } else if (value !== this.state.progress) {
             ref.setNewState({
               progress: value,
@@ -207,7 +217,8 @@ export default class ModuleList extends Component {
           Toast.show('下载失败')
           FileTools.deleteFile(fileCachePath)
           ref.setNewState({ isShowProgressView: false, disabled: false })
-          this.downloading = false
+          // this.downloading = false
+          ref.setDownloading(false)
         })
     } catch (e) {
       Toast.show('网络错误，下载失败')
@@ -280,7 +291,11 @@ export default class ModuleList extends Component {
           this.moduleItems[index].getDialogCheck()
         ) {
           item.action && item.action(tmpCurrentUser)
-        } else if (this.downloading) {
+        } else if (
+          this.moduleItems &&
+          this.moduleItems[index] &&
+          this.moduleItems[index].getDownloading()
+        ) {
           item.action && item.action(tmpCurrentUser)
         } else {
           item.action && item.action(tmpCurrentUser)
