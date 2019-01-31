@@ -250,9 +250,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
       )
       path = parentPath + '/' + fileName
     } else {
-      parentPath = path
-      // parentPath = path.substr(0, path.lastIndexOf('/'))
-      // console.warn(parentPath)
+      parentPath = path.substr(0, path.lastIndexOf('/'))
     }
     // 导出工作空间
     if (params.maps && params.maps.length > 0) {
