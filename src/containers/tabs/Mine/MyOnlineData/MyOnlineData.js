@@ -25,7 +25,7 @@ import Toast from '../../../../utils/Toast'
 import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
 import { scaleSize } from '../../../../utils'
-
+import RNFS from 'react-native-fs'
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
@@ -42,8 +42,8 @@ export default class MyOnlineData extends Component {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     if (this.props.user.currentUser.userName !== _previousUserName) {
-      SOnlineService.cancelDownload()
-      this._removeListener()
+      // SOnlineService.cancelDownload()
+      // this._removeListener()
       _callBackIos = undefined
       _iLoadOnlineDataCount = 1
       _iDataListTotal = -1
@@ -56,6 +56,7 @@ export default class MyOnlineData extends Component {
       data: _arrOnlineData,
       isRefreshing: false,
       modalIsVisible: false,
+      isFirstLoadingModal: true,
       downloadingIndex: -1,
       onClickItemBgColor: color.pink,
       itemBgColor: color.blackBg,
@@ -64,8 +65,8 @@ export default class MyOnlineData extends Component {
     this.pageSize = 20
   }
   componentDidMount() {
-    this._removeListener()
-    this._addListener()
+    // this._removeListener()
+    // this._addListener()
     this._firstLoadData()
   }
 
@@ -341,6 +342,9 @@ export default class MyOnlineData extends Component {
   _changeModalProgressState = progress => {
     if (_iDownloadingIndex >= 0) {
       let newData = [...this.state.data]
+      if (newData.length < _iDownloadingIndex) {
+        return
+      }
       newData[_iDownloadingIndex].downloadingProgress = progress
       _arrOnlineData = newData
       if (
@@ -441,7 +445,33 @@ export default class MyOnlineData extends Component {
         this.modalRef._changeDownloadingState('下载中...')
       }
       this._setDownloadingState(_iDownloadingIndex)
-      SOnlineService.downloadFileWithDataId(filePath, dataId)
+      // SOnlineService.downloadFileWithDataId(filePath, dataId)
+      let dataUrl = `https://www.supermapol.com/web/mycontent/datas/${dataId}/download`
+      const downloadOptions = {
+        fromUrl: dataUrl,
+        toFile: filePath,
+        background: true,
+        progress: res => {
+          let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+          // console.warn("value:"+value)
+          let progress = '下载:' + value + '%'
+          this._changeModalProgressState(progress)
+        },
+      }
+      const ret = RNFS.downloadFile(downloadOptions)
+      ret.promise
+        .then(async result => {
+          if (result.statusCode === 200) {
+            let result = '下载完成'
+            this._changeModalProgressState(result)
+            this._resetDownloadIndex(-1)
+          }
+        })
+        .catch(() => {
+          let result = '下载失败'
+          this._changeModalProgressState(result)
+          this._resetDownloadIndex(-1)
+        })
       Toast.show('开始下载')
     } catch (e) {
       Toast.show('网络错误')
@@ -604,7 +634,7 @@ export default class MyOnlineData extends Component {
     }
   }
   _renderModal = () => {
-    if (this.state.modalIsVisible) {
+    if (!this.state.isFirstLoadingModal) {
       return (
         <PopupModal
           ref={ref => (this.modalRef = ref)}
@@ -623,9 +653,15 @@ export default class MyOnlineData extends Component {
   }
   _onClickItemEvent = item => {
     this.index = item.index
-    /** 重新渲染render，使modal展示出来*/
-    // this.setState({ modalIsVisible: true })
-    this.setState({ modalIsVisible: true, data: _arrOnlineData })
+    if (this.state.isFirstLoadingModal) {
+      this.setState({
+        modalIsVisible: true,
+        data: _arrOnlineData,
+        isFirstLoadingModal: false,
+      })
+    } else {
+      this.setState({ modalIsVisible: true, data: _arrOnlineData })
+    }
   }
 
   _renderItem = item => {
