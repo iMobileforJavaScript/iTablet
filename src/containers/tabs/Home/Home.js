@@ -55,18 +55,12 @@ export default class Home extends Component {
     // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
     StatusBar.setHidden(statusBarVisible)
   }
-  _onImportWorkspace = async (fileDirPath, toPath, isFirstImportWorkspace) => {
+  _onImportWorkspace = async (filePath, toPath, isFirstImportWorkspace) => {
     try {
-      if (fileDirPath !== undefined) {
+      if (filePath !== undefined) {
         if (isFirstImportWorkspace === true) {
           this.container && this.container.setLoading(true, '导入数据中...')
         }
-        // await FileTools.copyFile(fileDirPath, toPath)
-        let arrFilePath = await FileTools.getFilterFiles(fileDirPath, {
-          smwu: 'smwu',
-          sxwu: 'sxwu',
-        })
-        let filePath = arrFilePath[0].filePath
         let is3D = await SScene.is3DWorkspace({ server: filePath })
         if (is3D === true) {
           let result = await this.props.importSceneWorkspace({

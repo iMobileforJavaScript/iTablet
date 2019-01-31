@@ -19,6 +19,7 @@ import { downloadFile } from 'react-native-fs'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
+import { SMap } from 'imobile_for_reactnative'
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -281,18 +282,20 @@ export default class ModuleList extends Component {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
       } else {
-        let arrFilePath = await FileTools.getFilterFiles(toPath, {
-          smwu: 'smwu',
-          sxwu: 'sxwu',
-        })
-        if (arrFilePath.length === 0) {
-          await this.props.importWorkspace(fileDirPath, toPath, true)
+        let filePath = arrFile[0].filePath
+        let maps = await SMap.getMapsByFile(filePath)
+        let mapName = maps[0]
+        let filePath2 =
+          homePath +
+          ConstPath.UserPath +
+          currentUserName +
+          '/Data/Map/' +
+          mapName +
+          '.xml'
+        let isExist = await FileTools.fileIsExist(filePath2)
+        if (!isExist) {
+          await this.props.importWorkspace(filePath, toPath, true)
         }
-        // let filePath =  homePath + ConstPath.UserPath + currentUserName +'/Data/Map/'+fileName+'.xml'
-        // let isExist = await FileTools.fileIsExist(filePath)
-        // if(!isExist){
-        //   await this.props.importWorkspace(fileDirPath, toPath, true)
-        // }
         this.moduleItems[index].setNewState({
           disabled: false,
           isShowProgressView: false,

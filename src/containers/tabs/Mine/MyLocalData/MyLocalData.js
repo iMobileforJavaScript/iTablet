@@ -102,7 +102,7 @@ export default class MyLocalData extends Component {
         }
       }
     } catch (e) {
-      Toast.show('没有数据')
+      // Toast.show('没有数据')
     }
     return arrFilterFile
   }
