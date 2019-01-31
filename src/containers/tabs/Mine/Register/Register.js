@@ -22,6 +22,7 @@ import NavigationService from '../../../NavigationService'
 import styles, {
   titleOnFocusBackgroundColor,
   titleOnBlurBackgroundColor,
+  fontSize,
 } from './Styles'
 import color from '../../../../styles/color'
 
@@ -176,7 +177,7 @@ export default class Register extends React.Component {
             keyboardType={'phone-pad'}
             clearButtonMode={'while-editing'}
             placeholder={'请输入验证码'}
-            style={{ flex: 1 }}
+            style={{ flex: 1, fontSize: fontSize }}
             onChangeText={text => {
               this.txtVerifyCode = text
             }}

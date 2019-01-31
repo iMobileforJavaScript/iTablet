@@ -17,6 +17,7 @@ const RelativePath = {
   Environment: 'Environment/',
   License: 'License/',
   Log: 'Log/',
+  ExportData: 'ExportData/',
   ExternalData: 'ExternalData/',
   ExternalData2: 'ExternalData',
   Data: Data,

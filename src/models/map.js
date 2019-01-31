@@ -250,7 +250,9 @@ export const exportWorkspace = (params, cb = () => {}) => async (
       )
       path = parentPath + '/' + fileName
     } else {
-      parentPath = path.substr(0, path.lastIndexOf('/'))
+      parentPath = path
+      // parentPath = path.substr(0, path.lastIndexOf('/'))
+      // console.warn(parentPath)
     }
     // 导出工作空间
     if (params.maps && params.maps.length > 0) {
@@ -263,6 +265,7 @@ export const exportWorkspace = (params, cb = () => {}) => async (
         params.extra,
       )
     }
+    // console.warn(exportResult)
     // 压缩工作空间
     if (exportResult) {
       zipPath = parentPath + '.zip'

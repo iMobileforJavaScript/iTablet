@@ -283,8 +283,6 @@ export default class MyLocalData extends Component {
   }
 
   _renderItem = info => {
-    this.index = info.index
-
     let name = info.item.name
     let txtInfo =
       name.lastIndexOf('.') > 0
@@ -536,6 +534,7 @@ export default class MyLocalData extends Component {
 
   _onDeleteData = async () => {
     try {
+      this._closeModal()
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         this.setLoading(true, ConstInfo.DELETING_DATA)
         let result = false
@@ -556,7 +555,6 @@ export default class MyLocalData extends Component {
         Toast.show(result ? ConstInfo.DELETE_SUCCESS : ConstInfo.DELETE_FAILED)
         if (result) {
           this.itemInfo = null
-          this._closeModal()
           this.getData()
         }
       } else {
@@ -587,6 +585,7 @@ export default class MyLocalData extends Component {
 
   /** 删除数据源 **/
   _deleteDatasource = async () => {
+    this._closeModal()
     if (!this.itemInfo) return false
     let udbPath = await FileTools.appendingHomeDirectory(
       this.itemInfo.item.path,
@@ -601,6 +600,7 @@ export default class MyLocalData extends Component {
 
   /** 删除场景 **/
   _deleteScene = async () => {
+    this._closeModal()
     if (!this.itemInfo) return false
     let scenePath = await FileTools.appendingHomeDirectory(
       this.itemInfo.item.path,
@@ -615,6 +615,7 @@ export default class MyLocalData extends Component {
 
   /** 删除符号 **/
   _deleteSymbol = async () => {
+    this._closeModal()
     if (!this.itemInfo) return false
     let symbolPath = await FileTools.appendingHomeDirectory(
       this.itemInfo.item.path,
@@ -626,9 +627,22 @@ export default class MyLocalData extends Component {
   }
 
   _exportData = async () => {
-    let name = this.state.sectionData[0].data[this.index].name
+    this._closeModal()
+    let name = this.state.sectionData[0].data[this.itemInfo.index].name
     let mapName = name.substring(0, name.length - 4)
-    this.props.exportWorkspace({ maps: [mapName] }, result => {
+    let homePath = await FileTools.appendingHomeDirectory()
+    let path =
+      homePath +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.ExternalData +
+      ConstPath.RelativePath.ExportData +
+      mapName +
+      '/' +
+      mapName +
+      '.smwu'
+    this.props.exportWorkspace({ maps: [mapName], outPath: path }, result => {
       if (result === true) {
         Toast.show('导出成功')
       } else {

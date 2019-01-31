@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
   },
 })
 export default styles
-export { titleOnFocusBackgroundColor, titleOnBlurBackgroundColor }
+export { titleOnFocusBackgroundColor, titleOnBlurBackgroundColor, fontSize }
