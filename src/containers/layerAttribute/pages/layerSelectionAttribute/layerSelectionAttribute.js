@@ -131,7 +131,7 @@ export default class layerSelectionAttribute extends React.Component {
           ref={ref => (this.table = ref)}
           data={this.state.attributes[0]}
           hasIndex={false}
-          tableTitle={this.state.attributes.head}
+          tableTitle={this.state.tableTitle}
           widthArr={[100, 100]}
           tableHead={['名称', '属性值']}
           refresh={this.getAttribute}

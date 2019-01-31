@@ -58,7 +58,8 @@ export default class LayerAttribute extends React.Component {
     if (
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer) ||
-      (mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
+      (mapTabs.routes &&
+        mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
         JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
     ) {
       this.getAttribute()
@@ -272,23 +273,25 @@ export default class LayerAttribute extends React.Component {
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        {this.state.showTable ? (
-          this.props.attributes.head.length > 0 ? (
-            this.type === 'MAP_3D' ? (
-              this.renderMap3dLayerAttribute()
+        {this.state.showTable &&
+        this.props.attributes &&
+        this.props.attributes.head ? (
+            this.props.attributes.head.length > 0 ? (
+              this.type === 'MAP_3D' ? (
+                this.renderMap3dLayerAttribute()
+              ) : (
+                this.renderMapLayerAttribute()
+              )
             ) : (
-              this.renderMapLayerAttribute()
+              <View style={styles.infoView}>
+                <Text style={styles.info}>请选择图层对象</Text>
+              </View>
             )
           ) : (
             <View style={styles.infoView}>
-              <Text style={styles.info}>请选择图层对象</Text>
+              <Text style={styles.info}>请选择图层</Text>
             </View>
-          )
-        ) : (
-          <View style={styles.infoView}>
-            <Text style={styles.info}>请选择图层</Text>
-          </View>
-        )}
+          )}
       </Container>
     )
   }
