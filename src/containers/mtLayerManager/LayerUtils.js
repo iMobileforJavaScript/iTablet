@@ -42,6 +42,7 @@ function getBaseLayers(layers = []) {
       arr.push(layers[i])
     }
   }
+  GLOBAL.BaseMapSize = arr.length
   return arr
 }
 
@@ -51,7 +52,7 @@ async function addBaseMap(
   index,
   visible = true,
 ) {
-  if (getBaseLayers(layers).length == 0) {
+  if (getBaseLayers(layers).length === 0) {
     if (data instanceof Array) {
       for (let i = data.length - 1; i >= 0; i--) {
         await SMap.openDatasource(
@@ -61,6 +62,7 @@ async function addBaseMap(
           visible,
         )
       }
+      GLOBAL.BaseMapSize = data.length
     } else {
       await SMap.openDatasource(
         data.DSParams,
@@ -68,6 +70,7 @@ async function addBaseMap(
         false,
         visible,
       )
+      GLOBAL.BaseMapSize = 1
     }
   }
 }
