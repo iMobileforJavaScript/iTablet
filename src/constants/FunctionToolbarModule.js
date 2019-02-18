@@ -44,7 +44,7 @@ const BotMap = [
         },
       },
       {
-        title: 'Google Staelite',
+        title: 'Google Satellite',
         image: require('../assets/mapToolbar/list_type_map_black.png'),
         action: () => {
           OpenData(ConstOnline.Google, 1)
@@ -167,7 +167,7 @@ const layerManagerData = [
     themeType: -1,
   },
   {
-    title: 'Google Staelite',
+    title: 'Google Satellite',
     action: () => {
       return OpenData(ConstOnline.Google, 1)
     },
