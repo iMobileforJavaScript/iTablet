@@ -8,21 +8,12 @@ import * as React from 'react'
 import {
   View,
   ScrollView,
-  TextInput,
   KeyboardAvoidingView,
-  TouchableOpacity,
+  SectionList,
 } from 'react-native'
-import { scaleSize, dataUtil } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Rows,
-  Col,
-  Cell,
-} from 'react-native-table-component'
-import { FieldType } from 'imobile_for_reactnative'
+import Row from './Row'
 
 import styles from './styles'
 
@@ -30,11 +21,9 @@ const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttributeTable extends React.Component {
   props: {
-    mapChange: () => {},
-    showSaveDialog: () => {},
-    add: () => {},
-    edit: () => {},
-    selectRow: () => {},
+    refresh?: () => {},
+    loadMore?: () => {},
+    selectRow?: () => {},
 
     selectable: boolean,
 
@@ -45,6 +34,7 @@ export default class LayerAttributeTable extends React.Component {
     colHeight: number,
     type: string,
     data: Object,
+    hasIndex?: boolean,
   }
 
   static defaultProps = {
@@ -54,333 +44,191 @@ export default class LayerAttributeTable extends React.Component {
     tableData: [],
     widthArr: [40, 200, 200, 100, 100, 100, 80],
     selectable: true,
+    hasIndex: false,
+    refreshing: false,
   }
 
   constructor(props) {
     super(props)
-    let { dataList, colHeight } = this.dealData(props.tableTitle, props.data)
+    // let { dataList, colHeight } = this.dealData(props.tableTitle, props.data)
+    let titles =
+      props.tableTitle.length > 0 ? props.tableTitle : this.getTitle(props.data)
     this.state = {
-      colHeight: colHeight,
+      colHeight: COL_HEIGHT,
       widthArr: props.widthArr,
       modifiedData: {},
-      tableTitle: props.tableTitle,
+      tableTitle: titles,
       // tableData: props.tableData,
       tableHead: props.tableHead,
       // tableTitle: titleList,
-      tableData: dataList,
+      // tableData: dataList,
+      tableData: [
+        {
+          title: titles,
+          data: props.data,
+        },
+      ],
       currentSelect: -1,
+      refreshing: false,
     }
   }
 
-  dealData = (title = [], data, height = COL_HEIGHT) => {
-    let titleList = title,
-      dataList = data,
-      colHeight = []
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.tableTitle) !==
+        JSON.stringify(this.props.tableTitle) ||
+      JSON.stringify(prevProps.data) !== JSON.stringify(this.props.data)
+    ) {
+      let titles = this.getTitle(this.props.data)
 
-    if (data instanceof Object) {
-      titleList = []
-      dataList = []
-      Object.keys(data).forEach(key => {
-        titleList.push(key)
-        dataList.push([
-          // key,
-          data[key].fieldInfo.caption,
-          {
-            index: 1,
-            key: key,
-            data: data[key],
-            type: dataUtil.getType(data[key].value),
-          },
-        ])
-        colHeight.push(height)
-      })
-      return { titleList, dataList, colHeight }
-    }
-
-    for (let i = 0; i < dataList.length; i++) {
-      colHeight[i] = height
-    }
-    return { titleList, dataList, colHeight }
-  }
-
-  add = () => {
-    if (typeof this.props.add === 'function') {
-      this.props.add()
-    }
-  }
-
-  edit = () => {
-    if (typeof this.props.edit === 'function') {
-      this.props.edit()
-    }
-  }
-
-  getModifiedData = () => {
-    return this.state.modifiedData
-  }
-
-  setData = data => {
-    // this.originData = changeOrigin ? { ...data } : {}
-    let { titleList, dataList, colHeight } = this.dealData(
-      this.props.tableTitle,
-      data,
-    )
-    this.setState({
-      titleData: titleList,
-      tableData: dataList,
-      colHeight: colHeight,
-    })
-  }
-
-  reset = oldData => {
-    let data = this.dealData(this.props.tableTitle, oldData)
-    this.setState({
-      tableData: data.dataList,
-    })
-  }
-
-  modified = (item, value, index) => {
-    // item.data.value = value
-    let newTableData = this.state.tableData
-    newTableData[index][item.index].data.value = value
-    let modified = this.state.modifiedData
-    modified[item.key] = item
-    this.setState({
-      tableData: newTableData,
-      modifiedData: modified,
-    })
-  }
-
-  dealEditCellData = (obj, index) => {
-    if (Object.keys(obj).length <= 0) return
-    let arr = []
-    arr.push(index + 1)
-    arr.push(obj.name)
-    arr.push(obj.caption)
-    arr.push(obj.type)
-    arr.push(obj.maxLength)
-    arr.push(obj.defaultValue)
-    arr.push(obj.isRequired ? '是' : '否')
-    return arr
-  }
-
-  selectRow = (index, data) => {
-    if (this.props.selectable && this.state.currentSelect !== index) {
       this.setState({
-        currentSelect: index,
+        colHeight: COL_HEIGHT,
+        widthArr: this.props.widthArr,
+        tableData: [
+          {
+            title: titles,
+            data: this.props.data,
+          },
+        ],
+        tableHead: this.props.tableHead,
       })
-      this.props.selectRow && this.props.selectRow(data)
+      if (this.props.data.length < prevProps.data.length) {
+        this.table &&
+          this.table.scrollToLocation({
+            animated: false,
+            itemIndex: 0,
+            sectionIndex: 0,
+          })
+      }
     }
   }
 
-  renderInput = (item, index) => {
-    return (
-      <TextInput
-        accessible={true}
-        accessibilityLabel={item.key}
-        keyboardType={item.type === 'Number' ? 'numeric' : 'default'}
-        defaultValue={item.data.value + ''}
-        value={item.data.value + ''}
-        underlineColorAndroid={'transparent'}
-        style={styles.textInput}
-        onChangeText={text => {
-          this.modified(item, text, index)
-        }}
-      />
-    )
+  getTitle = data => {
+    let titleList = []
+    if (data instanceof Array && data.length > 1 && data[0] instanceof Array) {
+      data[0].forEach(item => {
+        titleList.push(item.name)
+      })
+    } else {
+      titleList = this.props.tableHead
+    }
+
+    return titleList
   }
 
-  renderRow = (rowData, index) => {
+  refresh = () => {
+    if (this.props.refresh && typeof this.props.refresh === 'function') {
+      this.setState({
+        refreshing: true,
+      })
+      this.props.refresh(() => {
+        this.setState({
+          refreshing: false,
+        })
+      })
+    }
+  }
+
+  loadMore = () => {
+    if (this.props.loadMore && typeof this.props.loadMore === 'function') {
+      this.props.loadMore()
+    }
+  }
+
+  onPressRow = data => {
+    if (this.props.selectRow && typeof this.props.selectRow === 'function') {
+      this.props.selectRow(data)
+    }
+  }
+
+  _renderSingleDataItem = ({ item, index }) => {
     return (
       <Row
-        flexArr={[1, 1]}
-        // widthArr={this.state.widthArr}
-        key={index}
-        data={rowData}
-        style={[styles.row, index % 2 && { backgroundColor: '#F7F6E7' }]}
-        textStyle={styles.text}
+        data={item}
+        index={index}
+        onPress={() => this.onPressRow({ item, index })}
       />
     )
   }
 
-  renderColTable = () => {
-    if (this.state.tableTitle && this.state.tableTitle.length > 0) {
-      return (
-        <TableWrapper style={styles.wrapper}>
-          <Col
-            data={this.state.tableTitle}
-            style={styles.title}
-            heightArr={this.state.colHeight}
-            textStyle={styles.text}
-          />
-          {/*<Rows data={this.state.tableData} flexArr={[1, 1]} style={styles.row} textStyle={styles.text}/>*/}
-        </TableWrapper>
-      )
-    } else {
-      return (
-        <Rows
-          data={this.state.tableData}
-          style={styles.row}
-          textStyle={styles.text}
-        />
-      )
-    }
-  }
-
-  renderNormalTable = () => {
+  _renderItem = ({ item, index }) => {
     return (
-      <View style={{ flex: 1 }}>
-        <Table
-          borderStyle={{
-            borderColor: '#C1C0B9',
-            flex: 1,
-            backgroundColor: 'blue',
-          }}
-        >
-          <Row
-            flexArr={[1, 1]}
-            // widthArr={this.state.widthArr}
-            data={this.state.tableHead}
-            style={styles.head}
-            textStyle={styles.headerText}
-          />
-        </Table>
-        <ScrollView style={styles.dataWrapper}>
-          <Table borderStyle={{ borderColor: '#C1C0B9' }}>
-            {this.state.tableData.map((rowData, index) => {
-              return (
-                <TableWrapper key={index} style={styles.row}>
-                  {rowData.map((cellData, cellIndex) => {
-                    let isSystemField =
-                      cellData.data &&
-                      cellData.data.fieldInfo &&
-                      cellData.data.fieldInfo.isSystemField
-                    return (
-                      <Cell
-                        key={cellIndex}
-                        data={
-                          cellIndex === 0
-                            ? cellData
-                            : isSystemField
-                              ? cellData.data.value === undefined
-                                ? ''
-                                : cellData.data.value
-                              : this.renderInput(cellData, index)
-                        }
-                        textStyle={styles.text}
-                      />
-                    )
-                  })}
-                </TableWrapper>
-              )
-            })}
-          </Table>
-        </ScrollView>
-      </View>
+      <Row
+        data={item}
+        index={index}
+        indexColumn={0}
+        onPress={() => this.onPressRow({ item, index })}
+      />
     )
   }
 
-  renderScrollTable = () => {
+  _keyExtractor = (item, index) => {
+    return index
+  }
+
+  _renderSectionHeader = ({ section }) => {
+    return (
+      <Row
+        style={{ backgroundColor: color.itemColorGray }}
+        cellTextStyle={{ color: color.fontColorWhite }}
+        data={section.title}
+        onPress={() => {}}
+      />
+    )
+  }
+
+  renderMultiDataTable = () => {
     return (
       <ScrollView style={{ flex: 1 }} horizontal={true}>
-        <View>
-          <Table borderStyle={{ borderColor: '#C1C0B9', flex: 1 }}>
-            <Row
-              // flexArr={[1, 1]}
-              data={this.state.tableHead}
-              widthArr={this.state.widthArr}
-              style={styles.head}
-              textStyle={styles.headerText}
-            />
-          </Table>
-          <ScrollView style={styles.dataWrapper}>
-            <Table borderStyle={{ borderColor: '#C1C0B9' }}>
-              {this.state.tableData.map((rowData, index) => {
-                let data =
-                  (rowData && rowData[1].data && rowData[1].data.fieldInfo) ||
-                  {}
-                let arr = this.dealEditCellData(data, index)
-                return (
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    key={index}
-                    onPress={() => this.selectRow(index, data)}
-                  >
-                    <TableWrapper
-                      key={index}
-                      style={[
-                        styles.row,
-                        index % 2 === 1 && { backgroundColor: color.grayLight },
-                        this.state.currentSelect === index && styles.selectRow,
-                      ]}
-                    >
-                      {arr.map((cellData, cellIndex) => {
-                        if (cellIndex === 3) {
-                          let type = ''
-
-                          switch (cellData) {
-                            case FieldType.WTEXT:
-                            case FieldType.CHAR:
-                            case FieldType.TEXT:
-                              type = '文本'
-                              break
-                            case FieldType.BYTE:
-                            case FieldType.INT16:
-                            case FieldType.INT32:
-                            case FieldType.INT64:
-                            case FieldType.LONGBINARY:
-                            case FieldType.SINGLE:
-                            case FieldType.DOUBLE:
-                              type = '数值'
-                              break
-                            case FieldType.BOOLEAN:
-                              type = '布尔'
-                              break
-                            case FieldType.DATETIME:
-                              type = '日期'
-                              break
-                            default:
-                              type = '未知属性'
-                              break
-                          }
-                          cellData = type
-                        }
-                        return (
-                          <Cell
-                            width={this.state.widthArr[cellIndex]}
-                            key={cellIndex}
-                            data={cellData}
-                            textStyle={[
-                              styles.text,
-                              this.state.currentSelect === index &&
-                                styles.selectText,
-                            ]}
-                          />
-                        )
-                      })}
-                    </TableWrapper>
-                  </TouchableOpacity>
-                )
-              })}
-            </Table>
-          </ScrollView>
-        </View>
+        <SectionList
+          ref={ref => (this.table = ref)}
+          refreshing={this.state.refreshing}
+          style={styles.container}
+          sections={this.state.tableData}
+          renderItem={this._renderItem}
+          keyExtractor={this._keyExtractor}
+          renderSectionHeader={this._renderSectionHeader}
+          onRefresh={this.refresh}
+          onEndReachedThreshold={0.5}
+          onEndReached={this.loadMore}
+          initialNumToRender={20}
+        />
       </ScrollView>
     )
   }
 
+  renderSingleDataTable = () => {
+    return (
+      <SectionList
+        ref={ref => (this.table = ref)}
+        refreshing={this.state.refreshing}
+        style={styles.container}
+        sections={this.state.tableData}
+        renderItem={this._renderSingleDataItem}
+        keyExtractor={this._keyExtractor}
+        renderSectionHeader={this._renderSectionHeader}
+        // onRefresh={this.refresh}
+        // onEndReachedThreshold={0.5}
+        // onEndReached={this.loadMore}
+        initialNumToRender={20}
+      />
+    )
+  }
+
   render() {
+    let isMultiData =
+      this.state.tableData[0].data instanceof Array &&
+      this.state.tableData[0].data.length > 1 &&
+      this.state.tableData[0].data[0] instanceof Array
     return (
       <KeyboardAvoidingView
         behavior={this.state.behavior}
         style={styles.container}
       >
         <View style={styles.container}>
-          {this.props.type === 'EDIT_ATTRIBUTE'
-            ? this.renderScrollTable()
-            : this.renderNormalTable()}
-          {/*{this.renderScrollTable()}*/}
-          {/*{this.renderNormalTable()}*/}
+          {this.props.type === 'MULTI_DATA' && isMultiData
+            ? this.renderMultiDataTable()
+            : this.renderSingleDataTable()}
         </View>
       </KeyboardAvoidingView>
     )
@@ -390,4 +238,6 @@ export default class LayerAttributeTable extends React.Component {
 LayerAttributeTable.Type = {
   ATTRIBUTE: 'ATTRIBUTE',
   EDIT_ATTRIBUTE: 'EDIT_ATTRIBUTE',
+  SINGLE_DATA: 'SINGLE_DATA', // 单个对象的属性，两列：'名称', '属性值'
+  MULTI_DATA: 'MULTI_DATA', // 多个对象的属性，多列
 }

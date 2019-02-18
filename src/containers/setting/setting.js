@@ -9,6 +9,8 @@ import {
   SectionList,
   TouchableOpacity,
   Switch,
+  BackHandler,
+  Platform,
 } from 'react-native'
 import styles from './styles'
 import settingData from './settingData'
@@ -32,6 +34,9 @@ export default class setting extends Component {
 
   componentDidMount() {
     this.getdata()
+
+    Platform.OS === 'android' &&
+      BackHandler.addEventListener('hardwareBackPress', this.back)
   }
 
   componentDidUpdate(prevProps) {
@@ -41,6 +46,17 @@ export default class setting extends Component {
     ) {
       this.setState({ data: this.props.settingData })
     }
+  }
+
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    }
+  }
+
+  back = () => {
+    this.props.navigation.navigate('Map3D')
+    return true
   }
 
   getdata = async () => {

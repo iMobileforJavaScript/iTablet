@@ -2,7 +2,15 @@ import React, { Component } from 'react'
 import { Container } from '../../components'
 import { MAP_MODULE } from '../../constants'
 import Layer3DItem from './Layer3DItem'
-import { View, TouchableOpacity, Text, SectionList, Image } from 'react-native'
+import {
+  View,
+  TouchableOpacity,
+  Text,
+  SectionList,
+  Image,
+  BackHandler,
+  Platform,
+} from 'react-native'
 import styles from './styles'
 import { LayerManager_tolbar } from '../mtLayerManager/components'
 import { OverlayView, MapToolbar } from '../workspace/components'
@@ -25,6 +33,12 @@ export default class Map3DToolBar extends Component {
       toHeightItem: {},
     }
   }
+
+  componentDidMount() {
+    Platform.OS === 'android' &&
+      BackHandler.addEventListener('hardwareBackPress', this.back)
+  }
+
   // eslint-disable-next-line
   //   componentWillReceiveProps(nextProps) {
   //     if (JSON.stringify(this.props.data) !== JSON.stringify(nextProps.data)) {
@@ -34,10 +48,22 @@ export default class Map3DToolBar extends Component {
   //     }
   //   }
 
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      BackHandler.removeEventListener('hardwareBackPress', this.back)
+    }
+    this.props.setCurrentLayer3d({})
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.layer3dList !== this.state.data) {
       this.setState({ data: nextProps.layer3dList })
     }
+  }
+
+  back = () => {
+    this.props.navigation.navigate('Map3D')
+    return true
   }
 
   renderListItem = ({ item, index }) => {
