@@ -118,7 +118,7 @@ export default class MapView extends React.Component {
     this.backAction = null
     this.state = {
       showMap: false, // 控制地图初始化显示
-      data: params.data,
+      data: params ? params.data : [],
       popShow: false, //  一级popView显示控制
       popType: '',
       mapName: '',

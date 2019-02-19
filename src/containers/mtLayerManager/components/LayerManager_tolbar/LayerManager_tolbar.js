@@ -42,6 +42,7 @@ export default class LayerManager_tolbar extends React.Component {
     onThisPress: () => {},
     getOverlayView: () => {},
     device: Object,
+    layers: Object,
   }
 
   static defaultProps = {
@@ -282,8 +283,16 @@ export default class LayerManager_tolbar extends React.Component {
     } else if (section.title === '置底') {
       (async function() {
         await SMap.moveToBottom(this.state.layerdata.name)
-        await this.props.getLayers()
       }.bind(this)())
+      SMap.moveUpLayer(this.state.layerdata.name)
+      if (
+        this.props.layers[this.props.layers.length - 1].name.indexOf(
+          'vec@TD',
+        ) >= 0
+      ) {
+        SMap.moveUpLayer(this.state.layerdata.name)
+      }
+      this.props.getLayers()
       this.setVisible(false)
     } else if (section.title === '设置为当前图层') {
       if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {

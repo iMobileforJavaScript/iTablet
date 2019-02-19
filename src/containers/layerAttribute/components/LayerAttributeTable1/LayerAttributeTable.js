@@ -31,6 +31,8 @@ const COL_HEIGHT = scaleSize(80)
 
 export default class LayerAttributeTable extends React.Component {
   props: {
+    mapChange: () => {},
+    showSaveDialog: () => {},
     add: () => {},
     edit: () => {},
     selectRow: () => {},

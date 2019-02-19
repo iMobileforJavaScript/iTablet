@@ -7,7 +7,7 @@
 import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../styles'
-import { scaleSize } from '../utils'
+// import { scaleSize } from '../utils'
 import PropTypes from 'prop-types'
 
 export default class ListSeparator extends React.Component {
@@ -55,7 +55,7 @@ export default class ListSeparator extends React.Component {
 const styles = StyleSheet.create({
   hSeparator: {
     flex: 1,
-    height: scaleSize(1),
+    height: 1,
     marginHorizontal: 0,
     backgroundColor: color.bgG,
     // marginLeft: scaleSize(16),
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
   vSeparator: {
     // flex: 1,
-    width: scaleSize(1),
+    width: 1,
     backgroundColor: color.bgG,
     // marginLeft: scaleSize(16),
     // marginRight: scaleSize(16),

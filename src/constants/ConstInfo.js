@@ -60,6 +60,7 @@ export default {
 
   READING_DATA: '读取数据中',
   LOADING_DATA: '数据加载中',
+  ALL_DATA_ALREADY_LOADED: '数据已经全部加载完',
 
   PLEASE_INPUT_NAME: '请输入名称',
   PLEASE_CHOOSE_DELETE_OBJ: '请选择删除对象',

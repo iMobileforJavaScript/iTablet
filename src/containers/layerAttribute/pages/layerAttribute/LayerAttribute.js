@@ -5,7 +5,7 @@
  */
 
 import * as React from 'react'
-import { View, Text, Platform, BackHandler, Dimensions } from 'react-native'
+import { View, Text, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container } from '../../../../components'
 import { Toast } from '../../../../utils'
@@ -41,6 +41,8 @@ export default class LayerAttribute extends React.Component {
 
     this.currentFieldInfo = []
     this.currentFieldIndex = -1
+    this.currentPage = 0
+    this.pageSize = 20
   }
 
   componentDidMount() {
@@ -49,7 +51,8 @@ export default class LayerAttribute extends React.Component {
     if (this.type === 'MAP_3D') {
       this.getMap3DAttribute()
     } else {
-      this.getAttribute()
+      this.setLoading(true, ConstInfo.LOADING_DATA)
+      this.refresh()
     }
   }
 
@@ -62,7 +65,7 @@ export default class LayerAttribute extends React.Component {
         mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
         JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
     ) {
-      this.getAttribute()
+      this.refresh()
     }
   }
 
@@ -100,21 +103,43 @@ export default class LayerAttribute extends React.Component {
     cb && cb()
   }
 
+  /** 下拉刷新 **/
+  refresh = (cb = () => {}) => {
+    this.currentPage = 0
+    this.getAttribute(cb)
+  }
+
+  /** 加载更多 **/
+  loadMore = (cb = () => {}) => {
+    this.currentPage += 1
+    this.getAttribute(attribute => {
+      cb && cb()
+      if (!attribute || attribute.length <= 0) {
+        Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
+        this.currentPage--
+      }
+    })
+  }
+
   getAttribute = (cb = () => {}) => {
     if (!this.props.currentLayer.path) return
-    this.setLoading(true, ConstInfo.LOADING_DATA)
+    let attribute = []
     ;(async function() {
       try {
-        this.props.getAttributes(this.props.currentLayer.path)
+        attribute = await this.props.getAttributes({
+          path: this.props.currentLayer.path,
+          page: this.currentPage,
+          size: this.pageSize,
+        })
         !this.state.showTable &&
           this.setState({
             showTable: true,
           })
         this.setLoading(false)
-        cb && cb()
+        cb && cb(attribute)
       } catch (e) {
         this.setLoading(false)
-        cb && cb()
+        cb && cb(attribute)
       }
     }.bind(this)())
   }
@@ -160,7 +185,11 @@ export default class LayerAttribute extends React.Component {
   }
 
   back = () => {
-    this.props.navigation.navigate('MapView')
+    if (this.type === 'MAP_3D') {
+      this.props.navigation.navigate('Map3D')
+    } else {
+      this.props.navigation.navigate('MapView')
+    }
     return true
   }
 
@@ -174,74 +203,36 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
-  renderMap3dLayerAttribute = () => {
-    if (!this.props.attributes || !this.props.attributes.data) return null
-    if (this.props.attributes.data.length > 1) {
-      return (
-        <LayerAttributeTable
-          ref={ref => (this.table = ref)}
-          data={this.props.attributes.data}
-          tableHead={this.props.attributes.head}
-          // data={this.state.attribute}
-          // tableHead={this.state.tableHead}
-          // tableTitle={this.state.tableTitle}
-          NormalrowStyle={{ width: Dimensions.get('window').width }}
-          type={LayerAttributeTable.Type.MAP3D_ATTRIBUTE}
-          selectRow={this.selectRow}
-        />
-      )
-    } else {
-      return (
-        <LayerAttributeTable
-          ref={ref => (this.table = ref)}
-          data={this.props.attributes.data[0]}
-          hasIndex={false}
-          tableTitle={this.props.attributes.head}
-          // colHeight={this.state.colHeight}
-          widthArr={[100, 100]}
-          tableHead={['名称', '属性值']}
-          // tableHead={this.state.tableHead}
-        />
-      )
-    }
-  }
-
   renderMapLayerAttribute = () => {
-    if (!this.props.attributes || !this.props.attributes.data) return null
-    if (this.props.attributes.data.length > 1) {
-      return (
-        <LayerAttributeTable
-          ref={ref => (this.table = ref)}
-          data={this.props.attributes.data}
-          tableHead={this.props.attributes.head}
-          // data={this.state.attribute}
-          // tableHead={this.state.tableHead}
-          // tableTitle={this.state.tableTitle}
-          // NormalrowStyle={{width:scaleSize(720)}}
-          type={
-            this.props.attributes.data.length > 1
-              ? LayerAttributeTable.Type.EDIT_ATTRIBUTE
-              : LayerAttributeTable.Type.ATTRIBUTE
-          }
-          selectRow={this.selectRow}
-          refresh={this.getAttribute}
-        />
-      )
-    } else {
-      return (
-        <LayerAttributeTable
-          ref={ref => (this.table = ref)}
-          data={this.props.attributes.data[0]}
-          hasIndex={false}
-          tableTitle={this.props.attributes.head}
-          // colHeight={this.state.colHeight}
-          widthArr={[100, 100]}
-          tableHead={['名称', '属性值']}
-          // tableHead={this.state.tableHead}
-          refresh={this.getAttribute}
-        />
-      )
-    }
+    if (
+      !this.props.attributes ||
+      (!this.props.attributes.data && this.props.attributes.data.length === 0)
+    )
+      return null
+    return (
+      <LayerAttributeTable
+        ref={ref => (this.table = ref)}
+        data={
+          this.props.attributes.data.length > 1
+            ? this.props.attributes.data
+            : this.props.attributes.data[0]
+        }
+        tableHead={
+          this.props.attributes.data.length > 1
+            ? this.props.attributes.head
+            : ['名称', '属性值']
+        }
+        widthArr={this.props.attributes.data.length === 1 && [100, 100]}
+        type={
+          this.props.attributes.data.length > 1
+            ? LayerAttributeTable.Type.MULTI_DATA
+            : LayerAttributeTable.Type.SINGLE_DATA
+        }
+        selectRow={this.selectRow}
+        refresh={cb => this.refresh(cb)}
+        loadMore={cb => this.loadMore(cb)}
+      />
+    )
   }
 
   render() {
@@ -277,11 +268,12 @@ export default class LayerAttribute extends React.Component {
         this.props.attributes &&
         this.props.attributes.head ? (
             this.props.attributes.head.length > 0 ? (
-              this.type === 'MAP_3D' ? (
-                this.renderMap3dLayerAttribute()
-              ) : (
-                this.renderMapLayerAttribute()
-              )
+            // this.type === 'MAP_3D' ? (
+            //   this.renderMap3dLayerAttribute()
+            // ) : (
+            //   this.renderMapLayerAttribute()
+            // )
+              this.renderMapLayerAttribute()
             ) : (
               <View style={styles.infoView}>
                 <Text style={styles.info}>请选择图层对象</Text>
