@@ -1969,6 +1969,8 @@ export default class ToolBar extends React.PureComponent {
     let setData = function() {
       if (
         GLOBAL.Type === constants.MAP_EDIT ||
+        this.state.type === ConstToolType.GRID_STYLE ||
+        this.state.type === ConstToolType.MAP_STYLE ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
@@ -2069,6 +2071,8 @@ export default class ToolBar extends React.PureComponent {
   showMenuBox = () => {
     if (
       GLOBAL.Type === constants.MAP_EDIT ||
+      this.state.type === ConstToolType.GRID_STYLE ||
+      this.state.type === ConstToolType.MAP_STYLE ||
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
