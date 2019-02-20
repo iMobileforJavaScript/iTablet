@@ -1954,7 +1954,15 @@ export default class ToolBar extends React.PureComponent {
     let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
       if (
-        this.state.type.indexOf('MAP_THEME_PARAM') < 0 ||
+        GLOBAL.Type === constants.MAP_EDIT ||
+        this.state.type === ConstToolType.GRID_STYLE ||
+        this.state.type === ConstToolType.MAP_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+        this.state.type === ConstToolType.LINECOLOR_SET ||
+        this.state.type === ConstToolType.POINTCOLOR_SET ||
+        this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow)
       ) {
         Animated.timing(this.state.boxHeight, {
@@ -1971,6 +1979,12 @@ export default class ToolBar extends React.PureComponent {
         GLOBAL.Type === constants.MAP_EDIT ||
         this.state.type === ConstToolType.GRID_STYLE ||
         this.state.type === ConstToolType.MAP_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+        this.state.type === ConstToolType.LINECOLOR_SET ||
+        this.state.type === ConstToolType.POINTCOLOR_SET ||
+        this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
@@ -2073,6 +2087,12 @@ export default class ToolBar extends React.PureComponent {
       GLOBAL.Type === constants.MAP_EDIT ||
       this.state.type === ConstToolType.GRID_STYLE ||
       this.state.type === ConstToolType.MAP_STYLE ||
+      this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+      this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+      this.state.type === ConstToolType.LINECOLOR_SET ||
+      this.state.type === ConstToolType.POINTCOLOR_SET ||
+      this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+      this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
