@@ -1,7 +1,4 @@
 import LayerAttributeTab from './LayerAttributeTab'
-import LayerAttributeTable from './LayerAttributeTable'
+import LayerAttributeTable from './LayerAttributeTable/LayerAttributeTable1'
 
-export {
-  LayerAttributeTab,
-  LayerAttributeTable,
-}
+export { LayerAttributeTab, LayerAttributeTable }

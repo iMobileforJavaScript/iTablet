@@ -11,7 +11,9 @@ export const SET_CURRENT_ATTRIBUTE = 'SET_CURRENT_ATTRIBUTE'
 export const SET_CURRENT_LAYER = 'SET_CURRENT_LAYER'
 export const SET_ANALYST_LAYER = 'SET_ANALYST_LAYER'
 export const GET_LAYERS = 'GET_LAYERS'
-export const GET_ATTRIBUTES = 'GET_ATTRIBUTES'
+export const GET_ATTRIBUTES_REFRESH = 'GET_ATTRIBUTES_REFRESH'
+export const GET_ATTRIBUTES_LOAD = 'GET_ATTRIBUTES_LOAD'
+export const GET_ATTRIBUTES_FAILED = 'GET_ATTRIBUTES_FAILED'
 export const SET_ATTRIBUTES = 'SET_ATTRIBUTES'
 export const GET_LAYER3DLIST = 'GET_LAYER3DLIST'
 export const SET_CURRENTLAYER3D = 'SET_CURRENTLAYER3D'
@@ -89,25 +91,40 @@ export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
   return layers
 }
 
-export const getAttributes = (layerPath, cb = () => {}) => async (
+export const getAttributes = (params, cb = () => {}) => async (
   dispatch,
   getState,
 ) => {
   try {
-    if (!layerPath && getState().layers.toJS().currentLayer.path) {
-      layerPath = getState().layers.toJS().currentLayer.path
+    // 当page为0时，则为刷新
+    let path,
+      page = 0,
+      size = 20
+    if (params) {
+      if (!params.path && getState().layers.toJS().currentLayer.path) {
+        path = getState().layers.toJS().currentLayer.path
+      } else {
+        path = params.path
+      }
+      if (params.page >= 0) {
+        page = params.page
+      }
+      if (params.size >= 0) {
+        size = params.size
+      }
     }
-    let attribute = await SMap.getLayerAttribute(layerPath)
+    let attribute = await SMap.getLayerAttribute(path, page, size)
+
+    let action = page === 0 ? GET_ATTRIBUTES_REFRESH : GET_ATTRIBUTES_LOAD
     await dispatch({
-      type: GET_ATTRIBUTES,
+      type: action,
       payload: attribute || [],
     })
     cb && cb(attribute)
     return attribute
   } catch (e) {
     await dispatch({
-      type: GET_ATTRIBUTES,
-      payload: [],
+      type: GET_ATTRIBUTES_FAILED,
     })
     cb && cb()
     return e
@@ -225,7 +242,7 @@ export default handleActions(
         .setIn(['layers'], fromJS(payload.layers))
         .setIn(['currentLayer'], fromJS(currentLayer))
     },
-    [`${GET_ATTRIBUTES}`]: (state, { payload }) => {
+    [`${GET_ATTRIBUTES_REFRESH}`]: (state, { payload }) => {
       let currentAttribute = {},
         attributes = state.toJS().attributes
       if (
@@ -246,6 +263,42 @@ export default handleActions(
       }
       attributes.head = tableHead
       attributes.data = payload
+      return state
+        .setIn(['attributes'], fromJS(attributes))
+        .setIn(['currentAttribute'], fromJS(currentAttribute))
+    },
+    [`${GET_ATTRIBUTES_LOAD}`]: (state, { payload }) => {
+      let currentAttribute = {},
+        attributes = state.toJS().attributes
+      if (
+        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+        payload.length > 0
+      ) {
+        currentAttribute = payload[0]
+      }
+      let tableHead = []
+      if (payload && payload.length > 0) {
+        payload[0].forEach(item => {
+          if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+            tableHead.unshift(item.fieldInfo.caption)
+          } else {
+            tableHead.push(item.fieldInfo.caption)
+          }
+        })
+      } else {
+        tableHead = attributes.head
+      }
+      attributes.head = tableHead
+      attributes.data = (attributes.data || []).concat(payload)
+      return state
+        .setIn(['attributes'], fromJS(attributes))
+        .setIn(['currentAttribute'], fromJS(currentAttribute))
+    },
+    [`${GET_ATTRIBUTES_FAILED}`]: state => {
+      let currentAttribute = {},
+        attributes = state.toJS().attributes
+      attributes.head = []
+      attributes.data = []
       return state
         .setIn(['attributes'], fromJS(attributes))
         .setIn(['currentAttribute'], fromJS(currentAttribute))

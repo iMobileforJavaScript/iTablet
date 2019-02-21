@@ -150,7 +150,6 @@ export default class MT_layerManager extends React.Component {
     }
 
     if (Object.keys(newState).length > 0) {
-
       this.setState(newState)
     }
   }
@@ -504,71 +503,85 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  /**地图制图修改风格 */
+  mapEdit = data => {
+    SMap.setLayerEditable(data.path, true)
+    if (data.type === 83) {
+      GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
+        containerType: 'list',
+        isFullScreen: false,
+        height: ConstToolType.HEIGHT[4],
+      })
+      GLOBAL.toolBox.showFullMap()
+      this.props.navigation.navigate('MapView')
+    } else if (data.type === 1 || data.type === 3 || data.type === 5) {
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+        containerType: 'symbol',
+        isFullScreen: false,
+        column: 4,
+        height: ConstToolType.THEME_HEIGHT[3],
+      })
+      GLOBAL.toolBox.showFullMap()
+      this.props.navigation.navigate('MapView')
+    } else {
+      Toast.show('当前图层无法设置风格')
+    }
+  }
+
+  /**修改专题图 */
+  mapTheme = data => {
+    let curThemeType
+    switch (data.themeType) {
+      case ThemeType.UNIQUE:
+        // this.props.navigation.navigate('MapView')
+        // Toast.show('当前图层为:' + data.name)
+        curThemeType = constants.THEME_UNIQUE_STYLE
+        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
+        break
+      case ThemeType.RANGE:
+        // this.props.navigation.navigate('MapView')
+        // Toast.show('当前图层为:' + data.name)
+        curThemeType = constants.THEME_RANGE_STYLE
+        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
+        break
+      case ThemeType.LABEL:
+        // this.props.navigation.navigate('MapView')
+        // Toast.show('当前图层为:' + data.name)
+        curThemeType = constants.THEME_UNIFY_LABEL
+        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+        break
+      default:
+        Toast.show('提示:当前图层暂不支持修改')
+        break
+    }
+    if (curThemeType) {
+      // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
+        containerType: 'list',
+        isFullScreen: true,
+        themeType: curThemeType,
+        isTouchProgress: false,
+        showMenuDialog: true,
+      })
+      GLOBAL.toolBox.showFullMap()
+      this.props.navigation.navigate('MapView')
+      Toast.show('当前图层为:' + data.name)
+    }
+  }
+
   onPressRow = async ({ data }) => {
     this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
     if (GLOBAL.Type === constants.MAP_EDIT) {
       if (data.themeType <= 0) {
-        SMap.setLayerEditable(data.path, true)
-        if (data.type === 83) {
-          GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-            containerType: 'list',
-            isFullScreen: false,
-            height: ConstToolType.HEIGHT[4],
-          })
-          GLOBAL.toolBox.showFullMap()
-          this.props.navigation.navigate('MapView')
-        } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-          GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-            containerType: 'symbol',
-            isFullScreen: false,
-            column: 4,
-            height: ConstToolType.THEME_HEIGHT[3],
-          })
-          GLOBAL.toolBox.showFullMap()
-          this.props.navigation.navigate('MapView')
-        } else {
-          Toast.show('当前图层无法设置风格')
-        }
+        this.mapEdit(data)
       } else {
         Toast.show('当前图层无法设置风格')
       }
     } else if (GLOBAL.Type === constants.MAP_THEME) {
-      let curThemeType
-      switch (data.themeType) {
-        case ThemeType.UNIQUE:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
-          curThemeType = constants.THEME_UNIQUE_STYLE
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIQUE_STYLE)
-          break
-        case ThemeType.RANGE:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
-          curThemeType = constants.THEME_RANGE_STYLE
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_RANGE_STYLE)
-          break
-        case ThemeType.LABEL:
-          // this.props.navigation.navigate('MapView')
-          // Toast.show('当前图层为:' + data.name)
-          curThemeType = constants.THEME_UNIFY_LABEL
-          // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-          break
-        default:
-          Toast.show('提示:请选择专题图层')
-          break
-      }
-      if (curThemeType) {
-        // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-          containerType: 'list',
-          isFullScreen: true,
-          themeType: curThemeType,
-          isTouchProgress: false,
-          showMenuDialog: true,
-        })
-        GLOBAL.toolBox.showFullMap()
-        this.props.navigation.navigate('MapView')
-        Toast.show('当前图层为:' + data.name)
+      if (data.themeType <= 0) {
+        this.mapEdit(data)
+      } else {
+        this.mapTheme(data)
       }
     }
     this.setState({
