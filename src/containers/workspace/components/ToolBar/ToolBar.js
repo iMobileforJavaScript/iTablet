@@ -84,7 +84,7 @@ export default class ToolBar extends React.PureComponent {
     collection: Object,
     template: Object,
     currentLayer: Object,
-    selection: Object,
+    selection: Array,
     device: Object,
     confirm: () => {},
     showDialog: () => {},
@@ -1846,6 +1846,9 @@ export default class ToolBar extends React.PureComponent {
           if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
             // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
             SMap.setAction(Action.SELECT)
+          } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
+            // SMap.setAction(Action.SELECT_BY_RECTANGLE)
+            SMap.selectByRectangle()
           }
           SMap.setAction(actionType)
         }
@@ -3504,12 +3507,16 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
             if (
-              !this.props.selection.layerInfo ||
-              !this.props.selection.layerInfo.path
+              this.props.selection.length === 0
+              // !this.props.selection.layerInfo ||
+              // !this.props.selection.layerInfo.path
             ) {
               Toast.show(ConstInfo.NON_SELECTED_OBJ)
               return
             }
+            // NavigationService.navigate('layerSelectionAttribute', {
+            //   type: 'singleAttribute',
+            // })
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
             })

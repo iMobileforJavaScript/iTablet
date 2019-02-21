@@ -2,6 +2,7 @@ import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { color } from '../../../../styles'
 
+const ROW_HEIGHT = scaleSize(80)
 export default StyleSheet.create({
   container: {
     flex: 1,
@@ -53,5 +54,29 @@ export default StyleSheet.create({
     flex: 1,
     // borderColor: color.borderLight,
     borderColor: '#A0A0A0',
+  },
+  indexCell: {
+    height: ROW_HEIGHT - 1,
+    backgroundColor: color.itemColorGray,
+    paddingHorizontal: scaleSize(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  indexCellText: {
+    color: color.fontColorWhite,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+  cell: {
+    height: ROW_HEIGHT - 1,
+    backgroundColor: 'transparent',
+    paddingHorizontal: scaleSize(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cellText: {
+    color: color.themeText2,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
   },
 })

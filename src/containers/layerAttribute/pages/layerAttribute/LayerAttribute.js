@@ -23,11 +23,13 @@ export default class LayerAttribute extends React.Component {
     currentAttribute: Object,
     currentLayer: Object,
     selection: Object,
+    map: Object,
     attributes: Object,
     setAttributes: () => {},
     setCurrentAttribute: () => {},
     getAttributes: () => {},
     closeMap: () => {},
+    setLayerAttributes: () => {},
   }
 
   constructor(props) {
@@ -77,25 +79,6 @@ export default class LayerAttribute extends React.Component {
   }
 
   getMap3DAttribute = async (cb = () => {}) => {
-    // let list = []
-    // let data = await SScene.getLableAttributeList()
-    // for (let index = 0; index < data.length; index++) {
-    //   let arr = []
-    //   Object.keys(data[index]).forEach(key => {
-    //     let item = {
-    //       fieldInfo: { caption: key },
-    //       name: key,
-    //       value: data[index][key],
-    //     }
-    //     if (key === 'id') {
-    //       arr.unshift(item)
-    //     } else {
-    //       arr.push(item)
-    //     }
-    //   })
-    //   list.push(arr)
-    // }
-    // this.props.setAttributes(list)
     !this.state.showTable &&
       this.setState({
         showTable: true,
@@ -116,7 +99,7 @@ export default class LayerAttribute extends React.Component {
       cb && cb()
       if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
-        this.currentPage--
+        // this.currentPage--
       }
     })
   }
@@ -184,6 +167,38 @@ export default class LayerAttribute extends React.Component {
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
   }
 
+  /** 修改表格中的值的回调 **/
+  changeAction = data => {
+    if (
+      this.props.setLayerAttributes &&
+      typeof this.props.setLayerAttributes === 'function'
+    ) {
+      // 单个对象属性和多个对象属性数据有区别
+      let isSingleData = typeof data.cellData !== 'object'
+      this.props.setLayerAttributes([
+        {
+          mapName: this.props.map.currentMap.name,
+          layerPath: this.props.currentLayer.path,
+          fieldInfo: [
+            {
+              name: isSingleData ? data.rowData.name : data.cellData.name,
+              value: data.value,
+            },
+          ],
+          params: {
+            // index: int,      // 当前对象所在记录集中的位置
+            filter: `SmID=${
+              isSingleData
+                ? this.props.attributes.data[0][0].value
+                : data.rowData[0].value
+            }`, // 过滤条件
+            cursorType: 2, // 2: DYNAMIC, 3: STATIC
+          },
+        },
+      ])
+    }
+  }
+
   back = () => {
     if (this.type === 'MAP_3D') {
       this.props.navigation.navigate('Map3D')
@@ -228,9 +243,13 @@ export default class LayerAttribute extends React.Component {
             ? LayerAttributeTable.Type.MULTI_DATA
             : LayerAttributeTable.Type.SINGLE_DATA
         }
+        // indexColumn={this.props.attributes.data.length > 1 ? 0 : -1}
+        indexColumn={0}
+        hasInputText={this.props.attributes.data.length > 1}
         selectRow={this.selectRow}
         refresh={cb => this.refresh(cb)}
         loadMore={cb => this.loadMore(cb)}
+        changeAction={this.changeAction}
       />
     )
   }
@@ -268,11 +287,6 @@ export default class LayerAttribute extends React.Component {
         this.props.attributes &&
         this.props.attributes.head ? (
             this.props.attributes.head.length > 0 ? (
-            // this.type === 'MAP_3D' ? (
-            //   this.renderMap3dLayerAttribute()
-            // ) : (
-            //   this.renderMapLayerAttribute()
-            // )
               this.renderMapLayerAttribute()
             ) : (
               <View style={styles.infoView}>

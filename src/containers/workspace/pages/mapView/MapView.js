@@ -45,7 +45,7 @@ export default class MapView extends React.Component {
     user: PropTypes.object,
     editLayer: PropTypes.object,
     analystLayer: PropTypes.object,
-    selection: PropTypes.object,
+    selection: PropTypes.array,
     latestMap: PropTypes.object,
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
@@ -287,8 +287,15 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
-    this.props.setSelection && this.props.setSelection(event)
+    this.props.setSelection &&
+      this.props.setSelection([
+        {
+          layerInfo: event.layerInfo,
+          ids: [event.id],
+        },
+      ])
     switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       case ConstToolType.MAP_TOOL_POINT_SELECT:
         break
       case ConstToolType.MAP_EDIT_POINT:
@@ -331,8 +338,15 @@ export default class MapView extends React.Component {
     }
   }
 
-  geometryMultiSelected = () => {
-    // TODO 处理多选
+  geometryMultiSelected = event => {
+    let data = []
+    for (let i = 0; i < event.geometries.length; i++) {
+      data.push({
+        layerInfo: event.geometries[i].layerInfo,
+        ids: event.geometries[i].ids,
+      })
+    }
+    this.props.setSelection && this.props.setSelection(data)
   }
 
   // 导出(保存)工作空间中地图到模块
