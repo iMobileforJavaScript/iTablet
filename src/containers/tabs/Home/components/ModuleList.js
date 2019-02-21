@@ -302,16 +302,32 @@ export default class ModuleList extends Component {
           this._showAlert(this.moduleItems[index], downloadData, tmpCurrentUser)
         }
       } else {
+        let filePath2
         let filePath = arrFile[0].filePath
-        let maps = await SMap.getMapsByFile(filePath)
-        let mapName = maps[0]
-        let filePath2 =
-          homePath +
-          ConstPath.UserPath +
-          currentUserName +
-          '/Data/Map/' +
-          mapName +
-          '.xml'
+        let fileType = filePath.substr(filePath.lastIndexOf('.')).toLowerCase()
+        let fileName = filePath.substring(
+          filePath.lastIndexOf('/') + 1,
+          filePath.lastIndexOf('.'),
+        )
+        if (fileType === '.sxwu') {
+          filePath2 =
+            homePath +
+            ConstPath.UserPath +
+            currentUserName +
+            '/Data/Scene/' +
+            fileName +
+            '.pxp'
+        } else {
+          let maps = await SMap.getMapsByFile(filePath)
+          let mapName = maps[0]
+          filePath2 =
+            homePath +
+            ConstPath.UserPath +
+            currentUserName +
+            '/Data/Map/' +
+            mapName +
+            '.xml'
+        }
         let isExist = await FileTools.fileIsExist(filePath2)
         if (!isExist) {
           await this.props.importWorkspace(filePath, toPath, true)

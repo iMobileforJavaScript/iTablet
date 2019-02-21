@@ -11,6 +11,8 @@ export default {
   CLOSE_ANALYST: 'closeAnalyst',
   CLEAR: 'clear',
   END_FLY: 'endfly',
+  SAVE_FLY: 'savefly',
+  END_ADD_FLY: 'endaddfly',
   BACK: 'back',
   SAVE: 'save',
   CLOSE_SYMBOL: 'closesymbol',

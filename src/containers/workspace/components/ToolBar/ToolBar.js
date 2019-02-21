@@ -1467,6 +1467,12 @@ export default class ToolBar extends React.PureComponent {
               this.showToolbar()
               // this.updateOverlayerView()
               break
+
+            case ConstToolType.MAP3D_TOOL_NEWFLY:
+              this.height = ConstToolType.HEIGHT[0]
+              this.showToolbar()
+              // this.updateOverlayerView()
+              break
             case ConstToolType.MAP3D_CIRCLEFLY:
               this.height = ConstToolType.HEIGHT[0]
               this.props.showFullMap && this.props.showFullMap(true)
@@ -2216,9 +2222,23 @@ export default class ToolBar extends React.PureComponent {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  endAddFly = () => {
+    SScene.checkoutListener('startTouchAttribute')
+    SScene.clearRoutStops()
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
+    this.showToolbar(!this.isShow)
+    this.props.existFullMap && this.props.existFullMap()
+  }
+
+  saveFly = () => {}
+
   setfly = index => {
     SScene.setPosition(index)
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
+  }
+
+  newFly = () => {
+    this.showMap3DTool(ConstToolType.MAP3D_TOOL_NEWFLY)
   }
 
   listThemeAction = ({ item }) => {
@@ -3310,6 +3330,7 @@ export default class ToolBar extends React.PureComponent {
         importSceneWorkspace={this.props.importSceneWorkspace}
         refreshLayer3dList={this.props.refreshLayer3dList}
         device={this.props.device}
+        newFly={this.newFly}
       />
     )
   }
@@ -3468,6 +3489,15 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.endFly
           break
+        case ToolbarBtnType.END_ADD_FLY:
+          image = require('../../../../assets/mapEdit/cancel.png')
+          action = this.endAddFly
+          break
+        case ToolbarBtnType.SAVE_FLY:
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.saveFly
+          break
+
         case ToolbarBtnType.BACK:
           image = require('../../../../assets/mapEdit/icon_back.png')
           action = this.symbolBack
