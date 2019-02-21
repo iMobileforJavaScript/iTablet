@@ -14,6 +14,7 @@ import {
   MapController,
   ToolBar,
   OverlayView,
+  PointSearch,
 } from '../../components'
 import { Toast, scaleSize } from '../../../../utils'
 import constants from '../../constants'
@@ -66,6 +67,7 @@ export default class Map3D extends React.Component {
     this._addScene()
     this.addAttributeListener()
     this.addCircleFlyListen()
+    this.addPointSearchListen()
   }
 
   componentWillUnmount() {
@@ -112,6 +114,15 @@ export default class Map3D extends React.Component {
     this.circleFlyListen = await SScene.addCircleFlyListen({
       callback: () => {
         this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
+      },
+    })
+  }
+
+  addPointSearchListen = async () => {
+    this.pointSearchListen = await SScene.setPointSearchListener({
+      callback: result => {
+        // console.log(result)
+        this.pointSearch && this.pointSearch.setSearchData(result)
       },
     })
   }
@@ -219,6 +230,12 @@ export default class Map3D extends React.Component {
   //遮盖层
   renderOverLayer = () => {
     return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
+  }
+
+  renderPointSearch = () => {
+    return (
+      <PointSearch ref={ref => (this.pointSearch = ref)} type={'pointSearch'} />
+    )
   }
 
   renderFunctionToolbar = () => {
@@ -388,6 +405,7 @@ export default class Map3D extends React.Component {
         bottomProps={{ type: 'fix' }}
       >
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
+        {/* {this.renderPointSearch()} */}
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderOverLayer()}

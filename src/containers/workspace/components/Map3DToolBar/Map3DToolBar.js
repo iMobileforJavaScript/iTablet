@@ -23,6 +23,7 @@ export default class Map3DToolBar extends React.Component {
     setVisible: () => {},
     getLayer3d: () => {},
     getoverlayView: () => {},
+    newFly: () => {},
   }
   constructor(props) {
     super(props)
@@ -187,12 +188,19 @@ export default class Map3DToolBar extends React.Component {
     if (this.props.type === 'MAP3D_TOOL_FLYLIST') {
       // return <Text style={styles.sectionHeader}>{section.title}</Text>
       return (
-        <View style={styles.sceneView}>
-          <Image
-            source={require('../../../../assets/function/Frenchgrey/icon_symbolFly_white.png')}
-            style={styles.sceneImg}
-          />
-          <Text style={styles.sceneTitle}>{section.title}</Text>
+        <View style={styles.fltListHeader}>
+          <View style={styles.sceneView}>
+            <Image
+              source={require('../../../../assets/function/Frenchgrey/icon_symbolFly_white.png')}
+              style={styles.sceneImg}
+            />
+            <Text style={styles.sceneTitle}>{section.title}</Text>
+          </View>
+          {/* <TouchableOpacity style={styles.newView} onPress={()=>{
+            this.props.newFly&&this.props.newFly()
+          }}>
+            <Image source={require('../../../../assets/map/Frenchgrey/scene_addfly_light.png')} style={styles.newRout}/>
+          </TouchableOpacity> */}
         </View>
       )
     }
