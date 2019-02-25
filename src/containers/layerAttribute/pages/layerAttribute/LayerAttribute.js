@@ -250,6 +250,9 @@ export default class LayerAttribute extends React.Component {
       case constants.MAP_THEME:
         title = MAP_MODULE.MAP_THEME
         break
+      case constants.MAP_PLOTTING:
+        title = MAP_MODULE.MAP_PLOTTING
+        break
     }
     return (
       <Container

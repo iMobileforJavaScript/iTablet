@@ -1061,6 +1061,33 @@ export default class MapView extends React.Component {
     )
   }
 
+  cancel = () => {
+    GLOBAL.dialog.setDialogVisible(false)
+  }
+
+  confirm = () => {
+    (async function() {
+      let result = await SMap.setDynamicProjection()
+      if (result) {
+        GLOBAL.dialog.setDialogVisible(false)
+      }
+    }.bind(this)())
+  }
+
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (GLOBAL.dialog = ref)}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+        title={'提示'}
+        info={'是否开启动态投影？'}
+        confirmBtnTitle={'是'}
+        cancelBtnTitle={'否'}
+      />
+    )
+  }
+
   render() {
     return (
       <Container
@@ -1088,6 +1115,7 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
+        {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}

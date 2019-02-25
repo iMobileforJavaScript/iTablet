@@ -335,6 +335,9 @@ export default class ModuleList extends Component {
           case MAP_MODULE.MAP_THEME:
             module = constants.MAP_THEME
             break
+          case MAP_MODULE.MAP_PLOTTING:
+            module = constants.MAP_PLOTTING
+            break
         }
         let latestMap
         if (

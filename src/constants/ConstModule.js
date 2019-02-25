@@ -12,6 +12,7 @@ const MAP_MODULE = {
   MAP_3D: '三维场景',
   MAP_THEME: '专题制图',
   MAP_COLLECTION: '外业采集',
+  MAP_PLOTTING: '应急标绘',
 }
 
 export { MAP_MODULE }
@@ -281,6 +282,76 @@ export default [
       })
     },
   },
+  // {
+  //   key: '应急标绘',
+  //   title: '应急标绘',
+  //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
+  //   moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
+  //   style: {
+  //     width: scaleSize(70),
+  //     height: scaleSize(67),
+  //     position: 'absolute',
+  //     right: 0,
+  //     bottom: 0,
+  //   },
+  //   action: async (user, lastMap) => {
+  //     let data = ConstOnline['Google']
+  //     data.layerIndex = 1
+  //     GLOBAL.Type = constants.MAP_PLOTTING
+  //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+  //
+  //     let homePath = await FileTools.appendingHomeDirectory()
+  //     let userPath = ConstPath.CustomerPath
+  //     if (user && user.userName) {
+  //       userPath = ConstPath.UserPath + user.userName + '/'
+  //     }
+  //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+  //
+  //     let wsData,
+  //       isOpenLastMap = false
+  //
+  //     if (lastMap) {
+  //       isOpenLastMap = await FileTools.fileIsExistInHomeDirectory(lastMap.path)
+  //     }
+  //
+  //     if (isOpenLastMap) {
+  //       data = {
+  //         type: 'Map',
+  //         ...lastMap,
+  //       }
+  //     } else {
+  //       let moduleMapName = '国情普查_示范数据'
+  //       let moduleMapFullName = moduleMapName + '.xml'
+  //       // 地图相对路径
+  //       let moduleMapPath =
+  //         userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
+  //
+  //       if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
+  //         data = {
+  //           type: 'Map',
+  //           path: moduleMapPath,
+  //           name: moduleMapName,
+  //         }
+  //       }
+  //     }
+  //
+  //     wsData = [
+  //       {
+  //         DSParams: { server: wsPath },
+  //         // layerIndex: 0,
+  //         type: 'Workspace',
+  //       },
+  //       data,
+  //     ]
+  //
+  //     NavigationService.navigate('MapView', {
+  //       operationType: constants.MAP_PLOTTING,
+  //       wsData,
+  //       mapName: '应急标绘',
+  //       isExample: false,
+  //     })
+  //   },
+  // },
   // {
   //   key: '应急标绘',
   //   title: '应急标绘',

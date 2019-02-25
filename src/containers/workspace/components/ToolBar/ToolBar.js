@@ -260,7 +260,6 @@ export default class ToolBar extends React.PureComponent {
         buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT]
         break
       case ConstToolType.MAP_ADD_LAYER:
-        // data = layerAdd
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.PLACEHOLDER,
@@ -1736,6 +1735,7 @@ export default class ToolBar extends React.PureComponent {
           })
         if (result) {
           this.setVisible(false)
+          GLOBAL.dialog.setDialogVisible(true)
           Toast.show('添加成功')
         } else {
           Toast.show('添加失败')

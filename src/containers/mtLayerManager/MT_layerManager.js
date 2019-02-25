@@ -150,7 +150,6 @@ export default class MT_layerManager extends React.Component {
     }
 
     if (Object.keys(newState).length > 0) {
-
       this.setState(newState)
     }
   }
@@ -990,6 +989,9 @@ export default class MT_layerManager extends React.Component {
         break
       case constants.MAP_THEME:
         title = MAP_MODULE.MAP_THEME
+        break
+      case constants.MAP_PLOTTING:
+        title = MAP_MODULE.MAP_PLOTTING
         break
     }
     return (
