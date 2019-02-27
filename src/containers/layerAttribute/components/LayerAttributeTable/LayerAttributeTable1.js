@@ -24,12 +24,16 @@ export default class LayerAttributeTable extends React.Component {
     refresh?: () => {},
     loadMore?: () => {},
     selectRow?: () => {},
+    changeAction?: () => {}, // 修改表格中的值的回调
 
     selectable: boolean,
+    indexColumn?: number, // 每一行index所在的列，indexColumn >= 0 则所在列为Text
 
     tableHead: Array,
     tableTitle: Array,
     tableData: any,
+    indexCellStyle: any,
+    indexCellTextStyle: any,
     widthArr: Array,
     colHeight: number,
     type: string,
@@ -46,6 +50,7 @@ export default class LayerAttributeTable extends React.Component {
     selectable: true,
     hasIndex: false,
     refreshing: false,
+    indexColumn: -1,
   }
 
   constructor(props) {
@@ -98,6 +103,7 @@ export default class LayerAttributeTable extends React.Component {
             animated: false,
             itemIndex: 0,
             sectionIndex: 0,
+            viewOffset: COL_HEIGHT,
           })
       }
     }
@@ -141,23 +147,42 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
+  onChangeEnd = data => {
+    if (
+      this.props.changeAction &&
+      typeof this.props.changeAction === 'function'
+    ) {
+      this.props.changeAction(data)
+    }
+  }
+
   _renderSingleDataItem = ({ item, index }) => {
     return (
       <Row
         data={item}
         index={index}
         onPress={() => this.onPressRow({ item, index })}
+        onChangeEnd={this.onChangeEnd}
       />
     )
   }
 
   _renderItem = ({ item, index }) => {
+    let indexCellStyle = styles.cell,
+      indexCellTextStyle = styles.cellText
+    if (item instanceof Array && this.props.indexColumn >= 0) {
+      indexCellStyle = styles.indexCell
+      indexCellTextStyle = styles.indexCellText
+    }
     return (
       <Row
         data={item}
         index={index}
-        indexColumn={0}
+        indexColumn={this.props.indexColumn}
+        indexCellStyle={[indexCellStyle, this.props.indexCellStyle]}
+        indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
         onPress={() => this.onPressRow({ item, index })}
+        onChangeEnd={this.onChangeEnd}
       />
     )
   }
@@ -172,9 +197,18 @@ export default class LayerAttributeTable extends React.Component {
         style={{ backgroundColor: color.itemColorGray }}
         cellTextStyle={{ color: color.fontColorWhite }}
         data={section.title}
+        hasInputText={false}
         onPress={() => {}}
       />
     )
+  }
+
+  getItemLayout = (data, index) => {
+    return {
+      length: scaleSize(80),
+      offset: scaleSize(80) * index,
+      index,
+    }
   }
 
   renderMultiDataTable = () => {
@@ -192,6 +226,7 @@ export default class LayerAttributeTable extends React.Component {
           onEndReachedThreshold={0.5}
           onEndReached={this.loadMore}
           initialNumToRender={20}
+          getItemLayout={this.getItemLayout}
         />
       </ScrollView>
     )
@@ -204,13 +239,15 @@ export default class LayerAttributeTable extends React.Component {
         refreshing={this.state.refreshing}
         style={styles.container}
         sections={this.state.tableData}
-        renderItem={this._renderSingleDataItem}
+        // renderItem={this._renderSingleDataItem}
+        renderItem={this._renderItem}
         keyExtractor={this._keyExtractor}
         renderSectionHeader={this._renderSectionHeader}
         // onRefresh={this.refresh}
         // onEndReachedThreshold={0.5}
         // onEndReached={this.loadMore}
         initialNumToRender={20}
+        getItemLayout={this.getItemLayout}
       />
     )
   }
@@ -222,7 +259,9 @@ export default class LayerAttributeTable extends React.Component {
       this.state.tableData[0].data[0] instanceof Array
     return (
       <KeyboardAvoidingView
-        behavior={this.state.behavior}
+        // behavior={this.state.behavior}
+        behavior="padding"
+        enabled
         style={styles.container}
       >
         <View style={styles.container}>

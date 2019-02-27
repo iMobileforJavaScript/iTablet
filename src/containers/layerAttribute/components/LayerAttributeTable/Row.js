@@ -4,14 +4,15 @@
  E-mail: yangshanglong@supermap.com
  */
 
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { scaleSize } from '../../../../utils'
 import { ListSeparator } from '../../../../components'
 import { color } from '../../../../styles'
+import Cell from './Cell'
 
 const ROW_HEIGHT = scaleSize(80)
-const CELL_WIDTH = scaleSize(120)
+const CELL_WIDTH = 100
 
 const styles = StyleSheet.create({
   rowContainer: {
@@ -48,22 +49,27 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class Row extends PureComponent {
+export default class Row extends Component {
   props: {
     data: any,
     index: number,
+    hasInputText?: boolean,
     renderCell?: () => {},
     style?: Object,
     cellStyle?: Object,
     cellTextStyle?: Object,
     cellWidthArr?: Array, // cell的宽度数组
-    indexColumn?: number, // 每一行index所在的列，indexColumn >= 0 则所在列有背景色
+    indexColumn?: number, // 每一行index所在的列，indexColumn >= 0 则所在列为Text
+    indexCellStyle?: any, // 每一行index所在的列，indexColumn >= 0 则所在列样式
+    indexCellTextStyle?: any, // 每一行index所在的列，indexColumn >= 0 则所在列文字样式
     onPress?: () => {},
     separatorColor?: () => {},
+    onChangeEnd?: () => {},
   }
 
   static defaultProps = {
     indexColumn: -1,
+    hasInputText: true,
   }
 
   _action = () => {
@@ -71,6 +77,20 @@ export default class Row extends PureComponent {
       return this.props.onPress({
         item: this.props.data,
         index: this.props.index,
+      })
+    }
+  }
+
+  changeEnd = data => {
+    if (
+      this.props.onChangeEnd &&
+      typeof this.props.onChangeEnd === 'function'
+    ) {
+      this.props.onChangeEnd({
+        rowData: this.props.data,
+        index: this.props.index,
+        cellData: data.data,
+        value: data.value,
       })
     }
   }
@@ -85,28 +105,74 @@ export default class Row extends PureComponent {
     if (this.props.renderCell && typeof this.props.renderCell === 'function') {
       return this.props.renderCell({ item, index })
     }
-    let value =
-      !isNaN(item) || typeof item === 'boolean' || typeof item === 'string'
-        ? item
-        : item.value
-    let cellStyle = styles.cell,
-      textStyle = styles.cellText
-    if (this.props.indexColumn >= 0 && this.props.indexColumn === index) {
-      cellStyle = styles.indexCell
-      textStyle = styles.indexCellText
+    let isSingleData = typeof item !== 'object'
+    let value = isSingleData ? item : item.value
+    let editable, isRequired, defaultValue
+    if (isSingleData) {
+      // 单个属性，第一列为名称
+      if (index === 0) {
+        editable = false
+      } else {
+        let isHead = typeof this.props.data[index] === 'string'
+        editable = !isHead && !this.props.data.fieldInfo.isSystemField
+        isRequired = !isHead && this.props.data.fieldInfo.isRequired
+        defaultValue = !isHead && this.props.data.fieldInfo.defaultValue
+      }
+    } else {
+      editable = item.fieldInfo && !item.fieldInfo.isSystemField
+      isRequired = item.fieldInfo && !item.fieldInfo.isRequired
+      defaultValue = item.fieldInfo && !item.fieldInfo.defaultValue
     }
-    return (
-      <View
-        key={index}
-        style={[
-          cellStyle,
-          this.props.cellStyle,
-          width ? { width } : { flex: 1 },
-        ]}
-      >
-        <Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>
-      </View>
-    )
+
+    let cellStyle = [styles.cell, this.props.cellStyle],
+      textStyle = [styles.cellText, this.props.cellTextStyle]
+    if (
+      (this.props.indexColumn >= 0 && this.props.indexColumn === index) ||
+      !this.props.hasInputText
+    ) {
+      if (this.props.indexCellStyle) {
+        cellStyle = [styles.cell, this.props.indexCellStyle]
+      }
+      if (this.props.indexCellTextStyle) {
+        textStyle = [styles.cellText, this.props.indexCellTextStyle]
+      }
+
+      return (
+        <TouchableOpacity
+          activeOpacity={1}
+          key={index}
+          style={[
+            cellStyle,
+            width ? { width } : { flex: 1 },
+            // { width },
+          ]}
+        >
+          <Text style={[textStyle, width && { width: width - 4 }]}>
+            {value}
+          </Text>
+        </TouchableOpacity>
+      )
+    } else {
+      return (
+        <Cell
+          key={index}
+          style={[
+            cellStyle,
+            this.props.cellStyle,
+            width ? { width } : { flex: 1 },
+            // { width },
+          ]}
+          textStyle={[textStyle]}
+          value={value}
+          data={item}
+          editable={editable}
+          isRequired={isRequired}
+          defaultValue={defaultValue}
+          keyboardType={typeof value === 'number' ? 'decimal-pad' : 'default'}
+          changeEnd={this.changeEnd}
+        />
+      )
+    }
   }
 
   _renderCells = () => {

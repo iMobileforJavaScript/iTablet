@@ -84,7 +84,7 @@ export default class ToolBar extends React.PureComponent {
     collection: Object,
     template: Object,
     currentLayer: Object,
-    selection: Object,
+    selection: Array,
     device: Object,
     confirm: () => {},
     showDialog: () => {},
@@ -1466,6 +1466,12 @@ export default class ToolBar extends React.PureComponent {
               this.showToolbar()
               // this.updateOverlayerView()
               break
+
+            case ConstToolType.MAP3D_TOOL_NEWFLY:
+              this.height = ConstToolType.HEIGHT[0]
+              this.showToolbar()
+              // this.updateOverlayerView()
+              break
             case ConstToolType.MAP3D_CIRCLEFLY:
               this.height = ConstToolType.HEIGHT[0]
               this.props.showFullMap && this.props.showFullMap(true)
@@ -1846,6 +1852,9 @@ export default class ToolBar extends React.PureComponent {
           if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
             // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
             SMap.setAction(Action.SELECT)
+          } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
+            // SMap.setAction(Action.SELECT_BY_RECTANGLE)
+            SMap.selectByRectangle()
           }
           SMap.setAction(actionType)
         }
@@ -1954,7 +1963,15 @@ export default class ToolBar extends React.PureComponent {
     let isFullScreen, showMenuDialog, isTouchProgress
     let showBox = function() {
       if (
-        this.state.type.indexOf('MAP_THEME_PARAM') < 0 ||
+        GLOBAL.Type === constants.MAP_EDIT ||
+        this.state.type === ConstToolType.GRID_STYLE ||
+        this.state.type === ConstToolType.MAP_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+        this.state.type === ConstToolType.LINECOLOR_SET ||
+        this.state.type === ConstToolType.POINTCOLOR_SET ||
+        this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         (this.state.type.indexOf('MAP_THEME_PARAM') >= 0 && this.isBoxShow)
       ) {
         Animated.timing(this.state.boxHeight, {
@@ -1969,6 +1986,14 @@ export default class ToolBar extends React.PureComponent {
     let setData = function() {
       if (
         GLOBAL.Type === constants.MAP_EDIT ||
+        this.state.type === ConstToolType.GRID_STYLE ||
+        this.state.type === ConstToolType.MAP_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+        this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+        this.state.type === ConstToolType.LINECOLOR_SET ||
+        this.state.type === ConstToolType.POINTCOLOR_SET ||
+        this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+        this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
         this.state.type.indexOf('MAP_THEME_PARAM') >= 0
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
@@ -2069,6 +2094,14 @@ export default class ToolBar extends React.PureComponent {
   showMenuBox = () => {
     if (
       GLOBAL.Type === constants.MAP_EDIT ||
+      this.state.type === ConstToolType.GRID_STYLE ||
+      this.state.type === ConstToolType.MAP_STYLE ||
+      this.state.type === ConstToolType.MAP_EDIT_STYLE ||
+      this.state.type === ConstToolType.MAP_EDIT_MORE_STYLE ||
+      this.state.type === ConstToolType.LINECOLOR_SET ||
+      this.state.type === ConstToolType.POINTCOLOR_SET ||
+      this.state.type === ConstToolType.REGIONBEFORECOLOR_SET ||
+      this.state.type === ConstToolType.REGIONAFTERCOLOR_SET ||
       this.state.type.indexOf('MAP_THEME_PARAM') >= 0
     ) {
       // GLOBAL.showFlex = !GLOBAL.showFlex
@@ -2216,9 +2249,23 @@ export default class ToolBar extends React.PureComponent {
     this.props.existFullMap && this.props.existFullMap()
   }
 
+  endAddFly = () => {
+    SScene.checkoutListener('startTouchAttribute')
+    SScene.clearRoutStops()
+    GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
+    this.showToolbar(!this.isShow)
+    this.props.existFullMap && this.props.existFullMap()
+  }
+
+  saveFly = () => {}
+
   setfly = index => {
     SScene.setPosition(index)
     this.showMap3DTool(ConstToolType.MAP3D_TOOL_FLY)
+  }
+
+  newFly = () => {
+    this.showMap3DTool(ConstToolType.MAP3D_TOOL_NEWFLY)
   }
 
   listThemeAction = ({ item }) => {
@@ -2443,6 +2490,24 @@ export default class ToolBar extends React.PureComponent {
             isSuccess = await SThemeCartography.createUniformThemeLabelMap(
               params,
             )
+            break
+          case constants.THEME_UNIQUE_LABEL:
+            //单值标签
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '11.0',
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createUniqueThemeLabelMap(
+              params,
+            )
+            break
+          case constants.THEME_RANGE_LABEL:
+            //分段标签
             break
         }
         if (isSuccess) {
@@ -3310,6 +3375,7 @@ export default class ToolBar extends React.PureComponent {
         importSceneWorkspace={this.props.importSceneWorkspace}
         refreshLayer3dList={this.props.refreshLayer3dList}
         device={this.props.device}
+        newFly={this.newFly}
       />
     )
   }
@@ -3468,6 +3534,15 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/cancel.png')
           action = this.endFly
           break
+        case ToolbarBtnType.END_ADD_FLY:
+          image = require('../../../../assets/mapEdit/cancel.png')
+          action = this.endAddFly
+          break
+        case ToolbarBtnType.SAVE_FLY:
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.saveFly
+          break
+
         case ToolbarBtnType.BACK:
           image = require('../../../../assets/mapEdit/icon_back.png')
           action = this.symbolBack
@@ -3504,12 +3579,16 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapTools/icon_attribute_white.png')
           action = () => {
             if (
-              !this.props.selection.layerInfo ||
-              !this.props.selection.layerInfo.path
+              this.props.selection.length === 0
+              // !this.props.selection.layerInfo ||
+              // !this.props.selection.layerInfo.path
             ) {
               Toast.show(ConstInfo.NON_SELECTED_OBJ)
               return
             }
+            // NavigationService.navigate('layerSelectionAttribute', {
+            //   type: 'singleAttribute',
+            // })
             NavigationService.navigate('layerSelectionAttribute', {
               type: 'singleAttribute',
             })

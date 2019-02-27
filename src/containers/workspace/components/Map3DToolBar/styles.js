@@ -109,13 +109,19 @@ export default StyleSheet.create({
   sceneHead: {
     flex: 1,
   },
+  fltListHeader: {
+    height: scaleSize(80),
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: color.subTheme,
+  },
   sceneView: {
     // flex:1,
     height: scaleSize(80),
     flexDirection: 'row',
     // justifyContent:"center",
     alignItems: 'center',
-    backgroundColor: color.subTheme,
+    // backgroundColor: color.subTheme,
   },
   sceneTitle: {
     fontSize: setSpText(28),
@@ -157,5 +163,25 @@ export default StyleSheet.create({
     marginLeft: scaleSize(15),
     flexDirection: 'column',
     justifyContent: 'center',
+  },
+  newView: {
+    flex: 1,
+    height: scaleSize(80),
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    // backgroundColor: color.subTheme,
+    // backgroundColor:"red",
+  },
+  newRout: {
+    width: scaleSize(55),
+    height: scaleSize(55),
+    marginRight: scaleSize(15),
+    // marginLeft: scaleSize(30),
+  },
+  newText: {
+    fontSize: setSpText(28),
+    color: '#F0F0F0',
+    marginRight: scaleSize(30),
   },
 })

@@ -8,6 +8,7 @@ import StartData from './StartData'
 import CollectionData from './CollectionData'
 import EditData from './EditData'
 import ThemeMenuData from './ThemeMenuData'
+import { Toast } from '../../../../utils'
 
 // let _params = {}
 
@@ -161,34 +162,61 @@ function getMap3DData(type) {
           selectedImage: require('../../../../assets/mapEdit/icon_stop.png'),
           // selectMode:"flash"
         },
-        // {
-        //   key: ToolbarBtnType.END_FLY,
-        //   title: '结束飞行',
-        //   action: ()=>{
-        //     SScene.flyStop()
-        //   },
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_move.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        // },
-        // {
-        //   key: 'addstation',
-        //   title: '添加站点',
-        //   action: move,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_move.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        // },
-        // {
-        //   key: 'stationmanager',
-        //   title: '站点管理',
-        //   action: move,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_move.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_move_selected.png'),
-        // },
       ]
       buttons = [ToolbarBtnType.END_FLY]
+      break
+    case ConstToolType.MAP3D_TOOL_NEWFLY:
+      data = [
+        {
+          key: 'startFly',
+          title: '添加站点',
+          action: () => {
+            try {
+              SScene.saveCurrentRoutStop().then(result => {
+                if (result) {
+                  Toast.show('添加站点成功')
+                }
+              })
+            } catch (error) {
+              Toast.show('添加站点失败')
+            }
+          },
+          size: 'large',
+          image: require('../../../../assets/map/Frenchgrey/scene_addstop_dark.png'),
+          selectedImage: require('../../../../assets/map/Frenchgrey/scene_addstop_dark.png'),
+        },
+        {
+          key: 'stop',
+          title: '飞行',
+          action: () => {
+            try {
+              SScene.saveRoutStop()
+            } catch (error) {
+              // console.warn(error)
+            }
+          },
+          size: 'large',
+          image: require('../../../../assets/map/Frenchgrey/scene_play_dark.png'),
+          selectedImage: require('../../../../assets/map/Frenchgrey/scene_play_dark.png'),
+          // selectMode:"flash"
+        },
+        // {
+        //   key: 'stop',
+        //   title: '清除所有站点',
+        //   action: () => {
+        //     try {
+        //       SScene.clearRoutStops()
+        //     } catch (error) {
+        //       console.warn(error)
+        //     }
+        //   },
+        //   size: 'large',
+        //   image: require('../../../../assets/mapEdit/icon_stop.png'),
+        //   selectedImage: require('../../../../assets/mapEdit/icon_stop.png'),
+        //   // selectMode:"flash"
+        // },
+      ]
+      buttons = [ToolbarBtnType.END_ADD_FLY]
       break
     case ConstToolType.MAP3D_TOOL_LEVEL:
       buttons = [ToolbarBtnType.CANCEL]

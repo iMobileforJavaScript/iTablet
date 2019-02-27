@@ -31,12 +31,12 @@ async function getMap3DSettings() {
           isShow: true,
           index: 0,
         },
-        {
-          name: '地形缩放比例',
-          value: true,
-          isShow: true,
-          index: 0,
-        },
+        // {
+        //   name: '地形缩放比例',
+        //   value: true,
+        //   isShow: true,
+        //   index: 0,
+        // },
       ],
     },
   ]

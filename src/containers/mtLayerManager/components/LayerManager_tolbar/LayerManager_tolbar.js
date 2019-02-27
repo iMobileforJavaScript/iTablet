@@ -332,7 +332,7 @@ export default class LayerManager_tolbar extends React.Component {
           {
             isFullScreen: true,
             column: 3,
-            height: ConstToolType.HEIGHT[0],
+            height: ConstToolType.NEWTHEME_HEIGHT[1],
             createThemeByLayer: this.state.layerdata.name,
           },
         )

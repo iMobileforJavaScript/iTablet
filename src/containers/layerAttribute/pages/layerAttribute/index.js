@@ -4,6 +4,7 @@ import {
   setCurrentAttribute,
   getAttributes,
   setAttributes,
+  setLayerAttributes,
 } from '../../../../models/layers'
 import { closeMap } from '../../../../models/map'
 
@@ -12,6 +13,7 @@ const mapStateToProps = state => ({
   selection: state.layers.toJS().selection,
   currentLayer: state.layers.toJS().currentLayer,
   attributes: state.layers.toJS().attributes,
+  map: state.map.toJS(),
   nav: state.nav.toJS(),
 })
 
@@ -20,6 +22,7 @@ const mapDispatchToProps = {
   getAttributes,
   setAttributes,
   closeMap,
+  setLayerAttributes,
 }
 
 export default connect(
