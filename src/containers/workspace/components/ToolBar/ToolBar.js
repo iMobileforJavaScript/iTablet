@@ -249,6 +249,7 @@ export default class ToolBar extends React.PureComponent {
 
     switch (type) {
       case ConstToolType.ATTRIBUTE_RELATE:
+      case ConstToolType.ATTRIBUTE_SELECTION_RELATE:
         buttons = [ToolbarBtnType.CANCEL]
         break
       case ConstToolType.MAP_BASE:
@@ -1861,10 +1862,14 @@ export default class ToolBar extends React.PureComponent {
             SMap.selectByRectangle()
           } else {
             if (type === ConstToolType.ATTRIBUTE_RELATE) {
-              // 返回属性界面，并清除属性关联选中的对象
+              // 返回图层属性界面，并清除属性关联选中的对象
               this.props.navigation &&
                 this.props.navigation.navigate('LayerAttribute')
               SMap.selectObj(this.props.currentLayer.path)
+            } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
+              // 返回框选/点选属性界面，并清除属性关联选中的对象
+              NavigationService.navigate('LayerSelectionAttribute')
+              // SMap.selectObj(this.props.currentLayer.path)
             } else {
               SMap.setAction(actionType)
             }

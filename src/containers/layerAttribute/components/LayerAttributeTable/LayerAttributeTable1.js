@@ -149,18 +149,22 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   onPressRow = item => {
-    this.setState(state => {
-      // copy the map rather than modifying state.
-      const selected = new Map(state.selected)
-      const target = selected.get(item.data[0].value)
-      if (!this.props.multiSelect && !target) {
-        // 多选或者点击已选行
-        selected.clear()
-      }
+    if (item.data instanceof Array) {
+      // 多属性选中变颜色
+      this.setState(state => {
+        // copy the map rather than modifying state.
+        const selected = new Map(state.selected)
+        const target = selected.get(item.data[0].value)
+        if (!this.props.multiSelect && !target) {
+          // 多选或者点击已选行
+          selected.clear()
+        }
 
-      selected.set(item.data[0].value, !target) // toggle
-      return { selected }
-    })
+        selected.set(item.data[0].value, !target) // toggle
+        return { selected }
+      })
+    }
+
     if (this.props.selectRow && typeof this.props.selectRow === 'function') {
       this.props.selectRow(item)
     }
@@ -196,7 +200,7 @@ export default class LayerAttributeTable extends React.Component {
     return (
       <Row
         data={item}
-        selected={!!this.state.selected.get(item[0].value)}
+        selected={item[0] ? !!this.state.selected.get(item[0].value) : false}
         index={index}
         disableCellStyle={styles.disableCellStyle}
         // cellTextStyle={cellTextStyle}

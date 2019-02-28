@@ -14,13 +14,14 @@ import { SMap } from 'imobile_for_reactnative'
 export default class LayerSelectionAttribute extends React.Component {
   props: {
     navigation: Object,
-    currentAttribute: Object,
-    currentLayer: Object,
+    // currentAttribute: Object,
+    // currentLayer: Object,
     map: Object,
     layerSelection: Object,
     setCurrentAttribute: () => {},
     setLayerAttributes: () => {},
     setLoading: () => {},
+    selectAction: () => {},
   }
 
   constructor(props) {
@@ -106,7 +107,7 @@ export default class LayerSelectionAttribute extends React.Component {
             },
           )
         }
-        cb && cb()
+        cb && cb(attributes)
         this.setLoading(false)
       } catch (e) {
         cb && cb()
@@ -115,10 +116,37 @@ export default class LayerSelectionAttribute extends React.Component {
     }.bind(this)())
   }
 
-  selectRow = (data, index) => {
+  selectRow = ({ data, index }) => {
     if (!data || index < 0) return
     this.currentFieldInfo = data
     this.currentFieldIndex = index
+    if (
+      this.props.selectAction &&
+      typeof this.props.selectAction === 'function'
+    ) {
+      this.props.selectAction({
+        index,
+        data,
+      })
+    }
+  }
+
+  getAttributes = () => {
+    return this.state.attributes
+  }
+
+  getSelection = () => {
+    if (this.state.attributes.length === 1) {
+      return {
+        data: this.state.attributes[0],
+        index: 0,
+      }
+    } else {
+      return {
+        data: this.currentFieldInfo,
+        index: this.currentFieldIndex,
+      }
+    }
   }
 
   /** 下拉刷新 **/
@@ -200,6 +228,7 @@ export default class LayerSelectionAttribute extends React.Component {
             ? LayerAttributeTable.Type.MULTI_DATA
             : LayerAttributeTable.Type.SINGLE_DATA
         }
+        selectRow={this.selectRow}
       />
     )
   }
