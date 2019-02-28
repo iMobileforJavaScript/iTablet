@@ -22,10 +22,14 @@ export default class ImageButton extends React.Component {
     icon: PropTypes.any,
     title: PropTypes.string,
     type: PropTypes.string,
+    direction: PropTypes.string,
+    enabled: PropTypes.bool,
   }
 
   static defaultProps = {
     activeOpacity: 0.8,
+    direction: 'column',
+    enabled: true,
   }
 
   render() {
@@ -35,12 +39,19 @@ export default class ImageButton extends React.Component {
 
     return (
       <TouchableOpacity
+        enabled={this.props.enabled}
         accessible={true}
         accessibilityLabel={'图片按钮'}
-        style={[styles.container, this.props.containerStyle]}
+        style={[
+          styles.container,
+          { flexDirection: this.props.direction },
+          this.props.containerStyle,
+        ]}
         activeOpacity={this.props.activeOpacity}
         onPress={() => {
-          this.props.onPress && this.props.onPress()
+          if (this.props.enabled) {
+            this.props.onPress && this.props.onPress()
+          }
         }}
       >
         <View

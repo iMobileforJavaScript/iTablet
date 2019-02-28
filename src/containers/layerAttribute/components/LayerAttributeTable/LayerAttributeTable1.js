@@ -27,6 +27,7 @@ export default class LayerAttributeTable extends React.Component {
     changeAction?: () => {}, // 修改表格中的值的回调
 
     selectable: boolean,
+    multiSelect: boolean, // 是否多选
     indexColumn?: number, // 每一行index所在的列，indexColumn >= 0 则所在列为Text
 
     tableHead: Array,
@@ -48,6 +49,7 @@ export default class LayerAttributeTable extends React.Component {
     tableData: [],
     widthArr: [40, 200, 200, 100, 100, 100, 80],
     selectable: true,
+    multiSelect: false,
     hasIndex: false,
     refreshing: false,
     indexColumn: -1,
@@ -73,6 +75,7 @@ export default class LayerAttributeTable extends React.Component {
           data: props.data,
         },
       ],
+      selected: (new Map(): Map<string, boolean>),
       currentSelect: -1,
       refreshing: false,
     }
@@ -109,6 +112,10 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
+  getSelected = () => {
+    return this.state.selected
+  }
+
   getTitle = data => {
     let titleList = []
     if (data instanceof Array && data.length > 1 && data[0] instanceof Array) {
@@ -141,9 +148,21 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
-  onPressRow = data => {
+  onPressRow = item => {
+    this.setState(state => {
+      // copy the map rather than modifying state.
+      const selected = new Map(state.selected)
+      const target = selected.get(item.data[0].value)
+      if (!this.props.multiSelect && !target) {
+        // 多选或者点击已选行
+        selected.clear()
+      }
+
+      selected.set(item.data[0].value, !target) // toggle
+      return { selected }
+    })
     if (this.props.selectRow && typeof this.props.selectRow === 'function') {
-      this.props.selectRow(data)
+      this.props.selectRow(item)
     }
   }
 
@@ -177,11 +196,14 @@ export default class LayerAttributeTable extends React.Component {
     return (
       <Row
         data={item}
+        selected={!!this.state.selected.get(item[0].value)}
         index={index}
+        disableCellStyle={styles.disableCellStyle}
+        // cellTextStyle={cellTextStyle}
         indexColumn={this.props.indexColumn}
         indexCellStyle={[indexCellStyle, this.props.indexCellStyle]}
         indexCellTextStyle={[indexCellTextStyle, this.props.indexCellTextStyle]}
-        onPress={() => this.onPressRow({ item, index })}
+        onPress={() => this.onPressRow({ data: item, index })}
         onChangeEnd={this.onChangeEnd}
       />
     )
@@ -227,6 +249,7 @@ export default class LayerAttributeTable extends React.Component {
           onEndReached={this.loadMore}
           initialNumToRender={20}
           getItemLayout={this.getItemLayout}
+          extraData={this.state}
         />
       </ScrollView>
     )

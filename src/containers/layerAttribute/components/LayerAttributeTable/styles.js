@@ -7,7 +7,7 @@ export default StyleSheet.create({
   container: {
     flex: 1,
     // backgroundColor: color.subTheme,
-    backgroundColor: '#F0F0F0',
+    backgroundColor: color.white,
   },
   head: {
     height: scaleSize(60),
@@ -70,6 +70,13 @@ export default StyleSheet.create({
   cell: {
     height: ROW_HEIGHT - 1,
     backgroundColor: 'transparent',
+    paddingHorizontal: scaleSize(4),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  disableCellStyle: {
+    height: ROW_HEIGHT - 1,
+    backgroundColor: color.bgW,
     paddingHorizontal: scaleSize(4),
     alignItems: 'center',
     justifyContent: 'center',

@@ -75,6 +75,7 @@ export default class ToolBar extends React.PureComponent {
     children: any,
     type: string,
     containerProps?: Object,
+    navigation: Object,
     data: Array,
     existFullMap: () => {},
     symbol: Object,
@@ -103,7 +104,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentLayer: () => {}, // 设置当前图层
     importTemplate: () => {}, // 导入模板
     importWorkspace: () => {}, // 打开模板
-    setAttributes: () => {},
+    // setAttributes: () => {},
     getMaps: () => {},
     exportWorkspace: () => {},
     getSymbolTemplates: () => {},
@@ -247,6 +248,9 @@ export default class ToolBar extends React.PureComponent {
     if (data.length > 0) return { data, buttons }
 
     switch (type) {
+      case ConstToolType.ATTRIBUTE_RELATE:
+        buttons = [ToolbarBtnType.CANCEL]
+        break
       case ConstToolType.MAP_BASE:
         data = BotMap
         break
@@ -1855,8 +1859,16 @@ export default class ToolBar extends React.PureComponent {
           } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
             // SMap.setAction(Action.SELECT_BY_RECTANGLE)
             SMap.selectByRectangle()
+          } else {
+            if (type === ConstToolType.ATTRIBUTE_RELATE) {
+              // 返回属性界面，并清除属性关联选中的对象
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAttribute')
+              SMap.selectObj(this.props.currentLayer.path)
+            } else {
+              SMap.setAction(actionType)
+            }
           }
-          SMap.setAction(actionType)
         }
       }, Const.ANIMATED_DURATION_2)
       this.updateOverlayerView()
@@ -1938,7 +1950,7 @@ export default class ToolBar extends React.PureComponent {
       ]
       list.push(item)
     }
-    this.props.setAttributes && this.props.setAttributes(list)
+    // this.props.setAttributes && this.props.setAttributes(list)
   }
 
   symbolSave = () => {
@@ -3630,7 +3642,7 @@ export default class ToolBar extends React.PureComponent {
             // NavigationService.navigate('layerSelectionAttribute', {
             //   type: 'singleAttribute',
             // })
-            NavigationService.navigate('layerSelectionAttribute', {
+            NavigationService.navigate('LayerSelectionAttribute', {
               type: 'singleAttribute',
             })
           }

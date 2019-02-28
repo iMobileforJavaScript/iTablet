@@ -43,5 +43,8 @@ export default StyleSheet.create({
     backgroundColor: 'transparent',
   },
 
-  clearImg: {},
+  clearImg: {
+    width: scaleSize(23),
+    height: scaleSize(23),
+  },
 })

@@ -28,7 +28,7 @@ import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
-import { ConstPath, ConstInfo, ConstToolType } from './src/constants'
+import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
@@ -86,6 +86,8 @@ class AppRoot extends Component {
     }
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
+    // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
+    GLOBAL.ThemeType = ThemeType.LIGHT_THEME
   }
 
   componentDidMount() {

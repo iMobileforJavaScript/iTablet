@@ -18,7 +18,7 @@ import { Container } from '../../components'
 import constants from '../workspace/constants'
 import { Toast, scaleSize } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
-import { Action, SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
+import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType, MAP_MODULE } from '../../constants'
 import { color, size } from '../../styles'
@@ -221,7 +221,7 @@ export default class MT_layerManager extends React.Component {
       //     this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
       //   }
       // }
-      await SMap.setAction(Action.SELECT)
+      // await SMap.setAction(Action.SELECT)
 
       if (
         layers.length > 0 &&
