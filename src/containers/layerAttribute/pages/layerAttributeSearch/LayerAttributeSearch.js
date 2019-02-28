@@ -6,20 +6,18 @@
 
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
-import NavigationService from '../../../NavigationService'
+import { AttributeUtil } from '../../utils'
 import { Container, MTBtn } from '../../../../components'
 import { Toast } from '../../../../utils'
-import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
+import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
-import { LayerAttributeTable, LayerTopBar } from '../../components'
-import { AttributeUtil } from '../../utils'
+import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-import { SMap, Action } from 'imobile_for_reactnative'
+// import { SScene } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
-export default class LayerAttribute extends React.Component {
+export default class LayerAttributeSearch extends React.Component {
   props: {
-    nav: Object,
     navigation: Object,
     currentAttribute: Object,
     currentLayer: Object,
@@ -42,36 +40,15 @@ export default class LayerAttribute extends React.Component {
         data: [],
       },
       showTable: false,
-      // currentFieldInfo: [],
-      currentIndex: -1,
     }
 
     // this.currentFieldInfo = []
-    // this.currentIndex = -1
+    this.currentFieldIndex = -1
     this.currentPage = 0
     this.pageSize = 20
-    this.isInit = true
   }
 
-  componentDidMount() {
-    Platform.OS === 'android' &&
-      BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.setLoading(true, ConstInfo.LOADING_DATA)
-    this.refresh()
-  }
-
-  componentDidUpdate(prevProps) {
-    // let mapTabs = this.props.nav.routes[this.props.nav.index]
-    if (
-      JSON.stringify(prevProps.currentLayer) !==
-      JSON.stringify(this.props.currentLayer)
-      // || (mapTabs.routes &&
-      //   mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
-      //   JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
-    ) {
-      this.refresh(null, true)
-    }
-  }
+  componentDidMount() {}
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
@@ -81,34 +58,29 @@ export default class LayerAttribute extends React.Component {
   }
 
   /** 下拉刷新 **/
-  refresh = (cb = () => {}, resetCurrent = false) => {
+  refresh = (cb = () => {}) => {
     this.currentPage = 0
-    this.getAttribute(cb, resetCurrent)
+    this.getAttribute(cb)
   }
 
   /** 加载更多 **/
   loadMore = (cb = () => {}) => {
     this.currentPage += 1
-    this.getAttribute(attributes => {
+    this.getAttribute(attribute => {
       cb && cb()
-      if (!attributes || !attributes.data || attributes.data.length <= 0) {
+      if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
         // this.currentPage--
       }
     })
   }
 
-  /**
-   * 获取属性
-   * @param cb 回调函数
-   * @param resetCurrent 是否重置当前选择的对象
-   */
-  getAttribute = (cb = () => {}, resetCurrent = false) => {
+  getAttribute = (cb = () => {}) => {
     if (!this.props.currentLayer.path) return
-    let attributes = {}
+    let attributes = []
     ;(async function() {
       try {
-        // attributes = await SMap.getLayerAttribute({
+        // attribute = await this.props.getAttributes({
         //   path: this.props.currentLayer.path,
         //   page: this.currentPage,
         //   size: this.pageSize,
@@ -119,16 +91,9 @@ export default class LayerAttribute extends React.Component {
           this.currentPage,
           this.pageSize,
         )
-        let currentIndex =
-          attributes.data.length === 1
-            ? 0
-            : resetCurrent
-              ? -1
-              : this.state.currentIndex
         this.setState({
           showTable: true,
           attributes,
-          currentIndex: currentIndex,
         })
         this.setLoading(false)
         cb && cb(attributes)
@@ -141,33 +106,19 @@ export default class LayerAttribute extends React.Component {
 
   selectRow = ({ data, index }) => {
     if (!data || index < 0) return
-
-    if (this.state.currentIndex !== index) {
+    if (this.currentFieldIndex !== index) {
       this.setState({
-        // currentFieldInfo: data,
-        currentIndex: index,
+        currentFieldInfo: data,
       })
+
+      this.currentFieldIndex = index
     } else {
       this.setState({
-        // currentFieldInfo: [],
-        currentIndex: -1,
+        currentFieldInfo: [],
       })
-    }
-  }
 
-  /** 关联事件 **/
-  relateAction = () => {
-    SMap.setAction(Action.PAN)
-    SMap.selectObj(this.props.currentLayer.path, [
-      this.state.currentFieldInfo[0].value,
-    ]).then(() => {
-      this.props.navigation && this.props.navigation.navigate('MapView')
-      GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
-        isFullScreen: false,
-        height: 0,
-      })
-      GLOBAL.toolBox.showFullMap()
-    })
+      this.currentFieldIndex = -1
+    }
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -209,19 +160,6 @@ export default class LayerAttribute extends React.Component {
         },
       ])
     }
-  }
-
-  goToSearch = () => {
-    NavigationService.navigate('LayerAttributeSearch', {
-      type: 'singleAttribute',
-    })
-  }
-
-  canRelated = () => {
-    if (this.table) {
-      return this.table.getSelected().size() > 0
-    }
-    return false
   }
 
   back = () => {
@@ -303,23 +241,19 @@ export default class LayerAttribute extends React.Component {
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
-          withoutBack: true,
+          // withoutBack: true,
           headerRight: [
             <MTBtn
-              key={'search'}
+              key={'upload'}
               image={require('../../../../assets/header/Frenchgrey/icon_search.png')}
-              // imageStyle={styles.upload}
-              onPress={this.goToSearch}
+              imageStyle={styles.upload}
+              onPress={this.upload}
             />,
           ],
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        <LayerTopBar
-          canRelated={this.state.currentIndex >= 0}
-          relateAction={this.relateAction}
-        />
         {this.state.showTable &&
         this.state.attributes &&
         this.state.attributes.head ? (

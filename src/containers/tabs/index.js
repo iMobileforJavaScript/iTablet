@@ -2,6 +2,7 @@ import { TabNavigator } from 'react-navigation'
 import React from 'react'
 import { Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
+import { getThemeAssets } from '../../assets'
 import { color } from '../../styles'
 import Home, { Setting, AboutITablet } from './Home'
 import Mine, {
@@ -30,8 +31,10 @@ const Tabs = TabNavigator(
                   resizeMode="contain"
                   source={
                     data.focused
-                      ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
-                      : require('../../assets/tabBar/Frenchgrey/tab_home.png')
+                      ? getThemeAssets().tabBar.tab_home_selected
+                      : getThemeAssets().tabBar.tab_home
+                    // ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
+                    // : require('../../assets/tabBar/Frenchgrey/tab_home.png')
                   }
                   style={styles.icon}
                 />

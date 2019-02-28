@@ -3,7 +3,8 @@ import {
   LayerAttributeEdit,
   LayerAttributeAdd,
   LayerAttributeObj,
-  layerSelectionAttribute,
+  LayerSelectionAttribute,
+  LayerAttributeSearch,
 } from './pages'
 
 export {
@@ -11,5 +12,6 @@ export {
   LayerAttributeEdit,
   LayerAttributeAdd,
   LayerAttributeObj,
-  layerSelectionAttribute,
+  LayerSelectionAttribute,
+  LayerAttributeSearch,
 }

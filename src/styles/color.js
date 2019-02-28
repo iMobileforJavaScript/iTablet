@@ -1,7 +1,4 @@
-const DARK_THEME = 'darkTheme'
-const LIGHT_THEME = 'lightTheme'
-
-export { DARK_THEME, LIGHT_THEME }
+import { ThemeType } from '../constants'
 
 const darkTheme = {
   theme: '#2D2D2F',
@@ -38,6 +35,8 @@ const lightTheme = {
   bgW: '#F0F0F0',
   bgG: '#A0A0A0',
   switch: '#4680DF',
+  // selected: '#4680DF',
+  selected: 'rgba(70, 128, 223, 0.5)',
 
   fontColorWhite: '#F0F0F0',
   fontColorBlack: '#303030',
@@ -63,11 +62,11 @@ const lightTheme = {
 }
 
 let styles
-switch (GLOBAL.themeStyle) {
-  case DARK_THEME:
+switch (GLOBAL.ThemeType) {
+  case ThemeType.DARK_THEME:
     styles = darkTheme
     break
-  case LIGHT_THEME:
+  case ThemeType.LIGHT_THEME:
   default:
     styles = lightTheme
     break

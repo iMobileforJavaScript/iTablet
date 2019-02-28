@@ -6,7 +6,6 @@ import {
   setAnalystLayer,
   getLayers,
   setCurrentAttribute,
-  getAttributes,
   setCurrentLayer,
 } from '../../../../models/layers'
 import {
@@ -69,7 +68,6 @@ const mapDispatchToProps = {
   setCollectionInfo,
   setCurrentLayer,
   setCurrentAttribute,
-  getAttributes,
   importTemplate,
   importWorkspace,
   setCurrentTemplateInfo,

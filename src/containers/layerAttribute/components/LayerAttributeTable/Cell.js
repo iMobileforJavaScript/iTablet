@@ -19,14 +19,6 @@ const ROW_HEIGHT = scaleSize(80)
 // const CELL_WIDTH = scaleSize(120)
 
 const styles = StyleSheet.create({
-  rowContainer: {
-    flex: 1,
-    height: ROW_HEIGHT,
-    backgroundColor: color.bgW,
-    flexDirection: 'row',
-    borderBottomWidth: 1,
-    borderBottomColor: color.bgG,
-  },
   cell: {
     height: ROW_HEIGHT - 1,
     backgroundColor: 'transparent',
@@ -145,6 +137,15 @@ export default class Cell extends Component {
     }
   }
 
+  _onPress = () => {
+    if (this.props.onPress && typeof this.props.onPress === 'function') {
+      this.props.onPress({
+        data: this.props.data,
+        value: this.state.value,
+      })
+    }
+  }
+
   _onEndEditing = () => {
     // this.state.editable && this.setState({
     //   editable: false,
@@ -194,7 +195,7 @@ export default class Cell extends Component {
         style={[
           styles.cell,
           this.props.style,
-          !this.props.editable && { backgroundColor: color.borderLight },
+          // !this.props.editable && { backgroundColor: color.borderLight },
           // this.props.width ? { width: this.props.width } : { flex: 1 },
         ]}
         // onLongPress={this._setEditable}
@@ -220,6 +221,7 @@ export default class Cell extends Component {
             activeOpacity={1}
             style={styles.cellOverlay}
             onLongPress={this._setEditable}
+            onPress={this._onPress}
           />
         )}
       </View>

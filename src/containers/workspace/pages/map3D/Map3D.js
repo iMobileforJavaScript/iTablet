@@ -30,7 +30,7 @@ export default class Map3D extends React.Component {
     setEditLayer: () => {},
     setLatestMap: () => {},
     setCurrentAttribute: () => {},
-    setAttributes: () => {},
+    // setAttributes: () => {},
     exportmap3DWorkspace: () => {},
     refreshLayer3dList: () => {},
     user: Object,
@@ -105,7 +105,7 @@ export default class Map3D extends React.Component {
           }
         })
         list.push(arr)
-        this.props.setAttributes(list)
+        // this.props.setAttributes(list)
       },
     })
   }
@@ -329,7 +329,7 @@ export default class Map3D extends React.Component {
         showFullMap={this.showFullMap}
         setInputDialogVisible={this.setInputDialogVisible}
         {...this.props}
-        setAttributes={this.props.setAttributes}
+        // setAttributes={this.props.setAttributes}
         measureShow={this.measureShow}
       />
     )

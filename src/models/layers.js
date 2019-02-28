@@ -93,94 +93,53 @@ export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
 }
 
 // 获取图层属性
-export const getAttributes = (params, cb = () => {}) => async (
-  dispatch,
-  getState,
-) => {
-  try {
-    // 当page为0时，则为刷新
-    let path,
-      page = 0,
-      size = 20
-    if (params) {
-      if (!params.path && getState().layers.toJS().currentLayer.path) {
-        path = getState().layers.toJS().currentLayer.path
-      } else {
-        path = params.path
-      }
-      if (params.page >= 0) {
-        page = params.page
-      }
-      if (params.size >= 0) {
-        size = params.size
-      }
-    }
-    let attribute = await SMap.getLayerAttribute(path, page, size)
-
-    let action = page === 0 ? GET_ATTRIBUTES_REFRESH : GET_ATTRIBUTES_LOAD
-    await dispatch({
-      type: action,
-      payload: attribute || [],
-    })
-    cb && cb(attribute)
-    return attribute
-  } catch (e) {
-    await dispatch({
-      type: GET_ATTRIBUTES_FAILED,
-    })
-    cb && cb()
-    return e
-  }
-}
-
-// 获取选择集属性
-export const getAttributesBySelection = (params, cb = () => {}) => async (
-  dispatch,
-  getState,
-) => {
-  try {
-    // 当page为0时，则为刷新
-    let path,
-      page = 0,
-      size = 20
-    if (params) {
-      if (!params.path && getState().layers.toJS().currentLayer.path) {
-        path = getState().layers.toJS().currentLayer.path
-      } else {
-        path = params.path
-      }
-      if (params.page >= 0) {
-        page = params.page
-      }
-      if (params.size >= 0) {
-        size = params.size
-      }
-    }
-    let attribute = await SMap.getLayerAttribute(path, page, size)
-
-    let action = page === 0 ? GET_ATTRIBUTES_REFRESH : GET_ATTRIBUTES_LOAD
-    await dispatch({
-      type: action,
-      payload: attribute || [],
-    })
-    cb && cb(attribute)
-    return attribute
-  } catch (e) {
-    await dispatch({
-      type: GET_ATTRIBUTES_FAILED,
-    })
-    cb && cb()
-    return e
-  }
-}
-
-export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: SET_ATTRIBUTES,
-    payload: data || {},
-  })
-  cb && cb(data)
-}
+// export const getAttributes = (params, cb = () => {}) => async (
+//   dispatch,
+//   getState,
+// ) => {
+//   try {
+//     // 当page为0时，则为刷新
+//     let path,
+//       page = 0,
+//       size = 20
+//     if (params) {
+//       if (!params.path && getState().layers.toJS().currentLayer.path) {
+//         path = getState().layers.toJS().currentLayer.path
+//       } else {
+//         path = params.path
+//       }
+//       if (params.page >= 0) {
+//         page = params.page
+//       }
+//       if (params.size >= 0) {
+//         size = params.size
+//       }
+//     }
+//     let attribute = await SMap.getLayerAttribute(path, page, size)
+//
+//     let action = page === 0 ? GET_ATTRIBUTES_REFRESH : GET_ATTRIBUTES_LOAD
+//     await dispatch({
+//       type: action,
+//       payload: attribute || [],
+//     })
+//     cb && cb(attribute)
+//     return attribute
+//   } catch (e) {
+//     await dispatch({
+//       type: GET_ATTRIBUTES_FAILED,
+//     })
+//     cb && cb()
+//     return e
+//   }
+// }
+//
+// export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
+//   await dispatch({
+//     type: SET_ATTRIBUTES,
+//     payload: data || {},
+//   })
+//   cb && cb(data)
+// }
 
 /**
  * 修改对象属性，并记录到历史列表中
@@ -301,10 +260,10 @@ const initialState = fromJS({
    */
   selection: [],
   currentAttribute: {},
-  attributes: {
-    head: [],
-    data: [],
-  },
+  // attributes: {
+  //   head: [],
+  //   data: [],
+  // },
   /**
    * selectionAttributes: 选择集中对象的属性，可包含多个图层的属性
    * [
@@ -350,92 +309,92 @@ export default handleActions(
         .setIn(['layers'], fromJS(payload.layers))
         .setIn(['currentLayer'], fromJS(currentLayer))
     },
-    [`${GET_ATTRIBUTES_REFRESH}`]: (state, { payload }) => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      if (
-        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-        payload.length > 0
-      ) {
-        currentAttribute = payload[0]
-      }
-      let tableHead = []
-      if (payload && payload.length > 0) {
-        payload[0].forEach(item => {
-          if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-            tableHead.unshift(item.fieldInfo.caption)
-          } else {
-            tableHead.push(item.fieldInfo.caption)
-          }
-        })
-      }
-      attributes.head = tableHead
-      attributes.data = payload
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
-    [`${GET_ATTRIBUTES_LOAD}`]: (state, { payload }) => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      if (
-        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-        payload.length > 0
-      ) {
-        currentAttribute = payload[0]
-      }
-      let tableHead = []
-      if (payload && payload.length > 0) {
-        payload[0].forEach(item => {
-          if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-            tableHead.unshift(item.fieldInfo.caption)
-          } else {
-            tableHead.push(item.fieldInfo.caption)
-          }
-        })
-      } else {
-        tableHead = attributes.head
-      }
-      attributes.head = tableHead
-      attributes.data = (attributes.data || []).concat(payload)
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
-    [`${GET_ATTRIBUTES_FAILED}`]: state => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      attributes.head = []
-      attributes.data = []
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
-    [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      if (
-        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-        payload.length > 0
-      ) {
-        currentAttribute = payload[0]
-      }
-      let tableHead = []
-      if (payload && payload.length > 0) {
-        payload[0].forEach(item => {
-          if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
-            tableHead.unshift(item.fieldInfo.caption)
-          } else {
-            tableHead.push(item.fieldInfo.caption)
-          }
-        })
-      }
-      attributes.head = tableHead
-      attributes.data = payload
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
+    // [`${GET_ATTRIBUTES_REFRESH}`]: (state, { payload }) => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   if (
+    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+    //     payload.length > 0
+    //   ) {
+    //     currentAttribute = payload[0]
+    //   }
+    //   let tableHead = []
+    //   if (payload && payload.length > 0) {
+    //     payload[0].forEach(item => {
+    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+    //         tableHead.unshift(item.fieldInfo.caption)
+    //       } else {
+    //         tableHead.push(item.fieldInfo.caption)
+    //       }
+    //     })
+    //   }
+    //   attributes.head = tableHead
+    //   attributes.data = payload
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
+    // [`${GET_ATTRIBUTES_LOAD}`]: (state, { payload }) => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   if (
+    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+    //     payload.length > 0
+    //   ) {
+    //     currentAttribute = payload[0]
+    //   }
+    //   let tableHead = []
+    //   if (payload && payload.length > 0) {
+    //     payload[0].forEach(item => {
+    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+    //         tableHead.unshift(item.fieldInfo.caption)
+    //       } else {
+    //         tableHead.push(item.fieldInfo.caption)
+    //       }
+    //     })
+    //   } else {
+    //     tableHead = attributes.head
+    //   }
+    //   attributes.head = tableHead
+    //   attributes.data = (attributes.data || []).concat(payload)
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
+    // [`${GET_ATTRIBUTES_FAILED}`]: state => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   attributes.head = []
+    //   attributes.data = []
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
+    // [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   if (
+    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+    //     payload.length > 0
+    //   ) {
+    //     currentAttribute = payload[0]
+    //   }
+    //   let tableHead = []
+    //   if (payload && payload.length > 0) {
+    //     payload[0].forEach(item => {
+    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
+    //         tableHead.unshift(item.fieldInfo.caption)
+    //       } else {
+    //         tableHead.push(item.fieldInfo.caption)
+    //       }
+    //     })
+    //   }
+    //   attributes.head = tableHead
+    //   attributes.data = payload
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
     [`${GET_LAYER3DLIST}`]: (state, { payload }) => {
       let layer3dList = state.toJS().layer3dList
       if (payload.length > 0) {

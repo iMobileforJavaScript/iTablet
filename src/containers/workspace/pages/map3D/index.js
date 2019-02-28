@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import {
   setEditLayer,
   setCurrentAttribute,
-  setAttributes,
   refreshLayer3dList,
 } from '../../../../models/layers'
 import {
@@ -28,7 +27,6 @@ const mapDispatchToProps = {
   setEditLayer,
   setLatestMap,
   setCurrentAttribute,
-  setAttributes,
   exportmap3DWorkspace,
   importSceneWorkspace,
   setSharing,

@@ -1,24 +1,27 @@
-import { StyleSheet, Platform } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import { color, size } from '../../styles'
 import { scaleSize } from '../../utils'
 
 export default StyleSheet.create({
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // marginTop: scaleSize(30),
-    backgroundColor: 'white',
-    borderRadius: scaleSize(4),
-    height: scaleSize(80),
-    paddingHorizontal: scaleSize(20),
+  container: {
+    height: scaleSize(44),
+    backgroundColor: color.bgW,
+    borderRadius: scaleSize(22),
   },
-  label: {
-    fontSize: size.fontSize.fontSizeMd,
-    height: scaleSize(32),
-    color: color.themeText2,
-    // width: scaleSize(160),
+  textInputStyle: {
+    paddingVertical: 0,
+    borderBottomWidth: scaleSize(1),
+    borderColor: color.gray3,
+    marginTop: scaleSize(30),
+    height: scaleSize(50),
+    width: scaleSize(300),
+    color: color.themeText,
+    fontSize: size.fontSize.fontSizeXs,
     textAlign: 'center',
+  },
+  separator: {
+    width: '100%',
+    height: scaleSize(20),
     backgroundColor: 'transparent',
   },
   input: {
@@ -41,10 +44,5 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',
-  },
-
-  clearImg: {
-    width: scaleSize(23),
-    height: scaleSize(23),
   },
 })
