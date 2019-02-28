@@ -2448,6 +2448,32 @@ export default class ToolBar extends React.PureComponent {
               params,
             )
             break
+          case constants.THEME_UNIQUE_LABEL:
+            //单值标签
+            params = {
+              DatasourceAlias: this.state.themeDatasourceAlias,
+              DatasetName: this.state.themeDatasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '11.0',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createUniqueThemeLabelMap(
+              params,
+            )
+            break
+          case constants.THEME_RANGE_LABEL:
+            //分段标签
+            params = {
+              DatasourceAlias: this.state.themeDatasourceAlias,
+              DatasetName: this.state.themeDatasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '11.0',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
+            break
         }
         if (isSuccess) {
           Toast.show('创建专题图成功')
@@ -2525,6 +2551,15 @@ export default class ToolBar extends React.PureComponent {
             break
           case constants.THEME_RANGE_LABEL:
             //分段标签
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '11.0',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
             break
         }
         if (isSuccess) {
@@ -3230,6 +3265,12 @@ export default class ToolBar extends React.PureComponent {
               break
             case constants.THEME_UNIFY_LABEL:
               type = constants.THEME_UNIFY_LABEL
+              break
+            case constants.THEME_UNIQUE_LABEL:
+              type = constants.THEME_UNIQUE_LABEL
+              break
+            case constants.THEME_RANGE_LABEL:
+              type = constants.THEME_RANGE_LABEL
               break
           }
           let menutoolRef =
