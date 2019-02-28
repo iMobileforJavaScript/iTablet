@@ -448,7 +448,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
         column: 3,
-        height: ConstToolType.HEIGHT[0],
+        height: ConstToolType.NEWTHEME_HEIGHT[1],
       })
     }
   }

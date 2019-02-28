@@ -9,6 +9,7 @@ export default {
   MAP_ADD_DATASET: 'MAP_ADD_DATASET',
   MAP_SYMBOL: 'MAP_SYMBOL',
   MAP_COLLECTION: 'MAP_COLLECTION',
+  MAP_PLOTTING: 'MAP_PLOTTING',
 
   MAP_OPEN: 'MAP_OPEN',
 
@@ -143,6 +144,13 @@ export default {
     scaleSize(250),
     scaleSize(720),
     scaleSize(0),
+  ],
+  NEWTHEME_HEIGHT: [
+    scaleSize(100),
+    scaleSize(200),
+    scaleSize(300),
+    scaleSize(400),
+    scaleSize(500),
   ],
   THEME_HEIGHT: [
     scaleSize(100),

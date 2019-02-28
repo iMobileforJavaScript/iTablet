@@ -264,7 +264,6 @@ export default class ToolBar extends React.PureComponent {
         buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT]
         break
       case ConstToolType.MAP_ADD_LAYER:
-        // data = layerAdd
         buttons = [
           ToolbarBtnType.CANCEL,
           ToolbarBtnType.PLACEHOLDER,
@@ -1746,6 +1745,7 @@ export default class ToolBar extends React.PureComponent {
           })
         if (result) {
           this.setVisible(false)
+          GLOBAL.dialog.setDialogVisible(true)
           Toast.show('添加成功')
         } else {
           Toast.show('添加失败')
@@ -2502,6 +2502,24 @@ export default class ToolBar extends React.PureComponent {
             isSuccess = await SThemeCartography.createUniformThemeLabelMap(
               params,
             )
+            break
+          case constants.THEME_UNIQUE_LABEL:
+            //单值标签
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              RangeExpression: item.expression,
+              RangeMode: 'EQUALINTERVAL',
+              RangeParameter: '11.0',
+              // ColorGradientType: 'CYANWHITE',
+              ColorScheme: 'CD_Cyans',
+            }
+            isSuccess = await SThemeCartography.createUniqueThemeLabelMap(
+              params,
+            )
+            break
+          case constants.THEME_RANGE_LABEL:
+            //分段标签
             break
         }
         if (isSuccess) {
