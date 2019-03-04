@@ -457,7 +457,7 @@ export default class LayerManager_tolbar extends React.Component {
           style={{
             flexDirection: 'column',
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.bgG,
           }}
         />

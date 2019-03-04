@@ -13,7 +13,8 @@ import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable, LayerTopBar } from '../../components'
-import { AttributeUtil } from '../../utils'
+import { LayerUtil } from '../../utils'
+import { getThemeAssets } from '../../../../assets'
 import styles from './styles'
 import { SMap, Action } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
@@ -113,7 +114,7 @@ export default class LayerAttribute extends React.Component {
         //   page: this.currentPage,
         //   size: this.pageSize,
         // })
-        attributes = await AttributeUtil.getLayerAttribute(
+        attributes = await LayerUtil.getLayerAttribute(
           this.state.attributes,
           this.props.currentLayer.path,
           this.currentPage,
@@ -125,6 +126,20 @@ export default class LayerAttribute extends React.Component {
             : resetCurrent
               ? -1
               : this.state.currentIndex
+        if (attributes.data.length === 1) {
+          this.setState({
+            showTable: true,
+            attributes,
+            currentIndex: currentIndex,
+            currentFieldInfo: attributes.data[0],
+          })
+        } else {
+          this.setState({
+            showTable: true,
+            attributes,
+            currentIndex: currentIndex,
+          })
+        }
         this.setState({
           showTable: true,
           attributes,
@@ -144,12 +159,12 @@ export default class LayerAttribute extends React.Component {
 
     if (this.state.currentIndex !== index) {
       this.setState({
-        // currentFieldInfo: data,
+        currentFieldInfo: data,
         currentIndex: index,
       })
     } else {
       this.setState({
-        // currentFieldInfo: [],
+        currentFieldInfo: [],
         currentIndex: -1,
       })
     }
@@ -209,6 +224,10 @@ export default class LayerAttribute extends React.Component {
         },
       ])
     }
+  }
+
+  editUndo = () => {
+    // TODO 属性编辑回退
   }
 
   goToSearch = () => {
@@ -309,9 +328,15 @@ export default class LayerAttribute extends React.Component {
           withoutBack: true,
           headerRight: [
             <MTBtn
+              key={'undo'}
+              image={getThemeAssets().attribute.icon_undo}
+              imageStyle={styles.headerBtn}
+              onPress={this.editUndo}
+            />,
+            <MTBtn
               key={'search'}
-              image={require('../../../../assets/header/Frenchgrey/icon_search.png')}
-              // imageStyle={styles.upload}
+              image={getThemeAssets().publicAssets.iconSearch}
+              imageStyle={styles.headerBtn}
               onPress={this.goToSearch}
             />,
           ],

@@ -116,6 +116,14 @@ export default class LayerAttributeTable extends React.Component {
     return this.state.selected
   }
 
+  clearSelected = () => {
+    let _selected = new Map(this.state.selected)
+    _selected.clear()
+    this.setState({
+      selected: _selected,
+    })
+  }
+
   getTitle = data => {
     let titleList = []
     if (data instanceof Array && data.length > 1 && data[0] instanceof Array) {

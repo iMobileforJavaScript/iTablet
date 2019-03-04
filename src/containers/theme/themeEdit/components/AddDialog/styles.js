@@ -25,7 +25,7 @@ export default StyleSheet.create({
     marginLeft: scaleSize(10),
     height: scaleSize(60),
     borderColor: color.grayLight2,
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderRadius: scaleSize(4),
     backgroundColor: 'transparent',
     textAlign: 'center',

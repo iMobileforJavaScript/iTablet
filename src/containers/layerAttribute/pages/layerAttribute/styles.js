@@ -36,5 +36,10 @@ export default StyleSheet.create({
     color: '#303030',
     marginTop: scaleSize(100),
   },
+  headerBtn: {
+    height: scaleSize(60),
+    width: scaleSize(60),
+    paddingLeft: scaleSize(15),
+  },
   border: {},
 })

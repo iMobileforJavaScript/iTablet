@@ -41,7 +41,7 @@ export default StyleSheet.create({
   },
   Separator: {
     flex: 1,
-    height: scaleSize(1),
+    height: 1,
     // backgroundColor: color.fontColorGray,
     backgroundColor: '#A0A0A0',
   },

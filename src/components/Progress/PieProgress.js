@@ -38,8 +38,8 @@ export default class PieProgress extends Component {
         style={[
           styles.container,
           {
-            width: this.props.size + scaleSize(1),
-            height: this.props.size + scaleSize(1),
+            width: this.props.size + 1,
+            height: this.props.size + 1,
           },
           this.props.style,
         ]}

@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
     color: color.font_color_white,
   },
   sectionSeparateViewStyle: {
-    height: scaleSize(1),
+    height: 1,
     marginHorizontal: 0,
     backgroundColor: color.item_separate_white,
   },

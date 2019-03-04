@@ -5,7 +5,6 @@
  */
 
 import * as React from 'react'
-import { View } from 'react-native'
 import { ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
@@ -81,6 +80,10 @@ export default class LayerSelectionAttribute extends React.Component {
           this.currentPage,
           this.pageSize,
         )
+        // let attributes = await SMap.getAttributeByLayer(
+        //   this.props.layerSelection.layerInfo.path,
+        //   this.props.layerSelection.ids,
+        // )
         if (attributes && attributes.length > 0) {
           this.props.setCurrentAttribute(attributes[0])
           let tableHead = []
@@ -116,10 +119,10 @@ export default class LayerSelectionAttribute extends React.Component {
     }.bind(this)())
   }
 
-  selectRow = ({ data, index }) => {
-    if (!data || index < 0) return
-    this.currentFieldInfo = data
-    this.currentFieldIndex = index
+  selectRow = ({ data, index = -1 }) => {
+    // if (!data || index < 0) return
+    this.currentFieldInfo = data || []
+    this.currentFieldIndex = index >= 0 ? index : -1
     if (
       this.props.selectAction &&
       typeof this.props.selectAction === 'function'
@@ -149,6 +152,24 @@ export default class LayerSelectionAttribute extends React.Component {
     }
   }
 
+  /** 清除表格选中状态 **/
+  clearSelection = () => {
+    if (this.table) {
+      this.table.clearSelected()
+      this.currentFieldInfo = []
+      this.currentFieldIndex = -1
+      if (
+        this.props.selectAction &&
+        typeof this.props.selectAction === 'function'
+      ) {
+        this.props.selectAction({
+          index: this.currentFieldIndex,
+          data: this.currentFieldInfo,
+        })
+      }
+    }
+  }
+
   /** 下拉刷新 **/
   refresh = (cb = () => {}) => {
     this.currentPage = 0
@@ -157,7 +178,12 @@ export default class LayerSelectionAttribute extends React.Component {
 
   /** 加载更多 **/
   loadMore = (cb = () => {}) => {
-    if (this.isInit || this.noMore) return
+    if (
+      this.isInit ||
+      this.noMore ||
+      this.props.layerSelection.ids.length <= 20
+    )
+      return
     this.currentPage += 1
     this.getAttribute(attribute => {
       cb && cb()
@@ -202,32 +228,33 @@ export default class LayerSelectionAttribute extends React.Component {
   }
 
   renderTable = () => {
-    if (!this.state.attributes || this.state.attributes.length === 0)
-      return <View />
+    let data = [],
+      head = [],
+      type = LayerAttributeTable.Type.MULTI_DATA
+    // if (!this.state.attributes || this.state.attributes.length === 0) {
+    //   return <View />
+    // }
+    if (this.state.attributes.length > 1) {
+      data = this.state.attributes
+      head = this.state.tableHead
+    } else if (this.state.attributes.length === 1) {
+      data = this.state.attributes[0]
+      head = ['名称', '属性值']
+      type = LayerAttributeTable.Type.SINGLE_DATA
+    }
+
     return (
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
-        data={
-          this.state.attributes.length > 1
-            ? this.state.attributes
-            : this.state.attributes[0]
-        }
-        tableHead={
-          this.state.attributes.length > 1
-            ? this.state.tableHead
-            : ['名称', '属性值']
-        }
+        data={data}
+        tableHead={head}
         widthArr={this.state.attributes.length === 1 && [100, 100]}
         refresh={cb => this.refresh(cb)}
         loadMore={cb => this.loadMore(cb)}
         hasInputText={this.state.attributes.length > 1}
         changeAction={this.changeAction}
         indexColumn={0}
-        type={
-          this.state.attributes.length > 1
-            ? LayerAttributeTable.Type.MULTI_DATA
-            : LayerAttributeTable.Type.SINGLE_DATA
-        }
+        type={type}
         selectRow={this.selectRow}
       />
     )

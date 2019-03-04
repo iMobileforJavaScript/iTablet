@@ -34,7 +34,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: scaleSize(8),
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderColor: 'gray',
     zIndex: 101,
   },

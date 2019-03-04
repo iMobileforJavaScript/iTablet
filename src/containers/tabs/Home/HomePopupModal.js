@@ -48,7 +48,7 @@ export default class HomePopupModal extends PureComponent {
       <View
         style={{
           width: '100%',
-          height: scaleSize(1),
+          height: 1,
           backgroundColor: color.separateColorGray,
         }}
       />

@@ -6,7 +6,7 @@
 
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
-import { AttributeUtil } from '../../utils'
+import { LayerUtil } from '../../utils'
 import { Container, MTBtn } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { ConstInfo, MAP_MODULE } from '../../../../constants'
@@ -85,7 +85,7 @@ export default class LayerAttributeSearch extends React.Component {
         //   page: this.currentPage,
         //   size: this.pageSize,
         // })
-        attributes = await AttributeUtil.getLayerAttribute(
+        attributes = await LayerUtil.getLayerAttribute(
           this.state.attributes,
           this.props.currentLayer.path,
           this.currentPage,

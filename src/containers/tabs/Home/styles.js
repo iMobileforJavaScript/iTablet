@@ -98,7 +98,7 @@ export default StyleSheet.create({
   btnTitle: {
     fontSize: setSpText(20),
     color: '#303030',
-    // borderWidth:scaleSize(1),
+    // borderWidth:1,
     // borderColor:color.bgG,
   },
   checkView: {

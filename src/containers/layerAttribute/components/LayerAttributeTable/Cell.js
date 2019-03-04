@@ -32,8 +32,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   input: {
-    width: '100%',
-    height: ROW_HEIGHT,
+    // width: '100%',
+    // height: ROW_HEIGHT,
     backgroundColor: 'transparent',
     textAlign: 'center',
     ...Platform.select({
@@ -201,26 +201,29 @@ export default class Cell extends Component {
         // onLongPress={this._setEditable}
       >
         {/*<Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>*/}
-        <TextInput
-          ref={ref => (this.cellInput = ref)}
-          // editable={this.state.editable && this.props.editable}
-          // multiline = {true}
-          value={this.state.value + ''}
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          onChangeText={this._onChangeText}
-          onBlur={this._onBlur}
-          onEndEditing={this._onEndEditing}
-          onSubmitEditing={this._onSubmitEditing}
-          returnKeyType={'done'}
-          keyboardAppearance={'dark'}
-          keyboardType={this.props.keyboardType}
-        />
+        <View>
+          <TextInput
+            ref={ref => (this.cellInput = ref)}
+            // editable={this.state.editable && this.props.editable}
+            // multiline = {true}
+            value={this.state.value + ''}
+            style={styles.input}
+            underlineColorAndroid="transparent"
+            onChangeText={this._onChangeText}
+            onBlur={this._onBlur}
+            onEndEditing={this._onEndEditing}
+            onSubmitEditing={this._onSubmitEditing}
+            returnKeyType={'done'}
+            keyboardAppearance={'dark'}
+            keyboardType={this.props.keyboardType}
+          />
+        </View>
         {(!this.state.editable || !this.props.editable) && (
           <TouchableOpacity
             activeOpacity={1}
             style={styles.cellOverlay}
             onLongPress={this._setEditable}
+            delayLongPress={1500}
             onPress={this._onPress}
           />
         )}

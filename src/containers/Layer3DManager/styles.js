@@ -46,7 +46,7 @@ export default StyleSheet.create({
   itemSeparator: {
     // width: scaleSize(688),
     flex: 1,
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: '#A0A0A0',
     // marginLeft: scaleSize(16),
   },
@@ -84,7 +84,7 @@ export default StyleSheet.create({
   },
   sectionFooter: {
     flex: 1,
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: color.fontColorGray,
   },
 })

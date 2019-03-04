@@ -46,7 +46,7 @@ export default StyleSheet.create({
     fontSize: setSpText(22),
   },
   itemSeparator: {
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: '#A0A0A0',
   },
 })

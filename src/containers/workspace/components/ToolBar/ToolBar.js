@@ -250,7 +250,7 @@ export default class ToolBar extends React.PureComponent {
     switch (type) {
       case ConstToolType.ATTRIBUTE_RELATE:
       case ConstToolType.ATTRIBUTE_SELECTION_RELATE:
-        buttons = [ToolbarBtnType.CANCEL]
+        buttons = [ToolbarBtnType.CANCEL_2]
         break
       case ConstToolType.MAP_BASE:
         data = BotMap
@@ -1779,8 +1779,15 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
-  close = (type = this.state.type) => {
+  close = (type = this.state.type, actionFirst = false) => {
     (async function() {
+      GLOBAL.currentToolbarType = ''
+      let actionType = Action.PAN
+
+      if (actionFirst) {
+        await this.closeSubAction(type, actionType)
+      }
+
       if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
         // 去掉量算监听
         SMap.removeMeasureListener()
@@ -1793,8 +1800,6 @@ export default class ToolBar extends React.PureComponent {
         // GLOBAL.showFlex = true
         this.setState({ selectKey: '' })
       }
-      GLOBAL.currentToolbarType = ''
-      let actionType = Action.PAN
       if (
         type === ConstToolType.MAP_ADD_DATASET ||
         type === ConstToolType.MAP_THEME_ADD_DATASET
@@ -1846,38 +1851,56 @@ export default class ToolBar extends React.PureComponent {
         })
         this.height = 0
       }
-      setTimeout(() => {
-        // 关闭采集, type 为number时为采集类型，若有冲突再更改
-        if (
-          typeof type === 'number' ||
-          (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
-        ) {
-          SCollector.stopCollect()
-        } else {
-          if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
-            // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
-            SMap.setAction(Action.SELECT)
-          } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
-            // SMap.setAction(Action.SELECT_BY_RECTANGLE)
-            SMap.selectByRectangle()
-          } else {
-            if (type === ConstToolType.ATTRIBUTE_RELATE) {
-              // 返回图层属性界面，并清除属性关联选中的对象
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute')
-              SMap.selectObj(this.props.currentLayer.path)
-            } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-              // 返回框选/点选属性界面，并清除属性关联选中的对象
-              NavigationService.navigate('LayerSelectionAttribute')
-              // SMap.selectObj(this.props.currentLayer.path)
-            } else {
-              SMap.setAction(actionType)
-            }
-          }
-        }
-      }, Const.ANIMATED_DURATION_2)
+      if (!actionFirst) {
+        setTimeout(async () => {
+          // 关闭采集, type 为number时为采集类型，若有冲突再更改
+          await this.closeSubAction(type, actionType)
+        }, Const.ANIMATED_DURATION_2)
+      }
+
       this.updateOverlayerView()
     }.bind(this)())
+  }
+
+  closeSubAction = async (type, actionType) => {
+    if (
+      typeof type === 'number' ||
+      (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)
+    ) {
+      SCollector.stopCollect()
+    } else {
+      if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
+        // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
+        SMap.setAction(Action.SELECT)
+      } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
+        // SMap.setAction(Action.SELECT_BY_RECTANGLE)
+        SMap.selectByRectangle()
+      } else {
+        if (type === ConstToolType.ATTRIBUTE_RELATE) {
+          // 返回图层属性界面，并清除属性关联选中的对象
+          this.props.navigation &&
+            this.props.navigation.navigate('LayerAttribute')
+          SMap.selectObj(this.props.currentLayer.path)
+        } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
+          // TODO 恢复框选对象，并返回到地图
+          // NavigationService.navigate('LayerSelectionAttribute')
+          // NavigationService.navigate('LayerAttributeTabs', {initialPage: GLOBAL.LayerAttributeTabIndex})
+          NavigationService.goBack()
+          // 返回框选/点选属性界面，并清除属性关联选中的对象
+          let selection = []
+          for (let i = 0; i < this.props.selection.length; i++) {
+            selection.push({
+              layerPath: this.props.selection[i].layerInfo.path,
+              ids: this.props.selection[i].ids,
+            })
+          }
+          await SMap.selectObjs(selection)
+          // NavigationService.goBack()
+        } else {
+          SMap.setAction(actionType)
+        }
+      }
+    }
   }
 
   clearCurrentLabel = () => {
@@ -3556,6 +3579,10 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
           break
+        case ToolbarBtnType.CANCEL_2:
+          image = require('../../../../assets/mapEdit/icon_function_cancel.png')
+          action = () => this.close(this.state.type, true)
+          break
         case ToolbarBtnType.FLEX:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_style.png')
           action = this.showBox
@@ -3647,9 +3674,7 @@ export default class ToolBar extends React.PureComponent {
             // NavigationService.navigate('layerSelectionAttribute', {
             //   type: 'singleAttribute',
             // })
-            NavigationService.navigate('LayerSelectionAttribute', {
-              type: 'singleAttribute',
-            })
+            NavigationService.navigate('LayerSelectionAttribute')
           }
           break
         // case ToolbarBtnType.SHARE:

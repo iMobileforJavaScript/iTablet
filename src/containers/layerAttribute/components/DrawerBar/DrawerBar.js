@@ -5,9 +5,10 @@
  */
 
 import * as React from 'react'
-import { FlatList, Animated, TouchableOpacity, Text } from 'react-native'
-import { ListSeparator } from '../../../../components'
+import { FlatList, Animated } from 'react-native'
+import { ListSeparator, ImageButton } from '../../../../components'
 import { scaleSize } from '../../../../utils'
+import { DatasetType } from 'imobile_for_reactnative'
 
 import styles from './styles'
 
@@ -45,20 +46,61 @@ export default class DrawerBar extends React.Component {
       return { currentIndex }
     })
     if (this.props.onChange && typeof this.props.onChange === 'function') {
-      this.props.onChange(item, index)
+      this.props.onChange({ item, index })
     }
   }
 
   _renderItem = ({ item, index }) => {
-    let itemStyle =
-      this.state.currentIndex === index ? styles.itemSelected : styles.item
+    let icon,
+      iconStyle = styles.icon,
+      containerStyle = styles.item,
+      textStyle = styles.text,
+      iconBtnStyle = styles.iconBtn
+    if (this.state.currentIndex === index) {
+      containerStyle = styles.selectedItem
+      textStyle = styles.selectedText
+      iconBtnStyle = styles.selectedIconBtn
+    }
+    switch (item.layerInfo.type) {
+      case DatasetType.LINE:
+        icon = require('../../../../assets/map/icon-shallow-line.png')
+        break
+      case DatasetType.POINT:
+        icon = require('../../../../assets/map/icon-dot.png')
+        iconStyle = styles.dotIcon
+        break
+      case DatasetType.REGION:
+        icon = require('../../../../assets/map/icon-polygon.png')
+        break
+      case DatasetType.IMAGE:
+        icon = require('../../../../assets/map/icon-surface.png')
+        break
+      case DatasetType.Network:
+        icon = require('../../../../assets/map/icon-network.png')
+        break
+      default:
+        icon = require('../../../../assets/public/mapLoad.png')
+        break
+    }
+    // return (
+    //   <TouchableOpacity
+    //     style={itemStyle}
+    //     onPress={() => this.action({ item, index })}
+    //   >
+    //     <Text style={styles.text}>{item.layerInfo.name}</Text>
+    //   </TouchableOpacity>
+    // )
     return (
-      <TouchableOpacity
-        style={itemStyle}
+      <ImageButton
+        containerStyle={containerStyle}
+        titleStyle={textStyle}
+        iconBtnStyle={iconBtnStyle}
+        iconStyle={iconStyle}
+        icon={icon}
+        title={item.layerInfo.name}
+        direction={'row'}
         onPress={() => this.action({ item, index })}
-      >
-        <Text style={styles.text}>{item.layerInfo.name}</Text>
-      </TouchableOpacity>
+      />
     )
   }
 

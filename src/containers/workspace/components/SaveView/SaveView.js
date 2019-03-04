@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   separator: {
     // flex: 1,
     // marginHorizontal: scaleSize(16),
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: color.separateColorGray,
   },
   title: {
@@ -164,7 +164,7 @@ export default class SaveView extends React.Component {
               />
               <View style={styles.separator} />
               <Button
-                style={[styles.item, { marginTop: scaleSize(1) }]}
+                style={[styles.item, { marginTop: 1 }]}
                 titleStyle={styles.btnTitle}
                 title="不保存"
                 onPress={this.notSave}
@@ -172,7 +172,7 @@ export default class SaveView extends React.Component {
               />
               <View style={styles.separator} />
               <Button
-                style={[styles.item, { marginTop: scaleSize(1) }]}
+                style={[styles.item, { marginTop: 1 }]}
                 titleStyle={styles.btnTitle}
                 title="取消"
                 onPress={this.cancel}

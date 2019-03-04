@@ -1,3 +1,3 @@
-import AttributeUtil from './AttributeUtil'
+import LayerUtil from './LayerUtil'
 
-export { AttributeUtil }
+export { LayerUtil }
