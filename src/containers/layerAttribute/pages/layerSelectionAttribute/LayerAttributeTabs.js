@@ -238,7 +238,7 @@ export default class LayerAttributeTabs extends React.Component {
           }
           GLOBAL.LayerAttributeTabIndex = i
         }}
-        // locked
+        locked
         scrollWithoutAnimation
         // renderTabBar={() => (
         //   <View/>
@@ -340,6 +340,7 @@ export default class LayerAttributeTabs extends React.Component {
         <DrawerBar
           ref={ref => (this.drawer = ref)}
           data={this.props.selection}
+          index={this.state.currentTabIndex}
           onChange={this.drawerOnChange}
         />
       </Container>

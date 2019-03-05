@@ -17,6 +17,7 @@ const BAR_WIDTH = scaleSize(400)
 export default class DrawerBar extends React.Component {
   props: {
     data: Array,
+    index: number,
     onChange: () => {},
   }
 
@@ -29,6 +30,17 @@ export default class DrawerBar extends React.Component {
     this.state = {
       currentIndex: 0,
       left: new Animated.Value(-BAR_WIDTH),
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.index !== this.props.index &&
+      this.props.index !== this.state.currentIndex
+    ) {
+      this.setState({
+        currentIndex: this.props.index,
+      })
     }
   }
 
