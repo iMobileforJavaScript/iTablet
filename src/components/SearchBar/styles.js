@@ -4,32 +4,20 @@ import { scaleSize } from '../../utils'
 
 export default StyleSheet.create({
   container: {
+    marginHorizontal: scaleSize(120),
     height: scaleSize(44),
     backgroundColor: color.bgW,
     borderRadius: scaleSize(22),
-  },
-  textInputStyle: {
-    paddingVertical: 0,
-    borderBottomWidth: 1,
-    borderColor: color.gray3,
-    marginTop: scaleSize(30),
-    height: scaleSize(50),
-    width: scaleSize(300),
-    color: color.themeText,
-    fontSize: size.fontSize.fontSizeXs,
-    textAlign: 'center',
-  },
-  separator: {
-    width: '100%',
-    height: scaleSize(20),
-    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   input: {
     flex: 1,
-    height: scaleSize(80),
+    height: scaleSize(42),
     backgroundColor: 'transparent',
     textAlign: 'center',
-    color: color.themeText2,
+    color: color.contentColorBlack,
     fontSize: size.fontSize.fontSizeMd,
     ...Platform.select({
       android: {
@@ -38,9 +26,36 @@ export default StyleSheet.create({
     }),
   },
 
+  searchView: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+    marginLeft: scaleSize(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+
   clearBtn: {
     width: scaleSize(40),
     height: scaleSize(40),
+    marginRight: scaleSize(8),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+
+  clearImg: {
+    width: scaleSize(23),
+    height: scaleSize(23),
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+  },
+
+  searchImg: {
+    width: scaleSize(30),
+    height: scaleSize(30),
+    marginLeft: scaleSize(12),
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'transparent',

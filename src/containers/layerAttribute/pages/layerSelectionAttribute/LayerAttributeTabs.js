@@ -6,9 +6,10 @@
 
 import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Container } from '../../../../components'
+import { Container, MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { setSpText } from '../../../../utils'
+import { getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import DefaultTabBar from './DefaultTabBar'
@@ -101,6 +102,18 @@ export default class LayerAttributeTabs extends React.Component {
         currentFieldInfo: [],
       })
     }
+  }
+
+  editUndo = () => {
+    // TODO 属性编辑回退
+  }
+
+  goToSearch = () => {
+    NavigationService.navigate('LayerAttributeSearch', {
+      layerPath: this.props.selection[this.state.currentTabIndex].layerInfo
+        .path,
+      isSelection: true,
+    })
   }
 
   /** 关联事件 **/
@@ -282,6 +295,20 @@ export default class LayerAttributeTabs extends React.Component {
           title: '属性',
           navigation: this.props.navigation,
           backAction: this.back,
+          headerRight: [
+            <MTBtn
+              key={'undo'}
+              image={getThemeAssets().attribute.icon_undo}
+              imageStyle={styles.headerBtn}
+              onPress={this.editUndo}
+            />,
+            <MTBtn
+              key={'search'}
+              image={getThemeAssets().publicAssets.iconSearch}
+              imageStyle={styles.headerBtn}
+              onPress={this.goToSearch}
+            />,
+          ],
         }}
         style={styles.container}
       >

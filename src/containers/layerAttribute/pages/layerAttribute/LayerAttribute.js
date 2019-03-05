@@ -232,7 +232,7 @@ export default class LayerAttribute extends React.Component {
 
   goToSearch = () => {
     NavigationService.navigate('LayerAttributeSearch', {
-      type: 'singleAttribute',
+      layerPath: this.props.currentLayer.path,
     })
   }
 

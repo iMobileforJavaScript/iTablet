@@ -7,20 +7,20 @@
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
 import { LayerUtil } from '../../utils'
-import { Container, MTBtn } from '../../../../components'
+import { Container, SearchBar } from '../../../../components'
+import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils'
 import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
-// import { SScene } from 'imobile_for_reactnative'
-const SINGLE_ATTRIBUTE = 'singleAttribute'
+// import { SMap } from 'imobile_for_reactnative'
+
 export default class LayerAttributeSearch extends React.Component {
   props: {
     navigation: Object,
     currentAttribute: Object,
-    currentLayer: Object,
     selection: Object,
     map: Object,
     // attributes: Object,
@@ -34,6 +34,8 @@ export default class LayerAttributeSearch extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params && params.type
+    this.layerPath = params && params.layerPath
+    this.isSelection = (params && params.isSelection) || false
     this.state = {
       attributes: {
         head: [],
@@ -46,27 +48,39 @@ export default class LayerAttributeSearch extends React.Component {
     this.currentFieldIndex = -1
     this.currentPage = 0
     this.pageSize = 20
+    this.isInit = true
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    this.searchBar && this.searchBar.focus()
+  }
 
   componentWillUnmount() {
     if (Platform.OS === 'android') {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     }
-    this.props.setCurrentAttribute({})
+    // this.props.setCurrentAttribute({})
+  }
+
+  back = () => {
+    NavigationService.goBack()
+    return true
   }
 
   /** 下拉刷新 **/
-  refresh = (cb = () => {}) => {
-    this.currentPage = 0
-    this.getAttribute(cb)
-  }
+  // refresh = (cb = () => {}) => {
+  //   this.currentPage = 0
+  //   this.getAttribute(cb)
+  // }
 
   /** 加载更多 **/
   loadMore = (cb = () => {}) => {
+    if (this.searchKey === '' || this.searchKey === undefined || this.isInit) {
+      this.isInit = false
+      return
+    }
     this.currentPage += 1
-    this.getAttribute(attribute => {
+    this.search(this.searchKey, attribute => {
       cb && cb()
       if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -75,22 +89,32 @@ export default class LayerAttributeSearch extends React.Component {
     })
   }
 
-  getAttribute = (cb = () => {}) => {
-    if (!this.props.currentLayer.path) return
+  search = (searchKey = '', cb = () => {}) => {
+    if (!this.layerPath || searchKey === '') return
+    this.searchKey = searchKey
     let attributes = []
     ;(async function() {
       try {
-        // attribute = await this.props.getAttributes({
-        //   path: this.props.currentLayer.path,
-        //   page: this.currentPage,
-        //   size: this.pageSize,
-        // })
-        attributes = await LayerUtil.getLayerAttribute(
-          this.state.attributes,
-          this.props.currentLayer.path,
-          this.currentPage,
-          this.pageSize,
-        )
+        if (this.isSelection) {
+          attributes = await LayerUtil.searchSelectionAttribute(
+            this.state.attributes,
+            this.layerPath,
+            searchKey,
+            this.currentPage,
+            this.pageSize,
+          )
+        } else {
+          attributes = await LayerUtil.searchLayerAttribute(
+            this.state.attributes,
+            this.layerPath,
+            {
+              key: searchKey,
+            },
+            this.currentPage,
+            this.pageSize,
+          )
+        }
+
         this.setState({
           showTable: true,
           attributes,
@@ -141,7 +165,7 @@ export default class LayerAttributeSearch extends React.Component {
       this.props.setLayerAttributes([
         {
           mapName: this.props.map.currentMap.name,
-          layerPath: this.props.currentLayer.path,
+          layerPath: this.layerPath,
           fieldInfo: [
             {
               name: isSingleData ? data.rowData.name : data.cellData.name,
@@ -160,15 +184,6 @@ export default class LayerAttributeSearch extends React.Component {
         },
       ])
     }
-  }
-
-  back = () => {
-    if (this.type === 'MAP_3D') {
-      this.props.navigation.navigate('Map3D')
-    } else {
-      this.props.navigation.navigate('MapView')
-    }
-    return true
   }
 
   renderToolBar = () => {
@@ -210,9 +225,22 @@ export default class LayerAttributeSearch extends React.Component {
         indexColumn={0}
         hasInputText={this.state.attributes.data.length > 1}
         selectRow={this.selectRow}
-        refresh={cb => this.refresh(cb)}
+        // refresh={cb => this.refresh(cb)}
         loadMore={cb => this.loadMore(cb)}
         changeAction={this.changeAction}
+      />
+    )
+  }
+
+  renderSearchBar = () => {
+    return (
+      <SearchBar
+        ref={ref => (this.searchBar = ref)}
+        onSubmitEditing={searchKey => {
+          this.setLoading(true, ConstInfo.SEARCHING)
+          this.search(searchKey)
+        }}
+        placeholder={'请输入搜索关键字'}
       />
     )
   }
@@ -239,19 +267,16 @@ export default class LayerAttributeSearch extends React.Component {
         headerProps={{
           title: title,
           navigation: this.props.navigation,
-          // backAction: this.back,
-          // backImg: require('../../../../assets/mapTools/icon_close.png'),
-          // withoutBack: true,
-          headerRight: [
-            <MTBtn
-              key={'upload'}
-              image={require('../../../../assets/header/Frenchgrey/icon_search.png')}
-              imageStyle={styles.upload}
-              onPress={this.upload}
-            />,
-          ],
+          headerCenter: this.renderSearchBar(),
+          // headerRight: [
+          //   <MTBtn
+          //     key={'upload'}
+          //     image={require('../../../../assets/header/Frenchgrey/icon_search.png')}
+          //     imageStyle={styles.upload}
+          //     onPress={this.upload}
+          //   />,
+          // ],
         }}
-        bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
         {this.state.showTable &&
@@ -261,12 +286,12 @@ export default class LayerAttributeSearch extends React.Component {
               this.renderMapLayerAttribute()
             ) : (
               <View style={styles.infoView}>
-                <Text style={styles.info}>请选择图层对象</Text>
+                <Text style={styles.info}>搜索结果</Text>
               </View>
             )
           ) : (
             <View style={styles.infoView}>
-              <Text style={styles.info}>请选择图层</Text>
+              <Text style={styles.info}>搜索结果</Text>
             </View>
           )}
       </Container>

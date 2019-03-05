@@ -8,6 +8,7 @@ import React, { Component } from 'react'
 import {
   Platform,
   View,
+  Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
@@ -58,6 +59,7 @@ export default class Cell extends Component {
     data: any,
     value: any,
     defaultValue?: any,
+    cellTextStyle?: any,
     width?: number,
     keyboardType?: String,
     editable?: boolean, // 是否可以调整可编辑状态
@@ -202,21 +204,27 @@ export default class Cell extends Component {
       >
         {/*<Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>*/}
         <View>
-          <TextInput
-            ref={ref => (this.cellInput = ref)}
-            // editable={this.state.editable && this.props.editable}
-            // multiline = {true}
-            value={this.state.value + ''}
-            style={styles.input}
-            underlineColorAndroid="transparent"
-            onChangeText={this._onChangeText}
-            onBlur={this._onBlur}
-            onEndEditing={this._onEndEditing}
-            onSubmitEditing={this._onSubmitEditing}
-            returnKeyType={'done'}
-            keyboardAppearance={'dark'}
-            keyboardType={this.props.keyboardType}
-          />
+          {this.props.editable ? (
+            <TextInput
+              ref={ref => (this.cellInput = ref)}
+              // editable={this.state.editable && this.props.editable}
+              // multiline = {true}
+              value={this.state.value + ''}
+              style={styles.input}
+              underlineColorAndroid="transparent"
+              onChangeText={this._onChangeText}
+              onBlur={this._onBlur}
+              onEndEditing={this._onEndEditing}
+              onSubmitEditing={this._onSubmitEditing}
+              returnKeyType={'done'}
+              keyboardAppearance={'dark'}
+              keyboardType={this.props.keyboardType}
+            />
+          ) : (
+            <Text style={[styles.cellText, this.props.cellTextStyle]}>
+              {this.state.value}
+            </Text>
+          )}
         </View>
         {(!this.state.editable || !this.props.editable) && (
           <TouchableOpacity

@@ -170,7 +170,7 @@ export default class MapView extends React.Component {
         showMap: true,
       })
       clearTimeout(timer)
-    }, 500)
+    }, 800)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
@@ -740,7 +740,7 @@ export default class MapView extends React.Component {
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setLoading(false)
-        NavigationService.goBack('MapView')
+        NavigationService.goBack()
       } catch (e) {
         this.setLoading(false)
       }

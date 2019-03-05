@@ -72,4 +72,6 @@ export default {
   UPLOAD_SUCCESS: '上传成功',
   UPLOAD_FAILED: '上传失败',
   UPLOADING_DATA: '正在上传...',
+
+  SEARCHING: '搜索中',
 }

@@ -27,6 +27,7 @@ export default class LayerAttributeTable extends React.Component {
     changeAction?: () => {}, // 修改表格中的值的回调
 
     selectable: boolean,
+    stickySectionHeadersEnabled?: boolean,
     multiSelect: boolean, // 是否多选
     indexColumn?: number, // 每一行index所在的列，indexColumn >= 0 则所在列为Text
 
@@ -52,6 +53,7 @@ export default class LayerAttributeTable extends React.Component {
     multiSelect: false,
     hasIndex: false,
     refreshing: false,
+    stickySectionHeadersEnabled: true,
     indexColumn: -1,
   }
 
@@ -262,6 +264,7 @@ export default class LayerAttributeTable extends React.Component {
           initialNumToRender={20}
           getItemLayout={this.getItemLayout}
           extraData={this.state}
+          stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
         />
       </ScrollView>
     )
@@ -283,6 +286,7 @@ export default class LayerAttributeTable extends React.Component {
         // onEndReached={this.loadMore}
         initialNumToRender={20}
         getItemLayout={this.getItemLayout}
+        stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
       />
     )
   }

@@ -99,8 +99,8 @@ class NavigationHeader extends Component {
     let backBtnSource =
       backImg || require('../../assets/public/Frenchgrey/icon-back-white.png')
     // backBtnType === 'white'
-    //   ? require('../../assets/public/icon-back-white.png')
-    //   : require('../../assets/public/icon-back-gray.png')
+    //   ? require('../../assets/common/icon-back-white.png')
+    //   : require('../../assets/common/icon-back-gray.png')
     let backBtn = (
       <TouchableOpacity
         accessible={true}
