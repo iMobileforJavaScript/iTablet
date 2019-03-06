@@ -149,7 +149,7 @@ export default class Mine extends Component {
               title: Const.LABLE,
               leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
               onClick: () => {
-                // this.goToMyLable(Const.LABLE)
+                this.goToMyLable(Const.LABLE)
               },
             })}
             {this._renderItem({

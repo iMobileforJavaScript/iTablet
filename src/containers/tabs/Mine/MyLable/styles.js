@@ -16,8 +16,10 @@ export default StyleSheet.create({
     tintColor: color.fontColorBlack,
   },
   title: {
-    fontSize: size.fontSize.fontSizeSm,
-    color: color.bgG,
+    color: color.fontColorBlack,
+    paddingLeft: 15,
+    fontSize: size.fontSize.fontSizeXl,
+    flex: 1,
   },
   moreImgBtn: {
     marginRight: 10,
