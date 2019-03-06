@@ -164,24 +164,24 @@ function getThemeMapCreateByLayer(type, params) {
       image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
     },
-    // {
-    //   //单值标签
-    //   key: constants.THEME_UNIQUE_LABEL,
-    //   title: constants.THEME_UNIQUE_LABEL,
-    //   size: 'large',
-    //   action: showTips,
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-    // },
-    // {
-    //   //分段标签
-    //   key: constants.THEME_RANGE_LABEL,
-    //   title: constants.THEME_RANGE_LABEL,
-    //   size: 'large',
-    //   action: showTips,
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-    // },
+    {
+      //单值标签
+      key: constants.THEME_UNIQUE_LABEL,
+      title: constants.THEME_UNIQUE_LABEL,
+      size: 'large',
+      action: showExpressionList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+    },
+    {
+      //分段标签
+      key: constants.THEME_RANGE_LABEL,
+      title: constants.THEME_RANGE_LABEL,
+      size: 'large',
+      action: showExpressionList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+    },
   ]
   return { data, buttons }
 }
@@ -251,24 +251,24 @@ function getThemeMapCreate(type, params) {
       image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
       selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
     },
-    // {
-    //   //单值标签
-    //   key: constants.THEME_UNIQUE_LABEL,
-    //   title: constants.THEME_UNIQUE_LABEL,
-    //   size: 'large',
-    //   action: showTips,
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label.png'),
-    // },
-    // {
-    //   //分段标签
-    //   key: constants.THEME_RANGE_LABEL,
-    //   title: constants.THEME_RANGE_LABEL,
-    //   size: 'large',
-    //   action: showTips,
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label.png'),
-    // },
+    {
+      //单值标签
+      key: constants.THEME_UNIQUE_LABEL,
+      title: constants.THEME_UNIQUE_LABEL,
+      size: 'large',
+      action: showDatasetsList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+    },
+    {
+      //分段标签
+      key: constants.THEME_RANGE_LABEL,
+      title: constants.THEME_RANGE_LABEL,
+      size: 'large',
+      action: showDatasetsList,
+      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+    },
   ]
   return { data, buttons }
 }

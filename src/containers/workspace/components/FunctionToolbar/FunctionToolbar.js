@@ -447,7 +447,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
         column: 3,
-        height: ConstToolType.HEIGHT[0],
+        height: ConstToolType.NEWTHEME_HEIGHT[1],
       })
     }
   }
@@ -458,10 +458,10 @@ export default class FunctionToolbar extends React.Component {
       this.props.showFullMap && this.props.showFullMap(true)
       toolRef.setVisible(true, ConstToolType.MAP_TOOL, {
         isFullScreen: true,
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[2],
+        height: ConstToolType.HEIGHT[2],
+        // this.props.device.orientation === 'LANDSCAPE'
+        //   ? ConstToolType.HEIGHT[0]
+        //   : ConstToolType.HEIGHT[2],
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
         // this.props.device.orientation === 'LANDSCAPE'
         //   ? ConstToolType.HEIGHT[2]

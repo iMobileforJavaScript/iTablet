@@ -37,10 +37,11 @@ import AddDataset from './addDataset'
 import AddLayerGroup from './addLayerGroup'
 import MapChange from './mapChange'
 import {
-  layerSelectionAttribute,
+  LayerSelectionAttribute,
   LayerAttributeEdit,
   LayerAttributeAdd,
   LayerAttributeObj,
+  LayerAttributeSearch,
 } from './layerAttribute'
 import { ThemeEntry, ThemeEdit, ChoosePage, ThemeStyle } from './theme'
 import workspaceFlieList from './workspaceFileList'
@@ -161,8 +162,8 @@ export default StackNavigator(
         header: null,
       },
     },
-    layerSelectionAttribute: {
-      screen: layerSelectionAttribute,
+    LayerSelectionAttribute: {
+      screen: LayerSelectionAttribute,
       navigationOptions: {
         header: null,
       },
@@ -181,6 +182,12 @@ export default StackNavigator(
     },
     LayerAttributeAdd: {
       screen: LayerAttributeAdd,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    LayerAttributeSearch: {
+      screen: LayerAttributeSearch,
       navigationOptions: {
         header: null,
       },

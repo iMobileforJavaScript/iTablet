@@ -32,7 +32,7 @@ import {
   SaveDialog,
   InputDialog,
 } from '../../../../components'
-import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, jsonUtil } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
@@ -45,7 +45,7 @@ export default class MapView extends React.Component {
     user: PropTypes.object,
     editLayer: PropTypes.object,
     analystLayer: PropTypes.object,
-    selection: PropTypes.object,
+    selection: PropTypes.array,
     latestMap: PropTypes.object,
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
@@ -127,7 +127,7 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
-      changeLayerBtnBottom: scaleSize(200),
+      // changeLayerBtnBottom: scaleSize(200),
     }
 
     this.closeInfo = [
@@ -165,9 +165,12 @@ export default class MapView extends React.Component {
   componentDidMount() {
     GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     this.container && this.container.setLoading(true, '地图加载中')
-    this.setState({
-      showMap: true,
-    })
+    let timer = setTimeout(() => {
+      this.setState({
+        showMap: true,
+      })
+      clearTimeout(timer)
+    }, 800)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
@@ -190,19 +193,29 @@ export default class MapView extends React.Component {
       JSON.stringify(this.props.currentLayer)
     ) {
       GLOBAL.currentLayer = this.props.currentLayer
-      this.setState({
-        currentLayer: this.props.currentLayer,
-      })
+      // this.setState({
+      //   currentLayer: this.props.currentLayer,
+      // })
     }
     // 显示切换图层按钮
-    if (this.props.editLayer.name && this.popList) {
-      let bottom = this.popList.state.subPopShow
-        ? scaleSize(400)
-        : scaleSize(200)
-      bottom !== this.state.changeLayerBtnBottom &&
-        this.setState({
-          changeLayerBtnBottom: bottom,
-        })
+    // if (this.props.editLayer.name && this.popList) {
+    //   let bottom = this.popList.state.subPopShow
+    //     ? scaleSize(400)
+    //     : scaleSize(200)
+    //   bottom !== this.state.changeLayerBtnBottom &&
+    //     this.setState({
+    //       changeLayerBtnBottom: bottom,
+    //     })
+    // }
+
+    if (
+      JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav) &&
+      (!prevProps.nav.routes ||
+        (prevProps.nav.routes &&
+          this.props.nav.routes.length >= prevProps.nav.routes.length)) &&
+      this.checkMapViewIsUnique()
+    ) {
+      this.forceUpdate()
     }
   }
 
@@ -212,9 +225,33 @@ export default class MapView extends React.Component {
     }
   }
 
+  /** 检测MapView在router中是否唯一 **/
+  checkMapViewIsUnique = () => {
+    let mapViewNums = 0
+    if (this.props.nav.routes) {
+      for (let i = 0; i < this.props.nav.routes.length; i++) {
+        if (
+          this.props.nav.routes[i].routeName === 'MapView' ||
+          this.props.nav.routes[i].routeName === 'MapTabs'
+        ) {
+          mapViewNums++
+        }
+      }
+    } else {
+      mapViewNums++
+    }
+
+    let current = this.props.nav.routes[this.props.nav.routes.length - 1]
+
+    return (
+      mapViewNums === 1 &&
+      (current.routeName === 'MapView' || current.routeName === 'MapTabs')
+    )
+  }
+
   clearData = () => {
     this.props.setEditLayer(null)
-    this.props.setSelection(null)
+    // this.props.setSelection(null)
     this.props.setBufferSetting(null)
     this.props.setOverlaySetting(null)
     this.props.setAnalystLayer(null)
@@ -287,8 +324,15 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
-    this.props.setSelection && this.props.setSelection(event)
+    this.props.setSelection &&
+      this.props.setSelection([
+        {
+          layerInfo: event.layerInfo,
+          ids: [event.id],
+        },
+      ])
     switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       case ConstToolType.MAP_TOOL_POINT_SELECT:
         break
       case ConstToolType.MAP_EDIT_POINT:
@@ -331,8 +375,15 @@ export default class MapView extends React.Component {
     }
   }
 
-  geometryMultiSelected = () => {
-    // TODO 处理多选
+  geometryMultiSelected = event => {
+    let data = []
+    for (let i = 0; i < event.geometries.length; i++) {
+      data.push({
+        layerInfo: event.geometries[i].layerInfo,
+        ids: event.geometries[i].ids,
+      })
+    }
+    this.props.setSelection && this.props.setSelection(data)
   }
 
   // 导出(保存)工作空间中地图到模块
@@ -1061,6 +1112,33 @@ export default class MapView extends React.Component {
     )
   }
 
+  cancel = () => {
+    GLOBAL.dialog.setDialogVisible(false)
+  }
+
+  confirm = () => {
+    (async function() {
+      let result = await SMap.setDynamicProjection()
+      if (result) {
+        GLOBAL.dialog.setDialogVisible(false)
+      }
+    }.bind(this)())
+  }
+
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (GLOBAL.dialog = ref)}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+        title={'提示'}
+        info={'是否开启动态投影？'}
+        confirmBtnTitle={'是'}
+        cancelBtnTitle={'否'}
+      />
+    )
+  }
+
   render() {
     return (
       <Container
@@ -1088,6 +1166,7 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
+        {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}

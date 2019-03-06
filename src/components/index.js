@@ -39,6 +39,7 @@ import SaveDialog from './SaveDialog'
 import SaveMapNameDialog from './SaveMapNameDialog'
 import ColorTableList from './ColorTableList'
 import Input from './Input'
+import SearchBar from './SearchBar'
 
 export {
   Container,
@@ -87,4 +88,5 @@ export {
   ColorTableList,
   ColorBtn,
   Input,
+  SearchBar,
 }

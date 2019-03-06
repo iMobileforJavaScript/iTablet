@@ -100,6 +100,7 @@ android {
             keyPassword 'supermap321'
             storeFile file('../keystores/release.keystore')
             storePassword 'supermap123'
+            v2SigningEnabled false
         }
     }
     compileSdkVersion 27

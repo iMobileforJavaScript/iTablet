@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     height: scaleSize(8),
   },
   top: {
-    height: scaleSize(1),
+    height: 1,
   },
   rowTitle: {
     fontSize: size.fontSize.fontSizeMd,

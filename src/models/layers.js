@@ -15,6 +15,7 @@ export const GET_ATTRIBUTES_REFRESH = 'GET_ATTRIBUTES_REFRESH'
 export const GET_ATTRIBUTES_LOAD = 'GET_ATTRIBUTES_LOAD'
 export const GET_ATTRIBUTES_FAILED = 'GET_ATTRIBUTES_FAILED'
 export const SET_ATTRIBUTES = 'SET_ATTRIBUTES'
+export const SET_LAYERS_ATTRIBUTES = 'SET_LAYERS_ATTRIBUTES'
 export const GET_LAYER3DLIST = 'GET_LAYER3DLIST'
 export const SET_CURRENTLAYER3D = 'SET_CURRENTLAYER3D'
 // Actions
@@ -34,7 +35,7 @@ export const setEditLayer = (params, cb = () => {}) => async dispatch => {
 export const setSelection = (params, cb = () => {}) => async dispatch => {
   await dispatch({
     type: SET_SELECTION,
-    payload: params || {},
+    payload: params || [],
   })
   cb && cb()
 }
@@ -91,52 +92,97 @@ export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
   return layers
 }
 
-export const getAttributes = (params, cb = () => {}) => async (
-  dispatch,
-  getState,
-) => {
+// 获取图层属性
+// export const getAttributes = (params, cb = () => {}) => async (
+//   dispatch,
+//   getState,
+// ) => {
+//   try {
+//     // 当page为0时，则为刷新
+//     let path,
+//       page = 0,
+//       size = 20
+//     if (params) {
+//       if (!params.path && getState().layers.toJS().currentLayer.path) {
+//         path = getState().layers.toJS().currentLayer.path
+//       } else {
+//         path = params.path
+//       }
+//       if (params.page >= 0) {
+//         page = params.page
+//       }
+//       if (params.size >= 0) {
+//         size = params.size
+//       }
+//     }
+//     let attribute = await SMap.getLayerAttribute(path, page, size)
+//
+//     let action = page === 0 ? GET_ATTRIBUTES_REFRESH : GET_ATTRIBUTES_LOAD
+//     await dispatch({
+//       type: action,
+//       payload: attribute || [],
+//     })
+//     cb && cb(attribute)
+//     return attribute
+//   } catch (e) {
+//     await dispatch({
+//       type: GET_ATTRIBUTES_FAILED,
+//     })
+//     cb && cb()
+//     return e
+//   }
+// }
+//
+// export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
+//   await dispatch({
+//     type: SET_ATTRIBUTES,
+//     payload: data || {},
+//   })
+//   cb && cb(data)
+// }
+
+/**
+ * 修改对象属性，并记录到历史列表中
+ * @param params
+ *  {
+ *    mapName:   String 地图名称,
+ *    layerPath: String 图层路径,
+ *    fieldInfo: Array  修改的属性，
+ *    params:    Object 查询信息,
+ *      {
+           index: int,      // 当前对象所在记录集中的位置
+           filter: string,  // 过滤条件
+           cursorType: int, // 2: DYNAMIC, 3: STATIC
+         }
+ *  }
+ * @param cb
+ */
+export const setLayerAttributes = (
+  params = [],
+  cb = () => {},
+) => async dispatch => {
   try {
-    // 当page为0时，则为刷新
-    let path,
-      page = 0,
-      size = 20
-    if (params) {
-      if (!params.path && getState().layers.toJS().currentLayer.path) {
-        path = getState().layers.toJS().currentLayer.path
-      } else {
-        path = params.path
-      }
-      if (params.page >= 0) {
-        page = params.page
-      }
-      if (params.size >= 0) {
-        size = params.size
+    if (params && params.length > 0) {
+      for (let i = 0; i < params.length; i++) {
+        await SMap.setLayerFieldInfo(
+          params[i].layerPath,
+          params[i].fieldInfo,
+          params[i].params,
+        )
       }
     }
-    let attribute = await SMap.getLayerAttribute(path, page, size)
 
-    let action = page === 0 ? GET_ATTRIBUTES_REFRESH : GET_ATTRIBUTES_LOAD
+    // SMap.refreshMap()
+
     await dispatch({
-      type: action,
-      payload: attribute || [],
+      type: SET_LAYERS_ATTRIBUTES,
+      payload: params || [],
     })
-    cb && cb(attribute)
-    return attribute
+    cb && cb(true)
+    return true
   } catch (e) {
-    await dispatch({
-      type: GET_ATTRIBUTES_FAILED,
-    })
-    cb && cb()
-    return e
+    return false
   }
-}
-
-export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: SET_ATTRIBUTES,
-    payload: data || {},
-  })
-  cb && cb(data)
 }
 
 export const setCurrentLayer3d = (
@@ -203,16 +249,37 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
 const initialState = fromJS({
   layers: [],
   editLayer: {},
-  selection: {},
+  /**
+   * selection: 选择集中的信息。包含图层信息和对象IDs
+   * [
+       {
+         layerInfo: {},
+         ids: [],
+       }
+   * ]
+   */
+  selection: [],
   currentAttribute: {},
-  attributes: {
-    head: [],
-    data: [],
-  },
+  // attributes: {
+  //   head: [],
+  //   data: [],
+  // },
+  /**
+   * selectionAttributes: 选择集中对象的属性，可包含多个图层的属性
+   * [
+       {
+         layerPath: '',
+         head: [],
+         data: [],
+       }
+   * ]
+   */
+  selectionAttributes: [],
   currentLayer: {},
   analystLayer: {},
   layer3dList: [],
   currentLayer3d: {},
+  modifiedAttributeHistory: [],
 })
 
 export default handleActions(
@@ -242,92 +309,92 @@ export default handleActions(
         .setIn(['layers'], fromJS(payload.layers))
         .setIn(['currentLayer'], fromJS(currentLayer))
     },
-    [`${GET_ATTRIBUTES_REFRESH}`]: (state, { payload }) => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      if (
-        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-        payload.length > 0
-      ) {
-        currentAttribute = payload[0]
-      }
-      let tableHead = []
-      if (payload && payload.length > 0) {
-        payload[0].forEach(item => {
-          if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-            tableHead.unshift(item.fieldInfo.caption)
-          } else {
-            tableHead.push(item.fieldInfo.caption)
-          }
-        })
-      }
-      attributes.head = tableHead
-      attributes.data = payload
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
-    [`${GET_ATTRIBUTES_LOAD}`]: (state, { payload }) => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      if (
-        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-        payload.length > 0
-      ) {
-        currentAttribute = payload[0]
-      }
-      let tableHead = []
-      if (payload && payload.length > 0) {
-        payload[0].forEach(item => {
-          if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-            tableHead.unshift(item.fieldInfo.caption)
-          } else {
-            tableHead.push(item.fieldInfo.caption)
-          }
-        })
-      } else {
-        tableHead = attributes.head
-      }
-      attributes.head = tableHead
-      attributes.data = (attributes.data || []).concat(payload)
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
-    [`${GET_ATTRIBUTES_FAILED}`]: state => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      attributes.head = []
-      attributes.data = []
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
-    [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
-      let currentAttribute = {},
-        attributes = state.toJS().attributes
-      if (
-        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-        payload.length > 0
-      ) {
-        currentAttribute = payload[0]
-      }
-      let tableHead = []
-      if (payload && payload.length > 0) {
-        payload[0].forEach(item => {
-          if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
-            tableHead.unshift(item.fieldInfo.caption)
-          } else {
-            tableHead.push(item.fieldInfo.caption)
-          }
-        })
-      }
-      attributes.head = tableHead
-      attributes.data = payload
-      return state
-        .setIn(['attributes'], fromJS(attributes))
-        .setIn(['currentAttribute'], fromJS(currentAttribute))
-    },
+    // [`${GET_ATTRIBUTES_REFRESH}`]: (state, { payload }) => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   if (
+    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+    //     payload.length > 0
+    //   ) {
+    //     currentAttribute = payload[0]
+    //   }
+    //   let tableHead = []
+    //   if (payload && payload.length > 0) {
+    //     payload[0].forEach(item => {
+    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+    //         tableHead.unshift(item.fieldInfo.caption)
+    //       } else {
+    //         tableHead.push(item.fieldInfo.caption)
+    //       }
+    //     })
+    //   }
+    //   attributes.head = tableHead
+    //   attributes.data = payload
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
+    // [`${GET_ATTRIBUTES_LOAD}`]: (state, { payload }) => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   if (
+    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+    //     payload.length > 0
+    //   ) {
+    //     currentAttribute = payload[0]
+    //   }
+    //   let tableHead = []
+    //   if (payload && payload.length > 0) {
+    //     payload[0].forEach(item => {
+    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
+    //         tableHead.unshift(item.fieldInfo.caption)
+    //       } else {
+    //         tableHead.push(item.fieldInfo.caption)
+    //       }
+    //     })
+    //   } else {
+    //     tableHead = attributes.head
+    //   }
+    //   attributes.head = tableHead
+    //   attributes.data = (attributes.data || []).concat(payload)
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
+    // [`${GET_ATTRIBUTES_FAILED}`]: state => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   attributes.head = []
+    //   attributes.data = []
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
+    // [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
+    //   let currentAttribute = {},
+    //     attributes = state.toJS().attributes
+    //   if (
+    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+    //     payload.length > 0
+    //   ) {
+    //     currentAttribute = payload[0]
+    //   }
+    //   let tableHead = []
+    //   if (payload && payload.length > 0) {
+    //     payload[0].forEach(item => {
+    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
+    //         tableHead.unshift(item.fieldInfo.caption)
+    //       } else {
+    //         tableHead.push(item.fieldInfo.caption)
+    //       }
+    //     })
+    //   }
+    //   attributes.head = tableHead
+    //   attributes.data = payload
+    //   return state
+    //     .setIn(['attributes'], fromJS(attributes))
+    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
+    // },
     [`${GET_LAYER3DLIST}`]: (state, { payload }) => {
       let layer3dList = state.toJS().layer3dList
       if (payload.length > 0) {
@@ -342,6 +409,14 @@ export default handleActions(
         Toast.show('当前图层为 ' + currentLayer3d.name)
       }
       return state.setIn(['currentLayer3d'], fromJS(currentLayer3d))
+    },
+    [`${SET_LAYERS_ATTRIBUTES}`]: state => {
+      let modifiedAttributeHistory = state.toJS().modifiedAttributeHistory
+
+      return state.setIn(
+        ['modifiedAttributeHistory'],
+        fromJS(modifiedAttributeHistory),
+      )
     },
     [REHYDRATE]: () => {
       // return payload && payload.layers ? fromJS(payload.layers) : state

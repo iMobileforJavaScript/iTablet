@@ -89,7 +89,7 @@ export default class Layer3DManager_item extends React.Component {
     const image2 = this.state.visible
       ? require('../../../../assets/public/eye.png')
       : require('../../../../assets/public/eye-off.png')
-    // const image3 = this.state.selectable ? require('../../../../assets/public/select.png') :require('../../../../assets/public/select-off.png')
+    // const image3 = this.state.selectable ? require('../../../../assets/common/select.png') :require('../../../../assets/common/select-off.png')
     return (
       <View style={styles.container}>
         <View style={styles.rowOne}>

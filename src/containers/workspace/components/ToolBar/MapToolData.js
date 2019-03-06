@@ -51,6 +51,13 @@ function getMapTool(type, params) {
           image: require('../../../../assets/mapTools/icon_free_point_select_black.png'),
         },
         {
+          key: 'selectByRectangle',
+          title: '框选',
+          action: selectByRectangle,
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_select_by_rectangle.png'),
+        },
+        {
           key: 'pointSelect',
           title: '全幅',
           action: viewEntire,
@@ -143,6 +150,7 @@ function getMapTool(type, params) {
         ToolbarBtnType.MEASURE_CLEAR,
       ]
       break
+    case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
     case ConstToolType.MAP_TOOL_POINT_SELECT:
       data = [
         // {
@@ -174,15 +182,23 @@ function getMapTool(type, params) {
 }
 
 function select() {
-  SMap.setAction(Action.SELECT)
+  switch (GLOBAL.currentToolbarType) {
+    case ConstToolType.MAP_TOOL_POINT_SELECT:
+      SMap.setAction(Action.SELECT)
+      break
+    case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+      // SMap.setAction(Action.SELECT_BY_RECTANGLE)
+      SMap.selectByRectangle()
+      break
+  }
 }
 
 function viewEntire() {
   SMap.viewEntire()
 }
 
+/** 单选 **/
 function pointSelect() {
-  select()
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_POINT_SELECT
@@ -192,6 +208,22 @@ function pointSelect() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
+    cb: () => select(),
+  })
+}
+
+/** 框选 **/
+function selectByRectangle() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE, {
+    containerType: 'table',
+    column: 3,
+    isFullScreen: false,
+    height: ConstToolType.HEIGHT[0],
+    cb: () => select(),
   })
 }
 

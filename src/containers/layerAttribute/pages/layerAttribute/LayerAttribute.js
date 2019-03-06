@@ -7,14 +7,16 @@
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container } from '../../../../components'
+import { Container, MTBtn } from '../../../../components'
 import { Toast } from '../../../../utils'
-import { ConstInfo, MAP_MODULE } from '../../../../constants'
+import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
-import { LayerAttributeTable } from '../../components'
+import { LayerAttributeTable, LayerTopBar } from '../../components'
+import { LayerUtil } from '../../utils'
+import { getThemeAssets } from '../../../../assets'
 import styles from './styles'
-// import { SScene } from 'imobile_for_reactnative'
+import { SMap, Action } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
 export default class LayerAttribute extends React.Component {
   props: {
@@ -23,11 +25,12 @@ export default class LayerAttribute extends React.Component {
     currentAttribute: Object,
     currentLayer: Object,
     selection: Object,
-    attributes: Object,
-    setAttributes: () => {},
+    map: Object,
+    // attributes: Object,
+    // setAttributes: () => {},
     setCurrentAttribute: () => {},
-    getAttributes: () => {},
-    closeMap: () => {},
+    // getAttributes: () => {},
+    setLayerAttributes: () => {},
   }
 
   constructor(props) {
@@ -35,37 +38,39 @@ export default class LayerAttribute extends React.Component {
     const { params } = this.props.navigation.state
     this.type = params && params.type
     this.state = {
-      attribute: {},
+      attributes: {
+        head: [],
+        data: [],
+      },
       showTable: false,
+      // currentFieldInfo: [],
+      currentIndex: -1,
     }
 
-    this.currentFieldInfo = []
-    this.currentFieldIndex = -1
+    // this.currentFieldInfo = []
+    // this.currentIndex = -1
     this.currentPage = 0
     this.pageSize = 20
+    this.isInit = true
   }
 
   componentDidMount() {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
-    if (this.type === 'MAP_3D') {
-      this.getMap3DAttribute()
-    } else {
-      this.setLoading(true, ConstInfo.LOADING_DATA)
-      this.refresh()
-    }
+    this.setLoading(true, ConstInfo.LOADING_DATA)
+    this.refresh()
   }
 
   componentDidUpdate(prevProps) {
-    let mapTabs = this.props.nav.routes[this.props.nav.index]
+    // let mapTabs = this.props.nav.routes[this.props.nav.index]
     if (
       JSON.stringify(prevProps.currentLayer) !==
-        JSON.stringify(this.props.currentLayer) ||
-      (mapTabs.routes &&
-        mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
-        JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
+      JSON.stringify(this.props.currentLayer)
+      // || (mapTabs.routes &&
+      //   mapTabs.routes[mapTabs.index].key === 'LayerAttribute' &&
+      //   JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav))
     ) {
-      this.refresh()
+      this.refresh(null, true)
     }
   }
 
@@ -76,103 +81,108 @@ export default class LayerAttribute extends React.Component {
     this.props.setCurrentAttribute({})
   }
 
-  getMap3DAttribute = async (cb = () => {}) => {
-    // let list = []
-    // let data = await SScene.getLableAttributeList()
-    // for (let index = 0; index < data.length; index++) {
-    //   let arr = []
-    //   Object.keys(data[index]).forEach(key => {
-    //     let item = {
-    //       fieldInfo: { caption: key },
-    //       name: key,
-    //       value: data[index][key],
-    //     }
-    //     if (key === 'id') {
-    //       arr.unshift(item)
-    //     } else {
-    //       arr.push(item)
-    //     }
-    //   })
-    //   list.push(arr)
-    // }
-    // this.props.setAttributes(list)
-    !this.state.showTable &&
-      this.setState({
-        showTable: true,
-      })
-    cb && cb()
-  }
-
   /** 下拉刷新 **/
-  refresh = (cb = () => {}) => {
+  refresh = (cb = () => {}, resetCurrent = false) => {
     this.currentPage = 0
-    this.getAttribute(cb)
+    this.getAttribute(cb, resetCurrent)
   }
 
   /** 加载更多 **/
   loadMore = (cb = () => {}) => {
     this.currentPage += 1
-    this.getAttribute(attribute => {
+    this.getAttribute(attributes => {
       cb && cb()
-      if (!attribute || attribute.length <= 0) {
+      if (!attributes || !attributes.data || attributes.data.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
-        this.currentPage--
+        // this.currentPage--
       }
     })
   }
 
-  getAttribute = (cb = () => {}) => {
+  /**
+   * 获取属性
+   * @param cb 回调函数
+   * @param resetCurrent 是否重置当前选择的对象
+   */
+  getAttribute = (cb = () => {}, resetCurrent = false) => {
     if (!this.props.currentLayer.path) return
-    let attribute = []
+    let attributes = {}
     ;(async function() {
       try {
-        attribute = await this.props.getAttributes({
-          path: this.props.currentLayer.path,
-          page: this.currentPage,
-          size: this.pageSize,
-        })
-        !this.state.showTable &&
+        // attributes = await SMap.getLayerAttribute({
+        //   path: this.props.currentLayer.path,
+        //   page: this.currentPage,
+        //   size: this.pageSize,
+        // })
+        attributes = await LayerUtil.getLayerAttribute(
+          this.state.attributes,
+          this.props.currentLayer.path,
+          this.currentPage,
+          this.pageSize,
+        )
+        let currentIndex =
+          attributes.data.length === 1
+            ? 0
+            : resetCurrent
+              ? -1
+              : this.state.currentIndex
+        if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
+            attributes,
+            currentIndex: currentIndex,
+            currentFieldInfo: attributes.data[0],
           })
+        } else {
+          this.setState({
+            showTable: true,
+            attributes,
+            currentIndex: currentIndex,
+          })
+        }
+        this.setState({
+          showTable: true,
+          attributes,
+          currentIndex: currentIndex,
+        })
         this.setLoading(false)
-        cb && cb(attribute)
+        cb && cb(attributes)
       } catch (e) {
         this.setLoading(false)
-        cb && cb(attribute)
+        cb && cb(attributes)
       }
     }.bind(this)())
   }
 
-  add = () => {
-    Toast.show('待做')
-  }
+  selectRow = ({ data, index }) => {
+    if (!data || index < 0) return
 
-  edit = () => {
-    if (this.currentFieldInfo.length > 0) {
-      let smID = -1
-      for (let i = 0; i < this.currentFieldInfo.length; i++) {
-        if (this.currentFieldInfo[i].name === 'SMID') {
-          smID = this.currentFieldInfo[i].value
-          break
-        }
-      }
-      smID >= 0 &&
-        NavigationService.navigate('LayerAttributeObj', {
-          dataset: this.state.dataset,
-          filter: 'SmID=' + smID,
-          index: this.currentFieldIndex,
-          callBack: this.getDatasets,
-        })
+    if (this.state.currentIndex !== index) {
+      this.setState({
+        currentFieldInfo: data,
+        currentIndex: index,
+      })
     } else {
-      Toast.show('请选择一个属性')
+      this.setState({
+        currentFieldInfo: [],
+        currentIndex: -1,
+      })
     }
   }
 
-  selectRow = (data, index) => {
-    if (!data || index < 0) return
-    this.currentFieldInfo = data
-    this.currentFieldIndex = index
+  /** 关联事件 **/
+  relateAction = () => {
+    SMap.setAction(Action.PAN)
+    SMap.selectObj(this.props.currentLayer.path, [
+      this.state.currentFieldInfo[0].value,
+    ]).then(() => {
+      this.props.navigation && this.props.navigation.navigate('MapView')
+      GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
+        isFullScreen: false,
+        height: 0,
+      })
+      GLOBAL.toolBox.showFullMap()
+    })
   }
 
   setLoading = (loading = false, info, extra) => {
@@ -182,6 +192,55 @@ export default class LayerAttribute extends React.Component {
   setSaveViewVisible = visible => {
     GLOBAL.SaveMapView &&
       GLOBAL.SaveMapView.setVisible(visible, this.setLoading)
+  }
+
+  /** 修改表格中的值的回调 **/
+  changeAction = data => {
+    if (
+      this.props.setLayerAttributes &&
+      typeof this.props.setLayerAttributes === 'function'
+    ) {
+      // 单个对象属性和多个对象属性数据有区别
+      let isSingleData = typeof data.cellData !== 'object'
+      this.props.setLayerAttributes([
+        {
+          mapName: this.props.map.currentMap.name,
+          layerPath: this.props.currentLayer.path,
+          fieldInfo: [
+            {
+              name: isSingleData ? data.rowData.name : data.cellData.name,
+              value: data.value,
+            },
+          ],
+          params: {
+            // index: int,      // 当前对象所在记录集中的位置
+            filter: `SmID=${
+              isSingleData
+                ? this.state.attributes.data[0][0].value
+                : data.rowData[0].value
+            }`, // 过滤条件
+            cursorType: 2, // 2: DYNAMIC, 3: STATIC
+          },
+        },
+      ])
+    }
+  }
+
+  editUndo = () => {
+    // TODO 属性编辑回退
+  }
+
+  goToSearch = () => {
+    NavigationService.navigate('LayerAttributeSearch', {
+      layerPath: this.props.currentLayer.path,
+    })
+  }
+
+  canRelated = () => {
+    if (this.table) {
+      return this.table.getSelected().size() > 0
+    }
+    return false
   }
 
   back = () => {
@@ -205,32 +264,36 @@ export default class LayerAttribute extends React.Component {
 
   renderMapLayerAttribute = () => {
     if (
-      !this.props.attributes ||
-      (!this.props.attributes.data && this.props.attributes.data.length === 0)
+      !this.state.attributes ||
+      (!this.state.attributes.data && this.state.attributes.data.length === 0)
     )
       return null
     return (
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
         data={
-          this.props.attributes.data.length > 1
-            ? this.props.attributes.data
-            : this.props.attributes.data[0]
+          this.state.attributes.data.length > 1
+            ? this.state.attributes.data
+            : this.state.attributes.data[0]
         }
         tableHead={
-          this.props.attributes.data.length > 1
-            ? this.props.attributes.head
+          this.state.attributes.data.length > 1
+            ? this.state.attributes.head
             : ['名称', '属性值']
         }
-        widthArr={this.props.attributes.data.length === 1 && [100, 100]}
+        widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
-          this.props.attributes.data.length > 1
+          this.state.attributes.data.length > 1
             ? LayerAttributeTable.Type.MULTI_DATA
             : LayerAttributeTable.Type.SINGLE_DATA
         }
+        // indexColumn={this.state.attributes.data.length > 1 ? 0 : -1}
+        indexColumn={0}
+        hasInputText={this.state.attributes.data.length > 1}
         selectRow={this.selectRow}
         refresh={cb => this.refresh(cb)}
         loadMore={cb => this.loadMore(cb)}
+        changeAction={this.changeAction}
       />
     )
   }
@@ -250,6 +313,9 @@ export default class LayerAttribute extends React.Component {
       case constants.MAP_THEME:
         title = MAP_MODULE.MAP_THEME
         break
+      case constants.MAP_PLOTTING:
+        title = MAP_MODULE.MAP_PLOTTING
+        break
     }
     return (
       <Container
@@ -260,19 +326,32 @@ export default class LayerAttribute extends React.Component {
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
           withoutBack: true,
+          headerRight: [
+            <MTBtn
+              key={'undo'}
+              image={getThemeAssets().attribute.icon_undo}
+              imageStyle={styles.headerBtn}
+              onPress={this.editUndo}
+            />,
+            <MTBtn
+              key={'search'}
+              image={getThemeAssets().publicAssets.iconSearch}
+              imageStyle={styles.headerBtn}
+              onPress={this.goToSearch}
+            />,
+          ],
         }}
         bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
+        <LayerTopBar
+          canRelated={this.state.currentIndex >= 0}
+          relateAction={this.relateAction}
+        />
         {this.state.showTable &&
-        this.props.attributes &&
-        this.props.attributes.head ? (
-            this.props.attributes.head.length > 0 ? (
-            // this.type === 'MAP_3D' ? (
-            //   this.renderMap3dLayerAttribute()
-            // ) : (
-            //   this.renderMapLayerAttribute()
-            // )
+        this.state.attributes &&
+        this.state.attributes.head ? (
+            this.state.attributes.head.length > 0 ? (
               this.renderMapLayerAttribute()
             ) : (
               <View style={styles.infoView}>

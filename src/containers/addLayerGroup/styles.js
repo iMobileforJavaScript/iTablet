@@ -28,7 +28,7 @@ export default StyleSheet.create({
     height: scaleSize(60),
     backgroundColor: 'white',
     borderRadius: scaleSize(8),
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderColor: color.UNDERLAYCOLOR,
   },
 })

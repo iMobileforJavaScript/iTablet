@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   separator: {
     // flex: 1,
     marginHorizontal: scaleSize(16),
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: color.separateColorGray,
   },
   title: {
@@ -440,7 +440,7 @@ export default class MyLocalData extends Component {
         <View
           style={{
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.separateColorGray,
           }}
         />

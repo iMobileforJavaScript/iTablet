@@ -614,7 +614,7 @@ const styles = StyleSheet.create({
     color: color.font_color_white,
   },
   sectionSeparateViewStyle: {
-    height: scaleSize(1),
+    height: 1,
     marginHorizontal: 0,
     backgroundColor: color.item_separate_white,
   },
@@ -626,7 +626,7 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     width: '100%',
     // width: scaleSize(620),
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: color.item_separate_white,
   },
   imgItemInfo: {

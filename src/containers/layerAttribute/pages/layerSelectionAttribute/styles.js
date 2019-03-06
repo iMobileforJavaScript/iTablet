@@ -4,8 +4,8 @@ import { scaleSize } from '../../../../utils/index'
 export default StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#F0F0F0',
+    width: '100%',
   },
   headerBtnTitle: {
     color: 'white',

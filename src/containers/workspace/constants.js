@@ -118,6 +118,7 @@ export default {
   MAP_EDIT: 'MAP_EDIT',
   MAP_3D: 'MAP_3D',
   MAP_THEME: 'MAP_THEME',
+  MAP_PLOTTING: 'MAP_PLOTTING',
 
   // ==================分享===================
   QQ: 'QQ',
