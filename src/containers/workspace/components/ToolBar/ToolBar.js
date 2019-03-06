@@ -122,6 +122,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentSymbols: () => {},
     saveMap: () => {},
     measureShow: () => {},
+    setLoading: () => {},
   }
 
   static defaultProps = {
@@ -533,6 +534,25 @@ export default class ToolBar extends React.PureComponent {
             },
             size: 'large',
             image: require('../../../../assets/mapEdit/Frenchgrey/icon_action3d.png'),
+          },
+          {
+            key: 'pointAnalyst',
+            title: '路径分析',
+            action: () => {
+              try {
+                NavigationService.navigate('PointAnalyst', {
+                  container: this.props.setLoading ? this.props.setLoading : {},
+                  type: 'pointAnalyst',
+                })
+                this.showToolbar(!this.isShow)
+                this.props.existFullMap && this.props.existFullMap()
+                GLOBAL.OverlayView.setVisible(false)
+              } catch (error) {
+                Toast.show('操作失败')
+              }
+            },
+            size: 'large',
+            image: require('../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
           },
         ]
         buttons = []
