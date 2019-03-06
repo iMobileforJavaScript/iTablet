@@ -220,9 +220,6 @@ class AppRoot extends Component {
   map3dBackAction=async()=>{
     try {
       this.container && this.container.setLoading(true, '正在关闭')
-      if (GLOBAL.Map3DSymbol) {
-        await SScene.clearAllLabel()
-      }
       if (GLOBAL.openWorkspace) {
         // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
         await SScene.closeWorkspace()
