@@ -447,8 +447,8 @@ export default class FunctionToolbar extends React.Component {
       // TODO 根据符号类型改变ToolBox 编辑内容
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
-        column: 3,
-        height: ConstToolType.NEWTHEME_HEIGHT[1],
+        column: 4,
+        height: ConstToolType.THEME_HEIGHT[5],
       })
     }
   }

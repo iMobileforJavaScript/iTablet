@@ -1751,13 +1751,97 @@ export default class ToolBar extends React.PureComponent {
         } else {
           Toast.show('添加失败')
         }
+      } else if (
+        this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
+      ) {
+        // case constants.THEME_GRAPH_AREA:
+        // case constants.THEME_GRAPH_STEP:
+        // case constants.THEME_GRAPH_LINE:
+        // case constants.THEME_GRAPH_POINT:
+        // case constants.THEME_GRAPH_BAR:
+        // case constants.THEME_GRAPH_BAR3D:
+        // case constants.THEME_GRAPH_PIE:
+        // case constants.THEME_GRAPH_PIE3D:
+        // case constants.THEME_GRAPH_ROSE:
+        // case constants.THEME_GRAPH_ROSE3D:
+        // case constants.THEME_GRAPH_STACK_BAR:
+        // case constants.THEME_GRAPH_STACK_BAR3D:
+        // case constants.THEME_GRAPH_RING:
+        //   //统计专题图
+        //   params = {
+        //     DatasourceAlias: this.state.themeDatasourceAlias,
+        //     DatasetName: this.state.themeDatasetName,
+        //     GraphExpressions: new Array(item.expression),
+        //     ThemeGraphType: this.state.themeCreateType,
+        //   }
+        //   isSuccess = await SThemeCartography.createThemeGraphMap(params)
+        //   break
+        let result = true
+        let expressions =
+          (this.toolBarSectionList &&
+            this.toolBarSectionList.getSelectList()) ||
+          []
+        if (expressions.length === 0) {
+          Toast.show('请至少选择一个字段表达式')
+          return
+        }
+        //数据集->创建专题图
+        let params = {
+          DatasourceAlias: this.state.themeDatasourceAlias,
+          DatasetName: this.state.themeDatasetName,
+          GraphExpressions: expressions,
+          ThemeGraphType: this.state.themeCreateType,
+        }
+        result = await SThemeCartography.createThemeGraphMap(params)
+        result &&
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        if (result) {
+          this.setVisible(false)
+          GLOBAL.dialog.setDialogVisible(true)
+          Toast.show('创建专题图成功')
+        } else {
+          Toast.show('创建专题图失败')
+        }
+      } else if (
+        this.state.type ===
+        ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
+      ) {
+        let result = true
+        let expressions =
+          (this.toolBarSectionList &&
+            this.toolBarSectionList.getSelectList()) ||
+          []
+        if (expressions.length === 0) {
+          Toast.show('请至少选择一个字段表达式')
+          return
+        }
+        //图层->创建专题图
+        let params = {
+          LayerName: ThemeMenuData.getLayerNameCreateTheme(), //图层名称
+          GraphExpressions: expressions,
+          ThemeGraphType: this.state.themeCreateType,
+        }
+        result = await SThemeCartography.createThemeGraphMapByLayer(params)
+        result &&
+          this.props.getLayers(-1, layers => {
+            this.props.setCurrentLayer(layers.length > 0 && layers[0])
+          })
+        if (result) {
+          this.setVisible(false)
+          GLOBAL.dialog.setDialogVisible(true)
+          Toast.show('创建专题图成功')
+        } else {
+          Toast.show('创建专题图失败')
+        }
       } else {
         this.close()
       }
     }.bind(this)())
   }
 
-  addBack = (type = this.state.type) => {
+  back = (type = this.state.type) => {
     if (type === ConstToolType.MAP_THEME_ADD_DATASET) {
       let data = this.lastUdbList,
         buttons = []
@@ -1771,6 +1855,26 @@ export default class ToolBar extends React.PureComponent {
           data: data,
           buttons: buttons,
           type: ConstToolType.MAP_THEME_ADD_UDB,
+        },
+        () => {
+          this.updateOverlayerView()
+        },
+      )
+    } else if (type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION) {
+      let data = this.lastDatasetsList
+      this.setState(
+        {
+          isFullScreen: true,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          listSelectable: false, //单选框
+          height:
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[3]
+              : ConstToolType.THEME_HEIGHT[5],
+          data,
+          buttons: [ToolbarBtnType.THEME_CANCEL],
+          type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
         },
         () => {
           this.updateOverlayerView()
@@ -2395,6 +2499,34 @@ export default class ToolBar extends React.PureComponent {
               data: data.list,
             },
           ]
+          this.lastDatasetsList = this.state.data //保存上次的数据集数据
+          //统计专题图字段表达式可以多选
+          let listSelectable = false
+          switch (this.state.themeCreateType) {
+            case constants.THEME_UNIQUE_STYLE:
+            case constants.THEME_RANGE_STYLE:
+            case constants.THEME_UNIFY_LABEL:
+            case constants.THEME_UNIQUE_LABEL:
+            case constants.THEME_RANGE_LABEL:
+              listSelectable = false
+              break
+            case constants.THEME_GRAPH_AREA:
+            case constants.THEME_GRAPH_STEP:
+            case constants.THEME_GRAPH_LINE:
+            case constants.THEME_GRAPH_POINT:
+            case constants.THEME_GRAPH_BAR:
+            case constants.THEME_GRAPH_BAR3D:
+            case constants.THEME_GRAPH_PIE:
+            case constants.THEME_GRAPH_PIE3D:
+            case constants.THEME_GRAPH_ROSE:
+            case constants.THEME_GRAPH_ROSE3D:
+            case constants.THEME_GRAPH_STACK_BAR:
+            case constants.THEME_GRAPH_STACK_BAR3D:
+            case constants.THEME_GRAPH_RING:
+              //统计专题图
+              listSelectable = true
+              break
+          }
           this.setState(
             {
               themeDatasourceAlias: item.datasourceName,
@@ -2402,9 +2534,16 @@ export default class ToolBar extends React.PureComponent {
               isFullScreen: true,
               isTouchProgress: false,
               showMenuDialog: false,
+              listSelectable: listSelectable, //单选框
               containerType: 'list',
               data: datalist,
-              buttons: [ToolbarBtnType.THEME_CANCEL],
+              buttons: listSelectable
+                ? [
+                  ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
+                  ToolbarBtnType.THEME_COMMIT,
+                ]
+                : [ToolbarBtnType.THEME_CANCEL],
               type: ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION,
             },
             () => {
@@ -3295,6 +3434,45 @@ export default class ToolBar extends React.PureComponent {
             case constants.THEME_RANGE_LABEL:
               type = constants.THEME_RANGE_LABEL
               break
+            case constants.THEME_GRAPH_AREA:
+              type = constants.THEME_GRAPH_AREA
+              break
+            case constants.THEME_GRAPH_STEP:
+              type = constants.THEME_GRAPH_STEP
+              break
+            case constants.THEME_GRAPH_LINE:
+              type = constants.THEME_GRAPH_LINE
+              break
+            case constants.THEME_GRAPH_POINT:
+              type = constants.THEME_GRAPH_POINT
+              break
+            case constants.THEME_GRAPH_BAR:
+              type = constants.THEME_GRAPH_BAR
+              break
+            case constants.THEME_GRAPH_BAR3D:
+              type = constants.THEME_GRAPH_BAR3D
+              break
+            case constants.THEME_GRAPH_PIE:
+              type = constants.THEME_GRAPH_PIE
+              break
+            case constants.THEME_GRAPH_PIE3D:
+              type = constants.THEME_GRAPH_PIE3D
+              break
+            case constants.THEME_GRAPH_ROSE:
+              type = constants.THEME_GRAPH_ROSE
+              break
+            case constants.THEME_GRAPH_ROSE3D:
+              type = constants.THEME_GRAPH_ROSE3D
+              break
+            case constants.THEME_GRAPH_STACK_BAR:
+              type = constants.THEME_GRAPH_STACK_BAR
+              break
+            case constants.THEME_GRAPH_STACK_BAR3D:
+              type = constants.THEME_GRAPH_STACK_BAR3D
+              break
+            case constants.THEME_GRAPH_RING:
+              type = constants.THEME_GRAPH_RING
+              break
           }
           let menutoolRef =
             this.props.getMenuAlertDialogRef &&
@@ -3795,9 +3973,9 @@ export default class ToolBar extends React.PureComponent {
           action = this.close
           break
         case ToolbarBtnType.THEME_ADD_BACK:
-          //添加->返回上一级
+          //返回上一级
           image = require('../../../../assets/public/Frenchgrey/icon-back-white.png')
-          action = this.addBack
+          action = this.back
           break
         case ToolbarBtnType.MEASURE_CLEAR:
           //量算-清除
