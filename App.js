@@ -20,6 +20,7 @@ import {
   setCurrentTemplateInfo,
   setTemplate,
 } from './src/models/template'
+import { Dialog } from './src/components'
 import { setMapSetting } from './src/models/setting'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
@@ -102,6 +103,7 @@ class AppRoot extends Component {
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
+      await this.inspectEnvironment()
       await this.initOrientation()
     }).bind(this)()
     GLOBAL.clearMapData = () => {
@@ -130,6 +132,13 @@ class AppRoot extends Component {
           }
         }).bind(this)()
       }
+    }
+  }
+
+  inspectEnvironment=async()=>{
+    let result=await FileTools.EnvironmentIsValid()
+    if(!result){
+      this.exit.setDialogVisible(true)
     }
   }
 
@@ -316,6 +325,21 @@ class AppRoot extends Component {
     }
   }
 
+  renderDialog=()=>{
+    return(<Dialog
+      ref={ref => (this.exit = ref)}
+      type={'modal'}
+      title={"许可异常，请更换许可"}
+      onlyOneBtn={true}
+      cancelBtnVisible={false}
+      confirmAction={()=>{this.exit.setDialogVisible(false)}}
+      opacity={1}
+      opacityStyle={styles.opacityView}
+      style={styles.dialogBackground}
+    >
+    </Dialog>)
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -338,6 +362,7 @@ class AppRoot extends Component {
             // this.backAction = null
           }}
         />
+        {this.renderDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )

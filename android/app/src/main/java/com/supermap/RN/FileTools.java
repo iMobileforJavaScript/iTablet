@@ -16,6 +16,7 @@ import com.supermap.data.Datasource;
 import com.supermap.data.DatasourceConnectionInfo;
 import com.supermap.data.Datasources;
 import com.supermap.data.EngineType;
+import com.supermap.data.Environment;
 import com.supermap.data.Workspace;
 import com.supermap.file.Decompressor;
 import com.supermap.file.FileManager;
@@ -546,6 +547,16 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void EnvironmentIsValid( Promise promise) {
+        try {
+            Boolean result = Environment.getLicenseStatus().isLicenseValid();;
+            promise.resolve(result);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)
@@ -668,6 +679,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Temp");
         createDirectory(dataPath + "Lable");
         createDirectory(externalDataPath);
+//        createDirectory(externalDataPath+"Lable");
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
