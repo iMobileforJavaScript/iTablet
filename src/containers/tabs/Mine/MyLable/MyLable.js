@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
-import { FlatList, View, Image, TouchableOpacity, Text } from 'react-native'
+import { FlatList, View } from 'react-native'
 import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { SMap } from 'imobile_for_reactnative'
-import styles from './styles'
+import { SMap, EngineType } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
+import LableItem from './LableItem'
+import { color } from '../../../../styles'
 export default class MyLable extends Component {
   props: {
     user: any,
@@ -17,10 +18,19 @@ export default class MyLable extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.state = {
-      data: [],
+      data: [
+        {
+          title: 'ChangChun',
+        },
+        {
+          title: 'ChengDu',
+        },
+      ],
       title: params.title,
       modalIsVisible: false,
+      udbPath: '',
     }
+    this.uploadList = []
   }
 
   componentDidMount() {
@@ -39,24 +49,14 @@ export default class MyLable extends Component {
   }
 
   _renderItem = ({ item, index }) => {
-    let Img = require('../../../../assets/Mine/mine_my_online_data.png')
-    let moreImg = require('../../../../assets/Mine/icon_more_gray.png')
     return (
-      <TouchableOpacity style={{ flex: 1 }}>
-        <View style={styles.rowView}>
-          <Image source={Img} style={styles.Img} />
-          <Text style={styles.title}>{item.title}</Text>
-          <TouchableOpacity
-            style={styles.moreImgBtn}
-            onPress={() => {
-              this.itemInfo = { item, index }
-              this.setState({ modalIsVisible: true })
-            }}
-          >
-            <Image source={moreImg} style={styles.moreImg} />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
+      <LableItem
+        item={item}
+        index={index}
+        saveItemInfo={this.saveItemInfo}
+        uploadListOfAdd={this.uploadListOfAdd}
+        removeDataFromUpList={this.removeDataFromUpList}
+      />
     )
   }
 
@@ -68,11 +68,52 @@ export default class MyLable extends Component {
     this.setState({ modalIsVisible: false })
   }
 
+  saveItemInfo = ({ item, index }) => {
+    this.itemInfo = { item, index }
+    this.setState({ modalIsVisible: true })
+  }
+
+  uploadListOfAdd = data => {
+    this.uploadList.push(data)
+  }
+
+  removeDataFromUpList = data => {
+    let index = this.uploadList.indexOf(data)
+    if (index === -1) return
+    this.uploadList.splice(index, 1)
+  }
+
+  creatDatasource = async datasourcePath => {
+    let result = await SMap.createDatasource({
+      server: datasourcePath,
+      engineType: EngineType.UDB,
+      alias: 'Lable',
+    })
+    return result
+  }
+
+  upload = async () => {
+    let userPath = await FileTools.appendingHomeDirectory(
+      this.props.user.currentUser.userType === UserType.PROBATION_USER
+        ? ConstPath.CustomerPath
+        : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
+    )
+    let datasourcePath = this.state.udbPath
+    let todatasourcePath =
+      userPath + ConstPath.RelativePath.ExternalData + 'Lable/Lable.udb'
+    let result = this.creatDatasource(todatasourcePath)
+    if (result) {
+      await SMap.copyDataset(datasourcePath, todatasourcePath, this.uploadList)
+    }
+  }
+
   _showMyDataPopupModal = () => {
     let data = [
       {
         title: '删除数据',
-        action: () => {},
+        action: () => {
+          SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
+        },
       },
     ]
     return (
@@ -96,9 +137,19 @@ export default class MyLable extends Component {
         }}
       >
         <FlatList
+          initialNumToRender={20}
           ref={ref => (this.ref = ref)}
           renderItem={this._renderItem}
           data={this.state.data}
+          ItemSeparatorComponent={() => (
+            <View
+              style={{
+                backgroundColor: color.separateColorGray,
+                flex: 1,
+                height: 1,
+              }}
+            />
+          )}
         />
         {this._showMyDataPopupModal()}
       </Container>
