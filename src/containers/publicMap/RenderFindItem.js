@@ -6,13 +6,13 @@
 import React, { Component } from 'react'
 import { Image, Text, TouchableOpacity, View } from 'react-native'
 import styles from './Styles'
-import { Toast } from '../../../utils/index'
-import NavigationService from '../../NavigationService'
+import { Toast } from '../../utils'
+import NavigationService from '../NavigationService'
 import RNFS from 'react-native-fs'
-import { FileTools } from '../../../native'
-import ConstPath from '../../../constants/ConstPath'
-import { color } from '../../../styles'
-import UserType from '../../../constants/UserType'
+import { FileTools } from '../../native'
+import ConstPath from '../../constants/ConstPath'
+import { color } from '../../styles'
+import UserType from '../../constants/UserType'
 
 export default class RenderFindItem extends Component {
   props: {
@@ -184,7 +184,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/tab_user.png')}
+                source={require('../../assets/tabBar/tab_user.png')}
               />
               <Text
                 style={[styles.textStyle2, { color: fontColor }]}
@@ -197,7 +197,7 @@ export default class RenderFindItem extends Component {
               <Image
                 style={[styles.imageStyle2, { tintColor: fontColor }]}
                 resizeMode={'contain'}
-                source={require('../../../assets/tabBar/find_time.png')}
+                source={require('../../assets/tabBar/find_time.png')}
               />
               <Text
                 style={[styles.textStyle2, { color: fontColor }]}
@@ -234,7 +234,7 @@ export default class RenderFindItem extends Component {
             >
               <Image
                 style={{ width: 35, height: 35, tintColor: fontColor }}
-                source={require('../../../assets/tabBar/find_download.png')}
+                source={require('../../assets/tabBar/find_download.png')}
               />
             </TouchableOpacity>
             <Text

@@ -79,4 +79,8 @@ export default StyleSheet.create({
     fontSize: size.fontSize.fontSizeLg,
     color: color.fontColorBlack,
   },
+  search: {
+    width: scaleSize(30),
+    height: scaleSize(30),
+  },
 })

@@ -5,7 +5,15 @@
 */
 
 import * as React from 'react'
-import { BackHandler, Platform, View, Text, TextInput } from 'react-native'
+import {
+  BackHandler,
+  Platform,
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  Image,
+} from 'react-native'
 import { SMSceneView, Point3D, Camera, SScene } from 'imobile_for_reactnative'
 import { Container, Dialog, InputDialog } from '../../../../components'
 import {
@@ -14,7 +22,6 @@ import {
   MapController,
   ToolBar,
   OverlayView,
-  PointSearch,
 } from '../../components'
 import { Toast, scaleSize } from '../../../../utils'
 import constants from '../../constants'
@@ -67,7 +74,6 @@ export default class Map3D extends React.Component {
     this._addScene()
     this.addAttributeListener()
     this.addCircleFlyListen()
-    this.addPointSearchListen()
   }
 
   componentWillUnmount() {
@@ -114,15 +120,6 @@ export default class Map3D extends React.Component {
     this.circleFlyListen = await SScene.addCircleFlyListen({
       callback: () => {
         this.toolBox.showMap3DTool('MAP3D_CIRCLEFLY')
-      },
-    })
-  }
-
-  addPointSearchListen = async () => {
-    this.pointSearchListen = await SScene.setPointSearchListener({
-      callback: result => {
-        // console.log(result)
-        this.pointSearch && this.pointSearch.setSearchData(result)
       },
     })
   }
@@ -232,12 +229,6 @@ export default class Map3D extends React.Component {
     return <OverlayView ref={ref => (GLOBAL.OverlayView = ref)} />
   }
 
-  renderPointSearch = () => {
-    return (
-      <PointSearch ref={ref => (this.pointSearch = ref)} type={'pointSearch'} />
-    )
-  }
-
   renderFunctionToolbar = () => {
     return (
       <FunctionToolbar
@@ -318,6 +309,10 @@ export default class Map3D extends React.Component {
     )
   }
 
+  setLoading = async (value, content) => {
+    this.container.setLoading(value, content)
+  }
+
   renderTool = () => {
     return (
       <ToolBar
@@ -331,6 +326,7 @@ export default class Map3D extends React.Component {
         {...this.props}
         // setAttributes={this.props.setAttributes}
         measureShow={this.measureShow}
+        setLoading={this.setLoading}
       />
     )
   }
@@ -399,13 +395,28 @@ export default class Map3D extends React.Component {
           title: '三维场景',
           navigation: this.props.navigation,
           backAction: this.back,
+          headerRight: (
+            <TouchableOpacity
+              onPress={() => {
+                NavigationService.navigate('PointAnalyst', {
+                  type: 'pointSearch',
+                })
+              }}
+              style={styles.moreView}
+            >
+              <Image
+                resizeMode={'contain'}
+                source={require('../../../../assets/header/icon_search.png')}
+                style={styles.search}
+              />
+            </TouchableOpacity>
+          ),
           type: 'fix',
         }}
         bottomBar={this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
         <SMSceneView style={styles.map} onGetScene={this._onGetInstance} />
-        {/* {this.renderPointSearch()} */}
         {this.renderMapController()}
         {this.renderFunctionToolbar()}
         {this.renderOverLayer()}

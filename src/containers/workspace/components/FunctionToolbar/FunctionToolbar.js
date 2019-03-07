@@ -297,7 +297,6 @@ export default class FunctionToolbar extends React.Component {
       return
     }
     SScene.checkoutListener('startLabelOperate')
-    GLOBAL.Map3DSymbol = true
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -325,7 +324,7 @@ export default class FunctionToolbar extends React.Component {
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[2]
-            : ConstToolType.HEIGHT[2],
+            : ConstToolType.HEIGHT[3],
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }

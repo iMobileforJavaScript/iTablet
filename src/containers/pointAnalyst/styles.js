@@ -1,27 +1,29 @@
 import { StyleSheet } from 'react-native'
-import { scaleSize } from '../../../../utils'
-// import { color, zIndexLevel } from '../../../../styles'
+import { scaleSize } from '../../utils'
 export default StyleSheet.create({
-  contain: {
-    position: 'absolute',
-    top: scaleSize(143),
-    left: scaleSize(30),
-    width: scaleSize(200),
-    height: scaleSize(500),
-    // zIndex:zIndexLevel.TWO,
-    // backgroundColor:"red",
+  container: {
+    flex: 1,
   },
   PointSearch: {
     width: scaleSize(200),
     height: scaleSize(350),
     // backgroundColor:"red",
   },
-  SearchInput: {
-    width: scaleSize(200),
-    height: scaleSize(80),
+  analystInput: {
+    width: scaleSize(350),
+    height: scaleSize(60),
     borderWidth: scaleSize(2),
-    borderColor: 'red',
+    // borderColor: 'red',
     fontSize: scaleSize(24),
+    backgroundColor: 'white',
+  },
+  SearchInput: {
+    width: scaleSize(350),
+    height: scaleSize(60),
+    borderWidth: scaleSize(2),
+    // borderColor: 'red',
+    fontSize: scaleSize(24),
+    backgroundColor: 'white',
   },
   PointSearchList: {
     width: scaleSize(200),
