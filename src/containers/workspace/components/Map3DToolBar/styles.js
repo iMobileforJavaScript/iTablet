@@ -121,7 +121,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     // justifyContent:"center",
     alignItems: 'center',
-    // backgroundColor: color.subTheme,
+    backgroundColor: color.subTheme,
   },
   sceneTitle: {
     fontSize: setSpText(28),

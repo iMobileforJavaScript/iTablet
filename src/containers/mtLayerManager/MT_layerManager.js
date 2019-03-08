@@ -16,11 +16,11 @@ import {
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize } from '../../utils'
+import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, MAP_MODULE } from '../../constants'
+import { ConstToolType, MAP_MODULE, ConstPath } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
@@ -57,6 +57,7 @@ export default class MT_layerManager extends React.Component {
 
   componentDidUpdate(prevProps) {
     let newState = {}
+    let dataList = []
     if (
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
@@ -75,27 +76,33 @@ export default class MT_layerManager extends React.Component {
       ) {
         baseData = [this.props.layers[this.props.layers.length - 1]]
       }
-      newState.data = [
-        {
-          title: '我的图层',
-          data: this.props.layers,
-          visible: true,
-        },
-        {
-          title: '我的底图',
-          data: baseData,
-          visible: true,
-        },
-        // {
-        //   title: '切换底图',
-        //   data: layerManagerData,
-        //   visible: true,
-        // },
-      ]
-    }
-
-    if (Object.keys(newState).length > 0) {
-      this.setState(newState)
+      (async function() {
+        dataList = await SMap.getUDBName(
+          ConstPath.AndroidPath +
+            ConstPath.CustomerPath +
+            'Data/Lable/Lable.udb',
+        )
+        newState.data = [
+          {
+            title: '我的图层',
+            data: this.props.layers,
+            visible: true,
+          },
+          {
+            title: '我的底图',
+            data: baseData,
+            visible: true,
+          },
+          {
+            title: '我的标注',
+            data: dataList,
+            visible: true,
+          },
+        ]
+        if (Object.keys(newState).length > 0) {
+          this.setState(newState)
+        }
+      }.bind(this)())
     }
   }
 
@@ -142,12 +149,16 @@ export default class MT_layerManager extends React.Component {
       }
 
       let baseMap = []
+      let dataList = []
       if (
         layers.length > 0 &&
         LayerUtils.isBaseLayer(layers[layers.length - 1].name)
       ) {
         baseMap = [layers[layers.length - 1]]
       }
+      dataList = await SMap.getUDBName(
+        ConstPath.AndroidPath + ConstPath.CustomerPath + 'Data/Lable/Lable.udb',
+      )
       this.setState({
         data: [
           { title: '我的图层', data: layers, visible: true },
@@ -156,7 +167,7 @@ export default class MT_layerManager extends React.Component {
             data: baseMap,
             visible: true,
           },
-          // { title: '切换底图', data: layerManagerData, visible: true },
+          { title: '我的标注', data: dataList, visible: true },
         ],
         selectLayer: this.props.currentLayer.caption,
         refreshing: false,
@@ -515,6 +526,13 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
+  taggingTool = title => {
+    this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+      height: ConstToolType.TOOLBAR_HEIGHT[1],
+      layerdata: title,
+    })
+  }
+
   onToolPress = async ({ data }) => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       let themeType
@@ -679,59 +697,123 @@ export default class MT_layerManager extends React.Component {
     if (section.visible) {
       if (item) {
         let action
-        if (section.title === '我的图层') {
-          action = this.onToolPress
-          if (
-            this.props.layers.length > 0 &&
-            item.name === this.props.layers[this.props.layers.length - 1].name
-          ) {
-            if (LayerUtils.isBaseLayer(item.name)) return true
-          }
-          if (
-            this.props.layers.length > 1 &&
-            item.name === this.props.layers[this.props.layers.length - 2].name
-          ) {
-            if (LayerUtils.isBaseLayer(item.name)) return true
-          }
+        if (section.title === '我的标注') {
+          return (
+            <TouchableOpacity
+              style={{
+                height: scaleSize(80),
+                padding: scaleSize(6),
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <View
+                style={{
+                  marginLeft: scaleSize(6),
+                  marginRight: scaleSize(6),
+                  height: scaleSize(50),
+                  width: scaleSize(100),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={{
+                    height: scaleSize(40),
+                    width: scaleSize(40),
+                  }}
+                  source={require('../../assets/map/icon-cad_black.png')}
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: scaleSize(30) }}>
+                <Text
+                  style={{
+                    fontSize: setSpText(24),
+                    color: color.black,
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  {item.title}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={{
+                  height: scaleSize(50),
+                  width: scaleSize(100),
+                  marginLeft: scaleSize(6),
+                  marginRight: scaleSize(6),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => this.taggingTool(item.title)}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={{
+                    height: scaleSize(60),
+                    width: scaleSize(60),
+                  }}
+                  source={require('../../assets/function/icon_shallow_more_black.png')}
+                />
+              </TouchableOpacity>
+            </TouchableOpacity>
+          )
         } else {
-          action = this.onToolBasePress
-          if (!LayerUtils.isBaseLayer(item.name)) return true
+          if (section.title === '我的图层') {
+            action = this.onToolPress
+            if (
+              this.props.layers.length > 0 &&
+              item.name === this.props.layers[this.props.layers.length - 1].name
+            ) {
+              if (LayerUtils.isBaseLayer(item.name)) return true
+            }
+            if (
+              this.props.layers.length > 1 &&
+              item.name === this.props.layers[this.props.layers.length - 2].name
+            ) {
+              if (LayerUtils.isBaseLayer(item.name)) return true
+            }
+          } else {
+            action = this.onToolBasePress
+            if (!LayerUtils.isBaseLayer(item.name)) return true
+          }
+          return (
+            <LayerManager_item
+              key={item.id}
+              // sectionID={sectionID}
+              // rowID={item.index}
+              ref={ref => {
+                if (!this.itemRefs) {
+                  this.itemRefs = {}
+                }
+                this.itemRefs[item.name] = ref
+                return this.itemRefs[item.name]
+              }}
+              layer={item.layer}
+              // map={this.map}
+              data={item}
+              isClose={this.state.currentOpenItemName !== item.name}
+              mapControl={this.mapControl}
+              setLayerVisible={this.setLayerVisible}
+              onOpen={data => {
+                // data, sectionID, rowID
+                if (this.state.currentOpenItemName !== data.name) {
+                  let item = this.itemRefs[this.state.currentOpenItemName]
+                  item && item.close()
+                }
+                this.setState({
+                  currentOpenItemName: data.name,
+                })
+              }}
+              selectLayer={this.state.selectLayer}
+              onPress={this.onPressRow}
+              onAllPress={this.onAllPressRow}
+              onArrowPress={this.getChildList}
+              onToolPress={action}
+            />
+          )
         }
-        return (
-          <LayerManager_item
-            key={item.id}
-            // sectionID={sectionID}
-            // rowID={item.index}
-            ref={ref => {
-              if (!this.itemRefs) {
-                this.itemRefs = {}
-              }
-              this.itemRefs[item.name] = ref
-              return this.itemRefs[item.name]
-            }}
-            layer={item.layer}
-            // map={this.map}
-            data={item}
-            isClose={this.state.currentOpenItemName !== item.name}
-            mapControl={this.mapControl}
-            setLayerVisible={this.setLayerVisible}
-            onOpen={data => {
-              // data, sectionID, rowID
-              if (this.state.currentOpenItemName !== data.name) {
-                let item = this.itemRefs[this.state.currentOpenItemName]
-                item && item.close()
-              }
-              this.setState({
-                currentOpenItemName: data.name,
-              })
-            }}
-            selectLayer={this.state.selectLayer}
-            onPress={this.onPressRow}
-            onAllPress={this.onAllPressRow}
-            onArrowPress={this.getChildList}
-            onToolPress={action}
-          />
-        )
       } else {
         return <View />
       }

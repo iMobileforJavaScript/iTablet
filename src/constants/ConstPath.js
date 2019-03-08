@@ -28,6 +28,7 @@ const RelativePath = {
   Workspace: Data + 'Workspace/',
   Map: Data + 'Map/',
   Temp: Data + 'Temp/', // 临时文件
+  Lable: Data + 'Lable/', // 标注
 }
 
 const RelativeFilePath = {
@@ -63,6 +64,7 @@ export default {
   Common: AppPath + 'Common/', // 公共数据
   // 游客目录
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据
+  AndroidPath: 'storage/emulated/0',
   RelativePath,
   RelativeFilePath,
   Module,

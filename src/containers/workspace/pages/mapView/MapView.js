@@ -993,6 +993,7 @@ export default class MapView extends React.Component {
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
+        map={this.props.map}
         symbol={this.props.symbol}
         layers={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}

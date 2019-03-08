@@ -18,6 +18,7 @@ import Tabs, {
   Setting,
   AboutITablet,
   Login,
+  MyLable,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -54,6 +55,8 @@ import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
+import PointAnalyst from './pointAnalyst'
+import PublicMap from './publicMap'
 export default StackNavigator(
   {
     Tabs: {
@@ -357,6 +360,27 @@ export default StackNavigator(
     },
     Protocol: {
       screen: protocol,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    PointAnalyst: {
+      screen: PointAnalyst,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    PublicMap: {
+      screen: PublicMap,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyLable: {
+      screen: MyLable,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

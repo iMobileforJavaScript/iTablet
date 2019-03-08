@@ -64,10 +64,26 @@ export default {
 
   // Mine
   IMPORT: '导入',
+  SEVER: '服务',
+  LABLE: '标注',
+  BASEMAP: '底图',
+  POI: 'POI',
+  NAViGATION: '导航',
+  RIBBON: '色带',
+  STENCIL: '模板',
   MAP: '地图',
   DATA: '数据',
   SCENE: '场景',
   SYMBOL: '符号',
   ONLINE_DATA: '在线数据',
   ONLINE_MAP: '在线地图',
+
+  PUBLICMAP: '公共地图',
+  FRIENDMAP: '好友地图',
+  FRIENDPOSITION: '好友位置',
+  SHUTTLCOMMUTER: '班车通勤',
+  SUPERMAP: '超图集团',
+  FORUMOFSUPERMAP: '超图论坛',
+  SUPERMAPKNOWN: '超图知道',
+  MAPOFAPP: '地图APP',
 }

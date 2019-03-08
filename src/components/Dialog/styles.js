@@ -53,6 +53,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  oneBtn: {
+    marginTop: scaleSize(30),
+    marginHorizontal: scaleSize(40),
+    height: scaleSize(80),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   confirmBtnStyle: {
     justifyContent: 'center',
     alignItems: 'center',

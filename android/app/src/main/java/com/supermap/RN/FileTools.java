@@ -12,9 +12,16 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.supermap.data.Datasource;
+import com.supermap.data.DatasourceConnectionInfo;
+import com.supermap.data.Datasources;
+import com.supermap.data.EngineType;
+import com.supermap.data.Environment;
+import com.supermap.data.Workspace;
 import com.supermap.file.Decompressor;
 import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
+import com.supermap.interfaces.mapping.SDatasource;
 
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -540,6 +547,16 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+    @ReactMethod
+    public void EnvironmentIsValid( Promise promise) {
+        try {
+            Boolean result = Environment.getLicenseStatus().isLicenseValid();;
+            promise.resolve(result);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)
@@ -660,7 +677,9 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Template");
         createDirectory(dataPath + "Workspace");
         createDirectory(dataPath + "Temp");
+        createDirectory(dataPath + "Lable");
         createDirectory(externalDataPath);
+//        createDirectory(externalDataPath+"Lable");
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
@@ -668,6 +687,24 @@ public class FileTools extends ReactContextBaseJavaModule {
         String defaultZipData = "Template.zip";
         String templatePath = externalDataPath;
         String templateFilePath = templatePath + "地理国情普查";
+
+        String lableUDB=dataPath+"Lable/Lable.udb";
+        File file=new File(lableUDB);
+        if(!file.exists()){
+            Workspace workspace=new Workspace();
+            DatasourceConnectionInfo info=new DatasourceConnectionInfo();
+            info.setAlias("Lable");
+            info.setEngineType(EngineType.UDB);
+            info.setServer(lableUDB);
+            Datasources datasources=workspace.getDatasources();
+            Datasource datasource=datasources.create(info);
+            if(datasource!=null){
+                System.out.println("数据源创建成功");
+            }else {
+                System.out.println("数据源创建失败");
+            }
+            workspace.dispose();
+        }
 
         Boolean isUnZip;
         if (!Utils.fileIsExit(templatePath) || !Utils.fileIsExit(templateFilePath)) {

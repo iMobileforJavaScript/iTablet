@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.supermap.RN.appManager;
+import com.supermap.containts.EventConst;
 import com.supermap.data.Environment;
 import com.supermap.RN.FileTools;
 import com.supermap.file.Utils;
@@ -52,12 +54,13 @@ public class MainActivity extends ReactActivity {
     }
 
     private void initEnvironment() {
-        String licensePath = SDCARD + "/iTablet/license/";
-        String licenseName = "Trial_License.slm";
+
+//        String licensePath = SDCARD + "/iTablet/license/";
+//        String licenseName = "Trial_License.slm";
 //        if (!Utils.fileIsExit(licensePath + licenseName)) {
 //            Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
 //        }
-        Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
+//        Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
         Environment.setLicensePath(SDCARD + "/iTablet/license");
         Environment.initialization(this);
     }
