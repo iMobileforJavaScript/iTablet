@@ -27,6 +27,7 @@ export default class LayerAttributeTable extends React.Component {
     changeAction?: () => {}, // 修改表格中的值的回调
 
     selectable: boolean,
+    stickySectionHeadersEnabled?: boolean,
     multiSelect: boolean, // 是否多选
     indexColumn?: number, // 每一行index所在的列，indexColumn >= 0 则所在列为Text
 
@@ -52,6 +53,7 @@ export default class LayerAttributeTable extends React.Component {
     multiSelect: false,
     hasIndex: false,
     refreshing: false,
+    stickySectionHeadersEnabled: true,
     indexColumn: -1,
   }
 
@@ -116,6 +118,14 @@ export default class LayerAttributeTable extends React.Component {
     return this.state.selected
   }
 
+  clearSelected = () => {
+    let _selected = new Map(this.state.selected)
+    _selected.clear()
+    this.setState({
+      selected: _selected,
+    })
+  }
+
   getTitle = data => {
     let titleList = []
     if (data instanceof Array && data.length > 1 && data[0] instanceof Array) {
@@ -149,18 +159,22 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   onPressRow = item => {
-    this.setState(state => {
-      // copy the map rather than modifying state.
-      const selected = new Map(state.selected)
-      const target = selected.get(item.data[0].value)
-      if (!this.props.multiSelect && !target) {
-        // 多选或者点击已选行
-        selected.clear()
-      }
+    if (item.data instanceof Array) {
+      // 多属性选中变颜色
+      this.setState(state => {
+        // copy the map rather than modifying state.
+        const selected = new Map(state.selected)
+        const target = selected.get(item.data[0].value)
+        if (!this.props.multiSelect && !target) {
+          // 多选或者点击已选行
+          selected.clear()
+        }
 
-      selected.set(item.data[0].value, !target) // toggle
-      return { selected }
-    })
+        selected.set(item.data[0].value, !target) // toggle
+        return { selected }
+      })
+    }
+
     if (this.props.selectRow && typeof this.props.selectRow === 'function') {
       this.props.selectRow(item)
     }
@@ -196,7 +210,7 @@ export default class LayerAttributeTable extends React.Component {
     return (
       <Row
         data={item}
-        selected={!!this.state.selected.get(item[0].value)}
+        selected={item[0] ? !!this.state.selected.get(item[0].value) : false}
         index={index}
         disableCellStyle={styles.disableCellStyle}
         // cellTextStyle={cellTextStyle}
@@ -250,6 +264,7 @@ export default class LayerAttributeTable extends React.Component {
           initialNumToRender={20}
           getItemLayout={this.getItemLayout}
           extraData={this.state}
+          stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
         />
       </ScrollView>
     )
@@ -271,6 +286,7 @@ export default class LayerAttributeTable extends React.Component {
         // onEndReached={this.loadMore}
         initialNumToRender={20}
         getItemLayout={this.getItemLayout}
+        stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
       />
     )
   }

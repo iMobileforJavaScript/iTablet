@@ -299,7 +299,6 @@ export default class FunctionToolbar extends React.Component {
       return
     }
     SScene.checkoutListener('startLabelOperate')
-    GLOBAL.Map3DSymbol = true
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -327,7 +326,7 @@ export default class FunctionToolbar extends React.Component {
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[2]
-            : ConstToolType.HEIGHT[2],
+            : ConstToolType.HEIGHT[3],
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }
@@ -449,8 +448,8 @@ export default class FunctionToolbar extends React.Component {
       // TODO 根据符号类型改变ToolBox 编辑内容
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
-        column: 3,
-        height: ConstToolType.NEWTHEME_HEIGHT[1],
+        column: 4,
+        height: ConstToolType.THEME_HEIGHT[5],
       })
     }
   }

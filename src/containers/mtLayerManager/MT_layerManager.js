@@ -62,44 +62,7 @@ export default class MT_layerManager extends React.Component {
       JSON.stringify(this.props.currentLayer)
     ) {
       newState.selectLayer = this.props.currentLayer.caption
-      // this.setState({
-      //   selectLayer: this.props.currentLayer.caption,
-      // })
     }
-    // if (
-    //   this.props.layers.length > 0 &&
-    //   !LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].caption)
-    //
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'roadmap@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'satellite@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'terrain@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'TrafficMap@BaiduMap' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'Standard@OpenStreetMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'CycleMap@OpenStreetMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'TransportMap@OpenStreetMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'quanguo@SuperMapCloud'
-    //
-    // ) {
-    //   (async function() {
-    //     await SMap.openDatasource(
-    //       ConstOnline.Google.DSParams,
-    //       GLOBAL.Type === constants.COLLECTION ? 1 : ConstOnline.Google.layerIndex,
-    //       false, false)
-    //     await this.props.getLayers()
-    //   }.bind(this)())
-    // }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
@@ -146,38 +109,6 @@ export default class MT_layerManager extends React.Component {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     ;(async function() {
-      // if (
-      //   this.props.layers.length > 0 &&
-      //     !LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].name)
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'roadmap@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'satellite@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'terrain@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'TrafficMap@BaiduMap' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'Standard@OpenStreetMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'CycleMap@OpenStreetMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'TransportMap@OpenStreetMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'quanguo@SuperMapCloud'
-      // ) {
-      //   await SMap.openDatasource(
-      //     ConstOnline.Google.DSParams,
-      //     GLOBAL.Type === constants.COLLECTION ? 1 : ConstOnline.Google.layerIndex,
-      //     false, false)
-      //   // await this.props.getLayers()
-      // }
-
-      // this.setRefreshing(true)
       this.getData()
     }.bind(this)())
   }
@@ -200,16 +131,6 @@ export default class MT_layerManager extends React.Component {
     try {
       this.itemRefs = {}
       let layers = await this.props.getLayers()
-      // this.map = await this.mapControl.getMap()
-      // let layerNameArr = await this.map.getLayersByType()
-      // let layerNameArr = await SMap.getLayersByType()
-      // for (let i = 0; i < layerNameArr.length; i++) {
-      //   layerNameArr[i].key = layerNameArr[i].name
-      //   if (layerNameArr[i].isEditable) {
-      //     this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
-      //   }
-      // }
-      // await SMap.setAction(Action.SELECT)
 
       if (
         layers.length > 0 &&
@@ -967,7 +888,7 @@ export default class MT_layerManager extends React.Component {
           style={{
             flexDirection: 'column',
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.bgG,
           }}
         />
@@ -984,7 +905,7 @@ export default class MT_layerManager extends React.Component {
         style={{
           flexDirection: 'column',
           width: '100%',
-          height: scaleSize(1),
+          height: 1,
           backgroundColor: color.bgG,
         }}
       />

@@ -21,7 +21,7 @@ export default class ImageButton extends React.Component {
     onPress: PropTypes.func,
     icon: PropTypes.any,
     title: PropTypes.string,
-    type: PropTypes.string,
+    // type: PropTypes.string,
     direction: PropTypes.string,
     enabled: PropTypes.bool,
   }
@@ -56,7 +56,8 @@ export default class ImageButton extends React.Component {
       >
         <View
           style={[
-            this.props.type === 'normal' ? styles.iconBgNormal : styles.iconBg,
+            // this.props.type === 'normal' ? styles.iconBgNormal : styles.iconBg,
+            styles.iconBg,
             this.props.iconBtnStyle,
           ]}
         >

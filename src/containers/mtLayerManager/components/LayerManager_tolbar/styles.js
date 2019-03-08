@@ -39,7 +39,7 @@ export default StyleSheet.create({
   },
   textInputStyle: {
     paddingVertical: 0,
-    borderBottomWidth: scaleSize(1),
+    borderBottomWidth: 1,
     borderColor: color.themeText2,
     marginTop: scaleSize(30),
     height: scaleSize(50),

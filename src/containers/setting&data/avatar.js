@@ -23,7 +23,7 @@ export default class Avatar extends React.Component {
   render() {
     const imagePath = this.props.image
       ? this.props.image
-      : require('../assets/public/avatar.png')
+      : require('../assets/common/avatar.png')
     const btnClick = this.props.btnClick ? this.props.btnClick : () => {}
     const name = this.props.name ? this.props.name : '用户名'
     const email = this.props.email ? this.props.email : '绑定邮箱'
@@ -54,7 +54,7 @@ export default class Avatar extends React.Component {
         >
           <Image
             style={styles.btnImage}
-            source={require('../assets/public/arrow-right.png')}
+            source={require('../assets/common/arrow-right.png')}
           />
         </TouchableHighlight>
       </View>

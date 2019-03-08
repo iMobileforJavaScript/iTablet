@@ -16,6 +16,7 @@ import Mine, {
   Personal,
   ToggleAccount,
   Login,
+  MyLable,
 } from './Mine'
 import Find from './Find'
 const Tabs = TabNavigator(
@@ -227,4 +228,5 @@ export {
   Setting,
   AboutITablet,
   Login,
+  MyLable,
 }

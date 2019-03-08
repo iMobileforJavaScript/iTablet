@@ -1,5 +1,5 @@
 import { Dimensions, StyleSheet } from 'react-native'
-import { color } from '../../../styles'
+import { color } from '../../styles'
 export const itemWidth = Dimensions.get('window').width
 export const itemHeight = 140
 export const imageWidth = 90

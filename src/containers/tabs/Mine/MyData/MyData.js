@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   separator: {
     // flex: 1,
     marginHorizontal: scaleSize(16),
-    height: scaleSize(1),
+    height: 1,
     backgroundColor: color.separateColorGray,
   },
   title: {
@@ -218,9 +218,14 @@ export default class MyLocalData extends Component {
           }
           title = isUser ? '我的符号' : '游客符号'
           break
+        case Const.LABEL:
+          path += ConstPath.RelativePath.Lable
+          filter = {
+            type: 'file',
+          }
+          title = isUser ? '我的标注' : '游客标注'
       }
       let data = await FileTools.getPathListByFilter(path, filter)
-
       let sectionData = {
         title,
         data: data || [],
@@ -435,7 +440,7 @@ export default class MyLocalData extends Component {
         <View
           style={{
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.separateColorGray,
           }}
         />

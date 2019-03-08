@@ -12,6 +12,7 @@ import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
 
 import MyLocalData from './MyLocalData'
 import MyData from './MyData'
+import MyLable from './MyLable'
 import MyOnlineData from './MyOnlineData'
 
 const mapStateToProps = state => ({
@@ -40,4 +41,5 @@ export {
   Personal,
   ToggleAccount,
   Login,
+  MyLable,
 }

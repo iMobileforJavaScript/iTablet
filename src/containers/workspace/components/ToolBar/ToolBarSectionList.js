@@ -78,6 +78,7 @@ export default class ToolBarSectionList extends React.Component {
           selectList.push(
             sections[i].data[index].title ||
               sections[i].data[index].name ||
+              sections[i].data[index].expression ||
               sections[i].data[index].datasetName,
           )
         } else {
@@ -85,6 +86,7 @@ export default class ToolBarSectionList extends React.Component {
             if (
               selectList[j].title === sections[i].data[index].title ||
               selectList[j].name === sections[i].data[index].name ||
+              selectList[j].expression === sections[i].data[index].expression ||
               selectList[j].datasetName === sections[i].data[index].datasetName
             ) {
               selectList.splice(j, 1)
@@ -290,7 +292,7 @@ export default class ToolBarSectionList extends React.Component {
       <Text
         style={[
           item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
-          item.isSelected && !item.datasetType
+          item.isSelected && !item.datasetType && !this.props.listSelectable
             ? { color: color.item_text_selected }
             : { color: color.item_separate_white },
         ]}
@@ -326,7 +328,11 @@ export default class ToolBarSectionList extends React.Component {
   getExpressionItem = item => {
     return (
       <Text
-        style={item.isSelected ? styles.selected_itemTitle : styles.itemTitle}
+        style={
+          item.isSelected && !this.props.listSelectable
+            ? styles.selected_itemTitle
+            : styles.itemTitle
+        }
       >
         {item.expression}
       </Text>
@@ -614,7 +620,7 @@ const styles = StyleSheet.create({
     color: color.font_color_white,
   },
   sectionSeparateViewStyle: {
-    height: scaleSize(1),
+    height: 1,
     marginHorizontal: 0,
     backgroundColor: color.item_separate_white,
   },

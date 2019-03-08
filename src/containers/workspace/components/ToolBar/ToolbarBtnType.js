@@ -1,6 +1,7 @@
 /** 地图按钮类型 **/
 export default {
   CANCEL: 'cancel', // 取消
+  CANCEL_2: 'cancel_2', // 取消，先执行Action，再隐藏Toolbar
   FLEX: 'flex', // 伸缩
   FLEX_FULL: 'flex_full', // 伸缩(展开全屏/收缩取消全屏)
   STYLE: 'style', // 样式

@@ -61,7 +61,7 @@ export default StyleSheet.create({
   },
   separator: {
     backgroundColor: color.fontColorBlack,
-    height: scaleSize(1),
+    height: 1,
   },
   footerView: {
     // marginTop: scaleSize(270),
@@ -78,7 +78,7 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   cloumSeparator: {
-    width: scaleSize(1),
+    width: 1,
     height: scaleSize(40),
     backgroundColor: color.fontColorGray,
     //  marginLeft:scaleSize(25),

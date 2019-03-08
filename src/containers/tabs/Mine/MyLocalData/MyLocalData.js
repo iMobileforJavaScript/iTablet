@@ -620,7 +620,7 @@ export default class MyLocalData extends Component {
         <View
           style={{
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.separateColorGray,
           }}
         />
@@ -731,7 +731,7 @@ export default class MyLocalData extends Component {
 
   _renderItemSeparatorComponent = ({ section }) => {
     return section.isShowItem ? (
-      <ListSeparator color={color.separateColorGray} height={scaleSize(1)} />
+      <ListSeparator color={color.separateColorGray} height={1} />
     ) : null
   }
 

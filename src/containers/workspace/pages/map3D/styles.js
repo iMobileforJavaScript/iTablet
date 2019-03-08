@@ -53,7 +53,7 @@ export default StyleSheet.create({
     flex: 1,
     fontSize: setSpText(20),
     borderRadius: scaleSize(8),
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderColor: '#808080',
     color: '#333333',
   },
@@ -78,5 +78,9 @@ export default StyleSheet.create({
   measureResultText: {
     fontSize: size.fontSize.fontSizeLg,
     color: color.fontColorBlack,
+  },
+  search: {
+    width: scaleSize(30),
+    height: scaleSize(30),
   },
 })
