@@ -1,13 +1,15 @@
 import React, { Component } from 'react'
-import { FlatList, View } from 'react-native'
-import { ConstPath } from '../../../../constants'
+import { FlatList, View, TouchableOpacity, Image, Text } from 'react-native'
+import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { SMap, EngineType } from 'imobile_for_reactnative'
+import { SMap, EngineType, SOnlineService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import LableItem from './LableItem'
 import { color } from '../../../../styles'
+import { InputDialog } from '../../../../components/Dialog'
+import { Toast } from '../../../../utils'
 export default class MyLable extends Component {
   props: {
     user: any,
@@ -18,14 +20,7 @@ export default class MyLable extends Component {
     super(props)
     const { params } = this.props.navigation.state
     this.state = {
-      data: [
-        {
-          title: 'ChangChun',
-        },
-        {
-          title: 'ChengDu',
-        },
-      ],
+      data: [],
       title: params.title,
       modalIsVisible: false,
       udbPath: '',
@@ -92,18 +87,59 @@ export default class MyLable extends Component {
     return result
   }
 
-  upload = async () => {
-    let userPath = await FileTools.appendingHomeDirectory(
-      this.props.user.currentUser.userType === UserType.PROBATION_USER
-        ? ConstPath.CustomerPath
-        : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
-    )
-    let datasourcePath = this.state.udbPath
-    let todatasourcePath =
-      userPath + ConstPath.RelativePath.ExternalData + 'Lable/Lable.udb'
-    let result = this.creatDatasource(todatasourcePath)
-    if (result) {
-      await SMap.copyDataset(datasourcePath, todatasourcePath, this.uploadList)
+  uploadDialog = name => {
+    this.dialog.setDialogVisible(false)
+    Toast.show('上传中')
+    this.upload(name)
+  }
+
+  upload = async name => {
+    if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
+      Toast.show('请登录')
+      return
+    }
+    try {
+      let userPath = await FileTools.appendingHomeDirectory(
+        this.props.user.currentUser.userType === UserType.PROBATION_USER
+          ? ConstPath.CustomerPath
+          : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
+      )
+      let datasourcePath = this.state.udbPath
+      let todatasourcePath =
+        userPath +
+        ConstPath.RelativePath.ExternalData +
+        name +
+        '/' +
+        name +
+        '.udb'
+      let result = this.creatDatasource(todatasourcePath)
+      if (result) {
+        let archivePath, targetPath
+        archivePath = userPath + ConstPath.RelativePath.ExternalData + name
+        targetPath =
+          userPath + ConstPath.RelativePath.ExternalData + name + '_标注.zip'
+        await SMap.copyDataset(
+          datasourcePath,
+          todatasourcePath,
+          this.uploadList,
+        )
+        let zipResult = await FileTools.zipFile(archivePath, targetPath)
+        if (zipResult) {
+          let fileName = name + '_标注'
+          SOnlineService.uploadFile(targetPath, fileName, {
+            onProgress: progress => {
+              return progress
+            },
+            onResult: async () => {
+              Toast.show(ConstInfo.SHARE_SUCCESS)
+              FileTools.deleteFile(targetPath)
+              FileTools.deleteFile(archivePath)
+            },
+          })
+        }
+      }
+    } catch (error) {
+      Toast.show('上传失败，请检查网络')
     }
   }
 
@@ -126,6 +162,33 @@ export default class MyLable extends Component {
     )
   }
 
+  headerRight = () => {
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          this.dialog.setDialogVisible(true)
+        }}
+      >
+        <Image />
+        <Text style={{ fontSize: 18, color: 'white' }}>{'上传'}</Text>
+      </TouchableOpacity>
+    )
+  }
+
+  renderDiaolog = () => {
+    return (
+      <InputDialog
+        ref={ref => (this.dialog = ref)}
+        placeholder={'请输入数据名称'}
+        confirmAction={() => {
+          this.uploadDialog(this.dialog.state.value)
+        }}
+        confirmBtnTitle={'上传'}
+        cancelBtnTitle={'取消'}
+      />
+    )
+  }
+
   render() {
     return (
       <Container
@@ -134,6 +197,7 @@ export default class MyLable extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this.headerRight(),
         }}
       >
         <FlatList
@@ -152,6 +216,7 @@ export default class MyLable extends Component {
           )}
         />
         {this._showMyDataPopupModal()}
+        {this.renderDiaolog()}
       </Container>
     )
   }

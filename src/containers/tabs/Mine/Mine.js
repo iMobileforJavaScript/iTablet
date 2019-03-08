@@ -228,6 +228,13 @@ export default class Mine extends Component {
             onClick: () => this.goToMyData(Const.DATA),
           })}
           {this._renderItem({
+            title: Const.LABLE,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            onClick: () => {
+              this.goToMyLable(Const.LABLE)
+            },
+          })}
+          {this._renderItem({
             title: Const.MAP,
             leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
             onClick: () => this.goToMyData(Const.MAP),
