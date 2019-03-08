@@ -17,23 +17,20 @@ export default class LayerSelectionAttribute extends React.Component {
     // currentLayer: Object,
     map: Object,
     layerSelection: Object,
+    attributesHistory: Array,
     setCurrentAttribute: () => {},
     setLayerAttributes: () => {},
     setLoading: () => {},
     selectAction: () => {},
+    setAttributeHistory: () => {},
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      dataSourceList: [],
-      openList: {},
       attributes: [],
       tableTitle: [],
-      // tableHead: ['名称', '属性值'],
       tableHead: [],
-      tableData: [],
-      // type: params && params.type || '',
     }
 
     this.currentFieldInfo = []
@@ -195,6 +192,45 @@ export default class LayerSelectionAttribute extends React.Component {
     })
   }
 
+  /** 检测撤销/恢复/还原是否可用 **/
+  checkToolIsViable = () => {
+    let historyObj
+    for (let i = 0; i < this.props.attributesHistory.length; i++) {
+      if (
+        this.props.attributesHistory[i].mapName ===
+        this.props.map.currentMap.name
+      ) {
+        let layerHistory = this.props.attributesHistory[i].layers
+        for (let j = 0; j < layerHistory.length; j++) {
+          if (
+            layerHistory[j].layerPath ===
+            this.props.layerSelection.layerInfo.path
+          ) {
+            historyObj = layerHistory[j]
+            break
+          }
+        }
+        break
+      }
+    }
+
+    return {
+      canBeUndo:
+        historyObj &&
+        historyObj.history.length > 0 &&
+        historyObj.currentIndex < historyObj.history.length - 1,
+      canBeRedo:
+        historyObj &&
+        historyObj.history.length > 0 &&
+        historyObj.currentIndex > 0,
+      canBeRevert:
+        historyObj &&
+        historyObj.history.length > 0 &&
+        historyObj.currentIndex < historyObj.history.length - 1 &&
+        !(historyObj.history[historyObj.currentIndex + 1] instanceof Array),
+    }
+  }
+
   /** 修改表格中的值的回调 **/
   changeAction = data => {
     if (
@@ -203,27 +239,131 @@ export default class LayerSelectionAttribute extends React.Component {
     ) {
       // 单个对象属性和多个对象属性数据有区别
       let isSingleData = typeof data.cellData !== 'object'
-      this.props.setLayerAttributes([
-        {
-          mapName: this.props.map.currentMap.name,
-          layerPath: this.props.layerSelection.layerInfo.path,
-          fieldInfo: [
-            {
-              name: isSingleData ? data.rowData.name : data.cellData.name,
-              value: data.value,
+      this.props
+        .setLayerAttributes([
+          {
+            mapName: this.props.map.currentMap.name,
+            layerPath: this.props.layerSelection.layerInfo.path,
+            fieldInfo: [
+              {
+                name: isSingleData ? data.rowData.name : data.cellData.name,
+                value: data.value,
+                index: data.index,
+                columnIndex: data.columnIndex,
+              },
+            ],
+            prevData: [
+              {
+                name: isSingleData ? data.rowData.name : data.cellData.name,
+                value: isSingleData ? data.rowData.value : data.cellData.value,
+                index: data.index,
+                columnIndex: data.columnIndex,
+              },
+            ],
+            params: {
+              // index: int,      // 当前对象所在记录集中的位置
+              filter: `SmID=${
+                isSingleData
+                  ? this.state.attributes[0][0].value
+                  : data.rowData[0].value
+              }`, // 过滤条件
+              cursorType: 2, // 2: DYNAMIC, 3: STATIC
             },
-          ],
-          params: {
-            // index: int,      // 当前对象所在记录集中的位置
-            filter: `SmID=${
-              isSingleData
-                ? this.state.attributes[0][0].value
-                : data.rowData[0].value
-            }`, // 过滤条件
-            cursorType: 2, // 2: DYNAMIC, 3: STATIC
           },
-        },
-      ])
+        ])
+        .then(result => {
+          if (!isSingleData && result) {
+            // 成功修改属性后，更新数据
+            let attributes = JSON.parse(JSON.stringify(this.state.attributes))
+            attributes[data.index][data.columnIndex].value = data.value
+            let checkData = this.checkToolIsViable()
+            this.setState({
+              attributes,
+              ...checkData,
+            })
+          }
+        })
+    }
+  }
+
+  setAttributeHistory = async type => {
+    if (!type) return
+    switch (type) {
+      case 'undo':
+        if (!this.state.canBeUndo) {
+          Toast.show('已经无法回撤')
+          return
+        }
+        break
+      case 'redo':
+        if (!this.state.canBeRedo) {
+          Toast.show('已经无法恢复')
+          return
+        }
+        break
+      case 'revert':
+        if (!this.state.canBeRevert) {
+          Toast.show('已经无法还原')
+          return
+        }
+        break
+    }
+    this.setLoading(true, '修改中')
+    try {
+      this.props.setAttributeHistory &&
+        (await this.props
+          .setAttributeHistory({
+            mapName: this.props.map.currentMap.name,
+            layerPath: this.props.layerSelection.layerInfo.path,
+            type,
+          })
+          .then(({ msg, result, data }) => {
+            Toast.show(msg)
+            if (result) {
+              let attributes = JSON.parse(JSON.stringify(this.state.attributes))
+
+              if (data.length === 1) {
+                let fieldInfo = data[0].fieldInfo
+                if (
+                  attributes[fieldInfo[0].index][fieldInfo[0].columnIndex]
+                    .name === fieldInfo[0].name &&
+                  attributes[fieldInfo[0].index][fieldInfo[0].columnIndex]
+                    .value === fieldInfo[0].value
+                ) {
+                  this.setAttributeHistory(type)
+                  return
+                }
+              }
+
+              for (let i = 0; i < data.length; i++) {
+                let fieldInfo = data[i].fieldInfo
+                for (let j = 0; j < fieldInfo.length; j++) {
+                  if (
+                    attributes[fieldInfo[j].index][fieldInfo[j].columnIndex]
+                      .name === fieldInfo[j].name
+                  ) {
+                    attributes[fieldInfo[j].index][
+                      fieldInfo[j].columnIndex
+                    ].value = fieldInfo[j].value
+                  }
+                }
+              }
+              let checkData = this.checkToolIsViable()
+              this.setState(
+                {
+                  attributes,
+                  ...checkData,
+                },
+                () => {
+                  this.setLoading(false)
+                },
+              )
+            } else {
+              this.setLoading(false)
+            }
+          }))
+    } catch (e) {
+      this.setLoading(false)
     }
   }
 

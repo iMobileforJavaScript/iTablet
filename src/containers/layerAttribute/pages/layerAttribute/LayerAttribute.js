@@ -7,14 +7,14 @@
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, MTBtn } from '../../../../components'
+import { Container, MTBtn, PopModal } from '../../../../components'
 import { Toast } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable, LayerTopBar } from '../../components'
 import { LayerUtil } from '../../utils'
-import { getThemeAssets } from '../../../../assets'
+import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
 import { SMap, Action } from 'imobile_for_reactnative'
 const SINGLE_ATTRIBUTE = 'singleAttribute'
@@ -26,11 +26,13 @@ export default class LayerAttribute extends React.Component {
     currentLayer: Object,
     selection: Object,
     map: Object,
+    attributesHistory: Array,
     // attributes: Object,
     // setAttributes: () => {},
     setCurrentAttribute: () => {},
     // getAttributes: () => {},
     setLayerAttributes: () => {},
+    setAttributeHistory: () => {},
   }
 
   constructor(props) {
@@ -43,12 +45,14 @@ export default class LayerAttribute extends React.Component {
         data: [],
       },
       showTable: false,
-      // currentFieldInfo: [],
+      editControllerVisible: false,
       currentIndex: -1,
+
+      canBeUndo: false,
+      canBeRedo: false,
+      canBeRevert: false,
     }
 
-    // this.currentFieldInfo = []
-    // this.currentIndex = -1
     this.currentPage = 0
     this.pageSize = 20
     this.isInit = true
@@ -200,47 +204,181 @@ export default class LayerAttribute extends React.Component {
       this.props.setLayerAttributes &&
       typeof this.props.setLayerAttributes === 'function'
     ) {
-      // 单个对象属性和多个对象属性数据有区别
+      // 单个对象属性和多个对象属性数据有区别，单个属性cellData是值
       let isSingleData = typeof data.cellData !== 'object'
-      this.props.setLayerAttributes([
-        {
-          mapName: this.props.map.currentMap.name,
-          layerPath: this.props.currentLayer.path,
-          fieldInfo: [
-            {
-              name: isSingleData ? data.rowData.name : data.cellData.name,
-              value: data.value,
+      this.props
+        .setLayerAttributes([
+          {
+            mapName: this.props.map.currentMap.name,
+            layerPath: this.props.currentLayer.path,
+            fieldInfo: [
+              {
+                name: isSingleData ? data.rowData.name : data.cellData.name,
+                value: data.value,
+                index: data.index,
+                columnIndex: data.columnIndex,
+              },
+            ],
+            prevData: [
+              {
+                name: isSingleData ? data.rowData.name : data.cellData.name,
+                value: isSingleData ? data.rowData.value : data.cellData.value,
+                index: data.index,
+                columnIndex: data.columnIndex,
+              },
+            ],
+            params: {
+              // index: int,      // 当前对象所在记录集中的位置
+              filter: `SmID=${
+                isSingleData
+                  ? this.state.attributes.data[0][0].value
+                  : data.rowData[0].value
+              }`, // 过滤条件
+              cursorType: 2, // 2: DYNAMIC, 3: STATIC
             },
-          ],
-          params: {
-            // index: int,      // 当前对象所在记录集中的位置
-            filter: `SmID=${
-              isSingleData
-                ? this.state.attributes.data[0][0].value
-                : data.rowData[0].value
-            }`, // 过滤条件
-            cursorType: 2, // 2: DYNAMIC, 3: STATIC
           },
-        },
-      ])
+        ])
+        .then(result => {
+          if (!isSingleData && result) {
+            // 成功修改属性后，更新数据
+            let attributes = JSON.parse(JSON.stringify(this.state.attributes))
+            attributes.data[data.index][data.columnIndex].value = data.value
+            let checkData = this.checkToolIsViable()
+            this.setState({
+              attributes,
+              ...checkData,
+            })
+          }
+        })
     }
   }
 
-  editUndo = () => {
-    // TODO 属性编辑回退
+  /** 检测撤销/恢复/还原是否可用 **/
+  checkToolIsViable = () => {
+    let historyObj
+    for (let i = 0; i < this.props.attributesHistory.length; i++) {
+      if (
+        this.props.attributesHistory[i].mapName ===
+        this.props.map.currentMap.name
+      ) {
+        let layerHistory = this.props.attributesHistory[i].layers
+        for (let j = 0; j < layerHistory.length; j++) {
+          if (layerHistory[j].layerPath === this.props.currentLayer.path) {
+            historyObj = layerHistory[j]
+            break
+          }
+        }
+        break
+      }
+    }
+
+    return {
+      canBeUndo:
+        historyObj &&
+        historyObj.history.length > 0 &&
+        historyObj.currentIndex < historyObj.history.length - 1,
+      canBeRedo:
+        historyObj &&
+        historyObj.history.length > 0 &&
+        historyObj.currentIndex > 0,
+      canBeRevert:
+        historyObj &&
+        historyObj.history.length > 0 &&
+        historyObj.currentIndex < historyObj.history.length - 1 &&
+        !(historyObj.history[historyObj.currentIndex + 1] instanceof Array),
+    }
+  }
+
+  setAttributeHistory = async type => {
+    if (!type) return
+    switch (type) {
+      case 'undo':
+        if (!this.state.canBeUndo) {
+          Toast.show('已经无法回撤')
+          return
+        }
+        break
+      case 'redo':
+        if (!this.state.canBeRedo) {
+          Toast.show('已经无法恢复')
+          return
+        }
+        break
+      case 'revert':
+        if (!this.state.canBeRevert) {
+          Toast.show('已经无法还原')
+          return
+        }
+        break
+    }
+    this.setLoading(true, '修改中')
+    try {
+      this.props.setAttributeHistory &&
+        (await this.props
+          .setAttributeHistory({
+            mapName: this.props.map.currentMap.name,
+            layerPath: this.props.currentLayer.path,
+            type,
+          })
+          .then(({ msg, result, data }) => {
+            Toast.show(msg)
+            if (result) {
+              let attributes = JSON.parse(JSON.stringify(this.state.attributes))
+
+              if (data.length === 1) {
+                let fieldInfo = data[0].fieldInfo
+                if (
+                  attributes.data[fieldInfo[0].index][fieldInfo[0].columnIndex]
+                    .name === fieldInfo[0].name &&
+                  attributes.data[fieldInfo[0].index][fieldInfo[0].columnIndex]
+                    .value === fieldInfo[0].value
+                ) {
+                  this.setAttributeHistory(type)
+                  return
+                }
+              }
+
+              for (let i = 0; i < data.length; i++) {
+                let fieldInfo = data[i].fieldInfo
+                for (let j = 0; j < fieldInfo.length; j++) {
+                  if (
+                    attributes.data[fieldInfo[j].index][
+                      fieldInfo[j].columnIndex
+                    ].name === fieldInfo[j].name
+                  ) {
+                    attributes.data[fieldInfo[j].index][
+                      fieldInfo[j].columnIndex
+                    ].value = fieldInfo[j].value
+                  }
+                }
+              }
+              let checkData = this.checkToolIsViable()
+              this.setState(
+                {
+                  attributes,
+                  ...checkData,
+                },
+                () => {
+                  this.setLoading(false)
+                },
+              )
+            } else {
+              this.setLoading(false)
+            }
+          }))
+    } catch (e) {
+      this.setLoading(false)
+    }
+  }
+
+  showUndoView = () => {
+    this.popModal && this.popModal.setVisible(true)
   }
 
   goToSearch = () => {
     NavigationService.navigate('LayerAttributeSearch', {
       layerPath: this.props.currentLayer.path,
     })
-  }
-
-  canRelated = () => {
-    if (this.table) {
-      return this.table.getSelected().size() > 0
-    }
-    return false
   }
 
   back = () => {
@@ -298,6 +436,38 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
+  renderEditControllerView = () => {
+    return (
+      <View style={[styles.editControllerView, { width: '100%' }]}>
+        <MTBtn
+          key={'undo'}
+          title={'撤销'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_undo}
+          imageStyle={styles.headerBtn}
+          onPress={() => this.setAttributeHistory('undo')}
+        />
+        <MTBtn
+          key={'redo'}
+          title={'恢复'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_redo}
+          imageStyle={styles.headerBtn}
+          onPress={() => this.setAttributeHistory('redo')}
+        />
+        <MTBtn
+          key={'revert'}
+          title={'还原'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_revert}
+          imageStyle={styles.headerBtn}
+          onPress={() => this.setAttributeHistory('revert')}
+        />
+        <View style={styles.button} />
+      </View>
+    )
+  }
+
   render() {
     let title = ''
     switch (GLOBAL.Type) {
@@ -329,13 +499,13 @@ export default class LayerAttribute extends React.Component {
           headerRight: [
             <MTBtn
               key={'undo'}
-              image={getThemeAssets().attribute.icon_undo}
+              image={getPublicAssets().common.icon_undo}
               imageStyle={styles.headerBtn}
-              onPress={this.editUndo}
+              onPress={this.showUndoView}
             />,
             <MTBtn
               key={'search'}
-              image={getThemeAssets().publicAssets.iconSearch}
+              image={getPublicAssets().common.icon_search}
               imageStyle={styles.headerBtn}
               onPress={this.goToSearch}
             />,
@@ -363,6 +533,12 @@ export default class LayerAttribute extends React.Component {
               <Text style={styles.info}>请选择图层</Text>
             </View>
           )}
+        <PopModal
+          ref={ref => (this.popModal = ref)}
+          modalVisible={this.state.editControllerVisible}
+        >
+          {this.renderEditControllerView()}
+        </PopModal>
       </Container>
     )
   }

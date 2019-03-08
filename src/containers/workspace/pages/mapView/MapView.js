@@ -87,6 +87,7 @@ export default class MapView extends React.Component {
     getMapSetting: PropTypes.func,
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
+    clearAttributeHistory: PropTypes.func,
   }
 
   constructor(props) {
@@ -992,6 +993,7 @@ export default class MapView extends React.Component {
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
+        map={this.props.map}
         symbol={this.props.symbol}
         layers={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}

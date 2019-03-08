@@ -11,6 +11,7 @@ import {
   Const,
   ConstInfo,
   ConstPath,
+  UserType,
 } from '../../../../constants'
 import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
@@ -61,6 +62,7 @@ export default class FunctionToolbar extends React.Component {
     symbol: Object,
     device: Object,
     user: Object,
+    map: Object,
   }
 
   static defaultProps = {
@@ -695,6 +697,31 @@ export default class FunctionToolbar extends React.Component {
   }
 
   Tagging = async () => {
+    let userPath =
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
+        ? ConstPath.UserPath + this.props.user.currentUser.userName + '/'
+        : ConstPath.CustomerPath
+    let mapPath = await FileTools.appendingHomeDirectory(
+      userPath + ConstPath.RelativePath.Map,
+    )
+    let newName = await FileTools.getAvailableMapName(
+      mapPath,
+      this.props.map.currentMap.name || 'DefaultMap',
+    )
+    NavigationService.navigate('InputPage', {
+      headerTitle: '标注名称',
+      value: newName,
+      placeholder: ConstInfo.PLEASE_INPUT_NAME,
+      cb: async value => {
+        if (value !== '') {
+          (async function() {
+            await SMap.newTaggingDataset(value)
+          }.bind(this)())
+        }
+        NavigationService.goBack()
+      },
+    })
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
@@ -703,9 +730,9 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: false,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.HEIGHT[0]
-            : ConstToolType.HEIGHT[3],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+            ? ConstToolType.NEWTHEME_HEIGHT[0]
+            : ConstToolType.NEWTHEME_HEIGHT[1],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
     }
   }
@@ -768,14 +795,14 @@ export default class FunctionToolbar extends React.Component {
             action: this.getThemeMapAdd,
             image: require('../../../../assets/function/icon_function_add.png'),
           },
-          // {
-          //   key: '标注',
-          //   title: '标注',
-          //   action: this.Tagging,
-          //   size: 'large',
-          //   image: require('../../../../assets/function/icon_function_Tagging.png'),
-          //   selectMode: 'flash',
-          // },
+          {
+            key: '标注',
+            title: '标注',
+            action: this.Tagging,
+            size: 'large',
+            image: require('../../../../assets/function/icon_function_Tagging.png'),
+            selectMode: 'flash',
+          },
           {
             key: '风格',
             title: '风格',

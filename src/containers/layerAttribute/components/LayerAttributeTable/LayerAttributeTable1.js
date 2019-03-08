@@ -11,7 +11,7 @@ import {
   KeyboardAvoidingView,
   SectionList,
 } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, dataUtil } from '../../../../utils'
 import { color } from '../../../../styles'
 import Row from './Row'
 
@@ -65,7 +65,6 @@ export default class LayerAttributeTable extends React.Component {
     this.state = {
       colHeight: COL_HEIGHT,
       widthArr: props.widthArr,
-      modifiedData: {},
       tableTitle: titles,
       // tableData: props.tableData,
       tableHead: props.tableHead,
@@ -74,13 +73,25 @@ export default class LayerAttributeTable extends React.Component {
       tableData: [
         {
           title: titles,
-          data: props.data,
+          data: dataUtil.cloneObj(props.data),
         },
       ],
       selected: (new Map(): Map<string, boolean>),
       currentSelect: -1,
       refreshing: false,
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(nextState) !== JSON.stringify(this.state) ||
+      JSON.stringify(nextProps.tableTitle) !==
+        JSON.stringify(this.props.tableTitle) ||
+      JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data)
+    ) {
+      return true
+    }
+    return false
   }
 
   componentDidUpdate(prevProps) {

@@ -123,7 +123,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentSymbols: () => {},
     saveMap: () => {},
     measureShow: () => {},
-    setLoading: () => {},
+    clearAttributeHistory: () => {},
   }
 
   static defaultProps = {
@@ -545,7 +545,9 @@ export default class ToolBar extends React.PureComponent {
             action: () => {
               try {
                 NavigationService.navigate('PointAnalyst', {
-                  container: this.props.setLoading ? this.props.setLoading : {},
+                  container: this.props.setContainerLoading
+                    ? this.props.setContainerLoading
+                    : {},
                   type: 'pointAnalyst',
                 })
                 this.showToolbar(!this.isShow)
@@ -1983,6 +1985,9 @@ export default class ToolBar extends React.PureComponent {
       }
 
       this.updateOverlayerView()
+      if (type === ConstToolType.MAP_EDIT_TAGGING) {
+        this.props.getLayers()
+      }
     }.bind(this)())
   }
 
@@ -2249,6 +2254,7 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else {
+        SMap.submit()
         SMap.setAction(Action.PAN)
       }
     }
@@ -2651,7 +2657,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: this.state.themeDatasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
+              RangeParameter: '5.0',
               ColorScheme: 'CD_Cyans',
             }
             isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
@@ -2738,7 +2744,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: item.datasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
+              RangeParameter: '5.0',
               ColorScheme: 'CD_Cyans',
             }
             isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
@@ -3206,6 +3212,8 @@ export default class ToolBar extends React.PureComponent {
                   this.props.setContainerLoading(false)
                 Toast.show(msg)
               } else if (mapsInfo && mapsInfo.length > 0) {
+                // 清除属性历史记录
+                await this.props.clearAttributeHistory()
                 // 关闭地图
                 if (this.props.map.currentMap.name) {
                   await this.props.closeMap()
@@ -3317,6 +3325,8 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      // 清除属性历史记录
+      await this.props.clearAttributeHistory()
       await this.props.setCurrentSymbols()
       let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {

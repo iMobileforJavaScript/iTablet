@@ -7,6 +7,7 @@ import {
   getLayers,
   setCurrentAttribute,
   setCurrentLayer,
+  clearAttributeHistory,
 } from '../../../../models/layers'
 import {
   setLatestMap,
@@ -68,6 +69,7 @@ const mapDispatchToProps = {
   setCollectionInfo,
   setCurrentLayer,
   setCurrentAttribute,
+  clearAttributeHistory,
   importTemplate,
   importWorkspace,
   setCurrentTemplateInfo,

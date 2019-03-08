@@ -170,7 +170,7 @@ export default class MyLable extends Component {
         }}
       >
         <Image />
-        <Text style={{ fontSize: 18, color: 'white' }}>{'上传'}</Text>
+        <Text style={{ fontSize: 18, color: 'white' }}>{'分享'}</Text>
       </TouchableOpacity>
     )
   }
