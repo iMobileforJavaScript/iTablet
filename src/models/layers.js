@@ -2,7 +2,8 @@ import { fromJS } from 'immutable'
 import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
-import { Toast } from '../utils'
+import { Toast, dataUtil } from '../utils'
+import { ConstInfo } from '../constants'
 // Constants
 // --------------------------------------------------
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
@@ -15,7 +16,9 @@ export const GET_ATTRIBUTES_REFRESH = 'GET_ATTRIBUTES_REFRESH'
 export const GET_ATTRIBUTES_LOAD = 'GET_ATTRIBUTES_LOAD'
 export const GET_ATTRIBUTES_FAILED = 'GET_ATTRIBUTES_FAILED'
 export const SET_ATTRIBUTES = 'SET_ATTRIBUTES'
-export const SET_LAYERS_ATTRIBUTES = 'SET_LAYERS_ATTRIBUTES'
+export const ADD_ATTRIBUTE_HISTORY = 'ADD_ATTRIBUTE_HISTORY'
+export const SET_ATTRIBUTE_HISTORY = 'SET_ATTRIBUTE_HISTORY'
+export const CLEAR_ATTRIBUTE_HISTORY = 'CLEAR_ATTRIBUTE_HISTORY'
 export const GET_LAYER3DLIST = 'GET_LAYER3DLIST'
 export const SET_CURRENTLAYER3D = 'SET_CURRENTLAYER3D'
 // Actions
@@ -172,11 +175,163 @@ export const setLayerAttributes = (
       }
     }
 
-    // SMap.refreshMap()
+    await dispatch({
+      type: ADD_ATTRIBUTE_HISTORY,
+      payload: params || [],
+    })
+    cb && cb(true)
+    return true
+  } catch (e) {
+    return false
+  }
+}
+
+export const setAttributeHistory = (params = {}, cb = () => {}) => async (
+  dispatch,
+  getState,
+) => {
+  if (!params.type) {
+    params.type = 'undo'
+  }
+
+  let _type
+
+  switch (params.type) {
+    case 'undo':
+      _type = 'UNDO'
+      break
+    case 'redo':
+      _type = 'REDO'
+      break
+    case 'revert':
+      _type = 'RECOVER'
+      break
+  }
+  try {
+    if (!params || !params.mapName || !params.layerPath)
+      return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+    let attributesHistory = getState().layers.toJS().attributesHistory
+    let layerHistory = {}
+
+    if (attributesHistory.length === 0)
+      return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+
+    for (let i = 0; i < attributesHistory.length; i++) {
+      if (attributesHistory[i].mapName === params.mapName) {
+        let layerExist = false
+        for (let j = 0; j < attributesHistory[i].layers.length; j++) {
+          if (attributesHistory[i].layers[j].layerPath === params.layerPath) {
+            layerExist = true
+            layerHistory = attributesHistory[i].layers[j]
+            break
+          }
+        }
+        if (layerExist) break
+      }
+    }
+
+    if (!layerHistory.layerPath)
+      return { msg: ConstInfo[`${_type}_UNABLE`], result: false }
+
+    let currentHistory = [],
+      currentIndex = layerHistory.currentIndex
+
+    switch (params.type) {
+      case 'undo':
+        if (layerHistory.currentIndex < layerHistory.history.length - 1) {
+          currentIndex = layerHistory.currentIndex + 1
+          currentHistory =
+            layerHistory.history[currentIndex] instanceof Array
+              ? layerHistory.history[currentIndex]
+              : [layerHistory.history[currentIndex]]
+        } else {
+          return { msg: ConstInfo[`${_type}_UNABLE`], result: false }
+        }
+        break
+      case 'redo':
+        if (layerHistory.currentIndex > 0) {
+          currentIndex = layerHistory.currentIndex - 1
+
+          currentHistory =
+            layerHistory.history[currentIndex] instanceof Array
+              ? layerHistory.history[currentIndex]
+              : [layerHistory.history[currentIndex]]
+        } else {
+          return { msg: ConstInfo[`${_type}_UNABLE`], result: false }
+        }
+        break
+      case 'revert':
+        // 如果最新的历史记录是数组，那么就是还原的操作
+        if (!(layerHistory.history[0] instanceof Array)) {
+          // 还原到最初状态，并把本次操作记录到新的历史记录中
+          currentIndex = 0
+
+          for (let x = 0; x < layerHistory.history.length; x++) {
+            let exist = false
+
+            for (let y = 0; y < currentHistory.length; y++) {
+              if (
+                JSON.stringify(currentHistory[y].params) ===
+                  JSON.stringify(layerHistory.history[x].params) &&
+                currentHistory[y].fieldInfo[0].name ===
+                  layerHistory.history[x].fieldInfo[0].name
+              ) {
+                exist = true
+                if (
+                  currentHistory[y].fieldInfo[0].value ===
+                  layerHistory.history[x].fieldInfo[0].value
+                ) {
+                  continue
+                }
+                currentHistory[y] = layerHistory.history[x]
+              }
+            }
+            if (currentHistory.length === 0 || !exist) {
+              currentHistory.push(layerHistory.history[x])
+            }
+          }
+          layerHistory.history.unshift(currentHistory)
+        } else {
+          return { msg: ConstInfo[`${_type}_UNABLE`], result: false }
+        }
+    }
+
+    if (currentHistory && currentHistory && currentHistory.length > 0) {
+      for (let i = 0; i < currentHistory.length; i++) {
+        await SMap.setLayerFieldInfo(
+          layerHistory.layerPath,
+          currentHistory[i].fieldInfo,
+          currentHistory[i].params,
+        )
+      }
+    }
+
+    layerHistory.currentIndex = currentIndex
 
     await dispatch({
-      type: SET_LAYERS_ATTRIBUTES,
-      payload: params || [],
+      type: SET_ATTRIBUTE_HISTORY,
+      payload: attributesHistory || [],
+    })
+    cb &&
+      cb({
+        msg: ConstInfo[`${_type}_SUCCESS`],
+        result: true,
+        data: currentHistory,
+      })
+    return {
+      msg: ConstInfo[`${_type}_SUCCESS`],
+      result: true,
+      data: currentHistory,
+    }
+  } catch (e) {
+    return { msg: ConstInfo[`${_type}_FAILED`], result: false }
+  }
+}
+
+export const clearAttributeHistory = (cb = () => {}) => async dispatch => {
+  try {
+    await dispatch({
+      type: CLEAR_ATTRIBUTE_HISTORY,
     })
     cb && cb(true)
     return true
@@ -279,7 +434,27 @@ const initialState = fromJS({
   analystLayer: {},
   layer3dList: [],
   currentLayer3d: {},
-  modifiedAttributeHistory: [],
+  /**
+   * attributesHistory: 属性修改历史记录，且下标越小，记录越新
+   * [
+   *    {
+   *      mapName: '',
+   *      currentIndex: 0,
+   *      layers: [{
+   *        layerPath: '',
+   *        currentIndex: 0,
+   *        history: [
+   *          {
+   *            fieldInfo: [],
+   *            params: {}, // 查询参数
+   *          }
+   *        ],
+   *      }],
+   *    }
+   * ]
+   */
+  attributesHistory: [],
+  attributesHistoryKey: [], // 储存attributesHistory中对象的key，相同对象只有一个
 })
 
 export default handleActions(
@@ -410,13 +585,143 @@ export default handleActions(
       }
       return state.setIn(['currentLayer3d'], fromJS(currentLayer3d))
     },
-    [`${SET_LAYERS_ATTRIBUTES}`]: state => {
-      let modifiedAttributeHistory = state.toJS().modifiedAttributeHistory
+    [`${ADD_ATTRIBUTE_HISTORY}`]: (state, { payload }) => {
+      let attributesHistory = state.toJS().attributesHistory
+      let attributesHistoryKey = state.toJS().attributesHistoryKey
 
-      return state.setIn(
-        ['modifiedAttributeHistory'],
-        fromJS(modifiedAttributeHistory),
-      )
+      let checkIsIncludeKey = function(data) {
+        for (let i = 0; i < attributesHistoryKey.length; i++) {
+          if (
+            attributesHistoryKey[i].filter === data.params.filter &&
+            attributesHistoryKey[i].name === data.fieldInfo[0].name
+          ) {
+            return true
+          }
+        }
+        return false
+      }
+
+      payload.forEach(item => {
+        item.params = item.params || {}
+        let mapExist = false // 判断历史记录是否包含该地图
+        for (let i = 0; i < attributesHistory.length; i++) {
+          if (attributesHistory[i].mapName === item.mapName) {
+            mapExist = true
+            let layers = attributesHistory[i].layers
+            let layerExist = false // 判断历史记录是否包含该地图中的图层
+            for (let j = 0; j < layers.length; j++) {
+              if (layers[j].layerPath === item.layerPath) {
+                layerExist = true
+                // 添加新的记录时，如果当前历史记录指向的位置不是最新的（0）记录
+                // 则把0 到 currentIndex的记录删除，然后向0添加新的记录
+                if (layers[j].currentIndex > 0) {
+                  layers[j].history.splice(0, layers[j].currentIndex)
+                  layers[j].currentIndex = 0
+                }
+                if (!checkIsIncludeKey(item)) {
+                  layers[j].history.unshift({
+                    fieldInfo: item.prevData,
+                    params: item.params,
+                  })
+                  attributesHistoryKey.unshift({
+                    name: item.fieldInfo[0].name,
+                    filter: item.params.filter,
+                  })
+                }
+                // layers[j].history.unshift({
+                //   fieldInfo: item.prevData,
+                //   params: item.params,
+                // })
+                layers[j].history.unshift({
+                  fieldInfo: item.fieldInfo,
+                  params: item.params,
+                })
+                // 最新被修改的图层放到第一位
+                layers = dataUtil.swapArray(layers, 0, j)
+                break
+              }
+            }
+            if (!layerExist) {
+              // 若新建 地图-图层-历史记录，且包含prevData，则prevData作为初始数据，支持还原功能
+              layers.unshift({
+                currentIndex: 0,
+                layerPath: item.layerPath,
+                history: [
+                  {
+                    fieldInfo: item.fieldInfo,
+                    params: item.params,
+                  },
+                  {
+                    fieldInfo: item.prevData,
+                    params: item.params,
+                  },
+                ],
+              })
+              attributesHistoryKey.push({
+                name: item.fieldInfo[0].name,
+                filter: item.params.filter,
+              })
+              // layers.unshift({
+              //   currentIndex: 0,
+              //   layerPath: item.layerPath,
+              //   history: [{
+              //     fieldInfo: item.prevData,
+              //     params: item.params,
+              //   }],
+              // })
+            }
+            attributesHistory[i].layers = layers
+
+            // 最新被修改的地图放到第一位
+            attributesHistory = dataUtil.swapArray(attributesHistory, 0, i)
+            if (layerExist) break
+          }
+        }
+
+        if (!mapExist) {
+          let history = [
+            {
+              fieldInfo: item.fieldInfo,
+              params: item.params,
+            },
+          ]
+          // 若新建 地图-图层-历史记录，且包含prevData，则prevData作为初始数据，支持还原功能
+          if (item.prevData) {
+            history.push({
+              fieldInfo: item.prevData,
+              params: item.params,
+            })
+          }
+
+          attributesHistory.unshift({
+            mapName: item.mapName,
+            layers: [
+              {
+                currentIndex: 0,
+                layerPath: item.layerPath,
+                history,
+              },
+            ],
+          })
+
+          attributesHistoryKey.push({
+            name: item.fieldInfo[0].name,
+            filter: item.params.filter,
+          })
+        }
+      })
+
+      return state
+        .setIn(['attributesHistory'], fromJS(attributesHistory))
+        .setIn(['attributesHistoryKey'], fromJS(attributesHistoryKey))
+    },
+    [`${SET_ATTRIBUTE_HISTORY}`]: (state, { payload }) => {
+      return state.setIn(['attributesHistory'], fromJS(payload))
+    },
+    [`${CLEAR_ATTRIBUTE_HISTORY}`]: state => {
+      return state
+        .setIn(['attributesHistory'], fromJS([]))
+        .setIn(['attributesHistoryKey'], fromJS([]))
     },
     [REHYDRATE]: () => {
       // return payload && payload.layers ? fromJS(payload.layers) : state

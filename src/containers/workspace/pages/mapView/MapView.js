@@ -87,6 +87,7 @@ export default class MapView extends React.Component {
     getMapSetting: PropTypes.func,
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
+    clearAttributeHistory: PropTypes.func,
   }
 
   constructor(props) {

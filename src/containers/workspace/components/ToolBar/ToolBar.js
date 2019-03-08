@@ -123,6 +123,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentSymbols: () => {},
     saveMap: () => {},
     measureShow: () => {},
+    clearAttributeHistory: () => {},
   }
 
   static defaultProps = {
@@ -3047,6 +3048,8 @@ export default class ToolBar extends React.PureComponent {
                   this.props.setContainerLoading(false)
                 Toast.show(msg)
               } else if (mapsInfo && mapsInfo.length > 0) {
+                // 清除属性历史记录
+                await this.props.clearAttributeHistory()
                 // 关闭地图
                 if (this.props.map.currentMap.name) {
                   await this.props.closeMap()
@@ -3158,6 +3161,8 @@ export default class ToolBar extends React.PureComponent {
       if (this.props.map.currentMap.name) {
         await this.props.closeMap()
       }
+      // 清除属性历史记录
+      await this.props.clearAttributeHistory()
       await this.props.setCurrentSymbols()
       let mapInfo = await this.props.openMap({ ...item })
       if (mapInfo) {

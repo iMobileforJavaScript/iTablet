@@ -38,6 +38,7 @@ export default class MT_layerManager extends React.Component {
     setCurrentLayer: () => {},
     getLayers: () => {},
     closeMap: () => {},
+    clearAttributeHistory: () => {},
     device: Object,
     currentLayer: Object,
   }
@@ -45,7 +46,7 @@ export default class MT_layerManager extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      datasourceList: [],
+      // datasourceList: [],
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
@@ -102,7 +103,7 @@ export default class MT_layerManager extends React.Component {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     ;(async function() {
-      this.getData()
+      this.getData(true)
     }.bind(this)())
   }
 
@@ -119,11 +120,11 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  getData = async () => {
+  getData = async (isInit = false) => {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
-      let layers = await this.props.getLayers()
+      let layers = isInit ? this.props.layers : await this.props.getLayers()
 
       if (
         layers.length > 0 &&
@@ -393,7 +394,15 @@ export default class MT_layerManager extends React.Component {
   }
 
   onAllPressRow = async ({ data }) => {
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        // 切换地图，清除历史记录
+        if (
+          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
+        ) {
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        }
+      })
     this.setState({
       selectLayer: data.caption,
     })
@@ -472,7 +481,15 @@ export default class MT_layerManager extends React.Component {
   }
 
   onPressRow = async ({ data }) => {
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        // 切换地图，清除历史记录
+        if (
+          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
+        ) {
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        }
+      })
     if (GLOBAL.Type === constants.MAP_EDIT) {
       if (data.themeType <= 0) {
         this.mapEdit(data)
