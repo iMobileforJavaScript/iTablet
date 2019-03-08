@@ -63,6 +63,7 @@ export default {
   Common: AppPath + 'Common/', // 公共数据
   // 游客目录
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据
+  AndroidPath: 'storage/emulated/0',
   RelativePath,
   RelativeFilePath,
   Module,

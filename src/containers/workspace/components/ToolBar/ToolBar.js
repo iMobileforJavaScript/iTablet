@@ -1872,6 +1872,9 @@ export default class ToolBar extends React.PureComponent {
         }
       }, Const.ANIMATED_DURATION_2)
       this.updateOverlayerView()
+      if (type === ConstToolType.MAP_EDIT_TAGGING) {
+        this.props.getLayers()
+      }
     }.bind(this)())
   }
 
@@ -2097,6 +2100,7 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else {
+        SMap.submit()
         SMap.setAction(Action.PAN)
       }
     }
@@ -2464,7 +2468,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: this.state.themeDatasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
+              RangeParameter: '5.0',
               ColorScheme: 'CD_Cyans',
             }
             isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
@@ -2551,7 +2555,7 @@ export default class ToolBar extends React.PureComponent {
               DatasetName: item.datasetName,
               RangeExpression: item.expression,
               RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
+              RangeParameter: '5.0',
               ColorScheme: 'CD_Cyans',
             }
             isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
