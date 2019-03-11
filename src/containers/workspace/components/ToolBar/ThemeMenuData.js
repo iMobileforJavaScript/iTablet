@@ -123,23 +123,23 @@ function getThemeMapCreateByLayer(type, params) {
     buttons = []
   if (type !== ConstToolType.MAP_THEME_CREATE_BY_LAYER) return { data, buttons }
   data = [
-    // {
-    //   //统一风格
-    //   key: constants.THEME_UNIFY_STYLE,
-    //   title: constants.THEME_UNIFY_STYLE,
-    //   action: showTips,
-    //   size: 'large',
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    // },
+    {
+      //统一风格
+      key: constants.THEME_UNIFY_STYLE,
+      title: constants.THEME_UNIFY_STYLE,
+      action: getUnifyStyleAdd,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_create_unify_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_style,
+    },
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: () => showExpressionList('Theme'),
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      image: getThemeAssets().themeType.theme_create_unique_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_style,
     },
     {
       //分段风格
@@ -147,8 +147,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
       action: () => showExpressionList('Theme'),
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      image: getThemeAssets().themeType.theme_create_range_style,
+      selectedImage: getThemeAssets().themeType.theme_create_range_style,
     },
     // {
     //   //自定义风格
@@ -174,8 +174,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: () => showExpressionList('Theme'),
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_unify_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
     {
       //单值标签
@@ -183,8 +183,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_UNIQUE_LABEL,
       size: 'large',
       action: () => showExpressionList('Theme'),
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_unique_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
     },
     {
       //分段标签
@@ -192,8 +192,8 @@ function getThemeMapCreateByLayer(type, params) {
       title: constants.THEME_RANGE_LABEL,
       size: 'large',
       action: () => showExpressionList('Theme'),
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_range_label,
+      selectedImage: getThemeAssets().themeType.theme_create_range_label,
     },
     {
       //面积图
@@ -327,23 +327,23 @@ function getThemeMapCreate(type, params) {
     buttons = []
   if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
   data = [
-    // {
-    //   //统一风格
-    //   key: constants.THEME_UNIFY_STYLE,
-    //   title: constants.THEME_UNIFY_STYLE,
-    //   action: showTips,
-    //   size: 'large',
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    // },
+    {
+      //统一风格
+      key: constants.THEME_UNIFY_STYLE,
+      title: constants.THEME_UNIFY_STYLE,
+      action: getUnifyStyleAdd,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_create_unify_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_style,
+    },
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      image: getThemeAssets().themeType.theme_create_unique_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_style,
     },
     {
       //分段风格
@@ -351,8 +351,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      image: getThemeAssets().themeType.theme_create_range_style,
+      selectedImage: getThemeAssets().themeType.theme_create_range_style,
     },
     // {
     //   //自定义风格
@@ -378,8 +378,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_unify_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
     {
       //单值标签
@@ -387,8 +387,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_UNIQUE_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_unique_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
     },
     {
       //分段标签
@@ -396,8 +396,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_RANGE_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_range_label,
+      selectedImage: getThemeAssets().themeType.theme_create_range_label,
     },
     {
       //面积图
@@ -2495,6 +2495,102 @@ function getThemeGraphColorScheme() {
   return list
 }
 
+//得到去掉文件扩展名的文件名称
+function basename(str) {
+  var idx = str.lastIndexOf('/')
+  idx = idx > -1 ? idx : str.lastIndexOf('\\')
+  if (idx < 0) {
+    return str
+  }
+  let file = str.substring(idx + 1)
+  let arr = file.split('.')
+  return arr[0]
+}
+
+/**专题图:添加 --> 统一风格 */
+async function getUnifyStyleAdd() {
+  let data = [],
+    buttons = []
+  buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    // ToolbarBtnType.THEME_COMMIT,
+  ]
+  let customerUDBPath = await FileTools.appendingHomeDirectory(
+    ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+  )
+  let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+    extension: 'udb',
+    type: 'file',
+  })
+  customerUDBs.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+    item.info = {
+      infoType: 'mtime',
+      lastModifiedDate: item.mtime,
+    }
+    item.name = basename(item.path)
+  })
+
+  let userUDBPath, userUDBs
+  if (_toolbarParams.user && _toolbarParams.user.currentUser.userName) {
+    userUDBPath =
+      (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+      _toolbarParams.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Datasource
+    userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+      extension: 'udb',
+      type: 'file',
+    })
+    userUDBs.forEach(item => {
+      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
+      }
+      item.name = basename(item.path)
+    })
+
+    data = [
+      // {
+      //   title: Const.PUBLIC_DATA_SOURCE,
+      //   data: customerUDBs,
+      // },
+      {
+        title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+        data: userUDBs,
+      },
+    ]
+  } else {
+    data = [
+      {
+        title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+        data: customerUDBs,
+      },
+    ]
+  }
+
+  _toolbarParams.showFullMap && _toolbarParams.showFullMap(true)
+  _toolbarParams.setToolbarVisible &&
+    _toolbarParams.setToolbarVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
+      containerType: 'list',
+      isFullScreen: true,
+      isTouchProgress: false,
+      showMenuDialog: false,
+      listSelectable: false, //单选框
+      height:
+        _toolbarParams.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[5],
+      column: _toolbarParams.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      data,
+      buttons: buttons,
+    })
+  _toolbarParams.scrollListToLocation && _toolbarParams.scrollListToLocation()
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -2518,4 +2614,6 @@ export default {
   getGraphThemeGradutedMode,
   setThemeGraphGraduatedMode,
   getThemeGraphColorScheme,
+  getUnifyStyleAdd,
+  basename,
 }

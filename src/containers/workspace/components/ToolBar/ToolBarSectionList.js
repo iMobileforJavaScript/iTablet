@@ -198,7 +198,7 @@ export default class ToolBarSectionList extends React.Component {
     }
     if (item.isSystemField && this.state.sectionSelected) {
       //隐藏系统字段
-      return
+      return null
     }
     let selectImg = item.isSelected
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')

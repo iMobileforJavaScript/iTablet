@@ -898,13 +898,13 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_start.png'),
           },
-          {
-            key: '添加',
-            title: '添加',
-            size: 'large',
-            action: this.getThemeMapAdd,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   key: '添加',
+          //   title: '添加',
+          //   size: 'large',
+          //   action: this.getThemeMapAdd,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             key: '专题图',
             title: '专题图',
@@ -914,12 +914,12 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_create.png'),
           },
           {
-            key: '参数',
-            title: '参数',
+            key: '风格',
+            title: '风格',
             size: 'large',
             selectMode: 'flash',
             action: this.showMenuAlertDialog,
-            image: require('../../../../assets/function/icon_function_theme_param.png'),
+            image: require('../../../../assets/function/icon_function_style.png'),
           },
           {
             title: '工具',
