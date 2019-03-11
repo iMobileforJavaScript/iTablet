@@ -29,6 +29,8 @@ export default class Dialog extends PureComponent {
     activeOpacity?: number,
     cancelBtnTitle?: string,
     confirmBtnTitle?: string,
+    confirmBtnVisible: boolean,
+    cancelBtnVisible: boolean,
     cancelBtnStyle?: string,
     confirmBtnStyle?: string,
     confirmAction: () => {},
@@ -39,6 +41,7 @@ export default class Dialog extends PureComponent {
     header?: any,
     opacity: any,
     opacityStyle: Object,
+    onlyOneBtn: boolean,
   }
 
   static defaultProps = {
@@ -47,6 +50,9 @@ export default class Dialog extends PureComponent {
     cancelBtnTitle: '取消',
     confirmBtnTitle: '确定',
     showBtns: true,
+    confirmBtnVisible: true,
+    cancelBtnVisible: true,
+    onlyOneBtn: false,
   }
 
   constructor(props) {
@@ -78,25 +84,29 @@ export default class Dialog extends PureComponent {
   renderBtns = () => {
     if (!this.props.showBtns) return null
     return (
-      <View style={styles.btns}>
-        <TouchableOpacity
-          activeOpacity={this.props.activeOpacity}
-          style={[styles.btnStyle, this.props.confirmBtnStyle]}
-          onPress={this.confirm}
-        >
-          <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
-            {this.props.confirmBtnTitle}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          activeOpacity={this.props.activeOpacity}
-          style={[styles.btnStyle, this.props.cancelBtnStyle]}
-          onPress={this.cancel}
-        >
-          <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>
-            {this.props.cancelBtnTitle}
-          </Text>
-        </TouchableOpacity>
+      <View style={this.props.onlyOneBtn ? styles.oneBtn : styles.btns}>
+        {this.props.confirmBtnVisible && (
+          <TouchableOpacity
+            activeOpacity={this.props.activeOpacity}
+            style={[styles.btnStyle, this.props.confirmBtnStyle]}
+            onPress={this.confirm}
+          >
+            <Text style={[styles.btnTitle, this.props.confirmTitleStyle]}>
+              {this.props.confirmBtnTitle}
+            </Text>
+          </TouchableOpacity>
+        )}
+        {this.props.cancelBtnVisible && (
+          <TouchableOpacity
+            activeOpacity={this.props.activeOpacity}
+            style={[styles.btnStyle, this.props.cancelBtnStyle]}
+            onPress={this.cancel}
+          >
+            <Text style={[styles.btnTitle, this.props.cancelTitleStyle]}>
+              {this.props.cancelBtnTitle}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     )
   }

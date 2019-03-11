@@ -149,7 +149,7 @@ export default class Mine extends Component {
               title: Const.LABLE,
               leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
               onClick: () => {
-                // this.goToMyLable(Const.LABLE)
+                this.goToMyLable(Const.LABLE)
               },
             })}
             {this._renderItem({
@@ -226,6 +226,13 @@ export default class Mine extends Component {
             title: Const.DATA,
             leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
             onClick: () => this.goToMyData(Const.DATA),
+          })}
+          {this._renderItem({
+            title: Const.LABLE,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            onClick: () => {
+              this.goToMyLable(Const.LABLE)
+            },
           })}
           {this._renderItem({
             title: Const.MAP,

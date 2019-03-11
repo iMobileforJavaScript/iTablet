@@ -12,12 +12,19 @@ export default StyleSheet.create({
   Img: {
     width: scaleSize(30),
     height: scaleSize(30),
-    marginLeft: 20,
+    marginLeft: 10,
     tintColor: color.fontColorBlack,
   },
   title: {
-    fontSize: size.fontSize.fontSizeSm,
-    color: color.bgG,
+    color: color.fontColorBlack,
+    paddingLeft: 15,
+    fontSize: size.fontSize.fontSizeXl,
+    flex: 1,
+  },
+  selectImg: {
+    width: scaleSize(40),
+    height: scaleSize(40),
+    marginLeft: 20,
   },
   moreImgBtn: {
     marginRight: 10,

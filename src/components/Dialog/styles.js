@@ -53,6 +53,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  oneBtn: {
+    marginTop: scaleSize(30),
+    marginHorizontal: scaleSize(40),
+    height: scaleSize(80),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   confirmBtnStyle: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -82,9 +90,11 @@ export default StyleSheet.create({
     backgroundColor: color.content_white,
     borderWidth: 1,
     borderColor: color.bgG,
-    width: scaleSize(110),
+    // width: scaleSize(110),
+    // flex:1,
   },
   btnTitle: {
+    flex: 1,
     color: color.themeText2,
     fontSize: size.fontSize.fontSizeSm,
     backgroundColor: 'transparent',

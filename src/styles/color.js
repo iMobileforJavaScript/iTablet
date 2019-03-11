@@ -58,7 +58,8 @@ const lightTheme = {
   imageColorBlack: '#303030',
   imageColorWhite: '#F0F0F0',
 
-  modalBgColor: 'rgba(48, 48, 48, 0.85)',
+  // modalBgColor: 'rgba(48, 48, 48, 0.85)',
+  modalBgColor: 'rgba(0, 0, 0, 0.5)',
 }
 
 let styles

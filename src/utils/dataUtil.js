@@ -177,6 +177,35 @@ function angleTransfer(value = 0, decimals = -1) {
   return degrees + '°' + minutes + "'" + seconds + '"'
 }
 
+/**
+ * 数组元素交换位置
+ * @param {array} arr 数组
+ * @param {number} index1 添加项目的位置
+ * @param {number} index2 删除项目的位置
+ * index1和index2分别是两个数组的索引值，即是两个要交换元素位置的索引值，如1，5就是数组中下标为1和5的两个元素交换位置
+ */
+function swapArray(arr = [], index1, index2) {
+  arr[index1] = arr.splice(index2, 1, arr[index1])[0]
+  return arr
+}
+
+/**
+ * 深拷贝一个对象
+ * @param obj
+ * @returns {{}}
+ */
+function cloneObj(obj) {
+  let newObj = {}
+  if (obj instanceof Array) {
+    newObj = []
+  }
+  for (let key in obj) {
+    let val = obj[key]
+    newObj[key] = typeof val === 'object' ? cloneObj(val) : val
+  }
+  return newObj
+}
+
 export default {
   sortByPinYin,
   pySegSort,
@@ -189,4 +218,6 @@ export default {
   ChineseToNumber,
   checkColor,
   angleTransfer,
+  swapArray,
+  cloneObj,
 }

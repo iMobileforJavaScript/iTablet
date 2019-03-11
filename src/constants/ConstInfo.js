@@ -74,4 +74,16 @@ export default {
   UPLOADING_DATA: '正在上传...',
 
   SEARCHING: '搜索中',
+
+  UNDO_SUCCESS: '已经撤销',
+  REDO_SUCCESS: '已经恢复',
+  RECOVER_SUCCESS: '已经还原',
+
+  UNDO_FAILED: '撤销失败',
+  REDO_FAILED: '恢复失败',
+  RECOVER_FAILED: '还原失败',
+
+  UNDO_UNABLE: '已经不能撤销了',
+  REDO_UNABLE: '已经不能恢复了',
+  RECOVER_UNABLE: '已经不能还原了',
 }
