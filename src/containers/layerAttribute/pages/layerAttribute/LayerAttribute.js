@@ -56,6 +56,8 @@ export default class LayerAttribute extends React.Component {
     this.currentPage = 0
     this.pageSize = 20
     this.isInit = true
+    this.noMore = false
+    this.isLoading = false // 防止同时重复加载多次
   }
 
   componentDidMount() {
@@ -88,15 +90,24 @@ export default class LayerAttribute extends React.Component {
   /** 下拉刷新 **/
   refresh = (cb = () => {}, resetCurrent = false) => {
     this.currentPage = 0
+    this.noMore = false
     this.getAttribute(cb, resetCurrent)
   }
 
   /** 加载更多 **/
   loadMore = (cb = () => {}) => {
+    if (this.isLoading) return
+    if (this.noMore) {
+      cb && cb()
+      return
+    }
+    this.isLoading = true
     this.currentPage += 1
     this.getAttribute(attributes => {
       cb && cb()
+      this.isLoading = false
       if (!attributes || !attributes.data || attributes.data.length <= 0) {
+        this.noMore = true
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
         // this.currentPage--
       }
@@ -119,11 +130,17 @@ export default class LayerAttribute extends React.Component {
         //   size: this.pageSize,
         // })
         attributes = await LayerUtil.getLayerAttribute(
-          this.state.attributes,
+          JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.currentLayer.path,
           this.currentPage,
           this.pageSize,
         )
+        if (
+          attributes.data.length === this.state.attributes.data.length ||
+          attributes.data.length < 20
+        ) {
+          this.noMore = true
+        }
         let currentIndex =
           attributes.data.length === 1
             ? 0
@@ -152,6 +169,7 @@ export default class LayerAttribute extends React.Component {
         this.setLoading(false)
         cb && cb(attributes)
       } catch (e) {
+        this.isLoading = false
         this.setLoading(false)
         cb && cb(attributes)
       }
@@ -181,11 +199,12 @@ export default class LayerAttribute extends React.Component {
       this.state.currentFieldInfo[0].value,
     ]).then(() => {
       this.props.navigation && this.props.navigation.navigate('MapView')
-      GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
-        isFullScreen: false,
-        height: 0,
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
+          isFullScreen: false,
+          height: 0,
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
     })
   }
 
@@ -427,6 +446,7 @@ export default class LayerAttribute extends React.Component {
         }
         // indexColumn={this.state.attributes.data.length > 1 ? 0 : -1}
         indexColumn={0}
+        hasIndex={this.state.attributes.data.length > 1}
         hasInputText={this.state.attributes.data.length > 1}
         selectRow={this.selectRow}
         refresh={cb => this.refresh(cb)}

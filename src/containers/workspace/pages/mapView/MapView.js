@@ -209,15 +209,17 @@ export default class MapView extends React.Component {
     //     })
     // }
 
-    if (
-      JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav) &&
-      (!prevProps.nav.routes ||
-        (prevProps.nav.routes &&
-          this.props.nav.routes.length >= prevProps.nav.routes.length)) &&
-      this.checkMapViewIsUnique()
-    ) {
-      this.forceUpdate()
-    }
+    // if (
+    //   JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav) &&
+    //   (
+    //     prevProps.nav.routes &&
+    //     this.props.nav.routes.length < prevProps.nav.routes.length &&
+    //     prevProps.nav.routes[prevProps.nav.routes.length - 1].routeName === 'LayerSelectionAttribute'
+    //   ) &&
+    //   this.checkMapViewIsUnique()
+    // ) {
+    //   this.resetMapView()
+    // }
   }
 
   componentWillUnmount() {
@@ -247,6 +249,19 @@ export default class MapView extends React.Component {
     return (
       mapViewNums === 1 &&
       (current.routeName === 'MapView' || current.routeName === 'MapTabs')
+    )
+  }
+
+  resetMapView = () => {
+    this.setState(
+      {
+        showMap: false,
+      },
+      () => {
+        this.setState({
+          showMap: true,
+        })
+      },
     )
   }
 

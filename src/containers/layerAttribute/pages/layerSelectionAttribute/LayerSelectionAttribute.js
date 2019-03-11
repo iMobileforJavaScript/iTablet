@@ -23,6 +23,7 @@ export default class LayerSelectionAttribute extends React.Component {
     setLoading: () => {},
     selectAction: () => {},
     setAttributeHistory: () => {},
+    onGetAttribute?: () => {},
   }
 
   constructor(props) {
@@ -39,6 +40,7 @@ export default class LayerSelectionAttribute extends React.Component {
     this.pageSize = 20
     this.isInit = true // 初始化，防止多次加载
     this.noMore = false // 判断是否加载完毕
+    this.isLoading = false // 防止同时重复加载多次
   }
 
   componentDidMount() {
@@ -68,9 +70,9 @@ export default class LayerSelectionAttribute extends React.Component {
   }
 
   getAttribute = (cb = () => {}) => {
-    if (!this.props.layerSelection.layerInfo.path) return
-    this.setLoading(true)
-    ;(async function() {
+    if (!this.props.layerSelection.layerInfo.path)
+      return // this.setLoading(true)
+      ;(async function() {
       try {
         let attributes = await SMap.getSelectionAttributeByLayer(
           this.props.layerSelection.layerInfo.path,
@@ -91,11 +93,15 @@ export default class LayerSelectionAttribute extends React.Component {
               tableHead.push(item.fieldInfo.caption)
             }
           })
+          if (attributes.length < 20) {
+            this.noMore = true
+          }
           if (this.currentPage > 0) {
             attributes = JSON.parse(
               JSON.stringify(this.state.attributes),
             ).concat(attributes)
           }
+          this.props.onGetAttribute && this.props.onGetAttribute(attributes)
           this.setState(
             {
               attributes: attributes,
@@ -108,10 +114,11 @@ export default class LayerSelectionAttribute extends React.Component {
           )
         }
         cb && cb(attributes)
-        this.setLoading(false)
+        // this.setLoading(false)
       } catch (e) {
         cb && cb()
-        this.setLoading(false)
+        this.isLoading = false
+        // this.setLoading(false)
       }
     }.bind(this)())
   }
@@ -175,15 +182,20 @@ export default class LayerSelectionAttribute extends React.Component {
 
   /** 加载更多 **/
   loadMore = (cb = () => {}) => {
+    if (this.isLoading) return
     if (
       this.isInit ||
       this.noMore ||
       this.props.layerSelection.ids.length <= 20
-    )
+    ) {
+      cb && cb()
       return
+    }
+    this.isLoading = true
     this.currentPage += 1
     this.getAttribute(attribute => {
       cb && cb()
+      this.isLoading = false
       if (!attribute || attribute.length <= 0) {
         this.noMore = true
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -396,6 +408,7 @@ export default class LayerSelectionAttribute extends React.Component {
         indexColumn={0}
         type={type}
         selectRow={this.selectRow}
+        hasIndex={this.state.attributes.length !== 1}
       />
     )
   }

@@ -2003,7 +2003,9 @@ export default class ToolBar extends React.PureComponent {
         SMap.setAction(Action.SELECT)
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         // SMap.setAction(Action.SELECT_BY_RECTANGLE)
-        SMap.selectByRectangle()
+        // SMap.selectByRectangle()
+        SMap.setAction(Action.PAN)
+        SMap.clearSelection()
       } else {
         if (type === ConstToolType.ATTRIBUTE_RELATE) {
           // 返回图层属性界面，并清除属性关联选中的对象
@@ -2012,9 +2014,9 @@ export default class ToolBar extends React.PureComponent {
           SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
           // TODO 恢复框选对象，并返回到地图
-          // NavigationService.navigate('LayerSelectionAttribute')
+          NavigationService.navigate('LayerSelectionAttribute')
           // NavigationService.navigate('LayerAttributeTabs', {initialPage: GLOBAL.LayerAttributeTabIndex})
-          NavigationService.goBack()
+          // NavigationService.goBack()
           // 返回框选/点选属性界面，并清除属性关联选中的对象
           let selection = []
           for (let i = 0; i < this.props.selection.length; i++) {

@@ -414,6 +414,7 @@ const initialState = fromJS({
    * ]
    */
   selection: [],
+  /** 当前选中的对象 **/
   currentAttribute: {},
   // attributes: {
   //   head: [],

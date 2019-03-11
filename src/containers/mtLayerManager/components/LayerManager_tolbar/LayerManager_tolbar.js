@@ -346,17 +346,18 @@ export default class LayerManager_tolbar extends React.Component {
       ) {
         //由图层创建专题图(点，线，面)
         this.setVisible(false)
-        GLOBAL.toolBox.setVisible(
-          true,
-          ConstToolType.MAP_THEME_CREATE_BY_LAYER,
-          {
-            isFullScreen: true,
-            column: 4,
-            height: ConstToolType.THEME_HEIGHT[5],
-            createThemeByLayer: this.state.layerdata.name,
-          },
-        )
-        GLOBAL.toolBox.showFullMap()
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setVisible(
+            true,
+            ConstToolType.MAP_THEME_CREATE_BY_LAYER,
+            {
+              isFullScreen: true,
+              column: 4,
+              height: ConstToolType.THEME_HEIGHT[5],
+              createThemeByLayer: this.state.layerdata.name,
+            },
+          )
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
         // eslint-disable-next-line react/prop-types
         this.props.navigation.navigate('MapView')
       } else {
