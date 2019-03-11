@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform } from 'react-native'
+import { View, AppState, StyleSheet, Platform,Image,Text} from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -29,6 +29,7 @@ import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
+import { color } from './src/styles'
 import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
@@ -50,6 +51,30 @@ const styles = StyleSheet.create({
   invisibleMap: {
     width: 1,
     height: 1,
+  },
+  dialogHeaderView: {
+    flex: 1,
+    //  backgroundColor:"pink",
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dialogHeaderImg: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    opacity: 1,
+    // marginLeft:scaleSize(145),
+    // marginTop:scaleSize(21),
+  },
+  promptTtile: {
+    fontSize: scaleSize(24),
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+  },
+  dialogBackground: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
   },
 })
 
@@ -325,11 +350,22 @@ class AppRoot extends Component {
     }
   }
 
+  renderExitDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>许可过期,请更换并重启</Text>
+      </View>
+    )
+  }
+
   renderDialog=()=>{
     return(<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
-      title={"许可异常，请更换许可"}
       onlyOneBtn={true}
       cancelBtnVisible={false}
       confirmAction={()=>{this.exit.setDialogVisible(false)}}
@@ -337,6 +373,7 @@ class AppRoot extends Component {
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
     >
+    {this.renderExitDialogChildren()}
     </Dialog>)
   }
 
