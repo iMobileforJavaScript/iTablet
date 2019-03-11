@@ -25,6 +25,7 @@ import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
+import { getThemeAssets } from '../../assets'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -844,8 +845,8 @@ export default class MT_layerManager extends React.Component {
 
   renderSection = ({ section }) => {
     let image = section.visible
-      ? (image = require('../../assets/mapEdit/icon_spread.png'))
-      : (image = require('../../assets/mapEdit/icon_packUP.png'))
+      ? (image = getThemeAssets().publicAssets.list_section_packup)
+      : (image = getThemeAssets().publicAssets.list_section_spread)
     return (
       <TouchableOpacity
         style={{
