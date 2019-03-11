@@ -143,11 +143,13 @@ export default class FunctionToolbar extends React.Component {
       case ThemeType.LABEL:
         type = constants.THEME_UNIFY_LABEL
         break
+      case ThemeType.GRAPH:
+        type = constants.THEME_GRAPH_STYLE
+        break
       case ThemeType.GRIDRANGE:
       case ThemeType.GRIDUNIQUE:
       case ThemeType.CUSTOM:
       case ThemeType.DOTDENSITY:
-      case ThemeType.GRAPH:
       case ThemeType.GRADUATEDSYMBOL:
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return
@@ -158,13 +160,19 @@ export default class FunctionToolbar extends React.Component {
     }
 
     if (GLOBAL.toolBox) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        containerType: 'list',
-        isFullScreen: true,
-        isTouchProgress: false,
-        themeType: type,
-        showMenuDialog: true,
-      })
+      GLOBAL.toolBox.setVisible(
+        true,
+        type === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          isTouchProgress: false,
+          themeType: type,
+          showMenuDialog: true,
+        },
+      )
       GLOBAL.toolBox.showFullMap()
     }
 

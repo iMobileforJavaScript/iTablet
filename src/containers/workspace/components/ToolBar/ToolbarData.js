@@ -52,7 +52,10 @@ function getTabBarData(type, params = {}) {
     tabBarData = ShareData.getShareData(type, params)
   } else if (type === ConstToolType.MAP_THEME_CREATE) {
     tabBarData = ThemeMenuData.getThemeMapCreate(type, params)
-  } else if (type === ConstToolType.MAP_THEME_PARAM) {
+  } else if (
+    type === ConstToolType.MAP_THEME_PARAM ||
+    type === ConstToolType.MAP_THEME_PARAM_GRAPH
+  ) {
     tabBarData = ThemeMenuData.getThemeMapParam(type, params)
   } else if (type === ConstToolType.MAP_THEME_CREATE_BY_LAYER) {
     tabBarData = ThemeMenuData.getThemeMapCreateByLayer(type, params)

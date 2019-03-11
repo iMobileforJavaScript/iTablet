@@ -780,6 +780,46 @@ const labelMenuInfo = [
   },
 ]
 
+//统计专题图
+const graphMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeExpressions(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '计算方法',
+    selectKey: '计算方法',
+    btntitle: '计算方法',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeGradutedMode(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE,
+          '计算方法',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
 export {
   layerAdd,
   BotMap,
@@ -792,4 +832,5 @@ export {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  graphMenuInfo,
 }

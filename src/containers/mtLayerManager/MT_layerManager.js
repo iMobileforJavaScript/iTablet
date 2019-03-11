@@ -452,19 +452,28 @@ export default class MT_layerManager extends React.Component {
         curThemeType = constants.THEME_UNIFY_LABEL
         // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
         break
+      case ThemeType.GRAPH:
+        curThemeType = constants.THEME_GRAPH_STYLE
+        break
       default:
         Toast.show('提示:当前图层暂不支持修改')
         break
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        containerType: 'list',
-        isFullScreen: true,
-        themeType: curThemeType,
-        isTouchProgress: false,
-        showMenuDialog: true,
-      })
+      GLOBAL.toolBox.setVisible(
+        true,
+        curThemeType === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          themeType: curThemeType,
+          isTouchProgress: false,
+          showMenuDialog: true,
+        },
+      )
       GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
       Toast.show('当前图层为:' + data.name)

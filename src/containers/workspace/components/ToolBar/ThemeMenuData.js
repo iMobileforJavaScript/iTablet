@@ -648,7 +648,15 @@ function getThemeMapParam(type, params) {
   _toolbarParams = params
   let data = [],
     buttons = []
-  if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
+  buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.MENU,
+    ToolbarBtnType.MENU_FLEX,
+    ToolbarBtnType.THEME_GRAPH_TYPE, //快速设置统计专题图类型
+    ToolbarBtnType.MENU_COMMIT,
+  ]
+  if (type === ConstToolType.MAP_THEME_PARAM_GRAPH) return { data, buttons }
+  if (type !== ConstToolType.MAP_THEME_PARAM) return { data: [], buttons: [] }
   buttons = [
     ToolbarBtnType.THEME_CANCEL,
     // ToolbarBtnType.THEME_MENU,
@@ -1648,6 +1656,17 @@ function getLabelColor() {
   return data
 }
 
+function getThemeGraphMenu() {
+  let buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.MENU_FLEX,
+    ToolbarBtnType.THEME_GRAPH_TYPE, //快速设置统计专题图类型
+    ToolbarBtnType.MENU_COMMIT,
+  ]
+  return buttons
+}
+
 function getThemeFourMenu() {
   let buttons = [
     ToolbarBtnType.THEME_CANCEL,
@@ -2166,6 +2185,316 @@ function getUniqueColorScheme() {
   return list
 }
 
+/**设置统计专题图类型 */
+function setThemeGraphType() {
+  return SThemeCartography.setThemeGraphType(_params)
+}
+
+function getThemeGraphType() {
+  let data = [
+    {
+      key: constants.THEME_GRAPH_AREA,
+      title: constants.THEME_GRAPH_AREA,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_area,
+      selectedImage: getThemeAssets().themeType.theme_graph_area,
+    },
+    {
+      key: constants.THEME_GRAPH_STEP,
+      title: constants.THEME_GRAPH_STEP,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_step,
+      selectedImage: getThemeAssets().themeType.theme_graph_step,
+    },
+    {
+      key: constants.THEME_GRAPH_LINE,
+      title: constants.THEME_GRAPH_LINE,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_line,
+      selectedImage: getThemeAssets().themeType.theme_graph_line,
+    },
+    {
+      key: constants.THEME_GRAPH_POINT,
+      title: constants.THEME_GRAPH_POINT,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_point,
+      selectedImage: getThemeAssets().themeType.theme_graph_point,
+    },
+    {
+      key: constants.THEME_GRAPH_BAR,
+      title: constants.THEME_GRAPH_BAR,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    },
+    {
+      key: constants.THEME_GRAPH_BAR3D,
+      title: constants.THEME_GRAPH_BAR3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    },
+    {
+      key: constants.THEME_GRAPH_PIE,
+      title: constants.THEME_GRAPH_PIE,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_pie,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    },
+    {
+      key: constants.THEME_GRAPH_PIE3D,
+      title: constants.THEME_GRAPH_PIE3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_pie3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    },
+    {
+      key: constants.THEME_GRAPH_ROSE,
+      title: constants.THEME_GRAPH_ROSE,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_rose,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    },
+    {
+      key: constants.THEME_GRAPH_ROSE3D,
+      title: constants.THEME_GRAPH_ROSE3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_rose3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    },
+    {
+      key: constants.THEME_GRAPH_STACK_BAR,
+      title: constants.THEME_GRAPH_STACK_BAR,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_stack_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    },
+    {
+      key: constants.THEME_GRAPH_STACK_BAR3D,
+      title: constants.THEME_GRAPH_STACK_BAR3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    },
+    {
+      key: constants.THEME_GRAPH_RING,
+      title: constants.THEME_GRAPH_RING,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_ring,
+      selectedImage: getThemeAssets().themeType.theme_graph_ring,
+    },
+  ]
+  return data
+}
+
+/**设置统计专题图统计值计算方法 */
+function setThemeGraphGraduatedMode() {
+  return SThemeCartography.setThemeGraphGraduatedMode(_params)
+}
+
+function getGraphThemeGradutedMode() {
+  let data = [
+    {
+      key: constants.THEME_GRAPH_GRADUATEDMODE_CONS_KEY,
+      title: constants.THEME_GRAPH_GRADUATEDMODE_CONS,
+      action: setThemeGraphGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_cons,
+      selectedImage: getThemeAssets().themeType.theme_graph_graduatedmode_cons,
+    },
+    {
+      key: constants.THEME_GRAPH_GRADUATEDMODE_LOG_KEY,
+      title: constants.THEME_GRAPH_GRADUATEDMODE_LOG,
+      action: setThemeGraphGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_log,
+      selectedImage: getThemeAssets().themeType.theme_graph_graduatedmode_log,
+    },
+    {
+      key: constants.THEME_GRAPH_GRADUATEDMODE_SQUARE_KEY,
+      title: constants.THEME_GRAPH_GRADUATEDMODE_SQUARE,
+      action: setThemeGraphGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_square,
+      selectedImage: getThemeAssets().themeType
+        .theme_graph_graduatedmode_square,
+    },
+  ]
+  return data
+}
+
+/**
+ * 统计专题图颜色方案
+ */
+function getThemeGraphColorScheme() {
+  let list = [
+    {
+      key: 'CA_Red Rose',
+      colorSchemeName: 'CA_Red Rose',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BA_Blue.png'),
+    },
+    {
+      key: 'CB_Childish',
+      colorSchemeName: 'CB_Childish',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BB_Green.png'),
+    },
+    {
+      key: 'CC_Blue-Yellow',
+      colorSchemeName: 'CC_Blue-Yellow',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BC_Orange.png'),
+    },
+    {
+      key: 'CD_Concise',
+      colorSchemeName: 'CD_Concise',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BD_Pink.png'),
+    },
+    {
+      key: 'CE_Reposeful',
+      colorSchemeName: 'CE_Reposeful',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CA_Red_Rose.png'),
+    },
+    {
+      key: 'CF_Home',
+      colorSchemeName: 'CF_Home',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CB_Blue_and_Yellow.png'),
+    },
+    {
+      key: 'CG_Cold',
+      colorSchemeName: 'CG_Cold',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CC_Pink_and_Green.png'),
+    },
+    {
+      key: 'CH_Naive',
+      colorSchemeName: 'CH_Naive',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CD_Fresh.png'),
+    },
+    {
+      key: 'DA_Limber',
+      colorSchemeName: 'DA_Limber',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DB_Field',
+      colorSchemeName: 'DB_Field',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DB_Common.png'),
+    },
+    {
+      key: 'DC_Dressy',
+      colorSchemeName: 'DC_Dressy',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DC_Bright.png'),
+    },
+    {
+      key: 'DD_Set',
+      colorSchemeName: 'DD_Set',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DD_Warm.png'),
+    },
+    {
+      key: 'DE_Shock',
+      colorSchemeName: 'DE_Shock',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DE_Set.png'),
+    },
+    {
+      key: 'DF_Summer',
+      colorSchemeName: 'DF_Summer',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DF_Pastel.png'),
+    },
+    {
+      key: 'DG_Common',
+      colorSchemeName: 'DG_Common',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DG_Grass.png'),
+    },
+    {
+      key: 'DH_Red-Blue',
+      colorSchemeName: 'DH_Red-Blue',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EA_Sin_ColorScheme8.png'),
+    },
+    {
+      key: 'EA_Orange',
+      colorSchemeName: 'EA_Orange',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EB_Sweet.png'),
+    },
+    {
+      key: 'EB_Cold',
+      colorSchemeName: 'EB_Cold',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EC_Dusk.png'),
+    },
+    {
+      key: 'EC_Distinct',
+      colorSchemeName: 'EC_Distinct',
+      colorScheme: require('../../../../assets/uniqueColorScheme/ED_Pastel.png'),
+    },
+    {
+      key: 'ED_Pastal',
+      colorSchemeName: 'ED_Pastal',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EE_Lake.png'),
+    },
+    {
+      key: 'EE_Grass',
+      colorSchemeName: 'EE_Grass',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EF_Grass.png'),
+    },
+    {
+      key: 'EF_Blind',
+      colorSchemeName: 'EF_Blind',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EG_Sin_ColorScheme1.png'),
+    },
+    {
+      key: 'EG_Passion',
+      colorSchemeName: 'EG_Passion',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EH_Sin_ColorScheme4.png'),
+    },
+    {
+      key: 'EH_Amazing',
+      colorSchemeName: 'EH_Amazing',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EI_Sin_ColorScheme6.png'),
+    },
+    {
+      key: 'HA_Calm',
+      colorSchemeName: 'HA_Calm',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EJ_Sin_ColorScheme7.png'),
+    },
+    {
+      key: 'HB_Distance',
+      colorSchemeName: 'HB_Distance',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Red-Yellow-Blue.png'),
+    },
+    {
+      key: 'HC_Exotic',
+      colorSchemeName: 'HC_Exotic',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Blue-Yellow-Red.png'),
+    },
+    {
+      key: 'HD_Luck',
+      colorSchemeName: 'HD_Luck',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+    },
+    {
+      key: 'HE_Moist',
+      colorSchemeName: 'HE_Moist',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+    },
+    {
+      key: 'HF_Warm',
+      colorSchemeName: 'HF_Warm',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+    },
+  ]
+  return list
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -2184,4 +2513,9 @@ export default {
   setLayerNameCreateTheme,
   getLayerNameCreateTheme,
   getThemeMapStartCreate,
+  getThemeGraphMenu,
+  getThemeGraphType,
+  getGraphThemeGradutedMode,
+  setThemeGraphGraduatedMode,
+  getThemeGraphColorScheme,
 }

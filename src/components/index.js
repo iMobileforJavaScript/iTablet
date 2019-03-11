@@ -40,6 +40,7 @@ import SaveMapNameDialog from './SaveMapNameDialog'
 import ColorTableList from './ColorTableList'
 import Input from './Input'
 import SearchBar from './SearchBar'
+import HorizontalTableList from './HorizontalTableList'
 
 export {
   Container,
@@ -89,4 +90,5 @@ export {
   ColorBtn,
   Input,
   SearchBar,
+  HorizontalTableList,
 }
