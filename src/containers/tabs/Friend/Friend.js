@@ -19,7 +19,6 @@ import { getThemeAssets } from '../../../assets'
 import FriendMessage from './FriendMessage'
 import FriendGroup from './FriendGroup'
 import FriendList from './FriendList'
-//import AddFriend from './AddFriend'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add

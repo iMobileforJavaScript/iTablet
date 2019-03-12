@@ -35,7 +35,7 @@ import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
-import { Dialog } from './src/components'
+//import { Dialog } from './src/components'
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({

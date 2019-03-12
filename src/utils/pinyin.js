@@ -632,11 +632,11 @@ var PinYin = {
  * @param str 判断中英文
  * @returns {boolean} 中文返回true，其他返回false
  */
-// eslint-disable-next-line
 export function isChinese(str) {
-  // var entryVal = str
-  // var cnChar = entryVal.match(/[^\x00-\x80]/g)
-  // if (cnChar != null && cnChar.length > 0) return true
+  var entryVal = str
+  // eslint-disable-next-line
+  var cnChar = entryVal.match(/[^\x00-\x80]/g)
+  if (cnChar != null && cnChar.length > 0) return true
   return false
 }
 
