@@ -1,11 +1,11 @@
 import publicAssets from './public'
 import tabBar from './tabBar'
 import attribute from './attribute'
-import friend from './friend'
+import themeType from './themeType'
 
 export default {
   publicAssets,
   tabBar,
   attribute,
-  friend,
+  themeType,
 }

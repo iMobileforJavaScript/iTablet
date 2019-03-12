@@ -103,6 +103,12 @@ export default class protocol extends Component {
         }
         title = '服务协议'
         break
+      case 'superMapForum':
+        source = {
+          uri: `https://ask.supermap.com/`,
+        }
+        title = '超图论坛'
+        break
       default:
         break
     }

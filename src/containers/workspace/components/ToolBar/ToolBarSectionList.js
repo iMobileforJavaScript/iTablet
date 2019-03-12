@@ -28,6 +28,8 @@ export default class ToolBarSectionList extends React.Component {
     headerAction?: () => {},
     device: Object,
     layerManager?: boolean,
+    selectList: Array,
+    listSelectableAction?: () => {}, //多选刷新列表时调用
   }
 
   static defaultProps = {
@@ -39,7 +41,7 @@ export default class ToolBarSectionList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectList: [],
+      selectList: props.selectList ? props.selectList : [],
       sections: props.sections,
       sectionSelected: true,
     }
@@ -51,7 +53,7 @@ export default class ToolBarSectionList extends React.Component {
     ) {
       this.setState({
         sections: this.props.sections,
-        selectList: [],
+        selectList: this.props.selectList ? this.props.selectList : [],
       })
     }
   }
@@ -78,14 +80,16 @@ export default class ToolBarSectionList extends React.Component {
           selectList.push(
             sections[i].data[index].title ||
               sections[i].data[index].name ||
+              sections[i].data[index].expression ||
               sections[i].data[index].datasetName,
           )
         } else {
           for (let j = 0; j < selectList.length; j++) {
             if (
-              selectList[j].title === sections[i].data[index].title ||
-              selectList[j].name === sections[i].data[index].name ||
-              selectList[j].datasetName === sections[i].data[index].datasetName
+              selectList[j] === sections[i].data[index].title ||
+              selectList[j] === sections[i].data[index].name ||
+              selectList[j] === sections[i].data[index].expression ||
+              selectList[j] === sections[i].data[index].datasetName
             ) {
               selectList.splice(j, 1)
             }
@@ -94,10 +98,16 @@ export default class ToolBarSectionList extends React.Component {
         break
       }
     }
-    this.setState({
-      sections,
-      selectList,
-    })
+    this.setState(
+      {
+        sections,
+        selectList,
+      },
+      () => {
+        this.props.listSelectableAction &&
+          this.props.listSelectableAction({ selectList })
+      },
+    )
   }
 
   sectionSelect = section => {
@@ -188,7 +198,7 @@ export default class ToolBarSectionList extends React.Component {
     }
     if (item.isSystemField && this.state.sectionSelected) {
       //隐藏系统字段
-      return
+      return null
     }
     let selectImg = item.isSelected
       ? require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
@@ -286,11 +296,19 @@ export default class ToolBarSectionList extends React.Component {
     } else {
       return
     }
+    let style
+    if (item.image || item.datasetType) {
+      style = styles.imgItemInfo
+    } else if (item.expression && this.props.listSelectable) {
+      style = styles.itemInfo_expression_listSelectable
+    } else {
+      style = styles.itemInfo
+    }
     return (
       <Text
         style={[
-          item.image || item.datasetType ? styles.imgItemInfo : styles.itemInfo,
-          item.isSelected && !item.datasetType
+          style,
+          item.isSelected && !item.datasetType && !this.props.listSelectable
             ? { color: color.item_text_selected }
             : { color: color.item_separate_white },
         ]}
@@ -324,13 +342,15 @@ export default class ToolBarSectionList extends React.Component {
 
   /**字段表达式Item */
   getExpressionItem = item => {
-    return (
-      <Text
-        style={item.isSelected ? styles.selected_itemTitle : styles.itemTitle}
-      >
-        {item.expression}
-      </Text>
-    )
+    let style
+    if (item.expression && this.props.listSelectable) {
+      style = styles.listSelectable_selected_itemTitle
+    } else if (item.isSelected && !this.props.listSelectable) {
+      style = styles.selected_itemTitle
+    } else {
+      style = styles.itemTitle
+    }
+    return <Text style={style}>{item.expression}</Text>
   }
 
   /**数据集类型字段Item */
@@ -561,6 +581,14 @@ const styles = StyleSheet.create({
     color: color.item_text_selected,
     textAlignVertical: 'center',
   },
+  listSelectable_selected_itemTitle: {
+    marginLeft: scaleSize(20),
+    fontSize: size.fontSize.fontSizeMd,
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    color: color.font_color_white,
+    textAlignVertical: 'center',
+  },
   selectImgView: {
     width: scaleSize(80),
     height: scaleSize(80),
@@ -614,7 +642,7 @@ const styles = StyleSheet.create({
     color: color.font_color_white,
   },
   sectionSeparateViewStyle: {
-    height: scaleSize(1),
+    height: 1,
     marginHorizontal: 0,
     backgroundColor: color.item_separate_white,
   },
@@ -642,6 +670,16 @@ const styles = StyleSheet.create({
   itemInfo: {
     width: scaleSize(520),
     marginLeft: scaleSize(60),
+    marginTop: scaleSize(4),
+    fontSize: setSpText(16),
+    height: scaleSize(30),
+    backgroundColor: 'transparent',
+    textAlignVertical: 'center',
+    color: color.item_separate_white,
+  },
+  itemInfo_expression_listSelectable: {
+    width: scaleSize(520),
+    marginLeft: scaleSize(20),
     marginTop: scaleSize(4),
     fontSize: setSpText(16),
     height: scaleSize(30),

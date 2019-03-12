@@ -7,6 +7,7 @@
 import * as React from 'react'
 import { View, ScrollView } from 'react-native'
 import { ImageButton } from '../../../../components'
+import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import styles from './styles'
 
 export default class LayerTopBar extends React.Component {
@@ -70,7 +71,9 @@ export default class LayerTopBar extends React.Component {
     return (
       <ImageButton
         key={key}
-        containerStyle={styles.imgBtn}
+        containerStyle={styles.btn}
+        iconBtnStyle={styles.imgBtn}
+        titleStyle={enabled ? styles.enableBtnTitle : styles.btnTitle}
         icon={icon}
         title={title}
         direction={'row'}
@@ -80,11 +83,13 @@ export default class LayerTopBar extends React.Component {
     )
   }
 
-  renderTabBtn = ({ key, icon, title, action, enabled }) => {
+  renderTabBtn = ({ key, icon, title, action, enabled, style }) => {
     return (
       <ImageButton
         key={key}
-        containerStyle={styles.tabBtn}
+        containerStyle={[styles.btn, style]}
+        iconBtnStyle={styles.imgBtn}
+        titleStyle={styles.btnTitle}
         icon={icon}
         title={title}
         direction={'row'}
@@ -100,35 +105,36 @@ export default class LayerTopBar extends React.Component {
         {this.props.hasTabBtn &&
           this.renderTabBtn({
             icon: this.props.canLocated
-              ? require('../../../../assets/public/icon_upload_selected.png')
-              : require('../../../../assets/public/icon_upload_unselected.png'),
+              ? getThemeAssets().attribute.rightbar_tool_select_layerlist
+              : getThemeAssets().attribute.rightbar_tool_select_layerlist,
             key: '标签',
             action: this.tabsAction,
             enabled: this.props.canLocated,
+            style: styles.tabBtn,
           })}
         <ScrollView horizontal style={styles.rightList}>
           {this.renderBtn({
             icon: this.props.canLocated
-              ? require('../../../../assets/public/icon_upload_selected.png')
-              : require('../../../../assets/public/icon_upload_unselected.png'),
+              ? getThemeAssets().attribute.attribute_location
+              : getThemeAssets().attribute.attribute_location,
             key: '定位',
             title: '定位',
             action: this.locateAction,
             enabled: this.props.canLocated,
           })}
-          {this.renderBtn({
-            icon: this.props.canUndo
-              ? require('../../../../assets/public/icon_upload_selected.png')
-              : require('../../../../assets/public/icon_upload_unselected.png'),
-            key: '撤销',
-            title: '撤销',
-            action: this.undoAction,
-            enabled: this.props.canUndo,
-          })}
+          {/*{this.renderBtn({*/}
+          {/*icon: this.props.canUndo*/}
+          {/*? require('../../../../assets/public/icon_upload_selected.png')*/}
+          {/*: require('../../../../assets/public/icon_upload_unselected.png'),*/}
+          {/*key: '撤销',*/}
+          {/*title: '撤销',*/}
+          {/*action: this.undoAction,*/}
+          {/*enabled: this.props.canUndo,*/}
+          {/*})}*/}
           {this.renderBtn({
             icon: this.props.canRelated
-              ? require('../../../../assets/public/icon_upload_selected.png')
-              : require('../../../../assets/public/icon_upload_unselected.png'),
+              ? getThemeAssets().attribute.icon_attribute_browse
+              : getPublicAssets().attribute.icon_attribute_browse,
             key: '关联',
             title: '关联',
             action: this.relateAction,

@@ -54,7 +54,7 @@ export default StyleSheet.create({
   chooseColorContainer: {
     flex: 2,
     minHeight: scaleSize(60),
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderColor: color.title,
     padding: scaleSize(2),
     margin: scaleSize(10),

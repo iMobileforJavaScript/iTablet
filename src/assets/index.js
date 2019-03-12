@@ -14,4 +14,8 @@ function getThemeAssets() {
   return asset
 }
 
-export { getThemeAssets }
+function getPublicAssets() {
+  return require('./publicTheme').default
+}
+
+export { getThemeAssets, getPublicAssets }

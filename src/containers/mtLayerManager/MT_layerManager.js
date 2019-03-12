@@ -16,15 +16,16 @@ import {
 } from 'react-native'
 import { Container } from '../../components'
 import constants from '../workspace/constants'
-import { Toast, scaleSize } from '../../utils'
+import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, MAP_MODULE } from '../../constants'
+import { ConstToolType, MAP_MODULE, ConstPath } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
+import { getThemeAssets } from '../../assets'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -38,6 +39,7 @@ export default class MT_layerManager extends React.Component {
     setCurrentLayer: () => {},
     getLayers: () => {},
     closeMap: () => {},
+    clearAttributeHistory: () => {},
     device: Object,
     currentLayer: Object,
   }
@@ -45,7 +47,7 @@ export default class MT_layerManager extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      datasourceList: [],
+      // datasourceList: [],
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
@@ -56,49 +58,13 @@ export default class MT_layerManager extends React.Component {
 
   componentDidUpdate(prevProps) {
     let newState = {}
+    let dataList = []
     if (
       JSON.stringify(prevProps.currentLayer) !==
       JSON.stringify(this.props.currentLayer)
     ) {
       newState.selectLayer = this.props.currentLayer.caption
-      // this.setState({
-      //   selectLayer: this.props.currentLayer.caption,
-      // })
     }
-    // if (
-    //   this.props.layers.length > 0 &&
-    //   !LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].caption)
-    //
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'roadmap@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'satellite@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'terrain@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
-    // // this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'TrafficMap@BaiduMap' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'Standard@OpenStreetMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'CycleMap@OpenStreetMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'TransportMap@OpenStreetMaps' &&
-    // // this.props.layers[this.props.layers.length - 1] !==
-    // //   'quanguo@SuperMapCloud'
-    //
-    // ) {
-    //   (async function() {
-    //     await SMap.openDatasource(
-    //       ConstOnline.Google.DSParams,
-    //       GLOBAL.Type === constants.COLLECTION ? 1 : ConstOnline.Google.layerIndex,
-    //       false, false)
-    //     await this.props.getLayers()
-    //   }.bind(this)())
-    // }
     if (
       JSON.stringify(prevProps.layers) !== JSON.stringify(this.props.layers)
     ) {
@@ -111,46 +77,33 @@ export default class MT_layerManager extends React.Component {
       ) {
         baseData = [this.props.layers[this.props.layers.length - 1]]
       }
-      newState.data = [
-        {
-          title: '我的图层',
-          data: this.props.layers,
-          visible: true,
-        },
-        {
-          title: '我的底图',
-          data: baseData,
-          visible: true,
-        },
-        // {
-        //   title: '切换底图',
-        //   data: layerManagerData,
-        //   visible: true,
-        // },
-      ]
-      // this.setState({
-      //   data: [
-      //     {
-      //       title: '我的图层',
-      //       data: this.props.layers,
-      //       visible: true,
-      //     },
-      //     {
-      //       title: '我的底图',
-      //       data: baseData,
-      //       visible: true,
-      //     },
-      //     // {
-      //     //   title: '切换底图',
-      //     //   data: layerManagerData,
-      //     //   visible: true,
-      //     // },
-      //   ],
-      // })
-    }
-
-    if (Object.keys(newState).length > 0) {
-      this.setState(newState)
+      (async function() {
+        dataList = await SMap.getUDBName(
+          ConstPath.AndroidPath +
+            ConstPath.CustomerPath +
+            'Data/Lable/Lable.udb',
+        )
+        newState.data = [
+          {
+            title: '我的图层',
+            data: this.props.layers,
+            visible: true,
+          },
+          {
+            title: '我的底图',
+            data: baseData,
+            visible: true,
+          },
+          {
+            title: '我的标注',
+            data: dataList,
+            visible: true,
+          },
+        ]
+        if (Object.keys(newState).length > 0) {
+          this.setState(newState)
+        }
+      }.bind(this)())
     }
   }
 
@@ -158,39 +111,7 @@ export default class MT_layerManager extends React.Component {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     ;(async function() {
-      // if (
-      //   this.props.layers.length > 0 &&
-      //     !LayerUtils.isBaseLayer(this.props.layers[this.props.layers.length - 1].name)
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'roadmap@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'satellite@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'terrain@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'hybrid@GoogleMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'vec@TD' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'cva@TDWZ' &&
-      // // this.props.layers[this.props.layers.length - 1] !== 'img@TDYXM' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'TrafficMap@BaiduMap' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'Standard@OpenStreetMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'CycleMap@OpenStreetMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'TransportMap@OpenStreetMaps' &&
-      // // this.props.layers[this.props.layers.length - 1] !==
-      // //   'quanguo@SuperMapCloud'
-      // ) {
-      //   await SMap.openDatasource(
-      //     ConstOnline.Google.DSParams,
-      //     GLOBAL.Type === constants.COLLECTION ? 1 : ConstOnline.Google.layerIndex,
-      //     false, false)
-      //   // await this.props.getLayers()
-      // }
-
-      // this.setRefreshing(true)
-      this.getData()
+      this.getData(true)
     }.bind(this)())
   }
 
@@ -207,21 +128,11 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  getData = async () => {
+  getData = async (isInit = false) => {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
-      let layers = await this.props.getLayers()
-      // this.map = await this.mapControl.getMap()
-      // let layerNameArr = await this.map.getLayersByType()
-      // let layerNameArr = await SMap.getLayersByType()
-      // for (let i = 0; i < layerNameArr.length; i++) {
-      //   layerNameArr[i].key = layerNameArr[i].name
-      //   if (layerNameArr[i].isEditable) {
-      //     this.props.setEditLayer && this.props.setEditLayer(layerNameArr[i])
-      //   }
-      // }
-      // await SMap.setAction(Action.SELECT)
+      let layers = isInit ? this.props.layers : await this.props.getLayers()
 
       if (
         layers.length > 0 &&
@@ -239,12 +150,16 @@ export default class MT_layerManager extends React.Component {
       }
 
       let baseMap = []
+      let dataList = []
       if (
         layers.length > 0 &&
         LayerUtils.isBaseLayer(layers[layers.length - 1].name)
       ) {
         baseMap = [layers[layers.length - 1]]
       }
+      dataList = await SMap.getUDBName(
+        ConstPath.AndroidPath + ConstPath.CustomerPath + 'Data/Lable/Lable.udb',
+      )
       this.setState({
         data: [
           { title: '我的图层', data: layers, visible: true },
@@ -253,7 +168,7 @@ export default class MT_layerManager extends React.Component {
             data: baseMap,
             visible: true,
           },
-          // { title: '切换底图', data: layerManagerData, visible: true },
+          { title: '我的标注', data: dataList, visible: true },
         ],
         selectLayer: this.props.currentLayer.caption,
         refreshing: false,
@@ -491,7 +406,15 @@ export default class MT_layerManager extends React.Component {
   }
 
   onAllPressRow = async ({ data }) => {
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        // 切换地图，清除历史记录
+        if (
+          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
+        ) {
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        }
+      })
     this.setState({
       selectLayer: data.caption,
     })
@@ -507,21 +430,23 @@ export default class MT_layerManager extends React.Component {
   mapEdit = data => {
     SMap.setLayerEditable(data.path, true)
     if (data.type === 83) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-        containerType: 'list',
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[4],
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
+          containerType: 'list',
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[4],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.THEME_HEIGHT[3],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else {
       Toast.show('当前图层无法设置风格')
@@ -550,27 +475,44 @@ export default class MT_layerManager extends React.Component {
         curThemeType = constants.THEME_UNIFY_LABEL
         // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
         break
+      case ThemeType.GRAPH:
+        curThemeType = constants.THEME_GRAPH_STYLE
+        break
       default:
         Toast.show('提示:当前图层暂不支持修改')
         break
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        containerType: 'list',
-        isFullScreen: true,
-        themeType: curThemeType,
-        isTouchProgress: false,
-        showMenuDialog: true,
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox.setVisible(
+        true,
+        curThemeType === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          themeType: curThemeType,
+          isTouchProgress: false,
+          showMenuDialog: true,
+        },
+      )
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
       Toast.show('当前图层为:' + data.name)
     }
   }
 
   onPressRow = async ({ data }) => {
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        // 切换地图，清除历史记录
+        if (
+          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
+        ) {
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        }
+      })
     if (GLOBAL.Type === constants.MAP_EDIT) {
       if (data.themeType <= 0) {
         this.mapEdit(data)
@@ -593,6 +535,13 @@ export default class MT_layerManager extends React.Component {
     this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_STYLE, {
       height: ConstToolType.TOOLBAR_HEIGHT[0],
       layerdata: data,
+    })
+  }
+
+  taggingTool = title => {
+    this.toolBox.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+      height: ConstToolType.TOOLBAR_HEIGHT[1],
+      layerdata: title,
     })
   }
 
@@ -760,104 +709,123 @@ export default class MT_layerManager extends React.Component {
     if (section.visible) {
       if (item) {
         let action
-        if (section.title === '我的图层') {
-          action = this.onToolPress
-          if (
-            this.props.layers.length > 0 &&
-            item.name === this.props.layers[this.props.layers.length - 1].name
-          ) {
-            if (
-              LayerUtils.isBaseLayer(item.name)
-              // item.name === 'roadmap@GoogleMaps' ||
-              // item.name === 'satellite@GoogleMaps' ||
-              // item.name === 'terrain@GoogleMaps' ||
-              // item.name === 'hybrid@GoogleMaps' ||
-              // item.name === 'vec@TD' ||
-              // item.name === 'cva@TDWZ' ||
-              // item.name === 'img@TDYXM' ||
-              // item.name === 'TrafficMap@BaiduMap' ||
-              // item.name === 'Standard@OpenStreetMaps' ||
-              // item.name === 'CycleMap@OpenStreetMaps' ||
-              // item.name === 'TransportMap@OpenStreetMaps' ||
-              // item.name === 'quanguo@SuperMapCloud'
-            )
-              return true
-          }
-          if (
-            this.props.layers.length > 1 &&
-            item.name === this.props.layers[this.props.layers.length - 2].name
-          ) {
-            if (
-              LayerUtils.isBaseLayer(item.name)
-              // item.name === 'roadmap@GoogleMaps' ||
-              // item.name === 'satellite@GoogleMaps' ||
-              // item.name === 'terrain@GoogleMaps' ||
-              // item.name === 'hybrid@GoogleMaps' ||
-              // item.name === 'vec@TD' ||
-              // item.name === 'cva@TDWZ' ||
-              // item.name === 'img@TDYXM' ||
-              // item.name === 'TrafficMap@BaiduMap' ||
-              // item.name === 'Standard@OpenStreetMaps' ||
-              // item.name === 'CycleMap@OpenStreetMaps' ||
-              // item.name === 'TransportMap@OpenStreetMaps' ||
-              // item.name === 'quanguo@SuperMapCloud'
-            )
-              return true
-          }
-        } else {
-          action = this.onToolBasePress
-          if (
-            !LayerUtils.isBaseLayer(item.name)
-            // item.name !== 'roadmap@GoogleMaps' &&
-            // item.name !== 'satellite@GoogleMaps' &&
-            // item.name !== 'terrain@GoogleMaps' &&
-            // item.name !== 'hybrid@GoogleMaps' &&
-            // item.name !== 'vec@TD' &&
-            // item.name !== 'cva@TDWZ' &&
-            // item.name !== 'img@TDYXM' &&
-            // item.name !== 'TrafficMap@BaiduMap' &&
-            // item.name !== 'Standard@OpenStreetMaps' &&
-            // item.name !== 'CycleMap@OpenStreetMaps' &&
-            // item.name !== 'TransportMap@OpenStreetMaps' &&
-            // item.name !== 'quanguo@SuperMapCloud'
+        if (section.title === '我的标注') {
+          return (
+            <TouchableOpacity
+              style={{
+                height: scaleSize(80),
+                padding: scaleSize(6),
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}
+            >
+              <View
+                style={{
+                  marginLeft: scaleSize(6),
+                  marginRight: scaleSize(6),
+                  height: scaleSize(50),
+                  width: scaleSize(100),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={{
+                    height: scaleSize(40),
+                    width: scaleSize(40),
+                  }}
+                  source={require('../../assets/map/icon-cad_black.png')}
+                />
+              </View>
+              <View style={{ flex: 1, marginLeft: scaleSize(30) }}>
+                <Text
+                  style={{
+                    fontSize: setSpText(24),
+                    color: color.black,
+                    backgroundColor: 'transparent',
+                  }}
+                >
+                  {item.title}
+                </Text>
+              </View>
+              <TouchableOpacity
+                style={{
+                  height: scaleSize(50),
+                  width: scaleSize(100),
+                  marginLeft: scaleSize(6),
+                  marginRight: scaleSize(6),
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                onPress={() => this.taggingTool(item.title)}
+              >
+                <Image
+                  resizeMode={'contain'}
+                  style={{
+                    height: scaleSize(60),
+                    width: scaleSize(60),
+                  }}
+                  source={require('../../assets/function/icon_shallow_more_black.png')}
+                />
+              </TouchableOpacity>
+            </TouchableOpacity>
           )
-            return true
+        } else {
+          if (section.title === '我的图层') {
+            action = this.onToolPress
+            if (
+              this.props.layers.length > 0 &&
+              item.name === this.props.layers[this.props.layers.length - 1].name
+            ) {
+              if (LayerUtils.isBaseLayer(item.name)) return true
+            }
+            if (
+              this.props.layers.length > 1 &&
+              item.name === this.props.layers[this.props.layers.length - 2].name
+            ) {
+              if (LayerUtils.isBaseLayer(item.name)) return true
+            }
+          } else {
+            action = this.onToolBasePress
+            if (!LayerUtils.isBaseLayer(item.name)) return true
+          }
+          return (
+            <LayerManager_item
+              key={item.id}
+              // sectionID={sectionID}
+              // rowID={item.index}
+              ref={ref => {
+                if (!this.itemRefs) {
+                  this.itemRefs = {}
+                }
+                this.itemRefs[item.name] = ref
+                return this.itemRefs[item.name]
+              }}
+              layer={item.layer}
+              // map={this.map}
+              data={item}
+              isClose={this.state.currentOpenItemName !== item.name}
+              mapControl={this.mapControl}
+              setLayerVisible={this.setLayerVisible}
+              onOpen={data => {
+                // data, sectionID, rowID
+                if (this.state.currentOpenItemName !== data.name) {
+                  let item = this.itemRefs[this.state.currentOpenItemName]
+                  item && item.close()
+                }
+                this.setState({
+                  currentOpenItemName: data.name,
+                })
+              }}
+              selectLayer={this.state.selectLayer}
+              onPress={this.onPressRow}
+              onAllPress={this.onAllPressRow}
+              onArrowPress={this.getChildList}
+              onToolPress={action}
+            />
+          )
         }
-        return (
-          <LayerManager_item
-            key={item.id}
-            // sectionID={sectionID}
-            // rowID={item.index}
-            ref={ref => {
-              if (!this.itemRefs) {
-                this.itemRefs = {}
-              }
-              this.itemRefs[item.name] = ref
-              return this.itemRefs[item.name]
-            }}
-            layer={item.layer}
-            // map={this.map}
-            data={item}
-            isClose={this.state.currentOpenItemName !== item.name}
-            mapControl={this.mapControl}
-            setLayerVisible={this.setLayerVisible}
-            onOpen={data => {
-              // data, sectionID, rowID
-              if (this.state.currentOpenItemName !== data.name) {
-                let item = this.itemRefs[this.state.currentOpenItemName]
-                item && item.close()
-              }
-              this.setState({
-                currentOpenItemName: data.name,
-              })
-            }}
-            selectLayer={this.state.selectLayer}
-            onPress={this.onPressRow}
-            onAllPress={this.onAllPressRow}
-            onArrowPress={this.getChildList}
-            onToolPress={action}
-          />
-        )
       } else {
         return <View />
       }
@@ -877,8 +845,8 @@ export default class MT_layerManager extends React.Component {
 
   renderSection = ({ section }) => {
     let image = section.visible
-      ? (image = require('../../assets/mapEdit/icon_spread.png'))
-      : (image = require('../../assets/mapEdit/icon_packUP.png'))
+      ? (image = getThemeAssets().publicAssets.list_section_packup)
+      : (image = getThemeAssets().publicAssets.list_section_spread)
     return (
       <TouchableOpacity
         style={{
@@ -949,7 +917,7 @@ export default class MT_layerManager extends React.Component {
           style={{
             flexDirection: 'column',
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.bgG,
           }}
         />
@@ -966,7 +934,7 @@ export default class MT_layerManager extends React.Component {
         style={{
           flexDirection: 'column',
           width: '100%',
-          height: scaleSize(1),
+          height: 1,
           backgroundColor: color.bgG,
         }}
       />

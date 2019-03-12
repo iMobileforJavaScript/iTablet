@@ -1,6 +1,7 @@
 /** 地图按钮类型 **/
 export default {
   CANCEL: 'cancel', // 取消
+  CANCEL_2: 'cancel_2', // 取消，先执行Action，再隐藏Toolbar
   FLEX: 'flex', // 伸缩
   FLEX_FULL: 'flex_full', // 伸缩(展开全屏/收缩取消全屏)
   STYLE: 'style', // 样式
@@ -32,6 +33,7 @@ export default {
   THEME_FLEX: 'theme_flex',
   THEME_COMMIT: 'theme_commit',
   THEME_ADD_BACK: 'theme_add_back', //添加->返回上一级
+  THEME_GRAPH_TYPE: 'theme_graph_type',
   MAP3DSHARE: 'map3dshare',
 
   MENU_COMMIT: 'menu_commit',

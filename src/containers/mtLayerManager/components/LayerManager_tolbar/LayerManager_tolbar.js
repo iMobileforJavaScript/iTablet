@@ -9,6 +9,7 @@ import {
   layerThemeSettings,
   layereditsetting,
   baseListData,
+  taggingData,
 } from './LayerToolbarData'
 import {
   View,
@@ -106,6 +107,9 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.MAP3D_BASE:
         data = baseListData
+        break
+      case ConstToolType.MAP_EDIT_TAGGING:
+        data = taggingData
         break
     }
     return data
@@ -294,6 +298,22 @@ export default class LayerManager_tolbar extends React.Component {
       }
       this.props.getLayers()
       this.setVisible(false)
+    } else if (section.title === '导入标注') {
+      (async function() {
+        await SMap.openTaggingDataset(this.state.layerdata)
+        await this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
+      }.bind(this)())
+      this.setVisible(false)
+    } else if (section.title === '删除标注') {
+      (async function() {
+        await SMap.removeTaggingDataset(this.state.layerdata)
+        await this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
+      }.bind(this)())
+      this.setVisible(false)
     } else if (section.title === '设置为当前图层') {
       if (this.state.type === ConstToolType.MAP3D_LAYER3DSELECT) {
         this.cb && this.cb(this.layer3dItem)
@@ -326,17 +346,18 @@ export default class LayerManager_tolbar extends React.Component {
       ) {
         //由图层创建专题图(点，线，面)
         this.setVisible(false)
-        GLOBAL.toolBox.setVisible(
-          true,
-          ConstToolType.MAP_THEME_CREATE_BY_LAYER,
-          {
-            isFullScreen: true,
-            column: 3,
-            height: ConstToolType.NEWTHEME_HEIGHT[1],
-            createThemeByLayer: this.state.layerdata.name,
-          },
-        )
-        GLOBAL.toolBox.showFullMap()
+        GLOBAL.toolBox &&
+          GLOBAL.toolBox.setVisible(
+            true,
+            ConstToolType.MAP_THEME_CREATE_BY_LAYER,
+            {
+              isFullScreen: true,
+              column: 4,
+              height: ConstToolType.THEME_HEIGHT[5],
+              createThemeByLayer: this.state.layerdata.name,
+            },
+          )
+        GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
         // eslint-disable-next-line react/prop-types
         this.props.navigation.navigate('MapView')
       } else {
@@ -457,7 +478,7 @@ export default class LayerManager_tolbar extends React.Component {
           style={{
             flexDirection: 'column',
             width: '100%',
-            height: scaleSize(1),
+            height: 1,
             backgroundColor: color.bgG,
           }}
         />
@@ -470,6 +491,9 @@ export default class LayerManager_tolbar extends React.Component {
     switch (this.state.containerType) {
       case list:
         switch (this.state.type) {
+          case ConstToolType.MAP_EDIT_TAGGING:
+            box = this.renderList()
+            break
           case ConstToolType.MAP_STYLE:
             box = this.renderList()
             break

@@ -32,7 +32,7 @@ import {
   SaveDialog,
   InputDialog,
 } from '../../../../components'
-import { Toast, scaleSize, jsonUtil } from '../../../../utils'
+import { Toast, jsonUtil } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
@@ -87,6 +87,7 @@ export default class MapView extends React.Component {
     getMapSetting: PropTypes.func,
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
+    clearAttributeHistory: PropTypes.func,
   }
 
   constructor(props) {
@@ -127,7 +128,7 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
-      changeLayerBtnBottom: scaleSize(200),
+      // changeLayerBtnBottom: scaleSize(200),
     }
 
     this.closeInfo = [
@@ -165,9 +166,12 @@ export default class MapView extends React.Component {
   componentDidMount() {
     GLOBAL.SaveMapView && GLOBAL.SaveMapView.setTitle(SAVE_TITLE)
     this.container && this.container.setLoading(true, '地图加载中')
-    this.setState({
-      showMap: true,
-    })
+    let timer = setTimeout(() => {
+      this.setState({
+        showMap: true,
+      })
+      clearTimeout(timer)
+    }, 800)
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     this.clearData()
@@ -190,20 +194,32 @@ export default class MapView extends React.Component {
       JSON.stringify(this.props.currentLayer)
     ) {
       GLOBAL.currentLayer = this.props.currentLayer
-      this.setState({
-        currentLayer: this.props.currentLayer,
-      })
+      // this.setState({
+      //   currentLayer: this.props.currentLayer,
+      // })
     }
     // 显示切换图层按钮
-    if (this.props.editLayer.name && this.popList) {
-      let bottom = this.popList.state.subPopShow
-        ? scaleSize(400)
-        : scaleSize(200)
-      bottom !== this.state.changeLayerBtnBottom &&
-        this.setState({
-          changeLayerBtnBottom: bottom,
-        })
-    }
+    // if (this.props.editLayer.name && this.popList) {
+    //   let bottom = this.popList.state.subPopShow
+    //     ? scaleSize(400)
+    //     : scaleSize(200)
+    //   bottom !== this.state.changeLayerBtnBottom &&
+    //     this.setState({
+    //       changeLayerBtnBottom: bottom,
+    //     })
+    // }
+
+    // if (
+    //   JSON.stringify(this.props.nav) !== JSON.stringify(prevProps.nav) &&
+    //   (
+    //     prevProps.nav.routes &&
+    //     this.props.nav.routes.length < prevProps.nav.routes.length &&
+    //     prevProps.nav.routes[prevProps.nav.routes.length - 1].routeName === 'LayerSelectionAttribute'
+    //   ) &&
+    //   this.checkMapViewIsUnique()
+    // ) {
+    //   this.resetMapView()
+    // }
   }
 
   componentWillUnmount() {
@@ -212,9 +228,46 @@ export default class MapView extends React.Component {
     }
   }
 
+  /** 检测MapView在router中是否唯一 **/
+  checkMapViewIsUnique = () => {
+    let mapViewNums = 0
+    if (this.props.nav.routes) {
+      for (let i = 0; i < this.props.nav.routes.length; i++) {
+        if (
+          this.props.nav.routes[i].routeName === 'MapView' ||
+          this.props.nav.routes[i].routeName === 'MapTabs'
+        ) {
+          mapViewNums++
+        }
+      }
+    } else {
+      mapViewNums++
+    }
+
+    let current = this.props.nav.routes[this.props.nav.routes.length - 1]
+
+    return (
+      mapViewNums === 1 &&
+      (current.routeName === 'MapView' || current.routeName === 'MapTabs')
+    )
+  }
+
+  resetMapView = () => {
+    this.setState(
+      {
+        showMap: false,
+      },
+      () => {
+        this.setState({
+          showMap: true,
+        })
+      },
+    )
+  }
+
   clearData = () => {
     this.props.setEditLayer(null)
-    this.props.setSelection(null)
+    // this.props.setSelection(null)
     this.props.setBufferSetting(null)
     this.props.setOverlaySetting(null)
     this.props.setAnalystLayer(null)
@@ -955,6 +1008,7 @@ export default class MapView extends React.Component {
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
         user={this.props.user}
+        map={this.props.map}
         symbol={this.props.symbol}
         layers={this.props.currentLayer}
         addGeometrySelectedListener={this._addGeometrySelectedListener}

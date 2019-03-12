@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native'
 import { scaleSize } from '../../../../utils'
-import { size } from '../../../../styles'
+import { size, color } from '../../../../styles'
 
 export default StyleSheet.create({
   container: {
@@ -36,5 +36,21 @@ export default StyleSheet.create({
     color: '#303030',
     marginTop: scaleSize(100),
   },
-  border: {},
+  headerBtn: {
+    height: scaleSize(60),
+    width: scaleSize(60),
+    paddingLeft: scaleSize(15),
+  },
+  editControllerView: {
+    flexDirection: 'row',
+    height: scaleSize(100),
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: color.contentColorWhite,
+  },
+  button: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })

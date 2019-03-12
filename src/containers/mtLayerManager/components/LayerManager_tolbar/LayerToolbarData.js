@@ -4,10 +4,11 @@ const layersetting = [
     data: [],
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
-  // {
-  //   title: '可见比例尺范围',
-  //   data: [],
-  // },
+  {
+    title: '可见比例尺范围',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_range.png'),
+  },
   {
     title: '图层风格',
     data: [],
@@ -95,6 +96,11 @@ const layerThemeSetting = [
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
+    title: '可见比例尺范围',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_range.png'),
+  },
+  {
     title: '新建专题图',
     data: [],
     image: require('../../../../assets/layerToolbar/theme_new.png'),
@@ -136,6 +142,11 @@ const layerThemeSettings = [
     title: '设置为当前图层',
     data: [],
     image: require('../../../../assets/layerToolbar/layer_this.png'),
+  },
+  {
+    title: '可见比例尺范围',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_range.png'),
   },
   {
     title: '修改专题图',
@@ -207,6 +218,11 @@ const layerCollectionSetting = [
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
+    title: '可见比例尺范围',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_range.png'),
+  },
+  {
     title: '重命名',
     data: [],
     image: require('../../../../assets/layerToolbar/layer_rename.png'),
@@ -238,6 +254,19 @@ const layerCollectionSetting = [
   },
 ]
 
+const taggingData = [
+  {
+    title: '导入标注',
+    data: [],
+    image: require('../../../../assets/function/icon_function_Tagging.png'),
+  },
+  {
+    title: '删除标注',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_remove.png'),
+  },
+]
+
 export {
   layersetting,
   layerThemeSetting,
@@ -246,4 +275,5 @@ export {
   layerThemeSettings,
   layereditsetting,
   baseListData,
+  taggingData,
 }

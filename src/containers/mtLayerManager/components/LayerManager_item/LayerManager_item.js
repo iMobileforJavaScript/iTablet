@@ -13,6 +13,7 @@ import NavigationService from '../../../NavigationService'
 import SwipeOut from 'react-native-swipeout'
 import styles from './styles'
 import { color } from '../../../../styles'
+import { getThemeAssets } from '../../../../assets'
 
 const LAYER_GROUP = 'layerGroup'
 
@@ -411,6 +412,9 @@ export default class LayerManager_item extends React.Component {
       case ThemeType.LABEL: // 标签专题图
         icon = require('../../../../assets/map/layers_theme_unify_label_style.png')
         break
+      case ThemeType.GRAPH: // 统计专题图
+        icon = getThemeAssets().themeType.theme_graph_type_selected
+        break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
         break
@@ -429,6 +433,9 @@ export default class LayerManager_item extends React.Component {
         break
       case ThemeType.LABEL: // 标签专题图
         icon = require('../../../../assets/map/layers_theme_unify_label_style_black.png')
+        break
+      case ThemeType.GRAPH: // 统计专题图
+        icon = getThemeAssets().themeType.theme_graph_type
         break
       default:
         icon = require('../../../../assets/public/mapLoad.png')

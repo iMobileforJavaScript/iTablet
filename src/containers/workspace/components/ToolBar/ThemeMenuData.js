@@ -4,6 +4,7 @@ import { SThemeCartography } from 'imobile_for_reactnative'
 import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType, ConstPath, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
+import { getThemeAssets } from '../../../../assets'
 
 let _toolbarParams = {}
 
@@ -37,11 +38,11 @@ function showDatasetsList() {
           isFullScreen: true,
           isTouchProgress: false,
           showMenuDialog: false,
+          listSelectable: false, //单选框
           height:
             _toolbarParams.device.orientation === 'LANDSCAPE'
               ? ConstToolType.THEME_HEIGHT[3]
               : ConstToolType.THEME_HEIGHT[5],
-          // listSelectable: true, //单选框
           data,
           buttons: [ToolbarBtnType.THEME_CANCEL],
         },
@@ -56,7 +57,17 @@ function setLayerNameCreateTheme(createThemeByLayer) {
   _createThemeByLayer = createThemeByLayer
 }
 
-function showExpressionList() {
+function getLayerNameCreateTheme() {
+  return _createThemeByLayer
+}
+
+function showExpressionList(type) {
+  let listSelectable = false
+  if (type === 'ThemeGraph') {
+    listSelectable = true
+  } else {
+    listSelectable = false
+  }
   SThemeCartography.getThemeExpressionByLayerName(_createThemeByLayer).then(
     getdata => {
       let dataset = getdata.dataset
@@ -84,13 +95,15 @@ function showExpressionList() {
             isFullScreen: true,
             isTouchProgress: false,
             showMenuDialog: false,
+            listSelectable: listSelectable, //单选框
             height:
               _toolbarParams.device.orientation === 'LANDSCAPE'
                 ? ConstToolType.THEME_HEIGHT[3]
                 : ConstToolType.THEME_HEIGHT[5],
-            // listSelectable: true, //单选框
             data,
-            buttons: [ToolbarBtnType.THEME_CANCEL],
+            buttons: listSelectable
+              ? [ToolbarBtnType.THEME_CANCEL, ToolbarBtnType.THEME_COMMIT]
+              : [ToolbarBtnType.THEME_CANCEL],
           },
         )
       _toolbarParams.scrollListToLocation &&
@@ -110,32 +123,32 @@ function getThemeMapCreateByLayer(type, params) {
     buttons = []
   if (type !== ConstToolType.MAP_THEME_CREATE_BY_LAYER) return { data, buttons }
   data = [
-    // {
-    //   //统一风格
-    //   key: constants.THEME_UNIFY_STYLE,
-    //   title: constants.THEME_UNIFY_STYLE,
-    //   action: showTips,
-    //   size: 'large',
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    // },
+    {
+      //统一风格
+      key: constants.THEME_UNIFY_STYLE,
+      title: constants.THEME_UNIFY_STYLE,
+      action: getUnifyStyleAdd,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_create_unify_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_style,
+    },
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
-      action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      action: () => showExpressionList('Theme'),
+      image: getThemeAssets().themeType.theme_create_unique_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_style,
     },
     {
       //分段风格
       key: constants.THEME_RANGE_STYLE,
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
-      action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      action: () => showExpressionList('Theme'),
+      image: getThemeAssets().themeType.theme_create_range_style,
+      selectedImage: getThemeAssets().themeType.theme_create_range_style,
     },
     // {
     //   //自定义风格
@@ -160,27 +173,144 @@ function getThemeMapCreateByLayer(type, params) {
       key: constants.THEME_UNIFY_LABEL,
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
-      action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      action: () => showExpressionList('Theme'),
+      image: getThemeAssets().themeType.theme_create_unify_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
     {
       //单值标签
       key: constants.THEME_UNIQUE_LABEL,
       title: constants.THEME_UNIQUE_LABEL,
       size: 'large',
-      action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+      action: () => showExpressionList('Theme'),
+      image: getThemeAssets().themeType.theme_create_unique_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
     },
     {
       //分段标签
       key: constants.THEME_RANGE_LABEL,
       title: constants.THEME_RANGE_LABEL,
       size: 'large',
-      action: showExpressionList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+      action: () => showExpressionList('Theme'),
+      image: getThemeAssets().themeType.theme_create_range_label,
+      selectedImage: getThemeAssets().themeType.theme_create_range_label,
+    },
+    {
+      //面积图
+      key: constants.THEME_GRAPH_AREA,
+      title: constants.THEME_GRAPH_AREA,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_area,
+      selectedImage: getThemeAssets().themeType.theme_graph_area,
+    },
+    {
+      //阶梯图
+      key: constants.THEME_GRAPH_STEP,
+      title: constants.THEME_GRAPH_STEP,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_step,
+      selectedImage: getThemeAssets().themeType.theme_graph_step,
+    },
+    {
+      //折线图
+      key: constants.THEME_GRAPH_LINE,
+      title: constants.THEME_GRAPH_LINE,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_line,
+      selectedImage: getThemeAssets().themeType.theme_graph_line,
+    },
+    {
+      //点状图
+      key: constants.THEME_GRAPH_POINT,
+      title: constants.THEME_GRAPH_POINT,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_point,
+      selectedImage: getThemeAssets().themeType.theme_graph_point,
+    },
+    {
+      //柱状图
+      key: constants.THEME_GRAPH_BAR,
+      title: constants.THEME_GRAPH_BAR,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    },
+    {
+      //三维柱状图
+      key: constants.THEME_GRAPH_BAR3D,
+      title: constants.THEME_GRAPH_BAR3D,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    },
+    {
+      //饼图
+      key: constants.THEME_GRAPH_PIE,
+      title: constants.THEME_GRAPH_PIE,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_pie,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    },
+    {
+      //三维饼图
+      key: constants.THEME_GRAPH_PIE3D,
+      title: constants.THEME_GRAPH_PIE3D,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_pie3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    },
+    {
+      //玫瑰图
+      key: constants.THEME_GRAPH_ROSE,
+      title: constants.THEME_GRAPH_ROSE,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_rose,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    },
+    {
+      //三维玫瑰图
+      key: constants.THEME_GRAPH_ROSE3D,
+      title: constants.THEME_GRAPH_ROSE3D,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_rose3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    },
+    {
+      //堆叠柱状图
+      key: constants.THEME_GRAPH_STACK_BAR,
+      title: constants.THEME_GRAPH_STACK_BAR,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_stack_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    },
+    {
+      //三维堆叠柱状图
+      key: constants.THEME_GRAPH_STACK_BAR3D,
+      title: constants.THEME_GRAPH_STACK_BAR3D,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    },
+    {
+      //环状图
+      key: constants.THEME_GRAPH_RING,
+      title: constants.THEME_GRAPH_RING,
+      size: 'large',
+      action: () => showExpressionList('ThemeGraph'),
+      image: getThemeAssets().themeType.theme_graph_ring,
+      selectedImage: getThemeAssets().themeType.theme_graph_ring,
     },
   ]
   return { data, buttons }
@@ -197,23 +327,23 @@ function getThemeMapCreate(type, params) {
     buttons = []
   if (type !== ConstToolType.MAP_THEME_CREATE) return { data, buttons }
   data = [
-    // {
-    //   //统一风格
-    //   key: constants.THEME_UNIFY_STYLE,
-    //   title: constants.THEME_UNIFY_STYLE,
-    //   action: showTips,
-    //   size: 'large',
-    //   image: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    //   selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_style.png'),
-    // },
+    {
+      //统一风格
+      key: constants.THEME_UNIFY_STYLE,
+      title: constants.THEME_UNIFY_STYLE,
+      action: getUnifyStyleAdd,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_create_unify_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_style,
+    },
     {
       //单值风格
       key: constants.THEME_UNIQUE_STYLE,
       title: constants.THEME_UNIQUE_STYLE,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_style_black.png'),
+      image: getThemeAssets().themeType.theme_create_unique_style,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_style,
     },
     {
       //分段风格
@@ -221,8 +351,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_RANGE_STYLE,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_style_black.png'),
+      image: getThemeAssets().themeType.theme_create_range_style,
+      selectedImage: getThemeAssets().themeType.theme_create_range_style,
     },
     // {
     //   //自定义风格
@@ -248,8 +378,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_UNIFY_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unify_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_unify_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
     {
       //单值标签
@@ -257,8 +387,8 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_UNIQUE_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_unique_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_unique_label,
+      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
     },
     {
       //分段标签
@@ -266,8 +396,125 @@ function getThemeMapCreate(type, params) {
       title: constants.THEME_RANGE_LABEL,
       size: 'large',
       action: showDatasetsList,
-      image: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
-      selectedImage: require('../../../../assets/mapTools/icon_function_theme_create_range_label_black.png'),
+      image: getThemeAssets().themeType.theme_create_range_label,
+      selectedImage: getThemeAssets().themeType.theme_create_range_label,
+    },
+    {
+      //面积图
+      key: constants.THEME_GRAPH_AREA,
+      title: constants.THEME_GRAPH_AREA,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_area,
+      selectedImage: getThemeAssets().themeType.theme_graph_area,
+    },
+    {
+      //阶梯图
+      key: constants.THEME_GRAPH_STEP,
+      title: constants.THEME_GRAPH_STEP,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_step,
+      selectedImage: getThemeAssets().themeType.theme_graph_step,
+    },
+    {
+      //折线图
+      key: constants.THEME_GRAPH_LINE,
+      title: constants.THEME_GRAPH_LINE,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_line,
+      selectedImage: getThemeAssets().themeType.theme_graph_line,
+    },
+    {
+      //点状图
+      key: constants.THEME_GRAPH_POINT,
+      title: constants.THEME_GRAPH_POINT,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_point,
+      selectedImage: getThemeAssets().themeType.theme_graph_point,
+    },
+    {
+      //柱状图
+      key: constants.THEME_GRAPH_BAR,
+      title: constants.THEME_GRAPH_BAR,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    },
+    {
+      //三维柱状图
+      key: constants.THEME_GRAPH_BAR3D,
+      title: constants.THEME_GRAPH_BAR3D,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    },
+    {
+      //饼图
+      key: constants.THEME_GRAPH_PIE,
+      title: constants.THEME_GRAPH_PIE,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_pie,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    },
+    {
+      //三维饼图
+      key: constants.THEME_GRAPH_PIE3D,
+      title: constants.THEME_GRAPH_PIE3D,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_pie3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    },
+    {
+      //玫瑰图
+      key: constants.THEME_GRAPH_ROSE,
+      title: constants.THEME_GRAPH_ROSE,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_rose,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    },
+    {
+      //三维玫瑰图
+      key: constants.THEME_GRAPH_ROSE3D,
+      title: constants.THEME_GRAPH_ROSE3D,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_rose3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    },
+    {
+      //堆叠柱状图
+      key: constants.THEME_GRAPH_STACK_BAR,
+      title: constants.THEME_GRAPH_STACK_BAR,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_stack_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    },
+    {
+      //三维堆叠柱状图
+      key: constants.THEME_GRAPH_STACK_BAR3D,
+      title: constants.THEME_GRAPH_STACK_BAR3D,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    },
+    {
+      //环状图
+      key: constants.THEME_GRAPH_RING,
+      title: constants.THEME_GRAPH_RING,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_graph_ring,
+      selectedImage: getThemeAssets().themeType.theme_graph_ring,
     },
   ]
   return { data, buttons }
@@ -401,7 +648,15 @@ function getThemeMapParam(type, params) {
   _toolbarParams = params
   let data = [],
     buttons = []
-  if (type !== ConstToolType.MAP_THEME_PARAM) return { data, buttons }
+  buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.MENU,
+    ToolbarBtnType.MENU_FLEX,
+    ToolbarBtnType.THEME_GRAPH_TYPE, //快速设置统计专题图类型
+    ToolbarBtnType.MENU_COMMIT,
+  ]
+  if (type === ConstToolType.MAP_THEME_PARAM_GRAPH) return { data, buttons }
+  if (type !== ConstToolType.MAP_THEME_PARAM) return { data: [], buttons: [] }
   buttons = [
     ToolbarBtnType.THEME_CANCEL,
     // ToolbarBtnType.THEME_MENU,
@@ -1401,6 +1656,17 @@ function getLabelColor() {
   return data
 }
 
+function getThemeGraphMenu() {
+  let buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    ToolbarBtnType.THEME_MENU,
+    ToolbarBtnType.MENU_FLEX,
+    ToolbarBtnType.THEME_GRAPH_TYPE, //快速设置统计专题图类型
+    ToolbarBtnType.MENU_COMMIT,
+  ]
+  return buttons
+}
+
 function getThemeFourMenu() {
   let buttons = [
     ToolbarBtnType.THEME_CANCEL,
@@ -1919,6 +2185,412 @@ function getUniqueColorScheme() {
   return list
 }
 
+/**设置统计专题图类型 */
+function setThemeGraphType() {
+  return SThemeCartography.setThemeGraphType(_params)
+}
+
+function getThemeGraphType() {
+  let data = [
+    {
+      key: constants.THEME_GRAPH_AREA,
+      title: constants.THEME_GRAPH_AREA,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_area,
+      selectedImage: getThemeAssets().themeType.theme_graph_area,
+    },
+    {
+      key: constants.THEME_GRAPH_STEP,
+      title: constants.THEME_GRAPH_STEP,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_step,
+      selectedImage: getThemeAssets().themeType.theme_graph_step,
+    },
+    {
+      key: constants.THEME_GRAPH_LINE,
+      title: constants.THEME_GRAPH_LINE,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_line,
+      selectedImage: getThemeAssets().themeType.theme_graph_line,
+    },
+    {
+      key: constants.THEME_GRAPH_POINT,
+      title: constants.THEME_GRAPH_POINT,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_point,
+      selectedImage: getThemeAssets().themeType.theme_graph_point,
+    },
+    {
+      key: constants.THEME_GRAPH_BAR,
+      title: constants.THEME_GRAPH_BAR,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    },
+    {
+      key: constants.THEME_GRAPH_BAR3D,
+      title: constants.THEME_GRAPH_BAR3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    },
+    {
+      key: constants.THEME_GRAPH_PIE,
+      title: constants.THEME_GRAPH_PIE,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_pie,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    },
+    {
+      key: constants.THEME_GRAPH_PIE3D,
+      title: constants.THEME_GRAPH_PIE3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_pie3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    },
+    {
+      key: constants.THEME_GRAPH_ROSE,
+      title: constants.THEME_GRAPH_ROSE,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_rose,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    },
+    {
+      key: constants.THEME_GRAPH_ROSE3D,
+      title: constants.THEME_GRAPH_ROSE3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_rose3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    },
+    {
+      key: constants.THEME_GRAPH_STACK_BAR,
+      title: constants.THEME_GRAPH_STACK_BAR,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_stack_bar,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    },
+    {
+      key: constants.THEME_GRAPH_STACK_BAR3D,
+      title: constants.THEME_GRAPH_STACK_BAR3D,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    },
+    {
+      key: constants.THEME_GRAPH_RING,
+      title: constants.THEME_GRAPH_RING,
+      action: setThemeGraphType,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_ring,
+      selectedImage: getThemeAssets().themeType.theme_graph_ring,
+    },
+  ]
+  return data
+}
+
+/**设置统计专题图统计值计算方法 */
+function setThemeGraphGraduatedMode() {
+  return SThemeCartography.setThemeGraphGraduatedMode(_params)
+}
+
+function getGraphThemeGradutedMode() {
+  let data = [
+    {
+      key: constants.THEME_GRAPH_GRADUATEDMODE_CONS_KEY,
+      title: constants.THEME_GRAPH_GRADUATEDMODE_CONS,
+      action: setThemeGraphGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_cons,
+      selectedImage: getThemeAssets().themeType.theme_graph_graduatedmode_cons,
+    },
+    {
+      key: constants.THEME_GRAPH_GRADUATEDMODE_LOG_KEY,
+      title: constants.THEME_GRAPH_GRADUATEDMODE_LOG,
+      action: setThemeGraphGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_log,
+      selectedImage: getThemeAssets().themeType.theme_graph_graduatedmode_log,
+    },
+    {
+      key: constants.THEME_GRAPH_GRADUATEDMODE_SQUARE_KEY,
+      title: constants.THEME_GRAPH_GRADUATEDMODE_SQUARE,
+      action: setThemeGraphGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_square,
+      selectedImage: getThemeAssets().themeType
+        .theme_graph_graduatedmode_square,
+    },
+  ]
+  return data
+}
+
+/**
+ * 统计专题图颜色方案
+ */
+function getThemeGraphColorScheme() {
+  let list = [
+    {
+      key: 'CA_Red Rose',
+      colorSchemeName: 'CA_Red Rose',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BA_Blue.png'),
+    },
+    {
+      key: 'CB_Childish',
+      colorSchemeName: 'CB_Childish',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BB_Green.png'),
+    },
+    {
+      key: 'CC_Blue-Yellow',
+      colorSchemeName: 'CC_Blue-Yellow',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BC_Orange.png'),
+    },
+    {
+      key: 'CD_Concise',
+      colorSchemeName: 'CD_Concise',
+      colorScheme: require('../../../../assets/uniqueColorScheme/BD_Pink.png'),
+    },
+    {
+      key: 'CE_Reposeful',
+      colorSchemeName: 'CE_Reposeful',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CA_Red_Rose.png'),
+    },
+    {
+      key: 'CF_Home',
+      colorSchemeName: 'CF_Home',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CB_Blue_and_Yellow.png'),
+    },
+    {
+      key: 'CG_Cold',
+      colorSchemeName: 'CG_Cold',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CC_Pink_and_Green.png'),
+    },
+    {
+      key: 'CH_Naive',
+      colorSchemeName: 'CH_Naive',
+      colorScheme: require('../../../../assets/uniqueColorScheme/CD_Fresh.png'),
+    },
+    {
+      key: 'DA_Limber',
+      colorSchemeName: 'DA_Limber',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+    },
+    {
+      key: 'DB_Field',
+      colorSchemeName: 'DB_Field',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DB_Common.png'),
+    },
+    {
+      key: 'DC_Dressy',
+      colorSchemeName: 'DC_Dressy',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DC_Bright.png'),
+    },
+    {
+      key: 'DD_Set',
+      colorSchemeName: 'DD_Set',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DD_Warm.png'),
+    },
+    {
+      key: 'DE_Shock',
+      colorSchemeName: 'DE_Shock',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DE_Set.png'),
+    },
+    {
+      key: 'DF_Summer',
+      colorSchemeName: 'DF_Summer',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DF_Pastel.png'),
+    },
+    {
+      key: 'DG_Common',
+      colorSchemeName: 'DG_Common',
+      colorScheme: require('../../../../assets/uniqueColorScheme/DG_Grass.png'),
+    },
+    {
+      key: 'DH_Red-Blue',
+      colorSchemeName: 'DH_Red-Blue',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EA_Sin_ColorScheme8.png'),
+    },
+    {
+      key: 'EA_Orange',
+      colorSchemeName: 'EA_Orange',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EB_Sweet.png'),
+    },
+    {
+      key: 'EB_Cold',
+      colorSchemeName: 'EB_Cold',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EC_Dusk.png'),
+    },
+    {
+      key: 'EC_Distinct',
+      colorSchemeName: 'EC_Distinct',
+      colorScheme: require('../../../../assets/uniqueColorScheme/ED_Pastel.png'),
+    },
+    {
+      key: 'ED_Pastal',
+      colorSchemeName: 'ED_Pastal',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EE_Lake.png'),
+    },
+    {
+      key: 'EE_Grass',
+      colorSchemeName: 'EE_Grass',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EF_Grass.png'),
+    },
+    {
+      key: 'EF_Blind',
+      colorSchemeName: 'EF_Blind',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EG_Sin_ColorScheme1.png'),
+    },
+    {
+      key: 'EG_Passion',
+      colorSchemeName: 'EG_Passion',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EH_Sin_ColorScheme4.png'),
+    },
+    {
+      key: 'EH_Amazing',
+      colorSchemeName: 'EH_Amazing',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EI_Sin_ColorScheme6.png'),
+    },
+    {
+      key: 'HA_Calm',
+      colorSchemeName: 'HA_Calm',
+      colorScheme: require('../../../../assets/uniqueColorScheme/EJ_Sin_ColorScheme7.png'),
+    },
+    {
+      key: 'HB_Distance',
+      colorSchemeName: 'HB_Distance',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Red-Yellow-Blue.png'),
+    },
+    {
+      key: 'HC_Exotic',
+      colorSchemeName: 'HC_Exotic',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Blue-Yellow-Red.png'),
+    },
+    {
+      key: 'HD_Luck',
+      colorSchemeName: 'HD_Luck',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+    },
+    {
+      key: 'HE_Moist',
+      colorSchemeName: 'HE_Moist',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+    },
+    {
+      key: 'HF_Warm',
+      colorSchemeName: 'HF_Warm',
+      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+    },
+  ]
+  return list
+}
+
+//得到去掉文件扩展名的文件名称
+function basename(str) {
+  var idx = str.lastIndexOf('/')
+  idx = idx > -1 ? idx : str.lastIndexOf('\\')
+  if (idx < 0) {
+    return str
+  }
+  let file = str.substring(idx + 1)
+  let arr = file.split('.')
+  return arr[0]
+}
+
+/**专题图:添加 --> 统一风格 */
+async function getUnifyStyleAdd() {
+  let data = [],
+    buttons = []
+  buttons = [
+    ToolbarBtnType.THEME_CANCEL,
+    // ToolbarBtnType.THEME_COMMIT,
+  ]
+  let customerUDBPath = await FileTools.appendingHomeDirectory(
+    ConstPath.CustomerPath + ConstPath.RelativePath.Datasource,
+  )
+  let customerUDBs = await FileTools.getPathListByFilter(customerUDBPath, {
+    extension: 'udb',
+    type: 'file',
+  })
+  customerUDBs.forEach(item => {
+    item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+    item.info = {
+      infoType: 'mtime',
+      lastModifiedDate: item.mtime,
+    }
+    item.name = basename(item.path)
+  })
+
+  let userUDBPath, userUDBs
+  if (_toolbarParams.user && _toolbarParams.user.currentUser.userName) {
+    userUDBPath =
+      (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
+      _toolbarParams.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Datasource
+    userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
+      extension: 'udb',
+      type: 'file',
+    })
+    userUDBs.forEach(item => {
+      item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+      item.info = {
+        infoType: 'mtime',
+        lastModifiedDate: item.mtime,
+      }
+      item.name = basename(item.path)
+    })
+
+    data = [
+      // {
+      //   title: Const.PUBLIC_DATA_SOURCE,
+      //   data: customerUDBs,
+      // },
+      {
+        title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+        data: userUDBs,
+      },
+    ]
+  } else {
+    data = [
+      {
+        title: Const.DATA_SOURCE,
+        image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
+        data: customerUDBs,
+      },
+    ]
+  }
+
+  _toolbarParams.showFullMap && _toolbarParams.showFullMap(true)
+  _toolbarParams.setToolbarVisible &&
+    _toolbarParams.setToolbarVisible(true, ConstToolType.MAP_THEME_ADD_UDB, {
+      containerType: 'list',
+      isFullScreen: true,
+      isTouchProgress: false,
+      showMenuDialog: false,
+      listSelectable: false, //单选框
+      height:
+        _toolbarParams.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[3]
+          : ConstToolType.THEME_HEIGHT[5],
+      column: _toolbarParams.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      data,
+      buttons: buttons,
+    })
+  _toolbarParams.scrollListToLocation && _toolbarParams.scrollListToLocation()
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -1935,5 +2607,13 @@ export default {
   getUniqueColorScheme,
   getThemeMapCreateByLayer,
   setLayerNameCreateTheme,
+  getLayerNameCreateTheme,
   getThemeMapStartCreate,
+  getThemeGraphMenu,
+  getThemeGraphType,
+  getGraphThemeGradutedMode,
+  setThemeGraphGraduatedMode,
+  getThemeGraphColorScheme,
+  getUnifyStyleAdd,
+  basename,
 }

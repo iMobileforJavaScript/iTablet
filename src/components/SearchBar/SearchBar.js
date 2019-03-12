@@ -4,23 +4,33 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, TextInput, Image } from 'react-native'
+import { View, TextInput, Image, TouchableOpacity } from 'react-native'
+import { getPublicAssets } from '../../assets'
 import styles from './styles'
 
 export default class SearchBar extends PureComponent {
   props: {
     onBlur?: () => {},
     onFocus?: () => {},
-    cancelAction: () => {},
+    onClear?: () => {},
+    onSubmitEditing?: () => {},
 
     defaultValue: string,
     editable: string,
     placeholder: string,
     isFocused?: string,
+    keyboardAppearance?: string,
+    returnKeyType?: string,
+    returnKeyLabel?: string,
+    blurOnSubmit?: string,
   }
 
   static defaultProps = {
     isFocused: false,
+    keyboardAppearance: 'default',
+    returnKeyType: 'search',
+    returnKeyLabel: '搜索',
+    blurOnSubmit: true,
   }
 
   constructor(props) {
@@ -29,6 +39,14 @@ export default class SearchBar extends PureComponent {
       isFocused: props.isFocused,
       value: props.defaultValue,
     }
+  }
+
+  focus = () => {
+    this.searchInput && this.searchInput.focus()
+  }
+
+  blur = () => {
+    this.searchInput && this.searchInput.blur()
   }
 
   _onBlur = () => {
@@ -53,13 +71,29 @@ export default class SearchBar extends PureComponent {
     }
   }
 
+  _clear = () => {
+    if (this.props.onClear && typeof this.props.onClear === 'function') {
+      this.props.onClear()
+    }
+    this.searchInput && this.searchInput.clear()
+  }
+
+  _onSubmitEditing = () => {
+    if (
+      this.props.onSubmitEditing &&
+      typeof this.props.onSubmitEditing === 'function'
+    ) {
+      this.props.onSubmitEditing(this.state.value)
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
         <Image
-          style={styles.clearImg}
+          style={styles.searchImg}
           resizeMode={'contain'}
-          source={require('../../assets/public/icon_input_clear.png')}
+          source={getPublicAssets().common.icon_search_a0}
         />
         <TextInput
           ref={ref => (this.searchInput = ref)}
@@ -67,16 +101,30 @@ export default class SearchBar extends PureComponent {
           defaultValue={this.props.defaultValue}
           editable={this.props.editable}
           placeholder={this.props.placeholder}
-          style={styles.textInputStyle}
+          style={styles.input}
           onBlur={this._onBlur}
           onFocus={this._onFocus}
+          onSubmitEditing={this._onSubmitEditing}
+          returnKeyLabel={this.props.returnKeyLabel}
+          returnKeyType={this.props.returnKeyType}
+          keyboardAppearance={this.props.keyboardAppearance}
+          blurOnSubmit={this.props.blurOnSubmit}
+          onChangeText={value => {
+            this.setState({ value })
+          }}
         />
         {
-          <Image
-            style={styles.clearImg}
-            resizeMode={'contain'}
-            source={require('../../assets/public/icon_input_clear.png')}
-          />
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={styles.clearBtn}
+            onPress={this._clear}
+          >
+            <Image
+              style={styles.clearImg}
+              resizeMode={'contain'}
+              source={require('../../assets/public/icon_input_clear.png')}
+            />
+          </TouchableOpacity>
         }
       </View>
     )

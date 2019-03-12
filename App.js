@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform ,Image,Text} from 'react-native'
+import { View, AppState, StyleSheet, Platform,Image,Text} from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -20,6 +20,7 @@ import {
   setCurrentTemplateInfo,
   setTemplate,
 } from './src/models/template'
+import { Dialog } from './src/components'
 import { setMapSetting } from './src/models/setting'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
@@ -28,7 +29,7 @@ import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
-import  {color} from './src/styles'
+import { color } from './src/styles'
 import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
@@ -78,7 +79,6 @@ const styles = StyleSheet.create({
     height: scaleSize(240),
     borderRadius: scaleSize(4),
     backgroundColor: 'white',
-
   },
 })
 
@@ -165,7 +165,6 @@ class AppRoot extends Component {
   }
 
   inspectEnvironment=async()=>{
-
     let result=await FileTools.EnvironmentIsValid()
     if(!result){
       this.exit.setDialogVisible(true)
@@ -261,9 +260,6 @@ class AppRoot extends Component {
   map3dBackAction=async()=>{
     try {
       this.container && this.container.setLoading(true, '正在关闭')
-      if (GLOBAL.Map3DSymbol) {
-        await SScene.clearAllLabel()
-      }
       if (GLOBAL.openWorkspace) {
         // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
         await SScene.closeWorkspace()
