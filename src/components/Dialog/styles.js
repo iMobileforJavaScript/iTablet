@@ -53,6 +53,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  oneBtn: {
+    marginTop: scaleSize(30),
+    marginHorizontal: scaleSize(40),
+    height: scaleSize(80),
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   confirmBtnStyle: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -60,7 +68,7 @@ export default StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     borderRadius: scaleSize(4),
     backgroundColor: color.content_white,
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     width: scaleSize(110),
   },
   cancelBtnStyle: {
@@ -70,7 +78,7 @@ export default StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     borderRadius: scaleSize(4),
     backgroundColor: color.content_white,
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     width: scaleSize(110),
   },
   btnStyle: {
@@ -80,9 +88,9 @@ export default StyleSheet.create({
     paddingHorizontal: scaleSize(30),
     borderRadius: scaleSize(4),
     backgroundColor: color.content_white,
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderColor: color.bgG,
-    width: scaleSize(110),
+    // width: scaleSize(110),
   },
   btnTitle: {
     color: color.themeText2,
@@ -115,7 +123,7 @@ export default StyleSheet.create({
     marginLeft: scaleSize(10),
     height: scaleSize(60),
     borderColor: color.grayLight2,
-    borderWidth: scaleSize(1),
+    borderWidth: 1,
     borderRadius: scaleSize(4),
     backgroundColor: 'transparent',
     textAlign: 'center',

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform } from 'react-native'
+import { View, AppState, StyleSheet, Platform ,Image,Text} from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -28,11 +28,13 @@ import ConfigStore from './src/store'
 import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
+import  {color} from './src/styles'
 import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
+import { Dialog } from './src/components'
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -49,6 +51,34 @@ const styles = StyleSheet.create({
   invisibleMap: {
     width: 1,
     height: 1,
+  },
+  dialogHeaderView: {
+    flex: 1,
+    //  backgroundColor:"pink",
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dialogHeaderImg: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    opacity: 1,
+    // marginLeft:scaleSize(145),
+    // marginTop:scaleSize(21),
+  },
+  promptTtile: {
+    fontSize: scaleSize(24),
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+    marginLeft:scaleSize(10),
+    marginRight:scaleSize(10),
+    textAlign:'center',
+  },
+  dialogBackground: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
+
   },
 })
 
@@ -102,6 +132,7 @@ class AppRoot extends Component {
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
+      await this.inspectEnvironment()
       await this.initOrientation()
     }).bind(this)()
     GLOBAL.clearMapData = () => {
@@ -130,6 +161,14 @@ class AppRoot extends Component {
           }
         }).bind(this)()
       }
+    }
+  }
+
+  inspectEnvironment=async()=>{
+
+    let result=await FileTools.EnvironmentIsValid()
+    if(!result){
+      this.exit.setDialogVisible(true)
     }
   }
 
@@ -319,6 +358,34 @@ class AppRoot extends Component {
     }
   }
 
+  renderExitDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>试用许可已过期,请更换许可后重启</Text>
+      </View>
+    )
+  }
+
+  renderDialog=()=>{
+    return(<Dialog
+      ref={ref => (this.exit = ref)}
+      type={'modal'}
+      onlyOneBtn={true}
+      cancelBtnVisible={false}
+      confirmAction={()=>{this.exit.setDialogVisible(false)}}
+      opacity={1}
+      opacityStyle={styles.opacityView}
+      style={styles.dialogBackground}
+    >
+        {this.renderExitDialogChildren()}
+    </Dialog>
+    )
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -341,6 +408,7 @@ class AppRoot extends Component {
             // this.backAction = null
           }}
         />
+        {this.renderDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )

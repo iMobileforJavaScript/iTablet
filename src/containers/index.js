@@ -18,6 +18,8 @@ import Tabs, {
   Setting,
   AboutITablet,
   Login,
+  Chat,
+  AddFriend,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -262,6 +264,22 @@ export default StackNavigator(
         header: null,
       },
     },
+    /******************************** Friend **********************/
+    Chat: {
+      screen: Chat,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    AddFriend: {
+      screen: AddFriend,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+
     /******************************** Mine **********************/
     Register: {
       screen: Register,
