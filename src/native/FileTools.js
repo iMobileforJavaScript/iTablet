@@ -176,15 +176,15 @@ async function getFilterFiles(
   fileType: Object,
   arrFilterFile: Array,
 ) {
+  if (arrFilterFile === undefined) {
+    arrFilterFile = []
+  }
   try {
     if (typeof fileDir !== 'string') {
       return []
     }
     if (fileType === undefined) {
       fileType = { smwu: 'smwu', sxwu: 'sxwu', sxw: 'sxw', smw: 'smw' }
-    }
-    if (arrFilterFile === undefined) {
-      arrFilterFile = []
     }
     let isRecordFile = false
     let arrDirContent = await getDirectoryContent(fileDir)

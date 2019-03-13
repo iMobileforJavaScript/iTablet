@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal } from '../../../../components'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -520,7 +520,7 @@ export default class LayerAttribute extends React.Component {
             <MTBtn
               key={'undo'}
               image={getPublicAssets().common.icon_undo}
-              imageStyle={styles.headerBtn}
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
               onPress={this.showUndoView}
             />,
             <MTBtn
@@ -550,7 +550,9 @@ export default class LayerAttribute extends React.Component {
             )
           ) : (
             <View style={styles.infoView}>
-              <Text style={styles.info}>请选择图层</Text>
+              <Text style={styles.info}>
+                {this.props.currentLayer.path ? '请选择图层' : '该图层属性为空'}
+              </Text>
             </View>
           )}
         <PopModal

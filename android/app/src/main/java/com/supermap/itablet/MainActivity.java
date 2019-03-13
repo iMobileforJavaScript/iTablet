@@ -14,6 +14,7 @@ import com.supermap.RN.appManager;
 import com.supermap.containts.EventConst;
 import com.supermap.data.Environment;
 import com.supermap.RN.FileTools;
+import com.supermap.data.LicenseStatus;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
@@ -54,15 +55,23 @@ public class MainActivity extends ReactActivity {
     }
 
     private void initEnvironment() {
-
-//        String licensePath = SDCARD + "/iTablet/license/";
-//        String licenseName = "Trial_License.slm";
-//        if (!Utils.fileIsExit(licensePath + licenseName)) {
-//            Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
-//        }
+        String licensePath = SDCARD + "/iTablet/license/";
+        String licenseName = "Trial_License.slm";
+        if (!Utils.fileIsExit(licensePath + licenseName)) {
+            Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
+        }
 //        Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
         Environment.setLicensePath(SDCARD + "/iTablet/license");
         Environment.initialization(this);
+
+        LicenseStatus status = Environment.getLicenseStatus();
+
+        if(status.isTrailLicense() && !status.isLicenseValid()){
+            Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
+            Environment.initialization(this);
+
+            status = Environment.getLicenseStatus();
+        }
     }
 
     private void initDefaultData() {

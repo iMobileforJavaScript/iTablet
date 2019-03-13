@@ -39,7 +39,6 @@ export default StyleSheet.create({
   headerBtn: {
     height: scaleSize(60),
     width: scaleSize(60),
-    paddingLeft: scaleSize(15),
   },
   editControllerView: {
     flexDirection: 'row',

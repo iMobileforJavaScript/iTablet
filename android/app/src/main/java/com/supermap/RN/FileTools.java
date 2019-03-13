@@ -550,7 +550,7 @@ public class FileTools extends ReactContextBaseJavaModule {
     @ReactMethod
     public void EnvironmentIsValid( Promise promise) {
         try {
-            Boolean result = Environment.getLicenseStatus().isLicenseValid();;
+            Boolean result = Environment.getLicenseStatus().isLicenseValid();
             promise.resolve(result);
         } catch (Exception e) {
             promise.reject(e);
