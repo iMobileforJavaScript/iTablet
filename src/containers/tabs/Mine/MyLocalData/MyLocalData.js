@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   Image,
   AsyncStorage,
+  RefreshControl,
 } from 'react-native'
-import { Container, ListSeparator } from '../../../../components'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { Container, ListSeparator, TextBtn } from '../../../../components'
+import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -16,6 +17,7 @@ import { color, size } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
+import NavigationService from '../../../NavigationService'
 export default class MyLocalData extends Component {
   props: {
     user: Object,
@@ -33,6 +35,7 @@ export default class MyLocalData extends Component {
       isFirstLoadingModal: true,
       textValue: '扫描文件:',
       textDisplay: 'none',
+      isRefreshing: false,
     }
   }
   componentDidMount() {
@@ -751,6 +754,33 @@ export default class MyLocalData extends Component {
     ) : null
   }
 
+  goToMyOnlineData = async () => {
+    NavigationService.navigate('MyOnlineData')
+  }
+
+  _renderHeaderBtn = () => {
+    let btn = null
+    if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
+      this.props.user.currentUser.userName
+    ) {
+      let title = Const.ONLINE_DATA
+      let action = this.goToMyOnlineData
+
+      btn = (
+        <TextBtn
+          btnText={title}
+          textStyle={{
+            color: 'white',
+            fontSize: 17,
+          }}
+          btnClick={action}
+        />
+      )
+    }
+    return btn
+  }
+
   render() {
     let sectionData = this.state.sectionData
     return (
@@ -760,6 +790,7 @@ export default class MyLocalData extends Component {
           title: '导入',
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderBtn(),
         }}
       >
         <Text
@@ -787,6 +818,17 @@ export default class MyLocalData extends Component {
           renderItem={this._renderItem}
           // ItemSeparatorComponent={this._renderItemSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this._setSectionDataState3}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {this._showLocalDataPopupModal()}
       </Container>

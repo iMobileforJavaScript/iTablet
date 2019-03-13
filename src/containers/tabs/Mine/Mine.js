@@ -236,6 +236,13 @@ export default class Mine extends Component {
             onClick: () => this.goToMyData(Const.SCENE),
           })}
           {this._renderItem({
+            title: Const.BASEMAP,
+            leftImagePath: require('../../../assets/Mine/my_basemap.png'),
+            onClick: () => {
+              this.goToMyBaseMap()
+            },
+          })}
+          {this._renderItem({
             title: Const.SYMBOL,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
