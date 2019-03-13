@@ -21,6 +21,8 @@ export default class InputDialog extends PureComponent {
     defaultValue: string,
     keyboardAppearance: string,
     returnKeyType: string,
+    confirmBtnTitle: string,
+    cancelBtnTitle: string,
     // inputSelection: Object,
   }
 
@@ -30,6 +32,8 @@ export default class InputDialog extends PureComponent {
     keyboardAppearance: 'dark',
     returnKeyType: 'done',
     placeholder: '',
+    confirmBtnTitle: '是',
+    cancelBtnTitle: '否',
   }
 
   constructor(props) {
@@ -100,8 +104,8 @@ export default class InputDialog extends PureComponent {
         style={{ marginVertical: 15 }}
         confirmAction={this.confirm}
         cancelAction={this.cancel}
-        confirmBtnTitle={'是'}
-        cancelBtnTitle={'否'}
+        confirmBtnTitle={this.props.confirmBtnTitle}
+        cancelBtnTitle={this.props.cancelBtnTitle}
         type={Dialog.Type.MODAL}
       >
         <KeyboardAvoidingView behavior="padding" enabled>

@@ -6,10 +6,10 @@
 
 import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
-import { Container, MTBtn } from '../../../../components'
+import { Container, MTBtn, PopModal } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { setSpText } from '../../../../utils'
-import { getThemeAssets } from '../../../../assets'
+import { setSpText, scaleSize } from '../../../../utils'
+import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import DefaultTabBar from './DefaultTabBar'
@@ -32,6 +32,23 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
   },
+  editControllerView: {
+    flexDirection: 'row',
+    height: scaleSize(100),
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: color.contentColorWhite,
+  },
+  button: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerBtn: {
+    height: scaleSize(60),
+    width: scaleSize(60),
+    paddingLeft: scaleSize(15),
+  },
 })
 
 export default class LayerAttributeTabs extends React.Component {
@@ -41,8 +58,10 @@ export default class LayerAttributeTabs extends React.Component {
     currentLayer: Object,
     map: Object,
     selection: Array,
+    attributesHistory: Array,
     setCurrentAttribute: () => {},
     setLayerAttributes: () => {},
+    setAttributeHistory: () => {},
   }
 
   constructor(props) {
@@ -104,8 +123,8 @@ export default class LayerAttributeTabs extends React.Component {
     }
   }
 
-  editUndo = () => {
-    // TODO 属性编辑回退
+  showUndoView = () => {
+    this.popModal && this.popModal.setVisible(true)
   }
 
   goToSearch = () => {
@@ -114,6 +133,15 @@ export default class LayerAttributeTabs extends React.Component {
         .path,
       isSelection: true,
     })
+  }
+
+  onGetAttribute = attributes => {
+    // 当数据只有一条时，则默认当前index为0
+    if (attributes.length === 1 && this.state.currentIndex !== 0) {
+      this.setState({
+        currentIndex: 0,
+      })
+    }
   }
 
   /** 关联事件 **/
@@ -132,7 +160,12 @@ export default class LayerAttributeTabs extends React.Component {
       if (this.props.selection[i].layerInfo.name === layerPath) {
         objs.push({
           layerPath: layerPath,
-          ids: [selection.data[0].value],
+          // ids: [selection.data[0].value],
+          ids: [
+            selection.data[0].name === 'SmID'
+              ? selection.data[0].value
+              : selection.data[1].value,
+          ], // 多条数据有序号时：0为序号，1为SmID；无序号时0为SmID
         })
       } else {
         objs.push({
@@ -147,17 +180,18 @@ export default class LayerAttributeTabs extends React.Component {
     SMap.selectObjs(objs).then(() => {
       // TODO 选中对象跳转到地图
       // this.props.navigation && this.props.navigation.navigate('MapView')
-      NavigationService.navigate('MapView')
-      // NavigationService.goBack()
-      GLOBAL.toolBox.setVisible(
-        true,
-        ConstToolType.ATTRIBUTE_SELECTION_RELATE,
-        {
-          isFullScreen: false,
-          height: 0,
-        },
-      )
-      GLOBAL.toolBox.showFullMap()
+      // NavigationService.navigate('MapView')
+      NavigationService.goBack()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.ATTRIBUTE_SELECTION_RELATE,
+          {
+            isFullScreen: false,
+            height: 0,
+          },
+        )
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
     })
   }
 
@@ -176,29 +210,38 @@ export default class LayerAttributeTabs extends React.Component {
   back = () => {
     NavigationService.goBack()
 
-    GLOBAL.toolBox.showFullMap && GLOBAL.toolBox.showFullMap(true)
+    GLOBAL.toolBox &&
+      GLOBAL.toolBox.showFullMap &&
+      GLOBAL.toolBox.showFullMap(true)
     GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
 
-    GLOBAL.toolBox.setVisible(
-      true,
-      ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
-      {
-        containerType: 'table',
-        column: 3,
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[0],
-        cb: () => {
-          switch (GLOBAL.currentToolbarType) {
-            case ConstToolType.MAP_TOOL_POINT_SELECT:
-              SMap.setAction(Action.SELECT)
-              break
-            case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-              SMap.selectByRectangle()
-              break
-          }
+    GLOBAL.toolBox &&
+      GLOBAL.toolBox.setVisible(
+        true,
+        ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
+        {
+          containerType: 'table',
+          column: 3,
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[0],
+          cb: () => {
+            switch (GLOBAL.currentToolbarType) {
+              case ConstToolType.MAP_TOOL_POINT_SELECT:
+                SMap.setAction(Action.SELECT)
+                break
+              case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+                // SMap.selectByRectangle()
+                SMap.setAction(Action.SELECT_BY_RECTANGLE)
+                break
+            }
+          },
         },
-      },
-    )
+      )
+  }
+
+  setAttributeHistory = type => {
+    this.currentTabRefs[this.state.currentTabIndex] &&
+      this.currentTabRefs[this.state.currentTabIndex].setAttributeHistory(type)
   }
 
   renderTabs = () => {
@@ -279,11 +322,46 @@ export default class LayerAttributeTabs extends React.Component {
         // currentLayer={this.props.currentLayer}
         map={this.props.map}
         layerSelection={data}
+        attributesHistory={this.props.attributesHistory}
         setLoading={this.setLoading}
         setCurrentAttribute={this.props.setCurrentAttribute}
         setLayerAttributes={this.props.setLayerAttributes}
+        setAttributeHistory={this.props.setAttributeHistory}
         selectAction={this.selectAction}
+        onGetAttribute={this.onGetAttribute}
       />
+    )
+  }
+
+  renderEditControllerView = () => {
+    return (
+      <View style={[styles.editControllerView, { width: '100%' }]}>
+        <MTBtn
+          key={'undo'}
+          title={'撤销'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_undo}
+          imageStyle={styles.headerBtn}
+          onPress={() => this.setAttributeHistory('undo')}
+        />
+        <MTBtn
+          key={'redo'}
+          title={'恢复'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_redo}
+          imageStyle={styles.headerBtn}
+          onPress={() => this.setAttributeHistory('redo')}
+        />
+        <MTBtn
+          key={'revert'}
+          title={'还原'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_revert}
+          imageStyle={styles.headerBtn}
+          onPress={() => this.setAttributeHistory('revert')}
+        />
+        <View style={styles.button} />
+      </View>
     )
   }
 
@@ -298,13 +376,13 @@ export default class LayerAttributeTabs extends React.Component {
           headerRight: [
             <MTBtn
               key={'undo'}
-              image={getThemeAssets().attribute.icon_undo}
+              image={getPublicAssets().common.icon_undo}
               imageStyle={styles.headerBtn}
-              onPress={this.editUndo}
+              onPress={this.showUndoView}
             />,
             <MTBtn
               key={'search'}
-              image={getThemeAssets().publicAssets.iconSearch}
+              image={getPublicAssets().common.icon_search}
               imageStyle={styles.headerBtn}
               onPress={this.goToSearch}
             />,
@@ -337,6 +415,12 @@ export default class LayerAttributeTabs extends React.Component {
             onPress={() => this.showDrawer(false)}
           />
         )}
+        <PopModal
+          ref={ref => (this.popModal = ref)}
+          modalVisible={this.state.editControllerVisible}
+        >
+          {this.renderEditControllerView()}
+        </PopModal>
         <DrawerBar
           ref={ref => (this.drawer = ref)}
           data={this.props.selection}

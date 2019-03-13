@@ -26,7 +26,7 @@ export default class MT_Btn extends React.Component {
     image: any,
     selectedImage?: any,
     size?: string,
-    title: string,
+    title?: string,
     onPress: () => {},
     textStyle?: any,
     textColor?: string,

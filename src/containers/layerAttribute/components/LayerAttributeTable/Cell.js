@@ -61,6 +61,7 @@ export default class Cell extends Component {
     defaultValue?: any,
     cellTextStyle?: any,
     width?: number,
+    index: number,
     keyboardType?: String,
     editable?: boolean, // 是否可以调整可编辑状态
     isRequired?: boolean, // 是否不能为空
@@ -135,6 +136,7 @@ export default class Cell extends Component {
       this.props.changeEnd({
         data: this.props.data,
         value: this.state.value,
+        index: this.props.index,
       })
     }
   }
@@ -144,6 +146,7 @@ export default class Cell extends Component {
       this.props.onPress({
         data: this.props.data,
         value: this.state.value,
+        index: this.props.index,
       })
     }
   }

@@ -25,6 +25,7 @@ import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
+import { getThemeAssets } from '../../assets'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -38,6 +39,7 @@ export default class MT_layerManager extends React.Component {
     setCurrentLayer: () => {},
     getLayers: () => {},
     closeMap: () => {},
+    clearAttributeHistory: () => {},
     device: Object,
     currentLayer: Object,
   }
@@ -45,7 +47,7 @@ export default class MT_layerManager extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      datasourceList: [],
+      // datasourceList: [],
       mapName: '',
       refreshing: false,
       currentOpenItemName: '', // 记录左滑的图层的名称
@@ -109,7 +111,7 @@ export default class MT_layerManager extends React.Component {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
     ;(async function() {
-      this.getData()
+      this.getData(true)
     }.bind(this)())
   }
 
@@ -126,11 +128,11 @@ export default class MT_layerManager extends React.Component {
     })
   }
 
-  getData = async () => {
+  getData = async (isInit = false) => {
     // this.container.setLoading(true)
     try {
       this.itemRefs = {}
-      let layers = await this.props.getLayers()
+      let layers = isInit ? this.props.layers : await this.props.getLayers()
 
       if (
         layers.length > 0 &&
@@ -404,7 +406,15 @@ export default class MT_layerManager extends React.Component {
   }
 
   onAllPressRow = async ({ data }) => {
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        // 切换地图，清除历史记录
+        if (
+          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
+        ) {
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        }
+      })
     this.setState({
       selectLayer: data.caption,
     })
@@ -420,21 +430,23 @@ export default class MT_layerManager extends React.Component {
   mapEdit = data => {
     SMap.setLayerEditable(data.path, true)
     if (data.type === 83) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-        containerType: 'list',
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[4],
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
+          containerType: 'list',
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[4],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.THEME_HEIGHT[3],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else {
       Toast.show('当前图层无法设置风格')
@@ -463,27 +475,44 @@ export default class MT_layerManager extends React.Component {
         curThemeType = constants.THEME_UNIFY_LABEL
         // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
         break
+      case ThemeType.GRAPH:
+        curThemeType = constants.THEME_GRAPH_STYLE
+        break
       default:
         Toast.show('提示:当前图层暂不支持修改')
         break
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        containerType: 'list',
-        isFullScreen: true,
-        themeType: curThemeType,
-        isTouchProgress: false,
-        showMenuDialog: true,
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox.setVisible(
+        true,
+        curThemeType === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          themeType: curThemeType,
+          isTouchProgress: false,
+          showMenuDialog: true,
+        },
+      )
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
       Toast.show('当前图层为:' + data.name)
     }
   }
 
   onPressRow = async ({ data }) => {
-    this.props.setCurrentLayer && this.props.setCurrentLayer(data, () => {})
+    this.props.setCurrentLayer &&
+      this.props.setCurrentLayer(data, () => {
+        // 切换地图，清除历史记录
+        if (
+          JSON.stringify(this.props.currentLayer) !== JSON.stringify(data.name)
+        ) {
+          this.props.clearAttributeHistory && this.props.clearAttributeHistory()
+        }
+      })
     if (GLOBAL.Type === constants.MAP_EDIT) {
       if (data.themeType <= 0) {
         this.mapEdit(data)
@@ -816,8 +845,8 @@ export default class MT_layerManager extends React.Component {
 
   renderSection = ({ section }) => {
     let image = section.visible
-      ? (image = require('../../assets/mapEdit/icon_spread.png'))
-      : (image = require('../../assets/mapEdit/icon_packUP.png'))
+      ? (image = getThemeAssets().publicAssets.list_section_packup)
+      : (image = getThemeAssets().publicAssets.list_section_spread)
     return (
       <TouchableOpacity
         style={{

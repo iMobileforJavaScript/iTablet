@@ -90,9 +90,10 @@ export default StyleSheet.create({
     backgroundColor: color.content_white,
     borderWidth: 1,
     borderColor: color.bgG,
-    width: scaleSize(110),
+    // width: scaleSize(110),
   },
   btnTitle: {
+    flex: 1,
     color: color.themeText2,
     fontSize: size.fontSize.fontSizeSm,
     backgroundColor: 'transparent',

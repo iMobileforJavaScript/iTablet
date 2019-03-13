@@ -113,6 +113,7 @@ export default class Row extends Component {
       this.props.onChangeEnd({
         rowData: this.props.data,
         index: this.props.index,
+        columnIndex: data.index,
         cellData: data.data,
         value: data.value,
       })
@@ -191,6 +192,7 @@ export default class Row extends Component {
       return (
         <Cell
           key={index}
+          index={index}
           style={[
             !editable && { backgroundColor: color.bgW },
             cellStyle,

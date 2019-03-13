@@ -10,8 +10,10 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   SectionList,
+  Dimensions,
 } from 'react-native'
-import { scaleSize } from '../../../../utils'
+import { scaleSize, dataUtil } from '../../../../utils'
+import { IndicatorLoading } from '../../../../components'
 import { color } from '../../../../styles'
 import Row from './Row'
 
@@ -65,7 +67,6 @@ export default class LayerAttributeTable extends React.Component {
     this.state = {
       colHeight: COL_HEIGHT,
       widthArr: props.widthArr,
-      modifiedData: {},
       tableTitle: titles,
       // tableData: props.tableData,
       tableHead: props.tableHead,
@@ -74,13 +75,28 @@ export default class LayerAttributeTable extends React.Component {
       tableData: [
         {
           title: titles,
-          data: props.data,
+          data: dataUtil.cloneObj(props.data),
         },
       ],
       selected: (new Map(): Map<string, boolean>),
       currentSelect: -1,
       refreshing: false,
+      loading: false,
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(nextState) !== JSON.stringify(this.state) ||
+      JSON.stringify(nextProps.tableTitle) !==
+        JSON.stringify(this.props.tableTitle) ||
+      JSON.stringify(nextProps.data) !== JSON.stringify(this.props.data) ||
+      JSON.stringify([...this.state.selected]) !==
+        JSON.stringify([...nextState.selected])
+    ) {
+      return true
+    }
+    return false
   }
 
   componentDidUpdate(prevProps) {
@@ -153,8 +169,31 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   loadMore = () => {
-    if (this.props.loadMore && typeof this.props.loadMore === 'function') {
-      this.props.loadMore()
+    if (
+      this.props.loadMore &&
+      typeof this.props.loadMore === 'function' &&
+      !this.state.loading
+    ) {
+      this.setState(
+        {
+          loading: true,
+        },
+        () => {
+          // if (this.state.tableData[0].data && this.state.tableData[0].data.length > 0) {
+          //   this.table && this.table.scrollToLocation({
+          //     viewPosition: 1,
+          //     sectionIndex: 0,
+          //     itemIndex: this.state.tableData[0].data.length - 1,
+          //     viewOffset: COL_HEIGHT,
+          //   })
+          // }
+        },
+      )
+      this.props.loadMore(() => {
+        this.setState({
+          loading: false,
+        })
+      })
     }
   }
 
@@ -207,9 +246,17 @@ export default class LayerAttributeTable extends React.Component {
       indexCellStyle = styles.indexCell
       indexCellTextStyle = styles.indexCellText
     }
+    let data = item
+    if (this.props.hasIndex && data.length > 0 && data[0].name !== '序号') {
+      data.unshift({
+        name: '序号',
+        value: index + 1,
+        fieldInfo: {},
+      })
+    }
     return (
       <Row
-        data={item}
+        data={data}
         selected={item[0] ? !!this.state.selected.get(item[0].value) : false}
         index={index}
         disableCellStyle={styles.disableCellStyle}
@@ -228,11 +275,15 @@ export default class LayerAttributeTable extends React.Component {
   }
 
   _renderSectionHeader = ({ section }) => {
+    let titles = section.title
+    if (this.props.hasIndex && titles.length > 0 && titles[0] !== '序号') {
+      titles.unshift('序号')
+    }
     return (
       <Row
         style={{ backgroundColor: color.itemColorGray }}
         cellTextStyle={{ color: color.fontColorWhite }}
-        data={section.title}
+        data={titles}
         hasInputText={false}
         onPress={() => {}}
       />
@@ -265,6 +316,7 @@ export default class LayerAttributeTable extends React.Component {
           getItemLayout={this.getItemLayout}
           extraData={this.state}
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
+          renderSectionFooter={this.renderFooter}
         />
       </ScrollView>
     )
@@ -291,6 +343,22 @@ export default class LayerAttributeTable extends React.Component {
     )
   }
 
+  renderFooter = () => {
+    if (!this.state.loading) return <View />
+    return (
+      <View
+        style={{
+          width: Dimensions.get('window').width,
+          height: COL_HEIGHT,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <IndicatorLoading title={'加载中'} />
+      </View>
+    )
+  }
+
   render() {
     let isMultiData =
       this.state.tableData[0].data instanceof Array &&
@@ -307,6 +375,7 @@ export default class LayerAttributeTable extends React.Component {
           {this.props.type === 'MULTI_DATA' && isMultiData
             ? this.renderMultiDataTable()
             : this.renderSingleDataTable()}
+          {/*{this.state.loading && this.renderFooter()}*/}
         </View>
       </KeyboardAvoidingView>
     )

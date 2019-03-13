@@ -331,7 +331,7 @@ export default class Map3D extends React.Component {
         {...this.props}
         // setAttributes={this.props.setAttributes}
         measureShow={this.measureShow}
-        setLoading={this.setLoading}
+        setContainerLoading={this.setLoading}
       />
     )
   }
