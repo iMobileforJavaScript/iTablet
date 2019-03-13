@@ -10,6 +10,8 @@ import {
   layereditsetting,
   baseListData,
   taggingData,
+  scaleData,
+  mscaleData,
 } from './LayerToolbarData'
 import {
   View,
@@ -110,6 +112,15 @@ export default class LayerManager_tolbar extends React.Component {
         break
       case ConstToolType.MAP_EDIT_TAGGING:
         data = taggingData
+        break
+      case ConstToolType.MAP_SCALE:
+        data = scaleData
+        break
+      case ConstToolType.MAP_MAX_SCALE:
+        data = mscaleData
+        break
+      case ConstToolType.MAP_MIN_SCALE:
+        data = mscaleData
         break
     }
     return data
@@ -252,6 +263,101 @@ export default class LayerManager_tolbar extends React.Component {
     } else if (section.title === '图层风格') {
       this.mapStyle()
       this.setVisible(false)
+    } else if (section.title === '可见比例尺范围') {
+      this.setVisible(true, ConstToolType.MAP_SCALE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[1],
+        layerdata: this.state.layerdata,
+      })
+    } else if (section.title === '最大可见比例尺') {
+      this.setVisible(true, ConstToolType.MAP_MAX_SCALE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        layerdata: this.state.layerdata,
+      })
+    } else if (section.title === '最小可见比例尺') {
+      this.setVisible(true, ConstToolType.MAP_MIN_SCALE, {
+        height: ConstToolType.TOOLBAR_HEIGHT[6],
+        layerdata: this.state.layerdata,
+      })
+    } else if (section.title === '1:5,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 5000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 5000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:10,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 10000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 10000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:25,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 25000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 25000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:50,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 50000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 50000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:100,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 100000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 100000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:250,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 250000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 250000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:500,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 500000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 500000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
+    } else if (section.title === '1:1,000,000') {
+      (async function() {
+        if (this.state.type === ConstToolType.MAP_MIN_SCALE) {
+          await SMap.setMinVisibleScale(this.state.layerdata.name, 1000000)
+          this.setVisible(false)
+        } else {
+          await SMap.setMaxVisibleScale(this.state.layerdata.name, 1000000)
+          this.setVisible(false)
+        }
+      }.bind(this)())
     } else if (section.title === '重命名') {
       NavigationService.navigate('InputPage', {
         headerTitle: '图层名称',
@@ -300,6 +406,7 @@ export default class LayerManager_tolbar extends React.Component {
       this.setVisible(false)
     } else if (section.title === '导入标注') {
       (async function() {
+        GLOBAL.value = this.state.layerdata
         await SMap.openTaggingDataset(this.state.layerdata)
         await this.props.getLayers(-1, layers => {
           this.props.setCurrentLayer(layers.length > 0 && layers[0])
@@ -453,15 +560,17 @@ export default class LayerManager_tolbar extends React.Component {
               alignItems: 'center',
             }}
           >
-            <Image
-              resizeMode={'contain'}
-              style={{
-                marginLeft: scaleSize(60),
-                height: scaleSize(60),
-                width: scaleSize(60),
-              }}
-              source={section.image}
-            />
+            {section.image && (
+              <Image
+                resizeMode={'contain'}
+                style={{
+                  marginLeft: scaleSize(60),
+                  height: scaleSize(60),
+                  width: scaleSize(60),
+                }}
+                source={section.image}
+              />
+            )}
             <Text
               style={{
                 fontSize: setSpText(24),
@@ -491,6 +600,15 @@ export default class LayerManager_tolbar extends React.Component {
     switch (this.state.containerType) {
       case list:
         switch (this.state.type) {
+          case ConstToolType.MAP_SCALE:
+            box = this.renderList()
+            break
+          case ConstToolType.MAP_MAX_SCALE:
+            box = this.renderList()
+            break
+          case ConstToolType.MAP_MIN_SCALE:
+            box = this.renderList()
+            break
           case ConstToolType.MAP_EDIT_TAGGING:
             box = this.renderList()
             break

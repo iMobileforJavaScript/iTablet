@@ -2,6 +2,7 @@ import { SMap, Action, SCollector } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
+import NavigationService from '../../../NavigationService'
 
 /**
  * 获取编辑操作
@@ -14,6 +15,18 @@ function getEditData(type) {
   if (typeof type === 'string' && type.indexOf('MAP_EDIT_') === -1)
     return { data, buttons }
   switch (type) {
+    case ConstToolType.MAP_EDIT_TAGGING_SETTING:
+      data = [
+        {
+          title: '属性记录',
+          data: [
+            { title: '名称', action: name },
+            { title: '备注', action: remark },
+            { title: 'http地址', action: address },
+          ],
+        },
+      ]
+      break
     case ConstToolType.MAP_EDIT_TAGGING:
       data = [
         {
@@ -24,14 +37,14 @@ function getEditData(type) {
           image: require('../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
         },
-        {
-          key: constants.WORDS,
-          title: constants.WORDS,
-          size: 'large',
-          action: words,
-          image: require('../../../../assets/mapTools/icon_words_black.png'),
-          selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
-        },
+        // {
+        //   key: constants.WORDS,
+        //   title: constants.WORDS,
+        //   size: 'large',
+        //   action: words,
+        //   image: require('../../../../assets/mapTools/icon_words_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
+        // },
         {
           key: constants.POINTLINE,
           title: constants.POINTLINE,
@@ -332,6 +345,12 @@ function getEditData(type) {
       ToolbarBtnType.PLACEHOLDER,
       ToolbarBtnType.COMMIT,
     ]
+  } else if (type === ConstToolType.MAP_EDIT_TAGGING_SETTING) {
+    buttons = [
+      ToolbarBtnType.TAGGING_BACK,
+      ToolbarBtnType.PLACEHOLDER,
+      ToolbarBtnType.COMMIT,
+    ]
   } else {
     buttons = [
       ToolbarBtnType.CANCEL,
@@ -350,13 +369,55 @@ function getEditData(type) {
 //   return result
 // }
 
+function name() {
+  return NavigationService.navigate('InputPage', {
+    headerTitle: '名称',
+    cb: async value => {
+      if (value !== '') {
+        (async function() {
+          await SMap.addRecordset(GLOBAL.value, 'name', value)
+        }.bind(this)())
+      }
+      NavigationService.goBack()
+    },
+  })
+}
+
+function remark() {
+  return NavigationService.navigate('InputPage', {
+    headerTitle: '名称',
+    cb: async value => {
+      if (value !== '') {
+        (async function() {
+          await SMap.addRecordset(GLOBAL.value, 'remark', value)
+        }.bind(this)())
+      }
+      NavigationService.goBack()
+    },
+  })
+}
+
+function address() {
+  return NavigationService.navigate('InputPage', {
+    headerTitle: '名称',
+    cb: async value => {
+      if (value !== '') {
+        (async function() {
+          await SMap.addRecordset(GLOBAL.value, 'address', value)
+        }.bind(this)())
+      }
+      NavigationService.goBack()
+    },
+  })
+}
+
 function point() {
   return SMap.setAction(Action.CREATEPOINT)
 }
 
-function words() {
-  return SMap.setAction(Action.CREATEPLOT)
-}
+// function words() {
+//   return SMap.setAction(Action.CREATEPLOT)
+// }
 
 function pointline() {
   return SMap.setAction(Action.CREATEPOLYLINE)
