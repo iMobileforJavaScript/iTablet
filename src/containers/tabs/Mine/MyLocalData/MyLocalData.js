@@ -7,7 +7,7 @@ import {
   Image,
   AsyncStorage,
 } from 'react-native'
-import { ListSeparator } from '../../../../components'
+import { Container, ListSeparator } from '../../../../components'
 import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -243,14 +243,9 @@ export default class MyLocalData extends Component {
       let newSectionData = cacheSectionData.concat([
         { title: '外部数据', data: newData, isShowItem: true },
       ])
-      this.setState(
-        {
-          sectionData: newSectionData,
-        },
-        () => {
-          this.props.showOnlineData()
-        },
-      )
+      this.setState({
+        sectionData: newSectionData,
+      })
       // let externalSectionData = []
       // let result = await AsyncStorage.getItem('ExternalSectionData')
       // if (result !== null) {
@@ -759,7 +754,14 @@ export default class MyLocalData extends Component {
   render() {
     let sectionData = this.state.sectionData
     return (
-      <View style={{ flex: 1 }}>
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: '导入',
+          withoutBack: false,
+          navigation: this.props.navigation,
+        }}
+      >
         <Text
           numberOfLines={2}
           ellipsizeMode={'head'}
@@ -787,7 +789,7 @@ export default class MyLocalData extends Component {
           renderSectionFooter={this._renderSectionSeparatorComponent}
         />
         {this._showLocalDataPopupModal()}
-      </View>
+      </Container>
     )
   }
 }

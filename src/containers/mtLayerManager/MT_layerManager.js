@@ -25,6 +25,7 @@ import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
+import { getThemeAssets } from '../../assets'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -429,21 +430,23 @@ export default class MT_layerManager extends React.Component {
   mapEdit = data => {
     SMap.setLayerEditable(data.path, true)
     if (data.type === 83) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
-        containerType: 'list',
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[4],
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.GRID_STYLE, {
+          containerType: 'list',
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[4],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else if (data.type === 1 || data.type === 3 || data.type === 5) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.THEME_HEIGHT[3],
+        })
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
     } else {
       Toast.show('当前图层无法设置风格')
@@ -472,20 +475,29 @@ export default class MT_layerManager extends React.Component {
         curThemeType = constants.THEME_UNIFY_LABEL
         // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
         break
+      case ThemeType.GRAPH:
+        curThemeType = constants.THEME_GRAPH_STYLE
+        break
       default:
         Toast.show('提示:当前图层暂不支持修改')
         break
     }
     if (curThemeType) {
       // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        containerType: 'list',
-        isFullScreen: true,
-        themeType: curThemeType,
-        isTouchProgress: false,
-        showMenuDialog: true,
-      })
-      GLOBAL.toolBox.showFullMap()
+      GLOBAL.toolBox.setVisible(
+        true,
+        curThemeType === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          themeType: curThemeType,
+          isTouchProgress: false,
+          showMenuDialog: true,
+        },
+      )
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
       Toast.show('当前图层为:' + data.name)
     }
@@ -833,8 +845,8 @@ export default class MT_layerManager extends React.Component {
 
   renderSection = ({ section }) => {
     let image = section.visible
-      ? (image = require('../../assets/mapEdit/icon_spread.png'))
-      : (image = require('../../assets/mapEdit/icon_packUP.png'))
+      ? (image = getThemeAssets().publicAssets.list_section_packup)
+      : (image = getThemeAssets().publicAssets.list_section_spread)
     return (
       <TouchableOpacity
         style={{

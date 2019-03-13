@@ -35,6 +35,7 @@ import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
+//import { Dialog } from './src/components'
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -69,6 +70,9 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(24),
     color: color.theme_white,
     marginTop: scaleSize(5),
+    marginLeft:scaleSize(10),
+    marginRight:scaleSize(10),
+    textAlign:'center',
   },
   dialogBackground: {
     width: scaleSize(350),
@@ -357,7 +361,7 @@ class AppRoot extends Component {
           source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>许可过期,请更换并重启</Text>
+        <Text style={styles.promptTtile}>试用许可已过期,请更换许可后重启</Text>
       </View>
     )
   }
@@ -373,8 +377,9 @@ class AppRoot extends Component {
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
     >
-    {this.renderExitDialogChildren()}
-    </Dialog>)
+        {this.renderExitDialogChildren()}
+    </Dialog>
+    )
   }
 
   render() {

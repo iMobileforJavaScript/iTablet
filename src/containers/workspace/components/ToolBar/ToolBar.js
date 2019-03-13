@@ -5,6 +5,7 @@ import {
   TableList,
   ColorTableList,
   ColorBtn,
+  HorizontalTableList,
 } from '../../../../components'
 import {
   ConstToolType,
@@ -57,12 +58,16 @@ import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
+import { graphMenuInfo } from '../../../../constants/FunctionToolbarModule'
+import { getThemeAssets } from '../../../../assets'
 
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
 const tabs = 'tabs'
 const symbol = 'symbol'
+const colortable = 'colortable'
+const horizontalTable = 'horizontalTable'
 // 工具表格默认高度
 const DEFAULT_COLUMN = 4
 // 是否全屏显示，是否有Overlay
@@ -171,6 +176,7 @@ export default class ToolBar extends React.PureComponent {
       themeCreateType: '',
       selectName: '',
       selectKey: '',
+      listExpressions: [],
     }
     this.isShow = false
     this.isBoxShow = true
@@ -611,6 +617,7 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
+  //专题图字段表达式列表
   getThemeExpress = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
@@ -698,6 +705,265 @@ export default class ToolBar extends React.PureComponent {
       } catch (e) {
         this.props.setContainerLoading && this.props.setContainerLoading(false)
       }
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  //统计专题图字段表达式列表（多选）
+  getGraphThemeExpressions = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+        this.expressionData = await SThemeCartography.getThemeExpressionByLayerName(
+          GLOBAL.currentLayer.name,
+        )
+        let dataset = this.expressionData.dataset
+        let allExpressions = this.expressionData.list
+        let param = {
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        let expressions = await SThemeCartography.getGraphExpressions(param)
+        let selectedExpressions = expressions.list //已选择的字段列表
+        if (selectedExpressions) {
+          for (let index = 0; index < selectedExpressions.length; index++) {
+            for (let i = 0; i < allExpressions.length; i++) {
+              if (allExpressions[i].expression === selectedExpressions[index]) {
+                allExpressions[i].isSelected = true
+              }
+            }
+          }
+        }
+        allExpressions.forEach(item => {
+          item.info = {
+            infoType: 'fieldType',
+            fieldType: item.fieldType,
+          }
+        })
+        let datalist = [
+          {
+            title: dataset.datasetName,
+            datasetType: dataset.datasetType,
+            expressionType: true,
+            data: allExpressions,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            listSelectable: true, //单选框
+            containerType: 'list',
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeGraphMenu(),
+            selectName: name,
+            selectKey: key,
+            listExpressions: selectedExpressions,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            this.updateOverlayerView()
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      }
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  //统计专题图统计值计算方法
+  getGraphThemeGradutedMode = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[8]
+            : ConstToolType.THEME_HEIGHT[8],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getGraphThemeGradutedMode()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          listSelectable: false, //单选框
+          column: 3,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeGraphMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  //统计专题图颜色方案列表
+  getGraphThemeColorScheme = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[3]
+            : ConstToolType.THEME_HEIGHT[5],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      try {
+        this.props.setContainerLoading &&
+          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+        let list = await ThemeMenuData.getThemeGraphColorScheme()
+        let datalist = [
+          {
+            title: '颜色方案',
+            data: list,
+          },
+        ]
+        this.setState(
+          {
+            isFullScreen: false,
+            isTouchProgress: false,
+            showMenuDialog: false,
+            containerType: 'list',
+            listSelectable: false, //单选框
+            data: datalist,
+            type: type,
+            buttons: ThemeMenuData.getThemeGraphMenu(),
+            selectName: name,
+            selectKey: key,
+          },
+          () => {
+            this.height =
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5]
+            this.scrollListToLocation()
+
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            this.updateOverlayerView()
+          },
+        )
+      } catch (e) {
+        this.props.setContainerLoading && this.props.setContainerLoading(false)
+      }
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  //修改统计专题图类型
+  changeGraphType = async (type = ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) => {
+    this.isBoxShow = !this.isBoxShow
+    if (this.state.type !== ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
+      this.isBoxShow = true
+    }
+    this.height =
+      this.props.device.orientation === 'LANDSCAPE'
+        ? ConstToolType.THEME_HEIGHT[8]
+        : ConstToolType.THEME_HEIGHT[8]
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: this.isBoxShow ? this.height : 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getThemeGraphType()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'horizontalTable',
+          listSelectable: false, //单选框
+          column: 4,
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeGraphMenu(),
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
+        },
+      )
     }.bind(this)
 
     if (!this.state.showMenuDialog) {
@@ -1663,7 +1929,10 @@ export default class ToolBar extends React.PureComponent {
     }
     // Box内容框的显示和隐藏
     let bottom = parseFloat(JSON.stringify(this.state.bottom))
-    if (type === ConstToolType.MAP_THEME_PARAM) {
+    if (
+      type === ConstToolType.MAP_THEME_PARAM ||
+      type === ConstToolType.MAP_THEME_PARAM_GRAPH
+    ) {
       animatedList.push(
         Animated.timing(this.state.boxHeight, {
           toValue: 0,
@@ -2003,7 +2272,9 @@ export default class ToolBar extends React.PureComponent {
         SMap.setAction(Action.SELECT)
       } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         // SMap.setAction(Action.SELECT_BY_RECTANGLE)
-        SMap.selectByRectangle()
+        // SMap.selectByRectangle()
+        SMap.setAction(Action.PAN)
+        SMap.clearSelection()
       } else {
         if (type === ConstToolType.ATTRIBUTE_RELATE) {
           // 返回图层属性界面，并清除属性关联选中的对象
@@ -2012,9 +2283,9 @@ export default class ToolBar extends React.PureComponent {
           SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
           // TODO 恢复框选对象，并返回到地图
-          // NavigationService.navigate('LayerSelectionAttribute')
+          NavigationService.navigate('LayerSelectionAttribute')
           // NavigationService.navigate('LayerAttributeTabs', {initialPage: GLOBAL.LayerAttributeTabIndex})
-          NavigationService.goBack()
+          // NavigationService.goBack()
           // 返回框选/点选属性界面，并清除属性关联选中的对象
           let selection = []
           for (let i = 0; i < this.props.selection.length; i++) {
@@ -2167,17 +2438,29 @@ export default class ToolBar extends React.PureComponent {
       ) {
         // GLOBAL.showFlex =  !GLOBAL.showFlex
         this.isBoxShow = !this.isBoxShow
+        let buttons
+        if (this.state.type.indexOf('MAP_THEME_PARAM_GRAPH') >= 0) {
+          buttons = [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.THEME_GRAPH_TYPE,
+            ToolbarBtnType.MENU_COMMIT,
+          ]
+        } else {
+          buttons = [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ]
+        }
         this.setState(
           {
             isFullScreen,
             showMenuDialog,
             isTouchProgress,
-            buttons: [
-              ToolbarBtnType.CANCEL,
-              ToolbarBtnType.MENU,
-              ToolbarBtnType.MENU_FLEX,
-              ToolbarBtnType.MENU_COMMIT,
-            ],
+            buttons: buttons,
           },
           () => {
             this.updateOverlayerView()
@@ -2299,21 +2582,44 @@ export default class ToolBar extends React.PureComponent {
         )
         this.isBoxShow = false
       } else {
-        this.isBoxShow = !this.isBoxShow
-        Animated.timing(this.state.boxHeight, {
-          toValue: this.isBoxShow ? this.height : 0,
-          duration: Const.ANIMATED_DURATION,
-        }).start()
+        if (this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE) {
+          switch (this.state.selectKey) {
+            case '表达式':
+              this.getGraphThemeExpressions(
+                ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION,
+                '表达式',
+              )
+              break
+            case '计算方法':
+              this.getGraphThemeGradutedMode(
+                ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE,
+                '计算方法',
+              )
+              break
+            case '颜色方案':
+              this.getGraphThemeColorScheme(
+                ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
+                '颜色方案',
+              )
+              break
+          }
+        } else {
+          this.isBoxShow = !this.isBoxShow
+          Animated.timing(this.state.boxHeight, {
+            toValue: this.isBoxShow ? this.height : 0,
+            duration: Const.ANIMATED_DURATION,
+          }).start()
 
-        this.setState(
-          {
-            showMenuDialog: false,
-            isFullScreen: false,
-          },
-          () => {
-            this.updateOverlayerView()
-          },
-        )
+          this.setState(
+            {
+              showMenuDialog: false,
+              isFullScreen: false,
+            },
+            () => {
+              this.updateOverlayerView()
+            },
+          )
+        }
       }
     }
   }
@@ -2485,6 +2791,18 @@ export default class ToolBar extends React.PureComponent {
           LayerName: GLOBAL.currentLayer.name,
         }
         await SThemeCartography.setRangeColorScheme(Params)
+      }.bind(this)())
+    } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR) {
+      //统计专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          GraphColorType: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.setThemeGraphColorScheme(Params)
       }.bind(this)())
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION
@@ -2762,6 +3080,17 @@ export default class ToolBar extends React.PureComponent {
         this.setVisible(false)
       }.bind(this)())
     }
+  }
+
+  /**
+   * 统计专题图多选字段列表，修改所需字段，实时更新地图
+   */
+  listSelectableAction = async ({ selectList }) => {
+    let Params = {
+      LayerName: GLOBAL.currentLayer.name,
+      GraphExpressions: selectList,
+    }
+    await SThemeCartography.setThemeGraphExpressions(Params)
   }
 
   listAction = ({ item, index }) => {
@@ -3394,6 +3723,14 @@ export default class ToolBar extends React.PureComponent {
             this.listAction({ item, index })
           }
         }}
+        selectList={this.state.listExpressions}
+        listSelectableAction={({ selectList }) => {
+          if (
+            this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION
+          ) {
+            this.listSelectableAction({ selectList })
+          }
+        }}
         headerAction={this.headerAction}
         underlayColor={color.item_separate_white}
         keyExtractor={(item, index) => index}
@@ -3407,6 +3744,18 @@ export default class ToolBar extends React.PureComponent {
       <TableList
         data={this.state.data}
         type={this.state.tableType}
+        numColumns={this.state.column}
+        renderCell={this._renderItem}
+        Heighttype={this.state.type}
+        device={this.props.device}
+      />
+    )
+  }
+
+  renderHorizontalTable = () => {
+    return (
+      <HorizontalTableList
+        data={this.state.data}
         numColumns={this.state.column}
         renderCell={this._renderItem}
         Heighttype={this.state.type}
@@ -3569,6 +3918,25 @@ export default class ToolBar extends React.PureComponent {
               ColorType: 'BACKSHAPE_COLOR',
             }
             ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_TYPE
+          ) {
+            //统计专题图类型
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              ThemeGraphType: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE
+          ) {
+            //统计专题图统计值计算方法
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              GraduatedMode: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
           }
         }
         item.action()
@@ -3678,6 +4046,8 @@ export default class ToolBar extends React.PureComponent {
         list = rangeMenuInfo
       } else if (this.state.themeType === constants.THEME_UNIFY_LABEL) {
         list = labelMenuInfo
+      } else if (this.state.themeType === constants.THEME_GRAPH_STYLE) {
+        list = graphMenuInfo
       }
     }
     if (!list) {
@@ -3744,8 +4114,11 @@ export default class ToolBar extends React.PureComponent {
       case symbol:
         box = this.renderSymbol()
         break
-      case 'colortable':
+      case colortable:
         box = this.renderColorTable()
+        break
+      case horizontalTable:
+        box = this.renderHorizontalTable()
         break
       case table:
       default:
@@ -4012,6 +4385,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_clear.png')
           action = () => MapToolData.clearMeasure(this.state.type)
           break
+        case ToolbarBtnType.THEME_GRAPH_TYPE:
+          //统计专题图类型
+          image = getThemeAssets().themeType.theme_graph_type_selected
+          action = this.changeGraphType
+          break
       }
 
       if (type === ToolbarBtnType.PLACEHOLDER) {
@@ -4106,7 +4484,8 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress
             selectName={this.state.selectName}
             showMenu={this.menu}

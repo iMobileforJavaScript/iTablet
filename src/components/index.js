@@ -41,6 +41,8 @@ import ColorTableList from './ColorTableList'
 import Input from './Input'
 import SearchBar from './SearchBar'
 import PopModal from './PopModal'
+import { IndicatorLoading } from './Loading'
+import HorizontalTableList from './HorizontalTableList'
 
 export {
   Container,
@@ -91,4 +93,6 @@ export {
   Input,
   SearchBar,
   PopModal,
+  IndicatorLoading,
+  HorizontalTableList,
 }

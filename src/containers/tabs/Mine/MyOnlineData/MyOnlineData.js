@@ -15,7 +15,6 @@ import {
   TouchableOpacity,
   View,
   NetInfo,
-  ScrollView,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
@@ -26,8 +25,6 @@ import Toast from '../../../../utils/Toast'
 import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
 import { scaleSize } from '../../../../utils'
-import MyLocalData from '../MyLocalData'
-import UserType from '../../../../constants/UserType'
 import RNFS from 'react-native-fs'
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
@@ -72,7 +69,7 @@ export default class MyOnlineData extends Component {
   componentDidMount() {
     // this._removeListener()
     // this._addListener()
-    this.container.setLoading(true)
+    // this.container.setLoading(true)
     this._firstLoadData()
   }
 
@@ -788,30 +785,17 @@ export default class MyOnlineData extends Component {
     }
   }
 
-  showOnlineData = () => {
-    this.setState({ showOnlineData: true })
-    this.container.setLoading(false)
-  }
-
   render() {
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '导入',
+          title: '在线数据',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
       >
-        <ScrollView style={{ flex: 1 }}>
-          <MyLocalData
-            navigation={this.props.navigation}
-            showOnlineData={this.showOnlineData}
-          />
-          {this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
-            this.state.showOnlineData &&
-            this._render()}
-        </ScrollView>
+        {this._render()}
       </Container>
     )
   }

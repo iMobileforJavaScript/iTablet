@@ -94,7 +94,6 @@ export default StyleSheet.create({
     borderWidth: 1,
     borderColor: color.bgG,
     // width: scaleSize(110),
-    // flex:1,
   },
   btnTitle: {
     // flex: 1,

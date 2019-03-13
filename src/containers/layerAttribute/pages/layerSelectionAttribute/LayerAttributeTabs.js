@@ -135,6 +135,15 @@ export default class LayerAttributeTabs extends React.Component {
     })
   }
 
+  onGetAttribute = attributes => {
+    // 当数据只有一条时，则默认当前index为0
+    if (attributes.length === 1 && this.state.currentIndex !== 0) {
+      this.setState({
+        currentIndex: 0,
+      })
+    }
+  }
+
   /** 关联事件 **/
   relateAction = () => {
     if (
@@ -151,7 +160,12 @@ export default class LayerAttributeTabs extends React.Component {
       if (this.props.selection[i].layerInfo.name === layerPath) {
         objs.push({
           layerPath: layerPath,
-          ids: [selection.data[0].value],
+          // ids: [selection.data[0].value],
+          ids: [
+            selection.data[0].name === 'SmID'
+              ? selection.data[0].value
+              : selection.data[1].value,
+          ], // 多条数据有序号时：0为序号，1为SmID；无序号时0为SmID
         })
       } else {
         objs.push({
@@ -166,17 +180,18 @@ export default class LayerAttributeTabs extends React.Component {
     SMap.selectObjs(objs).then(() => {
       // TODO 选中对象跳转到地图
       // this.props.navigation && this.props.navigation.navigate('MapView')
-      NavigationService.navigate('MapView')
-      // NavigationService.goBack()
-      GLOBAL.toolBox.setVisible(
-        true,
-        ConstToolType.ATTRIBUTE_SELECTION_RELATE,
-        {
-          isFullScreen: false,
-          height: 0,
-        },
-      )
-      GLOBAL.toolBox.showFullMap()
+      // NavigationService.navigate('MapView')
+      NavigationService.goBack()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.ATTRIBUTE_SELECTION_RELATE,
+          {
+            isFullScreen: false,
+            height: 0,
+          },
+        )
+      GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
     })
   }
 
@@ -195,29 +210,33 @@ export default class LayerAttributeTabs extends React.Component {
   back = () => {
     NavigationService.goBack()
 
-    GLOBAL.toolBox.showFullMap && GLOBAL.toolBox.showFullMap(true)
+    GLOBAL.toolBox &&
+      GLOBAL.toolBox.showFullMap &&
+      GLOBAL.toolBox.showFullMap(true)
     GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
 
-    GLOBAL.toolBox.setVisible(
-      true,
-      ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
-      {
-        containerType: 'table',
-        column: 3,
-        isFullScreen: false,
-        height: ConstToolType.HEIGHT[0],
-        cb: () => {
-          switch (GLOBAL.currentToolbarType) {
-            case ConstToolType.MAP_TOOL_POINT_SELECT:
-              SMap.setAction(Action.SELECT)
-              break
-            case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-              SMap.selectByRectangle()
-              break
-          }
+    GLOBAL.toolBox &&
+      GLOBAL.toolBox.setVisible(
+        true,
+        ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE,
+        {
+          containerType: 'table',
+          column: 3,
+          isFullScreen: false,
+          height: ConstToolType.HEIGHT[0],
+          cb: () => {
+            switch (GLOBAL.currentToolbarType) {
+              case ConstToolType.MAP_TOOL_POINT_SELECT:
+                SMap.setAction(Action.SELECT)
+                break
+              case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+                // SMap.selectByRectangle()
+                SMap.setAction(Action.SELECT_BY_RECTANGLE)
+                break
+            }
+          },
         },
-      },
-    )
+      )
   }
 
   setAttributeHistory = type => {
@@ -309,6 +328,7 @@ export default class LayerAttributeTabs extends React.Component {
         setLayerAttributes={this.props.setLayerAttributes}
         setAttributeHistory={this.props.setAttributeHistory}
         selectAction={this.selectAction}
+        onGetAttribute={this.onGetAttribute}
       />
     )
   }

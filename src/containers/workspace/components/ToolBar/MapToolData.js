@@ -170,7 +170,7 @@ function getMapTool(type, params) {
         {
           key: constants.CANCEL_SELECT,
           title: constants.CANCEL_SELECT,
-          action: select,
+          action: cancelSelect,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_cancel_1.png'),
         },
@@ -187,10 +187,14 @@ function select() {
       SMap.setAction(Action.SELECT)
       break
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-      // SMap.setAction(Action.SELECT_BY_RECTANGLE)
-      SMap.selectByRectangle()
+      SMap.setAction(Action.SELECT_BY_RECTANGLE)
+      // SMap.selectByRectangle()
       break
   }
+}
+
+function cancelSelect() {
+  SMap.clearSelection()
 }
 
 function viewEntire() {

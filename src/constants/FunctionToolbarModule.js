@@ -283,21 +283,22 @@ const line = [
   {
     key: '符号线',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectKey: '符号线',
-        selectName: '符号线',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectKey: '符号线',
+          selectName: '符号线',
+        })
     },
     selectKey: '符号线',
     selectName: '符号线',
@@ -305,18 +306,19 @@ const line = [
   {
     key: '线宽',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectName: '线宽',
-        selectKey: '线宽',
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: '线宽',
+          selectKey: '线宽',
+        })
     },
     selectName: '线宽',
     selectKey: '线宽',
@@ -324,21 +326,22 @@ const line = [
   {
     key: '颜色',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET, {
-        containerType: 'colortable',
-        column: 8,
-        tableType: 'scroll',
-        isFullScreen: false,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectKey: '线颜色',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.LINECOLOR_SET, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectKey: '线颜色',
+        })
     },
     selectName: '颜色',
     selectKey: '线颜色',
@@ -349,21 +352,22 @@ const point = [
   {
     key: '点符号',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectName: '点符号',
-        selectKey: '点符号',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: '点符号',
+          selectKey: '点符号',
+        })
     },
     selectName: '点符号',
     selectKey: '点符号',
@@ -371,19 +375,20 @@ const point = [
   {
     key: '大小',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        selectName: '大小',
-        selectKey: '大小',
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '大小',
+          selectKey: '大小',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
     },
     selectName: '大小',
     selectKey: '大小',
@@ -391,22 +396,23 @@ const point = [
   {
     key: '颜色',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET, {
-        containerType: 'colortable',
-        column: 8,
-        tableType: 'scroll',
-        isFullScreen: false,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectName: '颜色',
-        selectKey: '点颜色',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.POINTCOLOR_SET, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: '颜色',
+          selectKey: '点颜色',
+        })
     },
     selectName: '颜色',
     selectKey: '点颜色',
@@ -414,38 +420,40 @@ const point = [
   {
     key: '旋转角度',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        selectName: '旋转角度',
-        selectKey: '旋转角度',
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '旋转角度',
+          selectKey: '旋转角度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
     },
     selectKey: '旋转角度',
   },
   {
     key: '透明度',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        selectName: '透明度',
-        selectKey: '点透明度',
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '透明度',
+          selectKey: '点透明度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
     },
     selectKey: '点透明度',
   },
@@ -455,88 +463,92 @@ const region = [
   {
     key: '面符号',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
-        containerType: 'symbol',
-        isFullScreen: false,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectKey: '面符号',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_STYLE, {
+          containerType: 'symbol',
+          isFullScreen: false,
+          column: 4,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectKey: '面符号',
+        })
     },
     selectKey: '面符号',
   },
   {
     key: '前景色',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET, {
-        containerType: 'colortable',
-        column: 8,
-        tableType: 'scroll',
-        isFullScreen: false,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectKey: '前景色',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONBEFORECOLOR_SET, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectKey: '前景色',
+        })
     },
     selectKey: '前景色',
   },
   {
     key: '背景色',
     action: () => {
-      GLOBAL.toolBox.menu()
-      GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
-        containerType: 'colortable',
-        column: 8,
-        tableType: 'scroll',
-        isFullScreen: false,
-        height: ConstToolType.THEME_HEIGHT[3],
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectKey: '背景色',
-      })
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(true, ConstToolType.REGIONAFTERCOLOR_SET, {
+          containerType: 'colortable',
+          column: 8,
+          tableType: 'scroll',
+          isFullScreen: false,
+          height: ConstToolType.THEME_HEIGHT[3],
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectKey: '背景色',
+        })
     },
     selectKey: '背景色',
   },
   {
     key: '透明度',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-        selectName: '透明度',
-        selectKey: '面透明度',
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+          selectName: '透明度',
+          selectKey: '面透明度',
+        })
     },
     selectKey: '面透明度',
   },
   // {
   //   key: '渐变',
   //   action: () => {
-  //     GLOBAL.toolBox.setState({
+  //     GLOBAL.toolBox && GLOBAL.toolBox.setState({
   //       isTouchProgress: true,
   //       showMenuDialog: false,
   //       buttons: [
@@ -553,57 +565,60 @@ const grid = [
   {
     key: '透明度',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        selectName: '透明度',
-        selectKey: '栅格透明度',
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '透明度',
+          selectKey: '栅格透明度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
     },
     selectKey: '栅格透明度',
   },
   {
     key: '对比度',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        selectName: '对比度',
-        selectKey: '栅格对比度',
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '对比度',
+          selectKey: '栅格对比度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
     },
     selectKey: '栅格对比度',
   },
   {
     key: '亮度',
     action: () => {
-      GLOBAL.toolBox.setState({
-        isTouchProgress: true,
-        showMenuDialog: false,
-        selectName: '亮度',
-        selectKey: '栅格亮度',
-        buttons: [
-          ToolbarBtnType.CANCEL,
-          // ToolbarBtnType.MENUS,
-          ToolbarBtnType.MENU,
-          ToolbarBtnType.MENU_FLEX,
-          ToolbarBtnType.MENU_COMMIT,
-        ],
-      })
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setState({
+          isTouchProgress: true,
+          showMenuDialog: false,
+          selectName: '亮度',
+          selectKey: '栅格亮度',
+          buttons: [
+            ToolbarBtnType.CANCEL,
+            // ToolbarBtnType.MENUS,
+            ToolbarBtnType.MENU,
+            ToolbarBtnType.MENU_FLEX,
+            ToolbarBtnType.MENU_COMMIT,
+          ],
+        })
     },
     selectKey: '栅格亮度',
   },
@@ -780,6 +795,46 @@ const labelMenuInfo = [
   },
 ]
 
+//统计专题图
+const graphMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeExpressions(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '计算方法',
+    selectKey: '计算方法',
+    btntitle: '计算方法',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeGradutedMode(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_GRADUATEDMODE,
+          '计算方法',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR,
+          '颜色方案',
+        )
+    },
+  },
+]
+
 export {
   layerAdd,
   BotMap,
@@ -792,4 +847,5 @@ export {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  graphMenuInfo,
 }
