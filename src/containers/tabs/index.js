@@ -17,6 +17,7 @@ import Mine, {
   ToggleAccount,
   Login,
   MyLable,
+  MyBaseMap,
 } from './Mine'
 import Find from './Find'
 const Tabs = TabNavigator(
@@ -229,4 +230,5 @@ export {
   AboutITablet,
   Login,
   MyLable,
+  MyBaseMap,
 }

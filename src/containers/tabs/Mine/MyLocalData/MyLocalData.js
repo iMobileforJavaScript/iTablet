@@ -7,7 +7,7 @@ import {
   Image,
   AsyncStorage,
 } from 'react-native'
-import { Container, ListSeparator } from '../../../../components'
+import { ListSeparator } from '../../../../components'
 import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -16,12 +16,12 @@ import { color, size } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
-
 export default class MyLocalData extends Component {
   props: {
     user: Object,
     navigation: Object,
     importWorkspace: () => {},
+    showOnlineData: () => {},
   }
 
   constructor(props) {
@@ -58,6 +58,8 @@ export default class MyLocalData extends Component {
   ) => {
     try {
       let isRecordFile = false
+      let udb = null
+      let isWorkspace = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
       for (let i = 0; i < arrDirContent.length; i++) {
         if (isShowText === true) {
@@ -68,13 +70,14 @@ export default class MyLocalData extends Component {
         let isFile = fileContent.type
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
+
         if (isFile === 'file' && !isRecordFile) {
+          // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
           if (
             (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
             (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
             (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
-            (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
-            (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+            (fileType.smw && fileName.indexOf(fileType.smw) !== -1)
           ) {
             if (
               !(
@@ -90,6 +93,19 @@ export default class MyLocalData extends Component {
                 directory: fullFileDir,
               })
               isRecordFile = true
+              isWorkspace = true
+            }
+          } else if (fileType.udb && fileName.indexOf(fileType.udb) !== -1) {
+            fileName = fileName.substring(0, fileName.length - 4)
+            udb = {
+              filePath: newPath,
+              fileName: fileName,
+              directory: fullFileDir,
+            }
+          }
+          if (i === arrDirContent.length - 1) {
+            if (!isWorkspace) {
+              udb !== null && arrFilterFile.push(udb)
             }
           }
         } else if (isFile === 'directory') {
@@ -227,9 +243,14 @@ export default class MyLocalData extends Component {
       let newSectionData = cacheSectionData.concat([
         { title: '外部数据', data: newData, isShowItem: true },
       ])
-      this.setState({
-        sectionData: newSectionData,
-      })
+      this.setState(
+        {
+          sectionData: newSectionData,
+        },
+        () => {
+          this.props.showOnlineData()
+        },
+      )
       // let externalSectionData = []
       // let result = await AsyncStorage.getItem('ExternalSectionData')
       // if (result !== null) {
@@ -409,7 +430,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu' },
+      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
       newData,
       false,
     )
@@ -459,7 +480,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu' },
+      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
       newData,
       false,
     )
@@ -738,14 +759,7 @@ export default class MyLocalData extends Component {
   render() {
     let sectionData = this.state.sectionData
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: '导入',
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <Text
           numberOfLines={2}
           ellipsizeMode={'head'}
@@ -773,7 +787,7 @@ export default class MyLocalData extends Component {
           renderSectionFooter={this._renderSectionSeparatorComponent}
         />
         {this._showLocalDataPopupModal()}
-      </Container>
+      </View>
     )
   }
 }

@@ -109,6 +109,13 @@ export default class protocol extends Component {
         }
         title = '超图论坛'
         break
+      case 'supermap':
+        source = {
+          uri: `http://mp.weixin.qq.com/profile?src=3&timestamp=1552115539&ver=1&signature=Woh7VGjhtLXAgNTVx1F50zmUmCsLKoHFVbmqPbIG9A8hHc0dRRkEY*lxVbf-sH5ULhQ6jonrW-AHDvub42uzsw==`,
+        }
+        title = '超图集团'
+
+        break
       default:
         break
     }

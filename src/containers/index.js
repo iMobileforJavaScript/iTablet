@@ -19,6 +19,7 @@ import Tabs, {
   AboutITablet,
   Login,
   MyLable,
+  MyBaseMap,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -57,6 +58,7 @@ import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
+import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
 export default StackNavigator(
   {
     Tabs: {
@@ -381,6 +383,20 @@ export default StackNavigator(
     },
     MyLable: {
       screen: MyLable,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyBaseMap: {
+      screen: MyBaseMap,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    LoadServer: {
+      screen: LoadServer,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

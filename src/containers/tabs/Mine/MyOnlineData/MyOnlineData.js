@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
   NetInfo,
+  ScrollView,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
@@ -25,6 +26,8 @@ import Toast from '../../../../utils/Toast'
 import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
 import { scaleSize } from '../../../../utils'
+import MyLocalData from '../MyLocalData'
+import UserType from '../../../../constants/UserType'
 import RNFS from 'react-native-fs'
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
@@ -36,6 +39,7 @@ export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
     user: Object,
+    importWorkspace: () => {},
   }
 
   constructor(props) {
@@ -61,12 +65,14 @@ export default class MyOnlineData extends Component {
       onClickItemBgColor: color.pink,
       itemBgColor: color.blackBg,
       progressWidth: this.screenWidth * 0.6,
+      showOnlineData: false,
     }
     this.pageSize = 20
   }
   componentDidMount() {
     // this._removeListener()
     // this._addListener()
+    this.container.setLoading(true)
     this._firstLoadData()
   }
 
@@ -781,17 +787,31 @@ export default class MyOnlineData extends Component {
       )
     }
   }
+
+  showOnlineData = () => {
+    this.setState({ showOnlineData: true })
+    this.container.setLoading(false)
+  }
+
   render() {
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '我的数据',
+          title: '导入',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
       >
-        {this._render()}
+        <ScrollView style={{ flex: 1 }}>
+          <MyLocalData
+            navigation={this.props.navigation}
+            showOnlineData={this.showOnlineData}
+          />
+          {this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
+            this.state.showOnlineData &&
+            this._render()}
+        </ScrollView>
       </Container>
     )
   }
