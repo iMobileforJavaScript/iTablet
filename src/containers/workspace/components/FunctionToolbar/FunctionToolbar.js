@@ -716,7 +716,7 @@ export default class FunctionToolbar extends React.Component {
       cb: async value => {
         if (value !== '') {
           (async function() {
-            await SMap.newTaggingDataset(value)
+            GLOBAL.value = await SMap.newTaggingDataset(value)
           }.bind(this)())
         }
         NavigationService.goBack()

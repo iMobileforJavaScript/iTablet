@@ -1945,7 +1945,8 @@ export default class ToolBar extends React.PureComponent {
         typeof type === 'string' &&
         type.indexOf('MAP_EDIT_') >= 0 &&
         type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_EDIT_TAGGING
+        type !== ConstToolType.MAP_EDIT_TAGGING &&
+        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
         actionType = Action.SELECT
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
@@ -1984,7 +1985,9 @@ export default class ToolBar extends React.PureComponent {
 
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
-        this.props.getLayers()
+        this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
       }
     }.bind(this)())
   }
@@ -2122,6 +2125,17 @@ export default class ToolBar extends React.PureComponent {
     SScene.symbolback()
   }
 
+  taggingback = () => {
+    this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+      isFullScreen: false,
+      height:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.NEWTHEME_HEIGHT[0]
+          : ConstToolType.NEWTHEME_HEIGHT[1],
+      column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+    })
+  }
+
   getPoint = () => {
     return this.point
   }
@@ -2239,7 +2253,8 @@ export default class ToolBar extends React.PureComponent {
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       if (
         type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_EDIT_TAGGING
+        type !== ConstToolType.MAP_EDIT_TAGGING &&
+        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
@@ -2254,6 +2269,20 @@ export default class ToolBar extends React.PureComponent {
       } else {
         SMap.submit()
         SMap.setAction(Action.PAN)
+        if (type === ConstToolType.MAP_EDIT_TAGGING) {
+          this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {
+            isFullScreen: false,
+            containerType: 'list',
+            height:
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5],
+            column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+          })
+        }
+        if (type === ConstToolType.MAP_EDIT_TAGGING_SETTING) {
+          this.taggingback()
+        }
       }
     }
     // this.props.existFullMap && this.props.existFullMap()
@@ -3829,7 +3858,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.saveFly
           break
-
+        case ToolbarBtnType.TAGGING_BACK:
+          //返回上一级
+          image = require('../../../../assets/public/Frenchgrey/icon-back-white.png')
+          action = this.taggingback
+          break
         case ToolbarBtnType.BACK:
           image = require('../../../../assets/mapEdit/icon_back.png')
           action = this.symbolBack

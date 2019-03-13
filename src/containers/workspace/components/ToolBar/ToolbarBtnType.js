@@ -13,6 +13,7 @@ export default {
   CLEAR: 'clear',
   END_FLY: 'endfly',
   SAVE_FLY: 'savefly',
+  TAGGING_BACK: 'TAGGING_BACK',
   END_ADD_FLY: 'endaddfly',
   BACK: 'back',
   SAVE: 'save',
