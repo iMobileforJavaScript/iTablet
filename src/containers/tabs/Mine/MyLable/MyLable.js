@@ -166,7 +166,11 @@ export default class MyLable extends Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          this.dialog.setDialogVisible(true)
+          if (this.uploadList.length > 0) {
+            this.dialog.setDialogVisible(true)
+          } else {
+            Toast.show('请选择要分享的数据集')
+          }
         }}
       >
         <Image />
