@@ -207,7 +207,7 @@ export default class Cell extends Component {
       >
         {/*<Text style={[textStyle, this.props.cellTextStyle]}>{value}</Text>*/}
         <View>
-          {this.props.editable ? (
+          {this.props.editable && this.state.editable ? (
             <TextInput
               ref={ref => (this.cellInput = ref)}
               // editable={this.state.editable && this.props.editable}

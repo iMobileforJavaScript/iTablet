@@ -13,8 +13,9 @@ import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
 import MyLocalData from './MyLocalData'
 import MyData from './MyData'
 import MyLable from './MyLable'
+import MyBaseMap from './MyBaseMap'
 import MyOnlineData from './MyOnlineData'
-
+// import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
   user: state.user.toJS(),
 })
@@ -42,4 +43,5 @@ export {
   ToggleAccount,
   Login,
   MyLable,
+  MyBaseMap,
 }

@@ -242,39 +242,6 @@ public class FileTools extends ReactContextBaseJavaModule {
                     // 匹配类型
                     if (filter.toHashMap().containsKey("type") && filter.getString("type").equals("Directory") != isDirectory) continue;
 
-
-//                    String type = "Directory";
-//                    if (filter.toHashMap().containsKey("type")) {
-//                        type = filter.getString("type");
-//                    }
-//
-//                    if (!filter.toHashMap().containsKey("name")) {
-//                        String filterName = filter.getString("name").toLowerCase().trim();
-//                        // 判断文件名
-//                        if (isDirectory || filterName.equals("") || !name.contains(filterName)) {
-//                            continue;
-//                        }
-//                    }
-//
-//                    boolean isExist = false;
-//                    if (filter.toHashMap().containsKey("extension")) {
-//                        String filterType = filter.getString("extension").toLowerCase();
-//                        String[] extensions = filterType.split(",");
-//                        for (int j = 0; j < extensions.length; j++) {
-//                            String mExtension = extensions[j].trim();
-//                            // 判断文件类型
-//                            if (isDirectory && type.equals("Directory") || !isDirectory && !mExtension.equals("") && extension.contains(mExtension)) {
-//                                isExist = true;
-//                                break;
-//                            } else {
-//                                isExist = false;
-//                            }
-//                        }
-//                    }
-//                    if (!isExist) {
-//                        continue;
-//                    }
-
                     WritableMap map = Arguments.createMap();
                     map.putString("path", p);
                     map.putString("name", n);
@@ -288,6 +255,7 @@ public class FileTools extends ReactContextBaseJavaModule {
             promise.reject(e);
         }
     }
+
 
     @ReactMethod
     public void getMaps(String path, ReadableMap filter, Promise promise) {
@@ -550,7 +518,7 @@ public class FileTools extends ReactContextBaseJavaModule {
     @ReactMethod
     public void EnvironmentIsValid( Promise promise) {
         try {
-            Boolean result = Environment.getLicenseStatus().isLicenseValid();;
+            Boolean result = Environment.getLicenseStatus().isLicenseValid();
             promise.resolve(result);
         } catch (Exception e) {
             promise.reject(e);

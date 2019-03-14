@@ -20,13 +20,12 @@ import {
   setCurrentTemplateInfo,
   setTemplate,
 } from './src/models/template'
-import { Dialog } from './src/components'
+import { Dialog, Loading } from './src/components'
 import { setMapSetting } from './src/models/setting'
 import { setCollectionInfo } from './src/models/collection'
 import { setShow }  from './src/models/device'
 import { FileTools }  from './src/native'
 import ConfigStore from './src/store'
-import { Loading } from './src/components'
 import { SaveView } from './src/containers/workspace/components'
 import { scaleSize, Toast } from './src/utils'
 import { color } from './src/styles'

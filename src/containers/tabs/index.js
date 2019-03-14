@@ -17,6 +17,7 @@ import Mine, {
   ToggleAccount,
   Login,
   MyLable,
+  MyBaseMap,
 } from './Mine'
 import Find from './Find'
 import Friend, { Chat, AddFriend } from './Friend'
@@ -257,4 +258,5 @@ export {
   Chat,
   AddFriend,
   MyLable,
+  MyBaseMap,
 }

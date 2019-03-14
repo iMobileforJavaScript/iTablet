@@ -75,6 +75,7 @@ export default {
   DATA: '数据',
   SCENE: '场景',
   SYMBOL: '符号',
+  MODULE: '模板',
   ONLINE_DATA: '在线数据',
   ONLINE_MAP: '在线地图',
 

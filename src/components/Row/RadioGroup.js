@@ -10,13 +10,14 @@ import styles from './styles'
 import { scaleSize } from '../../utils'
 
 export default class RadioGroup extends PureComponent {
-
   props: {
     style?: StyleSheet,
     data: Array,
     column?: number,
     defaultValue?: any,
     getSelected?: () => {},
+    renderRadio?: () => {},
+    onSubmitEditing?: () => {},
     separatorHeight?: number,
     disable?: boolean,
   }
@@ -53,11 +54,20 @@ export default class RadioGroup extends PureComponent {
     return index
   }
 
-  select = ({title, selected, index, value}) => {
+  select = ({ title, selected, index, value, ...other }) => {
     if (index === this.current) return
-    this.current >= 0 && this.refArr && this.refArr[this.current] && this.refArr[this.current].select(false)
+    this.current >= 0 &&
+      this.refArr &&
+      this.refArr[this.current] &&
+      this.refArr[this.current].select(false)
     this.current = index
-    this.props.getSelected && this.props.getSelected({title, selected, index, value})
+    this.props.getSelected &&
+      this.props.getSelected({ title, selected, index, value, ...other })
+  }
+
+  onSubmitEditing = ({ title, selected, index, value, ...other }) => {
+    this.props.onSubmitEditing &&
+      this.props.onSubmitEditing({ title, selected, index, value, ...other })
   }
 
   setRefs = (ref, index) => {
@@ -65,32 +75,47 @@ export default class RadioGroup extends PureComponent {
   }
 
   renderRows = () => {
-    let group = [], groupView = []
+    let group = [],
+      groupView = []
     this.props.data.forEach((obj, index) => {
       let row = Math.floor(index / this.props.column)
       if (!group[row]) group[row] = []
+      let { title, value, ...others } = obj
+      if (
+        this.props.renderRadio &&
+        typeof this.props.renderRadio === 'function'
+      ) {
+        group[row].push(this.props.renderRadio({ data: obj, index }))
+      }
       group[row].push(
         <Radio
-          style={{flex:1}}
-          key={obj.title + '-' + index}
+          style={{ flex: 1 }}
+          key={title + '-' + index}
           ref={ref => this.setRefs(ref, index)}
           index={index}
           selectable={!this.props.disable}
-          title={obj.title}
-          value={obj.value}
-          selected={this.props.defaultValue === obj.value}
+          title={title}
+          value={value}
+          selected={this.props.defaultValue === value}
           // selected={this.current === index}
           onPress={this.select}
-          // selectable={}
-        />
+          onSubmitEditing={this.onSubmitEditing}
+          {...others}
+        />,
       )
     })
 
     group.forEach((obj, index) => {
       groupView.push(
-        <View key={'row-' + index} style={[styles.radioGroupRow, index !== 0 && {marginTop: this.props.separatorHeight}]}>
+        <View
+          key={'row-' + index}
+          style={[
+            styles.radioGroupRow,
+            index !== 0 && { marginTop: this.props.separatorHeight },
+          ]}
+        >
           {obj}
-        </View>
+        </View>,
       )
     })
     // group.forEach((obj, index) => {
@@ -101,10 +126,6 @@ export default class RadioGroup extends PureComponent {
   }
 
   render() {
-    return (
-      <View style={styles.radioGroupContainer}>
-        {this.renderRows()}
-      </View>
-    )
+    return <View style={styles.radioGroupContainer}>{this.renderRows()}</View>
   }
 }

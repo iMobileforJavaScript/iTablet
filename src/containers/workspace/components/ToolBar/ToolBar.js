@@ -1831,9 +1831,7 @@ export default class ToolBar extends React.PureComponent {
       this.showMap3DTool(type)
       return
     }
-    // console.warn(0)
     // if (this.isShow === isShow && type === this.state.type) return
-    // console.warn(1)
     if (
       this.isShow !== isShow ||
       this.state.type !== type ||
@@ -2547,12 +2545,12 @@ export default class ToolBar extends React.PureComponent {
           isFullScreen: false,
           height: 0,
           cb: () => {
-            SMap.submit()
+            // SMap.submit()
             SMap.setAction(Action.SELECT)
           },
         })
       } else {
-        SMap.submit()
+        // SMap.submit()
         SMap.setAction(Action.PAN)
         if (type === ConstToolType.MAP_EDIT_TAGGING) {
           this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {

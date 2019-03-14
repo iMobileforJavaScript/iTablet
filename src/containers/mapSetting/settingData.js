@@ -1,6 +1,25 @@
 function getMapSettings() {
   let data = [
     {
+      title: '基本设置',
+      visible: true,
+      index: 0,
+      data: [
+        {
+          name: '手势旋转',
+          value: false,
+          isShow: true,
+          sectionIndex: 0,
+        },
+        {
+          name: '手势俯仰',
+          value: false,
+          isShow: true,
+          sectionIndex: 0,
+        },
+      ],
+    },
+    {
       title: '效果设置',
       visible: true,
       index: 0,

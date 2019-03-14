@@ -196,11 +196,17 @@ export default class Map3DToolBar extends React.Component {
             />
             <Text style={styles.sceneTitle}>{section.title}</Text>
           </View>
-          {/* <TouchableOpacity style={styles.newView} onPress={()=>{
-            this.props.newFly&&this.props.newFly()
-          }}>
-            <Image source={require('../../../../assets/map/Frenchgrey/scene_addfly_light.png')} style={styles.newRout}/>
-          </TouchableOpacity> */}
+          <TouchableOpacity
+            style={styles.newView}
+            onPress={() => {
+              this.props.newFly && this.props.newFly()
+            }}
+          >
+            <Image
+              source={require('../../../../assets/map/Frenchgrey/scene_addfly_light.png')}
+              style={styles.newRout}
+            />
+          </TouchableOpacity>
         </View>
       )
     }

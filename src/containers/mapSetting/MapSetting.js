@@ -61,9 +61,9 @@ export default class MapSetting extends Component {
     isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
-    newData[0].data[0].value = isAntialias
-    newData[0].data[1].value = isOverlapDisplayed
-    newData[1].data[0].value = isVisibleScalesEnabled
+    newData[1].data[0].value = isAntialias
+    newData[1].data[1].value = isOverlapDisplayed
+    newData[2].data[0].value = isVisibleScalesEnabled
 
     this.setState({
       data: newData,
@@ -124,6 +124,12 @@ export default class MapSetting extends Component {
     let newData = this.state.data
     newData[item.sectionIndex].data[index].value = value
     switch (newData[item.sectionIndex].data[index].name) {
+      case '手势旋转':
+        SMap.enableRotateTouch(value)
+        break
+      case '手势俯仰':
+        SMap.enableSlantTouch(value)
+        break
       case '反走样地图':
         SMap.setAntialias(value)
         break
