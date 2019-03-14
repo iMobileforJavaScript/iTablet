@@ -42,6 +42,7 @@ import Input from './Input'
 import SearchBar from './SearchBar'
 import PopModal from './PopModal'
 import { IndicatorLoading } from './Loading'
+import HorizontalTableList from './HorizontalTableList'
 
 export {
   Container,
@@ -93,4 +94,5 @@ export {
   SearchBar,
   PopModal,
   IndicatorLoading,
+  HorizontalTableList,
 }

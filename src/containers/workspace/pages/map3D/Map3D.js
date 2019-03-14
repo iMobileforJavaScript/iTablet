@@ -131,26 +131,20 @@ export default class Map3D extends React.Component {
         this.container.setLoading(false)
         Toast.show('无场景显示')
       }, 1500)
-
       return
     }
     try {
-      SScene.openScence(this.name).then(
-        () => {
-          SScene.setNavigationControlVisible(false)
-          this.initListener()
-          GLOBAL.openWorkspace = true
-          GLOBAL.sceneName = this.name
-          setTimeout(() => {
-            this.container.setLoading(false)
-            // Toast.show('无场景显示')
-          }, 1500)
-          this.props.refreshLayer3dList && this.props.refreshLayer3dList()
-        },
-        () => {
-          Toast.show('许可异常')
-        },
-      )
+      SScene.openScence(this.name).then(() => {
+        SScene.setNavigationControlVisible(false)
+        this.initListener()
+        GLOBAL.openWorkspace = true
+        GLOBAL.sceneName = this.name
+        setTimeout(() => {
+          this.container.setLoading(false)
+          // Toast.show('无场景显示')
+        }, 1500)
+        this.props.refreshLayer3dList && this.props.refreshLayer3dList()
+      })
     } catch (e) {
       setTimeout(() => {
         this.container.setLoading(false)

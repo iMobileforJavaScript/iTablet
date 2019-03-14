@@ -224,6 +224,14 @@ export default class MyLocalData extends Component {
             type: 'file',
           }
           title = isUser ? '我的标注' : '游客标注'
+          break
+        case Const.MODULE:
+          path += ConstPath.RelativePath.Template
+          filter = {
+            extension: 'xml',
+            type: 'file',
+          }
+          break
       }
       let data = await FileTools.getPathListByFilter(path, filter)
       let sectionData = {
@@ -321,7 +329,9 @@ export default class MyLocalData extends Component {
       case Const.SCENE:
         img = require('../../../../assets/mapTools/icon_scene.png')
         break
-      case Const.DATA:
+      case Const.MODULE:
+        img = require('../../../../assets/mapToolbar/list_type_map_black.png')
+        break
       default:
         img = require('../../../../assets/Mine/mine_my_online_data.png')
         break
@@ -765,22 +775,22 @@ export default class MyLocalData extends Component {
       this.props.user.currentUser.userName &&
       (this.state.title === Const.MAP || this.state.title === Const.DATA)
     ) {
-      let title =
-        this.state.title === Const.MAP ? Const.ONLINE_MAP : Const.ONLINE_DATA
-      let action =
-        this.state.title === Const.MAP
-          ? this.goToMyService
-          : this.goToMyOnlineData
-      btn = (
-        <TextBtn
-          btnText={title}
-          textStyle={{
-            color: 'white',
-            fontSize: 17,
-          }}
-          btnClick={action}
-        />
-      )
+      let title = Const.ONLINE_DATA
+      let action = this.goToMyOnlineData
+
+      btn =
+        this.state.title === Const.DATA ? (
+          <TextBtn
+            btnText={title}
+            textStyle={{
+              color: 'white',
+              fontSize: 17,
+            }}
+            btnClick={action}
+          />
+        ) : (
+          <View />
+        )
     }
     return btn
   }
@@ -808,7 +818,6 @@ export default class MyLocalData extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
-          headerRight: this._renderHeaderBtn(),
         }}
       >
         <Text

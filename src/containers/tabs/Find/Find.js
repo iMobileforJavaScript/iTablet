@@ -32,6 +32,10 @@ export default class Find extends Component {
     NavigationService.navigate('Protocol', { type: 'superMapForum' })
   }
 
+  goToSuperMap = () => {
+    NavigationService.navigate('Protocol', { type: 'supermap' })
+  }
+
   _renderItem = (
     itemRequire = {
       title: '',
@@ -136,45 +140,15 @@ export default class Find extends Component {
           {/* {this._renderLine()} */}
           {this._renderItem({
             title: Const.PUBLICMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            leftImagePath: require('../../../assets/Find/find_publicmap.png'),
             onClick: () => {
               NavigationService.navigate('PublicMap')
             },
           })}
           {this._renderItem({
-            title: Const.FRIENDMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.FRIENDPOSITION,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_data.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.SHUTTLCOMMUTER,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.SUPERMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
             title: Const.FORUMOFSUPERMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
+            leftImagePath: require('../../../assets/Find/find_forum.png'),
             onClick: this.goToSuperMapForum,
-          })}
-          {this._renderItem({
-            title: Const.SUPERMAPKNOWN,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.MAPOFAPP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
           })}
         </ScrollView>
       </View>
@@ -215,11 +189,11 @@ export default class Find extends Component {
             leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
             onClick: () => {},
           })}
-          {this._renderItem({
+          {/* {this._renderItem({
             title: Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
             onClick: () => {},
-          })}
+          })} */}
           {this._renderItem({
             title: Const.MAPOFAPP,
             leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),

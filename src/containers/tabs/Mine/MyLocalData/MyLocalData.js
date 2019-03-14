@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   Image,
   AsyncStorage,
+  RefreshControl,
 } from 'react-native'
-import { Container, ListSeparator } from '../../../../components'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { Container, ListSeparator, TextBtn } from '../../../../components'
+import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -16,12 +17,13 @@ import { color, size } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
-
+import NavigationService from '../../../NavigationService'
 export default class MyLocalData extends Component {
   props: {
     user: Object,
     navigation: Object,
     importWorkspace: () => {},
+    showOnlineData: () => {},
   }
 
   constructor(props) {
@@ -33,6 +35,7 @@ export default class MyLocalData extends Component {
       isFirstLoadingModal: true,
       textValue: '扫描文件:',
       textDisplay: 'none',
+      isRefreshing: false,
     }
   }
   componentDidMount() {
@@ -58,6 +61,8 @@ export default class MyLocalData extends Component {
   ) => {
     try {
       let isRecordFile = false
+      let udb = null
+      let isWorkspace = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
       for (let i = 0; i < arrDirContent.length; i++) {
         if (isShowText === true) {
@@ -68,13 +73,14 @@ export default class MyLocalData extends Component {
         let isFile = fileContent.type
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
+
         if (isFile === 'file' && !isRecordFile) {
+          // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
           if (
             (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
             (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
             (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
-            (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
-            (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+            (fileType.smw && fileName.indexOf(fileType.smw) !== -1)
           ) {
             if (
               !(
@@ -90,6 +96,19 @@ export default class MyLocalData extends Component {
                 directory: fullFileDir,
               })
               isRecordFile = true
+              isWorkspace = true
+            }
+          } else if (fileType.udb && fileName.indexOf(fileType.udb) !== -1) {
+            fileName = fileName.substring(0, fileName.length - 4)
+            udb = {
+              filePath: newPath,
+              fileName: fileName,
+              directory: fullFileDir,
+            }
+          }
+          if (i === arrDirContent.length - 1) {
+            if (!isWorkspace) {
+              udb !== null && arrFilterFile.push(udb)
             }
           }
         } else if (isFile === 'directory') {
@@ -409,7 +428,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu' },
+      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
       newData,
       false,
     )
@@ -735,6 +754,33 @@ export default class MyLocalData extends Component {
     ) : null
   }
 
+  goToMyOnlineData = async () => {
+    NavigationService.navigate('MyOnlineData')
+  }
+
+  _renderHeaderBtn = () => {
+    let btn = null
+    if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
+      this.props.user.currentUser.userName
+    ) {
+      let title = Const.ONLINE_DATA
+      let action = this.goToMyOnlineData
+
+      btn = (
+        <TextBtn
+          btnText={title}
+          textStyle={{
+            color: 'white',
+            fontSize: 17,
+          }}
+          btnClick={action}
+        />
+      )
+    }
+    return btn
+  }
+
   render() {
     let sectionData = this.state.sectionData
     return (
@@ -744,6 +790,7 @@ export default class MyLocalData extends Component {
           title: '导入',
           withoutBack: false,
           navigation: this.props.navigation,
+          headerRight: this._renderHeaderBtn(),
         }}
       >
         <Text
@@ -771,6 +818,17 @@ export default class MyLocalData extends Component {
           renderItem={this._renderItem}
           // ItemSeparatorComponent={this._renderItemSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this._setSectionDataState3}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {this._showLocalDataPopupModal()}
       </Container>

@@ -145,11 +145,13 @@ export default class FunctionToolbar extends React.Component {
       case ThemeType.LABEL:
         type = constants.THEME_UNIFY_LABEL
         break
+      case ThemeType.GRAPH:
+        type = constants.THEME_GRAPH_STYLE
+        break
       case ThemeType.GRIDRANGE:
       case ThemeType.GRIDUNIQUE:
       case ThemeType.CUSTOM:
       case ThemeType.DOTDENSITY:
-      case ThemeType.GRAPH:
       case ThemeType.GRADUATEDSYMBOL:
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return
@@ -160,13 +162,19 @@ export default class FunctionToolbar extends React.Component {
     }
 
     if (GLOBAL.toolBox) {
-      GLOBAL.toolBox.setVisible(true, ConstToolType.MAP_THEME_PARAM, {
-        containerType: 'list',
-        isFullScreen: true,
-        isTouchProgress: false,
-        themeType: type,
-        showMenuDialog: true,
-      })
+      GLOBAL.toolBox.setVisible(
+        true,
+        type === constants.THEME_GRAPH_STYLE
+          ? ConstToolType.MAP_THEME_PARAM_GRAPH
+          : ConstToolType.MAP_THEME_PARAM,
+        {
+          containerType: 'list',
+          isFullScreen: true,
+          isTouchProgress: false,
+          themeType: type,
+          showMenuDialog: true,
+        },
+      )
       GLOBAL.toolBox.showFullMap()
     }
 
@@ -716,7 +724,7 @@ export default class FunctionToolbar extends React.Component {
       cb: async value => {
         if (value !== '') {
           (async function() {
-            await SMap.newTaggingDataset(value)
+            GLOBAL.value = await SMap.newTaggingDataset(value)
           }.bind(this)())
         }
         NavigationService.goBack()
@@ -890,13 +898,13 @@ export default class FunctionToolbar extends React.Component {
             selectMode: 'flash',
             image: require('../../../../assets/function/icon_function_start.png'),
           },
-          {
-            key: '添加',
-            title: '添加',
-            size: 'large',
-            action: this.getThemeMapAdd,
-            image: require('../../../../assets/function/icon_function_add.png'),
-          },
+          // {
+          //   key: '添加',
+          //   title: '添加',
+          //   size: 'large',
+          //   action: this.getThemeMapAdd,
+          //   image: require('../../../../assets/function/icon_function_add.png'),
+          // },
           {
             key: '专题图',
             title: '专题图',
@@ -906,12 +914,12 @@ export default class FunctionToolbar extends React.Component {
             image: require('../../../../assets/function/icon_function_theme_create.png'),
           },
           {
-            key: '参数',
-            title: '参数',
+            key: '风格',
+            title: '风格',
             size: 'large',
             selectMode: 'flash',
             action: this.showMenuAlertDialog,
-            image: require('../../../../assets/function/icon_function_theme_param.png'),
+            image: require('../../../../assets/function/icon_function_style.png'),
           },
           {
             title: '工具',

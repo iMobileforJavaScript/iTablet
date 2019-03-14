@@ -11,6 +11,17 @@ const theme_graph_rose3d = require('./theme_graph_rose3d.png')
 const theme_graph_stack_bar = require('./theme_graph_stack_bar.png')
 const theme_graph_stack_bar3d = require('./theme_graph_stack_bar3d.png')
 const theme_graph_ring = require('./theme_graph_ring.png')
+const theme_graph_type = require('./theme_graph_type.png')
+const theme_graph_type_selected = require('./theme_graph_type_selected.png')
+const theme_graph_graduatedmode_cons = require('./theme_graph_graduatedmode_cons.png')
+const theme_graph_graduatedmode_log = require('./theme_graph_graduatedmode_log.png')
+const theme_graph_graduatedmode_square = require('./theme_graph_graduatedmode_square.png')
+const theme_create_unify_style = require('./theme_create_unify_style.png')
+const theme_create_unique_style = require('./theme_create_unique_style.png')
+const theme_create_range_style = require('./theme_create_range_style.png')
+const theme_create_unify_label = require('./theme_create_unify_label.png')
+const theme_create_unique_label = require('./theme_create_unique_label.png')
+const theme_create_range_label = require('./theme_create_range_label.png')
 
 //专题图类型图标
 export default {
@@ -28,4 +39,21 @@ export default {
   theme_graph_stack_bar,
   theme_graph_stack_bar3d,
   theme_graph_ring,
+  theme_graph_type,
+  theme_graph_type_selected,
+  theme_graph_graduatedmode_cons,
+  theme_graph_graduatedmode_log,
+  theme_graph_graduatedmode_square,
+  //统一风格
+  theme_create_unify_style,
+  //单值风格
+  theme_create_unique_style,
+  //分段风格
+  theme_create_range_style,
+  //统一标签
+  theme_create_unify_label,
+  //单值标签
+  theme_create_unique_label,
+  //分段标签
+  theme_create_range_label,
 }

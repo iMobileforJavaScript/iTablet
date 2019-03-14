@@ -7,6 +7,7 @@ import { Toast } from '../utils'
 import { ConstPath, ConstInfo } from '../constants'
 import fs from 'react-native-fs'
 import UserType from '../constants/UserType'
+import ConstOnline from '../constants/ConstOnline'
 // import xml2js from 'react-native-xml2js'
 // let parser = new xml2js.Parser()
 // Constants
@@ -20,6 +21,7 @@ export const OPEN_TEMPLATE = 'OPEN_TEMPLATE'
 export const SET_TEMPLATE = 'SET_TEMPLATE'
 export const SET_CURRENT_TEMPLATE_INFO = 'SET_CURRENT_TEMPLATE_INFO'
 export const GET_SYMBOL_TEMPLATES = 'GET_SYMBOL_TEMPLATES'
+export const SET_BASEMAP = 'SET_BASEMAP'
 // const Fs = require('react-native-fs')
 let isExporting = false
 
@@ -373,12 +375,26 @@ export const importSceneWorkspace = params => async (dispatch, getState) => {
   }
 }
 
+export const setBaseMap = (params, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_BASEMAP,
+    payload: params || {},
+  })
+  cb && cb()
+}
+
 const initialState = fromJS({
   latestMap: {},
   map: {},
   maps: [],
   currentMap: {},
   workspace: {},
+  baseMaps: [
+    ConstOnline.Baidu,
+    ConstOnline.Google,
+    ConstOnline.OSM,
+    ConstOnline.SuperMapCloud,
+  ],
 })
 
 export default handleActions(
@@ -458,6 +474,13 @@ export default handleActions(
       } else {
         return state.setIn(['currentMap'], fromJS(payload))
       }
+    },
+    [`${SET_BASEMAP}`]: (state, { payload }) => {
+      let newData
+      if (payload.length > 0) {
+        newData = payload
+      }
+      return state.setIn(['baseMaps'], fromJS(newData))
     },
     [REHYDRATE]: (state, { payload }) => {
       let data,

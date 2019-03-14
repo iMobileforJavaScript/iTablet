@@ -13,6 +13,7 @@ export default {
   CLEAR: 'clear',
   END_FLY: 'endfly',
   SAVE_FLY: 'savefly',
+  TAGGING_BACK: 'TAGGING_BACK',
   END_ADD_FLY: 'endaddfly',
   BACK: 'back',
   SAVE: 'save',
@@ -33,6 +34,7 @@ export default {
   THEME_FLEX: 'theme_flex',
   THEME_COMMIT: 'theme_commit',
   THEME_ADD_BACK: 'theme_add_back', //添加->返回上一级
+  THEME_GRAPH_TYPE: 'theme_graph_type',
   MAP3DSHARE: 'map3dshare',
 
   MENU_COMMIT: 'menu_commit',

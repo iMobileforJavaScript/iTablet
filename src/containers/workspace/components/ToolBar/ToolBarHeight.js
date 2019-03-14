@@ -91,6 +91,7 @@ function getToorbarHeight(orientation, type) {
     case ConstToolType.MAP_THEME_PARAM_UNIQUE_EXPRESSION:
     case ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION:
     case ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_EXPRESSION:
+    case ConstToolType.MAP_THEME_PARAM_GRAPH_EXPRESSION:
       if (orientation === 'PORTRAIT') {
         height = ConstToolType.THEME_HEIGHT[5]
         column = 4

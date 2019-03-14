@@ -17,8 +17,11 @@ import Mine, {
   ToggleAccount,
   Login,
   MyLable,
+  MyBaseMap,
 } from './Mine'
 import Find from './Find'
+import Friend, { Chat, AddFriend } from './Friend'
+
 const Tabs = TabNavigator(
   {
     Home: {
@@ -59,6 +62,30 @@ const Tabs = TabNavigator(
           //     style={styles.icon}
           //   />
           // ),
+          header: null,
+        }
+      },
+    },
+    Friend: {
+      screen: Friend,
+      navigationOptions: () => {
+        return {
+          tabBarLabel: data => {
+            return (
+              <View style={styles.labelView}>
+                <Image
+                  resizeMode="contain"
+                  source={
+                    data.focused
+                      ? getThemeAssets().tabBar.tab_friend_selected
+                      : getThemeAssets().tabBar.tab_friend
+                  }
+                  style={styles.icon}
+                />
+                <Text style={styles.tabText}>好友</Text>
+              </View>
+            )
+          },
           header: null,
         }
       },
@@ -228,5 +255,8 @@ export {
   Setting,
   AboutITablet,
   Login,
+  Chat,
+  AddFriend,
   MyLable,
+  MyBaseMap,
 }

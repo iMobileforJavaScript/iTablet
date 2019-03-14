@@ -764,7 +764,7 @@ export default class MapView extends React.Component {
       }
     }
     SMap.mapIsModified().then(result => {
-      if (result) {
+      if (result && !this.isExample) {
         this.setSaveViewVisible(true)
       } else {
         this.backAction()
