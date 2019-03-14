@@ -39,7 +39,6 @@ export default StyleSheet.create({
   headerBtn: {
     height: scaleSize(60),
     width: scaleSize(60),
-    paddingLeft: scaleSize(15),
   },
   editControllerView: {
     flexDirection: 'row',
@@ -52,5 +51,13 @@ export default StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  locationView: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: color.bgW,
   },
 })

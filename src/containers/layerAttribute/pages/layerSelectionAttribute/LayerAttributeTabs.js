@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
   headerBtn: {
     height: scaleSize(60),
     width: scaleSize(60),
-    paddingLeft: scaleSize(15),
   },
 })
 
@@ -377,7 +376,7 @@ export default class LayerAttributeTabs extends React.Component {
             <MTBtn
               key={'undo'}
               image={getPublicAssets().common.icon_undo}
-              imageStyle={styles.headerBtn}
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
               onPress={this.showUndoView}
             />,
             <MTBtn

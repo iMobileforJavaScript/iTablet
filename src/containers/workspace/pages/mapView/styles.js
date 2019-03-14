@@ -105,4 +105,20 @@ export default StyleSheet.create({
     left: scaleSize(20),
     bottom: scaleSize(120),
   },
+  headerBtn: {
+    height: scaleSize(60),
+    width: scaleSize(60),
+  },
+  editControllerView: {
+    flexDirection: 'row',
+    height: scaleSize(100),
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: color.contentColorWhite,
+  },
+  button: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 })

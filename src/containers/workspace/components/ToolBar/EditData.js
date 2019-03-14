@@ -37,14 +37,14 @@ function getEditData(type) {
           image: require('../../../../assets/mapTools/icon_point_black.png'),
           selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
         },
-        // {
-        //   key: constants.WORDS,
-        //   title: constants.WORDS,
-        //   size: 'large',
-        //   action: words,
-        //   image: require('../../../../assets/mapTools/icon_words_black.png'),
-        //   selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
-        // },
+        {
+          key: constants.WORDS,
+          title: constants.WORDS,
+          size: 'large',
+          action: words,
+          image: require('../../../../assets/mapTools/icon_words_black.png'),
+          selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
+        },
         {
           key: constants.POINTLINE,
           title: constants.POINTLINE,
@@ -415,9 +415,22 @@ function point() {
   return SMap.setAction(Action.CREATEPOINT)
 }
 
-// function words() {
-//   return SMap.setAction(Action.CREATEPLOT)
-// }
+function words() {
+  (async function() {
+    let x = await SMap.getGestureDetector()
+    if (x !== null) {
+      NavigationService.navigate('InputPage', {
+        headerTitle: '标注名称',
+        cb: async value => {
+          if (value !== '') {
+            await SMap.addTextRecordset(GLOBAL.value, value, x.x, x.y)
+          }
+          NavigationService.goBack()
+        },
+      })
+    }
+  }.bind(this)())
+}
 
 function pointline() {
   return SMap.setAction(Action.CREATEPOLYLINE)

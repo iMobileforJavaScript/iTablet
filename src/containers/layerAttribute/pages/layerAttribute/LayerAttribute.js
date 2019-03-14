@@ -8,11 +8,15 @@ import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal } from '../../../../components'
-import { Toast } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
-import { LayerAttributeTable, LayerTopBar } from '../../components'
+import {
+  LayerAttributeTable,
+  LayerTopBar,
+  LocationView,
+} from '../../components'
 import { LayerUtil } from '../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
@@ -191,6 +195,9 @@ export default class LayerAttribute extends React.Component {
       })
     }
   }
+
+  /** 属性定位 **/
+  locateAction = () => {}
 
   /** 关联事件 **/
   relateAction = () => {
@@ -394,6 +401,14 @@ export default class LayerAttribute extends React.Component {
     this.popModal && this.popModal.setVisible(true)
   }
 
+  showLocationView = () => {
+    this.locationView && this.locationView.show(true)
+  }
+
+  locateToTop = () => {}
+
+  locateToBottom = () => {}
+
   goToSearch = () => {
     NavigationService.navigate('LayerAttributeSearch', {
       layerPath: this.props.currentLayer.path,
@@ -520,7 +535,7 @@ export default class LayerAttribute extends React.Component {
             <MTBtn
               key={'undo'}
               image={getPublicAssets().common.icon_undo}
-              imageStyle={styles.headerBtn}
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
               onPress={this.showUndoView}
             />,
             <MTBtn
@@ -531,28 +546,47 @@ export default class LayerAttribute extends React.Component {
             />,
           ],
         }}
-        bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+        // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
         <LayerTopBar
           canRelated={this.state.currentIndex >= 0}
+          locateAction={this.showLocationView}
           relateAction={this.relateAction}
         />
-        {this.state.showTable &&
-        this.state.attributes &&
-        this.state.attributes.head ? (
-            this.state.attributes.head.length > 0 ? (
-              this.renderMapLayerAttribute()
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}
+        >
+          {this.state.showTable &&
+          this.state.attributes &&
+          this.state.attributes.head ? (
+              this.state.attributes.head.length > 0 ? (
+                this.renderMapLayerAttribute()
+              ) : (
+                <View style={styles.infoView}>
+                  <Text style={styles.info}>请选择图层对象</Text>
+                </View>
+              )
             ) : (
               <View style={styles.infoView}>
-                <Text style={styles.info}>请选择图层对象</Text>
+                <Text style={styles.info}>
+                  {this.props.currentLayer.path ? '请选择图层' : '该图层属性为空'}
+                </Text>
               </View>
-            )
-          ) : (
-            <View style={styles.infoView}>
-              <Text style={styles.info}>请选择图层</Text>
-            </View>
-          )}
+            )}
+          {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+          <LocationView
+            ref={ref => (this.locationView = ref)}
+            style={styles.locationView}
+            currentIndex={this.state.currentIndex}
+            locateToTop={this.locateToTop}
+            locateToBottom={this.locateToBottom}
+          />
+        </View>
         <PopModal
           ref={ref => (this.popModal = ref)}
           modalVisible={this.state.editControllerVisible}

@@ -71,7 +71,6 @@ export default StyleSheet.create({
     flex: 2,
   },
   input: {
-    height: scaleSize(80),
     paddingHorizontal: scaleSize(15),
     ...Platform.select({
       android: {
@@ -90,6 +89,35 @@ export default StyleSheet.create({
     bottom: 1,
     borderRadius: scaleSize(8),
     backgroundColor: '#rgba(0, 0, 0, 0.1)',
+  },
+  input2: {
+    flex: 1,
+    height: scaleSize(60),
+    marginLeft: scaleSize(15),
+    paddingHorizontal: scaleSize(15),
+    ...Platform.select({
+      android: {
+        padding: 0,
+      },
+    }),
+    borderWidth: 1,
+    backgroundColor: 'white',
+    borderRadius: scaleSize(8),
+    textAlign: 'center',
+  },
+  textView: {
+    flex: 1,
+    height: scaleSize(60),
+    marginLeft: scaleSize(15),
+    paddingHorizontal: scaleSize(15),
+    borderWidth: 1,
+    backgroundColor: 'white',
+    borderRadius: scaleSize(8),
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  text: {
+    textAlign: 'center',
   },
 
   /** RadioGroup **/

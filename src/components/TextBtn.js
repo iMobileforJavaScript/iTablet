@@ -6,11 +6,11 @@ const WIDTH = 70
 
 export default class TextBtn extends React.Component {
   props: {
-    width: number,
-    height: number,
+    width?: number,
+    height?: number,
     btnText: string,
     btnClick: () => {},
-    textStyle: any,
+    textStyle?: any,
   }
 
   constructor(props) {
