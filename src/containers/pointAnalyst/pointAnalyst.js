@@ -218,7 +218,7 @@ export default class PointAnalyst extends Component {
           />
           <Image
             resizeMode={'contain'}
-            source={require('../../assets/header/icon_search.png')}
+            source={require('../../assets/mapToolbar/icon_search_black.png')}
             style={styles.search}
           />
         </View>
