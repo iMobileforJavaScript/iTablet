@@ -28,7 +28,7 @@ const RelativePath = {
   Workspace: Data + 'Workspace/',
   Map: Data + 'Map/',
   Temp: Data + 'Temp/', // 临时文件
-  Lable: Data + 'Lable/', // 标注
+  Label: Data + 'Label/', // 标注
 }
 
 const RelativeFilePath = {

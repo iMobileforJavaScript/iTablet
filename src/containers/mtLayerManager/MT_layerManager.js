@@ -81,7 +81,7 @@ export default class MT_layerManager extends React.Component {
         dataList = await SMap.getUDBName(
           ConstPath.AndroidPath +
             ConstPath.CustomerPath +
-            'Data/Lable/Lable.udb',
+            'Data/Label/Label.udb',
         )
         newState.data = [
           {
