@@ -42,12 +42,14 @@ export default class LayerAttributeSearch extends React.Component {
         data: [],
       },
       showTable: false,
+      startIndex: 0,
     }
 
     // this.currentFieldInfo = []
     this.currentFieldIndex = -1
     this.currentPage = 0
     this.pageSize = 20
+    this.total = -1
     this.isInit = true
   }
 
@@ -92,11 +94,12 @@ export default class LayerAttributeSearch extends React.Component {
   search = (searchKey = '', cb = () => {}) => {
     if (!this.layerPath || searchKey === '') return
     this.searchKey = searchKey
-    let attributes = []
+    let result = {},
+      attributes = []
     ;(async function() {
       try {
         if (this.isSelection) {
-          attributes = await LayerUtil.searchSelectionAttribute(
+          result = await LayerUtil.searchSelectionAttribute(
             this.state.attributes,
             this.layerPath,
             searchKey,
@@ -104,7 +107,7 @@ export default class LayerAttributeSearch extends React.Component {
             this.pageSize,
           )
         } else {
-          attributes = await LayerUtil.searchLayerAttribute(
+          result = await LayerUtil.searchLayerAttribute(
             this.state.attributes,
             this.layerPath,
             {
@@ -115,10 +118,21 @@ export default class LayerAttributeSearch extends React.Component {
           )
         }
 
-        this.setState({
-          showTable: true,
-          attributes,
-        })
+        attributes = result.attributes || []
+
+        if (attributes.data.length === 1) {
+          this.setState({
+            showTable: true,
+            attributes,
+            startIndex: -1,
+          })
+        } else {
+          this.setState({
+            showTable: true,
+            attributes,
+          })
+        }
+        this.isInit = false
         this.setLoading(false)
         cb && cb(attributes)
       } catch (e) {
@@ -223,6 +237,11 @@ export default class LayerAttributeSearch extends React.Component {
         }
         // indexColumn={this.state.attributes.data.length > 1 ? 0 : -1}
         indexColumn={0}
+        startIndex={
+          this.state.attributes.data.length === 1
+            ? -1
+            : this.state.startIndex + 1
+        }
         hasInputText={this.state.attributes.data.length > 1}
         selectRow={this.selectRow}
         // refresh={cb => this.refresh(cb)}

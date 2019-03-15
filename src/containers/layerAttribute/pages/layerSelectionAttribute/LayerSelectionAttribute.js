@@ -7,8 +7,10 @@
 import * as React from 'react'
 import { ConstInfo } from '../../../../constants'
 import { Toast } from '../../../../utils'
+import { LayerUtil } from '../../utils'
 import { LayerAttributeTable } from '../../components'
-import { SMap } from 'imobile_for_reactnative'
+
+const PAGE_SIZE = 20
 
 export default class LayerSelectionAttribute extends React.Component {
   props: {
@@ -29,11 +31,17 @@ export default class LayerSelectionAttribute extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      attributes: [],
-      tableTitle: [],
+      attributes: {
+        head: [],
+        data: [],
+      },
+      // tableTitle: [],
       tableHead: [],
+      startIndex: 0,
+      currentIndex: -1,
     }
 
+    this.total = 0
     this.currentFieldInfo = []
     this.currentFieldIndex = -1
     this.currentPage = 0
@@ -50,12 +58,30 @@ export default class LayerSelectionAttribute extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
+      prevProps.layerSelection &&
       JSON.stringify(prevProps.layerSelection) !==
-      JSON.stringify(this.props.layerSelection)
+        JSON.stringify(this.props.layerSelection)
     ) {
-      this.isInit = true
+      // this.isInit = true
+      this.currentPage = 0
+      this.total = 0 // 属性总数
+      this.canBeRefresh = true
       this.noMore = false
-      this.getAttribute()
+      // this.getAttribute()
+      this.setState(
+        {
+          attributes: {
+            head: [],
+            data: [],
+          },
+          currentFieldInfo: [],
+          currentIndex: -1,
+          startIndex: 0,
+        },
+        () => {
+          this.refresh(null, true)
+        },
+      )
     }
   }
 
@@ -69,58 +95,297 @@ export default class LayerSelectionAttribute extends React.Component {
     }
   }
 
-  getAttribute = (cb = () => {}) => {
-    if (!this.props.layerSelection.layerInfo.path)
-      return // this.setLoading(true)
-      ;(async function() {
+  getAttribute = (params = {}, cb = () => {}, resetCurrent = false) => {
+    if (!this.props.layerSelection.layerInfo.path || params.currentPage < 0)
+      return
+    let { currentPage, pageSize, type, ...others } = params
+    ;(async function() {
       try {
-        let attributes = await SMap.getSelectionAttributeByLayer(
+        let result = await LayerUtil.getSelectionAttributeByLayer(
+          JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.layerSelection.layerInfo.path,
-          this.currentPage,
-          this.pageSize,
+          currentPage,
+          pageSize !== undefined ? pageSize : PAGE_SIZE,
+          type,
         )
-        // let attributes = await SMap.getAttributeByLayer(
-        //   this.props.layerSelection.layerInfo.path,
-        //   this.props.layerSelection.ids,
-        // )
-        if (attributes && attributes.length > 0) {
-          this.props.setCurrentAttribute(attributes[0])
-          let tableHead = []
-          attributes[0].forEach(item => {
-            if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
-              tableHead.unshift(item.fieldInfo.caption)
-            } else {
-              tableHead.push(item.fieldInfo.caption)
-            }
-          })
-          if (attributes.length < 20) {
-            this.noMore = true
-          }
-          if (this.currentPage > 0) {
-            attributes = JSON.parse(
-              JSON.stringify(this.state.attributes),
-            ).concat(attributes)
-          }
-          this.props.onGetAttribute && this.props.onGetAttribute(attributes)
-          this.setState(
-            {
-              attributes: attributes,
-              // attributes: attributes,
-              tableHead: tableHead,
-            },
-            () => {
-              this.isInit = false
-            },
-          )
+
+        this.total = result.total || 0
+        let attributes = result.attributes || []
+
+        if (
+          // attributes.data.length === this.state.attributes.data.length &&
+          // JSON.stringify(attributes.data) === JSON.stringify(this.state.attributes.data) ||
+          Math.floor(this.total / PAGE_SIZE) === currentPage ||
+          attributes.data.length < PAGE_SIZE
+        ) {
+          this.noMore = true
         }
+
+        let currentIndex =
+          attributes.data.length === 1
+            ? 0
+            : resetCurrent
+              ? -1
+              : this.state.currentIndex
+        if (attributes.data.length === 1) {
+          this.setState({
+            showTable: true,
+            attributes,
+            currentIndex: currentIndex,
+            currentFieldInfo: attributes.data[0],
+            startIndex: -1,
+            ...others,
+          })
+        } else {
+          this.setState({
+            showTable: true,
+            attributes,
+            currentIndex: currentIndex,
+            currentFieldInfo: attributes.data[currentIndex],
+            ...others,
+          })
+        }
+        this.props.onGetAttribute && this.props.onGetAttribute(attributes)
         cb && cb(attributes)
-        // this.setLoading(false)
+        this.setLoading(false)
       } catch (e) {
         cb && cb()
         this.isLoading = false
-        // this.setLoading(false)
+        this.setLoading(false)
       }
     }.bind(this)())
+  }
+
+  /** 下拉刷新 **/
+  refresh = (cb = () => {}, resetCurrent = false) => {
+    if (!this.canBeRefresh) {
+      Toast.show('已经是最新的了')
+      cb && cb()
+      return
+    }
+    let startIndex = this.state.startIndex - PAGE_SIZE
+    if (startIndex <= 0) {
+      startIndex = 0
+      this.canBeRefresh = false
+    }
+    let currentPage = startIndex / PAGE_SIZE
+    this.getAttribute(
+      {
+        type: 'refresh',
+        currentPage: currentPage,
+        startIndex: startIndex <= 0 ? 0 : startIndex,
+      },
+      cb,
+      resetCurrent,
+    )
+  }
+
+  /** 加载更多 **/
+  loadMore = (cb = () => {}) => {
+    if (this.isLoading) return
+    // if (
+    //   this.isInit ||
+    //   this.noMore ||
+    //   this.props.layerSelection.ids.length <= 20
+    // ) {
+    //   cb && cb()
+    //   return
+    // }
+    if (this.noMore) {
+      cb && cb()
+      return
+    }
+    this.isLoading = true
+    this.currentPage += 1
+    this.getAttribute(
+      {
+        type: 'loadMore',
+        currentPage: this.currentPage,
+      },
+      attribute => {
+        cb && cb()
+        this.isLoading = false
+        if (!attribute || !attribute.data || attribute.data.length <= 0) {
+          this.noMore = true
+          Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
+          // this.currentPage--
+        }
+      },
+    )
+  }
+
+  /**
+   * 定位到首位
+   */
+  locateToTop = (cb = () => {}) => {
+    this.currentPage = 0
+    if (this.state.startIndex === 0) {
+      this.setState(
+        {
+          currentIndex: 0,
+          currentFieldInfo: this.state.attributes.data[0],
+        },
+        () => {
+          let item = this.table.setSelected(0)
+          cb &&
+            cb({
+              currentIndex:
+                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentFieldInfo: item.data,
+            })
+          this.table &&
+            this.table.scrollToLocation({
+              animated: true,
+              itemIndex: 0,
+              sectionIndex: 0,
+              viewPosition: 0,
+            })
+        },
+      )
+    } else {
+      this.getAttribute(
+        {
+          type: 'reset',
+          currentPage: this.currentPage,
+          startIndex: 0,
+          currentIndex: 0,
+        },
+        () => {
+          let item = this.table.setSelected(0)
+          this.setState({
+            currentFieldInfo: item.data,
+          })
+          cb &&
+            cb({
+              currentIndex:
+                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentFieldInfo: item.data,
+            })
+          this.canBeRefresh = false
+          this.table &&
+            this.table.scrollToLocation({
+              animated: true,
+              itemIndex: 0,
+              sectionIndex: 0,
+              viewPosition: 0,
+            })
+        },
+      )
+    }
+  }
+
+  /**
+   * 定位到末尾
+   */
+  locateToBottom = (cb = () => {}) => {
+    if (this.total <= 0) return
+    this.currentPage = Math.floor(this.total / PAGE_SIZE)
+    let remainder = (this.total % PAGE_SIZE) - 1
+
+    let startIndex = this.currentPage * PAGE_SIZE
+    if (startIndex !== 0) {
+      this.canBeRefresh = true
+    }
+
+    this.getAttribute(
+      {
+        type: 'reset',
+        currentPage: this.currentPage,
+        startIndex: startIndex,
+        currentIndex: remainder,
+      },
+      () => {
+        if (this.table) {
+          let item = this.table.setSelected(remainder)
+          this.setState({
+            currentFieldInfo: item.data,
+          })
+          cb &&
+            cb({
+              currentIndex:
+                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentFieldInfo: item.data,
+            })
+          this.table &&
+            this.table.scrollToLocation({
+              animated: true,
+              itemIndex: remainder,
+              sectionIndex: 0,
+              viewOffset: 0,
+              viewPosition: 1,
+            })
+        }
+      },
+    )
+  }
+
+  /**
+   * 定位到指定位置（相对/绝对 位置）
+   * @param data {value, inputValue}
+   */
+  locateToPosition = (data = {}, cb = () => {}) => {
+    let remainder = 0,
+      viewPosition = 0.3
+    if (data.type === 'relative') {
+      let currentIndex =
+        (this.state.currentIndex <= 0 ? 0 : this.state.currentIndex) +
+        data.index
+      if (currentIndex < 0) {
+        Toast.show('位置越界')
+        return
+      }
+      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
+      remainder = currentIndex % PAGE_SIZE
+    } else if (data.type === 'absolute') {
+      this.currentPage = Math.floor(data.index / PAGE_SIZE)
+      remainder = (data.index % PAGE_SIZE) - 1
+    }
+
+    if (this.currentPage > 0) {
+      this.canBeRefresh = true
+    }
+
+    if (remainder <= PAGE_SIZE / 4) {
+      viewPosition = 0
+    } else if (remainder > (PAGE_SIZE * 3) / 4) {
+      viewPosition = 1
+    }
+
+    let startIndex = this.currentPage * PAGE_SIZE
+    if (startIndex !== 0) {
+      this.canBeRefresh = true
+    }
+
+    this.getAttribute(
+      {
+        type: 'reset',
+        currentPage: this.currentPage,
+        startIndex: startIndex,
+        currentIndex: remainder,
+      },
+      () => {
+        if (this.table) {
+          let item = this.table.setSelected(remainder)
+          this.setState({
+            currentFieldInfo: item.data,
+          })
+          cb &&
+            cb({
+              currentIndex:
+                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentFieldInfo: item.data,
+            })
+          this.table &&
+            this.table.scrollToLocation({
+              animated: true,
+              itemIndex: remainder,
+              sectionIndex: 0,
+              viewPosition: viewPosition,
+              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+            })
+        }
+      },
+    )
   }
 
   selectRow = ({ data, index = -1 }) => {
@@ -143,9 +408,9 @@ export default class LayerSelectionAttribute extends React.Component {
   }
 
   getSelection = () => {
-    if (this.state.attributes.length === 1) {
+    if (this.state.attributes.data.length === 1) {
       return {
-        data: this.state.attributes[0],
+        data: this.state.attributes.data[0],
         index: 0,
       }
     } else {
@@ -172,36 +437,6 @@ export default class LayerSelectionAttribute extends React.Component {
         })
       }
     }
-  }
-
-  /** 下拉刷新 **/
-  refresh = (cb = () => {}) => {
-    this.currentPage = 0
-    this.getAttribute(cb)
-  }
-
-  /** 加载更多 **/
-  loadMore = (cb = () => {}) => {
-    if (this.isLoading) return
-    if (
-      this.isInit ||
-      this.noMore ||
-      this.props.layerSelection.ids.length <= 20
-    ) {
-      cb && cb()
-      return
-    }
-    this.isLoading = true
-    this.currentPage += 1
-    this.getAttribute(attribute => {
-      cb && cb()
-      this.isLoading = false
-      if (!attribute || attribute.length <= 0) {
-        this.noMore = true
-        Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
-        this.currentPage--
-      }
-    })
   }
 
   /** 检测撤销/恢复/还原是否可用 **/
@@ -380,35 +615,52 @@ export default class LayerSelectionAttribute extends React.Component {
   }
 
   renderTable = () => {
-    let data = [],
-      head = [],
-      type = LayerAttributeTable.Type.MULTI_DATA
-    // if (!this.state.attributes || this.state.attributes.length === 0) {
-    //   return <View />
+    // let data = [],
+    //   head = [],
+    //   type = LayerAttributeTable.Type.MULTI_DATA
+    // // if (!this.state.attributes || this.state.attributes.length === 0) {
+    // //   return <View />
+    // // }
+    // if (this.state.attributes.length > 1) {
+    //   data = this.state.attributes
+    //   head = this.state.tableHead
+    // } else if (this.state.attributes.length === 1) {
+    //   data = this.state.attributes[0]
+    //   head = ['名称', '属性值']
+    //   type = LayerAttributeTable.Type.SINGLE_DATA
     // }
-    if (this.state.attributes.length > 1) {
-      data = this.state.attributes
-      head = this.state.tableHead
-    } else if (this.state.attributes.length === 1) {
-      data = this.state.attributes[0]
-      head = ['名称', '属性值']
-      type = LayerAttributeTable.Type.SINGLE_DATA
-    }
 
     return (
       <LayerAttributeTable
         ref={ref => (this.table = ref)}
-        data={data}
-        tableHead={head}
-        widthArr={this.state.attributes.length === 1 && [100, 100]}
+        data={
+          this.state.attributes.data.length > 1
+            ? this.state.attributes.data
+            : this.state.attributes.data[0]
+        }
+        tableHead={
+          this.state.attributes.data.length > 1
+            ? this.state.attributes.head
+            : ['名称', '属性值']
+        }
+        widthArr={this.state.attributes.data.length === 1 && [100, 100]}
+        type={
+          this.state.attributes.data.length > 1
+            ? LayerAttributeTable.Type.MULTI_DATA
+            : LayerAttributeTable.Type.SINGLE_DATA
+        }
         refresh={cb => this.refresh(cb)}
         loadMore={cb => this.loadMore(cb)}
-        hasInputText={this.state.attributes.length > 1}
+        hasInputText={this.state.attributes.data.length > 1}
         changeAction={this.changeAction}
         indexColumn={0}
-        type={type}
+        hasIndex={this.state.attributes.data.length > 1}
+        startIndex={
+          this.state.attributes.data.length === 1
+            ? -1
+            : this.state.startIndex + 1
+        }
         selectRow={this.selectRow}
-        hasIndex={this.state.attributes.length !== 1}
       />
     )
   }

@@ -49,12 +49,14 @@ export default class LocationView extends React.Component {
     this.currentData = {}
   }
 
+  isShow = () => this.state.isShow
+
   show = isShow => {
     if (isShow !== undefined && this.state.isShow !== isShow) {
       this.setState({
         isShow: isShow,
       })
-    } else {
+    } else if (isShow === undefined) {
       this.setState(prevState => ({
         isShow: !prevState.isShow,
       }))
@@ -93,11 +95,11 @@ export default class LocationView extends React.Component {
       if (
         this.currentData &&
         this.currentData.value &&
-        this.currentData.inputValue >= 0
+        this.currentData.inputValue
       ) {
         this.props.locateToPosition({
           type: this.currentData.value,
-          index: this.currentData.inputValue,
+          index: parseInt(this.currentData.inputValue),
         })
       } else {
         Toast.show('请选择定位信息')
@@ -109,7 +111,9 @@ export default class LocationView extends React.Component {
   renderTop = () => {
     return (
       <View style={styles.topView}>
-        <Text style={styles.text}>{'当前位置 ' + this.props.currentIndex}</Text>
+        <Text style={styles.text}>
+          {'当前位置 ' + (this.props.currentIndex + 1 || '')}
+        </Text>
       </View>
     )
   }

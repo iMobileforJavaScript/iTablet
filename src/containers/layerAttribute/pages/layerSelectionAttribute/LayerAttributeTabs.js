@@ -13,7 +13,7 @@ import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
 import DefaultTabBar from './DefaultTabBar'
-import { LayerTopBar, DrawerBar } from '../../components'
+import { LayerTopBar, DrawerBar, LocationView } from '../../components'
 import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import { SMap, Action } from 'imobile_for_reactnative'
@@ -48,7 +48,17 @@ const styles = StyleSheet.create({
     height: scaleSize(60),
     width: scaleSize(60),
   },
+  locationView: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: color.bgW,
+  },
 })
+
+const PAGE_SIZE = 30
 
 export default class LayerAttributeTabs extends React.Component {
   props: {
@@ -86,6 +96,7 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   showDrawer = isShow => {
+    this.locationView && this.locationView.show(false)
     if (!this.drawer) return
     if (isShow !== undefined && isShow !== this.state.isShowDrawer) {
       this.setState(
@@ -136,11 +147,65 @@ export default class LayerAttributeTabs extends React.Component {
 
   onGetAttribute = attributes => {
     // 当数据只有一条时，则默认当前index为0
-    if (attributes.length === 1 && this.state.currentIndex !== 0) {
+    if (attributes.data.length === 1 && this.state.currentIndex !== 0) {
       this.setState({
         currentIndex: 0,
       })
     }
+  }
+
+  showLocationView = () => {
+    this.locationView && this.locationView.show(true)
+  }
+
+  /**
+   * 定位到首位
+   */
+  locateToTop = () => {
+    this.currentTabRefs[this.state.currentTabIndex] &&
+      this.currentTabRefs[this.state.currentTabIndex].locateToTop(
+        ({ currentIndex, currentFieldInfo }) => {
+          this.setState({
+            currentIndex,
+            currentFieldInfo,
+          })
+          this.locationView && this.locationView.show(false)
+        },
+      )
+  }
+
+  /**
+   * 定位到末尾
+   */
+  locateToBottom = () => {
+    this.currentTabRefs[this.state.currentTabIndex] &&
+      this.currentTabRefs[this.state.currentTabIndex].locateToBottom(
+        ({ currentIndex, currentFieldInfo }) => {
+          this.setState({
+            currentIndex,
+            currentFieldInfo,
+          })
+          this.locationView && this.locationView.show(false)
+        },
+      )
+  }
+
+  /**
+   * 定位到指定位置（相对/绝对 位置）
+   * @param data {value, inputValue}
+   */
+  locateToPosition = (data = {}) => {
+    this.currentTabRefs[this.state.currentTabIndex] &&
+      this.currentTabRefs[this.state.currentTabIndex].locateToPosition(
+        data,
+        ({ currentIndex, currentFieldInfo }) => {
+          this.setState({
+            currentIndex,
+            currentFieldInfo,
+          })
+          this.locationView && this.locationView.show(false)
+        },
+      )
   }
 
   /** 关联事件 **/
@@ -207,6 +272,11 @@ export default class LayerAttributeTabs extends React.Component {
   }
 
   back = () => {
+    if (this.locationView && this.locationView.isShow()) {
+      this.locationView.show(false)
+      return
+    }
+
     NavigationService.goBack()
 
     GLOBAL.toolBox &&
@@ -394,19 +464,38 @@ export default class LayerAttributeTabs extends React.Component {
           tabsAction={this.showDrawer}
           canRelated={this.state.currentIndex >= 0}
           relateAction={this.relateAction}
+          locateAction={this.showLocationView}
         />
-        {this.props.selection && this.props.selection.length > 0 ? (
-          this.props.selection.length > 1 ? (
-            this.renderTabs()
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}
+        >
+          {this.props.selection && this.props.selection.length > 0 ? (
+            this.props.selection.length > 1 ? (
+              this.renderTabs()
+            ) : (
+              this.renderTable({
+                data: this.props.selection[0],
+                index: 0,
+              })
+            )
           ) : (
-            this.renderTable({
-              data: this.props.selection[0],
-              index: 0,
-            })
-          )
-        ) : (
-          <View style={{ flex: 1 }} />
-        )}
+            <View style={{ flex: 1 }} />
+          )}
+          <LocationView
+            ref={ref => (this.locationView = ref)}
+            style={styles.locationView}
+            currentIndex={
+              this.currentPage * PAGE_SIZE + this.state.currentIndex
+            }
+            locateToTop={this.locateToTop}
+            locateToBottom={this.locateToBottom}
+            locateToPosition={this.locateToPosition}
+          />
+        </View>
         {this.state.isShowDrawer && (
           <TouchableOpacity
             activeOpacity={1}
