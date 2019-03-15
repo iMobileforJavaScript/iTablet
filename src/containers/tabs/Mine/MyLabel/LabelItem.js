@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Image, TouchableOpacity, Text } from 'react-native'
 import styles from './styles'
-export default class LableItem extends Component {
+export default class LabelItem extends Component {
   props: {
     item: Object,
     index: number,

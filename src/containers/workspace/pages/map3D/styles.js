@@ -80,7 +80,7 @@ export default StyleSheet.create({
     color: color.fontColorBlack,
   },
   search: {
-    width: scaleSize(30),
-    height: scaleSize(30),
+    width: scaleSize(40),
+    height: scaleSize(40),
   },
 })

@@ -8,7 +8,7 @@ import {
   AsyncStorage,
   RefreshControl,
 } from 'react-native'
-import { Container, ListSeparator, TextBtn } from '../../../../components'
+import { ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -24,6 +24,7 @@ export default class MyLocalData extends Component {
     navigation: Object,
     importWorkspace: () => {},
     showOnlineData: () => {},
+    getContainer: () => {},
   }
 
   constructor(props) {
@@ -228,6 +229,7 @@ export default class MyLocalData extends Component {
 
   _setSectionDataState3 = async () => {
     try {
+      // this.container.setLoading(true)
       let cacheSectionData = await this._constructCacheSectionData()
       this.setState({
         sectionData: cacheSectionData,
@@ -246,9 +248,15 @@ export default class MyLocalData extends Component {
       let newSectionData = cacheSectionData.concat([
         { title: '外部数据', data: newData, isShowItem: true },
       ])
-      this.setState({
-        sectionData: newSectionData,
-      })
+      this.setState(
+        {
+          sectionData: newSectionData,
+        },
+        () => {
+          this.props.showOnlineData && this.props.showOnlineData()
+          // this.container.setLoading(false)
+        },
+      )
       // let externalSectionData = []
       // let result = await AsyncStorage.getItem('ExternalSectionData')
       // if (result !== null) {
@@ -428,7 +436,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )
@@ -755,7 +763,9 @@ export default class MyLocalData extends Component {
   }
 
   goToMyOnlineData = async () => {
-    NavigationService.navigate('MyOnlineData')
+    NavigationService.navigate('MyOnlineData', {
+      refreshData: this._setSectionDataState3,
+    })
   }
 
   _renderHeaderBtn = () => {
@@ -784,15 +794,7 @@ export default class MyLocalData extends Component {
   render() {
     let sectionData = this.state.sectionData
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: '导入',
-          withoutBack: false,
-          navigation: this.props.navigation,
-          headerRight: this._renderHeaderBtn(),
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <Text
           numberOfLines={2}
           ellipsizeMode={'head'}
@@ -831,7 +833,7 @@ export default class MyLocalData extends Component {
           }
         />
         {this._showLocalDataPopupModal()}
-      </Container>
+      </View>
     )
   }
 }

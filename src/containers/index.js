@@ -20,7 +20,7 @@ import Tabs, {
   Login,
   Chat,
   AddFriend,
-  MyLable,
+  MyLabel,
   MyBaseMap,
 } from './tabs'
 
@@ -399,8 +399,8 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-    MyLable: {
-      screen: MyLable,
+    MyLabel: {
+      screen: MyLabel,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
