@@ -745,6 +745,10 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
+  legend = async () => {
+    SMap.addLegend()
+  }
+
   Label = () => {
     this.props.Label()
   }
@@ -826,7 +830,7 @@ export default class FunctionToolbar extends React.Component {
           },
           // {
           //   title: '撤销',
-          //   action: this.remove,
+          //   action: this.legend,
           //   image: require('../../../../assets/function/icon_remove.png'),
           // },
           {

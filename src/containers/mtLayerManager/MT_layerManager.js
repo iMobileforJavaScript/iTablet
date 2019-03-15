@@ -81,7 +81,7 @@ export default class MT_layerManager extends React.Component {
         dataList = await SMap.getUDBName(
           ConstPath.AndroidPath +
             ConstPath.CustomerPath +
-            'Data/Lable/Lable.udb',
+            'Data/Label/Label.udb',
         )
         newState.data = [
           {
@@ -158,7 +158,7 @@ export default class MT_layerManager extends React.Component {
         baseMap = [layers[layers.length - 1]]
       }
       dataList = await SMap.getUDBName(
-        ConstPath.AndroidPath + ConstPath.CustomerPath + 'Data/Lable/Lable.udb',
+        ConstPath.AndroidPath + ConstPath.CustomerPath + 'Data/Label/Label.udb',
       )
       this.setState({
         data: [
