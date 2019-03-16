@@ -42,6 +42,7 @@ export default class Home extends Component {
       isDownloaded: false,
       modalIsVisible: false,
       dialogCheck: false,
+      downloadData: null,
     }
   }
 
@@ -55,7 +56,7 @@ export default class Home extends Component {
     // this.setState({ statusBarVisible:statusBarVisible }) /** 初始化状态栏可不可见*/
     StatusBar.setHidden(statusBarVisible)
   }
-  _onImportWorkspace = async (filePath, toPath, isFirstImportWorkspace) => {
+  _onImportWorkspace = async (filePath, isFirstImportWorkspace) => {
     try {
       if (filePath !== undefined) {
         if (isFirstImportWorkspace === true) {
@@ -191,7 +192,7 @@ export default class Home extends Component {
     this.dialogCancel = cancel
     this.downloadData = downloadData
     this.currentUserName = currentUserName
-    this.setState({ dialogCheck: dialogCheck })
+    this.setState({ dialogCheck: dialogCheck, downloadData: downloadData })
   }
 
   getExit = () => {
@@ -219,6 +220,32 @@ export default class Home extends Component {
   }
 
   renderDialogChildren = () => {
+    let storage = null
+    let fileName = null
+    if (this.state.downloadData !== null) {
+      switch (this.state.downloadData.fileName) {
+        case '地理国情普查_示范数据':
+          fileName = '地理国情普查'
+          storage = '4.70MB'
+          break
+        case '湖北':
+          fileName = '湖北'
+          storage = '3.34MB'
+          break
+        case '湖南':
+          fileName = '湖南'
+          storage = '5.28MB'
+          break
+        case 'OlympicGreen_android':
+          fileName = 'OlympicGreen'
+          storage = '38.10MB'
+          break
+        case 'OlympicGreen_ios':
+          fileName = 'OlympicGreen'
+          storage = '25.57MB'
+          break
+      }
+    }
     let Img = this.state.dialogCheck
       ? require('../../../assets/home/Frenchgrey/icon_check_selected.png')
       : require('../../../assets/home/Frenchgrey/icon_check.png')
@@ -228,7 +255,11 @@ export default class Home extends Component {
           source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>是否下载示例数据 ？</Text>
+        <Text style={styles.promptTtile}>{'是否下载示例数据？'}</Text>
+        <Text style={styles.depict}>
+          {fileName}
+          {storage}
+        </Text>
         <TouchableOpacity
           style={styles.checkView}
           onPress={() => {
