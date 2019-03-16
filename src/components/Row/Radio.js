@@ -157,7 +157,7 @@ export default class Radio extends PureComponent {
                     this.props.keyboardType === 'decimal-pad' ||
                     this.props.keyboardType === 'numeric'
                   ) {
-                    if (isNaN(text) && text !== '') {
+                    if (isNaN(text) && text !== '' && text !== '-') {
                       text = this.state.inputValue
                     }
                   }

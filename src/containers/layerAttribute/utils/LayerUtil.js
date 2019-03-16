@@ -6,12 +6,19 @@ import { SMap } from 'imobile_for_reactnative'
  * @param path
  * @param page
  * @param size
+ * @param type
  * @returns {Promise.<*>}
  */
-async function getLayerAttribute(attributes, path, page, size) {
+async function getLayerAttribute(
+  attributes,
+  path,
+  page,
+  size,
+  type = 'loadMore',
+) {
   let data = await SMap.getLayerAttribute(path, page, size)
 
-  return dealData(attributes, data, page)
+  return dealData(attributes, data, page, type)
 }
 
 /**
@@ -21,13 +28,21 @@ async function getLayerAttribute(attributes, path, page, size) {
  * @param params
  * @param page
  * @param size
+ * @param type
  * @returns {Promise.<*>}
  */
-async function searchLayerAttribute(attributes, path, params = {}, page, size) {
+async function searchLayerAttribute(
+  attributes,
+  path,
+  params = {},
+  page,
+  size,
+  type = 'loadMore',
+) {
   // let data = await SMap.getLayerAttribute(path, page, size)
   let data = await SMap.searchLayerAttribute(path, params, page, size)
 
-  return dealData(attributes, data, page)
+  return dealData(attributes, data, page, type)
 }
 
 /**
@@ -37,6 +52,7 @@ async function searchLayerAttribute(attributes, path, params = {}, page, size) {
  * @param searchKey
  * @param page
  * @param size
+ * @param type
  * @returns {Promise.<*>}
  */
 async function searchSelectionAttribute(
@@ -45,16 +61,29 @@ async function searchSelectionAttribute(
   searchKey = '',
   page,
   size,
+  type = 'loadMore',
 ) {
   let data = await SMap.searchSelectionAttribute(path, searchKey, page, size)
 
-  return dealData(attributes, data, page)
+  return dealData(attributes, data, page, type)
 }
 
-function dealData(attributes, data = [], page) {
+async function getSelectionAttributeByLayer(
+  attributes,
+  path,
+  page,
+  size,
+  type = 'loadMore',
+) {
+  let data = await SMap.getSelectionAttributeByLayer(path, page, size)
+
+  return dealData(attributes, data, page, type)
+}
+
+function dealData(attributes, result = {}, page, type) {
   let tableHead = []
-  if (data && data.length > 0) {
-    data[0].forEach(item => {
+  if (result.data && result.data.length > 0) {
+    result.data[0].forEach(item => {
       item.selected = false
       if (item.fieldInfo.caption.toString().toLowerCase() === 'smid') {
         tableHead.unshift(item.fieldInfo.caption)
@@ -65,13 +94,24 @@ function dealData(attributes, data = [], page) {
   }
   attributes.head =
     tableHead.length === 0 && page > 0 ? attributes.head : tableHead
-  attributes.data = page === 0 ? data : (attributes.data || []).concat(data)
+  if (type === 'refresh') {
+    attributes.data = result.data.concat(attributes.data || [])
+  } else if (type === 'reset') {
+    attributes.data = result.data
+  } else if (type === 'loadMore') {
+    attributes.data = (attributes.data || []).concat(result.data)
+  }
 
-  return attributes
+  return {
+    attributes,
+    total: result.total,
+    currentPage: result.currentPage,
+  }
 }
 
 export default {
   getLayerAttribute,
   searchLayerAttribute,
   searchSelectionAttribute,
+  getSelectionAttributeByLayer,
 }
