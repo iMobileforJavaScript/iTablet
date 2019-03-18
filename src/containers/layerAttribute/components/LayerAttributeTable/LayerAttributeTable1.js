@@ -41,8 +41,9 @@ export default class LayerAttributeTable extends React.Component {
     widthArr: Array,
     colHeight: number,
     type: string,
-    data: Object,
+    data: Array,
     hasIndex?: boolean,
+    startIndex?: number,
   }
 
   static defaultProps = {
@@ -54,6 +55,7 @@ export default class LayerAttributeTable extends React.Component {
     selectable: true,
     multiSelect: false,
     hasIndex: false,
+    startIndex: -1,
     refreshing: false,
     stickySectionHeadersEnabled: true,
     indexColumn: -1,
@@ -118,7 +120,7 @@ export default class LayerAttributeTable extends React.Component {
         ],
         tableHead: this.props.tableHead,
       })
-      if (this.props.data.length < prevProps.data.length) {
+      if (prevProps.data && this.props.data.length < prevProps.data.length) {
         this.table &&
           this.table.scrollToLocation({
             animated: false,
@@ -127,6 +129,20 @@ export default class LayerAttributeTable extends React.Component {
             viewOffset: COL_HEIGHT,
           })
       }
+    }
+  }
+
+  scrollToLocation = params => {
+    if (!params) return
+    if (this.table) {
+      this.table.scrollToLocation({
+        animated: params.animated || false,
+        itemIndex: params.itemIndex || 0,
+        sectionIndex: params.sectionIndex || 0,
+        viewOffset:
+          params.viewOffset !== undefined ? params.viewOffset : COL_HEIGHT,
+        viewPosition: params.viewPosition || 0,
+      })
     }
   }
 
@@ -197,6 +213,28 @@ export default class LayerAttributeTable extends React.Component {
     }
   }
 
+  setSelected = index => {
+    if (index === undefined || isNaN(index) || index < 0) return
+
+    this.setState(state => {
+      // copy the map rather than modifying state.
+      const selected = new Map(state.selected)
+      const target = selected.get(this.state.tableData[0].data[index][0].value)
+      if (!this.props.multiSelect && !target) {
+        // 多选或者点击已选行
+        selected.clear()
+      }
+
+      selected.set(this.state.tableData[0].data[index][0].value, !target) // toggle
+      return { selected }
+    })
+
+    return {
+      data: this.state.tableData[0].data[index],
+      index,
+    }
+  }
+
   onPressRow = item => {
     if (item.data instanceof Array) {
       // 多属性选中变颜色
@@ -247,10 +285,14 @@ export default class LayerAttributeTable extends React.Component {
       indexCellTextStyle = styles.indexCellText
     }
     let data = item
-    if (this.props.hasIndex && data.length > 0 && data[0].name !== '序号') {
+    if (
+      this.props.startIndex >= 0 &&
+      data.length > 0 &&
+      data[0].name !== '序号'
+    ) {
       data.unshift({
         name: '序号',
-        value: index + 1,
+        value: this.props.startIndex + index,
         fieldInfo: {},
       })
     }
@@ -276,7 +318,11 @@ export default class LayerAttributeTable extends React.Component {
 
   _renderSectionHeader = ({ section }) => {
     let titles = section.title
-    if (this.props.hasIndex && titles.length > 0 && titles[0] !== '序号') {
+    if (
+      this.props.startIndex >= 0 &&
+      titles.length > 0 &&
+      titles[0] !== '序号'
+    ) {
       titles.unshift('序号')
     }
     return (

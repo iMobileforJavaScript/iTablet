@@ -218,13 +218,6 @@ export default class MyLocalData extends Component {
           }
           title = isUser ? '我的符号' : '游客符号'
           break
-        case Const.LABEL:
-          path += ConstPath.RelativePath.Lable
-          filter = {
-            type: 'file',
-          }
-          title = isUser ? '我的标注' : '游客标注'
-          break
         case Const.MODULE:
           path += ConstPath.RelativePath.Template
           filter = {

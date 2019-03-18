@@ -4,7 +4,7 @@ import { SThemeCartography } from 'imobile_for_reactnative'
 import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType, ConstPath, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
-import { getThemeAssets } from '../../../../assets'
+import { getPublicAssets, getThemeAssets } from '../../../../assets'
 
 let _toolbarParams = {}
 
@@ -2344,152 +2344,152 @@ function getThemeGraphColorScheme() {
     {
       key: 'CA_Red Rose',
       colorSchemeName: 'CA_Red Rose',
-      colorScheme: require('../../../../assets/uniqueColorScheme/BA_Blue.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CA_Red_Rose,
     },
     {
       key: 'CB_Childish',
       colorSchemeName: 'CB_Childish',
-      colorScheme: require('../../../../assets/uniqueColorScheme/BB_Green.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CB_Childish,
     },
     {
       key: 'CC_Blue-Yellow',
       colorSchemeName: 'CC_Blue-Yellow',
-      colorScheme: require('../../../../assets/uniqueColorScheme/BC_Orange.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CC_Blue_Yellow,
     },
     {
       key: 'CD_Concise',
       colorSchemeName: 'CD_Concise',
-      colorScheme: require('../../../../assets/uniqueColorScheme/BD_Pink.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CD_Concise,
     },
     {
       key: 'CE_Reposeful',
       colorSchemeName: 'CE_Reposeful',
-      colorScheme: require('../../../../assets/uniqueColorScheme/CA_Red_Rose.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CE_Reposeful,
     },
     {
       key: 'CF_Home',
       colorSchemeName: 'CF_Home',
-      colorScheme: require('../../../../assets/uniqueColorScheme/CB_Blue_and_Yellow.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CF_Home,
     },
     {
       key: 'CG_Cold',
       colorSchemeName: 'CG_Cold',
-      colorScheme: require('../../../../assets/uniqueColorScheme/CC_Pink_and_Green.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CG_Cold,
     },
     {
       key: 'CH_Naive',
       colorSchemeName: 'CH_Naive',
-      colorScheme: require('../../../../assets/uniqueColorScheme/CD_Fresh.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.CH_Naive,
     },
     {
       key: 'DA_Limber',
       colorSchemeName: 'DA_Limber',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DA_Ragular.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DA_Limber,
     },
     {
       key: 'DB_Field',
       colorSchemeName: 'DB_Field',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DB_Common.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DB_Field,
     },
     {
       key: 'DC_Dressy',
       colorSchemeName: 'DC_Dressy',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DC_Bright.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DC_Dressy,
     },
     {
       key: 'DD_Set',
       colorSchemeName: 'DD_Set',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DD_Warm.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DD_Set,
     },
     {
       key: 'DE_Shock',
       colorSchemeName: 'DE_Shock',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DE_Set.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DE_Shock,
     },
     {
       key: 'DF_Summer',
       colorSchemeName: 'DF_Summer',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DF_Pastel.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DF_Summer,
     },
     {
       key: 'DG_Common',
       colorSchemeName: 'DG_Common',
-      colorScheme: require('../../../../assets/uniqueColorScheme/DG_Grass.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DG_Common,
     },
     {
       key: 'DH_Red-Blue',
       colorSchemeName: 'DH_Red-Blue',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EA_Sin_ColorScheme8.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.DH_Red,
     },
     {
       key: 'EA_Orange',
       colorSchemeName: 'EA_Orange',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EB_Sweet.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EA_Orange,
     },
     {
       key: 'EB_Cold',
       colorSchemeName: 'EB_Cold',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EC_Dusk.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EB_Cold,
     },
     {
       key: 'EC_Distinct',
       colorSchemeName: 'EC_Distinct',
-      colorScheme: require('../../../../assets/uniqueColorScheme/ED_Pastel.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EC_Distinct,
     },
     {
       key: 'ED_Pastal',
       colorSchemeName: 'ED_Pastal',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EE_Lake.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.ED_Pastal,
     },
     {
       key: 'EE_Grass',
       colorSchemeName: 'EE_Grass',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EF_Grass.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EE_Grass,
     },
     {
       key: 'EF_Blind',
       colorSchemeName: 'EF_Blind',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EG_Sin_ColorScheme1.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EF_Blind,
     },
     {
       key: 'EG_Passion',
       colorSchemeName: 'EG_Passion',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EH_Sin_ColorScheme4.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EG_Passion,
     },
     {
       key: 'EH_Amazing',
       colorSchemeName: 'EH_Amazing',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EI_Sin_ColorScheme6.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.EH_Amazing,
     },
     {
       key: 'HA_Calm',
       colorSchemeName: 'HA_Calm',
-      colorScheme: require('../../../../assets/uniqueColorScheme/EJ_Sin_ColorScheme7.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.HA_Calm,
     },
     {
       key: 'HB_Distance',
       colorSchemeName: 'HB_Distance',
-      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Red-Yellow-Blue.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.HB_Distance,
     },
     {
       key: 'HC_Exotic',
       colorSchemeName: 'HC_Exotic',
-      colorScheme: require('../../../../assets/uniqueColorScheme/FA_Blue-Yellow-Red.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.HC_Exotic,
     },
     {
       key: 'HD_Luck',
       colorSchemeName: 'HD_Luck',
-      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.HD_Luck,
     },
     {
       key: 'HE_Moist',
       colorSchemeName: 'HE_Moist',
-      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.HE_Moist,
     },
     {
       key: 'HF_Warm',
       colorSchemeName: 'HF_Warm',
-      colorScheme: require('../../../../assets/uniqueColorScheme/FB_Red-Yellow-Green.png'),
+      colorScheme: getPublicAssets().theme.graphColorScheme.HF_Warm,
     },
   ]
   return list

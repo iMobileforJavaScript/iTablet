@@ -656,12 +656,12 @@ public class FileTools extends ReactContextBaseJavaModule {
         String templatePath = externalDataPath;
         String templateFilePath = templatePath + "地理国情普查";
 
-        String lableUDB=dataPath+"Lable/Lable.udb";
+        String lableUDB=dataPath+"Label/Label.udb";
         File file=new File(lableUDB);
         if(!file.exists()){
             Workspace workspace=new Workspace();
             DatasourceConnectionInfo info=new DatasourceConnectionInfo();
-            info.setAlias("Lable");
+            info.setAlias("Label");
             info.setEngineType(EngineType.UDB);
             info.setServer(lableUDB);
             Datasources datasources=workspace.getDatasources();

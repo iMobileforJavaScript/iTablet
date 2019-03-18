@@ -6,11 +6,11 @@ import { SMap, EngineType, SOnlineService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
-import LableItem from './LableItem'
+import LabelItem from './LabelItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast } from '../../../../utils'
-export default class MyLable extends Component {
+export default class MyLabel extends Component {
   props: {
     user: any,
     navigation: Object,
@@ -38,14 +38,14 @@ export default class MyLable extends Component {
         ? ConstPath.CustomerPath
         : ConstPath.UserPath + this.props.user.currentUser.userName + '/',
     )
-    let path = userPath + ConstPath.RelativePath.Lable + 'Lable.udb'
+    let path = userPath + ConstPath.RelativePath.Label + 'Label.udb'
     let data = await SMap.getUDBName(path)
     this.setState({ data: data, udbPath: path })
   }
 
   _renderItem = ({ item, index }) => {
     return (
-      <LableItem
+      <LabelItem
         item={item}
         index={index}
         saveItemInfo={this.saveItemInfo}
@@ -82,7 +82,7 @@ export default class MyLable extends Component {
     let result = await SMap.createDatasource({
       server: datasourcePath,
       engineType: EngineType.UDB,
-      alias: 'Lable',
+      alias: 'Label',
     })
     return result
   }

@@ -12,7 +12,7 @@ import MyOnlineMap, { ScanOnlineMap } from './MyService/MyOnlineMap'
 
 import MyLocalData from './MyLocalData'
 import MyData from './MyData'
-import MyLable from './MyLable'
+import MyLabel from './MyLabel'
 import MyBaseMap from './MyBaseMap'
 import MyOnlineData from './MyOnlineData'
 // import LoadServer from './MyBaseMap'
@@ -42,6 +42,6 @@ export {
   Personal,
   ToggleAccount,
   Login,
-  MyLable,
+  MyLabel,
   MyBaseMap,
 }

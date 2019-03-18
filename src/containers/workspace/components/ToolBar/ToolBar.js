@@ -564,7 +564,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
+            image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
         ]
         buttons = []

@@ -1206,20 +1206,25 @@ export default class MapView extends React.Component {
           // headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
-          headerRight: [
-            <MTBtn
-              key={'undo'}
-              image={getPublicAssets().common.icon_undo}
-              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-              onPress={this.showUndoView}
-            />,
-            <MTBtn
-              key={'search'}
-              image={getPublicAssets().common.icon_search}
-              imageStyle={styles.headerBtn}
-              onPress={this.goToSearch}
-            />,
-          ],
+          headerRight: !this.isExample
+            ? [
+              <MTBtn
+                key={'undo'}
+                image={getPublicAssets().common.icon_undo}
+                imageStyle={[
+                  styles.headerBtn,
+                  { marginRight: scaleSize(15) },
+                ]}
+                onPress={this.showUndoView}
+              />,
+              <MTBtn
+                key={'search'}
+                image={getPublicAssets().common.icon_search}
+                imageStyle={styles.headerBtn}
+                onPress={this.goToSearch}
+              />,
+            ]
+            : null,
         }}
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
