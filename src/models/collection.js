@@ -43,9 +43,9 @@ export default handleActions(
           fromJS((payload && payload.datasourceServer) || ''),
         )
     },
-    [REHYDRATE]: () => {
-      return initialState
-    },
+    // [REHYDRATE]: () => {
+    //   return initialState
+    // },
   },
   initialState,
 )

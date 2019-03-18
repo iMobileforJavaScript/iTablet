@@ -724,10 +724,10 @@ export default handleActions(
         .setIn(['attributesHistory'], fromJS([]))
         .setIn(['attributesHistoryKey'], fromJS([]))
     },
-    [REHYDRATE]: () => {
-      // return payload && payload.layers ? fromJS(payload.layers) : state
-      return initialState
-    },
+    // [REHYDRATE]: () => {
+    //   // return payload && payload.layers ? fromJS(payload.layers) : state
+    //   return initialState
+    // },
   },
   initialState,
 )
