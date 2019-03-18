@@ -5,9 +5,9 @@
  */
 
 import * as React from 'react'
-import { View, Text, Platform, BackHandler } from 'react-native'
+import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
-import { Container, MTBtn, PopModal } from '../../../../components'
+import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
 import { Toast, scaleSize } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
@@ -703,6 +703,48 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
+  renderInfoView = ({ image, title }) => {
+    return (
+      <InfoView
+        image={image || getPublicAssets().attribute.info_no_attribute}
+        title={title}
+      />
+    )
+  }
+
+  renderContent = () => {
+    if (!this.state.showTable) return null
+    return (
+      <View>
+        <LayerTopBar
+          canRelated={this.state.currentIndex >= 0}
+          locateAction={this.showLocationView}
+          relateAction={this.relateAction}
+        />
+        <View
+          style={{
+            flex: 1,
+            flexDirection: 'column',
+            justifyContent: 'flex-start',
+          }}
+        >
+          {this.renderMapLayerAttribute()}
+          {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+          <LocationView
+            ref={ref => (this.locationView = ref)}
+            style={styles.locationView}
+            currentIndex={
+              this.currentPage * PAGE_SIZE + this.state.currentIndex
+            }
+            locateToTop={this.locateToTop}
+            locateToBottom={this.locateToBottom}
+            locateToPosition={this.locateToPosition}
+          />
+        </View>
+      </View>
+    )
+  }
+
   render() {
     let title = ''
     switch (GLOBAL.Type) {
@@ -722,6 +764,12 @@ export default class LayerAttribute extends React.Component {
         title = MAP_MODULE.MAP_PLOTTING
         break
     }
+    let showContent =
+      this.state.showTable &&
+      this.state.attributes &&
+      this.state.attributes.head &&
+      this.state.attributes.head.length > 0
+
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -749,11 +797,13 @@ export default class LayerAttribute extends React.Component {
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        <LayerTopBar
-          canRelated={this.state.currentIndex >= 0}
-          locateAction={this.showLocationView}
-          relateAction={this.relateAction}
-        />
+        {showContent && (
+          <LayerTopBar
+            canRelated={this.state.currentIndex >= 0}
+            locateAction={this.showLocationView}
+            relateAction={this.relateAction}
+          />
+        )}
         <View
           style={{
             flex: 1,
@@ -761,23 +811,11 @@ export default class LayerAttribute extends React.Component {
             justifyContent: 'flex-start',
           }}
         >
-          {this.state.showTable &&
-          this.state.attributes &&
-          this.state.attributes.head ? (
-              this.state.attributes.head.length > 0 ? (
-                this.renderMapLayerAttribute()
-              ) : (
-                <View style={styles.infoView}>
-                  <Text style={styles.info}>请选择图层对象</Text>
-                </View>
-              )
-            ) : (
-              <View style={styles.infoView}>
-                <Text style={styles.info}>
-                  {this.props.currentLayer.path ? '请选择图层' : '该图层属性为空'}
-                </Text>
-              </View>
-            )}
+          {showContent
+            ? this.renderMapLayerAttribute()
+            : this.renderInfoView({
+              title: '暂无属性',
+            })}
           {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
           <LocationView
             ref={ref => (this.locationView = ref)}
