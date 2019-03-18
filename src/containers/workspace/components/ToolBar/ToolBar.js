@@ -564,7 +564,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
+            image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
         ]
         buttons = []
@@ -4515,7 +4515,8 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress && this.state.isFullScreen && (
+        {this.state.isTouchProgress &&
+          this.state.isFullScreen && (
           <TouchProgress
             selectName={this.state.selectName}
             showMenu={this.menu}

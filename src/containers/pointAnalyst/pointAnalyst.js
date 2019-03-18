@@ -94,7 +94,9 @@ export default class PointAnalyst extends Component {
             style={styles.pointImg}
             source={require('../../assets/mapToolbar/icon_scene_position.png')}
           />
-          <Text style={styles.itemText}>{item.pointName}</Text>
+          {item.pointName && (
+            <Text style={styles.itemText}>{item.pointName}</Text>
+          )}
         </TouchableOpacity>
         <View style={styles.itemSeparator} />
       </View>
@@ -131,7 +133,7 @@ export default class PointAnalyst extends Component {
         }
       }
     } catch (error) {
-      Toast.show(error)
+      Toast.show('网络错误')
     }
   }
 
@@ -222,7 +224,6 @@ export default class PointAnalyst extends Component {
             style={styles.search}
           />
         </View>
-        {/* <View style={{height:scaleSize(40)}}/> */}
         <View>
           <FlatList data={this.state.searchData} renderItem={this.renderItem} />
         </View>

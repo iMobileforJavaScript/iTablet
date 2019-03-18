@@ -178,6 +178,11 @@ export default class Mine extends Component {
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
               onClick: () => this.goToMyData(Const.SYMBOL),
             })}
+            {this._renderItem({
+              title: Const.MODULE,
+              leftImagePath: require('../../../assets/function/icon_function_style.png'),
+              onClick: () => this.goToMyData(Const.MODULE),
+            })}
           </ScrollView>
         </View>
       )
@@ -246,6 +251,11 @@ export default class Mine extends Component {
             title: Const.SYMBOL,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
+          })}
+          {this._renderItem({
+            title: Const.MODULE,
+            leftImagePath: require('../../../assets/function/icon_function_style.png'),
+            onClick: () => this.goToMyData(Const.MODULE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}
