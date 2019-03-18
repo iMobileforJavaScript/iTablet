@@ -244,7 +244,9 @@ export default class MyLocalData extends Component {
       }
       // this.setState({ sectionData: userSectionData })
       let customerSectionData = await this._constructCustomerSectionData()
-      let newData = userData.concat(customerSectionData)
+      let qqData = await this._constructTecentOfQQ()
+      let weixinData = await this._constructTecentOfweixin()
+      let newData = userData.concat(customerSectionData, qqData, weixinData)
       let newSectionData = cacheSectionData.concat([
         { title: '外部数据', data: newData, isShowItem: true },
       ])
@@ -453,6 +455,7 @@ export default class MyLocalData extends Component {
   /** 构造当前用户数据*/
   _constructUserSectionData = async () => {
     this.homePath = await this._getHomePath()
+
     this.path =
       this.homePath +
       ConstPath.UserPath +
@@ -499,6 +502,32 @@ export default class MyLocalData extends Component {
     //   sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
     // }
     // return sectionData
+  }
+
+  _constructTecentOfQQ = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + '/Tencent/QQfile_recv'
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    return newData
+  }
+
+  _constructTecentOfweixin = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + '/Tencent/MicroMsg/Download'
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    return newData
   }
 
   _renderSectionHeader = info => {
@@ -818,7 +847,7 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
-          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
           refreshControl={
             <RefreshControl

@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { Toast, dataUtil } from '../utils'

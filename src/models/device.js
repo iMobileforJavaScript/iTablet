@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { screen } from '../utils'
 // Constants
