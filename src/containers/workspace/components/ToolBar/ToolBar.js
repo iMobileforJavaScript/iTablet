@@ -2550,7 +2550,7 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else {
-        // SMap.submit()
+        SMap.submit()
         SMap.setAction(Action.PAN)
         if (type === ConstToolType.MAP_EDIT_TAGGING) {
           this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {
