@@ -2271,9 +2271,10 @@ export default class ToolBar extends React.PureComponent {
       if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
         // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
         SMap.setAction(Action.SELECT)
-      } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
-        // SMap.setAction(Action.SELECT_BY_RECTANGLE)
-        // SMap.selectByRectangle()
+      } else if (
+        type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE ||
+        type === ConstToolType.MAP_TOOL_RECTANGLE_CUT
+      ) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
       } else {
@@ -3736,6 +3737,11 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  /** 切换到裁剪界面 **/
+  goToCut = () => {
+    NavigationService.navigate('MapCut')
+  }
+
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -4206,6 +4212,10 @@ export default class ToolBar extends React.PureComponent {
         case ToolbarBtnType.COMMIT:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.commit
+          break
+        case ToolbarBtnType.COMMIT_CUT:
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.goToCut
           break
         case ToolbarBtnType.MENU:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')

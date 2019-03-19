@@ -13,7 +13,7 @@ const mapStateToProps = state => ({
   selection: state.layers.toJS().selection,
   currentLayer: state.layers.toJS().currentLayer,
   attributesHistory: state.layers.toJS().attributesHistory,
-  // attributes: state.layers.toJS().attributes,
+  attributes: state.layers.toJS().attributes,
   map: state.map.toJS(),
   nav: state.nav.toJS(),
 })
