@@ -134,14 +134,14 @@ export const getLayers = (params = -1, cb = () => {}) => async dispatch => {
 //     return e
 //   }
 // }
-//
-// export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
-//   await dispatch({
-//     type: SET_ATTRIBUTES,
-//     payload: data || {},
-//   })
-//   cb && cb(data)
-// }
+
+export const setAttributes = (data = [], cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: SET_ATTRIBUTES,
+    payload: data || {},
+  })
+  cb && cb(data)
+}
 
 /**
  * 修改对象属性，并记录到历史列表中
@@ -415,10 +415,10 @@ const initialState = fromJS({
   selection: [],
   /** 当前选中的对象 **/
   currentAttribute: {},
-  // attributes: {
-  //   head: [],
-  //   data: [],
-  // },
+  attributes: {
+    head: [],
+    data: [],
+  },
   /**
    * selectionAttributes: 选择集中对象的属性，可包含多个图层的属性
    * [
@@ -545,31 +545,31 @@ export default handleActions(
     //     .setIn(['attributes'], fromJS(attributes))
     //     .setIn(['currentAttribute'], fromJS(currentAttribute))
     // },
-    // [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
-    //   let currentAttribute = {},
-    //     attributes = state.toJS().attributes
-    //   if (
-    //     JSON.stringify(state.toJS().currentAttribute) === '{}' &&
-    //     payload.length > 0
-    //   ) {
-    //     currentAttribute = payload[0]
-    //   }
-    //   let tableHead = []
-    //   if (payload && payload.length > 0) {
-    //     payload[0].forEach(item => {
-    //       if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
-    //         tableHead.unshift(item.fieldInfo.caption)
-    //       } else {
-    //         tableHead.push(item.fieldInfo.caption)
-    //       }
-    //     })
-    //   }
-    //   attributes.head = tableHead
-    //   attributes.data = payload
-    //   return state
-    //     .setIn(['attributes'], fromJS(attributes))
-    //     .setIn(['currentAttribute'], fromJS(currentAttribute))
-    // },
+    [`${SET_ATTRIBUTES}`]: (state, { payload }) => {
+      let currentAttribute = {},
+        attributes = state.toJS().attributes
+      if (
+        JSON.stringify(state.toJS().currentAttribute) === '{}' &&
+        payload.length > 0
+      ) {
+        currentAttribute = payload[0]
+      }
+      let tableHead = []
+      if (payload && payload.length > 0) {
+        payload[0].forEach(item => {
+          if (item.fieldInfo.caption.toString().toLowerCase() === 'id') {
+            tableHead.unshift(item.fieldInfo.caption)
+          } else {
+            tableHead.push(item.fieldInfo.caption)
+          }
+        })
+      }
+      attributes.head = tableHead
+      attributes.data = payload
+      return state
+        .setIn(['attributes'], fromJS(attributes))
+        .setIn(['currentAttribute'], fromJS(currentAttribute))
+    },
     [`${GET_LAYER3DLIST}`]: (state, { payload }) => {
       let layer3dList = state.toJS().layer3dList
       if (payload.length > 0) {

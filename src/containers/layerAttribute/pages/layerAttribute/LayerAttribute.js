@@ -34,7 +34,7 @@ export default class LayerAttribute extends React.Component {
     selection: Object,
     map: Object,
     attributesHistory: Array,
-    // attributes: Object,
+    attributes: Object, // 此时用于3D属性
     // setAttributes: () => {},
     setCurrentAttribute: () => {},
     // getAttributes: () => {},
@@ -72,8 +72,12 @@ export default class LayerAttribute extends React.Component {
   componentDidMount() {
     Platform.OS === 'android' &&
       BackHandler.addEventListener('hardwareBackPress', this.back)
-    this.setLoading(true, ConstInfo.LOADING_DATA)
-    this.refresh()
+    if (this.type === 'MAP_3D') {
+      this.getMap3DAttribute()
+    } else {
+      this.setLoading(true, ConstInfo.LOADING_DATA)
+      this.refresh()
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -109,6 +113,15 @@ export default class LayerAttribute extends React.Component {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     }
     this.props.setCurrentAttribute({})
+  }
+
+  getMap3DAttribute = async (cb = () => {}) => {
+    !this.state.showTable &&
+      this.setState({
+        showTable: true,
+        attributes: this.props.attributes,
+      })
+    cb && cb()
   }
 
   /** 下拉刷新 **/
@@ -797,7 +810,7 @@ export default class LayerAttribute extends React.Component {
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
       >
-        {showContent && (
+        {showContent && this.type !== 'MAP_3D' && (
           <LayerTopBar
             canRelated={this.state.currentIndex >= 0}
             locateAction={this.showLocationView}
