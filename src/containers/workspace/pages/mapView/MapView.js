@@ -31,8 +31,10 @@ import {
   SaveMapNameDialog,
   SaveDialog,
   InputDialog,
+  PopModal,
 } from '../../../../components'
-import { Toast, jsonUtil } from '../../../../utils'
+import { Toast, jsonUtil, scaleSize } from '../../../../utils'
+import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
@@ -348,6 +350,7 @@ export default class MapView extends React.Component {
         },
       ])
     switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
       case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       case ConstToolType.MAP_TOOL_POINT_SELECT:
         break
@@ -762,7 +765,7 @@ export default class MapView extends React.Component {
       }
     }
     SMap.mapIsModified().then(result => {
-      if (result) {
+      if (result && !this.isExample) {
         this.setSaveViewVisible(true)
       } else {
         this.backAction()
@@ -1081,6 +1084,11 @@ export default class MapView extends React.Component {
     }
   }
 
+  /** 展示撤销Modal **/
+  showUndoView = () => {
+    this.popModal && this.popModal.setVisible(true)
+  }
+
   renderMenuDialog = () => {
     return (
       <MenuAlertDialog
@@ -1156,6 +1164,39 @@ export default class MapView extends React.Component {
     )
   }
 
+  renderEditControllerView = () => {
+    return (
+      <View style={[styles.editControllerView, { width: '100%' }]}>
+        <MTBtn
+          key={'undo'}
+          title={'撤销'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_undo}
+          imageStyle={styles.headerBtn}
+          onPress={() => SMap.undo()}
+        />
+        <MTBtn
+          key={'redo'}
+          title={'恢复'}
+          style={styles.button}
+          image={getThemeAssets().publicAssets.icon_redo}
+          imageStyle={styles.headerBtn}
+          onPress={() => SMap.redo()}
+        />
+        {/*<MTBtn*/}
+        {/*key={'revert'}*/}
+        {/*title={'还原'}*/}
+        {/*style={styles.button}*/}
+        {/*image={getThemeAssets().publicAssets.icon_revert}*/}
+        {/*imageStyle={styles.headerBtn}*/}
+        {/*onPress={() => SMap.addMapHistory()}*/}
+        {/*/>*/}
+        <View style={styles.button} />
+        <View style={styles.button} />
+      </View>
+    )
+  }
+
   render() {
     return (
       <Container
@@ -1166,6 +1207,25 @@ export default class MapView extends React.Component {
           // headerRight: this.renderHeaderBtns(),
           backAction: this.back,
           type: 'fix',
+          headerRight: !this.isExample
+            ? [
+              <MTBtn
+                key={'undo'}
+                image={getPublicAssets().common.icon_undo}
+                imageStyle={[
+                  styles.headerBtn,
+                  { marginRight: scaleSize(15) },
+                ]}
+                onPress={this.showUndoView}
+              />,
+              <MTBtn
+                key={'search'}
+                image={getPublicAssets().common.icon_search}
+                imageStyle={styles.headerBtn}
+                onPress={this.goToSearch}
+              />,
+            ]
+            : null,
         }}
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
@@ -1183,6 +1243,14 @@ export default class MapView extends React.Component {
         {!this.isExample && this.renderTool()}
         {!this.isExample && this.renderMenuDialog()}
         {this.state.measureShow && this.renderMeasureLabel()}
+
+        <PopModal
+          ref={ref => (this.popModal = ref)}
+          modalVisible={this.state.editControllerVisible}
+        >
+          {this.renderEditControllerView()}
+        </PopModal>
+
         {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}

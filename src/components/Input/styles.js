@@ -24,8 +24,7 @@ export default StyleSheet.create({
   input: {
     flex: 1,
     height: scaleSize(80),
-    // backgroundColor: 'transparent',
-    backgroundColor: 'yellow',
+    backgroundColor: 'transparent',
     textAlign: 'center',
     color: color.themeText2,
     fontSize: size.fontSize.fontSizeMd,
@@ -41,8 +40,7 @@ export default StyleSheet.create({
     height: scaleSize(40),
     justifyContent: 'center',
     alignItems: 'center',
-    // backgroundColor: 'transparent',
-    backgroundColor: 'red',
+    backgroundColor: 'transparent',
   },
 
   clearImg: {

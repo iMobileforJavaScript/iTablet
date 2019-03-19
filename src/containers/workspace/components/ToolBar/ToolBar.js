@@ -564,7 +564,7 @@ export default class ToolBar extends React.PureComponent {
               }
             },
             size: 'large',
-            image: require('../../../../assets/mapEdit/Frenchgrey/icon_clear.png'),
+            image: require('../../../../assets/mapToolbar/icon_scene_pointAnalyst.png'),
           },
         ]
         buttons = []
@@ -1831,9 +1831,7 @@ export default class ToolBar extends React.PureComponent {
       this.showMap3DTool(type)
       return
     }
-    // console.warn(0)
     // if (this.isShow === isShow && type === this.state.type) return
-    // console.warn(1)
     if (
       this.isShow !== isShow ||
       this.state.type !== type ||
@@ -2216,7 +2214,8 @@ export default class ToolBar extends React.PureComponent {
         typeof type === 'string' &&
         type.indexOf('MAP_EDIT_') >= 0 &&
         type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_EDIT_TAGGING
+        type !== ConstToolType.MAP_EDIT_TAGGING &&
+        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
         actionType = Action.SELECT
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
@@ -2255,7 +2254,9 @@ export default class ToolBar extends React.PureComponent {
 
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
-        this.props.getLayers()
+        this.props.getLayers(-1, layers => {
+          this.props.setCurrentLayer(layers.length > 0 && layers[0])
+        })
       }
     }.bind(this)())
   }
@@ -2270,9 +2271,10 @@ export default class ToolBar extends React.PureComponent {
       if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
         // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
         SMap.setAction(Action.SELECT)
-      } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
-        // SMap.setAction(Action.SELECT_BY_RECTANGLE)
-        // SMap.selectByRectangle()
+      } else if (
+        type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE ||
+        type === ConstToolType.MAP_TOOL_RECTANGLE_CUT
+      ) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
       } else {
@@ -2393,6 +2395,17 @@ export default class ToolBar extends React.PureComponent {
 
   symbolBack = () => {
     SScene.symbolback()
+  }
+
+  taggingback = () => {
+    this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+      isFullScreen: false,
+      height:
+        this.props.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.NEWTHEME_HEIGHT[0]
+          : ConstToolType.NEWTHEME_HEIGHT[1],
+      column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+    })
   }
 
   getPoint = () => {
@@ -2524,7 +2537,8 @@ export default class ToolBar extends React.PureComponent {
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
       if (
         type !== ConstToolType.MAP_EDIT_DEFAULT &&
-        type !== ConstToolType.MAP_EDIT_TAGGING
+        type !== ConstToolType.MAP_EDIT_TAGGING &&
+        type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
@@ -2532,13 +2546,27 @@ export default class ToolBar extends React.PureComponent {
           isFullScreen: false,
           height: 0,
           cb: () => {
-            SMap.submit()
+            // SMap.submit()
             SMap.setAction(Action.SELECT)
           },
         })
       } else {
         SMap.submit()
         SMap.setAction(Action.PAN)
+        if (type === ConstToolType.MAP_EDIT_TAGGING) {
+          this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {
+            isFullScreen: false,
+            containerType: 'list',
+            height:
+              this.props.device.orientation === 'LANDSCAPE'
+                ? ConstToolType.THEME_HEIGHT[3]
+                : ConstToolType.THEME_HEIGHT[5],
+            column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+          })
+        }
+        if (type === ConstToolType.MAP_EDIT_TAGGING_SETTING) {
+          this.taggingback()
+        }
       }
     }
     // this.props.existFullMap && this.props.existFullMap()
@@ -3709,6 +3737,11 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  /** 切换到裁剪界面 **/
+  goToCut = () => {
+    NavigationService.navigate('MapCut')
+  }
+
   renderList = () => {
     if (this.state.data.length === 0) return
     return (
@@ -4180,6 +4213,10 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.commit
           break
+        case ToolbarBtnType.COMMIT_CUT:
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.goToCut
+          break
         case ToolbarBtnType.MENU:
           image = require('../../../../assets/mapEdit/icon_function_theme_param_menu.png')
           action = this.menu
@@ -4208,7 +4245,11 @@ export default class ToolBar extends React.PureComponent {
           image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
           action = this.saveFly
           break
-
+        case ToolbarBtnType.TAGGING_BACK:
+          //返回上一级
+          image = require('../../../../assets/public/Frenchgrey/icon-back-white.png')
+          action = this.taggingback
+          break
         case ToolbarBtnType.BACK:
           image = require('../../../../assets/mapEdit/icon_back.png')
           action = this.symbolBack

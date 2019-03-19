@@ -15,6 +15,7 @@ import {
   TouchableOpacity,
   View,
   NetInfo,
+  ScrollView,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
@@ -25,7 +26,10 @@ import Toast from '../../../../utils/Toast'
 import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
 import { scaleSize } from '../../../../utils'
-import RNFS from 'react-native-fs'
+import NavigationService from '../../../NavigationService'
+import MyLocalData from '../MyLocalData'
+// import UserType from '../../../../constants/UserType'
+// import RNFS from 'react-native-fs'
 let _iLoadOnlineDataCount = 1
 let _iDataListTotal = -1
 let _iDownloadingIndex = -1
@@ -36,6 +40,7 @@ export default class MyOnlineData extends Component {
   props: {
     navigation: Object,
     user: Object,
+    importWorkspace: () => {},
   }
 
   constructor(props) {
@@ -61,18 +66,22 @@ export default class MyOnlineData extends Component {
       onClickItemBgColor: color.pink,
       itemBgColor: color.blackBg,
       progressWidth: this.screenWidth * 0.6,
+      showOnlineData: false,
     }
     this.pageSize = 20
   }
   componentDidMount() {
     // this._removeListener()
-    // this._addListener()
+    this._addListener()
+    // this.container.setLoading(true)
     this._firstLoadData()
+    this.container.setLoading(true)
   }
 
   componentWillUnmount() {
     // this._removeListener()
   }
+
   _addListener = () => {
     let downloadingEventType =
       'com.supermap.RN.Mapcontrol.online_service_downloading'
@@ -135,6 +144,7 @@ export default class MyOnlineData extends Component {
       )
     }
   }
+
   _removeListener = () => {
     if (this.downloadFailureListener !== undefined) {
       this.downloadFailureListener.remove()
@@ -334,11 +344,59 @@ export default class MyOnlineData extends Component {
         let savePath = filePath.substring(0, filePath.length - 4)
         await FileTools.unZipFile(filePath, savePath)
         FileTools.deleteFile(filePath)
+        this._setFilterDatas(savePath, {
+          smwu: 'smwu',
+          sxwu: 'sxwu',
+          udb: 'udb',
+        })
       }
     } catch (e) {
       filePath && FileTools.deleteFile(filePath)
     }
   }
+
+  _setFilterDatas = async (fullFileDir, fileType) => {
+    try {
+      let isRecordFile = false
+      let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
+      for (let i = 0; i < arrDirContent.length; i++) {
+        let fileContent = arrDirContent[i]
+        let isFile = fileContent.type
+        let fileName = fileContent.name
+        let newPath = fullFileDir + '/' + fileName
+
+        if (isFile === 'file' && !isRecordFile) {
+          // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+          if (
+            (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
+            (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
+            (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
+            (fileType.smw && fileName.indexOf(fileType.smw) !== -1)
+          ) {
+            if (
+              !(
+                fileName.indexOf('~[') !== -1 &&
+                fileName.indexOf(']') !== -1 &&
+                fileName.indexOf('@') !== -1
+              )
+            ) {
+              this.props.importWorkspace &&
+                this.props.importWorkspace(newPath).then(result => {
+                  result && Toast.show('数据下载完成并导入成功')
+                  // console.warn("true")
+                })
+              isRecordFile = true
+            }
+          }
+        } else if (isFile === 'directory') {
+          await this._setFilterDatas(newPath, fileType)
+        }
+      }
+    } catch (e) {
+      Toast.show('没有数据')
+    }
+  }
+
   _changeModalProgressState = progress => {
     if (_iDownloadingIndex >= 0) {
       let newData = [...this.state.data]
@@ -428,6 +486,7 @@ export default class MyOnlineData extends Component {
         '/' +
         ConstPath.RelativePath.ExternalData +
         objContent.fileName
+
       let filePath = await FileTools.appendingHomeDirectory(path)
       let isFileExist = await FileTools.fileIsExist(filePath)
       this._resetDownloadIndex(this.index)
@@ -445,33 +504,35 @@ export default class MyOnlineData extends Component {
         this.modalRef._changeDownloadingState('下载中...')
       }
       this._setDownloadingState(_iDownloadingIndex)
-      // SOnlineService.downloadFileWithDataId(filePath, dataId)
-      let dataUrl = `https://www.supermapol.com/web/mycontent/datas/${dataId}/download`
-      const downloadOptions = {
-        fromUrl: dataUrl,
-        toFile: filePath,
-        background: true,
-        progress: res => {
-          let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
-          // console.warn("value:"+value)
-          let progress = '下载:' + value + '%'
-          this._changeModalProgressState(progress)
-        },
-      }
-      const ret = RNFS.downloadFile(downloadOptions)
-      ret.promise
-        .then(async result => {
-          if (result.statusCode === 200) {
-            let result = '下载完成'
-            this._changeModalProgressState(result)
-            this._resetDownloadIndex(-1)
-          }
-        })
-        .catch(() => {
-          let result = '下载失败'
-          this._changeModalProgressState(result)
-          this._resetDownloadIndex(-1)
-        })
+      SOnlineService.downloadFileWithDataId(filePath, dataId)
+      // let dataUrl = `https://www.supermapol.com/web/mycontent/datas/${dataId}/download`
+      // let sessionID =await SOnlineService.getAndroidSessionID()
+      // const downloadOptions = {
+      //   fromUrl: dataUrl,
+      //   toFile: filePath,
+      //   headers:{'Cookie':sessionID},
+      //   background: true,
+      //   progress: res => {
+      //     let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+      //     // console.warn("value:"+value)
+      //     let progress = '下载:' + value + '%'
+      //     this._changeModalProgressState(progress)
+      //   },
+      // }
+      // const ret = RNFS.downloadFile(downloadOptions)
+      // ret.promise
+      //   .then(async result => {
+      //     if (result.statusCode === 200) {
+      //       let result = '下载完成'
+      //       this._changeModalProgressState(result)
+      //       this._resetDownloadIndex(-1)
+      //     }
+      //   })
+      //   .catch(() => {
+      //     let result = '下载失败'
+      //     this._changeModalProgressState(result)
+      //     this._resetDownloadIndex(-1)
+      //   })
       Toast.show('开始下载')
     } catch (e) {
       Toast.show('网络错误')
@@ -670,8 +731,8 @@ export default class MyOnlineData extends Component {
       let length = dataName.length - 4
       let newDataName = dataName.substring(0, length)
       let itemHeight = scaleSize(80)
-      let imageWidth = scaleSize(30),
-        imageHeight = scaleSize(30)
+      let imageWidth = scaleSize(40),
+        imageHeight = scaleSize(40)
       let itemWidth = '100%'
       let fontColor = color.fontColorBlack
       let imageColor = fontColor
@@ -701,18 +762,34 @@ export default class MyOnlineData extends Component {
               resizeMode={'contain'}
               source={require('../../../../assets/Mine/mine_my_online_data.png')}
             />
-            <Text
-              style={{
-                flex: 1,
-                // lineHeight: itemHeight,
-                textAlign: 'left',
-                fontSize: fontSize,
-                color: fontColor,
-                paddingLeft: 15,
-              }}
-            >
-              {newDataName}
-            </Text>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
+              <Text
+                style={{
+                  marginTop: scaleSize(5),
+                  color: fontColor,
+                  paddingLeft: 15,
+                  fontSize: fontSize,
+                }}
+              >
+                {newDataName}
+              </Text>
+              <Text
+                ellipsizeMode={'middle'}
+                numberOfLines={1}
+                style={{
+                  marginTop: scaleSize(5),
+                  color: color.fontColorGray,
+                  paddingLeft: 15,
+                  fontSize: 10,
+                  height: 15,
+                  marginRight: 20,
+                }}
+              >
+                {`路径:https://www.supermapol.com/web/mycontent/datas/${
+                  item.item.id
+                }`}
+              </Text>
+            </View>
             <Image
               style={{
                 width: scaleSize(40),
@@ -781,17 +858,45 @@ export default class MyOnlineData extends Component {
       )
     }
   }
+
+  back = () => {
+    let refreshData = this.props.navigation.state.params.refreshData
+    refreshData && refreshData()
+    NavigationService.goBack()
+  }
+
+  showOnlineData = () => {
+    if (this.props.user.users.length > 1) {
+      this.setState({ showOnlineData: true })
+    }
+    this.container.setLoading(false)
+  }
+
+  getContainer = () => {
+    return this.container
+  }
+
   render() {
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '我的数据',
+          title: '导入',
           withoutBack: false,
           navigation: this.props.navigation,
         }}
       >
-        {this._render()}
+        <ScrollView
+          style={{ backgroundColor: color.contentColorWhite, flex: 1 }}
+        >
+          {
+            <MyLocalData
+              showOnlineData={this.showOnlineData}
+              navigation={this.props.navigation}
+            />
+          }
+          {this.state.showOnlineData && this._render()}
+        </ScrollView>
       </Container>
     )
   }

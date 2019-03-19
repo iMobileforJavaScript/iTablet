@@ -65,7 +65,7 @@ export default {
   // Mine
   IMPORT: '导入',
   SEVER: '服务',
-  LABLE: '标注',
+  MYLABEL: '标注',
   BASEMAP: '底图',
   POI: 'POI',
   NAViGATION: '导航',
@@ -75,6 +75,7 @@ export default {
   DATA: '数据',
   SCENE: '场景',
   SYMBOL: '符号',
+  MODULE: '模板',
   ONLINE_DATA: '在线数据',
   ONLINE_MAP: '在线地图',
 

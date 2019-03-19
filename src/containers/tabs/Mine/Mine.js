@@ -92,7 +92,7 @@ export default class Mine extends Component {
       this.props.user.currentUser.userType === UserType.PROBATION_USER
         ? 'Customer'
         : this.props.user.currentUser.userName
-    NavigationService.navigate('MyLocalData', {
+    NavigationService.navigate('MyOnlineData', {
       userName: userName,
     })
   }
@@ -103,8 +103,12 @@ export default class Mine extends Component {
     })
   }
 
-  goToMyLable = title => {
-    NavigationService.navigate('MyLable', {
+  goToMyBaseMap = () => {
+    NavigationService.navigate('MyBaseMap', {})
+  }
+
+  goToMyLabel = title => {
+    NavigationService.navigate('MyLabel', {
       title,
     })
   }
@@ -146,10 +150,10 @@ export default class Mine extends Component {
               onClick: () => this.goToMyData(Const.DATA),
             })}
             {this._renderItem({
-              title: Const.LABLE,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+              title: Const.MYLABEL,
+              leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
               onClick: () => {
-                this.goToMyLable(Const.LABLE)
+                this.goToMyLabel(Const.MYLABEL)
               },
             })}
             {this._renderItem({
@@ -164,18 +168,10 @@ export default class Mine extends Component {
             })}
             {this._renderItem({
               title: Const.BASEMAP,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-              onClick: () => {},
-            })}
-            {this._renderItem({
-              title: Const.POI,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-              onClick: () => {},
-            })}
-            {this._renderItem({
-              title: Const.NAViGATION,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-              onClick: () => {},
+              leftImagePath: require('../../../assets/Mine/my_basemap.png'),
+              onClick: () => {
+                this.goToMyBaseMap()
+              },
             })}
             {this._renderItem({
               title: Const.SYMBOL,
@@ -183,9 +179,9 @@ export default class Mine extends Component {
               onClick: () => this.goToMyData(Const.SYMBOL),
             })}
             {this._renderItem({
-              title: Const.RIBBON,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-              onClick: () => {},
+              title: Const.MODULE,
+              leftImagePath: require('../../../assets/function/icon_function_style.png'),
+              onClick: () => this.goToMyData(Const.MODULE),
             })}
           </ScrollView>
         </View>
@@ -219,7 +215,7 @@ export default class Mine extends Component {
           })}
           {this._renderItem({
             title: Const.SEVER,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_service.png'),
             onClick: this.goToMyService,
           })}
           {this._renderItem({
@@ -228,10 +224,10 @@ export default class Mine extends Component {
             onClick: () => this.goToMyData(Const.DATA),
           })}
           {this._renderItem({
-            title: Const.LABLE,
+            title: Const.MYLABEL,
             leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
             onClick: () => {
-              this.goToMyLable(Const.LABLE)
+              this.goToMyLabel(Const.MYLABEL)
             },
           })}
           {this._renderItem({
@@ -245,9 +241,21 @@ export default class Mine extends Component {
             onClick: () => this.goToMyData(Const.SCENE),
           })}
           {this._renderItem({
+            title: Const.BASEMAP,
+            leftImagePath: require('../../../assets/Mine/my_basemap.png'),
+            onClick: () => {
+              this.goToMyBaseMap()
+            },
+          })}
+          {this._renderItem({
             title: Const.SYMBOL,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
+          })}
+          {this._renderItem({
+            title: Const.MODULE,
+            leftImagePath: require('../../../assets/function/icon_function_style.png'),
+            onClick: () => this.goToMyData(Const.MODULE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}

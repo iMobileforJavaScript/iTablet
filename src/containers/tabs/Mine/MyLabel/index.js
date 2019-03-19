@@ -1,4 +1,4 @@
-import MyLable from './MyLable'
+import MyLabel from './MyLabel'
 import { connect } from 'react-redux'
 const mapStateToProps = state => ({
   user: state.user.toJS(),
@@ -6,4 +6,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   {},
-)(MyLable)
+)(MyLabel)

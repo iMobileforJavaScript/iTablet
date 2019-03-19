@@ -6,6 +6,7 @@ export default {
   FLEX_FULL: 'flex_full', // 伸缩(展开全屏/收缩取消全屏)
   STYLE: 'style', // 样式
   COMMIT: 'commit', // 提交
+  COMMIT_CUT: 'commitCut', // 提交
   MENU: 'menu', //菜单
   MENUS: 'menus', //菜单
   PLACEHOLDER: 'placeholder', // 占位
@@ -13,6 +14,7 @@ export default {
   CLEAR: 'clear',
   END_FLY: 'endfly',
   SAVE_FLY: 'savefly',
+  TAGGING_BACK: 'TAGGING_BACK',
   END_ADD_FLY: 'endaddfly',
   BACK: 'back',
   SAVE: 'save',

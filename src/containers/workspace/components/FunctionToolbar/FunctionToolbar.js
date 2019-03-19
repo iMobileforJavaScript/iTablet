@@ -724,7 +724,7 @@ export default class FunctionToolbar extends React.Component {
       cb: async value => {
         if (value !== '') {
           (async function() {
-            await SMap.newTaggingDataset(value)
+            GLOBAL.value = await SMap.newTaggingDataset(value)
           }.bind(this)())
         }
         NavigationService.goBack()
@@ -743,6 +743,10 @@ export default class FunctionToolbar extends React.Component {
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
     }
+  }
+
+  legend = async () => {
+    SMap.addLegend()
   }
 
   Label = () => {
@@ -826,7 +830,7 @@ export default class FunctionToolbar extends React.Component {
           },
           // {
           //   title: '撤销',
-          //   action: this.remove,
+          //   action: this.legend,
           //   image: require('../../../../assets/function/icon_remove.png'),
           // },
           {

@@ -6,9 +6,10 @@ import {
   TouchableOpacity,
   Image,
   AsyncStorage,
+  RefreshControl,
 } from 'react-native'
-import { Container, ListSeparator } from '../../../../components'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { ListSeparator, TextBtn } from '../../../../components'
+import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import LocalDataPopupModal from './LocalDataPopupModal'
@@ -16,12 +17,14 @@ import { color, size } from '../../../../styles'
 import { SScene } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
-
+import NavigationService from '../../../NavigationService'
 export default class MyLocalData extends Component {
   props: {
     user: Object,
     navigation: Object,
     importWorkspace: () => {},
+    showOnlineData: () => {},
+    getContainer: () => {},
   }
 
   constructor(props) {
@@ -33,6 +36,7 @@ export default class MyLocalData extends Component {
       isFirstLoadingModal: true,
       textValue: '扫描文件:',
       textDisplay: 'none',
+      isRefreshing: false,
     }
   }
   componentDidMount() {
@@ -58,6 +62,8 @@ export default class MyLocalData extends Component {
   ) => {
     try {
       let isRecordFile = false
+      let udb = null
+      let isWorkspace = false
       let arrDirContent = await FileTools.getDirectoryContent(fullFileDir)
       for (let i = 0; i < arrDirContent.length; i++) {
         if (isShowText === true) {
@@ -68,13 +74,14 @@ export default class MyLocalData extends Component {
         let isFile = fileContent.type
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
+
         if (isFile === 'file' && !isRecordFile) {
+          // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
           if (
             (fileType.smwu && fileName.indexOf(fileType.smwu) !== -1) ||
             (fileType.sxwu && fileName.indexOf(fileType.sxwu) !== -1) ||
             (fileType.sxw && fileName.indexOf(fileType.sxw) !== -1) ||
-            (fileType.smw && fileName.indexOf(fileType.smw) !== -1) ||
-            (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
+            (fileType.smw && fileName.indexOf(fileType.smw) !== -1)
           ) {
             if (
               !(
@@ -90,6 +97,19 @@ export default class MyLocalData extends Component {
                 directory: fullFileDir,
               })
               isRecordFile = true
+              isWorkspace = true
+            }
+          } else if (fileType.udb && fileName.indexOf(fileType.udb) !== -1) {
+            fileName = fileName.substring(0, fileName.length - 4)
+            udb = {
+              filePath: newPath,
+              fileName: fileName,
+              directory: fullFileDir,
+            }
+          }
+          if (i === arrDirContent.length - 1) {
+            if (!isWorkspace) {
+              udb !== null && arrFilterFile.push(udb)
             }
           }
         } else if (isFile === 'directory') {
@@ -209,6 +229,7 @@ export default class MyLocalData extends Component {
 
   _setSectionDataState3 = async () => {
     try {
+      // this.container.setLoading(true)
       let cacheSectionData = await this._constructCacheSectionData()
       this.setState({
         sectionData: cacheSectionData,
@@ -223,13 +244,21 @@ export default class MyLocalData extends Component {
       }
       // this.setState({ sectionData: userSectionData })
       let customerSectionData = await this._constructCustomerSectionData()
-      let newData = userData.concat(customerSectionData)
+      let qqData = await this._constructTecentOfQQ()
+      let weixinData = await this._constructTecentOfweixin()
+      let newData = userData.concat(customerSectionData, qqData, weixinData)
       let newSectionData = cacheSectionData.concat([
         { title: '外部数据', data: newData, isShowItem: true },
       ])
-      this.setState({
-        sectionData: newSectionData,
-      })
+      this.setState(
+        {
+          sectionData: newSectionData,
+        },
+        () => {
+          this.props.showOnlineData && this.props.showOnlineData()
+          // this.container.setLoading(false)
+        },
+      )
       // let externalSectionData = []
       // let result = await AsyncStorage.getItem('ExternalSectionData')
       // if (result !== null) {
@@ -426,6 +455,7 @@ export default class MyLocalData extends Component {
   /** 构造当前用户数据*/
   _constructUserSectionData = async () => {
     this.homePath = await this._getHomePath()
+
     this.path =
       this.homePath +
       ConstPath.UserPath +
@@ -472,6 +502,32 @@ export default class MyLocalData extends Component {
     //   sectionData = [{ title: titleWorkspace, data: newData, isShowItem: true }]
     // }
     // return sectionData
+  }
+
+  _constructTecentOfQQ = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + '/Tencent/QQfile_recv'
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    return newData
+  }
+
+  _constructTecentOfweixin = async () => {
+    this.homePath = await this._getHomePath()
+    this.path = this.homePath + '/Tencent/MicroMsg/Download'
+    let newData = []
+    await this._setFilterDatas(
+      this.path,
+      { smwu: 'smwu', sxwu: 'sxwu' },
+      newData,
+      false,
+    )
+    return newData
   }
 
   _renderSectionHeader = info => {
@@ -735,17 +791,39 @@ export default class MyLocalData extends Component {
     ) : null
   }
 
+  goToMyOnlineData = async () => {
+    NavigationService.navigate('MyOnlineData', {
+      refreshData: this._setSectionDataState3,
+    })
+  }
+
+  _renderHeaderBtn = () => {
+    let btn = null
+    if (
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER &&
+      this.props.user.currentUser.userName
+    ) {
+      let title = Const.ONLINE_DATA
+      let action = this.goToMyOnlineData
+
+      btn = (
+        <TextBtn
+          btnText={title}
+          textStyle={{
+            color: 'white',
+            fontSize: 17,
+          }}
+          btnClick={action}
+        />
+      )
+    }
+    return btn
+  }
+
   render() {
     let sectionData = this.state.sectionData
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: '导入',
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
+      <View style={{ flex: 1 }}>
         <Text
           numberOfLines={2}
           ellipsizeMode={'head'}
@@ -769,11 +847,22 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
-          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          ItemSeparatorComponent={this._renderItemSeparatorComponent}
           renderSectionFooter={this._renderSectionSeparatorComponent}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this._setSectionDataState3}
+              colors={['orange', 'red']}
+              titleColor={'orange'}
+              tintColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {this._showLocalDataPopupModal()}
-      </Container>
+      </View>
     )
   }
 }

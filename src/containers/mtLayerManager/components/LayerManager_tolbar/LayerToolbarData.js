@@ -267,6 +267,52 @@ const taggingData = [
   },
 ]
 
+const scaleData = [
+  {
+    title: '最大可见比例尺',
+    data: [],
+  },
+  {
+    title: '最小可见比例尺',
+    data: [],
+  },
+]
+
+const mscaleData = [
+  {
+    title: '1:5,000',
+    data: [],
+  },
+  {
+    title: '1:10,000',
+    data: [],
+  },
+  {
+    title: '1:25,000',
+    data: [],
+  },
+  {
+    title: '1:50,000',
+    data: [],
+  },
+  {
+    title: '1:100,000',
+    data: [],
+  },
+  {
+    title: '1:250,000',
+    data: [],
+  },
+  {
+    title: '1:500,000',
+    data: [],
+  },
+  {
+    title: '1:1,000,000',
+    data: [],
+  },
+]
+
 export {
   layersetting,
   layerThemeSetting,
@@ -276,4 +322,6 @@ export {
   layereditsetting,
   baseListData,
   taggingData,
+  scaleData,
+  mscaleData,
 }

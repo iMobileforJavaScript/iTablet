@@ -16,7 +16,8 @@ import Mine, {
   Personal,
   ToggleAccount,
   Login,
-  MyLable,
+  MyLabel,
+  MyBaseMap,
 } from './Mine'
 import Find from './Find'
 import Friend, { Chat, AddFriend, InformMessage } from './Friend'
@@ -240,7 +241,6 @@ const styles = StyleSheet.create({
 })
 export default Tabs
 export {
-  MyLable,
   /**Mine*/
   MyService,
   MyLocalData,
@@ -259,4 +259,6 @@ export {
   Chat,
   InformMessage,
   AddFriend,
+  MyLabel,
+  MyBaseMap,
 }

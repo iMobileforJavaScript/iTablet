@@ -467,30 +467,30 @@ export default class ToolBarSectionList extends React.Component {
         img = require('../../../../assets/mapToolbar/dataset_type_point_black.png')
         break
       case 'LINE':
-        item.isSelected
+        // item.isSelected
         img = require('../../../../assets/mapToolbar/dataset_type_line_black.png')
         break
       case 'REGION':
-        item.isSelected
+        // item.isSelected
         img = require('../../../../assets/mapToolbar/dataset_type_region_black.png')
         break
       case 'TEXT':
         img = require('../../../../assets/mapToolbar/dataset_type_text_black.png')
         break
       case 'IMAGE':
-        item.isSelected
+        // item.isSelected
         img = require('../../../../assets/mapToolbar/dataset_type_image_black.png')
         break
       case 'CAD':
-        item.isSelected
+        // item.isSelected
         img = require('../../../../assets/mapToolbar/dataset_type_cad_black.png')
         break
       case 'GRID':
-        item.isSelected
+        // item.isSelected
         img = require('../../../../assets/mapToolbar/dataset_type_grid_black.png')
         break
       case 'NETWORK':
-        item.isSelected
+        // item.isSelected
         img = require('../../../../assets/mapToolbar/dataset_type_network_black.png')
         break
       default:
@@ -503,7 +503,7 @@ export default class ToolBarSectionList extends React.Component {
   getItemLayout = (data, index) => {
     return {
       length: scaleSize(80),
-      offset: scaleSize(80 + 1) * index,
+      offset: (scaleSize(80) + 1) * index,
       index,
     }
   }
@@ -590,8 +590,8 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   selectImgView: {
-    width: scaleSize(80),
-    height: scaleSize(80),
+    width: scaleSize(60),
+    height: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
   },
