@@ -2550,7 +2550,7 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else {
-        // SMap.submit()
+        SMap.submit()
         SMap.setAction(Action.PAN)
         if (type === ConstToolType.MAP_EDIT_TAGGING) {
           this.setVisible(true, ConstToolType.MAP_EDIT_TAGGING_SETTING, {
@@ -4515,8 +4515,7 @@ export default class ToolBar extends React.PureComponent {
             style={styles.themeoverlay}
           />
         )}
-        {this.state.isTouchProgress &&
-          this.state.isFullScreen && (
+        {this.state.isTouchProgress && this.state.isFullScreen && (
           <TouchProgress
             selectName={this.state.selectName}
             showMenu={this.menu}

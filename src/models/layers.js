@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { Toast, dataUtil } from '../utils'
@@ -724,10 +723,10 @@ export default handleActions(
         .setIn(['attributesHistory'], fromJS([]))
         .setIn(['attributesHistoryKey'], fromJS([]))
     },
-    [REHYDRATE]: () => {
-      // return payload && payload.layers ? fromJS(payload.layers) : state
-      return initialState
-    },
+    // [REHYDRATE]: () => {
+    //   // return payload && payload.layers ? fromJS(payload.layers) : state
+    //   return initialState
+    // },
   },
   initialState,
 )
