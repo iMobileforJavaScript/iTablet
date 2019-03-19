@@ -187,9 +187,10 @@ export default class ModuleList extends Component {
         progressDivider: 1,
         background: true,
         progress: res => {
-          let tempVal = ((res.bytesWritten / res.contentLength) * 100).toFixed(
-            0,
-          )
+          let tempVal = ~~(
+            (res.bytesWritten / res.contentLength) *
+            100
+          ).toFixed(0)
           this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
           let value = this.bytesInfo + '%'
           // if(Platform.OS === 'android'){
