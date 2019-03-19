@@ -178,10 +178,10 @@ export default class ModuleList extends Component {
       let fileCachePath = fileDirPath + '.zip'
       await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
-        headers: {
-          Range: `bytes=${this.bytesInfo}-`,
-          Host: 'www.supermapol.com',
-        },
+        // headers: {
+        //   Range: `bytes=${this.bytesInfo}-`,
+        //   Host: 'www.supermapol.com',
+        // },
         fromUrl: dataUrl,
         toFile: fileCachePath,
         progressDivider: 1,
