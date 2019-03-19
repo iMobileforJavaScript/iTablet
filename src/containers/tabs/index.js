@@ -20,7 +20,7 @@ import Mine, {
   MyBaseMap,
 } from './Mine'
 import Find from './Find'
-import Friend, { Chat, AddFriend } from './Friend'
+import Friend, { Chat, AddFriend, InformMessage } from './Friend'
 
 const Tabs = TabNavigator(
   {
@@ -255,7 +255,9 @@ export {
   Setting,
   AboutITablet,
   Login,
+  //friend
   Chat,
+  InformMessage,
   AddFriend,
   MyLabel,
   MyBaseMap,

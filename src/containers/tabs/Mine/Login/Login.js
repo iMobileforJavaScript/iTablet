@@ -90,6 +90,8 @@ export default class Login extends React.Component {
     let isEmail = this.state.onEmailTitleFocus
     let userName = ''
     let password = ''
+    // this.txtPhoneNumber = '13683409897'
+    // this.txtPhoneNumberPassword = '123456'
     try {
       if (!isEmail) {
         if (!this.txtEmail) {
@@ -132,14 +134,42 @@ export default class Login extends React.Component {
         if (!isAccountExist) {
           await this.initUserDirectories(userName)
         }
-        // Toast.show('登录成功')
-        this.container.setLoading(false)
-        this.props.setUser({
-          userName: userName,
-          password: password,
-          isEmail: isEmail,
-          // userType:UserType.COMMON_USER,
-        })
+
+        let bGetUserInfo = false
+        let userInfo = {}
+        userInfo = await SOnlineService.getUserInfo()
+
+        if (userInfo !== false) {
+          let userID = await SOnlineService.getUserInfoBy(userInfo.nickname, 0)
+          userInfo['userId'] = userID[0]
+          bGetUserInfo = true
+        }
+
+        if (bGetUserInfo !== false) {
+          // Toast.show('登录成功')
+          this.container.setLoading(false)
+          this.props.setUser({
+            userName: userName,
+            password: password,
+            nickname: userInfo.nickname,
+            email: userInfo.email,
+            phoneNumber: userInfo.phoneNumber,
+            userId: userInfo.userId,
+            isEmail: isEmail,
+            userType: UserType.COMMON_USER,
+          })
+        } else {
+          // Toast.show('登录成功')
+          this.container.setLoading(false)
+          this.props.setUser({
+            userName: userName,
+            password: password,
+            isEmail: isEmail,
+            userId: userName,
+            userType: UserType.COMMON_USER,
+          })
+        }
+
         if (!this.state.isFirstLogin) {
           NavigationService.reset('Tabs')
         }
@@ -153,6 +183,7 @@ export default class Login extends React.Component {
         this.container.setLoading(false)
       }
     } catch (e) {
+      //console.warn(e)
       this.container.setLoading(false)
       Toast.show('登录异常')
       this.props.setUser({

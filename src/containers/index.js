@@ -20,6 +20,7 @@ import Tabs, {
   Login,
   Chat,
   AddFriend,
+  InformMessage,
   MyLabel,
   MyBaseMap,
 } from './tabs'
@@ -292,7 +293,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-
+    InformMessage: {
+      screen: InformMessage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,
