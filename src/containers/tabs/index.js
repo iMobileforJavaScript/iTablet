@@ -19,7 +19,7 @@ import Mine, {
   MyLable,
 } from './Mine'
 import Find from './Find'
-import Friend, { Chat, AddFriend } from './Friend'
+import Friend, { Chat, AddFriend, InformMessage } from './Friend'
 
 const Tabs = TabNavigator(
   {
@@ -240,6 +240,7 @@ const styles = StyleSheet.create({
 })
 export default Tabs
 export {
+  MyLable,
   /**Mine*/
   MyService,
   MyLocalData,
@@ -254,7 +255,8 @@ export {
   Setting,
   AboutITablet,
   Login,
+  //friend
   Chat,
+  InformMessage,
   AddFriend,
-  MyLable,
 }

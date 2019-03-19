@@ -1,19 +1,16 @@
 /**
  * Created by imobile-xzy on 2019/3/4.
  */
-import Chat from './Chat'
+import FriendGroup from './FriendGroup'
 import { connect } from 'react-redux'
-import { setUser } from '../../../../models/user'
 
 const mapStateToProps = state => ({
   user: state.user.toJS(),
   chat: state.chat.toJS(),
 })
 
-const mapDispatchToProps = {
-  setUser,
-}
+const mapDispatchToProps = {}
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Chat)
+)(FriendGroup)

@@ -95,4 +95,35 @@ const styles = StyleSheet.create({
     height: 2,
   },
 })
-export default styles
+
+const dialogStyles = StyleSheet.create({
+  dialogHeaderViewX: {
+    flex: 1,
+    //  backgroundColor:"pink",
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dialogHeaderImgX: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    opacity: 1,
+    // marginLeft:scaleSize(145),
+    // marginTop:scaleSize(21),
+  },
+  promptTtileX: {
+    fontSize: scaleSize(24),
+    color: '#303030',
+    marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
+  },
+  dialogBackgroundX: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
+  },
+})
+
+export { dialogStyles, styles }
