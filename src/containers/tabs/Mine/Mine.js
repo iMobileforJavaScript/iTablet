@@ -103,6 +103,10 @@ export default class Mine extends Component {
     })
   }
 
+  goToMyModule = title => {
+    NavigationService.navigate('MyModule', { title })
+  }
+
   goToMyBaseMap = () => {
     NavigationService.navigate('MyBaseMap', {})
   }
@@ -181,7 +185,7 @@ export default class Mine extends Component {
             {this._renderItem({
               title: Const.MODULE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
-              onClick: () => this.goToMyData(Const.MODULE),
+              onClick: () => this.goToMyModule(Const.MODULE),
             })}
           </ScrollView>
         </View>
@@ -255,7 +259,7 @@ export default class Mine extends Component {
           {this._renderItem({
             title: Const.MODULE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () => this.goToMyData(Const.MODULE),
+            onClick: () => this.goToMyModule(Const.MODULE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}

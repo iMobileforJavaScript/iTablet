@@ -10,6 +10,7 @@ import LabelItem from './LabelItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast } from '../../../../utils'
+import ModalBtns from '../MyModule/ModalBtns'
 export default class MyLabel extends Component {
   props: {
     user: any,
@@ -24,11 +25,13 @@ export default class MyLabel extends Component {
       title: params.title,
       modalIsVisible: false,
       udbPath: '',
+      showselect: false,
     }
     this.uploadList = []
   }
 
   componentDidMount() {
+    this.container.setLoading(true)
     this.getData()
   }
 
@@ -40,7 +43,9 @@ export default class MyLabel extends Component {
     )
     let path = userPath + ConstPath.RelativePath.Label + 'Label.udb'
     let data = await SMap.getUDBName(path)
-    this.setState({ data: data, udbPath: path })
+    this.setState({ data: data, udbPath: path }, () => {
+      this.container.setLoading(false)
+    })
   }
 
   _renderItem = ({ item, index }) => {
@@ -51,8 +56,13 @@ export default class MyLabel extends Component {
         saveItemInfo={this.saveItemInfo}
         uploadListOfAdd={this.uploadListOfAdd}
         removeDataFromUpList={this.removeDataFromUpList}
+        getShowSelect={this.getShowSelect}
       />
     )
+  }
+
+  getShowSelect = () => {
+    return this.state.showselect
   }
 
   _keyExtractor = index => {
@@ -82,7 +92,7 @@ export default class MyLabel extends Component {
     let result = await SMap.createDatasource({
       server: datasourcePath,
       engineType: EngineType.UDB,
-      alias: 'Label',
+      alias: 'labelDatasource',
     })
     return result
   }
@@ -146,6 +156,14 @@ export default class MyLabel extends Component {
   _showMyDataPopupModal = () => {
     let data = [
       {
+        title: '分享',
+        action: () => {
+          this._closeModal()
+          this.ModalBtns.setVisible(true)
+          this.setState({ showselect: true })
+        },
+      },
+      {
         title: '删除数据',
         action: () => {
           SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
@@ -185,6 +203,7 @@ export default class MyLabel extends Component {
         ref={ref => (this.dialog = ref)}
         placeholder={'请输入数据名称'}
         confirmAction={() => {
+          this.setState({ showselect: false })
           this.uploadDialog(this.dialog.state.value)
         }}
         confirmBtnTitle={'上传'}
@@ -201,7 +220,6 @@ export default class MyLabel extends Component {
           title: this.state.title,
           withoutBack: false,
           navigation: this.props.navigation,
-          headerRight: this.headerRight(),
         }}
       >
         <FlatList
@@ -221,6 +239,20 @@ export default class MyLabel extends Component {
         />
         {this._showMyDataPopupModal()}
         {this.renderDiaolog()}
+        <ModalBtns
+          ref={ref => {
+            this.ModalBtns = ref
+          }}
+          actionOfOnline={() => {
+            if (this.uploadList.length > 0) {
+              this.dialog.setDialogVisible(true)
+              this.ModalBtns.setVisible(false)
+            } else {
+              Toast.show('请选择要分享的数据集')
+              this.ModalBtns.setVisible(false)
+            }
+          }}
+        />
       </Container>
     )
   }

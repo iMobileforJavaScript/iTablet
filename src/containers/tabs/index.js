@@ -18,6 +18,7 @@ import Mine, {
   Login,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './Mine'
 import Find from './Find'
 import Friend, { Chat, AddFriend } from './Friend'
@@ -259,4 +260,5 @@ export {
   AddFriend,
   MyLabel,
   MyBaseMap,
+  MyModule,
 }

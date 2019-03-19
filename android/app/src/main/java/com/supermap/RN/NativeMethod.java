@@ -32,14 +32,19 @@ public class NativeMethod extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getTemplates(String userName, Promise promise) {
+    public void getTemplates(String userName, String strModule,Promise promise) {
         try {
             if (userName == null || userName.equals("")) {
                 userName = "Customer";
             }
-
+            String templatePath="";
             WritableArray templateList = Arguments.createArray();
-            String templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData";
+            if(strModule ==null || strModule.equals("")){
+                templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData";
+            }else {
+                templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData/"+strModule;
+            }
+
             File file = new File(templatePath);
 
             if (file.exists() && file.isDirectory()) {

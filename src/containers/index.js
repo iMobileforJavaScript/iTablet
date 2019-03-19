@@ -22,6 +22,7 @@ import Tabs, {
   AddFriend,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -415,6 +416,13 @@ export default StackNavigator(
     },
     LoadServer: {
       screen: LoadServer,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyModule: {
+      screen: MyModule,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

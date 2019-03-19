@@ -1,50 +1,31 @@
 import React, { Component } from 'react'
 import { View, Image, TouchableOpacity, Text } from 'react-native'
 import styles from './styles'
-export default class LabelItem extends Component {
+import { color } from '../../../../styles'
+export default class ModuleItem extends Component {
   props: {
     item: Object,
     index: number,
+    section: Object,
     saveItemInfo: () => {},
     uploadListOfAdd: () => {},
     removeDataFromUpList: () => {},
-    getShowSelect: () => {},
   }
   constructor(props) {
     super(props)
     this.state = {
-      title: props.item.title,
+      title: props.item.name,
       index: props.index,
       select: false,
     }
   }
+
   render() {
-    let Img = require('../../../../assets/Mine/mine_my_online_data.png')
+    let Img = require('../../../../assets/mapToolbar/list_type_map_black.png')
     let moreImg = require('../../../../assets/Mine/icon_more_gray.png')
-    let selectImg = require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
-    let selectedImg = require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
-    let showselect = this.props.getShowSelect && this.props.getShowSelect()
     return (
       <TouchableOpacity style={{ flex: 1 }}>
         <View style={styles.rowView}>
-          <TouchableOpacity
-            onPress={() => {
-              this.setState({ select: !this.state.select }, () => {
-                if (this.state.select) {
-                  this.props.uploadListOfAdd(this.state.title)
-                } else {
-                  this.props.removeDataFromUpList(this.state.title)
-                }
-              })
-            }}
-          >
-            {showselect && (
-              <Image
-                source={this.state.select ? selectedImg : selectImg}
-                style={styles.selectImg}
-              />
-            )}
-          </TouchableOpacity>
           <Image source={Img} style={styles.Img} />
           <Text style={styles.title}>{this.state.title}</Text>
           <TouchableOpacity
@@ -53,12 +34,20 @@ export default class LabelItem extends Component {
               this.props.saveItemInfo({
                 item: this.props.item,
                 index: this.props.index,
+                section: this.props.section,
               })
             }}
           >
             <Image source={moreImg} style={styles.moreImg} />
           </TouchableOpacity>
         </View>
+        <View
+          style={{
+            backgroundColor: color.separateColorGray,
+            flex: 1,
+            height: 1,
+          }}
+        />
       </TouchableOpacity>
     )
   }
