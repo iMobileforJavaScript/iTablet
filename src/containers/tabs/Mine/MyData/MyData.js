@@ -15,9 +15,8 @@ import MyDataPopupModal from './MyDataPopupModal'
 import { color, size } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
-
+import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
-
 const styles = StyleSheet.create({
   topContainer: {
     flexDirection: 'column',
@@ -218,12 +217,13 @@ export default class MyLocalData extends Component {
           }
           title = isUser ? '我的符号' : '游客符号'
           break
-        case Const.MODULE:
-          path += ConstPath.RelativePath.Template
+        case Const.MINE_COLOR:
+          path += ConstPath.RelativePath.Color
           filter = {
-            extension: 'xml',
+            extension: 'scs',
             type: 'file',
           }
+          title = isUser ? '我的色带' : '游客色带'
           break
       }
       let data = await FileTools.getPathListByFilter(path, filter)
@@ -516,8 +516,14 @@ export default class MyLocalData extends Component {
             archivePaths = [symbolPath]
             break
           }
+          case Const.MINE_COLOR: {
+            let colorPath = await FileTools.appendingHomeDirectory(
+              this.itemInfo.item.path,
+            )
+            archivePaths = [colorPath]
+            break
+          }
         }
-
         this.props.uploading({
           archivePaths,
           targetPath,
@@ -529,11 +535,12 @@ export default class MyLocalData extends Component {
                 ? ConstInfo.UPLOAD_SUCCESS
                 : ConstInfo.UPLOAD_FAILED,
             )
+            this.ModalBtns.setVisible(false)
           },
         })
       }
     } catch (e) {
-      Toast.show(ConstInfo.DELETE_FAILED)
+      Toast.show(ConstInfo.UPLOAD_FAILED)
       this._closeModal()
     } finally {
       this.setLoading(false)
@@ -557,6 +564,9 @@ export default class MyLocalData extends Component {
             result = await this._deleteScene()
             break
           case Const.SYMBOL:
+            result = await this._deleteSymbol()
+            break
+          case Const.MINE_COLOR:
             result = await this._deleteSymbol()
             break
         }
@@ -684,12 +694,12 @@ export default class MyLocalData extends Component {
 
   _showMyDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
-      let data
+      let data,
+        title = '分享'
       if (
         this.props.user.currentUser.userName &&
         this.props.user.currentUser.userType !== UserType.PROBATION_USER
       ) {
-        let title = '上传数据'
         let uploadingData = this.getUploadingData()
         if (uploadingData && uploadingData.progress >= 0) {
           title += '  ' + uploadingData.progress + '%'
@@ -698,7 +708,10 @@ export default class MyLocalData extends Component {
           data = [
             {
               title: title,
-              action: this._onUploadData,
+              action: () => {
+                this._closeModal()
+                this.ModalBtns.setVisible(true)
+              },
             },
             {
               title: '导出数据',
@@ -713,7 +726,10 @@ export default class MyLocalData extends Component {
           data = [
             {
               title: title,
-              action: this._onUploadData,
+              action: () => {
+                this._closeModal()
+                this.ModalBtns.setVisible(true)
+              },
             },
             {
               title: '删除数据',
@@ -850,6 +866,12 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor2}
         />*/}
         {this._showMyDataPopupModal()}
+        <ModalBtns
+          ref={ref => {
+            this.ModalBtns = ref
+          }}
+          actionOfOnline={this._onUploadData}
+        />
       </Container>
     )
   }

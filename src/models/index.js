@@ -9,6 +9,7 @@ import template from './template'
 import device from './device'
 import down from './down'
 import online from './online'
+import chat from './chat'
 export {
   nav,
   layers,
@@ -21,4 +22,5 @@ export {
   device,
   down,
   online,
+  chat,
 }

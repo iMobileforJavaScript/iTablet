@@ -20,8 +20,10 @@ import Tabs, {
   Login,
   Chat,
   AddFriend,
+  InformMessage,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -298,7 +300,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-
+    InformMessage: {
+      screen: InformMessage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,
@@ -429,6 +437,13 @@ export default StackNavigator(
     },
     LoadServer: {
       screen: LoadServer,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyModule: {
+      screen: MyModule,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
