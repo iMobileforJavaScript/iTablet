@@ -590,8 +590,8 @@ const styles = StyleSheet.create({
     textAlignVertical: 'center',
   },
   selectImgView: {
-    width: scaleSize(80),
-    height: scaleSize(80),
+    width: scaleSize(60),
+    height: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
   },

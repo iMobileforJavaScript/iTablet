@@ -483,14 +483,15 @@ export default handleActions(
       return state.setIn(['baseMaps'], fromJS(newData))
     },
     [REHYDRATE]: (state, { payload }) => {
-      let data,
-        payloadData = (payload && payload.map) || state.toJS()
-      data = Object.assign({}, payloadData, {
-        currentMap: {},
-        maps: [],
-        workspace: {},
-      })
-      return fromJS(data)
+      if (payload && payload.map) {
+        let data = payload.map
+        data.maps = []
+        data.currentMap = {}
+        data.workspace = {}
+        return fromJS(data)
+      } else {
+        return state
+      }
     },
   },
   initialState,

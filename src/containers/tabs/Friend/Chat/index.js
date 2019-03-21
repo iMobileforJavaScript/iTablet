@@ -7,6 +7,7 @@ import { setUser } from '../../../../models/user'
 
 const mapStateToProps = state => ({
   user: state.user.toJS(),
+  chat: state.chat.toJS(),
 })
 
 const mapDispatchToProps = {

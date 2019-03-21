@@ -44,13 +44,15 @@
 		0A11D9E121F94DCE00AFE6D6 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */; };
 		0A11D9E721F9641700AFE6D6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E621F9641700AFE6D6 /* icon.png */; };
 		0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E821F9641D00AFE6D6 /* logo.png */; };
+		0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A147441223F6A7B006663C7 /* libc++.1.tbd */; };
+		0A147481223F6CAB006663C7 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A147454223F6CAB006663C7 /* libstdc++.6.0.9.tbd */; };
 		0A15464A21D36FB800347720 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15464921D36FB800347720 /* SuperMap.framework */; };
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
 		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
+		0A7DD68C223D004D000F4CE6 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
-		0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
 		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
 		0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF521104C7100F206BB /* libflyMSC.a */; };
 		0A8EEE0E21104C7100F206BB /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF621104C7100F206BB /* libSocketRocket.a */; };
@@ -69,7 +71,6 @@
 		0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0621104C7100F206BB /* CoreText.framework */; };
 		0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0721104C7100F206BB /* Security.framework */; };
 		0A8EEE2021104C7100F206BB /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */; };
-		0A8EEE2121104C7100F206BB /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */; };
 		0A8F7C3921C35DF60003595E /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8F7C3721C35D9B0003595E /* libRCTOrientation.a */; };
 		0A8F7C8521D1BA260003595E /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8F7C8421D1BA250003595E /* ZipArchive.framework */; };
 		0A8F7C8621D1BA320003595E /* ZipArchive.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8F7C8421D1BA250003595E /* ZipArchive.framework */; };
@@ -473,6 +474,8 @@
 		0A11D9E021F94DCE00AFE6D6 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		0A11D9E621F9641700AFE6D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		0A11D9E821F9641D00AFE6D6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
+		0A147441223F6A7B006663C7 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
+		0A147454223F6CAB006663C7 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		0A15464921D36FB800347720 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
@@ -499,7 +502,6 @@
 		0A8EEE0621104C7100F206BB /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		0A8EEE0721104C7100F206BB /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		0A8F7C8421D1BA250003595E /* ZipArchive.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ZipArchive.framework; sourceTree = "<group>"; };
 		0A9573C621C0B8EE00B5853A /* NativeMethod.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethod.h; sourceTree = "<group>"; };
 		0A9573C721C0B8EE00B5853A /* NativeMethod.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethod.m; sourceTree = "<group>"; };
@@ -543,6 +545,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0A147481223F6CAB006663C7 /* libstdc++.6.0.9.tbd in Frameworks */,
+				0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */,
 				0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */,
 				0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */,
 				0A15466921D719A500347720 /* libSupermap.a in Frameworks */,
@@ -570,7 +574,6 @@
 				0A8F7C8521D1BA260003595E /* ZipArchive.framework in Frameworks */,
 				0A8EEE1721104C7100F206BB /* MobileCoreServices.framework in Frameworks */,
 				0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */,
-				0A8EEE2121104C7100F206BB /* libstdc++.6.0.9.tbd in Frameworks */,
 				0A8F7C8621D1BA320003595E /* ZipArchive.framework in Frameworks */,
 				133E29F31AD74F7200F7D852 /* libRCTLinking.a in Frameworks */,
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
@@ -586,7 +589,7 @@
 				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
 				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
 				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
-				0A8EEE0B21104C7100F206BB /* libAsHttpRequest.a in Frameworks */,
+				0A7DD68C223D004D000F4CE6 /* libAsHttpRequest.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -866,6 +869,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				0A147454223F6CAB006663C7 /* libstdc++.6.0.9.tbd */,
+				0A147441223F6A7B006663C7 /* libc++.1.tbd */,
 				0A15464921D36FB800347720 /* SuperMap.framework */,
 				0A8F7C8421D1BA250003595E /* ZipArchive.framework */,
 				0AC1FA172154872E00490605 /* UIKit.framework */,
@@ -891,7 +896,6 @@
 				0A8EEE0621104C7100F206BB /* CoreText.framework */,
 				0A8EEE0721104C7100F206BB /* Security.framework */,
 				0A8EEE0821104C7100F206BB /* SystemConfiguration.framework */,
-				0A8EEE0921104C7100F206BB /* libstdc++.6.0.9.tbd */,
 				2D16E6891FA4F8E400B85C8A /* libReact.a */,
 			);
 			name = Frameworks;
@@ -1599,8 +1603,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1624,6 +1628,7 @@
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1652,8 +1657,8 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/iPhoneOS.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1677,6 +1682,7 @@
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
 					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

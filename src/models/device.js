@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { screen } from '../utils'
 // Constants
@@ -44,10 +43,9 @@ export default handleActions(
       }
       return state.setIn(['device'], fromJS(device))
     },
-    [REHYDRATE]: () => {
-      // return payload && payload.user ? fromJS(payload.user) : state
-      return initialState
-    },
+    // [REHYDRATE]: (state, { payload }) => {
+    //   return payload && payload.device ? fromJS(payload.device) : state
+    // },
   },
   initialState,
 )

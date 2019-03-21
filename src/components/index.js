@@ -43,6 +43,7 @@ import SearchBar from './SearchBar'
 import PopModal from './PopModal'
 import { IndicatorLoading } from './Loading'
 import HorizontalTableList from './HorizontalTableList'
+import InfoView from './InfoView'
 
 export {
   Container,
@@ -95,4 +96,5 @@ export {
   PopModal,
   IndicatorLoading,
   HorizontalTableList,
+  InfoView,
 }

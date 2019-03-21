@@ -28,6 +28,7 @@ const RelativePath = {
   Attribute: Data + 'Attribute/',
   Workspace: Data + 'Workspace/',
   Map: Data + 'Map/',
+  Color: Data + 'Color/',
   Temp: Data + 'Temp/', // 临时文件
   Label: Data + 'Label/', // 标注
 }
@@ -43,6 +44,7 @@ const RelativeFilePath = {
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
   Map: Data + 'Map/',
+  Color: Data + 'Color/',
   Collection: Data + 'Map/' + Collection + '/',
   MapEdit: Data + 'Map/' + MapEdit + '/',
   MapTheme: Data + 'Map/' + MapTheme + '/',

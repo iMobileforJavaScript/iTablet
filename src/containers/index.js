@@ -20,6 +20,7 @@ import Tabs, {
   Login,
   Chat,
   AddFriend,
+  InformMessage,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -62,6 +63,8 @@ import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
+import MapCut from './mapCut'
+
 export default StackNavigator(
   {
     Tabs: {
@@ -245,6 +248,12 @@ export default StackNavigator(
         header: null,
       },
     },
+    MapCut: {
+      screen: MapCut,
+      navigationOptions: {
+        header: null,
+      },
+    },
 
     UpLoadList: {
       screen: UpLoadList,
@@ -285,7 +294,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-
+    InformMessage: {
+      screen: InformMessage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,

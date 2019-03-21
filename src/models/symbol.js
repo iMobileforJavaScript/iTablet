@@ -83,11 +83,15 @@ export default handleActions(
         return state.setIn(['currentSymbol'], fromJS(payload))
       }
     },
-    [REHYDRATE]: state => {
-      // return payload && payload.nav ? fromJS(payload.nav) : state
-      return state
-        .setIn(['currentSymbols'], fromJS([]))
-        .setIn(['currentSymbol'], fromJS({}))
+    [REHYDRATE]: (state, { payload }) => {
+      if (payload && payload.symbol) {
+        let data = payload.symbol
+        data.currentSymbols = []
+        data.currentSymbol = {}
+        return fromJS(data)
+      } else {
+        return state
+      }
     },
   },
   initialState,

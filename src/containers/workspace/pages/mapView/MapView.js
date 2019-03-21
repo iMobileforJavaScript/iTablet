@@ -350,6 +350,7 @@ export default class MapView extends React.Component {
         },
       ])
     switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
       case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
       case ConstToolType.MAP_TOOL_POINT_SELECT:
         break

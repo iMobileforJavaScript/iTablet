@@ -3,9 +3,11 @@ import { View, StyleSheet } from 'react-native'
 import { MTBtn } from '../../../../components'
 import { color } from '../../../../styles'
 import { scaleSize } from '../../../../utils'
+
 export default class ModalBtns extends Component {
   props: {
     actionOfOnline: () => {},
+    cancel: () => {},
   }
   constructor(props) {
     super(props)
@@ -27,7 +29,7 @@ export default class ModalBtns extends Component {
             key={'online'}
             title={'Online'}
             style={styles.button}
-            image={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+            image={require('../../../../assets/mapTools/icon_share_online_black.png')}
             imageStyle={styles.headerBtn}
             onPress={() => {
               this.props.actionOfOnline && this.props.actionOfOnline()
@@ -37,7 +39,7 @@ export default class ModalBtns extends Component {
             key={'wechat'}
             title={'微信'}
             style={styles.button}
-            image={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+            image={require('../../../../assets/Mine/icon_mine_wechat.png')}
             imageStyle={styles.headerBtn}
             onPress={() => {}}
           />
@@ -46,10 +48,11 @@ export default class ModalBtns extends Component {
             key={'cancel'}
             title={'取消'}
             style={styles.button}
-            image={require('../../../../assets/mapToolbar/list_type_map_black.png')}
+            image={require('../../../../assets/mapTools/icon_cancel_1.png')}
             imageStyle={styles.headerBtn}
             onPress={() => {
               this.setVisible(false)
+              this.props.cancel && this.props.cancel()
             }}
           />
         </View>

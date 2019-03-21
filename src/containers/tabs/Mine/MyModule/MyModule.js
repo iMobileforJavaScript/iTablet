@@ -19,6 +19,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
+// import {screen} from '../../../../utils'
 export default class MyModule extends Component {
   props: {
     user: any,
@@ -138,31 +139,11 @@ export default class MyModule extends Component {
     } else {
       data = [
         {
-          title: '删除数据',
-          action: async () => {
-            try {
-              let filePath = await FileTools.appendingHomeDirectory(
-                this.itemInfo.item.path,
-              )
-
-              let result = await FileTools.deleteFile(filePath)
-              if (result) {
-                this._closeModal()
-                Toast.show('删除成功')
-                this.getData()
-              } else {
-                Toast.show('删除失败')
-              }
-            } catch (error) {
-              Toast.show('删除失败')
-            }
-          },
-        },
-        {
           title: '分享',
           action: async () => {
             this._closeModal()
             this.ModalBtns.setVisible(true)
+
             // let expListPath = userPath + ConstPath.RelativePath.Map
             // let expList=await FileTools.getPathListByFilter(expListPath, {extension: 'exp',type: 'file',})
             // for (let index = 0; index < expList.length; index++) {
@@ -186,6 +167,27 @@ export default class MyModule extends Component {
             //     }
             //   }
             // }
+          },
+        },
+        {
+          title: '删除数据',
+          action: async () => {
+            try {
+              let filePath = await FileTools.appendingHomeDirectory(
+                this.itemInfo.item.path,
+              )
+
+              let result = await FileTools.deleteFile(filePath)
+              if (result) {
+                this._closeModal()
+                Toast.show('删除成功')
+                this.getData()
+              } else {
+                Toast.show('删除失败')
+              }
+            } catch (error) {
+              Toast.show('删除失败')
+            }
           },
         },
       ]
@@ -221,8 +223,7 @@ export default class MyModule extends Component {
         '.zip'
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
-        let fileName =
-          this.itemInfo.item.name + '_' + this.itemInfo.section.title
+        let fileName = this.itemInfo.item.name
         SOnlineService.uploadFile(toPath, fileName, {
           onResult: () => {
             Toast.show('分享成功')

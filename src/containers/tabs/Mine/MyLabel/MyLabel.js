@@ -252,6 +252,9 @@ export default class MyLabel extends Component {
               this.ModalBtns.setVisible(false)
             }
           }}
+          cancel={() => {
+            this.setState({ showselect: false })
+          }}
         />
       </Container>
     )
