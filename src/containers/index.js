@@ -63,7 +63,7 @@ import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
-import MapCut from './mapCut'
+import { MapCut, MapCutDS } from './mapCut/page'
 
 export default StackNavigator(
   {
@@ -250,6 +250,12 @@ export default StackNavigator(
     },
     MapCut: {
       screen: MapCut,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapCutDS: {
+      screen: MapCutDS,
       navigationOptions: {
         header: null,
       },
