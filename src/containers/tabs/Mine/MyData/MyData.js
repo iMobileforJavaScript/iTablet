@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Image,
   StyleSheet,
+  NativeModules,
 } from 'react-native'
 import { Container, ListSeparator, TextBtn } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
@@ -17,6 +18,7 @@ import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
+const appUtilsModule = NativeModules.AppUtils
 const styles = StyleSheet.create({
   topContainer: {
     flexDirection: 'column',
@@ -461,7 +463,7 @@ export default class MyLocalData extends Component {
     this.setState({ modalIsVisible: false })
   }
 
-  _onUploadData = async () => {
+  _onUploadData = async type => {
     try {
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
@@ -524,20 +526,41 @@ export default class MyLocalData extends Component {
             break
           }
         }
-        this.props.uploading({
-          archivePaths,
-          targetPath,
-          name: fileName,
-          onProgress: () => {},
-          onResult: (result, name) => {
-            Toast.show(
-              name + ' ' + result || result === undefined
-                ? ConstInfo.UPLOAD_SUCCESS
-                : ConstInfo.UPLOAD_FAILED,
-            )
-            this.ModalBtns.setVisible(false)
-          },
-        })
+        if (type === 'weChat') {
+          let zipResult = await FileTools.zipFiles(archivePaths, targetPath)
+          zipResult &&
+            appUtilsModule
+              .sendFileOfWechat({
+                filePath: targetPath,
+                title: fileName,
+                description: 'SuperMap iTablet',
+              })
+              .then(
+                result => {
+                  result && Toast.show(ConstInfo.UPLOAD_SUCCESS)
+                  this.ModalBtns.setVisible(false)
+                },
+                () => {
+                  Toast.show(ConstInfo.UPLOAD_FAILED)
+                  this.container.setLoading(false)
+                },
+              )
+        } else {
+          this.props.uploading({
+            archivePaths,
+            targetPath,
+            name: fileName,
+            onProgress: () => {},
+            onResult: (result, name) => {
+              Toast.show(
+                name + ' ' + result || result === undefined
+                  ? ConstInfo.UPLOAD_SUCCESS
+                  : ConstInfo.UPLOAD_FAILED,
+              )
+              this.ModalBtns.setVisible(false)
+            },
+          })
+        }
       }
     } catch (e) {
       Toast.show(ConstInfo.UPLOAD_FAILED)
@@ -870,7 +893,10 @@ export default class MyLocalData extends Component {
           ref={ref => {
             this.ModalBtns = ref
           }}
-          actionOfOnline={this._onUploadData}
+          actionOfOnline={() => this._onUploadData('online')}
+          actionOfWechat={() => {
+            this._onUploadData('weChat')
+          }}
         />
       </Container>
     )

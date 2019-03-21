@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { FlatList, View, TouchableOpacity, Image, Text } from 'react-native'
+import {
+  FlatList,
+  View,
+  TouchableOpacity,
+  Image,
+  Text,
+  NativeModules,
+} from 'react-native'
 import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import { SMap, EngineType, SOnlineService } from 'imobile_for_reactnative'
@@ -11,6 +18,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
+const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {
     user: any,
@@ -28,6 +36,7 @@ export default class MyLabel extends Component {
       showselect: false,
     }
     this.uploadList = []
+    this.uploadType = null
   }
 
   componentDidMount() {
@@ -136,16 +145,33 @@ export default class MyLabel extends Component {
         let zipResult = await FileTools.zipFile(archivePath, targetPath)
         if (zipResult) {
           let fileName = name + '_标注'
-          SOnlineService.uploadFile(targetPath, fileName, {
-            onProgress: progress => {
-              return progress
-            },
-            onResult: async () => {
-              Toast.show(ConstInfo.SHARE_SUCCESS)
-              FileTools.deleteFile(targetPath)
-              FileTools.deleteFile(archivePath)
-            },
-          })
+          if (this.uploadType === 'weChat') {
+            appUtilsModule
+              .sendFileOfWechat({
+                filePath: targetPath,
+                title: fileName,
+                description: 'SuperMap iTablet',
+              })
+              .then(
+                result => {
+                  result && Toast.show(ConstInfo.UPLOAD_SUCCESS)
+                },
+                () => {
+                  Toast.show(ConstInfo.UPLOAD_FAILED)
+                },
+              )
+          } else {
+            SOnlineService.uploadFile(targetPath, fileName, {
+              onProgress: progress => {
+                return progress
+              },
+              onResult: async () => {
+                Toast.show(ConstInfo.SHARE_SUCCESS)
+                FileTools.deleteFile(targetPath)
+                FileTools.deleteFile(archivePath)
+              },
+            })
+          }
         }
       }
     } catch (error) {
@@ -206,6 +232,10 @@ export default class MyLabel extends Component {
           this.setState({ showselect: false })
           this.uploadDialog(this.dialog.state.value)
         }}
+        cancelAction={() => {
+          this.dialog.setDialogVisible(false)
+          this.setState({ showselect: false })
+        }}
         confirmBtnTitle={'上传'}
         cancelBtnTitle={'取消'}
       />
@@ -249,7 +279,15 @@ export default class MyLabel extends Component {
               this.ModalBtns.setVisible(false)
             } else {
               Toast.show('请选择要分享的数据集')
+            }
+          }}
+          actionOfWechat={() => {
+            if (this.uploadList.length > 0) {
+              this.dialog.setDialogVisible(true)
               this.ModalBtns.setVisible(false)
+              this.uploadType = 'weChat'
+            } else {
+              Toast.show('请选择要分享的数据集')
             }
           }}
           cancel={() => {

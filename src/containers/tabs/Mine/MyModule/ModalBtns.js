@@ -8,6 +8,7 @@ export default class ModalBtns extends Component {
   props: {
     actionOfOnline: () => {},
     cancel: () => {},
+    actionOfWechat: () => {},
   }
   constructor(props) {
     super(props)
@@ -41,7 +42,9 @@ export default class ModalBtns extends Component {
             style={styles.button}
             image={require('../../../../assets/Mine/icon_mine_wechat.png')}
             imageStyle={styles.headerBtn}
-            onPress={() => {}}
+            onPress={() => {
+              this.props.actionOfWechat && this.props.actionOfWechat()
+            }}
           />
           <View style={styles.button} />
           <MTBtn

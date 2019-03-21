@@ -7,8 +7,9 @@ import {
   Text,
   RefreshControl,
   StyleSheet,
+  NativeModules,
 } from 'react-native'
-import { ConstPath } from '../../../../constants'
+import { ConstPath, ConstInfo } from '../../../../constants'
 import { FileTools, NativeMethod } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
@@ -19,6 +20,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
+const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
   props: {
@@ -202,7 +204,7 @@ export default class MyModule extends Component {
     )
   }
 
-  shareData = async () => {
+  shareData = async type => {
     try {
       this.ModalBtns.setVisible(false)
       this.container.setLoading(true, '正在分享')
@@ -224,13 +226,32 @@ export default class MyModule extends Component {
       let result = await FileTools.zipFile(fromPath, toPath)
       if (result) {
         let fileName = this.itemInfo.item.name
-        SOnlineService.uploadFile(toPath, fileName, {
-          onResult: () => {
-            Toast.show('分享成功')
-            FileTools.deleteFile(toPath)
-            this.container.setLoading(false)
-          },
-        })
+        if (type === 'weChat') {
+          appUtilsModule
+            .sendFileOfWechat({
+              filePath: toPath,
+              title: fileName,
+              description: 'SuperMap iTablet',
+            })
+            .then(
+              result => {
+                result && Toast.show(ConstInfo.UPLOAD_SUCCESS)
+                this.container.setLoading(false)
+              },
+              () => {
+                Toast.show(ConstInfo.UPLOAD_FAILED)
+                this.container.setLoading(false)
+              },
+            )
+        } else {
+          SOnlineService.uploadFile(toPath, fileName, {
+            onResult: () => {
+              Toast.show('分享成功')
+              FileTools.deleteFile(toPath)
+              this.container.setLoading(false)
+            },
+          })
+        }
       }
     } catch (error) {
       Toast.show('分享失败')
@@ -308,7 +329,8 @@ export default class MyModule extends Component {
         {this._showMyDataPopupModal()}
         <ModalBtns
           ref={ref => (this.ModalBtns = ref)}
-          actionOfOnline={this.shareData}
+          actionOfOnline={() => this.shareData('online')}
+          actionOfWechat={() => this.shareData('weChat')}
         />
       </Container>
     )
