@@ -1,14 +1,16 @@
-import Login from './Login'
-import { setUser } from '../../../../models/user'
+import MapCutDS from './MapCutDS'
 import { connect } from 'react-redux'
+import { getLayers } from '../../../../models/layers'
+
 const mapStateToProps = state => ({
-  user: state.user.toJS(),
+  layers: state.layers.toJS().layers,
 })
 
 const mapDispatchToProps = {
-  setUser,
+  getLayers,
 }
+
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(Login)
+)(MapCutDS)

@@ -22,7 +22,11 @@ export default class PopModal extends PureComponent {
   }
 
   setVisible = visible => {
-    if (visible === undefined) visible = !this.state.modalVisible
+    if (visible === undefined) {
+      visible = !this.state.modalVisible
+    } else if (visible === this.state.modalVisible) {
+      return
+    }
     this.setState({
       modalVisible: visible,
     })
@@ -126,15 +130,16 @@ export default class PopModal extends PureComponent {
         style={{ flex: 1 }}
         visible={this.state.modalVisible}
       >
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => {
-            this._onCloseModal()
-          }}
-          style={{ flex: 1, backgroundColor: color.modalBgColor }}
-        >
+        <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+          <TouchableOpacity
+            activeOpacity={1}
+            onPress={() => {
+              this._onCloseModal()
+            }}
+            style={{ flex: 1, backgroundColor: color.modalBgColor }}
+          />
           {this._renderContent()}
-        </TouchableOpacity>
+        </View>
       </Modal>
     )
   }
