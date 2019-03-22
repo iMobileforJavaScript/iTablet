@@ -402,18 +402,19 @@ export default handleActions(
         .setIn(['template'], fromJS(payload))
     },
     [REHYDRATE]: (state, { payload }) => {
-      let data,
-        payloadData = (payload && payload.map) || state.toJS()
-      data = Object.assign({}, payloadData, {
-        template: {
+      if (payload && payload.template) {
+        let data = payload.template
+        data.template = {
           symbols: [],
           path: '',
           name: '',
-        },
-        currentTemplateInfo: {},
-        currentTemplateList: [],
-      })
-      return fromJS(data)
+        }
+        data.currentTemplateInfo = {}
+        data.currentTemplateList = []
+        return fromJS(data)
+      } else {
+        return state
+      }
     },
   },
   initialState,

@@ -328,19 +328,6 @@ export default class MapView extends React.Component {
     this._addMap()
   }
 
-  /** 设置监听 **/
-  /** 选择事件监听 **/
-  _addGeometrySelectedListener = async () => {
-    await SMap.addGeometrySelectedListener({
-      geometrySelected: this.geometrySelected,
-      geometryMultiSelected: this.geometryMultiSelected,
-    })
-  }
-
-  _removeGeometrySelectedListener = async () => {
-    await SMap.removeGeometrySelectedListener()
-  }
-
   geometrySelected = event => {
     this.props.setSelection &&
       this.props.setSelection([
@@ -403,6 +390,14 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setSelection && this.props.setSelection(data)
+  }
+
+  /** 触摸事件监听 **/
+  _addGeometrySelectedListener = async () => {
+    await SMap.addGeometrySelectedListener({
+      geometrySelected: this.geometrySelected,
+      geometryMultiSelected: this.geometryMultiSelected,
+    })
   }
 
   // 导出(保存)工作空间中地图到模块
