@@ -23,6 +23,9 @@ import {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  graphMenuInfo,
+  dotDensityMenuInfo,
+  graduatedSymbolMenuInfo,
 } from './FunctionToolbarModule'
 
 import {
@@ -59,6 +62,9 @@ export {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  graphMenuInfo,
+  dotDensityMenuInfo,
+  graduatedSymbolMenuInfo,
   UserType,
   ThemeType,
 }

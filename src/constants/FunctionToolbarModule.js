@@ -2,6 +2,7 @@ import { SMap, DatasetType } from 'imobile_for_reactnative'
 import ConstOnline from './ConstOnline'
 import ToolbarBtnType from '../containers/workspace/components/ToolBar/ToolbarBtnType'
 import { ConstToolType } from '../constants'
+import constants from '../containers/workspace/constants'
 
 async function OpenData(data, index) {
   let layers = await SMap.getLayersByType()
@@ -835,6 +836,165 @@ const graphMenuInfo = [
   },
 ]
 
+//修改点密度专题图：设置点密度图的表达式，单点代表的值，点风格（大小和颜色）。
+const dotDensityMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getThemeExpress(
+          ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '单点代表值',
+    selectKey: '单点代表值',
+    btntitle: '单点代表值',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getDotDensityValueAndDotsize(
+          ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_VALUE,
+          '单点代表值',
+          '单点代表值',
+        )
+    },
+  },
+  {
+    key: '点符号',
+    selectKey: '点符号',
+    btntitle: '点符号',
+    action: () => {
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.setVisible(
+          true,
+          ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS,
+          {
+            containerType: 'symbol',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.THEME_HEIGHT[3],
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+            selectName: '点符号',
+            selectKey: '点符号',
+            themeType: constants.THEME_DOT_DENSITY,
+            themeSymbolType: 'point',
+          },
+        )
+    },
+  },
+  {
+    key: '符号大小',
+    selectKey: '符号大小',
+    btntitle: '符号大小',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getDotDensityValueAndDotsize(
+          ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SIZE,
+          '符号大小',
+          '符号大小',
+        )
+    },
+  },
+  {
+    key: '点颜色',
+    selectKey: '点颜色',
+    btntitle: '点颜色',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getDotDensityDotColor(
+          ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_COLOR,
+          '点颜色',
+        )
+    },
+  },
+]
+
+//修改等级符号专题图：设置表达式，分级方式，基准值，正值基准值风格（大小和颜色）。
+const graduatedSymbolMenuInfo = [
+  {
+    key: '表达式',
+    selectKey: '表达式',
+    btntitle: '表达式 ',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeExpressions(
+          ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION,
+          '表达式',
+        )
+    },
+  },
+  {
+    key: '分级方式',
+    selectKey: '分级方式',
+    btntitle: '分级方式',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeGradutedMode(
+          ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_GRADUATEDMODE,
+          '分级方式',
+        )
+    },
+  },
+  {
+    key: '基准值',
+    selectKey: '基准值',
+    btntitle: '基准值',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_VALUE,
+          '基准值',
+        )
+    },
+  },
+  {
+    key: '点符号',
+    selectKey: '点符号',
+    btntitle: '点符号',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS,
+          '点符号',
+        )
+    },
+  },
+  {
+    key: '符号大小',
+    selectKey: '符号大小',
+    btntitle: '符号大小',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_SIZE,
+          '符号大小',
+        )
+    },
+  },
+  {
+    key: '符号颜色',
+    selectKey: '符号颜色',
+    btntitle: '符号颜色',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphThemeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_COLOR,
+          '符号颜色',
+        )
+    },
+  },
+]
+
 export {
   layerAdd,
   BotMap,
@@ -848,4 +1008,6 @@ export {
   rangeMenuInfo,
   labelMenuInfo,
   graphMenuInfo,
+  dotDensityMenuInfo,
+  graduatedSymbolMenuInfo,
 }

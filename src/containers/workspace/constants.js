@@ -77,6 +77,8 @@ export default {
   THEME_UNIQUE_LABEL: '单值标签',
   THEME_RANGE_LABEL: '分段标签',
   THEME_GRAPH_STYLE: '统计专题图',
+  THEME_DOT_DENSITY: '点密度图',
+  THEME_GRADUATED_SYMBOL: '等级符号图',
 
   //统计专题图
   THEME_GRAPH_AREA: '面积图',

@@ -127,6 +127,35 @@ export default class TouchProgress extends Component {
             tips = '分段个数    ' + parseInt(this.ragngeCount)
           }
           break
+        case ThemeType.DOTDENSITY: //点密度专题图
+          {
+            if (this.props.selectName === '单点代表值') {
+              this.dotValue =
+                value !== undefined
+                  ? value
+                  : await SThemeCartography.getDotDensityValue({
+                    LayerName: this.props.currentLayer.name,
+                  })
+              this._panBtnStyles.style.left =
+                (this.dotValue * progressWidth) / 100 + panBtnDevLeft
+              this._previousLeft = (this.dotValue * progressWidth) / 100
+              this._BackLine.style.width = (this.dotValue * progressWidth) / 100
+              tips = '单点代表值    ' + parseInt(this.dotValue)
+            } else if (this.props.selectName === '符号大小') {
+              this.dotSize =
+                value !== undefined
+                  ? value
+                  : await SThemeCartography.getDotDensityDotSize({
+                    LayerName: this.props.currentLayer.name,
+                  })
+              this._panBtnStyles.style.left =
+                (this.dotSize * progressWidth) / 100 + panBtnDevLeft
+              this._previousLeft = (this.dotSize * progressWidth) / 100
+              this._BackLine.style.width = (this.dotSize * progressWidth) / 100
+              tips = '符号大小    ' + parseInt(this.dotSize) / 10 + 'mm'
+            }
+          }
+          break
         case ThemeType.LABEL: // 标签专题图
           {
             this.fontsize =
@@ -344,6 +373,10 @@ export default class TouchProgress extends Component {
         this.props.selectName === '字号'
       ) {
         newValue = value * 20
+      } else if (this.props.selectName === '单点代表值') {
+        newValue = value * 100
+      } else if (this.props.selectName === '符号大小') {
+        newValue = value * 100
       }
     }
 
@@ -407,6 +440,20 @@ export default class TouchProgress extends Component {
           FontSize: value,
         }
         await SThemeCartography.setUniformLabelFontSize(_params)
+      } else if (this.props.selectName === '单点代表值') {
+        tips = '单点代表值    ' + parseInt(value)
+        let _params = {
+          LayerName: this.props.currentLayer.name,
+          Value: value,
+        }
+        await SThemeCartography.modifyDotDensityThemeMap(_params)
+      } else if (this.props.selectName === '符号大小') {
+        tips = '符号大小    ' + parseInt(value) / 10 + 'mm'
+        let _params = {
+          LayerName: this.props.currentLayer.name,
+          DotSize: value,
+        }
+        await SThemeCartography.modifyDotDensityThemeMap(_params)
       }
     }
 
@@ -546,6 +593,20 @@ export default class TouchProgress extends Component {
         this.props.selectName === '字号'
       ) {
         tips = '字号    ' + parseInt(value)
+      } else if (this.props.selectName === '单点代表值') {
+        if (value < 0) {
+          value = 0
+        } else if (value > 100) {
+          value = 100
+        }
+        tips = '单点代表值    ' + parseInt(value)
+      } else if (this.props.selectName === '符号大小') {
+        if (value < 0) {
+          value = 0
+        } else if (value > 100) {
+          value = 100
+        }
+        tips = '符号大小    ' + parseInt(value) / 10 + 'mm'
       }
     }
 
