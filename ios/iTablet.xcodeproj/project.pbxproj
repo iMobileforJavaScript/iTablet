@@ -45,13 +45,14 @@
 		0A11D9E721F9641700AFE6D6 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E621F9641700AFE6D6 /* icon.png */; };
 		0A11D9E921F9641D00AFE6D6 /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A11D9E821F9641D00AFE6D6 /* logo.png */; };
 		0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A147441223F6A7B006663C7 /* libc++.1.tbd */; };
-		0A147481223F6CAB006663C7 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A147454223F6CAB006663C7 /* libstdc++.6.0.9.tbd */; };
 		0A15464A21D36FB800347720 /* SuperMap.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15464921D36FB800347720 /* SuperMap.framework */; };
 		0A15466921D719A500347720 /* libSupermap.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A15465621D710BD00347720 /* libSupermap.a */; };
 		0A177FE721F0A8B900EA39D6 /* resources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FBC21F0A8B900EA39D6 /* resources.bundle */; };
 		0A177FE921F7092E00EA39D6 /* Workspace.zip in Resources */ = {isa = PBXBuildFile; fileRef = 0A177FE821F7092D00EA39D6 /* Workspace.zip */; };
 		0A64601A21FEB82C00928DAD /* AppUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A64601921FEB82C00928DAD /* AppUtils.m */; };
 		0A7DD68C223D004D000F4CE6 /* libAsHttpRequest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */; };
+		0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */; };
+		0A7E6C8E22437A9A00936CE4 /* libstdc++.6.0.9.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */; };
 		0A8EEE0A21104C7100F206BB /* SuperMap.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A8EEDF221104C7100F206BB /* SuperMap.bundle */; };
 		0A8EEE0C21104C7100F206BB /* libCorePlot.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF421104C7100F206BB /* libCorePlot.a */; };
 		0A8EEE0D21104C7100F206BB /* libflyMSC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A8EEDF521104C7100F206BB /* libflyMSC.a */; };
@@ -475,13 +476,14 @@
 		0A11D9E621F9641700AFE6D6 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		0A11D9E821F9641D00AFE6D6 /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo.png; sourceTree = "<group>"; };
 		0A147441223F6A7B006663C7 /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "usr/lib/libc++.1.tbd"; sourceTree = SDKROOT; };
-		0A147454223F6CAB006663C7 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "usr/lib/libstdc++.6.0.9.tbd"; sourceTree = SDKROOT; };
 		0A15464921D36FB800347720 /* SuperMap.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SuperMap.framework; path = iPhoneOS.sdk/SuperMap.framework; sourceTree = "<group>"; };
 		0A15465121D710BD00347720 /* Supermap.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Supermap.xcodeproj; path = ../node_modules/imobile_for_reactnative/ios/Supermap.xcodeproj; sourceTree = "<group>"; };
 		0A177FBC21F0A8B900EA39D6 /* resources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = resources.bundle; sourceTree = "<group>"; };
 		0A177FE821F7092D00EA39D6 /* Workspace.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Workspace.zip; sourceTree = "<group>"; };
 		0A64601821FEB82C00928DAD /* AppUtils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AppUtils.h; path = Tools/AppUtils.h; sourceTree = SOURCE_ROOT; };
 		0A64601921FEB82C00928DAD /* AppUtils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = AppUtils.m; path = Tools/AppUtils.m; sourceTree = SOURCE_ROOT; };
+		0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneOS/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
+		0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libstdc++.6.0.9.tbd"; path = "../../../../../../../Volumes/WNMNG/Xcode10/iPhoneSimulator/libstdc++.6.0.9.tbd"; sourceTree = "<group>"; };
 		0A8EEDF221104C7100F206BB /* SuperMap.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = SuperMap.bundle; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/SuperMap.bundle; sourceTree = "<group>"; };
 		0A8EEDF321104C7100F206BB /* libAsHttpRequest.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libAsHttpRequest.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libAsHttpRequest.a; sourceTree = "<group>"; };
 		0A8EEDF421104C7100F206BB /* libCorePlot.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libCorePlot.a; path = ../../iTablet/ios/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib/libCorePlot.a; sourceTree = "<group>"; };
@@ -545,7 +547,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A147481223F6CAB006663C7 /* libstdc++.6.0.9.tbd in Frameworks */,
 				0A147442223F6A7B006663C7 /* libc++.1.tbd in Frameworks */,
 				0A11D9A021F885B500AFE6D6 /* libART.a in Frameworks */,
 				0A0D938821E74EB70041B997 /* libSplashScreen.a in Frameworks */,
@@ -579,6 +580,7 @@
 				00C302E91ABCBA2D00DB3ED1 /* libRCTNetwork.a in Frameworks */,
 				139105C61AF99C1200B5F7CC /* libRCTSettings.a in Frameworks */,
 				0A8EEE1821104C7100F206BB /* QuartzCore.framework in Frameworks */,
+				0A7E6C8E22437A9A00936CE4 /* libstdc++.6.0.9.tbd in Frameworks */,
 				832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */,
 				00C302EA1ABCBA2D00DB3ED1 /* libRCTVibration.a in Frameworks */,
 				139FDEF61B0652A700C62182 /* libRCTWebSocket.a in Frameworks */,
@@ -586,6 +588,7 @@
 				0A8EEE1F21104C7100F206BB /* Security.framework in Frameworks */,
 				0A8EEE1321104C7100F206BB /* Accelerate.framework in Frameworks */,
 				0A15464A21D36FB800347720 /* SuperMap.framework in Frameworks */,
+				0A7E6C8C22437A7100936CE4 /* libstdc++.6.0.9.tbd in Frameworks */,
 				0A8EEE1E21104C7100F206BB /* CoreText.framework in Frameworks */,
 				0A8EEE1921104C7100F206BB /* Foundation.framework in Frameworks */,
 				D84D43F7213CC2AF001F83D9 /* MessageQueue.framework in Frameworks */,
@@ -869,7 +872,8 @@
 		2D16E6871FA4F8E400B85C8A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0A147454223F6CAB006663C7 /* libstdc++.6.0.9.tbd */,
+				0A7E6C8B22437A7100936CE4 /* libstdc++.6.0.9.tbd */,
+				0A7E6C8D22437A9A00936CE4 /* libstdc++.6.0.9.tbd */,
 				0A147441223F6A7B006663C7 /* libc++.1.tbd */,
 				0A15464921D36FB800347720 /* SuperMap.framework */,
 				0A8F7C8421D1BA250003595E /* ZipArchive.framework */,
@@ -1522,7 +1526,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */ = {
 			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 8;
+			buildActionMask = 12;
 			files = (
 			);
 			inputPaths = (
@@ -1530,7 +1534,7 @@
 			name = "Bundle React Native code and images";
 			outputPaths = (
 			);
-			runOnlyForDeploymentPostprocessing = 1;
+			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
@@ -1603,7 +1607,16 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/MessageQueue.sdk",
+					"$(PROJECT_DIR)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/MessageQueue.sdk",
+					"$(PROJECT_DIR)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
@@ -1626,9 +1639,21 @@
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
-					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)",
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)",
+					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneOS",
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"$(PROJECT_DIR)/SampleCode/tools/zip",
+					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)",
+					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneSimulator",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1657,7 +1682,16 @@
 				DEVELOPMENT_TEAM = URZW253WPZ;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/MessageQueue.sdk",
+					"$(PROJECT_DIR)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
+					"$(PROJECT_DIR)/MessageQueue.sdk",
+					"$(PROJECT_DIR)",
+				);
+				"FRAMEWORK_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
@@ -1680,9 +1714,21 @@
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
-					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)",
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphoneos*]" = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)",
+					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneOS",
+				);
+				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
+					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
+					"$(PROJECT_DIR)/SampleCode/tools/zip",
+					"\"$(SRCROOT)/iTablet\"",
+					"$(PROJECT_DIR)",
+					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneSimulator",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

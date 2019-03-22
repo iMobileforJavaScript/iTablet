@@ -15,7 +15,7 @@ import { scaleSize } from '../../../../utils/screen'
 import { Container, Dialog } from '../../../../components'
 import { dialogStyles } from './../Styles'
 import { styles } from './Styles'
-import Friend from './../Friend'
+import AddFriend from './../AddFriend'
 
 export default class InformMessage extends React.Component {
   props: {
@@ -24,12 +24,14 @@ export default class InformMessage extends React.Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
+    this.friend = {}
     this.state = {
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
       currentUser: this.props.navigation.getParam('user', ''),
     }
   }
   componentDidMount() {
+    this.friend = this.props.navigation.getParam('friend')
     this.setState(() => {
       return {
         messageInfo: this.props.navigation.getParam('messageInfo'),
@@ -52,7 +54,7 @@ export default class InformMessage extends React.Component {
     }
   }
 
-  _acceptFriendAdd = () => {
+  _dialogConfirm = () => {
     //  this.target;
     let curUserName = this.state.currentUser.nickname
     let uuid = this.state.currentUser.userId
@@ -60,11 +62,20 @@ export default class InformMessage extends React.Component {
     let time = Date.parse(ctime)
     let message = {
       message: ' 我们已经是好友了,开始聊天吧',
-      type: uuid,
+      type: 1,
       user: { name: curUserName, id: uuid },
       time: time,
     }
-    Friend._sendMessage(JSON.stringify(message), this.target.messageId)
+    this.friend._sendMessage(
+      JSON.stringify(message),
+      this.target.messageId,
+      false,
+    )
+
+    AddFriend.acceptFriendAdd([this.target.messageId, this.target.users[[0]]])
+    // FriendListFileHandle.addToFriendList({"markName":this.target.users[0],"name":this.target.users[0],"id":this.target.messageId,"info":{"isFriend":1}})
+    // this.friend.refreshList();
+    // this.friend.refreshMessage();
     this.dialog.setDialogVisible(false)
   }
 
@@ -212,7 +223,7 @@ export default class InformMessage extends React.Component {
         type={'modal'}
         confirmBtnTitle={'确定'}
         cancelBtnTitle={'取消'}
-        confirmAction={this._acceptFriendAdd}
+        confirmAction={this._dialogConfirm}
         opacity={1}
         opacityStyle={styles.opacityView}
         style={dialogStyles.dialogBackgroundX}

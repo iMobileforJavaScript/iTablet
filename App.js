@@ -36,6 +36,8 @@ import Orientation from 'react-native-orientation'
 import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
+import UserType from './src/constants/UserType'
+
 const { persistor, store } = ConfigStore()
 
 const styles = StyleSheet.create({
@@ -123,6 +125,26 @@ class AppRoot extends Component {
   }
 
   componentDidMount() {
+
+    setInterval(async ()=>{
+      if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType!== UserType.PROBATION_USER) {
+
+          let isEmail = this.props.user.currentUser.isEmail
+          let userName = this.props.user.currentUser.userName
+          let password = this.props.user.currentUser.password
+          let bLogin;
+          if (isEmail === true) {
+            bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+          } else if (isEmail === false) {
+            bLogin =await SOnlineService.login(userName, password)
+          }
+          if(!bLogin){
+            Toast.show('登陆状态失效');
+          }
+
+      }
+    },30000)
+
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
@@ -151,18 +173,37 @@ class AppRoot extends Component {
 
   handleStateChange = appState => {
     if (appState === 'active') {
-      if (this.props.user.currentUser && this.props.user.currentUser.userName) {
-        (async function () {
-          let isEmail = this.props.user.currentUser.isEmail
-          let userName = this.props.user.currentUser.userName
-          let password = this.props.user.currentUser.password
-          if (isEmail === true) {
-            await SOnlineService.login(userName, password)
-          } else if (isEmail === false) {
-            await SOnlineService.loginWithPhoneNumber(userName, password)
-          }
-        }).bind(this)()
-      }
+      // if (this.props.user.currentUser && this.props.user.currentUser.userType!== UserType.PROBATION_USER) {
+      //   (async function () {
+      //     let isEmail = this.props.user.currentUser.isEmail
+      //     let userName = this.props.user.currentUser.userName
+      //     let password = this.props.user.currentUser.password
+      //     let bLogin;
+      //     if (isEmail === true) {
+      //       bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+      //     } else if (isEmail === false) {
+      //       bLogin =await SOnlineService.login(userName, password)
+      //     }
+      //     if(!bLogin){
+      //       Toast.show('登陆状态失效');
+      //     }else{
+      //       //下载好友列表
+      //
+      //       //优先加载在线的
+      //       let userPath = await FileTools.appendingHomeDirectory(
+      //         ConstPath.UserPath + '',
+      //       )
+      //       userPath = userPath + '~.fl'
+      //       SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
+      //         onResult: value => {
+      //           if (value !== true) {
+      //             console.warn(value);
+      //           }
+      //         },
+      //       })
+      //     }
+      //   }).bind(this)()
+      // }
     }
   }
 
