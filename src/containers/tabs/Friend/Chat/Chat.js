@@ -38,6 +38,11 @@ class Chat extends React.Component {
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
     }
 
+    this.friend = this.props.navigation.getParam('friend')
+    this.targetUser = this.props.navigation.getParam('target')
+    this.curUser = this.props.navigation.getParam('curUser')
+    this.friend.setCurChat(this)
+
     this._isMounted = false
     this.onSend = this.onSend.bind(this)
     this.onReceive = this.onReceive.bind(this)
@@ -51,11 +56,71 @@ class Chat extends React.Component {
   }
 
   componentDidMount() {
+    let curMsg = []
+    // curMsg = [
+    //   {
+    //     _id: Math.round(Math.random() * 1000000),
+    //     text: 'Yes, and I use Gifted Chat!',
+    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+    //     user: {
+    //       _id: 1,
+    //       name: 'xiezhiyan',
+    //     },
+    //     sent: true,
+    //     received: true,
+    //     // location: {
+    //     //   latitude: 48.864601,
+    //     //   longitude: 2.398704
+    //     // },
+    //   },
+    //   {
+    //     _id: Math.round(Math.random() * 1000000),
+    //     text: 'Are you building a chat app?',
+    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+    //     user: {
+    //       _id: 44,
+    //       name: '白小白',
+    //     },
+    //   },
+    //   {
+    //     _id: Math.round(Math.random() * 1000000),
+    //     text: 'dfgfdgsdfg?',
+    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 28, 0)),
+    //     user: {
+    //       _id: 43,
+    //       name: '白小白',
+    //     },
+    //   },
+    //   {
+    //     _id: Math.round(Math.random() * 1000000),
+    //     text: 'You are officially rocking GiftedChat.',
+    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+    //     system: true,
+    //   },
+    // ]
+
+    //加载两条
+    let n = 0
+    for (let i = this.targetUser.message.length - 1; i >= 0; i--) {
+      if (n++ > 1) {
+        break
+      }
+      let msg = this.targetUser.message[i]
+
+      let chatMsg = {
+        _id: msg.time,
+        text: msg.msg,
+        createdAt: new Date(msg.time),
+        user: { _id: msg.id, name: msg.name },
+      }
+      curMsg.push(chatMsg)
+    }
+    // curMsg.push({_id: Math.round(Math.random() * 1000000), text: '上次聊天到这', system: true})
+
     this._isMounted = true
     this.setState(() => {
       return {
-        messages: require('./data/messages.js'),
-        messageInfo: this.props.navigation.getParam('messageInfo'),
+        messages: curMsg,
       }
     })
 
@@ -81,6 +146,7 @@ class Chat extends React.Component {
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
+
   onLoadEarlier() {
     // eslint-disable-next-line
     this.setState(previousState => {
@@ -89,20 +155,56 @@ class Chat extends React.Component {
       }
     })
 
-    setTimeout(() => {
-      if (this._isMounted === true) {
-        this.setState(previousState => {
-          return {
-            messages: GiftedChat.prepend(
-              previousState.messages,
-              require('./data/old_messages.js'),
-            ),
-            loadEarlier: false,
-            isLoadingEarlier: false,
-          }
-        })
+    let oldMsg = [
+      // {
+      //   _id: Math.round(Math.random() * 1000000),
+      //   text:
+      //     'It uses the same design as React, letting you compose a rich mobile UI from declarative components https://facebook.github.io/react-native/',
+      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+      //   user: {
+      //     _id: 1,
+      //     name: 'Developer',
+      //   },
+      // },
+      // {
+      //   _id: Math.round(Math.random() * 1000000),
+      //   text: 'React Native lets you build mobile apps using only JavaScript',
+      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+      //   user: {
+      //     _id: 1,
+      //     name: 'Developer',
+      //   },
+      // },
+      // {
+      //   _id: Math.round(Math.random() * 1000000),
+      //   text: 'This is a system message.',
+      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
+      //   system: true,
+      // },
+    ]
+    if (this.targetUser.message.length > 2) {
+      for (let i = this.targetUser.message.length - 1 - 2; i >= 0; i--) {
+        let msg = this.targetUser.message[i]
+
+        let chatMsg = {
+          _id: msg.time,
+          text: msg.msg,
+          createdAt: new Date(msg.time),
+          user: { _id: msg.id, name: msg.name },
+        }
+        oldMsg.push(chatMsg)
       }
-    }, 1000) // simulating network
+    }
+
+    if (this._isMounted === true) {
+      this.setState(previousState => {
+        return {
+          messages: GiftedChat.prepend(previousState.messages, oldMsg),
+          loadEarlier: false,
+          isLoadingEarlier: false,
+        }
+      })
+    }
   }
   onSend(messages = []) {
     this.setState(previousState => {
@@ -110,63 +212,120 @@ class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages),
       }
     })
-
-    // for demo purpose
-    this.answerDemo(messages)
-  }
-
-  answerDemo(messages) {
-    if (messages.length > 0) {
-      if (messages[0].image || messages[0].location || !this._isAlright) {
-        // eslint-disable-next-line
-        this.setState(previousState => {
-          return {
-            typingText: 'React Native is typing',
-          }
-        })
-      }
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: messages[0].text,
+      type: 1,
+      user: { name: messages[0].user.name, id: messages[0].user._id },
+      time: time,
     }
-
-    setTimeout(() => {
-      if (this._isMounted === true) {
-        if (messages.length > 0) {
-          if (messages[0].image) {
-            this.onReceive('Nice picture!')
-          } else if (messages[0].location) {
-            this.onReceive('My favorite place')
-          } else {
-            if (!this._isAlright) {
-              this._isAlright = true
-              this.onReceive('Alright')
-            }
-          }
-        }
-      }
-
-      // eslint-disable-next-line
-      this.setState(previousState => {
-        return {
-          typingText: null,
-        }
-      })
-    }, 1000)
+    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
+    // for demo purpose
+    // this.answerDemo(messages)
   }
+
+  // answerDemo(messages) {
+  //   if (messages.length > 0) {
+  //     if (messages[0].image || messages[0].location || !this._isAlright) {
+  //       // eslint-disable-next-line
+  //       this.setState(previousState => {
+  //         return {
+  //           typingText: 'React Native is typing',
+  //         }
+  //       })
+  //     }
+  //   }
+  //   this.onReceive('Alright')
+  //
+  //   setTimeout(() => {
+  //     if (this._isMounted === true) {
+  //       if (messages.length > 0) {
+  //         if (messages[0].image) {
+  //           this.onReceive('Nice picture!')
+  //         } else if (messages[0].location) {
+  //           this.onReceive('My favorite place')
+  //         } else {
+  //           if (!this._isAlright) {
+  //             this._isAlright = true
+  //
+  //           }
+  //         }
+  //       }
+  //     }
+  //
+  //     // eslint-disable-next-line
+  //     this.setState(previousState => {
+  //       return {
+  //         typingText: null,
+  //       }
+  //     })
+  //   }, 1000)
+  //
+  // }
 
   onReceive(text) {
+    let messageObj = JSON.parse(text)
+
+    let bSystem = false
+    if (messageObj.message === '对方还未添加您为好友') {
+      bSystem = true
+    }
     this.setState(previousState => {
       return {
         messages: GiftedChat.append(previousState.messages, {
           _id: Math.round(Math.random() * 1000000),
-          text: text,
-          createdAt: new Date(),
+          text: messageObj.message,
+          createdAt: new Date(messageObj.time),
+          system: bSystem,
           user: {
-            _id: 2,
-            name: '白小白',
+            _id: messageObj.user.id,
+            name: messageObj.user.name,
             // avatar: 'https://facebook.github.io/react/img/logo_og.png',
           },
         }),
       }
     })
+  }
+
+  render() {
+    return (
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: this.targetUser['title'],
+          withoutBack: false,
+          navigation: this.props.navigation,
+        }}
+      >
+        <GiftedChat
+          placeholder="message..."
+          messages={this.state.messages}
+          onSend={this.onSend}
+          loadEarlier={this.state.loadEarlier}
+          onLoadEarlier={this.onLoadEarlier}
+          isLoadingEarlier={this.state.isLoadingEarlier}
+          showUserAvatar={this.state.showUserAvatar}
+          renderAvatarOnTop={false}
+          user={{
+            _id: this.curUser.userId, // sent messages should have same user._id
+            name: this.curUser.nickname,
+          }}
+          renderActions={this.renderCustomActions}
+          renderBubble={this.renderBubble}
+          renderSystemMessage={this.renderSystemMessage}
+          renderCustomView={this.renderCustomView}
+          renderFooter={this.renderFooter}
+          renderAvatar={this.renderAvatar}
+          renderMessageText={props => (
+            <MessageText
+              {...props}
+              customTextStyle={{ fontSize: scaleSize(20) }}
+            />
+          )}
+        />
+      </Container>
+    )
   }
 
   renderCustomActions(props) {
@@ -191,6 +350,11 @@ class Chat extends React.Component {
     let backColor = 'rgba(229,125,33,1.0)'
     if (props.currentMessage.user._id !== 1) {
       backColor = 'rgba(51,151,218,1.0)'
+    }
+
+    let headerStr = ''
+    if (props.currentMessage.user.name) {
+      headerStr = props.currentMessage.user.name[0]
     }
     return (
       <TouchableOpacity
@@ -217,7 +381,7 @@ class Chat extends React.Component {
               textAlign: 'center',
             }}
           >
-            {props.currentMessage.user.name[0]}
+            {headerStr}
           </Text>
         </View>
       </TouchableOpacity>
@@ -249,7 +413,7 @@ class Chat extends React.Component {
           marginBottom: 15,
         }}
         textStyle={{
-          fontSize: scaleSize(14),
+          fontSize: scaleSize(20),
         }}
       />
     )
@@ -269,46 +433,6 @@ class Chat extends React.Component {
       )
     }
     return null
-  }
-
-  render() {
-    return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: this.state['messageInfo']['title'],
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
-        <GiftedChat
-          placeholder="message..."
-          messages={this.state.messages}
-          onSend={this.onSend}
-          loadEarlier={this.state.loadEarlier}
-          onLoadEarlier={this.onLoadEarlier}
-          isLoadingEarlier={this.state.isLoadingEarlier}
-          showUserAvatar={this.state.showUserAvatar}
-          renderAvatarOnTop={false}
-          user={{
-            _id: 1, // sent messages should have same user._id
-            name: 'Developer Xie',
-          }}
-          renderActions={this.renderCustomActions}
-          renderBubble={this.renderBubble}
-          renderSystemMessage={this.renderSystemMessage}
-          renderCustomView={this.renderCustomView}
-          renderFooter={this.renderFooter}
-          renderAvatar={this.renderAvatar}
-          renderMessageText={props => (
-            <MessageText
-              {...props}
-              customTextStyle={{ fontSize: scaleSize(20) }}
-            />
-          )}
-        />
-      </Container>
-    )
   }
 }
 const styles = StyleSheet.create({

@@ -17,7 +17,8 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils/screen'
 import { Container, Dialog } from '../../../components'
 import { dialogStyles } from './Styles'
-import Friend from './Friend'
+//import Friend from './Friend'
+import FriendListFileHandle from './FriendListFileHandle'
 
 const dismissKeyboard = require('dismissKeyboard')
 
@@ -31,11 +32,17 @@ class AddFriend extends Component {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.target
+    this.friend = {}
+    this.user
     this.state = {
       list: [],
       isLoading: false,
       text: '',
     }
+  }
+  componentDidMount() {
+    this.friend = this.props.navigation.getParam('friend')
+    this.user = this.props.navigation.getParam('user')
   }
 
   renderSearchBar = () => {
@@ -82,6 +89,32 @@ class AddFriend extends Component {
     dismissKeyboard()
   }
 
+  //targetUser:[id,name]
+  static acceptFriendAdd = targetUser => {
+    //  this.target;
+    // let curUserName = this.state.currentUser.nickname
+    // let uuid = this.state.currentUser.userId
+    // let ctime = new Date()
+    // let time = Date.parse(ctime)
+    // let message = {
+    //   message: ' 我们已经是好友了,开始聊天吧',
+    //   type: 1,
+    //   user: { name: curUserName, id: uuid },
+    //   time: time,
+    // }
+    // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
+
+    FriendListFileHandle.addToFriendList({
+      markName: targetUser[1],
+      name: targetUser[1],
+      id: targetUser[0],
+      info: { isFriend: 1 },
+    })
+    // this.friend.refreshList();
+    // this.friend.refreshMessage();
+    // this.dialog.setDialogVisible(false)
+  }
+
   addFriendRequest = async () => {
     this.dialog.setDialogVisible(false)
 
@@ -98,7 +131,9 @@ class AddFriend extends Component {
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();
 
-    Friend._sendMessage(messageStr, item[0])
+    this.friend._sendMessage(messageStr, item[0], true)
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
+    // this.friend.refreshMessage();
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()
@@ -166,7 +201,7 @@ class AddFriend extends Component {
         style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
         onPress={() => {
-          this.target = item
+          this.target = item //[id,name]
           this.dialog.setDialogVisible(true)
         }}
       >

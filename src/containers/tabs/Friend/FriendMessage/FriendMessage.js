@@ -17,6 +17,7 @@ import { scaleSize } from '../../../../utils/screen'
 import { Dialog } from '../../../../components'
 import { styles } from './Styles'
 import { dialogStyles } from './../Styles'
+import FriendListFileHandle from '../FriendListFileHandle'
 
 // import Friend from './../Friend'
 
@@ -25,45 +26,70 @@ class FriendMessage extends Component {
     navigation: Object,
     user: Object,
     chat: Array,
+    friend: Object,
   }
 
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.inFormData = []
+    this.chat
     this.state = {
       data: [],
+      bRefesh: true,
     }
   }
 
+  refresh = chat => {
+    if (chat) {
+      if (JSON.stringify(this.chat) !== JSON.stringify(chat)) {
+        this.chat = chat
+        this.getContacts(this.props)
+      }
+    }
+  }
   componentDidMount() {
+    this.chat = this.props.friend.props.chat
     this.getContacts(this.props)
   }
 
-  // eslint-disable-next-line
-  componentWillReceiveProps(nextProps) {
-    this.getContacts(nextProps)
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state)
+    ) {
+      return true
+    }
+    return false
   }
 
-  getContacts = nextProps => {
-    // if(nextProps.chat===true){
-    //
-    // }
+  // componentDidUpdate(prevProps) {
+  //   if (JSON.stringify(prevProps)!==JSON.stringify(this.state)) {
+  //     this.getContacts()
+  //   }
+  // }
 
+  // eslint-disable-next-line
+  // componentWillReceiveProps(nextProps) {
+  //   this.getContacts(nextProps)
+  // }
+
+  getContacts = nextProps => {
     let srcData = []
     this.inFormData = []
     let currentUser
-    if (nextProps.chat.hasOwnProperty(nextProps.user.userId)) {
-      currentUser = nextProps.chat[nextProps.user.userId]
+    if (this.chat.hasOwnProperty(nextProps.user.userId)) {
+      currentUser = this.chat[nextProps.user.userId]
       for (let key in currentUser) {
         let messageHistory = currentUser[key]
-        for (let i in messageHistory) {
-          let messageStruct = messageHistory[i]
-          // {messageId:uuid, users: ['白小白'], message: [{msg,time}], type: 2 },
-          let messageObj = {}
+        if (key === '1') {
+          //通知类
+          for (let i in messageHistory) {
+            let messageStruct = messageHistory[i]
+            // {messageId:uuid, users: ['白小白'], message: [{msg,time}], type: 2 },
+            let messageObj = {}
 
-          //此处应该查询好友或者群组列表
-          if (messageStruct.type > 9) {
+            //此处应该查询好友或者群组列表
             //通知类
             //通知类消息，直接接收
             messageObj['users'] = []
@@ -74,52 +100,54 @@ class FriendMessage extends Component {
             messageObj['time'] = messageStruct.time
             messageObj['title'] = messageStruct.name
             this.inFormData.push(messageObj)
-          } else if (messageStruct.type === 2) {
-            //好友类
-            //此处应该查询好友
-          } else if (messageStruct.type === 3) {
-            //群组类
-            //此处应该查询群组列表
+          }
+        } else {
+          let obj = FriendListFileHandle.findFromFriendList(key)
+          if (obj) {
+            let friend = {
+              id: key,
+              users: [obj.markName],
+              message: messageHistory,
+              title: obj.markName,
+            }
+            srcData.push(friend)
           }
         }
       }
-    } else {
-      return
     }
-
     // let ss =  DataHandler.getKeys();
-    srcData = [
-      {
-        users: ['白小白'],
-        message: '你好',
-        time: 151464465465,
-        messageType: 2,
-      },
-      {
-        users: ['阿凡达'],
-        message: 'nice to meet U ',
-        time: 151464465465,
-        messageType: 2,
-      },
-      {
-        users: ['白小白', '黄二', 'alice', '文胖'],
-        message: '黄二:来群聊',
-        time: 151464465465,
-        messageType: 3,
-      },
-      {
-        users: ['白小白'],
-        message: '你好,请求添加您为好友',
-        time: 151464465465,
-        messageType: 1,
-      },
-      {
-        users: ['黄二'],
-        message: '你好,请求添加您为好友',
-        time: 151464465465,
-        messageType: 1,
-      },
-    ]
+    // srcData = [
+    //   {
+    //     users: ['白小白'],
+    //     message: '你好',
+    //     time: 151464465465,
+    //     messageType: 2,
+    //   },
+    //   {
+    //     users: ['阿凡达'],
+    //     message: 'nice to meet U ',
+    //     time: 151464465465,
+    //     messageType: 2,
+    //   },
+    //   {
+    //     users: ['白小白', '黄二', 'alice', '文胖'],
+    //     message: '黄二:来群聊',
+    //     time: 151464465465,
+    //     messageType: 3,
+    //   },
+    //   {
+    //     users: ['白小白'],
+    //     message: '你好,请求添加您为好友',
+    //     time: 151464465465,
+    //     messageType: 1,
+    //   },
+    //   {
+    //     users: ['黄二'],
+    //     message: '你好,请求添加您为好友',
+    //     time: 151464465465,
+    //     messageType: 1,
+    //   },
+    // ]
 
     this.setState({
       data: srcData,
@@ -128,7 +156,11 @@ class FriendMessage extends Component {
 
   _onSectionselect = item => {
     this.target = item
-    NavigationService.navigate('Chat', { messageInfo: item })
+    NavigationService.navigate('Chat', {
+      target: item,
+      curUser: this.props.user,
+      friend: this.props.friend,
+    })
   }
 
   render() {
@@ -152,6 +184,7 @@ class FriendMessage extends Component {
             NavigationService.navigate('InformMessage', {
               user: this.props.user,
               messageInfo: this.inFormData,
+              friend: this.props.friend,
             })
           }}
         >
@@ -293,8 +326,7 @@ class FriendMessage extends Component {
   }
   // eslint-disable-next-line
   _renderItemTitleView(item) {
-    // return <Text style={styles.ITemTextStyle}>{item['title']}</Text>
-    return <Text style={styles.ITemTextStyle}>123456</Text>
+    return <Text style={styles.ITemTextStyle}>{item['title']}</Text>
   }
 
   renderDialogConfirm = () => {
