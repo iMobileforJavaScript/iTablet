@@ -4,7 +4,7 @@
 import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import { dataUtil } from '../../../../utils'
-// import { getPublicAssets } from '../../../../assets'
+import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 
@@ -79,13 +79,13 @@ function getMapTool(type, params) {
         //   size: 'large',
         //   image: require('../../../../assets/mapTools/icon_free_cover.png'),
         // },
-        // {
-        //   key: 'rectangularCut',
-        //   title: '矩形裁剪',
-        //   action: rectangleCut,
-        //   size: 'large',
-        //   image: getPublicAssets().mapTools.tools_rectangle_cut,
-        // },
+        {
+          key: 'rectangularCut',
+          title: '矩形裁剪',
+          action: rectangleCut,
+          size: 'large',
+          image: getPublicAssets().mapTools.tools_rectangle_cut,
+        },
         // {
         //   key: 'roundCut',
         //   title: '圆形裁剪',
@@ -203,7 +203,9 @@ function cancelSelect() {
 }
 
 function viewEntire() {
-  SMap.viewEntire()
+  SMap.viewEntire().then(() => {
+    _params.setToolbarVisible && _params.setToolbarVisible(false)
+  })
 }
 
 /** 单选 **/
@@ -237,17 +239,17 @@ function selectByRectangle() {
 }
 
 /** 矩形裁剪 **/
-// function rectangleCut() {
-//   if (!_params.setToolbarVisible) return
-//   _params.showFullMap && _params.showFullMap(true)
-//   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
-//
-//   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
-//     isFullScreen: false,
-//     height: 0,
-//     cb: () => select(),
-//   })
-// }
+function rectangleCut() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
+
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
+    isFullScreen: false,
+    height: 0,
+    cb: () => select(),
+  })
+}
 
 /** 距离量算 **/
 function measureLength() {

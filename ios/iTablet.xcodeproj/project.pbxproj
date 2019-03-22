@@ -1612,6 +1612,7 @@
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);
@@ -1686,6 +1687,7 @@
 				);
 				"FRAMEWORK_SEARCH_PATHS[sdk=iphoneos*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk",
+					"$(PROJECT_DIR)/iPhoneSimulator.sdk",
 					"$(PROJECT_DIR)/MessageQueue.sdk",
 					"$(PROJECT_DIR)",
 				);

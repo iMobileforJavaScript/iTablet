@@ -23,6 +23,7 @@ import Tabs, {
   InformMessage,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -62,7 +63,7 @@ import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
-import MapCut from './mapCut'
+import { MapCut, MapCutDS } from './mapCut/page'
 
 export default StackNavigator(
   {
@@ -253,6 +254,12 @@ export default StackNavigator(
         header: null,
       },
     },
+    MapCutDS: {
+      screen: MapCutDS,
+      navigationOptions: {
+        header: null,
+      },
+    },
 
     UpLoadList: {
       screen: UpLoadList,
@@ -430,6 +437,13 @@ export default StackNavigator(
     },
     LoadServer: {
       screen: LoadServer,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyModule: {
+      screen: MyModule,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

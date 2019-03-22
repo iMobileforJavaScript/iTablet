@@ -103,6 +103,10 @@ export default class Mine extends Component {
     })
   }
 
+  goToMyModule = title => {
+    NavigationService.navigate('MyModule', { title })
+  }
+
   goToMyBaseMap = () => {
     NavigationService.navigate('MyBaseMap', {})
   }
@@ -175,13 +179,18 @@ export default class Mine extends Component {
             })}
             {this._renderItem({
               title: Const.SYMBOL,
-              leftImagePath: require('../../../assets/function/icon_function_style.png'),
+              leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
               onClick: () => this.goToMyData(Const.SYMBOL),
+            })}
+            {this._renderItem({
+              title: Const.MINE_COLOR,
+              leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
+              onClick: () => this.goToMyData(Const.MINE_COLOR),
             })}
             {this._renderItem({
               title: Const.MODULE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
-              onClick: () => this.goToMyData(Const.MODULE),
+              onClick: () => this.goToMyModule(Const.MODULE),
             })}
           </ScrollView>
         </View>
@@ -225,7 +234,7 @@ export default class Mine extends Component {
           })}
           {this._renderItem({
             title: Const.MYLABEL,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_plot.png'),
             onClick: () => {
               this.goToMyLabel(Const.MYLABEL)
             },
@@ -249,13 +258,18 @@ export default class Mine extends Component {
           })}
           {this._renderItem({
             title: Const.SYMBOL,
-            leftImagePath: require('../../../assets/function/icon_function_style.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
             onClick: () => this.goToMyData(Const.SYMBOL),
+          })}
+          {this._renderItem({
+            title: Const.MINE_COLOR,
+            leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
+            onClick: () => this.goToMyData(Const.MINE_COLOR),
           })}
           {this._renderItem({
             title: Const.MODULE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () => this.goToMyData(Const.MODULE),
+            onClick: () => this.goToMyModule(Const.MODULE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}

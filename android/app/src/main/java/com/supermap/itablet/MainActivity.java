@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.facebook.react.ReactActivity;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
 import com.supermap.RN.appManager;
-import com.supermap.containts.EventConst;
 import com.supermap.data.Environment;
 import com.supermap.RN.FileTools;
 import com.supermap.data.LicenseStatus;
@@ -44,7 +42,7 @@ public class MainActivity extends ReactActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         appManager.getAppManager().addActivity(this);
-
+        appManager.getAppManager().registerWechat(this);
     }
     @Override
     public void onConfigurationChanged(Configuration newConfig) {

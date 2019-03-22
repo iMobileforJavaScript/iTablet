@@ -667,15 +667,21 @@ export default class MapView extends React.Component {
     }.bind(this)())
   }
 
-  // 删除图层
+  // 删除图层中指定对象
   removeObject = () => {
     (async function() {
       try {
-        if (!this.props.selection || !this.props.selection.id) return
-        let result = await SCollector.remove(
-          this.props.selection.id,
-          this.props.selection.layerInfo.path,
-        )
+        if (!this.props.selection || !this.props.selection.length === 0) return
+
+        let result = true
+        this.props.selection.forEach(async item => {
+          if (item.ids.length > 0) {
+            result =
+              result &&
+              (await SCollector.removeByIds(item.ids, item.layerInfo.path))
+          }
+        })
+
         if (result) {
           Toast.show('删除成功')
           this.props.setSelection && this.props.setSelection()

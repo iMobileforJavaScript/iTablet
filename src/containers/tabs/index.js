@@ -18,6 +18,7 @@ import Mine, {
   Login,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './Mine'
 import Find from './Find'
 // eslint-disable-next-line
@@ -262,4 +263,5 @@ export {
   AddFriend,
   MyLabel,
   MyBaseMap,
+  MyModule,
 }

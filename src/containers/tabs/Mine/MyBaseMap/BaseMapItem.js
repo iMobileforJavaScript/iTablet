@@ -31,7 +31,7 @@ export default class BaseMapItem extends Component {
 
   goToMapView = () => {
     let params = {
-      wsData: [this.props.item],
+      wsData: this.props.item,
       isExample: true,
       mapName: this.props.item.mapName,
     }

@@ -190,7 +190,14 @@ export default class Login extends React.Component {
             userType: UserType.COMMON_USER,
           })
         }
-
+        // this.container.setLoading(false)
+        // this.props.setUser({
+        //   userName: userName,
+        //   password: password,
+        //   isEmail: isEmail,
+        //   userId: userName,
+        //   userType: UserType.COMMON_USER,
+        // })
         if (!this.state.isFirstLogin) {
           NavigationService.reset('Tabs')
         }

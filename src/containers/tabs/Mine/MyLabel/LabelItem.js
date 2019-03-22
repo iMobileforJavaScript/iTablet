@@ -8,6 +8,7 @@ export default class LabelItem extends Component {
     saveItemInfo: () => {},
     uploadListOfAdd: () => {},
     removeDataFromUpList: () => {},
+    getShowSelect: () => {},
   }
   constructor(props) {
     super(props)
@@ -17,12 +18,12 @@ export default class LabelItem extends Component {
       select: false,
     }
   }
-
   render() {
     let Img = require('../../../../assets/Mine/mine_my_online_data.png')
     let moreImg = require('../../../../assets/Mine/icon_more_gray.png')
     let selectImg = require('../../../../assets/mapTools/icon_multi_unselected_disable_black.png')
     let selectedImg = require('../../../../assets/mapTools/icon_multi_selected_disable_black.png')
+    let showselect = this.props.getShowSelect && this.props.getShowSelect()
     return (
       <TouchableOpacity style={{ flex: 1 }}>
         <View style={styles.rowView}>
@@ -37,10 +38,12 @@ export default class LabelItem extends Component {
               })
             }}
           >
-            <Image
-              source={this.state.select ? selectedImg : selectImg}
-              style={styles.selectImg}
-            />
+            {showselect && (
+              <Image
+                source={this.state.select ? selectedImg : selectImg}
+                style={styles.selectImg}
+              />
+            )}
           </TouchableOpacity>
           <Image source={Img} style={styles.Img} />
           <Text style={styles.title}>{this.state.title}</Text>

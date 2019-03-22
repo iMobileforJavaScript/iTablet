@@ -180,25 +180,21 @@ export default class ModuleList extends Component {
       let downloadOptions = {
         headers: {
           Range: `bytes=${this.bytesInfo}-`,
-          Host: 'www.supermapol.com',
         },
         fromUrl: dataUrl,
         toFile: fileCachePath,
         progressDivider: 1,
         background: true,
         progress: res => {
-          let tempVal = ((res.bytesWritten / res.contentLength) * 100).toFixed(
-            0,
-          )
-          this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
-          let value = this.bytesInfo + '%'
+          // let tempVal = ~~((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+          // this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
+          // let value = this.bytesInfo + '%'
           // if(Platform.OS === 'android'){
-          //   let isFileExist =await FileTools.fileIsExist(fileCachePath)
-          //   if (!isFileExist)
-          //     this.bytesInfo = 0
-          //   else
-          //     this.bytesInfo = res.bytesWritten + 1
+          if (this.bytesInfo < res.contentLength)
+            this.bytesInfo = res.bytesWritten + 1
           // }
+          let value =
+            ((this.bytesInfo / res.contentLength) * 100).toFixed(0) + '%'
           if (value === '100%') {
             ref.setNewState({
               progress: '导入中...',
@@ -219,7 +215,7 @@ export default class ModuleList extends Component {
       let result = downloadFile(downloadOptions)
       result.promise
         .then(async result => {
-          if (result.statusCode === 200) {
+          if (result.statusCode >= 200 && result.statusCode < 300) {
             await FileTools.unZipFile(fileCachePath, cachePath)
             let arrFile = await FileTools.getFilterFiles(fileDirPath)
             await this.props.importWorkspace(
