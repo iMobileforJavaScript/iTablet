@@ -282,6 +282,7 @@ export default class MyLocalData extends Component {
       this.setState({ textDisplay: 'none' })
     }
   }
+
   _setFilterExternalDatas = async (fullFileDir, fileType, arrFilterFile) => {
     try {
       let isRecordFile = false
@@ -455,7 +456,6 @@ export default class MyLocalData extends Component {
   /** 构造当前用户数据*/
   _constructUserSectionData = async () => {
     this.homePath = await this._getHomePath()
-
     this.path =
       this.homePath +
       ConstPath.UserPath +
@@ -782,12 +782,14 @@ export default class MyLocalData extends Component {
   }
 
   _renderSectionSeparatorComponent = () => {
-    return <ListSeparator color={color.contentColorWhite} height={1} />
+    return (
+      <ListSeparator color={color.contentColorWhite} height={scaleSize(2)} />
+    )
   }
 
   _renderItemSeparatorComponent = ({ section }) => {
     return section.isShowItem ? (
-      <ListSeparator color={color.separateColorGray} height={1} />
+      <ListSeparator color={color.separateColorGray} height={scaleSize(2)} />
     ) : null
   }
 
@@ -847,8 +849,8 @@ export default class MyLocalData extends Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           renderItem={this._renderItem}
-          ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          renderSectionFooter={this._renderSectionSeparatorComponent}
+          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          // renderSectionFooter={this._renderSectionSeparatorComponent}
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefreshing}

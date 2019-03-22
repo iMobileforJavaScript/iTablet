@@ -9,19 +9,21 @@ import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view'
 
+// eslint-disable-next-line
+import { SOnlineService } from 'imobile_for_reactnative'
 import { SMessageService } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 import { scaleSize } from '../../../utils/screen'
 import { Toast } from '../../../utils/index'
 import { styles } from './Styles'
-//import color from '../../../styles/color'
-//import FetchUtils from '../../../utils/FetchUtils'
+
 import { getThemeAssets } from '../../../assets'
 import FriendMessage from './FriendMessage/FriendMessage'
 import FriendGroup from './FriendGroup/FriendGroup'
 import FriendList from './FriendList/FriendList'
-//import DataHandler from './DataHandler'
 import UserType from '../../../constants/UserType'
+// import Chat from './Chat/Chat'
+import FriendListFileHandle from './FriendListFileHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -31,6 +33,7 @@ let sPort = 5672
 let sHostName = '/'
 let sUserName = 'androidtest'
 let sPassword = 'androidtest'
+
 let g_curUserId = ''
 let g_connectService = false
 export default class Friend extends Component {
@@ -45,7 +48,11 @@ export default class Friend extends Component {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.bHasUserInfo = false
-    // setInterval(this._receiveMessage,500);
+    this.friendMessage = {}
+    this.friendList = {}
+    this.friendGroup = {}
+    this.curChat = {}
+    this.un
     this.state = {
       data: [{}],
       isRefresh: false,
@@ -56,27 +63,62 @@ export default class Friend extends Component {
 
   componentDidMount() {}
 
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state)
+    ) {
+      return true
+    }
+    return false
+  }
+
+  refresh = () => {
+    this._refreshMessage()
+    this._refreshList()
+  }
+
+  _refreshMessage = () => {
+    if (this.friendMessage && this.friendMessage.refresh)
+      this.friendMessage.refresh()
+    if (this.friendList && this.friendList.refresh) this.friendList.refresh()
+    if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
+  }
+
+  _refreshList = () => {
+    if (this.friendList && this.friendList.refresh) this.friendList.refresh()
+    if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
+  }
+
+  setCurChat = chat => {
+    this.curChat = chat
+  }
+  // componentDidUpdate(prevProps) {
+  //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
+  //   //  // this
+  //   //  // this
+  //   // }
+  //
+  //   return true
+  // }
+
   componentWillUnmount() {
     this._disconnectService()
   }
   // eslint-disable-next-line
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.props === nextProps) {
-      return false
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state)
+    ) {
+      return true
     }
-    return true
+    return false
   }
   // eslint-disable-next-line
   componentWillReceiveProps(nextProps) {
-    let bHasUserInfo = false
-    if (this.props.user.currentUser.hasOwnProperty('userType') === true) {
-      let usrType = this.props.user.currentUser.userType
-      bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
-      if (bHasUserInfo === true) {
-        this._connectService()
-      } else {
-        SMessageService.stopReceiveMessage()
-      }
+    if (this.friendMessage.refresh) {
+      this.friendMessage.refresh(nextProps.chat)
     }
   }
 
@@ -88,7 +130,7 @@ export default class Friend extends Component {
   //}}
 
   //targetId
-  static _sendMessage = (messageStr, uuid) => {
+  _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
         sIP,
@@ -99,15 +141,36 @@ export default class Friend extends Component {
         g_curUserId,
       )
         .then(() => {
-          SMessageService.sendMessage(messageStr, uuid)
+          SMessageService.sendMessage(messageStr, talkId)
         })
         .catch(() => {
           Toast.show('连接消息服务失败！')
         })
       Toast.show('未能连接消息服务！')
     } else {
-      SMessageService.sendMessage(messageStr, uuid)
+      SMessageService.sendMessage(messageStr, talkId)
     }
+    if (!bInform) {
+      let messageObj = JSON.parse(messageStr)
+      //message {{
+      //talkId:talkId
+      //type 10+:通知类 单人消息1 群组消息2
+      //message: str
+      //use:{name:curUserName,id:uuid}
+      //time:time
+      //}}
+      let userId = this.props.user.currentUser.userId
+      this.props.addChat &&
+        this.props.addChat({
+          userId: userId, //当前登录账户的id
+          talkId: talkId,
+          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+          message: messageObj.message,
+          time: messageObj.time,
+          type: messageObj.type, //消息类型
+        })
+    }
+    this.refresh()
   }
   _receiveMessage = message => {
     if (g_connectService) {
@@ -119,20 +182,61 @@ export default class Friend extends Component {
       //use:{name:curUserName,id:uuid}
       //time:time
       //}}
+      if (messageObj.type < 9) {
+        //非通知消息，判断是否接收
+        let obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
+        if (!obj) {
+          //非好友
+          let ctime = new Date()
+          let time = Date.parse(ctime)
+          let message = {
+            message: '对方还未添加您为好友',
+            type: 1,
+            user: {
+              name: this.props.user.currentUser.name,
+              id: this.props.user.currentUser.userId,
+            },
+            time: time,
+          }
+          SMessageService.sendMessage(
+            JSON.stringify(message),
+            messageObj.user.id,
+          )
+          return
+        }
+      }
+
       let userId = this.props.user.currentUser.userId
-      // if(messageObj.type > 9){
-      //   userId = 1;
-      // }
-      this.props.addChat &&
-        this.props.addChat({
-          userId: userId,
-          messageUsr: messageObj.user,
-          message: messageObj.message,
-          time: messageObj.time,
-          type: messageObj.type,
-        })
+      if (userId === messageObj.user.id) {
+        //自己的消息，返回
+        return
+      }
+
+      if (messageObj.message !== '对方还未添加您为好友') {
+        let bUnReadMsg = false
+        if (
+          this.curChat.targetUser.id !== messageObj.user.id ||
+          messageObj.type < 9
+        ) {
+          bUnReadMsg = true
+        }
+
+        this.props.addChat &&
+          this.props.addChat({
+            userId: userId, //当前登录账户的id
+            talkId: messageObj.user.id, //会话ID
+            messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+            message: messageObj.message,
+            time: messageObj.time,
+            type: messageObj.type, //消息类型
+            unReadMsg: bUnReadMsg,
+          })
+      }
       // eslint-disable-next-line
-      console.warn(message)
+      if (this.curChat.onReceive) {
+        this.curChat.onReceive(message['message'])
+      }
+      this.refresh()
     }
   }
   _connectService = () => {
@@ -149,21 +253,6 @@ export default class Friend extends Component {
           if (!res) {
             Toast.show('连接消息服务失败！')
           } else {
-            /**
-             * [
-             *    {
-             *        userID,
-             *       chat:[
-             *           {
-             *             userInfo: {},
-             *             history: [{msg, time}]
-             *           }
-             *       ]
-             *   }
-             *
-             * ]
-             * @type {any}
-             */
             g_curUserId = this.props.user.currentUser.userId
             g_connectService = true
             if (this.bHasUserInfo === true) {
@@ -194,6 +283,17 @@ export default class Friend extends Component {
       this.bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
     }
 
+    let bHasUserInfo = false
+    if (this.props.user.currentUser.hasOwnProperty('userType') === true) {
+      let usrType = this.props.user.currentUser.userType
+      bHasUserInfo = usrType === UserType.COMMON_USER ? true : false
+      if (bHasUserInfo === true) {
+        this._connectService()
+      } else {
+        SMessageService.stopReceiveMessage()
+      }
+    }
+
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -206,6 +306,7 @@ export default class Friend extends Component {
                 onPress={() => {
                   NavigationService.navigate('AddFriend', {
                     user: this.props.user.currentUser,
+                    friend: this,
                   })
                 }}
               >
@@ -263,16 +364,19 @@ export default class Friend extends Component {
           tabLabel="消息"
           user={this.props.user.currentUser}
           chat={this.props.chat}
+          friend={this}
         />
         <FriendList
           ref={ref => (this.friendList = ref)}
           tabLabel="好友"
           user={this.props.user.currentUser}
+          friend={this}
         />
         <FriendGroup
           ref={ref => (this.friendGroup = ref)}
           tabLabel="群组"
           user={this.props.user.currentUser}
+          friend={this}
         />
       </ScrollableTabView>
     )

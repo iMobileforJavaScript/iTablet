@@ -97,34 +97,7 @@ export default class Cell extends Component {
   }
 
   _onBlur = () => {
-    if (
-      this.props.keyboardType === 'number-pad' ||
-      this.props.keyboardType === 'decimal-pad' ||
-      this.props.keyboardType === 'numeric'
-    ) {
-      // TextInput中获取的是String
-      // 为防止数字中以 '.' 结尾，转成数字
-      let _value = parseFloat(this.state.value)
-      if (isNaN(_value) || this.state.value === '') {
-        if (this.props.defaultValue !== undefined) {
-          _value = this.props.defaultValue
-        } else {
-          _value = 0
-        }
-      }
-      this.state.editable &&
-        this.setState({
-          editable: false,
-          value: _value,
-        })
-    } else {
-      this.state.editable &&
-        this.setState({
-          editable: false,
-        })
-    }
-
-    this.changeEnd()
+    this._onSubmitEditing()
   }
 
   changeEnd = () => {
@@ -158,10 +131,46 @@ export default class Cell extends Component {
   }
 
   _onSubmitEditing = () => {
-    this.state.editable &&
-      this.setState({
-        editable: false,
-      })
+    // this.state.editable &&
+    //   this.setState({
+    //     editable: false,
+    //   })
+    if (
+      this.props.keyboardType === 'number-pad' ||
+      this.props.keyboardType === 'decimal-pad' ||
+      this.props.keyboardType === 'numeric'
+    ) {
+      // TextInput中获取的是String
+      // 为防止数字中以 '.' 结尾，转成数字
+      let _value = parseFloat(this.state.value)
+      if (isNaN(_value) || this.state.value === '') {
+        if (this.props.defaultValue !== undefined) {
+          _value = this.props.defaultValue
+        } else {
+          _value = 0
+        }
+      }
+      this.state.editable &&
+        this.setState(
+          {
+            editable: false,
+            value: _value,
+          },
+          () => {
+            this.changeEnd()
+          },
+        )
+    } else {
+      this.state.editable &&
+        this.setState(
+          {
+            editable: false,
+          },
+          () => {
+            this.changeEnd()
+          },
+        )
+    }
   }
 
   _setEditable = () => {

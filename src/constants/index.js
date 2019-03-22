@@ -10,6 +10,7 @@ import Map3DBaseMapList from './Map3DBaseMapList'
 import ConstInfo from './ConstInfo'
 import UserType from './UserType'
 import ThemeType from './ThemeType'
+import CheckStatus from './CheckStatus'
 
 import {
   layerAdd,
@@ -67,4 +68,5 @@ export {
   graduatedSymbolMenuInfo,
   UserType,
   ThemeType,
+  CheckStatus,
 }

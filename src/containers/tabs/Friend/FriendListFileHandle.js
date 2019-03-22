@@ -10,8 +10,8 @@ import { Toast } from '../../../utils/index'
 import { FileTools } from '../../../native'
 
 export default class FriendListFileHandle {
-  static friends = {}
-  static group = {}
+  static friends = []
+  static group = []
   static friendListFile = ''
 
   static readLocalFriendList(friendListFile, resultCallBack) {
@@ -26,54 +26,36 @@ export default class FriendListFileHandle {
         resultCallBack(false)
       })
   }
-  static getContacts(path, filePath, resultCallBack) {
-    FriendListFileHandle.friendListFile = path + filePath
-    let friendListFile = path + filePath
+  static async getContacts(path, file, resultCallBack) {
+    let friendListFile = path + '/' + file
+    let onlineList = path + '/ol_fl'
 
-    //优先加载在线的
-    friendListFile = path + 'tmp'
-    SOnlineService.downloadFileWithCallBack(friendListFile, filePath, {
-      onResult: value => {
-        if (value === true) {
-          RNFS.read(friendListFile)
-            .then(value => {
-              let onlineVersion = JSON.parse(value)
-              //在线版本比本地新，更新下来
+    FriendListFileHandle.friendListFile = friendListFile
 
-              if (
-                !FriendListFileHandle.friends.hasOwnProperty('rev') ||
-                onlineVersion[0].rev > FriendListFileHandle.friends[0].rev
-              ) {
-                FriendListFileHandle.friends = JSON.parse(value)
-                RNFS.moveFile(friendListFile, path + 'friend.list')
-                resultCallBack(FriendListFileHandle.friends)
-              } else {
-                RNFS.moveFile(friendListFile, path + '')
-              }
-            })
-            // eslint-disable-next-line
-            .catch(err => {
-              Toast.show('读取好友列表失败!')
-              resultCallBack(false)
-            })
-        } else {
-          FileTools.fileIsExist(friendListFile)
-            .then(value => {
-              if (value) {
-                FriendListFileHandle.readLocalFriendList(
-                  friendListFile,
-                  resultCallBack,
-                )
-              }
-            })
-            .catch()
-        }
-      },
-    })
+    if (await FileTools.fileIsExist(friendListFile)) {
+      let value = await RNFS.read(friendListFile)
+      FriendListFileHandle.friends = JSON.parse(value)
+    }
+
+    if (await FileTools.fileIsExist(onlineList)) {
+      let value = await RNFS.read(onlineList)
+      let onlineVersion = JSON.parse(value)
+      if (
+        FriendListFileHandle.friends.length === 0 ||
+        !FriendListFileHandle.friends[0].rev ||
+        onlineVersion[0].rev > FriendListFileHandle.friends[0].rev
+      ) {
+        FriendListFileHandle.friends = onlineVersion
+        RNFS.writeFile(friendListFile, value)
+        //  RNFS.moveFile(friendListFile, path + 'friend.list')
+      }
+    }
+
+    resultCallBack(FriendListFileHandle.friends)
   }
 
   static addToFriendList(obj) {
-    let bFound = FriendListFileHandle.findFromFriendList(obj)
+    let bFound = FriendListFileHandle.findFromFriendList(obj.id)
 
     // for(let key in FriendListFileHandle.friends){
     //   let friend = FriendListFileHandle.friends[key];
@@ -88,27 +70,37 @@ export default class FriendListFileHandle {
     // }
 
     if (!bFound) {
-      FriendListFileHandle.friends['0'].rev += 1
+      if (FriendListFileHandle.friends.length === 0) {
+        FriendListFileHandle.friends.push({ rev: 1 })
+      } else {
+        FriendListFileHandle.friends['0'].rev += 1
+      }
       FriendListFileHandle.friends.push(obj)
+      let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+      //写如本地
+      RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(
+        () => {
+          //上传
+          SOnlineService.deleteData('friend.list').then(() => {
+            SOnlineService.uploadFile(
+              FriendListFileHandle.friendListFile,
+              'friend.list.zip',
+              // eslint-disable-next-line
+              { onResult: value => {} },
+            )
+          })
+        },
+      )
     }
-    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    RNFS.write(friendsStr, FriendListFileHandle.friendListFile).then(() => {
-      SOnlineService.deleteData('friend.list').then(() => {
-        SOnlineService.uploadFile(
-          FriendListFileHandle.friendListFile,
-          'friend.list',
-        )
-      })
-    })
   }
   // eslint-disable-next-line
-  static delFromFriendList(obj) {
+  static delFromFriendList(id) {
     for (let key in FriendListFileHandle.friends) {
       let friend = FriendListFileHandle.friends[key]
       if (key === '0') {
         continue
       }
-      if (obj.id === friend.id) {
+      if (id === friend.id) {
         FriendListFileHandle.friends.splice(key, 1)
         break
       }
@@ -117,15 +109,15 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['0'].rev += 1
   }
   // eslint-disable-next-line
-  static findFromFriendList(obj) {
-    let bFound = false
+  static findFromFriendList(id) {
+    let bFound
     for (let key in FriendListFileHandle.friends) {
       let friend = FriendListFileHandle.friends[key]
       if (key === '0') {
         continue
       }
-      if (obj.id === friend.id) {
-        bFound = true
+      if (id === friend.id) {
+        bFound = friend
         break
       }
     }

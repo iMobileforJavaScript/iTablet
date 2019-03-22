@@ -18,6 +18,7 @@ import Mine, {
   Login,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './Mine'
 import Find from './Find'
 // eslint-disable-next-line
@@ -67,30 +68,30 @@ const Tabs = TabNavigator(
         }
       },
     },
-    // Friend: {
-    //   screen: Friend,
-    //   navigationOptions: () => {
-    //     return {
-    //       tabBarLabel: data => {
-    //         return (
-    //           <View style={styles.labelView}>
-    //             <Image
-    //               resizeMode="contain"
-    //               source={
-    //                 data.focused
-    //                   ? getThemeAssets().tabBar.tab_friend_selected
-    //                   : getThemeAssets().tabBar.tab_friend
-    //               }
-    //               style={styles.icon}
-    //             />
-    //             <Text style={styles.tabText}>好友</Text>
-    //           </View>
-    //         )
-    //       },
-    //       header: null,
-    //     }
-    //   },
-    // },
+    Friend: {
+      screen: Friend,
+      navigationOptions: () => {
+        return {
+          tabBarLabel: data => {
+            return (
+              <View style={styles.labelView}>
+                <Image
+                  resizeMode="contain"
+                  source={
+                    data.focused
+                      ? getThemeAssets().tabBar.tab_friend_selected
+                      : getThemeAssets().tabBar.tab_friend
+                  }
+                  style={styles.icon}
+                />
+                <Text style={styles.tabText}>好友</Text>
+              </View>
+            )
+          },
+          header: null,
+        }
+      },
+    },
     Find: {
       screen: Find,
       navigationOptions: () => {
@@ -262,4 +263,5 @@ export {
   AddFriend,
   MyLabel,
   MyBaseMap,
+  MyModule,
 }

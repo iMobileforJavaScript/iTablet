@@ -215,7 +215,7 @@ export default class ModuleList extends Component {
       let result = downloadFile(downloadOptions)
       result.promise
         .then(async result => {
-          if (result.statusCode === 200) {
+          if (result.statusCode >= 200 && result.statusCode < 300) {
             await FileTools.unZipFile(fileCachePath, cachePath)
             let arrFile = await FileTools.getFilterFiles(fileDirPath)
             await this.props.importWorkspace(

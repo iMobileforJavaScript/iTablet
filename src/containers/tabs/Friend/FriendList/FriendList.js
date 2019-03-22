@@ -15,6 +15,7 @@ import {
   FlatList,
 } from 'react-native'
 
+import NavigationService from '../../../NavigationService'
 import { Toast } from '../../../../utils/index'
 import { scaleSize } from '../../../../utils/screen'
 import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
@@ -26,6 +27,7 @@ class FriendList extends Component {
   props: {
     navigation: Object,
     user: Object,
+    friend: Object,
   }
 
   constructor(props) {
@@ -34,25 +36,42 @@ class FriendList extends Component {
       sections: [], //section数组
       listData: [], //源数组
       letterArr: [], //首字母数组
-
-      showIndex: -1, //显示按钮的item对应的userId
+      bRefesh: true,
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
   }
 
+  refresh = () => {
+    this.getContacts()
+  }
   componentDidMount() {
     this.getContacts()
   }
 
+  shouldComponentUpdate(prevProps, prevState) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevState) !== JSON.stringify(this.state)
+    ) {
+      return true
+    }
+    return false
+  }
+
+  componentDidUpdate(prevProps) {
+    if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
+      this.getContacts()
+    }
+  }
+
   // componentWillReceiveProps(nextProps) {
-  //   this.setState({ showIndex: -1 }) //每次重新进入联系人页面时没有选择任何人（不会显示图标）
+  //   this.getContacts()
   // }
 
   getContacts = async () => {
     let userPath = await FileTools.appendingHomeDirectory(
-      ConstPath.UserPath + '',
-      //this.props.user.userId
+      ConstPath.UserPath + this.props.user.userName,
     )
 
     FriendListFileHandle.getContacts(userPath, 'friend.list', result => {
@@ -64,12 +83,14 @@ class FriendList extends Component {
           let srcFriendData = []
           for (let key in result) {
             if (key === '0') continue
-            let frend = {}
-            frend['id'] = result[key].id
-            frend['markName'] = result[key].markName
-            frend['name'] = result[key].name
-            frend['info'] = result[key].info
-            srcFriendData.push(frend)
+            if (result[key].id && result[key].name) {
+              let frend = {}
+              frend['id'] = result[key].id
+              frend['markName'] = result[key].markName
+              frend['name'] = result[key].name
+              frend['info'] = result[key].info
+              srcFriendData.push(frend)
+            }
           }
           // srcFriendData = [
           //
@@ -228,6 +249,34 @@ class FriendList extends Component {
     })
   }
 
+  _onFriendSelect = key => {
+    let friend = {
+      id: key.id,
+      users: [key.markName],
+      message: [],
+      title: key.markName,
+    }
+
+    let chatObj = {}
+    if (this.props.friend.props.chat.hasOwnProperty(this.props.user.userId)) {
+      let chats = this.props.friend.props.chat[this.props.user.userId]
+      if (chats.hasOwnProperty(key.id)) {
+        chatObj = chats[key.id]
+        friend = {
+          id: key.id,
+          users: [key.markName],
+          message: chatObj,
+          title: key.markName,
+        }
+      }
+    }
+
+    NavigationService.navigate('Chat', {
+      target: friend,
+      curUser: this.props.user,
+      friend: this.props.friend,
+    })
+  }
   _onSectionselect = key => {
     //滚动到指定的偏移的位置
     this.SectionList.scrollToLocation({
@@ -248,34 +297,6 @@ class FriendList extends Component {
     // }else{
     //   Linking.openURL("mailto:" + item.email);
     // }
-  }
-
-  _renderSectionHeader(sectionItem) {
-    const { section } = sectionItem
-    return (
-      <View style={styles.HeadViewStyle}>
-        <Text style={styles.HeadTextStyle}>{section.title.toUpperCase()}</Text>
-      </View>
-    )
-  }
-
-  _renderItem(item) {
-    return (
-      <TouchableOpacity
-        style={styles.ItemViewStyle}
-        activeOpacity={0.75}
-        onPress={() => {}}
-      >
-        <View style={styles.ITemHeadTextViewStyle}>
-          <Text style={styles.ITemHeadTextStyle}>
-            {item['markName'][0].toUpperCase()}
-          </Text>
-        </View>
-        <View style={styles.ITemTextViewStyle}>
-          <Text style={styles.ITemTextStyle}>{item['markName']}</Text>
-        </View>
-      </TouchableOpacity>
-    )
   }
 
   render() {
@@ -322,6 +343,34 @@ class FriendList extends Component {
           />
         </View>
       </View>
+    )
+  }
+
+  _renderSectionHeader(sectionItem) {
+    const { section } = sectionItem
+    return (
+      <View style={styles.HeadViewStyle}>
+        <Text style={styles.HeadTextStyle}>{section.title.toUpperCase()}</Text>
+      </View>
+    )
+  }
+
+  _renderItem(item) {
+    return (
+      <TouchableOpacity
+        style={styles.ItemViewStyle}
+        activeOpacity={0.75}
+        onPress={() => this._onFriendSelect(item)}
+      >
+        <View style={styles.ITemHeadTextViewStyle}>
+          <Text style={styles.ITemHeadTextStyle}>
+            {item['markName'][0].toUpperCase()}
+          </Text>
+        </View>
+        <View style={styles.ITemTextViewStyle}>
+          <Text style={styles.ITemTextStyle}>{item['markName']}</Text>
+        </View>
+      </TouchableOpacity>
     )
   }
 }
