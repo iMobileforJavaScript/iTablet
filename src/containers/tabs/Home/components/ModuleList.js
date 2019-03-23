@@ -183,8 +183,8 @@ export default class ModuleList extends Component {
         },
         fromUrl: dataUrl,
         toFile: fileCachePath,
-        progressDivider: 1,
         background: true,
+        progressDivider: 1,
         progress: res => {
           // let tempVal = ~~((res.bytesWritten / res.contentLength) * 100).toFixed(0)
           // this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
@@ -193,9 +193,9 @@ export default class ModuleList extends Component {
           if (this.bytesInfo < res.contentLength)
             this.bytesInfo = res.bytesWritten + 1
           // }
-          let value =
-            ((this.bytesInfo / res.contentLength) * 100).toFixed(0) + '%'
-          if (value === '100%') {
+          let valueNum = ((this.bytesInfo / res.contentLength) * 100).toFixed(0)
+          let value = valueNum + '%'
+          if (valueNum >= 100) {
             ref.setNewState({
               progress: '导入中...',
               isShowProgressView: true,
