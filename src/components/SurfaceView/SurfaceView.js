@@ -23,8 +23,7 @@ export default class SurfaceView extends Component {
 
   static defaultProps = {
     style: styles.container,
-    // type: ShapeType.RECTANGLE,
-    type: ShapeType.CIRCLE,
+    type: ShapeType.RECTANGLE,
   }
 
   constructor(props) {

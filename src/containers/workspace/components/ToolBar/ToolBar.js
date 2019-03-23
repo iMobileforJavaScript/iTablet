@@ -4188,6 +4188,10 @@ export default class ToolBar extends React.PureComponent {
       let image,
         action = () => {}
       switch (type) {
+        case ToolbarBtnType.COMPLETE:
+          image = require('../../../../assets/mapEdit/icon_function_theme_param_commit.png')
+          action = this.close
+          break
         case ToolbarBtnType.CANCEL:
           image = require('../../../../assets/mapEdit/icon_function_cancel.png')
           action = this.close
