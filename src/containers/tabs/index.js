@@ -23,7 +23,7 @@ import Mine, {
 import Find from './Find'
 // eslint-disable-next-line
 import Friend, { Chat, AddFriend, InformMessage } from './Friend'
-import InformSpot from '../../components/InformSpot/InformSpot'
+import InformSpot from './Friend/InformSpot/index'
 const Tabs = TabNavigator(
   {
     Home: {
@@ -74,7 +74,7 @@ const Tabs = TabNavigator(
         return {
           tabBarLabel: data => {
             return (
-              <View style={[styles.labelView, { backgroundColor: 'green' }]}>
+              <View style={[styles.labelView]}>
                 <Image
                   resizeMode="contain"
                   source={
