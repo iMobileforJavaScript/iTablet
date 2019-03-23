@@ -239,4 +239,10 @@ export default StyleSheet.create({
     // height: scaleSize(20),
     // width: scaleSize(120),
   },
+
+  /** 选择数据源page **/
+  dsListView: {
+    flex: 1,
+    backgroundColor: color.bgW,
+  },
 })

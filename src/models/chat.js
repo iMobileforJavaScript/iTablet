@@ -66,66 +66,32 @@ export default handleActions(
       currentUser = allChat[payload.userId]
 
       let chats
-      if (currentUser.hasOwnProperty(payload.messageUsr.id) === false) {
-        currentUser[payload.messageUsr.id] = []
+
+      if (payload.type > 9) {
+        if (currentUser.hasOwnProperty(1) === false) {
+          currentUser[1] = []
+        }
+        chats = currentUser[1]
+      } else {
+        if (currentUser.hasOwnProperty(payload.talkId) === false) {
+          currentUser[payload.talkId] = []
+        }
+        chats = currentUser[payload.talkId]
       }
-      chats = currentUser[payload.messageUsr.id]
+
       chats.push({
         msg: payload.message,
         time: payload.time,
         type: payload.type,
         name: payload.messageUsr.name,
         id: payload.messageUsr.id,
+        unReadMsg: payload.unReadMsg,
       })
-
-      // for (let i = 0; i < allChat.length; i++) {
-      //   if (allChat[i].userId === payload.userId) {
-      //     currentUser = allChat[i];
-      //     break
-      //   }
-      // }
-
-      // //登陆用户
-      // if(!currentUser){
-      //   currentUser = {};
-      //   currentUser['userId'] = payload.userId;
-      //   //登陆用户聊天列表
-      //   currentUser['chats'] = [];
-      //
-      //   //当前聊天
-      //   let chat = {};
-      //   chat['messageUsr'] = payload.messageUsr;
-      //   chat['type'] = payload.type;
-      //   //当前聊天历史记录列表
-      //   chat['history'] = [];
-      //   chat['history'].push({msg:payload.message,time:payload.time,type:payload.type});
-      //
-      //   //添加
-      //   currentUser['chats'].push(chat);
-      //   allChat.push(currentUser);
-      // }else{
-      //   let curChat;
-      //   for (let i = 0; i < currentUser['chats'].length; i++){
-      //     if( currentUser['chats'][i].messageUsr.id===  payload.messageUsr.id){
-      //       curChat = currentUser['chats'][i];
-      //       break;
-      //     }
-      //   }
-      //   //未找到当前用户聊天，新建
-      //   if(!curChat){
-      //     curChat = {};
-      //     curChat['messageUsr'] = payload.messageUsr;
-      //     curChat['type'] = payload.type;
-      //     curChat['history'] = [];
-      //   }
-      //   curChat['history'].push({msg:payload.message,time:payload.time,type:payload.type});
-      // }
 
       return fromJS(allChat)
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.chat ? fromJS(payload.chat) : state
-      // return initialState
     },
   },
   initialState,

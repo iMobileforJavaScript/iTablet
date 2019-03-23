@@ -284,7 +284,7 @@ export default class LayerAttributeTable extends React.Component {
       indexCellStyle = styles.indexCell
       indexCellTextStyle = styles.indexCellText
     }
-    let data = item
+    let data = JSON.parse(JSON.stringify(item))
     if (
       this.props.startIndex >= 0 &&
       data.length > 0 &&

@@ -17,6 +17,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   setUser,
   addChat,
+  //addUnreadMessage,
 }
 export default connect(
   mapStateToProps,

@@ -2271,12 +2271,11 @@ export default class ToolBar extends React.PureComponent {
       if (type === ConstToolType.MAP_TOOL_POINT_SELECT) {
         // 如果是点选，且有对象被选中，首先要取消选中状态，在设置PAN
         SMap.setAction(Action.SELECT)
-      } else if (
-        type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE ||
-        type === ConstToolType.MAP_TOOL_RECTANGLE_CUT
-      ) {
+      } else if (type === ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE) {
         SMap.setAction(Action.PAN)
         SMap.clearSelection()
+      } else if (type === ConstToolType.MAP_TOOL_RECTANGLE_CUT) {
+        GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
       } else {
         if (type === ConstToolType.ATTRIBUTE_RELATE) {
           // 返回图层属性界面，并清除属性关联选中的对象
@@ -4279,7 +4278,7 @@ export default class ToolBar extends React.PureComponent {
           action = this.showSymbol
           break
         case ToolbarBtnType.CHANGE_COLLECTION:
-          image = require('../../../../assets/mapEdit/icon-rename-white.png')
+          image = getThemeAssets().collection.icon_collection_change
           action = this.changeCollection
           break
         case ToolbarBtnType.SHOW_ATTRIBUTE:

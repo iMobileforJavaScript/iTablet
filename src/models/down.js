@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
@@ -66,10 +65,10 @@ export default handleActions(
       }
       return state.setIn(['downList'], fromJS(downList))
     },
-    [REHYDRATE]: () => {
-      // return payload && payload.user ? fromJS(payload.user) : state
-      return initialState
-    },
+    // [REHYDRATE]: () => {
+    //   // return payload && payload.down ? fromJS(payload.down) : state
+    //   return initialState
+    // },
   },
   initialState,
 )

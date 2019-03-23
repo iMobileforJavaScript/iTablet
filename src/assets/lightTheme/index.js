@@ -3,6 +3,7 @@ import tabBar from './tabBar'
 import attribute from './attribute'
 import themeType from './themeType'
 import friend from './friend'
+import collection from './collection'
 
 export default {
   publicAssets,
@@ -10,4 +11,5 @@ export default {
   attribute,
   themeType,
   friend,
+  collection,
 }
