@@ -65,6 +65,7 @@ export default class InformMessage extends React.Component {
       type: 1,
       user: { name: curUserName, id: uuid },
       time: time,
+      system: 0,
     }
     this.friend._sendMessage(
       JSON.stringify(message),
@@ -73,9 +74,7 @@ export default class InformMessage extends React.Component {
     )
 
     AddFriend.acceptFriendAdd([this.target.messageId, this.target.users[[0]]])
-    // FriendListFileHandle.addToFriendList({"markName":this.target.users[0],"name":this.target.users[0],"id":this.target.messageId,"info":{"isFriend":1}})
-    // this.friend.refreshList();
-    // this.friend.refreshMessage();
+    this.friend.refreshList()
     this.dialog.setDialogVisible(false)
   }
 

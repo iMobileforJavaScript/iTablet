@@ -142,6 +142,7 @@ class Chat extends React.Component {
   }
 
   componentWillUnmount() {
+    this.friend.setCurChat(undefined)
     this._isMounted = false
   }
   // eslint-disable-next-line
@@ -219,6 +220,7 @@ class Chat extends React.Component {
       type: 1,
       user: { name: messages[0].user.name, id: messages[0].user._id },
       time: time,
+      system: 0,
     }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
     // for demo purpose
@@ -268,7 +270,7 @@ class Chat extends React.Component {
     let messageObj = JSON.parse(text)
 
     let bSystem = false
-    if (messageObj.message === '对方还未添加您为好友') {
+    if (messageObj.system === 1) {
       bSystem = true
     }
     this.setState(previousState => {

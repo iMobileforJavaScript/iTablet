@@ -23,39 +23,40 @@ import FriendListFileHandle from '../FriendListFileHandle'
 
 class FriendMessage extends Component {
   props: {
-    navigation: Object,
+    friend: Object,
     user: Object,
     chat: Array,
-    friend: Object,
   }
 
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.inFormData = []
-    this.chat
+
+    //this.chat;
     this.state = {
       data: [],
       bRefesh: true,
+      hasInformMsg: 0,
     }
   }
 
-  refresh = chat => {
-    if (chat) {
-      if (JSON.stringify(this.chat) !== JSON.stringify(chat)) {
-        this.chat = chat
-        this.getContacts(this.props)
-      }
-    }
-  }
+  // refresh = () =>
+  // {
+  //   if (JSON.stringify(this.chat) !== JSON.stringify(this.props.friend.props.chat)) {
+  //     this.chat = this.props.friend.props.chat;
+  //     this.getContacts(this.props)
+  //   }
+  // }
   componentDidMount() {
-    this.chat = this.props.friend.props.chat
-    this.getContacts(this.props)
+    // this.chat = this.props.friend.props.chat
+    this.getContacts()
   }
 
   shouldComponentUpdate(prevProps, prevState) {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
     ) {
       return true
@@ -63,26 +64,32 @@ class FriendMessage extends Component {
     return false
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (JSON.stringify(prevProps)!==JSON.stringify(this.state)) {
-  //     this.getContacts()
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat)
+    ) {
+      this.getContacts()
+    }
+  }
 
   // eslint-disable-next-line
   // componentWillReceiveProps(nextProps) {
   //   this.getContacts(nextProps)
   // }
 
-  getContacts = nextProps => {
+  getContacts = () => {
     let srcData = []
     this.inFormData = []
     let currentUser
-    if (this.chat.hasOwnProperty(nextProps.user.userId)) {
-      currentUser = this.chat[nextProps.user.userId]
+    if (this.props.chat.hasOwnProperty(this.props.user.userId)) {
+      currentUser = this.props.chat[this.props.user.userId]
       for (let key in currentUser) {
-        let messageHistory = currentUser[key]
+        let messageHistory = currentUser[key].history
+        let unReadMsg = currentUser[key].unReadMsg
         if (key === '1') {
+          this.setState({ hasInformMsg: unReadMsg })
+          // this.hasInformMsg = unReadMsg;
           //通知类
           for (let i in messageHistory) {
             let messageStruct = messageHistory[i]
@@ -99,6 +106,7 @@ class FriendMessage extends Component {
             messageObj['message'] = messageStruct.msg
             messageObj['time'] = messageStruct.time
             messageObj['title'] = messageStruct.name
+            messageObj['unReadMsg'] = messageStruct.unReadMsg
             this.inFormData.push(messageObj)
           }
         } else {
@@ -109,46 +117,23 @@ class FriendMessage extends Component {
               users: [obj.markName],
               message: messageHistory,
               title: obj.markName,
+              unReadMsg: unReadMsg,
             }
             srcData.push(friend)
           }
         }
       }
     }
-    // let ss =  DataHandler.getKeys();
-    // srcData = [
-    //   {
-    //     users: ['白小白'],
-    //     message: '你好',
-    //     time: 151464465465,
-    //     messageType: 2,
-    //   },
-    //   {
-    //     users: ['阿凡达'],
-    //     message: 'nice to meet U ',
-    //     time: 151464465465,
-    //     messageType: 2,
-    //   },
-    //   {
-    //     users: ['白小白', '黄二', 'alice', '文胖'],
-    //     message: '黄二:来群聊',
-    //     time: 151464465465,
-    //     messageType: 3,
-    //   },
-    //   {
-    //     users: ['白小白'],
-    //     message: '你好,请求添加您为好友',
-    //     time: 151464465465,
-    //     messageType: 1,
-    //   },
-    //   {
-    //     users: ['黄二'],
-    //     message: '你好,请求添加您为好友',
-    //     time: 151464465465,
-    //     messageType: 1,
-    //   },
-    // ]
-
+    this.inFormData = this.inFormData.sort((obj1, obj2) => {
+      let time1 = obj1.time
+      let time2 = obj2.time
+      return time2 - time1
+    })
+    srcData = srcData.sort((obj1, obj2) => {
+      let time1 = obj1['message'][obj1['message'].length - 1].time
+      let time2 = obj2['message'][obj2['message'].length - 1].time
+      return time2 - time1
+    })
     this.setState({
       data: srcData,
     })
@@ -174,54 +159,7 @@ class FriendMessage extends Component {
           backgroundColor: 'white',
         }}
       >
-        <TouchableOpacity
-          style={[
-            styles.ItemViewStyle,
-            { borderBottomWidth: 1, borderColor: 'rgba(213,213,213,1.0)' },
-          ]}
-          activeOpacity={0.75}
-          onPress={() => {
-            NavigationService.navigate('InformMessage', {
-              user: this.props.user,
-              messageInfo: this.inFormData,
-              friend: this.props.friend,
-            })
-          }}
-        >
-          <View
-            style={[
-              styles.ITemHeadTextViewStyle,
-              { backgroundColor: 'orange' },
-            ]}
-          >
-            <View
-              style={{
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                flexWrap: 'wrap',
-              }}
-            >
-              <Text style={styles.ITemHeadTextStyle}>通</Text>
-            </View>
-          </View>
-          <View style={styles.ITemTextViewStyle}>
-            <Text style={styles.ITemTextStyle}>消息通知</Text>
-          </View>
-          <View
-            style={{
-              marginRight: scaleSize(20),
-              flexDirection: 'row',
-              justifyContent: 'flex-end',
-              flexGrow: 1,
-            }}
-          >
-            <Image
-              source={require('../../../../assets/lightTheme/friend/app_friend_arrow.png')}
-              style={{ width: scaleSize(30), height: scaleSize(30) }}
-            />
-          </View>
-        </TouchableOpacity>
+        {this._renderInformItem()}
         <FlatList
           ItemSeparatorComponent={() => {
             return <View style={styles.SectionSeparaLineStyle} />
@@ -236,6 +174,80 @@ class FriendMessage extends Component {
     )
   }
 
+  _renderInformItem() {
+    return (
+      <TouchableOpacity
+        style={[
+          styles.ItemViewStyle,
+          { borderBottomWidth: 1, borderColor: 'rgba(213,213,213,1.0)' },
+        ]}
+        activeOpacity={0.75}
+        onPress={() => {
+          this.props.friend.setReadTalk(this.props.user.userId, 1)
+          NavigationService.navigate('InformMessage', {
+            user: this.props.user,
+            messageInfo: this.inFormData,
+            friend: this.props.friend,
+          })
+        }}
+      >
+        <View
+          style={[styles.ITemHeadTextViewStyle, { backgroundColor: 'orange' }]}
+        >
+          {this.state.hasInformMsg > 0 ? (
+            <View
+              style={{
+                position: 'absolute',
+                backgroundColor: 'red',
+                justifyContent: 'center',
+                height: scaleSize(25),
+                width: scaleSize(25),
+                borderRadius: scaleSize(25),
+                top: scaleSize(-6),
+                right: scaleSize(-12),
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: scaleSize(20),
+                  color: 'white',
+                  textAlign: 'center',
+                }}
+              >
+                {this.state.hasInformMsg}
+              </Text>
+            </View>
+          ) : null}
+          <View
+            style={{
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+            }}
+          >
+            <Text style={styles.ITemHeadTextStyle}>通</Text>
+          </View>
+        </View>
+        <View style={styles.ITemTextViewStyle}>
+          <Text style={styles.ITemTextStyle}>消息通知</Text>
+        </View>
+        <View
+          style={{
+            marginRight: scaleSize(20),
+            flexDirection: 'row',
+            justifyContent: 'flex-end',
+            flexGrow: 1,
+          }}
+        >
+          <Image
+            source={require('../../../../assets/lightTheme/friend/app_friend_arrow.png')}
+            style={{ width: scaleSize(30), height: scaleSize(30) }}
+          />
+        </View>
+      </TouchableOpacity>
+    )
+  }
   _renderItem(item, index) {
     let lastMessage = item['message'][item['message'].length - 1]
     let time = lastMessage.time
@@ -261,6 +273,30 @@ class FriendMessage extends Component {
         }}
       >
         <View style={styles.ITemHeadTextViewStyle}>
+          {item.unReadMsg > 0 ? (
+            <View
+              style={{
+                position: 'absolute',
+                backgroundColor: 'red',
+                justifyContent: 'center',
+                height: scaleSize(25),
+                width: scaleSize(25),
+                borderRadius: scaleSize(25),
+                top: scaleSize(-6),
+                right: scaleSize(-12),
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: scaleSize(20),
+                  color: 'white',
+                  textAlign: 'center',
+                }}
+              >
+                {item.unReadMsg}
+              </Text>
+            </View>
+          ) : null}
           <View
             style={{
               alignItems: 'center',

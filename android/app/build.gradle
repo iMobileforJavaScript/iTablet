@@ -162,6 +162,7 @@ dependencies {
     api project(':react-native-splash-screen')
     api project(':react-native-fs')
     api project(':react-native-orientation')
+    api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.3.1'
     implementation project(':imobile_for_reactnative')
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
