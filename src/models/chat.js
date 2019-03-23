@@ -69,24 +69,32 @@ export default handleActions(
 
       if (payload.type > 9) {
         if (currentUser.hasOwnProperty(1) === false) {
-          currentUser[1] = []
+          currentUser[1] = { unReadMsg: 0, history: [] }
         }
         chats = currentUser[1]
       } else {
         if (currentUser.hasOwnProperty(payload.talkId) === false) {
-          currentUser[payload.talkId] = []
+          //currentUser[payload.talkId] = []
+          currentUser[payload.talkId] = { unReadMsg: 0, history: [] }
         }
         chats = currentUser[payload.talkId]
       }
 
-      chats.push({
-        msg: payload.message,
-        time: payload.time,
-        type: payload.type,
-        name: payload.messageUsr.name,
-        id: payload.messageUsr.id,
-        unReadMsg: payload.unReadMsg,
-      })
+      if (!payload.messageUsr) {
+        chats.unReadMsg = 0 //清除未读信息
+      } else {
+        chats.history.push({
+          msg: payload.message,
+          time: payload.time,
+          type: payload.type,
+          name: payload.messageUsr.name,
+          id: payload.messageUsr.id,
+          unReadMsg: payload.unReadMsg,
+        })
+        if (payload.unReadMsg) {
+          chats.unReadMsg++
+        }
+      }
 
       return fromJS(allChat)
     },
