@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../native'
@@ -122,10 +121,10 @@ export default handleActions(
       }
       return state.setIn(['upload'], fromJS(list))
     },
-    [REHYDRATE]: () => {
-      // return payload && payload.user ? fromJS(payload.user) : state
-      return initialState
-    },
+    // [REHYDRATE]: () => {
+    //   // return payload && payload.online ? fromJS(payload.online) : state
+    //   return initialState
+    // },
   },
   initialState,
 )

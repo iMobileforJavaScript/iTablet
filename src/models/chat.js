@@ -92,7 +92,6 @@ export default handleActions(
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.chat ? fromJS(payload.chat) : state
-      // return initialState
     },
   },
   initialState,
