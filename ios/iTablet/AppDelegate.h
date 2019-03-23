@@ -9,8 +9,9 @@
 
 #import <UIKit/UIKit.h>
 #import "FileTools.h"
+#import "WeiXinUtils.h"
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,WXApiDelegate>
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) UINavigationController *nav;

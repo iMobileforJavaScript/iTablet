@@ -1646,14 +1646,14 @@
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)",
-					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneOS",
+					"$(PROJECT_DIR)/iPhoneOS",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)",
-					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneSimulator",
+					"$(PROJECT_DIR)/iPhoneSimulator",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
@@ -1721,14 +1721,14 @@
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)",
-					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneOS",
+					"$(PROJECT_DIR)/iPhoneOS",
 				);
 				"LIBRARY_SEARCH_PATHS[sdk=iphonesimulator*]" = (
 					"$(PROJECT_DIR)/iPhoneOS.sdk/SuperMap.framework/Versions/A/Resources/ThirdLib",
 					"$(PROJECT_DIR)/SampleCode/tools/zip",
 					"\"$(SRCROOT)/iTablet\"",
 					"$(PROJECT_DIR)",
-					"/Users/imobile-xzy/Documents/RNWorkSpace/iTablet2.0/iTablet/ios/iPhoneSimulator",
+					"$(PROJECT_DIR)/iPhoneSimulator",
 				);
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (

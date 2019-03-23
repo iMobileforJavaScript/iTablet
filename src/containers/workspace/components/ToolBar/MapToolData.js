@@ -191,7 +191,6 @@ function select() {
       SMap.setAction(Action.SELECT)
       break
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-    case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
       break
@@ -242,6 +241,8 @@ function selectByRectangle() {
 function rectangleCut() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
+  // addMapCutListener()
+  GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
@@ -325,7 +326,54 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
   }
 }
 
+/********** 裁剪手势监听 ************/
+// async function addMapCutListener() {
+//   await SMap.setGestureDetector({
+//     touchBeganHandler: touchBeganHandler,
+//     scrollHandler: scrollHandler,
+//     touchEndHandler: touchEndHandler,
+//     // scrollHandler: scrollHandler,
+//   })
+// }
+//
+// async function removeMapCutListener() {
+//   await SMap.deleteGestureDetector()
+// }
+//
+// let drawGeo = {
+//   id: -1,
+//   startPoint: {},
+//   endPoint: {},
+// }
+// function touchBeganHandler (event) {
+//   STracking.clear().then(async () => {
+//     drawGeo.startPoint = {x: event.x, y: event.y}
+//     drawGeo.id = await STracking.drawRectangle(drawGeo.id, drawGeo.startPoint, drawGeo.startPoint)
+//   })
+// }
+//
+// function scrollHandler (event) {
+//   if (drawGeo.startPoint.x === event.x && drawGeo.startPoint.y === event.y){
+//     return
+//   } else if (drawGeo.startPoint.x === undefined && drawGeo.startPoint.y === undefined) {
+//     drawGeo.startPoint.x = event.x
+//     drawGeo.startPoint.y = event.y
+//     return
+//   }
+//   drawGeo.endPoint = {x: event.x, y: event.y}
+//   STracking.drawRectangle(drawGeo.id, drawGeo.startPoint, drawGeo.endPoint).then(async id => {
+//     drawGeo.id = id
+//   })
+// }
+//
+// function touchEndHandler (event) {
+//   drawGeo.endPoint = {x: event.x, y: event.y}
+//   console.warn(JSON.stringify(drawGeo))
+// }
+
 export default {
   getMapTool,
   clearMeasure,
+  // addMapCutListener,
+  // removeMapCutListener,
 }
