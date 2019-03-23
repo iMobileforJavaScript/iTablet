@@ -12,6 +12,7 @@ import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -20,6 +21,7 @@ public class appManager {
     private static appManager instance;
     private IWXAPI iwxapi=null;
     private appManager(){}
+
     /**
      * 单一实例
      */
@@ -82,6 +84,26 @@ public class appManager {
         }
         activityStack.clear();
     }
+
+        public boolean isAppOnForeground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        String packageName = context.getPackageName();
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        if (appProcesses == null)
+            return false;
+
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            // The name of the process that this object is associated with.
+            if (appProcess.processName.equals(packageName)
+                    && appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * 退出应用程序
      */
