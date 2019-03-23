@@ -32,6 +32,7 @@ import {
   SaveDialog,
   InputDialog,
   PopModal,
+  SurfaceView,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -1238,6 +1239,7 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+        <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderOverLayer()}

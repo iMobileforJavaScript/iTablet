@@ -95,7 +95,7 @@ export default class MapCutAddLayer extends React.Component {
       <PopModal ref={ref => (this.addLayerModal = ref)}>
         <View style={[styles.popView, { width: '100%' }]}>
           <FlatList
-            style={{ flex: 1 }}
+            style={styles.dsList}
             initialNumToRender={20}
             ref={ref => (this.ref = ref)}
             renderItem={this._renderItem}

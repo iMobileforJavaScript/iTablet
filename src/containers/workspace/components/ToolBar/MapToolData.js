@@ -242,12 +242,13 @@ function rectangleCut() {
   if (!_params.setToolbarVisible) return
   _params.showFullMap && _params.showFullMap(true)
   // addMapCutListener()
+  GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(true)
   GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
 
   _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
     isFullScreen: false,
     height: 0,
-    // cb: () => select(),
+    cb: () => select(),
   })
 }
 
