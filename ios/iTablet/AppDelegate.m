@@ -82,6 +82,11 @@ static NSString* g_sampleCodeName = @"#";;
     zipFilePath=[head stringByAppendingString:zipFilePath];
     //判断文件是否存在
     BOOL b =[[NSFileManager defaultManager] fileExistsAtPath:zipFilePath isDirectory:nil];
+    
+    if(b){
+      SSZipArchive *zip = [[SSZipArchive alloc]initWithPath:zipFilePath];
+    }
+    
   }
   return YES;
 }
