@@ -10,8 +10,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view'
 
 // eslint-disable-next-line
-import { SOnlineService } from 'imobile_for_reactnative'
-import { SMessageService } from 'imobile_for_reactnative'
+import { SOnlineService, SMessageService } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 import { scaleSize } from '../../../utils/screen'
 import { Toast } from '../../../utils/index'
@@ -24,6 +23,7 @@ import FriendList from './FriendList/FriendList'
 import UserType from '../../../constants/UserType'
 // import Chat from './Chat/Chat'
 import FriendListFileHandle from './FriendListFileHandle'
+import InformSpot from './InformSpot'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -398,7 +398,7 @@ export default class Friend extends Component {
           />
         </ScrollableTabView>
 
-        <View
+        <InformSpot
           style={{
             position: 'absolute',
             backgroundColor: 'red',
