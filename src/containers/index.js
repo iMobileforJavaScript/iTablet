@@ -18,9 +18,9 @@ import Tabs, {
   Setting,
   AboutITablet,
   Login,
-  Chat,
-  AddFriend,
-  InformMessage,
+  // Chat,
+  // AddFriend,
+  // InformMessage,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -286,27 +286,27 @@ export default StackNavigator(
       },
     },
     /******************************** Friend **********************/
-    Chat: {
-      screen: Chat,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    AddFriend: {
-      screen: AddFriend,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
-    InformMessage: {
-      screen: InformMessage,
-      navigationOptions: {
-        header: null,
-        gesturesEnabled: true,
-      },
-    },
+    // Chat: {
+    //   screen: Chat,
+    //   navigationOptions: {
+    //     header: null,
+    //     gesturesEnabled: true,
+    //   },
+    // },
+    // AddFriend: {
+    //   screen: AddFriend,
+    //   navigationOptions: {
+    //     header: null,
+    //     gesturesEnabled: true,
+    //   },
+    // },
+    // InformMessage: {
+    //   screen: InformMessage,
+    //   navigationOptions: {
+    //     header: null,
+    //     gesturesEnabled: true,
+    //   },
+    // },
     /******************************** Mine **********************/
     Register: {
       screen: Register,

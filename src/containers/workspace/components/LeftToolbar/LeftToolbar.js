@@ -16,7 +16,7 @@ const EDIT = 'EDIT'
 
 export { COLLECTION_LEFT, COLLECTION_RIGHT, NETWORK, EDIT }
 
-export default class Toolbar extends React.Component {
+export default class LeftToolbar extends React.Component {
   props: {
     style?: any,
     hide?: boolean,

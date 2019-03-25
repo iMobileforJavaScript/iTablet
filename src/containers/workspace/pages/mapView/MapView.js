@@ -1259,7 +1259,7 @@ export default class MapView extends React.Component {
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
           title={'提示'}
-          info={'是否要删除该对象吗？'}
+          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}

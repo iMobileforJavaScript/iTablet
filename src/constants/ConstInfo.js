@@ -86,4 +86,6 @@ export default {
   UNDO_UNABLE: '已经不能撤销了',
   REDO_UNABLE: '已经不能恢复了',
   RECOVER_UNABLE: '已经不能还原了',
+
+  LOCATING: '正在定位',
 }
