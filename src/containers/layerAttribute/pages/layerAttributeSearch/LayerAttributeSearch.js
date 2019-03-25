@@ -17,6 +17,8 @@ import { LayerAttributeTable } from '../../components'
 import styles from './styles'
 // import { SMap } from 'imobile_for_reactnative'
 
+const PAGE_SIZE = 30
+
 export default class LayerAttributeSearch extends React.Component {
   props: {
     navigation: Object,
@@ -48,9 +50,9 @@ export default class LayerAttributeSearch extends React.Component {
     // this.currentFieldInfo = []
     this.currentFieldIndex = -1
     this.currentPage = 0
-    this.pageSize = 20
     this.total = -1
     this.isInit = true
+    this.noMore = false
   }
 
   componentDidMount() {
@@ -81,12 +83,18 @@ export default class LayerAttributeSearch extends React.Component {
       this.isInit = false
       return
     }
+    if (this.noMore) {
+      cb && cb()
+      return
+    }
     this.currentPage += 1
     this.search(this.searchKey, attribute => {
       cb && cb()
       if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
         // this.currentPage--
+      } else if (attribute.length < PAGE_SIZE) {
+        this.noMore = true
       }
     })
   }
@@ -104,7 +112,7 @@ export default class LayerAttributeSearch extends React.Component {
             this.layerPath,
             searchKey,
             this.currentPage,
-            this.pageSize,
+            PAGE_SIZE,
           )
         } else {
           result = await LayerUtil.searchLayerAttribute(
@@ -114,11 +122,18 @@ export default class LayerAttributeSearch extends React.Component {
               key: searchKey,
             },
             this.currentPage,
-            this.pageSize,
+            PAGE_SIZE,
           )
         }
 
         attributes = result.attributes || []
+
+        if (
+          Math.floor(this.total / PAGE_SIZE) === this.currentPage ||
+          attributes.data.length < PAGE_SIZE
+        ) {
+          this.noMore = true
+        }
 
         if (attributes.data.length === 1) {
           this.setState({
