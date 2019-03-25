@@ -55,4 +55,8 @@ export default StyleSheet.create({
     alignItems: 'center',
     backgroundColor: color.bgW,
   },
+  bottomBtnTxt: {
+    fontSize: size.fontSize.fontSizeLg,
+    color: color.contentColorGray,
+  },
 })
