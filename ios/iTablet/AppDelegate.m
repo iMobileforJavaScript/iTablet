@@ -13,10 +13,16 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
+#import "RNFSManager.h"
 //#import "RNSplashScreen.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+{
+  [RNFSManager setCompletionHandlerForIdentifier:identifier completionHandler:completionHandler];
+}
 
 +(void)SetSampleCodeName:(NSString*)name
 {
@@ -27,7 +33,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"localhost"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.112"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
