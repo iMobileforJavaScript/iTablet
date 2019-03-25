@@ -182,7 +182,10 @@ export default class LayerAttribute extends React.Component {
    * @param resetCurrent 是否重置当前选择的对象
    */
   getAttribute = (params = {}, cb = () => {}, resetCurrent = false) => {
-    if (!this.props.currentLayer.path || params.currentPage < 0) return
+    if (!this.props.currentLayer.path || params.currentPage < 0) {
+      this.setLoading(false)
+      return
+    }
     let { currentPage, pageSize, type, ...others } = params
     let result = {},
       attributes = {}
@@ -250,6 +253,7 @@ export default class LayerAttribute extends React.Component {
    * 定位到首位
    */
   locateToTop = () => {
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -266,6 +270,7 @@ export default class LayerAttribute extends React.Component {
               sectionIndex: 0,
               viewPosition: 0,
             })
+          this.setLoading(true, ConstInfo.LOCATING)
         },
       )
     } else {
@@ -290,6 +295,7 @@ export default class LayerAttribute extends React.Component {
               sectionIndex: 0,
               viewPosition: 0,
             })
+          this.setLoading(false)
         },
       )
     }
@@ -330,6 +336,7 @@ export default class LayerAttribute extends React.Component {
               viewPosition: 1,
             })
         }
+        this.setLoading(false)
       },
     )
     this.locationView && this.locationView.show(false)
@@ -341,9 +348,10 @@ export default class LayerAttribute extends React.Component {
    */
   locateToPosition = (data = {}) => {
     let remainder = 0,
-      viewPosition = 0.3
+      viewPosition = 0.3,
+      currentIndex
     if (data.type === 'relative') {
-      let currentIndex =
+      currentIndex =
         (this.state.currentIndex <= 0 ? 0 : this.state.currentIndex) +
         data.index
       if (currentIndex < 0) {
@@ -353,17 +361,23 @@ export default class LayerAttribute extends React.Component {
       this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
       remainder = currentIndex % PAGE_SIZE
     } else if (data.type === 'absolute') {
-      this.currentPage = Math.floor(data.index / PAGE_SIZE)
-      remainder = (data.index % PAGE_SIZE) - 1
+      if (data.index <= 0 || data.index > this.total) {
+        Toast.show('位置越界')
+        return
+      }
+      currentIndex = data.index - 1
+      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
+      remainder = currentIndex % PAGE_SIZE
     }
 
     if (this.currentPage > 0) {
       this.canBeRefresh = true
     }
 
-    if (remainder <= PAGE_SIZE / 4) {
+    let restLength = this.total - currentIndex - 1
+    if (remainder <= PAGE_SIZE / 4 && !(restLength < PAGE_SIZE / 4)) {
       viewPosition = 0
-    } else if (remainder > (PAGE_SIZE * 3) / 4) {
+    } else if (remainder > (PAGE_SIZE * 3) / 4 || restLength < PAGE_SIZE / 4) {
       viewPosition = 1
     }
 
@@ -394,6 +408,7 @@ export default class LayerAttribute extends React.Component {
               viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
             })
         }
+        this.setLoading(false)
       },
     )
   }

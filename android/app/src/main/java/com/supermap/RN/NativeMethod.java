@@ -24,6 +24,7 @@ public class NativeMethod extends ReactContextBaseJavaModule {
     public NativeMethod(ReactApplicationContext reactContext) {
         super(reactContext);
     }
+
     public static final String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath() + "/";
 
     @Override
@@ -32,17 +33,17 @@ public class NativeMethod extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void getTemplates(String userName, String strModule,Promise promise) {
+    public void getTemplates(String userName, String strModule, Promise promise) {
         try {
             if (userName == null || userName.equals("")) {
                 userName = "Customer";
             }
-            String templatePath="";
+            String templatePath = "";
             WritableArray templateList = Arguments.createArray();
-            if(strModule ==null || strModule.equals("")){
+            if (strModule == null || strModule.equals("")) {
                 templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData";
-            }else {
-                templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData/"+strModule;
+            } else {
+                templatePath = SDCARD + "iTablet/User/" + userName + "/ExternalData/" + strModule;
             }
 
             File file = new File(templatePath);
