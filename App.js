@@ -120,7 +120,6 @@ class AppRoot extends Component {
     GLOBAL.isBackHome = true
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
-    
     PT.initCustomPrototype()
   }
 
@@ -129,18 +128,18 @@ class AppRoot extends Component {
     setInterval(async ()=>{
       if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType!== UserType.PROBATION_USER) {
 
-          let isEmail = this.props.user.currentUser.isEmail
-          let userName = this.props.user.currentUser.userName
-          let password = this.props.user.currentUser.password
-          let bLogin;
-          if (isEmail === true) {
-            bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
-          } else if (isEmail === false) {
-            bLogin =await SOnlineService.login(userName, password)
-          }
-          if(!bLogin){
-            Toast.show('登陆状态失效');
-          }
+        let isEmail = this.props.user.currentUser.isEmail
+        let userName = this.props.user.currentUser.userName
+        let password = this.props.user.currentUser.password
+        let bLogin = false
+        if (isEmail === true) {
+          bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
+        } else if (isEmail === false) {
+          bLogin =await SOnlineService.login(userName, password)
+        }
+        if(!bLogin){
+          Toast.show('登陆状态失效')
+        }
 
       }
     },30000)

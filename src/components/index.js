@@ -44,6 +44,7 @@ import PopModal from './PopModal'
 import { IndicatorLoading } from './Loading'
 import HorizontalTableList from './HorizontalTableList'
 import InfoView from './InfoView'
+import SurfaceView from './SurfaceView'
 
 export {
   Container,
@@ -97,4 +98,5 @@ export {
   IndicatorLoading,
   HorizontalTableList,
   InfoView,
+  SurfaceView,
 }

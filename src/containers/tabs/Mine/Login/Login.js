@@ -89,8 +89,8 @@ export default class Login extends React.Component {
     let isEmail = this.state.onEmailTitleFocus
     let userName = 'imobile1234'
     let password = 'imobile'
-    // this.txtPhoneNumber = '13683409897'
-    // this.txtPhoneNumberPassword = '123456'
+    this.txtPhoneNumber = '13683409897'
+    this.txtPhoneNumberPassword = '123456'
 
     try {
       if (!isEmail) {

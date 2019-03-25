@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "React/RCTBridgeModule.h"
+#import "WeiXinUtils.h"
 
 @interface AppUtils : NSObject<RCTBridgeModule>
 

@@ -128,12 +128,13 @@ class AddFriend extends Component {
       type: 10,
       user: { name: curUserName, id: uuid },
       time: time,
+      system: 0,
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();
 
     this.friend._sendMessage(messageStr, item[0], true)
     AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
-    // this.friend.refreshMessage();
+    this.friend.refreshList()
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

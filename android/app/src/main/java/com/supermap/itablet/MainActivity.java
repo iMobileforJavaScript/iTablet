@@ -1,10 +1,13 @@
 package com.supermap.itablet;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -13,16 +16,19 @@ import com.supermap.RN.appManager;
 import com.supermap.data.Environment;
 import com.supermap.RN.FileTools;
 import com.supermap.data.LicenseStatus;
+import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 import org.devio.rn.splashscreen.SplashScreen;
 
+import java.io.File;
+
 import io.reactivex.functions.Consumer;
 
 public class MainActivity extends ReactActivity {
     public final static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
-
+    public static boolean isActive;
     /**
      * Returns the name of the main component registered from JavaScript.
      * This is used to schedule rendering of the component.
@@ -31,6 +37,7 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "iTablet";
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SplashScreen.show(this);
@@ -38,12 +45,15 @@ public class MainActivity extends ReactActivity {
         requestPermissions();
         initEnvironment();
         initDefaultData();
-        if(!isTablet(this)){
+        if (!isTablet(this)) {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         appManager.getAppManager().addActivity(this);
         appManager.getAppManager().registerWechat(this);
+        FileTools.unZipEXternalData(this);
+
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -51,6 +61,35 @@ public class MainActivity extends ReactActivity {
         intent.putExtra("newConfig", newConfig);
         this.sendBroadcast(intent);
     }
+    @Override
+    public void onNewIntent(Intent intent) {
+
+        super.onNewIntent(intent);
+
+        setIntent(intent);//must store the new intent unless getIntent() will return the old one
+    }
+
+    @Override
+    protected void onResume() {
+        if (!isActive) {
+            //app 从后台唤醒，进入前台
+            isActive = true;
+            Log.e("ACTIVITY", "程序从后台唤醒");
+            FileTools.unZipEXternalData( appManager.getAppManager().currentActivity());
+        }
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        if (!appManager.getAppManager().isAppOnForeground(this)) {
+            //app 进入后台
+            isActive = false;//记录当前已经进入后台
+            Log.i("ACTIVITY", "程序进入后台");
+        }
+        super.onStop();
+    }
+
 
     private void initEnvironment() {
         String licensePath = SDCARD + "/iTablet/license/";
@@ -64,7 +103,7 @@ public class MainActivity extends ReactActivity {
 
         LicenseStatus status = Environment.getLicenseStatus();
 
-        if(status.isTrailLicense() && !status.isLicenseValid()){
+        if (status.isTrailLicense() && !status.isLicenseValid()) {
             Utils.copyAssetFileToSDcard(this, licensePath, licenseName);
             Environment.initialization(this);
 
@@ -128,7 +167,9 @@ public class MainActivity extends ReactActivity {
                 });
     }
 
-    private boolean isTablet (Activity context){
-       return(context.getResources().getConfiguration().screenLayout&Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
+    private boolean isTablet(Activity context) {
+        return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
+
+
 }

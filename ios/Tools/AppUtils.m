@@ -24,4 +24,14 @@ RCT_REMAP_METHOD(AppExit,AppExit:(RCTPromiseResolveBlock)resolve rejecter:(RCTPr
   resolve(@(1));
   
 }
+
+RCT_REMAP_METHOD(sendFileOfWechat, sendFileOfWechat:(NSDictionary*)data resolve:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+  @try {
+    [WeiXinUtils sendFileContent:data];
+    resolve(@(1));
+  } @catch (NSException *exception) {
+    reject(@"AppUtils", exception.reason, nil);
+  }
+}
+
 @end
