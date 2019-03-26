@@ -34,6 +34,7 @@ import {
   PopModal,
   SurfaceView,
 } from '../../../../components'
+import { Utils } from '../../util'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
@@ -330,6 +331,7 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
+    Utils.setSelectionStyle(event.layerInfo.path)
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -385,6 +387,7 @@ export default class MapView extends React.Component {
   geometryMultiSelected = event => {
     let data = []
     for (let i = 0; i < event.geometries.length; i++) {
+      Utils.setSelectionStyle(event.geometries[i].layerInfo.path)
       data.push({
         layerInfo: event.geometries[i].layerInfo,
         ids: event.geometries[i].ids,
@@ -1200,6 +1203,24 @@ export default class MapView extends React.Component {
   }
 
   render() {
+    {
+      /*<MTBtn*/
+    }
+    {
+      /*key={'search'}*/
+    }
+    {
+      /*image={getPublicAssets().common.icon_search}*/
+    }
+    {
+      /*imageStyle={styles.headerBtn}*/
+    }
+    {
+      /*onPress={this.goToSearch}*/
+    }
+    {
+      /*/>,*/
+    }
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -1219,12 +1240,6 @@ export default class MapView extends React.Component {
                   { marginRight: scaleSize(15) },
                 ]}
                 onPress={this.showUndoView}
-              />,
-              <MTBtn
-                key={'search'}
-                image={getPublicAssets().common.icon_search}
-                imageStyle={styles.headerBtn}
-                onPress={this.goToSearch}
               />,
             ]
             : null,

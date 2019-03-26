@@ -62,7 +62,9 @@ class SymbolTabs extends React.Component {
 
   constructor(props) {
     super(props)
-    this.state = {}
+    this.state = {
+      currentPage: 1,
+    }
   }
 
   componentDidMount() {
@@ -136,7 +138,11 @@ class SymbolTabs extends React.Component {
   }
 
   goToPage = index => {
-    this.scrollTab.goToPage(index)
+    // this.scrollTab.goToPage(index)
+    this.state.currentPage !== index &&
+      this.setState({
+        currentPage: index,
+      })
   }
 
   renderTabs = () => {
@@ -145,6 +151,8 @@ class SymbolTabs extends React.Component {
         ref={ref => (this.scrollTab = ref)}
         style={[styles.container, this.props.style]}
         initialPage={1}
+        page={this.state.currentPage}
+        onChangeTab={({ i }) => this.goToPage(i)}
         renderTabBar={() => (
           <DefaultTabBar
             activeBackgroundColor={color.bgW}
@@ -194,6 +202,8 @@ class SymbolTabs extends React.Component {
         ref={ref => (this.scrollTab = ref)}
         style={[styles.container, this.props.style]}
         initialPage={1}
+        page={this.state.currentPage}
+        onChangeTab={({ i }) => this.goToPage(i)}
         renderTabBar={() => (
           <DefaultTabBar
             activeBackgroundColor={color.bgW}
