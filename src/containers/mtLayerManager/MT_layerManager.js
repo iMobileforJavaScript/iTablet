@@ -476,6 +476,12 @@ export default class MT_layerManager extends React.Component {
         curThemeType = constants.THEME_UNIFY_LABEL
         // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
         break
+      case ThemeType.DOTDENSITY:
+        curThemeType = constants.THEME_DOT_DENSITY
+        break
+      case ThemeType.GRADUATEDSYMBOL:
+        curThemeType = constants.THEME_GRADUATED_SYMBOL
+        break
       case ThemeType.GRAPH:
         curThemeType = constants.THEME_GRAPH_STYLE
         break
