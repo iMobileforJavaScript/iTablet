@@ -230,7 +230,7 @@ export default class MyModule extends Component {
           appUtilsModule
             .sendFileOfWechat({
               filePath: toPath,
-              title: fileName,
+              title: fileName + '.zip',
               description: 'SuperMap iTablet',
             })
             .then(

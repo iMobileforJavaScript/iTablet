@@ -706,6 +706,8 @@ public class FileTools extends ReactContextBaseJavaModule {
         USER_NAME=userName;
         String userPath = SDCARD + "/iTablet/User/" + userName + "/";
         String externalDataPath = userPath + "ExternalData/";
+        String plottingExtDataPath = externalDataPath + "Plotting/";
+        String collectionExtDataPath = externalDataPath + "Collection/";
         String dataPath = userPath + "Data/";
 
         String defaultData = "DefaultData";
@@ -725,8 +727,9 @@ public class FileTools extends ReactContextBaseJavaModule {
         if (defaultDataFile.exists()) {
             defaultDataFile.delete();
         }
-
+        String cachePath=SDCARD + "/iTablet/Cache/";
         //创建用户目录
+        createDirectory(cachePath);
         createDirectory(dataPath + "Attribute");
         createDirectory(dataPath + "Datasource");
         createDirectory(dataPath + "Scene");
@@ -738,15 +741,15 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Color");
         createDirectory(dataPath + "Import");
         createDirectory(externalDataPath);
-        createDirectory(externalDataPath+"Plotting");
-        createDirectory(externalDataPath+"Collection");
+        createDirectory(plottingExtDataPath);
+        createDirectory(collectionExtDataPath);
 //        createDirectory(externalDataPath+"Lable");
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
-        String templatePath = externalDataPath;
+        String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
 
         String lableUDB=dataPath+"Label/Label.udb";

@@ -547,7 +547,7 @@ export default class MyLocalData extends Component {
             appUtilsModule
               .sendFileOfWechat({
                 filePath: targetPath,
-                title: fileName,
+                title: fileName + '.zip',
                 description: 'SuperMap iTablet',
               })
               .then(
