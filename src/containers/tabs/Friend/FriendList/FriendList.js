@@ -1,9 +1,6 @@
 /**
  * Created by imobile-xzy on 2019/3/4.
  */
-/**
- * Created by imobile-xzy on 2019/3/4.
- */
 
 import React, { Component } from 'react'
 import {
@@ -261,7 +258,7 @@ class FriendList extends Component {
     if (this.props.friend.props.chat.hasOwnProperty(this.props.user.userId)) {
       let chats = this.props.friend.props.chat[this.props.user.userId]
       if (chats.hasOwnProperty(key.id)) {
-        chatObj = chats[key.id]
+        chatObj = chats[key.id].history
         friend = {
           id: key.id,
           users: [key.markName],
@@ -319,9 +316,17 @@ class FriendList extends Component {
           numColumns={1}
           renderItem={({ item, index }) => this._renderItem(item, index)}
           ListEmptyComponent={() => (
-            <Text style={{ fontSize: scaleSize(30), textAlign: 'center' }}>
-              还未添加好友哦
-            </Text>
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: scaleSize(50),
+              }}
+            >
+              <Text style={{ fontSize: scaleSize(30), textAlign: 'center' }}>
+                您还未添加好友哦
+              </Text>
+            </View>
           )} // 数据为空时调用
         />
         <View style={styles.FlatListViewStyle}>
@@ -358,7 +363,7 @@ class FriendList extends Component {
   _renderItem(item) {
     return (
       <TouchableOpacity
-        style={styles.ItemViewStyle}
+        style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
         onPress={() => this._onFriendSelect(item)}
       >

@@ -249,97 +249,99 @@ class FriendMessage extends Component {
     )
   }
   _renderItem(item, index) {
-    let lastMessage = item['message'][item['message'].length - 1]
-    let time = lastMessage.time
-    let ctime = new Date(time)
-    let timeString =
-      '' +
-      ctime.getFullYear() +
-      '/' +
-      (ctime.getMonth() + 1) +
-      '/' +
-      ctime.getDate() +
-      ' ' +
-      ctime.getHours() +
-      ':' +
-      ctime.getMinutes()
+    if (item && item['message'].length > 0) {
+      let lastMessage = item['message'][item['message'].length - 1]
+      let time = lastMessage.time
+      let ctime = new Date(time)
+      let timeString =
+        '' +
+        ctime.getFullYear() +
+        '/' +
+        (ctime.getMonth() + 1) +
+        '/' +
+        ctime.getDate() +
+        ' ' +
+        ctime.getHours() +
+        ':' +
+        ctime.getMinutes()
 
-    return (
-      <TouchableOpacity
-        style={styles.ItemViewStyle}
-        activeOpacity={0.75}
-        onPress={() => {
-          this._onSectionselect(item, index)
-        }}
-      >
-        <View style={styles.ITemHeadTextViewStyle}>
-          {item.unReadMsg > 0 ? (
-            <View
-              style={{
-                position: 'absolute',
-                backgroundColor: 'red',
-                justifyContent: 'center',
-                height: scaleSize(25),
-                width: scaleSize(25),
-                borderRadius: scaleSize(25),
-                top: scaleSize(-6),
-                right: scaleSize(-12),
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: scaleSize(20),
-                  color: 'white',
-                  textAlign: 'center',
-                }}
-              >
-                {item.unReadMsg}
-              </Text>
-            </View>
-          ) : null}
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}
-          >
-            {this._renderItemHeadView(item)}
-          </View>
-        </View>
-        <View style={styles.ITemTextViewStyle}>
-          {this._renderItemTitleView(item)}
-          <Text
-            style={{
-              fontSize: scaleSize(20),
-              color: 'grey',
-              top: scaleSize(10),
-            }}
-          >
-            {lastMessage.msg}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginRight: scaleSize(20),
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            flexGrow: 1,
+      return (
+        <TouchableOpacity
+          style={styles.ItemViewStyle}
+          activeOpacity={0.75}
+          onPress={() => {
+            this._onSectionselect(item, index)
           }}
         >
-          <Text
+          <View style={styles.ITemHeadTextViewStyle}>
+            {item.unReadMsg > 0 ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'red',
+                  justifyContent: 'center',
+                  height: scaleSize(25),
+                  width: scaleSize(25),
+                  borderRadius: scaleSize(25),
+                  top: scaleSize(-6),
+                  right: scaleSize(-12),
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: scaleSize(20),
+                    color: 'white',
+                    textAlign: 'center',
+                  }}
+                >
+                  {item.unReadMsg}
+                </Text>
+              </View>
+            ) : null}
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}
+            >
+              {this._renderItemHeadView(item)}
+            </View>
+          </View>
+          <View style={styles.ITemTextViewStyle}>
+            {this._renderItemTitleView(item)}
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                color: 'grey',
+                top: scaleSize(10),
+              }}
+            >
+              {lastMessage.msg}
+            </Text>
+          </View>
+          <View
             style={{
-              fontSize: scaleSize(20),
-              color: 'grey',
-              textAlign: 'right',
+              marginRight: scaleSize(20),
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              flexGrow: 1,
             }}
           >
-            {timeString}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                color: 'grey',
+                textAlign: 'right',
+              }}
+            >
+              {timeString}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
   }
 
   _renderItemHeadView(item) {
