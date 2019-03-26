@@ -580,7 +580,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                         }
                     }
                     if(workspace.size()>0){
-                        List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"");
+                        List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
                         if(result.size()>0){
                             importData=false;
                             deleteDirectory(importPath);

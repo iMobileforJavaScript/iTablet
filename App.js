@@ -465,6 +465,9 @@ class AppRoot extends Component {
             this.import.setDialogVisible(false)
             GLOBAL.Loading.setLoading(false)
             result&&Toast.show("导入成功")
+          },()=>{
+            GLOBAL.Loading.setLoading(false)
+            result&&Toast.show("导入失败")
           })
         }}
         cancelAction={ async()=>{
