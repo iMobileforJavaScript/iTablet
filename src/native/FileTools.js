@@ -189,7 +189,7 @@ function addImportExternalData(handlers) {
 }
 
 function getImportResult() {
-  return FileTools.getImportResult()
+  // return FileTools.getImportResult()
 }
 
 function importData() {

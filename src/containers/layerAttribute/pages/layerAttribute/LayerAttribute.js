@@ -359,16 +359,19 @@ export default class LayerAttribute extends React.Component {
   locateToPosition = (data = {}) => {
     let remainder = 0,
       viewPosition = 0.3,
-      relativeIndex
+      relativeIndex,
+      currentIndex
     if (data.type === 'relative') {
       relativeIndex =
         (this.state.relativeIndex <= 0 ? 0 : this.state.relativeIndex) +
-        this.currentPage * PAGE_SIZE +
+        // this.currentPage * PAGE_SIZE +
+        this.state.startIndex +
         data.index
       if (relativeIndex < 0 || relativeIndex >= this.total) {
         Toast.show('位置越界')
         return
       }
+      currentIndex = this.state.currentIndex + data.index
       this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
       remainder = relativeIndex % PAGE_SIZE
     } else if (data.type === 'absolute') {
@@ -379,6 +382,7 @@ export default class LayerAttribute extends React.Component {
       relativeIndex = data.index - 1
       this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
       remainder = relativeIndex % PAGE_SIZE
+      currentIndex = data.index
     }
 
     // if (this.currentPage > 0) {
@@ -403,7 +407,7 @@ export default class LayerAttribute extends React.Component {
         currentPage: this.currentPage,
         startIndex: startIndex,
         relativeIndex: remainder,
-        currentIndex: data.index - 1,
+        currentIndex,
       },
       () => {
         if (this.table) {
