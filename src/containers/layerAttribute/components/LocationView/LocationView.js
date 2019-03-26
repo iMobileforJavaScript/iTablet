@@ -154,8 +154,16 @@ export default class LocationView extends React.Component {
   renderBottom = () => {
     return (
       <View style={styles.bottomButtons}>
-        <TextBtn btnText="取消" btnClick={() => this.show(false)} />
-        <TextBtn btnText="定位" btnClick={this.locateToPosition} />
+        <TextBtn
+          textStyle={styles.bottomBtnTxt}
+          btnText="取消"
+          btnClick={() => this.show(false)}
+        />
+        <TextBtn
+          textStyle={styles.bottomBtnTxt}
+          btnText="定位"
+          btnClick={this.locateToPosition}
+        />
       </View>
     )
   }

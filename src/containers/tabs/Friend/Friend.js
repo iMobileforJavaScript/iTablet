@@ -10,8 +10,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view'
 
 // eslint-disable-next-line
-import { SOnlineService } from 'imobile_for_reactnative'
-import { SMessageService } from 'imobile_for_reactnative'
+import { SOnlineService, SMessageService } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 import { scaleSize } from '../../../utils/screen'
 import { Toast } from '../../../utils/index'
@@ -24,15 +23,21 @@ import FriendList from './FriendList/FriendList'
 import UserType from '../../../constants/UserType'
 // import Chat from './Chat/Chat'
 import FriendListFileHandle from './FriendListFileHandle'
+import InformSpot from './InformSpot'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
 
-let sIP = '192.168.0.106'
+// let sIP = '192.168.0.106'
+// let sPort = 5672
+// let sHostName = '/'
+// let sUserName = 'androidtest'
+// let sPassword = 'androidtest'
+let sIP = '111.202.121.144'
 let sPort = 5672
 let sHostName = '/'
-let sUserName = 'androidtest'
-let sPassword = 'androidtest'
+let sUserName = 'admin'
+let sPassword = 'admin'
 
 let g_curUserId = ''
 let g_connectService = false
@@ -51,8 +56,7 @@ export default class Friend extends Component {
     this.friendMessage = {}
     this.friendList = {}
     this.friendGroup = {}
-    this.curChat = {}
-    this.un
+    this.curChat = undefined
     this.state = {
       data: [{}],
       isRefresh: false,
@@ -73,25 +77,27 @@ export default class Friend extends Component {
     return false
   }
 
-  refresh = () => {
-    this._refreshMessage()
-    this._refreshList()
-  }
-
-  _refreshMessage = () => {
-    if (this.friendMessage && this.friendMessage.refresh)
-      this.friendMessage.refresh()
-    if (this.friendList && this.friendList.refresh) this.friendList.refresh()
-    if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
-  }
-
-  _refreshList = () => {
+  refreshList = () => {
     if (this.friendList && this.friendList.refresh) this.friendList.refresh()
     if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
   }
 
   setCurChat = chat => {
     this.curChat = chat
+    if (this.curChat) {
+      this.setReadTalk(
+        this.props.user.currentUser.userId,
+        this.curChat.targetUser.id,
+      )
+    }
+  }
+  setReadTalk = (userId, talkId) => {
+    this.props.addChat &&
+      this.props.addChat({
+        //清除未读信息
+        userId: userId, //当前登录账户的id
+        talkId: talkId, //会话ID
+      })
   }
   // componentDidUpdate(prevProps) {
   //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
@@ -109,6 +115,7 @@ export default class Friend extends Component {
   shouldComponentUpdate(prevProps, prevState) {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
+      JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
       JSON.stringify(prevState) !== JSON.stringify(this.state)
     ) {
       return true
@@ -116,11 +123,11 @@ export default class Friend extends Component {
     return false
   }
   // eslint-disable-next-line
-  componentWillReceiveProps(nextProps) {
-    if (this.friendMessage.refresh) {
-      this.friendMessage.refresh(nextProps.chat)
-    }
-  }
+  // componentWillReceiveProps(nextProps) {
+  //   if (this.friendMessage.refresh) {
+  //     this.friendMessage.refresh(nextProps.chat)
+  //   }
+  // }
 
   //message {{
   //type 1+:通知类(暂定大于10,10申请添加,11同意添加)  2.单人消息 3.群组消息
@@ -158,6 +165,7 @@ export default class Friend extends Component {
       //message: str
       //use:{name:curUserName,id:uuid}
       //time:time
+      //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
       this.props.addChat &&
@@ -168,9 +176,10 @@ export default class Friend extends Component {
           message: messageObj.message,
           time: messageObj.time,
           type: messageObj.type, //消息类型
+          system: messageObj.system,
         })
     }
-    this.refresh()
+    // this.refresh()
   }
   _receiveMessage = message => {
     if (g_connectService) {
@@ -181,6 +190,7 @@ export default class Friend extends Component {
       //message: str
       //use:{name:curUserName,id:uuid}
       //time:time
+      //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       if (messageObj.type < 9) {
         //非通知消息，判断是否接收
@@ -197,6 +207,7 @@ export default class Friend extends Component {
               id: this.props.user.currentUser.userId,
             },
             time: time,
+            system: 1,
           }
           SMessageService.sendMessage(
             JSON.stringify(message),
@@ -212,11 +223,12 @@ export default class Friend extends Component {
         return
       }
 
-      if (messageObj.message !== '对方还未添加您为好友') {
+      if (messageObj.system === 0) {
         let bUnReadMsg = false
         if (
+          !this.curChat ||
           this.curChat.targetUser.id !== messageObj.user.id ||
-          messageObj.type < 9
+          messageObj.type > 9
         ) {
           bUnReadMsg = true
         }
@@ -231,12 +243,17 @@ export default class Friend extends Component {
             type: messageObj.type, //消息类型
             unReadMsg: bUnReadMsg,
           })
+      } else {
+        if (messageObj.system > 1) {
+          //to do 系统消息，做处理机制
+          return
+        }
       }
       // eslint-disable-next-line
-      if (this.curChat.onReceive) {
+      if (this.curChat && this.curChat.onReceive) {
         this.curChat.onReceive(message['message'])
       }
-      this.refresh()
+      // this.refresh()
     }
   }
   _connectService = () => {
@@ -341,44 +358,59 @@ export default class Friend extends Component {
 
   renderTab() {
     return (
-      <ScrollableTabView
-        renderTabBar={() => <DefaultTabBar />}
-        initialPage={1}
-        tabBarUnderlineStyle={{
-          backgroundColor: 'rgba(70,128,223,1.0)',
-          height: 2,
-          width: 20,
-          marginLeft: this.screenWidth / 3 / 2 - 10,
-        }}
-        tabBarBackgroundColor="white"
-        tabBarActiveTextColor="rgba(70,128,223,1.0)"
-        tabBarInactiveTextColor="black"
-        tabBarTextStyle={{
-          fontSize: scaleSize(25),
-          textAlign: 'center',
-          marginTop: 10,
-        }}
-      >
-        <FriendMessage
-          ref={ref => (this.friendMessage = ref)}
-          tabLabel="消息"
-          user={this.props.user.currentUser}
-          chat={this.props.chat}
-          friend={this}
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
+        <ScrollableTabView
+          renderTabBar={() => <DefaultTabBar />}
+          initialPage={1}
+          tabBarUnderlineStyle={{
+            backgroundColor: 'rgba(70,128,223,1.0)',
+            height: 2,
+            width: 20,
+            marginLeft: this.screenWidth / 3 / 2 - 10,
+          }}
+          tabBarBackgroundColor="white"
+          tabBarActiveTextColor="rgba(70,128,223,1.0)"
+          tabBarInactiveTextColor="black"
+          tabBarTextStyle={{
+            fontSize: scaleSize(25),
+            textAlign: 'center',
+            marginTop: 10,
+          }}
+        >
+          <FriendMessage
+            ref={ref => (this.friendMessage = ref)}
+            tabLabel="消息"
+            user={this.props.user.currentUser}
+            chat={this.props.chat}
+            friend={this}
+          />
+          <FriendList
+            ref={ref => (this.friendList = ref)}
+            tabLabel="好友"
+            user={this.props.user.currentUser}
+            friend={this}
+          />
+          <FriendGroup
+            ref={ref => (this.friendGroup = ref)}
+            tabLabel="群组"
+            user={this.props.user.currentUser}
+            friend={this}
+          />
+        </ScrollableTabView>
+
+        <InformSpot
+          style={{
+            position: 'absolute',
+            backgroundColor: 'red',
+            justifyContent: 'center',
+            height: scaleSize(15),
+            width: scaleSize(15),
+            borderRadius: scaleSize(25),
+            top: scaleSize(10),
+            left: this.screenWidth / 3 / 2 + 10,
+          }}
         />
-        <FriendList
-          ref={ref => (this.friendList = ref)}
-          tabLabel="好友"
-          user={this.props.user.currentUser}
-          friend={this}
-        />
-        <FriendGroup
-          ref={ref => (this.friendGroup = ref)}
-          tabLabel="群组"
-          user={this.props.user.currentUser}
-          friend={this}
-        />
-      </ScrollableTabView>
+      </View>
     )
   }
   renderNOFriend() {

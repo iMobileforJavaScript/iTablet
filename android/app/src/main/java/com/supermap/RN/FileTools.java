@@ -528,16 +528,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    @ReactMethod
-    public void EnvironmentIsValid( Promise promise) {
-        try {
-            Boolean result = Environment.getLicenseStatus().isLicenseValid();
-            promise.resolve(result);
-        } catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)

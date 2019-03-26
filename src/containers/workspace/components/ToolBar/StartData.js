@@ -540,34 +540,35 @@ function openTemplate() {
   //     },
   //   )
   // }.bind(this)())
-  NativeMethod.getTemplates(_params.user.currentUser.userName).then(
-    async templateList => {
-      let tpList = []
-      for (let i = 0; i < templateList.length; i++) {
-        let item = templateList[i]
-        let path = await FileTools.appendingHomeDirectory(item.path)
-        let is3D = await SScene.is3DWorkspace({ server: path })
-        if (!is3D) {
-          tpList.push(item)
-        }
+  NativeMethod.getTemplates(
+    _params.user.currentUser.userName,
+    ConstPath.Module.Collection,
+  ).then(async templateList => {
+    let tpList = []
+    for (let i = 0; i < templateList.length; i++) {
+      let item = templateList[i]
+      let path = await FileTools.appendingHomeDirectory(item.path)
+      let is3D = await SScene.is3DWorkspace({ server: path })
+      if (!is3D) {
+        tpList.push(item)
       }
-      let data = [
-        {
-          title: Const.CREATE_SYMBOL_COLLECTION,
-          data: [],
-        },
-        {
-          title: Const.CREATE_MODULE,
-          data: tpList,
-        },
-      ]
-      _params.setToolbarVisible(true, ConstToolType.MAP_TEMPLATE, {
-        containerType: 'list',
-        height: ConstToolType.HEIGHT[3],
-        data,
-      })
-    },
-  )
+    }
+    let data = [
+      {
+        title: Const.CREATE_SYMBOL_COLLECTION,
+        data: [],
+      },
+      {
+        title: Const.CREATE_MODULE,
+        data: tpList,
+      },
+    ]
+    _params.setToolbarVisible(true, ConstToolType.MAP_TEMPLATE, {
+      containerType: 'list',
+      height: ConstToolType.HEIGHT[3],
+      data,
+    })
+  })
 }
 
 /** 导入 **/
