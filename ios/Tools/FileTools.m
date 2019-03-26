@@ -512,7 +512,7 @@ RCT_REMAP_METHOD(getImportResult, getImportResult:(RCTPromiseResolveBlock)resolv
   NSFileManager *filemanager = [NSFileManager defaultManager];
   if([zipFilePath hasSuffix:@".zip"]){
    
-    
+
     BOOL isFileExist = [FileTools getUriState:url];
     if(isFileExist){
       @try {

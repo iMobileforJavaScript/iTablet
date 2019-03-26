@@ -28,4 +28,5 @@ static BOOL hasImportedData = NO;
 +(NSString*)getLastModifiedTime:(NSDate*) nsDate;
 + (NSDictionary *)readLocalFileWithPath:(NSString *)path;
 +(BOOL)importData:(NSURL*)url;
+
 @end
