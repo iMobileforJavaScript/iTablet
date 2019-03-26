@@ -145,7 +145,7 @@ export default class MyLabel extends Component {
         )
         let zipResult = await FileTools.zipFile(archivePath, targetPath)
         if (zipResult) {
-          let fileName = name + '_标注'
+          let fileName = name + '_标注.zip'
           if (this.uploadType === 'weChat') {
             appUtilsModule
               .sendFileOfWechat({
