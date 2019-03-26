@@ -152,7 +152,38 @@ export default class TouchProgress extends Component {
                 (this.dotSize * progressWidth) / 100 + panBtnDevLeft
               this._previousLeft = (this.dotSize * progressWidth) / 100
               this._BackLine.style.width = (this.dotSize * progressWidth) / 100
-              tips = '符号大小    ' + parseInt(this.dotSize) / 10 + 'mm'
+              tips = '符号大小    ' + parseInt(this.dotSize) + 'mm'
+            }
+          }
+          break
+        case ThemeType.GRADUATEDSYMBOL: //等级符号专题图专题图
+          {
+            if (this.props.selectName === '基准值') {
+              this.baseValue =
+                value !== undefined
+                  ? value
+                  : await SThemeCartography.getGraduatedSymbolValue({
+                    LayerName: this.props.currentLayer.name,
+                  })
+              this._panBtnStyles.style.left =
+                (this.baseValue * progressWidth) / 1000 + panBtnDevLeft
+              this._previousLeft = (this.baseValue * progressWidth) / 1000
+              this._BackLine.style.width =
+                (this.baseValue * progressWidth) / 1000
+              tips = '基准值    ' + parseInt(this.baseValue)
+            } else if (this.props.selectName === '符号大小') {
+              this.graSymbolSize =
+                value !== undefined
+                  ? value
+                  : await SThemeCartography.getGraduatedSymbolSize({
+                    LayerName: this.props.currentLayer.name,
+                  })
+              this._panBtnStyles.style.left =
+                (this.graSymbolSize * progressWidth) / 100 + panBtnDevLeft
+              this._previousLeft = (this.graSymbolSize * progressWidth) / 100
+              this._BackLine.style.width =
+                (this.graSymbolSize * progressWidth) / 100
+              tips = '符号大小    ' + parseInt(this.graSymbolSize) + 'mm'
             }
           }
           break
@@ -377,6 +408,8 @@ export default class TouchProgress extends Component {
         newValue = value * 100
       } else if (this.props.selectName === '符号大小') {
         newValue = value * 100
+      } else if (this.props.selectName === '基准值') {
+        newValue = value * 1000
       }
     }
 
@@ -418,6 +451,7 @@ export default class TouchProgress extends Component {
    */
   setData = async value => {
     let layerType = this.props.currentLayer.type
+    let themeType = this.props.currentLayer.themeType
     let tips = ''
     if (GLOBAL.Type === constants.MAP_THEME) {
       if (
@@ -448,12 +482,26 @@ export default class TouchProgress extends Component {
         }
         await SThemeCartography.modifyDotDensityThemeMap(_params)
       } else if (this.props.selectName === '符号大小') {
-        tips = '符号大小    ' + parseInt(value) / 10 + 'mm'
+        tips = '符号大小    ' + parseInt(value) + 'mm'
         let _params = {
           LayerName: this.props.currentLayer.name,
-          DotSize: value,
+          SymbolSize: value,
         }
-        await SThemeCartography.modifyDotDensityThemeMap(_params)
+        switch (themeType) {
+          case ThemeType.DOTDENSITY:
+            await SThemeCartography.modifyDotDensityThemeMap(_params)
+            break
+          case ThemeType.GRADUATEDSYMBOL:
+            await SThemeCartography.modifyGraduatedSymbolThemeMap(_params)
+            break
+        }
+      } else if (this.props.selectName === '基准值') {
+        tips = '基准值    ' + parseInt(value)
+        let _params = {
+          LayerName: this.props.currentLayer.name,
+          BaseValue: value,
+        }
+        await SThemeCartography.modifyGraduatedSymbolThemeMap(_params)
       }
     }
 
@@ -606,7 +654,14 @@ export default class TouchProgress extends Component {
         } else if (value > 100) {
           value = 100
         }
-        tips = '符号大小    ' + parseInt(value) / 10 + 'mm'
+        tips = '符号大小    ' + parseInt(value) + 'mm'
+      } else if (this.props.selectName === '基准值') {
+        if (value < 0) {
+          value = 0
+        } else if (value > 1000) {
+          value = 1000
+        }
+        tips = '基准值    ' + parseInt(value)
       }
     }
 

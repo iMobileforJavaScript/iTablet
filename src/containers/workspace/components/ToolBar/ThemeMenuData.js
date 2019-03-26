@@ -995,12 +995,14 @@ function getLabelFontRotation() {
 
 /**设置颜色 */
 function setColor() {
-  if (_params.ColorType === 'FORECOLOR') {
+  if (_params.ColorType === 'UNIFORMLABEL_FORE_COLOR') {
     return SThemeCartography.setUniformLabelColor(_params)
-  } else if (_params.ColorType === 'BACKSHAPE_COLOR') {
+  } else if (_params.ColorType === 'UNIFORMLABEL_BACKSHAPE_COLOR') {
     return SThemeCartography.setUniformLabelBackColor(_params)
-  } else if (_params.ColorType === 'DOTDENSITYCOLOR') {
+  } else if (_params.ColorType === 'DOT_DENSITY_COLOR') {
     return SThemeCartography.modifyDotDensityThemeMap(_params)
+  } else if (_params.ColorType === 'GRADUATED_SYMBOL_COLOR') {
+    return SThemeCartography.modifyGraduatedSymbolThemeMap(_params)
   }
 }
 
@@ -2374,6 +2376,42 @@ function getGraphThemeGradutedMode() {
   return data
 }
 
+/**设置等级符号专题图分级方式 */
+function setThemeGraduatedSymbolGraduatedMode() {
+  return SThemeCartography.modifyGraduatedSymbolThemeMap(_params)
+}
+
+function getGraduatedSymbolGradutedMode() {
+  let data = [
+    {
+      key: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_CONS_KEY,
+      title: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_CONS,
+      action: setThemeGraduatedSymbolGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_cons,
+      selectedImage: getThemeAssets().themeType.theme_graph_graduatedmode_cons,
+    },
+    {
+      key: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_LOG_KEY,
+      title: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_LOG,
+      action: setThemeGraduatedSymbolGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_log,
+      selectedImage: getThemeAssets().themeType.theme_graph_graduatedmode_log,
+    },
+    {
+      key: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_SQUARE_KEY,
+      title: constants.THEME_GRADUATED_SYMBOL_GRADUATEDMODE_SQUARE,
+      action: setThemeGraduatedSymbolGraduatedMode,
+      size: 'large',
+      image: getThemeAssets().themeType.theme_graph_graduatedmode_square,
+      selectedImage: getThemeAssets().themeType
+        .theme_graph_graduatedmode_square,
+    },
+  ]
+  return data
+}
+
 /**
  * 统计专题图颜色方案
  */
@@ -2654,4 +2692,5 @@ export default {
   getThemeGraphColorScheme,
   getUnifyStyleAdd,
   basename,
+  getGraduatedSymbolGradutedMode,
 }

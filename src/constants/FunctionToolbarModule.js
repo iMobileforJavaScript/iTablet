@@ -737,7 +737,7 @@ const labelMenuInfo = [
     btntitle: '背景颜色',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getLabelBackColor(
+        GLOBAL.toolBox.getColorTable(
           ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR,
           '背景颜色',
         )
@@ -788,7 +788,7 @@ const labelMenuInfo = [
     btntitle: '颜色',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getLabelFontColor(
+        GLOBAL.toolBox.getColorTable(
           ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR,
           '颜色',
         )
@@ -887,7 +887,7 @@ const dotDensityMenuInfo = [
             selectName: '点符号',
             selectKey: '点符号',
             themeType: constants.THEME_DOT_DENSITY,
-            themeSymbolType: 'point',
+            themeSymbolType: ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS,
           },
         )
     },
@@ -911,8 +911,9 @@ const dotDensityMenuInfo = [
     btntitle: '点颜色',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getDotDensityDotColor(
+        GLOBAL.toolBox.getColorTable(
           ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_COLOR,
+          '点颜色',
           '点颜色',
         )
     },
@@ -927,7 +928,7 @@ const graduatedSymbolMenuInfo = [
     btntitle: '表达式 ',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getGraphThemeExpressions(
+        GLOBAL.toolBox.getThemeExpress(
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION,
           '表达式',
         )
@@ -939,7 +940,7 @@ const graduatedSymbolMenuInfo = [
     btntitle: '分级方式',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getGraphThemeGradutedMode(
+        GLOBAL.toolBox.getGraduatedSymbolGradutedMode(
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_GRADUATEDMODE,
           '分级方式',
         )
@@ -951,8 +952,9 @@ const graduatedSymbolMenuInfo = [
     btntitle: '基准值',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getGraphThemeColorScheme(
+        GLOBAL.toolBox.getGraduatedSymbolBaseValueAndSymbolSize(
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_VALUE,
+          '基准值',
           '基准值',
         )
     },
@@ -962,10 +964,27 @@ const graduatedSymbolMenuInfo = [
     selectKey: '点符号',
     btntitle: '点符号',
     action: () => {
+      GLOBAL.toolBox && GLOBAL.toolBox.menu()
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getGraphThemeColorScheme(
+        GLOBAL.toolBox.setVisible(
+          true,
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS,
-          '点符号',
+          {
+            containerType: 'symbol',
+            isFullScreen: false,
+            column: 4,
+            height: ConstToolType.THEME_HEIGHT[3],
+            buttons: [
+              ToolbarBtnType.CANCEL,
+              ToolbarBtnType.MENU,
+              ToolbarBtnType.MENU_FLEX,
+              ToolbarBtnType.MENU_COMMIT,
+            ],
+            selectName: '点符号',
+            selectKey: '点符号',
+            themeType: constants.THEME_GRADUATED_SYMBOL,
+            themeSymbolType: ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS,
+          },
         )
     },
   },
@@ -975,8 +994,9 @@ const graduatedSymbolMenuInfo = [
     btntitle: '符号大小',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getGraphThemeColorScheme(
+        GLOBAL.toolBox.getGraduatedSymbolBaseValueAndSymbolSize(
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_SIZE,
+          '符号大小',
           '符号大小',
         )
     },
@@ -987,8 +1007,9 @@ const graduatedSymbolMenuInfo = [
     btntitle: '符号颜色',
     action: () => {
       GLOBAL.toolBox &&
-        GLOBAL.toolBox.getGraphThemeColorScheme(
+        GLOBAL.toolBox.getColorTable(
           ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_COLOR,
+          '符号颜色',
           '符号颜色',
         )
     },

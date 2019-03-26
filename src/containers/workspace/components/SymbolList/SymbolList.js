@@ -9,6 +9,7 @@ import {
   SThemeCartography,
 } from 'imobile_for_reactnative'
 import constants from '../../constants'
+import { ConstToolType } from '../../../../constants'
 
 export default class SymbolList extends React.Component {
   props: {
@@ -33,12 +34,11 @@ export default class SymbolList extends React.Component {
         SymbolID: data.id,
       }
       switch (this.props.themeSymbolType) {
-        case 'point':
+        case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
           SThemeCartography.modifyDotDensityThemeMap(params)
           break
-        case 'line':
-          break
-        case 'region':
+        case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS:
+          SThemeCartography.modifyGraduatedSymbolThemeMap(params)
           break
       }
       return
@@ -75,7 +75,8 @@ export default class SymbolList extends React.Component {
   renderLibrary = () => {
     if (GLOBAL.Type === constants.MAP_THEME) {
       switch (this.props.themeSymbolType) {
-        case 'point':
+        case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
+        case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS:
           SMap.findSymbolsByGroups('point', '').then(result => {
             let symbols = []
             result.forEach(item => {
@@ -83,10 +84,6 @@ export default class SymbolList extends React.Component {
             })
             this.setState({ layerData: this.props.layerData, data: symbols })
           })
-          break
-        case 'line':
-          break
-        case 'region':
           break
       }
       return
