@@ -4,9 +4,10 @@
 
 // eslint-disable-next-line
 import React, { Component } from 'react'
+import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import { SOnlineService } from 'imobile_for_reactnative'
-import { Toast } from '../../../utils/index'
+// import { Toast } from '../../../utils/index'
 import { FileTools } from '../../../native'
 
 export default class FriendListFileHandle {
@@ -14,18 +15,6 @@ export default class FriendListFileHandle {
   static group = []
   static friendListFile = ''
 
-  static readLocalFriendList(friendListFile, resultCallBack) {
-    RNFS.read(friendListFile)
-      .then(value => {
-        FriendListFileHandle.friends = JSON.parse(value)
-        resultCallBack(FriendListFileHandle.friends)
-      })
-      // eslint-disable-next-line
-      .catch(err => {
-        Toast.show('读取好友列表失败!')
-        resultCallBack(false)
-      })
-  }
   static async getContacts(path, file, resultCallBack) {
     let friendListFile = path + '/' + file
     let onlineList = path + '/ol_fl'
@@ -33,12 +22,14 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friendListFile = friendListFile
 
     if (await FileTools.fileIsExist(friendListFile)) {
-      let value = await RNFS.read(friendListFile)
+      let value = await RNFS.readFile(friendListFile)
+
       FriendListFileHandle.friends = JSON.parse(value)
     }
 
     if (await FileTools.fileIsExist(onlineList)) {
-      let value = await RNFS.read(onlineList)
+      let value = await RNFS.readFile(onlineList)
+
       let onlineVersion = JSON.parse(value)
       if (
         FriendListFileHandle.friends.length === 0 ||
@@ -82,9 +73,13 @@ export default class FriendListFileHandle {
         () => {
           //上传
           SOnlineService.deleteData('friend.list').then(() => {
+            let UploadFileName = 'friend.list.zip'
+            if (Platform.OS === 'android') {
+              UploadFileName = 'friend.list'
+            }
             SOnlineService.uploadFile(
               FriendListFileHandle.friendListFile,
-              'friend.list.zip',
+              UploadFileName,
               // eslint-disable-next-line
               { onResult: value => {} },
             )

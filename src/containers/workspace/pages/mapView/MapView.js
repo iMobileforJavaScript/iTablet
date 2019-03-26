@@ -32,6 +32,7 @@ import {
   SaveDialog,
   InputDialog,
   PopModal,
+  SurfaceView,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -330,19 +331,6 @@ export default class MapView extends React.Component {
     this._addMap()
   }
 
-  /** 设置监听 **/
-  /** 选择事件监听 **/
-  _addGeometrySelectedListener = async () => {
-    await SMap.addGeometrySelectedListener({
-      geometrySelected: this.geometrySelected,
-      geometryMultiSelected: this.geometryMultiSelected,
-    })
-  }
-
-  _removeGeometrySelectedListener = async () => {
-    await SMap.removeGeometrySelectedListener()
-  }
-
   geometrySelected = event => {
     this.props.setSelection &&
       this.props.setSelection([
@@ -405,6 +393,14 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setSelection && this.props.setSelection(data)
+  }
+
+  /** 触摸事件监听 **/
+  _addGeometrySelectedListener = async () => {
+    await SMap.addGeometrySelectedListener({
+      geometrySelected: this.geometrySelected,
+      geometryMultiSelected: this.geometryMultiSelected,
+    })
   }
 
   // 导出(保存)工作空间中地图到模块
@@ -1260,6 +1256,7 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+        <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderOverLayer()}
@@ -1278,7 +1275,7 @@ export default class MapView extends React.Component {
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
           title={'提示'}
-          info={'是否要删除该对象吗？'}
+          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}

@@ -9,7 +9,7 @@ import {
   StyleSheet,
   NativeModules,
 } from 'react-native'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
 import { FileTools, NativeMethod } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
@@ -235,11 +235,12 @@ export default class MyModule extends Component {
             })
             .then(
               result => {
-                result && Toast.show(ConstInfo.UPLOAD_SUCCESS)
+                result && Toast.show('分享成功')
                 this.container.setLoading(false)
+                this.ModalBtns.setVisible(false)
               },
               () => {
-                Toast.show(ConstInfo.UPLOAD_FAILED)
+                Toast.show('分享失败')
                 this.container.setLoading(false)
               },
             )
@@ -249,6 +250,7 @@ export default class MyModule extends Component {
               Toast.show('分享成功')
               FileTools.deleteFile(toPath)
               this.container.setLoading(false)
+              this.ModalBtns.setVisible(false)
             },
           })
         }

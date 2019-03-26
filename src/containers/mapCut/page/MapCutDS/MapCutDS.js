@@ -58,7 +58,7 @@ export default class MapCutDS extends React.Component {
       >
         <FlatList
           data={this.state.data}
-          style={styles.dsList}
+          style={styles.dsListView}
           renderItem={this.renderDSItem}
           keyExtractor={item => item.alias}
           ItemSeparatorComponent={() => (

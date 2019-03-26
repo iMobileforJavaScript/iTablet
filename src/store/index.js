@@ -7,7 +7,7 @@ import middlewares from './middlewares'
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  blacklist: ['nav', 'collection', 'down', 'layers', 'online', 'device', 'nav'],
+  blacklist: ['nav', 'collection', 'down', 'layers', 'online', 'device'],
 }
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 

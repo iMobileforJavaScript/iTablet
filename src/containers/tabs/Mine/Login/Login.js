@@ -89,8 +89,8 @@ export default class Login extends React.Component {
     let isEmail = this.state.onEmailTitleFocus
     let userName = 'imobile1234'
     let password = 'imobile'
-    // this.txtPhoneNumber = '13683409897'
-    // this.txtPhoneNumberPassword = '123456'
+    this.txtPhoneNumber = '13683409897'
+    this.txtPhoneNumberPassword = '123456'
 
     try {
       if (!isEmail) {
@@ -159,8 +159,18 @@ export default class Login extends React.Component {
           userPath = userPath + '/ol_fl'
           SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
             onResult: value => {
-              if (value !== true) {
-                //  console.warn(value)
+              if (value === true) {
+                this.props.setUser({
+                  userName: userName,
+                  password: password,
+                  nickname: userInfo.nickname,
+                  email: userInfo.email,
+                  phoneNumber: userInfo.phoneNumber,
+                  userId: userInfo.userId,
+                  isEmail: isEmail,
+                  userType: UserType.COMMON_USER,
+                  hasUpdateFriend: true,
+                })
               }
             },
           })
@@ -178,6 +188,7 @@ export default class Login extends React.Component {
             userId: userInfo.userId,
             isEmail: isEmail,
             userType: UserType.COMMON_USER,
+            hasUpdateFriend: false,
           })
         } else {
           // Toast.show('登录成功')

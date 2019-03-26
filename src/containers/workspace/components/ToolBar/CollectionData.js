@@ -220,6 +220,7 @@ function getCollectionData(type, params) {
     ToolbarBtnType.CANCEL,
     ToolbarBtnType.CHANGE_COLLECTION,
     ToolbarBtnType.MAP_SYMBOL,
+    ToolbarBtnType.COMPLETE,
   ]
 
   return { data, buttons }

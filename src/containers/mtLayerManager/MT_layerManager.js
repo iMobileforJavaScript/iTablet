@@ -26,6 +26,7 @@ const LAYER_GROUP = 'layerGroup'
 import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
+import { FileTools } from '../../native'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
@@ -78,11 +79,10 @@ export default class MT_layerManager extends React.Component {
         baseData = [this.props.layers[this.props.layers.length - 1]]
       }
       (async function() {
-        dataList = await SMap.getUDBName(
-          ConstPath.AndroidPath +
-            ConstPath.CustomerPath +
-            'Data/Label/Label.udb',
+        let udbPath = await FileTools.appendingHomeDirectory(
+          ConstPath.CustomerPath + 'Data/Label/Label.udb',
         )
+        dataList = await SMap.getUDBName(udbPath)
         newState.data = [
           {
             title: '我的图层',
@@ -157,9 +157,10 @@ export default class MT_layerManager extends React.Component {
       ) {
         baseMap = [layers[layers.length - 1]]
       }
-      dataList = await SMap.getUDBName(
-        ConstPath.AndroidPath + ConstPath.CustomerPath + 'Data/Label/Label.udb',
+      let udbPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath + 'Data/Label/Label.udb',
       )
+      dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
           { title: '我的图层', data: layers, visible: true },
@@ -474,6 +475,12 @@ export default class MT_layerManager extends React.Component {
         // Toast.show('当前图层为:' + data.name)
         curThemeType = constants.THEME_UNIFY_LABEL
         // GLOBAL.toolBox.showMenuAlertDialog(constants.THEME_UNIFY_LABEL)
+        break
+      case ThemeType.DOTDENSITY:
+        curThemeType = constants.THEME_DOT_DENSITY
+        break
+      case ThemeType.GRADUATEDSYMBOL:
+        curThemeType = constants.THEME_GRADUATED_SYMBOL
         break
       case ThemeType.GRAPH:
         curThemeType = constants.THEME_GRAPH_STYLE

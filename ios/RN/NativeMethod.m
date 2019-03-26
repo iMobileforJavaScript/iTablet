@@ -11,7 +11,7 @@
 @implementation NativeMethod
 RCT_EXPORT_MODULE();
 
-RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
+RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName strModule:(NSString *)strModule resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   @try {
     if (userName == nil || [userName isEqualToString:@""]) {
       userName = @"Customer";
@@ -19,6 +19,12 @@ RCT_REMAP_METHOD(getTemplates, getTemplatesByUserName:(NSString *)userName resol
     NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData"];
     
     NSMutableArray* templateList = [NativeMethod getTemplate:templatePath];
+    
+    if(strModule == nil || [strModule isEqualToString:@""]){
+      templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData"];
+    }else {
+      templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData", strModule];
+    }
     
     resolve(templateList);
   } @catch (NSException *exception) {
