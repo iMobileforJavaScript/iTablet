@@ -50,9 +50,10 @@ public class MainActivity extends ReactActivity {
         }
         appManager.getAppManager().addActivity(this);
         appManager.getAppManager().registerWechat(this);
-        FileTools.unZipEXternalData(this);
+        FileTools.importEXternalData(this);
 
     }
+
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -66,28 +67,9 @@ public class MainActivity extends ReactActivity {
 
         super.onNewIntent(intent);
 
-        setIntent(intent);//must store the new intent unless getIntent() will return the old one
-    }
-
-    @Override
-    protected void onResume() {
-        if (!isActive) {
-            //app 从后台唤醒，进入前台
-            isActive = true;
-            Log.e("ACTIVITY", "程序从后台唤醒");
-            FileTools.unZipEXternalData( appManager.getAppManager().currentActivity());
-        }
-        super.onResume();
-    }
-
-    @Override
-    protected void onStop() {
-        if (!appManager.getAppManager().isAppOnForeground(this)) {
-            //app 进入后台
-            isActive = false;//记录当前已经进入后台
-            Log.i("ACTIVITY", "程序进入后台");
-        }
-        super.onStop();
+        setIntent(intent);
+        FileTools.importEXternalData(this);
+        //must store the new intent unless getIntent() will return the old one
     }
 
 

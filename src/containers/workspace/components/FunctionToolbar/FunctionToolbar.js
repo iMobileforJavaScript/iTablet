@@ -148,11 +148,15 @@ export default class FunctionToolbar extends React.Component {
       case ThemeType.GRAPH:
         type = constants.THEME_GRAPH_STYLE
         break
+      case ThemeType.DOTDENSITY:
+        type = constants.THEME_DOT_DENSITY
+        break
+      case ThemeType.GRADUATEDSYMBOL:
+        type = constants.THEME_GRADUATED_SYMBOL
+        break
       case ThemeType.GRIDRANGE:
       case ThemeType.GRIDUNIQUE:
       case ThemeType.CUSTOM:
-      case ThemeType.DOTDENSITY:
-      case ThemeType.GRADUATEDSYMBOL:
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return
       default:
@@ -457,7 +461,7 @@ export default class FunctionToolbar extends React.Component {
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
         column: 4,
-        height: ConstToolType.THEME_HEIGHT[5],
+        height: ConstToolType.THEME_HEIGHT[10],
       })
     }
   }
@@ -746,7 +750,20 @@ export default class FunctionToolbar extends React.Component {
   }
 
   legend = async () => {
-    SMap.addLegend()
+    const toolRef = this.props.getToolRef()
+    if (toolRef) {
+      this.props.showFullMap && this.props.showFullMap(true)
+      // TODO 根据符号类型改变ToolBox 编辑内容
+      toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
+        isFullScreen: false,
+        containerType: 'legend',
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.NEWTHEME_HEIGHT[0]
+            : ConstToolType.NEWTHEME_HEIGHT[1],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
+      })
+    }
   }
 
   Label = () => {
