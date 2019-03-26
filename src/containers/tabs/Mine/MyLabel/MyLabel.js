@@ -7,7 +7,7 @@ import {
   Text,
   NativeModules,
 } from 'react-native'
-import { ConstPath, ConstInfo } from '../../../../constants'
+import { ConstPath } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import { SMap, EngineType, SOnlineService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
@@ -108,7 +108,7 @@ export default class MyLabel extends Component {
 
   uploadDialog = name => {
     this.dialog.setDialogVisible(false)
-    Toast.show('上传中')
+    Toast.show('分享中')
     this.upload(name)
   }
 
@@ -118,6 +118,7 @@ export default class MyLabel extends Component {
       return
     }
     try {
+      this.container.setLoading(true, '正在分享')
       let userPath = await FileTools.appendingHomeDirectory(
         this.props.user.currentUser.userType === UserType.PROBATION_USER
           ? ConstPath.CustomerPath
@@ -154,10 +155,12 @@ export default class MyLabel extends Component {
               })
               .then(
                 result => {
-                  result && Toast.show(ConstInfo.UPLOAD_SUCCESS)
+                  result && Toast.show('分享成功')
+                  this.container.setLoading(false)
                 },
                 () => {
-                  Toast.show(ConstInfo.UPLOAD_FAILED)
+                  Toast.show('分享失败')
+                  this.container.setLoading(false)
                 },
               )
           } else {
@@ -166,7 +169,8 @@ export default class MyLabel extends Component {
                 return progress
               },
               onResult: async () => {
-                Toast.show(ConstInfo.SHARE_SUCCESS)
+                Toast.show('分享成功')
+                this.container.setLoading(false)
                 FileTools.deleteFile(targetPath)
                 FileTools.deleteFile(archivePath)
               },
@@ -175,7 +179,8 @@ export default class MyLabel extends Component {
         }
       }
     } catch (error) {
-      Toast.show('上传失败，请检查网络')
+      Toast.show('分享失败，请检查网络')
+      this.container.setLoading(false)
     }
   }
 

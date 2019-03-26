@@ -125,7 +125,7 @@ class AddFriend extends Component {
     let time = Date.parse(ctime)
     let message = {
       message: curUserName + ' 请求添加您为好友',
-      type: 10,
+      type: 901,
       user: { name: curUserName, id: uuid },
       time: time,
     }
@@ -133,7 +133,7 @@ class AddFriend extends Component {
 
     this.friend._sendMessage(messageStr, item[0], true)
     AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
-    // this.friend.refreshMessage();
+    this.friend.refreshList()
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

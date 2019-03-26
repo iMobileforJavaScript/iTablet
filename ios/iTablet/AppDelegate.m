@@ -13,10 +13,16 @@
 #import <React/RCTRootView.h>
 #import "VisualViewController.h"
 #import "VCViewController.h"
+#import "RNFSManager.h"
 //#import "RNSplashScreen.h"
 
 static NSString* g_sampleCodeName = @"#";;
 @implementation AppDelegate
+
+- (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler
+{
+  [RNFSManager setCompletionHandlerForIdentifier:identifier completionHandler:completionHandler];
+}
 
 +(void)SetSampleCodeName:(NSString*)name
 {
@@ -27,7 +33,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"localhost"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.109"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
 
@@ -59,26 +65,8 @@ static NSString* g_sampleCodeName = @"#";;
   
   [NSThread sleepForTimeInterval:1];
 //  [RNSplashScreen show];
-  //注册微信
-  [WeiXinUtils registerApp];
   return YES;
 }
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-
-{
-  //压缩包地址
-  NSString* zipFilePath=[url absoluteString];
-  //是否是压缩文件
-  if([zipFilePath hasSuffix:@".zip"]){
-    NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-    zipFilePath = [@"/" stringByAppendingString:[[zipFilePath componentsSeparatedByString:@"Documents"] objectAtIndex:1]];
-    zipFilePath=[head stringByAppendingString:zipFilePath];
-    //判断文件是否存在
-    BOOL b =[[NSFileManager defaultManager] fileExistsAtPath:zipFilePath isDirectory:nil];
-  }
-  return YES;
-}
-
 
 #pragma mark - 初始化license
 - (void)initEnvironment {
@@ -134,20 +122,6 @@ static NSString* g_sampleCodeName = @"#";;
     [self.nav pushViewController:vt animated:YES];
     self.nav.navigationBarHidden = NO;
   }
-}
-
-// onReq是微信终端向第三方程序发起请求，要求第三方程序响应。第三方程序响应完后必须调用sendRsp返回。在调用sendRsp返回时，会切回到微信终端程序界面
-- (void)onReq:(BaseReq *)req
-{
-
-}
-
-// 如果第三方程序向微信发送了sendReq的请求，那么onResp会被回调。sendReq请求调用后，会切到微信终端程序界面
-- (void)onResp:(BaseResp *)resp
-{
-  // 处理 分享请求 回调
-  
-  
 }
 
 //- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window

@@ -47,11 +47,7 @@ export default class InformMessage extends React.Component {
 
   _onSectionselect = item => {
     this.target = item
-    if (item.type === 10) {
-      this.dialog.setDialogVisible(true)
-    } else if (item.type === 11) {
-      this.dialogConfirm.setDialogVisible(true)
-    }
+    this.dialog.setDialogVisible(true)
   }
 
   _dialogConfirm = () => {
@@ -73,9 +69,7 @@ export default class InformMessage extends React.Component {
     )
 
     AddFriend.acceptFriendAdd([this.target.messageId, this.target.users[[0]]])
-    // FriendListFileHandle.addToFriendList({"markName":this.target.users[0],"name":this.target.users[0],"id":this.target.messageId,"info":{"isFriend":1}})
-    // this.friend.refreshList();
-    // this.friend.refreshMessage();
+    this.friend.refreshList()
     this.dialog.setDialogVisible(false)
   }
 

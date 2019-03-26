@@ -1,11 +1,22 @@
 package com.supermap.RN;
 
+import android.app.Activity;
+
+import android.content.ContentResolver;
 import android.content.Context;
-import android.util.Log;
+import android.content.Intent;
+
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.text.TextUtils;
+import android.widget.Switch;
+
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableArray;
@@ -18,10 +29,11 @@ import com.supermap.data.Datasources;
 import com.supermap.data.EngineType;
 import com.supermap.data.Environment;
 import com.supermap.data.Workspace;
-import com.supermap.file.Decompressor;
+import com.supermap.data.WorkspaceType;
 import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
-import com.supermap.interfaces.mapping.SDatasource;
+import com.supermap.interfaces.mapping.SMap;
+import com.supermap.messagequeue.Enum;
 
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
@@ -39,20 +51,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipException;
-//import java.util.zip.ZipOutputStream;
 import org.apache.tools.zip.ZipOutputStream;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class FileTools extends ReactContextBaseJavaModule {
@@ -60,6 +71,8 @@ public class FileTools extends ReactContextBaseJavaModule {
 //    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
+    private static String USER_NAME="";
+
 
     public static final String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
     public static ReactApplicationContext reactContext;
@@ -515,16 +528,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    @ReactMethod
-    public void EnvironmentIsValid( Promise promise) {
-        try {
-            Boolean result = Environment.getLicenseStatus().isLicenseValid();
-            promise.resolve(result);
-        } catch (Exception e) {
-            promise.reject(e);
-        }
-    }
-
     private static void zipFile(File resFile, ZipOutputStream zipout, String rootpath)
             throws FileNotFoundException, IOException {
         rootpath = rootpath + (rootpath.trim().length() == 0 ? "" : File.separator)
@@ -615,6 +618,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         userName = userName == null || userName.equals("") ? "Customer" : userName;
 
         // 初始化用户工作空间
+        USER_NAME=userName;
         String userPath = SDCARD + "/iTablet/User/" + userName + "/";
         String externalDataPath = userPath + "ExternalData/";
         String dataPath = userPath + "Data/";
@@ -647,6 +651,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Temp");
         createDirectory(dataPath + "Lable");
         createDirectory(dataPath + "Color");
+        createDirectory(dataPath + "Import");
         createDirectory(externalDataPath);
         createDirectory(externalDataPath+"Plotting");
         createDirectory(externalDataPath+"Collection");
@@ -878,6 +883,118 @@ public class FileTools extends ReactContextBaseJavaModule {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public static void importEXternalData(Activity activity){
+        Intent intent=activity.getIntent();
+        Uri uri=intent.getData();
+        if(uri==null){
+            return  ;
+        }
+        try {
+             InputStream inputStream=activity.getContentResolver().openInputStream(uri);
+             String userName=getUserName();
+             String importPath=SDCARD+"/iTablet/User/"+userName+"/Data/Import";
+             String filePath=importPath+"/weChat.zip";
+             File importFile=new File(importPath);
+             if(!importFile.exists()){
+                 importFile.mkdirs();
+             }
+             File file=new File(filePath);
+             FileOutputStream fop=new FileOutputStream(file);
+             if(!file.exists()){
+                 file.createNewFile();
+             }
+             byte[] buffer=new byte[1024];
+             int length=-1;
+             while ((length=inputStream.read(buffer))!=-1){
+                 fop.write(buffer,0,length);
+             }
+             fop.close();
+             String toPath=importPath;
+             Boolean reuslt=FileTools.unZipFile(filePath, toPath);
+             if(reuslt){
+                 file.delete();
+                 ArrayList<String> arrayList =new ArrayList();
+
+                 getFilePath(toPath,arrayList);
+                 ArrayList<Map> workspace =new ArrayList();
+                 ArrayList<String> datasource =new ArrayList();
+                 for (int i = 0; i <arrayList.size() ; i++) {
+                    String path= arrayList.get(i);
+                    String fileType=path.substring(path.indexOf('.')+1);
+                    if(fileType.equals("smwu")||fileType.equals("sxwu")||fileType.equals("sxw")||fileType.equals("smw")){
+                        Map map=new HashMap();
+                        map.put("server",arrayList.get(i));
+                        String workspaceType=null;
+                        switch (fileType){
+                            case "smwu":
+                                workspaceType="9.0";
+                                break;
+                            case "sxwu":
+                                workspaceType="8.0";
+                                break;
+                            case "sxw":
+                                workspaceType="4.0";
+                                break;
+                            case "smw":
+                                workspaceType="5.0";
+                                break;
+                        }
+                        map.put("type", workspaceType);
+                        workspace.add(map);
+                    }
+                    if(fileType.equals("udb")){
+                        datasource.add(arrayList.get(i));
+                    }
+                 }
+                 if(workspace.size()>0){
+                     SMap sMap=SMap.getInstance();
+                     List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"");
+                     if(result.size()>0){
+                         deleteDirectory(importPath);
+                     }
+                 }else if(datasource.size()>0){
+                     SMap sMap=SMap.getInstance();
+                     for (int i = 0; i <datasource.size() ; i++) {
+                         Workspace workspace1=new Workspace();
+                         DatasourceConnectionInfo datasourceConnectionInfo=new DatasourceConnectionInfo();
+                         datasourceConnectionInfo.setServer(datasource.get(i));
+                         datasourceConnectionInfo.setEngineType(EngineType.UDB);
+                         Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
+                         if(datasource1.getAlias()=="labelDatasource"){
+
+                         }else {
+                             sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);
+                         }
+                     }
+                     deleteDirectory(importPath);
+                 }
+             }
+        }catch (Exception e){
+            e.printStackTrace();
+            return  ;
+        }
+    }
+
+    public static  String getUserName(){
+        return USER_NAME;
+    }
+
+    public static void getFilePath(String path, ArrayList<String> arr){
+        File flist = new File(path);
+        String[] mFileList = flist.list();
+
+
+        for (String str : mFileList) {
+            String type = "";
+            if (new File(path + "/" + str).isDirectory()) {
+                getFilePath(path+"/"+str,arr);
+            } else {
+                type = "file";
+                arr.add(path+"/"+str);
+            }
         }
     }
 }

@@ -25,26 +25,32 @@
   [WXApi sendReq:req];
 }
 
-+ (void)sendFileContent:(NSString*)title filePath:(NSString*)filePath
++ (void)sendFileContent:(NSDictionary*)infoDic
 {
-  WXMediaMessage *message = [WXMediaMessage message];
-  //    message.title = @"ML.pdf";
-  message.title = title;
-  message.description = @"Pro CoreData";
-  //默认设置APP图标
-  [message setThumbImage:[UIImage imageNamed:[[NSBundle mainBundle] pathForResource:@"icon" ofType:@"png"]]];
-  WXFileObject *ext = [WXFileObject object];
-  ext.fileExtension = @"zip";
-  ext.fileData = [NSData dataWithContentsOfFile:filePath];
-  BOOL b =[[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:nil];
-  message.mediaObject = ext;
-  
-  SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
-  req.bText = NO;
-  req.message = message;
-  req.scene = WXSceneSession;
-  
-  [WXApi sendReq:req];
+  @try {
+    WXMediaMessage *message = [WXMediaMessage message];
+    if ([infoDic objectForKey:@"title"]) {
+      message.title = [infoDic objectForKey:@"title"];
+    }
+    if ([infoDic objectForKey:@"description"]) {
+      message.description = [infoDic objectForKey:@"description"];
+    }
+    if ([infoDic objectForKey:@"filePath"]) {
+      NSString* filePath = [infoDic objectForKey:@"filePath"];
+      WXFileObject *ext = [WXFileObject object];
+      ext.fileExtension = @"zip";
+      ext.fileData = [NSData dataWithContentsOfFile:filePath];
+      message.mediaObject = ext;
+    }
+    SendMessageToWXReq* req = [[SendMessageToWXReq alloc] init];
+    req.bText = NO;
+    req.message = message;
+    req.scene = WXSceneSession;
+    
+    [WXApi sendReq:req];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
 }
 
 

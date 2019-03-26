@@ -32,6 +32,7 @@ import {
   SaveDialog,
   InputDialog,
   PopModal,
+  SurfaceView,
 } from '../../../../components'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
@@ -1238,6 +1239,7 @@ export default class MapView extends React.Component {
             onGetInstance={this._onGetInstance}
           />
         )}
+        <SurfaceView ref={ref => (GLOBAL.MapSurfaceView = ref)} />
         {this.renderMapController()}
         {!this.isExample && this.renderFunctionToolbar()}
         {!this.isExample && this.renderOverLayer()}
@@ -1257,7 +1259,7 @@ export default class MapView extends React.Component {
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
           title={'提示'}
-          info={'是否要删除该对象吗？'}
+          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}
