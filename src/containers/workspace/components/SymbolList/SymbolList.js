@@ -2,13 +2,21 @@ import * as React from 'react'
 import { View, StyleSheet } from 'react-native'
 import { color } from '../../../../styles'
 import { scaleSize, dataUtil } from '../../../../utils'
-import { SMSymbolTable, SMap, SCartography } from 'imobile_for_reactnative'
+import {
+  SMSymbolTable,
+  SMap,
+  SCartography,
+  SThemeCartography,
+} from 'imobile_for_reactnative'
+import constants from '../../constants'
+import { ConstToolType } from '../../../../constants'
 
 export default class SymbolList extends React.Component {
   props: {
     setCurrentSymbol?: () => {},
     layerData: Object,
     device: Object,
+    themeSymbolType: '',
   }
 
   constructor(props) {
@@ -20,6 +28,21 @@ export default class SymbolList extends React.Component {
   }
 
   _onSymbolClick = data => {
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      let params = {
+        LayerName: this.props.layerData.name,
+        SymbolID: data.id,
+      }
+      switch (this.props.themeSymbolType) {
+        case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
+          SThemeCartography.modifyDotDensityThemeMap(params)
+          break
+        case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS:
+          SThemeCartography.modifyGraduatedSymbolThemeMap(params)
+          break
+      }
+      return
+    }
     if (this.props.layerData.type === 3) {
       SCartography.setLineSymbolID(data.id, this.props.layerData.name)
     }
@@ -50,6 +73,21 @@ export default class SymbolList extends React.Component {
   }
 
   renderLibrary = () => {
+    if (GLOBAL.Type === constants.MAP_THEME) {
+      switch (this.props.themeSymbolType) {
+        case ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_SYMBOLS:
+        case ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOLS:
+          SMap.findSymbolsByGroups('point', '').then(result => {
+            let symbols = []
+            result.forEach(item => {
+              symbols.push(item)
+            })
+            this.setState({ layerData: this.props.layerData, data: symbols })
+          })
+          break
+      }
+      return
+    }
     switch (this.props.layerData.type) {
       case 3:
         SMap.findSymbolsByGroups('line', '').then(result => {

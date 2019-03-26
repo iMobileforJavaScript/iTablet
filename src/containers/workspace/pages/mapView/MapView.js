@@ -41,6 +41,7 @@ import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
+// import LegendView from '../../components/LegendView/LegendView'
 const SAVE_TITLE = '是否保存当前地图?'
 export default class MapView extends React.Component {
   static propTypes = {
@@ -131,6 +132,7 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
+      legend: false,
       // changeLayerBtnBottom: scaleSize(200),
     }
 
@@ -857,6 +859,9 @@ export default class MapView extends React.Component {
         )
         this._addGeometrySelectedListener()
         this.container.setLoading(false)
+        this.setState({
+          legend: true,
+        })
       } catch (e) {
         this.container.setLoading(false)
       }
@@ -1232,6 +1237,18 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
+        {/*{this.state.legend&&(<View style={{*/}
+        {/*position: 'absolute',*/}
+        {/*width: scaleSize(100),*/}
+        {/*height: scaleSize(300),*/}
+        {/*left: 0 ,*/}
+        {/*top: 0 ,*/}
+        {/*backgroundColor: 'white',*/}
+        {/*zIndex: 1,*/}
+        {/*}}>*/}
+        {/*<LegendView/>*/}
+        {/*</View>)}*/}
+
         {this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
@@ -1253,7 +1270,6 @@ export default class MapView extends React.Component {
         >
           {this.renderEditControllerView()}
         </PopModal>
-
         {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}

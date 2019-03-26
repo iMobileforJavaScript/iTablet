@@ -27,6 +27,9 @@ import {
   uniqueMenuInfo,
   rangeMenuInfo,
   labelMenuInfo,
+  graphMenuInfo,
+  dotDensityMenuInfo,
+  graduatedSymbolMenuInfo,
   UserType,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -58,14 +61,15 @@ import MapToolData from './MapToolData'
 import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
-import { graphMenuInfo } from '../../../../constants/FunctionToolbarModule'
 import { getThemeAssets } from '../../../../assets'
+import LegendView from '../../components/LegendView/LegendView'
 
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
 const tabs = 'tabs'
 const symbol = 'symbol'
+const legend = 'legend'
 const colortable = 'colortable'
 const horizontalTable = 'horizontalTable'
 // 工具表格默认高度
@@ -177,6 +181,7 @@ export default class ToolBar extends React.PureComponent {
       selectName: '',
       selectKey: '',
       listExpressions: [],
+      themeSymbolType: '',
     }
     this.isShow = false
     this.isBoxShow = true
@@ -653,6 +658,18 @@ export default class ToolBar extends React.PureComponent {
           selectedExpression = await SThemeCartography.getUniformLabelExpression(
             param,
           )
+        } else if (
+          type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION
+        ) {
+          selectedExpression = await SThemeCartography.getDotDensityExpression(
+            param,
+          )
+        } else if (
+          type === ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION
+        ) {
+          selectedExpression = await SThemeCartography.getGraduatedSymbolExpress(
+            param,
+          )
         }
         let dataset = this.expressionData.dataset
         let allExpressions = this.expressionData.list
@@ -860,6 +877,57 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //等级符号专题图分级方式
+  getGraduatedSymbolGradutedMode = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[8]
+            : ConstToolType.THEME_HEIGHT[8],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getGraduatedSymbolGradutedMode()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          listSelectable: false, //单选框
+          column: 3,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
   //统计专题图颜色方案列表
   getGraphThemeColorScheme = async (type, key = '', name = '') => {
     let showBox = function() {
@@ -977,6 +1045,7 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //单值专题图颜色方案列表
   getUniqueColorScheme = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
@@ -1040,6 +1109,7 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //分段专题图颜色方案列表
   getRangeColorScheme = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
@@ -1255,6 +1325,91 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //点密度基础值，点大小
+  getDotDensityValueAndDotsize = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
+
+    let setData = async function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          selectName: name, //'单点代表值' ，'符号大小'
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          // buttons: ThemeMenuData.getThemeThreeMenu(),
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  //等级符号基准值,点符号大小
+  getGraduatedSymbolBaseValueAndSymbolSize = async (
+    type,
+    key = '',
+    name = '',
+  ) => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
+
+    let setData = async function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          selectName: name, //基准值，符号大小
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
   getLabelBackShape = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
@@ -1304,7 +1459,8 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
-  getLabelBackColor = async (type, key = '', name = '') => {
+  //各种专题图的颜色值选择
+  getColorTable = async (type, key = '', name = '') => {
     let showBox = function() {
       Animated.timing(this.state.boxHeight, {
         toValue:
@@ -1317,7 +1473,7 @@ export default class ToolBar extends React.PureComponent {
     }.bind(this)
 
     let setData = async function() {
-      let date = await ThemeMenuData.getLabelColor()
+      let date = await ThemeMenuData.getColorTable()
       this.setState(
         {
           isFullScreen: false,
@@ -1469,55 +1625,6 @@ export default class ToolBar extends React.PureComponent {
         },
         () => {
           this.height = 0
-          this.updateOverlayerView()
-        },
-      )
-    }.bind(this)
-
-    if (!this.state.showMenuDialog) {
-      // 先滑出box，再显示Menu
-      showBox()
-      setTimeout(setData, Const.ANIMATED_DURATION_2)
-    } else {
-      // 先隐藏Menu，再滑进box
-      setData()
-      showBox()
-    }
-  }
-
-  getLabelFontColor = async (type, key = '', name = '') => {
-    let showBox = function() {
-      Animated.timing(this.state.boxHeight, {
-        toValue:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[7]
-            : ConstToolType.THEME_HEIGHT[3],
-        duration: Const.ANIMATED_DURATION,
-      }).start()
-      this.isBoxShow = true
-    }.bind(this)
-
-    let setData = async function() {
-      let date = await ThemeMenuData.getLabelColor()
-      this.setState(
-        {
-          isFullScreen: false,
-          isTouchProgress: false,
-          showMenuDialog: false,
-          containerType: 'colortable',
-          column: 8,
-          tableType: 'scroll',
-          data: date,
-          type: type,
-          buttons: ThemeMenuData.getThemeFourMenu(),
-          selectName: name,
-          selectKey: key,
-        },
-        () => {
-          this.height =
-            this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[7]
-              : ConstToolType.THEME_HEIGHT[3]
           this.updateOverlayerView()
         },
       )
@@ -1876,6 +1983,8 @@ export default class ToolBar extends React.PureComponent {
           themeType: params && params.themeType ? params.themeType : '',
           selectKey: params && params.selectKey ? params.selectKey : '',
           selectName: params && params.selectName ? params.selectName : '',
+          themeSymbolType:
+            params && params.themeSymbolType ? params.themeSymbolType : '',
         },
         () => {
           // if (!showViewFirst) {
@@ -2490,7 +2599,10 @@ export default class ToolBar extends React.PureComponent {
       this.state.selectKey === '亮度' ||
       this.state.selectKey === '分段个数' ||
       this.state.selectKey === '旋转角度' ||
-      this.state.selectKey === '字号'
+      this.state.selectKey === '字号' ||
+      this.state.selectKey === '单点代表值' ||
+      this.state.selectKey === '符号大小' ||
+      this.state.selectKey === '基准值'
     ) {
       isFullScreen = true
       showMenuDialog = !this.state.showMenuDialog
@@ -2550,6 +2662,7 @@ export default class ToolBar extends React.PureComponent {
           },
         })
       } else {
+        SMap.setTaggingGrid(GLOBAL.value)
         SMap.submit()
         SMap.setAction(Action.PAN)
         if (type === ConstToolType.MAP_EDIT_TAGGING) {
@@ -2594,7 +2707,10 @@ export default class ToolBar extends React.PureComponent {
         this.state.selectKey === '亮度' ||
         this.state.selectKey === '分段个数' ||
         this.state.selectKey === '旋转角度' ||
-        this.state.selectKey === '字号'
+        this.state.selectKey === '字号' ||
+        this.state.selectKey === '单点代表值' ||
+        this.state.selectKey === '符号大小' ||
+        this.state.selectKey === '基准值'
       ) {
         // 显示指滑进度条
         this.setState(
@@ -2807,6 +2923,31 @@ export default class ToolBar extends React.PureComponent {
         await this.refreshThemeExpression(item.expression)
         await SThemeCartography.setRangeExpression(Params)
       }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_EXPRESSION
+    ) {
+      //点密度专题图表达式
+      (async function() {
+        let Params = {
+          DotExpression: item.expression,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await this.refreshThemeExpression(item.expression)
+        await SThemeCartography.modifyDotDensityThemeMap(Params)
+      }.bind(this)())
+    } else if (
+      this.state.type ===
+      ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_EXPRESSION
+    ) {
+      //等级符号专题图表达式
+      (async function() {
+        let Params = {
+          GraSymbolExpression: item.expression,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await this.refreshThemeExpression(item.expression)
+        await SThemeCartography.modifyGraduatedSymbolThemeMap(Params)
+      }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_COLOR) {
       //分段专题图颜色表
       this.setState({
@@ -2879,6 +3020,8 @@ export default class ToolBar extends React.PureComponent {
             case constants.THEME_UNIFY_LABEL:
             case constants.THEME_UNIQUE_LABEL:
             case constants.THEME_RANGE_LABEL:
+            case constants.THEME_DOT_DENSITY:
+            case constants.THEME_GRADUATED_SYMBOL:
               listSelectable = false
               break
             case constants.THEME_GRAPH_AREA:
@@ -2941,6 +3084,7 @@ export default class ToolBar extends React.PureComponent {
       (async function() {
         let params = {}
         let isSuccess = false
+        let errorInfo = ''
         switch (this.state.themeCreateType) {
           case constants.THEME_UNIQUE_STYLE:
             //单值风格
@@ -2951,7 +3095,14 @@ export default class ToolBar extends React.PureComponent {
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
             }
-            isSuccess = await SThemeCartography.createThemeUniqueMap(params)
+            // isSuccess = await SThemeCartography.createThemeUniqueMap(params)
+            await SThemeCartography.createThemeUniqueMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
             break
           case constants.THEME_RANGE_STYLE:
             //分段风格
@@ -2964,7 +3115,49 @@ export default class ToolBar extends React.PureComponent {
               // ColorGradientType: 'CYANWHITE',
               ColorScheme: 'CD_Cyans',
             }
-            isSuccess = await SThemeCartography.createThemeRangeMap(params)
+            // isSuccess = await SThemeCartography.createThemeRangeMap(params)
+            await SThemeCartography.createThemeRangeMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
+            break
+          case constants.THEME_DOT_DENSITY:
+            //点密度专题图
+            params = {
+              DatasourceAlias: this.state.themeDatasourceAlias,
+              DatasetName: this.state.themeDatasetName,
+              DotExpression: item.expression,
+              Value: '20',
+            }
+            // isSuccess = await SThemeCartography.createDotDensityThemeMap(params)
+            await SThemeCartography.createDotDensityThemeMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
+            break
+          case constants.THEME_GRADUATED_SYMBOL:
+            //等级符号专题图
+            params = {
+              DatasourceAlias: this.state.themeDatasourceAlias,
+              DatasetName: this.state.themeDatasetName,
+              GraSymbolExpression: item.expression,
+              GraduatedMode: 'LOGARITHM',
+              //SymbolSize: '30',
+            }
+            // isSuccess = await SThemeCartography.createGraduatedSymbolThemeMap(params)
+            await SThemeCartography.createGraduatedSymbolThemeMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
             break
           case constants.THEME_UNIFY_LABEL:
             //统一标签
@@ -2977,9 +3170,14 @@ export default class ToolBar extends React.PureComponent {
               // FontSize: '15.0',
               ForeColor: '#000000',
             }
-            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
-              params,
-            )
+            // isSuccess = await SThemeCartography.createUniformThemeLabelMap(params)
+            await SThemeCartography.createUniformThemeLabelMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
             break
           case constants.THEME_UNIQUE_LABEL:
             //单值标签
@@ -2991,9 +3189,14 @@ export default class ToolBar extends React.PureComponent {
               RangeParameter: '11.0',
               ColorScheme: 'CD_Cyans',
             }
-            isSuccess = await SThemeCartography.createUniqueThemeLabelMap(
-              params,
-            )
+            // isSuccess = await SThemeCartography.createUniqueThemeLabelMap(params)
+            await SThemeCartography.createUniqueThemeLabelMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
             break
           case constants.THEME_RANGE_LABEL:
             //分段标签
@@ -3005,7 +3208,14 @@ export default class ToolBar extends React.PureComponent {
               RangeParameter: '5.0',
               ColorScheme: 'CD_Cyans',
             }
-            isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
+            // isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
+            await SThemeCartography.createRangeThemeLabelMap(params)
+              .then(msg => {
+                isSuccess = msg
+              })
+              .catch(err => {
+                errorInfo = err.message
+              })
             break
         }
         if (isSuccess) {
@@ -3014,10 +3224,11 @@ export default class ToolBar extends React.PureComponent {
           this.props.getLayers(-1, layers => {
             this.props.setCurrentLayer(layers.length > 0 && layers[0])
           })
+          this.setVisible(false)
         } else {
-          Toast.show('创建专题图失败')
+          // Toast.show('创建专题图失败')
+          Toast.show('创建专题图失败\n' + errorInfo)
         }
-        this.setVisible(false)
       }.bind(this)())
     } else if (
       this.state.type ===
@@ -3051,6 +3262,29 @@ export default class ToolBar extends React.PureComponent {
               ColorScheme: 'CD_Cyans',
             }
             isSuccess = await SThemeCartography.createThemeRangeMap(params)
+            break
+          case constants.THEME_DOT_DENSITY:
+            //点密度专题图
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              DotExpression: item.expression,
+              Value: '20',
+            }
+            isSuccess = await SThemeCartography.createDotDensityThemeMap(params)
+            break
+          case constants.THEME_GRADUATED_SYMBOL:
+            //等级符号专题图
+            params = {
+              DatasourceAlias: item.datasourceName,
+              DatasetName: item.datasetName,
+              GraSymbolExpression: item.expression,
+              GraduatedMode: 'LOGARITHM',
+              //SymbolSize: '30',
+            }
+            isSuccess = await SThemeCartography.createGraduatedSymbolThemeMap(
+              params,
+            )
             break
           case constants.THEME_UNIFY_LABEL:
             //统一标签
@@ -3887,6 +4121,12 @@ export default class ToolBar extends React.PureComponent {
             case constants.THEME_GRAPH_RING:
               type = constants.THEME_GRAPH_RING
               break
+            case constants.THEME_DOT_DENSITY:
+              type = constants.THEME_DOT_DENSITY
+              break
+            case constants.THEME_GRADUATED_SYMBOL:
+              type = constants.THEME_GRADUATED_SYMBOL
+              break
           }
           let menutoolRef =
             this.props.getMenuAlertDialogRef &&
@@ -3937,20 +4177,22 @@ export default class ToolBar extends React.PureComponent {
             this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_FORECOLOR
           ) {
+            //统一标签前景色
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               Color: item.key,
-              ColorType: 'FORECOLOR',
+              ColorType: 'UNIFORMLABEL_FORE_COLOR',
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
             this.state.type ===
             ConstToolType.MAP_THEME_PARAM_UNIFORMLABEL_BACKSHAPE_COLOR
           ) {
+            //统一标签背景色
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               Color: item.key,
-              ColorType: 'BACKSHAPE_COLOR',
+              ColorType: 'UNIFORMLABEL_BACKSHAPE_COLOR',
             }
             ThemeMenuData.setThemeParams(Params)
           } else if (
@@ -3970,6 +4212,37 @@ export default class ToolBar extends React.PureComponent {
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               GraduatedMode: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_GRADUATEDMODE
+          ) {
+            //等级符号专题图分级方式
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              GraduatedMode: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type === ConstToolType.MAP_THEME_PARAM_DOT_DENSITY_COLOR
+          ) {
+            //点密度专题图：点颜色
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              LineColor: item.key,
+              ColorType: 'DOT_DENSITY_COLOR',
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_GRADUATED_SYMBOL_COLOR
+          ) {
+            //等级符号专题图：点颜色
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              LineColor: item.key,
+              ColorType: 'GRADUATED_SYMBOL_COLOR',
             }
             ThemeMenuData.setThemeParams(Params)
           }
@@ -4015,8 +4288,13 @@ export default class ToolBar extends React.PureComponent {
       <SymbolList
         device={this.props.device}
         layerData={this.props.currentLayer}
+        themeSymbolType={this.state.themeSymbolType}
       />
     )
+  }
+
+  legend = () => {
+    return <LegendView />
   }
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
@@ -4083,6 +4361,10 @@ export default class ToolBar extends React.PureComponent {
         list = labelMenuInfo
       } else if (this.state.themeType === constants.THEME_GRAPH_STYLE) {
         list = graphMenuInfo
+      } else if (this.state.themeType === constants.THEME_DOT_DENSITY) {
+        list = dotDensityMenuInfo
+      } else if (this.state.themeType === constants.THEME_GRADUATED_SYMBOL) {
+        list = graduatedSymbolMenuInfo
       }
     }
     if (!list) {
@@ -4145,6 +4427,9 @@ export default class ToolBar extends React.PureComponent {
         break
       case tabs:
         box = this.renderTabs()
+        break
+      case legend:
+        box = this.legend()
         break
       case symbol:
         box = this.renderSymbol()
@@ -4434,7 +4719,7 @@ export default class ToolBar extends React.PureComponent {
           break
         case ToolbarBtnType.THEME_GRAPH_TYPE:
           //统计专题图类型
-          image = getThemeAssets().themeType.theme_graph_type_selected
+          image = getThemeAssets().themeType.theme_graphmap_selected
           action = this.changeGraphType
           break
       }
