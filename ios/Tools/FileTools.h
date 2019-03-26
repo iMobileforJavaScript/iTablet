@@ -9,9 +9,13 @@
 #import <Foundation/Foundation.h>
 #import "React/RCTBridgeModule.h"
 #import <ZipArchive/ZipArchive.h>
+#import "SMap.h"
+
+NSString *USER_NAME;
 
 @interface FileTools : NSObject<RCTBridgeModule, SSZipArchiveDelegate>
 @property(nonatomic) id<SSZipArchiveDelegate> zipArchiveDelegate;
+
 
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;
 +(BOOL)zipFiles:(NSArray *)archivePaths targetPath:(NSString *)targetPath;

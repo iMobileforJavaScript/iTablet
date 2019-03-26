@@ -393,7 +393,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 
 +(BOOL)initUserDefaultData:(NSString *)userName {
   userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
-  
+  USER_NAME = userName;
   // 初始化用户工作空间
   NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
   NSString* defaultDataPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/DefaultData/" ];

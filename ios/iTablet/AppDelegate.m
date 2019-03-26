@@ -33,17 +33,17 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"localhost"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.112"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
-
+  
   NSLog(@"============== %@",NSHomeDirectory());
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"iTablet"
                                                initialProperties:nil
                                                    launchOptions:launchOptions];
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
-
+  
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
   rootViewController.view = rootView;
@@ -64,7 +64,7 @@ static NSString* g_sampleCodeName = @"#";;
   [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(doSampleCodeNotification:) name:@"RNOpenVC" object:nil];
   
   [NSThread sleepForTimeInterval:1];
-//  [RNSplashScreen show];
+  //  [RNSplashScreen show];
   //注册微信
   [WeiXinUtils registerApp];
   return YES;
@@ -81,12 +81,91 @@ static NSString* g_sampleCodeName = @"#";;
     zipFilePath = [@"/" stringByAppendingString:[[zipFilePath componentsSeparatedByString:@"Documents"] objectAtIndex:1]];
     zipFilePath=[head stringByAppendingString:zipFilePath];
     //判断文件是否存在
-    BOOL b =[[NSFileManager defaultManager] fileExistsAtPath:zipFilePath isDirectory:nil];
+    NSFileManager *filemanager = [NSFileManager defaultManager];
+    BOOL isFileExist =[filemanager fileExistsAtPath:zipFilePath isDirectory:nil];
     
-    if(b){
-      SSZipArchive *zip = [[SSZipArchive alloc]initWithPath:zipFilePath];
+    if(isFileExist){
+      @try {
+        NSString *username = USER_NAME;
+        NSString *destinationPath = [[NSString alloc]initWithFormat:@"/Documents/iTablet/User/%@/Data/Import",username];
+        
+        if(![filemanager fileExistsAtPath:destinationPath]){
+          [filemanager createDirectoryAtPath:destinationPath withIntermediateDirectories:NO attributes:nil error:nil];
+        }
+        
+        BOOL isUnzipSuccess = [FileTools unZipFile:zipFilePath targetPath:destinationPath];
+        //解压成功
+        if(isUnzipSuccess){
+          NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
+          NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
+          NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
+          
+          NSString *suffix = @"";
+          for(NSString *str in dirArray){
+            NSArray *splitArr = [str componentsSeparatedByString:@"."];
+            suffix = [splitArr objectAtIndex:(splitArr.count-1)];
+            
+            //            if([str hasSuffix:@".smwu"])
+            //              suffix = @"smwu";
+            //            else if([str hasSuffix:@".sxwu"]){
+            //              suffix = @"sxwu";
+            //            }else if([str hasSuffix:@".sxw"]){
+            //              suffix = @"sxw";
+            //            }else if([str hasSuffix:@".smw"]){
+            //              suffix = @"smw";
+            //            }else if([str hasSuffix:@".udb"]){
+            //              suffix = @"udb";
+            //            }
+            
+            NSDictionary *verisonMap = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                        @"9.0",@"smwu",
+                                        @"8.0",@"sxwu",
+                                        @"4.0",@"sxw",
+                                        @"5.0",@"smw",
+                                        nil];
+            if(![suffix isEqualToString:@"udb"]){
+              // workspace add
+              NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+              [dic setValue:str forKey:@"server"];
+              [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
+              
+              [workSpaceFile addObject:dic];
+            }else{
+              //udb add
+              [dataSourceFile addObject:str];
+            }
+          }
+          SMap *smap = [SMap singletonInstance];
+          if(workSpaceFile.count){
+            //导入工作空间 SMAP
+            BOOL isImportSuccess = [smap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] withFileDirectory:destinationPath isDatasourceReplace:NO isSymbolsReplace:YES];
+            if(isImportSuccess){
+              [FileTools deleteFile:zipFilePath];
+            }
+          }else if([dataSourceFile count]){
+            //导入udb文件
+            for(int i = 0,len = (int)dataSourceFile.count; i < len; i++){
+              Workspace *ws = [[Workspace alloc]init];
+              DatasourceConnectionInfo *dsci = [[DatasourceConnectionInfo alloc]init];
+              dsci.server = [dataSourceFile objectAtIndex:i];
+              dsci.engineType = ET_UDB;
+              Datasource *datasource = [[ws datasources]open:dsci];
+              
+              if(![[datasource alias]isEqualToString:@"labelDatasource"]){
+                [smap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
+              }
+            }
+            [FileTools deleteFile:zipFilePath];
+          }
+        }
+        
+      }@catch (NSException *exception) {
+        @throw exception;
+      }
+    }else{
+      NSLog(@"文件不存在，解压失败");
+      return NO;
     }
-    
   }
   return YES;
 }
@@ -97,10 +176,10 @@ static NSString* g_sampleCodeName = @"#";;
   NSString *srclic = [[NSBundle mainBundle] pathForResource:@"Trial_License" ofType:@"slm"];
   if (srclic) {
     NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"/Library/Caches/%@",@"Trial_License.slm"];
-//    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
-//      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
-//        NSLog(@"拷贝数据失败");
-//    }
+    //    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
+    //      if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
+    //        NSLog(@"拷贝数据失败");
+    //    }
     if(![[NSFileManager defaultManager] copyItemAtPath:srclic toPath:deslic error:nil])
       NSLog(@"拷贝数据失败");
   }
@@ -108,7 +187,7 @@ static NSString* g_sampleCodeName = @"#";;
 
 #pragma mark - 初始化默认数据
 - (void)initDefaultData {
-//  [self initCustomWorkspace];
+  //  [self initCustomWorkspace];
   [self initDefaultWorkspace];
 }
 
@@ -138,7 +217,7 @@ static NSString* g_sampleCodeName = @"#";;
     
     VisualViewController* vt = [[UIStoryboard storyboardWithName:@"VisualMain" bundle:nil] instantiateViewControllerWithIdentifier:@"Visual"];
     [self.nav pushViewController:vt animated:YES];
-     self.nav.navigationBarHidden = NO;
+    self.nav.navigationBarHidden = NO;
   }else if([g_sampleCodeName isEqualToString:@"glCache"])
   {
     VCViewController* vt = [[UIStoryboard storyboardWithName:@"VCMain" bundle:nil] instantiateViewControllerWithIdentifier:@"VC"];
