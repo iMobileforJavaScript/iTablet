@@ -3473,12 +3473,15 @@ export default class ToolBar extends React.PureComponent {
               1,
             )
 
+            let layers = await this.props.getLayers()
+
+            // 隐藏底图
+            await SMap.setLayerVisible(layers[layers.length - 1].path, false)
+
             // if (GLOBAL.Type === constants.COLLECTION) {
             //
             // }
             this.mapMoveToCurrent()
-
-            await this.props.getLayers()
 
             this.props.saveMap &&
               (await this.props.saveMap({

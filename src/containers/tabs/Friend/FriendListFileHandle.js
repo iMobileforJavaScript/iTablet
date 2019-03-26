@@ -4,6 +4,7 @@
 
 // eslint-disable-next-line
 import React, { Component } from 'react'
+import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import { SOnlineService } from 'imobile_for_reactnative'
 // import { Toast } from '../../../utils/index'
@@ -22,11 +23,13 @@ export default class FriendListFileHandle {
 
     if (await FileTools.fileIsExist(friendListFile)) {
       let value = await RNFS.readFile(friendListFile)
+
       FriendListFileHandle.friends = JSON.parse(value)
     }
 
     if (await FileTools.fileIsExist(onlineList)) {
       let value = await RNFS.readFile(onlineList)
+
       let onlineVersion = JSON.parse(value)
       if (
         FriendListFileHandle.friends.length === 0 ||
@@ -70,9 +73,13 @@ export default class FriendListFileHandle {
         () => {
           //上传
           SOnlineService.deleteData('friend.list').then(() => {
+            let UploadFileName = 'friend.list.zip'
+            if (Platform.OS === 'android') {
+              UploadFileName = 'friend.list'
+            }
             SOnlineService.uploadFile(
               FriendListFileHandle.friendListFile,
-              'friend.list.zip',
+              UploadFileName,
               // eslint-disable-next-line
               { onResult: value => {} },
             )

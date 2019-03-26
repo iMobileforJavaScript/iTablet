@@ -206,15 +206,15 @@ class AppRoot extends Component {
     }
   }
 
-  inspectEnvironment=async()=>{
-    let result=await FileTools.EnvironmentIsValid()
-    if(!result){
+  inspectEnvironment = async() => {
+    let status = await SMap.getEnvironmentStatus()
+    if(!status.isLicenseValid){
       this.exit.setDialogVisible(true)
     }
   }
 
   //初始化横竖屏显示方式
-  initOrientation=async()=>{
+  initOrientation = async() => {
     Orientation.getOrientation((e, orientation) => {
       this.props.setShow({orientation:orientation})
     })
@@ -299,7 +299,7 @@ class AppRoot extends Component {
   //   }
   // }
 
-  map3dBackAction=async()=>{
+  map3dBackAction = async() => {
     try {
       this.container && this.container.setLoading(true, '正在关闭')
       if (GLOBAL.openWorkspace) {

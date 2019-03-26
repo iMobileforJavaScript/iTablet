@@ -220,7 +220,6 @@ class Chat extends React.Component {
       type: 1,
       user: { name: messages[0].user.name, id: messages[0].user._id },
       time: time,
-      system: 0,
     }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
     // for demo purpose
@@ -266,13 +265,9 @@ class Chat extends React.Component {
   //
   // }
 
-  onReceive(text) {
+  onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
 
-    let bSystem = false
-    if (messageObj.system === 1) {
-      bSystem = true
-    }
     this.setState(previousState => {
       return {
         messages: GiftedChat.append(previousState.messages, {

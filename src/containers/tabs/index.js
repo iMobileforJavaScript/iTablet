@@ -22,8 +22,8 @@ import Mine, {
 } from './Mine'
 import Find from './Find'
 // eslint-disable-next-line
-import Friend, { Chat, AddFriend, InformMessage } from './Friend'
-import InformSpot from './Friend/InformSpot/index'
+// import Friend, { Chat, AddFriend, InformMessage } from './Friend'
+// import InformSpot from './Friend/InformSpot'
 const Tabs = TabNavigator(
   {
     Home: {
@@ -68,31 +68,31 @@ const Tabs = TabNavigator(
         }
       },
     },
-    Friend: {
-      screen: Friend,
-      navigationOptions: () => {
-        return {
-          tabBarLabel: data => {
-            return (
-              <View style={[styles.labelView]}>
-                <Image
-                  resizeMode="contain"
-                  source={
-                    data.focused
-                      ? getThemeAssets().tabBar.tab_friend_selected
-                      : getThemeAssets().tabBar.tab_friend
-                  }
-                  style={styles.icon}
-                />
-                <Text style={styles.tabText}>好友</Text>
-                <InformSpot />
-              </View>
-            )
-          },
-          header: null,
-        }
-      },
-    },
+    // Friend: {
+    //   screen: Friend,
+    //   navigationOptions: () => {
+    //     return {
+    //       tabBarLabel: data => {
+    //         return (
+    //           <View style={[styles.labelView]}>
+    //             <Image
+    //               resizeMode="contain"
+    //               source={
+    //                 data.focused
+    //                   ? getThemeAssets().tabBar.tab_friend_selected
+    //                   : getThemeAssets().tabBar.tab_friend
+    //               }
+    //               style={styles.icon}
+    //             />
+    //             <Text style={styles.tabText}>好友</Text>
+    //             <InformSpot />
+    //           </View>
+    //         )
+    //       },
+    //       header: null,
+    //     }
+    //   },
+    // },
     Find: {
       screen: Find,
       navigationOptions: () => {
@@ -179,7 +179,7 @@ const Tabs = TabNavigator(
     tabBarPosition: 'bottom', // 显示在底端，android 默认是显示在页面顶端的
     swipeEnabled: false, // 是否可以左右滑动切换tab
     backBehavior: 'none', // 按 back 键是否跳转到第一个Tab(首页)， none 为不跳转
-    lazy: true,
+    lazy: false,
     tabBarOptions: {
       activeTintColor: color.blue2, // 文字和图片选中颜色
       inactiveTintColor: '#999', // 文字和图片未选中颜色
@@ -259,9 +259,9 @@ export {
   AboutITablet,
   Login,
   //friend
-  Chat,
-  InformMessage,
-  AddFriend,
+  // Chat,
+  // InformMessage,
+  // AddFriend,
   MyLabel,
   MyBaseMap,
   MyModule,
