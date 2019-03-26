@@ -24,7 +24,7 @@ import UserType from '../../../constants/UserType'
 // import Chat from './Chat/Chat'
 import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
-// import AddMore from './AddMore'
+import AddMore from './AddMore'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -62,6 +62,7 @@ export default class Friend extends Component {
       bHasUserInfo: false,
       progressWidth: this.screenWidth * 0.4,
       isLoadingData: false,
+      showPop: false,
     }
   }
 
@@ -139,6 +140,14 @@ export default class Friend extends Component {
       return true
     }
     return false
+  }
+  // eslint-disable-next-line
+  createGroupTalk = memmbers => {
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    // eslint-disable-next-line
+    let groupId = '' + time + '_' + this.props.user.currentUser.userId
+    // console.warn(memmbers + groupId)
   }
   // eslint-disable-next-line
   // componentWillReceiveProps(nextProps) {
@@ -329,6 +338,20 @@ export default class Friend extends Component {
     g_curUserId = ''
   }
 
+  addMore = index => {
+    if (index === 1) {
+      //add friend
+      NavigationService.navigate('AddFriend', {
+        user: this.props.user.currentUser,
+        friend: this,
+      })
+    } else if (index === 2) {
+      NavigationService.navigate('CreateGroupChat', {
+        user: this.props.user.currentUser,
+        friend: this,
+      })
+    }
+  }
   render() {
     return (
       <Container
@@ -340,10 +363,7 @@ export default class Friend extends Component {
               <TouchableOpacity
                 style={styles.addFriendView}
                 onPress={() => {
-                  NavigationService.navigate('AddFriend', {
-                    user: this.props.user.currentUser,
-                    friend: this,
-                  })
+                  this.setState({ showPop: true })
                 }}
               >
                 <Image source={addFriendImg} style={styles.addFriendImg} />
@@ -373,7 +393,13 @@ export default class Friend extends Component {
         {this.state.bHasUserInfo === true
           ? this.renderTab()
           : this.renderNOFriend()}
-        {/*<AddMore style={{}} />*/}
+        <AddMore
+          show={this.state.showPop}
+          closeModal={show => {
+            this.setState({ showPop: show })
+          }}
+          addMore={this.addMore}
+        />
       </Container>
     )
   }

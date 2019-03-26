@@ -44,7 +44,9 @@ export default class FriendListFileHandle {
 
     resultCallBack(FriendListFileHandle.friends)
   }
-
+  static getContactsLocal() {
+    return FriendListFileHandle.friends
+  }
   static addToFriendList(obj) {
     let bFound = FriendListFileHandle.findFromFriendList(obj.id)
 
