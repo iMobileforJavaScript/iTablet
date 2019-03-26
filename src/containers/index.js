@@ -20,8 +20,10 @@ import Tabs, {
   Login,
   Chat,
   AddFriend,
+  InformMessage,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -61,6 +63,8 @@ import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
+import { MapCut, MapCutDS } from './mapCut/page'
+
 export default StackNavigator(
   {
     Tabs: {
@@ -244,6 +248,18 @@ export default StackNavigator(
         header: null,
       },
     },
+    MapCut: {
+      screen: MapCut,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapCutDS: {
+      screen: MapCutDS,
+      navigationOptions: {
+        header: null,
+      },
+    },
 
     UpLoadList: {
       screen: UpLoadList,
@@ -284,7 +300,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
-
+    InformMessage: {
+      screen: InformMessage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     /******************************** Mine **********************/
     Register: {
       screen: Register,
@@ -415,6 +437,13 @@ export default StackNavigator(
     },
     LoadServer: {
       screen: LoadServer,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    MyModule: {
+      screen: MyModule,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

@@ -18,9 +18,11 @@ import Mine, {
   Login,
   MyLabel,
   MyBaseMap,
+  MyModule,
 } from './Mine'
 import Find from './Find'
-import Friend, { Chat, AddFriend } from './Friend'
+// eslint-disable-next-line
+import Friend, { Chat, AddFriend, InformMessage } from './Friend'
 
 const Tabs = TabNavigator(
   {
@@ -255,8 +257,11 @@ export {
   Setting,
   AboutITablet,
   Login,
+  //friend
   Chat,
+  InformMessage,
   AddFriend,
   MyLabel,
   MyBaseMap,
+  MyModule,
 }

@@ -5,11 +5,12 @@ const Collection = 'Collection'
 const MapEdit = 'MapEdit'
 const MapTheme = 'Map/MapTheme'
 const Workspace = 'Workspace.sxwu' // 工作空间
-
+const Plotting = 'Plotting'
 const Module = {
   Collection,
   MapEdit,
   MapTheme,
+  Plotting,
 }
 
 // 该目录下的数据会被创建在 '/iTablet/'下，不要轻易加
@@ -27,6 +28,7 @@ const RelativePath = {
   Attribute: Data + 'Attribute/',
   Workspace: Data + 'Workspace/',
   Map: Data + 'Map/',
+  Color: Data + 'Color/',
   Temp: Data + 'Temp/', // 临时文件
   Label: Data + 'Label/', // 标注
 }
@@ -42,6 +44,7 @@ const RelativeFilePath = {
   Scene: Data + 'Scene/',
   List: Data + 'Scene/List/',
   Map: Data + 'Map/',
+  Color: Data + 'Color/',
   Collection: Data + 'Map/' + Collection + '/',
   MapEdit: Data + 'Map/' + MapEdit + '/',
   MapTheme: Data + 'Map/' + MapTheme + '/',

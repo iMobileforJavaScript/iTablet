@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
@@ -22,10 +21,10 @@ export default handleActions(
     [`${NAV_SET}`]: (state, { payload }) => {
       return fromJS(payload)
     },
-    [REHYDRATE]: state => {
-      // return payload && payload.nav ? fromJS(payload.nav) : state
-      return state
-    },
+    // [REHYDRATE]: state => {
+    //   // return payload && payload.nav ? fromJS(payload.nav) : state
+    //   return state
+    // },
   },
   initialState,
 )

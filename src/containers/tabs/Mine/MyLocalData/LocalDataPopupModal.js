@@ -124,7 +124,7 @@ export default class LocalDataPopupModal extends PureComponent {
               right: 0,
             }}
           >
-            {this._onImportWorkspace()}
+            {this.props.onImportWorkspace && this._onImportWorkspace()}
             {this._onDeleteButton()}
           </View>
         </TouchableOpacity>

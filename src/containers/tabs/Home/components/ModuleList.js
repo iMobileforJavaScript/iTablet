@@ -20,6 +20,7 @@ import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
+
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -135,6 +136,7 @@ export default class ModuleList extends Component {
       isShowProgressView: false,
     }
     this.moduleItems = []
+    this.bytesInfo = 0
   }
 
   _showAlert = (ref, downloadData, currentUserName) => {
@@ -176,12 +178,23 @@ export default class ModuleList extends Component {
       let fileCachePath = fileDirPath + '.zip'
       await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
+        headers: {
+          Range: `bytes=${this.bytesInfo}-`,
+        },
         fromUrl: dataUrl,
         toFile: fileCachePath,
+        progressDivider: 1,
         background: true,
         progress: res => {
+          // let tempVal = ~~((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+          // this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
+          // let value = this.bytesInfo + '%'
+          // if(Platform.OS === 'android'){
+          if (this.bytesInfo < res.contentLength)
+            this.bytesInfo = res.bytesWritten + 1
+          // }
           let value =
-            ((res.bytesWritten / res.contentLength) * 100).toFixed(0) + '%'
+            ((this.bytesInfo / res.contentLength) * 100).toFixed(0) + '%'
           if (value === '100%') {
             ref.setNewState({
               progress: '导入中...',
@@ -202,7 +215,7 @@ export default class ModuleList extends Component {
       let result = downloadFile(downloadOptions)
       result.promise
         .then(async result => {
-          if (result.statusCode === 200) {
+          if (result.statusCode >= 200 && result.statusCode < 300) {
             await FileTools.unZipFile(fileCachePath, cachePath)
             let arrFile = await FileTools.getFilterFiles(fileDirPath)
             await this.props.importWorkspace(

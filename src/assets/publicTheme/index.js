@@ -3,6 +3,7 @@
 import attribute from './attribute'
 import common from './common'
 import theme from './theme'
+import mapTools from './mapTools'
 
 export default {
   // publicAssets,
@@ -10,4 +11,5 @@ export default {
   attribute,
   common,
   theme,
+  mapTools,
 }

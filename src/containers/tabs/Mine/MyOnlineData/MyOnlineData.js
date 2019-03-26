@@ -803,7 +803,7 @@ export default class MyOnlineData extends Component {
           </View>
           <View
             style={{
-              height: 1,
+              height: scaleSize(2),
               width: itemWidth,
               backgroundColor: color.separateColorGray,
             }}

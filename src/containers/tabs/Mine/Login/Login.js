@@ -15,7 +15,6 @@ import {
   Keyboard,
 } from 'react-native'
 import { Toast } from '../../../../utils/index'
-
 import { Container } from '../../../../components'
 import { FileTools } from '../../../../native'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -88,8 +87,11 @@ export default class Login extends React.Component {
   _login = async () => {
     let result
     let isEmail = this.state.onEmailTitleFocus
-    let userName = ''
-    let password = ''
+    let userName = 'imobile1234'
+    let password = 'imobile'
+    // this.txtPhoneNumber = '13683409897'
+    // this.txtPhoneNumberPassword = '123456'
+
     try {
       if (!isEmail) {
         if (!this.txtEmail) {
@@ -103,7 +105,9 @@ export default class Login extends React.Component {
         this.container.setLoading(true, '登录中...')
         userName = this.txtEmail
         password = this.txtEmailPassword
+        /// debugger
         result = await SOnlineService.login(userName, password)
+        // debugger
       } else {
         if (!this.txtPhoneNumber) {
           Toast.show('请输入手机号')
@@ -116,10 +120,13 @@ export default class Login extends React.Component {
         this.container.setLoading(true, '登录中...')
         userName = this.txtPhoneNumber
         password = this.txtPhoneNumberPassword
+        //debugger
         result = await SOnlineService.loginWithPhoneNumber(userName, password)
+        // debugger
       }
-
+      // debugger
       if (typeof result === 'boolean' && result) {
+        //debugger
         let isAccountExist
         for (let i = 0; i < this.props.user.users.length; i++) {
           isAccountExist =
@@ -132,14 +139,65 @@ export default class Login extends React.Component {
         if (!isAccountExist) {
           await this.initUserDirectories(userName)
         }
-        // Toast.show('登录成功')
-        this.container.setLoading(false)
-        this.props.setUser({
-          userName: userName,
-          password: password,
-          isEmail: isEmail,
-          // userType:UserType.COMMON_USER,
-        })
+
+        let bGetUserInfo = false
+        let userInfo = {}
+        userInfo = await SOnlineService.getUserInfo()
+
+        if (userInfo !== false) {
+          let userID = await SOnlineService.getUserInfoBy(userInfo.nickname, 0)
+          userInfo['userId'] = userID[0]
+          bGetUserInfo = true
+        }
+
+        //下载好友列表
+        if (bGetUserInfo !== false) {
+          //优先加载在线的
+          let userPath = await FileTools.appendingHomeDirectory(
+            ConstPath.UserPath + userName,
+          )
+          userPath = userPath + '/ol_fl'
+          SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
+            onResult: value => {
+              if (value !== true) {
+                //  console.warn(value)
+              }
+            },
+          })
+        }
+
+        if (bGetUserInfo !== false) {
+          // Toast.show('登录成功')
+          this.container.setLoading(false)
+          this.props.setUser({
+            userName: userName,
+            password: password,
+            nickname: userInfo.nickname,
+            email: userInfo.email,
+            phoneNumber: userInfo.phoneNumber,
+            userId: userInfo.userId,
+            isEmail: isEmail,
+            userType: UserType.COMMON_USER,
+          })
+        } else {
+          // Toast.show('登录成功')
+          this.container.setLoading(false)
+          this.props.setUser({
+            userName: userName,
+            password: password,
+            isEmail: isEmail,
+            userId: userName,
+            userType: UserType.COMMON_USER,
+          })
+        }
+        // this.container.setLoading(false)
+        // this.props.setUser({
+        //   userName: userName,
+        //   password: password,
+        //   isEmail: isEmail,
+        //   userId: userName,
+        //   userType: UserType.COMMON_USER,
+        // })
         if (!this.state.isFirstLogin) {
           NavigationService.reset('Tabs')
         }
@@ -153,6 +211,7 @@ export default class Login extends React.Component {
         this.container.setLoading(false)
       }
     } catch (e) {
+      //console.warn(e)
       this.container.setLoading(false)
       Toast.show('登录异常')
       this.props.setUser({

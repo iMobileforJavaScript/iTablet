@@ -10,10 +10,17 @@ import {
   Dimensions,
   TextInput,
   FlatList,
+  Image,
 } from 'react-native'
 //import NavigationService from '../../NavigationService'
+import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../utils/screen'
-import Container from '../../../components/Container'
+import { Container, Dialog } from '../../../components'
+import { dialogStyles } from './Styles'
+//import Friend from './Friend'
+import FriendListFileHandle from './FriendListFileHandle'
+
+const dismissKeyboard = require('dismissKeyboard')
 
 class AddFriend extends Component {
   props: {
@@ -24,11 +31,18 @@ class AddFriend extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
+    this.target
+    this.friend = {}
+    this.user
     this.state = {
       list: [],
       isLoading: false,
       text: '',
     }
+  }
+  componentDidMount() {
+    this.friend = this.props.navigation.getParam('friend')
+    this.user = this.props.navigation.getParam('user')
   }
 
   renderSearchBar = () => {
@@ -56,55 +70,146 @@ class AddFriend extends Component {
     )
   }
 
-  search = () => {
+  search = async () => {
     let val = this.state.text
     if (!val) {
       return
     }
-    this.page = 1
-    this.total = 1
-    this.setState(
-      {
-        list: [val],
-      },
-      // , _ => {
-      //   this.searching = true
-      //   this._fetchMoreData()
-      // }
-    )
+    this.container.setLoading(true, '查询好友中...')
+
+    let result = await SOnlineService.getUserInfoBy(val, 0)
+    if (result === false) {
+      result = ['无', '该用户不存在']
+    }
+    this.setState({
+      list: [result],
+    })
+
+    this.container.setLoading(false)
+    dismissKeyboard()
   }
 
+  //targetUser:[id,name]
+  static acceptFriendAdd = targetUser => {
+    //  this.target;
+    // let curUserName = this.state.currentUser.nickname
+    // let uuid = this.state.currentUser.userId
+    // let ctime = new Date()
+    // let time = Date.parse(ctime)
+    // let message = {
+    //   message: ' 我们已经是好友了,开始聊天吧',
+    //   type: 1,
+    //   user: { name: curUserName, id: uuid },
+    //   time: time,
+    // }
+    // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
+
+    FriendListFileHandle.addToFriendList({
+      markName: targetUser[1],
+      name: targetUser[1],
+      id: targetUser[0],
+      info: { isFriend: 1 },
+    })
+    // this.friend.refreshList();
+    // this.friend.refreshMessage();
+    // this.dialog.setDialogVisible(false)
+  }
+
+  addFriendRequest = async () => {
+    this.dialog.setDialogVisible(false)
+
+    let item = this.target
+    let curUserName = this.props.navigation.getParam('user').nickname
+    let uuid = this.props.navigation.getParam('user').userId
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: curUserName + ' 请求添加您为好友',
+      type: 10,
+      user: { name: curUserName, id: uuid },
+      time: time,
+    }
+    let messageStr = JSON.stringify(message) //message.toJSONString();
+
+    this.friend._sendMessage(messageStr, item[0], true)
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
+    // this.friend.refreshMessage();
+  }
   renderSearchButton = () => {
     let text = this.state.text.trim()
     return (
       <TouchableOpacity
+        style={{
+          height: scaleSize(70),
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
         activeOpacity={text.length > 0 ? 0.5 : 1}
         onPress={this.search}
       >
-        <Text
-          style={[
-            styles.sendText,
-            { color: text.length > 0 ? '#0084ff' : '#BBB' },
-          ]}
-        >
-          搜索
-        </Text>
+        <View>
+          <Text
+            style={[
+              styles.sendText,
+              { color: text.length > 0 ? '#0084ff' : '#BBB' },
+            ]}
+          >
+            搜索
+          </Text>
+        </View>
       </TouchableOpacity>
     )
   }
 
+  renderDialogChildren = () => {
+    return (
+      <View style={dialogStyles.dialogHeaderViewX}>
+        <Image
+          source={require('../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={dialogStyles.dialogHeaderImgX}
+        />
+        <Text style={dialogStyles.promptTtileX}>添加对方为好友 ？</Text>
+      </View>
+    )
+  }
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={this.addFriendRequest}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={dialogStyles.dialogBackgroundX}
+      >
+        {this.renderDialogChildren()}
+      </Dialog>
+    )
+  }
+
   _renderItem(item) {
+    let opacity = 1.0
+    let headStr = item[1][0].toUpperCase()
+    if (item[0] === '无') {
+      opacity = 0.3
+      headStr = '无'
+    }
     return (
       <TouchableOpacity
-        style={styles.ItemViewStyle}
+        style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
-        onPress={() => {}}
+        onPress={() => {
+          this.target = item //[id,name]
+          this.dialog.setDialogVisible(true)
+        }}
       >
-        <View style={styles.ITemHeadTextViewStyle}>
-          <Text style={styles.ITemHeadTextStyle}>{item[0].toUpperCase()}</Text>
+        <View style={[styles.ITemHeadTextViewStyle, { opacity: opacity }]}>
+          <Text style={styles.ITemHeadTextStyle}>{headStr}</Text>
         </View>
-        <View style={styles.ITemTextViewStyle}>
-          <Text style={styles.ITemTextStyle}>{item}</Text>
+        <View style={[styles.ITemTextViewStyle, { opacity: opacity }]}>
+          <Text style={styles.ITemTextStyle}>{item[1]}</Text>
         </View>
       </TouchableOpacity>
     )
@@ -144,7 +249,7 @@ class AddFriend extends Component {
             return <View style={styles.SectionSeparaLineStyle} />
           }}
           // extraData={this.state}
-          renderItem={({ item, index }) => this._renderItem(item, index)}
+          renderItem={({ item }) => this._renderItem(item)}
           initialNumToRender={2}
           keyExtractor={(item, index) => index.toString()}
           // ListEmptyComponent={<Loading/>}
@@ -155,6 +260,7 @@ class AddFriend extends Component {
           returnKeyType={'search'}
           keyboardDismissMode={'on-drag'}
         />
+        {this.renderDialog()}
       </Container>
     )
   }
@@ -174,10 +280,10 @@ var styles = StyleSheet.create({
   },
   sendText: {
     fontWeight: '600',
-    fontSize: 17,
+    fontSize: scaleSize(25),
     backgroundColor: 'transparent',
-    marginLeft: 5,
-    marginRight: 10,
+    marginLeft: scaleSize(5),
+    marginRight: scaleSize(10),
   },
 
   ITemTextStyle: {

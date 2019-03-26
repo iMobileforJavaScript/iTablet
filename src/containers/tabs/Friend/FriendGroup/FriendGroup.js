@@ -12,6 +12,7 @@ class FriendGroup extends Component {
   props: {
     navigation: Object,
     user: Object,
+    friend: Object,
   }
 
   constructor(props) {
@@ -25,6 +26,11 @@ class FriendGroup extends Component {
     }
   }
 
+  refresh = () => {
+    this.getContacts()
+  }
+
+  getContacts = async () => {}
   render() {
     //console.log(params.user);
     return (

@@ -5,12 +5,20 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Handler;
 
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXAppExtendObject;
+import com.tencent.mm.opensdk.modelmsg.WXFileObject;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+
+import java.util.Map;
 import java.util.Stack;
 
 public class appManager {
     private static Stack<Activity> activityStack;
     private static appManager instance;
-
+    private IWXAPI iwxapi=null;
     private appManager(){}
     /**
      * 单一实例
@@ -92,5 +100,34 @@ public class appManager {
             System.out.println(e);
         }
     }
+    public void registerWechat(Context context){
+        String APP_ID="wx06e9572a1d069aaa";
+        iwxapi=WXAPIFactory.createWXAPI(context ,APP_ID,false);
+        iwxapi.registerApp(APP_ID);
+    }
 
+    public void sendFileOfWechat(Map map){
+        WXMediaMessage msg=new WXMediaMessage();
+        SendMessageToWX.Req req=new SendMessageToWX.Req();
+        if(map.containsKey("title")){
+            msg.title=map.get("title").toString();
+        }
+        if(map.containsKey("description")){
+            msg.description=map.get("description").toString();
+        }
+        if(map.containsKey("filePath")){
+            WXFileObject fileObject=new WXFileObject(map.get("filePath").toString());
+            msg.mediaObject=fileObject;
+        }
+        req.transaction=buildTransaction("file");
+        req.message=msg;
+        req.scene=SendMessageToWX.Req.WXSceneSession;
+        if(iwxapi!=null){
+            iwxapi.sendReq(req);
+        }
+    }
+
+    private String buildTransaction(String type){
+        return (type==null) ? String.valueOf(System.currentTimeMillis()) :type +System.currentTimeMillis();
+    }
 }

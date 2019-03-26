@@ -1,6 +1,6 @@
 import Login from './Login'
 import { setUser } from '../../../../models/user'
-import connect from 'react-redux/es/connect/connect'
+import { connect } from 'react-redux'
 const mapStateToProps = state => ({
   user: state.user.toJS(),
 })

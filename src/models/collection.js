@@ -1,5 +1,4 @@
 import { fromJS } from 'immutable'
-import { REHYDRATE } from 'redux-persist'
 import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
@@ -43,9 +42,9 @@ export default handleActions(
           fromJS((payload && payload.datasourceServer) || ''),
         )
     },
-    [REHYDRATE]: () => {
-      return initialState
-    },
+    // [REHYDRATE]: () => {
+    //   return initialState
+    // },
   },
   initialState,
 )

@@ -4,6 +4,7 @@
 import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import { dataUtil } from '../../../../utils'
+import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
 
@@ -78,13 +79,13 @@ function getMapTool(type, params) {
         //   size: 'large',
         //   image: require('../../../../assets/mapTools/icon_free_cover.png'),
         // },
-        // {
-        //   key: 'rectangularCut',
-        //   title: '矩形裁剪',
-        //   action: this.showBox,
-        //   size: 'large',
-        //   image: require('../../../../assets/mapTools/icon_common_track.png'),
-        // },
+        {
+          key: 'rectangularCut',
+          title: '矩形裁剪',
+          action: rectangleCut,
+          size: 'large',
+          image: getPublicAssets().mapTools.tools_rectangle_cut,
+        },
         // {
         //   key: 'roundCut',
         //   title: '圆形裁剪',
@@ -177,6 +178,9 @@ function getMapTool(type, params) {
       ]
       buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.SHOW_ATTRIBUTE]
       break
+    case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
+      buttons = [ToolbarBtnType.CANCEL, ToolbarBtnType.COMMIT_CUT]
+      break
   }
   return { data, buttons }
 }
@@ -187,6 +191,7 @@ function select() {
       SMap.setAction(Action.SELECT)
       break
     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+    case ConstToolType.MAP_TOOL_RECTANGLE_CUT:
       SMap.setAction(Action.SELECT_BY_RECTANGLE)
       // SMap.selectByRectangle()
       break
@@ -198,7 +203,9 @@ function cancelSelect() {
 }
 
 function viewEntire() {
-  SMap.viewEntire()
+  SMap.viewEntire().then(() => {
+    _params.setToolbarVisible && _params.setToolbarVisible(false)
+  })
 }
 
 /** 单选 **/
@@ -227,6 +234,19 @@ function selectByRectangle() {
     column: 3,
     isFullScreen: false,
     height: ConstToolType.HEIGHT[0],
+    cb: () => select(),
+  })
+}
+
+/** 矩形裁剪 **/
+function rectangleCut() {
+  if (!_params.setToolbarVisible) return
+  _params.showFullMap && _params.showFullMap(true)
+  GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_RECTANGLE_CUT
+
+  _params.setToolbarVisible(true, ConstToolType.MAP_TOOL_RECTANGLE_CUT, {
+    isFullScreen: false,
+    height: 0,
     cb: () => select(),
   })
 }
@@ -288,6 +308,7 @@ function measureAngle() {
   })
 }
 
+/** 清除量算结果 **/
 function clearMeasure(type = GLOBAL.currentToolbarType) {
   if (typeof type === 'string' && type.indexOf('MAP_TOOL_MEASURE_') >= 0) {
     switch (type) {
