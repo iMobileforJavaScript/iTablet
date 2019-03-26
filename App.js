@@ -82,6 +82,12 @@ const styles = StyleSheet.create({
     borderRadius: scaleSize(4),
     backgroundColor: 'white',
   },
+  opacityView: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
+  },
 })
 
 class AppRoot extends Component {
@@ -115,6 +121,7 @@ class AppRoot extends Component {
     super(props)
     this.state = {
       sceneStyle: styles.invisibleMap,
+      import:null,
     }
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
@@ -157,6 +164,8 @@ class AppRoot extends Component {
       // await this.initCustomerWorkspace()
       await this.inspectEnvironment()
       await this.initOrientation()
+      await this.getImportResult()
+      await this.addImportExternalData()
     }).bind(this)()
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
@@ -270,6 +279,21 @@ class AppRoot extends Component {
     } catch (e) {
       return false
     }
+  }
+
+
+  addImportExternalData=async()=>{
+    await FileTools.addImportExternalData({
+      callback:result=>{
+        result&&this.import.setDialogVisible(true)
+      }
+    })
+  }
+
+  getImportResult=async()=>{
+   let result= await FileTools.getImportResult()
+   if(result===null)return
+   result&&this.import.setDialogVisible(true)
   }
 
   // 初始化录音
@@ -424,6 +448,57 @@ class AppRoot extends Component {
     )
   }
 
+
+  renderImportDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.import = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={()=>{
+          GLOBAL.Loading.setLoading(
+            true,
+            "数据导入中",
+          )
+          FileTools.importData().then(result=>{
+            this.import.setDialogVisible(false)
+            GLOBAL.Loading.setLoading(false)
+            result&&Toast.show("导入成功")
+          })
+        }}
+        cancelAction={ async()=>{
+          let homePath = await FileTools.appendingHomeDirectory()
+          let importPath =
+          homePath +
+          ConstPath.UserPath +
+          this.props.user.currentUser.userName +
+          '/' +
+          ConstPath.RelativePath.Import
+          await FileTools.deleteFile(importPath)
+          this.import.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        {this.renderImportDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderImportDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>{"是否导入外部数据"}</Text>
+      </View>
+    )
+  }
+
   render() {
     return (
       <View style={{ flex: 1 }}>
@@ -447,6 +522,7 @@ class AppRoot extends Component {
           }}
         />
         {this.renderDialog()}
+        {this.renderImportDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )

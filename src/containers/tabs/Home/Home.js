@@ -226,23 +226,23 @@ export default class Home extends Component {
       switch (this.state.downloadData.fileName) {
         case '地理国情普查_示范数据':
           fileName = '地理国情普查'
-          storage = '4.70MB'
+          storage = '  4.70MB'
           break
         case '湖北':
           fileName = '湖北'
-          storage = '3.34MB'
+          storage = '  3.34MB'
           break
         case '湖南':
           fileName = '湖南'
-          storage = '5.28MB'
+          storage = '  5.28MB'
           break
         case 'OlympicGreen_android':
           fileName = 'OlympicGreen'
-          storage = '38.10MB'
+          storage = '  38.10MB'
           break
         case 'OlympicGreen_ios':
           fileName = 'OlympicGreen'
-          storage = '25.57MB'
+          storage = '  25.57MB'
           break
       }
     }

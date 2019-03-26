@@ -31,6 +31,7 @@ const RelativePath = {
   Color: Data + 'Color/',
   Temp: Data + 'Temp/', // 临时文件
   Label: Data + 'Label/', // 标注
+  Import: Data + 'Import', //导入外部数据临时文件夹
 }
 
 const RelativeFilePath = {

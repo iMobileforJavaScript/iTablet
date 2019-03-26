@@ -1,17 +1,10 @@
 package com.supermap.RN;
 
 import android.app.Activity;
-
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-
-import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.text.TextUtils;
-import android.widget.Switch;
-
+import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -23,21 +16,18 @@ import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.supermap.containts.EventConst;
 import com.supermap.data.Datasource;
 import com.supermap.data.DatasourceConnectionInfo;
 import com.supermap.data.Datasources;
 import com.supermap.data.EngineType;
-import com.supermap.data.Environment;
 import com.supermap.data.Workspace;
-import com.supermap.data.WorkspaceType;
 import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
 import com.supermap.interfaces.mapping.SMap;
-import com.supermap.messagequeue.Enum;
-
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -72,7 +62,8 @@ public class FileTools extends ReactContextBaseJavaModule {
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
     private static String USER_NAME="";
-
+    private static Boolean importData=false;
+    private static ReactContext mReactContext;
 
     public static final String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
     public static ReactApplicationContext reactContext;
@@ -80,6 +71,7 @@ public class FileTools extends ReactContextBaseJavaModule {
     public FileTools(ReactApplicationContext context) {
         super(context);
         reactContext = context;
+        mReactContext=context;
     }
 
     @Override
@@ -513,7 +505,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    @ReactMethod
     public void fileIsExistInHomeDirectory(String path, Promise promise) {
         try {
             Boolean isExist = false;
@@ -525,6 +516,100 @@ public class FileTools extends ReactContextBaseJavaModule {
             promise.resolve(isExist);
         } catch (Exception e) {
             promise.reject(e);
+        }
+    }
+
+
+
+    /**
+     * 获取导入外部数据的结果。
+     *
+     */
+    @ReactMethod
+    public void getImportResult(Promise promise) {
+        try {
+             promise.resolve(importData);
+        } catch (Exception e) {
+            promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void importData(Promise promise){
+        try {
+            SMap sMap=SMap.getInstance();
+            String userName=getUserName();
+            String importPath=SDCARD+"/iTablet/User/"+userName+"/Data/Import";
+            String filePath=importPath+"/weChat.zip";
+            String toPath=importPath;
+            File file=new File(filePath);
+            if(file.exists()){
+                Boolean reuslt=FileTools.unZipFile(filePath, toPath);
+                if(reuslt){
+                    deleteFile(filePath);
+                    ArrayList<String> arrayList =new ArrayList();
+                    getFilePath(toPath,arrayList);
+                    ArrayList<Map> workspace =new ArrayList();
+                    ArrayList<String> datasource =new ArrayList();
+                    for (int i = 0; i <arrayList.size() ; i++) {
+                        String path= arrayList.get(i);
+                        String fileType=path.substring(path.indexOf('.')+1);
+                        if(fileType.equals("smwu")||fileType.equals("sxwu")||fileType.equals("sxw")||fileType.equals("smw")){
+                            Map map=new HashMap();
+                            map.put("server",arrayList.get(i));
+                            String workspaceType=null;
+                            switch (fileType){
+                                case "smwu":
+                                    workspaceType="9.0";
+                                    break;
+                                case "sxwu":
+                                    workspaceType="8.0";
+                                    break;
+                                case "sxw":
+                                    workspaceType="4.0";
+                                    break;
+                                case "smw":
+                                    workspaceType="5.0";
+                                    break;
+                            }
+                            map.put("type", workspaceType);
+                            workspace.add(map);
+                        }
+                        if(fileType.equals("udb")){
+                            datasource.add(arrayList.get(i));
+                        }
+                    }
+                    if(workspace.size()>0){
+                        List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"");
+                        if(result.size()>0){
+                            importData=false;
+                            deleteDirectory(importPath);
+                        }
+                    }else if(datasource.size()>0){
+                        for (int i = 0; i <datasource.size() ; i++) {
+                            Workspace workspace1=new Workspace();
+                            DatasourceConnectionInfo datasourceConnectionInfo=new DatasourceConnectionInfo();
+                            datasourceConnectionInfo.setServer(datasource.get(i));
+                            datasourceConnectionInfo.setEngineType(EngineType.UDB);
+                            Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
+                            if(datasource1.getAlias()=="labelDatasource"){
+                                importData=false;
+                            }else {
+                                sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);
+                                importData=false;
+                            }
+                        }
+                        deleteDirectory(importPath);
+                    }
+
+                    promise.resolve(true);
+                }else {
+                    deleteDirectory(toPath);
+                }
+            }
+        }catch (Exception e){
+            promise.reject(e);
+            return  ;
         }
     }
 
@@ -893,88 +978,30 @@ public class FileTools extends ReactContextBaseJavaModule {
             return  ;
         }
         try {
-             InputStream inputStream=activity.getContentResolver().openInputStream(uri);
-             String userName=getUserName();
-             String importPath=SDCARD+"/iTablet/User/"+userName+"/Data/Import";
-             String filePath=importPath+"/weChat.zip";
-             File importFile=new File(importPath);
-             if(!importFile.exists()){
-                 importFile.mkdirs();
-             }
-             File file=new File(filePath);
-             FileOutputStream fop=new FileOutputStream(file);
-             if(!file.exists()){
-                 file.createNewFile();
-             }
-             byte[] buffer=new byte[1024];
-             int length=-1;
-             while ((length=inputStream.read(buffer))!=-1){
-                 fop.write(buffer,0,length);
-             }
-             fop.close();
-             String toPath=importPath;
-             Boolean reuslt=FileTools.unZipFile(filePath, toPath);
-             if(reuslt){
-                 file.delete();
-                 ArrayList<String> arrayList =new ArrayList();
+              InputStream inputStream=activity.getContentResolver().openInputStream(uri);
+              String userName=getUserName();
+              String importPath=SDCARD+"/iTablet/User/"+userName+"/Data/Import";
+              String filePath=importPath+"/weChat.zip";
+              File importFile=new File(importPath);
+              if(!importFile.exists()){
+                  importFile.mkdirs();
+              }
+              File file=new File(filePath);
+              FileOutputStream fop=new FileOutputStream(file);
+              if(!file.exists()){
 
-                 getFilePath(toPath,arrayList);
-                 ArrayList<Map> workspace =new ArrayList();
-                 ArrayList<String> datasource =new ArrayList();
-                 for (int i = 0; i <arrayList.size() ; i++) {
-                    String path= arrayList.get(i);
-                    String fileType=path.substring(path.indexOf('.')+1);
-                    if(fileType.equals("smwu")||fileType.equals("sxwu")||fileType.equals("sxw")||fileType.equals("smw")){
-                        Map map=new HashMap();
-                        map.put("server",arrayList.get(i));
-                        String workspaceType=null;
-                        switch (fileType){
-                            case "smwu":
-                                workspaceType="9.0";
-                                break;
-                            case "sxwu":
-                                workspaceType="8.0";
-                                break;
-                            case "sxw":
-                                workspaceType="4.0";
-                                break;
-                            case "smw":
-                                workspaceType="5.0";
-                                break;
-                        }
-                        map.put("type", workspaceType);
-                        workspace.add(map);
-                    }
-                    if(fileType.equals("udb")){
-                        datasource.add(arrayList.get(i));
-                    }
-                 }
-                 if(workspace.size()>0){
-                     SMap sMap=SMap.getInstance();
-                     List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"");
-                     if(result.size()>0){
-                         deleteDirectory(importPath);
-                     }
-                 }else if(datasource.size()>0){
-                     SMap sMap=SMap.getInstance();
-                     for (int i = 0; i <datasource.size() ; i++) {
-                         Workspace workspace1=new Workspace();
-                         DatasourceConnectionInfo datasourceConnectionInfo=new DatasourceConnectionInfo();
-                         datasourceConnectionInfo.setServer(datasource.get(i));
-                         datasourceConnectionInfo.setEngineType(EngineType.UDB);
-                         Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
-                         if(datasource1.getAlias()=="labelDatasource"){
-
-                         }else {
-                             sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);
-                         }
-                     }
-                     deleteDirectory(importPath);
-                 }
-             }
+                  file.createNewFile();
+              }
+              byte[] buffer=new byte[1024];
+              int length=-1;
+              while ((length=inputStream.read(buffer))!=-1){
+                  fop.write(buffer,0,length);
+              }
+              fop.close();
+              importData=true;
+             mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EventConst.MESSAGE_IMPORTEXTERNALDATA, importData);
         }catch (Exception e){
-            e.printStackTrace();
-            return  ;
+             e.printStackTrace();
         }
     }
 
