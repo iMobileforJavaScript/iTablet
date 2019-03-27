@@ -14,8 +14,9 @@
 NSString *USER_NAME;
 static BOOL hasImportedData = NO;
 
-@interface FileTools : NSObject<RCTBridgeModule, SSZipArchiveDelegate>
+@interface FileTools : RCTEventEmitter<RCTBridgeModule, SSZipArchiveDelegate>
 @property(nonatomic) id<SSZipArchiveDelegate> zipArchiveDelegate;
+
 
 
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;
@@ -27,6 +28,5 @@ static BOOL hasImportedData = NO;
 +(BOOL)initUserDefaultData:(NSString *)userName;
 +(NSString*)getLastModifiedTime:(NSDate*) nsDate;
 + (NSDictionary *)readLocalFileWithPath:(NSString *)path;
-+(BOOL)importData:(NSURL*)url;
-
++(BOOL)getUriState:(NSURL *)url;
 @end
