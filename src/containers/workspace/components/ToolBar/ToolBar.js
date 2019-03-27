@@ -1325,6 +1325,46 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //专题图中统计符号显示的最大值(倍数)
+  getGraphMaxValue = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
+
+    let setData = async function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          selectName: name,
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          buttons: ThemeMenuData.getThemeGraphMenu(),
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
   //点密度基础值，点大小
   getDotDensityValueAndDotsize = async (type, key = '', name = '') => {
     let showBox = function() {
@@ -2602,7 +2642,8 @@ export default class ToolBar extends React.PureComponent {
       this.state.selectKey === '字号' ||
       this.state.selectKey === '单点代表值' ||
       this.state.selectKey === '符号大小' ||
-      this.state.selectKey === '基准值'
+      this.state.selectKey === '基准值' ||
+      this.state.selectKey === '最大显示值'
     ) {
       isFullScreen = true
       showMenuDialog = !this.state.showMenuDialog
@@ -2710,7 +2751,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.selectKey === '字号' ||
         this.state.selectKey === '单点代表值' ||
         this.state.selectKey === '符号大小' ||
-        this.state.selectKey === '基准值'
+        this.state.selectKey === '基准值' ||
+        this.state.selectKey === '最大显示值'
       ) {
         // 显示指滑进度条
         this.setState(
