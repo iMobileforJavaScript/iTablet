@@ -974,7 +974,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    public static void importEXternalData(Activity activity){
+    public static void getUriState(Activity activity){
         Intent intent=activity.getIntent();
         Uri uri=intent.getData();
         if(uri==null){

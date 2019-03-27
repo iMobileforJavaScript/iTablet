@@ -26,6 +26,7 @@ export default {
   MAP_SYMBOL_TEMPLATE: 'mapSymbolTemplate',
   CHANGE_COLLECTION: 'changeCollection',
   SHOW_ATTRIBUTE: 'showAttribute', // 显示属性
+  SHOW_MAP3D_ATTRIBUTE: 'showMap3DAttribute', // 显示属性
   CLEAR_CURRENT_LABEL: 'clearCurrentLabel',
   CLOSE_CIRCLE: 'closeCircle',
   SHARE: 'SHARE',

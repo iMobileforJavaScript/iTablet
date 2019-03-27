@@ -529,21 +529,30 @@ export default class ToolBar extends React.PureComponent {
             key: 'action3d',
             title: '选择',
             action: () => {
+              // try {
+              //   if (GLOBAL.action3d === 'PAN3D') {
+              //     SScene.setAction('PANSELECT3D')
+              //     GLOBAL.action3d = 'PANSELECT3D'
+              //     Toast.show('当前场景操作状态为可选')
+              //   } else {
+              //     SScene.clearSelection()
+              //     SScene.setAction('PAN3D')
+              //     GLOBAL.action3d = 'PAN3D'
+              //     Toast.show('当前场景操作状态为不可选')
+              //   }
+              //   this.showToolbar(!this.isShow)
+              //   this.props.existFullMap && this.props.existFullMap()
+              //   GLOBAL.OverlayView.setVisible(false)
+              // } catch (error) {
+              //   Toast.show('操作失败')
+              // }
+
               try {
-                if (GLOBAL.action3d === 'PAN3D') {
-                  SScene.setAction('PANSELECT3D')
-                  GLOBAL.action3d = 'PANSELECT3D'
-                  Toast.show('当前场景操作状态为可选')
-                } else {
-                  SScene.clearSelection()
-                  SScene.setAction('PAN3D')
-                  GLOBAL.action3d = 'PAN3D'
-                  Toast.show('当前场景操作状态为不可选')
-                }
-                this.showToolbar(!this.isShow)
-                this.props.existFullMap && this.props.existFullMap()
-                GLOBAL.OverlayView.setVisible(false)
-              } catch (error) {
+                SScene.setAction('PANSELECT3D')
+                GLOBAL.action3d = 'PANSELECT3D'
+                GLOBAL.Map3DSymbol = true
+                this.showMap3DTool(ConstToolType.MAP3D_SYMBOL_SELECT)
+              } catch (e) {
                 Toast.show('操作失败')
               }
             },
@@ -1848,6 +1857,26 @@ export default class ToolBar extends React.PureComponent {
           this.updateOverlayerView()
         },
       )
+    } else if (type === ConstToolType.MAP3D_SYMBOL_SELECT) {
+      let { data, buttons } = this.getData(type)
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          containerType: 'table',
+          isFullScreen: false,
+          column: 3,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[0]
+              : ConstToolType.HEIGHT[0]
+          this.showToolbar()
+          this.updateOverlayerView()
+        },
+      )
     } else {
       let { data, buttons } = this.getData(type)
       this.setState(
@@ -1876,7 +1905,6 @@ export default class ToolBar extends React.PureComponent {
               this.height = ConstToolType.HEIGHT[0]
               this.props.showFullMap && this.props.showFullMap(true)
               this.showToolbar()
-
               break
             default:
               this.height = 0
@@ -2821,8 +2849,10 @@ export default class ToolBar extends React.PureComponent {
     })
   }
 
-  clearAttribute = () => {
-    SScene.clearSelection()
+  clearAttribute = async () => {
+    await SScene.clearSelection()
+    await SScene.setAction('PAN3D')
+    GLOBAL.action3d = 'PAN3D'
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
@@ -2871,6 +2901,7 @@ export default class ToolBar extends React.PureComponent {
   endAddFly = () => {
     SScene.checkoutListener('startTouchAttribute')
     SScene.clearRoutStops()
+    SScene.flyStop()
     GLOBAL.action3d && SScene.setAction(GLOBAL.action3d)
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
@@ -4588,6 +4619,12 @@ export default class ToolBar extends React.PureComponent {
             //   type: 'singleAttribute',
             // })
             NavigationService.navigate('LayerSelectionAttribute')
+          }
+          break
+        case ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE:
+          image = require('../../../../assets/mapTools/icon_attribute_white.png')
+          action = () => {
+            NavigationService.navigate('LayerAttribute', { type: 'MAP_3D' })
           }
           break
         // case ToolbarBtnType.SHARE:

@@ -195,12 +195,27 @@ function getMap3DData(type) {
             try {
               SScene.saveRoutStop()
             } catch (error) {
-              // console.warn(error)
+              Toast.show('请添加站点')
             }
           },
           size: 'large',
           image: require('../../../../assets/map/Frenchgrey/scene_play_dark.png'),
           selectedImage: require('../../../../assets/map/Frenchgrey/scene_play_dark.png'),
+          // selectMode:"flash"
+        },
+        {
+          key: 'pause',
+          title: '暂停',
+          action: () => {
+            try {
+              SScene.pasueRoutStop()
+            } catch (error) {
+              Toast.show('暂停失败')
+            }
+          },
+          size: 'large',
+          image: require('../../../../assets/mapEdit/icon_stop.png'),
+          selectedImage: require('../../../../assets/mapEdit/icon_stop.png'),
           // selectMode:"flash"
         },
         // {
@@ -269,6 +284,24 @@ function getMap3DData(type) {
         },
       ]
       buttons = ['closeCircle', 'flex']
+      break
+    case ConstToolType.MAP3D_SYMBOL_SELECT:
+      data = [
+        {
+          key: 'cancel',
+          title: '取消',
+          action: () => {
+            SScene.clearSelection()
+          },
+          size: 'large',
+          image: require('../../../../assets/mapTools/icon_cancel_1.png'),
+        },
+      ]
+      buttons = [
+        ToolbarBtnType.CLEAR_ATTRIBUTE,
+        ToolbarBtnType.SHOW_MAP3D_ATTRIBUTE,
+      ]
+      break
   }
   return { data, buttons }
 }
