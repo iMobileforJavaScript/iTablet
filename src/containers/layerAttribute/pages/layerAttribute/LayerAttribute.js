@@ -100,6 +100,7 @@ export default class LayerAttribute extends React.Component {
           },
           currentFieldInfo: [],
           relativeIndex: -1,
+          currentIndex: -1,
           startIndex: 0,
         },
         () => {

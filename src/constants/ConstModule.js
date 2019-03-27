@@ -364,17 +364,17 @@ export default [
   //     left: 0,
   //   },
   // },
-  // {
-  //   key: '数据分析',
-  //   title: '数据分析',
-  //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
-  //   moduleImage: require('../assets/home/icon_mapanalysis.png'),
-  //   style: {
-  //     width: scaleSize(70),
-  //     height: scaleSize(67),
-  //     position: 'absolute',
-  //     right: 0,
-  //     bottom: 0,
-  //   },
-  // },
+  {
+    key: '数据分析',
+    title: '数据分析',
+    baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
+    moduleImage: require('../assets/home/icon_mapanalysis.png'),
+    style: {
+      width: scaleSize(70),
+      height: scaleSize(67),
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+    },
+  },
 ]
