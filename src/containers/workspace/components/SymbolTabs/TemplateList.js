@@ -121,12 +121,14 @@ export default class TemplateList extends React.Component {
       { field: data.fields[0].field },
       { layerPath: (layer && layer.path) || '' },
     )
-    this.props.setCurrentTemplateInfo(tempSymbol)
+    this.props.setCurrentTemplateInfo(
+      tempSymbol,
+      () => this.props.goToPage && this.props.goToPage(1),
+    )
 
     // let tempSymbol = Object.assign({}, data, { layerPath: layer.path })
     // this.props.setCurrentTemplateInfo(tempSymbol)
 
-    this.props.goToPage && this.props.goToPage(1)
     // }
   }
 

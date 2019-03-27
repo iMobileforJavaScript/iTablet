@@ -706,6 +706,8 @@ public class FileTools extends ReactContextBaseJavaModule {
         USER_NAME=userName;
         String userPath = SDCARD + "/iTablet/User/" + userName + "/";
         String externalDataPath = userPath + "ExternalData/";
+        String plottingExtDataPath = externalDataPath + "Plotting/";
+        String collectionExtDataPath = externalDataPath + "Collection/";
         String dataPath = userPath + "Data/";
 
         String defaultData = "DefaultData";
@@ -739,15 +741,15 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Color");
         createDirectory(dataPath + "Import");
         createDirectory(externalDataPath);
-        createDirectory(externalDataPath+"Plotting");
-        createDirectory(externalDataPath+"Collection");
+        createDirectory(plottingExtDataPath);
+        createDirectory(collectionExtDataPath);
 //        createDirectory(externalDataPath+"Lable");
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
-        String templatePath = externalDataPath;
+        String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
 
         String lableUDB=dataPath+"Label/Label.udb";
@@ -972,7 +974,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    public static void importEXternalData(Activity activity){
+    public static void getUriState(Activity activity){
         Intent intent=activity.getIntent();
         Uri uri=intent.getData();
         if(uri==null){

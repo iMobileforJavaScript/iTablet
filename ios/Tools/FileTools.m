@@ -393,7 +393,7 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 
 +(BOOL)initUserDefaultData:(NSString *)userName {
   userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
-  
+  USER_NAME = userName;
   // 初始化用户工作空间
   NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
   NSString* defaultDataPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/DefaultData/" ];
@@ -417,6 +417,8 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   NSString* commonPath = @"/Documents/iTablet/Common/";
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
   NSString* externalDataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/ExternalData/"];
+  NSString* plottingExtDataPath = [NSString stringWithFormat:@"%@%@", externalDataPath, @"/Plotting/"];
+  NSString* collectionExtDataPath = [NSString stringWithFormat:@"%@%@", externalDataPath, @"/Collection/"];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @""]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Attribute"]];
@@ -427,12 +429,14 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Workspace"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", dataPath, @"Temp"]];
   [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", externalDataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", plottingExtDataPath, @""]];
+  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", collectionExtDataPath, @""]];
   
   // 初始化模板数据
   NSString* originPath = [[NSBundle mainBundle] pathForResource:@"Template" ofType:@"zip"];
   NSString* commonZipPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@", commonPath, @"Template.zip"];
-  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", externalDataPath];
-  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", externalDataPath, @"地理国情普查"];
+  NSString* templatePath = [NSHomeDirectory() stringByAppendingFormat:@"%@", collectionExtDataPath];
+  NSString* templateFilePath = [NSString stringWithFormat:@"%@/%@", collectionExtDataPath, @"地理国情普查"];
 
   BOOL isUnZip = NO;
   if (![[NSFileManager defaultManager] fileExistsAtPath:externalDataPath isDirectory:nil] || ![[NSFileManager defaultManager] fileExistsAtPath:templateFilePath isDirectory:nil]) {
@@ -489,4 +493,125 @@ RCT_REMAP_METHOD(createDirectory,createDirectoryPath:(NSString*)path getHomeDire
   return [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:nil];
 }
 
+RCT_REMAP_METHOD(getImportResult, getImportResult:(RCTPromiseResolveBlock)resolve rejector:(RCTPromiseRejectBlock)reject){
+  @try {
+    BOOL isSuccess = hasImportedData;
+    resolve(@(isSuccess));
+  } @catch (NSException *exception) {
+    reject(@"",@"improtError",(NSError *)exception);
+  }
+}
+
++(BOOL)importData:(NSURL*)url{
+  //压缩包地址
+  NSString* zipFilePath=[url absoluteString];
+  NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+  zipFilePath = [@"/" stringByAppendingString:[[zipFilePath componentsSeparatedByString:@"Documents"] objectAtIndex:1]];
+  zipFilePath=[head stringByAppendingString:zipFilePath];
+  
+  NSFileManager *filemanager = [NSFileManager defaultManager];
+  if([zipFilePath hasSuffix:@".zip"]){
+   
+    
+    BOOL isFileExist = [FileTools getUriState:url];
+    if(isFileExist){
+      @try {
+        NSString *username = USER_NAME;
+        NSString *destinationPath = [[NSString alloc]initWithFormat:@"/Documents/iTablet/User/%@/Data/Import",username];
+        
+        if(![filemanager fileExistsAtPath:destinationPath]){
+          [filemanager createDirectoryAtPath:destinationPath withIntermediateDirectories:NO attributes:nil error:nil];
+        }
+        
+        BOOL isUnzipSuccess = [FileTools unZipFile:zipFilePath targetPath:destinationPath];
+        //解压成功
+        if(isUnzipSuccess){
+          NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
+          NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
+          NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
+          
+          NSString *suffix = @"";
+          for(NSString *str in dirArray){
+            NSArray *splitArr = [str componentsSeparatedByString:@"."];
+            suffix = [splitArr objectAtIndex:(splitArr.count-1)];
+            
+            //            if([str hasSuffix:@".smwu"])
+            //              suffix = @"smwu";
+            //            else if([str hasSuffix:@".sxwu"]){
+            //              suffix = @"sxwu";
+            //            }else if([str hasSuffix:@".sxw"]){
+            //              suffix = @"sxw";
+            //            }else if([str hasSuffix:@".smw"]){
+            //              suffix = @"smw";
+            //            }else if([str hasSuffix:@".udb"]){
+            //              suffix = @"udb";
+            //            }
+            
+            NSDictionary *verisonMap = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                        @"9.0",@"smwu",
+                                        @"8.0",@"sxwu",
+                                        @"4.0",@"sxw",
+                                        @"5.0",@"smw",
+                                        nil];
+            if(![suffix isEqualToString:@"udb"]){
+              // workspace add
+              NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
+              [dic setValue:str forKey:@"server"];
+              [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
+              
+              [workSpaceFile addObject:dic];
+            }else{
+              //udb add
+              [dataSourceFile addObject:str];
+            }
+          }
+          SMap *smap = [SMap singletonInstance];
+          if(workSpaceFile.count){
+            //导入工作空间 SMAP
+            BOOL isImportSuccess = [smap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] withFileDirectory:destinationPath isDatasourceReplace:NO isSymbolsReplace:YES];
+            if(isImportSuccess){
+              [FileTools deleteFile:zipFilePath];
+              hasImportedData = NO;
+            }
+          }else if([dataSourceFile count]){
+            //导入udb文件
+            for(int i = 0,len = (int)dataSourceFile.count; i < len; i++){
+              Workspace *ws = [[Workspace alloc]init];
+              DatasourceConnectionInfo *dsci = [[DatasourceConnectionInfo alloc]init];
+              dsci.server = [dataSourceFile objectAtIndex:i];
+              dsci.engineType = ET_UDB;
+              Datasource *datasource = [[ws datasources]open:dsci];
+              
+              if(![[datasource alias]isEqualToString:@"labelDatasource"]){
+                [smap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
+              }
+            }
+            [FileTools deleteFile:zipFilePath];
+            hasImportedData = NO;
+          }
+        }
+        
+      }@catch (NSException *exception) {
+        @throw exception;
+      }
+    }else{
+      NSLog(@"文件不存在，解压失败");
+      return NO;
+    }
+  }
+  return YES;
+}
+
+/*
+ * 判断压缩包是否存在
+ */
++(BOOL)getUriState:(NSString *)urlString{
+  NSFileManager *filemanager = [NSFileManager defaultManager];
+  BOOL isFileExist =[filemanager fileExistsAtPath:urlString isDirectory:nil];
+  if(isFileExist)
+  {
+    hasImportedData = YES;
+  }
+  return isFileExist;
+}
 @end

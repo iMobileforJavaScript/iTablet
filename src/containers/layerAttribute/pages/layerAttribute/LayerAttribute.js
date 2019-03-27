@@ -54,6 +54,7 @@ export default class LayerAttribute extends React.Component {
       showTable: false,
       editControllerVisible: false,
       currentFieldInfo: [],
+      relativeIndex: -1, // 当前页面从startIndex开始的被选中的index, 0 -> this.total - 1
       currentIndex: -1,
       startIndex: 0,
 
@@ -82,6 +83,14 @@ export default class LayerAttribute extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
+      this.type === 'MAP_3D' &&
+      this.state.attributes !== prevProps.attributes
+    ) {
+      this.setState({
+        attributes: prevProps.attributes,
+      })
+      // console.log(prevProps)
+    } else if (
       prevProps.currentLayer &&
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer)
@@ -98,6 +107,7 @@ export default class LayerAttribute extends React.Component {
             data: [],
           },
           currentFieldInfo: [],
+          relativeIndex: -1,
           currentIndex: -1,
           startIndex: 0,
         },
@@ -207,25 +217,31 @@ export default class LayerAttribute extends React.Component {
         this.total = result.total || 0
         attributes = result.attributes || []
 
-        if (
-          // attributes.data.length === this.state.attributes.data.length &&
-          // JSON.stringify(attributes.data) === JSON.stringify(this.state.attributes.data) ||
+        // if (
+        //   // attributes.data.length === this.state.attributes.data.length &&
+        //   // JSON.stringify(attributes.data) === JSON.stringify(this.state.attributes.data) ||
+        //   Math.floor(this.total / PAGE_SIZE) === currentPage ||
+        //   attributes.data.length < PAGE_SIZE
+        // ) {
+        //   this.noMore = true
+        // } else {
+        //   this.noMore = false
+        // }
+        this.noMore =
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
-        ) {
-          this.noMore = true
-        }
-        let currentIndex =
+
+        let relativeIndex =
           attributes.data.length === 1
             ? 0
             : resetCurrent
               ? -1
-              : this.state.currentIndex
+              : this.state.relativeIndex
         if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex,
+            relativeIndex,
             currentFieldInfo: attributes.data[0],
             startIndex: -1,
             ...others,
@@ -234,8 +250,8 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex,
-            currentFieldInfo: attributes.data[currentIndex],
+            relativeIndex,
+            currentFieldInfo: attributes.data[relativeIndex],
             ...others,
           })
         }
@@ -258,6 +274,7 @@ export default class LayerAttribute extends React.Component {
     if (this.state.startIndex === 0) {
       this.setState(
         {
+          relativeIndex: 0,
           currentIndex: 0,
         },
         () => {
@@ -270,7 +287,7 @@ export default class LayerAttribute extends React.Component {
               sectionIndex: 0,
               viewPosition: 0,
             })
-          this.setLoading(true, ConstInfo.LOCATING)
+          this.setLoading(false)
         },
       )
     } else {
@@ -279,6 +296,7 @@ export default class LayerAttribute extends React.Component {
           type: 'reset',
           currentPage: this.currentPage,
           startIndex: 0,
+          relativeIndex: 0,
           currentIndex: 0,
         },
         () => {
@@ -319,7 +337,8 @@ export default class LayerAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        currentIndex: remainder,
+        relativeIndex: remainder,
+        currentIndex: this.total - 1,
       },
       () => {
         if (this.table) {
@@ -349,32 +368,37 @@ export default class LayerAttribute extends React.Component {
   locateToPosition = (data = {}) => {
     let remainder = 0,
       viewPosition = 0.3,
+      relativeIndex,
       currentIndex
     if (data.type === 'relative') {
-      currentIndex =
-        (this.state.currentIndex <= 0 ? 0 : this.state.currentIndex) +
+      relativeIndex =
+        (this.state.relativeIndex <= 0 ? 0 : this.state.relativeIndex) +
+        // this.currentPage * PAGE_SIZE +
+        this.state.startIndex +
         data.index
-      if (currentIndex < 0) {
+      if (relativeIndex < 0 || relativeIndex >= this.total) {
         Toast.show('位置越界')
         return
       }
-      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
-      remainder = currentIndex % PAGE_SIZE
+      currentIndex = this.state.currentIndex + data.index
+      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
+      remainder = relativeIndex % PAGE_SIZE
     } else if (data.type === 'absolute') {
       if (data.index <= 0 || data.index > this.total) {
         Toast.show('位置越界')
         return
       }
-      currentIndex = data.index - 1
-      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
-      remainder = currentIndex % PAGE_SIZE
+      relativeIndex = data.index - 1
+      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
+      remainder = relativeIndex % PAGE_SIZE
+      currentIndex = data.index
     }
 
-    if (this.currentPage > 0) {
-      this.canBeRefresh = true
-    }
+    // if (this.currentPage > 0) {
+    //   this.canBeRefresh = true
+    // }
 
-    let restLength = this.total - currentIndex - 1
+    let restLength = this.total - relativeIndex - 1
     if (remainder <= PAGE_SIZE / 4 && !(restLength < PAGE_SIZE / 4)) {
       viewPosition = 0
     } else if (remainder > (PAGE_SIZE * 3) / 4 || restLength < PAGE_SIZE / 4) {
@@ -391,7 +415,8 @@ export default class LayerAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        currentIndex: remainder,
+        relativeIndex: remainder,
+        currentIndex,
       },
       () => {
         if (this.table) {
@@ -416,14 +441,16 @@ export default class LayerAttribute extends React.Component {
   selectRow = ({ data, index }) => {
     if (!data || index < 0) return
 
-    if (this.state.currentIndex !== index) {
+    if (this.state.relativeIndex !== index) {
       this.setState({
         currentFieldInfo: data,
-        currentIndex: index,
+        relativeIndex: index,
+        currentIndex: this.currentPage * PAGE_SIZE + index,
       })
     } else {
       this.setState({
         currentFieldInfo: [],
+        relativeIndex: -1,
         currentIndex: -1,
       })
     }
@@ -778,38 +805,38 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
-  renderContent = () => {
-    if (!this.state.showTable) return null
-    return (
-      <View>
-        <LayerTopBar
-          canRelated={this.state.currentIndex >= 0}
-          locateAction={this.showLocationView}
-          relateAction={this.relateAction}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}
-        >
-          {this.renderMapLayerAttribute()}
-          {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
-          <LocationView
-            ref={ref => (this.locationView = ref)}
-            style={styles.locationView}
-            currentIndex={
-              this.currentPage * PAGE_SIZE + this.state.currentIndex
-            }
-            locateToTop={this.locateToTop}
-            locateToBottom={this.locateToBottom}
-            locateToPosition={this.locateToPosition}
-          />
-        </View>
-      </View>
-    )
-  }
+  // renderContent = () => {
+  //   if (!this.state.showTable) return null
+  //   return (
+  //     <View>
+  //       <LayerTopBar
+  //         canRelated={this.state.relativeIndex >= 0}
+  //         locateAction={this.showLocationView}
+  //         relateAction={this.relateAction}
+  //       />
+  //       <View
+  //         style={{
+  //           flex: 1,
+  //           flexDirection: 'column',
+  //           justifyContent: 'flex-start',
+  //         }}
+  //       >
+  //         {this.renderMapLayerAttribute()}
+  //         {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+  //         <LocationView
+  //           ref={ref => (this.locationView = ref)}
+  //           style={styles.locationView}
+  //           relativeIndex={
+  //             this.currentPage * PAGE_SIZE + this.state.relativeIndex
+  //           }
+  //           locateToTop={this.locateToTop}
+  //           locateToBottom={this.locateToBottom}
+  //           locateToPosition={this.locateToPosition}
+  //         />
+  //       </View>
+  //     </View>
+  //   )
+  // }
 
   render() {
     let title = ''
@@ -886,9 +913,7 @@ export default class LayerAttribute extends React.Component {
           <LocationView
             ref={ref => (this.locationView = ref)}
             style={styles.locationView}
-            currentIndex={
-              this.currentPage * PAGE_SIZE + this.state.currentIndex
-            }
+            currentIndex={this.state.currentIndex}
             locateToTop={this.locateToTop}
             locateToBottom={this.locateToBottom}
             locateToPosition={this.locateToPosition}

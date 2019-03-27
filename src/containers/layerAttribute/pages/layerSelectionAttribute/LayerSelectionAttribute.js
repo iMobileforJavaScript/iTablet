@@ -10,7 +10,7 @@ import { Toast } from '../../../../utils'
 import { LayerUtil } from '../../utils'
 import { LayerAttributeTable } from '../../components'
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 30
 
 export default class LayerSelectionAttribute extends React.Component {
   props: {
@@ -37,13 +37,15 @@ export default class LayerSelectionAttribute extends React.Component {
       },
       // tableTitle: [],
       tableHead: [],
+      currentFieldInfo: [],
       startIndex: 0,
+      relativeIndex: -1, // 当前页面从startIndex开始的被选中的index, 0 -> this.total - 1
       currentIndex: -1,
     }
 
     this.total = 0
-    this.currentFieldInfo = []
-    this.currentFieldIndex = -1
+    // this.currentFieldInfo = []
+    // this.currentFieldIndex = -1
     this.currentPage = 0
     this.pageSize = 20
     this.isInit = true // 初始化，防止多次加载
@@ -75,6 +77,7 @@ export default class LayerSelectionAttribute extends React.Component {
             data: [],
           },
           currentFieldInfo: [],
+          relativeIndex: -1,
           currentIndex: -1,
           startIndex: 0,
         },
@@ -112,26 +115,21 @@ export default class LayerSelectionAttribute extends React.Component {
         this.total = result.total || 0
         let attributes = result.attributes || []
 
-        if (
-          // attributes.data.length === this.state.attributes.data.length &&
-          // JSON.stringify(attributes.data) === JSON.stringify(this.state.attributes.data) ||
+        this.noMore =
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
-        ) {
-          this.noMore = true
-        }
 
-        let currentIndex =
+        let relativeIndex =
           attributes.data.length === 1
             ? 0
             : resetCurrent
               ? -1
-              : this.state.currentIndex
+              : this.state.relativeIndex
         if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: currentIndex,
+            relativeIndex,
             currentFieldInfo: attributes.data[0],
             startIndex: -1,
             ...others,
@@ -140,8 +138,8 @@ export default class LayerSelectionAttribute extends React.Component {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: currentIndex,
-            currentFieldInfo: attributes.data[currentIndex],
+            relativeIndex,
+            currentFieldInfo: attributes.data[relativeIndex],
             ...others,
           })
         }
@@ -222,6 +220,7 @@ export default class LayerSelectionAttribute extends React.Component {
     if (this.state.startIndex === 0) {
       this.setState(
         {
+          relativeIndex: 0,
           currentIndex: 0,
           currentFieldInfo: this.state.attributes.data[0],
         },
@@ -229,8 +228,7 @@ export default class LayerSelectionAttribute extends React.Component {
           let item = this.table.setSelected(0)
           cb &&
             cb({
-              currentIndex:
-                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentIndex: 0,
               currentFieldInfo: item.data,
             })
           this.table &&
@@ -248,6 +246,7 @@ export default class LayerSelectionAttribute extends React.Component {
           type: 'reset',
           currentPage: this.currentPage,
           startIndex: 0,
+          relativeIndex: 0,
           currentIndex: 0,
         },
         () => {
@@ -257,8 +256,7 @@ export default class LayerSelectionAttribute extends React.Component {
           })
           cb &&
             cb({
-              currentIndex:
-                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentIndex: 0,
               currentFieldInfo: item.data,
             })
           this.canBeRefresh = false
@@ -292,7 +290,8 @@ export default class LayerSelectionAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        currentIndex: remainder,
+        relativeIndex: remainder,
+        currentIndex: this.total - 1,
       },
       () => {
         if (this.table) {
@@ -302,8 +301,7 @@ export default class LayerSelectionAttribute extends React.Component {
           })
           cb &&
             cb({
-              currentIndex:
-                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentIndex: this.total - 1,
               currentFieldInfo: item.data,
             })
           this.table &&
@@ -325,29 +323,40 @@ export default class LayerSelectionAttribute extends React.Component {
    */
   locateToPosition = (data = {}, cb = () => {}) => {
     let remainder = 0,
-      viewPosition = 0.3
+      viewPosition = 0.3,
+      relativeIndex,
+      currentIndex
     if (data.type === 'relative') {
-      let currentIndex =
-        (this.state.currentIndex <= 0 ? 0 : this.state.currentIndex) +
+      let relativeIndex =
+        (this.state.relativeIndex <= 0 ? 0 : this.state.relativeIndex) +
+        this.state.startIndex +
         data.index
-      if (currentIndex < 0) {
+      if (relativeIndex < 0 || relativeIndex >= this.total) {
         Toast.show('位置越界')
         return
       }
-      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
-      remainder = currentIndex % PAGE_SIZE
+      currentIndex = this.state.currentIndex + data.index
+      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
+      remainder = relativeIndex % PAGE_SIZE
     } else if (data.type === 'absolute') {
-      this.currentPage = Math.floor(data.index / PAGE_SIZE)
-      remainder = (data.index % PAGE_SIZE) - 1
+      if (data.index <= 0 || data.index > this.total) {
+        Toast.show('位置越界')
+        return
+      }
+      relativeIndex = data.index - 1
+      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
+      remainder = relativeIndex % PAGE_SIZE
+      currentIndex = data.index
     }
 
-    if (this.currentPage > 0) {
-      this.canBeRefresh = true
-    }
+    // if (this.currentPage > 0) {
+    //   this.canBeRefresh = true
+    // }
 
-    if (remainder <= PAGE_SIZE / 4) {
+    let restLength = this.total - relativeIndex - 1
+    if (remainder <= PAGE_SIZE / 4 && !(restLength < PAGE_SIZE / 4)) {
       viewPosition = 0
-    } else if (remainder > (PAGE_SIZE * 3) / 4) {
+    } else if (remainder > (PAGE_SIZE * 3) / 4 || restLength < PAGE_SIZE / 4) {
       viewPosition = 1
     }
 
@@ -361,7 +370,8 @@ export default class LayerSelectionAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        currentIndex: remainder,
+        relativeIndex: remainder,
+        currentIndex,
       },
       () => {
         if (this.table) {
@@ -371,8 +381,7 @@ export default class LayerSelectionAttribute extends React.Component {
           })
           cb &&
             cb({
-              currentIndex:
-                this.currentPage * PAGE_SIZE + this.state.currentIndex,
+              currentIndex: this.state.startIndex + remainder,
               currentFieldInfo: item.data,
             })
           this.table &&
@@ -390,14 +399,20 @@ export default class LayerSelectionAttribute extends React.Component {
 
   selectRow = ({ data, index = -1 }) => {
     // if (!data || index < 0) return
-    this.currentFieldInfo = data || []
-    this.currentFieldIndex = index >= 0 ? index : -1
+    // this.currentFieldInfo = data || []
+    // this.currentFieldIndex = index >= 0 ? index : -1
+
+    this.setState({
+      currentFieldInfo: data || [],
+      relativeIndex: index >= 0 ? index : -1,
+      currentIndex: this.state.startIndex + index,
+    })
     if (
       this.props.selectAction &&
       typeof this.props.selectAction === 'function'
     ) {
       this.props.selectAction({
-        index,
+        index: this.state.startIndex + index,
         data,
       })
     }
@@ -415,8 +430,8 @@ export default class LayerSelectionAttribute extends React.Component {
       }
     } else {
       return {
-        data: this.currentFieldInfo,
-        index: this.currentFieldIndex,
+        data: this.state.attributes.data[this.state.relativeIndex],
+        index: this.state.relativeIndex,
       }
     }
   }
@@ -425,15 +440,18 @@ export default class LayerSelectionAttribute extends React.Component {
   clearSelection = () => {
     if (this.table) {
       this.table.clearSelected()
-      this.currentFieldInfo = []
-      this.currentFieldIndex = -1
+      this.setState({
+        currentFieldInfo: [],
+        relativeIndex: -1,
+        currentIndex: -1,
+      })
       if (
         this.props.selectAction &&
         typeof this.props.selectAction === 'function'
       ) {
         this.props.selectAction({
-          index: this.currentFieldIndex,
-          data: this.currentFieldInfo,
+          index: [],
+          data: -1,
         })
       }
     }
