@@ -338,7 +338,7 @@ export default class FunctionToolbar extends React.Component {
         height:
           this.props.device.orientation === 'LANDSCAPE'
             ? ConstToolType.HEIGHT[2]
-            : ConstToolType.HEIGHT[3],
+            : scaleSize(350),
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
       })
     }

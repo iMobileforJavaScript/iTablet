@@ -83,6 +83,14 @@ export default class LayerAttribute extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
+      this.type === 'MAP_3D' &&
+      this.state.attributes !== prevProps.attributes
+    ) {
+      this.setState({
+        attributes: prevProps.attributes,
+      })
+      // console.log(prevProps)
+    } else if (
       prevProps.currentLayer &&
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer)
