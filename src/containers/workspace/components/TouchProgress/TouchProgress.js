@@ -202,6 +202,23 @@ export default class TouchProgress extends Component {
             tips = '字号    ' + parseInt(this.fontsize)
           }
           break
+        case ThemeType.GRAPH:
+          {
+            if (this.props.selectName === '最大显示值') {
+              this.maxValue =
+                value !== undefined
+                  ? value
+                  : await SThemeCartography.getGraphMaxValue({
+                    LayerName: this.props.currentLayer.name,
+                  })
+              this._panBtnStyles.style.left =
+                (this.maxValue * progressWidth) / 20 + panBtnDevLeft
+              this._previousLeft = (this.maxValue * progressWidth) / 20
+              this._BackLine.style.width = (this.maxValue * progressWidth) / 20
+              tips = '最大显示值    ' + parseInt(this.maxValue) + 'X'
+            }
+          }
+          break
       }
     }
 
@@ -410,6 +427,8 @@ export default class TouchProgress extends Component {
         newValue = value * 100
       } else if (this.props.selectName === '基准值') {
         newValue = value * 1000
+      } else if (this.props.selectName === '最大显示值') {
+        newValue = value * 20
       }
     }
 
@@ -502,6 +521,13 @@ export default class TouchProgress extends Component {
           BaseValue: value,
         }
         await SThemeCartography.modifyGraduatedSymbolThemeMap(_params)
+      } else if (this.props.selectName === '最大显示值') {
+        tips = '最大显示值    ' + parseInt(value) + 'X'
+        let _params = {
+          LayerName: this.props.currentLayer.name,
+          MaxValue: value,
+        }
+        await SThemeCartography.setGraphMaxValue(_params)
       }
     }
 
@@ -630,8 +656,8 @@ export default class TouchProgress extends Component {
         this.props.selectName === 'range_parameter' ||
         this.props.selectName === '分段个数'
       ) {
-        if (value < 0) {
-          value = 0
+        if (value <= 0) {
+          value = 1
         } else if (value > 100) {
           value = 100
         }
@@ -640,28 +666,40 @@ export default class TouchProgress extends Component {
         this.props.selectName === 'fontsize' ||
         this.props.selectName === '字号'
       ) {
+        if (value <= 0) {
+          value = 1
+        } else if (value > 20) {
+          value = 20
+        }
         tips = '字号    ' + parseInt(value)
       } else if (this.props.selectName === '单点代表值') {
-        if (value < 0) {
-          value = 0
+        if (value <= 0) {
+          value = 1
         } else if (value > 100) {
           value = 100
         }
         tips = '单点代表值    ' + parseInt(value)
       } else if (this.props.selectName === '符号大小') {
-        if (value < 0) {
-          value = 0
+        if (value <= 0) {
+          value = 1
         } else if (value > 100) {
           value = 100
         }
         tips = '符号大小    ' + parseInt(value) + 'mm'
       } else if (this.props.selectName === '基准值') {
-        if (value < 0) {
-          value = 0
+        if (value <= 0) {
+          value = 1
         } else if (value > 1000) {
           value = 1000
         }
         tips = '基准值    ' + parseInt(value)
+      } else if (this.props.selectName === '最大显示值') {
+        if (value <= 0) {
+          value = 1
+        } else if (value > 20) {
+          value = 20
+        }
+        tips = '最大显示值    ' + parseInt(value) + 'X'
       }
     }
 

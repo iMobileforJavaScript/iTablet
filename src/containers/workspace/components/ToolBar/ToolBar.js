@@ -1334,6 +1334,46 @@ export default class ToolBar extends React.PureComponent {
     }
   }
 
+  //专题图中统计符号显示的最大值(倍数)
+  getGraphMaxValue = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue: 0,
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = false
+    }.bind(this)
+
+    let setData = async function() {
+      this.setState(
+        {
+          isFullScreen: true,
+          selectName: name,
+          isTouchProgress: true,
+          showMenuDialog: false,
+          type: type,
+          buttons: ThemeMenuData.getThemeGraphMenu(),
+          selectKey: key,
+          data: [],
+        },
+        () => {
+          this.height = 0
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
   //点密度基础值，点大小
   getDotDensityValueAndDotsize = async (type, key = '', name = '') => {
     let showBox = function() {
@@ -1877,6 +1917,26 @@ export default class ToolBar extends React.PureComponent {
           this.updateOverlayerView()
         },
       )
+    } else if (type === ConstToolType.MAP3D_CIRCLEFLY) {
+      let { data, buttons } = this.getData(type)
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          containerType: 'table',
+          isFullScreen: false,
+          column: 1,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[0]
+              : ConstToolType.HEIGHT[0]
+          this.showToolbar()
+          this.updateOverlayerView()
+        },
+      )
     } else {
       let { data, buttons } = this.getData(type)
       this.setState(
@@ -1900,11 +1960,6 @@ export default class ToolBar extends React.PureComponent {
               this.height = ConstToolType.HEIGHT[0]
               this.showToolbar()
               // this.updateOverlayerView()
-              break
-            case ConstToolType.MAP3D_CIRCLEFLY:
-              this.height = ConstToolType.HEIGHT[0]
-              this.props.showFullMap && this.props.showFullMap(true)
-              this.showToolbar()
               break
             default:
               this.height = 0
@@ -2630,7 +2685,8 @@ export default class ToolBar extends React.PureComponent {
       this.state.selectKey === '字号' ||
       this.state.selectKey === '单点代表值' ||
       this.state.selectKey === '符号大小' ||
-      this.state.selectKey === '基准值'
+      this.state.selectKey === '基准值' ||
+      this.state.selectKey === '最大显示值'
     ) {
       isFullScreen = true
       showMenuDialog = !this.state.showMenuDialog
@@ -2738,7 +2794,8 @@ export default class ToolBar extends React.PureComponent {
         this.state.selectKey === '字号' ||
         this.state.selectKey === '单点代表值' ||
         this.state.selectKey === '符号大小' ||
-        this.state.selectKey === '基准值'
+        this.state.selectKey === '基准值' ||
+        this.state.selectKey === '最大显示值'
       ) {
         // 显示指滑进度条
         this.setState(
@@ -4330,9 +4387,6 @@ export default class ToolBar extends React.PureComponent {
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column = this.state.column
-    if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
-      column = 1
-    }
     return (
       <MTBtn
         style={[styles.cell, { width: this.props.device.width / column }]}

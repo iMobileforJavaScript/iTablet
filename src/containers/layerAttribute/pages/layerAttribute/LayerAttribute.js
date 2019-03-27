@@ -108,6 +108,7 @@ export default class LayerAttribute extends React.Component {
           },
           currentFieldInfo: [],
           relativeIndex: -1,
+          currentIndex: -1,
           startIndex: 0,
         },
         () => {
@@ -862,6 +863,24 @@ export default class LayerAttribute extends React.Component {
       this.state.attributes.head &&
       this.state.attributes.head.length > 0
 
+    let headerRight = []
+    if (this.type !== 'MAP_3D') {
+      headerRight = [
+        <MTBtn
+          key={'undo'}
+          image={getPublicAssets().common.icon_undo}
+          imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          onPress={this.showUndoView}
+        />,
+        <MTBtn
+          key={'search'}
+          image={getPublicAssets().common.icon_search}
+          imageStyle={styles.headerBtn}
+          onPress={this.goToSearch}
+        />,
+      ]
+    }
+
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -871,20 +890,7 @@ export default class LayerAttribute extends React.Component {
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
           withoutBack: true,
-          headerRight: [
-            <MTBtn
-              key={'undo'}
-              image={getPublicAssets().common.icon_undo}
-              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-              onPress={this.showUndoView}
-            />,
-            <MTBtn
-              key={'search'}
-              image={getPublicAssets().common.icon_search}
-              imageStyle={styles.headerBtn}
-              onPress={this.goToSearch}
-            />,
-          ],
+          headerRight,
         }}
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
