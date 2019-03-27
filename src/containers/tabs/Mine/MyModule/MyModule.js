@@ -238,10 +238,16 @@ export default class MyModule extends Component {
                 result && Toast.show('分享成功')
                 this.container.setLoading(false)
                 this.ModalBtns.setVisible(false)
+                setTimeout(() => {
+                  FileTools.deleteFile(toPath)
+                }, 2000)
               },
               () => {
                 Toast.show('分享失败')
                 this.container.setLoading(false)
+                setTimeout(() => {
+                  FileTools.deleteFile(toPath)
+                }, 2000)
               },
             )
         } else {
