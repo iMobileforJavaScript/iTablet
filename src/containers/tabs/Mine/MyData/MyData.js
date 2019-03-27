@@ -554,12 +554,16 @@ export default class MyLocalData extends Component {
                 result => {
                   result && Toast.show('分享成功')
                   this.ModalBtns && this.ModalBtns.setVisible(false)
-                  FileTools.deleteFile(targetPath)
+                  setTimeout(() => {
+                    FileTools.deleteFile(targetPath)
+                  }, 2000)
                 },
                 () => {
                   Toast.show('分享失败')
                   this.ModalBtns && this.ModalBtns.setVisible(false)
-                  FileTools.deleteFile(targetPath)
+                  setTimeout(() => {
+                    FileTools.deleteFile(targetPath)
+                  }, 2000)
                 },
               )
         } else {

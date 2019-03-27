@@ -50,7 +50,7 @@ public class MainActivity extends ReactActivity {
         }
         appManager.getAppManager().addActivity(this);
         appManager.getAppManager().registerWechat(this);
-        FileTools.importEXternalData(this);
+        FileTools.getUriState(this);
 
     }
 
@@ -68,7 +68,7 @@ public class MainActivity extends ReactActivity {
         super.onNewIntent(intent);
 
         setIntent(intent);
-        FileTools.importEXternalData(this);
+        FileTools.getUriState(this);
         //must store the new intent unless getIntent() will return the old one
     }
 

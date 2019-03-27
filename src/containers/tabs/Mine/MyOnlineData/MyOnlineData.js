@@ -15,11 +15,9 @@ import {
   TouchableOpacity,
   View,
   NetInfo,
-  ScrollView,
 } from 'react-native'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
-import Container from '../../../../components/Container/index'
 import styles from './Styles'
 import { color, size } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
@@ -27,7 +25,6 @@ import PopupModal from './PopupModal'
 import ConstPath from '../../../../constants/ConstPath'
 import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
-import MyLocalData from '../MyLocalData'
 // import UserType from '../../../../constants/UserType'
 // import RNFS from 'react-native-fs'
 let _iLoadOnlineDataCount = 1
@@ -41,6 +38,7 @@ export default class MyOnlineData extends Component {
     navigation: Object,
     user: Object,
     importWorkspace: () => {},
+    setLoading: () => {},
   }
 
   constructor(props) {
@@ -67,6 +65,7 @@ export default class MyOnlineData extends Component {
       itemBgColor: color.blackBg,
       progressWidth: this.screenWidth * 0.6,
       showOnlineData: false,
+      sectionState: true,
     }
     this.pageSize = 20
   }
@@ -75,7 +74,7 @@ export default class MyOnlineData extends Component {
     this._addListener()
     // this.container.setLoading(true)
     this._firstLoadData()
-    this.container.setLoading(true)
+    // this.container.setLoading(true)
   }
 
   componentWillUnmount() {
@@ -474,7 +473,7 @@ export default class MyOnlineData extends Component {
     this.setState({ data: _arrOnlineData })
   }
   setLoading = (visible, info) => {
-    this.container && this.container.setLoading(visible, info)
+    this.props.setLoading(visible, info)
   }
   _onDownloadFile = async () => {
     try {
@@ -865,39 +864,14 @@ export default class MyOnlineData extends Component {
     NavigationService.goBack()
   }
 
-  showOnlineData = () => {
-    if (this.props.user.users.length > 1) {
-      this.setState({ showOnlineData: true })
-    }
-    this.container.setLoading(false)
-  }
-
-  getContainer = () => {
-    return this.container
-  }
+  // showOnlineData = (value) => {
+  //   if (this.props.user.users.length > 1) {
+  //     this.setState({ showOnlineData: value })
+  //   }
+  //   this.container.setLoading(false)
+  // }
 
   render() {
-    return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: '导入',
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
-        <ScrollView
-          style={{ backgroundColor: color.contentColorWhite, flex: 1 }}
-        >
-          {
-            <MyLocalData
-              showOnlineData={this.showOnlineData}
-              navigation={this.props.navigation}
-            />
-          }
-          {this.state.showOnlineData && this._render()}
-        </ScrollView>
-      </Container>
-    )
+    return <View style={{ flex: 1 }}>{this._render()}</View>
   }
 }

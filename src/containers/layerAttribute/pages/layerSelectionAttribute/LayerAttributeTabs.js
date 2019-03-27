@@ -58,8 +58,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const PAGE_SIZE = 30
-
 export default class LayerAttributeTabs extends React.Component {
   props: {
     navigation: Object,
@@ -489,7 +487,8 @@ export default class LayerAttributeTabs extends React.Component {
             ref={ref => (this.locationView = ref)}
             style={styles.locationView}
             currentIndex={
-              this.currentPage * PAGE_SIZE + this.state.currentIndex
+              // this.currentPage * PAGE_SIZE + this.state.currentIndex
+              this.state.currentIndex
             }
             locateToTop={this.locateToTop}
             locateToBottom={this.locateToBottom}
