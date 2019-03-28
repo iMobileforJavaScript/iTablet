@@ -49,7 +49,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="wxapi.WXEntryActivity"
+            android:name=".wxapi.WXEntryActivity"
             android:launchMode="singleTop"
             android:exported="true">
         </activity>

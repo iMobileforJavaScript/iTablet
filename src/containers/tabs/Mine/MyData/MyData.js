@@ -552,7 +552,8 @@ export default class MyLocalData extends Component {
                 description: 'SuperMap iTablet',
               })
               .then(result => {
-                !result && Toast.show('分享失败,请重试')
+                !result && Toast.show('所分享文件超过10MB')
+                !result && FileTools.deleteFile(targetPath)
               })
         } else {
           if (this.state.title === Const.MAP) {
