@@ -31,7 +31,6 @@ const RelativePath = {
   Color: Data + 'Color/',
   Temp: Data + 'Temp/', // 临时文件
   Label: Data + 'Label/', // 标注
-  Import: Data + 'Import', //导入外部数据临时文件夹
 }
 
 const RelativeFilePath = {
@@ -66,6 +65,7 @@ export default {
   UserPath: AppPath + 'User/', // 存放用户数据
   UserPath2: AppPath + 'User', // 存放用户数据
   Common: AppPath + 'Common/', // 公共数据
+  Import: AppPath + 'Import', //导入外部数据文件夹
   // 游客目录
   CustomerPath: AppPath + 'User/Customer/', // 存放游客数据
   RelativePath,

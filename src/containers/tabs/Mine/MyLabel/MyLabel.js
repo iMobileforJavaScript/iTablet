@@ -147,6 +147,7 @@ export default class MyLabel extends Component {
         if (zipResult) {
           let fileName = name + '_标注.zip'
           if (this.uploadType === 'weChat') {
+            GLOBAL.shareFilePath = targetPath
             appUtilsModule
               .sendFileOfWechat({
                 filePath: targetPath,
@@ -155,18 +156,14 @@ export default class MyLabel extends Component {
               })
               .then(
                 result => {
-                  result && Toast.show('分享成功')
                   this.container.setLoading(false)
-                  setTimeout(() => {
-                    FileTools.deleteFile(targetPath)
-                  }, 4000)
+                  !result && Toast.show('所分享文件超过10MB')
+                  !result && FileTools.deleteFile(targetPath)
                 },
                 () => {
-                  Toast.show('分享失败')
                   this.container.setLoading(false)
-                  setTimeout(() => {
-                    FileTools.deleteFile(targetPath)
-                  }, 4000)
+                  Toast.show('分享失败')
+                  FileTools.deleteFile(targetPath)
                 },
               )
           } else {

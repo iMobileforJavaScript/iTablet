@@ -165,7 +165,8 @@ class AppRoot extends Component {
       await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
-      await this.addImportExternalData()
+      await this.addImportExternalDataListener()
+      await this.addGetShareResultListener()
     }).bind(this)()
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
@@ -281,10 +282,21 @@ class AppRoot extends Component {
     }
   }
 
-  addImportExternalData = async () => {
+  addImportExternalDataListener = async () => {
     await FileTools.addImportExternalData({
       callback: result => {
         result && this.import.setDialogVisible(true)
+      },
+    })
+  }
+
+  addGetShareResultListener = async () => {
+    await FileTools.getShareResult({
+      callback: result => {
+        if(GLOBAL.shareFilePath&&GLOBAL.shareFilePath.length>1){
+          // FileTools.deleteFile(GLOBAL.shareFilePath)
+        }
+        // result && this.import.setDialogVisible(true)
       },
     })
   }
@@ -455,12 +467,12 @@ class AppRoot extends Component {
         confirmBtnTitle={'确定'}
         cancelBtnTitle={'取消'}
         confirmAction={() => {
+          this.import.setDialogVisible(false)
           GLOBAL.Loading.setLoading(
             true,
             '数据导入中',
           )
           FileTools.importData().then(result => {
-            this.import.setDialogVisible(false)
             GLOBAL.Loading.setLoading(false)
             result && Toast.show('导入成功')
           }, () => {
@@ -469,13 +481,7 @@ class AppRoot extends Component {
           })
         }}
         cancelAction={ async () => {
-          let homePath = await FileTools.appendingHomeDirectory()
-          let importPath =
-            homePath +
-            ConstPath.UserPath +
-            this.props.user.currentUser.userName +
-            '/' +
-            ConstPath.RelativePath.Import
+          let importPath =ConstPath.Import
           await FileTools.deleteFile(importPath)
           this.import.setDialogVisible(false)
         }}
