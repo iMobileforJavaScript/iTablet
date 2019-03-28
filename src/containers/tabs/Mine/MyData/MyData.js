@@ -466,7 +466,7 @@ export default class MyLocalData extends Component {
 
   _onUploadData = async type => {
     try {
-      this.setLoading(true, '开始分享')
+      this.setLoading(true, '分享中')
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
           0,
@@ -543,6 +543,7 @@ export default class MyLocalData extends Component {
           } else {
             zipResult = await FileTools.zipFiles(archivePaths, targetPath)
           }
+          await this.setLoading(false)
           zipResult &&
             appUtilsModule
               .sendFileOfWechat({
@@ -550,18 +551,10 @@ export default class MyLocalData extends Component {
                 title: fileName + '.zip',
                 description: 'SuperMap iTablet',
               })
-              .then(
-                result => {
-                  result && Toast.show('分享成功')
-                  this.ModalBtns && this.ModalBtns.setVisible(false)
-                  FileTools.deleteFile(targetPath)
-                },
-                () => {
-                  Toast.show('分享失败')
-                  this.ModalBtns && this.ModalBtns.setVisible(false)
-                  FileTools.deleteFile(targetPath)
-                },
-              )
+              .then(result => {
+                !result && Toast.show('所分享文件超过10MB')
+                !result && FileTools.deleteFile(targetPath)
+              })
         } else {
           if (this.state.title === Const.MAP) {
             await this._exportData()

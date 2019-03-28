@@ -834,6 +834,19 @@ const graphMenuInfo = [
         )
     },
   },
+  {
+    key: '最大显示值',
+    selectKey: '最大显示值',
+    btntitle: '最大显示值',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getGraphMaxValue(
+          ConstToolType.MAP_THEME_PARAM_GRAPH_MAXVALUE,
+          '最大显示值',
+          '最大显示值',
+        )
+    },
+  },
 ]
 
 //修改点密度专题图：设置点密度图的表达式，单点代表的值，点风格（大小和颜色）。

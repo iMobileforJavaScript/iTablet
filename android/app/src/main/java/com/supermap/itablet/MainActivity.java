@@ -10,6 +10,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.facebook.react.ReactActivity;
 import com.supermap.RN.appManager;
@@ -20,6 +21,11 @@ import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+
 import org.devio.rn.splashscreen.SplashScreen;
 
 import java.io.File;
@@ -49,11 +55,9 @@ public class MainActivity extends ReactActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
         appManager.getAppManager().addActivity(this);
-        appManager.getAppManager().registerWechat(this);
-        FileTools.importEXternalData(this);
-
+        IWXAPI iwxapi=appManager.getAppManager().registerWechat(this);
+        FileTools.getUriState(this);
     }
-
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -68,7 +72,7 @@ public class MainActivity extends ReactActivity {
         super.onNewIntent(intent);
 
         setIntent(intent);
-        FileTools.importEXternalData(this);
+        FileTools.getUriState(this);
         //must store the new intent unless getIntent() will return the old one
     }
 
@@ -152,6 +156,5 @@ public class MainActivity extends ReactActivity {
     private boolean isTablet(Activity context) {
         return (context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE;
     }
-
 
 }

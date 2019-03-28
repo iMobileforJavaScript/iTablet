@@ -46,6 +46,7 @@ export default class LayerAttribute extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params && params.type
+    let checkData = this.checkToolIsViable()
     this.state = {
       attributes: {
         head: [],
@@ -58,9 +59,9 @@ export default class LayerAttribute extends React.Component {
       currentIndex: -1,
       startIndex: 0,
 
-      canBeUndo: false,
-      canBeRedo: false,
-      canBeRevert: false,
+      canBeUndo: checkData.canBeUndo,
+      canBeRedo: checkData.canBeRedo,
+      canBeRevert: checkData.canBeRevert,
     }
 
     this.currentPage = 0
@@ -83,10 +84,19 @@ export default class LayerAttribute extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
+      this.type === 'MAP_3D' &&
+      this.state.attributes !== prevProps.attributes
+    ) {
+      this.setState({
+        attributes: prevProps.attributes,
+      })
+      // console.log(prevProps)
+    } else if (
       prevProps.currentLayer &&
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer)
     ) {
+      let checkData = this.checkToolIsViable()
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数
@@ -100,12 +110,22 @@ export default class LayerAttribute extends React.Component {
           },
           currentFieldInfo: [],
           relativeIndex: -1,
+          currentIndex: -1,
           startIndex: 0,
+          ...checkData,
         },
         () => {
           this.refresh(null, true)
         },
       )
+    } else if (
+      JSON.stringify(prevProps.attributesHistory) !==
+      JSON.stringify(this.props.attributesHistory)
+    ) {
+      let checkData = this.checkToolIsViable()
+      this.setState({
+        ...checkData,
+      })
     }
   }
 
@@ -129,7 +149,15 @@ export default class LayerAttribute extends React.Component {
   refresh = (cb = () => {}, resetCurrent = false) => {
     if (!this.canBeRefresh) {
       Toast.show('已经是最新的了')
-      cb && cb()
+      this.getAttribute(
+        {
+          type: 'reset',
+          currentPage: 0,
+          startIndex: 0,
+        },
+        cb,
+        resetCurrent,
+      )
       return
     }
     let startIndex = this.state.startIndex - PAGE_SIZE
@@ -192,11 +220,6 @@ export default class LayerAttribute extends React.Component {
       attributes = {}
     ;(async function() {
       try {
-        // attributes = await SMap.getLayerAttribute({
-        //   path: this.props.currentLayer.path,
-        //   page: this.currentPage,
-        //   size: PAGE_SIZE,
-        // })
         result = await LayerUtil.getLayerAttribute(
           JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.currentLayer.path,
@@ -208,16 +231,6 @@ export default class LayerAttribute extends React.Component {
         this.total = result.total || 0
         attributes = result.attributes || []
 
-        // if (
-        //   // attributes.data.length === this.state.attributes.data.length &&
-        //   // JSON.stringify(attributes.data) === JSON.stringify(this.state.attributes.data) ||
-        //   Math.floor(this.total / PAGE_SIZE) === currentPage ||
-        //   attributes.data.length < PAGE_SIZE
-        // ) {
-        //   this.noMore = true
-        // } else {
-        //   this.noMore = false
-        // }
         this.noMore =
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
@@ -558,18 +571,23 @@ export default class LayerAttribute extends React.Component {
 
     return {
       canBeUndo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1) ||
+        false,
       canBeRedo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex > 0,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex > 0) ||
+        false,
       canBeRevert:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1 &&
-        !(historyObj.history[historyObj.currentIndex + 1] instanceof Array),
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1 &&
+          !(
+            historyObj.history[historyObj.currentIndex + 1] instanceof Array
+          )) ||
+        false,
     }
   }
 
@@ -579,18 +597,21 @@ export default class LayerAttribute extends React.Component {
       case 'undo':
         if (!this.state.canBeUndo) {
           Toast.show('已经无法回撤')
+          this.setLoading(false)
           return
         }
         break
       case 'redo':
         if (!this.state.canBeRedo) {
           Toast.show('已经无法恢复')
+          this.setLoading(false)
           return
         }
         break
       case 'revert':
         if (!this.state.canBeRevert) {
           Toast.show('已经无法还原')
+          this.setLoading(false)
           return
         }
         break
@@ -854,6 +875,24 @@ export default class LayerAttribute extends React.Component {
       this.state.attributes.head &&
       this.state.attributes.head.length > 0
 
+    let headerRight = []
+    if (this.type !== 'MAP_3D') {
+      headerRight = [
+        <MTBtn
+          key={'undo'}
+          image={getPublicAssets().common.icon_undo}
+          imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          onPress={this.showUndoView}
+        />,
+        <MTBtn
+          key={'search'}
+          image={getPublicAssets().common.icon_search}
+          imageStyle={styles.headerBtn}
+          onPress={this.goToSearch}
+        />,
+      ]
+    }
+
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -863,20 +902,7 @@ export default class LayerAttribute extends React.Component {
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
           withoutBack: true,
-          headerRight: [
-            <MTBtn
-              key={'undo'}
-              image={getPublicAssets().common.icon_undo}
-              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-              onPress={this.showUndoView}
-            />,
-            <MTBtn
-              key={'search'}
-              image={getPublicAssets().common.icon_search}
-              imageStyle={styles.headerBtn}
-              onPress={this.goToSearch}
-            />,
-          ],
+          headerRight,
         }}
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}

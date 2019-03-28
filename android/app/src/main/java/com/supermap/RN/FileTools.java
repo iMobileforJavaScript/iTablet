@@ -41,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -505,6 +506,8 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+
+    @ReactMethod
     public void fileIsExistInHomeDirectory(String path, Promise promise) {
         try {
             Boolean isExist = false;
@@ -539,7 +542,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         try {
             SMap sMap=SMap.getInstance();
             String userName=getUserName();
-            String importPath=SDCARD+"/iTablet/User/"+userName+"/Data/Import";
+            String importPath=SDCARD+"/iTablet/Import";
             String filePath=importPath+"/weChat.zip";
             String toPath=importPath;
             File file=new File(filePath);
@@ -974,7 +977,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    public static void importEXternalData(Activity activity){
+    public static void getUriState(Activity activity){
         Intent intent=activity.getIntent();
         Uri uri=intent.getData();
         if(uri==null){
@@ -983,7 +986,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         try {
               InputStream inputStream=activity.getContentResolver().openInputStream(uri);
               String userName=getUserName();
-              String importPath=SDCARD+"/iTablet/User/"+userName+"/Data/Import";
+              String importPath=SDCARD+"/iTablet/Import";
               String filePath=importPath+"/weChat.zip";
               File importFile=new File(importPath);
               if(!importFile.exists()){
