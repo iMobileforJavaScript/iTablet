@@ -9,6 +9,7 @@
 #import "FileTools.h"
 
 NSString * const MESSAGE_IMPORTEXTERNALDATA = @"com.supermap.RN.Mapcontrol.message_importexternaldata";
+NSString * const MESSAGE_SHARERESULT = @"com.supermap.RN.Mapcontrol.message_shareresult";
 static FileTools *filetools = nil;
 
 @implementation FileTools
@@ -18,6 +19,7 @@ RCT_EXPORT_MODULE();
 {
   return @[
           MESSAGE_IMPORTEXTERNALDATA,
+          MESSAGE_SHARERESULT,
            ];
 }
 
@@ -595,7 +597,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
 }
 
 /*
- * 判断压缩包是否存在
+ * 判断压缩包是否存在并解压，给RN发送消息，用户选择是否导入
  */
 +(BOOL)getUriState:(NSURL *)url{
   
@@ -625,5 +627,11 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
   }
   
   return isFileExist;
+}
+/*
+ * 微信分享完成或取消回调触发，给RN发信息通知分享成功 6.7.2版本微信更新后无法获取是否分享成功，success和cancel统一走success回调
+ */
++(void)sendShareResult{
+  [filetools sendEventWithName:MESSAGE_SHARERESULT body:nil];
 }
 @end

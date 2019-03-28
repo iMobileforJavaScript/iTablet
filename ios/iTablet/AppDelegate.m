@@ -33,7 +33,7 @@ static NSString* g_sampleCodeName = @"#";;
   NSURL *jsCodeLocation;
   
 #if DEBUG
-  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.0.109"];
+  [[RCTBundleURLProvider sharedSettings] setJsLocation:@"192.168.137.94"];
 #endif
   jsCodeLocation = [[RCTBundleURLProvider sharedSettings] jsBundleURLForBundleRoot:@"index" fallbackResource:nil];
   
@@ -145,8 +145,7 @@ static NSString* g_sampleCodeName = @"#";;
 - (void)onResp:(BaseResp *)resp
 {
   // 处理 分享请求 回调
-  
-  
+  [FileTools sendShareResult];
 }
 
 //- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(nullable UIWindow *)window
