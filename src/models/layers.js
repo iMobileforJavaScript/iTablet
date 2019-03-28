@@ -239,10 +239,38 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
       case 'undo':
         if (layerHistory.currentIndex < layerHistory.history.length - 1) {
           currentIndex = layerHistory.currentIndex + 1
-          currentHistory =
+
+          // 去掉还原记录, 还原记录在history中是两个连续数组，前一个为还原值，后一个为还原前的值
+          if (
+            layerHistory.history[layerHistory.currentIndex] instanceof Array &&
             layerHistory.history[currentIndex] instanceof Array
-              ? layerHistory.history[currentIndex]
-              : [layerHistory.history[currentIndex]]
+          ) {
+            currentHistory =
+              layerHistory.history[currentIndex] instanceof Array
+                ? layerHistory.history[currentIndex]
+                : [layerHistory.history[currentIndex]]
+            layerHistory.history.splice(layerHistory.currentIndex, 2)
+            currentIndex = layerHistory.currentIndex
+          } else if (
+            !(
+              layerHistory.history[layerHistory.currentIndex] instanceof Array
+            ) &&
+            layerHistory.history[currentIndex] instanceof Array
+          ) {
+            currentHistory =
+              layerHistory.history[currentIndex + 1] instanceof Array
+                ? layerHistory.history[currentIndex + 1]
+                : [layerHistory.history[currentIndex + 1]]
+            layerHistory.history.splice(currentIndex, 2)
+            currentIndex = layerHistory.currentIndex + 1
+          } else {
+            currentHistory = [layerHistory.history[currentIndex]]
+          }
+
+          // currentHistory =
+          //   layerHistory.history[currentIndex] instanceof Array
+          //     ? layerHistory.history[currentIndex]
+          //     : [layerHistory.history[currentIndex]]
         } else {
           return { msg: ConstInfo[`${_type}_UNABLE`], result: false }
         }
@@ -264,6 +292,7 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
         if (!(layerHistory.history[0] instanceof Array)) {
           // 还原到最初状态，并把本次操作记录到新的历史记录中
           currentIndex = 0
+          let latestHistory = [] // 存放还原前最新数据
 
           for (let x = 0; x < layerHistory.history.length; x++) {
             let exist = false
@@ -287,9 +316,11 @@ export const setAttributeHistory = (params = {}, cb = () => {}) => async (
             }
             if (currentHistory.length === 0 || !exist) {
               currentHistory.push(layerHistory.history[x])
+              !exist && latestHistory.push(layerHistory.history[x])
             }
           }
-          layerHistory.history.unshift(currentHistory)
+          layerHistory.history.unshift(latestHistory) // 存放还原前最新数据
+          layerHistory.history.unshift(currentHistory) // 存放更改前数据
         } else {
           return { msg: ConstInfo[`${_type}_UNABLE`], result: false }
         }

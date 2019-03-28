@@ -30,6 +30,7 @@ export default class LayerSelectionAttribute extends React.Component {
 
   constructor(props) {
     super(props)
+    let checkData = this.checkToolIsViable()
     this.state = {
       attributes: {
         head: [],
@@ -41,6 +42,10 @@ export default class LayerSelectionAttribute extends React.Component {
       startIndex: 0,
       relativeIndex: -1, // 当前页面从startIndex开始的被选中的index, 0 -> this.total - 1
       currentIndex: -1,
+
+      canBeUndo: checkData.canBeUndo,
+      canBeRedo: checkData.canBeRedo,
+      canBeRevert: checkData.canBeRevert,
     }
 
     this.total = 0
@@ -64,6 +69,7 @@ export default class LayerSelectionAttribute extends React.Component {
       JSON.stringify(prevProps.layerSelection) !==
         JSON.stringify(this.props.layerSelection)
     ) {
+      let checkData = this.checkToolIsViable()
       // this.isInit = true
       this.currentPage = 0
       this.total = 0 // 属性总数
@@ -80,6 +86,7 @@ export default class LayerSelectionAttribute extends React.Component {
           relativeIndex: -1,
           currentIndex: -1,
           startIndex: 0,
+          ...checkData,
         },
         () => {
           this.refresh(null, true)
@@ -481,18 +488,23 @@ export default class LayerSelectionAttribute extends React.Component {
 
     return {
       canBeUndo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1) ||
+        false,
       canBeRedo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex > 0,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex > 0) ||
+        false,
       canBeRevert:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1 &&
-        !(historyObj.history[historyObj.currentIndex + 1] instanceof Array),
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1 &&
+          !(
+            historyObj.history[historyObj.currentIndex + 1] instanceof Array
+          )) ||
+        false,
     }
   }
 
@@ -575,18 +587,21 @@ export default class LayerSelectionAttribute extends React.Component {
       case 'undo':
         if (!this.state.canBeUndo) {
           Toast.show('已经无法回撤')
+          this.setLoading(false)
           return
         }
         break
       case 'redo':
         if (!this.state.canBeRedo) {
           Toast.show('已经无法恢复')
+          this.setLoading(false)
           return
         }
         break
       case 'revert':
         if (!this.state.canBeRevert) {
           Toast.show('已经无法还原')
+          this.setLoading(false)
           return
         }
         break
