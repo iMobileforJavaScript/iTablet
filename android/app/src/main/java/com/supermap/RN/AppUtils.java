@@ -31,8 +31,8 @@ public class AppUtils extends ReactContextBaseJavaModule {
     public void  sendFileOfWechat(ReadableMap map, Promise promise){
         try {
             Map params = map.toHashMap();
-            appManager.getAppManager().sendFileOfWechat(params);
-            promise.resolve(true);
+            Boolean result=appManager.getAppManager().sendFileOfWechat(params);
+            promise.resolve(result);
         }catch (Exception e){
             promise.reject(e);
         }

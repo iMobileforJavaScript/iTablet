@@ -240,14 +240,14 @@ export default class MyModule extends Component {
                 this.ModalBtns.setVisible(false)
                 setTimeout(() => {
                   FileTools.deleteFile(toPath)
-                }, 2000)
+                }, 4000)
               },
               () => {
                 Toast.show('分享失败')
                 this.container.setLoading(false)
                 setTimeout(() => {
                   FileTools.deleteFile(toPath)
-                }, 2000)
+                }, 4000)
               },
             )
         } else {

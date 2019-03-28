@@ -1,18 +1,15 @@
 package com.supermap.RN;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Handler;
 
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXAppExtendObject;
 import com.tencent.mm.opensdk.modelmsg.WXFileObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
@@ -114,13 +111,15 @@ public class appManager {
         }
     }
 
-    public void registerWechat(Context context) {
+    public IWXAPI registerWechat(Context context) {
         String APP_ID = "wx06e9572a1d069aaa";
         iwxapi = WXAPIFactory.createWXAPI(context, APP_ID, false);
         iwxapi.registerApp(APP_ID);
+        return iwxapi;
     }
 
-    public void sendFileOfWechat(Map map) {
+    public Boolean sendFileOfWechat(Map map) {
+        Boolean result=false;
         WXMediaMessage msg = new WXMediaMessage();
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         if (map.containsKey("title")) {
@@ -137,8 +136,9 @@ public class appManager {
         req.message = msg;
         req.scene = SendMessageToWX.Req.WXSceneSession;
         if (iwxapi != null) {
-            iwxapi.sendReq(req);
+            result=iwxapi.sendReq(req);
         }
+        return result;
     }
 
     private String buildTransaction(String type) {

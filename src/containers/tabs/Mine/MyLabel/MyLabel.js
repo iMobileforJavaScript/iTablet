@@ -159,14 +159,14 @@ export default class MyLabel extends Component {
                   this.container.setLoading(false)
                   setTimeout(() => {
                     FileTools.deleteFile(targetPath)
-                  }, 2000)
+                  }, 4000)
                 },
                 () => {
                   Toast.show('分享失败')
                   this.container.setLoading(false)
                   setTimeout(() => {
                     FileTools.deleteFile(targetPath)
-                  }, 2000)
+                  }, 4000)
                 },
               )
           } else {

@@ -527,7 +527,7 @@ export default class ToolBar extends React.PureComponent {
           },
           {
             key: 'action3d',
-            title: '选择',
+            title: '点选',
             action: () => {
               // try {
               //   if (GLOBAL.action3d === 'PAN3D') {
