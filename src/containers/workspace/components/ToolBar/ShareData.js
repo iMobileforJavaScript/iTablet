@@ -216,6 +216,7 @@ function showSaveDialog(type) {
  * 分享到SuperMap Online
  */
 async function shareToSuperMapOnline(list = [], name = '') {
+  let timer
   try {
     if (
       !_params.user.currentUser.userName ||
@@ -228,76 +229,82 @@ async function shareToSuperMapOnline(list = [], name = '') {
       Toast.show('分享中，请稍后')
       return
     }
-    Toast.show('开始分享')
     _params.setToolbarVisible && _params.setToolbarVisible(false)
-    _params.setSharing({
-      module: GLOBAL.Type,
-      name: name,
-      progress: 0,
-    })
+    Toast.show('开始分享')
 
-    let layers = await SMap.getLayersByType()
-    let notExportMapIndexes = []
-    for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
-      notExportMapIndexes.push(layers.length - i)
-    }
-    let notExport = {
-      [_params.map.currentMap.name]: notExportMapIndexes,
-    }
+    timer = setTimeout(async () => {
+      _params.setSharing({
+        module: GLOBAL.Type,
+        name: name,
+        progress: 0,
+      })
 
-    _params.exportWorkspace(
-      {
-        maps: list,
-        extra: {
-          notExport,
+      let layers = await SMap.getLayersByType()
+      let notExportMapIndexes = []
+      for (let i = 1; i <= GLOBAL.BaseMapSize; i++) {
+        notExportMapIndexes.push(layers.length - i)
+      }
+      let notExport = {
+        [_params.map.currentMap.name]: notExportMapIndexes,
+      }
+
+      _params.exportWorkspace(
+        {
+          maps: list,
+          extra: {
+            notExport,
+          },
         },
-      },
-      (result, path) => {
-        Toast.show(
-          result
-            ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
-            : ConstInfo.EXPORT_WORKSPACE_FAILED,
-        )
-        // 分享
-        let fileName = path.substr(path.lastIndexOf('/') + 1)
-        let dataName = name || fileName.substr(0, fileName.lastIndexOf('.'))
+        (result, path) => {
+          Toast.show(
+            result
+              ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
+              : ConstInfo.EXPORT_WORKSPACE_FAILED,
+          )
+          // 分享
+          let fileName = path.substr(path.lastIndexOf('/') + 1)
+          let dataName = name || fileName.substr(0, fileName.lastIndexOf('.'))
 
-        SOnlineService.deleteData(dataName).then(async () => {
-          await SOnlineService.uploadFile(path, dataName, {
-            onProgress: progress => {
-              _params.setSharing({
-                module: GLOBAL.Type,
-                name: dataName,
-                progress: (progress > 95 ? 95 : progress) / 100,
-              })
-            },
-            onResult: async () => {
-              let result = await SOnlineService.publishService(dataName)
-              // SOnlineService.changeServiceVisibility()
-              if (result) {
+          SOnlineService.deleteData(dataName).then(async () => {
+            await SOnlineService.uploadFile(path, dataName, {
+              onProgress: progress => {
                 _params.setSharing({
                   module: GLOBAL.Type,
                   name: dataName,
-                  progress: 1,
+                  progress: (progress > 95 ? 95 : progress) / 100,
                 })
-              }
-              setTimeout(() => {
-                _params.setSharing({
-                  module: GLOBAL.Type,
-                  name: dataName,
-                })
-              }, 2000)
-              Toast.show(
-                result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
-              )
-              FileTools.deleteFile(path)
-              isSharing = false
-            },
+              },
+              onResult: async () => {
+                let result = await SOnlineService.publishService(dataName)
+                // SOnlineService.changeServiceVisibility()
+                if (result) {
+                  _params.setSharing({
+                    module: GLOBAL.Type,
+                    name: dataName,
+                    progress: 1,
+                  })
+                }
+                let timer2 = setTimeout(() => {
+                  _params.setSharing({
+                    module: GLOBAL.Type,
+                    name: dataName,
+                  })
+                  if (timer2) timer2.clear()
+                }, 2000)
+                Toast.show(
+                  result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
+                )
+                FileTools.deleteFile(path)
+                isSharing = false
+                timer.clear()
+              },
+            })
           })
-        })
-      },
-    )
+        },
+      )
+    }, 500)
   } catch (e) {
+    if (timer) timer.clear()
     isSharing = false
   }
 }

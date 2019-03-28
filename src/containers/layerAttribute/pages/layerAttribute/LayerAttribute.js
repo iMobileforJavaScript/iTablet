@@ -466,7 +466,7 @@ export default class LayerAttribute extends React.Component {
     SMap.setAction(Action.PAN)
     SMap.selectObj(this.props.currentLayer.path, [
       this.state.currentFieldInfo[0].value,
-    ]).then(() => {
+    ]).then(data => {
       this.props.navigation && this.props.navigation.navigate('MapView')
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(true, ConstToolType.ATTRIBUTE_RELATE, {
@@ -474,6 +474,12 @@ export default class LayerAttribute extends React.Component {
           height: 0,
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+      if (data instanceof Array && data.length > 0) {
+        SMap.moveToPoint({
+          x: data[0].x,
+          y: data[0].y,
+        })
+      }
     })
   }
 
