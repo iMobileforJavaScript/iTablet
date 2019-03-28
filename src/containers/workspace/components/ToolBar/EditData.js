@@ -22,7 +22,9 @@ function getEditData(type) {
           data: [
             { title: '名称', action: name },
             { title: '备注', action: remark },
+            // { title: '风格', action: remark },
             { title: 'http地址', action: address },
+            // { title: '图片', action: address },
           ],
         },
       ]

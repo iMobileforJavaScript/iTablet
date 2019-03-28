@@ -224,6 +224,7 @@ export default class ModuleList extends Component {
             )
             ref.setNewState({ isShowProgressView: false, disabled: false })
             this.bytesInfo = 0
+
             FileTools.deleteFile(fileDirPath + '.zip')
           }
         })
