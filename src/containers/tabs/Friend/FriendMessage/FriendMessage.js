@@ -110,30 +110,56 @@ class FriendMessage extends Component {
             this.inFormData.push(messageObj)
           }
         } else {
-          let obj = FriendListFileHandle.findFromFriendList(key)
-          if (obj) {
-            let friend = {
-              id: key,
-              users: [obj.markName],
-              message: messageHistory,
-              title: obj.markName,
-              unReadMsg: unReadMsg,
+          let obj = undefined
+          if (key.indexOf('Group_') == -1) {
+            obj = FriendListFileHandle.findFromFriendList(key)
+            if (obj) {
+              let friend = {
+                id: key,
+                users: [obj.markName],
+                message: messageHistory,
+                title: obj.markName,
+                unReadMsg: unReadMsg,
+              }
+              srcData.push(friend)
             }
-            srcData.push(friend)
+          } else {
+            //group
+            obj = FriendListFileHandle.findFromGroupList(key)
+            if (obj) {
+              let friend = {
+                id: key,
+                users: obj.members,
+                message: messageHistory,
+                title: obj.groupName,
+                unReadMsg: unReadMsg,
+              }
+              srcData.push(friend)
+            }
           }
         }
       }
     }
-    this.inFormData = this.inFormData.sort((obj1, obj2) => {
-      let time1 = obj1.time
-      let time2 = obj2.time
-      return time2 - time1
-    })
-    srcData = srcData.sort((obj1, obj2) => {
-      let time1 = obj1['message'][obj1['message'].length - 1].time
-      let time2 = obj2['message'][obj2['message'].length - 1].time
-      return time2 - time1
-    })
+    if (this.inFormData.length > 2) {
+      this.inFormData = this.inFormData.sort((obj1, obj2) => {
+        let time1 = obj1.time
+        let time2 = obj2.time
+        return time2 - time1
+      })
+    }
+    if (srcData.length > 2) {
+      srcData = srcData.sort((obj1, obj2) => {
+        let msg1 = obj1.message[obj1.message.length - 1]
+        let msg2 = obj2.message[obj2.message.length - 1]
+        if (msg1 && msg2) {
+          let time1 = msg1.time
+          let time2 = msg2.time
+          return time2 - time1
+        } else {
+          return true
+        }
+      })
+    }
     this.setState({
       data: srcData,
     })
@@ -345,7 +371,7 @@ class FriendMessage extends Component {
   }
 
   _renderItemHeadView(item) {
-    if (item['messageType'] === 3) {
+    if (item.users.length > 1) {
       let texts = []
       for (var i in item['users']) {
         if (i > 4) break
@@ -353,7 +379,7 @@ class FriendMessage extends Component {
           <Text
             style={{ fontSize: scaleSize(18), color: 'white', top: 2, left: 1 }}
           >
-            {item['users'][i][0].toUpperCase() + ' '}
+            {item['users'][i].name[0].toUpperCase() + ' '}
           </Text>,
         )
       }

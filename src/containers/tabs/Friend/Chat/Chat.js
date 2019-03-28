@@ -45,6 +45,8 @@ class Chat extends React.Component {
 
     this._isMounted = false
     this.onSend = this.onSend.bind(this)
+    this.onSendFile = this.onSendFile.bind(this)
+    this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
     this.renderBubble = this.renderBubble.bind(this)
@@ -112,6 +114,7 @@ class Chat extends React.Component {
         text: msg.msg,
         createdAt: new Date(msg.time),
         user: { _id: msg.id, name: msg.name },
+        type: msg.type, //根据type渲染
       }
       curMsg.push(chatMsg)
     }
@@ -213,17 +216,58 @@ class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages),
       }
     })
+    let bGroup = 1
+    let groupID = messages[0].user._id
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
       message: messages[0].text,
-      type: 1,
-      user: { name: messages[0].user.name, id: messages[0].user._id },
+      type: bGroup,
+      user: {
+        name: messages[0].user.name,
+        id: messages[0].user._id,
+        groupID: groupID,
+      },
       time: time,
     }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
     // for demo purpose
     // this.answerDemo(messages)
+  }
+
+  onSendFile() {
+    // filepath1
+    let filepath = '/sdcard/send.zip'
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      type: 3, //文件
+      user: { name: this.curUser.nickname, id: this.curUser.userId },
+      time: time,
+      system: 0,
+    }
+    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
+
+    let fileinform = {
+      id: time,
+      text: 'abc',
+      type: 4, //文件接收通知
+      user: '',
+      createdAt: time,
+      system: 0,
+      fileName: '',
+      queueName: '',
+    }
+
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, fileinform),
+      }
+    })
   }
 
   // answerDemo(messages) {
@@ -280,9 +324,23 @@ class Chat extends React.Component {
             name: messageObj.user.name,
             // avatar: 'https://facebook.github.io/react/img/logo_og.png',
           },
+          type: messageObj.type,
         }),
       }
     })
+  }
+
+  onLongPress(context, message) {
+    switch (message.type) {
+      case 1:
+        alert('1')
+        break
+      case 4:
+        alert('4')
+        break
+      default:
+        alert('undefined')
+    }
   }
 
   render() {
@@ -308,6 +366,7 @@ class Chat extends React.Component {
             _id: this.curUser.userId, // sent messages should have same user._id
             name: this.curUser.nickname,
           }}
+          onLongPress={this.onLongPress}
           renderActions={this.renderCustomActions}
           renderBubble={this.renderBubble}
           renderSystemMessage={this.renderSystemMessage}
@@ -332,7 +391,8 @@ class Chat extends React.Component {
     const options = {
       // eslint-disable-next-line
       'Action 1': props => {
-        alert('option 1')
+        // alert('option 1')
+        this.onSendFile()
       },
       // eslint-disable-next-line
       'Action 2': props => {

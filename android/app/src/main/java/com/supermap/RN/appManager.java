@@ -1,18 +1,20 @@
 package com.supermap.RN;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.os.Handler;
 
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
-import com.tencent.mm.opensdk.modelmsg.WXAppExtendObject;
 import com.tencent.mm.opensdk.modelmsg.WXFileObject;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Map;
 import java.util.Stack;
 
@@ -114,13 +116,15 @@ public class appManager {
         }
     }
 
-    public void registerWechat(Context context) {
+    public IWXAPI registerWechat(Context context) {
         String APP_ID = "wx06e9572a1d069aaa";
         iwxapi = WXAPIFactory.createWXAPI(context, APP_ID, false);
         iwxapi.registerApp(APP_ID);
+        return iwxapi;
     }
 
-    public void sendFileOfWechat(Map map) {
+    public Boolean sendFileOfWechat(Map map) {
+        Boolean result = false;
         WXMediaMessage msg = new WXMediaMessage();
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         if (map.containsKey("title")) {
@@ -130,6 +134,18 @@ public class appManager {
             msg.description = map.get("description").toString();
         }
         if (map.containsKey("filePath")) {
+            File file=new File(map.get("filePath").toString());
+            try {
+                FileInputStream fis=new FileInputStream(file);
+                long size=fis.available();
+                if(size>10485760){
+                    return false;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             WXFileObject fileObject = new WXFileObject(map.get("filePath").toString());
             msg.mediaObject = fileObject;
         }
@@ -137,8 +153,15 @@ public class appManager {
         req.message = msg;
         req.scene = SendMessageToWX.Req.WXSceneSession;
         if (iwxapi != null) {
-            iwxapi.sendReq(req);
+            result = iwxapi.sendReq(req);
+            while (!result){
+                result= iwxapi.sendReq(req);
+                if(result){
+                    break;
+                }
+            }
         }
+        return result;
     }
 
     private String buildTransaction(String type) {

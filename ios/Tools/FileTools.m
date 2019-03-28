@@ -8,8 +8,26 @@
 
 #import "FileTools.h"
 
+NSString * const MESSAGE_IMPORTEXTERNALDATA = @"com.supermap.RN.Mapcontrol.message_importexternaldata";
+static FileTools *filetools = nil;
+
 @implementation FileTools
+
 RCT_EXPORT_MODULE();
+- (NSArray<NSString *> *)supportedEvents
+{
+  return @[
+          MESSAGE_IMPORTEXTERNALDATA,
+           ];
+}
+
++(id)allocWithZone:(NSZone *)zone {
+  static dispatch_once_t onceToken;
+  dispatch_once(&onceToken, ^{
+    filetools = [super allocWithZone:zone];
+  });
+  return filetools;
+}
 
 RCT_REMAP_METHOD(getHomeDirectory,getHomeDirectoryWithresolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject){
   NSString* home = [NSHomeDirectory() stringByAppendingString:@"/Documents"];
@@ -412,7 +430,10 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
     if(![FileTools unZipFile:srclic targetPath:defaultDataPath])
       NSLog(@"拷贝数据失败");
   }
-  
+  //创建Import文件夹
+  NSString *importFilePath = [NSHomeDirectory() stringByAppendingString:@"/Documents/iTablet/Import"];
+  [FileTools deleteFile:importFilePath];
+  [FileTools createFileDirectories:importFilePath];
   //创建用户目录
   NSString* commonPath = @"/Documents/iTablet/Common/";
   NSString* dataPath = [NSString stringWithFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/Data/"];
@@ -502,116 +523,107 @@ RCT_REMAP_METHOD(getImportResult, getImportResult:(RCTPromiseResolveBlock)resolv
   }
 }
 
-+(BOOL)importData:(NSURL*)url{
+RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector:(RCTPromiseRejectBlock)reject){
   //压缩包地址
-  NSString* zipFilePath=[url absoluteString];
+  
   NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
-  zipFilePath = [@"/" stringByAppendingString:[[zipFilePath componentsSeparatedByString:@"Documents"] objectAtIndex:1]];
-  zipFilePath=[head stringByAppendingString:zipFilePath];
+  NSString * destinationPath = [head stringByAppendingString:@"/iTablet/Import/"];
   
   NSFileManager *filemanager = [NSFileManager defaultManager];
-  if([zipFilePath hasSuffix:@".zip"]){
-   
-    
-    BOOL isFileExist = [FileTools getUriState:url];
-    if(isFileExist){
-      @try {
-        NSString *username = USER_NAME;
-        NSString *destinationPath = [[NSString alloc]initWithFormat:@"/Documents/iTablet/User/%@/Data/Import",username];
+  if(hasImportedData){
+    @try {
+      NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
+      NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
+      NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
+      
+      NSString *suffix = @"";
+      
+      for(NSString *str in dirArray){
+        NSArray *splitArr = [str componentsSeparatedByString:@"."];
+        suffix = [splitArr objectAtIndex:(splitArr.count-1)];
         
-        if(![filemanager fileExistsAtPath:destinationPath]){
-          [filemanager createDirectoryAtPath:destinationPath withIntermediateDirectories:NO attributes:nil error:nil];
-        }
-        
-        BOOL isUnzipSuccess = [FileTools unZipFile:zipFilePath targetPath:destinationPath];
-        //解压成功
-        if(isUnzipSuccess){
-          NSMutableArray *workSpaceFile = [[NSMutableArray alloc]init];
-          NSMutableArray *dataSourceFile = [[NSMutableArray alloc]init];
-          NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
+        NSDictionary *verisonMap = [[NSDictionary alloc] initWithObjectsAndKeys:
+                                    @"9.0",@"smwu",
+                                    @"8.0",@"sxwu",
+                                    @"4.0",@"sxw",
+                                    @"5.0",@"smw",
+                                    nil];
+        if([suffix isEqualToString:@"smwu"] || [suffix isEqualToString:@"sxwu"] ||[suffix isEqualToString:@"sxw"] ||[suffix isEqualToString:@"smw"] ){
+          // workspace add
+          NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
           
-          NSString *suffix = @"";
-          for(NSString *str in dirArray){
-            NSArray *splitArr = [str componentsSeparatedByString:@"."];
-            suffix = [splitArr objectAtIndex:(splitArr.count-1)];
-            
-            //            if([str hasSuffix:@".smwu"])
-            //              suffix = @"smwu";
-            //            else if([str hasSuffix:@".sxwu"]){
-            //              suffix = @"sxwu";
-            //            }else if([str hasSuffix:@".sxw"]){
-            //              suffix = @"sxw";
-            //            }else if([str hasSuffix:@".smw"]){
-            //              suffix = @"smw";
-            //            }else if([str hasSuffix:@".udb"]){
-            //              suffix = @"udb";
-            //            }
-            
-            NSDictionary *verisonMap = [[NSDictionary alloc] initWithObjectsAndKeys:
-                                        @"9.0",@"smwu",
-                                        @"8.0",@"sxwu",
-                                        @"4.0",@"sxw",
-                                        @"5.0",@"smw",
-                                        nil];
-            if(![suffix isEqualToString:@"udb"]){
-              // workspace add
-              NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
-              [dic setValue:str forKey:@"server"];
-              [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
-              
-              [workSpaceFile addObject:dic];
-            }else{
-              //udb add
-              [dataSourceFile addObject:str];
-            }
-          }
-          SMap *smap = [SMap singletonInstance];
-          if(workSpaceFile.count){
-            //导入工作空间 SMAP
-            BOOL isImportSuccess = [smap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] withFileDirectory:destinationPath isDatasourceReplace:NO isSymbolsReplace:YES];
-            if(isImportSuccess){
-              [FileTools deleteFile:zipFilePath];
-              hasImportedData = NO;
-            }
-          }else if([dataSourceFile count]){
-            //导入udb文件
-            for(int i = 0,len = (int)dataSourceFile.count; i < len; i++){
-              Workspace *ws = [[Workspace alloc]init];
-              DatasourceConnectionInfo *dsci = [[DatasourceConnectionInfo alloc]init];
-              dsci.server = [dataSourceFile objectAtIndex:i];
-              dsci.engineType = ET_UDB;
-              Datasource *datasource = [[ws datasources]open:dsci];
-              
-              if(![[datasource alias]isEqualToString:@"labelDatasource"]){
-                [smap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
-              }
-            }
-            [FileTools deleteFile:zipFilePath];
-            hasImportedData = NO;
+          [dic setValue:[destinationPath stringByAppendingString:str] forKey:@"server"];
+          [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
+          
+          [workSpaceFile addObject:dic];
+        }else{
+          //udb add
+          [dataSourceFile addObject:[destinationPath stringByAppendingString:str]];
+        }
+      }
+      SMap *smap = [SMap singletonInstance];
+      if(workSpaceFile.count){
+        //导入工作空间
+        BOOL isImportSuccess = [smap.smMapWC importWorkspaceInfo:[workSpaceFile objectAtIndex:0] toModule:@"" isPrivate:YES];
+        
+        if(isImportSuccess){
+          hasImportedData = NO;
+          [FileTools deleteFile:destinationPath];
+        }
+      }else if([dataSourceFile count]){
+        //导入udb文件
+        for(int i = 0,len = (int)dataSourceFile.count; i < len; i++){
+          Workspace *ws = [[Workspace alloc]init];
+          DatasourceConnectionInfo *dsci = [[DatasourceConnectionInfo alloc]init];
+          dsci.server = [dataSourceFile objectAtIndex:i];
+          dsci.engineType = ET_UDB;
+          Datasource *datasource = [[ws datasources]open:dsci];
+          
+          if(![[datasource alias]isEqualToString:@"labelDatasource"]){
+            [smap.smMapWC importDatasourceFile:[dataSourceFile objectAtIndex:0] ofModule:nil];
           }
         }
-        
-      }@catch (NSException *exception) {
-        @throw exception;
+        hasImportedData = NO;
       }
-    }else{
-      NSLog(@"文件不存在，解压失败");
-      return NO;
+      
+    } @catch (NSException *exception) {
+      reject(@"",@"improtError",(NSError *)exception);
     }
+    resolve(@(YES));
   }
-  return YES;
+  
 }
 
 /*
  * 判断压缩包是否存在
  */
-+(BOOL)getUriState:(NSString *)urlString{
++(BOOL)getUriState:(NSURL *)url{
+  
+   NSString* head=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+  
+  NSString* zipFilePath=[url absoluteString];
+ 
+  zipFilePath = [@"/" stringByAppendingString:[[zipFilePath componentsSeparatedByString:@"Documents"] objectAtIndex:1]];
+  zipFilePath=[[head stringByAppendingString:zipFilePath] stringByRemovingPercentEncoding];
+  
   NSFileManager *filemanager = [NSFileManager defaultManager];
-  BOOL isFileExist =[filemanager fileExistsAtPath:urlString isDirectory:nil];
+  
+  NSString *destinationPath = [head stringByAppendingString: @"/iTablet/Import/"];
+  BOOL isFileExist =[filemanager fileExistsAtPath:zipFilePath isDirectory:nil];
+  
   if(isFileExist)
   {
-    hasImportedData = YES;
+     BOOL isUnzipSuccess = [FileTools unZipFile:zipFilePath targetPath:destinationPath];
+    if(isUnzipSuccess){
+      [FileTools deleteFile:zipFilePath];
+      hasImportedData = YES;
+      [filetools sendEventWithName:MESSAGE_IMPORTEXTERNALDATA
+                              body:[NSNumber numberWithBool:YES]];
+      
+    }
+   
   }
+  
   return isFileExist;
 }
 @end

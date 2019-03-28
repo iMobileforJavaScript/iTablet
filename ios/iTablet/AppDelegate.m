@@ -70,11 +70,11 @@ static NSString* g_sampleCodeName = @"#";;
   return YES;
 }
 
+#pragma mark - 微信打开压缩包
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
-
 {
-  BOOL isImportSuccess = [FileTools importData:url];
-  return isImportSuccess;
+  BOOL isZipFileExist = [FileTools getUriState:url];
+  return isZipFileExist;
 }
 
 #pragma mark - 初始化license

@@ -17,6 +17,5 @@
 + (void) sendTextContent:(NSString*)textContent;
 
 //发送文件消息
-+ (void)sendFileContent:(NSDictionary*)infoDic;
-
++(BOOL)sendFileContent:(NSDictionary*)infoDic;
 @end
