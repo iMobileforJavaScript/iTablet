@@ -2578,8 +2578,8 @@ export default class ToolBar extends React.PureComponent {
       isFullScreen: false,
       height:
         this.props.device.orientation === 'LANDSCAPE'
-          ? ConstToolType.NEWTHEME_HEIGHT[0]
-          : ConstToolType.NEWTHEME_HEIGHT[1],
+          ? ConstToolType.THEME_HEIGHT[0]
+          : ConstToolType.THEME_HEIGHT[2],
       column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
     })
   }
@@ -2740,8 +2740,8 @@ export default class ToolBar extends React.PureComponent {
             containerType: 'list',
             height:
               this.props.device.orientation === 'LANDSCAPE'
-                ? ConstToolType.THEME_HEIGHT[3]
-                : ConstToolType.THEME_HEIGHT[5],
+                ? ConstToolType.NEWTHEME_HEIGHT[3]
+                : ConstToolType.NEWTHEME_HEIGHT[3],
             column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
           })
         }
