@@ -1917,6 +1917,26 @@ export default class ToolBar extends React.PureComponent {
           this.updateOverlayerView()
         },
       )
+    } else if (type === ConstToolType.MAP3D_CIRCLEFLY) {
+      let { data, buttons } = this.getData(type)
+      this.setState(
+        {
+          type: type,
+          data: data,
+          buttons: buttons,
+          containerType: 'table',
+          isFullScreen: false,
+          column: 1,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.HEIGHT[0]
+              : ConstToolType.HEIGHT[0]
+          this.showToolbar()
+          this.updateOverlayerView()
+        },
+      )
     } else {
       let { data, buttons } = this.getData(type)
       this.setState(
@@ -1940,11 +1960,6 @@ export default class ToolBar extends React.PureComponent {
               this.height = ConstToolType.HEIGHT[0]
               this.showToolbar()
               // this.updateOverlayerView()
-              break
-            case ConstToolType.MAP3D_CIRCLEFLY:
-              this.height = ConstToolType.HEIGHT[0]
-              this.props.showFullMap && this.props.showFullMap(true)
-              this.showToolbar()
               break
             default:
               this.height = 0
@@ -4372,9 +4387,6 @@ export default class ToolBar extends React.PureComponent {
 
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column = this.state.column
-    if (this.state.type === ConstToolType.MAP3D_CIRCLEFLY) {
-      column = 1
-    }
     return (
       <MTBtn
         style={[styles.cell, { width: this.props.device.width / column }]}

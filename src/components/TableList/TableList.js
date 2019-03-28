@@ -19,7 +19,6 @@ export default class TableList extends React.Component {
     renderCell: () => {},
     device: Object,
     type?: string,
-    Heighttype?: string,
   }
 
   static defaultProps = {
@@ -47,9 +46,6 @@ export default class TableList extends React.Component {
       rowsView = []
     this.props.data.forEach((item, index) => {
       let column = this.props.numColumns
-      if (this.props.Heighttype === 'MAP3D_CIRCLEFLY') {
-        column = 1
-      }
       let rowIndex = Math.floor(index / column)
       if (!rows[rowIndex]) {
         rows[rowIndex] = []
@@ -83,9 +79,6 @@ export default class TableList extends React.Component {
   renderCell = (item, rowIndex, cellIndex) => {
     if (!this.props.renderCell) throw new Error('Please render cell')
     let column = this.props.numColumns
-    if (this.props.Heighttype === 'MAP3D_CIRCLEFLY') {
-      column = 1
-    }
     return (
       <View
         style={{ width: this.props.device.width / column }}

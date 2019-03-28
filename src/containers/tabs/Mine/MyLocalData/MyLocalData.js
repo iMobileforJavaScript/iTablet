@@ -7,8 +7,9 @@ import {
   Image,
   AsyncStorage,
   RefreshControl,
+  ScrollView,
 } from 'react-native'
-import { ListSeparator, TextBtn } from '../../../../components'
+import { ListSeparator, TextBtn, Container } from '../../../../components'
 import { ConstPath, ConstInfo, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import Toast from '../../../../utils/Toast'
@@ -18,13 +19,12 @@ import { SScene } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
+import MyOnlineData from '../MyOnlineData'
 export default class MyLocalData extends Component {
   props: {
     user: Object,
     navigation: Object,
     importWorkspace: () => {},
-    showOnlineData: () => {},
-    getContainer: () => {},
   }
 
   constructor(props) {
@@ -255,7 +255,6 @@ export default class MyLocalData extends Component {
           sectionData: newSectionData,
         },
         () => {
-          this.props.showOnlineData && this.props.showOnlineData()
           // this.container.setLoading(false)
         },
       )
@@ -807,7 +806,6 @@ export default class MyLocalData extends Component {
     ) {
       let title = Const.ONLINE_DATA
       let action = this.goToMyOnlineData
-
       btn = (
         <TextBtn
           btnText={title}
@@ -822,49 +820,74 @@ export default class MyLocalData extends Component {
     return btn
   }
 
+  renderMyOnlineData = () => {
+    if (this.props.user.users.length > 1 && this.state.sectionData.length > 1) {
+      if (this.state.sectionData[this.state.sectionData.length - 1].isShowItem)
+        return (
+          <MyOnlineData
+            navigation={this.props.navigation}
+            user={this.props.user}
+            setLoading={this.setLoading}
+          />
+        )
+    }
+  }
+
   render() {
     let sectionData = this.state.sectionData
     return (
-      <View style={{ flex: 1 }}>
-        <Text
-          numberOfLines={2}
-          ellipsizeMode={'head'}
-          style={{
-            width: '100%',
-            backgroundColor: color.contentColorWhite,
-            display: this.state.textDisplay,
-            paddingLeft: 10,
-            fontSize: 10,
-          }}
-        >
-          {this.state.textValue}
-        </Text>
-        <SectionList
-          style={{
-            flex: 1,
-            backgroundColor: color.contentColorWhite,
-          }}
-          sections={sectionData}
-          initialNumToRender={20}
-          keyExtractor={this._keyExtractor}
-          renderSectionHeader={this._renderSectionHeader}
-          renderItem={this._renderItem}
-          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          // renderSectionFooter={this._renderSectionSeparatorComponent}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this._setSectionDataState3}
-              colors={['orange', 'red']}
-              titleColor={'orange'}
-              tintColor={'orange'}
-              title={'刷新中...'}
-              enabled={true}
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: '导入',
+          withoutBack: false,
+          navigation: this.props.navigation,
+        }}
+      >
+        <View style={{ flex: 1 }}>
+          <Text
+            numberOfLines={2}
+            ellipsizeMode={'head'}
+            style={{
+              width: '100%',
+              backgroundColor: color.contentColorWhite,
+              display: this.state.textDisplay,
+              paddingLeft: 10,
+              fontSize: 10,
+            }}
+          >
+            {this.state.textValue}
+          </Text>
+          <ScrollView>
+            <SectionList
+              style={{
+                flex: 1,
+                backgroundColor: color.contentColorWhite,
+              }}
+              sections={sectionData}
+              initialNumToRender={20}
+              keyExtractor={this._keyExtractor}
+              renderSectionHeader={this._renderSectionHeader}
+              renderItem={this._renderItem}
+              // ItemSeparatorComponent={this._renderItemSeparatorComponent}
+              // renderSectionFooter={this._renderSectionSeparatorComponent}
+              refreshControl={
+                <RefreshControl
+                  refreshing={this.state.isRefreshing}
+                  onRefresh={this._setSectionDataState3}
+                  colors={['orange', 'red']}
+                  titleColor={'orange'}
+                  tintColor={'orange'}
+                  title={'刷新中...'}
+                  enabled={true}
+                />
+              }
             />
-          }
-        />
-        {this._showLocalDataPopupModal()}
-      </View>
+            {this.renderMyOnlineData()}
+          </ScrollView>
+          {this._showLocalDataPopupModal()}
+        </View>
+      </Container>
     )
   }
 }

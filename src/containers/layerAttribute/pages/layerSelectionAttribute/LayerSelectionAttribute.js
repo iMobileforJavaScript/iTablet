@@ -30,6 +30,7 @@ export default class LayerSelectionAttribute extends React.Component {
 
   constructor(props) {
     super(props)
+    let checkData = this.checkToolIsViable()
     this.state = {
       attributes: {
         head: [],
@@ -41,6 +42,10 @@ export default class LayerSelectionAttribute extends React.Component {
       startIndex: 0,
       relativeIndex: -1, // 当前页面从startIndex开始的被选中的index, 0 -> this.total - 1
       currentIndex: -1,
+
+      canBeUndo: checkData.canBeUndo,
+      canBeRedo: checkData.canBeRedo,
+      canBeRevert: checkData.canBeRevert,
     }
 
     this.total = 0
@@ -64,6 +69,7 @@ export default class LayerSelectionAttribute extends React.Component {
       JSON.stringify(prevProps.layerSelection) !==
         JSON.stringify(this.props.layerSelection)
     ) {
+      let checkData = this.checkToolIsViable()
       // this.isInit = true
       this.currentPage = 0
       this.total = 0 // 属性总数
@@ -80,6 +86,7 @@ export default class LayerSelectionAttribute extends React.Component {
           relativeIndex: -1,
           currentIndex: -1,
           startIndex: 0,
+          ...checkData,
         },
         () => {
           this.refresh(null, true)
@@ -481,18 +488,23 @@ export default class LayerSelectionAttribute extends React.Component {
 
     return {
       canBeUndo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1) ||
+        false,
       canBeRedo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex > 0,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex > 0) ||
+        false,
       canBeRevert:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1 &&
-        !(historyObj.history[historyObj.currentIndex + 1] instanceof Array),
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1 &&
+          !(
+            historyObj.history[historyObj.currentIndex + 1] instanceof Array
+          )) ||
+        false,
     }
   }
 
@@ -537,10 +549,28 @@ export default class LayerSelectionAttribute extends React.Component {
           },
         ])
         .then(result => {
-          if (!isSingleData && result) {
+          // if (!isSingleData && result) {
+          //   // 成功修改属性后，更新数据
+          //   let attributes = JSON.parse(JSON.stringify(this.state.attributes))
+          //   attributes[data.index][data.columnIndex].value = data.value
+          //   let checkData = this.checkToolIsViable()
+          //   this.setState({
+          //     attributes,
+          //     ...checkData,
+          //   })
+          // }
+          if (result) {
             // 成功修改属性后，更新数据
             let attributes = JSON.parse(JSON.stringify(this.state.attributes))
-            attributes[data.index][data.columnIndex].value = data.value
+            // 如果有序号，column.index要 -1
+            // let column = this.state.attributes.data.length > 1 ? (data.columnIndex - 1) : data.columnIndex
+            if (this.state.attributes.data.length > 1) {
+              attributes.data[data.index][data.columnIndex - 1].value =
+                data.value
+            } else {
+              attributes.data[0][data.index].value = data.value
+            }
+
             let checkData = this.checkToolIsViable()
             this.setState({
               attributes,
@@ -557,18 +587,21 @@ export default class LayerSelectionAttribute extends React.Component {
       case 'undo':
         if (!this.state.canBeUndo) {
           Toast.show('已经无法回撤')
+          this.setLoading(false)
           return
         }
         break
       case 'redo':
         if (!this.state.canBeRedo) {
           Toast.show('已经无法恢复')
+          this.setLoading(false)
           return
         }
         break
       case 'revert':
         if (!this.state.canBeRevert) {
           Toast.show('已经无法还原')
+          this.setLoading(false)
           return
         }
         break
@@ -589,27 +622,57 @@ export default class LayerSelectionAttribute extends React.Component {
 
               if (data.length === 1) {
                 let fieldInfo = data[0].fieldInfo
-                if (
-                  attributes[fieldInfo[0].index][fieldInfo[0].columnIndex]
-                    .name === fieldInfo[0].name &&
-                  attributes[fieldInfo[0].index][fieldInfo[0].columnIndex]
-                    .value === fieldInfo[0].value
-                ) {
-                  this.setAttributeHistory(type)
-                  return
+                if (this.state.attributes.data.length > 1) {
+                  if (
+                    attributes.data[fieldInfo[0].index][
+                      fieldInfo[0].columnIndex - 1
+                    ].name === fieldInfo[0].name &&
+                    attributes.data[fieldInfo[0].index][
+                      fieldInfo[0].columnIndex - 1
+                    ].value === fieldInfo[0].value
+                  ) {
+                    this.setAttributeHistory(type)
+                    return
+                  }
+                } else {
+                  if (
+                    attributes.data[0][fieldInfo[0].index].name ===
+                      fieldInfo[0].name &&
+                    attributes.data[0][fieldInfo[0].index].value ===
+                      fieldInfo[0].value
+                  ) {
+                    this.setAttributeHistory(type)
+                    return
+                  }
                 }
               }
 
               for (let i = 0; i < data.length; i++) {
                 let fieldInfo = data[i].fieldInfo
                 for (let j = 0; j < fieldInfo.length; j++) {
-                  if (
-                    attributes[fieldInfo[j].index][fieldInfo[j].columnIndex]
-                      .name === fieldInfo[j].name
-                  ) {
-                    attributes[fieldInfo[j].index][
-                      fieldInfo[j].columnIndex
-                    ].value = fieldInfo[j].value
+                  if (this.state.attributes.data.length > 1) {
+                    if (
+                      attributes.data[fieldInfo[j].index][
+                        fieldInfo[j].columnIndex - 1
+                      ].name === fieldInfo[j].name &&
+                      attributes.data[fieldInfo[j].index][
+                        fieldInfo[j].columnIndex - 1
+                      ].value !== fieldInfo[j].value
+                    ) {
+                      attributes.data[fieldInfo[j].index][
+                        fieldInfo[j].columnIndex - 1
+                      ].value = fieldInfo[j].value
+                    }
+                  } else {
+                    if (
+                      attributes.data[0][fieldInfo[j].index].name ===
+                        fieldInfo[j].name &&
+                      attributes.data[0][fieldInfo[j].index].value !==
+                        fieldInfo[j].value
+                    ) {
+                      attributes.data[0][fieldInfo[j].index].value =
+                        fieldInfo[j].value
+                    }
                   }
                 }
               }
