@@ -241,28 +241,32 @@ export default class Friend extends Component {
 
   _sendFile = (messageStr, filepath, talkId) => {
     let connectInfo = {
-      serverIP : sIP,
-      port : sPort,
-      hostName : sHostName,
-      userName : sUserName,
-      passwd : sPassword,
-      userID : g_curUserId,
+      serverIP: sIP,
+      port: sPort,
+      hostName: sHostName,
+      userName: sUserName,
+      passwd: sPassword,
+      userID: g_curUserId,
     }
-    SMessageService.sendFile(JSON.stringify(connectInfo), messageStr, filepath, talkId)
-    .then(res => {
-        let messageObj = JSON.parse(messageStr)
-        let ctime = new Date()
-        let time = Date.parse(ctime)
-        let fileinform = {
-          message: "[长按接收文件" + res.fileName + "]",
-          type: 4,//文件接收通知
-          user: messageObj.user,
-          time: time,
-          system: 0,
-          fileName: res.fileName,
-          queueName: res.queueName
-        }
-        this._sendMessage(JSON.stringify(fileinform), talkId, false)
+    SMessageService.sendFile(
+      JSON.stringify(connectInfo),
+      messageStr,
+      filepath,
+      talkId,
+    ).then(res => {
+      let messageObj = JSON.parse(messageStr)
+      let ctime = new Date()
+      let time = Date.parse(ctime)
+      let fileinform = {
+        message: '[长按接收文件' + res.fileName + ']',
+        type: 4, //文件接收通知
+        user: messageObj.user,
+        time: time,
+        system: 0,
+        fileName: res.fileName,
+        queueName: res.queueName,
+      }
+      this._sendMessage(JSON.stringify(fileinform), talkId, false)
     })
   }
 

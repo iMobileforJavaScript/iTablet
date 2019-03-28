@@ -227,6 +227,7 @@ export default class MyModule extends Component {
       if (result) {
         let fileName = this.itemInfo.item.name
         if (type === 'weChat') {
+          GLOBAL.shareFilePath = toPath
           appUtilsModule
             .sendFileOfWechat({
               filePath: toPath,
@@ -235,19 +236,14 @@ export default class MyModule extends Component {
             })
             .then(
               result => {
-                result && Toast.show('分享成功')
-                this.container.setLoading(false)
+                !result && Toast.show('所分享文件超过10MB')
+                !result && FileTools.deleteFile(toPath)
                 this.ModalBtns.setVisible(false)
-                setTimeout(() => {
-                  FileTools.deleteFile(toPath)
-                }, 4000)
               },
               () => {
                 Toast.show('分享失败')
                 this.container.setLoading(false)
-                setTimeout(() => {
-                  FileTools.deleteFile(toPath)
-                }, 4000)
+                FileTools.deleteFile(toPath)
               },
             )
         } else {

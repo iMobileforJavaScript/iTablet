@@ -114,7 +114,7 @@ class Chat extends React.Component {
         text: msg.msg,
         createdAt: new Date(msg.time),
         user: { _id: msg.id, name: msg.name },
-        type: msg.type,//根据type渲染
+        type: msg.type, //根据type渲染
       }
       curMsg.push(chatMsg)
     }
@@ -239,12 +239,13 @@ class Chat extends React.Component {
     // this.answerDemo(messages)
   }
 
-  onSendFile(filepath1){
-    let filepath = "/sdcard/send.zip"
+  onSendFile() {
+    // filepath1
+    let filepath = '/sdcard/send.zip'
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
-      type: 3,//文件
+      type: 3, //文件
       user: { name: this.curUser.nickname, id: this.curUser.userId },
       time: time,
       system: 0,
@@ -253,13 +254,13 @@ class Chat extends React.Component {
 
     let fileinform = {
       id: time,
-      text: "abc",
-      type: 4,//文件接收通知
-      user: "",
+      text: 'abc',
+      type: 4, //文件接收通知
+      user: '',
       createdAt: time,
       system: 0,
-      fileName: "",
-      queueName: ""
+      fileName: '',
+      queueName: '',
     }
 
     this.setState(previousState => {
@@ -329,18 +330,18 @@ class Chat extends React.Component {
     })
   }
 
-  onLongPress(context, message){
-    switch(message.type){
-      case 1: alert("1")
-      break
-      case 4: alert("4")
-      break
-      default: alert("undefined")
-      
+  onLongPress(context, message) {
+    switch (message.type) {
+      case 1:
+        alert('1')
+        break
+      case 4:
+        alert('4')
+        break
+      default:
+        alert('undefined')
     }
-    
   }
-
 
   render() {
     return (
@@ -365,7 +366,7 @@ class Chat extends React.Component {
             _id: this.curUser.userId, // sent messages should have same user._id
             name: this.curUser.nickname,
           }}
-          onLongPress ={this.onLongPress}
+          onLongPress={this.onLongPress}
           renderActions={this.renderCustomActions}
           renderBubble={this.renderBubble}
           renderSystemMessage={this.renderSystemMessage}
