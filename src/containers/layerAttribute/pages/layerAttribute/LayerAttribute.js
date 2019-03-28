@@ -46,6 +46,7 @@ export default class LayerAttribute extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.type = params && params.type
+    let checkData = this.checkToolIsViable()
     this.state = {
       attributes: {
         head: [],
@@ -54,12 +55,13 @@ export default class LayerAttribute extends React.Component {
       showTable: false,
       editControllerVisible: false,
       currentFieldInfo: [],
+      relativeIndex: -1, // 当前页面从startIndex开始的被选中的index, 0 -> this.total - 1
       currentIndex: -1,
       startIndex: 0,
 
-      canBeUndo: false,
-      canBeRedo: false,
-      canBeRevert: false,
+      canBeUndo: checkData.canBeUndo,
+      canBeRedo: checkData.canBeRedo,
+      canBeRevert: checkData.canBeRevert,
     }
 
     this.currentPage = 0
@@ -82,10 +84,19 @@ export default class LayerAttribute extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (
+      this.type === 'MAP_3D' &&
+      this.state.attributes !== prevProps.attributes
+    ) {
+      this.setState({
+        attributes: prevProps.attributes,
+      })
+      // console.log(prevProps)
+    } else if (
       prevProps.currentLayer &&
       JSON.stringify(prevProps.currentLayer) !==
         JSON.stringify(this.props.currentLayer)
     ) {
+      let checkData = this.checkToolIsViable()
       // 切换图层，重置属性界面
       this.currentPage = 0
       this.total = 0 // 属性总数
@@ -98,13 +109,23 @@ export default class LayerAttribute extends React.Component {
             data: [],
           },
           currentFieldInfo: [],
+          relativeIndex: -1,
           currentIndex: -1,
           startIndex: 0,
+          ...checkData,
         },
         () => {
           this.refresh(null, true)
         },
       )
+    } else if (
+      JSON.stringify(prevProps.attributesHistory) !==
+      JSON.stringify(this.props.attributesHistory)
+    ) {
+      let checkData = this.checkToolIsViable()
+      this.setState({
+        ...checkData,
+      })
     }
   }
 
@@ -128,7 +149,15 @@ export default class LayerAttribute extends React.Component {
   refresh = (cb = () => {}, resetCurrent = false) => {
     if (!this.canBeRefresh) {
       Toast.show('已经是最新的了')
-      cb && cb()
+      this.getAttribute(
+        {
+          type: 'reset',
+          currentPage: 0,
+          startIndex: 0,
+        },
+        cb,
+        resetCurrent,
+      )
       return
     }
     let startIndex = this.state.startIndex - PAGE_SIZE
@@ -182,17 +211,15 @@ export default class LayerAttribute extends React.Component {
    * @param resetCurrent 是否重置当前选择的对象
    */
   getAttribute = (params = {}, cb = () => {}, resetCurrent = false) => {
-    if (!this.props.currentLayer.path || params.currentPage < 0) return
+    if (!this.props.currentLayer.path || params.currentPage < 0) {
+      this.setLoading(false)
+      return
+    }
     let { currentPage, pageSize, type, ...others } = params
     let result = {},
       attributes = {}
     ;(async function() {
       try {
-        // attributes = await SMap.getLayerAttribute({
-        //   path: this.props.currentLayer.path,
-        //   page: this.currentPage,
-        //   size: PAGE_SIZE,
-        // })
         result = await LayerUtil.getLayerAttribute(
           JSON.parse(JSON.stringify(this.state.attributes)),
           this.props.currentLayer.path,
@@ -204,25 +231,21 @@ export default class LayerAttribute extends React.Component {
         this.total = result.total || 0
         attributes = result.attributes || []
 
-        if (
-          // attributes.data.length === this.state.attributes.data.length &&
-          // JSON.stringify(attributes.data) === JSON.stringify(this.state.attributes.data) ||
+        this.noMore =
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
-        ) {
-          this.noMore = true
-        }
-        let currentIndex =
+
+        let relativeIndex =
           attributes.data.length === 1
             ? 0
             : resetCurrent
               ? -1
-              : this.state.currentIndex
+              : this.state.relativeIndex
         if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex,
+            relativeIndex,
             currentFieldInfo: attributes.data[0],
             startIndex: -1,
             ...others,
@@ -231,8 +254,8 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex,
-            currentFieldInfo: attributes.data[currentIndex],
+            relativeIndex,
+            currentFieldInfo: attributes.data[relativeIndex],
             ...others,
           })
         }
@@ -250,10 +273,12 @@ export default class LayerAttribute extends React.Component {
    * 定位到首位
    */
   locateToTop = () => {
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
         {
+          relativeIndex: 0,
           currentIndex: 0,
         },
         () => {
@@ -266,6 +291,7 @@ export default class LayerAttribute extends React.Component {
               sectionIndex: 0,
               viewPosition: 0,
             })
+          this.setLoading(false)
         },
       )
     } else {
@@ -274,6 +300,7 @@ export default class LayerAttribute extends React.Component {
           type: 'reset',
           currentPage: this.currentPage,
           startIndex: 0,
+          relativeIndex: 0,
           currentIndex: 0,
         },
         () => {
@@ -290,6 +317,7 @@ export default class LayerAttribute extends React.Component {
               sectionIndex: 0,
               viewPosition: 0,
             })
+          this.setLoading(false)
         },
       )
     }
@@ -313,7 +341,8 @@ export default class LayerAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        currentIndex: remainder,
+        relativeIndex: remainder,
+        currentIndex: this.total - 1,
       },
       () => {
         if (this.table) {
@@ -330,6 +359,7 @@ export default class LayerAttribute extends React.Component {
               viewPosition: 1,
             })
         }
+        this.setLoading(false)
       },
     )
     this.locationView && this.locationView.show(false)
@@ -341,29 +371,41 @@ export default class LayerAttribute extends React.Component {
    */
   locateToPosition = (data = {}) => {
     let remainder = 0,
-      viewPosition = 0.3
+      viewPosition = 0.3,
+      relativeIndex,
+      currentIndex
     if (data.type === 'relative') {
-      let currentIndex =
-        (this.state.currentIndex <= 0 ? 0 : this.state.currentIndex) +
+      relativeIndex =
+        (this.state.relativeIndex <= 0 ? 0 : this.state.relativeIndex) +
+        // this.currentPage * PAGE_SIZE +
+        this.state.startIndex +
         data.index
-      if (currentIndex < 0) {
+      if (relativeIndex < 0 || relativeIndex >= this.total) {
         Toast.show('位置越界')
         return
       }
-      this.currentPage = Math.floor(currentIndex / PAGE_SIZE)
-      remainder = currentIndex % PAGE_SIZE
+      currentIndex = this.state.currentIndex + data.index
+      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
+      remainder = relativeIndex % PAGE_SIZE
     } else if (data.type === 'absolute') {
-      this.currentPage = Math.floor(data.index / PAGE_SIZE)
-      remainder = (data.index % PAGE_SIZE) - 1
+      if (data.index <= 0 || data.index > this.total) {
+        Toast.show('位置越界')
+        return
+      }
+      relativeIndex = data.index - 1
+      this.currentPage = Math.floor(relativeIndex / PAGE_SIZE)
+      remainder = relativeIndex % PAGE_SIZE
+      currentIndex = data.index
     }
 
-    if (this.currentPage > 0) {
-      this.canBeRefresh = true
-    }
+    // if (this.currentPage > 0) {
+    //   this.canBeRefresh = true
+    // }
 
-    if (remainder <= PAGE_SIZE / 4) {
+    let restLength = this.total - relativeIndex - 1
+    if (remainder <= PAGE_SIZE / 4 && !(restLength < PAGE_SIZE / 4)) {
       viewPosition = 0
-    } else if (remainder > (PAGE_SIZE * 3) / 4) {
+    } else if (remainder > (PAGE_SIZE * 3) / 4 || restLength < PAGE_SIZE / 4) {
       viewPosition = 1
     }
 
@@ -377,7 +419,8 @@ export default class LayerAttribute extends React.Component {
         type: 'reset',
         currentPage: this.currentPage,
         startIndex: startIndex,
-        currentIndex: remainder,
+        relativeIndex: remainder,
+        currentIndex,
       },
       () => {
         if (this.table) {
@@ -394,6 +437,7 @@ export default class LayerAttribute extends React.Component {
               viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
             })
         }
+        this.setLoading(false)
       },
     )
   }
@@ -401,14 +445,16 @@ export default class LayerAttribute extends React.Component {
   selectRow = ({ data, index }) => {
     if (!data || index < 0) return
 
-    if (this.state.currentIndex !== index) {
+    if (this.state.relativeIndex !== index) {
       this.setState({
         currentFieldInfo: data,
-        currentIndex: index,
+        relativeIndex: index,
+        currentIndex: this.currentPage * PAGE_SIZE + index,
       })
     } else {
       this.setState({
         currentFieldInfo: [],
+        relativeIndex: -1,
         currentIndex: -1,
       })
     }
@@ -525,18 +571,23 @@ export default class LayerAttribute extends React.Component {
 
     return {
       canBeUndo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1) ||
+        false,
       canBeRedo:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex > 0,
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex > 0) ||
+        false,
       canBeRevert:
-        historyObj &&
-        historyObj.history.length > 0 &&
-        historyObj.currentIndex < historyObj.history.length - 1 &&
-        !(historyObj.history[historyObj.currentIndex + 1] instanceof Array),
+        (historyObj &&
+          historyObj.history.length > 0 &&
+          historyObj.currentIndex < historyObj.history.length - 1 &&
+          !(
+            historyObj.history[historyObj.currentIndex + 1] instanceof Array
+          )) ||
+        false,
     }
   }
 
@@ -546,18 +597,21 @@ export default class LayerAttribute extends React.Component {
       case 'undo':
         if (!this.state.canBeUndo) {
           Toast.show('已经无法回撤')
+          this.setLoading(false)
           return
         }
         break
       case 'redo':
         if (!this.state.canBeRedo) {
           Toast.show('已经无法恢复')
+          this.setLoading(false)
           return
         }
         break
       case 'revert':
         if (!this.state.canBeRevert) {
           Toast.show('已经无法还原')
+          this.setLoading(false)
           return
         }
         break
@@ -763,38 +817,38 @@ export default class LayerAttribute extends React.Component {
     )
   }
 
-  renderContent = () => {
-    if (!this.state.showTable) return null
-    return (
-      <View>
-        <LayerTopBar
-          canRelated={this.state.currentIndex >= 0}
-          locateAction={this.showLocationView}
-          relateAction={this.relateAction}
-        />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}
-        >
-          {this.renderMapLayerAttribute()}
-          {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
-          <LocationView
-            ref={ref => (this.locationView = ref)}
-            style={styles.locationView}
-            currentIndex={
-              this.currentPage * PAGE_SIZE + this.state.currentIndex
-            }
-            locateToTop={this.locateToTop}
-            locateToBottom={this.locateToBottom}
-            locateToPosition={this.locateToPosition}
-          />
-        </View>
-      </View>
-    )
-  }
+  // renderContent = () => {
+  //   if (!this.state.showTable) return null
+  //   return (
+  //     <View>
+  //       <LayerTopBar
+  //         canRelated={this.state.relativeIndex >= 0}
+  //         locateAction={this.showLocationView}
+  //         relateAction={this.relateAction}
+  //       />
+  //       <View
+  //         style={{
+  //           flex: 1,
+  //           flexDirection: 'column',
+  //           justifyContent: 'flex-start',
+  //         }}
+  //       >
+  //         {this.renderMapLayerAttribute()}
+  //         {this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
+  //         <LocationView
+  //           ref={ref => (this.locationView = ref)}
+  //           style={styles.locationView}
+  //           relativeIndex={
+  //             this.currentPage * PAGE_SIZE + this.state.relativeIndex
+  //           }
+  //           locateToTop={this.locateToTop}
+  //           locateToBottom={this.locateToBottom}
+  //           locateToPosition={this.locateToPosition}
+  //         />
+  //       </View>
+  //     </View>
+  //   )
+  // }
 
   render() {
     let title = ''
@@ -821,6 +875,24 @@ export default class LayerAttribute extends React.Component {
       this.state.attributes.head &&
       this.state.attributes.head.length > 0
 
+    let headerRight = []
+    if (this.type !== 'MAP_3D') {
+      headerRight = [
+        <MTBtn
+          key={'undo'}
+          image={getPublicAssets().common.icon_undo}
+          imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+          onPress={this.showUndoView}
+        />,
+        <MTBtn
+          key={'search'}
+          image={getPublicAssets().common.icon_search}
+          imageStyle={styles.headerBtn}
+          onPress={this.goToSearch}
+        />,
+      ]
+    }
+
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -830,20 +902,7 @@ export default class LayerAttribute extends React.Component {
           // backAction: this.back,
           // backImg: require('../../../../assets/mapTools/icon_close.png'),
           withoutBack: true,
-          headerRight: [
-            <MTBtn
-              key={'undo'}
-              image={getPublicAssets().common.icon_undo}
-              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-              onPress={this.showUndoView}
-            />,
-            <MTBtn
-              key={'search'}
-              image={getPublicAssets().common.icon_search}
-              imageStyle={styles.headerBtn}
-              onPress={this.goToSearch}
-            />,
-          ],
+          headerRight,
         }}
         // bottomBar={this.type !== SINGLE_ATTRIBUTE && this.renderToolBar()}
         style={styles.container}
@@ -871,9 +930,7 @@ export default class LayerAttribute extends React.Component {
           <LocationView
             ref={ref => (this.locationView = ref)}
             style={styles.locationView}
-            currentIndex={
-              this.currentPage * PAGE_SIZE + this.state.currentIndex
-            }
+            currentIndex={this.state.currentIndex}
             locateToTop={this.locateToTop}
             locateToBottom={this.locateToBottom}
             locateToPosition={this.locateToPosition}

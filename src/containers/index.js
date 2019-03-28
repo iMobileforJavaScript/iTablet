@@ -21,6 +21,7 @@ import Tabs, {
   Chat,
   AddFriend,
   InformMessage,
+  CreateGroupChat,
   MyLabel,
   MyBaseMap,
   MyModule,
@@ -302,6 +303,13 @@ export default StackNavigator(
     },
     InformMessage: {
       screen: InformMessage,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    CreateGroupChat: {
+      screen: CreateGroupChat,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

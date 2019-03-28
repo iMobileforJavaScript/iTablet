@@ -9,9 +9,15 @@
 #import <Foundation/Foundation.h>
 #import "React/RCTBridgeModule.h"
 #import <ZipArchive/ZipArchive.h>
+#import "SMap.h"
 
-@interface FileTools : NSObject<RCTBridgeModule, SSZipArchiveDelegate>
+NSString *USER_NAME;
+static BOOL hasImportedData = NO;
+
+@interface FileTools : RCTEventEmitter<RCTBridgeModule, SSZipArchiveDelegate>
 @property(nonatomic) id<SSZipArchiveDelegate> zipArchiveDelegate;
+
+
 
 +(BOOL)zipFile:(NSString *)archivePath targetPath:(NSString *)targetPath;
 +(BOOL)zipFiles:(NSArray *)archivePaths targetPath:(NSString *)targetPath;
@@ -22,4 +28,5 @@
 +(BOOL)initUserDefaultData:(NSString *)userName;
 +(NSString*)getLastModifiedTime:(NSDate*) nsDate;
 + (NSDictionary *)readLocalFileWithPath:(NSString *)path;
++(BOOL)getUriState:(NSURL *)url;
 @end

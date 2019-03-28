@@ -1,14 +1,9 @@
 package com.supermap.RN;
 
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.facebook.react.bridge.Arguments;
@@ -27,14 +22,12 @@ import com.supermap.data.Datasource;
 import com.supermap.data.DatasourceConnectionInfo;
 import com.supermap.data.Datasources;
 import com.supermap.data.EngineType;
-import com.supermap.data.Environment;
 import com.supermap.data.Workspace;
 import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
-
+import com.supermap.interfaces.mapping.SMap;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -48,17 +41,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipException;
-//import java.util.zip.ZipOutputStream;
 import org.apache.tools.zip.ZipOutputStream;
 import org.json.JSONObject;
 
@@ -67,10 +62,9 @@ public class FileTools extends ReactContextBaseJavaModule {
 //    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
-    private static final android.content.ContentUris ContentUris =null ;
     private static String USER_NAME="";
-    private static String lastFilePath=null;
-    private ReactContext mReactContext;
+    private static Boolean importData=false;
+    private static ReactContext mReactContext;
 
     public static final String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();
     public static ReactApplicationContext reactContext;
@@ -78,6 +72,7 @@ public class FileTools extends ReactContextBaseJavaModule {
     public FileTools(ReactApplicationContext context) {
         super(context);
         reactContext = context;
+        mReactContext=context;
     }
 
     @Override
@@ -511,6 +506,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+
     @ReactMethod
     public void fileIsExistInHomeDirectory(String path, Promise promise) {
         try {
@@ -526,13 +522,97 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
+
+
+    /**
+     * 获取导入外部数据的结果。
+     *
+     */
     @ReactMethod
-    public void EnvironmentIsValid( Promise promise) {
+    public void getImportResult(Promise promise) {
         try {
-            Boolean result = Environment.getLicenseStatus().isLicenseValid();
-            promise.resolve(result);
+             promise.resolve(importData);
         } catch (Exception e) {
             promise.reject(e);
+        }
+    }
+
+    @ReactMethod
+    public void importData(Promise promise){
+        try {
+            SMap sMap=SMap.getInstance();
+            String userName=getUserName();
+            String importPath=SDCARD+"/iTablet/Import";
+            String filePath=importPath+"/weChat.zip";
+            String toPath=importPath;
+            File file=new File(filePath);
+            if(file.exists()){
+                Boolean reuslt=FileTools.unZipFile(filePath, toPath);
+                if(reuslt){
+                    deleteFile(filePath);
+                    ArrayList<String> arrayList =new ArrayList();
+                    getFilePath(toPath,arrayList);
+                    ArrayList<Map> workspace =new ArrayList();
+                    ArrayList<String> datasource =new ArrayList();
+                    for (int i = 0; i <arrayList.size() ; i++) {
+                        String path= arrayList.get(i);
+                        String fileType=path.substring(path.indexOf('.')+1);
+                        if(fileType.equals("smwu")||fileType.equals("sxwu")||fileType.equals("sxw")||fileType.equals("smw")){
+                            Map map=new HashMap();
+                            map.put("server",arrayList.get(i));
+                            String workspaceType=null;
+                            switch (fileType){
+                                case "smwu":
+                                    workspaceType="9.0";
+                                    break;
+                                case "sxwu":
+                                    workspaceType="8.0";
+                                    break;
+                                case "sxw":
+                                    workspaceType="4.0";
+                                    break;
+                                case "smw":
+                                    workspaceType="5.0";
+                                    break;
+                            }
+                            map.put("type", workspaceType);
+                            workspace.add(map);
+                        }
+                        if(fileType.equals("udb")){
+                            datasource.add(arrayList.get(i));
+                        }
+                    }
+                    if(workspace.size()>0){
+                        List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
+                        if(result.size()>0){
+                            importData=false;
+                            deleteDirectory(importPath);
+                        }
+                    }else if(datasource.size()>0){
+                        for (int i = 0; i <datasource.size() ; i++) {
+                            Workspace workspace1=new Workspace();
+                            DatasourceConnectionInfo datasourceConnectionInfo=new DatasourceConnectionInfo();
+                            datasourceConnectionInfo.setServer(datasource.get(i));
+                            datasourceConnectionInfo.setEngineType(EngineType.UDB);
+                            Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
+                            if(datasource1.getAlias()=="labelDatasource"){
+                                importData=false;
+                            }else {
+                                sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);
+                                importData=false;
+                            }
+                        }
+                        deleteDirectory(importPath);
+                    }
+
+                    promise.resolve(true);
+                }else {
+                    deleteDirectory(toPath);
+                }
+            }
+        }catch (Exception e){
+            promise.reject(e);
+            return  ;
         }
     }
 
@@ -629,6 +709,8 @@ public class FileTools extends ReactContextBaseJavaModule {
         USER_NAME=userName;
         String userPath = SDCARD + "/iTablet/User/" + userName + "/";
         String externalDataPath = userPath + "ExternalData/";
+        String plottingExtDataPath = externalDataPath + "Plotting/";
+        String collectionExtDataPath = externalDataPath + "Collection/";
         String dataPath = userPath + "Data/";
 
         String defaultData = "DefaultData";
@@ -648,8 +730,9 @@ public class FileTools extends ReactContextBaseJavaModule {
         if (defaultDataFile.exists()) {
             defaultDataFile.delete();
         }
-
+        String cachePath=SDCARD + "/iTablet/Cache/";
         //创建用户目录
+        createDirectory(cachePath);
         createDirectory(dataPath + "Attribute");
         createDirectory(dataPath + "Datasource");
         createDirectory(dataPath + "Scene");
@@ -659,16 +742,17 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Temp");
         createDirectory(dataPath + "Lable");
         createDirectory(dataPath + "Color");
+        createDirectory(dataPath + "Import");
         createDirectory(externalDataPath);
-        createDirectory(externalDataPath+"Plotting");
-        createDirectory(externalDataPath+"Collection");
+        createDirectory(plottingExtDataPath);
+        createDirectory(collectionExtDataPath);
 //        createDirectory(externalDataPath+"Lable");
 
         // 初始化用户数据
         String commonPath = SDCARD + "/iTablet/Common/";
         String commonZipPath = commonPath + "Template.zip";
         String defaultZipData = "Template.zip";
-        String templatePath = externalDataPath;
+        String templatePath = collectionExtDataPath;
         String templateFilePath = templatePath + "地理国情普查";
 
         String lableUDB=dataPath+"Label/Label.udb";
@@ -893,25 +977,37 @@ public class FileTools extends ReactContextBaseJavaModule {
         }
     }
 
-    public static void unZipEXternalData(Activity activity){
-        Intent intent=
-        intent=activity.getIntent();
+    public static void getUriState(Activity activity){
+        Intent intent=activity.getIntent();
         Uri uri=intent.getData();
         if(uri==null){
-            intent=new Intent();
             return  ;
         }
         try {
-            String filePath=getPhotoPathFromContentUri(reactContext,uri);
-            String userName=getUserName();
-            String toPath=SDCARD+"/iTablet/User/"+userName+"/ExternalData";
-            File file=new File(filePath);
-                if(file.exists()){
-                    FileTools.unZipFile(filePath, toPath);
-                }
+              InputStream inputStream=activity.getContentResolver().openInputStream(uri);
+              String userName=getUserName();
+              String importPath=SDCARD+"/iTablet/Import";
+              String filePath=importPath+"/weChat.zip";
+              File importFile=new File(importPath);
+              if(!importFile.exists()){
+                  importFile.mkdirs();
+              }
+              File file=new File(filePath);
+              FileOutputStream fop=new FileOutputStream(file);
+              if(!file.exists()){
+
+                  file.createNewFile();
+              }
+              byte[] buffer=new byte[1024];
+              int length=-1;
+              while ((length=inputStream.read(buffer))!=-1){
+                  fop.write(buffer,0,length);
+              }
+              fop.close();
+              importData=true;
+             mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EventConst.MESSAGE_IMPORTEXTERNALDATA, importData);
         }catch (Exception e){
-            e.printStackTrace();
-            return  ;
+             e.printStackTrace();
         }
     }
 
@@ -919,79 +1015,20 @@ public class FileTools extends ReactContextBaseJavaModule {
         return USER_NAME;
     }
 
-    public static String getPhotoPathFromContentUri(Context context, Uri uri) {
-        String photoPath = "";
-        if (context == null || uri == null) {
-            return photoPath;
-        }
+    public static void getFilePath(String path, ArrayList<String> arr){
+        File flist = new File(path);
+        String[] mFileList = flist.list();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(context, uri)) {
-            String docId = DocumentsContract.getDocumentId(uri);
-            if (isExternalStorageDocument(uri)) {
-                String[] split = docId.split(":");
-                if (split.length >= 2) {
-                    String type = split[0];
-                    if ("primary".equalsIgnoreCase(type)) {
-                        photoPath = android.os.Environment.getExternalStorageDirectory() + "/" + split[1];
-                    }
-                }
-            } else if (isDownloadsDocument(uri)) {
-                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
-                photoPath = getDataColumn(context, contentUri, null, null);
-            } else if (isMediaDocument(uri)) {
-                String[] split = docId.split(":");
-                if (split.length >= 2) {
-                    String type = split[0];
-                    Uri contentUris = null;
-                    if ("image".equals(type)) {
-                        contentUris = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("video".equals(type)) {
-                        contentUris = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                    } else if ("audio".equals(type)) {
-                        contentUris = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                    }
-                    String selection = MediaStore.Images.Media._ID + "=?";
-                    String[] selectionArgs = new String[]{split[1]};
-                    photoPath = getDataColumn(context, contentUris, selection, selectionArgs);
-                }
-            }
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            photoPath = uri.getPath();
-        } else {
-            photoPath = getDataColumn(context, uri, null, null);
-        }
 
-        return photoPath;
-    }
-
-    private static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    private static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    private static String getDataColumn(Context context, Uri uri, String selection, String[] selectionArgs) {
-        Cursor cursor = null;
-        String column = MediaStore.Images.Media.DATA;
-        String[] projection = {column};
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs, null);
-            if (cursor != null && cursor.moveToFirst()) {
-                int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null && !cursor.isClosed()) {
-                cursor.close();
+        for (String str : mFileList) {
+            String type = "";
+            if (new File(path + "/" + str).isDirectory()) {
+                getFilePath(path+"/"+str,arr);
+            } else {
+                type = "file";
+                arr.add(path+"/"+str);
             }
         }
-        return null;
     }
 }
 

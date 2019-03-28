@@ -87,10 +87,8 @@ export default class Login extends React.Component {
   _login = async () => {
     let result
     let isEmail = this.state.onEmailTitleFocus
-    let userName = 'imobile1234'
-    let password = 'imobile'
-    this.txtPhoneNumber = '13683409897'
-    this.txtPhoneNumberPassword = '123456'
+    let userName = ''
+    let password = ''
 
     try {
       if (!isEmail) {
@@ -149,7 +147,6 @@ export default class Login extends React.Component {
           userInfo['userId'] = userID[0]
           bGetUserInfo = true
         }
-
         //下载好友列表
         if (bGetUserInfo !== false) {
           //优先加载在线的
@@ -159,8 +156,31 @@ export default class Login extends React.Component {
           userPath = userPath + '/ol_fl'
           SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
             onResult: value => {
-              if (value !== true) {
-                //  console.warn(value)
+              // console.warn("-------------")
+              if (value === true) {
+                this.props.setUser({
+                  userName: userName,
+                  password: password,
+                  nickname: userInfo.nickname,
+                  email: userInfo.email,
+                  phoneNumber: userInfo.phoneNumber,
+                  userId: userInfo.userId,
+                  isEmail: isEmail,
+                  userType: UserType.COMMON_USER,
+                  hasUpdateFriend: true,
+                })
+              } else {
+                this.props.setUser({
+                  userName: userName,
+                  password: password,
+                  nickname: userInfo.nickname,
+                  email: userInfo.email,
+                  phoneNumber: userInfo.phoneNumber,
+                  userId: userInfo.userId,
+                  isEmail: isEmail,
+                  userType: UserType.COMMON_USER,
+                  hasUpdateFriend: false,
+                })
               }
             },
           })
@@ -178,6 +198,7 @@ export default class Login extends React.Component {
             userId: userInfo.userId,
             isEmail: isEmail,
             userType: UserType.COMMON_USER,
+            hasUpdateFriend: undefined,
           })
         } else {
           // Toast.show('登录成功')

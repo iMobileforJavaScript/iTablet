@@ -110,30 +110,56 @@ class FriendMessage extends Component {
             this.inFormData.push(messageObj)
           }
         } else {
-          let obj = FriendListFileHandle.findFromFriendList(key)
-          if (obj) {
-            let friend = {
-              id: key,
-              users: [obj.markName],
-              message: messageHistory,
-              title: obj.markName,
-              unReadMsg: unReadMsg,
+          let obj = undefined
+          if (key.indexOf('Group_') == -1) {
+            obj = FriendListFileHandle.findFromFriendList(key)
+            if (obj) {
+              let friend = {
+                id: key,
+                users: [obj.markName],
+                message: messageHistory,
+                title: obj.markName,
+                unReadMsg: unReadMsg,
+              }
+              srcData.push(friend)
             }
-            srcData.push(friend)
+          } else {
+            //group
+            obj = FriendListFileHandle.findFromGroupList(key)
+            if (obj) {
+              let friend = {
+                id: key,
+                users: obj.members,
+                message: messageHistory,
+                title: obj.groupName,
+                unReadMsg: unReadMsg,
+              }
+              srcData.push(friend)
+            }
           }
         }
       }
     }
-    this.inFormData = this.inFormData.sort((obj1, obj2) => {
-      let time1 = obj1.time
-      let time2 = obj2.time
-      return time2 - time1
-    })
-    srcData = srcData.sort((obj1, obj2) => {
-      let time1 = obj1['message'][obj1['message'].length - 1].time
-      let time2 = obj2['message'][obj2['message'].length - 1].time
-      return time2 - time1
-    })
+    if (this.inFormData.length > 2) {
+      this.inFormData = this.inFormData.sort((obj1, obj2) => {
+        let time1 = obj1.time
+        let time2 = obj2.time
+        return time2 - time1
+      })
+    }
+    if (srcData.length > 2) {
+      srcData = srcData.sort((obj1, obj2) => {
+        let msg1 = obj1.message[obj1.message.length - 1]
+        let msg2 = obj2.message[obj2.message.length - 1]
+        if (msg1 && msg2) {
+          let time1 = msg1.time
+          let time2 = msg2.time
+          return time2 - time1
+        } else {
+          return true
+        }
+      })
+    }
     this.setState({
       data: srcData,
     })
@@ -249,101 +275,103 @@ class FriendMessage extends Component {
     )
   }
   _renderItem(item, index) {
-    let lastMessage = item['message'][item['message'].length - 1]
-    let time = lastMessage.time
-    let ctime = new Date(time)
-    let timeString =
-      '' +
-      ctime.getFullYear() +
-      '/' +
-      (ctime.getMonth() + 1) +
-      '/' +
-      ctime.getDate() +
-      ' ' +
-      ctime.getHours() +
-      ':' +
-      ctime.getMinutes()
+    if (item && item['message'].length > 0) {
+      let lastMessage = item['message'][item['message'].length - 1]
+      let time = lastMessage.time
+      let ctime = new Date(time)
+      let timeString =
+        '' +
+        ctime.getFullYear() +
+        '/' +
+        (ctime.getMonth() + 1) +
+        '/' +
+        ctime.getDate() +
+        ' ' +
+        ctime.getHours() +
+        ':' +
+        ctime.getMinutes()
 
-    return (
-      <TouchableOpacity
-        style={styles.ItemViewStyle}
-        activeOpacity={0.75}
-        onPress={() => {
-          this._onSectionselect(item, index)
-        }}
-      >
-        <View style={styles.ITemHeadTextViewStyle}>
-          {item.unReadMsg > 0 ? (
-            <View
-              style={{
-                position: 'absolute',
-                backgroundColor: 'red',
-                justifyContent: 'center',
-                height: scaleSize(25),
-                width: scaleSize(25),
-                borderRadius: scaleSize(25),
-                top: scaleSize(-6),
-                right: scaleSize(-12),
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: scaleSize(20),
-                  color: 'white',
-                  textAlign: 'center',
-                }}
-              >
-                {item.unReadMsg}
-              </Text>
-            </View>
-          ) : null}
-          <View
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              flexDirection: 'row',
-              flexWrap: 'wrap',
-            }}
-          >
-            {this._renderItemHeadView(item)}
-          </View>
-        </View>
-        <View style={styles.ITemTextViewStyle}>
-          {this._renderItemTitleView(item)}
-          <Text
-            style={{
-              fontSize: scaleSize(20),
-              color: 'grey',
-              top: scaleSize(10),
-            }}
-          >
-            {lastMessage.msg}
-          </Text>
-        </View>
-        <View
-          style={{
-            marginRight: scaleSize(20),
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            flexGrow: 1,
+      return (
+        <TouchableOpacity
+          style={styles.ItemViewStyle}
+          activeOpacity={0.75}
+          onPress={() => {
+            this._onSectionselect(item, index)
           }}
         >
-          <Text
+          <View style={styles.ITemHeadTextViewStyle}>
+            {item.unReadMsg > 0 ? (
+              <View
+                style={{
+                  position: 'absolute',
+                  backgroundColor: 'red',
+                  justifyContent: 'center',
+                  height: scaleSize(25),
+                  width: scaleSize(25),
+                  borderRadius: scaleSize(25),
+                  top: scaleSize(-6),
+                  right: scaleSize(-12),
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: scaleSize(20),
+                    color: 'white',
+                    textAlign: 'center',
+                  }}
+                >
+                  {item.unReadMsg}
+                </Text>
+              </View>
+            ) : null}
+            <View
+              style={{
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}
+            >
+              {this._renderItemHeadView(item)}
+            </View>
+          </View>
+          <View style={styles.ITemTextViewStyle}>
+            {this._renderItemTitleView(item)}
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                color: 'grey',
+                top: scaleSize(10),
+              }}
+            >
+              {lastMessage.msg}
+            </Text>
+          </View>
+          <View
             style={{
-              fontSize: scaleSize(20),
-              color: 'grey',
-              textAlign: 'right',
+              marginRight: scaleSize(20),
+              flexDirection: 'column',
+              justifyContent: 'flex-end',
+              flexGrow: 1,
             }}
           >
-            {timeString}
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
+            <Text
+              style={{
+                fontSize: scaleSize(20),
+                color: 'grey',
+                textAlign: 'right',
+              }}
+            >
+              {timeString}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    }
   }
 
   _renderItemHeadView(item) {
-    if (item['messageType'] === 3) {
+    if (item.users.length > 1) {
       let texts = []
       for (var i in item['users']) {
         if (i > 4) break
@@ -351,7 +379,7 @@ class FriendMessage extends Component {
           <Text
             style={{ fontSize: scaleSize(18), color: 'white', top: 2, left: 1 }}
           >
-            {item['users'][i][0].toUpperCase() + ' '}
+            {item['users'][i].name[0].toUpperCase() + ' '}
           </Text>,
         )
       }

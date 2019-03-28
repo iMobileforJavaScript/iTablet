@@ -47,11 +47,7 @@ export default class InformMessage extends React.Component {
 
   _onSectionselect = item => {
     this.target = item
-    if (item.type === 10) {
-      this.dialog.setDialogVisible(true)
-    } else if (item.type === 11) {
-      this.dialogConfirm.setDialogVisible(true)
-    }
+    this.dialog.setDialogVisible(true)
   }
 
   _dialogConfirm = () => {
@@ -65,7 +61,6 @@ export default class InformMessage extends React.Component {
       type: 1,
       user: { name: curUserName, id: uuid },
       time: time,
-      system: 0,
     }
     this.friend._sendMessage(
       JSON.stringify(message),

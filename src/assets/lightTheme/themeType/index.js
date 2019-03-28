@@ -12,7 +12,6 @@ const theme_graph_stack_bar = require('./theme_graph_stack_bar.png')
 const theme_graph_stack_bar3d = require('./theme_graph_stack_bar3d.png')
 const theme_graph_ring = require('./theme_graph_ring.png')
 const theme_graph_type = require('./theme_graph_type.png')
-const theme_graph_type_selected = require('./theme_graph_type_selected.png')
 const theme_graph_graduatedmode_cons = require('./theme_graph_graduatedmode_cons.png')
 const theme_graph_graduatedmode_log = require('./theme_graph_graduatedmode_log.png')
 const theme_graph_graduatedmode_square = require('./theme_graph_graduatedmode_square.png')
@@ -22,6 +21,12 @@ const theme_create_range_style = require('./theme_create_range_style.png')
 const theme_create_unify_label = require('./theme_create_unify_label.png')
 const theme_create_unique_label = require('./theme_create_unique_label.png')
 const theme_create_range_label = require('./theme_create_range_label.png')
+const theme_dot_density = require('./theme_dot_density.png')
+const theme_graduated_symbol = require('./theme_graduated_symbol.png')
+const theme_graphmap = require('./theme_graphmap.png')
+const theme_graphmap_selected = require('./theme_graphmap_selected.png')
+const theme_dot_density_selected = require('./theme_dot_density_selected.png')
+const theme_graduated_symbol_selected = require('./theme_graduated_symbol_selected.png')
 
 //专题图类型图标
 export default {
@@ -40,7 +45,6 @@ export default {
   theme_graph_stack_bar3d,
   theme_graph_ring,
   theme_graph_type,
-  theme_graph_type_selected,
   theme_graph_graduatedmode_cons,
   theme_graph_graduatedmode_log,
   theme_graph_graduatedmode_square,
@@ -56,4 +60,13 @@ export default {
   theme_create_unique_label,
   //分段标签
   theme_create_range_label,
+  //点密度专题图
+  theme_dot_density,
+  theme_dot_density_selected,
+  //等级符号专题图
+  theme_graduated_symbol,
+  theme_graduated_symbol_selected,
+  //统计专题图类型图标
+  theme_graphmap,
+  theme_graphmap_selected,
 }

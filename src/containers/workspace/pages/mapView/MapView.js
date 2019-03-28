@@ -34,6 +34,7 @@ import {
   PopModal,
   SurfaceView,
 } from '../../../../components'
+import { Utils } from '../../util'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
@@ -41,6 +42,7 @@ import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
+// import LegendView from '../../components/LegendView/LegendView'
 const SAVE_TITLE = '是否保存当前地图?'
 export default class MapView extends React.Component {
   static propTypes = {
@@ -131,6 +133,7 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
+      legend: false,
       // changeLayerBtnBottom: scaleSize(200),
     }
 
@@ -330,6 +333,7 @@ export default class MapView extends React.Component {
   }
 
   geometrySelected = event => {
+    Utils.setSelectionStyle(event.layerInfo.path)
     this.props.setSelection &&
       this.props.setSelection([
         {
@@ -385,6 +389,7 @@ export default class MapView extends React.Component {
   geometryMultiSelected = event => {
     let data = []
     for (let i = 0; i < event.geometries.length; i++) {
+      Utils.setSelectionStyle(event.geometries[i].layerInfo.path)
       data.push({
         layerInfo: event.geometries[i].layerInfo,
         ids: event.geometries[i].ids,
@@ -857,6 +862,9 @@ export default class MapView extends React.Component {
         )
         this._addGeometrySelectedListener()
         this.container.setLoading(false)
+        this.setState({
+          legend: true,
+        })
       } catch (e) {
         this.container.setLoading(false)
       }
@@ -1200,6 +1208,24 @@ export default class MapView extends React.Component {
   }
 
   render() {
+    {
+      /*<MTBtn*/
+    }
+    {
+      /*key={'search'}*/
+    }
+    {
+      /*image={getPublicAssets().common.icon_search}*/
+    }
+    {
+      /*imageStyle={styles.headerBtn}*/
+    }
+    {
+      /*onPress={this.goToSearch}*/
+    }
+    {
+      /*/>,*/
+    }
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -1220,18 +1246,24 @@ export default class MapView extends React.Component {
                 ]}
                 onPress={this.showUndoView}
               />,
-              <MTBtn
-                key={'search'}
-                image={getPublicAssets().common.icon_search}
-                imageStyle={styles.headerBtn}
-                onPress={this.goToSearch}
-              />,
             ]
             : null,
         }}
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
+        {/*{this.state.legend&&(<View style={{*/}
+        {/*position: 'absolute',*/}
+        {/*width: scaleSize(100),*/}
+        {/*height: scaleSize(300),*/}
+        {/*left: 0 ,*/}
+        {/*top: 0 ,*/}
+        {/*backgroundColor: 'white',*/}
+        {/*zIndex: 1,*/}
+        {/*}}>*/}
+        {/*<LegendView/>*/}
+        {/*</View>)}*/}
+
         {this.state.showMap && (
           <SMMapView
             ref={ref => (GLOBAL.mapView = ref)}
@@ -1253,13 +1285,12 @@ export default class MapView extends React.Component {
         >
           {this.renderEditControllerView()}
         </PopModal>
-
         {this.renderDialog()}
         <Dialog
           ref={ref => (GLOBAL.removeObjectDialog = ref)}
           type={Dialog.Type.MODAL}
           title={'提示'}
-          info={'是否要删除该对象吗？'}
+          info={'是否要删除该对象吗？\n（删除后将不可恢复）'}
           confirmAction={this.removeObject}
           confirmBtnTitle={'是'}
           cancelBtnTitle={'否'}

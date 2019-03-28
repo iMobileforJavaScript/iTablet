@@ -1,6 +1,13 @@
-import { NativeModules } from 'react-native'
+import {
+  NativeModules,
+  DeviceEventEmitter,
+  NativeEventEmitter,
+  Platform,
+} from 'react-native'
 const FileTools = NativeModules.FileTools
-
+const nativeEvt = new NativeEventEmitter(FileTools)
+const MESSAGE_IMPORTEXTERNALDATA =
+  'com.supermap.RN.Mapcontrol.message_importexternaldata'
 /**
  * 获取沙盒路径
  * @returns {Promise.<string>}
@@ -165,6 +172,30 @@ function EnvironmentIsValid() {
   return FileTools.EnvironmentIsValid()
 }
 
+function addImportExternalData(handlers) {
+  if (Platform.OS === 'ios' && handlers) {
+    if (typeof handlers.callback === 'function') {
+      nativeEvt.addListener(MESSAGE_IMPORTEXTERNALDATA, function(e) {
+        handlers.callback(e)
+      })
+    }
+  } else if (Platform.OS === 'android' && handlers) {
+    if (typeof handlers.callback === 'function') {
+      DeviceEventEmitter.addListener(MESSAGE_IMPORTEXTERNALDATA, function(e) {
+        handlers.callback(e)
+      })
+    }
+  }
+}
+
+function getImportResult() {
+  return FileTools.getImportResult()
+}
+
+function importData() {
+  return FileTools.importData()
+}
+
 /**
  * 深度遍历fileDir目录下的fileType数据,并添加到arrFilterFile中
  * fileDir 文件目录
@@ -264,4 +295,7 @@ export default {
   getMaps,
   getAvailableMapName,
   EnvironmentIsValid,
+  addImportExternalData,
+  getImportResult,
+  importData,
 }

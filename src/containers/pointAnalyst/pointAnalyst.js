@@ -7,8 +7,9 @@ import {
   TextInput,
   Image,
 } from 'react-native'
-import { Container } from '../../components'
+import { Container, SearchBar } from '../../components'
 // import { scaleSize} from '../../utils'
+import { ConstInfo } from '../../constants'
 import { SScene } from 'imobile_for_reactnative'
 import NavigationService from '../NavigationService'
 import { Toast } from '../../utils'
@@ -41,6 +42,7 @@ export default class PointAnalyst extends Component {
           this.setState({ analystData: result })
         } else {
           this.setState({ searchData: result })
+          this.setLoading(false)
         }
       },
     })
@@ -204,7 +206,7 @@ export default class PointAnalyst extends Component {
   renderPointSearch = () => {
     return (
       <View>
-        <View style={styles.pointSearchView}>
+        {/* <View style={styles.pointSearchView}>
           <TextInput
             placeholder={'请输入需要搜索的位置'}
             style={styles.PointSearch}
@@ -223,11 +225,28 @@ export default class PointAnalyst extends Component {
             source={require('../../assets/mapToolbar/icon_search_black.png')}
             style={styles.search}
           />
-        </View>
+        </View> */}
         <View>
           <FlatList data={this.state.searchData} renderItem={this.renderItem} />
         </View>
       </View>
+    )
+  }
+
+  setLoading = (loading = false, info, extra) => {
+    this.container && this.container.setLoading(loading, info, extra)
+  }
+
+  renderSearchBar = () => {
+    return (
+      <SearchBar
+        ref={ref => (this.searchBar = ref)}
+        onSubmitEditing={searchKey => {
+          this.setLoading(true, ConstInfo.SEARCHING)
+          SScene.pointSearch(searchKey)
+        }}
+        placeholder={'请输入搜索关键字'}
+      />
     )
   }
 
@@ -240,6 +259,8 @@ export default class PointAnalyst extends Component {
         headerProps={{
           title: this.type === 'pointSearch' ? '位置搜索' : '路径分析',
           navigation: this.props.navigation,
+          headerCenter:
+            this.type === 'pointSearch' ? this.renderSearchBar() : <View />,
         }}
       >
         {this.type === 'pointSearch'

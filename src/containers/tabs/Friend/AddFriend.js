@@ -125,10 +125,9 @@ class AddFriend extends Component {
     let time = Date.parse(ctime)
     let message = {
       message: curUserName + ' 请求添加您为好友',
-      type: 10,
+      type: 901,
       user: { name: curUserName, id: uuid },
       time: time,
-      system: 0,
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();
 

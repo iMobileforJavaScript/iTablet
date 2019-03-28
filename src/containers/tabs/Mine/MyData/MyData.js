@@ -18,6 +18,7 @@ import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import ModalBtns from '../MyModule/ModalBtns'
 import UserType from '../../../../constants/UserType'
+import { SOnlineService } from 'imobile_for_reactnative'
 const appUtilsModule = NativeModules.AppUtils
 const styles = StyleSheet.create({
   topContainer: {
@@ -465,6 +466,7 @@ export default class MyLocalData extends Component {
 
   _onUploadData = async type => {
     try {
+      this.setLoading(true, '分享中')
       if (this.itemInfo !== undefined && this.itemInfo !== null) {
         let fileName = this.itemInfo.item.name.substring(
           0,
@@ -480,9 +482,6 @@ export default class MyLocalData extends Component {
               ConstPath.RelativePath.Temp) +
           fileName +
           '.zip'
-
-        this.setLoading(true, ConstInfo.UPLOAD_START)
-
         let archivePaths = []
         switch (this.state.title) {
           case Const.MAP: {
@@ -527,43 +526,77 @@ export default class MyLocalData extends Component {
           }
         }
         if (type === 'weChat') {
-          let zipResult = await FileTools.zipFiles(archivePaths, targetPath)
+          let zipResult
+          if (this.state.title === Const.MAP) {
+            await this._exportData()
+            zipResult = true
+            let homePath = await FileTools.appendingHomeDirectory()
+            targetPath =
+              homePath +
+              ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.ExternalData +
+              ConstPath.RelativeFilePath.ExportData +
+              fileName +
+              '.zip'
+          } else {
+            zipResult = await FileTools.zipFiles(archivePaths, targetPath)
+          }
+          await this.setLoading(false)
           zipResult &&
             appUtilsModule
               .sendFileOfWechat({
                 filePath: targetPath,
-                title: fileName,
+                title: fileName + '.zip',
                 description: 'SuperMap iTablet',
               })
-              .then(
-                result => {
-                  result && Toast.show(ConstInfo.UPLOAD_SUCCESS)
-                  this.ModalBtns.setVisible(false)
-                },
-                () => {
-                  Toast.show(ConstInfo.UPLOAD_FAILED)
-                  this.container.setLoading(false)
-                },
-              )
+              .then(result => {
+                !result && Toast.show('所分享文件超过10MB')
+                !result && FileTools.deleteFile(targetPath)
+              })
         } else {
-          this.props.uploading({
-            archivePaths,
-            targetPath,
-            name: fileName,
-            onProgress: () => {},
-            onResult: (result, name) => {
-              Toast.show(
-                name + ' ' + result || result === undefined
-                  ? ConstInfo.UPLOAD_SUCCESS
-                  : ConstInfo.UPLOAD_FAILED,
-              )
-              this.ModalBtns.setVisible(false)
-            },
-          })
+          if (this.state.title === Const.MAP) {
+            await this._exportData()
+            let homePath = await FileTools.appendingHomeDirectory()
+            targetPath =
+              homePath +
+              ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.ExternalData +
+              ConstPath.RelativeFilePath.ExportData +
+              fileName +
+              '.zip'
+            await SOnlineService.uploadFile(targetPath, fileName, {
+              onResult: result => {
+                result && Toast.show('分享成功')
+                this.ModalBtns && this.ModalBtns.setVisible(false)
+                FileTools.deleteFile(targetPath)
+              },
+            })
+          } else {
+            this.props.uploading({
+              archivePaths,
+              targetPath,
+              name: fileName,
+              onProgress: () => {},
+              onResult: (result, name) => {
+                Toast.show(
+                  name + ' ' + result || result === undefined
+                    ? '分享成功'
+                    : '分享失败',
+                )
+                this.ModalBtns && this.ModalBtns.setVisible(false)
+                FileTools.deleteFile(targetPath)
+              },
+            })
+          }
         }
       }
     } catch (e) {
-      Toast.show(ConstInfo.UPLOAD_FAILED)
+      Toast.show('分享失败')
+      this.ModalBtns && this.ModalBtns.setVisible(false)
       this._closeModal()
     } finally {
       this.setLoading(false)
@@ -667,7 +700,7 @@ export default class MyLocalData extends Component {
     return result
   }
 
-  _exportData = async () => {
+  _exportData = async (showToast = false) => {
     this._closeModal()
     let name = this.state.sectionData[0].data[this.itemInfo.index].name
     let mapName = name.substring(0, name.length - 4)
@@ -687,9 +720,9 @@ export default class MyLocalData extends Component {
       { maps: [mapName], outPath: path, isOpenMap: true },
       result => {
         if (result === true) {
-          Toast.show('导出成功')
+          showToast && Toast.show('导出成功')
         } else {
-          Toast.show('导出失败')
+          showToast && Toast.show('导出失败')
         }
       },
     )
@@ -733,12 +766,14 @@ export default class MyLocalData extends Component {
               title: title,
               action: () => {
                 this._closeModal()
-                this.ModalBtns.setVisible(true)
+                this.ModalBtns && this.ModalBtns.setVisible(true)
               },
             },
             {
               title: '导出数据',
-              action: this._exportData,
+              action: () => {
+                this._exportData(true)
+              },
             },
             {
               title: '删除数据',
@@ -751,7 +786,7 @@ export default class MyLocalData extends Component {
               title: title,
               action: () => {
                 this._closeModal()
-                this.ModalBtns.setVisible(true)
+                this.ModalBtns && this.ModalBtns.setVisible(true)
               },
             },
             {
@@ -765,7 +800,9 @@ export default class MyLocalData extends Component {
           data = [
             {
               title: '导出数据',
-              action: this._exportData,
+              action: () => {
+                this._exportData(true)
+              },
             },
             {
               title: '删除数据',

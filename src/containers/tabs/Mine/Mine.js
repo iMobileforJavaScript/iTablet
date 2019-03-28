@@ -92,7 +92,7 @@ export default class Mine extends Component {
       this.props.user.currentUser.userType === UserType.PROBATION_USER
         ? 'Customer'
         : this.props.user.currentUser.userName
-    NavigationService.navigate('MyOnlineData', {
+    NavigationService.navigate('MyLocalData', {
       userName: userName,
     })
   }

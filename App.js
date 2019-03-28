@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, AppState, StyleSheet, Platform,Image,Text} from 'react-native'
+import { View, AppState, StyleSheet, Platform, Image, Text } from 'react-native'
 import { Provider, connect } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import PropTypes from 'prop-types'
@@ -38,7 +38,7 @@ import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
 
-const { persistor, store } = ConfigStore()
+const {persistor, store} = ConfigStore()
 
 const styles = StyleSheet.create({
   map: {
@@ -72,11 +72,17 @@ const styles = StyleSheet.create({
     fontSize: scaleSize(24),
     color: color.theme_white,
     marginTop: scaleSize(5),
-    marginLeft:scaleSize(10),
-    marginRight:scaleSize(10),
-    textAlign:'center',
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
   },
   dialogBackground: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
+  },
+  opacityView: {
     width: scaleSize(350),
     height: scaleSize(240),
     borderRadius: scaleSize(4),
@@ -95,26 +101,27 @@ class AppRoot extends Component {
     layers: PropTypes.array,
     setNav: PropTypes.func,
     setUser: PropTypes.func,
-    openWorkspace:PropTypes.func,
-    setShow:PropTypes.func,
-    closeMap:PropTypes.func,
-    setCurrentMap:PropTypes.func,
+    openWorkspace: PropTypes.func,
+    setShow: PropTypes.func,
+    closeMap: PropTypes.func,
+    setCurrentMap: PropTypes.func,
 
-    setEditLayer:PropTypes.func,
-    setSelection:PropTypes.func,
-    setCollectionInfo:PropTypes.func,
-    setCurrentTemplateInfo:PropTypes.func,
-    setTemplate:PropTypes.func,
-    setMapSetting:PropTypes.func,
-    saveMap:PropTypes.func,
-    setCurrentAttribute:PropTypes.func,
-    setAttributes:PropTypes.func,
+    setEditLayer: PropTypes.func,
+    setSelection: PropTypes.func,
+    setCollectionInfo: PropTypes.func,
+    setCurrentTemplateInfo: PropTypes.func,
+    setTemplate: PropTypes.func,
+    setMapSetting: PropTypes.func,
+    saveMap: PropTypes.func,
+    setCurrentAttribute: PropTypes.func,
+    setAttributes: PropTypes.func,
   }
 
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       sceneStyle: styles.invisibleMap,
+      import: null,
     }
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
@@ -123,10 +130,10 @@ class AppRoot extends Component {
     PT.initCustomPrototype()
   }
 
-  componentDidMount() {
+  componentDidMount () {
 
-    setInterval(async ()=>{
-      if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType!== UserType.PROBATION_USER) {
+    setInterval(async () => {
+      if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
 
         let isEmail = this.props.user.currentUser.isEmail
         let userName = this.props.user.currentUser.userName
@@ -135,28 +142,30 @@ class AppRoot extends Component {
         if (isEmail === true) {
           bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
         } else if (isEmail === false) {
-          bLogin =await SOnlineService.login(userName, password)
+          bLogin = await SOnlineService.login(userName, password)
         }
-        if(!bLogin){
+        if (!bLogin) {
           Toast.show('登陆状态失效')
         }
 
       }
-    },30000)
+    }, 30000)
 
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
       SOnlineService.init()
       SOnlineService.removeCookie()
-      let customerPath = ConstPath.CustomerPath+ConstPath.RelativeFilePath.Workspace
+      let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let path = await FileTools.appendingHomeDirectory(customerPath)
-      this.props.openWorkspace({server:path})
+      this.props.openWorkspace({server: path})
       // await this.initEnvironment()
       // await this.initSpeechManager()
       // await this.initCustomerWorkspace()
       await this.inspectEnvironment()
       await this.initOrientation()
+      await this.getImportResult()
+      await this.addImportExternalData()
     }).bind(this)()
     GLOBAL.clearMapData = () => {
       this.props.setEditLayer(null) // 清空地图图层中的数据
@@ -206,26 +215,26 @@ class AppRoot extends Component {
     }
   }
 
-  inspectEnvironment=async()=>{
-    let result=await FileTools.EnvironmentIsValid()
-    if(!result){
+  inspectEnvironment = async () => {
+    let status = await SMap.getEnvironmentStatus()
+    if (!status.isLicenseValid) {
       this.exit.setDialogVisible(true)
     }
   }
 
   //初始化横竖屏显示方式
-  initOrientation=async()=>{
+  initOrientation = async () => {
     Orientation.getOrientation((e, orientation) => {
-      this.props.setShow({orientation:orientation})
+      this.props.setShow({orientation: orientation})
     })
     Orientation.addOrientationListener(orientation => {
-      if (orientation === "LANDSCAPE"){
+      if (orientation === 'LANDSCAPE') {
         this.props.setShow({
-          orientation:orientation,
+          orientation: orientation,
         })
-      }else{
+      } else {
         this.props.setShow({
-          orientation:orientation,
+          orientation: orientation,
         })
       }
     })
@@ -272,6 +281,20 @@ class AppRoot extends Component {
     }
   }
 
+  addImportExternalData = async () => {
+    await FileTools.addImportExternalData({
+      callback: result => {
+        result && this.import.setDialogVisible(true)
+      },
+    })
+  }
+
+  getImportResult = async () => {
+    let result = await FileTools.getImportResult()
+    if (result === null)return
+    result && this.import.setDialogVisible(true)
+  }
+
   // 初始化录音
   // initSpeechManager = async () => {
   //   try {
@@ -299,7 +322,7 @@ class AppRoot extends Component {
   //   }
   // }
 
-  map3dBackAction=async()=>{
+  map3dBackAction = async () => {
     try {
       this.container && this.container.setLoading(true, '正在关闭')
       if (GLOBAL.openWorkspace) {
@@ -320,7 +343,7 @@ class AppRoot extends Component {
   }
 
   saveMap = async () => {
-    if (GLOBAL.Type===ConstToolType.MAP_3D){
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
       this.map3dBackAction()
       GLOBAL.openWorkspace && Toast.show(ConstInfo.SAVE_SCENE_SUCCESS)
       return
@@ -377,7 +400,7 @@ class AppRoot extends Component {
   }
 
   closeMapHandler = async () => {
-    if (GLOBAL.Type === ConstToolType.MAP_3D){
+    if (GLOBAL.Type === ConstToolType.MAP_3D) {
       this.map3dBackAction()
       return
     }
@@ -408,25 +431,78 @@ class AppRoot extends Component {
     )
   }
 
-  renderDialog=()=>{
-    return(<Dialog
+  renderDialog = () => {
+    return (<Dialog
       ref={ref => (this.exit = ref)}
       type={'modal'}
       onlyOneBtn={true}
       cancelBtnVisible={false}
-      confirmAction={()=>{this.exit.setDialogVisible(false)}}
+      confirmAction={() => {this.exit.setDialogVisible(false)}}
       opacity={1}
       opacityStyle={styles.opacityView}
       style={styles.dialogBackground}
     >
-        {this.renderExitDialogChildren()}
+      {this.renderExitDialogChildren()}
     </Dialog>
     )
   }
 
-  render() {
+  renderImportDialog = () => {
     return (
-      <View style={{ flex: 1 }}>
+      <Dialog
+        ref={ref => (this.import = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={() => {
+          GLOBAL.Loading.setLoading(
+            true,
+            '数据导入中',
+          )
+          FileTools.importData().then(result => {
+            this.import.setDialogVisible(false)
+            GLOBAL.Loading.setLoading(false)
+            result && Toast.show('导入成功')
+          }, () => {
+            GLOBAL.Loading.setLoading(false)
+            result && Toast.show('导入失败')
+          })
+        }}
+        cancelAction={ async () => {
+          let homePath = await FileTools.appendingHomeDirectory()
+          let importPath =
+            homePath +
+            ConstPath.UserPath +
+            this.props.user.currentUser.userName +
+            '/' +
+            ConstPath.RelativePath.Import
+          await FileTools.deleteFile(importPath)
+          this.import.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        {this.renderImportDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderImportDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('./src/assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>{'是否导入外部数据'}</Text>
+      </View>
+    )
+  }
+
+  render () {
+    return (
+      <View style={{flex: 1}}>
         <RootNavigator
           ref={navigatorRef => {
             NavigationService.setTopLevelNavigator(navigatorRef)
@@ -447,6 +523,7 @@ class AppRoot extends Component {
           }}
         />
         {this.renderDialog()}
+        {this.renderImportDialog()}
         <Loading ref={ref => GLOBAL.Loading = ref} initLoading={false}/>
       </View>
     )
@@ -458,10 +535,10 @@ const mapStateToProps = state => {
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,
-    device:state.device.toJS().device,
-    map:state.map.toJS(),
-    collection:state.collection.toJS(),
-    layers:state.layers.toJS().layers,
+    device: state.device.toJS().device,
+    map: state.map.toJS(),
+    collection: state.collection.toJS(),
+    layers: state.layers.toJS().layers,
   }
 }
 
