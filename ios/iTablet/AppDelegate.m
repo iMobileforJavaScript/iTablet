@@ -73,8 +73,10 @@ static NSString* g_sampleCodeName = @"#";;
 #pragma mark - 微信打开压缩包
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
-  BOOL isZipFileExist = [FileTools getUriState:url];
-  return isZipFileExist;
+  if(![[url absoluteString] containsString:@"platformId=wechat"]){
+       [FileTools getUriState:url];
+  }
+  return [WXApi handleOpenURL:url delegate:self];
 }
 
 #pragma mark - 初始化license
