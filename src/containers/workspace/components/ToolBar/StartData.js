@@ -542,7 +542,7 @@ function openTemplate() {
   // }.bind(this)())
   NativeMethod.getTemplates(
     _params.user.currentUser.userName,
-    ConstPath.RelativeFilePath.Module.Collection,
+    ConstPath.Module.Collection,
   ).then(async templateList => {
     let tpList = []
     for (let i = 0; i < templateList.length; i++) {
