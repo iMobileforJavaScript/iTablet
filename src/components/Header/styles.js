@@ -112,8 +112,8 @@ export default StyleSheet.create({
   headerTitleView: {
     position: 'absolute',
     zIndex: -1,
-    left: 0,
-    right: 0,
+    left: scaleSize(80),
+    right: scaleSize(60),
     alignItems: 'center',
     justifyContent: 'center',
   },

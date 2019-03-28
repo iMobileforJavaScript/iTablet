@@ -17,6 +17,7 @@ export default class FriendListFileHandle {
   static friendListFile_ol = ''
 
   static async getContacts(path, file, resultCallBack) {
+    FriendListFileHandle.friends = undefined
     let friendListFile = path + '/' + file
     let onlineList = path + '/ol_fl'
 

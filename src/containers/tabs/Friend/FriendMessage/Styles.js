@@ -30,10 +30,11 @@ const styles = StyleSheet.create({
   },
 
   ITemTextViewStyle: {
-    //marginRight: scaleSize(120),
+    marginRight: scaleSize(10),
     marginLeft: scaleSize(25),
     flexDirection: 'column',
     justifyContent: 'space-between',
+    flex: 1,
   },
   ITemTextStyle: {
     fontSize: scaleSize(30),
