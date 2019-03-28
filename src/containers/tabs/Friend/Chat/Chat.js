@@ -213,12 +213,22 @@ class Chat extends React.Component {
         messages: GiftedChat.append(previousState.messages, messages),
       }
     })
+    let bGroup = 1
+    let groupID = messages[0].user._id
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
       message: messages[0].text,
-      type: 1,
-      user: { name: messages[0].user.name, id: messages[0].user._id },
+      type: bGroup,
+      user: {
+        name: messages[0].user.name,
+        id: messages[0].user._id,
+        groupID: groupID,
+      },
       time: time,
     }
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)

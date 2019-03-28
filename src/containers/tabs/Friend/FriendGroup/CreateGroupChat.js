@@ -72,15 +72,15 @@ class CreateGroupChat extends Component {
   // }
 
   getContacts = () => {
-    let result = FriendListFileHandle.getContactsLocal()
-    if (result.length !== 0) {
+    let results = FriendListFileHandle.getContactsLocal()
+    if (results && results.userInfo.length !== 0) {
+      let result = results.userInfo
       try {
         // let data =  API.app.contactlist();     //获取联系人列表
         // const {list} = data;
 
         let srcFriendData = []
         for (let key in result) {
-          if (key === '0') continue
           if (result[key].id && result[key].name) {
             let frend = {}
             frend['id'] = result[key].id
@@ -138,11 +138,17 @@ class CreateGroupChat extends Component {
     // }
 
     let seletctArr = [...this.state.seletctArr]
-    let n = seletctArr.indexOf(key.id)
+    let n = -1
+    for (let i = 0; i < seletctArr.length; i++) {
+      if (key.id === seletctArr[i].id) {
+        n = i
+        break
+      }
+    }
     if (n !== -1) {
       seletctArr.splice(n, 1)
     } else {
-      seletctArr.push(key.id)
+      seletctArr.push({ id: key.id, name: key.markName })
     }
 
     this.setState({ seletctArr })
@@ -182,7 +188,7 @@ class CreateGroupChat extends Component {
     //偏移量 = （设备高度 - 字母索引高度 - 底部导航栏 - 顶部标题栏 - 24）/ 2
     // const top_offset = (Dimensions.get('window').height - letterArr.length*scaleSize(35) - 24) / 2;
 
-    let nSelect = '已选择(' + this.state.seletctArr.length + ')'
+    let nSelect = '确定(' + this.state.seletctArr.length + ')'
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -279,9 +285,13 @@ class CreateGroupChat extends Component {
 
   _renderItem(item) {
     let bShowImage = false
-    if (this.state.seletctArr.indexOf(item.id) != -1) {
-      bShowImage = true
+    for (let i in this.state.seletctArr) {
+      if (item.id === this.state.seletctArr[i].id) {
+        bShowImage = true
+        break
+      }
     }
+
     return (
       <TouchableOpacity
         style={styles.ItemViewStyle}

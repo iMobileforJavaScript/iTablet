@@ -78,22 +78,12 @@ export default class Friend extends Component {
       this.disconnectService()
       this.connectService()
     }
-
     if (
       JSON.stringify(prevProps.user.currentUser.hasUpdateFriend) !==
       JSON.stringify(this.props.user.currentUser.hasUpdateFriend)
     ) {
       this.refreshList()
     }
-  }
-  shouldComponentUpdate(prevProps, prevState) {
-    if (
-      JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)
-    ) {
-      return true
-    }
-    return false
   }
 
   refreshList = () => {
@@ -142,12 +132,52 @@ export default class Friend extends Component {
     return false
   }
   // eslint-disable-next-line
-  createGroupTalk = memmbers => {
+  createGroupTalk = members => {
     let ctime = new Date()
     let time = Date.parse(ctime)
     // eslint-disable-next-line
-    let groupId = '' + time + '_' + this.props.user.currentUser.userId
-    // console.warn(memmbers + groupId)
+
+    if (members.length < 2) {
+      Toast.show('一人不能发起群聊')
+    } else {
+      let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
+      //服务绑定
+      SMessageService.declareSession(members, groupId)
+
+      let msgObj = {
+        user: {
+          name: this.props.user.currentUser.nickname,
+          id: this.props.user.currentUser.userId,
+          groupID: groupId,
+        },
+        members: members,
+        type: 912,
+        time: time,
+        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
+      }
+      let groupName = ''
+      for (let i in members) {
+        if (i > 3) break
+        groupName += members[i].name
+        if (i !== members.length - 2) groupName += '、'
+      }
+      FriendListFileHandle.addToGroupList(
+        {
+          id: groupId,
+          members: members,
+          groupName: groupName,
+          masterID: this.props.user.currentUser.userId,
+        },
+        () => {
+          this.refreshList()
+        },
+      )
+      let msgStr = JSON.stringify(msgObj)
+      for (let i in members) {
+        this._sendMessage(msgStr, members[i].id, false)
+      }
+    }
+    // console.warn(members + groupId)
   }
   // eslint-disable-next-line
   // componentWillReceiveProps(nextProps) {
@@ -262,7 +292,7 @@ export default class Friend extends Component {
         let bUnReadMsg = false
         if (
           !this.curChat ||
-          this.curChat.targetUser.id !== messageObj.user.id ||
+          this.curChat.targetUser.id !== messageObj.user.groupID || //个人会话这个ID和groupID是同一个，就用一个吧
           messageObj.type > 9
         ) {
           bUnReadMsg = true
@@ -271,7 +301,7 @@ export default class Friend extends Component {
         this.props.addChat &&
           this.props.addChat({
             userId: userId, //当前登录账户的id
-            talkId: messageObj.user.id, //会话ID
+            talkId: messageObj.user.groupID, //会话ID
             messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
             message: messageObj.message,
             time: messageObj.time,
@@ -279,8 +309,26 @@ export default class Friend extends Component {
             unReadMsg: bUnReadMsg,
           })
       } else {
-        if (messageObj.system > 1) {
-          //to do 系统消息，做处理机制
+        //to do 系统消息，做处理机制
+        if (messageObj.type === 912) {
+          //加入群
+          let groupName = ''
+          for (let i in messageObj.members) {
+            if (i > 3) break
+            groupName += messageObj.members[i].name
+            if (i !== messageObj.members.length - 2) groupName += '、'
+          }
+          FriendListFileHandle.addToGroupList(
+            {
+              id: messageObj.user.groupID,
+              members: messageObj.members,
+              groupName: groupName,
+              masterID: messageObj.user.id,
+            },
+            () => {
+              this.refreshList()
+            },
+          )
           return
         }
       }
