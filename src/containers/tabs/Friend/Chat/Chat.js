@@ -238,8 +238,9 @@ class Chat extends React.Component {
     // for demo purpose
     // this.answerDemo(messages)
   }
-  // eslint-disable-next-line
-  onSendFile(filepath1) {
+
+  onSendFile() {
+    // filepath1
     let filepath = '/sdcard/send.zip'
     let ctime = new Date()
     let time = Date.parse(ctime)
