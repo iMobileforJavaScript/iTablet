@@ -728,6 +728,7 @@ export default class FunctionToolbar extends React.Component {
       cb: async value => {
         if (value !== '') {
           (async function() {
+            await SMap.setLabelColor()
             GLOBAL.value = await SMap.newTaggingDataset(value)
           }.bind(this)())
         }
@@ -742,8 +743,8 @@ export default class FunctionToolbar extends React.Component {
         isFullScreen: false,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.NEWTHEME_HEIGHT[0]
-            : ConstToolType.NEWTHEME_HEIGHT[1],
+            ? ConstToolType.THEME_HEIGHT[0]
+            : ConstToolType.THEME_HEIGHT[2],
         column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
       })
     }

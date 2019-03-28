@@ -44,6 +44,9 @@ class FriendList extends Component {
   }
   componentDidMount() {
     this.getContacts()
+    if (this.props.friend.props.user.currentUser.hasUpdateFriend === false) {
+      this.upload()
+    }
   }
 
   shouldComponentUpdate(prevProps, prevState) {
@@ -66,20 +69,27 @@ class FriendList extends Component {
   //   this.getContacts()
   // }
 
+  upload = () => {
+    FriendListFileHandle.upload()
+  }
+  download = () => {
+    FriendListFileHandle.download()
+  }
+
   getContacts = async () => {
     let userPath = await FileTools.appendingHomeDirectory(
       ConstPath.UserPath + this.props.user.userName,
     )
 
-    FriendListFileHandle.getContacts(userPath, 'friend.list', result => {
-      if (result !== false) {
+    FriendListFileHandle.getContacts(userPath, 'friend.list', results => {
+      if (results) {
+        let result = results.userInfo
         try {
           // let data =  API.app.contactlist();     //获取联系人列表
           // const {list} = data;
 
           let srcFriendData = []
           for (let key in result) {
-            if (key === '0') continue
             if (result[key].id && result[key].name) {
               let frend = {}
               frend['id'] = result[key].id
