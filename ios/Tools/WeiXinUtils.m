@@ -25,7 +25,7 @@
   [WXApi sendReq:req];
 }
 
-+ (void)sendFileContent:(NSDictionary*)infoDic
++(BOOL)sendFileContent:(NSDictionary*)infoDic
 {
   @try {
     WXMediaMessage *message = [WXMediaMessage message];
@@ -37,6 +37,10 @@
     }
     if ([infoDic objectForKey:@"filePath"]) {
       NSString* filePath = [infoDic objectForKey:@"filePath"];
+      NSFileManager *filemanager = [NSFileManager defaultManager];
+      if([[filemanager attributesOfItemAtPath:filePath error:nil] fileSize] > 1024*1024){
+        return NO;
+      }
       WXFileObject *ext = [WXFileObject object];
       ext.fileExtension = @"zip";
       ext.fileData = [NSData dataWithContentsOfFile:filePath];
@@ -48,6 +52,7 @@
     req.scene = WXSceneSession;
     
     [WXApi sendReq:req];
+    return YES;
   } @catch (NSException *exception) {
     @throw exception;
   }
