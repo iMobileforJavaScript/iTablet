@@ -298,7 +298,15 @@ export default class Friend extends Component {
       //个人,或者群组
       if (messageObj.type < 9) {
         //非通知消息，判断是否接收
-        let obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
+        let obj = undefined
+        if (messageObj.type === 1) {
+          obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
+        } else if (messageObj.type === 2) {
+          obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
+          if (!obj) {
+            return
+          }
+        }
         if (!obj) {
           //非好友
           let ctime = new Date()

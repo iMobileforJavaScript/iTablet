@@ -730,9 +730,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         if (defaultDataFile.exists()) {
             defaultDataFile.delete();
         }
-        String cachePath=SDCARD + "/iTablet/Cache/";
         //创建用户目录
-        createDirectory(cachePath);
         createDirectory(dataPath + "Attribute");
         createDirectory(dataPath + "Datasource");
         createDirectory(dataPath + "Scene");
@@ -742,7 +740,6 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Temp");
         createDirectory(dataPath + "Lable");
         createDirectory(dataPath + "Color");
-        createDirectory(dataPath + "Import");
         createDirectory(externalDataPath);
         createDirectory(plottingExtDataPath);
         createDirectory(collectionExtDataPath);

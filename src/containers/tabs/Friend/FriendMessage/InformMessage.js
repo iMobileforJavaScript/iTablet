@@ -59,7 +59,7 @@ export default class InformMessage extends React.Component {
     let message = {
       message: ' 我们已经是好友了,开始聊天吧',
       type: 1,
-      user: { name: curUserName, id: uuid },
+      user: { name: curUserName, id: uuid, groupID: uuid },
       time: time,
     }
     this.friend._sendMessage(

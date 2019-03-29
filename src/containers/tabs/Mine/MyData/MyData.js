@@ -540,6 +540,7 @@ export default class MyLocalData extends Component {
               ConstPath.RelativeFilePath.ExportData +
               fileName +
               '.zip'
+            GLOBAL.shareFilePath = targetPath
           } else {
             zipResult = await FileTools.zipFiles(archivePaths, targetPath)
           }

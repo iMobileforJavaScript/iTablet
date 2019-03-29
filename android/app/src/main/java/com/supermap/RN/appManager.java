@@ -154,9 +154,11 @@ public class appManager {
         req.scene = SendMessageToWX.Req.WXSceneSession;
         if (iwxapi != null) {
             result = iwxapi.sendReq(req);
+            int i=0;
             while (!result){
                 result= iwxapi.sendReq(req);
-                if(result){
+                i++;
+                if(result||i==10){
                     break;
                 }
             }

@@ -349,10 +349,9 @@ class FriendMessage extends Component {
           </View>
           <View
             style={{
-              marginRight: scaleSize(20),
+              width: scaleSize(110),
               flexDirection: 'column',
               justifyContent: 'flex-end',
-              flexGrow: 1,
             }}
           >
             <Text
@@ -390,7 +389,11 @@ class FriendMessage extends Component {
   }
   // eslint-disable-next-line
   _renderItemTitleView(item) {
-    return <Text style={styles.ITemTextStyle}>{item['title']}</Text>
+    return (
+      <Text style={styles.ITemTextStyle} ellipsizeMode="tail" numberOfLines={1}>
+        {item['title']}
+      </Text>
+    )
   }
 
   renderDialogConfirm = () => {

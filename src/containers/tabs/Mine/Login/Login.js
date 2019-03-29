@@ -144,7 +144,12 @@ export default class Login extends React.Component {
 
         if (userInfo !== false) {
           let userID = await SOnlineService.getUserInfoBy(userInfo.nickname, 0)
-          userInfo['userId'] = userID[0]
+          if (userID === false) {
+            //有的online账号拿不到ID
+            userInfo['userId'] = userInfo.nickname //
+          } else {
+            userInfo['userId'] = userID[0]
+          }
           bGetUserInfo = true
         }
         //下载好友列表

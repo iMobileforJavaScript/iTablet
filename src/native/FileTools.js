@@ -8,6 +8,7 @@ const FileTools = NativeModules.FileTools
 const nativeEvt = new NativeEventEmitter(FileTools)
 const MESSAGE_IMPORTEXTERNALDATA =
   'com.supermap.RN.Mapcontrol.message_importexternaldata'
+const MESSAGE_SHARERESULT = 'com.supermap.RN.Mapcontrol.message_shareresult'
 /**
  * 获取沙盒路径
  * @returns {Promise.<string>}
@@ -188,6 +189,22 @@ function addImportExternalData(handlers) {
   }
 }
 
+function getShareResult(handlers) {
+  if (Platform.OS === 'ios' && handlers) {
+    if (typeof handlers.callback === 'function') {
+      nativeEvt.addListener(MESSAGE_SHARERESULT, function(e) {
+        handlers.callback(e)
+      })
+    }
+  } else if (Platform.OS === 'android' && handlers) {
+    if (typeof handlers.callback === 'function') {
+      DeviceEventEmitter.addListener(MESSAGE_SHARERESULT, function(e) {
+        handlers.callback(e)
+      })
+    }
+  }
+}
+
 function getImportResult() {
   return FileTools.getImportResult()
 }
@@ -296,6 +313,7 @@ export default {
   getAvailableMapName,
   EnvironmentIsValid,
   addImportExternalData,
+  getShareResult,
   getImportResult,
   importData,
 }

@@ -126,7 +126,13 @@ class NavigationHeader extends Component {
           {headerCenter ? (
             headerCenter
           ) : (
-            <Text style={headerTitleStyle}>{title}</Text>
+            <Text
+              style={headerTitleStyle}
+              ellipsizeMode="tail"
+              numberOfLines={1}
+            >
+              {title}
+            </Text>
           )}
         </View>
       )

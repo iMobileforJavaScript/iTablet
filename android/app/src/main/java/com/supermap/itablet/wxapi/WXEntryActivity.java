@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.supermap.RN.AppUtils;
 import com.supermap.RN.appManager;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
@@ -40,24 +41,27 @@ public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHan
         String result = null;
         switch (baseResp.errCode) {
             case BaseResp.ErrCode.ERR_OK: {
-                itentMainActivity();
                 result = "分享成功";
+                AppUtils.sendShareResult(result);
+                itentMainActivity();
                 Log.e("分享成功", "=====================");
             }
             break;
             case BaseResp.ErrCode.ERR_USER_CANCEL:
-                itentMainActivity();
                 result = "分享取消";
+                AppUtils.sendShareResult(result);
+                itentMainActivity();
                 Log.e("分享取消", "=====================");
                 break;
             case BaseResp.ErrCode.ERR_AUTH_DENIED:
-                itentMainActivity();
                 result = "分享被拒绝";
+                AppUtils.sendShareResult(result);
+                itentMainActivity();
                 Log.e("分享被拒绝", "=====================");
                 break;
             default:
-                itentMainActivity();
                 result = "分享返回";
+                itentMainActivity();
                 Log.e("分享返回", "=====================");
                 break;
         }

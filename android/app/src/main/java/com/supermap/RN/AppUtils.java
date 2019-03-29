@@ -42,7 +42,8 @@ public class AppUtils extends ReactContextBaseJavaModule {
         }
     }
 
-//    public void sendShareResult(String result){
-//        mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EventConst.MESSAGE_IMPORTEXTERNALDATA, result);
-//    }
+    public static void sendShareResult(String result) {
+        mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(EventConst.MESSAGE_SHARERESULT, result);
+    }
+
 }
