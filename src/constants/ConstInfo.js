@@ -33,6 +33,10 @@ export default {
   TEMPLATE_CHANGE_SUCCESS: '已为您切换模板',
   TEMPLATE_CHANGE_FAILED: '切换模板失败',
 
+  SHARE_NEED_LOGIN: '请登陆后再分享',
+  SHARE_PREPARE: '准备分享',
+  SHARE_START: '开始分享',
+  SHARE_WAIT: '分享中，请稍后',
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',
 

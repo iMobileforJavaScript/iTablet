@@ -487,24 +487,9 @@ export default class LayerSelectionAttribute extends React.Component {
     }
 
     return {
-      canBeUndo:
-        (historyObj &&
-          historyObj.history.length > 0 &&
-          historyObj.currentIndex < historyObj.history.length - 1) ||
-        false,
-      canBeRedo:
-        (historyObj &&
-          historyObj.history.length > 0 &&
-          historyObj.currentIndex > 0) ||
-        false,
-      canBeRevert:
-        (historyObj &&
-          historyObj.history.length > 0 &&
-          historyObj.currentIndex < historyObj.history.length - 1 &&
-          !(
-            historyObj.history[historyObj.currentIndex + 1] instanceof Array
-          )) ||
-        false,
+      canBeUndo: LayerUtil.canBeUndo(historyObj),
+      canBeRedo: LayerUtil.canBeRedo(historyObj),
+      canBeRevert: LayerUtil.canBeRevert(historyObj),
     }
   }
 
