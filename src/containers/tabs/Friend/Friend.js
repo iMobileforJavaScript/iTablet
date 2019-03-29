@@ -373,7 +373,11 @@ export default class Friend extends Component {
         }
       }
       // eslint-disable-next-line
-      if (this.curChat && this.curChat.onReceive) {
+      if (
+        this.curChat &&
+        this.curChat.onReceive &&
+        this.curChat.targetUser.id === messageObj.user.groupID
+      ) {
         this.curChat.onReceive(message['message'], bSystem)
       }
       // this.refresh()
