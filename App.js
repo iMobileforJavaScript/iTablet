@@ -339,6 +339,7 @@ class AppRoot extends Component {
       this.container && this.container.setLoading(true, '正在关闭')
       if (GLOBAL.openWorkspace) {
         // this.SaveDialog && this.SaveDialog.setDialogVisible(true)
+        // await SScene.saveWorkspace()
         await SScene.closeWorkspace()
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
@@ -346,8 +347,8 @@ class AppRoot extends Component {
         this.container && this.container.setLoading(false)
         NavigationService.goBack()
       }
-      this.props.setCurrentAttribute({})
-      this.props.setAttributes({})
+      // this.props.setCurrentAttribute({})
+      // this.props.setAttributes({})
     } catch (e) {
       this.container && this.container.setLoading(false)
       NavigationService.goBack()

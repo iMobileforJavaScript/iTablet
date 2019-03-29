@@ -113,7 +113,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentLayer: () => {}, // 设置当前图层
     importTemplate: () => {}, // 导入模板
     importWorkspace: () => {}, // 打开模板
-    // setAttributes: () => {},
+    setAttributes: () => {},
     getMaps: () => {},
     exportWorkspace: () => {},
     getSymbolTemplates: () => {},
@@ -2910,6 +2910,7 @@ export default class ToolBar extends React.PureComponent {
     await SScene.clearSelection()
     await SScene.setAction('PAN3D')
     GLOBAL.action3d = 'PAN3D'
+    this.props.setAttributes({})
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }
