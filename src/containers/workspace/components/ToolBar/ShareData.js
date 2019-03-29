@@ -216,23 +216,22 @@ function showSaveDialog(type) {
  * 分享到SuperMap Online
  */
 async function shareToSuperMapOnline(list = [], name = '') {
-  let timer
   try {
     if (
       !_params.user.currentUser.userName ||
       _params.user.currentUser.userType === UserType.PROBATION_USER
     ) {
-      Toast.show('请登陆后再分享')
+      Toast.show(ConstInfo.SHARE_NEED_LOGIN)
       return
     }
     if (isSharing) {
-      Toast.show('分享中，请稍后')
+      Toast.show(ConstInfo.SHARE_WAIT)
       return
     }
     _params.setToolbarVisible && _params.setToolbarVisible(false)
-    Toast.show('开始分享')
+    Toast.show(ConstInfo.SHARE_PREPARE)
 
-    timer = setTimeout(async () => {
+    setTimeout(async () => {
       _params.setSharing({
         module: GLOBAL.Type,
         name: name,
@@ -256,23 +255,23 @@ async function shareToSuperMapOnline(list = [], name = '') {
           },
         },
         (result, path) => {
-          Toast.show(
-            result
-              ? ConstInfo.EXPORT_WORKSPACE_SUCCESS
-              : ConstInfo.EXPORT_WORKSPACE_FAILED,
-          )
+          !result && Toast.show(ConstInfo.EXPORT_WORKSPACE_FAILED)
           // 分享
           let fileName = path.substr(path.lastIndexOf('/') + 1)
           let dataName = name || fileName.substr(0, fileName.lastIndexOf('.'))
 
           SOnlineService.deleteData(dataName).then(async () => {
+            Toast.show(ConstInfo.SHARE_START)
             await SOnlineService.uploadFile(path, dataName, {
               onProgress: progress => {
-                _params.setSharing({
-                  module: GLOBAL.Type,
-                  name: dataName,
-                  progress: (progress > 95 ? 95 : progress) / 100,
-                })
+                if (progress < 100) {
+                  // console.warn('uploading: ' + progress)
+                  _params.setSharing({
+                    module: GLOBAL.Type,
+                    name: dataName,
+                    progress: (progress > 95 ? 95 : progress) / 100,
+                  })
+                }
               },
               onResult: async () => {
                 let result = await SOnlineService.publishService(dataName)
@@ -284,19 +283,17 @@ async function shareToSuperMapOnline(list = [], name = '') {
                     progress: 1,
                   })
                 }
-                let timer2 = setTimeout(() => {
+                setTimeout(() => {
                   _params.setSharing({
                     module: GLOBAL.Type,
                     name: dataName,
                   })
-                  if (timer2) timer2.clear()
                 }, 2000)
                 Toast.show(
                   result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
                 )
                 FileTools.deleteFile(path)
                 isSharing = false
-                timer.clear()
               },
             })
           })
@@ -304,7 +301,6 @@ async function shareToSuperMapOnline(list = [], name = '') {
       )
     }, 500)
   } catch (e) {
-    if (timer) timer.clear()
     isSharing = false
   }
 }
