@@ -33,10 +33,11 @@ import { ConstPath, ConstInfo, ConstToolType, ThemeType } from './src/constants'
 import * as PT from './src/customPrototype'
 import NavigationService from './src/containers/NavigationService'
 import Orientation from 'react-native-orientation'
-import { SOnlineService, SScene, SMap } from 'imobile_for_reactnative'
+import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactnative'
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
+import MSGConstans from "./src/containers/tabs/Friend/MsgConstans"
 
 const {persistor, store} = ConfigStore()
 
@@ -125,18 +126,41 @@ class AppRoot extends Component {
     }
     GLOBAL.AppState = AppState.currentState
     GLOBAL.isBackHome = true
+    GLOBAL.loginTimer = undefined
     // TODO 动态切换主题，将 GLOBAL.ThemeType 放入Redux中管理
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     PT.initCustomPrototype()
   }
   UNSAFE_componentWillMount(){
     //再次进行用户数据初始化
-    if(Platform.OS === 'ios'&&this.props.user.currentUser.userName){
-      FileTools.initUserDefaultData(this.props.user.currentUser.userName)
+    let checkAndInit = async ()=>{
+      let curUser = this.props.user.currentUser
+      if( curUser && curUser.userType && curUser.userType !== UserType.PROBATION_USER){
+        let isFileExist = await FileTools.fileIsExist(ConstPath.UserPath + curUser.userName)
+        if(!isFileExist)
+          FileTools.initUserDefaultData(curUser.userName)
+      }
     }
+    checkAndInit()
   }
   componentDidMount () {
-    setInterval(async () => {
+
+    if(GLOBAL.loginTimer != undefined){
+      clearInterval(GLOBAL.loginTimer)
+      GLOBAL.loginTimer = undefined
+    }
+    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER){
+      SMessageService.connectService(
+        MSGConstans.MSG_IP,
+        MSGConstans.MSG_Port,
+        MSGConstans.MSG_HostName,
+        MSGConstans.MSG_UserName,
+        MSGConstans.MSG_Password,
+        this.props.user.currentUser.userId,
+      )
+    }
+
+    GLOBAL.loginTimer = setInterval(async () => {
       if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
 
         let isEmail = this.props.user.currentUser.isEmail
@@ -185,39 +209,14 @@ class AppRoot extends Component {
   }
 
   handleStateChange = appState => {
-    if (appState === 'active') {
-      // if (this.props.user.currentUser && this.props.user.currentUser.userType!== UserType.PROBATION_USER) {
-      //   (async function () {
-      //     let isEmail = this.props.user.currentUser.isEmail
-      //     let userName = this.props.user.currentUser.userName
-      //     let password = this.props.user.currentUser.password
-      //     let bLogin;
-      //     if (isEmail === true) {
-      //       bLogin = await SOnlineService.loginWithPhoneNumber(userName, password)
-      //     } else if (isEmail === false) {
-      //       bLogin =await SOnlineService.login(userName, password)
-      //     }
-      //     if(!bLogin){
-      //       Toast.show('登陆状态失效');
-      //     }else{
-      //       //下载好友列表
-      //
-      //       //优先加载在线的
-      //       let userPath = await FileTools.appendingHomeDirectory(
-      //         ConstPath.UserPath + '',
-      //       )
-      //       userPath = userPath + '~.fl'
-      //       SOnlineService.downloadFileWithCallBack(userPath, 'friend.list', {
-      //         onResult: value => {
-      //           if (value !== true) {
-      //             console.warn(value);
-      //           }
-      //         },
-      //       })
-      //     }
-      //   }).bind(this)()
-      // }
+    if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
+      if (appState === 'active') {
+        SMessageService.resume()
+      }else if(appState === 'background'){
+        SMessageService.suspend()
+      }
     }
+
   }
 
   inspectEnvironment = async () => {

@@ -22,6 +22,11 @@ import { scaleSize } from '../../../../utils/screen'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 
+let Top = scaleSize(60)
+if (Platform.OS === 'ios') {
+  Top = scaleSize(60)
+}
+
 class Chat extends React.Component {
   props: {
     navigation: Object,
@@ -36,6 +41,7 @@ class Chat extends React.Component {
       isLoadingEarlier: false,
       showUserAvatar: true,
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
+      showInformSpot: false,
     }
 
     this.friend = this.props.navigation.getParam('friend')
@@ -53,69 +59,19 @@ class Chat extends React.Component {
     this.renderSystemMessage = this.renderSystemMessage.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
-
-    this._isAlright = null
   }
 
   componentDidMount() {
     let curMsg = []
-    // curMsg = [
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'Yes, and I use Gifted Chat!',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    //     user: {
-    //       _id: 1,
-    //       name: 'xiezhiyan',
-    //     },
-    //     sent: true,
-    //     received: true,
-    //     // location: {
-    //     //   latitude: 48.864601,
-    //     //   longitude: 2.398704
-    //     // },
-    //   },
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'Are you building a chat app?',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    //     user: {
-    //       _id: 44,
-    //       name: '白小白',
-    //     },
-    //   },
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'dfgfdgsdfg?',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 28, 0)),
-    //     user: {
-    //       _id: 43,
-    //       name: '白小白',
-    //     },
-    //   },
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'You are officially rocking GiftedChat.',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    //     system: true,
-    //   },
-    // ]
 
     //加载两条
     let n = 0
     for (let i = this.targetUser.message.length - 1; i >= 0; i--) {
-      if (n++ > 1) {
+      if (n++ > 3) {
         break
       }
       let msg = this.targetUser.message[i]
-
-      let chatMsg = {
-        _id: msg.time,
-        text: msg.msg,
-        createdAt: new Date(msg.time),
-        user: { _id: msg.id, name: msg.name },
-        type: msg.type, //根据type渲染
-      }
+      let chatMsg = this.loadMsgByType(msg)
       curMsg.push(chatMsg)
     }
     // curMsg.push({_id: Math.round(Math.random() * 1000000), text: '上次聊天到这', system: true})
@@ -159,43 +115,11 @@ class Chat extends React.Component {
       }
     })
 
-    let oldMsg = [
-      // {
-      //   _id: Math.round(Math.random() * 1000000),
-      //   text:
-      //     'It uses the same design as React, letting you compose a rich mobile UI from declarative components https://facebook.github.io/react-native/',
-      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-      //   user: {
-      //     _id: 1,
-      //     name: 'Developer',
-      //   },
-      // },
-      // {
-      //   _id: Math.round(Math.random() * 1000000),
-      //   text: 'React Native lets you build mobile apps using only JavaScript',
-      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-      //   user: {
-      //     _id: 1,
-      //     name: 'Developer',
-      //   },
-      // },
-      // {
-      //   _id: Math.round(Math.random() * 1000000),
-      //   text: 'This is a system message.',
-      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-      //   system: true,
-      // },
-    ]
-    if (this.targetUser.message.length > 2) {
-      for (let i = this.targetUser.message.length - 1 - 2; i >= 0; i--) {
+    let oldMsg = []
+    if (this.targetUser.message.length > 4) {
+      for (let i = this.targetUser.message.length - 1 - 4; i >= 0; i--) {
         let msg = this.targetUser.message[i]
-
-        let chatMsg = {
-          _id: msg.time,
-          text: msg.msg,
-          createdAt: new Date(msg.time),
-          user: { _id: msg.id, name: msg.name },
-        }
+        let chatMsg = this.loadMsgByType(msg)
         oldMsg.push(chatMsg)
       }
     }
@@ -210,12 +134,31 @@ class Chat extends React.Component {
       })
     }
   }
+
+  loadMsgByType(msg) {
+    switch (msg.type) {
+      default:
+        return {
+          _id: msg.time,
+          text: msg.msg,
+          createdAt: new Date(msg.time),
+          user: { _id: msg.id, name: msg.name },
+          type: msg.type, //根据type渲染
+        }
+      case 4:
+        return {
+          _id: msg.time,
+          text: msg.msg,
+          createdAt: new Date(msg.time),
+          user: { _id: msg.id, name: msg.name },
+          type: msg.type, //根据type渲染
+          fileName: msg.fileName,
+          queueName: msg.queueName,
+        }
+    }
+  }
+
   onSend(messages = []) {
-    this.setState(previousState => {
-      return {
-        messages: GiftedChat.append(previousState.messages, messages),
-      }
-    })
     let bGroup = 1
     let groupID = messages[0].user._id
     if (this.targetUser.id.indexOf('Group_') != -1) {
@@ -237,26 +180,42 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
     // for demo purpose
     // this.answerDemo(messages)
+    messages[0].type = bGroup
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, messages),
+      }
+    })
   }
 
   onSendFile() {
     // filepath1
+    // let bGroup = 1
+    let groupID = this.curUser.userId
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      // bGroup = 2
+      groupID = this.targetUser.id
+    }
     let filepath = '/sdcard/send.zip'
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
       type: 3, //文件
-      user: { name: this.curUser.nickname, id: this.curUser.userId },
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
       time: time,
       system: 0,
     }
     this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
 
-    let fileinform = {
-      id: time,
-      text: 'abc',
+    let msg = {
+      _id: time,
+      text: '[文件]',
       type: 4, //文件接收通知
-      user: '',
+      user: { name: this.curUser.nickname, _id: this.curUser.userId },
       createdAt: time,
       system: 0,
       fileName: '',
@@ -265,72 +224,43 @@ class Chat extends React.Component {
 
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, fileinform),
+        messages: GiftedChat.append(previousState.messages, msg),
       }
     })
   }
 
-  // answerDemo(messages) {
-  //   if (messages.length > 0) {
-  //     if (messages[0].image || messages[0].location || !this._isAlright) {
-  //       // eslint-disable-next-line
-  //       this.setState(previousState => {
-  //         return {
-  //           typingText: 'React Native is typing',
-  //         }
-  //       })
-  //     }
-  //   }
-  //   this.onReceive('Alright')
-  //
-  //   setTimeout(() => {
-  //     if (this._isMounted === true) {
-  //       if (messages.length > 0) {
-  //         if (messages[0].image) {
-  //           this.onReceive('Nice picture!')
-  //         } else if (messages[0].location) {
-  //           this.onReceive('My favorite place')
-  //         } else {
-  //           if (!this._isAlright) {
-  //             this._isAlright = true
-  //
-  //           }
-  //         }
-  //       }
-  //     }
-  //
-  //     // eslint-disable-next-line
-  //     this.setState(previousState => {
-  //       return {
-  //         typingText: null,
-  //       }
-  //     })
-  //   }, 1000)
-  //
-  // }
-
+  showInformSpot = b => {
+    this.setState({ showInformSpot: b })
+  }
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
+    let msg = {
+      _id: Math.round(Math.random() * 1000000),
+      text: messageObj.message,
+      createdAt: new Date(messageObj.time),
+      system: bSystem,
+      user: {
+        _id: messageObj.user.id,
+        name: messageObj.user.name,
+        // avatar: 'https://facebook.github.io/react/img/logo_og.png',
+      },
+      type: messageObj.type,
+    }
+    if (msg.type === 4) {
+      msg.fileName = messageObj.fileName
+      msg.queueName = messageObj.queueName
+    }
 
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, {
-          _id: Math.round(Math.random() * 1000000),
-          text: messageObj.message,
-          createdAt: new Date(messageObj.time),
-          system: bSystem,
-          user: {
-            _id: messageObj.user.id,
-            name: messageObj.user.name,
-            // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-          },
-          type: messageObj.type,
-        }),
+        messages: GiftedChat.append(previousState.messages, msg),
+        showInformSpot: false,
       }
     })
   }
 
   onLongPress(context, message) {
+    // console.log(message)
     switch (message.type) {
       case 1:
         alert('1')
@@ -353,6 +283,19 @@ class Chat extends React.Component {
           navigation: this.props.navigation,
         }}
       >
+        {this.state.showInformSpot ? (
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              height: scaleSize(15),
+              width: scaleSize(15),
+              borderRadius: scaleSize(15),
+              top: Top,
+              left: scaleSize(80),
+            }}
+          />
+        ) : null}
         <GiftedChat
           placeholder="message..."
           messages={this.state.messages}
@@ -390,8 +333,7 @@ class Chat extends React.Component {
     }
     const options = {
       // eslint-disable-next-line
-      'Action 1': props => {
-        // alert('option 1')
+      发送文件: props => {
         this.onSendFile()
       },
       // eslint-disable-next-line
