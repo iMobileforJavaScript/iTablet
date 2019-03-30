@@ -14,15 +14,16 @@ import {
   Dimensions,
 } from 'react-native'
 import RenderFindItem from './RenderFindItem'
-import { Toast } from '../../utils'
+import { Toast, scaleSize } from '../../utils'
+// import { InfoView } from '../../components'
 import styles from './Styles'
 import color from '../../styles/color'
 import FetchUtils from '../../utils/FetchUtils'
 import { SOnlineService } from 'imobile_for_reactnative'
-// import { FileTools } from '../../native'
-// import { ConstPath } from '../../constants'
-// import FriendListFileHandle from '../tabs/Friend/FriendListFileHandle'
-export default class PublicMap extends Component {
+import { FileTools } from '../../native'
+import { ConstPath } from '../../constants'
+import FriendListFileHandle from '../tabs/Friend/FriendListFileHandle'
+export default class FriendMap extends Component {
   props: {
     navigation: Object,
     user: Object,
@@ -46,6 +47,9 @@ export default class PublicMap extends Component {
     // this._loadFirstUserData()
     this.currentLoadPage2 = 1
     let data = []
+    if (this.props.user.users.length > 1) {
+      this.getContacts()
+    }
     this._loadFirstUserData2(this.currentLoadPage2, 100, data)
   }
   componentWillUnmount() {
@@ -68,7 +72,30 @@ export default class PublicMap extends Component {
     }
   }
 
+  getContacts = async () => {
+    let userPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath + this.props.user.userName,
+    )
+    let srcFriendData = []
+    await FriendListFileHandle.getContacts(userPath, 'friend.list', result => {
+      if (result) {
+        for (let key in result) {
+          if (result[key].id && result[key].name) {
+            let frend = {}
+            frend['id'] = result[key].id
+            frend['markName'] = result[key].markName
+            frend['name'] = result[key].name
+            frend['info'] = result[key].info
+            srcFriendData.push(result[key].name)
+          }
+        }
+      }
+    })
+    this.friendList = srcFriendData
+  }
+
   getCurrentLoadData2 = async (currentPage, totalPage) => {
+    // console.log('1111')
     await SOnlineService.syncAndroidCookie()
     let data = []
     while (currentPage <= totalPage) {
@@ -124,9 +151,8 @@ export default class PublicMap extends Component {
       if (!objArrUserDataContent) {
         return
       }
-      // console.log(objArrUserDataContent)
       let contentLength = objArrUserDataContent.length
-      // console.log(dataItemServices)
+      // console.log(objArrUserDataContent)
       for (let i = 0; i < contentLength; i++) {
         let objContent = objArrUserDataContent[i]
         if (objContent && objContent.type === 'WORKSPACE') {
@@ -141,9 +167,9 @@ export default class PublicMap extends Component {
           if (arrDataItemServices) {
             let length = arrDataItemServices.length
             let restUrl
+            // console.log(arrDataItemServices)
             for (let i = 0; i < length; i++) {
               let dataItemServices = arrDataItemServices[i]
-
               if (
                 dataItemServices &&
                 dataItemServices.serviceType === 'RESTMAP'
@@ -216,16 +242,17 @@ export default class PublicMap extends Component {
     return FetchUtils.getObjJson(uri, 3000)
   }
   _onRefresh2 = async () => {
-    // console.log('1`11111')
     try {
       if (!this.state.isRefresh) {
         this.setState({ isRefresh: true })
         this.currentLoadPage2 = 1
-        let data = await this.getCurrentLoadData2(
+        this.getCurrentLoadData2(
           this.currentLoadPage2,
           this.allUserDataCount,
-        )
-        this.setState({ isRefresh: false, data: data })
+        ).then(data => {
+          // console.log(data)
+          this.setState({ isRefresh: false, data: data })
+        })
       }
     } catch (e) {
       Toast.show('网络错误')
@@ -248,7 +275,7 @@ export default class PublicMap extends Component {
     }
   }
   _loadData2 = async () => {
-    // console.log('222222')
+    // console.log('2222')
     try {
       if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })
@@ -371,7 +398,16 @@ export default class PublicMap extends Component {
         ]}
         data={this.state.data}
         renderItem={data => {
-          return <RenderFindItem user={this.props.user} data={data.item} />
+          let name = data.item.nickname
+          // console.log(this.friendList)
+          // console.log(name)
+          if (this.friendList) {
+            if (this.friendList.indexOf(name) !== -1) {
+              return <RenderFindItem user={this.props.user} data={data.item} />
+            }
+          } else {
+            return <View />
+          }
         }}
         refreshControl={
           <RefreshControl
@@ -392,16 +428,42 @@ export default class PublicMap extends Component {
     )
   }
 
+  renderView = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Text
+          style={{
+            fontSize: scaleSize(28),
+            flex: 1,
+            marginTop: scaleSize(250),
+          }}
+        >
+          {'无好友地图，请登录后游览'}
+        </Text>
+      </View>
+    )
+    // return(<InfoView title={"请登陆"}/>)
+  }
+
   render() {
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '公共地图',
+          title: '好友地图',
           navigation: this.props.navigation,
         }}
       >
-        {this._selectRender()}
+        {this.props.user.users.length > 1
+          ? this._selectRender()
+          : this.renderView()}
       </Container>
     )
   }

@@ -63,7 +63,7 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
 import LegendView from '../../components/LegendView/LegendView'
-
+import { Utils } from '../../util'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -113,7 +113,7 @@ export default class ToolBar extends React.PureComponent {
     setCurrentLayer: () => {}, // 设置当前图层
     importTemplate: () => {}, // 导入模板
     importWorkspace: () => {}, // 打开模板
-    // setAttributes: () => {},
+    setAttributes: () => {},
     getMaps: () => {},
     exportWorkspace: () => {},
     getSymbolTemplates: () => {},
@@ -2444,6 +2444,7 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
+      Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
         this.props.getLayers(-1, layers => {
@@ -2473,7 +2474,8 @@ export default class ToolBar extends React.PureComponent {
           // 返回图层属性界面，并清除属性关联选中的对象
           this.props.navigation &&
             this.props.navigation.navigate('LayerAttribute')
-          SMap.selectObj(this.props.currentLayer.path)
+          this.props.currentLayer &&
+            SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
           // TODO 恢复框选对象，并返回到地图
           NavigationService.navigate('LayerSelectionAttribute')
@@ -2910,6 +2912,7 @@ export default class ToolBar extends React.PureComponent {
     await SScene.clearSelection()
     await SScene.setAction('PAN3D')
     GLOBAL.action3d = 'PAN3D'
+    this.props.setAttributes({})
     this.showToolbar(!this.isShow)
     this.props.existFullMap && this.props.existFullMap()
   }

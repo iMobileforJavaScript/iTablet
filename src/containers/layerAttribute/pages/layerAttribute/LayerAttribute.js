@@ -18,6 +18,7 @@ import {
   LocationView,
 } from '../../components'
 import { LayerUtil } from '../../utils'
+import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
 import { SMap, Action } from 'imobile_for_reactnative'
@@ -474,6 +475,8 @@ export default class LayerAttribute extends React.Component {
           height: 0,
         })
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+
+      Utils.setSelectionStyle(this.props.currentLayer.path)
       if (data instanceof Array && data.length > 0) {
         SMap.moveToPoint({
           x: data[0].x,
@@ -576,24 +579,9 @@ export default class LayerAttribute extends React.Component {
     }
 
     return {
-      canBeUndo:
-        (historyObj &&
-          historyObj.history.length > 0 &&
-          historyObj.currentIndex < historyObj.history.length - 1) ||
-        false,
-      canBeRedo:
-        (historyObj &&
-          historyObj.history.length > 0 &&
-          historyObj.currentIndex > 0) ||
-        false,
-      canBeRevert:
-        (historyObj &&
-          historyObj.history.length > 0 &&
-          historyObj.currentIndex < historyObj.history.length - 1 &&
-          !(
-            historyObj.history[historyObj.currentIndex + 1] instanceof Array
-          )) ||
-        false,
+      canBeUndo: LayerUtil.canBeUndo(historyObj),
+      canBeRedo: LayerUtil.canBeRedo(historyObj),
+      canBeRevert: LayerUtil.canBeRevert(historyObj),
     }
   }
 

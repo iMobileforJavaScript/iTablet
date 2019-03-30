@@ -145,6 +145,13 @@ export default class Find extends Component {
               NavigationService.navigate('PublicMap')
             },
           })}
+          {/* {this._renderItem({
+            title: Const.FRIENDMAP,
+            leftImagePath: require('../../../assets/Find/find_publicmap.png'),
+            onClick: () => {
+              NavigationService.navigate('FriendMap')
+            },
+          })} */}
           {this._renderItem({
             title: Const.FORUMOFSUPERMAP,
             leftImagePath: require('../../../assets/Find/find_forum.png'),

@@ -63,6 +63,7 @@ import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
+import FriendMap from './friendMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
 import { MapCut, MapCutDS } from './mapCut/page'
 
@@ -424,6 +425,13 @@ export default StackNavigator(
     },
     PublicMap: {
       screen: PublicMap,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    FriendMap: {
+      screen: FriendMap,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,
