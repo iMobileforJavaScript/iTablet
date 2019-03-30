@@ -264,7 +264,21 @@ async function shareToSuperMapOnline(list = [], name = '') {
             Toast.show(ConstInfo.SHARE_START)
             await SOnlineService.uploadFile(path, dataName, {
               onProgress: progress => {
-                if (progress < 100) {
+                progress = parseInt(progress)
+                let currentSharingProgress = 0
+                for (let i = 0; i < _params.online.share.length; i++) {
+                  if (
+                    _params.online.share[i].module === GLOBAL.Type &&
+                    _params.online.share[i].name === dataName
+                  ) {
+                    currentSharingProgress = _params.online.share[i].progress
+                    break
+                  }
+                }
+                if (
+                  progress < 100 &&
+                  currentSharingProgress !== progress / 100
+                ) {
                   // console.warn('uploading: ' + progress)
                   _params.setSharing({
                     module: GLOBAL.Type,

@@ -91,6 +91,7 @@ export default class ToolBar extends React.PureComponent {
     user: Object,
     map: Object,
     layers: Object,
+    online: Object,
     collection: Object,
     template: Object,
     currentLayer: Object,

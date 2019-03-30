@@ -103,6 +103,13 @@ export default class SurfaceView extends Component {
     }
   }
 
+  getResult = () => {
+    return {
+      startPoint: this.state.startPoint,
+      endPoint: this.state.endPoint,
+    }
+  }
+
   draw = () => {
     switch (this.props.type) {
       case ShapeType.CIRCLE:
