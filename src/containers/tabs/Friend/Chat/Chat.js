@@ -22,6 +22,11 @@ import { scaleSize } from '../../../../utils/screen'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 
+let Top = scaleSize(60)
+if (Platform.OS === 'ios') {
+  Top = scaleSize(60)
+}
+
 class Chat extends React.Component {
   props: {
     navigation: Object,
@@ -36,6 +41,7 @@ class Chat extends React.Component {
       isLoadingEarlier: false,
       showUserAvatar: true,
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
+      showInformSpot: false,
     }
 
     this.friend = this.props.navigation.getParam('friend')
@@ -53,58 +59,15 @@ class Chat extends React.Component {
     this.renderSystemMessage = this.renderSystemMessage.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
-
-    this._isAlright = null
   }
 
   componentDidMount() {
     let curMsg = []
-    // curMsg = [
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'Yes, and I use Gifted Chat!',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    //     user: {
-    //       _id: 1,
-    //       name: 'xiezhiyan',
-    //     },
-    //     sent: true,
-    //     received: true,
-    //     // location: {
-    //     //   latitude: 48.864601,
-    //     //   longitude: 2.398704
-    //     // },
-    //   },
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'Are you building a chat app?',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    //     user: {
-    //       _id: 44,
-    //       name: '白小白',
-    //     },
-    //   },
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'dfgfdgsdfg?',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 28, 0)),
-    //     user: {
-    //       _id: 43,
-    //       name: '白小白',
-    //     },
-    //   },
-    //   {
-    //     _id: Math.round(Math.random() * 1000000),
-    //     text: 'You are officially rocking GiftedChat.',
-    //     createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-    //     system: true,
-    //   },
-    // ]
 
     //加载两条
     let n = 0
     for (let i = this.targetUser.message.length - 1; i >= 0; i--) {
-      if (n++ > 1) {
+      if (n++ > 3) {
         break
       }
       let msg = this.targetUser.message[i]
@@ -159,35 +122,9 @@ class Chat extends React.Component {
       }
     })
 
-    let oldMsg = [
-      // {
-      //   _id: Math.round(Math.random() * 1000000),
-      //   text:
-      //     'It uses the same design as React, letting you compose a rich mobile UI from declarative components https://facebook.github.io/react-native/',
-      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-      //   user: {
-      //     _id: 1,
-      //     name: 'Developer',
-      //   },
-      // },
-      // {
-      //   _id: Math.round(Math.random() * 1000000),
-      //   text: 'React Native lets you build mobile apps using only JavaScript',
-      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-      //   user: {
-      //     _id: 1,
-      //     name: 'Developer',
-      //   },
-      // },
-      // {
-      //   _id: Math.round(Math.random() * 1000000),
-      //   text: 'This is a system message.',
-      //   createdAt: new Date(Date.UTC(2016, 7, 30, 17, 20, 0)),
-      //   system: true,
-      // },
-    ]
-    if (this.targetUser.message.length > 2) {
-      for (let i = this.targetUser.message.length - 1 - 2; i >= 0; i--) {
+    let oldMsg = []
+    if (this.targetUser.message.length > 4) {
+      for (let i = this.targetUser.message.length - 1 - 4; i >= 0; i--) {
         let msg = this.targetUser.message[i]
 
         let chatMsg = {
@@ -270,45 +207,9 @@ class Chat extends React.Component {
     })
   }
 
-  // answerDemo(messages) {
-  //   if (messages.length > 0) {
-  //     if (messages[0].image || messages[0].location || !this._isAlright) {
-  //       // eslint-disable-next-line
-  //       this.setState(previousState => {
-  //         return {
-  //           typingText: 'React Native is typing',
-  //         }
-  //       })
-  //     }
-  //   }
-  //   this.onReceive('Alright')
-  //
-  //   setTimeout(() => {
-  //     if (this._isMounted === true) {
-  //       if (messages.length > 0) {
-  //         if (messages[0].image) {
-  //           this.onReceive('Nice picture!')
-  //         } else if (messages[0].location) {
-  //           this.onReceive('My favorite place')
-  //         } else {
-  //           if (!this._isAlright) {
-  //             this._isAlright = true
-  //
-  //           }
-  //         }
-  //       }
-  //     }
-  //
-  //     // eslint-disable-next-line
-  //     this.setState(previousState => {
-  //       return {
-  //         typingText: null,
-  //       }
-  //     })
-  //   }, 1000)
-  //
-  // }
-
+  showInformSpot = b => {
+    this.setState({ showInformSpot: b })
+  }
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
 
@@ -326,6 +227,7 @@ class Chat extends React.Component {
           },
           type: messageObj.type,
         }),
+        showInformSpot: false,
       }
     })
   }
@@ -353,6 +255,19 @@ class Chat extends React.Component {
           navigation: this.props.navigation,
         }}
       >
+        {this.state.showInformSpot ? (
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor: 'red',
+              height: scaleSize(15),
+              width: scaleSize(15),
+              borderRadius: scaleSize(15),
+              top: Top,
+              left: scaleSize(80),
+            }}
+          />
+        ) : null}
         <GiftedChat
           placeholder="message..."
           messages={this.state.messages}
