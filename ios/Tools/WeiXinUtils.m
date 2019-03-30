@@ -38,7 +38,7 @@
     if ([infoDic objectForKey:@"filePath"]) {
       NSString* filePath = [infoDic objectForKey:@"filePath"];
       NSFileManager *filemanager = [NSFileManager defaultManager];
-      if([[filemanager attributesOfItemAtPath:filePath error:nil] fileSize] > 1024*1024){
+      if([[filemanager attributesOfItemAtPath:filePath error:nil] fileSize] > 10*1024*1024){
         return NO;
       }
       WXFileObject *ext = [WXFileObject object];

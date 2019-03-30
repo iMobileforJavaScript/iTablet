@@ -23,6 +23,7 @@ export default class SuperMapKnown extends Component {
   getData = async () => {
     try {
       let result = await SOnlineService.getSuperMapKnown()
+      //   console.log(result)
       this.setState({ data: result })
     } catch (error) {
       Toast.show('请求失败请检查网络')

@@ -129,9 +129,13 @@ class AppRoot extends Component {
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     PT.initCustomPrototype()
   }
-
+  UNSAFE_componentWillMount(){
+    //再次进行用户数据初始化
+    if(Platform.OS === 'ios'&&this.props.user.currentUser.userName){
+      FileTools.initUserDefaultData(this.props.user.currentUser.userName)
+    }
+  }
   componentDidMount () {
-
     setInterval(async () => {
       if (this.props.user.currentUser && this.props.user.currentUser.userType && this.props.user.currentUser.userType !== UserType.PROBATION_USER) {
 

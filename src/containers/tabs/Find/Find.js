@@ -154,7 +154,7 @@ export default class Find extends Component {
           })} */}
           {this._renderItem({
             title: Const.SUPERMAPKNOWN,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
             onClick: () => {
               NavigationService.navigate('SuperMapKnown')
             },

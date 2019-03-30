@@ -9,7 +9,7 @@ export default StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     backgroundColor: color.content_white,
-    borderWidth: 1,
+    borderBottomWidth: 1,
     borderColor: color.item_separate_white,
   },
   leftView: {

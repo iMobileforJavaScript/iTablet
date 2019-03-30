@@ -384,8 +384,6 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   
   BOOL isDir = FALSE;
   BOOL isDirExist = [fileManager fileExistsAtPath:DOCUMENTS_FOLDER_AUDIO isDirectory:&isDir];
-  
-  
   if(!(isDirExist && isDir)){
     BOOL bCreateDir = [fileManager createDirectoryAtPath:DOCUMENTS_FOLDER_AUDIO withIntermediateDirectories:YES attributes:nil error:nil];
     
@@ -413,13 +411,12 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 
 +(BOOL)initUserDefaultData:(NSString *)userName {
   userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
-  USER_NAME = userName;
   // 初始化用户工作空间
   NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
   NSString* defaultDataPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/DefaultData/" ];
   NSString* wsName = @"Workspace.sxwu";
   
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", defaultDataPath, @""]];
+  [FileTools createFileDirectories:defaultDataPath];
 //  if (srclic) {
 //    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
 //    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
