@@ -25,22 +25,11 @@ import UserType from '../../../constants/UserType'
 import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
+import MSGConstans from './MsgConstans'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
 
-// let sIP = '192.168.0.106'
-// let sPort = 5672
-// let sHostName = '/'
-// let sUserName = 'androidtest'
-// let sPassword = 'androidtest'
-let sIP = '111.202.121.144'
-let sPort = 5672
-let sHostName = '/'
-let sUserName = 'admin'
-let sPassword = 'admin'
-
-let g_curUserId = ''
 let g_connectService = false
 export default class Friend extends Component {
   props: {
@@ -118,7 +107,7 @@ export default class Friend extends Component {
   // }
 
   componentWillUnmount() {
-    this.connectService()
+    // this.connectService()
   }
   // eslint-disable-next-line
   shouldComponentUpdate(prevProps, prevState) {
@@ -197,12 +186,12 @@ export default class Friend extends Component {
   _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
-        sIP,
-        sPort,
-        sHostName,
-        sUserName,
-        sPassword,
-        g_curUserId,
+        MSGConstans.MSG_IP,
+        MSGConstans.MSG_Port,
+        MSGConstans.MSG_HostName,
+        MSGConstans.MSG_UserName,
+        MSGConstans.MSG_Password,
+        this.props.user.currentUser.userId,
       )
         .then(() => {
           SMessageService.sendMessage(messageStr, talkId)
@@ -243,12 +232,12 @@ export default class Friend extends Component {
 
   _sendFile = (messageStr, filepath, talkId) => {
     let connectInfo = {
-      serverIP: sIP,
-      port: sPort,
-      hostName: sHostName,
-      userName: sUserName,
-      passwd: sPassword,
-      userID: g_curUserId,
+      serverIP: MSGConstans.MSG_IP,
+      port: MSGConstans.MSG_Port,
+      hostName: MSGConstans.MSG_HostName,
+      userName: MSGConstans.MSG_UserName,
+      passwd: MSGConstans.MSG_Password,
+      userID: this.props.user.currentUser.userId,
     }
     SMessageService.sendFile(
       JSON.stringify(connectInfo),
@@ -376,9 +365,14 @@ export default class Friend extends Component {
         }
       }
       // eslint-disable-next-line
-      if (this.curChat && this.curChat.onReceive) {
-        this.curChat.onReceive(message['message'], bSystem)
+      if (this.curChat) {
+        if (this.curChat.targetUser.id === messageObj.user.groupID) {
+          this.curChat.onReceive(message['message'], bSystem)
+        } else {
+          this.curChat.showInformSpot(true)
+        }
       }
+
       // this.refresh()
     }
   }
@@ -391,18 +385,17 @@ export default class Friend extends Component {
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
           SMessageService.connectService(
-            sIP,
-            sPort,
-            sHostName,
-            sUserName,
-            sPassword,
+            MSGConstans.MSG_IP,
+            MSGConstans.MSG_Port,
+            MSGConstans.MSG_HostName,
+            MSGConstans.MSG_UserName,
+            MSGConstans.MSG_Password,
             this.props.user.currentUser.userId,
           )
             .then(res => {
               if (!res) {
                 Toast.show('连接消息服务失败！')
               } else {
-                g_curUserId = this.props.user.currentUser.userId
                 g_connectService = true
                 SMessageService.startReceiveMessage(
                   this.props.user.currentUser.userId,
@@ -426,7 +419,6 @@ export default class Friend extends Component {
     SMessageService.disconnectionService()
     SMessageService.stopReceiveMessage()
     g_connectService = false
-    g_curUserId = ''
   }
 
   addMore = index => {

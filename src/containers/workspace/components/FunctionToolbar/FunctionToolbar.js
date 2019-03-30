@@ -83,6 +83,17 @@ export default class FunctionToolbar extends React.Component {
     this.visible = true
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(this.props.online.share) !==
+        JSON.stringify(nextProps.online.share) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
+    ) {
+      return true
+    }
+    return false
+  }
+
   componentDidUpdate(prevProps) {
     if (
       JSON.stringify(this.props.online.share) !==
