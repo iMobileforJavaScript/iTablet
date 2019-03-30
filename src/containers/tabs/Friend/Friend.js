@@ -234,6 +234,8 @@ export default class Friend extends Component {
           time: messageObj.time,
           type: messageObj.type, //消息类型
           system: messageObj.system,
+          fileName: messageObj.fileName,
+          queueName: messageObj.queueName,
         })
     }
     // this.refresh()
@@ -252,13 +254,12 @@ export default class Friend extends Component {
       JSON.stringify(connectInfo),
       messageStr,
       filepath,
-      talkId,
     ).then(res => {
       let messageObj = JSON.parse(messageStr)
       let ctime = new Date()
       let time = Date.parse(ctime)
       let fileinform = {
-        message: '[长按接收文件' + res.fileName + ']',
+        message: '[文件]',
         type: 4, //文件接收通知
         user: messageObj.user,
         time: time,
@@ -299,7 +300,7 @@ export default class Friend extends Component {
       if (messageObj.type < 9) {
         //非通知消息，判断是否接收
         let obj = undefined
-        if (messageObj.type === 1) {
+        if (messageObj.type === 1 || messageObj.type === 4) {
           obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
         } else if (messageObj.type === 2) {
           obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
@@ -347,6 +348,8 @@ export default class Friend extends Component {
             time: messageObj.time,
             type: messageObj.type, //消息类型
             unReadMsg: bUnReadMsg,
+            fileName: messageObj.fileName,
+            queueName: messageObj.queueName,
           })
       } else {
         //to do 系统消息，做处理机制

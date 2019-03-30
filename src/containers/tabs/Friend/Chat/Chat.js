@@ -108,14 +108,7 @@ class Chat extends React.Component {
         break
       }
       let msg = this.targetUser.message[i]
-
-      let chatMsg = {
-        _id: msg.time,
-        text: msg.msg,
-        createdAt: new Date(msg.time),
-        user: { _id: msg.id, name: msg.name },
-        type: msg.type, //根据type渲染
-      }
+      let chatMsg = this.loadMsgByType(msg)
       curMsg.push(chatMsg)
     }
     // curMsg.push({_id: Math.round(Math.random() * 1000000), text: '上次聊天到这', system: true})
@@ -189,13 +182,7 @@ class Chat extends React.Component {
     if (this.targetUser.message.length > 2) {
       for (let i = this.targetUser.message.length - 1 - 2; i >= 0; i--) {
         let msg = this.targetUser.message[i]
-
-        let chatMsg = {
-          _id: msg.time,
-          text: msg.msg,
-          createdAt: new Date(msg.time),
-          user: { _id: msg.id, name: msg.name },
-        }
+        let chatMsg = this.loadMsgByType(msg)
         oldMsg.push(chatMsg)
       }
     }
@@ -210,12 +197,32 @@ class Chat extends React.Component {
       })
     }
   }
+
+  
+  loadMsgByType(msg){
+    switch(msg.type){
+      default:
+          return {
+          _id: msg.time,
+          text: msg.msg,
+          createdAt: new Date(msg.time),
+          user: { _id: msg.id, name: msg.name },
+          type: msg.type, //根据type渲染
+        }
+      case(4):
+          return {
+          _id: msg.time,
+          text: msg.msg,
+          createdAt: new Date(msg.time),
+          user: { _id: msg.id, name: msg.name },
+          type: msg.type, //根据type渲染
+          fileName: msg.fileName,
+          queueName: msg.queueName,
+        }
+    }
+  }
+
   onSend(messages = []) {
-    this.setState(previousState => {
-      return {
-        messages: GiftedChat.append(previousState.messages, messages),
-      }
-    })
     let bGroup = 1
     let groupID = messages[0].user._id
     if (this.targetUser.id.indexOf('Group_') != -1) {
@@ -237,26 +244,38 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
     // for demo purpose
     // this.answerDemo(messages)
+    messages[0].type = bGroup
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, messages),
+      }
+    })
   }
 
   onSendFile() {
     // filepath1
+    let bGroup = 1
+    let groupID = this.curUser.userId
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
     let filepath = '/sdcard/send.zip'
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
       type: 3, //文件
-      user: { name: this.curUser.nickname, id: this.curUser.userId },
+      user: { name: this.curUser.nickname, id: this.curUser.userId, groupID: groupID },
       time: time,
       system: 0,
     }
     this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
 
-    let fileinform = {
-      id: time,
-      text: 'abc',
+    let msg = {
+      _id: time,
+      text: '[文件]',
       type: 4, //文件接收通知
-      user: '',
+      user: { name: this.curUser.nickname, _id: this.curUser.userId },
       createdAt: time,
       system: 0,
       fileName: '',
@@ -265,7 +284,7 @@ class Chat extends React.Component {
 
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, fileinform),
+        messages: GiftedChat.append(previousState.messages, msg),
       }
     })
   }
@@ -311,26 +330,32 @@ class Chat extends React.Component {
 
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
+    let msg = {
+      _id: Math.round(Math.random() * 1000000),
+      text: messageObj.message,
+      createdAt: new Date(messageObj.time),
+      system: bSystem,
+      user: {
+        _id: messageObj.user.id,
+        name: messageObj.user.name,
+        // avatar: 'https://facebook.github.io/react/img/logo_og.png',
+      },
+      type: messageObj.type,
+    }
+    if(msg.type === 4){
+      msg.fileName = messageObj.fileName
+      msg.queueName = messageObj.queueName
+    }
 
     this.setState(previousState => {
       return {
-        messages: GiftedChat.append(previousState.messages, {
-          _id: Math.round(Math.random() * 1000000),
-          text: messageObj.message,
-          createdAt: new Date(messageObj.time),
-          system: bSystem,
-          user: {
-            _id: messageObj.user.id,
-            name: messageObj.user.name,
-            // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-          },
-          type: messageObj.type,
-        }),
+        messages: GiftedChat.append(previousState.messages, msg),
       }
     })
   }
 
   onLongPress(context, message) {
+    console.log(message)
     switch (message.type) {
       case 1:
         alert('1')
@@ -390,8 +415,7 @@ class Chat extends React.Component {
     }
     const options = {
       // eslint-disable-next-line
-      'Action 1': props => {
-        // alert('option 1')
+      '发送文件': props => {
         this.onSendFile()
       },
       // eslint-disable-next-line

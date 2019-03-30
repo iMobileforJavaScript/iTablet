@@ -83,14 +83,24 @@ export default handleActions(
       if (!payload.messageUsr) {
         chats.unReadMsg = 0 //清除未读信息
       } else {
-        chats.history.push({
+        let pushMsg = {
           msg: payload.message,
           time: payload.time,
           type: payload.type,
           name: payload.messageUsr.name,
           id: payload.messageUsr.id,
           unReadMsg: payload.unReadMsg,
-        })
+        }
+        switch(payload.type){
+          case 4:
+            pushMsg.queueName = payload.queueName
+            pushMsg.fileName= payload.fileName
+          break
+          default:
+          break
+        }
+        chats.history.push(pushMsg)
+        
         if (payload.unReadMsg) {
           chats.unReadMsg++
         }
