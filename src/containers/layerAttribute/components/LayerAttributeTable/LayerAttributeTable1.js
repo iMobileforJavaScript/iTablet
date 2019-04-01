@@ -414,6 +414,13 @@ export default class LayerAttributeTable extends React.Component {
       this.state.tableData[0].data instanceof Array &&
       this.state.tableData[0].data.length > 1 &&
       this.state.tableData[0].data[0] instanceof Array
+
+    if (
+      !isMultiData &&
+      Object.keys(this.state.tableData[0].data).length === 0
+    ) {
+      return null
+    }
     return (
       <KeyboardAvoidingView
         // behavior={this.state.behavior}

@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize, LayerUtil } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -17,7 +17,6 @@ import {
   LayerTopBar,
   LocationView,
 } from '../../components'
-import { LayerUtil } from '../../utils'
 import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
