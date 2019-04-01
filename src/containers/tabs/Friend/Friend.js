@@ -26,6 +26,7 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstans from './MsgConstans'
+import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -46,6 +47,8 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
+    MessageDataHandle.setHandle(this.props.addChat)
+
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -83,20 +86,14 @@ export default class Friend extends Component {
   setCurChat = chat => {
     this.curChat = chat
     if (this.curChat) {
-      this.setReadTalk(
-        this.props.user.currentUser.userId,
-        this.curChat.targetUser.id,
-      )
+      MessageDataHandle.readMessage({
+        //清除未读信息
+        userId: this.props.user.currentUser.userId, //当前登录账户的id
+        talkId: this.curChat.targetUser.id, //会话ID
+      })
     }
   }
-  setReadTalk = (userId, talkId) => {
-    this.props.addChat &&
-      this.props.addChat({
-        //清除未读信息
-        userId: userId, //当前登录账户的id
-        talkId: talkId, //会话ID
-      })
-  }
+
   // componentDidUpdate(prevProps) {
   //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
   //   //  // this
@@ -214,18 +211,17 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      this.props.addChat &&
-        this.props.addChat({
-          userId: userId, //当前登录账户的id
-          talkId: talkId,
-          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-          message: messageObj.message,
-          time: messageObj.time,
-          type: messageObj.type, //消息类型
-          system: messageObj.system,
-          fileName: messageObj.fileName,
-          queueName: messageObj.queueName,
-        })
+      MessageDataHandle.pushMessage({
+        userId: userId, //当前登录账户的id
+        talkId: talkId,
+        messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+        message: messageObj.message,
+        time: messageObj.time,
+        type: messageObj.type, //消息类型
+        system: messageObj.system,
+        fileName: messageObj.fileName,
+        queueName: messageObj.queueName,
+      })
     }
     // this.refresh()
   }
@@ -329,18 +325,17 @@ export default class Friend extends Component {
           bUnReadMsg = true
         }
 
-        this.props.addChat &&
-          this.props.addChat({
-            userId: userId, //当前登录账户的id
-            talkId: messageObj.user.groupID, //会话ID
-            messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-            message: messageObj.message,
-            time: messageObj.time,
-            type: messageObj.type, //消息类型
-            unReadMsg: bUnReadMsg,
-            fileName: messageObj.fileName,
-            queueName: messageObj.queueName,
-          })
+        MessageDataHandle.pushMessage({
+          userId: userId, //当前登录账户的id
+          talkId: messageObj.user.groupID, //会话ID
+          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+          message: messageObj.message,
+          time: messageObj.time,
+          type: messageObj.type, //消息类型
+          unReadMsg: bUnReadMsg,
+          fileName: messageObj.fileName,
+          queueName: messageObj.queueName,
+        })
       } else {
         //to do 系统消息，做处理机制
         if (messageObj.type === 912) {

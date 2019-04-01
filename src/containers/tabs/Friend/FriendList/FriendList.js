@@ -10,6 +10,8 @@ import {
   TouchableOpacity,
   SectionList,
   FlatList,
+  Image,
+  TextInput,
 } from 'react-native'
 
 import NavigationService from '../../../NavigationService'
@@ -19,6 +21,11 @@ import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
 import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
+// import MessageDataHandle from "../MessageDataHandle";
+// eslint-disable-next-line
+import { ActionPopover } from 'teaset'
+import { dialogStyles, inputStyles } from '../Styles'
+import { Dialog } from '../../../../components/Dialog'
 
 class FriendList extends Component {
   props: {
@@ -34,6 +41,7 @@ class FriendList extends Component {
       listData: [], //源数组
       letterArr: [], //首字母数组
       bRefesh: true,
+      inputText: '',
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
@@ -357,8 +365,41 @@ class FriendList extends Component {
             )}
           />
         </View>
+        {this.renderDialog()}
+        {this.renderInputDialog()}
       </View>
     )
+  }
+
+  _showPopover = (pressView, item) => {
+    this.target = item
+
+    let obj = {
+      title: '设置备注',
+      onPress: () => {
+        this.inputdialog.setDialogVisible(true)
+      },
+    }
+    pressView.measure((ox, oy, width, height, px, py) => {
+      let items = [
+        obj,
+        {
+          title: '删除好友',
+          onPress: () => {
+            this.dialog.setDialogVisible(true)
+          },
+        },
+      ]
+      ActionPopover.show(
+        {
+          x: px,
+          y: py,
+          width,
+          height,
+        },
+        items,
+      )
+    })
   }
 
   _renderSectionHeader(sectionItem) {
@@ -371,11 +412,16 @@ class FriendList extends Component {
   }
 
   _renderItem(item) {
+    let iTemView
     return (
       <TouchableOpacity
+        ref={ref => (iTemView = ref)}
         style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
         onPress={() => this._onFriendSelect(item)}
+        onLongPress={() => {
+          this._showPopover(iTemView, item)
+        }}
       >
         <View style={styles.ITemHeadTextViewStyle}>
           <Text style={styles.ITemHeadTextStyle}>
@@ -386,6 +432,72 @@ class FriendList extends Component {
           <Text style={styles.ITemTextStyle}>{item['markName']}</Text>
         </View>
       </TouchableOpacity>
+    )
+  }
+
+  renderDialogChildren = () => {
+    return (
+      <View style={dialogStyles.dialogHeaderViewX}>
+        <Image
+          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={dialogStyles.dialogHeaderImgX}
+        />
+        <Text style={dialogStyles.promptTtileX}>将该联系人删除?</Text>
+      </View>
+    )
+  }
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={() => {
+          this.dialog.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={dialogStyles.dialogBackgroundX}
+      >
+        {this.renderDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderInputDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.inputdialog = ref)}
+        style={{
+          marginVertical: 15,
+          width: scaleSize(420),
+          height: scaleSize(250),
+        }}
+        type={'modal'}
+        confirmAction={this.confirm}
+        cancelAction={this.cancel}
+      >
+        <View style={inputStyles.item}>
+          {/* <Text style={styles.title}>文本内容</Text> */}
+          <TextInput
+            underlineColorAndroid={'transparent'}
+            accessible={true}
+            accessibilityLabel={'文本内容'}
+            onChangeText={text => {
+              this.setState({
+                inputText: text,
+              })
+            }}
+            value={this.state.inputText}
+            placeholder={'请输入备注名'}
+            style={inputStyles.textInputStyle}
+          />
+        </View>
+        {this.state.placeholder && (
+          <Text style={styles.placeholder}>内容不符合规范请重新输入</Text>
+        )}
+      </Dialog>
     )
   }
 }
