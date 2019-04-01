@@ -173,7 +173,7 @@ class AppRoot extends Component {
           bLogin = await SOnlineService.login(userName, password)
         }
         if (!bLogin) {
-          Toast.show('登陆状态失效')
+         // Toast.show('登陆状态失效')
         }
 
       }

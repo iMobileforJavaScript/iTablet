@@ -307,6 +307,7 @@ export default class Friend extends Component {
             user: {
               name: this.props.user.currentUser.name,
               id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
             },
             time: time,
           }

@@ -22,9 +22,9 @@ import { scaleSize } from '../../../../utils/screen'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 
-let Top = scaleSize(60)
+let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
-  Top = scaleSize(60)
+  Top = scaleSize(80)
 }
 
 class Chat extends React.Component {
@@ -292,7 +292,7 @@ class Chat extends React.Component {
               width: scaleSize(15),
               borderRadius: scaleSize(15),
               top: Top,
-              left: scaleSize(80),
+              left: scaleSize(75),
             }}
           />
         ) : null}
