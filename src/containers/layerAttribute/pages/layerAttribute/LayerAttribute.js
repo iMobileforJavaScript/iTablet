@@ -429,14 +429,17 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             currentFieldInfo: item.data,
           })
-          this.table &&
-            this.table.scrollToLocation({
-              animated: true,
-              itemIndex: remainder,
-              sectionIndex: 0,
-              viewPosition: viewPosition,
-              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-            })
+          // 避免 Android 更新数据后无法滚动
+          setTimeout(() => {
+            this.table &&
+              this.table.scrollToLocation({
+                animated: true,
+                itemIndex: remainder,
+                sectionIndex: 0,
+                viewPosition: viewPosition,
+                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+              })
+          }, 0)
         }
         this.setLoading(false)
       },

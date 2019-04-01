@@ -85,6 +85,7 @@ export default class LayerAttributeTable extends React.Component {
       refreshing: false,
       loading: false,
     }
+    this.canBeLoadMore = true // 控制是否可以加载更多
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -186,6 +187,7 @@ export default class LayerAttributeTable extends React.Component {
 
   loadMore = () => {
     if (
+      this.canBeLoadMore &&
       this.props.loadMore &&
       typeof this.props.loadMore === 'function' &&
       !this.state.loading
@@ -206,6 +208,7 @@ export default class LayerAttributeTable extends React.Component {
         },
       )
       this.props.loadMore(() => {
+        this.canBeLoadMore = false
         this.setState({
           loading: false,
         })
@@ -363,6 +366,7 @@ export default class LayerAttributeTable extends React.Component {
           extraData={this.state}
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
           renderSectionFooter={this.renderFooter}
+          onScroll={() => (this.canBeLoadMore = true)}
         />
       </ScrollView>
     )
