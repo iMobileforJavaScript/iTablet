@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Container, MTBtn, PopModal } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { setSpText, scaleSize } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
@@ -360,7 +360,7 @@ export default class LayerAttributeTabs extends React.Component {
             activeTextColor={color.themeText2}
             inactiveTextColor={'white'}
             textStyle={{
-              fontSize: setSpText(22),
+              fontSize: 0,
               backgroundColor: 'transparent',
             }}
             tabStyle={{
