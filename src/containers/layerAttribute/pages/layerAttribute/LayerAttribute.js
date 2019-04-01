@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
-import { Toast, scaleSize } from '../../../../utils'
+import { Toast, scaleSize, LayerUtil } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -17,7 +17,6 @@ import {
   LayerTopBar,
   LocationView,
 } from '../../components'
-import { LayerUtil } from '../../utils'
 import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
@@ -429,14 +428,17 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             currentFieldInfo: item.data,
           })
-          this.table &&
-            this.table.scrollToLocation({
-              animated: true,
-              itemIndex: remainder,
-              sectionIndex: 0,
-              viewPosition: viewPosition,
-              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-            })
+          // 避免 Android 更新数据后无法滚动
+          setTimeout(() => {
+            this.table &&
+              this.table.scrollToLocation({
+                animated: true,
+                itemIndex: remainder,
+                sectionIndex: 0,
+                viewPosition: viewPosition,
+                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+              })
+          }, 0)
         }
         this.setLoading(false)
       },

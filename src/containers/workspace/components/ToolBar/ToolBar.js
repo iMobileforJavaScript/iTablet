@@ -91,6 +91,7 @@ export default class ToolBar extends React.PureComponent {
     user: Object,
     map: Object,
     layers: Object,
+    online: Object,
     collection: Object,
     template: Object,
     currentLayer: Object,
@@ -2732,18 +2733,25 @@ export default class ToolBar extends React.PureComponent {
   commit = (type = this.originType) => {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
-      if (
-        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+      if (type === ConstToolType.MAP_EDIT_DEFAULT) {
+        // 编辑完成关闭Toolbar
+        this.setVisible(false, '', {
+          cb: () => {
+            SMap.setAction(Action.PAN)
+          },
+        })
+      } else if (
         type !== ConstToolType.MAP_EDIT_TAGGING &&
         type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
+        // 编辑完成关闭Toolbar
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
         this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
           isFullScreen: false,
           height: 0,
           cb: () => {
-            // SMap.submit()
+            SMap.submit()
             SMap.setAction(Action.SELECT)
           },
         })
@@ -4066,7 +4074,9 @@ export default class ToolBar extends React.PureComponent {
 
   /** 切换到裁剪界面 **/
   goToCut = () => {
-    NavigationService.navigate('MapCut')
+    NavigationService.navigate('MapCut', {
+      points: GLOBAL.MapSurfaceView.getResult(),
+    })
   }
 
   renderList = () => {
