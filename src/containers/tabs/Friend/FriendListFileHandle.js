@@ -91,7 +91,7 @@ export default class FriendListFileHandle {
       )
     })
   }
-  static addToFriendList(obj) {
+  static addToFriendList(obj, callback) {
     let bFound = FriendListFileHandle.findFromFriendList(obj.id)
 
     if (!bFound) {
@@ -109,12 +109,34 @@ export default class FriendListFileHandle {
       RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(
         () => {
           FriendListFileHandle.upload()
+          if (callback) callback(true)
         },
       )
     }
   }
+
+  static modifyFriendList(id, name, callback) {
+    for (let key in FriendListFileHandle.friends.userInfo) {
+      let friend = FriendListFileHandle.friends.userInfo[key]
+      if (id === friend.id) {
+        friend.markName = name
+        break
+      }
+    }
+
+    FriendListFileHandle.friends['rev'] += 1
+
+    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+    //写如本地
+    RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
+      //上传
+      FriendListFileHandle.upload()
+      if (callback) callback(true)
+    })
+  }
+
   // eslint-disable-next-line
-  static delFromFriendList(id) {
+  static delFromFriendList(id, callback) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
@@ -124,7 +146,36 @@ export default class FriendListFileHandle {
     }
 
     FriendListFileHandle.friends['rev'] += 1
+
+    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+    //写如本地
+    RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
+      //上传
+      FriendListFileHandle.upload()
+      if (callback) callback(true)
+    })
   }
+
+  // static modifyGroupList(id, name, callback) {
+  //   for (let key in FriendListFileHandle.friends.groupInfo) {
+  //     let friend = FriendListFileHandle.friends.groupInfo[key]
+  //     if (id === friend.id) {
+  //       friend.groupName = name
+  //       break
+  //     }
+  //   }
+  //
+  //   FriendListFileHandle.friends['rev'] += 1
+  //
+  //   let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+  //   //写如本地
+  //   RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
+  //     //上传
+  //     FriendListFileHandle.upload()
+  //     if (callback) callback(true)
+  //   })
+  // }
+
   // eslint-disable-next-line
   static findFromFriendList(id) {
     let bFound
@@ -175,13 +226,13 @@ export default class FriendListFileHandle {
         () => {
           //上传
           FriendListFileHandle.upload()
-          callback(true)
+          if (callback) callback(true)
         },
       )
     }
   }
   // eslint-disable-next-line
-  static delFromGroupList(id) {
+  static delFromGroupList(id, callback) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
@@ -191,5 +242,32 @@ export default class FriendListFileHandle {
     }
 
     FriendListFileHandle.friends['rev'] += 1
+
+    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+    //写如本地
+    RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
+      //上传
+      FriendListFileHandle.upload()
+      if (callback) callback(true)
+    })
+  }
+  static modifyGroupList(id, name, callback) {
+    for (let key in FriendListFileHandle.friends.groupInfo) {
+      let friend = FriendListFileHandle.friends.groupInfo[key]
+      if (id === friend.id) {
+        friend.groupName = name
+        break
+      }
+    }
+
+    FriendListFileHandle.friends['rev'] += 1
+
+    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
+    //写如本地
+    RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
+      //上传
+      FriendListFileHandle.upload()
+      if (callback) callback(true)
+    })
   }
 }

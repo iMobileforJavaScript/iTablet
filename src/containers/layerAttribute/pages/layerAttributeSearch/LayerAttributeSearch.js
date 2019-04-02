@@ -6,10 +6,9 @@
 
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
-import { LayerUtil } from '../../utils'
 import { Container, SearchBar } from '../../../../components'
 import NavigationService from '../../../NavigationService'
-import { Toast } from '../../../../utils'
+import { Toast, LayerUtil } from '../../../../utils'
 import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'

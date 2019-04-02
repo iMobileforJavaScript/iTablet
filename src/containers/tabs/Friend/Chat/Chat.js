@@ -22,9 +22,9 @@ import { scaleSize } from '../../../../utils/screen'
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 
-let Top = scaleSize(60)
-if (Platform.OS === 'android') {
-  Top -= 20
+let Top = scaleSize(38)
+if (Platform.OS === 'ios') {
+  Top = scaleSize(80)
 }
 
 class Chat extends React.Component {
@@ -135,9 +135,8 @@ class Chat extends React.Component {
     }
   }
 
-  
-  loadMsgByType(msg){
-    switch(msg.type){
+  loadMsgByType(msg) {
+    switch (msg.type) {
       default:
           return {
           _id: msg.msgId,
@@ -195,10 +194,10 @@ class Chat extends React.Component {
 
   onSendFile() {
     // filepath1
-    let bGroup = 1
+    // let bGroup = 1
     let groupID = this.curUser.userId
     if (this.targetUser.id.indexOf('Group_') != -1) {
-      bGroup = 2
+      // bGroup = 2
       groupID = this.targetUser.id
     }
     let filepath = '/sdcard/send.zip'
@@ -206,7 +205,11 @@ class Chat extends React.Component {
     let time = Date.parse(ctime)
     let message = {
       type: 3, //文件
-      user: { name: this.curUser.nickname, id: this.curUser.userId, groupID: groupID },
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
       time: time,
       system: 0,
     }
@@ -249,7 +252,7 @@ class Chat extends React.Component {
       },
       type: messageObj.type,
     }
-    if(msg.type === 4){
+    if (msg.type === 4) {
       msg.fileName = messageObj.fileName
       msg.queueName = messageObj.queueName
       msg.isReceived = 0
@@ -264,7 +267,7 @@ class Chat extends React.Component {
   }
 
   onLongPress(context, message) {
-    console.log(message)
+    // console.log(message)
     switch (message.type) {
       case 1:
         alert(GiftedChat.getMessages())
@@ -316,7 +319,7 @@ class Chat extends React.Component {
               width: scaleSize(15),
               borderRadius: scaleSize(15),
               top: Top,
-              left: scaleSize(80),
+              left: scaleSize(75),
             }}
           />
         ) : null}
@@ -357,7 +360,7 @@ class Chat extends React.Component {
     }
     const options = {
       // eslint-disable-next-line
-      '发送文件': props => {
+      发送文件: props => {
         this.onSendFile()
       },
       // eslint-disable-next-line

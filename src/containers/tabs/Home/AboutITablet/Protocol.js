@@ -18,6 +18,7 @@ export default class protocol extends Component {
     super(props)
     const params = this.props.navigation.state.params
     this.type = params.type
+    this.knownItem = params.knownItem || {}
     this.state = {
       progressWidth: Dimensions.get('window').width * 0.4,
       isLoadWebView: false,
@@ -114,7 +115,15 @@ export default class protocol extends Component {
           uri: `http://mp.weixin.qq.com/profile?src=3&timestamp=1552115539&ver=1&signature=Woh7VGjhtLXAgNTVx1F50zmUmCsLKoHFVbmqPbIG9A8hHc0dRRkEY*lxVbf-sH5ULhQ6jonrW-AHDvub42uzsw==`,
         }
         title = '超图集团'
-
+        break
+      case 'superMapKnown':
+        source = {
+          uri:
+            'http://111.202.121.144:8088/officialAccount/zhidao/html/' +
+            this.knownItem.id +
+            '.html',
+        }
+        title = '超图知道'
         break
       default:
         break

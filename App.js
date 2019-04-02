@@ -37,7 +37,7 @@ import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactn
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-import MSGConstans from "./src/containers/tabs/Friend/MsgConstans";
+import MSGConstans from "./src/containers/tabs/Friend/MsgConstans"
 
 const {persistor, store} = ConfigStore()
 
@@ -133,9 +133,15 @@ class AppRoot extends Component {
   }
   UNSAFE_componentWillMount(){
     //再次进行用户数据初始化
-    if(Platform.OS === 'ios'&&this.props.user.currentUser.userName){
-      FileTools.initUserDefaultData(this.props.user.currentUser.userName)
+    let checkAndInit = async ()=>{
+      let curUser = this.props.user.currentUser
+      if( curUser && curUser.userType && curUser.userType !== UserType.PROBATION_USER){
+        let isFileExist = await FileTools.fileIsExist(ConstPath.UserPath + curUser.userName)
+        if(!isFileExist)
+          FileTools.initUserDefaultData(curUser.userName)
+      }
     }
+    checkAndInit()
   }
   componentDidMount () {
 
@@ -167,7 +173,7 @@ class AppRoot extends Component {
           bLogin = await SOnlineService.login(userName, password)
         }
         if (!bLogin) {
-          Toast.show('登陆状态失效')
+         // Toast.show('登陆状态失效')
         }
 
       }
