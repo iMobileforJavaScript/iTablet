@@ -9,6 +9,6 @@ export default StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#rgba(255, 255, 255, 0)',
+    // backgroundColor: '#rgba(255, 255, 255, 0.5)',
   },
 })

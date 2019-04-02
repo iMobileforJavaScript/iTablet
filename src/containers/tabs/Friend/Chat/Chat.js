@@ -139,7 +139,7 @@ class Chat extends React.Component {
     switch (msg.type) {
       default:
         return {
-          _id: msg.msgId,
+          _id: msg.time,
           text: msg.msg,
           createdAt: new Date(msg.time),
           user: { _id: msg.id, name: msg.name },
@@ -147,14 +147,13 @@ class Chat extends React.Component {
         }
       case 4:
         return {
-          _id: msg.msgId,
+          _id: msg.time,
           text: msg.msg,
           createdAt: new Date(msg.time),
           user: { _id: msg.id, name: msg.name },
           type: msg.type, //根据type渲染
           fileName: msg.fileName,
           queueName: msg.queueName,
-          isReceived: msg.isReceived,
         }
     }
   }
@@ -178,18 +177,15 @@ class Chat extends React.Component {
       },
       time: time,
     }
+    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
     // for demo purpose
     // this.answerDemo(messages)
     messages[0].type = bGroup
-    let msgId = this.friend._getChatId(this.targetUser.id)
-    messages[0]._id = msgId
     this.setState(previousState => {
       return {
         messages: GiftedChat.append(previousState.messages, messages),
       }
     })
-
-    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
   onSendFile() {
@@ -213,10 +209,10 @@ class Chat extends React.Component {
       time: time,
       system: 0,
     }
+    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
 
-    let msgId = this.friend._getChatId(this.targetUser.id)
     let msg = {
-      _id: msgId,
+      _id: time,
       text: '[文件]',
       type: 4, //文件接收通知
       user: { name: this.curUser.nickname, _id: this.curUser.userId },
@@ -225,13 +221,12 @@ class Chat extends React.Component {
       fileName: '',
       queueName: '',
     }
+
     this.setState(previousState => {
       return {
         messages: GiftedChat.append(previousState.messages, msg),
       }
     })
-
-    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
   }
 
   showInformSpot = b => {
@@ -239,9 +234,8 @@ class Chat extends React.Component {
   }
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
-    let msgId = this.friend._getChatId(this.targetUser.id) - 1
     let msg = {
-      _id: msgId,
+      _id: Math.round(Math.random() * 1000000),
       text: messageObj.message,
       createdAt: new Date(messageObj.time),
       system: bSystem,
@@ -255,7 +249,6 @@ class Chat extends React.Component {
     if (msg.type === 4) {
       msg.fileName = messageObj.fileName
       msg.queueName = messageObj.queueName
-      msg.isReceived = 0
     }
 
     this.setState(previousState => {
@@ -267,38 +260,13 @@ class Chat extends React.Component {
   }
 
   onLongPress(context, message) {
+    // console.log(message)
     switch (message.type) {
       case 1:
         alert('1')
         break
       case 4:
-        if (message.user._id !== this.curUser.userId) {
-          alert('4')
-          if (message.isReceived === 0) {
-            this.friend._receiveFile(
-              message.fileName,
-              message.queueName,
-              this.targetUser.id,
-              message._id,
-            )
-            this.setState(previousState => {
-              let length = previousState.messages
-              let i = 0
-              for (; i < length; i++) {
-                if (previousState.messages[i]._id === message._id) {
-                  break
-                }
-              }
-              previousState.messages[i].isReceived = 1
-              return {
-                messages: previousState.messages,
-              }
-            })
-          } else {
-            alert('已接收此文件')
-          }
-        }
-
+        alert('4')
         break
       default:
         alert('undefined')

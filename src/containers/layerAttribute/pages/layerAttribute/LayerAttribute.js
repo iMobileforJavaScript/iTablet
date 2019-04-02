@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, Platform, BackHandler } from 'react-native'
 import NavigationService from '../../../NavigationService'
 import { Container, MTBtn, PopModal, InfoView } from '../../../../components'
-import { Toast, scaleSize, LayerUtil } from '../../../../utils'
+import { Toast, scaleSize } from '../../../../utils'
 import { ConstInfo, MAP_MODULE, ConstToolType } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
@@ -17,6 +17,7 @@ import {
   LayerTopBar,
   LocationView,
 } from '../../components'
+import { LayerUtil } from '../../utils'
 import { Utils } from '../../../workspace/util'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import styles from './styles'
@@ -235,24 +236,26 @@ export default class LayerAttribute extends React.Component {
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
 
+        let relativeIndex =
+          attributes.data.length === 1
+            ? 0
+            : resetCurrent
+              ? -1
+              : this.state.relativeIndex
         if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: 0,
-            relativeIndex: 0,
+            relativeIndex,
             currentFieldInfo: attributes.data[0],
-            startIndex: 0,
+            startIndex: -1,
             ...others,
           })
         } else {
-          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
-          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: currentIndex,
-            relativeIndex: relativeIndex,
+            relativeIndex,
             currentFieldInfo: attributes.data[relativeIndex],
             ...others,
           })
@@ -426,17 +429,14 @@ export default class LayerAttribute extends React.Component {
           this.setState({
             currentFieldInfo: item.data,
           })
-          // 避免 Android 更新数据后无法滚动
-          setTimeout(() => {
-            this.table &&
-              this.table.scrollToLocation({
-                animated: true,
-                itemIndex: remainder,
-                sectionIndex: 0,
-                viewPosition: viewPosition,
-                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-              })
-          }, 0)
+          this.table &&
+            this.table.scrollToLocation({
+              animated: true,
+              itemIndex: remainder,
+              sectionIndex: 0,
+              viewPosition: viewPosition,
+              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+            })
         }
         this.setLoading(false)
       },

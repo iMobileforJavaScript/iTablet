@@ -85,7 +85,6 @@ export default class LayerAttributeTable extends React.Component {
       refreshing: false,
       loading: false,
     }
-    this.canBeLoadMore = true // 控制是否可以加载更多
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -187,7 +186,6 @@ export default class LayerAttributeTable extends React.Component {
 
   loadMore = () => {
     if (
-      this.canBeLoadMore &&
       this.props.loadMore &&
       typeof this.props.loadMore === 'function' &&
       !this.state.loading
@@ -208,7 +206,6 @@ export default class LayerAttributeTable extends React.Component {
         },
       )
       this.props.loadMore(() => {
-        this.canBeLoadMore = false
         this.setState({
           loading: false,
         })
@@ -366,7 +363,6 @@ export default class LayerAttributeTable extends React.Component {
           extraData={this.state}
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
           renderSectionFooter={this.renderFooter}
-          onScroll={() => (this.canBeLoadMore = true)}
         />
       </ScrollView>
     )
@@ -414,13 +410,6 @@ export default class LayerAttributeTable extends React.Component {
       this.state.tableData[0].data instanceof Array &&
       this.state.tableData[0].data.length > 1 &&
       this.state.tableData[0].data[0] instanceof Array
-
-    if (
-      !isMultiData &&
-      Object.keys(this.state.tableData[0].data).length === 0
-    ) {
-      return null
-    }
     return (
       <KeyboardAvoidingView
         // behavior={this.state.behavior}

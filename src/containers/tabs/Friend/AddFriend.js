@@ -104,17 +104,12 @@ class AddFriend extends Component {
     // }
     // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
 
-    FriendListFileHandle.addToFriendList(
-      {
-        markName: targetUser[1],
-        name: targetUser[1],
-        id: targetUser[0],
-        info: { isFriend: 1 },
-      },
-      () => {
-        this.friend.refreshList()
-      },
-    )
+    FriendListFileHandle.addToFriendList({
+      markName: targetUser[1],
+      name: targetUser[1],
+      id: targetUser[0],
+      info: { isFriend: 1 },
+    })
     // this.friend.refreshList();
     // this.friend.refreshMessage();
     // this.dialog.setDialogVisible(false)
@@ -138,6 +133,7 @@ class AddFriend extends Component {
 
     this.friend._sendMessage(messageStr, item[0], true)
     AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
+    this.friend.refreshList()
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

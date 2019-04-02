@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, Animated } from 'react-native'
+import { View, FlatList, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
@@ -94,17 +94,17 @@ export default class FunctionToolbar extends React.Component {
     return false
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     JSON.stringify(this.props.online.share) !==
-  //     JSON.stringify(prevProps.online.share)
-  //   ) {
-  //     let data = prevProps.data || this.getData(prevProps.type)
-  //     this.setState({
-  //       data,
-  //     })
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    if (
+      JSON.stringify(this.props.online.share) !==
+      JSON.stringify(prevProps.online.share)
+    ) {
+      let data = prevProps.data || this.getData(prevProps.type)
+      this.setState({
+        data,
+      })
+    }
+  }
 
   setVisible = visible => {
     if (this.visible === visible) return
@@ -1136,7 +1136,7 @@ export default class FunctionToolbar extends React.Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <View style={styles.btnView} key={this._keyExtractor(item, index)}>
+      <View style={styles.btnView}>
         <MTBtn
           style={styles.btn}
           key={index}
@@ -1155,20 +1155,10 @@ export default class FunctionToolbar extends React.Component {
           this.props.online.share[0].progress !== undefined && (
           <Bar
             style={styles.progress}
-            // indeterminate={true}
-            progress={
-              this.props.online.share[this.props.online.share.length - 1]
-                .progress
-            }
+            progress={this.props.online.share[0].progress}
             width={scaleSize(60)}
           />
         )}
-        {/*{item.title === '分享' &&*/}
-        {/*this.props.online.share[this.props.online.share.length - 1] &&*/}
-        {/*GLOBAL.Type === this.props.online.share[this.props.online.share.length - 1].module &&*/}
-        {/*this.props.online.share[this.props.online.share.length - 1].progress !== undefined && (*/}
-        {/*<Text>{this.props.online.share[this.props.online.share.length - 1].progress}</Text>*/}
-        {/*)}*/}
 
         {/*<PieProgress*/}
         {/*ref={ref => (this.shareProgress = ref)}*/}
@@ -1187,15 +1177,6 @@ export default class FunctionToolbar extends React.Component {
 
   _keyExtractor = (item, index) => index + '-' + item.title
 
-  renderList = () => {
-    let arr = []
-    if (!this.state.data || this.state.data.length === 0) return null
-    this.state.data.forEach((item, index) => {
-      arr.push(this._renderItem({ item, index }))
-    })
-    return <View style={{ flexDirection: 'column' }}>{arr}</View>
-  }
-
   render() {
     if (this.props.hide) {
       return null
@@ -1208,13 +1189,12 @@ export default class FunctionToolbar extends React.Component {
           { right: this.state.right },
         ]}
       >
-        {/*<FlatList*/}
-        {/*data={this.state.data}*/}
-        {/*renderItem={this._renderItem}*/}
-        {/*// ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
-        {/*keyExtractor={this._keyExtractor}*/}
-        {/*/>*/}
-        {this.renderList()}
+        <FlatList
+          data={this.state.data}
+          renderItem={this._renderItem}
+          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
+          keyExtractor={this._keyExtractor}
+        />
         {/*<MoreToolbar*/}
         {/*ref={ref => (this.moreToolbar = ref)}*/}
         {/*data={this.getMoreData(this.props.type)}*/}

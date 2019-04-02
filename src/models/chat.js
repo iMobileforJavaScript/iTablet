@@ -4,20 +4,12 @@ import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
 export const ADD_CHAT = 'ADD_CHAT'
-export const EDIT_CHAT = 'EDIT_CHAT'
+
 // Actions
 // ---------------------------------.3-----------------
 export const addChat = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: ADD_CHAT,
-    payload: params,
-  })
-  cb && cb()
-}
-
-export const editChat = (params = {}, cb = () => {}) => async dispatch => {
-  await dispatch({
-    type: EDIT_CHAT,
     payload: params,
   })
   cb && cb()
@@ -76,13 +68,11 @@ export default handleActions(
       let chats
 
       if (payload.type > 9) {
-        //inform
         if (currentUser.hasOwnProperty(1) === false) {
           currentUser[1] = { unReadMsg: 0, history: [] }
         }
         chats = currentUser[1]
       } else {
-        //normal
         if (currentUser.hasOwnProperty(payload.talkId) === false) {
           //currentUser[payload.talkId] = []
           currentUser[payload.talkId] = { unReadMsg: 0, history: [] }
@@ -90,13 +80,9 @@ export default handleActions(
         chats = currentUser[payload.talkId]
       }
 
-      if (payload.operate === 'unRead') {
-        chats.unReadMsg = 1 //设置未读
-      } else if (payload.operate === 'read') {
+      if (!payload.messageUsr) {
         chats.unReadMsg = 0 //清除未读信息
-      } else if (payload.operate === 'del') {
-        delete currentUser[payload.talkId]
-      } else if (payload.operate === 'add') {
+      } else {
         let pushMsg = {
           msg: payload.message,
           time: payload.time,
@@ -104,13 +90,11 @@ export default handleActions(
           name: payload.messageUsr.name,
           id: payload.messageUsr.id,
           unReadMsg: payload.unReadMsg,
-          msgId: payload.msgId,
         }
         switch (payload.type) {
           case 4:
             pushMsg.queueName = payload.queueName
             pushMsg.fileName = payload.fileName
-            pushMsg.isReceived = payload.isReceived
             break
           default:
             break
@@ -122,24 +106,10 @@ export default handleActions(
         }
       }
 
-      // if (!payload.messageUsr) {
-      //   chats.unReadMsg = 0 //清除未读信息
-      // } else {
-      //
-      // }
-
       return fromJS(allChat)
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.chat ? fromJS(payload.chat) : state
-    },
-    [`${EDIT_CHAT}`]: (state, { payload }) => {
-      let allChat = state.toJS() || {}
-      // console.log(allChat)
-      let message =
-        allChat[payload.userId][payload.talkId].history[payload.msgId]
-      Object.assign(message, payload.editItem)
-      return fromJS(allChat)
     },
   },
   initialState,

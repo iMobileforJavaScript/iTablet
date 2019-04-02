@@ -3,6 +3,7 @@
  */
 
 // eslint-disable-next-line
+import React, { Component } from 'react'
 import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -38,7 +39,7 @@ export default class FriendListFileHandle {
         onlineVersion.rev > FriendListFileHandle.friends.rev
       ) {
         FriendListFileHandle.friends = onlineVersion
-        RNFS.writeFile(friendListFile, onlineVersion)
+        RNFS.writeFile(friendListFile, value)
         //  RNFS.moveFile(friendListFile, path + 'friend.list')
       }
     }
@@ -85,36 +86,12 @@ export default class FriendListFileHandle {
       SOnlineService.uploadFile(
         FriendListFileHandle.friendListFile,
         UploadFileName,
-        {
-          // eslint-disable-next-line
-          onResult: value => {},
-        },
+        // eslint-disable-next-line
+        { onResult: value => {} },
       )
     })
   }
-
-  static saveHelper(friendsStr, callback) {
-    FileTools.fileIsExist(FriendListFileHandle.friendListFile).then(value => {
-      if (value) {
-        RNFS.unlink(FriendListFileHandle.friendListFile).then(() => {
-          RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr).then(
-            () => {
-              FriendListFileHandle.upload()
-              if (callback) callback(true)
-            },
-          )
-        })
-      } else {
-        RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr).then(
-          () => {
-            FriendListFileHandle.upload()
-            if (callback) callback(true)
-          },
-        )
-      }
-    })
-  }
-  static addToFriendList(obj, callback) {
+  static addToFriendList(obj) {
     let bFound = FriendListFileHandle.findFromFriendList(obj.id)
 
     if (!bFound) {
@@ -128,27 +105,16 @@ export default class FriendListFileHandle {
       }
       FriendListFileHandle.friends.userInfo.push(obj)
       let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-      FriendListFileHandle.saveHelper(friendsStr, callback)
+      //写如本地
+      RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(
+        () => {
+          FriendListFileHandle.upload()
+        },
+      )
     }
   }
-
-  static modifyFriendList(id, name, callback) {
-    for (let key in FriendListFileHandle.friends.userInfo) {
-      let friend = FriendListFileHandle.friends.userInfo[key]
-      if (id === friend.id) {
-        friend.markName = name
-        break
-      }
-    }
-
-    FriendListFileHandle.friends['rev'] += 1
-
-    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr, callback)
-  }
-
   // eslint-disable-next-line
-  static delFromFriendList(id, callback) {
+  static delFromFriendList(id) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
@@ -158,31 +124,7 @@ export default class FriendListFileHandle {
     }
 
     FriendListFileHandle.friends['rev'] += 1
-
-    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr, callback)
   }
-
-  // static modifyGroupList(id, name, callback) {
-  //   for (let key in FriendListFileHandle.friends.groupInfo) {
-  //     let friend = FriendListFileHandle.friends.groupInfo[key]
-  //     if (id === friend.id) {
-  //       friend.groupName = name
-  //       break
-  //     }
-  //   }
-  //
-  //   FriendListFileHandle.friends['rev'] += 1
-  //
-  //   let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-  //   //写如本地
-  //   RNFS.write(FriendListFileHandle.friendListFile, friendsStr, 0).then(() => {
-  //     //上传
-  //     FriendListFileHandle.upload()
-  //     if (callback) callback(true)
-  //   })
-  // }
-
   // eslint-disable-next-line
   static findFromFriendList(id) {
     let bFound
@@ -233,13 +175,13 @@ export default class FriendListFileHandle {
         () => {
           //上传
           FriendListFileHandle.upload()
-          if (callback) callback(true)
+          callback(true)
         },
       )
     }
   }
   // eslint-disable-next-line
-  static delFromGroupList(id, callback) {
+  static delFromGroupList(id) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {
@@ -249,22 +191,5 @@ export default class FriendListFileHandle {
     }
 
     FriendListFileHandle.friends['rev'] += 1
-
-    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr, callback)
-  }
-  static modifyGroupList(id, name, callback) {
-    for (let key in FriendListFileHandle.friends.groupInfo) {
-      let friend = FriendListFileHandle.friends.groupInfo[key]
-      if (id === friend.id) {
-        friend.groupName = name
-        break
-      }
-    }
-
-    FriendListFileHandle.friends['rev'] += 1
-
-    let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr, callback)
   }
 }

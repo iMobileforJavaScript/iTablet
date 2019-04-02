@@ -6,7 +6,8 @@
 
 import * as React from 'react'
 import { ConstInfo } from '../../../../constants'
-import { Toast, LayerUtil } from '../../../../utils'
+import { Toast } from '../../../../utils'
+import { LayerUtil } from '../../utils'
 import { LayerAttributeTable } from '../../components'
 
 const PAGE_SIZE = 30
@@ -60,20 +61,6 @@ export default class LayerSelectionAttribute extends React.Component {
   componentDidMount() {
     this.isInit = true
     this.getAttribute()
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (
-      JSON.stringify(nextState) !== JSON.stringify(this.state) ||
-      JSON.stringify(nextProps.map) !== JSON.stringify(this.props.map) ||
-      JSON.stringify(nextProps.layerSelection) !==
-        JSON.stringify(this.props.layerSelection) ||
-      JSON.stringify(nextProps.attributesHistory) !==
-        JSON.stringify(nextProps.attributesHistory)
-    ) {
-      return true
-    }
-    return false
   }
 
   componentDidUpdate(prevProps) {
@@ -139,24 +126,26 @@ export default class LayerSelectionAttribute extends React.Component {
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
 
+        let relativeIndex =
+          attributes.data.length === 1
+            ? 0
+            : resetCurrent
+              ? -1
+              : this.state.relativeIndex
         if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: 0,
-            relativeIndex: 0,
+            relativeIndex,
             currentFieldInfo: attributes.data[0],
-            startIndex: 0,
+            startIndex: -1,
             ...others,
           })
         } else {
-          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
-          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
           this.setState({
             showTable: true,
             attributes,
-            currentIndex: currentIndex,
-            relativeIndex: relativeIndex,
+            relativeIndex,
             currentFieldInfo: attributes.data[relativeIndex],
             ...others,
           })
@@ -402,18 +391,14 @@ export default class LayerSelectionAttribute extends React.Component {
               currentIndex: this.state.startIndex + remainder,
               currentFieldInfo: item.data,
             })
-
-          // 避免 Android 更新数据后无法滚动
-          setTimeout(() => {
-            this.table &&
-              this.table.scrollToLocation({
-                animated: true,
-                itemIndex: remainder,
-                sectionIndex: 0,
-                viewPosition: viewPosition,
-                viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
-              })
-          }, 0)
+          this.table &&
+            this.table.scrollToLocation({
+              animated: true,
+              itemIndex: remainder,
+              sectionIndex: 0,
+              viewPosition: viewPosition,
+              viewOffset: viewPosition === 1 ? 0 : undefined, // 滚动显示在底部，不需要设置offset
+            })
         }
       },
     )

@@ -3,7 +3,7 @@
  */
 import { Dimensions, StyleSheet } from 'react-native'
 import { color } from '../../../styles'
-import { scaleSize, setSpText } from '../../../utils'
+import { scaleSize } from '../../../utils'
 
 export const itemWidth = Dimensions.get('window').width
 export const itemHeight = 140
@@ -126,23 +126,4 @@ const dialogStyles = StyleSheet.create({
   },
 })
 
-const inputStyles = StyleSheet.create({
-  textInputStyle: {
-    marginTop: scaleSize(25),
-    height: scaleSize(70),
-    flex: 1,
-    fontSize: setSpText(20),
-    borderRadius: scaleSize(8),
-    borderWidth: 1,
-    borderColor: '#808080',
-    color: '#333333',
-  },
-  item: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: scaleSize(30),
-    height: scaleSize(80),
-  },
-})
-export { dialogStyles, styles, inputStyles }
+export { dialogStyles, styles }

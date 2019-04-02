@@ -65,24 +65,6 @@ export default class MapCutSetting extends React.Component {
 
   componentDidMount() {}
 
-  componentDidUpdate(prevProps) {
-    if (
-      JSON.stringify(prevProps.datasources) !==
-      JSON.stringify(this.props.datasources)
-    ) {
-      this.setState(state => {
-        const newData = new Map(state.data)
-        let item = newData.get('ds')
-        item.selected = !item.selected
-        item.dsName = this.props.datasources[0]
-          ? this.props.datasources[0].alias
-          : ''
-        newData.set('ds', item)
-        return { data: newData }
-      })
-    }
-  }
-
   showModal = isShow => {
     this.settingModal && this.settingModal.setVisible(isShow)
   }
