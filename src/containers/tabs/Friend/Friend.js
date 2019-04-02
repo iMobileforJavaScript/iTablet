@@ -57,6 +57,8 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
+
+    this._receiveMessage = this._receiveMessage.bind(this)
   }
 
   componentDidMount() {
@@ -295,7 +297,7 @@ export default class Friend extends Component {
    
   }
 
-  _receiveMessage = message => {
+  _receiveMessage(message) {
     if (g_connectService) {
       //  DataHandler.dealWithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
@@ -363,19 +365,23 @@ export default class Friend extends Component {
         ) {
           bUnReadMsg = true
         }
-        let chatHistory
-        if(messageObj.type === 2){
-          chatHistory = this.props.chat[userId][messageObj.user.groupID].history
-        }else{
-          chatHistory = this.props.chat[userId][messageObj.user.id].history
+        if(this.props.chat){
+          if(messageObj.type === 2){
+            chatHistory = this.props.chat[userId][messageObj.user.groupID].history
+          }else{
+            chatHistory = this.props.chat[userId][messageObj.user.id].history
+          }
+          let chatHistory
+        
+          let msgId
+          if(chatHistory.length === 0){
+            msgId = 0
+          }else{
+            msgId = chatHistory[chatHistory.length-1].msgId + 1
+          }
+          
         }
         
-        let msgId
-        if(chatHistory.length === 0){
-          msgId = 0
-        }else{
-          msgId = chatHistory[chatHistory.length-1].msgId + 1
-        }
 
         MessageDataHandle.pushMessage({
           userId: userId, //当前登录账户的id
