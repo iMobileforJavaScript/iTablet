@@ -214,7 +214,10 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      let chatHistory = this.props.chat[userId][talkId].history
+      let chatHistory = []
+      if (this.props.chat[userId][talkId]) {
+        chatHistory = this.props.chat[userId][talkId].history
+      }
       let msgId
       if (chatHistory.length === 0) {
         msgId = 0
@@ -297,7 +300,7 @@ export default class Friend extends Component {
 
   _receiveMessage(message) {
     if (g_connectService) {
-      //  DataHandler.dealWithMessage(this.props.user.currentUser.userId,message['message']);
+      //  DataHandler.dealWhgjgithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
 
       let userId = this.props.user.currentUser.userId

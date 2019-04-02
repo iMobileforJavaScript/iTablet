@@ -203,14 +203,14 @@ class FriendMessage extends Component {
 
   _showPopover = (pressView, item) => {
     this.target = item
-    let friendMsgHandle = this
+    // let friendMsgHandle = this
     let obj = {
       title: '标记已读',
       onPress: () => {
         MessageDataHandle.readMessage({
           //清除未读信息
-          userId: friendMsgHandle.props.user.userId, //当前登录账户的id
-          talkId: friendMsgHandle.target.id, //会话ID
+          userId: this.props.user.userId, //当前登录账户的id
+          talkId: this.target.id, //会话ID
         })
       },
     }
@@ -220,8 +220,8 @@ class FriendMessage extends Component {
         onPress: () => {
           MessageDataHandle.unReadMessage({
             //清除未读信息
-            userId: friendMsgHandle.props.user.userId, //当前登录账户的id
-            talkId: friendMsgHandle.target.id, //会话ID
+            userId: this.props.user.userId, //当前登录账户的id
+            talkId: this.target.id, //会话ID
           })
         },
       }
