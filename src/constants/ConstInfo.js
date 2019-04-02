@@ -60,7 +60,9 @@ export default {
   NON_SELECTED_OBJ: '没有选择对象',
 
   ADD_SUCCESS: '添加成功',
-  ADD_FAILED: '添加成功',
+  ADD_FAILED: '添加失败',
+
+  ADDING_MAP: '正在添加地图',
 
   READING_DATA: '读取数据中',
   LOADING_DATA: '数据加载中',

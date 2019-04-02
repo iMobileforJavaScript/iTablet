@@ -13,6 +13,7 @@ import {
   FlatList,
   TouchableOpacity,
   Platform,
+  InteractionManager,
 } from 'react-native'
 import {
   Container,
@@ -52,7 +53,8 @@ export default class MapCut extends React.Component {
       isSelectAll: false,
       isSaveAs: false,
       saveAsName: '',
-      layers: props.layers,
+      // layers: props.layers,
+      layers: [],
       outLayers: [], // 未选中的图层
       datasources: [],
       points: (params && params.points) || [],
@@ -63,15 +65,39 @@ export default class MapCut extends React.Component {
   }
 
   componentDidMount() {
-    (async function() {
-      let layers = await this.props.getLayers()
-      SMap.getDatasources().then(datasources => {
-        this.setState({
-          datasources,
+    InteractionManager.runAfterInteractions(() => {
+      (async function() {
+        let layers = await this.props.getLayers()
+        SMap.getDatasources().then(datasources => {
+          this.setState({
+            datasources,
+          })
         })
-      })
-      this.selectAll(true, layers)
-    }.bind(this)())
+        let _layers = await this.getAllLayers(layers)
+
+        this.selectAll(true, _layers)
+      }.bind(this)())
+    })
+  }
+
+  /**
+   * 获取所有图层，包含图层组中的图层
+   */
+  getAllLayers = async layers => {
+    let _layers = []
+    for (let i = 0; i < layers.length; i++) {
+      let item = layers[i]
+      if (item.type === 'layerGroup') {
+        let groupLayers = await SMap.getLayersByGroupPath(item.path)
+        if (groupLayers.length > 0) {
+          let _layers_2 = await this.getAllLayers(groupLayers)
+          _layers = _layers.concat(_layers_2)
+        }
+      } else {
+        _layers.push(item)
+      }
+    }
+    return _layers
   }
 
   headerBtnAction = () => {
@@ -167,7 +193,7 @@ export default class MapCut extends React.Component {
    * 全选/全取消
    * @param isSelectAll
    */
-  selectAll = (isSelectAll, data = this.state.layers) => {
+  selectAll = (isSelectAll, layers = this.state.layers) => {
     if (isSelectAll !== undefined && isSelectAll === this.state.isSelectAll)
       return
     this.setState(state => {
@@ -177,14 +203,15 @@ export default class MapCut extends React.Component {
         selected.clear()
       } else {
         // this.state.layers.forEach(item => {
-        data.forEach(item => {
+        layers.forEach(item => {
           selected.set(item.name, true)
         })
       }
-      // if (JSON.stringify(state.layers) !== JSON.stringify(data)) {
-      //   return { selected, isSelectAll, data }
-      // }
-      return { selected, isSelectAll }
+      if (JSON.stringify(state.layers) !== JSON.stringify(layers)) {
+        return { selected, isSelectAll, layers }
+      } else {
+        return { selected, isSelectAll }
+      }
     })
   }
 

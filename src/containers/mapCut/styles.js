@@ -57,7 +57,7 @@ export default StyleSheet.create({
   topRightView: {
     flexDirection: 'row',
     height: ROW_HEIGHT,
-    paddingRight: scaleSize(30),
+    // paddingRight: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'flex-end',
     backgroundColor: 'transparent',

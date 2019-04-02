@@ -3214,7 +3214,7 @@ export default class ToolBar extends React.PureComponent {
     await SThemeCartography.setThemeGraphExpressions(Params)
   }
 
-  listAction = ({ item, index }) => {
+  listAction = ({ item, index, section }) => {
     if (this.state.type === 'MAP3D_BASE') return
     if (item.action) {
       item.action && item.action()
@@ -3250,53 +3250,66 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
-        this.lastUdbList = this.state.data //保存上次的数据源数据
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
-        this.path = await FileTools.appendingHomeDirectory(item.path)
-        SThemeCartography.getUDBName(this.path).then(list => {
-          list.forEach(item => {
-            if (item.geoCoordSysType && item.prjCoordSysType) {
-              item.info = {
-                infoType: 'dataset',
-                geoCoordSysType: item.geoCoordSysType,
-                prjCoordSysType: item.prjCoordSysType,
+        if (section.title === Const.DATA_SOURCE) {
+          // 添加数据集
+          this.lastUdbList = this.state.data //保存上次的数据源数据
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.path = await FileTools.appendingHomeDirectory(item.path)
+          SThemeCartography.getUDBName(this.path).then(list => {
+            list.forEach(item => {
+              if (item.geoCoordSysType && item.prjCoordSysType) {
+                item.info = {
+                  infoType: 'dataset',
+                  geoCoordSysType: item.geoCoordSysType,
+                  prjCoordSysType: item.prjCoordSysType,
+                }
               }
-            }
+            })
+            let arr = item.name.split('.')
+            let alias = arr[0]
+            let dataList = [
+              {
+                title: alias,
+                image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+                data: list,
+              },
+            ]
+            this.setState(
+              {
+                themeDatasourceAlias: alias,
+                listSelectable: true, //单选框
+                buttons: [
+                  ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
+                  ToolbarBtnType.THEME_COMMIT,
+                ],
+                data: dataList,
+                type: ConstToolType.MAP_THEME_ADD_DATASET,
+              },
+              () => {
+                this.scrollListToLocation()
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+              () => {
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+            )
+            // this.setLastState()
           })
-          let arr = item.name.split('.')
-          let alias = arr[0]
-          let dataList = [
-            {
-              title: alias,
-              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-              data: list,
-            },
-          ]
-          this.setState(
-            {
-              themeDatasourceAlias: alias,
-              listSelectable: true, //单选框
-              buttons: [
-                ToolbarBtnType.THEME_CANCEL,
-                ToolbarBtnType.THEME_ADD_BACK,
-                ToolbarBtnType.THEME_COMMIT,
-              ],
-              data: dataList,
-              type: ConstToolType.MAP_THEME_ADD_DATASET,
-            },
-            () => {
-              this.scrollListToLocation()
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-            },
-            () => {
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-            },
-          )
-          // this.setLastState()
-        })
+        } else if (section.title === Const.MAP) {
+          // 添加地图
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.ADDING_MAP)
+          SMap.addMap(item.name || item.title).then(result => {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show(result ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED)
+            this.setVisible(false)
+          })
+        }
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
@@ -3847,11 +3860,11 @@ export default class ToolBar extends React.PureComponent {
         ref={ref => (this.toolBarSectionList = ref)}
         listSelectable={this.state.listSelectable}
         sections={this.state.data}
-        itemAction={({ item, index }) => {
+        itemAction={({ item, index, section }) => {
           if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
-            this.listThemeAction({ item, index })
+            this.listThemeAction({ item, index, section })
           } else {
-            this.listAction({ item, index })
+            this.listAction({ item, index, section })
           }
         }}
         selectList={this.state.listExpressions}
