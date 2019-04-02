@@ -4,12 +4,20 @@ import { handleActions } from 'redux-actions'
 // Constants
 // --------------------------------------------------
 export const ADD_CHAT = 'ADD_CHAT'
-
+export const EDIT_CHAT = 'EDIT_CHAT'
 // Actions
 // ---------------------------------.3-----------------
 export const addChat = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: ADD_CHAT,
+    payload: params,
+  })
+  cb && cb()
+}
+
+export const editChat =  (params = {}, cb = () => {}) => async dispatch => {
+  await dispatch({
+    type: EDIT_CHAT,
     payload: params,
   })
   cb && cb()
@@ -90,11 +98,13 @@ export default handleActions(
           name: payload.messageUsr.name,
           id: payload.messageUsr.id,
           unReadMsg: payload.unReadMsg,
+          msgId: payload.msgId,
         }
         switch(payload.type){
           case 4:
             pushMsg.queueName = payload.queueName
             pushMsg.fileName= payload.fileName
+            pushMsg.isReceived= payload.isReceived
           break
           default:
           break
@@ -110,6 +120,13 @@ export default handleActions(
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.chat ? fromJS(payload.chat) : state
+    },
+    [`${EDIT_CHAT}`]: (state, { payload }) => {
+      let allChat = state.toJS() || {}
+      // console.log(allChat)
+      let message = allChat[payload.userId][payload.talkId].history[payload.msgId]
+      Object.assign(message, payload.editItem)
+      return fromJS(allChat)
     },
   },
   initialState,

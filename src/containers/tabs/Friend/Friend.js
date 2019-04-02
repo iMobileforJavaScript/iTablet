@@ -37,6 +37,7 @@ export default class Friend extends Component {
     user: Object,
     chat: Array,
     addChat: () => {},
+    editChat: () => {},
   }
 
   constructor(props) {
@@ -214,6 +215,13 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
+      let chatHistory = this.props.chat[userId][talkId].history
+      let msgId
+      if(chatHistory.length === 0){
+        msgId = 0
+      }else{
+        msgId = chatHistory[chatHistory.length-1].msgId + 1
+      }
       this.props.addChat &&
         this.props.addChat({
           userId: userId, //当前登录账户的id
@@ -225,9 +233,22 @@ export default class Friend extends Component {
           system: messageObj.system,
           fileName: messageObj.fileName,
           queueName: messageObj.queueName,
+          msgId: msgId,
         })
     }
     // this.refresh()
+  }
+
+  _getChatId = (talkId) =>  {
+    let userId = this.props.user.currentUser.userId
+    let chatHistory = this.props.chat[userId][talkId].history
+    let msgId
+    if(chatHistory.length === 0){
+      msgId = 0
+    }else{
+      msgId = chatHistory[chatHistory.length-1].msgId + 1
+    }
+    return msgId
   }
 
   _sendFile = (messageStr, filepath, talkId) => {
@@ -258,6 +279,24 @@ export default class Friend extends Component {
       }
       this._sendMessage(JSON.stringify(fileinform), talkId, false)
     })
+  }
+
+  _receiveFile = (fileName, queueName, talkId, msgId) => {
+    if(g_connectService){
+      SMessageService.receiveFile(fileName, queueName)
+      .then(res =>{
+        if(res === true){
+          this.props.editChat &&
+            this.props.editChat({
+              userId: this.props.user.currentUser.userId,
+              talkId: talkId,
+              msgId: msgId,
+              editItem: {isReceived: 1,},
+            })
+        }
+      })
+    }
+   
   }
 
   _receiveMessage = message => {
@@ -328,6 +367,19 @@ export default class Friend extends Component {
           bUnReadMsg = true
         }
 
+        let chatHistory
+        if(messageObj.type === 2){
+          chatHistory = this.props.chat[userId][messageObj.user.groupID].history
+        }else{
+          chatHistory = this.props.chat[userId][messageObj.user.id].history
+        }
+        
+        let msgId
+        if(chatHistory.length === 0){
+          msgId = 0
+        }else{
+          msgId = chatHistory[chatHistory.length-1].msgId + 1
+        }
         this.props.addChat &&
           this.props.addChat({
             userId: userId, //当前登录账户的id
@@ -339,6 +391,8 @@ export default class Friend extends Component {
             unReadMsg: bUnReadMsg,
             fileName: messageObj.fileName,
             queueName: messageObj.queueName,
+            msgId: msgId,
+            isReceived: 0,
           })
       } else {
         //to do 系统消息，做处理机制
