@@ -267,10 +267,9 @@ class Chat extends React.Component {
   }
 
   onLongPress(context, message) {
-    // console.log(message)
     switch (message.type) {
       case 1:
-        alert(GiftedChat.getMessages())
+        alert('1')
         break
       case 4:
         if (message.user._id !== this.curUser.userId) {

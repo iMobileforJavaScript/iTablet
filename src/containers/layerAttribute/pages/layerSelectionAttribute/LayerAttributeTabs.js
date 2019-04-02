@@ -16,6 +16,7 @@ import DefaultTabBar from './DefaultTabBar'
 import { LayerTopBar, DrawerBar, LocationView } from '../../components'
 import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
+import { Utils } from '../../../workspace/util'
 import { SMap, Action } from 'imobile_for_reactnative'
 
 const styles = StyleSheet.create({
@@ -239,10 +240,17 @@ export default class LayerAttributeTabs extends React.Component {
 
     SMap.setAction(Action.PAN)
     // SMap.selectObj(layerPath, [selection.data[0].value]).then(() => {
-    SMap.selectObjs(objs).then(() => {
+    SMap.selectObjs(objs).then(data => {
       // TODO 选中对象跳转到地图
       // this.props.navigation && this.props.navigation.navigate('MapView')
       // NavigationService.navigate('MapView')
+      Utils.setSelectionStyle(this.props.currentLayer.path)
+      if (data instanceof Array && data.length > 0) {
+        SMap.moveToPoint({
+          x: data[0].x,
+          y: data[0].y,
+        })
+      }
       NavigationService.goBack()
       GLOBAL.toolBox &&
         GLOBAL.toolBox.setVisible(

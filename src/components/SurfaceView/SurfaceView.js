@@ -92,15 +92,28 @@ export default class SurfaceView extends Component {
   _handlePanResponderEnd = () => {}
 
   show = isShow => {
-    if (isShow === undefined) {
-      this.setState({
-        isShow: !this.state.isShow,
-      })
+    let newState = {}
+    if (
+      (isShow === undefined && this.state.isShow) ||
+      (isShow !== undefined && !isShow)
+    ) {
+      newState = {
+        isShow: false,
+        startPoint: {
+          x: 0,
+          y: 0,
+        },
+        endPoint: {
+          x: 0,
+          y: 0,
+        },
+      }
     } else {
-      this.setState({
-        isShow,
-      })
+      newState = {
+        isShow: true,
+      }
     }
+    this.setState(newState)
   }
 
   getResult = () => {

@@ -15,7 +15,7 @@ export const addChat = (params = {}, cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
-export const editChat =  (params = {}, cb = () => {}) => async dispatch => {
+export const editChat = (params = {}, cb = () => {}) => async dispatch => {
   await dispatch({
     type: EDIT_CHAT,
     payload: params,
@@ -110,7 +110,7 @@ export default handleActions(
           case 4:
             pushMsg.queueName = payload.queueName
             pushMsg.fileName = payload.fileName
-            pushMsg.isReceived= payload.isReceived
+            pushMsg.isReceived = payload.isReceived
             break
           default:
             break
@@ -136,7 +136,8 @@ export default handleActions(
     [`${EDIT_CHAT}`]: (state, { payload }) => {
       let allChat = state.toJS() || {}
       // console.log(allChat)
-      let message = allChat[payload.userId][payload.talkId].history[payload.msgId]
+      let message =
+        allChat[payload.userId][payload.talkId].history[payload.msgId]
       Object.assign(message, payload.editItem)
       return fromJS(allChat)
     },

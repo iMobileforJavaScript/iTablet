@@ -368,18 +368,20 @@ export default class Friend extends Component {
         }
 
         let chatHistory = []
-        if (this.props.chat[userId][messageObj.user.id]) {
-          if (messageObj.type === 2) {
-            chatHistory = this.props.chat[userId][messageObj.user.groupID]
-              .history
-          } else {
-            chatHistory = this.props.chat[userId][messageObj.user.id].history
-          }
+        let msgId = 0
+        if (
+          messageObj.type === 2 &&
+          this.props.chat[userId] &&
+          this.props.chat[userId][messageObj.user.groupID]
+        ) {
+          chatHistory = this.props.chat[userId][messageObj.user.groupID].history
+        } else if (
+          this.props.chat[userId] &&
+          this.props.chat[userId][messageObj.user.id]
+        ) {
+          chatHistory = this.props.chat[userId][messageObj.user.id].history
         }
-        let msgId
-        if (chatHistory.length === 0) {
-          msgId = 0
-        } else {
+        if (chatHistory.length !== 0) {
           msgId = chatHistory[chatHistory.length - 1].msgId + 1
         }
         MessageDataHandle.pushMessage({
