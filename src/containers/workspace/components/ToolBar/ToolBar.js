@@ -63,7 +63,6 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
 import LegendView from '../../components/LegendView/LegendView'
-import { Utils } from '../../util'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -91,6 +90,7 @@ export default class ToolBar extends React.PureComponent {
     user: Object,
     map: Object,
     layers: Object,
+    online: Object,
     collection: Object,
     template: Object,
     currentLayer: Object,
@@ -2444,7 +2444,7 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      Utils.setSelectionStyle(this.props.currentLayer.path, {})
+      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
         this.props.getLayers(-1, layers => {
@@ -2732,18 +2732,25 @@ export default class ToolBar extends React.PureComponent {
   commit = (type = this.originType) => {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
-      if (
-        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+      if (type === ConstToolType.MAP_EDIT_DEFAULT) {
+        // 编辑完成关闭Toolbar
+        this.setVisible(false, '', {
+          cb: () => {
+            SMap.setAction(Action.PAN)
+          },
+        })
+      } else if (
         type !== ConstToolType.MAP_EDIT_TAGGING &&
         type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
+        // 编辑完成关闭Toolbar
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
         this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
           isFullScreen: false,
           height: 0,
           cb: () => {
-            // SMap.submit()
+            SMap.submit()
             SMap.setAction(Action.SELECT)
           },
         })
@@ -3078,7 +3085,7 @@ export default class ToolBar extends React.PureComponent {
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
-      //跳转到专题图字段选择列表
+      //数据集选择列表(跳转到专题图字段选择列表)
       (async function() {
         try {
           this.props.setContainerLoading &&
@@ -3171,265 +3178,27 @@ export default class ToolBar extends React.PureComponent {
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
-      //点击字段名创建专题图
+      //点击字段名创建专题图(数据集创建)
       (async function() {
-        let params = {}
-        let isSuccess = false
-        let errorInfo = ''
-        switch (this.state.themeCreateType) {
-          case constants.THEME_UNIQUE_STYLE:
-            //单值风格
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              UniqueExpression: item.expression,
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
-            }
-            // isSuccess = await SThemeCartography.createThemeUniqueMap(params)
-            await SThemeCartography.createThemeUniqueMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_RANGE_STYLE:
-            //分段风格
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'CD_Cyans',
-            }
-            // isSuccess = await SThemeCartography.createThemeRangeMap(params)
-            await SThemeCartography.createThemeRangeMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_DOT_DENSITY:
-            //点密度专题图
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              DotExpression: item.expression,
-              Value: '20',
-            }
-            // isSuccess = await SThemeCartography.createDotDensityThemeMap(params)
-            await SThemeCartography.createDotDensityThemeMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_GRADUATED_SYMBOL:
-            //等级符号专题图
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              GraSymbolExpression: item.expression,
-              GraduatedMode: 'LOGARITHM',
-              //SymbolSize: '30',
-            }
-            // isSuccess = await SThemeCartography.createGraduatedSymbolThemeMap(params)
-            await SThemeCartography.createGraduatedSymbolThemeMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_UNIFY_LABEL:
-            //统一标签
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              LabelExpression: item.expression,
-              LabelBackShape: 'NONE',
-              FontName: '宋体',
-              // FontSize: '15.0',
-              ForeColor: '#000000',
-            }
-            // isSuccess = await SThemeCartography.createUniformThemeLabelMap(params)
-            await SThemeCartography.createUniformThemeLabelMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_UNIQUE_LABEL:
-            //单值标签
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              ColorScheme: 'CD_Cyans',
-            }
-            // isSuccess = await SThemeCartography.createUniqueThemeLabelMap(params)
-            await SThemeCartography.createUniqueThemeLabelMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_RANGE_LABEL:
-            //分段标签
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '5.0',
-              ColorScheme: 'CD_Cyans',
-            }
-            // isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
-            await SThemeCartography.createRangeThemeLabelMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-        }
-        if (isSuccess) {
-          Toast.show('创建专题图成功')
-          //设置当前图层
-          this.props.getLayers(-1, layers => {
-            this.props.setCurrentLayer(layers.length > 0 && layers[0])
-          })
-          this.setVisible(false)
-        } else {
-          // Toast.show('创建专题图失败')
-          Toast.show('创建专题图失败\n' + errorInfo)
-        }
+        await ThemeMenuData.createThemeByDataset(item, {
+          setToolbarVisible: this.setVisible,
+          ...this.props,
+          themeDatasourceAlias: this.state.themeDatasourceAlias,
+          themeDatasetName: this.state.themeDatasetName,
+          themeCreateType: this.state.themeCreateType,
+        })
       }.bind(this)())
     } else if (
       this.state.type ===
       ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
     ) {
-      //点击字段名创建专题图
+      //点击字段名创建专题图(图层创建)
       (async function() {
-        let params = {}
-        let isSuccess = false
-        switch (this.state.themeCreateType) {
-          case constants.THEME_UNIQUE_STYLE:
-            //单值风格
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              UniqueExpression: item.expression,
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
-            }
-            isSuccess = await SThemeCartography.createThemeUniqueMap(params)
-            break
-          case constants.THEME_RANGE_STYLE:
-            //分段风格
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'CD_Cyans',
-            }
-            isSuccess = await SThemeCartography.createThemeRangeMap(params)
-            break
-          case constants.THEME_DOT_DENSITY:
-            //点密度专题图
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              DotExpression: item.expression,
-              Value: '20',
-            }
-            isSuccess = await SThemeCartography.createDotDensityThemeMap(params)
-            break
-          case constants.THEME_GRADUATED_SYMBOL:
-            //等级符号专题图
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              GraSymbolExpression: item.expression,
-              GraduatedMode: 'LOGARITHM',
-              //SymbolSize: '30',
-            }
-            isSuccess = await SThemeCartography.createGraduatedSymbolThemeMap(
-              params,
-            )
-            break
-          case constants.THEME_UNIFY_LABEL:
-            //统一标签
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              LabelExpression: item.expression,
-              LabelBackShape: 'NONE',
-              FontName: '宋体',
-              // FontSize: '15.0',
-              ForeColor: '#000000',
-            }
-            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
-              params,
-            )
-            break
-          case constants.THEME_UNIQUE_LABEL:
-            //单值标签
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'CD_Cyans',
-            }
-            isSuccess = await SThemeCartography.createUniqueThemeLabelMap(
-              params,
-            )
-            break
-          case constants.THEME_RANGE_LABEL:
-            //分段标签
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '5.0',
-              ColorScheme: 'CD_Cyans',
-            }
-            isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
-            break
-        }
-        if (isSuccess) {
-          Toast.show('创建专题图成功')
-          //设置当前图层
-          this.props.getLayers(-1, layers => {
-            this.props.setCurrentLayer(layers.length > 0 && layers[0])
-          })
-        } else {
-          Toast.show('创建专题图失败')
-        }
-        this.setVisible(false)
+        await ThemeMenuData.createThemeByLayer(item, {
+          setToolbarVisible: this.setVisible,
+          ...this.props,
+          themeCreateType: this.state.themeCreateType,
+        })
       }.bind(this)())
     }
   }
@@ -4066,7 +3835,9 @@ export default class ToolBar extends React.PureComponent {
 
   /** 切换到裁剪界面 **/
   goToCut = () => {
-    NavigationService.navigate('MapCut')
+    NavigationService.navigate('MapCut', {
+      points: GLOBAL.MapSurfaceView.getResult(),
+    })
   }
 
   renderList = () => {

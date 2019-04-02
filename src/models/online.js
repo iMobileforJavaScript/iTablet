@@ -85,7 +85,7 @@ export default handleActions(
           shareList[i].name === payload.name
         ) {
           if (payload.progress === undefined) {
-            shareList.splice(i, i + 1)
+            shareList.splice(i, 1)
           } else {
             shareList[i] = payload
           }
