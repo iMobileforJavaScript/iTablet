@@ -126,46 +126,47 @@ export default class Friend extends Component {
     let time = Date.parse(ctime)
     // eslint-disable-next-line
 
-    if (members.length < 2) {
-      Toast.show('一人不能发起群聊')
-    } else {
-      let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
-      //服务绑定
-      SMessageService.declareSession(members, groupId)
+    members.push({
+      id: this.props.user.currentUser.userId,
+      name: this.props.user.currentUser.nickname,
+    })
+    let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
+    //服务绑定
+    SMessageService.declareSession(members, groupId)
 
-      let msgObj = {
-        user: {
-          name: this.props.user.currentUser.nickname,
-          id: this.props.user.currentUser.userId,
-          groupID: groupId,
-        },
-        members: members,
-        type: 912,
-        time: time,
-        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
-      }
-      let groupName = ''
-      for (let i in members) {
-        if (i > 3) break
-        groupName += members[i].name
-        if (i !== members.length - 2) groupName += '、'
-      }
-      FriendListFileHandle.addToGroupList(
-        {
-          id: groupId,
-          members: members,
-          groupName: groupName,
-          masterID: this.props.user.currentUser.userId,
-        },
-        () => {
-          this.refreshList()
-        },
-      )
-      let msgStr = JSON.stringify(msgObj)
-      for (let i in members) {
-        this._sendMessage(msgStr, members[i].id, false)
-      }
+    let msgObj = {
+      user: {
+        name: this.props.user.currentUser.nickname,
+        id: this.props.user.currentUser.userId,
+        groupID: groupId,
+      },
+      members: members,
+      type: 912,
+      time: time,
+      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
     }
+    let groupName = ''
+    for (let i in members) {
+      if (i > 3) break
+      groupName += members[i].name
+      if (i !== members.length - 2) groupName += '、'
+    }
+    FriendListFileHandle.addToGroupList(
+      {
+        id: groupId,
+        members: members,
+        groupName: groupName,
+        masterID: this.props.user.currentUser.userId,
+      },
+      () => {
+        this.refreshList()
+      },
+    )
+    let msgStr = JSON.stringify(msgObj)
+    for (let i in members) {
+      this._sendMessage(msgStr, members[i].id, false)
+    }
+
     // console.warn(members + groupId)
   }
   // eslint-disable-next-line
@@ -214,7 +215,10 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      let chatHistory = this.props.chat[userId][talkId].history
+      let chatHistory = []
+      if (this.props.chat[userId][talkId]) {
+        chatHistory = this.props.chat[userId][talkId].history
+      }
       let msgId
       if (chatHistory.length === 0) {
         msgId = 0
@@ -297,7 +301,7 @@ export default class Friend extends Component {
 
   _receiveMessage(message) {
     if (g_connectService) {
-      //  DataHandler.dealWithMessage(this.props.user.currentUser.userId,message['message']);
+      //  DataHandler.dealWhgjgithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
 
       let userId = this.props.user.currentUser.userId

@@ -19,6 +19,7 @@ import { Toast } from '../../../../utils/index'
 import { scaleSize } from '../../../../utils/screen'
 // import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
+import MessageDataHandle from '../MessageDataHandle'
 import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
 import { dialogStyles, inputStyles } from '../Styles'
@@ -147,6 +148,28 @@ class FriendGroup extends Component {
       curUser: this.props.user,
       friend: this.props.friend,
     })
+  }
+
+  _modifyName = () => {
+    FriendListFileHandle.modifyGroupList(
+      this.target.id,
+      this.state.inputText,
+      () => {
+        this.refresh()
+      },
+    )
+    this.inputdialog.setDialogVisible(false)
+  }
+  _deleteGroup = () => {
+    MessageDataHandle.delMessage({
+      //清除未读信息
+      userId: this.props.user.userId, //当前登录账户的id
+      talkId: this.target.id, //会话ID
+    })
+    FriendListFileHandle.delFromGroupList(this.target.id, () => {
+      this.refresh()
+    })
+    this.dialog.setDialogVisible(false)
   }
 
   render() {
@@ -359,9 +382,7 @@ class FriendGroup extends Component {
         type={'modal'}
         confirmBtnTitle={'确定'}
         cancelBtnTitle={'取消'}
-        confirmAction={() => {
-          this.dialog.setDialogVisible(false)
-        }}
+        confirmAction={this._deleteGroup}
         opacity={1}
         opacityStyle={styles.opacityView}
         style={dialogStyles.dialogBackgroundX}
@@ -381,8 +402,8 @@ class FriendGroup extends Component {
           height: scaleSize(250),
         }}
         type={'modal'}
-        confirmAction={this.confirm}
-        cancelAction={this.cancel}
+        confirmAction={this._modifyName}
+        // cancelAction={this.cancel}
       >
         <View style={inputStyles.item}>
           {/* <Text style={styles.title}>文本内容</Text> */}

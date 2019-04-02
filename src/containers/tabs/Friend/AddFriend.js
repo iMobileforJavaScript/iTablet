@@ -19,6 +19,7 @@ import { Container, Dialog } from '../../../components'
 import { dialogStyles } from './Styles'
 //import Friend from './Friend'
 import FriendListFileHandle from './FriendListFileHandle'
+import { Toast } from '../../../utils'
 
 const dismissKeyboard = require('dismissKeyboard')
 
@@ -33,7 +34,7 @@ class AddFriend extends Component {
     this.screenWidth = Dimensions.get('window').width
     this.target
     this.friend = {}
-    this.user
+    this.user = this.props.navigation.getParam('user')
     this.state = {
       list: [],
       isLoading: false,
@@ -90,7 +91,7 @@ class AddFriend extends Component {
   }
 
   //targetUser:[id,name]
-  static acceptFriendAdd = targetUser => {
+  static acceptFriendAdd = (targetUser, callback) => {
     //  this.target;
     // let curUserName = this.state.currentUser.nickname
     // let uuid = this.state.currentUser.userId
@@ -104,12 +105,15 @@ class AddFriend extends Component {
     // }
     // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
 
-    FriendListFileHandle.addToFriendList({
-      markName: targetUser[1],
-      name: targetUser[1],
-      id: targetUser[0],
-      info: { isFriend: 1 },
-    })
+    FriendListFileHandle.addToFriendList(
+      {
+        markName: targetUser[1],
+        name: targetUser[1],
+        id: targetUser[0],
+        info: { isFriend: 1 },
+      },
+      callback,
+    )
     // this.friend.refreshList();
     // this.friend.refreshMessage();
     // this.dialog.setDialogVisible(false)
@@ -119,8 +123,8 @@ class AddFriend extends Component {
     this.dialog.setDialogVisible(false)
 
     let item = this.target
-    let curUserName = this.props.navigation.getParam('user').nickname
-    let uuid = this.props.navigation.getParam('user').userId
+    let curUserName = this.user.nickname
+    let uuid = this.user.userId
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
@@ -131,9 +135,14 @@ class AddFriend extends Component {
     }
     let messageStr = JSON.stringify(message) //message.toJSONString();
 
+    if (this.target[0] == this.user.userId) {
+      Toast.show('不能添加自己为好友哦')
+      return
+    }
     this.friend._sendMessage(messageStr, item[0], true)
-    AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
-    this.friend.refreshList()
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]], () => {
+      this.friend.refreshList()
+    })
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

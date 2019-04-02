@@ -185,7 +185,7 @@ const layerThemeSettings = [
   },
 ]
 
-const layer3dSetting = [
+const layer3dSettingCanSelect = [
   {
     title: '设置为当前图层',
     data: [],
@@ -195,6 +195,14 @@ const layer3dSetting = [
     title: '设置图层可选',
     data: [],
     image: require('../../../../assets/map/Frenchgrey/icon_selectable_selected.png'),
+  },
+]
+
+const layer3dSettingCanNotSelect = [
+  {
+    title: '设置为当前图层',
+    data: [],
+    image: require('../../../../assets/layerToolbar/layer_this.png'),
   },
   {
     title: '设置图层不可选',
@@ -316,7 +324,8 @@ const mscaleData = [
 export {
   layersetting,
   layerThemeSetting,
-  layer3dSetting,
+  layer3dSettingCanSelect,
+  layer3dSettingCanNotSelect,
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
