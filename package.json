@@ -55,7 +55,8 @@
     "redux-actions": "^2.6.5",
     "redux-persist": "^5.10.0",
     "redux-promise-middleware": "^6.1.0",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "teaset": "^0.6.3"
   },
   "devDependencies": {
     "babel-core": "^7.0.0-bridge.0",

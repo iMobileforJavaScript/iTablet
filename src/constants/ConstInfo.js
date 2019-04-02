@@ -92,4 +92,8 @@ export default {
   RECOVER_UNABLE: '已经不能还原了',
 
   LOCATING: '正在定位',
+
+  CLIPPING: '地图裁剪中',
+  CLIP_SUCCESS: '裁剪成功',
+  CLIP_FAILED: '裁剪失败',
 }

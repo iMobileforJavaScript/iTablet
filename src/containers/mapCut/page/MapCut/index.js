@@ -4,6 +4,7 @@ import { getLayers } from '../../../../models/layers'
 
 const mapStateToProps = state => ({
   nav: state.nav.toJS(),
+  map: state.map.toJS(),
   layers: state.layers.toJS().layers,
 })
 
