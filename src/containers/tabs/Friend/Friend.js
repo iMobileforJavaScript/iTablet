@@ -26,6 +26,7 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstans from './MsgConstans'
+import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -37,6 +38,7 @@ export default class Friend extends Component {
     user: Object,
     chat: Array,
     addChat: () => {},
+    editChat: () => {},
   }
 
   constructor(props) {
@@ -46,6 +48,8 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
+    MessageDataHandle.setHandle(this.props.addChat)
+
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -53,6 +57,8 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
+
+    this._receiveMessage = this._receiveMessage.bind(this)
   }
 
   componentDidMount() {
@@ -83,20 +89,14 @@ export default class Friend extends Component {
   setCurChat = chat => {
     this.curChat = chat
     if (this.curChat) {
-      this.setReadTalk(
-        this.props.user.currentUser.userId,
-        this.curChat.targetUser.id,
-      )
+      MessageDataHandle.readMessage({
+        //清除未读信息
+        userId: this.props.user.currentUser.userId, //当前登录账户的id
+        talkId: this.curChat.targetUser.id, //会话ID
+      })
     }
   }
-  setReadTalk = (userId, talkId) => {
-    this.props.addChat &&
-      this.props.addChat({
-        //清除未读信息
-        userId: userId, //当前登录账户的id
-        talkId: talkId, //会话ID
-      })
-  }
+
   // componentDidUpdate(prevProps) {
   //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
   //   //  // this
@@ -214,20 +214,39 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      this.props.addChat &&
-        this.props.addChat({
-          userId: userId, //当前登录账户的id
-          talkId: talkId,
-          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-          message: messageObj.message,
-          time: messageObj.time,
-          type: messageObj.type, //消息类型
-          system: messageObj.system,
-          fileName: messageObj.fileName,
-          queueName: messageObj.queueName,
-        })
+      let chatHistory = this.props.chat[userId][talkId].history
+      let msgId
+      if (chatHistory.length === 0) {
+        msgId = 0
+      } else {
+        msgId = chatHistory[chatHistory.length - 1].msgId + 1
+      }
+      MessageDataHandle.pushMessage({
+        userId: userId, //当前登录账户的id
+        talkId: talkId,
+        messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+        message: messageObj.message,
+        time: messageObj.time,
+        type: messageObj.type, //消息类型
+        system: messageObj.system,
+        fileName: messageObj.fileName,
+        queueName: messageObj.queueName,
+        msgId: msgId,
+      })
     }
     // this.refresh()
+  }
+
+  _getChatId = talkId => {
+    let userId = this.props.user.currentUser.userId
+    let chatHistory = this.props.chat[userId][talkId].history
+    let msgId
+    if (chatHistory.length === 0) {
+      msgId = 0
+    } else {
+      msgId = chatHistory[chatHistory.length - 1].msgId + 1
+    }
+    return msgId
   }
 
   _sendFile = (messageStr, filepath, talkId) => {
@@ -260,7 +279,23 @@ export default class Friend extends Component {
     })
   }
 
-  _receiveMessage = message => {
+  _receiveFile = (fileName, queueName, talkId, msgId) => {
+    if (g_connectService) {
+      SMessageService.receiveFile(fileName, queueName).then(res => {
+        if (res === true) {
+          this.props.editChat &&
+            this.props.editChat({
+              userId: this.props.user.currentUser.userId,
+              talkId: talkId,
+              msgId: msgId,
+              editItem: { isReceived: 1 },
+            })
+        }
+      })
+    }
+  }
+
+  _receiveMessage(message) {
     if (g_connectService) {
       //  DataHandler.dealWithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
@@ -329,18 +364,36 @@ export default class Friend extends Component {
           bUnReadMsg = true
         }
 
-        this.props.addChat &&
-          this.props.addChat({
-            userId: userId, //当前登录账户的id
-            talkId: messageObj.user.groupID, //会话ID
-            messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-            message: messageObj.message,
-            time: messageObj.time,
-            type: messageObj.type, //消息类型
-            unReadMsg: bUnReadMsg,
-            fileName: messageObj.fileName,
-            queueName: messageObj.queueName,
-          })
+        let chatHistory = []
+        let msgId = 0
+        if (
+          messageObj.type === 2 &&
+          this.props.chat[userId] &&
+          this.props.chat[userId][messageObj.user.groupID]
+        ) {
+          chatHistory = this.props.chat[userId][messageObj.user.groupID].history
+        } else if (
+          this.props.chat[userId] &&
+          this.props.chat[userId][messageObj.user.id]
+        ) {
+          chatHistory = this.props.chat[userId][messageObj.user.id].history
+        }
+        if (chatHistory.length !== 0) {
+          msgId = chatHistory[chatHistory.length - 1].msgId + 1
+        }
+        MessageDataHandle.pushMessage({
+          userId: userId, //当前登录账户的id
+          talkId: messageObj.user.groupID, //会话ID
+          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+          message: messageObj.message,
+          time: messageObj.time,
+          type: messageObj.type, //消息类型
+          unReadMsg: bUnReadMsg,
+          fileName: messageObj.fileName,
+          queueName: messageObj.queueName,
+          msgId: msgId,
+          isReceived: 0,
+        })
       } else {
         //to do 系统消息，做处理机制
         if (messageObj.type === 912) {
