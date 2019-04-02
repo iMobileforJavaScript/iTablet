@@ -173,9 +173,17 @@ export default class CutListItem extends PureComponent {
           <TouchableOpacity
             onPress={this.showDatasource}
             activeOpacity={0.8}
-            style={[styles.topRightView, { width: scaleSize(360) }]}
+            style={[
+              styles.topRightView,
+              { paddingRight: scaleSize(30), width: scaleSize(360) },
+            ]}
           >
-            <Text style={[styles.content, { width: scaleSize(140) }]}>
+            <Text
+              style={[
+                styles.content,
+                { width: scaleSize(140), textAlign: 'center' },
+              ]}
+            >
               {this.props.datasourceName}
             </Text>
             <Image

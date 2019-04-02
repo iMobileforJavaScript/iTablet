@@ -18,8 +18,6 @@ export default StyleSheet.create({
 
   /** Check按钮 **/
   selectContainer: {
-    flex: 1,
-    width: scaleSize(120),
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -142,7 +140,6 @@ export default StyleSheet.create({
   content: {
     fontSize: size.fontSize.fontSizeMd,
     color: color.fontColorBlack,
-    textAlign: 'center',
     backgroundColor: 'transparent',
   },
   downImg: {
