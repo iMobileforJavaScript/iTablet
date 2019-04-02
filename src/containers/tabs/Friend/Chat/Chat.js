@@ -138,15 +138,15 @@ class Chat extends React.Component {
   loadMsgByType(msg) {
     switch (msg.type) {
       default:
-          return {
+        return {
           _id: msg.msgId,
           text: msg.msg,
           createdAt: new Date(msg.time),
           user: { _id: msg.id, name: msg.name },
           type: msg.type, //根据type渲染
         }
-      case(4):
-          return {
+      case 4:
+        return {
           _id: msg.msgId,
           text: msg.msg,
           createdAt: new Date(msg.time),
@@ -273,14 +273,20 @@ class Chat extends React.Component {
         alert(GiftedChat.getMessages())
         break
       case 4:
-        if(message.user._id !== this.curUser.userId){
+        if (message.user._id !== this.curUser.userId) {
           alert('4')
-          if(message.isReceived === 0){
-            this.friend._receiveFile(message.fileName, message.queueName, this.targetUser.id, message._id)
+          if (message.isReceived === 0) {
+            this.friend._receiveFile(
+              message.fileName,
+              message.queueName,
+              this.targetUser.id,
+              message._id,
+            )
             this.setState(previousState => {
               let length = previousState.messages
-              for(i=0; i<length;i++){
-                if(previousState.messages[i]._id===message._id){
+              let i = 0
+              for (; i < length; i++) {
+                if (previousState.messages[i]._id === message._id) {
                   break
                 }
               }
@@ -289,11 +295,11 @@ class Chat extends React.Component {
                 messages: previousState.messages,
               }
             })
-          }else{
-            alert("已接收此文件")
+          } else {
+            alert('已接收此文件')
           }
         }
-        
+
         break
       default:
         alert('undefined')

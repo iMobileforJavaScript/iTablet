@@ -216,10 +216,10 @@ export default class Friend extends Component {
       let userId = this.props.user.currentUser.userId
       let chatHistory = this.props.chat[userId][talkId].history
       let msgId
-      if(chatHistory.length === 0){
+      if (chatHistory.length === 0) {
         msgId = 0
-      }else{
-        msgId = chatHistory[chatHistory.length-1].msgId + 1
+      } else {
+        msgId = chatHistory[chatHistory.length - 1].msgId + 1
       }
       MessageDataHandle.pushMessage({
         userId: userId, //当前登录账户的id
@@ -237,14 +237,14 @@ export default class Friend extends Component {
     // this.refresh()
   }
 
-  _getChatId = (talkId) =>  {
+  _getChatId = talkId => {
     let userId = this.props.user.currentUser.userId
     let chatHistory = this.props.chat[userId][talkId].history
     let msgId
-    if(chatHistory.length === 0){
+    if (chatHistory.length === 0) {
       msgId = 0
-    }else{
-      msgId = chatHistory[chatHistory.length-1].msgId + 1
+    } else {
+      msgId = chatHistory[chatHistory.length - 1].msgId + 1
     }
     return msgId
   }
@@ -280,21 +280,19 @@ export default class Friend extends Component {
   }
 
   _receiveFile = (fileName, queueName, talkId, msgId) => {
-    if(g_connectService){
-      SMessageService.receiveFile(fileName, queueName)
-      .then(res =>{
-        if(res === true){
+    if (g_connectService) {
+      SMessageService.receiveFile(fileName, queueName).then(res => {
+        if (res === true) {
           this.props.editChat &&
             this.props.editChat({
               userId: this.props.user.currentUser.userId,
               talkId: talkId,
               msgId: msgId,
-              editItem: {isReceived: 1,},
+              editItem: { isReceived: 1 },
             })
         }
       })
     }
-   
   }
 
   _receiveMessage(message) {
@@ -365,24 +363,22 @@ export default class Friend extends Component {
         ) {
           bUnReadMsg = true
         }
-        if(this.props.chat){
-          if(messageObj.type === 2){
-            chatHistory = this.props.chat[userId][messageObj.user.groupID].history
-          }else{
+
+        let chatHistory = []
+        if (this.props.chat[userId][messageObj.user.id]) {
+          if (messageObj.type === 2) {
+            chatHistory = this.props.chat[userId][messageObj.user.groupID]
+              .history
+          } else {
             chatHistory = this.props.chat[userId][messageObj.user.id].history
           }
-          let chatHistory
-        
-          let msgId
-          if(chatHistory.length === 0){
-            msgId = 0
-          }else{
-            msgId = chatHistory[chatHistory.length-1].msgId + 1
-          }
-          
         }
-        
-
+        let msgId
+        if (chatHistory.length === 0) {
+          msgId = 0
+        } else {
+          msgId = chatHistory[chatHistory.length - 1].msgId + 1
+        }
         MessageDataHandle.pushMessage({
           userId: userId, //当前登录账户的id
           talkId: messageObj.user.groupID, //会话ID
