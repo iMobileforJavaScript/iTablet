@@ -25,6 +25,7 @@ import Tabs, {
   MyLabel,
   MyBaseMap,
   MyModule,
+  SuperMapKnown,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -460,6 +461,13 @@ export default StackNavigator(
     },
     MyModule: {
       screen: MyModule,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SuperMapKnown: {
+      screen: SuperMapKnown,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

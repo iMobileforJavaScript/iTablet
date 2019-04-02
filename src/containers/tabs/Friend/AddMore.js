@@ -1,8 +1,12 @@
 import React from 'react'
 import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native'
-
+import { Platform } from 'react-native'
 import { scaleSize } from '../../../utils/screen'
 
+let Top = scaleSize(88)
+if (Platform.OS === 'ios') {
+  Top += 20
+}
 // const deviceH = Dimensions.get('window').height
 // const deviceW = Dimensions.get('window').width
 
@@ -117,7 +121,7 @@ const styles = StyleSheet.create({
     height: scaleSize(170),
     position: 'absolute',
     left: scaleSize(25),
-    top: scaleSize(128),
+    top: Top,
     padding: scaleSize(5),
     justifyContent: 'center',
     alignItems: 'center',

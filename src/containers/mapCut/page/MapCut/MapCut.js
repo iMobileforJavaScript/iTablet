@@ -12,6 +12,7 @@ import {
   KeyboardAvoidingView,
   FlatList,
   TouchableOpacity,
+  Platform,
 } from 'react-native'
 import {
   Container,
@@ -20,8 +21,8 @@ import {
   Button,
   PopModal,
 } from '../../../../components'
-import { scaleSize } from '../../../../utils'
-import { CheckStatus } from '../../../../constants'
+import { scaleSize, Toast } from '../../../../utils'
+import { CheckStatus, ConstInfo } from '../../../../constants'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { MapCutSetting, CutListItem, MapCutAddLayer } from '../../compoents'
@@ -35,12 +36,14 @@ export default class MapCut extends React.Component {
   props: {
     navigation: Object,
     nav: Object,
+    map: Array,
     layers: Array,
     getLayers: () => {},
   }
 
   constructor(props) {
     super(props)
+    const { params } = props.navigation.state
     this.state = {
       headerBtnTitle: EDIT,
       selected: (new Map(): Map<string, boolean>),
@@ -51,6 +54,7 @@ export default class MapCut extends React.Component {
       layers: props.layers,
       outLayers: [], // 未选中的图层
       datasources: [],
+      points: (params && params.points) || [],
     }
     this.init = true
     this.changeDSData = null
@@ -73,8 +77,58 @@ export default class MapCut extends React.Component {
       headerBtnTitle: this.state.headerBtnTitle === EDIT ? COMPLETE : EDIT,
     })
   }
+  saveMapName
+  cut = () => {
+    (async function() {
+      try {
+        this.mapNameIput && this.mapNameIput.blur()
+        this.container && this.container.setLoading(true, ConstInfo.CLIPPING)
+        let layersInfo = []
+        this.state.selected.forEach((value, key) => {
+          let layerInfo = {}
+          if (!value) return
+          let info = this.state.extraData.get(key)
+          if (!info) return
 
-  cut = () => {}
+          layerInfo.LayerName = key
+          layerInfo.IsClipInRegion =
+            info.inRangeStatus === CheckStatus.CHECKED ||
+            info.inRangeStatus === CheckStatus.CHECKED_DISABLE
+          layerInfo.IsErase =
+            info.eraseStatus === CheckStatus.CHECKED ||
+            info.eraseStatus === CheckStatus.CHECKED_DISABLE
+          if (
+            info.exactCutStatus === CheckStatus.CHECKED ||
+            info.exactCutStatus === CheckStatus.UN_CHECK
+          ) {
+            layerInfo.IsExactClip = info.exactCutStatus === CheckStatus.CHECKED
+          }
+          layerInfo.DatasourceTarget = info.datasourceName
+
+          layersInfo.push(layerInfo)
+        })
+
+        let addition = {}
+        if (this.props.map.currentMap.Template) {
+          addition.Template = this.props.map.currentMap.Template
+        }
+
+        await SMap.clipMap(
+          this.state.points,
+          layersInfo,
+          this.state.saveAsName,
+          '',
+          addition,
+          true,
+        )
+        this.container && this.container.setLoading(false)
+        Toast.show(ConstInfo.CLIP_SUCCESS)
+      } catch (e) {
+        this.container && this.container.setLoading(false)
+        Toast.show(ConstInfo.CLIP_FAILED)
+      }
+    }.bind(this)())
+  }
 
   _onChangeText = text => {
     this.setState({
@@ -471,7 +525,10 @@ export default class MapCut extends React.Component {
       )
     } else {
       return (
-        <KeyboardAvoidingView behavior="padding" enabled>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' && 'padding'}
+          enabled
+        >
           <View style={[styles.bottomView, { width: '100%' }]}>
             <View style={styles.bottomLeftView}>
               {this.renderCheckButton({
@@ -482,6 +539,7 @@ export default class MapCut extends React.Component {
               })}
               {this.state.isSaveAs ? (
                 <TextInput
+                  ref={ref => (this.mapNameIput = ref)}
                   value={this.state.text}
                   style={styles.input}
                   placeholder={'请输入地图名字'}

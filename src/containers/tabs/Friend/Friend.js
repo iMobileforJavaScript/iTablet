@@ -25,22 +25,12 @@ import UserType from '../../../constants/UserType'
 import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
+import MSGConstans from './MsgConstans'
+import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
 
-// let sIP = '192.168.0.106'
-// let sPort = 5672
-// let sHostName = '/'
-// let sUserName = 'androidtest'
-// let sPassword = 'androidtest'
-let sIP = '111.202.121.144'
-let sPort = 5672
-let sHostName = '/'
-let sUserName = 'admin'
-let sPassword = 'admin'
-
-let g_curUserId = ''
 let g_connectService = false
 export default class Friend extends Component {
   props: {
@@ -48,6 +38,7 @@ export default class Friend extends Component {
     user: Object,
     chat: Array,
     addChat: () => {},
+    editChat: () => {},
   }
 
   constructor(props) {
@@ -57,6 +48,8 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
+    MessageDataHandle.setHandle(this.props.addChat)
+
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -94,20 +87,14 @@ export default class Friend extends Component {
   setCurChat = chat => {
     this.curChat = chat
     if (this.curChat) {
-      this.setReadTalk(
-        this.props.user.currentUser.userId,
-        this.curChat.targetUser.id,
-      )
+      MessageDataHandle.readMessage({
+        //清除未读信息
+        userId: this.props.user.currentUser.userId, //当前登录账户的id
+        talkId: this.curChat.targetUser.id, //会话ID
+      })
     }
   }
-  setReadTalk = (userId, talkId) => {
-    this.props.addChat &&
-      this.props.addChat({
-        //清除未读信息
-        userId: userId, //当前登录账户的id
-        talkId: talkId, //会话ID
-      })
-  }
+
   // componentDidUpdate(prevProps) {
   //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
   //   //  // this
@@ -118,7 +105,7 @@ export default class Friend extends Component {
   // }
 
   componentWillUnmount() {
-    this.connectService()
+    // this.connectService()
   }
   // eslint-disable-next-line
   shouldComponentUpdate(prevProps, prevState) {
@@ -197,12 +184,12 @@ export default class Friend extends Component {
   _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
-        sIP,
-        sPort,
-        sHostName,
-        sUserName,
-        sPassword,
-        g_curUserId,
+        MSGConstans.MSG_IP,
+        MSGConstans.MSG_Port,
+        MSGConstans.MSG_HostName,
+        MSGConstans.MSG_UserName,
+        MSGConstans.MSG_Password,
+        this.props.user.currentUser.userId,
       )
         .then(() => {
           SMessageService.sendMessage(messageStr, talkId)
@@ -225,40 +212,60 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      this.props.addChat &&
-        this.props.addChat({
-          userId: userId, //当前登录账户的id
-          talkId: talkId,
-          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-          message: messageObj.message,
-          time: messageObj.time,
-          type: messageObj.type, //消息类型
-          system: messageObj.system,
-        })
+      let chatHistory = this.props.chat[userId][talkId].history
+      let msgId
+      if(chatHistory.length === 0){
+        msgId = 0
+      }else{
+        msgId = chatHistory[chatHistory.length-1].msgId + 1
+      }
+      MessageDataHandle.pushMessage({
+        userId: userId, //当前登录账户的id
+        talkId: talkId,
+        messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+        message: messageObj.message,
+        time: messageObj.time,
+        type: messageObj.type, //消息类型
+        system: messageObj.system,
+        fileName: messageObj.fileName,
+        queueName: messageObj.queueName,
+        msgId: msgId,
+      })
     }
     // this.refresh()
   }
 
+  _getChatId = (talkId) =>  {
+    let userId = this.props.user.currentUser.userId
+    let chatHistory = this.props.chat[userId][talkId].history
+    let msgId
+    if(chatHistory.length === 0){
+      msgId = 0
+    }else{
+      msgId = chatHistory[chatHistory.length-1].msgId + 1
+    }
+    return msgId
+  }
+
   _sendFile = (messageStr, filepath, talkId) => {
     let connectInfo = {
-      serverIP: sIP,
-      port: sPort,
-      hostName: sHostName,
-      userName: sUserName,
-      passwd: sPassword,
-      userID: g_curUserId,
+      serverIP: MSGConstans.MSG_IP,
+      port: MSGConstans.MSG_Port,
+      hostName: MSGConstans.MSG_HostName,
+      userName: MSGConstans.MSG_UserName,
+      passwd: MSGConstans.MSG_Password,
+      userID: this.props.user.currentUser.userId,
     }
     SMessageService.sendFile(
       JSON.stringify(connectInfo),
       messageStr,
       filepath,
-      talkId,
     ).then(res => {
       let messageObj = JSON.parse(messageStr)
       let ctime = new Date()
       let time = Date.parse(ctime)
       let fileinform = {
-        message: '[长按接收文件' + res.fileName + ']',
+        message: '[文件]',
         type: 4, //文件接收通知
         user: messageObj.user,
         time: time,
@@ -268,6 +275,24 @@ export default class Friend extends Component {
       }
       this._sendMessage(JSON.stringify(fileinform), talkId, false)
     })
+  }
+
+  _receiveFile = (fileName, queueName, talkId, msgId) => {
+    if(g_connectService){
+      SMessageService.receiveFile(fileName, queueName)
+      .then(res =>{
+        if(res === true){
+          this.props.editChat &&
+            this.props.editChat({
+              userId: this.props.user.currentUser.userId,
+              talkId: talkId,
+              msgId: msgId,
+              editItem: {isReceived: 1,},
+            })
+        }
+      })
+    }
+   
   }
 
   _receiveMessage = message => {
@@ -299,7 +324,7 @@ export default class Friend extends Component {
       if (messageObj.type < 9) {
         //非通知消息，判断是否接收
         let obj = undefined
-        if (messageObj.type === 1) {
+        if (messageObj.type === 1 || messageObj.type === 4) {
           obj = FriendListFileHandle.findFromFriendList(messageObj.user.id)
         } else if (messageObj.type === 2) {
           obj = FriendListFileHandle.findFromGroupList(messageObj.user.groupID)
@@ -317,6 +342,7 @@ export default class Friend extends Component {
             user: {
               name: this.props.user.currentUser.name,
               id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
             },
             time: time,
           }
@@ -337,17 +363,33 @@ export default class Friend extends Component {
         ) {
           bUnReadMsg = true
         }
+        let chatHistory
+        if(messageObj.type === 2){
+          chatHistory = this.props.chat[userId][messageObj.user.groupID].history
+        }else{
+          chatHistory = this.props.chat[userId][messageObj.user.id].history
+        }
+        
+        let msgId
+        if(chatHistory.length === 0){
+          msgId = 0
+        }else{
+          msgId = chatHistory[chatHistory.length-1].msgId + 1
+        }
 
-        this.props.addChat &&
-          this.props.addChat({
-            userId: userId, //当前登录账户的id
-            talkId: messageObj.user.groupID, //会话ID
-            messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-            message: messageObj.message,
-            time: messageObj.time,
-            type: messageObj.type, //消息类型
-            unReadMsg: bUnReadMsg,
-          })
+        MessageDataHandle.pushMessage({
+          userId: userId, //当前登录账户的id
+          talkId: messageObj.user.groupID, //会话ID
+          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+          message: messageObj.message,
+          time: messageObj.time,
+          type: messageObj.type, //消息类型
+          unReadMsg: bUnReadMsg,
+          fileName: messageObj.fileName,
+          queueName: messageObj.queueName,
+          msgId: msgId,
+          isReceived: 0,
+        })
       } else {
         //to do 系统消息，做处理机制
         if (messageObj.type === 912) {
@@ -373,9 +415,14 @@ export default class Friend extends Component {
         }
       }
       // eslint-disable-next-line
-      if (this.curChat && this.curChat.onReceive) {
-        this.curChat.onReceive(message['message'], bSystem)
+      if (this.curChat) {
+        if (this.curChat.targetUser.id === messageObj.user.groupID) {
+          this.curChat.onReceive(message['message'], bSystem)
+        } else {
+          this.curChat.showInformSpot(true)
+        }
       }
+
       // this.refresh()
     }
   }
@@ -388,18 +435,17 @@ export default class Friend extends Component {
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
           SMessageService.connectService(
-            sIP,
-            sPort,
-            sHostName,
-            sUserName,
-            sPassword,
+            MSGConstans.MSG_IP,
+            MSGConstans.MSG_Port,
+            MSGConstans.MSG_HostName,
+            MSGConstans.MSG_UserName,
+            MSGConstans.MSG_Password,
             this.props.user.currentUser.userId,
           )
             .then(res => {
               if (!res) {
                 Toast.show('连接消息服务失败！')
               } else {
-                g_curUserId = this.props.user.currentUser.userId
                 g_connectService = true
                 SMessageService.startReceiveMessage(
                   this.props.user.currentUser.userId,
@@ -423,7 +469,6 @@ export default class Friend extends Component {
     SMessageService.disconnectionService()
     SMessageService.stopReceiveMessage()
     g_connectService = false
-    g_curUserId = ''
   }
 
   addMore = index => {
