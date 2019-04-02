@@ -127,8 +127,12 @@ export default class Friend extends Component {
     // eslint-disable-next-line
 
     if (members.length < 2) {
-      Toast.show('一人不能发起群聊')
+      Toast.show('三人才能发起发起群聊')
     } else {
+      members.push({
+        id: this.props.user.currentUser.userId,
+        name: this.props.user.currentUser.nickname,
+      })
       let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
       //服务绑定
       SMessageService.declareSession(members, groupId)
