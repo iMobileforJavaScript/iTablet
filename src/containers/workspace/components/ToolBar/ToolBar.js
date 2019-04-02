@@ -63,7 +63,6 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
 import LegendView from '../../components/LegendView/LegendView'
-import { Utils } from '../../util'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -2445,7 +2444,7 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      Utils.setSelectionStyle(this.props.currentLayer.path, {})
+      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
         this.props.getLayers(-1, layers => {
