@@ -526,6 +526,10 @@ export default class MyLocalData extends Component {
           }
         }
         if (type === 'weChat') {
+          if (this.state.title === Const.SCENE) {
+            Toast.show('所分享文件超过10MB')
+            return
+          }
           let zipResult
           if (this.state.title === Const.MAP) {
             await this._exportData()
@@ -571,6 +575,7 @@ export default class MyLocalData extends Component {
               '.zip'
             await SOnlineService.uploadFile(targetPath, fileName, {
               onResult: result => {
+                this.setLoading(false)
                 result && Toast.show('分享成功')
                 this.ModalBtns && this.ModalBtns.setVisible(false)
                 FileTools.deleteFile(targetPath)
@@ -583,6 +588,7 @@ export default class MyLocalData extends Component {
               name: fileName,
               onProgress: () => {},
               onResult: (result, name) => {
+                this.setLoading(false)
                 Toast.show(
                   name + ' ' + result || result === undefined
                     ? '分享成功'
@@ -598,7 +604,6 @@ export default class MyLocalData extends Component {
       Toast.show('分享失败')
       this.ModalBtns && this.ModalBtns.setVisible(false)
       this._closeModal()
-    } finally {
       this.setLoading(false)
     }
   }

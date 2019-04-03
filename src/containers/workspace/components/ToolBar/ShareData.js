@@ -222,7 +222,7 @@ function showSaveDialog(type) {
  */
 async function shareToSuperMapOnline(list = [], name = '') {
   try {
-    GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
     if (
       !_params.user.currentUser.userName ||
       _params.user.currentUser.userType === UserType.PROBATION_USER
@@ -322,7 +322,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
       )
     }, 500)
   } catch (e) {
-    GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
     isSharing = false
   }
 }
@@ -332,7 +332,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
  */
 async function share3DToSuperMapOnline(list = []) {
   try {
-    GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
     let isSharing = false
     if (_params.user.users.length <= 1) {
       Toast.show('请登陆后再分享')
@@ -388,7 +388,7 @@ async function share3DToSuperMapOnline(list = []) {
       }
     }
   } catch (error) {
-    GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
     Toast.show('分享失败')
   }
 }

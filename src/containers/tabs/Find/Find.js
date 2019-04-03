@@ -153,13 +153,6 @@ export default class Find extends Component {
             },
           })} */}
           {this._renderItem({
-            title: Const.SUPERMAPKNOWN,
-            leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
-            onClick: () => {
-              NavigationService.navigate('SuperMapKnown')
-            },
-          })}
-          {this._renderItem({
             title: Const.FRIENDMAP,
             leftImagePath: require('../../../assets/Find/find_publicmap.png'),
             onClick: () => {
