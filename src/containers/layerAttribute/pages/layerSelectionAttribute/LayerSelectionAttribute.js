@@ -472,7 +472,7 @@ export default class LayerSelectionAttribute extends React.Component {
         typeof this.props.selectAction === 'function'
       ) {
         this.props.selectAction({
-          index: [],
+          index: -1,
           data: -1,
         })
       }

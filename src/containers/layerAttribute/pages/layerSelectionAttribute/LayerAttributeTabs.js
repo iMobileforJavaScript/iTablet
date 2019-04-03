@@ -218,6 +218,8 @@ export default class LayerAttributeTabs extends React.Component {
         .layerSelection.layerInfo.path,
       selection = this.currentTabRefs[this.state.currentTabIndex].getSelection()
 
+    if (!selection || !selection.data) return
+
     let objs = []
     for (let i = 0; i < this.props.selection.length; i++) {
       if (this.props.selection[i].layerInfo.name === layerPath) {
@@ -267,10 +269,15 @@ export default class LayerAttributeTabs extends React.Component {
 
   drawerOnChange = ({ index }) => {
     // this.scrollTab && this.scrollTab.goToPage(index)
-    this.state.currentTabIndex !== index &&
+
+    if (this.state.currentTabIndex !== index) {
+      this.currentTabRefs &&
+        this.currentTabRefs[this.state.currentTabIndex].clearSelection()
       this.setState({
         currentTabIndex: index,
       })
+    }
+
     let timer = setTimeout(() => {
       this.showDrawer(false)
       clearTimeout(timer)
