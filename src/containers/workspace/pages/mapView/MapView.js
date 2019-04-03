@@ -396,6 +396,12 @@ export default class MapView extends React.Component {
       })
     }
     this.props.setSelection && this.props.setSelection(data)
+
+    switch (GLOBAL.currentToolbarType) {
+      case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+        SMap.setAction(Action.PAN)
+        break
+    }
   }
 
   /** 触摸事件监听 **/

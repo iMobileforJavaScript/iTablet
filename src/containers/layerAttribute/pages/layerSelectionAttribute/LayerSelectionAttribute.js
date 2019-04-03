@@ -234,6 +234,10 @@ export default class LayerSelectionAttribute extends React.Component {
    * 定位到首位
    */
   locateToTop = (cb = () => {}) => {
+    if (this.state.attributes.data.length === 0 || this.total <= 0) {
+      Toast.show(ConstInfo.CANNOT_LOCATION)
+      return
+    }
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -294,7 +298,10 @@ export default class LayerSelectionAttribute extends React.Component {
    * 定位到末尾
    */
   locateToBottom = (cb = () => {}) => {
-    if (this.total <= 0) return
+    if (this.state.attributes.data.length === 0 || this.total <= 0) {
+      Toast.show(ConstInfo.CANNOT_LOCATION)
+      return
+    }
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -340,6 +347,10 @@ export default class LayerSelectionAttribute extends React.Component {
    * @param data {value, inputValue}
    */
   locateToPosition = (data = {}, cb = () => {}) => {
+    if (this.state.attributes.data.length === 0 || this.total <= 0) {
+      Toast.show(ConstInfo.CANNOT_LOCATION)
+      return
+    }
     let remainder = 0,
       viewPosition = 0.3,
       relativeIndex,
