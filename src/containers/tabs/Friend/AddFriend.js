@@ -91,7 +91,7 @@ class AddFriend extends Component {
   }
 
   //targetUser:[id,name]
-  static acceptFriendAdd = (targetUser, callback) => {
+  static acceptFriendAdd = targetUser => {
     //  this.target;
     // let curUserName = this.state.currentUser.nickname
     // let uuid = this.state.currentUser.userId
@@ -105,15 +105,12 @@ class AddFriend extends Component {
     // }
     // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
 
-    FriendListFileHandle.addToFriendList(
-      {
-        markName: targetUser[1],
-        name: targetUser[1],
-        id: targetUser[0],
-        info: { isFriend: 1 },
-      },
-      callback,
-    )
+    FriendListFileHandle.addToFriendList({
+      markName: targetUser[1],
+      name: targetUser[1],
+      id: targetUser[0],
+      info: { isFriend: 1 },
+    })
     // this.friend.refreshList();
     // this.friend.refreshMessage();
     // this.dialog.setDialogVisible(false)
@@ -140,9 +137,7 @@ class AddFriend extends Component {
       return
     }
     this.friend._sendMessage(messageStr, item[0], true)
-    AddFriend.acceptFriendAdd([this.target[0], this.target[1]], () => {
-      this.friend.refreshList()
-    })
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

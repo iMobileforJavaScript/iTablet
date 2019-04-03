@@ -45,6 +45,7 @@ class FriendList extends Component {
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
+    this._modifyName = this._modifyName.bind(this)
   }
 
   refresh = () => {
@@ -314,14 +315,8 @@ class FriendList extends Component {
     // }
   }
 
-  _modifyName = () => {
-    FriendListFileHandle.modifyFriendList(
-      this.target.id,
-      this.state.inputText,
-      () => {
-        this.refresh()
-      },
-    )
+  _modifyName() {
+    FriendListFileHandle.modifyFriendList(this.target.id, this.state.inputText)
     this.inputdialog.setDialogVisible(false)
   }
   _deleteFriend = () => {
@@ -330,9 +325,7 @@ class FriendList extends Component {
       userId: this.props.user.userId, //当前登录账户的id
       talkId: this.target.id, //会话ID
     })
-    FriendListFileHandle.delFromFriendList(this.target.id, () => {
-      this.refresh()
-    })
+    FriendListFileHandle.delFromFriendList(this.target.id)
     this.dialog.setDialogVisible(false)
   }
   render() {

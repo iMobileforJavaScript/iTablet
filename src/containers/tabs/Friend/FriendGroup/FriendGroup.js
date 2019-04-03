@@ -151,13 +151,7 @@ class FriendGroup extends Component {
   }
 
   _modifyName = () => {
-    FriendListFileHandle.modifyGroupList(
-      this.target.id,
-      this.state.inputText,
-      () => {
-        this.refresh()
-      },
-    )
+    FriendListFileHandle.modifyGroupList(this.target.id, this.state.inputText)
     this.inputdialog.setDialogVisible(false)
   }
   _deleteGroup = () => {
@@ -166,9 +160,7 @@ class FriendGroup extends Component {
       userId: this.props.user.userId, //当前登录账户的id
       talkId: this.target.id, //会话ID
     })
-    FriendListFileHandle.delFromGroupList(this.target.id, () => {
-      this.refresh()
-    })
+    FriendListFileHandle.delFromGroupList(this.target.id)
     this.dialog.setDialogVisible(false)
   }
 

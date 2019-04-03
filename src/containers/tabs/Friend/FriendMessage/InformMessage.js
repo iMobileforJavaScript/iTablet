@@ -68,8 +68,12 @@ export default class InformMessage extends React.Component {
       false,
     )
 
-    AddFriend.acceptFriendAdd([this.target.messageId, this.target.users[[0]]])
-    this.friend.refreshList()
+    AddFriend.acceptFriendAdd(
+      [this.target.messageId, this.target.users[[0]]],
+      () => {
+        this.friend.refreshList()
+      },
+    )
     this.dialog.setDialogVisible(false)
   }
 
