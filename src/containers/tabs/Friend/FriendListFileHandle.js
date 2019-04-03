@@ -26,6 +26,7 @@ function isJSON(str) {
 export default class FriendListFileHandle {
   static friends = undefined
   static refreshCallback = undefined
+  static refreshMessageCallback = undefined
   static friendListFile = ''
   static friendListFile_ol = ''
 
@@ -121,15 +122,19 @@ export default class FriendListFileHandle {
     })
   }
 
-  static saveHelper(friendsStr) {
+  static saveHelper(friendsStr, callback) {
     FileTools.fileIsExist(FriendListFileHandle.friendListFile).then(value => {
       if (value) {
         RNFS.unlink(FriendListFileHandle.friendListFile).then(() => {
           RNFS.writeFile(FriendListFileHandle.friendListFile, friendsStr).then(
             () => {
               FriendListFileHandle.upload()
-              if (FriendListFileHandle.refreshCallback)
+              if (FriendListFileHandle.refreshCallback) {
                 FriendListFileHandle.refreshCallback(true)
+              }
+              if (callback) {
+                callback(true)
+              }
             },
           )
         })
@@ -174,7 +179,10 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr)
+    FriendListFileHandle.saveHelper(
+      friendsStr,
+      FriendListFileHandle.refreshMessageCallback,
+    )
   }
 
   // eslint-disable-next-line
@@ -288,6 +296,9 @@ export default class FriendListFileHandle {
     FriendListFileHandle.friends['rev'] += 1
 
     let friendsStr = JSON.stringify(FriendListFileHandle.friends)
-    FriendListFileHandle.saveHelper(friendsStr)
+    FriendListFileHandle.saveHelper(
+      friendsStr,
+      FriendListFileHandle.refreshMessageCallback,
+    )
   }
 }
