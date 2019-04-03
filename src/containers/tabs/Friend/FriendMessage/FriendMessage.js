@@ -43,13 +43,9 @@ class FriendMessage extends Component {
     }
   }
 
-  // refresh = () =>
-  // {
-  //   if (JSON.stringify(this.chat) !== JSON.stringify(this.props.friend.props.chat)) {
-  //     this.chat = this.props.friend.props.chat;
-  //     this.getContacts(this.props)
-  //   }
-  // }
+  refresh = () => {
+    this.getContacts()
+  }
   componentDidMount() {
     // this.chat = this.props.friend.props.chat
     this.getContacts()
@@ -142,14 +138,14 @@ class FriendMessage extends Component {
         }
       }
     }
-    if (this.inFormData.length > 2) {
+    if (this.inFormData.length > 1) {
       this.inFormData = this.inFormData.sort((obj1, obj2) => {
         let time1 = obj1.time
         let time2 = obj2.time
         return time2 - time1
       })
     }
-    if (srcData.length > 2) {
+    if (srcData.length > 1) {
       srcData = srcData.sort((obj1, obj2) => {
         let msg1 = obj1.message[obj1.message.length - 1]
         let msg2 = obj2.message[obj2.message.length - 1]
