@@ -53,7 +53,7 @@ export default class Register extends React.Component {
       let isEmail = this.state.onEmailTitleFocus
       if (!isEmail) {
         if (!this.txtEmail) {
-          Toast.show('请输入QQ邮箱')
+          Toast.show('请输入邮箱')
           return
         }
         if (!this.txtEmailNickname) {
@@ -124,7 +124,7 @@ export default class Register extends React.Component {
         <TextInput
           keyboardType={'email-address'}
           clearButtonMode={'while-editing'}
-          placeholder={'请输入QQ邮箱'}
+          placeholder={'请输入邮箱'}
           style={styles.textInputStyle}
           onChangeText={text => {
             this.txtEmail = text

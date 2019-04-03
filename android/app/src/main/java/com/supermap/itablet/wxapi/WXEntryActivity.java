@@ -3,7 +3,7 @@ package com.supermap.itablet.wxapi;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+//import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.supermap.RN.AppUtils;
@@ -13,7 +13,7 @@ import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 
-public class WXEntryActivity extends AppCompatActivity implements IWXAPIEventHandler {
+public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
     private IWXAPI iwxapi;
 
     @Override

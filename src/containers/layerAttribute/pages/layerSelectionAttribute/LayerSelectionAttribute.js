@@ -234,6 +234,10 @@ export default class LayerSelectionAttribute extends React.Component {
    * 定位到首位
    */
   locateToTop = (cb = () => {}) => {
+    if (this.state.attributes.data.length === 0 || this.total <= 0) {
+      Toast.show(ConstInfo.CANNOT_LOCATION)
+      return
+    }
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -248,6 +252,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: 0,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
           this.table &&
             this.table.scrollToLocation({
@@ -276,6 +281,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: 0,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
           this.canBeRefresh = false
           this.table &&
@@ -294,7 +300,10 @@ export default class LayerSelectionAttribute extends React.Component {
    * 定位到末尾
    */
   locateToBottom = (cb = () => {}) => {
-    if (this.total <= 0) return
+    if (this.state.attributes.data.length === 0 || this.total <= 0) {
+      Toast.show(ConstInfo.CANNOT_LOCATION)
+      return
+    }
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -321,6 +330,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: this.total - 1,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
           this.table &&
             this.table.scrollToLocation({
@@ -340,6 +350,10 @@ export default class LayerSelectionAttribute extends React.Component {
    * @param data {value, inputValue}
    */
   locateToPosition = (data = {}, cb = () => {}) => {
+    if (this.state.attributes.data.length === 0 || this.total <= 0) {
+      Toast.show(ConstInfo.CANNOT_LOCATION)
+      return
+    }
     let remainder = 0,
       viewPosition = 0.3,
       relativeIndex,
@@ -401,6 +415,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: this.state.startIndex + remainder,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
 
           // 避免 Android 更新数据后无法滚动
@@ -436,6 +451,7 @@ export default class LayerSelectionAttribute extends React.Component {
       this.props.selectAction({
         index: this.state.startIndex + index,
         data,
+        layerInfo: this.props.layerSelection.layerInfo,
       })
     }
   }
@@ -472,7 +488,7 @@ export default class LayerSelectionAttribute extends React.Component {
         typeof this.props.selectAction === 'function'
       ) {
         this.props.selectAction({
-          index: [],
+          index: -1,
           data: -1,
         })
       }

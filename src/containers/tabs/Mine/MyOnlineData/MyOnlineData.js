@@ -363,7 +363,6 @@ export default class MyOnlineData extends Component {
         let isFile = fileContent.type
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
-
         if (isFile === 'file' && !isRecordFile) {
           // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
           if (

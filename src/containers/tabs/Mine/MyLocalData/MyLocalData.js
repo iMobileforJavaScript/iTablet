@@ -464,7 +464,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )
@@ -488,7 +488,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )
@@ -858,7 +858,19 @@ export default class MyLocalData extends Component {
           >
             {this.state.textValue}
           </Text>
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._setSectionDataState3}
+                colors={['orange', 'red']}
+                titleColor={'orange'}
+                tintColor={'orange'}
+                title={'刷新中...'}
+                enabled={true}
+              />
+            }
+          >
             <SectionList
               style={{
                 flex: 1,
