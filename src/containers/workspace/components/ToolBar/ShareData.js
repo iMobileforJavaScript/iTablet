@@ -29,7 +29,11 @@ function getShareData(type, params) {
           title: constants.SUPERMAP_ONLINE,
           action: () => {
             // showMap3DList(constants.SUPERMAP_ONLINE)
-            showSaveDialog(ConstToolType.MAP_SHARE_MAP3D)
+            SScene.getMapList().then(list => {
+              let data = [list[0].name]
+              _params.map = { ..._params.map, currentMap: { name: data } }
+              showSaveDialog(ConstToolType.MAP_SHARE_MAP3D)
+            })
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_share_online_black.png'),
@@ -127,6 +131,7 @@ function showSaveDialog(type) {
       NavigationService.goBack()
     },
   })
+
   // if (type === constants.SUPERMAP_ONLINE) {
   //   let list = [_params.map.currentMap.name]
   //   _params.setInputDialogVisible &&
@@ -217,6 +222,7 @@ function showSaveDialog(type) {
  */
 async function shareToSuperMapOnline(list = [], name = '') {
   try {
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
     if (
       !_params.user.currentUser.userName ||
       _params.user.currentUser.userType === UserType.PROBATION_USER
@@ -303,6 +309,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
                     name: dataName,
                   })
                 }, 2000)
+                GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
                 Toast.show(
                   result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
                 )
@@ -315,6 +322,7 @@ async function shareToSuperMapOnline(list = [], name = '') {
       )
     }, 500)
   } catch (e) {
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
     isSharing = false
   }
 }
@@ -322,10 +330,11 @@ async function shareToSuperMapOnline(list = [], name = '') {
 /**
  * 分享3D到SuperMap Online
  */
-async function share3DToSuperMapOnline(list = [], name = '') {
+async function share3DToSuperMapOnline(list = []) {
   try {
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(true, '分享中')
     let isSharing = false
-    if (!_params.user.currentUser.userName) {
+    if (_params.user.users.length <= 1) {
       Toast.show('请登陆后再分享')
       return
     }
@@ -337,7 +346,7 @@ async function share3DToSuperMapOnline(list = [], name = '') {
     if (list.length > 0) {
       isSharing = true
       for (let index = 0; index < list.length; index++) {
-        let dataName = name || list[index]
+        let dataName = list[index]
         _params.setSharing({
           module: GLOBAL.Type,
           name: dataName,
@@ -348,14 +357,15 @@ async function share3DToSuperMapOnline(list = [], name = '') {
           async (result, zipPath) => {
             if (result) {
               await SOnlineService.uploadFile(zipPath, dataName, {
-                onProgress: progress => {
-                  _params.setSharing({
-                    module: GLOBAL.Type,
-                    name: dataName,
-                    progress: progress / 100,
-                  })
-                },
+                // onProgress: progress => {
+                //   _params.setSharing({
+                //     module: GLOBAL.Type,
+                //     name: dataName,
+                //     progress: progress / 100,
+                //   })
+                // },
                 onResult: async () => {
+                  GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
                   Toast.show(
                     // result ? ConstInfo.SHARE_SUCCESS : ConstInfo.SHARE_FAILED,
                     ConstInfo.SHARE_SUCCESS,
@@ -378,6 +388,7 @@ async function share3DToSuperMapOnline(list = [], name = '') {
       }
     }
   } catch (error) {
+    // GLOBAL.Loading && GLOBAL.Loading.setLoading(false)
     Toast.show('分享失败')
   }
 }

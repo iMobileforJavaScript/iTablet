@@ -70,7 +70,6 @@ export default class FriendListFileHandle {
         //  RNFS.moveFile(friendListFile, path + 'friend.list')
       }
     }
-
     resultCallBack(FriendListFileHandle.friends)
   }
   static getContactsLocal() {
@@ -178,7 +177,7 @@ export default class FriendListFileHandle {
   }
 
   // eslint-disable-next-line
-  static delFromFriendList(id) {
+  static delFromFriendList(id, callback) {
     for (let key in FriendListFileHandle.friends.userInfo) {
       let friend = FriendListFileHandle.friends.userInfo[key]
       if (id === friend.id) {
@@ -262,7 +261,7 @@ export default class FriendListFileHandle {
     }
   }
   // eslint-disable-next-line
-  static delFromGroupList(id) {
+  static delFromGroupList(id, callback) {
     for (let key in FriendListFileHandle.friends.groupInfo) {
       let friend = FriendListFileHandle.friends.groupInfo[key]
       if (id === friend.id) {

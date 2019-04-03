@@ -91,7 +91,7 @@ class AddFriend extends Component {
   }
 
   //targetUser:[id,name]
-  static acceptFriendAdd = targetUser => {
+  static acceptFriendAdd = (targetUser, callback) => {
     //  this.target;
     // let curUserName = this.state.currentUser.nickname
     // let uuid = this.state.currentUser.userId
@@ -105,12 +105,15 @@ class AddFriend extends Component {
     // }
     // this.friend._sendMessage(JSON.stringify(message), this.target.messageId,false)
 
-    FriendListFileHandle.addToFriendList({
-      markName: targetUser[1],
-      name: targetUser[1],
-      id: targetUser[0],
-      info: { isFriend: 1 },
-    })
+    FriendListFileHandle.addToFriendList(
+      {
+        markName: targetUser[1],
+        name: targetUser[1],
+        id: targetUser[0],
+        info: { isFriend: 1 },
+      },
+      callback,
+    )
     // this.friend.refreshList();
     // this.friend.refreshMessage();
     // this.dialog.setDialogVisible(false)

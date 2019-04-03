@@ -19,6 +19,9 @@ import styles from './Styles'
 import color from '../../styles/color'
 import FetchUtils from '../../utils/FetchUtils'
 import { SOnlineService } from 'imobile_for_reactnative'
+import { FileTools } from '../../native'
+import { ConstPath } from '../../constants'
+import RNFS from 'react-native-fs'
 // import { FileTools } from '../../native'
 // import { ConstPath } from '../../constants'
 // import FriendListFileHandle from '../tabs/Friend/FriendListFileHandle'
@@ -50,7 +53,24 @@ export default class PublicMap extends Component {
   }
   componentWillUnmount() {
     this._clearInterval()
+    this.savefriendMap()
   }
+
+  savefriendMap = async () => {
+    if (this.state.length < 1) return
+    let data = JSON.stringify(this.state.data)
+    let path =
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      'publicMap.txt'
+    RNFS.writeFile(path, data, 'utf8')
+      .then(() => {})
+      .catch(() => {})
+  }
+
   _clearInterval = () => {
     if (this.objProgressWidth !== undefined) {
       clearInterval(this.objProgressWidth)
@@ -59,10 +79,51 @@ export default class PublicMap extends Component {
   }
   _loadFirstUserData2 = async (currentPage, totalPage) => {
     try {
-      this._showLoadProgressView()
-      let data = await this.getCurrentLoadData2(currentPage, totalPage)
-      this.setState({ data: data })
-      this._clearInterval()
+      await SOnlineService.syncAndroidCookie()
+      let path =
+        (await FileTools.getHomeDirectory()) +
+        ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativePath.Temp +
+        'publicMap.txt'
+      let exist = await FileTools.fileIsExist(path)
+      if (exist) {
+        let result = await RNFS.readFile(path)
+        if (result) {
+          let data = JSON.parse(result)
+          let mapList = []
+
+          if (!data[0].id) {
+            this._showLoadProgressView()
+            let data = await this.getCurrentLoadData2(currentPage, totalPage)
+            this.setState({ data: data })
+            this._clearInterval()
+          } else {
+            for (let index = 0; index < data.length; index++) {
+              const element = data[index]
+              let dataId = element.id
+              let dataUrl =
+                'https://www.supermapol.com/web/datas/' + dataId + '.json'
+              // 'https://www.supermapol.com/web/datas/1916243026.json'
+              let objDataJson = await FetchUtils.getObjJson(dataUrl)
+              if (objDataJson) {
+                if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP') {
+                  mapList.push(element)
+                }
+              }
+            }
+            this.setState({ data: mapList })
+            this._clearInterval()
+          }
+        }
+      } else {
+        this._showLoadProgressView()
+        let data = await this.getCurrentLoadData2(currentPage, totalPage)
+        // let objUserData = await this.getAllUserZipData(12)
+        this.setState({ data: data })
+        this._clearInterval()
+      }
     } catch (e) {
       this._clearInterval()
     }
@@ -82,7 +143,6 @@ export default class PublicMap extends Component {
     }
     return data
   }
-
   _loadFirstUserData = async () => {
     try {
       this._showLoadProgressView()
@@ -133,6 +193,7 @@ export default class PublicMap extends Component {
           let dataId = objContent.id
           let dataUrl =
             'https://www.supermapol.com/web/datas/' + dataId + '.json'
+          // 'https://www.supermapol.com/web/datas/1916243026.json'
           let objDataJson = await FetchUtils.getObjJson(dataUrl, timeout)
           if (!objDataJson) {
             continue
@@ -221,10 +282,7 @@ export default class PublicMap extends Component {
       if (!this.state.isRefresh) {
         this.setState({ isRefresh: true })
         this.currentLoadPage2 = 1
-        let data = await this.getCurrentLoadData2(
-          this.currentLoadPage2,
-          this.allUserDataCount,
-        )
+        let data = await this.getCurrentLoadData2(this.currentLoadPage2, 100)
         this.setState({ isRefresh: false, data: data })
       }
     } catch (e) {
@@ -237,9 +295,7 @@ export default class PublicMap extends Component {
       if (!this.state.isRefresh) {
         this.loadCount = 1
         this.setState({ isRefresh: true })
-        // this.flatListData = await this._loadUserData(1, 20)
         this.flatListData = await this._loadUserData2(1)
-
         this.setState({ isRefresh: false, data: this.flatListData })
       }
     } catch (e) {
