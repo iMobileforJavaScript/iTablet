@@ -3583,7 +3583,7 @@ export default class ToolBar extends React.PureComponent {
             let layers = await this.props.getLayers()
 
             // 隐藏底图
-            await SMap.setLayerVisible(layers[layers.length - 1].path, false)
+            await SMap.setLayerVisible(layers[layers.length - 1].path, true)
 
             // if (GLOBAL.Type === constants.COLLECTION) {
             //

@@ -134,6 +134,7 @@ export default class PublicMap extends Component {
     let data = []
     while (currentPage <= totalPage) {
       await this._loadUserData2(currentPage, data)
+      // console.log(data)
       if (data.length >= 1) {
         break
       }
@@ -183,7 +184,9 @@ export default class PublicMap extends Component {
       if (!objArrUserDataContent) {
         return
       }
+      // console.log(objArrUserDataContent)
       let contentLength = objArrUserDataContent.length
+      // console.log(dataItemServices)
       for (let i = 0; i < contentLength; i++) {
         let objContent = objArrUserDataContent[i]
         if (objContent && objContent.type === 'WORKSPACE') {
@@ -274,6 +277,7 @@ export default class PublicMap extends Component {
     return FetchUtils.getObjJson(uri, 3000)
   }
   _onRefresh2 = async () => {
+    // console.log('1`11111')
     try {
       if (!this.state.isRefresh) {
         this.setState({ isRefresh: true })
@@ -300,6 +304,7 @@ export default class PublicMap extends Component {
     }
   }
   _loadData2 = async () => {
+    // console.log('222222')
     try {
       if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })

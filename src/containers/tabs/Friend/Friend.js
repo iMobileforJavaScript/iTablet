@@ -49,7 +49,7 @@ export default class Friend extends Component {
     this.friendGroup = {}
     this.curChat = undefined
     MessageDataHandle.setHandle(this.props.addChat)
-
+    FriendListFileHandle.refreshCallback = this.refreshList
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -151,17 +151,12 @@ export default class Friend extends Component {
       groupName += members[i].name
       if (i !== members.length - 2) groupName += '、'
     }
-    FriendListFileHandle.addToGroupList(
-      {
-        id: groupId,
-        members: members,
-        groupName: groupName,
-        masterID: this.props.user.currentUser.userId,
-      },
-      () => {
-        this.refreshList()
-      },
-    )
+    FriendListFileHandle.addToGroupList({
+      id: groupId,
+      members: members,
+      groupName: groupName,
+      masterID: this.props.user.currentUser.userId,
+    })
     let msgStr = JSON.stringify(msgObj)
     for (let i in members) {
       this._sendMessage(msgStr, members[i].id, false)
@@ -408,17 +403,12 @@ export default class Friend extends Component {
             groupName += messageObj.members[i].name
             if (i !== messageObj.members.length - 2) groupName += '、'
           }
-          FriendListFileHandle.addToGroupList(
-            {
-              id: messageObj.user.groupID,
-              members: messageObj.members,
-              groupName: groupName,
-              masterID: messageObj.user.id,
-            },
-            () => {
-              this.refreshList()
-            },
-          )
+          FriendListFileHandle.addToGroupList({
+            id: messageObj.user.groupID,
+            members: messageObj.members,
+            groupName: groupName,
+            masterID: messageObj.user.id,
+          })
           return
         }
       }

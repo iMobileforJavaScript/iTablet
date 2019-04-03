@@ -75,7 +75,7 @@ export default class DrawerBar extends React.Component {
     }
     switch (item.layerInfo.type) {
       case DatasetType.LINE:
-        icon = require('../../../../assets/map/icon-shallow-line.png')
+        icon = require('../../../../assets/map/icon-shallow-line_black.png')
         break
       case DatasetType.POINT:
         icon = require('../../../../assets/map/icon-dot.png')
@@ -85,7 +85,7 @@ export default class DrawerBar extends React.Component {
         icon = require('../../../../assets/map/icon-polygon.png')
         break
       case DatasetType.IMAGE:
-        icon = require('../../../../assets/map/icon-surface.png')
+        icon = require('../../../../assets/map/icon-shallow-image_black.png')
         break
       case DatasetType.Network:
         icon = require('../../../../assets/map/icon-network.png')

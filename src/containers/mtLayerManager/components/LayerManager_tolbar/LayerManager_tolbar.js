@@ -606,38 +606,16 @@ export default class LayerManager_tolbar extends React.Component {
       case list:
         switch (this.state.type) {
           case ConstToolType.MAP_SCALE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_MAX_SCALE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_MIN_SCALE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_EDIT_TAGGING:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_THEME_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_THEME_STYLES:
-            box = this.renderList()
-            break
           case ConstToolType.MAP3D_LAYER3DSELECT:
-            box = this.renderList()
-            break
           case ConstToolType.COLLECTION:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_EDIT_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_EDIT_MORE_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP3D_LAYER3DCHANGE:
             box = this.renderList()
             break

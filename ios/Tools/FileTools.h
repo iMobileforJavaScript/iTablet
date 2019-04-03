@@ -29,4 +29,5 @@ static BOOL hasImportedData = NO;
 +(NSString*)getLastModifiedTime:(NSDate*) nsDate;
 + (NSDictionary *)readLocalFileWithPath:(NSString *)path;
 +(BOOL)getUriState:(NSURL *)url;
++(void)sendShareResult;
 @end

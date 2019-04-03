@@ -140,9 +140,7 @@ class AddFriend extends Component {
       return
     }
     this.friend._sendMessage(messageStr, item[0], true)
-    AddFriend.acceptFriendAdd([this.target[0], this.target[1]], () => {
-      this.friend.refreshList()
-    })
+    AddFriend.acceptFriendAdd([this.target[0], this.target[1]])
   }
   renderSearchButton = () => {
     let text = this.state.text.trim()

@@ -9,6 +9,7 @@
 #import "FileTools.h"
 
 NSString * const MESSAGE_IMPORTEXTERNALDATA = @"com.supermap.RN.Mapcontrol.message_importexternaldata";
+NSString * const MESSAGE_SHARERESULT = @"com.supermap.RN.Mapcontrol.message_shareresult";
 static FileTools *filetools = nil;
 
 @implementation FileTools
@@ -18,6 +19,7 @@ RCT_EXPORT_MODULE();
 {
   return @[
           MESSAGE_IMPORTEXTERNALDATA,
+          MESSAGE_SHARERESULT,
            ];
 }
 
@@ -382,8 +384,6 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
   
   BOOL isDir = FALSE;
   BOOL isDirExist = [fileManager fileExistsAtPath:DOCUMENTS_FOLDER_AUDIO isDirectory:&isDir];
-  
-  
   if(!(isDirExist && isDir)){
     BOOL bCreateDir = [fileManager createDirectoryAtPath:DOCUMENTS_FOLDER_AUDIO withIntermediateDirectories:YES attributes:nil error:nil];
     
@@ -411,13 +411,12 @@ RCT_REMAP_METHOD(initUserDefaultData, initUserDefaultDataByUserName:(NSString *)
 
 +(BOOL)initUserDefaultData:(NSString *)userName {
   userName = userName == nil || [userName isEqualToString:@""] ? @"Customer" : userName;
-  USER_NAME = userName;
   // 初始化用户工作空间
   NSString* srclic = [[NSBundle mainBundle] pathForResource:@"Workspace" ofType:@"zip"];
   NSString* defaultDataPath = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", @"/Documents/iTablet/User/", userName, @"/DefaultData/" ];
   NSString* wsName = @"Workspace.sxwu";
   
-  [FileTools createFileDirectories:[NSHomeDirectory() stringByAppendingFormat:@"%@%@", defaultDataPath, @""]];
+  [FileTools createFileDirectories:defaultDataPath];
 //  if (srclic) {
 //    NSString* deslic = [NSHomeDirectory() stringByAppendingFormat:@"%@%@%@", wsPath, @"Workspace", @".smwu"];
 //    if(![[NSFileManager defaultManager] fileExistsAtPath:deslic isDirectory:nil]){
@@ -595,7 +594,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
 }
 
 /*
- * 判断压缩包是否存在
+ * 判断压缩包是否存在并解压，给RN发送消息，用户选择是否导入
  */
 +(BOOL)getUriState:(NSURL *)url{
   
@@ -625,5 +624,11 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
   }
   
   return isFileExist;
+}
+/*
+ * 微信分享完成或取消回调触发，给RN发信息通知分享成功 6.7.2版本微信更新后无法获取是否分享成功，success和cancel统一走success回调
+ */
++(void)sendShareResult{
+  [filetools sendEventWithName:MESSAGE_SHARERESULT body:nil];
 }
 @end
