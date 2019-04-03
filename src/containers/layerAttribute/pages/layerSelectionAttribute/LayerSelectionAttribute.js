@@ -252,6 +252,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: 0,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
           this.table &&
             this.table.scrollToLocation({
@@ -280,6 +281,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: 0,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
           this.canBeRefresh = false
           this.table &&
@@ -328,6 +330,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: this.total - 1,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
           this.table &&
             this.table.scrollToLocation({
@@ -412,6 +415,7 @@ export default class LayerSelectionAttribute extends React.Component {
             cb({
               currentIndex: this.state.startIndex + remainder,
               currentFieldInfo: item.data,
+              layerInfo: this.props.layerSelection.layerInfo,
             })
 
           // 避免 Android 更新数据后无法滚动
@@ -447,6 +451,7 @@ export default class LayerSelectionAttribute extends React.Component {
       this.props.selectAction({
         index: this.state.startIndex + index,
         data,
+        layerInfo: this.props.layerSelection.layerInfo,
       })
     }
   }

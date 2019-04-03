@@ -2477,19 +2477,20 @@ export default class ToolBar extends React.PureComponent {
           this.props.currentLayer &&
             SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-          // TODO 恢复框选对象，并返回到地图
-          NavigationService.navigate('LayerSelectionAttribute')
-          // NavigationService.navigate('LayerAttributeTabs', {initialPage: GLOBAL.LayerAttributeTabIndex})
-          // NavigationService.goBack()
           // 返回框选/点选属性界面，并清除属性关联选中的对象
-          let selection = []
-          for (let i = 0; i < this.props.selection.length; i++) {
-            selection.push({
-              layerPath: this.props.selection[i].layerInfo.path,
-              ids: this.props.selection[i].ids,
-            })
-          }
-          await SMap.selectObjs(selection)
+          NavigationService.navigate('LayerSelectionAttribute', {
+            selectionAttribute: GLOBAL.SelectedSelectionAttribute,
+            preAction: async () => {
+              let selection = []
+              for (let i = 0; i < this.props.selection.length; i++) {
+                selection.push({
+                  layerPath: this.props.selection[i].layerInfo.path,
+                  ids: this.props.selection[i].ids,
+                })
+              }
+              await SMap.selectObjs(selection)
+            },
+          })
           // NavigationService.goBack()
         } else {
           SMap.setAction(actionType)

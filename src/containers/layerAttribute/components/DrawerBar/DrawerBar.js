@@ -23,12 +23,13 @@ export default class DrawerBar extends React.Component {
 
   static defaultProps = {
     data: [],
+    index: 0,
   }
 
   constructor(props) {
     super(props)
     this.state = {
-      currentIndex: 0,
+      currentIndex: props.index,
       left: new Animated.Value(-BAR_WIDTH),
     }
   }
