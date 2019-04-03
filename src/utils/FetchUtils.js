@@ -27,7 +27,6 @@ export default class FetchUtils {
         const timeoutRequest = new Promise((resolve, reject) => {
           setTimeout(reject, timeout, 'Request time out')
         })
-
         return Promise.race([request, timeoutRequest]).then(
           res => {
             return res

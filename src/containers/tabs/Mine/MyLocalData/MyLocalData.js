@@ -464,7 +464,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )
@@ -488,7 +488,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )

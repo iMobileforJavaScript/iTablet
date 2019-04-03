@@ -589,7 +589,6 @@ export default class MyLocalData extends Component {
                     : '分享失败',
                 )
                 this.ModalBtns && this.ModalBtns.setVisible(false)
-                FileTools.deleteFile(targetPath)
               },
             })
           }

@@ -27,6 +27,7 @@ export default StyleSheet.create({
     paddingBottom: scaleSize(10),
   },
   progress: {
+    width: scaleSize(60),
     // width: scaleSize(18),
     height: 2,
     // position: 'absolute',

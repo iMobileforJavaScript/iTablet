@@ -21,6 +21,7 @@ import Mine, {
   MyModule,
 } from './Mine'
 import Find from './Find'
+import SuperMapKnown from './Find/superMapKnown'
 // eslint-disable-next-line
 import Friend, {
   Chat,
@@ -272,4 +273,5 @@ export {
   MyLabel,
   MyBaseMap,
   MyModule,
+  SuperMapKnown,
 }

@@ -109,9 +109,52 @@ function dealData(attributes, result = {}, page, type) {
   }
 }
 
+function canBeUndo(layerHistory) {
+  return (
+    (layerHistory &&
+      layerHistory.history &&
+      layerHistory.history.length > 0 &&
+      layerHistory.currentIndex < layerHistory.history.length - 1) ||
+    false
+  )
+}
+
+function canBeRedo(layerHistory) {
+  return (
+    (layerHistory &&
+      layerHistory.history &&
+      layerHistory.history.length > 0 &&
+      layerHistory.currentIndex > 0) ||
+    false
+  )
+}
+
+function canBeRevert(layerHistory) {
+  return (
+    (layerHistory &&
+      layerHistory.history &&
+      layerHistory.history.length > 0 &&
+      layerHistory.currentIndex < layerHistory.history.length - 1 &&
+      ((!(layerHistory.history[layerHistory.currentIndex] instanceof Array) &&
+        !(
+          layerHistory.history[layerHistory.currentIndex + 1] instanceof Array
+        )) ||
+        (!(layerHistory.history[layerHistory.currentIndex] instanceof Array) &&
+          layerHistory.history[layerHistory.currentIndex + 1] instanceof
+            Array) ||
+        (layerHistory.history[layerHistory.currentIndex] instanceof Array &&
+          layerHistory.history[layerHistory.currentIndex + 1] instanceof
+            Array))) ||
+    false
+  )
+}
+
 export default {
   getLayerAttribute,
   searchLayerAttribute,
   searchSelectionAttribute,
   getSelectionAttributeByLayer,
+  canBeUndo,
+  canBeRedo,
+  canBeRevert,
 }

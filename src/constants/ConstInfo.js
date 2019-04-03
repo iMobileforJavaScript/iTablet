@@ -33,6 +33,10 @@ export default {
   TEMPLATE_CHANGE_SUCCESS: '已为您切换模板',
   TEMPLATE_CHANGE_FAILED: '切换模板失败',
 
+  SHARE_NEED_LOGIN: '请登陆后再分享',
+  SHARE_PREPARE: '准备分享',
+  SHARE_START: '开始分享',
+  SHARE_WAIT: '分享中，请稍后',
   SHARE_SUCCESS: '分享成功',
   SHARE_FAILED: '分享失败',
 
@@ -56,7 +60,9 @@ export default {
   NON_SELECTED_OBJ: '没有选择对象',
 
   ADD_SUCCESS: '添加成功',
-  ADD_FAILED: '添加成功',
+  ADD_FAILED: '添加失败',
+
+  ADDING_MAP: '正在添加地图',
 
   READING_DATA: '读取数据中',
   LOADING_DATA: '数据加载中',
@@ -88,4 +94,8 @@ export default {
   RECOVER_UNABLE: '已经不能还原了',
 
   LOCATING: '正在定位',
+
+  CLIPPING: '地图裁剪中',
+  CLIP_SUCCESS: '裁剪成功',
+  CLIP_FAILED: '裁剪失败',
 }

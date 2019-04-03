@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, FlatList, Animated } from 'react-native'
+import { View, Animated } from 'react-native'
 import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
@@ -83,17 +83,28 @@ export default class FunctionToolbar extends React.Component {
     this.visible = true
   }
 
-  componentDidUpdate(prevProps) {
+  shouldComponentUpdate(nextProps, nextState) {
     if (
       JSON.stringify(this.props.online.share) !==
-      JSON.stringify(prevProps.online.share)
+        JSON.stringify(nextProps.online.share) ||
+      JSON.stringify(this.state) !== JSON.stringify(nextState)
     ) {
-      let data = prevProps.data || this.getData(prevProps.type)
-      this.setState({
-        data,
-      })
+      return true
     }
+    return false
   }
+
+  // componentDidUpdate(prevProps) {
+  //   if (
+  //     JSON.stringify(this.props.online.share) !==
+  //     JSON.stringify(prevProps.online.share)
+  //   ) {
+  //     let data = prevProps.data || this.getData(prevProps.type)
+  //     this.setState({
+  //       data,
+  //     })
+  //   }
+  // }
 
   setVisible = visible => {
     if (this.visible === visible) return
@@ -647,18 +658,38 @@ export default class FunctionToolbar extends React.Component {
     })
 
     let userUDBPath, userUDBs
-    if (this.props.user && this.props.user.currentUser.userName) {
-      userUDBPath =
+    if (
+      this.props.user &&
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType === UserType.PROBATION_USER
+    ) {
+      let userPath =
         (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
         this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativePath.Datasource
+        '/'
+      userUDBPath = userPath + ConstPath.RelativePath.Datasource
       userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
         extension: 'udb',
         type: 'file',
       })
       userUDBs.forEach(item => {
         item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+        item.name = this.basename(item.path)
+      })
+
+      let mapData = await FileTools.getPathListByFilter(
+        userPath + ConstPath.RelativePath.Map,
+        {
+          extension: 'xml',
+          type: 'file',
+        },
+      )
+      mapData.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
@@ -676,13 +707,41 @@ export default class FunctionToolbar extends React.Component {
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
           data: userUDBs,
         },
+        {
+          title: Const.MAP,
+          image: require('../../../../assets/mapToolbar/list_type_map.png'),
+          data: mapData,
+        },
       ]
     } else {
+      let customerPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath,
+      )
+      let mapData = await FileTools.getPathListByFilter(
+        customerPath + ConstPath.RelativePath.Map,
+        {
+          extension: 'xml',
+          type: 'file',
+        },
+      )
+      mapData.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+        item.name = this.basename(item.path)
+      })
       data = [
         {
           title: Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
           data: customerUDBs,
+        },
+        {
+          title: Const.MAP,
+          image: require('../../../../assets/mapToolbar/list_type_map.png'),
+          data: mapData,
         },
       ]
     }
@@ -1125,7 +1184,7 @@ export default class FunctionToolbar extends React.Component {
 
   _renderItem = ({ item, index }) => {
     return (
-      <View style={styles.btnView}>
+      <View style={styles.btnView} key={this._keyExtractor(item, index)}>
         <MTBtn
           style={styles.btn}
           key={index}
@@ -1144,10 +1203,20 @@ export default class FunctionToolbar extends React.Component {
           this.props.online.share[0].progress !== undefined && (
           <Bar
             style={styles.progress}
-            progress={this.props.online.share[0].progress}
+            // indeterminate={true}
+            progress={
+              this.props.online.share[this.props.online.share.length - 1]
+                .progress
+            }
             width={scaleSize(60)}
           />
         )}
+        {/*{item.title === '分享' &&*/}
+        {/*this.props.online.share[this.props.online.share.length - 1] &&*/}
+        {/*GLOBAL.Type === this.props.online.share[this.props.online.share.length - 1].module &&*/}
+        {/*this.props.online.share[this.props.online.share.length - 1].progress !== undefined && (*/}
+        {/*<Text>{this.props.online.share[this.props.online.share.length - 1].progress}</Text>*/}
+        {/*)}*/}
 
         {/*<PieProgress*/}
         {/*ref={ref => (this.shareProgress = ref)}*/}
@@ -1166,6 +1235,15 @@ export default class FunctionToolbar extends React.Component {
 
   _keyExtractor = (item, index) => index + '-' + item.title
 
+  renderList = () => {
+    let arr = []
+    if (!this.state.data || this.state.data.length === 0) return null
+    this.state.data.forEach((item, index) => {
+      arr.push(this._renderItem({ item, index }))
+    })
+    return <View style={{ flexDirection: 'column' }}>{arr}</View>
+  }
+
   render() {
     if (this.props.hide) {
       return null
@@ -1178,12 +1256,13 @@ export default class FunctionToolbar extends React.Component {
           { right: this.state.right },
         ]}
       >
-        <FlatList
-          data={this.state.data}
-          renderItem={this._renderItem}
-          // ItemSeparatorComponent={this._renderItemSeparatorComponent}
-          keyExtractor={this._keyExtractor}
-        />
+        {/*<FlatList*/}
+        {/*data={this.state.data}*/}
+        {/*renderItem={this._renderItem}*/}
+        {/*// ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
+        {/*keyExtractor={this._keyExtractor}*/}
+        {/*/>*/}
+        {this.renderList()}
         {/*<MoreToolbar*/}
         {/*ref={ref => (this.moreToolbar = ref)}*/}
         {/*data={this.getMoreData(this.props.type)}*/}

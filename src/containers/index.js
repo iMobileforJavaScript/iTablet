@@ -25,6 +25,7 @@ import Tabs, {
   MyLabel,
   MyBaseMap,
   MyModule,
+  SuperMapKnown,
 } from './tabs'
 
 import GetBack from './register&getBack/GetBack'
@@ -63,6 +64,7 @@ import InputPage from './InputPage'
 import protocol from './tabs/Home/AboutITablet/Protocol'
 import PointAnalyst from './pointAnalyst'
 import PublicMap from './publicMap'
+import FriendMap from './friendMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
 import { MapCut, MapCutDS } from './mapCut/page'
 
@@ -429,6 +431,13 @@ export default StackNavigator(
         gesturesEnabled: true,
       },
     },
+    FriendMap: {
+      screen: FriendMap,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
     MyLabel: {
       screen: MyLabel,
       navigationOptions: {
@@ -452,6 +461,13 @@ export default StackNavigator(
     },
     MyModule: {
       screen: MyModule,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    SuperMapKnown: {
+      screen: SuperMapKnown,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

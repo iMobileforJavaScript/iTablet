@@ -33,7 +33,7 @@ function getTabBarData(type, params = {}) {
   } else if (typeof type === 'string' && type.indexOf('MAP_EDIT_') > -1) {
     tabBarData = EditData.getEditData(type)
   } else if (typeof type === 'string' && type.indexOf('MAP3D_') > -1) {
-    tabBarData = getMap3DData(type)
+    tabBarData = getMap3DData(type, params)
   } else if (typeof type === 'string' && type.indexOf('MAP_MORE') > -1) {
     tabBarData = MoreData.getMapMore(type, params)
   } else if (
@@ -68,7 +68,7 @@ function getTabBarData(type, params = {}) {
   }
 }
 
-function getMap3DData(type) {
+function getMap3DData(type, params) {
   let data = [],
     buttons = []
   if (type.indexOf('MAP3D_') === -1) return { data, buttons }
@@ -292,6 +292,7 @@ function getMap3DData(type) {
           title: '取消',
           action: () => {
             SScene.clearSelection()
+            params.setAttributes && params.setAttributes({})
           },
           size: 'large',
           image: require('../../../../assets/mapTools/icon_cancel_1.png'),
