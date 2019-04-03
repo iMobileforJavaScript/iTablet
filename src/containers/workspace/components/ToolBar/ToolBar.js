@@ -3304,10 +3304,15 @@ export default class ToolBar extends React.PureComponent {
           // 添加地图
           this.props.setContainerLoading &&
             this.props.setContainerLoading(true, ConstInfo.ADDING_MAP)
-          SMap.addMap(item.name || item.title).then(result => {
+          SMap.addMap(item.name || item.title).then(async result => {
             this.props.setContainerLoading &&
               this.props.setContainerLoading(false)
             Toast.show(result ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED)
+            if (result) {
+              await this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+            }
             this.setVisible(false)
           })
         }
