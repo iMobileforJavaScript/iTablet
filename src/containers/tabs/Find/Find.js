@@ -154,7 +154,7 @@ export default class Find extends Component {
           })} */}
           {this._renderItem({
             title: Const.FRIENDMAP,
-            leftImagePath: require('../../../assets/Find/find_publicmap.png'),
+            leftImagePath: require('../../../assets/Find/icon_contact_map_light.png'),
             onClick: () => {
               NavigationService.navigate('FriendMap')
             },
