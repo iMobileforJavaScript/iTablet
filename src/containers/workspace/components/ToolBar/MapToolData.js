@@ -199,6 +199,7 @@ function select() {
 
 function cancelSelect() {
   SMap.clearSelection()
+  select()
 }
 
 function viewEntire() {
