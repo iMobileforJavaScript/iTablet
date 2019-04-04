@@ -3897,7 +3897,7 @@ export default class ToolBar extends React.PureComponent {
         numColumns={this.state.column}
         renderCell={this._renderItem}
         Heighttype={this.state.type}
-        device={this.props.device}
+        cellStyle={{ width: this.props.device.width / this.state.column }}
       />
     )
   }

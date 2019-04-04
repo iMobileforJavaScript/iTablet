@@ -21,10 +21,11 @@ import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
+// eslint-disable-next-line
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
-import { EventConst } from '../../../../constants';
-import RNFS  from 'react-native-fs'
-import stat from 'react-native-fs'
+import { EventConst } from '../../../../constants'
+// import RNFS  from 'react-native-fs'
+// import stat from 'react-native-fs'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -90,19 +91,21 @@ class Chat extends React.Component {
 
     this.listener = RCTDeviceEventEmitter.addListener(
       EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-      (value)=>{
-        console.log(value)
-      // 接受到 通知后的处理
-    })
+      // eslint-disable-next-line
+      value => {
+        // console.log(value)
+        // 接受到 通知后的处理
+      },
+    )
 
     this.listener = RCTDeviceEventEmitter.addListener(
       EventConst.MESSAGE_SERVICE_SEND_FILE,
-      (value)=>{
-        console.log(value)
-      // 接受到 通知后的处理
-    })
-
-  
+      // eslint-disable-next-line
+      value => {
+        // console.log(value)
+        // 接受到 通知后的处理
+      },
+    )
 
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
@@ -124,7 +127,7 @@ class Chat extends React.Component {
   componentWillUnmount() {
     this.friend.setCurChat(undefined)
     this._isMounted = false
-    this.listener.remove();
+    this.listener.remove()
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -253,7 +256,12 @@ class Chat extends React.Component {
       }
     })
 
-    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id, msgId)
+    this.friend._sendFile(
+      JSON.stringify(message),
+      filepath,
+      this.targetUser.id,
+      msgId,
+    )
   }
 
   showInformSpot = b => {
