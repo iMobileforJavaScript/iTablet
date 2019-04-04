@@ -28,6 +28,7 @@ export default class ToolBarSectionList extends React.Component {
     headerAction?: () => {},
     device: Object,
     layerManager?: boolean,
+    initialNumToRender?: number,
     selectList: Array,
     listSelectableAction?: () => {}, //多选刷新列表时调用
   }
@@ -36,6 +37,7 @@ export default class ToolBarSectionList extends React.Component {
     sections: [],
     listSelectable: false,
     activeOpacity: 1,
+    initialNumToRender: 15,
   }
 
   constructor(props) {
@@ -539,6 +541,7 @@ export default class ToolBarSectionList extends React.Component {
         getItemLayout={this.getItemLayout}
         ItemSeparatorComponent={this.renderSeparator}
         renderSectionFooter={this.renderSectionFooter}
+        initialNumToRender={this.props.initialNumToRender}
       />
     )
   }

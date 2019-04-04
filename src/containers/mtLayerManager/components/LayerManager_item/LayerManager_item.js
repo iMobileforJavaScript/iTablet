@@ -460,7 +460,7 @@ export default class LayerManager_item extends React.Component {
     let icon
     switch (type) {
       case LAYER_GROUP:
-        icon = require('../../../../assets/map/icon-directory.png')
+        icon = require('../../../../assets/map/icon-layer-group.png')
         break
       case DatasetType.POINT: // 点数据集
         icon = require('../../../../assets/map/icon-shallow-dot.png')
@@ -497,7 +497,7 @@ export default class LayerManager_item extends React.Component {
     let icon
     switch (type) {
       case LAYER_GROUP:
-        icon = require('../../../../assets/map/icon-directory.png')
+        icon = require('../../../../assets/map/icon-layer-group.png')
         break
       case DatasetType.POINT: // 点数据集
         icon = require('../../../../assets/map/icon-shallow-dot_black.png')

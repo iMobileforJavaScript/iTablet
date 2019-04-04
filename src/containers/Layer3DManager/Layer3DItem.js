@@ -62,7 +62,7 @@ export default class Layer3DItem extends Component {
         default:
           layer3dToolbar.setVisible(true, ConstToolType.MAP3D_LAYER3DSELECT, {
             isFullScreen: true,
-            height: scaleSize(261),
+            height: scaleSize(174),
           })
           break
       }
@@ -72,10 +72,14 @@ export default class Layer3DItem extends Component {
         this.props.setCurrentLayer3d,
         this.setItemSelectable,
         overlayView,
+        this.changeState,
       )
     }
   }
 
+  changeState = canSelectable => {
+    this.setState({ selectable: canSelectable })
+  }
   render() {
     // let selectImg = this.state.selectable
     //   ? require('../../assets/map/Frenchgrey/icon_selectable_selected.png')

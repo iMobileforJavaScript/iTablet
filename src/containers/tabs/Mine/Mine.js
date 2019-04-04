@@ -188,9 +188,9 @@ export default class Mine extends Component {
               onClick: () => this.goToMyData(Const.MINE_COLOR),
             })}
             {this._renderItem({
-              title: Const.MODULE,
+              title: Const.TEMPLATE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
-              onClick: () => this.goToMyModule(Const.MODULE),
+              onClick: () => this.goToMyModule(Const.TEMPLATE),
             })}
           </ScrollView>
         </View>
@@ -267,9 +267,9 @@ export default class Mine extends Component {
             onClick: () => this.goToMyData(Const.MINE_COLOR),
           })}
           {this._renderItem({
-            title: Const.MODULE,
+            title: Const.TEMPLATE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () => this.goToMyModule(Const.MODULE),
+            onClick: () => this.goToMyModule(Const.TEMPLATE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}
@@ -289,14 +289,18 @@ export default class Mine extends Component {
     let allColor = color.font_color_white
     let headerHeight = scaleSize(120)
     let imageWidth = scaleSize(70)
-    let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
-    let headerImage = isPro
-      ? require('../../../assets/home/system_default_header_image.png')
-      : {
-        uri:
-            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
-      }
-    let headerTitle = isPro ? '立即登录' : this.props.user.currentUser.userName
+    // let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
+    let headerImage =
+      this.props.user.users.length <= 1
+        ? require('../../../assets/home/system_default_header_image.png')
+        : {
+          uri:
+              'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+        }
+    let headerTitle =
+      this.props.user.users.length <= 1
+        ? '立即登录'
+        : this.props.user.currentUser.userName
     return (
       <View
         style={{
@@ -448,27 +452,29 @@ export default class Mine extends Component {
   }
 
   render() {
-    if (
-      this.props.user &&
-      this.props.user.currentUser &&
-      (this.props.user.currentUser.userName ||
-        this.props.user.currentUser.userType)
-    ) {
-      return (
-        <Container
-          ref={ref => (this.container = ref)}
-          headerProps={{
-            title: '我的',
-            withoutBack: true,
-            navigation: this.props.navigation,
-          }}
-        >
-          {this._selectionRender()}
-        </Container>
-      )
-    } else {
-      return <View />
-      // return <Login setUser={this.props.setUser} user={this.props.user} />
-    }
+    // if (
+    //   this.props.user &&
+    //   this.props.user.currentUser &&
+    //   (this.props.user.currentUser.userName ||
+    //     this.props.user.currentUser.userType)
+    // ) {
+    return (
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: '我的',
+          withoutBack: true,
+          navigation: this.props.navigation,
+        }}
+      >
+        {this._selectionRender()}
+      </Container>
+    )
+    // }
+
+    // else {
+    // return <View />
+    // return <Login setUser={this.props.setUser} user={this.props.user} />
+    // }
   }
 }

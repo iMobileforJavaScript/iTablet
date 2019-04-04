@@ -21,7 +21,7 @@ import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
 import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
-// import MessageDataHandle from "../MessageDataHandle";
+import MessageDataHandle from '../MessageDataHandle'
 // eslint-disable-next-line
 import { ActionPopover } from 'teaset'
 import { dialogStyles, inputStyles } from '../Styles'
@@ -45,6 +45,7 @@ class FriendList extends Component {
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
+    this._modifyName = this._modifyName.bind(this)
   }
 
   refresh = () => {
@@ -314,6 +315,19 @@ class FriendList extends Component {
     // }
   }
 
+  _modifyName() {
+    FriendListFileHandle.modifyFriendList(this.target.id, this.state.inputText)
+    this.inputdialog.setDialogVisible(false)
+  }
+  _deleteFriend = () => {
+    MessageDataHandle.delMessage({
+      //清除未读信息
+      userId: this.props.user.userId, //当前登录账户的id
+      talkId: this.target.id, //会话ID
+    })
+    FriendListFileHandle.delFromFriendList(this.target.id)
+    this.dialog.setDialogVisible(false)
+  }
   render() {
     const { letterArr, sections } = this.state
     //偏移量 = （设备高度 - 字母索引高度 - 底部导航栏 - 顶部标题栏 - 24）/ 2
@@ -442,7 +456,9 @@ class FriendList extends Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={dialogStyles.dialogHeaderImgX}
         />
-        <Text style={dialogStyles.promptTtileX}>将该联系人删除?</Text>
+        <Text style={dialogStyles.promptTtileX}>
+          将该联系人删除,将同时删除与该联系人的聊天记录
+        </Text>
       </View>
     )
   }
@@ -453,9 +469,7 @@ class FriendList extends Component {
         type={'modal'}
         confirmBtnTitle={'确定'}
         cancelBtnTitle={'取消'}
-        confirmAction={() => {
-          this.dialog.setDialogVisible(false)
-        }}
+        confirmAction={this._deleteFriend}
         opacity={1}
         opacityStyle={styles.opacityView}
         style={dialogStyles.dialogBackgroundX}
@@ -475,8 +489,8 @@ class FriendList extends Component {
           height: scaleSize(250),
         }}
         type={'modal'}
-        confirmAction={this.confirm}
-        cancelAction={this.cancel}
+        confirmAction={this._modifyName}
+        // cancelAction={this.cancel}
       >
         <View style={inputStyles.item}>
           {/* <Text style={styles.title}>文本内容</Text> */}

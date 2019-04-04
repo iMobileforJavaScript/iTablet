@@ -10,126 +10,76 @@ import {
   View,
   ViewPropTypes,
   Text,
+  Image,
 } from 'react-native'
 
-import CameraRollPicker from 'react-native-camera-roll-picker'
-import NavBar, { NavButton, NavButtonText, NavTitle } from 'react-native-nav'
+// import CameraRollPicker from 'react-native-camera-roll-picker'
+// import NavBar, { NavButton, NavButtonText, NavTitle } from 'react-native-nav'
+import { scaleSize } from '../../../../utils/screen'
+import NavigationService from '../../../NavigationService'
+import { Const } from '../../../../constants'
+//import { ThemeUnique } from 'imobile_for_reactnative';
+//import console = require('console');
+
+// eslint-disable-next-line no-unused-vars
+const ICONS = context => [
+  {
+    name: require('../../../../assets/lightTheme/friend/app_chat_map.png'),
+    type: 'ionicon',
+    text: '地图',
+    onPress: () => {
+      NavigationService.navigate('MyData', {
+        title: Const.MAP,
+        formChat: true,
+        // eslint-disable-next-line
+        chatCallBack: _path => {
+          // console.warn(path)
+        },
+      })
+      context.setModalVisible()
+    },
+  },
+  {
+    name: require('../../../../assets/lightTheme/friend/app_chat_data.png'),
+    type: 'ionicon',
+    text: '模版',
+    onPress: () => {
+      NavigationService.navigate('MyModule', {})
+      context.setModalVisible()
+    },
+  },
+  {
+    name: require('../../../../assets/lightTheme/friend/app_chat_location.png'),
+    type: 'material',
+    text: '位置',
+    onPress: () => {
+      context.setModalVisible()
+    },
+  },
+]
 
 export default class CustomActions extends React.Component {
+  props: {
+    callBack: () => {},
+  }
+
   constructor(props) {
     super(props)
     this._images = []
     this.state = {
       modalVisible: false,
     }
-    this.onActionsPress = this.onActionsPress.bind(this)
-    this.selectImages = this.selectImages.bind(this)
-  }
-
-  setImages(images) {
-    this._images = images
-  }
-
-  getImages() {
-    return this._images
+    // this.onActionsPress = this.onActionsPress.bind(this)
+    // this.selectImages = this.selectImages.bind(this)
   }
 
   setModalVisible(visible = false) {
+    if (visible) {
+      this.props.callBack(scaleSize(400))
+    } else {
+      this.props.callBack(scaleSize(0))
+    }
     this.setState({ modalVisible: visible })
-  }
-
-  onActionsPress() {
-    const options = ['Choose From Library', 'Send Location', 'Cancel']
-    const cancelButtonIndex = options.length - 1
-    this.context.actionSheet().showActionSheetWithOptions(
-      {
-        options,
-        cancelButtonIndex,
-      },
-      buttonIndex => {
-        switch (buttonIndex) {
-          case 0:
-            this.setModalVisible(true)
-            break
-          case 1:
-            navigator.geolocation.getCurrentPosition(
-              position => {
-                this.props.onSend({
-                  location: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                  },
-                })
-              },
-              error => alert(error.message),
-              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-            )
-            break
-          default:
-        }
-      },
-    )
-  }
-
-  selectImages(images) {
-    this.setImages(images)
-  }
-
-  renderNavBar() {
-    return (
-      <NavBar
-        style={{
-          statusBar: {
-            backgroundColor: '#FFF',
-          },
-          navBar: {
-            backgroundColor: '#FFF',
-          },
-        }}
-      >
-        <NavButton
-          onPress={() => {
-            this.setModalVisible(false)
-          }}
-        >
-          <NavButtonText
-            style={{
-              color: '#000',
-            }}
-          >
-            {'Cancel'}
-          </NavButtonText>
-        </NavButton>
-        <NavTitle
-          style={{
-            color: '#000',
-          }}
-        >
-          {'Camera Roll'}
-        </NavTitle>
-        <NavButton
-          onPress={() => {
-            this.setModalVisible(false)
-
-            const images = this.getImages().map(image => {
-              return {
-                image: image.uri,
-              }
-            })
-            this.props.onSend(images)
-            this.setImages([])
-          }}
-        >
-          <NavButtonText
-            style={{
-              color: '#000',
-            }}
-          >
-            {'Send'}
-          </NavButtonText>
-        </NavButton>
-      </NavBar>
-    )
   }
 
   renderIcon() {
@@ -147,30 +97,93 @@ export default class CustomActions extends React.Component {
     return (
       <TouchableOpacity
         style={[styles.container, this.props.containerStyle]}
-        onPress={this.onActionsPress}
+        onPress={() => {
+          this.setModalVisible(true)
+        }}
       >
         <Modal
-          animationType={'slide'}
-          transparent={false}
+          transparent={true}
           visible={this.state.modalVisible}
-          onRequestClose={() => {
-            this.setModalVisible(false)
-          }}
+          animationType={'fade'}
+          onRequestClose={() => this.setModalVisible()}
         >
-          {this.renderNavBar()}
-          <CameraRollPicker
-            maximum={10}
-            imagesPerRow={4}
-            callback={this.selectImages}
-            selected={[]}
-          />
+          <View style={{ flex: 1 }}>
+            <TouchableOpacity
+              style={modalStyles.overlay}
+              activeOpacity={1}
+              onPress={() => this.setModalVisible()}
+            />
+
+            <View style={modalStyles.modal}>
+              {ICONS(this).map((v, i) => (
+                <View
+                  key={i}
+                  style={[
+                    modalStyles.itemView,
+                    {
+                      marginRight: (i + 1) % 4 === 0 ? 0 : scaleSize(40),
+                    },
+                  ]}
+                >
+                  <TouchableOpacity onPress={() => v.onPress(this)}>
+                    <Image
+                      source={v.name}
+                      style={{ width: scaleSize(85), height: scaleSize(85) }}
+                    />
+                  </TouchableOpacity>
+                  <Text style={modalStyles.textStyle}>{v.text}</Text>
+                </View>
+              ))}
+            </View>
+          </View>
         </Modal>
         {this.renderIcon()}
       </TouchableOpacity>
     )
   }
 }
-
+const modalStyles = StyleSheet.create({
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: '#rgba(255,0,0,0)',
+  },
+  modal: {
+    position: 'absolute',
+    backgroundColor: 'white',
+    borderTopColor: '#rgba(160,160,160,1)',
+    borderTopWidth: 1,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    height: scaleSize(400),
+    padding: scaleSize(5),
+    flexWrap: 'wrap',
+    flexDirection: 'row',
+  },
+  itemView: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: scaleSize(20),
+    marginLeft: scaleSize(20),
+    width: scaleSize(90),
+    height: scaleSize(90),
+  },
+  textStyle: {
+    color: 'black',
+    fontSize: scaleSize(25),
+    // marginLeft: scaleSize(6),
+    textAlign: 'center',
+  },
+  imgStyle: {
+    width: 20,
+    height: 20,
+  },
+})
 const styles = StyleSheet.create({
   container: {
     width: 26,
