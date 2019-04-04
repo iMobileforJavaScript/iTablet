@@ -9,7 +9,13 @@ import { Toast } from '../../../../utils'
 
 let _toolbarParams = {}
 
-function showDatasetsList() {
+async function showDatasetsList() {
+  let isAnyOpenedDS = true //是否有打开的数据源
+  isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+  if (!isAnyOpenedDS) {
+    Toast.show('请先通过"统一风格"添加数据源')
+    return
+  }
   let data = []
   SThemeCartography.getAllDatasetNames().then(getdata => {
     getdata.reverse()
