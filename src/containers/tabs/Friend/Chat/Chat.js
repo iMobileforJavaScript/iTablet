@@ -8,6 +8,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Animated,
 } from 'react-native'
 import {
   GiftedChat,
@@ -20,6 +21,10 @@ import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
+import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
+import { EventConst } from '../../../../constants';
+import RNFS  from 'react-native-fs'
+import stat from 'react-native-fs'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -41,6 +46,7 @@ class Chat extends React.Component {
       showUserAvatar: true,
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
       showInformSpot: false,
+      chatBottom: 0,
     }
 
     this.friend = this.props.navigation.getParam('friend')
@@ -82,6 +88,22 @@ class Chat extends React.Component {
       }
     })
 
+    this.listener = RCTDeviceEventEmitter.addListener(
+      EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+      (value)=>{
+        console.log(value)
+      // 接受到 通知后的处理
+    })
+
+    this.listener = RCTDeviceEventEmitter.addListener(
+      EventConst.MESSAGE_SERVICE_SEND_FILE,
+      (value)=>{
+        console.log(value)
+      // 接受到 通知后的处理
+    })
+
+  
+
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
     //   messages: [
@@ -102,6 +124,7 @@ class Chat extends React.Component {
   componentWillUnmount() {
     this.friend.setCurChat(undefined)
     this._isMounted = false
+    this.listener.remove();
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -180,7 +203,7 @@ class Chat extends React.Component {
     // for demo purpose
     // this.answerDemo(messages)
     messages[0].type = bGroup
-    let msgId = this.friend._getChatId(this.targetUser.id)
+    let msgId = this.friend._getMsgId(this.targetUser.id)
     messages[0]._id = msgId
     this.setState(previousState => {
       return {
@@ -213,7 +236,7 @@ class Chat extends React.Component {
       system: 0,
     }
 
-    let msgId = this.friend._getChatId(this.targetUser.id)
+    let msgId = this.friend._getMsgId(this.targetUser.id)
     let msg = {
       _id: msgId,
       text: '[文件]',
@@ -230,7 +253,7 @@ class Chat extends React.Component {
       }
     })
 
-    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
+    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id, msgId)
   }
 
   showInformSpot = b => {
@@ -238,7 +261,7 @@ class Chat extends React.Component {
   }
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
-    let msgId = this.friend._getChatId(this.targetUser.id) - 1
+    let msgId = this.friend._getMsgId(this.targetUser.id) - 1
     let msg = {
       _id: msgId,
       text: messageObj.message,
@@ -297,7 +320,6 @@ class Chat extends React.Component {
             alert('已接收此文件')
           }
         }
-
         break
       default:
         alert('undefined')
@@ -306,75 +328,68 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: this.targetUser['title'],
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
-        {this.state.showInformSpot ? (
-          <View
-            style={{
-              position: 'absolute',
-              backgroundColor: 'red',
-              height: scaleSize(15),
-              width: scaleSize(15),
-              borderRadius: scaleSize(15),
-              top: Top,
-              left: scaleSize(75),
-            }}
-          />
-        ) : null}
-        <GiftedChat
-          placeholder="message..."
-          messages={this.state.messages}
-          onSend={this.onSend}
-          loadEarlier={this.state.loadEarlier}
-          onLoadEarlier={this.onLoadEarlier}
-          isLoadingEarlier={this.state.isLoadingEarlier}
-          showUserAvatar={this.state.showUserAvatar}
-          renderAvatarOnTop={false}
-          user={{
-            _id: this.curUser.userId, // sent messages should have same user._id
-            name: this.curUser.nickname,
+      <Animated.View style={{ flex: 1, bottom: this.state.chatBottom }}>
+        <Container
+          ref={ref => (this.container = ref)}
+          headerProps={{
+            title: this.targetUser['title'],
+            withoutBack: false,
+            navigation: this.props.navigation,
           }}
-          onLongPress={this.onLongPress}
-          renderActions={this.renderCustomActions}
-          renderBubble={this.renderBubble}
-          renderSystemMessage={this.renderSystemMessage}
-          renderCustomView={this.renderCustomView}
-          renderFooter={this.renderFooter}
-          renderAvatar={this.renderAvatar}
-          renderMessageText={props => (
-            <MessageText
-              {...props}
-              customTextStyle={{ fontSize: scaleSize(20) }}
+        >
+          {this.state.showInformSpot ? (
+            <View
+              style={{
+                position: 'absolute',
+                backgroundColor: 'red',
+                height: scaleSize(15),
+                width: scaleSize(15),
+                borderRadius: scaleSize(15),
+                top: Top,
+                left: scaleSize(75),
+              }}
             />
-          )}
-        />
-      </Container>
+          ) : null}
+
+          <GiftedChat
+            placeholder="message..."
+            messages={this.state.messages}
+            onSend={this.onSend}
+            loadEarlier={this.state.loadEarlier}
+            onLoadEarlier={this.onLoadEarlier}
+            isLoadingEarlier={this.state.isLoadingEarlier}
+            showUserAvatar={this.state.showUserAvatar}
+            renderAvatarOnTop={false}
+            user={{
+              _id: this.curUser.userId, // sent messages should have same user._id
+              name: this.curUser.nickname,
+            }}
+            onLongPress={this.onLongPress}
+            renderActions={this.renderCustomActions}
+            renderBubble={this.renderBubble}
+            renderSystemMessage={this.renderSystemMessage}
+            renderCustomView={this.renderCustomView}
+            renderFooter={this.renderFooter}
+            renderAvatar={this.renderAvatar}
+            renderMessageText={props => (
+              <MessageText
+                {...props}
+                customTextStyle={{ fontSize: scaleSize(20) }}
+              />
+            )}
+          />
+        </Container>
+      </Animated.View>
     )
   }
 
   renderCustomActions(props) {
-    //if (Platform.OS === 'ios')
-    {
-      return <CustomActions {...props} />
-    }
-    // const options = {
-    //   // eslint-disable-next-line
-    //   发送文件: props => {
-    //     this.onSendFile()
-    //   },
-    //   // eslint-disable-next-line
-    //   'Action 2': props => {
-    //     alert('option 2')
-    //   },
-    //   Cancel: () => {},
-    // }
-    // return <Actions {...props} options={options} />
+    return (
+      <CustomActions
+        {...props}
+        callBack={value => this.setState({ chatBottom: value })}
+      />
+    )
   }
 
   renderAvatar = props => {
