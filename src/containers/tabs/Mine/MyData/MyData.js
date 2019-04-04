@@ -307,6 +307,9 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
+    if (this.formChat && this.chatCallBack) {
+      isShowMore = false
+    }
     switch (this.state.title) {
       case Const.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
@@ -341,6 +344,7 @@ export default class MyLocalData extends Component {
         style={[styles.item, { display: display }]}
         onPress={async () => {
           if (this.formChat && this.chatCallBack) {
+            this.itemInfo = info
             this._onUploadData('')
           }
         }}
@@ -621,6 +625,7 @@ export default class MyLocalData extends Component {
           } else {
             let zipResult = await FileTools.zipFiles(archivePaths, targetPath)
             if (zipResult) {
+              this.setLoading(false)
               this.chatCallBack && this.chatCallBack(targetPath)
               NavigationService.goBack()
             }
