@@ -36,7 +36,7 @@ export default StyleSheet.create({
   },
   btn: {
     height: scaleSize(50),
-    width: scaleSize(100),
+    width: scaleSize(60),
     marginLeft: scaleSize(6),
     marginRight: scaleSize(6),
     justifyContent: 'center',
@@ -44,7 +44,7 @@ export default StyleSheet.create({
   },
   btn1: {
     height: scaleSize(50),
-    width: scaleSize(100),
+    width: scaleSize(60),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -95,7 +95,7 @@ export default StyleSheet.create({
   additionView: {
     flexDirection: 'column',
     width: '100%',
-    paddingLeft: scaleSize(72),
+    // paddingLeft: scaleSize(60),
   },
   radioView: {
     marginLeft: scaleSize(30),

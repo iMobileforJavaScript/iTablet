@@ -16,7 +16,7 @@ import {
   View,
   NetInfo,
 } from 'react-native'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SMap } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import styles from './Styles'
 import { color, size } from '../../../../styles'
@@ -363,7 +363,6 @@ export default class MyOnlineData extends Component {
         let isFile = fileContent.type
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
-
         if (isFile === 'file' && !isRecordFile) {
           // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
           if (
@@ -386,6 +385,10 @@ export default class MyOnlineData extends Component {
                 })
               isRecordFile = true
             }
+          } else if (fileType.udb && fileName.indexOf(fileType.udb) !== -1) {
+            SMap.importDatasourceFile(newPath).then(() => {
+              Toast.show('数据下载完成并导入成功')
+            })
           }
         } else if (isFile === 'directory') {
           await this._setFilterDatas(newPath, fileType)

@@ -596,6 +596,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                             datasourceConnectionInfo.setEngineType(EngineType.UDB);
                             Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
                             if(datasource1.getAlias()=="labelDatasource"){
+                                
                                 importData=false;
                             }else {
                                 sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);

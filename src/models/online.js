@@ -33,7 +33,6 @@ export const uploading = (params = {}, cb = () => {}) => async dispatch => {
     params.archivePaths,
     params.targetPath,
   )
-
   let uploadResult =
     zipResult &&
     (await SOnlineService.uploadFile(params.targetPath, params.name, {

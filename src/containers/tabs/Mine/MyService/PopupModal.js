@@ -99,15 +99,23 @@ export default class PopupModal extends PureComponent {
       <TouchableOpacity
         style={{ backgroundColor: color.content_white }}
         onPress={async () => {
-          this._onClose()
-          let result = await SOnlineService.deleteServiceWithServiceId(
-            this.props.itemId,
-          )
-          if (typeof result === 'boolean' && result) {
-            this.deleteService = true
-            this._onRefresh()
-            Toast.show('删除成功')
-          } else {
+          try {
+            this._onClose()
+            let result = await SOnlineService.deleteServiceWithServiceId(
+              this.props.itemId,
+            )
+            if (typeof result === 'boolean' && result) {
+              this.deleteService = true
+              this._onRefresh()
+              Toast.show('删除成功')
+            } else if (typeof result === 'boolean' && !result) {
+              this.deleteService = true
+              this._onRefresh()
+              Toast.show('删除成功')
+            } else {
+              Toast.show('删除失败')
+            }
+          } catch (error) {
             Toast.show('删除失败')
           }
         }}

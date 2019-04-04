@@ -65,7 +65,6 @@ import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
 import LegendView from '../../components/LegendView/LegendView'
-import { Utils } from '../../util'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -2496,7 +2495,7 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      Utils.setSelectionStyle(this.props.currentLayer.path, {})
+      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
         this.props.getLayers(-1, layers => {
@@ -2529,19 +2528,20 @@ export default class ToolBar extends React.PureComponent {
           this.props.currentLayer &&
             SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-          // TODO 恢复框选对象，并返回到地图
-          NavigationService.navigate('LayerSelectionAttribute')
-          // NavigationService.navigate('LayerAttributeTabs', {initialPage: GLOBAL.LayerAttributeTabIndex})
-          // NavigationService.goBack()
           // 返回框选/点选属性界面，并清除属性关联选中的对象
-          let selection = []
-          for (let i = 0; i < this.props.selection.length; i++) {
-            selection.push({
-              layerPath: this.props.selection[i].layerInfo.path,
-              ids: this.props.selection[i].ids,
-            })
-          }
-          await SMap.selectObjs(selection)
+          NavigationService.navigate('LayerSelectionAttribute', {
+            selectionAttribute: GLOBAL.SelectedSelectionAttribute,
+            preAction: async () => {
+              let selection = []
+              for (let i = 0; i < this.props.selection.length; i++) {
+                selection.push({
+                  layerPath: this.props.selection[i].layerInfo.path,
+                  ids: this.props.selection[i].ids,
+                })
+              }
+              await SMap.selectObjs(selection)
+            },
+          })
           // NavigationService.goBack()
         } else {
           SMap.setAction(actionType)
@@ -3313,7 +3313,7 @@ export default class ToolBar extends React.PureComponent {
     await SThemeCartography.setThemeGraphExpressions(Params)
   }
 
-  listAction = ({ item, index }) => {
+  listAction = ({ item, index, section }) => {
     if (this.state.type === 'MAP3D_BASE') return
     if (item.action) {
       item.action && item.action()
@@ -3349,53 +3349,71 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
-        this.lastUdbList = this.state.data //保存上次的数据源数据
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
-        this.path = await FileTools.appendingHomeDirectory(item.path)
-        SThemeCartography.getUDBName(this.path).then(list => {
-          list.forEach(item => {
-            if (item.geoCoordSysType && item.prjCoordSysType) {
-              item.info = {
-                infoType: 'dataset',
-                geoCoordSysType: item.geoCoordSysType,
-                prjCoordSysType: item.prjCoordSysType,
+        if (section.title === Const.DATA_SOURCE) {
+          // 添加数据集
+          this.lastUdbList = this.state.data //保存上次的数据源数据
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.path = await FileTools.appendingHomeDirectory(item.path)
+          SThemeCartography.getUDBName(this.path).then(list => {
+            list.forEach(item => {
+              if (item.geoCoordSysType && item.prjCoordSysType) {
+                item.info = {
+                  infoType: 'dataset',
+                  geoCoordSysType: item.geoCoordSysType,
+                  prjCoordSysType: item.prjCoordSysType,
+                }
               }
-            }
+            })
+            let arr = item.name.split('.')
+            let alias = arr[0]
+            let dataList = [
+              {
+                title: alias,
+                image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+                data: list,
+              },
+            ]
+            this.setState(
+              {
+                themeDatasourceAlias: alias,
+                listSelectable: true, //单选框
+                buttons: [
+                  ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
+                  ToolbarBtnType.THEME_COMMIT,
+                ],
+                data: dataList,
+                type: ConstToolType.MAP_THEME_ADD_DATASET,
+              },
+              () => {
+                this.scrollListToLocation()
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+              () => {
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+            )
+            // this.setLastState()
           })
-          let arr = item.name.split('.')
-          let alias = arr[0]
-          let dataList = [
-            {
-              title: alias,
-              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-              data: list,
-            },
-          ]
-          this.setState(
-            {
-              themeDatasourceAlias: alias,
-              listSelectable: true, //单选框
-              buttons: [
-                ToolbarBtnType.THEME_CANCEL,
-                ToolbarBtnType.THEME_ADD_BACK,
-                ToolbarBtnType.THEME_COMMIT,
-              ],
-              data: dataList,
-              type: ConstToolType.MAP_THEME_ADD_DATASET,
-            },
-            () => {
-              this.scrollListToLocation()
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-            },
-            () => {
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-            },
-          )
-          // this.setLastState()
-        })
+        } else if (section.title === Const.MAP) {
+          // 添加地图
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.ADDING_MAP)
+          SMap.addMap(item.name || item.title).then(async result => {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show(result ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED)
+            if (result) {
+              await this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+            }
+            this.setVisible(false)
+          })
+        }
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
@@ -3621,7 +3639,7 @@ export default class ToolBar extends React.PureComponent {
             let layers = await this.props.getLayers()
 
             // 隐藏底图
-            await SMap.setLayerVisible(layers[layers.length - 1].path, false)
+            await SMap.setLayerVisible(layers[layers.length - 1].path, true)
 
             // if (GLOBAL.Type === constants.COLLECTION) {
             //
@@ -3898,11 +3916,11 @@ export default class ToolBar extends React.PureComponent {
         ref={ref => (this.toolBarSectionList = ref)}
         listSelectable={this.state.listSelectable}
         sections={this.state.data}
-        itemAction={({ item, index }) => {
+        itemAction={({ item, index, section }) => {
           if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
-            this.listThemeAction({ item, index })
+            this.listThemeAction({ item, index, section })
           } else {
-            this.listAction({ item, index })
+            this.listAction({ item, index, section })
           }
         }}
         selectList={this.state.listExpressions}

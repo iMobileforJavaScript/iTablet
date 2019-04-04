@@ -49,7 +49,8 @@ export default class Friend extends Component {
     this.friendGroup = {}
     this.curChat = undefined
     MessageDataHandle.setHandle(this.props.addChat)
-
+    FriendListFileHandle.refreshCallback = this.refreshList
+    FriendListFileHandle.refreshMessageCallback = this.refreshMsg
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -57,6 +58,8 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
+
+    this._receiveMessage = this._receiveMessage.bind(this)
   }
 
   componentDidMount() {
@@ -77,6 +80,11 @@ export default class Friend extends Component {
     ) {
       this.refreshList()
     }
+  }
+
+  refreshMsg = () => {
+    if (this.friendMessage && this.friendMessage.refresh)
+      this.friendMessage.refresh()
   }
 
   refreshList = () => {
@@ -124,46 +132,42 @@ export default class Friend extends Component {
     let time = Date.parse(ctime)
     // eslint-disable-next-line
 
-    if (members.length < 2) {
-      Toast.show('一人不能发起群聊')
-    } else {
-      let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
-      //服务绑定
-      SMessageService.declareSession(members, groupId)
+    members.push({
+      id: this.props.user.currentUser.userId,
+      name: this.props.user.currentUser.nickname,
+    })
+    let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
+    //服务绑定
+    SMessageService.declareSession(members, groupId)
 
-      let msgObj = {
-        user: {
-          name: this.props.user.currentUser.nickname,
-          id: this.props.user.currentUser.userId,
-          groupID: groupId,
-        },
-        members: members,
-        type: 912,
-        time: time,
-        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
-      }
-      let groupName = ''
-      for (let i in members) {
-        if (i > 3) break
-        groupName += members[i].name
-        if (i !== members.length - 2) groupName += '、'
-      }
-      FriendListFileHandle.addToGroupList(
-        {
-          id: groupId,
-          members: members,
-          groupName: groupName,
-          masterID: this.props.user.currentUser.userId,
-        },
-        () => {
-          this.refreshList()
-        },
-      )
-      let msgStr = JSON.stringify(msgObj)
-      for (let i in members) {
-        this._sendMessage(msgStr, members[i].id, false)
-      }
+    let msgObj = {
+      user: {
+        name: this.props.user.currentUser.nickname,
+        id: this.props.user.currentUser.userId,
+        groupID: groupId,
+      },
+      members: members,
+      type: 912,
+      time: time,
+      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
     }
+    let groupName = ''
+    for (let i in members) {
+      if (i > 3) break
+      groupName += members[i].name
+      if (i !== members.length - 2) groupName += '、'
+    }
+    FriendListFileHandle.addToGroupList({
+      id: groupId,
+      members: members,
+      groupName: groupName,
+      masterID: this.props.user.currentUser.userId,
+    })
+    let msgStr = JSON.stringify(msgObj)
+    for (let i in members) {
+      this._sendMessage(msgStr, members[i].id, false)
+    }
+
     // console.warn(members + groupId)
   }
   // eslint-disable-next-line
@@ -212,12 +216,15 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      let chatHistory = this.props.chat[userId][talkId].history
+      let chatHistory = []
+      if (this.props.chat[userId][talkId]) {
+        chatHistory = this.props.chat[userId][talkId].history
+      }
       let msgId
-      if(chatHistory.length === 0){
+      if (chatHistory.length === 0) {
         msgId = 0
-      }else{
-        msgId = chatHistory[chatHistory.length-1].msgId + 1
+      } else {
+        msgId = chatHistory[chatHistory.length - 1].msgId + 1
       }
       MessageDataHandle.pushMessage({
         userId: userId, //当前登录账户的id
@@ -235,14 +242,14 @@ export default class Friend extends Component {
     // this.refresh()
   }
 
-  _getChatId = (talkId) =>  {
+  _getChatId = talkId => {
     let userId = this.props.user.currentUser.userId
     let chatHistory = this.props.chat[userId][talkId].history
     let msgId
-    if(chatHistory.length === 0){
+    if (chatHistory.length === 0) {
       msgId = 0
-    }else{
-      msgId = chatHistory[chatHistory.length-1].msgId + 1
+    } else {
+      msgId = chatHistory[chatHistory.length - 1].msgId + 1
     }
     return msgId
   }
@@ -278,26 +285,24 @@ export default class Friend extends Component {
   }
 
   _receiveFile = (fileName, queueName, talkId, msgId) => {
-    if(g_connectService){
-      SMessageService.receiveFile(fileName, queueName)
-      .then(res =>{
-        if(res === true){
+    if (g_connectService) {
+      SMessageService.receiveFile(fileName, queueName).then(res => {
+        if (res === true) {
           this.props.editChat &&
             this.props.editChat({
               userId: this.props.user.currentUser.userId,
               talkId: talkId,
               msgId: msgId,
-              editItem: {isReceived: 1,},
+              editItem: { isReceived: 1 },
             })
         }
       })
     }
-   
   }
 
-  _receiveMessage = message => {
+  _receiveMessage(message) {
     if (g_connectService) {
-      //  DataHandler.dealWithMessage(this.props.user.currentUser.userId,message['message']);
+      //  DataHandler.dealWhgjgithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
 
       let userId = this.props.user.currentUser.userId
@@ -363,20 +368,24 @@ export default class Friend extends Component {
         ) {
           bUnReadMsg = true
         }
-        let chatHistory
-        if(messageObj.type === 2){
+
+        let chatHistory = []
+        let msgId = 0
+        if (
+          messageObj.type === 2 &&
+          this.props.chat[userId] &&
+          this.props.chat[userId][messageObj.user.groupID]
+        ) {
           chatHistory = this.props.chat[userId][messageObj.user.groupID].history
-        }else{
+        } else if (
+          this.props.chat[userId] &&
+          this.props.chat[userId][messageObj.user.id]
+        ) {
           chatHistory = this.props.chat[userId][messageObj.user.id].history
         }
-        
-        let msgId
-        if(chatHistory.length === 0){
-          msgId = 0
-        }else{
-          msgId = chatHistory[chatHistory.length-1].msgId + 1
+        if (chatHistory.length !== 0) {
+          msgId = chatHistory[chatHistory.length - 1].msgId + 1
         }
-
         MessageDataHandle.pushMessage({
           userId: userId, //当前登录账户的id
           talkId: messageObj.user.groupID, //会话ID
@@ -400,17 +409,12 @@ export default class Friend extends Component {
             groupName += messageObj.members[i].name
             if (i !== messageObj.members.length - 2) groupName += '、'
           }
-          FriendListFileHandle.addToGroupList(
-            {
-              id: messageObj.user.groupID,
-              members: messageObj.members,
-              groupName: groupName,
-              masterID: messageObj.user.id,
-            },
-            () => {
-              this.refreshList()
-            },
-          )
+          FriendListFileHandle.addToGroupList({
+            id: messageObj.user.groupID,
+            members: messageObj.members,
+            groupName: groupName,
+            masterID: messageObj.user.id,
+          })
           return
         }
       }

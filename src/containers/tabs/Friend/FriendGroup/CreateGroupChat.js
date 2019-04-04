@@ -200,6 +200,10 @@ class CreateGroupChat extends Component {
             <TouchableOpacity
               onPress={() => {
                 {
+                  if (this.state.seletctArr.length < 2) {
+                    Toast.show('少于两人不能发起群聊')
+                    return
+                  }
                   NavigationService.goBack()
                   this.friend.createGroupTalk(this.state.seletctArr)
                 }

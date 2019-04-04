@@ -111,6 +111,8 @@ export default class MyLocalData extends Component {
       textDisplay: 'none',
       title: (params && params.title) || '',
     }
+    this.formChat = params.formChat || false
+    this.chatCallBack = params.chatCallBack
   }
 
   componentDidMount() {
@@ -291,6 +293,8 @@ export default class MyLocalData extends Component {
     return <View />
   }
 
+  _returnItem = () => {}
+
   _renderItem = info => {
     let name = info.item.name
     let txtInfo =
@@ -303,6 +307,9 @@ export default class MyLocalData extends Component {
     let display = info.section.isShowItem ? 'flex' : 'none'
     let img,
       isShowMore = true
+    if (this.formChat && this.chatCallBack) {
+      isShowMore = false
+    }
     switch (this.state.title) {
       case Const.MAP:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
@@ -325,7 +332,7 @@ export default class MyLocalData extends Component {
       case Const.SCENE:
         img = require('../../../../assets/mapTools/icon_scene.png')
         break
-      case Const.MODULE:
+      case Const.TEMPLATE:
         img = require('../../../../assets/mapToolbar/list_type_map_black.png')
         break
       default:
@@ -335,9 +342,11 @@ export default class MyLocalData extends Component {
     return (
       <TouchableOpacity
         style={[styles.item, { display: display }]}
-        onPress={() => {
-          // this.itemInfo = info
-          // this.setState({ modalIsVisible: true })
+        onPress={async () => {
+          if (this.formChat && this.chatCallBack) {
+            this.itemInfo = info
+            this._onUploadData('')
+          }
         }}
       >
         <Image style={styles.img} resizeMode={'contain'} source={img} />
@@ -526,6 +535,10 @@ export default class MyLocalData extends Component {
           }
         }
         if (type === 'weChat') {
+          if (this.state.title === Const.SCENE) {
+            Toast.show('所分享文件超过10MB')
+            return
+          }
           let zipResult
           if (this.state.title === Const.MAP) {
             await this._exportData()
@@ -556,7 +569,7 @@ export default class MyLocalData extends Component {
                 !result && Toast.show('所分享文件超过10MB')
                 !result && FileTools.deleteFile(targetPath)
               })
-        } else {
+        } else if (type === 'online') {
           if (this.state.title === Const.MAP) {
             await this._exportData()
             let homePath = await FileTools.appendingHomeDirectory()
@@ -571,6 +584,7 @@ export default class MyLocalData extends Component {
               '.zip'
             await SOnlineService.uploadFile(targetPath, fileName, {
               onResult: result => {
+                this.setLoading(false)
                 result && Toast.show('分享成功')
                 this.ModalBtns && this.ModalBtns.setVisible(false)
                 FileTools.deleteFile(targetPath)
@@ -583,15 +597,38 @@ export default class MyLocalData extends Component {
               name: fileName,
               onProgress: () => {},
               onResult: (result, name) => {
+                this.setLoading(false)
                 Toast.show(
                   name + ' ' + result || result === undefined
                     ? '分享成功'
                     : '分享失败',
                 )
                 this.ModalBtns && this.ModalBtns.setVisible(false)
-                FileTools.deleteFile(targetPath)
               },
             })
+          }
+        } else if (this.formChat) {
+          if (this.state.title === Const.MAP) {
+            await this._exportData()
+            let homePath = await FileTools.appendingHomeDirectory()
+            targetPath =
+              homePath +
+              ConstPath.UserPath +
+              this.props.user.currentUser.userName +
+              '/' +
+              ConstPath.RelativePath.ExternalData +
+              ConstPath.RelativeFilePath.ExportData +
+              fileName +
+              '.zip'
+            this.chatCallBack && this.chatCallBack(targetPath)
+            NavigationService.goBack()
+          } else {
+            let zipResult = await FileTools.zipFiles(archivePaths, targetPath)
+            if (zipResult) {
+              this.setLoading(false)
+              this.chatCallBack && this.chatCallBack(targetPath)
+              NavigationService.goBack()
+            }
           }
         }
       }
@@ -599,7 +636,6 @@ export default class MyLocalData extends Component {
       Toast.show('分享失败')
       this.ModalBtns && this.ModalBtns.setVisible(false)
       this._closeModal()
-    } finally {
       this.setLoading(false)
     }
   }

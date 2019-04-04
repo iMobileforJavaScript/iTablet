@@ -662,18 +662,38 @@ export default class FunctionToolbar extends React.Component {
     })
 
     let userUDBPath, userUDBs
-    if (this.props.user && this.props.user.currentUser.userName) {
-      userUDBPath =
+    if (
+      this.props.user &&
+      this.props.user.currentUser.userName &&
+      this.props.user.currentUser.userType === UserType.PROBATION_USER
+    ) {
+      let userPath =
         (await FileTools.appendingHomeDirectory(ConstPath.UserPath)) +
         this.props.user.currentUser.userName +
-        '/' +
-        ConstPath.RelativePath.Datasource
+        '/'
+      userUDBPath = userPath + ConstPath.RelativePath.Datasource
       userUDBs = await FileTools.getPathListByFilter(userUDBPath, {
         extension: 'udb',
         type: 'file',
       })
       userUDBs.forEach(item => {
         item.image = require('../../../../assets/mapToolbar/list_type_udb_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+        item.name = this.basename(item.path)
+      })
+
+      let mapData = await FileTools.getPathListByFilter(
+        userPath + ConstPath.RelativePath.Map,
+        {
+          extension: 'xml',
+          type: 'file',
+        },
+      )
+      mapData.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
         item.info = {
           infoType: 'mtime',
           lastModifiedDate: item.mtime,
@@ -691,13 +711,41 @@ export default class FunctionToolbar extends React.Component {
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
           data: userUDBs,
         },
+        {
+          title: Const.MAP,
+          image: require('../../../../assets/mapToolbar/list_type_map.png'),
+          data: mapData,
+        },
       ]
     } else {
+      let customerPath = await FileTools.appendingHomeDirectory(
+        ConstPath.CustomerPath,
+      )
+      let mapData = await FileTools.getPathListByFilter(
+        customerPath + ConstPath.RelativePath.Map,
+        {
+          extension: 'xml',
+          type: 'file',
+        },
+      )
+      mapData.forEach(item => {
+        item.image = require('../../../../assets/mapToolbar/list_type_map_black.png')
+        item.info = {
+          infoType: 'mtime',
+          lastModifiedDate: item.mtime,
+        }
+        item.name = this.basename(item.path)
+      })
       data = [
         {
           title: Const.DATA_SOURCE,
           image: require('../../../../assets/mapToolbar/list_type_udbs.png'),
           data: customerUDBs,
+        },
+        {
+          title: Const.MAP,
+          image: require('../../../../assets/mapToolbar/list_type_map.png'),
+          data: mapData,
         },
       ]
     }

@@ -235,26 +235,24 @@ export default class LayerAttribute extends React.Component {
           Math.floor(this.total / PAGE_SIZE) === currentPage ||
           attributes.data.length < PAGE_SIZE
 
-        let relativeIndex =
-          attributes.data.length === 1
-            ? 0
-            : resetCurrent
-              ? -1
-              : this.state.relativeIndex
         if (attributes.data.length === 1) {
           this.setState({
             showTable: true,
             attributes,
-            relativeIndex,
+            currentIndex: 0,
+            relativeIndex: 0,
             currentFieldInfo: attributes.data[0],
-            startIndex: -1,
+            startIndex: 0,
             ...others,
           })
         } else {
+          let currentIndex = resetCurrent ? -1 : this.state.currentIndex
+          let relativeIndex = resetCurrent ? -1 : this.state.relativeIndex
           this.setState({
             showTable: true,
             attributes,
-            relativeIndex,
+            currentIndex: currentIndex,
+            relativeIndex: relativeIndex,
             currentFieldInfo: attributes.data[relativeIndex],
             ...others,
           })

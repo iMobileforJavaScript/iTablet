@@ -594,14 +594,14 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  getChildList = async ({ data }) => {
+  getChildList = async ({ data, section }) => {
     try {
       if (data.type !== 'layerGroup') return
       this.container.setLoading(true)
       let layers = await SMap.getLayersByGroupPath(data.path)
       let child = []
       for (let i = 0; i < layers.length; i++) {
-        child.push(this._renderItem({ item: layers[i] }))
+        child.push(this._renderItem({ item: layers[i], section }))
       }
       this.container.setLoading(false)
       return child
@@ -725,6 +725,7 @@ export default class MT_layerManager extends React.Component {
         if (section.title === '我的标注') {
           return (
             <TouchableOpacity
+              key={item.name}
               style={{
                 height: scaleSize(80),
                 padding: scaleSize(6),
@@ -805,7 +806,7 @@ export default class MT_layerManager extends React.Component {
           }
           return (
             <LayerManager_item
-              key={item.id}
+              key={item.name}
               // sectionID={sectionID}
               // rowID={item.index}
               ref={ref => {
@@ -834,7 +835,9 @@ export default class MT_layerManager extends React.Component {
               selectLayer={this.state.selectLayer}
               onPress={this.onPressRow}
               onAllPress={this.onAllPressRow}
-              onArrowPress={this.getChildList}
+              onArrowPress={({ data, layer }) =>
+                this.getChildList({ data, layer, section })
+              }
               onToolPress={action}
             />
           )
