@@ -8,6 +8,7 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Animated,
 } from 'react-native'
 import {
   GiftedChat,
@@ -41,6 +42,7 @@ class Chat extends React.Component {
       showUserAvatar: true,
       messageInfo: this.props.navigation.getParam('messageInfo', ''),
       showInformSpot: false,
+      chatBottom: 0,
     }
 
     this.friend = this.props.navigation.getParam('friend')
@@ -297,7 +299,6 @@ class Chat extends React.Component {
             alert('已接收此文件')
           }
         }
-
         break
       default:
         alert('undefined')
@@ -306,75 +307,68 @@ class Chat extends React.Component {
 
   render() {
     return (
-      <Container
-        ref={ref => (this.container = ref)}
-        headerProps={{
-          title: this.targetUser['title'],
-          withoutBack: false,
-          navigation: this.props.navigation,
-        }}
-      >
-        {this.state.showInformSpot ? (
-          <View
-            style={{
-              position: 'absolute',
-              backgroundColor: 'red',
-              height: scaleSize(15),
-              width: scaleSize(15),
-              borderRadius: scaleSize(15),
-              top: Top,
-              left: scaleSize(75),
-            }}
-          />
-        ) : null}
-        <GiftedChat
-          placeholder="message..."
-          messages={this.state.messages}
-          onSend={this.onSend}
-          loadEarlier={this.state.loadEarlier}
-          onLoadEarlier={this.onLoadEarlier}
-          isLoadingEarlier={this.state.isLoadingEarlier}
-          showUserAvatar={this.state.showUserAvatar}
-          renderAvatarOnTop={false}
-          user={{
-            _id: this.curUser.userId, // sent messages should have same user._id
-            name: this.curUser.nickname,
+      <Animated.View style={{ flex: 1, bottom: this.state.chatBottom }}>
+        <Container
+          ref={ref => (this.container = ref)}
+          headerProps={{
+            title: this.targetUser['title'],
+            withoutBack: false,
+            navigation: this.props.navigation,
           }}
-          onLongPress={this.onLongPress}
-          renderActions={this.renderCustomActions}
-          renderBubble={this.renderBubble}
-          renderSystemMessage={this.renderSystemMessage}
-          renderCustomView={this.renderCustomView}
-          renderFooter={this.renderFooter}
-          renderAvatar={this.renderAvatar}
-          renderMessageText={props => (
-            <MessageText
-              {...props}
-              customTextStyle={{ fontSize: scaleSize(20) }}
+        >
+          {this.state.showInformSpot ? (
+            <View
+              style={{
+                position: 'absolute',
+                backgroundColor: 'red',
+                height: scaleSize(15),
+                width: scaleSize(15),
+                borderRadius: scaleSize(15),
+                top: Top,
+                left: scaleSize(75),
+              }}
             />
-          )}
-        />
-      </Container>
+          ) : null}
+
+          <GiftedChat
+            placeholder="message..."
+            messages={this.state.messages}
+            onSend={this.onSend}
+            loadEarlier={this.state.loadEarlier}
+            onLoadEarlier={this.onLoadEarlier}
+            isLoadingEarlier={this.state.isLoadingEarlier}
+            showUserAvatar={this.state.showUserAvatar}
+            renderAvatarOnTop={false}
+            user={{
+              _id: this.curUser.userId, // sent messages should have same user._id
+              name: this.curUser.nickname,
+            }}
+            onLongPress={this.onLongPress}
+            renderActions={this.renderCustomActions}
+            renderBubble={this.renderBubble}
+            renderSystemMessage={this.renderSystemMessage}
+            renderCustomView={this.renderCustomView}
+            renderFooter={this.renderFooter}
+            renderAvatar={this.renderAvatar}
+            renderMessageText={props => (
+              <MessageText
+                {...props}
+                customTextStyle={{ fontSize: scaleSize(20) }}
+              />
+            )}
+          />
+        </Container>
+      </Animated.View>
     )
   }
 
   renderCustomActions(props) {
-    //if (Platform.OS === 'ios')
-    {
-      return <CustomActions {...props} />
-    }
-    // const options = {
-    //   // eslint-disable-next-line
-    //   发送文件: props => {
-    //     this.onSendFile()
-    //   },
-    //   // eslint-disable-next-line
-    //   'Action 2': props => {
-    //     alert('option 2')
-    //   },
-    //   Cancel: () => {},
-    // }
-    // return <Actions {...props} options={options} />
+    return (
+      <CustomActions
+        {...props}
+        callBack={value => this.setState({ chatBottom: value })}
+      />
+    )
   }
 
   renderAvatar = props => {

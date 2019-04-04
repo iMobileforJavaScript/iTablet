@@ -18,6 +18,8 @@ import {
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { Const } from '../../../../constants'
+//import { ThemeUnique } from 'imobile_for_reactnative';
+//import console = require('console');
 
 // eslint-disable-next-line no-unused-vars
 const ICONS = context => [
@@ -26,7 +28,14 @@ const ICONS = context => [
     type: 'ionicon',
     text: '地图',
     onPress: () => {
-      NavigationService.navigate('MyData', { title: Const.MAP })
+      NavigationService.navigate('MyData', {
+        title: Const.MAP,
+        formChat: true,
+        // eslint-disable-next-line
+        chatCallBack: _path => {
+          // console.warn(path)
+        },
+      })
       context.setModalVisible()
     },
   },
@@ -50,6 +59,10 @@ const ICONS = context => [
 ]
 
 export default class CustomActions extends React.Component {
+  props: {
+    callBack: () => {},
+  }
+
   constructor(props) {
     super(props)
     this._images = []
@@ -60,21 +73,15 @@ export default class CustomActions extends React.Component {
     // this.selectImages = this.selectImages.bind(this)
   }
 
-  setImages(images) {
-    this._images = images
-  }
-
-  getImages() {
-    return this._images
-  }
-
   setModalVisible(visible = false) {
+    if (visible) {
+      this.props.callBack(scaleSize(400))
+    } else {
+      this.props.callBack(scaleSize(0))
+    }
     this.setState({ modalVisible: visible })
   }
 
-  selectImages(images) {
-    this.setImages(images)
-  }
   renderIcon() {
     if (this.props.icon) {
       return this.props.icon()
@@ -91,7 +98,7 @@ export default class CustomActions extends React.Component {
       <TouchableOpacity
         style={[styles.container, this.props.containerStyle]}
         onPress={() => {
-          this.setState({ modalVisible: true })
+          this.setModalVisible(true)
         }}
       >
         <Modal
