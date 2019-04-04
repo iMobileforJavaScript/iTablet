@@ -166,7 +166,11 @@ export default class FunctionToolbar extends React.Component {
         type = constants.THEME_GRADUATED_SYMBOL
         break
       case ThemeType.GRIDRANGE:
+        type = constants.THEME_GRID_RANGE
+        break
       case ThemeType.GRIDUNIQUE:
+        type = constants.THEME_GRID_UNIQUE
+        break
       case ThemeType.CUSTOM:
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return

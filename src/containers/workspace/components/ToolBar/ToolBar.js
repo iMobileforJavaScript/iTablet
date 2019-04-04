@@ -30,6 +30,8 @@ import {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
   UserType,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -1267,6 +1269,55 @@ export default class ToolBar extends React.PureComponent {
           showMenuDialog: false,
           containerType: 'table',
           column: 4,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[0]
+              : ConstToolType.THEME_HEIGHT[2]
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  getGridRangeMode = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[0]
+            : ConstToolType.THEME_HEIGHT[0],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getGridRangeMode()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column: 3,
           tableType: 'normal',
           data: date,
           type: type,
@@ -3011,6 +3062,20 @@ export default class ToolBar extends React.PureComponent {
         await SThemeCartography.setUniqueColorScheme(Params)
       }.bind(this)())
     } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR
+    ) {
+      //栅格单值专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          GridUniqueColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.modifyThemeGridUniqueMap(Params)
+      }.bind(this)())
+    } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
     ) {
       //分段专题图表达式
@@ -3059,6 +3124,20 @@ export default class ToolBar extends React.PureComponent {
         }
         await SThemeCartography.setRangeColorScheme(Params)
       }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR
+    ) {
+      //栅格分段专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          GridRangeColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.modifyThemeGridRangeMap(Params)
+      }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR) {
       //统计专题图颜色表
       this.setState({
@@ -3089,6 +3168,25 @@ export default class ToolBar extends React.PureComponent {
       //数据集选择列表(跳转到专题图字段选择列表)
       (async function() {
         try {
+          //栅格专题图直接由数据集创建，无需选择字段
+          if (this.state.themeCreateType === constants.THEME_GRID_UNIQUE) {
+            let params = {
+              themeDatasourceAlias: item.datasourceName,
+              themeDatasetName: item.datasetName,
+            }
+            ThemeMenuData.createThemeGridUniqueMap(params)
+            return
+          } else if (
+            this.state.themeCreateType === constants.THEME_GRID_RANGE
+          ) {
+            let params = {
+              themeDatasourceAlias: item.datasourceName,
+              themeDatasetName: item.datasetName,
+            }
+            ThemeMenuData.createThemeGridRangeMap(params)
+            return
+          }
+          //其他专题图需要选择字段
           this.props.setContainerLoading &&
             this.props.setContainerLoading(true, ConstInfo.READING_DATA)
           let data = await SThemeCartography.getThemeExpressionByDatasetName(
@@ -3375,54 +3473,6 @@ export default class ToolBar extends React.PureComponent {
       //     currentLayerIndex: 0,
       //   })
       // }
-    } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
-      //地图制图，专题制图：导入数据
-      this.importData(item)
-    } else if (this.state.type === ConstToolType.MAP_THEME_START_OPENDS) {
-      //专题制图：开始->新建地图->数据源列表(->数据集列表)
-      (async function() {
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
-        this.path = await FileTools.appendingHomeDirectory(item.path)
-        let arr = item.name.split('.')
-        let alias = arr[0]
-        SThemeCartography.getUDBName(this.path).then(
-          list => {
-            list.forEach(item => {
-              if (item.geoCoordSysType && item.prjCoordSysType) {
-                item.info = {
-                  infoType: 'dataset',
-                  geoCoordSysType: item.geoCoordSysType,
-                  prjCoordSysType: item.prjCoordSysType,
-                }
-              }
-            })
-            let dataList = [
-              {
-                title: alias,
-                image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-                data: list,
-              },
-            ]
-            this.setState(
-              {
-                data: dataList,
-                type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
-              },
-              () => {
-                this.scrollListToLocation()
-
-                this.props.setContainerLoading &&
-                  this.props.setContainerLoading(false)
-              },
-            )
-          },
-          () => {
-            this.props.setContainerLoading &&
-              this.props.setContainerLoading(false)
-          },
-        )
-      }.bind(this)())
     }
   }
 
@@ -3990,6 +4040,12 @@ export default class ToolBar extends React.PureComponent {
             case constants.THEME_GRADUATED_SYMBOL:
               type = constants.THEME_GRADUATED_SYMBOL
               break
+            case constants.THEME_GRID_UNIQUE:
+              type = constants.THEME_GRID_UNIQUE
+              break
+            case constants.THEME_GRID_RANGE:
+              type = constants.THEME_GRID_RANGE
+              break
           }
           let menutoolRef =
             this.props.getMenuAlertDialogRef &&
@@ -4004,6 +4060,16 @@ export default class ToolBar extends React.PureComponent {
 
           if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             //分段专题图：分段方法
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              RangeMode: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGEMODE
+          ) {
+            //分段栅格专题图：分段方法
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               RangeMode: item.key,
@@ -4225,6 +4291,10 @@ export default class ToolBar extends React.PureComponent {
         list = dotDensityMenuInfo
       } else if (this.state.themeType === constants.THEME_GRADUATED_SYMBOL) {
         list = graduatedSymbolMenuInfo
+      } else if (this.state.themeType === constants.THEME_GRID_UNIQUE) {
+        list = gridUniqueMenuInfo
+      } else if (this.state.themeType === constants.THEME_GRID_RANGE) {
+        list = gridRangeMenuInfo
       }
     }
     if (!list) {

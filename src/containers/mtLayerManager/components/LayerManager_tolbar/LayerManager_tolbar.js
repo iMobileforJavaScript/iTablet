@@ -449,9 +449,10 @@ export default class LayerManager_tolbar extends React.Component {
       } else if (
         parseInt(type) === 1 ||
         parseInt(type) === 3 ||
-        parseInt(type) === 5
+        parseInt(type) === 5 ||
+        parseInt(type) === 83
       ) {
-        //由图层创建专题图(点，线，面)
+        //由图层创建专题图(点，线，面, 栅格)
         this.setVisible(false)
         GLOBAL.toolBox &&
           GLOBAL.toolBox.setVisible(
