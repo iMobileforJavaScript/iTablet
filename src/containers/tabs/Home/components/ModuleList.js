@@ -136,7 +136,7 @@ export default class ModuleList extends Component {
       isShowProgressView: false,
     }
     this.moduleItems = []
-    this.bytesInfo = 0
+    //this.bytesInfo = 0
   }
 
   _showAlert = (ref, downloadData, currentUserName) => {
@@ -178,9 +178,9 @@ export default class ModuleList extends Component {
       let fileCachePath = fileDirPath + '.zip'
       await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
-        headers: {
-          Range: `bytes=${this.bytesInfo}-`,
-        },
+        // headers: {
+        //   Range: `bytes=${this.bytesInfo}-`,
+        // },
         fromUrl: dataUrl,
         toFile: fileCachePath,
         background: true,
@@ -190,12 +190,12 @@ export default class ModuleList extends Component {
           // this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
           // let value = this.bytesInfo + '%'
           // if(Platform.OS === 'android'){
-          if (this.bytesInfo < res.contentLength)
-            this.bytesInfo = res.bytesWritten + 1
-          // }
-          let valueNum = ((this.bytesInfo / res.contentLength) * 100).toFixed(0)
-          let value = valueNum + '%'
-          if (valueNum >= 100) {
+          // if (this.bytesInfo < res.contentLength)
+          //   this.bytesInfo = res.bytesWritten + 1
+          // // }
+          // let valueNum = ((this.bytesInfo / res.contentLength) * 100).toFixed(0)
+          let value = ~~res.progress.toFixed(0) + '%'
+          if (~~res.progress >= 100) {
             ref.setNewState({
               progress: '导入中...',
               isShowProgressView: true,
@@ -214,19 +214,16 @@ export default class ModuleList extends Component {
       }
       let result = downloadFile(downloadOptions)
       result.promise
-        .then(async result => {
-          if (result.statusCode >= 200 && result.statusCode < 300) {
-            await FileTools.unZipFile(fileCachePath, cachePath)
-            let arrFile = await FileTools.getFilterFiles(fileDirPath)
-            await this.props.importWorkspace(
-              arrFile[0].filePath,
-              downloadData.copyFilePath,
-            )
-            ref.setNewState({ isShowProgressView: false, disabled: false })
-            this.bytesInfo = 0
+        .then(async () => {
+          await FileTools.unZipFile(fileCachePath, cachePath)
+          let arrFile = await FileTools.getFilterFiles(fileDirPath)
+          await this.props.importWorkspace(
+            arrFile[0].filePath,
+            downloadData.copyFilePath,
+          )
+          ref.setNewState({ isShowProgressView: false, disabled: false })
 
-            FileTools.deleteFile(fileDirPath + '.zip')
-          }
+          FileTools.deleteFile(fileDirPath + '.zip')
         })
         .catch(() => {
           Toast.show('下载失败')
