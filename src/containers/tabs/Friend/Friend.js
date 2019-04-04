@@ -50,6 +50,7 @@ export default class Friend extends Component {
     this.curChat = undefined
     MessageDataHandle.setHandle(this.props.addChat)
     FriendListFileHandle.refreshCallback = this.refreshList
+    FriendListFileHandle.refreshMessageCallback = this.refreshMsg
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -79,6 +80,11 @@ export default class Friend extends Component {
     ) {
       this.refreshList()
     }
+  }
+
+  refreshMsg = () => {
+    if (this.friendMessage && this.friendMessage.refresh)
+      this.friendMessage.refresh()
   }
 
   refreshList = () => {

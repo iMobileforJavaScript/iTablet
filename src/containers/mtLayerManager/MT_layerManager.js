@@ -800,7 +800,7 @@ export default class MT_layerManager extends React.Component {
           }
           return (
             <LayerManager_item
-              key={item.id}
+              key={item.name}
               // sectionID={sectionID}
               // rowID={item.index}
               ref={ref => {

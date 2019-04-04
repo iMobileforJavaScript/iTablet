@@ -11,7 +11,6 @@ import {
 } from 'react-native'
 import {
   GiftedChat,
-  Actions,
   Bubble,
   MessageText,
   SystemMessage,
@@ -360,21 +359,22 @@ class Chat extends React.Component {
   }
 
   renderCustomActions(props) {
-    if (Platform.OS === 'ios') {
+    //if (Platform.OS === 'ios')
+    {
       return <CustomActions {...props} />
     }
-    const options = {
-      // eslint-disable-next-line
-      发送文件: props => {
-        this.onSendFile()
-      },
-      // eslint-disable-next-line
-      'Action 2': props => {
-        alert('option 2')
-      },
-      Cancel: () => {},
-    }
-    return <Actions {...props} options={options} />
+    // const options = {
+    //   // eslint-disable-next-line
+    //   发送文件: props => {
+    //     this.onSendFile()
+    //   },
+    //   // eslint-disable-next-line
+    //   'Action 2': props => {
+    //     alert('option 2')
+    //   },
+    //   Cancel: () => {},
+    // }
+    // return <Actions {...props} options={options} />
   }
 
   renderAvatar = props => {
