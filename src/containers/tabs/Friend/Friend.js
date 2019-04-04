@@ -216,16 +216,7 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      let chatHistory = []
-      if (this.props.chat[userId][talkId]) {
-        chatHistory = this.props.chat[userId][talkId].history
-      }
-      let msgId
-      if (chatHistory.length === 0) {
-        msgId = 0
-      } else {
-        msgId = chatHistory[chatHistory.length - 1].msgId + 1
-      }
+      let msgId = this._getMsgId(talkId)
       MessageDataHandle.pushMessage({
         userId: userId, //当前登录账户的id
         talkId: talkId,
@@ -242,19 +233,20 @@ export default class Friend extends Component {
     // this.refresh()
   }
 
-  _getChatId = talkId => {
+  _getMsgId = talkId => {
     let userId = this.props.user.currentUser.userId
-    let chatHistory = this.props.chat[userId][talkId].history
-    let msgId
-    if (chatHistory.length === 0) {
-      msgId = 0
-    } else {
+    let msgId = 0
+    let chatHistory = []
+    if(this.props.chat[userId] && this.props.chat[userId][talkId]){
+      chatHistory = this.props.chat[userId][talkId].history
+    }
+    if (chatHistory.length !== 0) {
       msgId = chatHistory[chatHistory.length - 1].msgId + 1
     }
     return msgId
   }
 
-  _sendFile = (messageStr, filepath, talkId) => {
+  _sendFile = (messageStr, filepath, talkId, msgId) => {
     let connectInfo = {
       serverIP: MSGConstans.MSG_IP,
       port: MSGConstans.MSG_Port,
@@ -267,6 +259,8 @@ export default class Friend extends Component {
       JSON.stringify(connectInfo),
       messageStr,
       filepath,
+      talkId,
+      msgId,
     ).then(res => {
       let messageObj = JSON.parse(messageStr)
       let ctime = new Date()
@@ -286,7 +280,7 @@ export default class Friend extends Component {
 
   _receiveFile = (fileName, queueName, talkId, msgId) => {
     if (g_connectService) {
-      SMessageService.receiveFile(fileName, queueName).then(res => {
+      SMessageService.receiveFile(fileName, queueName, talkId, msgId).then(res => {
         if (res === true) {
           this.props.editChat &&
             this.props.editChat({
@@ -369,23 +363,25 @@ export default class Friend extends Component {
           bUnReadMsg = true
         }
 
-        let chatHistory = []
+        // let chatHistory = []
+        // let msgId = 0
+        // if (messageObj.type === 2 && this.props.chat[userId] 
+        //     && this.props.chat[userId][messageObj.user.groupID]) {
+        //     chatHistory = this.props.chat[userId][messageObj.user.groupID]
+        //       .history
+        // } else if ( this.props.chat[userId] && this.props.chat[userId][messageObj.user.id] ) {
+        //     chatHistory = this.props.chat[userId][messageObj.user.id].history
+        // }
+        // if (chatHistory.length !== 0) {
+        //   msgId = chatHistory[chatHistory.length - 1].msgId + 1
+        // }
         let msgId = 0
-        if (
-          messageObj.type === 2 &&
-          this.props.chat[userId] &&
-          this.props.chat[userId][messageObj.user.groupID]
-        ) {
-          chatHistory = this.props.chat[userId][messageObj.user.groupID].history
-        } else if (
-          this.props.chat[userId] &&
-          this.props.chat[userId][messageObj.user.id]
-        ) {
-          chatHistory = this.props.chat[userId][messageObj.user.id].history
+        if (messageObj.type === 2){
+          msgId = this._getMsgId(messageObj.user.groupID)
+        }else{
+          msgId = this._getMsgId(messageObj.user.id)
         }
-        if (chatHistory.length !== 0) {
-          msgId = chatHistory[chatHistory.length - 1].msgId + 1
-        }
+
         MessageDataHandle.pushMessage({
           userId: userId, //当前登录账户的id
           talkId: messageObj.user.groupID, //会话ID
