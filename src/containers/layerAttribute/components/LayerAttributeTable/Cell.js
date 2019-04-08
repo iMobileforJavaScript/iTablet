@@ -62,6 +62,7 @@ export default class Cell extends Component {
     cellTextStyle?: any,
     width?: number,
     index: number,
+    delayLongPress: number,
     keyboardType?: String,
     editable?: boolean, // 是否可以调整可编辑状态
     isRequired?: boolean, // 是否不能为空
@@ -75,6 +76,7 @@ export default class Cell extends Component {
   static defaultProps = {
     editable: true,
     keyboardType: 'default',
+    delayLongPress: 1000,
   }
 
   state = {
@@ -243,7 +245,7 @@ export default class Cell extends Component {
             activeOpacity={1}
             style={styles.cellOverlay}
             onLongPress={this._setEditable}
-            delayLongPress={1500}
+            delayLongPress={this.props.delayLongPress}
             onPress={this._onPress}
           />
         )}

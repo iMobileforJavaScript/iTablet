@@ -87,8 +87,8 @@ function getMapMore(type, params) {
           image: require('../../../../assets/mapTools/icon_export_black.png'),
         },
         {
-          key: constants.SHARE,
-          title: constants.SHARE,
+          key: constants.SHARE_MAP,
+          title: constants.SHARE_MAP,
           size: 'large',
           action: shareMap,
           image: require('../../../../assets/mapTools/icon_share_black.png'),

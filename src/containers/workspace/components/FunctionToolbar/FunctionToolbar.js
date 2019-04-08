@@ -33,7 +33,10 @@ const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
 const MAP_3D = 'MAP_3D'
 const MAP_EDIT = 'MAP_EDIT'
-const MAP_THEME = 'MAP_THEME'
+// const MAP_THEME = 'MAP_THEME'
+/**
+ * @deprecated 移除当前的类型，使用constants
+ */
 export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 
@@ -66,7 +69,7 @@ export default class FunctionToolbar extends React.Component {
   }
 
   static defaultProps = {
-    type: COLLECTION,
+    type: constants.COLLECTION,
     hide: false,
     direction: 'column',
     separator: 20,
@@ -861,7 +864,7 @@ export default class FunctionToolbar extends React.Component {
   getData = type => {
     let data
     switch (type) {
-      case MAP_EDIT:
+      case constants.MAP_EDIT:
         data = [
           // {
           //   key: '底图',
@@ -905,11 +908,6 @@ export default class FunctionToolbar extends React.Component {
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
-          // {
-          //   title: '撤销',
-          //   action: this.legend,
-          //   image: require('../../../../assets/function/icon_remove.png'),
-          // },
           {
             title: '分享',
             action: () => {
@@ -919,7 +917,7 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case MAP_3D:
+      case constants.MAP_3D:
         data = [
           {
             key: '开始',
@@ -969,7 +967,7 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case MAP_THEME:
+      case constants.MAP_THEME:
         data = [
           {
             key: '开始',
@@ -1019,7 +1017,44 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case COLLECTION:
+      case constants.MAP_ANALYST:
+        data = [
+          {
+            key: constants.START,
+            title: constants.START,
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: constants.ADD,
+            title: constants.ADD,
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: constants.EDIT,
+            title: constants.EDIT,
+            action: this.showEdit,
+            image: require('../../../../assets/function/icon_edit.png'),
+          },
+          {
+            key: constants.TOOL,
+            title: constants.TOOL,
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            key: constants.SHARE,
+            title: constants.SHARE,
+            action: () => {
+              this.showMore(ConstToolType.MAP_SHARE)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
+      case constants.COLLECTION:
       default:
         data = [
           {

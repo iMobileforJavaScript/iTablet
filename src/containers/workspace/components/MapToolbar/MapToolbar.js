@@ -25,20 +25,30 @@ export default class MapToolbar extends React.Component {
     type: constants.COLLECTION,
     hidden: false,
     editLayer: {},
-    initIndex: 0,
+    initIndex: -1,
   }
 
   constructor(props) {
     super(props)
 
     this.show = false
-    this.oldPress = null
     this.type = ''
     const data = this.getToolbar(props.type)
 
+    let current = 0
+    if (props.initIndex < 0 && data.length > 0) {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].key === props.navigation.state.key) {
+          current = i
+        }
+      }
+    } else {
+      current = props.initIndex
+    }
+
     this.state = {
       data: data,
-      currentIndex: props.initIndex,
+      currentIndex: current,
     }
   }
 
@@ -48,6 +58,7 @@ export default class MapToolbar extends React.Component {
       case constants.MAP_EDIT:
       case constants.MAP_PLOTTING:
       case constants.COLLECTION:
+      case constants.MAP_THEME:
         list = [
           {
             key: 'MapView',
@@ -55,7 +66,8 @@ export default class MapToolbar extends React.Component {
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
             btnClick: () => {
-              this.props.navigation && this.props.navigation.navigate('MapView')
+              this.props.navigation &&
+                this.props.navigation.navigate('MapView', { type })
             },
           },
           {
@@ -65,7 +77,7 @@ export default class MapToolbar extends React.Component {
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('LayerManager')
+                this.props.navigation.navigate('LayerManager', { type })
             },
           },
           {
@@ -75,7 +87,7 @@ export default class MapToolbar extends React.Component {
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute')
+                this.props.navigation.navigate('LayerAttribute', { type })
             },
           },
           {
@@ -85,7 +97,41 @@ export default class MapToolbar extends React.Component {
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
             btnClick: () => {
               this.props.navigation &&
-                this.props.navigation.navigate('MapSetting')
+                this.props.navigation.navigate('MapSetting', { type })
+            },
+          },
+        ]
+        break
+      case constants.MAP_ANALYST:
+        list = [
+          {
+            key: 'MapAnalystView',
+            title: '地图',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('MapAnalystView', { type })
+            },
+          },
+          {
+            key: 'AnalystTools',
+            title: '工具箱',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('AnalystTools', { type })
+            },
+          },
+          {
+            key: 'LayerAnalystManager',
+            title: '图层',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAnalystManager', { type })
             },
           },
         ]
@@ -142,55 +188,6 @@ export default class MapToolbar extends React.Component {
               // Utility.unZipFile(toPath,path)
               this.props.navigation &&
                 this.props.navigation.navigate('Map3DSetting', {})
-            },
-          },
-        ]
-        break
-      case constants.MAP_THEME:
-        list = [
-          {
-            key: 'MapView',
-            title: '地图',
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
-            btnClick: () => {
-              this.props.navigation && this.props.navigation.navigate('MapView')
-            },
-          },
-          {
-            key: 'LayerManager',
-            title: '图层',
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerManager', {
-                  type: constants.MAP_THEME,
-                })
-            },
-          },
-          {
-            key: 'LayerAttribute',
-            title: '属性',
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('LayerAttribute', {
-                  type: constants.MAP_THEME,
-                })
-            },
-          },
-          {
-            key: 'MapSetting',
-            title: '设置',
-            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
-            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
-            btnClick: () => {
-              this.props.navigation &&
-                this.props.navigation.navigate('MapSetting', {
-                  type: constants.MAP_THEME,
-                })
             },
           },
         ]

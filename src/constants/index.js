@@ -11,6 +11,7 @@ import ConstInfo from './ConstInfo'
 import UserType from './UserType'
 import ThemeType from './ThemeType'
 import CheckStatus from './CheckStatus'
+import ConstAnalyst from './ConstAnalyst'
 
 import {
   layerAdd,
@@ -69,4 +70,5 @@ export {
   UserType,
   ThemeType,
   CheckStatus,
+  ConstAnalyst,
 }

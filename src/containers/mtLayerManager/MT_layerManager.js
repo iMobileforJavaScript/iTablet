@@ -47,6 +47,7 @@ export default class MT_layerManager extends React.Component {
 
   constructor(props) {
     super(props)
+    const { params } = props.navigation.state
     this.state = {
       // datasourceList: [],
       mapName: '',
@@ -54,6 +55,7 @@ export default class MT_layerManager extends React.Component {
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
       selectLayer: this.props.currentLayer.caption,
+      type: params && params.type, // 底部Tabbar类型
     }
   }
 
@@ -893,7 +895,9 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderToolBar = () => {
-    return <MapToolbar navigation={this.props.navigation} initIndex={1} />
+    return (
+      <MapToolbar navigation={this.props.navigation} type={this.state.type} />
+    )
   }
 
   renderList = () => {
