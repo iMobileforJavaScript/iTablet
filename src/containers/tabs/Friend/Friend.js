@@ -394,6 +394,7 @@ export default class Friend extends Component {
           msgId = this._getMsgId(messageObj.user.id)
         }
 
+        //文件通知消息
         if (messageObj.message.type && messageObj.message.type === 6) {
           messageObj.message.message.isReceived = 0
         }

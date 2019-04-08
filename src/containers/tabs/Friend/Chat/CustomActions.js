@@ -17,8 +17,9 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { Const } from '../../../../constants'
-
-var Geolocation = require('Geolocation')
+// eslint-disable-next-line import/no-unresolved
+import Geolocation from 'Geolocation'
+// var Geolocation = require('Geolocation')
 
 // eslint-disable-next-line no-unused-vars
 const ICONS = context => [

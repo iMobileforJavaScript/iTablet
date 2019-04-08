@@ -170,7 +170,7 @@ class Chat extends React.Component {
             type: msg.type,
             message: msg.msg,
           }
-        case 6:
+        case 6: //文件
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -178,6 +178,19 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
+          }
+        case 10: //位置
+          return {
+            _id: msg.msgId,
+            text: msg.msg.message.message,
+            createdAt: new Date(msg.time),
+            user: { _id: msg.id, name: msg.name },
+            type: msg.type,
+            message: msg.msg,
+            location: {
+              latitude: msg.msg.message.latitude,
+              longitude: msg.msg.message.longitude,
+            },
           }
       }
     }
@@ -229,7 +242,7 @@ class Chat extends React.Component {
     let positionStr =
       value.address +
       '\n' +
-      'SITE(' +
+      'LOCATION(' +
       value.longitude.toFixed(6) +
       ',' +
       value.latitude.toFixed(6) +
@@ -243,7 +256,14 @@ class Chat extends React.Component {
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
-      message: positionStr,
+      message: {
+        type: 10,
+        message: {
+          message: positionStr,
+          longitude: value.longitude,
+          latitude: value.latitude,
+        },
+      },
       type: bGroup,
       user: {
         name: this.curUser.nickname,
@@ -261,6 +281,10 @@ class Chat extends React.Component {
       user: { name: this.curUser.nickname, _id: this.curUser.userId },
       createdAt: time,
       system: 0,
+      location: {
+        latitude: value.latitude,
+        longitude: value.longitude,
+      },
     }
     this.setState(previousState => {
       return {
@@ -369,7 +393,14 @@ class Chat extends React.Component {
         message: messageObj.message,
       }
       if (messageObj.message.type === 6) {
+        //文件通知
         msg.message.message.isReceived = 0
+      } else if (messageObj.message.type === 10) {
+        //位置
+        msg.location = {
+          latitude: messageObj.message.message.latitude,
+          longitude: messageObj.message.message.longitude,
+        }
       }
     }
 
