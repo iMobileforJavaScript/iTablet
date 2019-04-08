@@ -33,7 +33,19 @@ function getThemeIconByType(type) {
       icon = require('./map/layers_theme_unify_label_style_black.png')
       break
     case ThemeType.GRAPH: // 统计专题图
-      icon = getThemeAssets().themeType.theme_graph_type
+      icon = getThemeAssets().themeType.theme_graphmap
+      break
+    case ThemeType.DOTDENSITY: // 点密度专题图
+      icon = getThemeAssets().themeType.theme_dot_density
+      break
+    case ThemeType.GRADUATEDSYMBOL: // 等级符号专题图
+      icon = getThemeAssets().themeType.theme_graduated_symbol
+      break
+    case ThemeType.GRIDUNIQUE: // 栅格单值专题图
+      icon = getThemeAssets().themeType.theme_grid_unique
+      break
+    case ThemeType.GRIDRANGE: // 栅格分段专题图
+      icon = getThemeAssets().themeType.theme_grid_range
       break
     default:
       icon = require('./public/mapLoad.png')

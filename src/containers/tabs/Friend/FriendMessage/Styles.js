@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
   ItemViewStyle: {
     paddingLeft: scaleSize(20),
     paddingRight: scaleSize(20),
-    height: scaleSize(120),
+    height: scaleSize(140),
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',

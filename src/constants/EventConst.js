@@ -13,4 +13,8 @@ export default {
   ONLINE_SERVICE_UPLOADED: 'com.supermap.RN.Mapcontrol.online_service_uploaded',
   ONLINE_SERVICE_UPLOADFAILURE:
     'com.supermap.RN.Mapcontrol.online_service_uploadfailure',
+  MESSAGE_SERVICE_SEND_FILE:
+    'com.supermap.RN.MessageService.send_file_progress',
+  MESSAGE_SERVICE_RECEIVE_FILE:
+    'com.supermap.RN.MessageService.receive_file_progress',
 }

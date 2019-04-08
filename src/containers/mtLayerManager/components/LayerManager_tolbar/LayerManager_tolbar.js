@@ -450,9 +450,10 @@ export default class LayerManager_tolbar extends React.Component {
       } else if (
         parseInt(type) === 1 ||
         parseInt(type) === 3 ||
-        parseInt(type) === 5
+        parseInt(type) === 5 ||
+        parseInt(type) === 83
       ) {
-        //由图层创建专题图(点，线，面)
+        //由图层创建专题图(点，线，面, 栅格)
         this.setVisible(false)
         GLOBAL.toolBox &&
           GLOBAL.toolBox.setVisible(
@@ -460,8 +461,11 @@ export default class LayerManager_tolbar extends React.Component {
             ConstToolType.MAP_THEME_CREATE_BY_LAYER,
             {
               isFullScreen: true,
-              column: 4,
-              height: ConstToolType.THEME_HEIGHT[10],
+              column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+              height:
+                this.props.device.orientation === 'LANDSCAPE'
+                  ? ConstToolType.THEME_HEIGHT[4]
+                  : ConstToolType.THEME_HEIGHT[10],
               createThemeByLayer: this.state.layerdata.name,
             },
           )

@@ -16,13 +16,7 @@ import {
 import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import styles from './styles'
-import {
-  SScene,
-  SMap,
-  Action,
-  ThemeType,
-  SThemeCartography,
-} from 'imobile_for_reactnative'
+import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import constants from '../../constants'
 import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
@@ -169,7 +163,11 @@ export default class FunctionToolbar extends React.Component {
         type = constants.THEME_GRADUATED_SYMBOL
         break
       case ThemeType.GRIDRANGE:
+        type = constants.THEME_GRID_RANGE
+        break
       case ThemeType.GRIDUNIQUE:
+        type = constants.THEME_GRID_UNIQUE
+        break
       case ThemeType.CUSTOM:
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return
@@ -462,20 +460,23 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
-    let isAnyOpenedDS = true //是否有打开的数据源
-    isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
-    if (!isAnyOpenedDS) {
-      Toast.show('请先添加数据源')
-      return
-    }
+    // let isAnyOpenedDS = true //是否有打开的数据源
+    // isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+    // if (!isAnyOpenedDS) {
+    //   Toast.show('请先添加数据源')
+    //   return
+    // }
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       // TODO 根据符号类型改变ToolBox 编辑内容
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[10],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[10],
       })
     }
   }

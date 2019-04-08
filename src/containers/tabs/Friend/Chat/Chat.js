@@ -21,6 +21,9 @@ import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
+// eslint-disable-next-line import/no-unresolved
+import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
+import { EventConst } from '../../../../constants'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -53,6 +56,7 @@ class Chat extends React.Component {
     this._isMounted = false
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
+    this.onSendLocation = this.onSendLocation.bind(this)
     this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
@@ -84,6 +88,23 @@ class Chat extends React.Component {
       }
     })
 
+    this.listener = RCTDeviceEventEmitter.addListener(
+      EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+      // eslint-disable-next-line no-unused-vars
+      value => {
+        // console.log(value)
+        // 接受到 通知后的处理
+      },
+    )
+
+    this.listener = RCTDeviceEventEmitter.addListener(
+      EventConst.MESSAGE_SERVICE_SEND_FILE,
+      // eslint-disable-next-line no-unused-vars
+      value => {
+        // console.log(value)
+        // 接受到 通知后的处理
+      },
+    )
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
     //   messages: [
@@ -104,6 +125,7 @@ class Chat extends React.Component {
   componentWillUnmount() {
     this.friend.setCurChat(undefined)
     this._isMounted = false
+    this.listener.remove()
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -137,26 +159,35 @@ class Chat extends React.Component {
   }
 
   loadMsgByType(msg) {
-    switch (msg.type) {
-      default:
-        return {
-          _id: msg.msgId,
-          text: msg.msg,
-          createdAt: new Date(msg.time),
-          user: { _id: msg.id, name: msg.name },
-          type: msg.type, //根据type渲染
-        }
-      case 4:
-        return {
-          _id: msg.msgId,
-          text: msg.msg,
-          createdAt: new Date(msg.time),
-          user: { _id: msg.id, name: msg.name },
-          type: msg.type, //根据type渲染
-          fileName: msg.fileName,
-          queueName: msg.queueName,
-          isReceived: msg.isReceived,
-        }
+    if (msg.msg.type) {
+      switch (msg.msg.type) {
+        default:
+          return {
+            _id: msg.msgId,
+            text: ' ',
+            createdAt: new Date(msg.time),
+            user: { _id: msg.id, name: msg.name },
+            type: msg.type,
+            message: msg.msg,
+          }
+        case 6:
+          return {
+            _id: msg.msgId,
+            text: msg.msg.message.message,
+            createdAt: new Date(msg.time),
+            user: { _id: msg.id, name: msg.name },
+            type: msg.type,
+            message: msg.msg,
+          }
+      }
+    }
+    return {
+      _id: msg.msgId,
+      text: msg.msg,
+      createdAt: new Date(msg.time),
+      user: { _id: msg.id, name: msg.name },
+      type: msg.type,
+      message: msg.msg,
     }
   }
 
@@ -181,8 +212,9 @@ class Chat extends React.Component {
     }
     // for demo purpose
     // this.answerDemo(messages)
+    messages[0].message = messages[0].text
     messages[0].type = bGroup
-    let msgId = this.friend._getChatId(this.targetUser.id)
+    let msgId = this.friend._getMsgId(this.targetUser.id)
     messages[0]._id = msgId
     this.setState(previousState => {
       return {
@@ -193,38 +225,42 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
-  onSendFile() {
-    // filepath1
-    // let bGroup = 1
+  onSendLocation(value) {
+    let positionStr =
+      value.address +
+      '\n' +
+      'SITE(' +
+      value.longitude.toFixed(6) +
+      ',' +
+      value.latitude.toFixed(6) +
+      ')'
+    let bGroup = 1
     let groupID = this.curUser.userId
     if (this.targetUser.id.indexOf('Group_') != -1) {
-      // bGroup = 2
+      bGroup = 2
       groupID = this.targetUser.id
     }
-    let filepath = '/sdcard/send.zip'
     let ctime = new Date()
     let time = Date.parse(ctime)
     let message = {
-      type: 3, //文件
+      message: positionStr,
+      type: bGroup,
       user: {
         name: this.curUser.nickname,
         id: this.curUser.userId,
         groupID: groupID,
       },
       time: time,
-      system: 0,
     }
-
-    let msgId = this.friend._getChatId(this.targetUser.id)
+    let msgId = this.friend._getMsgId(this.targetUser.id)
     let msg = {
+      //添加到giftedchat的消息
       _id: msgId,
-      text: '[文件]',
-      type: 4, //文件接收通知
+      text: positionStr,
+      type: 1,
       user: { name: this.curUser.nickname, _id: this.curUser.userId },
       createdAt: time,
       system: 0,
-      fileName: '',
-      queueName: '',
     }
     this.setState(previousState => {
       return {
@@ -232,7 +268,68 @@ class Chat extends React.Component {
       }
     })
 
-    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id)
+    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
+  }
+  onSendFile(filepath) {
+    let bGroup = 1
+    let groupID = this.curUser.userId
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      //要发送的消息
+      type: bGroup,
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
+      time: time,
+      system: 0,
+      message: {
+        type: 3, //文件本体
+        message: {
+          data: '',
+          index: 0,
+          length: 0,
+        },
+      },
+    }
+
+    let msgId = this.friend._getMsgId(this.targetUser.id)
+    let msg = {
+      //添加到giftedchat的消息
+      _id: msgId,
+      text: '[文件]',
+      type: 1, //文件接收通知
+      user: { name: this.curUser.nickname, _id: this.curUser.userId },
+      createdAt: time,
+      system: 0,
+      message: {
+        type: 6,
+        message: {
+          message: '[文件]',
+          fileName: '',
+          fileSize: '',
+          queueName: '',
+        },
+      },
+    }
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, msg),
+      }
+    })
+
+    this.friend._sendFile(
+      JSON.stringify(message),
+      filepath,
+      this.targetUser.id,
+      msgId,
+    )
   }
 
   showInformSpot = b => {
@@ -240,23 +337,40 @@ class Chat extends React.Component {
   }
   onReceive(text, bSystem) {
     let messageObj = JSON.parse(text)
-    let msgId = this.friend._getChatId(this.targetUser.id) - 1
-    let msg = {
-      _id: msgId,
-      text: messageObj.message,
-      createdAt: new Date(messageObj.time),
-      system: bSystem,
-      user: {
-        _id: messageObj.user.id,
-        name: messageObj.user.name,
-        // avatar: 'https://facebook.github.io/react/img/logo_og.png',
-      },
-      type: messageObj.type,
-    }
-    if (msg.type === 4) {
-      msg.fileName = messageObj.fileName
-      msg.queueName = messageObj.queueName
-      msg.isReceived = 0
+    let msgId = this.friend._getMsgId(this.targetUser.id) - 1
+    let msg = {}
+    if (!messageObj.message.type) {
+      //特殊处理文本消息
+      msg = {
+        _id: msgId,
+        text: messageObj.message,
+        createdAt: new Date(messageObj.time),
+        system: bSystem,
+        user: {
+          _id: messageObj.user.id,
+          name: messageObj.user.name,
+          // avatar: 'https://facebook.github.io/react/img/logo_og.png',
+        },
+        type: messageObj.type,
+        message: messageObj.message,
+      }
+    } else {
+      msg = {
+        _id: msgId,
+        text: messageObj.message.message.message,
+        createdAt: new Date(messageObj.time),
+        system: bSystem,
+        user: {
+          _id: messageObj.user.id,
+          name: messageObj.user.name,
+          // avatar: 'https://facebook.github.io/react/img/logo_og.png',
+        },
+        type: messageObj.type,
+        message: messageObj.message,
+      }
+      if (messageObj.message.type === 6) {
+        msg.message.message.isReceived = 0
+      }
     }
 
     this.setState(previousState => {
@@ -268,40 +382,42 @@ class Chat extends React.Component {
   }
 
   onLongPress(context, message) {
-    switch (message.type) {
-      case 1:
-        alert('1')
-        break
-      case 4:
-        if (message.user._id !== this.curUser.userId) {
-          alert('4')
-          if (message.isReceived === 0) {
-            this.friend._receiveFile(
-              message.fileName,
-              message.queueName,
-              this.targetUser.id,
-              message._id,
-            )
-            this.setState(previousState => {
-              let length = previousState.messages
-              let i = 0
-              for (; i < length; i++) {
-                if (previousState.messages[i]._id === message._id) {
-                  break
+    // console.log(message)
+    if (message.message.type) {
+      switch (message.message.type) {
+        case 6:
+          if (message.user._id !== this.curUser.userId) {
+            alert('6')
+            if (message.message.message.isReceived === 0) {
+              this.friend._receiveFile(
+                message.message.message.fileName,
+                message.message.message.queueName,
+                this.targetUser.id,
+                message._id,
+              )
+              this.setState(previousState => {
+                let length = previousState.messages
+                let i = 0
+                for (; i < length; i++) {
+                  if (previousState.messages[i]._id === message._id) {
+                    break
+                  }
                 }
-              }
-              previousState.messages[i].isReceived = 1
-              return {
-                messages: previousState.messages,
-              }
-            })
-          } else {
-            alert('已接收此文件')
+                previousState.messages[i].message.message.isReceived = 1
+                return {
+                  messages: previousState.messages,
+                }
+              })
+            } else {
+              alert('已接收此文件')
+            }
           }
-        }
-        break
-      default:
-        alert('undefined')
+          break
+        default:
+          alert('undefined')
+      }
+    } else {
+      alert('1')
     }
   }
 
@@ -367,6 +483,13 @@ class Chat extends React.Component {
       <CustomActions
         {...props}
         callBack={value => this.setState({ chatBottom: value })}
+        sendCallBack={(type, value) => {
+          if (type === 1) {
+            this.onSendFile(value)
+          } else if (type === 3) {
+            this.onSendLocation(value)
+          }
+        }}
       />
     )
   }
