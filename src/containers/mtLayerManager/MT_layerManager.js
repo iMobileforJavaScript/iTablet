@@ -485,6 +485,12 @@ export default class MT_layerManager extends React.Component {
       case ThemeType.GRAPH:
         curThemeType = constants.THEME_GRAPH_STYLE
         break
+      case ThemeType.GRIDRANGE:
+        curThemeType = constants.THEME_GRID_RANGE
+        break
+      case ThemeType.GRIDUNIQUE:
+        curThemeType = constants.THEME_GRID_UNIQUE
+        break
       default:
         Toast.show('提示:当前图层暂不支持修改')
         break

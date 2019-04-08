@@ -27,6 +27,8 @@ import {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
 } from './FunctionToolbarModule'
 
 import {
@@ -66,6 +68,8 @@ export {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
   UserType,
   ThemeType,
   CheckStatus,

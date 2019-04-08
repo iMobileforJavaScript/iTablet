@@ -9,7 +9,13 @@ import { Toast } from '../../../../utils'
 
 let _toolbarParams = {}
 
-function showDatasetsList() {
+async function showDatasetsList() {
+  let isAnyOpenedDS = true //是否有打开的数据源
+  isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+  if (!isAnyOpenedDS) {
+    Toast.show('请先通过"统一风格"添加数据源')
+    return
+  }
   let data = []
   SThemeCartography.getAllDatasetNames().then(getdata => {
     getdata.reverse()
@@ -111,6 +117,124 @@ function showExpressionList(type) {
         _toolbarParams.scrollListToLocation()
     },
   )
+}
+
+//通过数据集->创建栅格单值专题图
+async function createThemeGridUniqueMap(params) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    DatasourceAlias: params.themeDatasourceAlias,
+    DatasetName: params.themeDatasetName,
+    GridUniqueColorScheme: 'EE_Lake',
+  }
+  await SThemeCartography.createThemeGridUniqueMap(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
+//通过数据集->创建栅格分段专题图
+async function createThemeGridRangeMap(params) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    DatasourceAlias: params.themeDatasourceAlias,
+    DatasetName: params.themeDatasetName,
+    GridRangeColorScheme: 'FF_Blues',
+  }
+  await SThemeCartography.createThemeGridRangeMap(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
+//通过图层->创建栅格单值专题图
+async function createThemeGridUniqueMapByLayer() {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    LayerName: _createThemeByLayer,
+    GridUniqueColorScheme: 'EE_Lake',
+  }
+  await SThemeCartography.createThemeGridUniqueMapByLayer(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
+//通过图层->创建栅格分段专题图
+async function createThemeGridRangeMapByLayer() {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    LayerName: _createThemeByLayer,
+    GridRangeColorScheme: 'FF_Blues',
+  }
+  await SThemeCartography.createThemeGridRangeMapByLayer(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
 }
 
 /**
@@ -318,7 +442,7 @@ function getThemeMapCreateByLayer(type, params) {
       key: constants.THEME_DOT_DENSITY,
       title: constants.THEME_DOT_DENSITY,
       size: 'large',
-      action: () => {},
+      action: () => showExpressionList('Theme'),
       image: getThemeAssets().themeType.theme_dot_density,
       selectedImage: getThemeAssets().themeType.theme_dot_density,
     },
@@ -327,16 +451,34 @@ function getThemeMapCreateByLayer(type, params) {
       key: constants.THEME_GRADUATED_SYMBOL,
       title: constants.THEME_GRADUATED_SYMBOL,
       size: 'large',
-      action: () => {},
+      action: () => showExpressionList('Theme'),
       image: getThemeAssets().themeType.theme_graduated_symbol,
       selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    },
+    {
+      //栅格单值专题图
+      key: constants.THEME_GRID_UNIQUE,
+      title: constants.THEME_GRID_UNIQUE,
+      size: 'large',
+      action: () => createThemeGridUniqueMapByLayer(),
+      image: getThemeAssets().themeType.theme_grid_unique,
+      selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    },
+    {
+      //栅格分段专题图
+      key: constants.THEME_GRID_RANGE,
+      title: constants.THEME_GRID_RANGE,
+      size: 'large',
+      action: () => createThemeGridRangeMapByLayer(),
+      image: getThemeAssets().themeType.theme_grid_range,
+      selectedImage: getThemeAssets().themeType.theme_grid_range,
     },
   ]
   return { data, buttons }
 }
 
 /**
- * 获取创建专题图菜单
+ * 通过数据集创建专题图
  * @param type
  * @returns {{data: Array, buttons: Array}}
  */
@@ -553,6 +695,24 @@ function getThemeMapCreate(type, params) {
       image: getThemeAssets().themeType.theme_graduated_symbol,
       selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
     },
+    {
+      //栅格单值专题图
+      key: constants.THEME_GRID_UNIQUE,
+      title: constants.THEME_GRID_UNIQUE,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_grid_unique,
+      selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    },
+    {
+      //栅格分段专题图
+      key: constants.THEME_GRID_RANGE,
+      title: constants.THEME_GRID_RANGE,
+      size: 'large',
+      action: showDatasetsList,
+      image: getThemeAssets().themeType.theme_grid_range,
+      selectedImage: getThemeAssets().themeType.theme_grid_range,
+    },
   ]
   return { data, buttons }
 }
@@ -717,6 +877,10 @@ function setRangeMode() {
   return SThemeCartography.modifyThemeRangeMap(_params)
 }
 
+function setGridRangeMode() {
+  return SThemeCartography.modifyThemeGridRangeMap(_params)
+}
+
 function getRangeMode() {
   let data = [
     {
@@ -769,6 +933,48 @@ function getRangeMode() {
     //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
     //   title: '自定义分段',
     //   action: setRangeMode,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    //   selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    // },
+  ]
+  return data
+}
+
+function getGridRangeMode() {
+  let data = [
+    {
+      // 等距分段
+      key: constants.MAP_THEME_PARAM_RANGE_MODE_EQUALINTERVAL,
+      title: '等距分段',
+      action: setGridRangeMode,
+      size: 'large',
+      image: require('../../../../assets/mapTools/range_mode_equalinterval_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_equalinterval_black.png'),
+    },
+    {
+      // 平方根分段
+      key: constants.MAP_THEME_PARAM_RANGE_MODE_SQUAREROOT,
+      title: '平方根分段',
+      action: setGridRangeMode,
+      size: 'large',
+      image: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
+    },
+    {
+      // 对数分段
+      key: constants.MAP_THEME_PARAM_RANGE_MODE_LOGARITHM,
+      title: '对数分段',
+      action: setGridRangeMode,
+      size: 'large',
+      image: require('../../../../assets/mapTools/range_mode_logarithm_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_logarithm_black.png'),
+    },
+    // {
+    //   // 自定义分段
+    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
+    //   title: '自定义分段',
+    //   action: setGridRangeMode,
     //   size: 'large',
     //   image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
     //   selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
@@ -2984,4 +3190,7 @@ export default {
   //创建专题图
   createThemeByDataset,
   createThemeByLayer,
+  createThemeGridUniqueMap,
+  createThemeGridRangeMap,
+  getGridRangeMode,
 }

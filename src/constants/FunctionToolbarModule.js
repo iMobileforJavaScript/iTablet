@@ -1029,6 +1029,79 @@ const graduatedSymbolMenuInfo = [
   },
 ]
 
+//栅格单值专题图
+const gridUniqueMenuInfo = [
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getUniqueColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR,
+          '颜色方案',
+          '颜色方案',
+        )
+    },
+  },
+  // {
+  //   key: '缺省风格',
+  //   selectKey: '缺省风格',
+  //   btntitle: '缺省风格',
+  //   action: () => {
+  //     GLOBAL.toolBox &&
+  //     GLOBAL.toolBox.getColorTable(
+  //       ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_DEFAULT_COLOR,
+  //       '缺省风格',
+  //       '缺省风格',
+  //     )
+  //   },
+  // },
+]
+
+//栅格分段专题图（分段方法有缺陷，只有等距分段有用，先注释掉）
+const gridRangeMenuInfo = [
+  // {
+  //   key: '分段方法',
+  //   selectKey: '分段方法',
+  //   btntitle: '分段方法',
+  //   action: () => {
+  //     GLOBAL.toolBox &&
+  //     GLOBAL.toolBox.getGridRangeMode(
+  //       ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGEMODE,
+  //       '分段方法',
+  //       '分段方法',
+  //     )
+  //   },
+  // },
+  {
+    key: '分段个数',
+    selectKey: '分段个数',
+    btntitle: '分段个数',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeParameter(
+          ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGECOUNT,
+          '分段个数',
+          '分段个数',
+        )
+    },
+  },
+  {
+    key: '颜色方案',
+    selectKey: '颜色方案',
+    btntitle: '颜色方案',
+    action: () => {
+      GLOBAL.toolBox &&
+        GLOBAL.toolBox.getRangeColorScheme(
+          ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR,
+          '颜色方案',
+          '颜色方案',
+        )
+    },
+  },
+]
+
 export {
   layerAdd,
   BotMap,
@@ -1044,4 +1117,6 @@ export {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
 }
