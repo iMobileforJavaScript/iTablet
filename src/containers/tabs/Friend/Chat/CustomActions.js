@@ -33,7 +33,7 @@ const ICONS = context => [
         // eslint-disable-next-line
         chatCallBack: _path => {
           // console.warn(path)
-          context.props.sendFileCallBack(1, _path)
+          context.props.sendCallBack(1, _path)
         },
       })
       context.setModalVisible()
@@ -66,6 +66,7 @@ const ICONS = context => [
 export default class CustomActions extends React.Component {
   props: {
     callBack: () => {},
+    sendCallBack: () => {},
   }
 
   constructor(props) {
@@ -151,30 +152,35 @@ export default class CustomActions extends React.Component {
     Geolocation.getCurrentPosition(
       location => {
         // eslint-disable-next-line no-unused-vars
-        var result =
-          '速度：' +
-          location.coords.speed +
-          '\n经度：' +
-          location.coords.longitude +
-          '\n纬度：' +
-          location.coords.latitude +
-          '\n准确度：' +
-          location.coords.accuracy +
-          '\n行进方向：' +
-          location.coords.heading +
-          '\n海拔：' +
-          location.coords.altitude +
-          '\n海拔准确度：' +
-          location.coords.altitudeAccuracy +
-          '\n时间戳：' +
-          location.timestamp
+        // var result =
+        //   '速度：' +
+        //   location.coords.speed +
+        //   '\n经度：' +
+        //   location.coords.longitude +
+        //   '\n纬度：' +
+        //   location.coords.latitude +
+        //   '\n准确度：' +
+        //   location.coords.accuracy +
+        //   '\n行进方向：' +
+        //   location.coords.heading +
+        //   '\n海拔：' +
+        //   location.coords.altitude +
+        //   '\n海拔准确度：' +
+        //   location.coords.altitudeAccuracy +
+        //   '\n时间戳：' +
+        //   location.timestamp
         //alert(result);
         SOnlineService.reverseGeocoding(
           location.coords.longitude,
           location.coords.latitude,
           {
             onResult: result => {
-              alert(result)
+              this.props.sendCallBack(3, {
+                address: result,
+                longitude: location.coords.longitude,
+                latitude: location.coords.latitude,
+              })
+              // alert(result)
             },
           },
         )

@@ -56,6 +56,7 @@ class Chat extends React.Component {
     this._isMounted = false
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
+    this.onSendLocation = this.onSendLocation.bind(this)
     this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
@@ -224,6 +225,51 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
+  onSendLocation(value) {
+    let positionStr =
+      value.address +
+      '\n' +
+      'SITE(' +
+      value.longitude.toFixed(6) +
+      ',' +
+      value.latitude.toFixed(6) +
+      ')'
+    let bGroup = 1
+    let groupID = this.curUser.userId
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: positionStr,
+      type: bGroup,
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
+      time: time,
+    }
+    let msgId = this.friend._getMsgId(this.targetUser.id)
+    let msg = {
+      //添加到giftedchat的消息
+      _id: msgId,
+      text: positionStr,
+      type: 1,
+      user: { name: this.curUser.nickname, _id: this.curUser.userId },
+      createdAt: time,
+      system: 0,
+    }
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, msg),
+      }
+    })
+
+    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
+  }
   onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
@@ -437,9 +483,11 @@ class Chat extends React.Component {
       <CustomActions
         {...props}
         callBack={value => this.setState({ chatBottom: value })}
-        sendFileCallBack={(type, path) => {
+        sendCallBack={(type, value) => {
           if (type === 1) {
-            this.onSendFile(path)
+            this.onSendFile(value)
+          } else if (type === 3) {
+            this.onSendLocation(value)
           }
         }}
       />
