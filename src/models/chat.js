@@ -106,15 +106,6 @@ export default handleActions(
           unReadMsg: payload.unReadMsg,
           msgId: payload.msgId,
         }
-        switch (payload.type) {
-          case 4:
-            pushMsg.queueName = payload.queueName
-            pushMsg.fileName = payload.fileName
-            pushMsg.isReceived = payload.isReceived
-            break
-          default:
-            break
-        }
         chats.history.push(pushMsg)
 
         if (payload.unReadMsg) {

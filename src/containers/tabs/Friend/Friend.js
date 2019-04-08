@@ -225,8 +225,6 @@ export default class Friend extends Component {
         time: messageObj.time,
         type: messageObj.type, //消息类型
         system: messageObj.system,
-        fileName: messageObj.fileName,
-        queueName: messageObj.queueName,
         msgId: msgId,
       })
     }
@@ -265,16 +263,23 @@ export default class Friend extends Component {
       let messageObj = JSON.parse(messageStr)
       let ctime = new Date()
       let time = Date.parse(ctime)
-      let fileinform = {
-        message: '[文件]',
-        type: 4, //文件接收通知
+      let informMsg = {
+        type: messageObj.type, 
         user: messageObj.user,
         time: time,
         system: 0,
-        fileName: res.fileName,
-        queueName: res.queueName,
+        message: {
+          type: 6, //文件接收通知
+          message: {
+            message: '[文件]',
+            fileName: res.fileName,
+            fileSize: res.fileSize,
+            queueName: res.queueName,
+          },
+          
+        },
       }
-      this._sendMessage(JSON.stringify(fileinform), talkId, false)
+      this._sendMessage(JSON.stringify(informMsg), talkId, false)
     })
   }
 
@@ -287,7 +292,13 @@ export default class Friend extends Component {
               userId: this.props.user.currentUser.userId,
               talkId: talkId,
               msgId: msgId,
-              editItem: { isReceived: 1 },
+              editItem: 
+              { message: {
+                  message: {
+                    isReceived: 1
+                  }
+                }
+               },
             })
         }
       })
@@ -382,6 +393,10 @@ export default class Friend extends Component {
           msgId = this._getMsgId(messageObj.user.id)
         }
 
+        if (messageObj.message.type && messageObj.message.type === 6){
+          messageObj.message.message.isReceived = 0
+        }
+
         MessageDataHandle.pushMessage({
           userId: userId, //当前登录账户的id
           talkId: messageObj.user.groupID, //会话ID
@@ -390,8 +405,6 @@ export default class Friend extends Component {
           time: messageObj.time,
           type: messageObj.type, //消息类型
           unReadMsg: bUnReadMsg,
-          fileName: messageObj.fileName,
-          queueName: messageObj.queueName,
           msgId: msgId,
           isReceived: 0,
         })

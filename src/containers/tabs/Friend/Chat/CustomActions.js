@@ -34,6 +34,7 @@ const ICONS = context => [
         // eslint-disable-next-line
         chatCallBack: _path => {
           // console.warn(path)
+          context.props.sendFileCallBack(1,_path)
         },
       })
       context.setModalVisible()
