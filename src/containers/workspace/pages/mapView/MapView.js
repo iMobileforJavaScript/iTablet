@@ -100,8 +100,8 @@ export default class MapView extends React.Component {
     const { params } = this.props.navigation.state
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
-    this.operationType =
-      (params && params.operationType) || constants.COLLECTION
+    // this.operationType =
+    //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
     this.mapName = (params && params.mapName) || ''
@@ -1011,7 +1011,7 @@ export default class MapView extends React.Component {
       <MapToolbar
         navigation={this.props.navigation}
         initIndex={0}
-        type={this.operationType}
+        type={this.type}
       />
     )
   }
@@ -1022,7 +1022,7 @@ export default class MapView extends React.Component {
       <FunctionToolbar
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
-        type={this.operationType}
+        type={this.type}
         getToolRef={() => this.toolBox}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}
