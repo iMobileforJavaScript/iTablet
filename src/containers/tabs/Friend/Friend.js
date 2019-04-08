@@ -237,7 +237,7 @@ export default class Friend extends Component {
     let userId = this.props.user.currentUser.userId
     let msgId = 0
     let chatHistory = []
-    if(this.props.chat[userId] && this.props.chat[userId][talkId]){
+    if (this.props.chat[userId] && this.props.chat[userId][talkId]) {
       chatHistory = this.props.chat[userId][talkId].history
     }
     if (chatHistory.length !== 0) {
@@ -280,17 +280,19 @@ export default class Friend extends Component {
 
   _receiveFile = (fileName, queueName, talkId, msgId) => {
     if (g_connectService) {
-      SMessageService.receiveFile(fileName, queueName, talkId, msgId).then(res => {
-        if (res === true) {
-          this.props.editChat &&
-            this.props.editChat({
-              userId: this.props.user.currentUser.userId,
-              talkId: talkId,
-              msgId: msgId,
-              editItem: { isReceived: 1 },
-            })
-        }
-      })
+      SMessageService.receiveFile(fileName, queueName, talkId, msgId).then(
+        res => {
+          if (res === true) {
+            this.props.editChat &&
+              this.props.editChat({
+                userId: this.props.user.currentUser.userId,
+                talkId: talkId,
+                msgId: msgId,
+                editItem: { isReceived: 1 },
+              })
+          }
+        },
+      )
     }
   }
 
@@ -365,7 +367,7 @@ export default class Friend extends Component {
 
         // let chatHistory = []
         // let msgId = 0
-        // if (messageObj.type === 2 && this.props.chat[userId] 
+        // if (messageObj.type === 2 && this.props.chat[userId]
         //     && this.props.chat[userId][messageObj.user.groupID]) {
         //     chatHistory = this.props.chat[userId][messageObj.user.groupID]
         //       .history
@@ -376,9 +378,9 @@ export default class Friend extends Component {
         //   msgId = chatHistory[chatHistory.length - 1].msgId + 1
         // }
         let msgId = 0
-        if (messageObj.type === 2){
+        if (messageObj.type === 2) {
           msgId = this._getMsgId(messageObj.user.groupID)
-        }else{
+        } else {
           msgId = this._getMsgId(messageObj.user.id)
         }
 
