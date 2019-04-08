@@ -31,7 +31,10 @@ const ICONS = context => [
         title: Const.MAP,
         formChat: true,
         // eslint-disable-next-line
-        chatCallBack: _path => {},
+        chatCallBack: _path => {
+          // console.warn(path)
+          context.props.sendFileCallBack(1, _path)
+        },
       })
       context.setModalVisible()
     },
