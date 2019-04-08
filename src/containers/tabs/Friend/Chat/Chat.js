@@ -23,6 +23,7 @@ import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
+// eslint-disable-next-line import/no-unresolved
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
 import { ConstPath, EventConst } from '../../../../constants';
 import { color } from '../../../../styles'
@@ -60,6 +61,7 @@ class Chat extends React.Component {
     this._isMounted = false
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
+    this.onSendLocation = this.onSendLocation.bind(this)
     this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
@@ -93,20 +95,21 @@ class Chat extends React.Component {
 
     this.listener = RCTDeviceEventEmitter.addListener(
       EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-      (value)=>{
-        console.log(value)
-      // 接受到 通知后的处理
-    })
+      // eslint-disable-next-line no-unused-vars
+      value => {
+        // console.log(value)
+        // 接受到 通知后的处理
+      },
+    )
 
     this.listener = RCTDeviceEventEmitter.addListener(
       EventConst.MESSAGE_SERVICE_SEND_FILE,
-      (value)=>{
-        console.log(value)
-      // 接受到 通知后的处理
-    })
-
-  
-
+      // eslint-disable-next-line no-unused-vars
+      value => {
+        // console.log(value)
+        // 接受到 通知后的处理
+      },
+    )
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
     //   messages: [
@@ -127,7 +130,7 @@ class Chat extends React.Component {
   componentWillUnmount() {
     this.friend.setCurChat(undefined)
     this._isMounted = false
-    this.listener.remove();
+    this.listener.remove()
   }
   // eslint-disable-next-line
   onPressAvator = data => {}
@@ -161,18 +164,18 @@ class Chat extends React.Component {
   }
 
   loadMsgByType(msg) {
-    if(msg.msg.type){
+    if (msg.msg.type) {
       switch (msg.msg.type) {
         default:
-        return {
-          _id: msg.msgId,
-          text: " ",
-          createdAt: new Date(msg.time),
-          user: { _id: msg.id, name: msg.name },
-          type: msg.type,
-          message: msg.msg,
-        }
-        case 6 :
+          return {
+            _id: msg.msgId,
+            text: ' ',
+            createdAt: new Date(msg.time),
+            user: { _id: msg.id, name: msg.name },
+            type: msg.type,
+            message: msg.msg,
+          }
+        case 6: //文件
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -180,6 +183,19 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
+          }
+        case 10: //位置
+          return {
+            _id: msg.msgId,
+            text: msg.msg.message.message,
+            createdAt: new Date(msg.time),
+            user: { _id: msg.id, name: msg.name },
+            type: msg.type,
+            message: msg.msg,
+            location: {
+              latitude: msg.msg.message.latitude,
+              longitude: msg.msg.message.longitude,
+            },
           }
       }
     }
@@ -214,7 +230,7 @@ class Chat extends React.Component {
     }
     // for demo purpose
     // this.answerDemo(messages)
-    messages[0].message =  messages[0].text
+    messages[0].message = messages[0].text
     messages[0].type = bGroup
     let msgId = this.friend._getMsgId(this.targetUser.id)
     messages[0]._id = msgId
@@ -227,6 +243,62 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
+  onSendLocation(value) {
+    let positionStr =
+      value.address +
+      '\n' +
+      'LOCATION(' +
+      value.longitude.toFixed(6) +
+      ',' +
+      value.latitude.toFixed(6) +
+      ')'
+    let bGroup = 1
+    let groupID = this.curUser.userId
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: {
+        type: 10,
+        message: {
+          message: positionStr,
+          longitude: value.longitude,
+          latitude: value.latitude,
+        },
+      },
+      type: bGroup,
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
+      time: time,
+    }
+    let msgId = this.friend._getMsgId(this.targetUser.id)
+    let msg = {
+      //添加到giftedchat的消息
+      _id: msgId,
+      text: positionStr,
+      type: 1,
+      user: { name: this.curUser.nickname, _id: this.curUser.userId },
+      createdAt: time,
+      system: 0,
+      location: {
+        latitude: value.latitude,
+        longitude: value.longitude,
+      },
+    }
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, msg),
+      }
+    })
+
+    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
+  }
   onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
@@ -236,8 +308,9 @@ class Chat extends React.Component {
     }
     let ctime = new Date()
     let time = Date.parse(ctime)
-    let message = { //要发送的消息
-      type: bGroup, 
+    let message = {
+      //要发送的消息
+      type: bGroup,
       user: {
         name: this.curUser.nickname,
         id: this.curUser.userId,
@@ -248,7 +321,7 @@ class Chat extends React.Component {
       message: {
         type: 3, //文件本体
         message: {
-          data:"",
+          data: '',
           index: 0,
           length: 0,
         },
@@ -281,7 +354,12 @@ class Chat extends React.Component {
       }
     })
 
-    this.friend._sendFile(JSON.stringify(message), filepath, this.targetUser.id, msgId)
+    this.friend._sendFile(
+      JSON.stringify(message),
+      filepath,
+      this.targetUser.id,
+      msgId,
+    )
   }
 
   showInformSpot = b => {
@@ -291,7 +369,8 @@ class Chat extends React.Component {
     let messageObj = JSON.parse(text)
     let msgId = this.friend._getMsgId(this.targetUser.id) - 1
     let msg = {}
-    if(!messageObj.message.type){//特殊处理文本消息
+    if (!messageObj.message.type) {
+      //特殊处理文本消息
       msg = {
         _id: msgId,
         text: messageObj.message,
@@ -305,7 +384,7 @@ class Chat extends React.Component {
         type: messageObj.type,
         message: messageObj.message,
       }
-    }else{
+    } else {
       msg = {
         _id: msgId,
         text: messageObj.message.message.message,
@@ -319,12 +398,17 @@ class Chat extends React.Component {
         type: messageObj.type,
         message: messageObj.message,
       }
-      if(messageObj.message.type === 6){
-        msg.message.message.isReceived =0
+      if (messageObj.message.type === 6) {
+        //文件通知
+        msg.message.message.isReceived = 0
+      } else if (messageObj.message.type === 10) {
+        //位置
+        msg.location = {
+          latitude: messageObj.message.message.latitude,
+          longitude: messageObj.message.message.longitude,
+        }
       }
     }
-    
-    
 
     this.setState(previousState => {
       return {
@@ -335,7 +419,6 @@ class Chat extends React.Component {
   }
 
    async onLongPress(context, message) {
-    console.log(message)
     if(message.message.type){
       switch (message.message.type) {
         case 6:
@@ -373,7 +456,7 @@ class Chat extends React.Component {
         default:
           alert('undefined')
       }
-    }else{
+    } else {
       alert('1')
     }
   }
@@ -445,10 +528,12 @@ class Chat extends React.Component {
     return (
       <CustomActions
         {...props}
-        callBack={value => this.setState({ chatBottom: value }) }
-        sendFileCallBack = {(type,path)=>{
-          if(type===1){
-            this.onSendFile(path)
+        callBack={value => this.setState({ chatBottom: value })}
+        sendCallBack={(type, value) => {
+          if (type === 1) {
+            this.onSendFile(value)
+          } else if (type === 3) {
+            this.onSendLocation(value)
           }
         }}
       />

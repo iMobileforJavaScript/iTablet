@@ -235,7 +235,7 @@ export default class Friend extends Component {
     let userId = this.props.user.currentUser.userId
     let msgId = 0
     let chatHistory = []
-    if(this.props.chat[userId] && this.props.chat[userId][talkId]){
+    if (this.props.chat[userId] && this.props.chat[userId][talkId]) {
       chatHistory = this.props.chat[userId][talkId].history
     }
     if (chatHistory.length !== 0) {
@@ -264,7 +264,7 @@ export default class Friend extends Component {
       let ctime = new Date()
       let time = Date.parse(ctime)
       let informMsg = {
-        type: messageObj.type, 
+        type: messageObj.type,
         user: messageObj.user,
         time: time,
         system: 0,
@@ -276,7 +276,6 @@ export default class Friend extends Component {
             fileSize: res.fileSize,
             queueName: res.queueName,
           },
-          
         },
       }
       this._sendMessage(JSON.stringify(informMsg), talkId, false)
@@ -375,7 +374,7 @@ export default class Friend extends Component {
 
         // let chatHistory = []
         // let msgId = 0
-        // if (messageObj.type === 2 && this.props.chat[userId] 
+        // if (messageObj.type === 2 && this.props.chat[userId]
         //     && this.props.chat[userId][messageObj.user.groupID]) {
         //     chatHistory = this.props.chat[userId][messageObj.user.groupID]
         //       .history
@@ -386,13 +385,14 @@ export default class Friend extends Component {
         //   msgId = chatHistory[chatHistory.length - 1].msgId + 1
         // }
         let msgId = 0
-        if (messageObj.type === 2){
+        if (messageObj.type === 2) {
           msgId = this._getMsgId(messageObj.user.groupID)
-        }else{
+        } else {
           msgId = this._getMsgId(messageObj.user.id)
         }
 
-        if (messageObj.message.type && messageObj.message.type === 6){
+        //文件通知消息
+        if (messageObj.message.type && messageObj.message.type === 6) {
           messageObj.message.message.isReceived = 0
         }
 

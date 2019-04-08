@@ -219,20 +219,20 @@ export default class CutListItem extends PureComponent {
               {this.props.caption || this.props.data.caption}
             </Text>
           </View>
-          <View style={[styles.topRightView, { width: scaleSize(360) }]}>
-            <View style={styles.selectContainer}>
+          <View style={[styles.topRightView2, { width: scaleSize(360) }]}>
+            <View style={styles.select}>
               {this.renderCheckButton({
                 status: this.props.inRangeStatus,
                 action: this.changeRangeCut,
               })}
             </View>
-            <View style={styles.selectContainer}>
+            <View style={styles.select}>
               {this.renderCheckButton({
                 status: this.props.eraseStatus,
                 action: this.changeErase,
               })}
             </View>
-            <View style={styles.selectContainer}>
+            <View style={styles.select}>
               {this.renderCheckButton({
                 status: this.props.exactCutStatus,
                 action: this.changeExactCut,

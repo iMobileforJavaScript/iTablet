@@ -13,13 +13,13 @@ import {
   Image,
 } from 'react-native'
 
-// import CameraRollPicker from 'react-native-camera-roll-picker'
-// import NavBar, { NavButton, NavButtonText, NavTitle } from 'react-native-nav'
+import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { Const } from '../../../../constants'
-//import { ThemeUnique } from 'imobile_for_reactnative';
-//import console = require('console');
+// eslint-disable-next-line import/no-unresolved
+import Geolocation from 'Geolocation'
+// var Geolocation = require('Geolocation')
 
 // eslint-disable-next-line no-unused-vars
 const ICONS = context => [
@@ -34,7 +34,7 @@ const ICONS = context => [
         // eslint-disable-next-line
         chatCallBack: _path => {
           // console.warn(path)
-          context.props.sendFileCallBack(1,_path)
+          context.props.sendCallBack(1, _path)
         },
       })
       context.setModalVisible()
@@ -45,7 +45,11 @@ const ICONS = context => [
     type: 'ionicon',
     text: '模版',
     onPress: () => {
-      NavigationService.navigate('MyModule', {})
+      NavigationService.navigate('MyModule', {
+        formChat: true,
+        // eslint-disable-next-line
+        chatCallBack: _path => {},
+      })
       context.setModalVisible()
     },
   },
@@ -55,6 +59,7 @@ const ICONS = context => [
     text: '位置',
     onPress: () => {
       context.setModalVisible()
+      context.handleLocationClick()
     },
   },
 ]
@@ -62,6 +67,7 @@ const ICONS = context => [
 export default class CustomActions extends React.Component {
   props: {
     callBack: () => {},
+    sendCallBack: () => {},
   }
 
   constructor(props) {
@@ -140,6 +146,49 @@ export default class CustomActions extends React.Component {
         </Modal>
         {this.renderIcon()}
       </TouchableOpacity>
+    )
+  }
+
+  handleLocationClick = () => {
+    Geolocation.getCurrentPosition(
+      location => {
+        // eslint-disable-next-line no-unused-vars
+        // var result =
+        //   '速度：' +
+        //   location.coords.speed +
+        //   '\n经度：' +
+        //   location.coords.longitude +
+        //   '\n纬度：' +
+        //   location.coords.latitude +
+        //   '\n准确度：' +
+        //   location.coords.accuracy +
+        //   '\n行进方向：' +
+        //   location.coords.heading +
+        //   '\n海拔：' +
+        //   location.coords.altitude +
+        //   '\n海拔准确度：' +
+        //   location.coords.altitudeAccuracy +
+        //   '\n时间戳：' +
+        //   location.timestamp
+        //alert(result);
+        SOnlineService.reverseGeocoding(
+          location.coords.longitude,
+          location.coords.latitude,
+          {
+            onResult: result => {
+              this.props.sendCallBack(3, {
+                address: result,
+                longitude: location.coords.longitude,
+                latitude: location.coords.latitude,
+              })
+              // alert(result)
+            },
+          },
+        )
+      },
+      error => {
+        alert('获取位置失败：' + error)
+      },
     )
   }
 }

@@ -37,7 +37,7 @@ export default class CustomView extends React.Component {
     if (this.props.currentMessage.location) {
       return (
         <TouchableOpacity
-          style={[styles.container, this.props.containerStyle]}
+          style={[styles.mapView, this.props.containerStyle]}
           onPress={() => {
             const url = Platform.select({
               ios: `http://maps.apple.com/?ll=${

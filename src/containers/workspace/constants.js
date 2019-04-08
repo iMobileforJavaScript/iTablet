@@ -47,9 +47,12 @@ export default {
   CLOSE: '关闭地图',
   SAVE: '保存地图',
   SAVE_AS: '另存地图',
-  SHARE: '分享地图',
+  SHARE_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
   START: '开始',
+  EDIT: '编辑',
+  TOOL: '工具',
+  SHARE: '分享',
   OPEN: '打开地图',
   WORKSPACE: '工作空间',
   CREATE: '新建地图',
@@ -154,6 +157,8 @@ export default {
   MAP_3D: 'MAP_3D',
   MAP_THEME: 'MAP_THEME',
   MAP_PLOTTING: 'MAP_PLOTTING',
+  MAP_ANALYST: 'MAP_ANALYST',
+  NETWORK: 'NETWORK',
 
   // ==================分享===================
   QQ: 'QQ',

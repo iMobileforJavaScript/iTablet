@@ -418,7 +418,9 @@ class FriendMessage extends Component {
                 top: scaleSize(10),
               }}
             >
-              {lastMessage.msg.type ? lastMessage.msg.message.message : lastMessage.msg}
+              {lastMessage.msg.type
+                ? lastMessage.msg.message.message
+                : lastMessage.msg}
             </Text>
           </View>
           <View
