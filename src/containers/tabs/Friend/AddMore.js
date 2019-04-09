@@ -1,6 +1,12 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity, Modal } from 'react-native'
-import { Platform } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  Modal,
+  Platform,
+} from 'react-native'
 import { scaleSize } from '../../../utils/screen'
 
 let Top = scaleSize(88)
