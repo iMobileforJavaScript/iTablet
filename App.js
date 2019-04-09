@@ -131,18 +131,18 @@ class AppRoot extends Component {
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     PT.initCustomPrototype()
   }
-  UNSAFE_componentWillMount(){
-    //再次进行用户数据初始化
-    let checkAndInit = async ()=>{
-      let curUser = this.props.user.currentUser
-      if( curUser && curUser.userType && curUser.userType !== UserType.PROBATION_USER){
-        let isFileExist = await FileTools.fileIsExist(ConstPath.UserPath + curUser.userName)
-        if(!isFileExist)
-          FileTools.initUserDefaultData(curUser.userName)
-      }
-    }
-    checkAndInit()
-  }
+  // UNSAFE_componentWillMount(){
+  //   //再次进行用户数据初始化
+  //   let checkAndInit = async ()=>{
+  //     let curUser = this.props.user.currentUser
+  //     if( curUser && curUser.userType && curUser.userType !== UserType.PROBATION_USER){
+  //       let isFileExist = await FileTools.fileIsExist(ConstPath.UserPath + curUser.userName)
+  //       if(!isFileExist)
+  //         FileTools.initUserDefaultData(curUser.userName)
+  //     }
+  //   }
+  //   checkAndInit()
+  // }
   componentDidMount () {
 
     if(GLOBAL.loginTimer !== undefined){
@@ -181,7 +181,8 @@ class AppRoot extends Component {
 
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
-      await this.initDirectories()
+      // await this.initDirectories()
+      await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
       SOnlineService.removeCookie()
 
