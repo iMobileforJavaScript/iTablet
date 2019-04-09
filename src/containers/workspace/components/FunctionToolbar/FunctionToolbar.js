@@ -16,13 +16,7 @@ import {
 import { scaleSize, Toast, setSpText } from '../../../../utils'
 import { FileTools } from '../../../../native'
 import styles from './styles'
-import {
-  SScene,
-  SMap,
-  Action,
-  ThemeType,
-  SThemeCartography,
-} from 'imobile_for_reactnative'
+import { SScene, SMap, Action, ThemeType } from 'imobile_for_reactnative'
 import PropTypes from 'prop-types'
 import constants from '../../constants'
 import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
@@ -33,7 +27,10 @@ const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
 const MAP_3D = 'MAP_3D'
 const MAP_EDIT = 'MAP_EDIT'
-const MAP_THEME = 'MAP_THEME'
+// const MAP_THEME = 'MAP_THEME'
+/**
+ * @deprecated 移除当前的类型，使用constants
+ */
 export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 
@@ -66,12 +63,12 @@ export default class FunctionToolbar extends React.Component {
   }
 
   static defaultProps = {
-    type: COLLECTION,
+    type: constants.COLLECTION,
     hide: false,
     direction: 'column',
     separator: 20,
   }
-
+  //todo 修改bug
   constructor(props) {
     super(props)
     let data = props.data || this.getData(props.type)
@@ -166,7 +163,11 @@ export default class FunctionToolbar extends React.Component {
         type = constants.THEME_GRADUATED_SYMBOL
         break
       case ThemeType.GRIDRANGE:
+        type = constants.THEME_GRID_RANGE
+        break
       case ThemeType.GRIDUNIQUE:
+        type = constants.THEME_GRID_UNIQUE
+        break
       case ThemeType.CUSTOM:
         Toast.show('提示: 暂不支持编辑的专题图层。')
         return
@@ -459,20 +460,23 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showThemeCreate = async () => {
-    let isAnyOpenedDS = true //是否有打开的数据源
-    isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
-    if (!isAnyOpenedDS) {
-      Toast.show('请先添加数据源')
-      return
-    }
+    // let isAnyOpenedDS = true //是否有打开的数据源
+    // isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+    // if (!isAnyOpenedDS) {
+    //   Toast.show('请先添加数据源')
+    //   return
+    // }
     const toolRef = this.props.getToolRef()
     if (toolRef) {
       this.props.showFullMap && this.props.showFullMap(true)
       // TODO 根据符号类型改变ToolBox 编辑内容
       toolRef.setVisible(true, ConstToolType.MAP_THEME_CREATE, {
         isFullScreen: true,
-        column: 4,
-        height: ConstToolType.THEME_HEIGHT[10],
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+        height:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[4]
+            : ConstToolType.THEME_HEIGHT[10],
       })
     }
   }
@@ -861,7 +865,7 @@ export default class FunctionToolbar extends React.Component {
   getData = type => {
     let data
     switch (type) {
-      case MAP_EDIT:
+      case constants.MAP_EDIT:
         data = [
           // {
           //   key: '底图',
@@ -905,11 +909,6 @@ export default class FunctionToolbar extends React.Component {
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
-          // {
-          //   title: '撤销',
-          //   action: this.legend,
-          //   image: require('../../../../assets/function/icon_remove.png'),
-          // },
           {
             title: '分享',
             action: () => {
@@ -919,7 +918,7 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case MAP_3D:
+      case constants.MAP_3D:
         data = [
           {
             key: '开始',
@@ -969,7 +968,7 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case MAP_THEME:
+      case constants.MAP_THEME:
         data = [
           {
             key: '开始',
@@ -1019,7 +1018,44 @@ export default class FunctionToolbar extends React.Component {
           },
         ]
         break
-      case COLLECTION:
+      case constants.MAP_ANALYST:
+        data = [
+          {
+            key: constants.START,
+            title: constants.START,
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            key: constants.ADD,
+            title: constants.ADD,
+            size: 'large',
+            action: this.getThemeMapAdd,
+            image: require('../../../../assets/function/icon_function_add.png'),
+          },
+          {
+            key: constants.EDIT,
+            title: constants.EDIT,
+            action: this.showEdit,
+            image: require('../../../../assets/function/icon_edit.png'),
+          },
+          {
+            key: constants.TOOL,
+            title: constants.TOOL,
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            key: constants.SHARE,
+            title: constants.SHARE,
+            action: () => {
+              this.showMore(ConstToolType.MAP_SHARE)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
+      case constants.COLLECTION:
       default:
         data = [
           {

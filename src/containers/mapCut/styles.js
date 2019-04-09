@@ -17,6 +17,12 @@ export default StyleSheet.create({
   },
 
   /** Check按钮 **/
+  select: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
   selectContainer: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -58,6 +64,14 @@ export default StyleSheet.create({
     // paddingRight: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
+  },
+  topRightView2: {
+    flexDirection: 'row',
+    height: ROW_HEIGHT,
+    // paddingRight: scaleSize(30),
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'transparent',
   },
   topText: {

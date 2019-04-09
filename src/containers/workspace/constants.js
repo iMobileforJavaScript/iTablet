@@ -47,9 +47,12 @@ export default {
   CLOSE: '关闭地图',
   SAVE: '保存地图',
   SAVE_AS: '另存地图',
-  SHARE: '分享地图',
+  SHARE_MAP: '分享地图',
   EXPORT_MAP: '导出地图',
   START: '开始',
+  EDIT: '编辑',
+  TOOL: '工具',
+  SHARE: '分享',
   OPEN: '打开地图',
   WORKSPACE: '工作空间',
   CREATE: '新建地图',
@@ -79,6 +82,8 @@ export default {
   THEME_GRAPH_STYLE: '统计专题图',
   THEME_DOT_DENSITY: '点密度图',
   THEME_GRADUATED_SYMBOL: '等级符号图',
+  THEME_GRID_UNIQUE: '单值栅格图',
+  THEME_GRID_RANGE: '分段栅格图',
 
   //统计专题图
   THEME_GRAPH_AREA: '面积图',
@@ -152,6 +157,8 @@ export default {
   MAP_3D: 'MAP_3D',
   MAP_THEME: 'MAP_THEME',
   MAP_PLOTTING: 'MAP_PLOTTING',
+  MAP_ANALYST: 'MAP_ANALYST',
+  NETWORK: 'NETWORK',
 
   // ==================分享===================
   QQ: 'QQ',

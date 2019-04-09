@@ -165,7 +165,7 @@ export default class AddDataset extends React.Component {
     for (let key in this.state.openList) {
       let item = this.state.openList[key]
       await this.map.addLayer(item.dataset, true)
-      if (item.type === DatasetType.IMAGE || item.type === DatasetType.Grid) {
+      if (item.type === DatasetType.IMAGE || item.type === DatasetType.GRID) {
         showEntireMap = true
       }
     }

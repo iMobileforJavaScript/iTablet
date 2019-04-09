@@ -346,7 +346,7 @@ export default class Home extends Component {
 
   render() {
     let userImg =
-      this.props.user.users.length > 1
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
         ? {
           uri:
               'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
