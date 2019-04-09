@@ -109,6 +109,7 @@ export default class MapView extends React.Component {
     //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
+    this.showMarker = params && params.showMarker
     this.mapName = ''
     if (params && params.mapName) {
       this.mapName = params.mapName
@@ -243,6 +244,8 @@ export default class MapView extends React.Component {
     if (Platform.OS === 'android') {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     }
+
+    this.showMarker && SMap.deleteMarker()
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -885,6 +888,8 @@ export default class MapView extends React.Component {
       } catch (e) {
         this.container.setLoading(false)
       }
+      this.showMarker &&
+        SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
     }.bind(this)())
   }
 
