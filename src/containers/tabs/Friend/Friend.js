@@ -279,30 +279,27 @@ export default class Friend extends Component {
         },
       }
       this._sendMessage(JSON.stringify(informMsg), talkId, false)
+      Toast.show("分享完成")
     })
   }
 
-  _receiveFile = (fileName, queueName, talkId, msgId) => {
+  _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
-      SMessageService.receiveFile(fileName, queueName, talkId, msgId).then(
-        res => {
-          if (res === true) {
-            this.props.editChat &&
-              this.props.editChat({
-                userId: this.props.user.currentUser.userId,
-                talkId: talkId,
-                msgId: msgId,
-                editItem: {
-                  message: {
-                    message: {
-                      isReceived: 1,
-                    },
-                  },
-                },
-              })
-          }
-        },
-      )
+      SMessageService.receiveFile(fileName, queueName, receivePath, talkId, msgId).then(res => {
+        if (res === true) {
+          Toast.show("接收完成")
+          let message = this.props.chat[this.props.user.currentUser.userId][talkId].history[msgId]
+          message.msg.message.isReceived = 1
+          message.msg.message.filePath = receivePath + '/' + fileName
+          this.props.editChat &&
+            this.props.editChat({
+              userId: this.props.user.currentUser.userId,
+              talkId: talkId,
+              msgId: msgId,
+              editItem: message,
+            })
+        }
+      })
     }
   }
 
@@ -394,6 +391,7 @@ export default class Friend extends Component {
           msgId = this._getMsgId(messageObj.user.id)
         }
 
+        //文件通知消息
         if (messageObj.message.type && messageObj.message.type === 6) {
           messageObj.message.message.isReceived = 0
         }

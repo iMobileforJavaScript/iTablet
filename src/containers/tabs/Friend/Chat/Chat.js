@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   TouchableOpacity,
   Animated,
 } from 'react-native'
@@ -17,13 +18,17 @@ import {
   SystemMessage,
 } from 'react-native-gifted-chat'
 import Container from '../../../../components/Container'
+import { Dialog } from '../../../../components'
 import { scaleSize } from '../../../../utils/screen'
 
 import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 // eslint-disable-next-line import/no-unresolved
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
-import { EventConst } from '../../../../constants'
+import { ConstPath, EventConst } from '../../../../constants';
+import { color } from '../../../../styles'
+import { FileTools }  from '../../../../native'
+import { Toast } from '../../../../utils/index'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -56,6 +61,7 @@ class Chat extends React.Component {
     this._isMounted = false
     this.onSend = this.onSend.bind(this)
     this.onSendFile = this.onSendFile.bind(this)
+    this.onSendLocation = this.onSendLocation.bind(this)
     this.onLongPress = this.onLongPress.bind(this)
     this.onReceive = this.onReceive.bind(this)
     this.renderCustomActions = this.renderCustomActions.bind(this)
@@ -169,7 +175,7 @@ class Chat extends React.Component {
             type: msg.type,
             message: msg.msg,
           }
-        case 6:
+        case 6: //文件
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -177,6 +183,19 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
+          }
+        case 10: //位置
+          return {
+            _id: msg.msgId,
+            text: msg.msg.message.message,
+            createdAt: new Date(msg.time),
+            user: { _id: msg.id, name: msg.name },
+            type: msg.type,
+            message: msg.msg,
+            location: {
+              latitude: msg.msg.message.latitude,
+              longitude: msg.msg.message.longitude,
+            },
           }
       }
     }
@@ -224,6 +243,62 @@ class Chat extends React.Component {
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
 
+  onSendLocation(value) {
+    let positionStr =
+      value.address +
+      '\n' +
+      'LOCATION(' +
+      value.longitude.toFixed(6) +
+      ',' +
+      value.latitude.toFixed(6) +
+      ')'
+    let bGroup = 1
+    let groupID = this.curUser.userId
+    if (this.targetUser.id.indexOf('Group_') != -1) {
+      bGroup = 2
+      groupID = this.targetUser.id
+    }
+    let ctime = new Date()
+    let time = Date.parse(ctime)
+    let message = {
+      message: {
+        type: 10,
+        message: {
+          message: positionStr,
+          longitude: value.longitude,
+          latitude: value.latitude,
+        },
+      },
+      type: bGroup,
+      user: {
+        name: this.curUser.nickname,
+        id: this.curUser.userId,
+        groupID: groupID,
+      },
+      time: time,
+    }
+    let msgId = this.friend._getMsgId(this.targetUser.id)
+    let msg = {
+      //添加到giftedchat的消息
+      _id: msgId,
+      text: positionStr,
+      type: 1,
+      user: { name: this.curUser.nickname, _id: this.curUser.userId },
+      createdAt: time,
+      system: 0,
+      location: {
+        latitude: value.latitude,
+        longitude: value.longitude,
+      },
+    }
+    this.setState(previousState => {
+      return {
+        messages: GiftedChat.append(previousState.messages, msg),
+      }
+    })
+
+    this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
+  }
   onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
@@ -254,8 +329,8 @@ class Chat extends React.Component {
     }
 
     let msgId = this.friend._getMsgId(this.targetUser.id)
-    let msg = {
-      //添加到giftedchat的消息
+    let fileName = filepath.substr(filepath.lastIndexOf("/")+1)
+    let msg = {//添加到giftedchat的消息
       _id: msgId,
       text: '[文件]',
       type: 1, //文件接收通知
@@ -266,10 +341,11 @@ class Chat extends React.Component {
         type: 6,
         message: {
           message: '[文件]',
-          fileName: '',
+          fileName: fileName,
           fileSize: '',
           queueName: '',
-        },
+          filePath: filepath,
+        }
       },
     }
     this.setState(previousState => {
@@ -323,7 +399,14 @@ class Chat extends React.Component {
         message: messageObj.message,
       }
       if (messageObj.message.type === 6) {
+        //文件通知
         msg.message.message.isReceived = 0
+      } else if (messageObj.message.type === 10) {
+        //位置
+        msg.location = {
+          latitude: messageObj.message.message.latitude,
+          longitude: messageObj.message.message.longitude,
+        }
       }
     }
 
@@ -335,35 +418,38 @@ class Chat extends React.Component {
     })
   }
 
-  onLongPress(context, message) {
-    // console.log(message)
-    if (message.message.type) {
+   async onLongPress(context, message) {
+    if(message.message.type){
       switch (message.message.type) {
         case 6:
           if (message.user._id !== this.curUser.userId) {
-            alert('6')
+            let userPath = await FileTools.appendingHomeDirectory(ConstPath.UserPath + this.curUser.userName)
+            let receivePath = userPath + "/ReceivedFiles"
             if (message.message.message.isReceived === 0) {
               this.friend._receiveFile(
                 message.message.message.fileName,
                 message.message.message.queueName,
+                receivePath,
                 this.targetUser.id,
                 message._id,
               )
-              this.setState(previousState => {
-                let length = previousState.messages
-                let i = 0
-                for (; i < length; i++) {
-                  if (previousState.messages[i]._id === message._id) {
-                    break
-                  }
+            this.setState(previousState => {
+              let length = previousState.messages
+              let i = 0
+              for (; i < length; i++) {
+                if (previousState.messages[i]._id === message._id) {
+                  break
                 }
-                previousState.messages[i].message.message.isReceived = 1
-                return {
-                  messages: previousState.messages,
-                }
-              })
+              }
+              previousState.messages[i].message.message.isReceived = 1
+              return {
+                messages: previousState.messages,
+              }
+            })
             } else {
-              alert('已接收此文件')
+              let toPath = await  FileTools.appendingHomeDirectory(ConstPath.Import +"/weChat.zip")
+              FileTools.copyFile(receivePath+'/'+message.message.message.fileName, toPath)
+              this.import.setDialogVisible(true)
             }
           }
           break
@@ -420,13 +506,19 @@ class Chat extends React.Component {
             renderCustomView={this.renderCustomView}
             renderFooter={this.renderFooter}
             renderAvatar={this.renderAvatar}
-            renderMessageText={props => (
+            renderMessageText={props => {
+              if(props.currentMessage.message.type &&
+                props.currentMessage.message.type === 6){
+                return null
+              }
+              return (
               <MessageText
                 {...props}
                 customTextStyle={{ fontSize: scaleSize(20) }}
-              />
-            )}
+              />)
+            }}
           />
+          {this.renderImportDialog()}
         </Container>
       </Animated.View>
     )
@@ -437,9 +529,11 @@ class Chat extends React.Component {
       <CustomActions
         {...props}
         callBack={value => this.setState({ chatBottom: value })}
-        sendFileCallBack={(type, path) => {
+        sendCallBack={(type, value) => {
           if (type === 1) {
-            this.onSendFile(path)
+            this.onSendFile(value)
+          } else if (type === 3) {
+            this.onSendLocation(value)
           }
         }}
       />
@@ -534,7 +628,58 @@ class Chat extends React.Component {
     }
     return null
   }
+
+  renderImportDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.import = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={() => {
+          this.import.setDialogVisible(false)
+          GLOBAL.Loading.setLoading(
+            true,
+            '数据导入中',
+          )
+          
+          FileTools.importData().then(result => {
+            GLOBAL.Loading.setLoading(false)
+            result && Toast.show('导入成功')
+          }, () => {
+            GLOBAL.Loading.setLoading(false)
+            result && Toast.show('导入失败')
+          })
+        }}
+        cancelAction={ async () => {
+          let importPath =ConstPath.Import
+          await FileTools.deleteFile(importPath)
+          this.import.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        {this.renderImportDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderImportDialogChildren = () => {
+  return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>{'是否导入数据'}</Text>
+      </View>
+    )
+  }
+
+
 }
+
 const styles = StyleSheet.create({
   footerContainer: {
     marginTop: scaleSize(5),
@@ -545,6 +690,39 @@ const styles = StyleSheet.create({
   footerText: {
     fontSize: scaleSize(14),
     color: '#aaa',
+  },
+  dialogHeaderView: {
+    flex: 1,
+    //  backgroundColor:"pink",
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  dialogHeaderImg: {
+    width: scaleSize(60),
+    height: scaleSize(60),
+    opacity: 1,
+    // marginLeft:scaleSize(145),
+    // marginTop:scaleSize(21),
+  },
+  promptTtile: {
+    fontSize: scaleSize(24),
+    color: color.theme_white,
+    marginTop: scaleSize(5),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    textAlign: 'center',
+  },
+  dialogBackground: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
+  },
+  opacityView: {
+    width: scaleSize(350),
+    height: scaleSize(240),
+    borderRadius: scaleSize(4),
+    backgroundColor: 'white',
   },
 })
 export default Chat

@@ -13,6 +13,7 @@ const MAP_MODULE = {
   MAP_THEME: '专题制图',
   MAP_COLLECTION: '外业采集',
   MAP_PLOTTING: '应急标绘',
+  MAP_ANALYST: '数据分析',
 }
 
 export { MAP_MODULE }
@@ -375,6 +376,34 @@ export default [
   //     position: 'absolute',
   //     right: 0,
   //     bottom: 0,
+  //   },
+  //   action: async user => {
+  //     let data = ConstOnline['Google']
+  //     data.layerIndex = 1
+  //     GLOBAL.Type = constants.MAP_ANALYST
+  //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+  //
+  //     let homePath = await FileTools.appendingHomeDirectory()
+  //     let userPath = ConstPath.CustomerPath
+  //     if (user && user.userName) {
+  //       userPath = ConstPath.UserPath + user.userName + '/'
+  //     }
+  //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+  //
+  //     let wsData = [
+  //       {
+  //         DSParams: { server: wsPath },
+  //         // layerIndex: 0,
+  //         type: 'Workspace',
+  //       },
+  //       data,
+  //     ]
+  //     NavigationService.navigate('AnalystTools', {
+  //       operationType: constants.MAP_ANALYST,
+  //       wsData,
+  //       mapName: MAP_MODULE.MAP_ANALYST,
+  //       isExample: false,
+  //     })
   //   },
   // },
 ]

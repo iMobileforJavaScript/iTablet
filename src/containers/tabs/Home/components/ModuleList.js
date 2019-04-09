@@ -264,7 +264,10 @@ export default class ModuleList extends Component {
       let fileName
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-      if (moduleKey === '地图制图') {
+      if (moduleKey === MAP_MODULE.MAP_ANALYST) {
+        item.action && item.action(this.props.currentUser)
+        return
+      } else if (moduleKey === '地图制图') {
         fileName = '湖南'
       } else if (moduleKey === '专题制图') {
         fileName = '湖北'

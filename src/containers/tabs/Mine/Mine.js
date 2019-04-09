@@ -289,18 +289,14 @@ export default class Mine extends Component {
     let allColor = color.font_color_white
     let headerHeight = scaleSize(120)
     let imageWidth = scaleSize(70)
-    // let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
-    let headerImage =
-      this.props.user.users.length <= 1
-        ? require('../../../assets/home/system_default_header_image.png')
-        : {
-          uri:
-              'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
-        }
-    let headerTitle =
-      this.props.user.users.length <= 1
-        ? '立即登录'
-        : this.props.user.currentUser.userName
+    let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
+    let headerImage = isPro
+      ? require('../../../assets/home/system_default_header_image.png')
+      : {
+        uri:
+            'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
+      }
+    let headerTitle = isPro ? '立即登录' : this.props.user.currentUser.userName
     return (
       <View
         style={{

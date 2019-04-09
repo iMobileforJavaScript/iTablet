@@ -1,4 +1,4 @@
-import { SMap, Action, SCollector } from 'imobile_for_reactnative'
+import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -455,11 +455,13 @@ function move() {
 }
 
 function undo(type) {
-  return SCollector.undo(type)
+  // return SCollector.undo(type)
+  return SMap.undo(type)
 }
 
 function redo(type) {
-  return SCollector.redo(type)
+  // return SCollector.redo(type)
+  return SMap.redo(type)
 }
 
 function remove() {

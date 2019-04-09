@@ -4,6 +4,7 @@ import attribute from './attribute'
 import themeType from './themeType'
 import friend from './friend'
 import collection from './collection'
+import analyst from './analyst'
 
 export default {
   publicAssets,
@@ -12,4 +13,5 @@ export default {
   themeType,
   friend,
   collection,
+  analyst,
 }
