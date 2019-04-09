@@ -16,7 +16,25 @@ const MAP_MODULE = {
   MAP_ANALYST: '数据分析',
 }
 
-export { MAP_MODULE }
+function getHeaderTitle(type) {
+  if (!type) return ''
+  switch (type) {
+    case constants.MAP_EDIT:
+      return MAP_MODULE.MAP_EDIT
+    case constants.MAP_3D:
+      return MAP_MODULE.MAP_3D
+    case constants.MAP_THEME:
+      return MAP_MODULE.MAP_THEME
+    case constants.MAP_COLLECTION:
+      return MAP_MODULE.MAP_COLLECTION
+    case constants.MAP_PLOTTING:
+      return MAP_MODULE.MAP_PLOTTING
+    case constants.MAP_ANALYST:
+      return MAP_MODULE.MAP_ANALYST
+  }
+}
+
+export { MAP_MODULE, getHeaderTitle }
 
 export default [
   {

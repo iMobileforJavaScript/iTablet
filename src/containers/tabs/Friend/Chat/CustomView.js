@@ -48,8 +48,10 @@ export default class CustomView extends React.Component {
         </View>
       )
     }
-    if(this.props.currentMessage.message.type &&
-      this.props.currentMessage.message.type === 10) {
+    if (
+      this.props.currentMessage.message.type &&
+      this.props.currentMessage.message.type === 10
+    ) {
       return (
         <TouchableOpacity
           style={[styles.mapView, this.props.containerStyle]}
