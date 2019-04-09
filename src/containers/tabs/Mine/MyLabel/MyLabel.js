@@ -168,7 +168,7 @@ export default class MyLabel extends Component {
                 },
               )
           } else {
-            SOnlineService.uploadFile(targetPath, fileName, {
+            SOnlineService.uploadFile(targetPath, name, {
               onProgress: progress => {
                 return progress
               },

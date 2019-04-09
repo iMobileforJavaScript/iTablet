@@ -78,7 +78,7 @@ export default class MyOnlineData extends Component {
   }
 
   componentWillUnmount() {
-    // this._removeListener()
+    this._removeListener()
   }
 
   _addListener = () => {
@@ -170,8 +170,10 @@ export default class MyOnlineData extends Component {
     }
     try {
       for (let i = 1; i <= _iLoadOnlineDataCount; i++) {
+        // console.log(_iLoadOnlineDataCount)
         let tempData = await this._getOnlineData(i, this.pageSize)
         newData = newData.concat(tempData)
+        // console.log(tempData)
       }
       // 如果有数据正在下载，则重构newData
       if (_iDownloadingIndex >= 0) {
@@ -423,6 +425,7 @@ export default class MyOnlineData extends Component {
         progress === '下载失败' ||
         progress === '已下载'
       ) {
+        // console.log(progress)
         this._setFinalDownloadingProgressState(_iDownloadingIndex, progress)
         if (progress === '下载完成' || progress === '已下载') {
           this._unZipFile()
@@ -562,7 +565,7 @@ export default class MyOnlineData extends Component {
         if (result === undefined || result === '') {
           result = '服务发布失败'
         }
-        Toast.show(result)
+        Toast.show('服务发布失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -598,7 +601,7 @@ export default class MyOnlineData extends Component {
         if (result === undefined || result === '') {
           result = '服务删除失败'
         }
-        Toast.show(result)
+        Toast.show('服务删除失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -763,7 +766,7 @@ export default class MyOnlineData extends Component {
                 tintColor: imageColor,
               }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/mine_my_online_data.png')}
+              source={require('../../../../assets/Mine/mine_my_import_online_light.png')}
             />
             <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text
@@ -806,7 +809,7 @@ export default class MyOnlineData extends Component {
           </View>
           <View
             style={{
-              height: scaleSize(2),
+              height: 1,
               width: itemWidth,
               backgroundColor: color.separateColorGray,
             }}
