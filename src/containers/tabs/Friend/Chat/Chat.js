@@ -25,9 +25,9 @@ import CustomActions from './CustomActions'
 import CustomView from './CustomView'
 // eslint-disable-next-line import/no-unresolved
 import RCTDeviceEventEmitter from 'RCTDeviceEventEmitter'
-import { ConstPath, EventConst } from '../../../../constants';
+import { ConstPath, EventConst } from '../../../../constants'
 import { color } from '../../../../styles'
-import { FileTools }  from '../../../../native'
+import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 
 let Top = scaleSize(38)
@@ -337,8 +337,9 @@ class Chat extends React.Component {
     }
 
     let msgId = this.friend._getMsgId(this.targetUser.id)
-    let fileName = filepath.substr(filepath.lastIndexOf("/")+1)
-    let msg = {//添加到giftedchat的消息
+    let fileName = filepath.substr(filepath.lastIndexOf('/') + 1)
+    let msg = {
+      //添加到giftedchat的消息
       _id: msgId,
       text: '[文件]',
       type: 1, //文件接收通知
@@ -353,7 +354,7 @@ class Chat extends React.Component {
           fileSize: '',
           queueName: '',
           filePath: filepath,
-        }
+        },
       },
     }
     this.setState(previousState => {
@@ -426,13 +427,15 @@ class Chat extends React.Component {
     })
   }
 
-   async onLongPress(context, message) {
-    if(message.message.type){
+  async onLongPress(context, message) {
+    if (message.message.type) {
       switch (message.message.type) {
         case 6:
           if (message.user._id !== this.curUser.userId) {
-            let userPath = await FileTools.appendingHomeDirectory(ConstPath.UserPath + this.curUser.userName)
-            let receivePath = userPath + "/ReceivedFiles"
+            let userPath = await FileTools.appendingHomeDirectory(
+              ConstPath.UserPath + this.curUser.userName,
+            )
+            let receivePath = userPath + '/ReceivedFiles'
             if (message.message.message.isReceived === 0) {
               this.friend._receiveFile(
                 message.message.message.fileName,
@@ -441,22 +444,27 @@ class Chat extends React.Component {
                 this.targetUser.id,
                 message._id,
               )
-            this.setState(previousState => {
-              let length = previousState.messages
-              let i = 0
-              for (; i < length; i++) {
-                if (previousState.messages[i]._id === message._id) {
-                  break
+              this.setState(previousState => {
+                let length = previousState.messages
+                let i = 0
+                for (; i < length; i++) {
+                  if (previousState.messages[i]._id === message._id) {
+                    break
+                  }
                 }
-              }
-              previousState.messages[i].message.message.isReceived = 1
-              return {
-                messages: previousState.messages,
-              }
-            })
+                previousState.messages[i].message.message.isReceived = 1
+                return {
+                  messages: previousState.messages,
+                }
+              })
             } else {
-              let toPath = await  FileTools.appendingHomeDirectory(ConstPath.Import +"/weChat.zip")
-              FileTools.copyFile(receivePath+'/'+message.message.message.fileName, toPath)
+              let toPath = await FileTools.appendingHomeDirectory(
+                ConstPath.Import + '/weChat.zip',
+              )
+              FileTools.copyFile(
+                receivePath + '/' + message.message.message.fileName,
+                toPath,
+              )
               this.import.setDialogVisible(true)
             }
           }
@@ -515,15 +523,18 @@ class Chat extends React.Component {
             renderFooter={this.renderFooter}
             renderAvatar={this.renderAvatar}
             renderMessageText={props => {
-              if(props.currentMessage.message.type &&
-                props.currentMessage.message.type === 6){
+              if (
+                props.currentMessage.message.type &&
+                props.currentMessage.message.type === 6
+              ) {
                 return null
               }
               return (
-              <MessageText
-                {...props}
-                customTextStyle={{ fontSize: scaleSize(20) }}
-              />)
+                <MessageText
+                  {...props}
+                  customTextStyle={{ fontSize: scaleSize(20) }}
+                />
+              )
             }}
           />
           {this.renderImportDialog()}
@@ -646,21 +657,21 @@ class Chat extends React.Component {
         cancelBtnTitle={'取消'}
         confirmAction={() => {
           this.import.setDialogVisible(false)
-          GLOBAL.Loading.setLoading(
-            true,
-            '数据导入中',
+          GLOBAL.Loading.setLoading(true, '数据导入中')
+
+          FileTools.importData().then(
+            result => {
+              GLOBAL.Loading.setLoading(false)
+              result && Toast.show('导入成功')
+            },
+            result => {
+              GLOBAL.Loading.setLoading(false)
+              result && Toast.show('导入失败')
+            },
           )
-          
-          FileTools.importData().then(result => {
-            GLOBAL.Loading.setLoading(false)
-            result && Toast.show('导入成功')
-          }, () => {
-            GLOBAL.Loading.setLoading(false)
-            result && Toast.show('导入失败')
-          })
         }}
-        cancelAction={ async () => {
-          let importPath =ConstPath.Import
+        cancelAction={async () => {
+          let importPath = ConstPath.Import
           await FileTools.deleteFile(importPath)
           this.import.setDialogVisible(false)
         }}
@@ -674,7 +685,7 @@ class Chat extends React.Component {
   }
 
   renderImportDialogChildren = () => {
-  return (
+    return (
       <View style={styles.dialogHeaderView}>
         <Image
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
@@ -684,8 +695,6 @@ class Chat extends React.Component {
       </View>
     )
   }
-
-
 }
 
 const styles = StyleSheet.create({

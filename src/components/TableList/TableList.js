@@ -6,8 +6,8 @@
 
 import * as React from 'react'
 import { ScrollView, View } from 'react-native'
+import { screen } from '../../utils'
 import styles from './styles'
-
 export default class TableList extends React.PureComponent {
   props: {
     data: Array,
@@ -17,7 +17,6 @@ export default class TableList extends React.PureComponent {
     cellStyle?: Object,
     rowStyle?: Object,
     renderCell: () => {},
-    device: Object,
     type?: string,
   }
 
@@ -27,17 +26,6 @@ export default class TableList extends React.PureComponent {
     type: 'normal', // normal | scroll
     lineSeparator: 10,
   }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      width: 0,
-    }
-  }
-
-  // componentDidMount(){
-  //   this.getDeviceWidth()
-  // }
 
   renderRows = () => {
     // this.getDeviceWidth()
@@ -81,7 +69,7 @@ export default class TableList extends React.PureComponent {
     let column = this.props.numColumns
     return (
       <View
-        style={{ width: this.props.device.width / column }}
+        style={[{ width: screen.deviceWidth / column }, this.props.cellStyle]}
         key={rowIndex + '-' + cellIndex}
       >
         {this.props.renderCell({ item, rowIndex, cellIndex })}

@@ -23,7 +23,6 @@ import { LayerManager_item, LayerManager_tolbar } from './components'
 import { ConstToolType, MAP_MODULE, ConstPath } from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
-import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
 import { FileTools } from '../../native'
@@ -136,41 +135,41 @@ export default class MT_layerManager extends React.Component {
       this.itemRefs = {}
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
-      if (
-        layers.length > 0 &&
-        !LayerUtils.isBaseLayer(layers[layers.length - 1].name)
-      ) {
-        await SMap.openDatasource(
-          ConstOnline.Google.DSParams,
-          GLOBAL.Type === constants.COLLECTION
-            ? 1
-            : ConstOnline.Google.layerIndex,
-          false,
-          false,
-        )
-        layers = await this.props.getLayers()
-      }
+      // if (
+      //   layers.length > 0 &&
+      //   !LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+      // ) {
+      //   await SMap.openDatasource(
+      //     ConstOnline.Google.DSParams,
+      //     GLOBAL.Type === constants.COLLECTION
+      //       ? 1
+      //       : ConstOnline.Google.layerIndex,
+      //     false,
+      //     false,
+      //   )
+      //   layers = await this.props.getLayers()
+      // }
 
-      let baseMap = []
-      let dataList = []
-      if (
-        layers.length > 0 &&
-        LayerUtils.isBaseLayer(layers[layers.length - 1].name)
-      ) {
-        baseMap = [layers[layers.length - 1]]
-      }
+      // let baseMap = []
+      // let dataList = []
+      // if (
+      //   layers.length > 0 &&
+      //   LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+      // ) {
+      //   baseMap = [layers[layers.length - 1]]
+      // }
       let udbPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath + 'Data/Label/Label.udb',
       )
-      dataList = await SMap.getUDBName(udbPath)
+      let dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
           { title: '我的图层', data: layers, visible: true },
-          {
-            title: '我的底图',
-            data: baseMap,
-            visible: true,
-          },
+          // {
+          //   title: '我的底图',
+          //   data: baseMap,
+          //   visible: true,
+          // },
           { title: '我的标注', data: dataList, visible: true },
         ],
         selectLayer: this.props.currentLayer.caption,
@@ -615,6 +614,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = (data, value) => {
+    let layers = this.state.data[0].data
+    let backMaps = this.state.data[1].data
+    let hasDeal = false
+    let caption = data.caption
+    let curData = this.state.data.concat()
+    for (let i = 0, l = layers.length; i < l; i++) {
+      if (caption === layers[i].caption) {
+        curData[0].data[i].isVisible = value
+        hasDeal = true
+        break
+      }
+    }
+    if (!hasDeal)
+      for (let j = 0, l = backMaps.length; j < l; j++) {
+        if (caption === backMaps[j].caption) {
+          curData[1].data.isVisible = value
+          hasDeal = true
+          break
+        }
+      }
     SMap.setLayerVisible(data.path, value)
   }
 

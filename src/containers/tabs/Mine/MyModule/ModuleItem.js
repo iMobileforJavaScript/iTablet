@@ -7,6 +7,7 @@ export default class ModuleItem extends Component {
     item: Object,
     index: number,
     section: Object,
+    isShowMore: boolean,
     saveItemInfo: () => {},
     uploadListOfAdd: () => {},
     removeDataFromUpList: () => {},
@@ -17,6 +18,7 @@ export default class ModuleItem extends Component {
       title: props.item.name,
       index: props.index,
       select: false,
+      isShowMore: props.isShowMore || true,
     }
   }
 
@@ -38,7 +40,9 @@ export default class ModuleItem extends Component {
               })
             }}
           >
-            <Image source={moreImg} style={styles.moreImg} />
+            {this.state.isShowMore && (
+              <Image source={moreImg} style={styles.moreImg} />
+            )}
           </TouchableOpacity>
         </View>
         <View
