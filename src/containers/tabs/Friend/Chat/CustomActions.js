@@ -18,8 +18,8 @@ import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { Const } from '../../../../constants'
 // eslint-disable-next-line import/no-unresolved
-import Geolocation from 'Geolocation'
-// var Geolocation = require('Geolocation')
+//import Geolocation from 'Geolocation'
+ var Geolocation = require('Geolocation')
 
 // eslint-disable-next-line no-unused-vars
 const ICONS = context => [

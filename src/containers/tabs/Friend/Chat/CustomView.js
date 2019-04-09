@@ -34,18 +34,19 @@ export default class CustomView extends React.Component {
         </View>
       )
     }
-    if (this.props.currentMessage.location) {
+    if(this.props.currentMessage.message.type &&
+      this.props.currentMessage.message.type === 10) {
       return (
         <TouchableOpacity
           style={[styles.mapView, this.props.containerStyle]}
           onPress={() => {
             const url = Platform.select({
               ios: `http://maps.apple.com/?ll=${
-                this.props.currentMessage.location.latitude
-              },${this.props.currentMessage.location.longitude}`,
+                this.props.currentMessage.message.message.latitude
+              },${this.props.currentMessage.message.message.longitude}`,
               android: `http://maps.google.com/?q=${
-                this.props.currentMessage.location.latitude
-              },${this.props.currentMessage.location.longitude}`,
+                this.props.currentMessage.message.message.latitude
+              },${this.props.currentMessage.message.message.longitude}`,
             })
             Linking.canOpenURL(url)
               .then(supported => {
@@ -62,8 +63,8 @@ export default class CustomView extends React.Component {
           <MapView
             style={[styles.mapView, this.props.mapViewStyle]}
             region={{
-              latitude: this.props.currentMessage.location.latitude,
-              longitude: this.props.currentMessage.location.longitude,
+              latitude: this.props.currentMessage.message.message.latitude,
+              longitude: this.props.currentMessage.message.message.longitude,
               latitudeDelta: 0.0922,
               longitudeDelta: 0.0421,
             }}

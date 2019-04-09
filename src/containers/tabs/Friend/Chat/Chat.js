@@ -192,10 +192,10 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
-            location: {
-              latitude: msg.msg.message.latitude,
-              longitude: msg.msg.message.longitude,
-            },
+            // location: {
+            //   latitude: msg.msg.message.latitude,
+            //   longitude: msg.msg.message.longitude,
+            // },
           }
       }
     }
@@ -286,9 +286,17 @@ class Chat extends React.Component {
       user: { name: this.curUser.nickname, _id: this.curUser.userId },
       createdAt: time,
       system: 0,
-      location: {
-        latitude: value.latitude,
-        longitude: value.longitude,
+      // location: {
+      //   latitude: value.latitude,
+      //   longitude: value.longitude,
+      // },
+      message: {
+        type: 10,
+        message: {
+          message: positionStr,
+          longitude: value.longitude,
+          latitude: value.latitude,
+        },
       },
     }
     this.setState(previousState => {
