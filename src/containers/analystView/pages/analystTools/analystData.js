@@ -1,11 +1,14 @@
 import { ConstAnalyst } from '../../../../constants'
 import { getThemeAssets } from '../../../../assets'
+import NavigationService from '../../../NavigationService'
 function getData() {
   let data = [
     {
       key: ConstAnalyst.BUFFER_ANALYST,
       title: ConstAnalyst.BUFFER_ANALYST,
-      action: () => {},
+      action: () => {
+        NavigationService.navigate('BufferAnalystView')
+      },
       size: 'large',
       image: getThemeAssets().analyst.analysis_buffer,
     },

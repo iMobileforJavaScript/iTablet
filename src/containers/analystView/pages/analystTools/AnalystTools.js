@@ -32,11 +32,10 @@ export default class AnalystTools extends Component {
         title={item.title}
         textColor={color.font_color_white}
         textStyle={{ fontSize: setSpText(20) }}
-        // size={MTBtn.Size.NORMAL}
         image={item.image}
         background={item.background}
         onPress={() => {
-          // this.itemaction(item)
+          item.action()
         }}
       />
     )
