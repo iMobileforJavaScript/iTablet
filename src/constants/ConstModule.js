@@ -36,7 +36,6 @@ export default [
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       GLOBAL.showMenu = true
       // GLOBAL.showFlex = true
-
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
       if (user && user.userName) {
@@ -162,7 +161,6 @@ export default [
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_THEME
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
       if (user && user.userName) {
@@ -229,7 +227,6 @@ export default [
       data.layerIndex = 1
       GLOBAL.Type = constants.COLLECTION
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
       if (user && user.userName) {

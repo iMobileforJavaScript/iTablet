@@ -111,6 +111,10 @@ export default class LayerAttributeTabs extends React.Component {
       currentTabIndex: initTabIndex,
       isShowDrawer: false,
       initialPage: initTabIndex,
+      attributes: {
+        head: [],
+        data: [],
+      },
     }
 
     // 选择集中当前选中的属性
@@ -200,6 +204,13 @@ export default class LayerAttributeTabs extends React.Component {
     if (attributes.data.length === 1 && this.state.currentIndex !== 0) {
       this.setState({
         currentIndex: 0,
+        attributes,
+      })
+    } else if (
+      JSON.stringify(this.state.attributes) !== JSON.stringify(attributes)
+    ) {
+      this.setState({
+        attributes,
       })
     }
 
@@ -354,9 +365,17 @@ export default class LayerAttributeTabs extends React.Component {
     if (this.state.currentTabIndex !== index) {
       this.currentTabRefs &&
         this.currentTabRefs[this.state.currentTabIndex].clearSelection()
-      this.setState({
+      let newState = {
         currentTabIndex: index,
-      })
+      }
+      if (this.currentTabRefs[index]) {
+        let attributes = this.currentTabRefs[index].getAttributes()
+        newState.attributes = attributes
+        newState.attributes =
+          attributes.data.length === 1 && this.state.currentIndex !== 0 ? 0 : -1
+      }
+
+      this.setState(newState)
     }
 
     let timer = setTimeout(() => {
@@ -436,14 +455,14 @@ export default class LayerAttributeTabs extends React.Component {
           ) {
             this.currentTabRefs[this.state.currentTabIndex].clearSelection()
           }
-          if (
-            i < this.currentTabRefs.length &&
-            this.state.currentTabIndex !== i
-          ) {
-            this.setState({
-              currentTabIndex: i,
-            })
-          }
+          // if (
+          //   i < this.currentTabRefs.length &&
+          //   this.state.currentTabIndex !== i
+          // ) {
+          //   this.setState({
+          //     currentTabIndex: i,
+          //   })
+          // }
           GLOBAL.LayerAttributeTabIndex = i
         }}
         locked
@@ -558,6 +577,7 @@ export default class LayerAttributeTabs extends React.Component {
         <LayerTopBar
           hasTabBtn
           tabsAction={this.showDrawer}
+          canLocated={this.state.attributes.data.length > 1}
           canRelated={this.state.currentIndex >= 0}
           relateAction={this.relateAction}
           locateAction={this.showLocationView}

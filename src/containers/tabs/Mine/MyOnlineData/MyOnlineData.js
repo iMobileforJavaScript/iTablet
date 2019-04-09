@@ -121,6 +121,7 @@ export default class MyOnlineData extends Component {
       this.downloadingListener = DeviceEventEmitter.addListener(
         downloadingEventType,
         progress => {
+          // console.log(progress)
           let result = '下载' + progress.toFixed(0) + '%'
           this._changeModalProgressState(result)
         },

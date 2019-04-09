@@ -483,15 +483,15 @@ export default class LayerSelectionAttribute extends React.Component {
         relativeIndex: -1,
         currentIndex: -1,
       })
-      if (
-        this.props.selectAction &&
-        typeof this.props.selectAction === 'function'
-      ) {
-        this.props.selectAction({
-          index: -1,
-          data: -1,
-        })
-      }
+      // if (
+      //   this.props.selectAction &&
+      //   typeof this.props.selectAction === 'function'
+      // ) {
+      //   this.props.selectAction({
+      //     index: -1,
+      //     data: -1,
+      //   })
+      // }
     }
   }
 

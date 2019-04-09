@@ -444,7 +444,7 @@ export default class LayerAttribute extends React.Component {
   }
 
   selectRow = ({ data, index }) => {
-    if (!data || index < 0) return
+    if (!data || index < 0 || this.state.attributes.data.length === 1) return
 
     if (this.state.relativeIndex !== index) {
       this.setState({
@@ -903,6 +903,7 @@ export default class LayerAttribute extends React.Component {
       >
         {showContent && this.type !== 'MAP_3D' && (
           <LayerTopBar
+            canLocated={this.state.attributes.data.length > 1}
             canRelated={this.state.currentIndex >= 0}
             locateAction={this.showLocationView}
             relateAction={this.relateAction}
