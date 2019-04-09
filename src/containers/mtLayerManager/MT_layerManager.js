@@ -613,6 +613,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = (data, value) => {
+    let layers = this.state.data[0].data
+    let backMaps = this.state.data[1].data
+    let hasDeal = false
+    let caption = data.caption
+    let curData = this.state.data.concat()
+    for (let i = 0, l = layers.length; i < l; i++) {
+      if (caption === layers[i].caption) {
+        curData[0].data[i].isVisible = value
+        hasDeal = true
+        break
+      }
+    }
+    if (!hasDeal)
+      for (let j = 0, l = backMaps.length; j < l; j++) {
+        if (caption === backMaps[j].caption) {
+          curData[1].data.isVisible = value
+          hasDeal = true
+          break
+        }
+      }
     SMap.setLayerVisible(data.path, value)
   }
 
