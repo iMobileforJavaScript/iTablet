@@ -4,7 +4,7 @@ import Const from './Const'
 import AudioKeywords from './AudioKeywords'
 import EventConst from './EventConst'
 import ExampleMapData from './ExampleMapData'
-import ConstModule, { MAP_MODULE } from './ConstModule'
+import ConstModule, { MAP_MODULE, getHeaderTitle } from './ConstModule'
 import ConstToolType from './ConstToolType'
 import Map3DBaseMapList from './Map3DBaseMapList'
 import ConstInfo from './ConstInfo'
@@ -75,4 +75,5 @@ export {
   ThemeType,
   CheckStatus,
   ConstAnalyst,
+  getHeaderTitle,
 }

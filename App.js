@@ -145,7 +145,7 @@ class AppRoot extends Component {
   }
   componentDidMount () {
 
-    if(GLOBAL.loginTimer != undefined){
+    if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
@@ -184,8 +184,23 @@ class AppRoot extends Component {
       await this.initDirectories()
       SOnlineService.init()
       SOnlineService.removeCookie()
-      let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      let path = await FileTools.appendingHomeDirectory(customerPath)
+
+      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
+      if (
+        this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
+        (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
+      ) {
+        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace
+        if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
+          path = await FileTools.appendingHomeDirectory(userWsPath)
+        } else {
+          path = await FileTools.appendingHomeDirectory(wsPath)
+        }
+      } else {
+        path = await FileTools.appendingHomeDirectory(wsPath)
+      }
+      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // path = await FileTools.appendingHomeDirectory(customerPath)
       this.props.openWorkspace({server: path})
       // await this.initEnvironment()
       // await this.initSpeechManager()

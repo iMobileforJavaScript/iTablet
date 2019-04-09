@@ -26,6 +26,7 @@ export default class Mine extends Component {
   props: {
     navigation: Object,
     user: Object,
+    workspace: Object,
     setUser: () => {},
     closeWorkspace: () => {},
     openWorkspace: () => {},
@@ -67,14 +68,17 @@ export default class Mine extends Component {
     }
   }
 
-  openUserWorkspace = () => {
-    this.props.closeWorkspace(async () => {
-      let userPath = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath +
-          this.props.user.currentUser.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace,
-      )
+  openUserWorkspace = async () => {
+    let userPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativeFilePath.Workspace,
+    )
+    // 防止多次打开同一个工作空间
+    if (!this.props.workspace || this.props.workspace.server === userPath)
+      return
+    this.props.closeWorkspace(() => {
       this.props.openWorkspace({ server: userPath })
     })
   }
