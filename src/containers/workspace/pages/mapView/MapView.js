@@ -38,7 +38,12 @@ import { Utils } from '../../util'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
-import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
+import {
+  ConstPath,
+  ConstToolType,
+  ConstInfo,
+  getHeaderTitle,
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
@@ -104,7 +109,13 @@ export default class MapView extends React.Component {
     //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
-    this.mapName = (params && params.mapName) || ''
+    this.mapName = ''
+    if (params && params.mapName) {
+      this.mapName = params.mapName
+    } else if (GLOBAL.Type) {
+      this.mapName = getHeaderTitle(GLOBAL.Type)
+    }
+
     this.path = (params && params.path) || ''
     this.showDialogCaption =
       params && params.path ? !params.path.endsWith('.smwu') : true

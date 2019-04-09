@@ -131,21 +131,21 @@ class AppRoot extends Component {
     GLOBAL.ThemeType = ThemeType.LIGHT_THEME
     PT.initCustomPrototype()
   }
-  UNSAFE_componentWillMount(){
-    //再次进行用户数据初始化
-    let checkAndInit = async ()=>{
-      let curUser = this.props.user.currentUser
-      if( curUser && curUser.userType && curUser.userType !== UserType.PROBATION_USER){
-        let isFileExist = await FileTools.fileIsExist(ConstPath.UserPath + curUser.userName)
-        if(!isFileExist)
-          FileTools.initUserDefaultData(curUser.userName)
-      }
-    }
-    checkAndInit()
-  }
+  // UNSAFE_componentWillMount(){
+  //   //再次进行用户数据初始化
+  //   let checkAndInit = async ()=>{
+  //     let curUser = this.props.user.currentUser
+  //     if( curUser && curUser.userType && curUser.userType !== UserType.PROBATION_USER){
+  //       let isFileExist = await FileTools.fileIsExist(ConstPath.UserPath + curUser.userName)
+  //       if(!isFileExist)
+  //         FileTools.initUserDefaultData(curUser.userName)
+  //     }
+  //   }
+  //   checkAndInit()
+  // }
   componentDidMount () {
 
-    if(GLOBAL.loginTimer != undefined){
+    if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
@@ -181,11 +181,27 @@ class AppRoot extends Component {
 
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
-      await this.initDirectories()
+      // await this.initDirectories()
+      await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
       SOnlineService.removeCookie()
-      let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      let path = await FileTools.appendingHomeDirectory(customerPath)
+
+      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
+      if (
+        this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
+        (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
+      ) {
+        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace
+        if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
+          path = await FileTools.appendingHomeDirectory(userWsPath)
+        } else {
+          path = await FileTools.appendingHomeDirectory(wsPath)
+        }
+      } else {
+        path = await FileTools.appendingHomeDirectory(wsPath)
+      }
+      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // path = await FileTools.appendingHomeDirectory(customerPath)
       this.props.openWorkspace({server: path})
       await this.inspectEnvironment()
       await this.initOrientation()
