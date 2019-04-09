@@ -3630,16 +3630,16 @@ export default class ToolBar extends React.PureComponent {
               wsPath = await FileTools.appendingHomeDirectory(customerPath)
             }
             await this.props.openWorkspace({ server: wsPath })
-            await SMap.openDatasource(
-              ConstOnline['Google'].DSParams,
-              // ConstOnline['Google'].layerIndex,
-              1,
-            )
+            // await SMap.openDatasource(
+            //   ConstOnline['Google'].DSParams,
+            //   // ConstOnline['Google'].layerIndex,
+            //   1,
+            // )
 
-            let layers = await this.props.getLayers()
+            // let layers = await this.props.getLayers()
 
             // 隐藏底图
-            await SMap.setLayerVisible(layers[layers.length - 1].path, true)
+            // await SMap.setLayerVisible(layers[layers.length - 1].path, true)
 
             // if (GLOBAL.Type === constants.COLLECTION) {
             //
@@ -3779,18 +3779,18 @@ export default class ToolBar extends React.PureComponent {
                 await this.props.getLayers(-1, async layers => {
                   this.props.setCurrentLayer(layers.length > 0 && layers[0])
 
-                  if (
-                    !LayerUtils.isBaseLayer(layers[layers.length - 1].caption)
-                  ) {
-                    await LayerUtils.addBaseMap(
-                      layers,
-                      ConstOnline['Google'],
-                      GLOBAL.Type === constants.COLLECTION
-                        ? 1
-                        : ConstOnline['Google'].layerIndex,
-                      false,
-                    )
-                  }
+                  // if (
+                  //   !LayerUtils.isBaseLayer(layers[layers.length - 1].caption)
+                  // ) {
+                  //   await LayerUtils.addBaseMap(
+                  //     layers,
+                  //     ConstOnline['Google'],
+                  //     GLOBAL.Type === constants.COLLECTION
+                  //       ? 1
+                  //       : ConstOnline['Google'].layerIndex,
+                  //     false,
+                  //   )
+                  // }
 
                   // // 若没有底图，默认添加地图
                   // if (LayerUtils.getBaseLayers(layers).length > 0) {

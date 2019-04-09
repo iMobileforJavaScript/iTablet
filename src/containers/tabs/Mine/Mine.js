@@ -22,6 +22,7 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
 import { UserType, Const } from '../../../constants'
 import { scaleSize } from '../../../utils'
+const Customer = 'Customer'
 export default class Mine extends Component {
   props: {
     navigation: Object,
@@ -293,14 +294,20 @@ export default class Mine extends Component {
     let allColor = color.font_color_white
     let headerHeight = scaleSize(120)
     let imageWidth = scaleSize(70)
-    let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
+    let isPro =
+      this.props.user.currentUser.userType &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
     let headerImage = isPro
-      ? require('../../../assets/home/system_default_header_image.png')
-      : {
+      ? {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
-    let headerTitle = isPro ? '立即登录' : this.props.user.currentUser.userName
+      : require('../../../assets/home/system_default_header_image.png')
+    let headerTitle = isPro
+      ? this.props.user.currentUser.userName
+        ? this.props.user.currentUser.userName
+        : Customer
+      : '立即登录'
     return (
       <View
         style={{

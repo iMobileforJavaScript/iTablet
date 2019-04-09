@@ -4,7 +4,6 @@ import {
   ConstInfo,
   ConstPath,
   Const,
-  ConstOnline,
   UserType,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
@@ -672,11 +671,11 @@ function create() {
           // await SMap.removeAllLayer() // 移除所有图层
           // await SMap.closeDatasource(-1) // 关闭所有数据源
 
-          await SMap.openDatasource(
-            ConstOnline['Google'].DSParams,
-            // ConstOnline['Google'].layerIndex,
-            1,
-          )
+          // await SMap.openDatasource(
+          //   ConstOnline['Google'].DSParams,
+          //   // ConstOnline['Google'].layerIndex,
+          //   1,
+          // )
           _params.getLayers && (await _params.getLayers())
 
           _params.saveMap &&
