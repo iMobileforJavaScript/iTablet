@@ -12,6 +12,7 @@ import {
   FlatList,
   Image,
   TextInput,
+  RefreshControl,
 } from 'react-native'
 
 import NavigationService from '../../../NavigationService'
@@ -40,7 +41,7 @@ class FriendList extends Component {
       sections: [], //section数组
       listData: [], //源数组
       letterArr: [], //首字母数组
-      bRefesh: true,
+      isRefresh: false,
       inputText: '',
     }
 
@@ -50,6 +51,7 @@ class FriendList extends Component {
 
   refresh = () => {
     this.getContacts()
+    this.setState({ isRefresh: false })
   }
   componentDidMount() {
     this.getContacts()
@@ -360,6 +362,17 @@ class FriendList extends Component {
               </Text>
             </View>
           )} // 数据为空时调用
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefresh}
+              onRefresh={this.refresh}
+              colors={['orange', 'red']}
+              tintColor={'orange'}
+              titleColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         <View style={styles.FlatListViewStyle}>
           <FlatList

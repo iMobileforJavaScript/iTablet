@@ -187,9 +187,6 @@ class AppRoot extends Component {
       let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
       let path = await FileTools.appendingHomeDirectory(customerPath)
       this.props.openWorkspace({server: path})
-      // await this.initEnvironment()
-      // await this.initSpeechManager()
-      // await this.initCustomerWorkspace()
       await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
