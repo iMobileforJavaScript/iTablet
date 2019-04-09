@@ -1,5 +1,6 @@
 import MyLocalData from './MyLocalData'
 import { importWorkspace } from '../../../../models/template'
+import { importSceneWorkspace } from '../../../../models/map'
 import { connect } from 'react-redux'
 import { setUser } from '../../../../models/user'
 const mapStateToProps = state => ({
@@ -9,6 +10,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = {
   setUser,
   importWorkspace,
+  importSceneWorkspace,
 }
 export default connect(
   mapStateToProps,

@@ -149,7 +149,7 @@ export default class Mine extends Component {
             {this._renderLine()}
             {this._renderItem({
               title: Const.IMPORT,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+              leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
               onClick: this.goToMyLocalData,
             })}
 
@@ -224,7 +224,7 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: Const.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
