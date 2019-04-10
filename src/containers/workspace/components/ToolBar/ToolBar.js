@@ -182,7 +182,7 @@ export default class ToolBar extends React.PureComponent {
       themeCreateType: '',
       selectName: '',
       selectKey: '',
-      listExpressions: [],
+      listExpressions: {},
       themeSymbolType: '',
     }
     this.isShow = false
@@ -3387,6 +3387,18 @@ export default class ToolBar extends React.PureComponent {
                 type: ConstToolType.MAP_THEME_ADD_DATASET,
               },
               () => {
+                let les = this.state.listExpressions
+                let data = this.state.data[0].data
+                if (les && alias in les && data) {
+                  let names = les[alias]
+                  for (let j = 0, dataLen = data.length; j < dataLen; j++) {
+                    if (
+                      JSON.stringify(names).indexOf(data[j].datasetName) >= 0
+                    ) {
+                      data[j].isSelected = true
+                    }
+                  }
+                }
                 this.scrollListToLocation()
                 this.props.setContainerLoading &&
                   this.props.setContainerLoading(false)
@@ -3930,6 +3942,9 @@ export default class ToolBar extends React.PureComponent {
           ) {
             this.listSelectableAction({ selectList })
           }
+          this.setState({
+            listExpressions: selectList,
+          })
         }}
         headerAction={this.headerAction}
         underlayColor={color.item_separate_white}

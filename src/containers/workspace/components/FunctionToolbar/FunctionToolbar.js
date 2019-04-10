@@ -68,7 +68,7 @@ export default class FunctionToolbar extends React.Component {
     direction: 'column',
     separator: 20,
   }
-  //todo 修改bug
+
   constructor(props) {
     super(props)
     let data = props.data || this.getData(props.type)
