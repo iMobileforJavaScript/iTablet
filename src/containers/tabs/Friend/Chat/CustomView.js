@@ -17,6 +17,7 @@ export default class CustomView extends React.Component {
   props: {
     user: Object,
     currentMessage: any,
+    position: '',
   }
 
   render() {
@@ -59,12 +60,18 @@ export default class CustomView extends React.Component {
         ',' +
         this.props.currentMessage.message.message.latitude.toFixed(6) +
         ')'
+      let textColor = 'white'
+      if (this.props.position === 'left') {
+        textColor = 'black'
+      }
       return (
         <TouchableOpacity
           style={[styles.container, this.props.containerStyle]}
           onPress={() => {
+            let wsData = JSON.parse(JSON.stringify(ConstOnline.Google))
+            wsData.layerIndex = 3
             NavigationService.navigate('MapView', {
-              wsData: ConstOnline.Google,
+              wsData,
               isExample: true,
               mapName: this.props.currentMessage.message.message.message,
               showMarker: {
@@ -80,13 +87,14 @@ export default class CustomView extends React.Component {
               width: scaleSize(45),
               height: scaleSize(45),
               marginTop: scaleSize(10),
+              marginLeft: scaleSize(10),
             }}
           />
           <Text
             style={{
               textAlign: 'center',
               fontSize: scaleSize(20),
-              color: 'white',
+              color: textColor,
             }}
           >
             {text}
