@@ -640,7 +640,7 @@ export default class MyOnlineData extends Component {
           let dataPermissionType = { dataPermissionType: 'DOWNLOAD' }
           authorizeSetting.push(dataPermissionType)
 
-          Toast.show('成功设置为共有数据')
+          Toast.show('成功设置为公有数据')
         }
         _arrOnlineData = newData
         this.setState({ data: _arrOnlineData })
