@@ -29,6 +29,7 @@ import { ConstPath, EventConst } from '../../../../constants'
 import { color } from '../../../../styles'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
+import { stat } from 'react-native-fs'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
@@ -192,10 +193,10 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
-            location: {
-              latitude: msg.msg.message.latitude,
-              longitude: msg.msg.message.longitude,
-            },
+            // location: {
+            //   latitude: msg.msg.message.latitude,
+            //   longitude: msg.msg.message.longitude,
+            // },
           }
       }
     }
@@ -244,14 +245,7 @@ class Chat extends React.Component {
   }
 
   onSendLocation(value) {
-    let positionStr =
-      value.address +
-      '\n' +
-      'LOCATION(' +
-      value.longitude.toFixed(6) +
-      ',' +
-      value.latitude.toFixed(6) +
-      ')'
+    let positionStr = value.address
     let bGroup = 1
     let groupID = this.curUser.userId
     if (this.targetUser.id.indexOf('Group_') != -1) {
@@ -286,9 +280,17 @@ class Chat extends React.Component {
       user: { name: this.curUser.nickname, _id: this.curUser.userId },
       createdAt: time,
       system: 0,
-      location: {
-        latitude: value.latitude,
-        longitude: value.longitude,
+      // location: {
+      //   latitude: value.latitude,
+      //   longitude: value.longitude,
+      // },
+      message: {
+        type: 10,
+        message: {
+          message: positionStr,
+          longitude: value.longitude,
+          latitude: value.latitude,
+        },
       },
     }
     this.setState(previousState => {
@@ -299,7 +301,7 @@ class Chat extends React.Component {
 
     this.friend._sendMessage(JSON.stringify(message), this.targetUser.id, false)
   }
-  onSendFile(filepath) {
+  async onSendFile(filepath) {
     let bGroup = 1
     let groupID = this.curUser.userId
     if (this.targetUser.id.indexOf('Group_') != -1) {
@@ -330,6 +332,8 @@ class Chat extends React.Component {
 
     let msgId = this.friend._getMsgId(this.targetUser.id)
     let fileName = filepath.substr(filepath.lastIndexOf('/') + 1)
+
+    let statResult = await stat(filepath)
     let msg = {
       //添加到giftedchat的消息
       _id: msgId,
@@ -343,7 +347,7 @@ class Chat extends React.Component {
         message: {
           message: '[文件]',
           fileName: fileName,
-          fileSize: '',
+          fileSize: statResult.size,
           queueName: '',
           filePath: filepath,
         },
@@ -419,6 +423,28 @@ class Chat extends React.Component {
     })
   }
 
+  receiveFile = (message, receivePath) => {
+    this.friend._receiveFile(
+      message.message.message.fileName,
+      message.message.message.queueName,
+      receivePath,
+      this.targetUser.id,
+      message._id,
+    )
+    this.setState(previousState => {
+      let length = previousState.messages
+      let i = 0
+      for (; i < length; i++) {
+        if (previousState.messages[i]._id === message._id) {
+          break
+        }
+      }
+      previousState.messages[i].message.message.isReceived = 1
+      return {
+        messages: previousState.messages,
+      }
+    })
+  }
   async onLongPress(context, message) {
     if (message.message.type) {
       switch (message.message.type) {
@@ -449,6 +475,9 @@ class Chat extends React.Component {
                   messages: previousState.messages,
                 }
               })
+              this.downloadmessage = message
+              this.downloadreceivePath = receivePath
+              this.download.setDialogVisible(true)
             } else {
               let toPath = await FileTools.appendingHomeDirectory(
                 ConstPath.Import + '/weChat.zip',
@@ -530,6 +559,7 @@ class Chat extends React.Component {
             }}
           />
           {this.renderImportDialog()}
+          {this.renderDownloadDialog()}
         </Container>
       </Animated.View>
     )
@@ -684,6 +714,41 @@ class Chat extends React.Component {
           style={styles.dialogHeaderImg}
         />
         <Text style={styles.promptTtile}>{'是否导入数据'}</Text>
+      </View>
+    )
+  }
+
+  renderDownloadDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.download = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={() => {
+          this.download.setDialogVisible(false)
+          this.receiveFile(this.downloadmessage, this.downloadreceivePath)
+        }}
+        cancelAction={() => {
+          this.download.setDialogVisible(false)
+        }}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={styles.dialogBackground}
+      >
+        {this.renderDownloadDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderDownloadDialogChildren = () => {
+    return (
+      <View style={styles.dialogHeaderView}>
+        <Image
+          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={styles.dialogHeaderImg}
+        />
+        <Text style={styles.promptTtile}>{'是否下载数据'}</Text>
       </View>
     )
   }

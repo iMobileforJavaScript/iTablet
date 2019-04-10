@@ -541,7 +541,12 @@ export default class MyLocalData extends Component {
           }
           let zipResult
           if (this.state.title === Const.MAP) {
-            await this._exportData()
+            let result = await this._exportData()
+            if (!result) {
+              Toast.show('分享失败')
+              this.setLoading(false)
+              return
+            }
             zipResult = true
             let homePath = await FileTools.appendingHomeDirectory()
             targetPath =
@@ -571,7 +576,12 @@ export default class MyLocalData extends Component {
               })
         } else if (type === 'online') {
           if (this.state.title === Const.MAP) {
-            await this._exportData()
+            let result = await this._exportData()
+            if (!result) {
+              Toast.show('分享失败')
+              this.setLoading(false)
+              return
+            }
             let homePath = await FileTools.appendingHomeDirectory()
             targetPath =
               homePath +
@@ -753,7 +763,8 @@ export default class MyLocalData extends Component {
       '/' +
       mapName +
       '.smwu'
-    this.props.exportWorkspace(
+    let exportResult = false
+    await this.props.exportWorkspace(
       { maps: [mapName], outPath: path, isOpenMap: true },
       result => {
         if (result === true) {
@@ -761,8 +772,10 @@ export default class MyLocalData extends Component {
         } else {
           showToast && Toast.show('导出失败')
         }
+        exportResult = result
       },
     )
+    return exportResult
   }
 
   getUploadingData = () => {
@@ -788,7 +801,7 @@ export default class MyLocalData extends Component {
   _showMyDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
       let data,
-        title = '分享'
+        title = this.state.title
       if (
         this.props.user.currentUser.userName &&
         this.props.user.currentUser.userType !== UserType.PROBATION_USER
@@ -800,34 +813,34 @@ export default class MyLocalData extends Component {
         if (this.state.sectionData[0].title.indexOf('我的地图') !== -1) {
           data = [
             {
-              title: title,
+              title: '分享',
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
               },
             },
             {
-              title: '导出数据',
+              title: '导出地图',
               action: () => {
                 this._exportData(true)
               },
             },
             {
-              title: '删除数据',
+              title: '删除地图',
               action: this._onDeleteData,
             },
           ]
         } else {
           data = [
             {
-              title: title,
+              title: '分享',
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
               },
             },
             {
-              title: '删除数据',
+              title: '删除' + title,
               action: this._onDeleteData,
             },
           ]
@@ -836,20 +849,20 @@ export default class MyLocalData extends Component {
         if (this.state.sectionData[0].title.indexOf('地图') !== -1) {
           data = [
             {
-              title: '导出数据',
+              title: '导出地图',
               action: () => {
                 this._exportData(true)
               },
             },
             {
-              title: '删除数据',
+              title: '删除地图',
               action: this._onDeleteData,
             },
           ]
         } else {
           data = [
             {
-              title: '删除数据',
+              title: '删除' + title,
               action: this._onDeleteData,
             },
           ]

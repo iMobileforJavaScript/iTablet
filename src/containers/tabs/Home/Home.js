@@ -346,12 +346,13 @@ export default class Home extends Component {
 
   render() {
     let userImg =
-      this.props.user.users.length > 1
-        ? {
+      this.props.user.currentUser.userType === UserType.PROBATION_USER ||
+      typeof this.props.user.currentUser.userType === 'undefined'
+        ? require('../../../assets/home/system_default_header_image.png')
+        : {
           uri:
               'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
         }
-        : require('../../../assets/home/system_default_header_image.png')
     let moreImg = require('../../../assets/home/Frenchgrey/icon_else_selected.png')
     return (
       <Container

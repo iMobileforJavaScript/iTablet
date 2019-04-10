@@ -15,7 +15,9 @@ import MapView from 'react-native-maps'
 export default class CustomView extends React.Component {
   props: {
     user: Object,
+    currentMessage: any,
   }
+
   render() {
     if (
       this.props.currentMessage.message.type &&

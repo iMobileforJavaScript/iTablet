@@ -5,14 +5,17 @@
 */
 
 import * as React from 'react'
-import { StyleSheet, TouchableHighlight, Image } from 'react-native'
+import { StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { getPublicAssets } from '../assets'
+import { CheckStatus } from '../constants'
 
 const bgColor = 'transparent'
 
-export default class CheckBox extends React.Component {
+export default class CheckBox extends React.PureComponent {
   props: {
     onChange: () => {},
-    size: number,
+    checkStatus: string,
+    style?: Object,
   }
 
   constructor(props) {
@@ -37,20 +40,29 @@ export default class CheckBox extends React.Component {
   }
 
   render() {
-    const size = this.props.size
-      ? { width: this.props.size, height: this.props.size }
-      : { width: 20, height: 20 }
-    const imagePath = this.state.checked
-      ? require('../assets/public/checkbox-yes.png')
-      : require('../assets/public/checkbox-no.png')
+    let icon
+    switch (this.props.checkStatus) {
+      case CheckStatus.CHECKED:
+        icon = getPublicAssets().common.icon_radio_selected
+        break
+      case CheckStatus.UN_CHECK_DISABLE:
+        icon = getPublicAssets().common.icon_radio_unselected
+        break
+      case CheckStatus.CHECKED_DISABLE:
+        icon = getPublicAssets().common.icon_radio_selected_disable
+        break
+      case CheckStatus.UN_CHECK:
+        icon = getPublicAssets().common.icon_radio_unselected_disable
+        break
+    }
     return (
-      <TouchableHighlight
-        style={[styles.btn, size]}
+      <TouchableOpacity
+        style={[styles.btn]}
         onPress={this._btnPress}
         underlayColor={bgColor}
       >
-        <Image style={[styles.btn_image, size]} source={imagePath} />
-      </TouchableHighlight>
+        <Image style={[styles.btn_image]} source={icon} />
+      </TouchableOpacity>
     )
   }
 }
