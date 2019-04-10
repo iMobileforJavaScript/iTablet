@@ -85,6 +85,7 @@ class FriendList extends Component {
   }
   download = () => {
     FriendListFileHandle.download()
+    this.setState({ isRefresh: false })
   }
 
   getContacts = async () => {
@@ -365,7 +366,7 @@ class FriendList extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefresh}
-              onRefresh={this.refresh}
+              onRefresh={this.download}
               colors={['orange', 'red']}
               tintColor={'orange'}
               titleColor={'orange'}

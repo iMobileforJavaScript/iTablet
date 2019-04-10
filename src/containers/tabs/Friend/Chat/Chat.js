@@ -332,6 +332,7 @@ class Chat extends React.Component {
 
     let msgId = this.friend._getMsgId(this.targetUser.id)
     let fileName = filepath.substr(filepath.lastIndexOf('/') + 1)
+
     let statResult = await stat(filepath)
     let msg = {
       //添加到giftedchat的消息
@@ -444,7 +445,6 @@ class Chat extends React.Component {
       }
     })
   }
-
   async onLongPress(context, message) {
     if (message.message.type) {
       switch (message.message.type) {
@@ -455,6 +455,26 @@ class Chat extends React.Component {
             )
             let receivePath = userPath + '/ReceivedFiles'
             if (message.message.message.isReceived === 0) {
+              this.friend._receiveFile(
+                message.message.message.fileName,
+                message.message.message.queueName,
+                receivePath,
+                this.targetUser.id,
+                message._id,
+              )
+              this.setState(previousState => {
+                let length = previousState.messages
+                let i = 0
+                for (; i < length; i++) {
+                  if (previousState.messages[i]._id === message._id) {
+                    break
+                  }
+                }
+                previousState.messages[i].message.message.isReceived = 1
+                return {
+                  messages: previousState.messages,
+                }
+              })
               this.downloadmessage = message
               this.downloadreceivePath = receivePath
               this.download.setDialogVisible(true)
@@ -666,9 +686,9 @@ class Chat extends React.Component {
               GLOBAL.Loading.setLoading(false)
               result && Toast.show('导入成功')
             },
-            result => {
+            () => {
               GLOBAL.Loading.setLoading(false)
-              result && Toast.show('导入失败')
+              Toast.show('导入失败')
             },
           )
         }}
