@@ -20,7 +20,12 @@ import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, ConstPath, getHeaderTitle } from '../../constants'
+import {
+  ConstToolType,
+  ConstPath,
+  getHeaderTitle,
+  ConstOnline,
+} from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
 import * as LayerUtils from './LayerUtils'
@@ -135,41 +140,41 @@ export default class MT_layerManager extends React.Component {
       this.itemRefs = {}
       let layers = isInit ? this.props.layers : await this.props.getLayers()
 
-      // if (
-      //   layers.length > 0 &&
-      //   !LayerUtils.isBaseLayer(layers[layers.length - 1].name)
-      // ) {
-      //   await SMap.openDatasource(
-      //     ConstOnline.Google.DSParams,
-      //     GLOBAL.Type === constants.COLLECTION
-      //       ? 1
-      //       : ConstOnline.Google.layerIndex,
-      //     false,
-      //     false,
-      //   )
-      //   layers = await this.props.getLayers()
-      // }
+      if (
+        layers.length > 0 &&
+        !LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+      ) {
+        await SMap.openDatasource(
+          ConstOnline.Google.DSParams,
+          GLOBAL.Type === constants.COLLECTION
+            ? 1
+            : ConstOnline.Google.layerIndex,
+          false,
+          false,
+        )
+        layers = await this.props.getLayers()
+      }
 
-      // let baseMap = []
-      // let dataList = []
-      // if (
-      //   layers.length > 0 &&
-      //   LayerUtils.isBaseLayer(layers[layers.length - 1].name)
-      // ) {
-      //   baseMap = [layers[layers.length - 1]]
-      // }
+      let baseMap = []
+      let dataList = []
+      if (
+        layers.length > 0 &&
+        LayerUtils.isBaseLayer(layers[layers.length - 1].name)
+      ) {
+        baseMap = [layers[layers.length - 1]]
+      }
       let udbPath = await FileTools.appendingHomeDirectory(
         ConstPath.CustomerPath + 'Data/Label/Label.udb',
       )
-      let dataList = await SMap.getUDBName(udbPath)
+      dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
           { title: '我的图层', data: layers, visible: true },
-          // {
-          //   title: '我的底图',
-          //   data: baseMap,
-          //   visible: true,
-          // },
+          {
+            title: '我的底图',
+            data: baseMap,
+            visible: true,
+          },
           { title: '我的标注', data: dataList, visible: true },
         ],
         selectLayer: this.props.currentLayer.caption,

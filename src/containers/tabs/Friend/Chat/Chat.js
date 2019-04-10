@@ -245,14 +245,7 @@ class Chat extends React.Component {
   }
 
   onSendLocation(value) {
-    let positionStr =
-      value.address +
-      '\n' +
-      'LOCATION(' +
-      value.longitude.toFixed(6) +
-      ',' +
-      value.latitude.toFixed(6) +
-      ')'
+    let positionStr = value.address
     let bGroup = 1
     let groupID = this.curUser.userId
     if (this.targetUser.id.indexOf('Group_') != -1) {

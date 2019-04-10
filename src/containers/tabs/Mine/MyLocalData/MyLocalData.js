@@ -620,7 +620,7 @@ export default class MyLocalData extends Component {
         <View
           style={{
             flexDirection: 'row',
-            backgroundColor: color.contentColorWhite,
+            // backgroundColor: color.contentColorWhite,
             alignItems: 'center',
             height: itemHeight,
           }}
@@ -878,7 +878,6 @@ export default class MyLocalData extends Component {
             <SectionList
               style={{
                 flex: 1,
-                backgroundColor: color.contentColorWhite,
               }}
               sections={sectionData}
               initialNumToRender={20}

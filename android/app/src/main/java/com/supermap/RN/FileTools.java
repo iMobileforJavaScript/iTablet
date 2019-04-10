@@ -718,6 +718,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         String plottingExtDataPath = externalDataPath + "Plotting/";
         String collectionExtDataPath = externalDataPath + "Collection/";
         String dataPath = userPath + "Data/";
+//        String CachePath=SDCARD+"/iTablet/Cache/";
 
         String defaultData = "DefaultData";
         String defaultDataPath = SDCARD + "/iTablet/User/" + userName + "/" + defaultData + "/";
@@ -746,6 +747,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Temp");
         createDirectory(dataPath + "Lable");
         createDirectory(dataPath + "Color");
+//        createDirectory(CachePath);
         createDirectory(externalDataPath);
         createDirectory(plottingExtDataPath);
         createDirectory(collectionExtDataPath);

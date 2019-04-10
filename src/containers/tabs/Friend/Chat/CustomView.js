@@ -1,16 +1,17 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {
-  Linking,
-  Platform,
+  Image,
   StyleSheet,
   TouchableOpacity,
   ViewPropTypes,
   Text,
   View,
 } from 'react-native'
-import MapView from 'react-native-maps'
-//import { scaleSize } from '../../../../utils/screen'
+// import MapView from 'react-native-maps'
+import { scaleSize } from '../../../../utils/screen'
+import NavigationService from '../../../NavigationService'
+import { ConstOnline } from '../../../../constants'
 
 export default class CustomView extends React.Component {
   props: {
@@ -52,41 +53,44 @@ export default class CustomView extends React.Component {
       this.props.currentMessage.message.type &&
       this.props.currentMessage.message.type === 10
     ) {
+      let text =
+        'LOCATION(' +
+        this.props.currentMessage.message.message.longitude.toFixed(6) +
+        ',' +
+        this.props.currentMessage.message.message.latitude.toFixed(6) +
+        ')'
       return (
         <TouchableOpacity
-          style={[styles.mapView, this.props.containerStyle]}
+          style={[styles.container, this.props.containerStyle]}
           onPress={() => {
-            const url = Platform.select({
-              ios: `http://maps.apple.com/?ll=${
-                this.props.currentMessage.message.message.latitude
-              },${this.props.currentMessage.message.message.longitude}`,
-              android: `http://maps.google.com/?q=${
-                this.props.currentMessage.message.message.latitude
-              },${this.props.currentMessage.message.message.longitude}`,
+            NavigationService.navigate('MapView', {
+              wsData: ConstOnline.Google,
+              isExample: true,
+              mapName: this.props.currentMessage.message.message.message,
+              showMarker: {
+                longitude: this.props.currentMessage.message.message.longitude,
+                latitude: this.props.currentMessage.message.message.latitude,
+              },
             })
-            Linking.canOpenURL(url)
-              .then(supported => {
-                if (supported) {
-                  return Linking.openURL(url)
-                }
-              })
-              // eslint-disable-next-line
-              .catch(err => {
-                // console.error('An error occurred', err)
-              })
           }}
         >
-          <MapView
-            style={[styles.mapView, this.props.mapViewStyle]}
-            region={{
-              latitude: this.props.currentMessage.message.message.latitude,
-              longitude: this.props.currentMessage.message.message.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
+          <Image
+            source={require('../../../../assets/lightTheme/friend/app_chat_pin.png')}
+            style={{
+              width: scaleSize(45),
+              height: scaleSize(45),
+              marginTop: scaleSize(10),
             }}
-            scrollEnabled={false}
-            zoomEnabled={false}
           />
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: scaleSize(20),
+              color: 'white',
+            }}
+          >
+            {text}
+          </Text>
         </TouchableOpacity>
       )
     }
@@ -95,37 +99,42 @@ export default class CustomView extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  container: {},
-  container1: {
-    backgroundColor: 'white',
-    width: 150,
+  container: {
+    flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+  },
+  container1: {
+    backgroundColor: 'white',
+    width: scaleSize(150),
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    borderTopLeftRadius: scaleSize(12),
+    borderTopRightRadius: scaleSize(12),
   },
   container2: {
     alignItems: 'flex-start',
   },
   fileName: {
-    marginTop: 10,
-    marginLeft: 10,
-    marginRight: 10,
-    fontSize: 14,
+    marginTop: scaleSize(10),
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    fontSize: scaleSize(14),
     color: 'black',
   },
   fileSize: {
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
-    fontSize: 12,
+    marginLeft: scaleSize(10),
+    marginRight: scaleSize(10),
+    marginBottom: scaleSize(10),
+    fontSize: scaleSize(12),
   },
-  mapView: {
-    width: 150,
-    height: 100,
-    borderRadius: 13,
-    margin: 3,
-  },
+  // mapView: {
+  //   width: 150,
+  //   height: 100,
+  //   borderRadius: 13,
+  //   margin: 3,
+  //   backgroundColor:'red',
+  // },
 })
 
 CustomView.defaultProps = {

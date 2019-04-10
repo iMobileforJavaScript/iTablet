@@ -133,6 +133,7 @@ export default class PublicMap extends Component {
     await SOnlineService.syncAndroidCookie()
     let data = []
     while (currentPage <= totalPage) {
+      // console.log(currentPage, totalPage)
       await this._loadUserData2(currentPage, data)
       // console.log(data)
       if (data.length >= 1) {
@@ -174,6 +175,7 @@ export default class PublicMap extends Component {
     let timeout = 3000
     try {
       let objUserData = await this.getAllUserZipData(currentPage)
+      // console.log(objUserData)
       if (!objUserData) {
         return
       }
@@ -190,6 +192,7 @@ export default class PublicMap extends Component {
       for (let i = 0; i < contentLength; i++) {
         let objContent = objArrUserDataContent[i]
         if (objContent && objContent.type === 'WORKSPACE') {
+          // console.log(objContent)
           let dataId = objContent.id
           let dataUrl =
             'https://www.supermapol.com/web/datas/' + dataId + '.json'
@@ -274,6 +277,7 @@ export default class PublicMap extends Component {
   getAllUserZipData = currentPage => {
     let time = new Date().getTime()
     let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&tags=%5B%22%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
+    // console.log(uri)
     return FetchUtils.getObjJson(uri, 3000)
   }
   _onRefresh2 = async () => {

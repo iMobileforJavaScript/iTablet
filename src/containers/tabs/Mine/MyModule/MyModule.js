@@ -360,6 +360,7 @@ const styles = StyleSheet.create({
     width: scaleSize(30),
     height: scaleSize(30),
     marginLeft: 10,
+    tintColor: color.imageColorWhite,
   },
   sectionText: {
     color: color.fontColorWhite,

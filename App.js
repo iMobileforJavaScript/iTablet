@@ -181,7 +181,7 @@ class AppRoot extends Component {
 
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
-      // await this.initDirectories()
+      await this.initDirectories()
       await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
       SOnlineService.removeCookie()

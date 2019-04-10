@@ -41,7 +41,7 @@ export default class MyService extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
-    this.publishServiceTitle = '共有服务'
+    this.publishServiceTitle = '公有服务'
     this.privateServiceTitle = '私有服务'
     this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
