@@ -93,7 +93,8 @@ export default class FriendListFileHandle {
                   onlineVersion.rev > FriendListFileHandle.friends.rev
                 ) {
                   FriendListFileHandle.friends = onlineVersion
-                  RNFS.writeFile(FriendListFileHandle.friendListFile, value)
+                  FriendListFileHandle.saveHelper(value)
+                  //  RNFS.writeFile(FriendListFileHandle.friendListFile, value)
                   //  RNFS.moveFile(friendListFile, path + 'friend.list')
                 }
               },

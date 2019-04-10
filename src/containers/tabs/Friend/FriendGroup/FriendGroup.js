@@ -82,6 +82,13 @@ class FriendGroup extends Component {
     }
   }
 
+  upload = () => {
+    FriendListFileHandle.upload()
+  }
+  download = () => {
+    FriendListFileHandle.download()
+    this.setState({ isRefresh: false })
+  }
   refresh = () => {
     this.getContacts()
     this.setState({ isRefresh: false })
@@ -188,7 +195,7 @@ class FriendGroup extends Component {
           refreshControl={
             <RefreshControl
               refreshing={this.state.isRefresh}
-              onRefresh={this.refresh}
+              onRefresh={this.download}
               colors={['orange', 'red']}
               tintColor={'orange'}
               titleColor={'orange'}
