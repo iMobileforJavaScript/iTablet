@@ -190,7 +190,6 @@ export default class FriendMap extends Component {
     if (!currentData) {
       currentData = []
     }
-    let timeout = 3000
     try {
       let objUserData = await this.getAllUserZipData(currentPage)
       if (!objUserData) {
@@ -210,7 +209,7 @@ export default class FriendMap extends Component {
           let dataId = objContent.id
           let dataUrl =
             'https://www.supermapol.com/web/datas/' + dataId + '.json'
-          let objDataJson = await FetchUtils.getObjJson(dataUrl, timeout)
+          let objDataJson = await FetchUtils.getObjJson(dataUrl)
           if (!objDataJson) {
             continue
           }
@@ -230,7 +229,7 @@ export default class FriendMap extends Component {
             }
             if (restUrl && restUrl !== '') {
               restUrl = restUrl + '/maps.json'
-              let arrMapJson = await FetchUtils.getObjJson(restUrl, timeout)
+              let arrMapJson = await FetchUtils.getObjJson(restUrl, 6000)
               let arrMapInfos = []
               if (!arrMapJson) {
                 continue
