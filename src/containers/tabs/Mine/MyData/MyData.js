@@ -801,7 +801,7 @@ export default class MyLocalData extends Component {
   _showMyDataPopupModal = () => {
     if (!this.state.isFirstLoadingModal) {
       let data,
-        title = '分享'
+        title = this.state.title
       if (
         this.props.user.currentUser.userName &&
         this.props.user.currentUser.userType !== UserType.PROBATION_USER
@@ -813,7 +813,7 @@ export default class MyLocalData extends Component {
         if (this.state.sectionData[0].title.indexOf('我的地图') !== -1) {
           data = [
             {
-              title: title,
+              title: '分享',
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
@@ -833,14 +833,14 @@ export default class MyLocalData extends Component {
         } else {
           data = [
             {
-              title: title,
+              title: '分享',
               action: () => {
                 this._closeModal()
                 this.ModalBtns && this.ModalBtns.setVisible(true)
               },
             },
             {
-              title: '删除数据',
+              title: '删除' + title,
               action: this._onDeleteData,
             },
           ]
@@ -862,7 +862,7 @@ export default class MyLocalData extends Component {
         } else {
           data = [
             {
-              title: '删除数据',
+              title: '删除' + title,
               action: this._onDeleteData,
             },
           ]
