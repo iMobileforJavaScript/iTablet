@@ -19,6 +19,7 @@ export default class InputPage extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
+    this.backcb = params && params.backcb
     this.state = {
       value: params && params.value ? params.value : '',
       placeholder: params && params.placeholder ? params.placeholder : '',
@@ -39,6 +40,14 @@ export default class InputPage extends React.Component {
     }
   }
 
+  back = () => {
+    if (this.backcb) {
+      this.backcb()
+    } else {
+      this.props.navigation.goBack()
+    }
+  }
+
   render() {
     return (
       <Container
@@ -46,6 +55,7 @@ export default class InputPage extends React.Component {
         style={styles.container}
         headerProps={{
           title: this.state.headerTitle,
+          backAction: this.back,
           navigation: this.props.navigation,
           headerRight: (
             <TextBtn

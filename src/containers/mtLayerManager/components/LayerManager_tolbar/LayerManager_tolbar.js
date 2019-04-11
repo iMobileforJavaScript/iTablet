@@ -464,8 +464,8 @@ export default class LayerManager_tolbar extends React.Component {
               column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
               height:
                 this.props.device.orientation === 'LANDSCAPE'
-                  ? ConstToolType.THEME_HEIGHT[4]
-                  : ConstToolType.THEME_HEIGHT[10],
+                  ? ConstToolType.THEME_HEIGHT[1]
+                  : ConstToolType.THEME_HEIGHT[1],
               createThemeByLayer: this.state.layerdata.name,
             },
           )

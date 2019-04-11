@@ -275,6 +275,7 @@ export default class Friend extends Component {
             fileName: res.fileName,
             fileSize: res.fileSize,
             queueName: res.queueName,
+            progress: 0,
           },
         },
       }

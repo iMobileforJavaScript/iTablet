@@ -64,13 +64,11 @@ import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
-import LegendView from '../../components/LegendView/LegendView'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
 const tabs = 'tabs'
 const symbol = 'symbol'
-const legend = 'legend'
 const colortable = 'colortable'
 const horizontalTable = 'horizontalTable'
 // 工具表格默认高度
@@ -1252,8 +1250,8 @@ export default class ToolBar extends React.PureComponent {
       Animated.timing(this.state.boxHeight, {
         toValue:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2],
+            ? ConstToolType.THEME_HEIGHT[1]
+            : ConstToolType.THEME_HEIGHT[1],
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = true
@@ -1278,8 +1276,8 @@ export default class ToolBar extends React.PureComponent {
         () => {
           this.height =
             this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[0]
-              : ConstToolType.THEME_HEIGHT[2]
+              ? ConstToolType.THEME_HEIGHT[1]
+              : ConstToolType.THEME_HEIGHT[1]
           this.updateOverlayerView()
         },
       )
@@ -4254,10 +4252,6 @@ export default class ToolBar extends React.PureComponent {
     )
   }
 
-  legend = () => {
-    return <LegendView />
-  }
-
   _renderItem = ({ item, rowIndex, cellIndex }) => {
     let column = this.state.column
     return (
@@ -4389,9 +4383,6 @@ export default class ToolBar extends React.PureComponent {
         break
       case tabs:
         box = this.renderTabs()
-        break
-      case legend:
-        box = this.legend()
         break
       case symbol:
         box = this.renderSymbol()
