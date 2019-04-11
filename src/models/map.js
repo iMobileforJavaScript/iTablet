@@ -87,7 +87,10 @@ export const openMap = (params, cb = () => {}) => async (
     let module = params.module || ''
     let fileName = params.name || params.title
     let isCustomerPath = params.path.indexOf(ConstPath.CustomerPath) >= 0
-    let importResult = await SMap.openMapName(fileName, module, !isCustomerPath)
+    let importResult = await SMap.openMapName(fileName, {
+      Module: module,
+      IsPrivate: !isCustomerPath,
+    })
     let expFilePath =
       absolutePath.substr(0, absolutePath.lastIndexOf('.')) + '.exp'
     let openMapResult = importResult && (await SMap.openMap(fileName))
@@ -263,12 +266,10 @@ export const exportWorkspace = (params, cb = () => {}) => async (
         let isLogin =
           getState().user.toJS().currentUser.userType !==
           UserType.PROBATION_USER
-        exportResult = await SMap.exportWorkspaceByMap(
-          params.maps[0],
-          '',
-          isLogin,
-          path,
-        )
+        exportResult = await SMap.exportWorkspaceByMap(params.maps[0], path, {
+          Module: '',
+          IsPrivate: isLogin,
+        })
       } else {
         exportResult = await SMap.exportWorkspace(
           params.maps,
@@ -348,7 +349,6 @@ export const exportmap3DWorkspace = (params, cb = () => {}) => async (
 //导入三维工作空间
 export const importSceneWorkspace = params => async (dispatch, getState) => {
   let userName = getState().user.toJS().currentUser.userName || 'Customer'
-  // console.log(userName)
   // return
   if (userName !== 'Customer') {
     let path = await FileTools.appendingHomeDirectory(

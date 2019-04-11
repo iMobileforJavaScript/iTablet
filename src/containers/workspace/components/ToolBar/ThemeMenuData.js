@@ -5,10 +5,17 @@ import ToolbarBtnType from './ToolbarBtnType'
 import { ConstToolType, ConstPath, Const } from '../../../../constants'
 import { FileTools } from '../../../../native'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
+import { Toast } from '../../../../utils'
 
 let _toolbarParams = {}
 
-function showDatasetsList() {
+async function showDatasetsList() {
+  let isAnyOpenedDS = true //是否有打开的数据源
+  isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
+  if (!isAnyOpenedDS) {
+    Toast.show('请先通过"统一风格"添加数据源')
+    return
+  }
   let data = []
   SThemeCartography.getAllDatasetNames().then(getdata => {
     getdata.reverse()
@@ -112,6 +119,124 @@ function showExpressionList(type) {
   )
 }
 
+//通过数据集->创建栅格单值专题图
+async function createThemeGridUniqueMap(params) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    DatasourceAlias: params.themeDatasourceAlias,
+    DatasetName: params.themeDatasetName,
+    GridUniqueColorScheme: 'EE_Lake',
+  }
+  await SThemeCartography.createThemeGridUniqueMap(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
+//通过数据集->创建栅格分段专题图
+async function createThemeGridRangeMap(params) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  paramsTheme = {
+    DatasourceAlias: params.themeDatasourceAlias,
+    DatasetName: params.themeDatasetName,
+    GridRangeColorScheme: 'FF_Blues',
+  }
+  await SThemeCartography.createThemeGridRangeMap(paramsTheme)
+    .then(msg => {
+      isSuccess = msg.Result
+      errorInfo = msg.Error && msg.Error
+    })
+    .catch(err => {
+      errorInfo = err.message
+    })
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    _toolbarParams.getLayers(-1, layers => {
+      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    _toolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
+//通过图层->创建栅格单值专题图
+// async function createThemeGridUniqueMapByLayer() {
+//   let paramsTheme = {}
+//   let isSuccess = false
+//   let errorInfo = ''
+//   paramsTheme = {
+//     LayerName: _createThemeByLayer,
+//     GridUniqueColorScheme: 'EE_Lake',
+//   }
+//   await SThemeCartography.createThemeGridUniqueMapByLayer(paramsTheme)
+//     .then(msg => {
+//       isSuccess = msg.Result
+//       errorInfo = msg.Error && msg.Error
+//     })
+//     .catch(err => {
+//       errorInfo = err.message
+//     })
+//   if (isSuccess) {
+//     Toast.show('创建专题图成功')
+//     //设置当前图层
+//     _toolbarParams.getLayers(-1, layers => {
+//       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+//     })
+//     _toolbarParams.setToolbarVisible(false)
+//   } else {
+//     Toast.show('创建专题图失败\n' + errorInfo)
+//   }
+// }
+
+//通过图层->创建栅格分段专题图
+// async function createThemeGridRangeMapByLayer() {
+//   let paramsTheme = {}
+//   let isSuccess = false
+//   let errorInfo = ''
+//   paramsTheme = {
+//     LayerName: _createThemeByLayer,
+//     GridRangeColorScheme: 'FF_Blues',
+//   }
+//   await SThemeCartography.createThemeGridRangeMapByLayer(paramsTheme)
+//     .then(msg => {
+//       isSuccess = msg.Result
+//       errorInfo = msg.Error && msg.Error
+//     })
+//     .catch(err => {
+//       errorInfo = err.message
+//     })
+//   if (isSuccess) {
+//     Toast.show('创建专题图成功')
+//     //设置当前图层
+//     _toolbarParams.getLayers(-1, layers => {
+//       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+//     })
+//     _toolbarParams.setToolbarVisible(false)
+//   } else {
+//     Toast.show('创建专题图失败\n' + errorInfo)
+//   }
+// }
+
 /**
  * 通过图层创建专题图
  * @param type
@@ -177,165 +302,183 @@ function getThemeMapCreateByLayer(type, params) {
       image: getThemeAssets().themeType.theme_create_unify_label,
       selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
-    {
-      //单值标签
-      key: constants.THEME_UNIQUE_LABEL,
-      title: constants.THEME_UNIQUE_LABEL,
-      size: 'large',
-      action: () => showExpressionList('Theme'),
-      image: getThemeAssets().themeType.theme_create_unique_label,
-      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
-    },
-    {
-      //分段标签
-      key: constants.THEME_RANGE_LABEL,
-      title: constants.THEME_RANGE_LABEL,
-      size: 'large',
-      action: () => showExpressionList('Theme'),
-      image: getThemeAssets().themeType.theme_create_range_label,
-      selectedImage: getThemeAssets().themeType.theme_create_range_label,
-    },
-    {
-      //面积图
-      key: constants.THEME_GRAPH_AREA,
-      title: constants.THEME_GRAPH_AREA,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_area,
-      selectedImage: getThemeAssets().themeType.theme_graph_area,
-    },
-    {
-      //阶梯图
-      key: constants.THEME_GRAPH_STEP,
-      title: constants.THEME_GRAPH_STEP,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_step,
-      selectedImage: getThemeAssets().themeType.theme_graph_step,
-    },
-    {
-      //折线图
-      key: constants.THEME_GRAPH_LINE,
-      title: constants.THEME_GRAPH_LINE,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_line,
-      selectedImage: getThemeAssets().themeType.theme_graph_line,
-    },
-    {
-      //点状图
-      key: constants.THEME_GRAPH_POINT,
-      title: constants.THEME_GRAPH_POINT,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_point,
-      selectedImage: getThemeAssets().themeType.theme_graph_point,
-    },
-    {
-      //柱状图
-      key: constants.THEME_GRAPH_BAR,
-      title: constants.THEME_GRAPH_BAR,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar,
-    },
-    {
-      //三维柱状图
-      key: constants.THEME_GRAPH_BAR3D,
-      title: constants.THEME_GRAPH_BAR3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
-    },
-    {
-      //饼图
-      key: constants.THEME_GRAPH_PIE,
-      title: constants.THEME_GRAPH_PIE,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_pie,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie,
-    },
-    {
-      //三维饼图
-      key: constants.THEME_GRAPH_PIE3D,
-      title: constants.THEME_GRAPH_PIE3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_pie3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
-    },
-    {
-      //玫瑰图
-      key: constants.THEME_GRAPH_ROSE,
-      title: constants.THEME_GRAPH_ROSE,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_rose,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose,
-    },
-    {
-      //三维玫瑰图
-      key: constants.THEME_GRAPH_ROSE3D,
-      title: constants.THEME_GRAPH_ROSE3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_rose3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
-    },
-    {
-      //堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR,
-      title: constants.THEME_GRAPH_STACK_BAR,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_stack_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
-    },
-    {
-      //三维堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR3D,
-      title: constants.THEME_GRAPH_STACK_BAR3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
-    },
-    {
-      //环状图
-      key: constants.THEME_GRAPH_RING,
-      title: constants.THEME_GRAPH_RING,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_ring,
-      selectedImage: getThemeAssets().themeType.theme_graph_ring,
-    },
-    {
-      //点密度专题图
-      key: constants.THEME_DOT_DENSITY,
-      title: constants.THEME_DOT_DENSITY,
-      size: 'large',
-      action: () => {},
-      image: getThemeAssets().themeType.theme_dot_density,
-      selectedImage: getThemeAssets().themeType.theme_dot_density,
-    },
-    {
-      //等级符号专题图
-      key: constants.THEME_GRADUATED_SYMBOL,
-      title: constants.THEME_GRADUATED_SYMBOL,
-      size: 'large',
-      action: () => {},
-      image: getThemeAssets().themeType.theme_graduated_symbol,
-      selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
-    },
+    // {
+    //   //单值标签
+    //   key: constants.THEME_UNIQUE_LABEL,
+    //   title: constants.THEME_UNIQUE_LABEL,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_create_unique_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_unique_label,
+    // },
+    // {
+    //   //分段标签
+    //   key: constants.THEME_RANGE_LABEL,
+    //   title: constants.THEME_RANGE_LABEL,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_create_range_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_range_label,
+    // },
+    // {
+    //   //面积图
+    //   key: constants.THEME_GRAPH_AREA,
+    //   title: constants.THEME_GRAPH_AREA,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_area,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_area,
+    // },
+    // {
+    //   //阶梯图
+    //   key: constants.THEME_GRAPH_STEP,
+    //   title: constants.THEME_GRAPH_STEP,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_step,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_step,
+    // },
+    // {
+    //   //折线图
+    //   key: constants.THEME_GRAPH_LINE,
+    //   title: constants.THEME_GRAPH_LINE,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_line,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_line,
+    // },
+    // {
+    //   //点状图
+    //   key: constants.THEME_GRAPH_POINT,
+    //   title: constants.THEME_GRAPH_POINT,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_point,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_point,
+    // },
+    // {
+    //   //柱状图
+    //   key: constants.THEME_GRAPH_BAR,
+    //   title: constants.THEME_GRAPH_BAR,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    // },
+    // {
+    //   //三维柱状图
+    //   key: constants.THEME_GRAPH_BAR3D,
+    //   title: constants.THEME_GRAPH_BAR3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    // },
+    // {
+    //   //饼图
+    //   key: constants.THEME_GRAPH_PIE,
+    //   title: constants.THEME_GRAPH_PIE,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_pie,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    // },
+    // {
+    //   //三维饼图
+    //   key: constants.THEME_GRAPH_PIE3D,
+    //   title: constants.THEME_GRAPH_PIE3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_pie3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    // },
+    // {
+    //   //玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE,
+    //   title: constants.THEME_GRAPH_ROSE,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_rose,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    // },
+    // {
+    //   //三维玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE3D,
+    //   title: constants.THEME_GRAPH_ROSE3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_rose3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    // },
+    // {
+    //   //堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR,
+    //   title: constants.THEME_GRAPH_STACK_BAR,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    // },
+    // {
+    //   //三维堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR3D,
+    //   title: constants.THEME_GRAPH_STACK_BAR3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    // },
+    // {
+    //   //环状图
+    //   key: constants.THEME_GRAPH_RING,
+    //   title: constants.THEME_GRAPH_RING,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_ring,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_ring,
+    // },
+    // {
+    //   //点密度专题图
+    //   key: constants.THEME_DOT_DENSITY,
+    //   title: constants.THEME_DOT_DENSITY,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_dot_density,
+    //   selectedImage: getThemeAssets().themeType.theme_dot_density,
+    // },
+    // {
+    //   //等级符号专题图
+    //   key: constants.THEME_GRADUATED_SYMBOL,
+    //   title: constants.THEME_GRADUATED_SYMBOL,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_graduated_symbol,
+    //   selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    // },
+    // {
+    //   //栅格单值专题图
+    //   key: constants.THEME_GRID_UNIQUE,
+    //   title: constants.THEME_GRID_UNIQUE,
+    //   size: 'large',
+    //   action: () => createThemeGridUniqueMapByLayer(),
+    //   image: getThemeAssets().themeType.theme_grid_unique,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    // },
+    // {
+    //   //栅格分段专题图
+    //   key: constants.THEME_GRID_RANGE,
+    //   title: constants.THEME_GRID_RANGE,
+    //   size: 'large',
+    //   action: () => createThemeGridRangeMapByLayer(),
+    //   image: getThemeAssets().themeType.theme_grid_range,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_range,
+    // },
   ]
   return { data, buttons }
 }
 
 /**
- * 获取创建专题图菜单
+ * 通过数据集创建专题图
  * @param type
  * @returns {{data: Array, buttons: Array}}
  */
@@ -399,159 +542,177 @@ function getThemeMapCreate(type, params) {
       image: getThemeAssets().themeType.theme_create_unify_label,
       selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
-    {
-      //单值标签
-      key: constants.THEME_UNIQUE_LABEL,
-      title: constants.THEME_UNIQUE_LABEL,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_create_unique_label,
-      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
-    },
-    {
-      //分段标签
-      key: constants.THEME_RANGE_LABEL,
-      title: constants.THEME_RANGE_LABEL,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_create_range_label,
-      selectedImage: getThemeAssets().themeType.theme_create_range_label,
-    },
-    {
-      //面积图
-      key: constants.THEME_GRAPH_AREA,
-      title: constants.THEME_GRAPH_AREA,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_area,
-      selectedImage: getThemeAssets().themeType.theme_graph_area,
-    },
-    {
-      //阶梯图
-      key: constants.THEME_GRAPH_STEP,
-      title: constants.THEME_GRAPH_STEP,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_step,
-      selectedImage: getThemeAssets().themeType.theme_graph_step,
-    },
-    {
-      //折线图
-      key: constants.THEME_GRAPH_LINE,
-      title: constants.THEME_GRAPH_LINE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_line,
-      selectedImage: getThemeAssets().themeType.theme_graph_line,
-    },
-    {
-      //点状图
-      key: constants.THEME_GRAPH_POINT,
-      title: constants.THEME_GRAPH_POINT,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_point,
-      selectedImage: getThemeAssets().themeType.theme_graph_point,
-    },
-    {
-      //柱状图
-      key: constants.THEME_GRAPH_BAR,
-      title: constants.THEME_GRAPH_BAR,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar,
-    },
-    {
-      //三维柱状图
-      key: constants.THEME_GRAPH_BAR3D,
-      title: constants.THEME_GRAPH_BAR3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
-    },
-    {
-      //饼图
-      key: constants.THEME_GRAPH_PIE,
-      title: constants.THEME_GRAPH_PIE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_pie,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie,
-    },
-    {
-      //三维饼图
-      key: constants.THEME_GRAPH_PIE3D,
-      title: constants.THEME_GRAPH_PIE3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_pie3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
-    },
-    {
-      //玫瑰图
-      key: constants.THEME_GRAPH_ROSE,
-      title: constants.THEME_GRAPH_ROSE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_rose,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose,
-    },
-    {
-      //三维玫瑰图
-      key: constants.THEME_GRAPH_ROSE3D,
-      title: constants.THEME_GRAPH_ROSE3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_rose3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
-    },
-    {
-      //堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR,
-      title: constants.THEME_GRAPH_STACK_BAR,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_stack_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
-    },
-    {
-      //三维堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR3D,
-      title: constants.THEME_GRAPH_STACK_BAR3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
-    },
-    {
-      //环状图
-      key: constants.THEME_GRAPH_RING,
-      title: constants.THEME_GRAPH_RING,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_ring,
-      selectedImage: getThemeAssets().themeType.theme_graph_ring,
-    },
-    {
-      //点密度专题图
-      key: constants.THEME_DOT_DENSITY,
-      title: constants.THEME_DOT_DENSITY,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_dot_density,
-      selectedImage: getThemeAssets().themeType.theme_dot_density,
-    },
-    {
-      //等级符号专题图
-      key: constants.THEME_GRADUATED_SYMBOL,
-      title: constants.THEME_GRADUATED_SYMBOL,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graduated_symbol,
-      selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
-    },
+    // {
+    //   //单值标签
+    //   key: constants.THEME_UNIQUE_LABEL,
+    //   title: constants.THEME_UNIQUE_LABEL,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_create_unique_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_unique_label,
+    // },
+    // {
+    //   //分段标签
+    //   key: constants.THEME_RANGE_LABEL,
+    //   title: constants.THEME_RANGE_LABEL,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_create_range_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_range_label,
+    // },
+    // {
+    //   //面积图
+    //   key: constants.THEME_GRAPH_AREA,
+    //   title: constants.THEME_GRAPH_AREA,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_area,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_area,
+    // },
+    // {
+    //   //阶梯图
+    //   key: constants.THEME_GRAPH_STEP,
+    //   title: constants.THEME_GRAPH_STEP,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_step,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_step,
+    // },
+    // {
+    //   //折线图
+    //   key: constants.THEME_GRAPH_LINE,
+    //   title: constants.THEME_GRAPH_LINE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_line,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_line,
+    // },
+    // {
+    //   //点状图
+    //   key: constants.THEME_GRAPH_POINT,
+    //   title: constants.THEME_GRAPH_POINT,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_point,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_point,
+    // },
+    // {
+    //   //柱状图
+    //   key: constants.THEME_GRAPH_BAR,
+    //   title: constants.THEME_GRAPH_BAR,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    // },
+    // {
+    //   //三维柱状图
+    //   key: constants.THEME_GRAPH_BAR3D,
+    //   title: constants.THEME_GRAPH_BAR3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    // },
+    // {
+    //   //饼图
+    //   key: constants.THEME_GRAPH_PIE,
+    //   title: constants.THEME_GRAPH_PIE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_pie,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    // },
+    // {
+    //   //三维饼图
+    //   key: constants.THEME_GRAPH_PIE3D,
+    //   title: constants.THEME_GRAPH_PIE3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_pie3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    // },
+    // {
+    //   //玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE,
+    //   title: constants.THEME_GRAPH_ROSE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_rose,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    // },
+    // {
+    //   //三维玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE3D,
+    //   title: constants.THEME_GRAPH_ROSE3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_rose3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    // },
+    // {
+    //   //堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR,
+    //   title: constants.THEME_GRAPH_STACK_BAR,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    // },
+    // {
+    //   //三维堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR3D,
+    //   title: constants.THEME_GRAPH_STACK_BAR3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    // },
+    // {
+    //   //环状图
+    //   key: constants.THEME_GRAPH_RING,
+    //   title: constants.THEME_GRAPH_RING,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_ring,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_ring,
+    // },
+    // {
+    //   //点密度专题图
+    //   key: constants.THEME_DOT_DENSITY,
+    //   title: constants.THEME_DOT_DENSITY,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_dot_density,
+    //   selectedImage: getThemeAssets().themeType.theme_dot_density,
+    // },
+    // {
+    //   //等级符号专题图
+    //   key: constants.THEME_GRADUATED_SYMBOL,
+    //   title: constants.THEME_GRADUATED_SYMBOL,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graduated_symbol,
+    //   selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    // },
+    // {
+    //   //栅格单值专题图
+    //   key: constants.THEME_GRID_UNIQUE,
+    //   title: constants.THEME_GRID_UNIQUE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_grid_unique,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    // },
+    // {
+    //   //栅格分段专题图
+    //   key: constants.THEME_GRID_RANGE,
+    //   title: constants.THEME_GRID_RANGE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_grid_range,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_range,
+    // },
   ]
   return { data, buttons }
 }
@@ -716,6 +877,10 @@ function setRangeMode() {
   return SThemeCartography.modifyThemeRangeMap(_params)
 }
 
+function setGridRangeMode() {
+  return SThemeCartography.modifyThemeGridRangeMap(_params)
+}
+
 function getRangeMode() {
   let data = [
     {
@@ -736,15 +901,15 @@ function getRangeMode() {
       image: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
       selectedImage: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
     },
-    {
-      // 标准差分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_STDDEVIATION,
-      title: '标准差分段',
-      action: setRangeMode,
-      size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
-    },
+    // {
+    //   // 标准差分段
+    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_STDDEVIATION,
+    //   title: '标准差分段',
+    //   action: setRangeMode,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
+    //   selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
+    // },
     {
       // 对数分段
       key: constants.MAP_THEME_PARAM_RANGE_MODE_LOGARITHM,
@@ -768,6 +933,48 @@ function getRangeMode() {
     //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
     //   title: '自定义分段',
     //   action: setRangeMode,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    //   selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
+    // },
+  ]
+  return data
+}
+
+function getGridRangeMode() {
+  let data = [
+    {
+      // 等距分段
+      key: constants.MAP_THEME_PARAM_RANGE_MODE_EQUALINTERVAL,
+      title: '等距分段',
+      action: setGridRangeMode,
+      size: 'large',
+      image: require('../../../../assets/mapTools/range_mode_equalinterval_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_equalinterval_black.png'),
+    },
+    {
+      // 平方根分段
+      key: constants.MAP_THEME_PARAM_RANGE_MODE_SQUAREROOT,
+      title: '平方根分段',
+      action: setGridRangeMode,
+      size: 'large',
+      image: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
+    },
+    {
+      // 对数分段
+      key: constants.MAP_THEME_PARAM_RANGE_MODE_LOGARITHM,
+      title: '对数分段',
+      action: setGridRangeMode,
+      size: 'large',
+      image: require('../../../../assets/mapTools/range_mode_logarithm_black.png'),
+      selectedImage: require('../../../../assets/mapTools/range_mode_logarithm_black.png'),
+    },
+    // {
+    //   // 自定义分段
+    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_CUSTOMINTERVAL,
+    //   title: '自定义分段',
+    //   action: setGridRangeMode,
     //   size: 'large',
     //   image: require('../../../../assets/mapTools/range_mode_squareroot.png'),
     //   selectedImage: require('../../../../assets/mapTools/range_mode_squareroot.png'),
@@ -2495,7 +2702,7 @@ function getThemeGraphColorScheme() {
     {
       key: 'DH_Red-Blue',
       colorSchemeName: 'DH_Red-Blue',
-      colorScheme: getPublicAssets().theme.graphColorScheme.DH_Red,
+      colorScheme: getPublicAssets().theme.graphColorScheme.DH_Red_Blue,
     },
     {
       key: 'EA_Orange',
@@ -2667,6 +2874,293 @@ async function getUnifyStyleAdd() {
   _toolbarParams.scrollListToLocation && _toolbarParams.scrollListToLocation()
 }
 
+/**
+ * 由数据集创建专题图
+ */
+async function createThemeByDataset(item, ToolbarParams = {}) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  switch (ToolbarParams.themeCreateType) {
+    case constants.THEME_UNIQUE_STYLE:
+      //单值风格
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        UniqueExpression: item.expression,
+        // ColorGradientType: 'CYANWHITE',
+        ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
+      }
+      await SThemeCartography.createThemeUniqueMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_RANGE_STYLE:
+      //分段风格
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        RangeExpression: item.expression,
+        RangeMode: 'EQUALINTERVAL',
+        RangeParameter: '11.0',
+        ColorScheme: 'FF_Blues',
+      }
+      await SThemeCartography.createThemeRangeMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_DOT_DENSITY:
+      //点密度专题图
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        DotExpression: item.expression,
+        Value: '20',
+      }
+      await SThemeCartography.createDotDensityThemeMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_GRADUATED_SYMBOL:
+      //等级符号专题图
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        GraSymbolExpression: item.expression,
+        GraduatedMode: 'LOGARITHM',
+        //SymbolSize: '30',
+      }
+      await SThemeCartography.createGraduatedSymbolThemeMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_UNIFY_LABEL:
+      //统一标签
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        LabelExpression: item.expression,
+        LabelBackShape: 'NONE',
+        FontName: '宋体',
+        // FontSize: '15.0',
+        ForeColor: '#000000',
+      }
+      await SThemeCartography.createUniformThemeLabelMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_UNIQUE_LABEL:
+      //单值标签
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        RangeExpression: item.expression,
+        RangeMode: 'EQUALINTERVAL',
+        RangeParameter: '11.0',
+        ColorScheme: 'CD_Cyans',
+      }
+      await SThemeCartography.createUniqueThemeLabelMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_RANGE_LABEL:
+      //分段标签
+      paramsTheme = {
+        DatasourceAlias: ToolbarParams.themeDatasourceAlias,
+        DatasetName: ToolbarParams.themeDatasetName,
+        RangeExpression: item.expression,
+        RangeMode: 'EQUALINTERVAL',
+        RangeParameter: '5.0',
+        ColorScheme: 'CD_Cyans',
+      }
+      await SThemeCartography.createRangeThemeLabelMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+  }
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    ToolbarParams.getLayers(-1, layers => {
+      ToolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    ToolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
+/**
+ * 由图层创建专题图
+ */
+async function createThemeByLayer(item, ToolbarParams = {}) {
+  let paramsTheme = {}
+  let isSuccess = false
+  let errorInfo = ''
+  switch (ToolbarParams.themeCreateType) {
+    case constants.THEME_UNIQUE_STYLE:
+      //单值风格
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        UniqueExpression: item.expression,
+        ColorScheme: 'BB_Green',
+      }
+      await SThemeCartography.createThemeUniqueMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_RANGE_STYLE:
+      //分段风格
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        RangeExpression: item.expression,
+        RangeMode: 'EQUALINTERVAL',
+        RangeParameter: '11.0',
+        ColorScheme: 'CD_Cyans',
+      }
+      await SThemeCartography.createThemeRangeMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_DOT_DENSITY:
+      //点密度专题图
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        DotExpression: item.expression,
+        Value: '20',
+      }
+      await SThemeCartography.createDotDensityThemeMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_GRADUATED_SYMBOL:
+      //等级符号专题图
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        GraSymbolExpression: item.expression,
+        GraduatedMode: 'LOGARITHM',
+        //SymbolSize: '30',
+      }
+      await SThemeCartography.createGraduatedSymbolThemeMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_UNIFY_LABEL:
+      //统一标签
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        LabelExpression: item.expression,
+        LabelBackShape: 'NONE',
+        FontName: '宋体',
+        // FontSize: '15.0',
+        ForeColor: '#000000',
+      }
+      await SThemeCartography.createUniformThemeLabelMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_UNIQUE_LABEL:
+      //单值标签
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        RangeExpression: item.expression,
+        RangeMode: 'EQUALINTERVAL',
+        RangeParameter: '11.0',
+        ColorScheme: 'CD_Cyans',
+      }
+      await SThemeCartography.createUniqueThemeLabelMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+    case constants.THEME_RANGE_LABEL:
+      //分段标签
+      paramsTheme = {
+        DatasourceAlias: item.datasourceName,
+        DatasetName: item.datasetName,
+        RangeExpression: item.expression,
+        RangeMode: 'EQUALINTERVAL',
+        RangeParameter: '5.0',
+        ColorScheme: 'CD_Cyans',
+      }
+      await SThemeCartography.createRangeThemeLabelMap(paramsTheme)
+        .then(msg => {
+          isSuccess = msg
+        })
+        .catch(err => {
+          errorInfo = err.message
+        })
+      break
+  }
+  if (isSuccess) {
+    Toast.show('创建专题图成功')
+    //设置当前图层
+    ToolbarParams.getLayers(-1, layers => {
+      ToolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+    })
+    ToolbarParams.setToolbarVisible(false)
+  } else {
+    Toast.show('创建专题图失败\n' + errorInfo)
+  }
+}
+
 export default {
   getRangeMode,
   getColorGradientType,
@@ -2693,4 +3187,10 @@ export default {
   getUnifyStyleAdd,
   basename,
   getGraduatedSymbolGradutedMode,
+  //创建专题图
+  createThemeByDataset,
+  createThemeByLayer,
+  createThemeGridUniqueMap,
+  createThemeGridRangeMap,
+  getGridRangeMode,
 }

@@ -102,6 +102,7 @@ export default class MyLabel extends Component {
       server: datasourcePath,
       engineType: EngineType.UDB,
       alias: 'labelDatasource',
+      description: 'Label',
     })
     return result
   }
@@ -167,7 +168,7 @@ export default class MyLabel extends Component {
                 },
               )
           } else {
-            SOnlineService.uploadFile(targetPath, fileName, {
+            SOnlineService.uploadFile(targetPath, name, {
               onProgress: progress => {
                 return progress
               },
@@ -285,6 +286,7 @@ export default class MyLabel extends Component {
             if (this.uploadList.length > 0) {
               this.dialog.setDialogVisible(true)
               this.ModalBtns.setVisible(false)
+              this.uploadType = 'online'
             } else {
               Toast.show('请选择要分享的数据集')
             }

@@ -421,6 +421,12 @@ export default class LayerManager_item extends React.Component {
       case ThemeType.GRADUATEDSYMBOL: // 等级符号专题图
         icon = getThemeAssets().themeType.theme_graduated_symbol_selected
         break
+      case ThemeType.GRIDUNIQUE: // 栅格单值专题图
+        icon = getThemeAssets().themeType.theme_grid_unique_selected
+        break
+      case ThemeType.GRIDRANGE: // 栅格分段专题图
+        icon = getThemeAssets().themeType.theme_grid_range_selected
+        break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
         break
@@ -449,6 +455,12 @@ export default class LayerManager_item extends React.Component {
       case ThemeType.GRADUATEDSYMBOL: // 等级符号专题图
         icon = getThemeAssets().themeType.theme_graduated_symbol
         break
+      case ThemeType.GRIDUNIQUE: // 栅格单值专题图
+        icon = getThemeAssets().themeType.theme_grid_unique
+        break
+      case ThemeType.GRIDRANGE: // 栅格分段专题图
+        icon = getThemeAssets().themeType.theme_grid_range
+        break
       default:
         icon = require('../../../../assets/public/mapLoad.png')
         break
@@ -460,7 +472,7 @@ export default class LayerManager_item extends React.Component {
     let icon
     switch (type) {
       case LAYER_GROUP:
-        icon = require('../../../../assets/map/icon-directory.png')
+        icon = require('../../../../assets/map/icon-layer-group.png')
         break
       case DatasetType.POINT: // 点数据集
         icon = require('../../../../assets/map/icon-shallow-dot.png')
@@ -497,7 +509,7 @@ export default class LayerManager_item extends React.Component {
     let icon
     switch (type) {
       case LAYER_GROUP:
-        icon = require('../../../../assets/map/icon-directory.png')
+        icon = require('../../../../assets/map/icon-layer-group.png')
         break
       case DatasetType.POINT: // 点数据集
         icon = require('../../../../assets/map/icon-shallow-dot_black.png')

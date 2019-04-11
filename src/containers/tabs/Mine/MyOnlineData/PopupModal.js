@@ -130,7 +130,7 @@ export default class PopupModal extends PureComponent {
       if (isPublish) {
         title = '设为私有数据'
       } else {
-        title = '设为共有数据'
+        title = '设为公有数据'
       }
       return (
         <TouchableOpacity

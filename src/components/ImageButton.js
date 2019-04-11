@@ -22,12 +22,14 @@ export default class ImageButton extends React.Component {
     icon: PropTypes.any,
     title: PropTypes.string,
     // type: PropTypes.string,
+    resizeMode: PropTypes.string,
     direction: PropTypes.string,
     enabled: PropTypes.bool,
   }
 
   static defaultProps = {
     activeOpacity: 0.8,
+    resizeMode: 'contain',
     direction: 'column',
     enabled: true,
   }
@@ -62,6 +64,7 @@ export default class ImageButton extends React.Component {
           ]}
         >
           <Image
+            resizeMode={this.props.resizeMode}
             style={[styles.icon, this.props.iconStyle]}
             source={this.props.icon}
           />

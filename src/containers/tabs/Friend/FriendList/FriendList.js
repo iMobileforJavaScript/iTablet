@@ -10,6 +10,9 @@ import {
   TouchableOpacity,
   SectionList,
   FlatList,
+  Image,
+  TextInput,
+  RefreshControl,
 } from 'react-native'
 
 import NavigationService from '../../../NavigationService'
@@ -19,6 +22,11 @@ import { getPinYinFirstCharacter } from '../../../../utils/pinyin'
 import FriendListFileHandle from '../FriendListFileHandle'
 import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
+import MessageDataHandle from '../MessageDataHandle'
+// eslint-disable-next-line
+import { ActionPopover } from 'teaset'
+import { dialogStyles, inputStyles } from '../Styles'
+import { Dialog } from '../../../../components/Dialog'
 
 class FriendList extends Component {
   props: {
@@ -33,14 +41,17 @@ class FriendList extends Component {
       sections: [], //section数组
       listData: [], //源数组
       letterArr: [], //首字母数组
-      bRefesh: true,
+      isRefresh: false,
+      inputText: '',
     }
 
     this._renderSectionHeader = this._renderSectionHeader.bind(this)
+    this._modifyName = this._modifyName.bind(this)
   }
 
   refresh = () => {
     this.getContacts()
+    this.setState({ isRefresh: false })
   }
   componentDidMount() {
     this.getContacts()
@@ -74,6 +85,7 @@ class FriendList extends Component {
   }
   download = () => {
     FriendListFileHandle.download()
+    this.setState({ isRefresh: false })
   }
 
   getContacts = async () => {
@@ -306,6 +318,19 @@ class FriendList extends Component {
     // }
   }
 
+  _modifyName() {
+    FriendListFileHandle.modifyFriendList(this.target.id, this.state.inputText)
+    this.inputdialog.setDialogVisible(false)
+  }
+  _deleteFriend = () => {
+    MessageDataHandle.delMessage({
+      //清除未读信息
+      userId: this.props.user.userId, //当前登录账户的id
+      talkId: this.target.id, //会话ID
+    })
+    FriendListFileHandle.delFromFriendList(this.target.id)
+    this.dialog.setDialogVisible(false)
+  }
   render() {
     const { letterArr, sections } = this.state
     //偏移量 = （设备高度 - 字母索引高度 - 底部导航栏 - 顶部标题栏 - 24）/ 2
@@ -338,6 +363,17 @@ class FriendList extends Component {
               </Text>
             </View>
           )} // 数据为空时调用
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefresh}
+              onRefresh={this.download}
+              colors={['orange', 'red']}
+              tintColor={'orange'}
+              titleColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         <View style={styles.FlatListViewStyle}>
           <FlatList
@@ -357,8 +393,41 @@ class FriendList extends Component {
             )}
           />
         </View>
+        {this.renderDialog()}
+        {this.renderInputDialog()}
       </View>
     )
+  }
+
+  _showPopover = (pressView, item) => {
+    this.target = item
+
+    let obj = {
+      title: '设置备注',
+      onPress: () => {
+        this.inputdialog.setDialogVisible(true)
+      },
+    }
+    pressView.measure((ox, oy, width, height, px, py) => {
+      let items = [
+        obj,
+        {
+          title: '删除好友',
+          onPress: () => {
+            this.dialog.setDialogVisible(true)
+          },
+        },
+      ]
+      ActionPopover.show(
+        {
+          x: px,
+          y: py,
+          width,
+          height,
+        },
+        items,
+      )
+    })
   }
 
   _renderSectionHeader(sectionItem) {
@@ -371,11 +440,16 @@ class FriendList extends Component {
   }
 
   _renderItem(item) {
+    let iTemView
     return (
       <TouchableOpacity
+        ref={ref => (iTemView = ref)}
         style={[styles.ItemViewStyle]}
         activeOpacity={0.75}
         onPress={() => this._onFriendSelect(item)}
+        onLongPress={() => {
+          this._showPopover(iTemView, item)
+        }}
       >
         <View style={styles.ITemHeadTextViewStyle}>
           <Text style={styles.ITemHeadTextStyle}>
@@ -386,6 +460,72 @@ class FriendList extends Component {
           <Text style={styles.ITemTextStyle}>{item['markName']}</Text>
         </View>
       </TouchableOpacity>
+    )
+  }
+
+  renderDialogChildren = () => {
+    return (
+      <View style={dialogStyles.dialogHeaderViewX}>
+        <Image
+          source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
+          style={dialogStyles.dialogHeaderImgX}
+        />
+        <Text style={dialogStyles.promptTtileX}>
+          将该联系人删除,将同时删除与该联系人的聊天记录
+        </Text>
+      </View>
+    )
+  }
+  renderDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.dialog = ref)}
+        type={'modal'}
+        confirmBtnTitle={'确定'}
+        cancelBtnTitle={'取消'}
+        confirmAction={this._deleteFriend}
+        opacity={1}
+        opacityStyle={styles.opacityView}
+        style={dialogStyles.dialogBackgroundX}
+      >
+        {this.renderDialogChildren()}
+      </Dialog>
+    )
+  }
+
+  renderInputDialog = () => {
+    return (
+      <Dialog
+        ref={ref => (this.inputdialog = ref)}
+        style={{
+          marginVertical: 15,
+          width: scaleSize(420),
+          height: scaleSize(250),
+        }}
+        type={'modal'}
+        confirmAction={this._modifyName}
+        // cancelAction={this.cancel}
+      >
+        <View style={inputStyles.item}>
+          {/* <Text style={styles.title}>文本内容</Text> */}
+          <TextInput
+            underlineColorAndroid={'transparent'}
+            accessible={true}
+            accessibilityLabel={'文本内容'}
+            onChangeText={text => {
+              this.setState({
+                inputText: text,
+              })
+            }}
+            value={this.state.inputText}
+            placeholder={'请输入备注名'}
+            style={inputStyles.textInputStyle}
+          />
+        </View>
+        {this.state.placeholder && (
+          <Text style={styles.placeholder}>内容不符合规范请重新输入</Text>
+        )}
+      </Dialog>
     )
   }
 }

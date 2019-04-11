@@ -30,6 +30,8 @@ import {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
   UserType,
 } from '../../../../constants'
 import TouchProgress from '../TouchProgress'
@@ -62,7 +64,6 @@ import MenuDialog from './MenuDialog'
 import styles from './styles'
 import { color } from '../../../../styles'
 import { getThemeAssets } from '../../../../assets'
-import { Utils } from '../../util'
 /** 工具栏类型 **/
 const list = 'list'
 const table = 'table'
@@ -89,6 +90,7 @@ export default class ToolBar extends React.PureComponent {
     user: Object,
     map: Object,
     layers: Object,
+    online: Object,
     collection: Object,
     template: Object,
     currentLayer: Object,
@@ -178,7 +180,7 @@ export default class ToolBar extends React.PureComponent {
       themeCreateType: '',
       selectName: '',
       selectKey: '',
-      listExpressions: [],
+      listExpressions: {},
       themeSymbolType: '',
     }
     this.isShow = false
@@ -1248,8 +1250,8 @@ export default class ToolBar extends React.PureComponent {
       Animated.timing(this.state.boxHeight, {
         toValue:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2],
+            ? ConstToolType.THEME_HEIGHT[1]
+            : ConstToolType.THEME_HEIGHT[1],
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = true
@@ -1264,6 +1266,55 @@ export default class ToolBar extends React.PureComponent {
           showMenuDialog: false,
           containerType: 'table',
           column: 4,
+          tableType: 'normal',
+          data: date,
+          type: type,
+          buttons: ThemeMenuData.getThemeFourMenu(),
+          selectName: name,
+          selectKey: key,
+        },
+        () => {
+          this.height =
+            this.props.device.orientation === 'LANDSCAPE'
+              ? ConstToolType.THEME_HEIGHT[1]
+              : ConstToolType.THEME_HEIGHT[1]
+          this.updateOverlayerView()
+        },
+      )
+    }.bind(this)
+
+    if (!this.state.showMenuDialog) {
+      // 先滑出box，再显示Menu
+      showBox()
+      setTimeout(setData, Const.ANIMATED_DURATION_2)
+    } else {
+      // 先隐藏Menu，再滑进box
+      setData()
+      showBox()
+    }
+  }
+
+  getGridRangeMode = async (type, key = '', name = '') => {
+    let showBox = function() {
+      Animated.timing(this.state.boxHeight, {
+        toValue:
+          this.props.device.orientation === 'LANDSCAPE'
+            ? ConstToolType.THEME_HEIGHT[0]
+            : ConstToolType.THEME_HEIGHT[0],
+        duration: Const.ANIMATED_DURATION,
+      }).start()
+      this.isBoxShow = true
+    }.bind(this)
+
+    let setData = async function() {
+      let date = await ThemeMenuData.getGridRangeMode()
+      this.setState(
+        {
+          isFullScreen: false,
+          isTouchProgress: false,
+          showMenuDialog: false,
+          containerType: 'table',
+          column: 3,
           tableType: 'normal',
           data: date,
           type: type,
@@ -2364,8 +2415,6 @@ export default class ToolBar extends React.PureComponent {
 
   close = (type = this.state.type, actionFirst = false) => {
     (async function() {
-      SMap.updateLegend()
-
       GLOBAL.currentToolbarType = ''
       let actionType = Action.PAN
 
@@ -2444,7 +2493,7 @@ export default class ToolBar extends React.PureComponent {
         }, Const.ANIMATED_DURATION_2)
       }
 
-      Utils.setSelectionStyle(this.props.currentLayer.path, {})
+      // Utils.setSelectionStyle(this.props.currentLayer.path, {})
       this.updateOverlayerView()
       if (type === ConstToolType.MAP_EDIT_TAGGING) {
         this.props.getLayers(-1, layers => {
@@ -2477,19 +2526,20 @@ export default class ToolBar extends React.PureComponent {
           this.props.currentLayer &&
             SMap.selectObj(this.props.currentLayer.path)
         } else if (type === ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
-          // TODO 恢复框选对象，并返回到地图
-          NavigationService.navigate('LayerSelectionAttribute')
-          // NavigationService.navigate('LayerAttributeTabs', {initialPage: GLOBAL.LayerAttributeTabIndex})
-          // NavigationService.goBack()
           // 返回框选/点选属性界面，并清除属性关联选中的对象
-          let selection = []
-          for (let i = 0; i < this.props.selection.length; i++) {
-            selection.push({
-              layerPath: this.props.selection[i].layerInfo.path,
-              ids: this.props.selection[i].ids,
-            })
-          }
-          await SMap.selectObjs(selection)
+          NavigationService.navigate('LayerSelectionAttribute', {
+            selectionAttribute: GLOBAL.SelectedSelectionAttribute,
+            preAction: async () => {
+              let selection = []
+              for (let i = 0; i < this.props.selection.length; i++) {
+                selection.push({
+                  layerPath: this.props.selection[i].layerInfo.path,
+                  ids: this.props.selection[i].ids,
+                })
+              }
+              await SMap.selectObjs(selection)
+            },
+          })
           // NavigationService.goBack()
         } else {
           SMap.setAction(actionType)
@@ -2732,18 +2782,25 @@ export default class ToolBar extends React.PureComponent {
   commit = (type = this.originType) => {
     // this.showToolbar(false)
     if (typeof type === 'string' && type.indexOf('MAP_EDIT_') >= 0) {
-      if (
-        type !== ConstToolType.MAP_EDIT_DEFAULT &&
+      if (type === ConstToolType.MAP_EDIT_DEFAULT) {
+        // 编辑完成关闭Toolbar
+        this.setVisible(false, '', {
+          cb: () => {
+            SMap.setAction(Action.PAN)
+          },
+        })
+      } else if (
         type !== ConstToolType.MAP_EDIT_TAGGING &&
         type !== ConstToolType.MAP_EDIT_TAGGING_SETTING
       ) {
+        // 编辑完成关闭Toolbar
         GLOBAL.currentToolbarType = ConstToolType.MAP_EDIT_DEFAULT
         // 若为编辑点线面状态，点击关闭则返回没有选中对象的状态
         this.setVisible(true, ConstToolType.MAP_EDIT_DEFAULT, {
           isFullScreen: false,
           height: 0,
           cb: () => {
-            // SMap.submit()
+            SMap.submit()
             SMap.setAction(Action.SELECT)
           },
         })
@@ -3003,6 +3060,20 @@ export default class ToolBar extends React.PureComponent {
         await SThemeCartography.setUniqueColorScheme(Params)
       }.bind(this)())
     } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_UNIQUE_COLOR
+    ) {
+      //栅格单值专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          GridUniqueColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.modifyThemeGridUniqueMap(Params)
+      }.bind(this)())
+    } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_EXPRESSION
     ) {
       //分段专题图表达式
@@ -3051,6 +3122,20 @@ export default class ToolBar extends React.PureComponent {
         }
         await SThemeCartography.setRangeColorScheme(Params)
       }.bind(this)())
+    } else if (
+      this.state.type === ConstToolType.MAP_THEME_PARAM_GRID_RANGE_COLOR
+    ) {
+      //栅格分段专题图颜色表
+      this.setState({
+        themeColor: item.key,
+      })
+      ;(async function() {
+        let Params = {
+          GridRangeColorScheme: item.key,
+          LayerName: GLOBAL.currentLayer.name,
+        }
+        await SThemeCartography.modifyThemeGridRangeMap(Params)
+      }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_PARAM_GRAPH_COLOR) {
       //统计专题图颜色表
       this.setState({
@@ -3078,9 +3163,28 @@ export default class ToolBar extends React.PureComponent {
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS
     ) {
-      //跳转到专题图字段选择列表
+      //数据集选择列表(跳转到专题图字段选择列表)
       (async function() {
         try {
+          //栅格专题图直接由数据集创建，无需选择字段
+          if (this.state.themeCreateType === constants.THEME_GRID_UNIQUE) {
+            let params = {
+              themeDatasourceAlias: item.datasourceName,
+              themeDatasetName: item.datasetName,
+            }
+            ThemeMenuData.createThemeGridUniqueMap(params)
+            return
+          } else if (
+            this.state.themeCreateType === constants.THEME_GRID_RANGE
+          ) {
+            let params = {
+              themeDatasourceAlias: item.datasourceName,
+              themeDatasetName: item.datasetName,
+            }
+            ThemeMenuData.createThemeGridRangeMap(params)
+            return
+          }
+          //其他专题图需要选择字段
           this.props.setContainerLoading &&
             this.props.setContainerLoading(true, ConstInfo.READING_DATA)
           let data = await SThemeCartography.getThemeExpressionByDatasetName(
@@ -3171,265 +3275,27 @@ export default class ToolBar extends React.PureComponent {
     } else if (
       this.state.type === ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION
     ) {
-      //点击字段名创建专题图
+      //点击字段名创建专题图(数据集创建)
       (async function() {
-        let params = {}
-        let isSuccess = false
-        let errorInfo = ''
-        switch (this.state.themeCreateType) {
-          case constants.THEME_UNIQUE_STYLE:
-            //单值风格
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              UniqueExpression: item.expression,
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
-            }
-            // isSuccess = await SThemeCartography.createThemeUniqueMap(params)
-            await SThemeCartography.createThemeUniqueMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_RANGE_STYLE:
-            //分段风格
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'CD_Cyans',
-            }
-            // isSuccess = await SThemeCartography.createThemeRangeMap(params)
-            await SThemeCartography.createThemeRangeMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_DOT_DENSITY:
-            //点密度专题图
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              DotExpression: item.expression,
-              Value: '20',
-            }
-            // isSuccess = await SThemeCartography.createDotDensityThemeMap(params)
-            await SThemeCartography.createDotDensityThemeMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_GRADUATED_SYMBOL:
-            //等级符号专题图
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              GraSymbolExpression: item.expression,
-              GraduatedMode: 'LOGARITHM',
-              //SymbolSize: '30',
-            }
-            // isSuccess = await SThemeCartography.createGraduatedSymbolThemeMap(params)
-            await SThemeCartography.createGraduatedSymbolThemeMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_UNIFY_LABEL:
-            //统一标签
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              LabelExpression: item.expression,
-              LabelBackShape: 'NONE',
-              FontName: '宋体',
-              // FontSize: '15.0',
-              ForeColor: '#000000',
-            }
-            // isSuccess = await SThemeCartography.createUniformThemeLabelMap(params)
-            await SThemeCartography.createUniformThemeLabelMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_UNIQUE_LABEL:
-            //单值标签
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              ColorScheme: 'CD_Cyans',
-            }
-            // isSuccess = await SThemeCartography.createUniqueThemeLabelMap(params)
-            await SThemeCartography.createUniqueThemeLabelMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-          case constants.THEME_RANGE_LABEL:
-            //分段标签
-            params = {
-              DatasourceAlias: this.state.themeDatasourceAlias,
-              DatasetName: this.state.themeDatasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '5.0',
-              ColorScheme: 'CD_Cyans',
-            }
-            // isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
-            await SThemeCartography.createRangeThemeLabelMap(params)
-              .then(msg => {
-                isSuccess = msg
-              })
-              .catch(err => {
-                errorInfo = err.message
-              })
-            break
-        }
-        if (isSuccess) {
-          Toast.show('创建专题图成功')
-          //设置当前图层
-          this.props.getLayers(-1, layers => {
-            this.props.setCurrentLayer(layers.length > 0 && layers[0])
-          })
-          this.setVisible(false)
-        } else {
-          // Toast.show('创建专题图失败')
-          Toast.show('创建专题图失败\n' + errorInfo)
-        }
+        await ThemeMenuData.createThemeByDataset(item, {
+          setToolbarVisible: this.setVisible,
+          ...this.props,
+          themeDatasourceAlias: this.state.themeDatasourceAlias,
+          themeDatasetName: this.state.themeDatasetName,
+          themeCreateType: this.state.themeCreateType,
+        })
       }.bind(this)())
     } else if (
       this.state.type ===
       ConstToolType.MAP_THEME_PARAM_CREATE_EXPRESSION_BY_LAYERNAME
     ) {
-      //点击字段名创建专题图
+      //点击字段名创建专题图(图层创建)
       (async function() {
-        let params = {}
-        let isSuccess = false
-        switch (this.state.themeCreateType) {
-          case constants.THEME_UNIQUE_STYLE:
-            //单值风格
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              UniqueExpression: item.expression,
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'BB_Green', //有ColorScheme，则ColorGradientType无效（ColorGradientType的颜色方案会被覆盖）
-            }
-            isSuccess = await SThemeCartography.createThemeUniqueMap(params)
-            break
-          case constants.THEME_RANGE_STYLE:
-            //分段风格
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'CD_Cyans',
-            }
-            isSuccess = await SThemeCartography.createThemeRangeMap(params)
-            break
-          case constants.THEME_DOT_DENSITY:
-            //点密度专题图
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              DotExpression: item.expression,
-              Value: '20',
-            }
-            isSuccess = await SThemeCartography.createDotDensityThemeMap(params)
-            break
-          case constants.THEME_GRADUATED_SYMBOL:
-            //等级符号专题图
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              GraSymbolExpression: item.expression,
-              GraduatedMode: 'LOGARITHM',
-              //SymbolSize: '30',
-            }
-            isSuccess = await SThemeCartography.createGraduatedSymbolThemeMap(
-              params,
-            )
-            break
-          case constants.THEME_UNIFY_LABEL:
-            //统一标签
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              LabelExpression: item.expression,
-              LabelBackShape: 'NONE',
-              FontName: '宋体',
-              // FontSize: '15.0',
-              ForeColor: '#000000',
-            }
-            isSuccess = await SThemeCartography.createUniformThemeLabelMap(
-              params,
-            )
-            break
-          case constants.THEME_UNIQUE_LABEL:
-            //单值标签
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '11.0',
-              // ColorGradientType: 'CYANWHITE',
-              ColorScheme: 'CD_Cyans',
-            }
-            isSuccess = await SThemeCartography.createUniqueThemeLabelMap(
-              params,
-            )
-            break
-          case constants.THEME_RANGE_LABEL:
-            //分段标签
-            params = {
-              DatasourceAlias: item.datasourceName,
-              DatasetName: item.datasetName,
-              RangeExpression: item.expression,
-              RangeMode: 'EQUALINTERVAL',
-              RangeParameter: '5.0',
-              ColorScheme: 'CD_Cyans',
-            }
-            isSuccess = await SThemeCartography.createRangeThemeLabelMap(params)
-            break
-        }
-        if (isSuccess) {
-          Toast.show('创建专题图成功')
-          //设置当前图层
-          this.props.getLayers(-1, layers => {
-            this.props.setCurrentLayer(layers.length > 0 && layers[0])
-          })
-        } else {
-          Toast.show('创建专题图失败')
-        }
-        this.setVisible(false)
+        await ThemeMenuData.createThemeByLayer(item, {
+          setToolbarVisible: this.setVisible,
+          ...this.props,
+          themeCreateType: this.state.themeCreateType,
+        })
       }.bind(this)())
     }
   }
@@ -3445,7 +3311,7 @@ export default class ToolBar extends React.PureComponent {
     await SThemeCartography.setThemeGraphExpressions(Params)
   }
 
-  listAction = ({ item, index }) => {
+  listAction = ({ item, index, section }) => {
     if (this.state.type === 'MAP3D_BASE') return
     if (item.action) {
       item.action && item.action()
@@ -3481,53 +3347,83 @@ export default class ToolBar extends React.PureComponent {
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_THEME_ADD_UDB) {
       (async function() {
-        this.lastUdbList = this.state.data //保存上次的数据源数据
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
-        this.path = await FileTools.appendingHomeDirectory(item.path)
-        SThemeCartography.getUDBName(this.path).then(list => {
-          list.forEach(item => {
-            if (item.geoCoordSysType && item.prjCoordSysType) {
-              item.info = {
-                infoType: 'dataset',
-                geoCoordSysType: item.geoCoordSysType,
-                prjCoordSysType: item.prjCoordSysType,
+        if (section.title === Const.DATA_SOURCE) {
+          // 添加数据集
+          this.lastUdbList = this.state.data //保存上次的数据源数据
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.READING_DATA)
+          this.path = await FileTools.appendingHomeDirectory(item.path)
+          SThemeCartography.getUDBName(this.path).then(list => {
+            list.forEach(item => {
+              if (item.geoCoordSysType && item.prjCoordSysType) {
+                item.info = {
+                  infoType: 'dataset',
+                  geoCoordSysType: item.geoCoordSysType,
+                  prjCoordSysType: item.prjCoordSysType,
+                }
               }
-            }
+            })
+            let arr = item.name.split('.')
+            let alias = arr[0]
+            let dataList = [
+              {
+                title: alias,
+                image: require('../../../../assets/mapToolbar/list_type_udb.png'),
+                data: list,
+              },
+            ]
+            this.setState(
+              {
+                themeDatasourceAlias: alias,
+                listSelectable: true, //单选框
+                buttons: [
+                  ToolbarBtnType.THEME_CANCEL,
+                  ToolbarBtnType.THEME_ADD_BACK,
+                  ToolbarBtnType.THEME_COMMIT,
+                ],
+                data: dataList,
+                type: ConstToolType.MAP_THEME_ADD_DATASET,
+              },
+              () => {
+                let les = this.state.listExpressions
+                let data = this.state.data[0].data
+                if (les && alias in les && data) {
+                  let names = les[alias]
+                  for (let j = 0, dataLen = data.length; j < dataLen; j++) {
+                    if (
+                      JSON.stringify(names).indexOf(data[j].datasetName) >= 0
+                    ) {
+                      data[j].isSelected = true
+                    }
+                  }
+                }
+                this.scrollListToLocation()
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+              () => {
+                this.props.setContainerLoading &&
+                  this.props.setContainerLoading(false)
+              },
+            )
+            // this.setLastState()
           })
-          let arr = item.name.split('.')
-          let alias = arr[0]
-          let dataList = [
-            {
-              title: alias,
-              image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-              data: list,
-            },
-          ]
-          this.setState(
-            {
-              themeDatasourceAlias: alias,
-              listSelectable: true, //单选框
-              buttons: [
-                ToolbarBtnType.THEME_CANCEL,
-                ToolbarBtnType.THEME_ADD_BACK,
-                ToolbarBtnType.THEME_COMMIT,
-              ],
-              data: dataList,
-              type: ConstToolType.MAP_THEME_ADD_DATASET,
-            },
-            () => {
-              this.scrollListToLocation()
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-            },
-            () => {
-              this.props.setContainerLoading &&
-                this.props.setContainerLoading(false)
-            },
-          )
-          // this.setLastState()
-        })
+        } else if (section.title === Const.MAP) {
+          // 添加地图
+          this.props.setContainerLoading &&
+            this.props.setContainerLoading(true, ConstInfo.ADDING_MAP)
+          SMap.addMap(item.name || item.title).then(async result => {
+            this.props.setContainerLoading &&
+              this.props.setContainerLoading(false)
+            Toast.show(result ? ConstInfo.ADD_SUCCESS : ConstInfo.ADD_FAILED)
+            if (result) {
+              await this.props.getLayers(-1, layers => {
+                this.props.setCurrentLayer(layers.length > 0 && layers[0])
+              })
+            }
+            this.setVisible(false)
+          })
+        }
       }.bind(this)())
     } else if (this.state.type === ConstToolType.MAP_ADD_DATASET) {
       (async function() {
@@ -3605,54 +3501,6 @@ export default class ToolBar extends React.PureComponent {
       //     currentLayerIndex: 0,
       //   })
       // }
-    } else if (this.state.type === ConstToolType.MAP_IMPORT_TEMPLATE) {
-      //地图制图，专题制图：导入数据
-      this.importData(item)
-    } else if (this.state.type === ConstToolType.MAP_THEME_START_OPENDS) {
-      //专题制图：开始->新建地图->数据源列表(->数据集列表)
-      (async function() {
-        this.props.setContainerLoading &&
-          this.props.setContainerLoading(true, ConstInfo.READING_DATA)
-        this.path = await FileTools.appendingHomeDirectory(item.path)
-        let arr = item.name.split('.')
-        let alias = arr[0]
-        SThemeCartography.getUDBName(this.path).then(
-          list => {
-            list.forEach(item => {
-              if (item.geoCoordSysType && item.prjCoordSysType) {
-                item.info = {
-                  infoType: 'dataset',
-                  geoCoordSysType: item.geoCoordSysType,
-                  prjCoordSysType: item.prjCoordSysType,
-                }
-              }
-            })
-            let dataList = [
-              {
-                title: alias,
-                image: require('../../../../assets/mapToolbar/list_type_udb.png'),
-                data: list,
-              },
-            ]
-            this.setState(
-              {
-                data: dataList,
-                type: ConstToolType.MAP_THEME_PARAM_CREATE_DATASETS,
-              },
-              () => {
-                this.scrollListToLocation()
-
-                this.props.setContainerLoading &&
-                  this.props.setContainerLoading(false)
-              },
-            )
-          },
-          () => {
-            this.props.setContainerLoading &&
-              this.props.setContainerLoading(false)
-          },
-        )
-      }.bind(this)())
     }
   }
 
@@ -3801,7 +3649,7 @@ export default class ToolBar extends React.PureComponent {
             let layers = await this.props.getLayers()
 
             // 隐藏底图
-            await SMap.setLayerVisible(layers[layers.length - 1].path, false)
+            await SMap.setLayerVisible(layers[layers.length - 1].path, true)
 
             // if (GLOBAL.Type === constants.COLLECTION) {
             //
@@ -4066,7 +3914,9 @@ export default class ToolBar extends React.PureComponent {
 
   /** 切换到裁剪界面 **/
   goToCut = () => {
-    NavigationService.navigate('MapCut')
+    NavigationService.navigate('MapCut', {
+      points: GLOBAL.MapSurfaceView.getResult(),
+    })
   }
 
   renderList = () => {
@@ -4076,11 +3926,11 @@ export default class ToolBar extends React.PureComponent {
         ref={ref => (this.toolBarSectionList = ref)}
         listSelectable={this.state.listSelectable}
         sections={this.state.data}
-        itemAction={({ item, index }) => {
+        itemAction={({ item, index, section }) => {
           if (this.state.type.indexOf('MAP_THEME_PARAM_') >= 0) {
-            this.listThemeAction({ item, index })
+            this.listThemeAction({ item, index, section })
           } else {
-            this.listAction({ item, index })
+            this.listAction({ item, index, section })
           }
         }}
         selectList={this.state.listExpressions}
@@ -4090,6 +3940,9 @@ export default class ToolBar extends React.PureComponent {
           ) {
             this.listSelectableAction({ selectList })
           }
+          this.setState({
+            listExpressions: selectList,
+          })
         }}
         headerAction={this.headerAction}
         underlayColor={color.item_separate_white}
@@ -4106,7 +3959,6 @@ export default class ToolBar extends React.PureComponent {
         type={this.state.tableType}
         numColumns={this.state.column}
         renderCell={this._renderItem}
-        Heighttype={this.state.type}
         device={this.props.device}
       />
     )
@@ -4218,6 +4070,12 @@ export default class ToolBar extends React.PureComponent {
             case constants.THEME_GRADUATED_SYMBOL:
               type = constants.THEME_GRADUATED_SYMBOL
               break
+            case constants.THEME_GRID_UNIQUE:
+              type = constants.THEME_GRID_UNIQUE
+              break
+            case constants.THEME_GRID_RANGE:
+              type = constants.THEME_GRID_RANGE
+              break
           }
           let menutoolRef =
             this.props.getMenuAlertDialogRef &&
@@ -4232,6 +4090,16 @@ export default class ToolBar extends React.PureComponent {
 
           if (this.state.type === ConstToolType.MAP_THEME_PARAM_RANGE_MODE) {
             //分段专题图：分段方法
+            let Params = {
+              LayerName: GLOBAL.currentLayer.name,
+              RangeMode: item.key,
+            }
+            ThemeMenuData.setThemeParams(Params)
+          } else if (
+            this.state.type ===
+            ConstToolType.MAP_THEME_PARAM_GRID_RANGE_RANGEMODE
+          ) {
+            //分段栅格专题图：分段方法
             let Params = {
               LayerName: GLOBAL.currentLayer.name,
               RangeMode: item.key,
@@ -4449,6 +4317,10 @@ export default class ToolBar extends React.PureComponent {
         list = dotDensityMenuInfo
       } else if (this.state.themeType === constants.THEME_GRADUATED_SYMBOL) {
         list = graduatedSymbolMenuInfo
+      } else if (this.state.themeType === constants.THEME_GRID_UNIQUE) {
+        list = gridUniqueMenuInfo
+      } else if (this.state.themeType === constants.THEME_GRID_RANGE) {
+        list = gridRangeMenuInfo
       }
     }
     if (!list) {

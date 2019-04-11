@@ -4,8 +4,8 @@ import {
   ConstInfo,
   ConstPath,
   Const,
-  ConstOnline,
   UserType,
+  ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -408,7 +408,10 @@ function openMap() {
     })
     _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
       containerType: 'list',
-      height: ConstToolType.HEIGHT[3],
+      height:
+        _params.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[4]
+          : ConstToolType.HEIGHT[3],
       data,
     })
   })()
@@ -715,7 +718,10 @@ function showHistory() {
   ]
   _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
     containerType: 'list',
-    height: ConstToolType.HEIGHT[3],
+    height:
+      _params.device.orientation === 'LANDSCAPE'
+        ? ConstToolType.THEME_HEIGHT[4]
+        : ConstToolType.HEIGHT[3],
     data,
   })
 }

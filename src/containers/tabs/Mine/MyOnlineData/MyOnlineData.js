@@ -16,7 +16,7 @@ import {
   View,
   NetInfo,
 } from 'react-native'
-import { SOnlineService } from 'imobile_for_reactnative'
+import { SOnlineService, SMap } from 'imobile_for_reactnative'
 import { FileTools } from '../../../../native'
 import styles from './Styles'
 import { color, size } from '../../../../styles'
@@ -78,7 +78,7 @@ export default class MyOnlineData extends Component {
   }
 
   componentWillUnmount() {
-    // this._removeListener()
+    this._removeListener()
   }
 
   _addListener = () => {
@@ -121,6 +121,7 @@ export default class MyOnlineData extends Component {
       this.downloadingListener = DeviceEventEmitter.addListener(
         downloadingEventType,
         progress => {
+          // console.log(progress)
           let result = '下载' + progress.toFixed(0) + '%'
           this._changeModalProgressState(result)
         },
@@ -169,8 +170,10 @@ export default class MyOnlineData extends Component {
     }
     try {
       for (let i = 1; i <= _iLoadOnlineDataCount; i++) {
+        // console.log(_iLoadOnlineDataCount)
         let tempData = await this._getOnlineData(i, this.pageSize)
         newData = newData.concat(tempData)
+        // console.log(tempData)
       }
       // 如果有数据正在下载，则重构newData
       if (_iDownloadingIndex >= 0) {
@@ -363,7 +366,6 @@ export default class MyOnlineData extends Component {
         let isFile = fileContent.type
         let fileName = fileContent.name
         let newPath = fullFileDir + '/' + fileName
-
         if (isFile === 'file' && !isRecordFile) {
           // (fileType.udb && fileName.indexOf(fileType.udb) !== -1)
           if (
@@ -386,6 +388,10 @@ export default class MyOnlineData extends Component {
                 })
               isRecordFile = true
             }
+          } else if (fileType.udb && fileName.indexOf(fileType.udb) !== -1) {
+            SMap.importDatasourceFile(newPath).then(() => {
+              Toast.show('数据下载完成并导入成功')
+            })
           }
         } else if (isFile === 'directory') {
           await this._setFilterDatas(newPath, fileType)
@@ -419,6 +425,7 @@ export default class MyOnlineData extends Component {
         progress === '下载失败' ||
         progress === '已下载'
       ) {
+        // console.log(progress)
         this._setFinalDownloadingProgressState(_iDownloadingIndex, progress)
         if (progress === '下载完成' || progress === '已下载') {
           this._unZipFile()
@@ -558,7 +565,7 @@ export default class MyOnlineData extends Component {
         if (result === undefined || result === '') {
           result = '服务发布失败'
         }
-        Toast.show(result)
+        Toast.show('服务发布失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -594,7 +601,7 @@ export default class MyOnlineData extends Component {
         if (result === undefined || result === '') {
           result = '服务删除失败'
         }
-        Toast.show(result)
+        Toast.show('服务删除失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -632,8 +639,7 @@ export default class MyOnlineData extends Component {
         } else {
           let dataPermissionType = { dataPermissionType: 'DOWNLOAD' }
           authorizeSetting.push(dataPermissionType)
-
-          Toast.show('成功设置为共有数据')
+          Toast.show('成功设置为公有数据')
         }
         _arrOnlineData = newData
         this.setState({ data: _arrOnlineData })
@@ -641,7 +647,7 @@ export default class MyOnlineData extends Component {
         if (result === undefined || result === '') {
           result = '设置失败'
         }
-        Toast.show(result)
+        Toast.show('设置失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -684,7 +690,7 @@ export default class MyOnlineData extends Component {
         this.setState({ data: _arrOnlineData })
         Toast.show('数据删除成功')
       } else {
-        Toast.show(result)
+        Toast.show('数据删除失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -725,6 +731,7 @@ export default class MyOnlineData extends Component {
   }
 
   _renderItem = item => {
+    // console.log(item)
     let dataName = item.item.fileName
     if (dataName !== undefined) {
       let length = dataName.length - 4
@@ -759,7 +766,7 @@ export default class MyOnlineData extends Component {
                 tintColor: imageColor,
               }}
               resizeMode={'contain'}
-              source={require('../../../../assets/Mine/mine_my_online_data.png')}
+              source={require('../../../../assets/Mine/mine_my_import_online_light.png')}
             />
             <View style={{ flex: 1, justifyContent: 'center' }}>
               <Text
@@ -802,7 +809,7 @@ export default class MyOnlineData extends Component {
           </View>
           <View
             style={{
-              height: scaleSize(2),
+              height: 1,
               width: itemWidth,
               backgroundColor: color.separateColorGray,
             }}

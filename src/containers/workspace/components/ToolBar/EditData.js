@@ -1,4 +1,4 @@
-import { SMap, Action, SCollector } from 'imobile_for_reactnative'
+import { SMap, Action } from 'imobile_for_reactnative'
 import { ConstToolType } from '../../../../constants'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
@@ -419,19 +419,27 @@ function point() {
 
 function words() {
   (async function() {
-    let x = await SMap.getGestureDetector()
-    if (x !== null) {
-      NavigationService.navigate('InputPage', {
-        headerTitle: '标注名称',
-        cb: async value => {
-          if (value !== '') {
-            await SMap.addTextRecordset(GLOBAL.value, value, x.x, x.y)
-          }
-          NavigationService.goBack()
-        },
-      })
-    }
+    await SMap.setGestureDetector({
+      singleTapHandler: setwords,
+    })
   }.bind(this)())
+}
+
+function setwords(event) {
+  NavigationService.navigate('InputPage', {
+    headerTitle: '标注名称',
+    cb: async value => {
+      if (value !== '') {
+        await SMap.addTextRecordset(GLOBAL.value, value, event.x, event.y)
+      }
+      await SMap.deleteGestureDetector()
+      NavigationService.goBack()
+    },
+    backcb: async () => {
+      await SMap.deleteGestureDetector()
+      NavigationService.goBack()
+    },
+  })
 }
 
 function pointline() {
@@ -455,11 +463,13 @@ function move() {
 }
 
 function undo(type) {
-  return SCollector.undo(type)
+  // return SCollector.undo(type)
+  return SMap.undo(type)
 }
 
 function redo(type) {
-  return SCollector.redo(type)
+  // return SCollector.redo(type)
+  return SMap.redo(type)
 }
 
 function remove() {

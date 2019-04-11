@@ -4,7 +4,8 @@ import NavigationService from '../../../NavigationService'
 import {
   layersetting,
   layerThemeSetting,
-  layer3dSetting,
+  layer3dSettingCanSelect,
+  layer3dSettingCanNotSelect,
   layerCollectionSetting,
   layerThemeSettings,
   layereditsetting,
@@ -93,7 +94,7 @@ export default class LayerManager_tolbar extends React.Component {
         data = layerThemeSettings
         break
       case ConstToolType.MAP3D_LAYER3DSELECT:
-        data = layer3dSetting
+        data = layer3dSettingCanSelect
         break
       case ConstToolType.MAP3D_LAYER3DCHANGE:
         data = layereditsetting
@@ -449,9 +450,10 @@ export default class LayerManager_tolbar extends React.Component {
       } else if (
         parseInt(type) === 1 ||
         parseInt(type) === 3 ||
-        parseInt(type) === 5
+        parseInt(type) === 5 ||
+        parseInt(type) === 83
       ) {
-        //由图层创建专题图(点，线，面)
+        //由图层创建专题图(点，线，面, 栅格)
         this.setVisible(false)
         GLOBAL.toolBox &&
           GLOBAL.toolBox.setVisible(
@@ -459,8 +461,11 @@ export default class LayerManager_tolbar extends React.Component {
             ConstToolType.MAP_THEME_CREATE_BY_LAYER,
             {
               isFullScreen: true,
-              column: 4,
-              height: ConstToolType.THEME_HEIGHT[10],
+              column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+              height:
+                this.props.device.orientation === 'LANDSCAPE'
+                  ? ConstToolType.THEME_HEIGHT[1]
+                  : ConstToolType.THEME_HEIGHT[1],
               createThemeByLayer: this.state.layerdata.name,
             },
           )
@@ -470,9 +475,16 @@ export default class LayerManager_tolbar extends React.Component {
       } else {
         Toast.show('不支持由该图层创建专题图')
       }
-    } else if (section.title === '设置图层可选') {
-      SScene.setSelectable(this.layer3dItem.name, true).then(result => {
-        result ? Toast.show('设置图层可选成功') : Toast.show('设置图层可选失败')
+    } else if (
+      section.title === '设置图层可选' ||
+      section.title === '设置图层不可选'
+    ) {
+      //console.warn(this.state.data)
+      let _title = section.title
+      let canChoose = true
+      _title.indexOf('不') > 0 && (canChoose = false)
+      SScene.setSelectable(this.layer3dItem.name, canChoose).then(result => {
+        result ? Toast.show(`${_title}成功`) : Toast.show(`${_title}失败`)
         // this.overlayView&&this.overlayView.setVisible(false)
         this.setVisible(false)
         let overlayView = this.props.getOverlayView
@@ -481,20 +493,9 @@ export default class LayerManager_tolbar extends React.Component {
         if (overlayView) {
           overlayView.setVisible(false)
         }
-      })
-    } else if (section.title === '设置图层不可选') {
-      SScene.setSelectable(this.layer3dItem.name, false).then(result => {
-        result
-          ? Toast.show('设置图层不可选成功')
-          : Toast.show('设置图层不可选失败')
-        this.setVisible(false)
-        let overlayView = this.props.getOverlayView
-          ? this.props.getOverlayView()
-          : null
-        if (overlayView) {
-          overlayView.setVisible(false)
+        if (result) {
+          this.changeState(!canChoose)
         }
-        // this.overlayView&&this.overlayView.setVisible(false)
       })
     }
   }
@@ -504,12 +505,20 @@ export default class LayerManager_tolbar extends React.Component {
     cb = () => {},
     setItemSelectable = () => {},
     overlayView = {},
+    changeState = () => {},
   ) => {
-    // console.log(layer3dItem)
+    //console.log(layer3dItem)
     this.layer3dItem = layer3dItem
     this.cb = cb
     this.setItemSelectable = setItemSelectable
     this.overlayView = overlayView
+    this.changeState = changeState
+    let selectabel = this.layer3dItem.selectable
+    let data
+    selectabel
+      ? (data = layer3dSettingCanSelect)
+      : (data = layer3dSettingCanNotSelect)
+    this.setState({ data })
   }
 
   getLayer3d = () => {
@@ -601,38 +610,16 @@ export default class LayerManager_tolbar extends React.Component {
       case list:
         switch (this.state.type) {
           case ConstToolType.MAP_SCALE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_MAX_SCALE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_MIN_SCALE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_EDIT_TAGGING:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_THEME_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_THEME_STYLES:
-            box = this.renderList()
-            break
           case ConstToolType.MAP3D_LAYER3DSELECT:
-            box = this.renderList()
-            break
           case ConstToolType.COLLECTION:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_EDIT_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP_EDIT_MORE_STYLE:
-            box = this.renderList()
-            break
           case ConstToolType.MAP3D_LAYER3DCHANGE:
             box = this.renderList()
             break

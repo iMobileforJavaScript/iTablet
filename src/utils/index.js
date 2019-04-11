@@ -6,6 +6,7 @@ import AudioAnalyst from './AudioAnalyst'
 import checkType from './checkType'
 import jsonUtil from './jsonUtil'
 import FetchUtils from './FetchUtils'
+import LayerUtil from './LayerUtil'
 export {
   screen,
   scaleSize,
@@ -17,4 +18,6 @@ export {
   jsonUtil,
   FetchUtils,
   setSpText,
+  /** 地图公共方法 **/
+  LayerUtil,
 }

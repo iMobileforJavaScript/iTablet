@@ -14,6 +14,7 @@ import { SMap } from 'imobile_for_reactnative'
 export default class MapSetting extends Component {
   props: {
     navigation: Object,
+    currentMap: Object,
     data: Array,
     setMapSetting: () => {},
     closeMap: () => {},
@@ -44,6 +45,12 @@ export default class MapSetting extends Component {
       JSON.stringify(this.props.mapSetting)
     ) {
       this.setState({ data: this.props.mapSetting })
+    } else if (
+      JSON.stringify(prevProps.currentMap) !==
+        JSON.stringify(this.props.currentMap) &&
+      this.props.currentMap.name
+    ) {
+      this.getData()
     }
     if (
       JSON.stringify(prevProps.mapLegend) !==
@@ -60,13 +67,9 @@ export default class MapSetting extends Component {
   }
 
   getData = async () => {
-    let isAntialias = true
-    let isOverlapDisplayed = false
-    let isVisibleScalesEnabled = false
-
-    isAntialias = await SMap.isAntialias()
-    isOverlapDisplayed = await SMap.isOverlapDisplayed()
-    isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
+    let isAntialias = await SMap.isAntialias()
+    let isOverlapDisplayed = await SMap.isOverlapDisplayed()
+    let isVisibleScalesEnabled = await SMap.isVisibleScalesEnabled()
 
     let newData = getMapSettings()
     newData[1].data[0].value = isAntialias

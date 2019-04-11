@@ -62,7 +62,6 @@ public class FileTools extends ReactContextBaseJavaModule {
 //    private static final int BUFF_SIZE = 1024 * 1024; // 1M Byte
     private final static String TAG = "ZipHelper";
     private final static int BUFF_SIZE = 2048;
-    private static String USER_NAME="";
     private static Boolean importData=false;
     private static ReactContext mReactContext;
 
@@ -546,6 +545,7 @@ public class FileTools extends ReactContextBaseJavaModule {
             String filePath=importPath+"/weChat.zip";
             String toPath=importPath;
             File file=new File(filePath);
+            Boolean importResult=false;
             if(file.exists()){
                 Boolean reuslt=FileTools.unZipFile(filePath, toPath);
                 if(reuslt){
@@ -585,6 +585,7 @@ public class FileTools extends ReactContextBaseJavaModule {
                     if(workspace.size()>0){
                         List<String> result=sMap.getSmMapWC().importWorkspaceInfo(workspace.get(0),"",true);
                         if(result.size()>0){
+                            importResult=true;
                             importData=false;
                             deleteDirectory(importPath);
                         }
@@ -595,17 +596,23 @@ public class FileTools extends ReactContextBaseJavaModule {
                             datasourceConnectionInfo.setServer(datasource.get(i));
                             datasourceConnectionInfo.setEngineType(EngineType.UDB);
                             Datasource datasource1=workspace1.getDatasources().open(datasourceConnectionInfo);
-                            if(datasource1.getAlias()=="labelDatasource"){
-                                importData=false;
+                            if(datasource1.getDescription().equals("Label")){
+                                String todatasource=SDCARD+"/iTablet/User/"+getUserName()+"/Data/Label/Label.udb";
+                                File udb=new File(todatasource);
+                                if(udb.exists()){
+                                    sMap.getSmMapWC().copyDataset(datasource.get(i),todatasource);
+                                    importResult=true;
+                                    importData=false;
+                                }
                             }else {
                                 sMap.getSmMapWC().importDatasourceFile(datasource.get(0),null);
+                                importResult=true;
                                 importData=false;
                             }
                         }
                         deleteDirectory(importPath);
                     }
-
-                    promise.resolve(true);
+                    promise.resolve(importResult);
                 }else {
                     deleteDirectory(toPath);
                 }
@@ -706,12 +713,12 @@ public class FileTools extends ReactContextBaseJavaModule {
         userName = userName == null || userName.equals("") ? "Customer" : userName;
 
         // 初始化用户工作空间
-        USER_NAME=userName;
         String userPath = SDCARD + "/iTablet/User/" + userName + "/";
         String externalDataPath = userPath + "ExternalData/";
         String plottingExtDataPath = externalDataPath + "Plotting/";
         String collectionExtDataPath = externalDataPath + "Collection/";
         String dataPath = userPath + "Data/";
+//        String CachePath=SDCARD+"/iTablet/Cache/";
 
         String defaultData = "DefaultData";
         String defaultDataPath = SDCARD + "/iTablet/User/" + userName + "/" + defaultData + "/";
@@ -740,6 +747,7 @@ public class FileTools extends ReactContextBaseJavaModule {
         createDirectory(dataPath + "Temp");
         createDirectory(dataPath + "Lable");
         createDirectory(dataPath + "Color");
+//        createDirectory(CachePath);
         createDirectory(externalDataPath);
         createDirectory(plottingExtDataPath);
         createDirectory(collectionExtDataPath);
@@ -1009,7 +1017,8 @@ public class FileTools extends ReactContextBaseJavaModule {
     }
 
     public static  String getUserName(){
-        return USER_NAME;
+        String userNmae=SMap.getInstance().getSmMapWC().getUserName();
+        return userNmae;
     }
 
     public static void getFilePath(String path, ArrayList<String> arr){

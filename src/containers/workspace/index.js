@@ -11,6 +11,7 @@ import Map3DLayerManager from '../Layer3DManager'
 import Setting from '../setting'
 import MapSetting from '../mapSetting'
 import { LayerAttribute } from '../layerAttribute'
+import { AnalystTools } from '../analystView/pages'
 
 const options = {
   animationEnabled: false, // 切换页面时是否有动画效果
@@ -61,6 +62,22 @@ const MapTabs = TabNavigator(
   options,
 )
 
+const analystTabsOptions = Object.assign(options, { initialRouteIndex: 1 })
+const MapAnalystTabs = TabNavigator(
+  {
+    MapAnalystView: {
+      screen: MapView,
+    },
+    AnalystTools: {
+      screen: AnalystTools,
+    },
+    LayerAnalystManager: {
+      screen: LayerManager,
+    },
+  },
+  analystTabsOptions,
+)
+
 const Map3DTabs = TabNavigator(
   {
     Map3D: {
@@ -74,21 +91,6 @@ const Map3DTabs = TabNavigator(
     },
     Map3DSetting: {
       screen: Setting,
-    },
-  },
-  options,
-)
-
-const MapAnalystTabs = TabNavigator(
-  {
-    AnalystMapView: {
-      screen: MapView,
-    },
-    AnalystLayerManager: {
-      screen: LayerManager,
-    },
-    AnalystLayerAttribute: {
-      screen: LayerAttribute,
     },
   },
   options,

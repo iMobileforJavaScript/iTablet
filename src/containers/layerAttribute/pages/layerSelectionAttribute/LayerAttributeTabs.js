@@ -8,7 +8,7 @@ import * as React from 'react'
 import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Container, MTBtn, PopModal } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
-import { setSpText, scaleSize } from '../../../../utils'
+import { scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { color, zIndexLevel } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
@@ -16,6 +16,7 @@ import DefaultTabBar from './DefaultTabBar'
 import { LayerTopBar, DrawerBar, LocationView } from '../../components'
 import LayerSelectionAttribute from './LayerSelectionAttribute'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
+import { Utils } from '../../../workspace/util'
 import { SMap, Action } from 'imobile_for_reactnative'
 
 const styles = StyleSheet.create({
@@ -74,23 +75,68 @@ export default class LayerAttributeTabs extends React.Component {
   constructor(props) {
     super(props)
     let { params } = props.navigation.state
-    this.state = {
-      currentIndex:
-        this.props.selection.length > 0 &&
-        this.props.selection[0].ids.length === 1
-          ? 0
-          : -1,
-      currentFieldInfo: [],
-      currentTabIndex: 0,
-      isShowDrawer: false,
-      initialPage: params && params.initialPage >= 0 ? params.initialPage : 0,
+    let initTabIndex = 0
+    let initIndex =
+      props.selection.length > 0 && props.selection[0].ids.length === 1 ? 0 : -1
+    let initFieldInfo = []
+
+    this.preAction = params && params.preAction
+    // 初始化选择的图层和属性（关联后返回属性界面，找到对应的图层属性）
+    const selectionAttribute = params && params.selectionAttribute
+    if (
+      props.selection &&
+      props.selection.length > 0 &&
+      selectionAttribute &&
+      selectionAttribute.layerInfo &&
+      selectionAttribute.layerInfo.name
+    ) {
+      for (let i = 0; i < props.selection.length; i++) {
+        if (
+          selectionAttribute.layerInfo.name ===
+          props.selection[i].layerInfo.name
+        ) {
+          initFieldInfo = selectionAttribute.data || []
+          initIndex =
+            selectionAttribute.index >= 0 ? selectionAttribute.index : -1
+          initTabIndex = i
+          break
+        }
+      }
     }
 
-    // this.currentFieldInfo = []
-    // this.currentFieldIndex = -1
-    // this.isShowDrawer = false
+    this.state = {
+      isShowView: false,
+      currentIndex: initIndex,
+      currentFieldInfo: initFieldInfo,
+      currentTabIndex: initTabIndex,
+      isShowDrawer: false,
+      initialPage: initTabIndex,
+      attributes: {
+        head: [],
+        data: [],
+      },
+    }
+
+    // 选择集中当前选中的属性
+    GLOBAL.SelectedSelectionAttribute = selectionAttribute || {
+      index: initIndex,
+      layerInfo: {},
+      data: [],
+    }
+
     this.currentTabRefs = []
-    // this.currentTabIndex = 0
+    this.init = !!selectionAttribute
+  }
+
+  componentDidMount() {
+    (async function() {
+      if (this.preAction && typeof this.preAction === 'function') {
+        await this.preAction()
+      }
+      this.setState({
+        isShowView: true,
+      })
+    }.bind(this)())
   }
 
   showDrawer = isShow => {
@@ -117,13 +163,23 @@ export default class LayerAttributeTabs extends React.Component {
     this.container && this.container.setLoading(loading, info, extra)
   }
 
-  selectAction = ({ data, index }) => {
+  selectAction = ({ data, index, layerInfo }) => {
     if (this.props.selection.length > 0 && index !== this.state.currentIndex) {
+      GLOBAL.SelectedSelectionAttribute = {
+        index,
+        layerInfo,
+        data,
+      }
       this.setState({
         currentIndex: index,
         currentFieldInfo: data,
       })
     } else {
+      GLOBAL.SelectedSelectionAttribute = {
+        index: -1,
+        layerInfo: {},
+        data: [],
+      }
       this.setState({
         currentIndex: -1,
         currentFieldInfo: [],
@@ -148,6 +204,27 @@ export default class LayerAttributeTabs extends React.Component {
     if (attributes.data.length === 1 && this.state.currentIndex !== 0) {
       this.setState({
         currentIndex: 0,
+        attributes,
+      })
+    } else if (
+      JSON.stringify(this.state.attributes) !== JSON.stringify(attributes)
+    ) {
+      this.setState({
+        attributes,
+      })
+    }
+
+    // 初始化第一次进入，多行属性界面，跳转到初始化行
+    if (
+      this.init &&
+      this.props.selection.length > 0 &&
+      this.props.selection[this.state.currentTabIndex].ids.length > 1 &&
+      this.state.currentIndex >= 0
+    ) {
+      this.init = false
+      this.locateToPosition({
+        type: 'absolute',
+        index: this.state.currentIndex + 1, // currentIndex从0开始，表格序号从1开始
       })
     }
   }
@@ -162,11 +239,16 @@ export default class LayerAttributeTabs extends React.Component {
   locateToTop = () => {
     this.currentTabRefs[this.state.currentTabIndex] &&
       this.currentTabRefs[this.state.currentTabIndex].locateToTop(
-        ({ currentIndex, currentFieldInfo }) => {
+        ({ currentIndex, currentFieldInfo, layerInfo }) => {
           this.setState({
             currentIndex,
             currentFieldInfo,
           })
+          GLOBAL.SelectedSelectionAttribute = {
+            index: currentIndex,
+            layerInfo,
+            data: currentFieldInfo,
+          }
           this.locationView && this.locationView.show(false)
         },
       )
@@ -178,11 +260,16 @@ export default class LayerAttributeTabs extends React.Component {
   locateToBottom = () => {
     this.currentTabRefs[this.state.currentTabIndex] &&
       this.currentTabRefs[this.state.currentTabIndex].locateToBottom(
-        ({ currentIndex, currentFieldInfo }) => {
+        ({ currentIndex, currentFieldInfo, layerInfo }) => {
           this.setState({
             currentIndex,
             currentFieldInfo,
           })
+          GLOBAL.SelectedSelectionAttribute = {
+            index: currentIndex,
+            layerInfo,
+            data: currentFieldInfo,
+          }
           this.locationView && this.locationView.show(false)
         },
       )
@@ -196,11 +283,16 @@ export default class LayerAttributeTabs extends React.Component {
     this.currentTabRefs[this.state.currentTabIndex] &&
       this.currentTabRefs[this.state.currentTabIndex].locateToPosition(
         data,
-        ({ currentIndex, currentFieldInfo }) => {
+        ({ currentIndex, currentFieldInfo, layerInfo }) => {
           this.setState({
             currentIndex,
             currentFieldInfo,
           })
+          GLOBAL.SelectedSelectionAttribute = {
+            index: currentIndex,
+            layerInfo,
+            data: currentFieldInfo,
+          }
           this.locationView && this.locationView.show(false)
         },
       )
@@ -216,6 +308,8 @@ export default class LayerAttributeTabs extends React.Component {
     let layerPath = this.currentTabRefs[this.state.currentTabIndex].props
         .layerSelection.layerInfo.path,
       selection = this.currentTabRefs[this.state.currentTabIndex].getSelection()
+
+    if (!selection || !selection.data) return
 
     let objs = []
     for (let i = 0; i < this.props.selection.length; i++) {
@@ -239,7 +333,7 @@ export default class LayerAttributeTabs extends React.Component {
 
     SMap.setAction(Action.PAN)
     // SMap.selectObj(layerPath, [selection.data[0].value]).then(() => {
-    SMap.selectObjs(objs).then(() => {
+    SMap.selectObjs(objs).then(data => {
       // TODO 选中对象跳转到地图
       // this.props.navigation && this.props.navigation.navigate('MapView')
       // NavigationService.navigate('MapView')
@@ -254,15 +348,35 @@ export default class LayerAttributeTabs extends React.Component {
           },
         )
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
+
+      Utils.setSelectionStyle(this.props.currentLayer.path)
+      if (data instanceof Array && data.length > 0) {
+        SMap.moveToPoint({
+          x: data[0].x,
+          y: data[0].y,
+        })
+      }
     })
   }
 
   drawerOnChange = ({ index }) => {
     // this.scrollTab && this.scrollTab.goToPage(index)
-    this.state.currentTabIndex !== index &&
-      this.setState({
+
+    if (this.state.currentTabIndex !== index) {
+      this.currentTabRefs &&
+        this.currentTabRefs[this.state.currentTabIndex].clearSelection()
+      let newState = {
         currentTabIndex: index,
-      })
+      }
+      if (this.currentTabRefs[index]) {
+        let attributes = this.currentTabRefs[index].getAttributes()
+        newState.attributes = attributes
+        newState.currentIndex =
+          attributes.data.length === 1 && this.state.currentIndex !== 0 ? 0 : -1
+      }
+      this.setState(newState)
+    }
+
     let timer = setTimeout(() => {
       this.showDrawer(false)
       clearTimeout(timer)
@@ -274,6 +388,8 @@ export default class LayerAttributeTabs extends React.Component {
       this.locationView.show(false)
       return
     }
+
+    GLOBAL.SelectedSelectionAttribute = null // 清除选择集中当前选中的属性
 
     NavigationService.goBack()
 
@@ -291,17 +407,17 @@ export default class LayerAttributeTabs extends React.Component {
           column: 3,
           isFullScreen: false,
           height: ConstToolType.HEIGHT[0],
-          cb: () => {
-            switch (GLOBAL.currentToolbarType) {
-              case ConstToolType.MAP_TOOL_POINT_SELECT:
-                SMap.setAction(Action.SELECT)
-                break
-              case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
-                // SMap.selectByRectangle()
-                SMap.setAction(Action.SELECT_BY_RECTANGLE)
-                break
-            }
-          },
+          // cb: () => {
+          //   switch (GLOBAL.currentToolbarType) {
+          //     case ConstToolType.MAP_TOOL_POINT_SELECT:
+          //       SMap.setAction(Action.SELECT)
+          //       break
+          //     case ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE:
+          //       // SMap.selectByRectangle()
+          //       SMap.setAction(Action.SELECT_BY_RECTANGLE)
+          //       break
+          //   }
+          // },
         },
       )
   }
@@ -328,26 +444,26 @@ export default class LayerAttributeTabs extends React.Component {
         initialPage={this.state.initialPage}
         page={this.state.currentTabIndex}
         tabBarPosition={'bottom'}
-        onChangeTab={({ i }) => {
-          if (
-            this.state.currentTabIndex < this.currentTabRefs.length &&
-            this.currentTabRefs[this.state.currentTabIndex] &&
-            this.currentTabRefs[this.state.currentTabIndex].selectRow &&
-            typeof this.currentTabRefs[this.state.currentTabIndex].selectRow ===
-              'function'
-          ) {
-            this.currentTabRefs[this.state.currentTabIndex].clearSelection()
-          }
-          if (
-            i < this.currentTabRefs.length &&
-            this.state.currentTabIndex !== i
-          ) {
-            this.setState({
-              currentTabIndex: i,
-            })
-          }
-          GLOBAL.LayerAttributeTabIndex = i
-        }}
+        // onChangeTab={({ i }) => {
+        //   // if (
+        //   //   this.state.currentTabIndex < this.currentTabRefs.length &&
+        //   //   this.currentTabRefs[this.state.currentTabIndex] &&
+        //   //   this.currentTabRefs[this.state.currentTabIndex].selectRow &&
+        //   //   typeof this.currentTabRefs[this.state.currentTabIndex].selectRow ===
+        //   //     'function'
+        //   // ) {
+        //   //   this.currentTabRefs[this.state.currentTabIndex].clearSelection()
+        //   // }
+        //   // if (
+        //   //   i < this.currentTabRefs.length &&
+        //   //   this.state.currentTabIndex !== i
+        //   // ) {
+        //   //   this.setState({
+        //   //     currentTabIndex: i,
+        //   //   })
+        //   // }
+        //   // GLOBAL.LayerAttributeTabIndex = i
+        // }}
         locked
         scrollWithoutAnimation
         // renderTabBar={() => (
@@ -360,7 +476,7 @@ export default class LayerAttributeTabs extends React.Component {
             activeTextColor={color.themeText2}
             inactiveTextColor={'white'}
             textStyle={{
-              fontSize: setSpText(22),
+              fontSize: 0,
               backgroundColor: 'transparent',
             }}
             tabStyle={{
@@ -460,41 +576,44 @@ export default class LayerAttributeTabs extends React.Component {
         <LayerTopBar
           hasTabBtn
           tabsAction={this.showDrawer}
+          canLocated={this.state.attributes.data.length > 1}
           canRelated={this.state.currentIndex >= 0}
           relateAction={this.relateAction}
           locateAction={this.showLocationView}
         />
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'column',
-            justifyContent: 'flex-start',
-          }}
-        >
-          {this.props.selection && this.props.selection.length > 0 ? (
-            this.props.selection.length > 1 ? (
-              this.renderTabs()
+        {this.state.isShowView && (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+            }}
+          >
+            {this.props.selection && this.props.selection.length > 0 ? (
+              this.props.selection.length > 1 ? (
+                this.renderTabs()
+              ) : (
+                this.renderTable({
+                  data: this.props.selection[0],
+                  index: 0,
+                })
+              )
             ) : (
-              this.renderTable({
-                data: this.props.selection[0],
-                index: 0,
-              })
-            )
-          ) : (
-            <View style={{ flex: 1 }} />
-          )}
-          <LocationView
-            ref={ref => (this.locationView = ref)}
-            style={styles.locationView}
-            currentIndex={
-              // this.currentPage * PAGE_SIZE + this.state.currentIndex
-              this.state.currentIndex
-            }
-            locateToTop={this.locateToTop}
-            locateToBottom={this.locateToBottom}
-            locateToPosition={this.locateToPosition}
-          />
-        </View>
+              <View style={{ flex: 1 }} />
+            )}
+            <LocationView
+              ref={ref => (this.locationView = ref)}
+              style={styles.locationView}
+              currentIndex={
+                // this.currentPage * PAGE_SIZE + this.state.currentIndex
+                this.state.currentIndex
+              }
+              locateToTop={this.locateToTop}
+              locateToBottom={this.locateToBottom}
+              locateToPosition={this.locateToPosition}
+            />
+          </View>
+        )}
         {this.state.isShowDrawer && (
           <TouchableOpacity
             activeOpacity={1}

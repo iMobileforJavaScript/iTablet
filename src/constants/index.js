@@ -4,13 +4,14 @@ import Const from './Const'
 import AudioKeywords from './AudioKeywords'
 import EventConst from './EventConst'
 import ExampleMapData from './ExampleMapData'
-import ConstModule, { MAP_MODULE } from './ConstModule'
+import ConstModule, { MAP_MODULE, getHeaderTitle } from './ConstModule'
 import ConstToolType from './ConstToolType'
 import Map3DBaseMapList from './Map3DBaseMapList'
 import ConstInfo from './ConstInfo'
 import UserType from './UserType'
 import ThemeType from './ThemeType'
 import CheckStatus from './CheckStatus'
+import ConstAnalyst from './ConstAnalyst'
 
 import {
   layerAdd,
@@ -27,6 +28,8 @@ import {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
 } from './FunctionToolbarModule'
 
 import {
@@ -66,7 +69,11 @@ export {
   graphMenuInfo,
   dotDensityMenuInfo,
   graduatedSymbolMenuInfo,
+  gridUniqueMenuInfo,
+  gridRangeMenuInfo,
   UserType,
   ThemeType,
   CheckStatus,
+  ConstAnalyst,
+  getHeaderTitle,
 }

@@ -4,7 +4,7 @@ import { color, zIndexLevel } from '../../../../styles'
 import { MTBtn } from '../../../../components'
 import { ConstToolType } from '../../../../constants'
 import { View, StyleSheet } from 'react-native'
-import { SCollector } from 'imobile_for_reactnative'
+import { SMap } from 'imobile_for_reactnative'
 import constants from '../../constants'
 // 地图按钮栏默认高度
 const BUTTON_HEIGHT = scaleSize(80)
@@ -22,19 +22,23 @@ export default class EditControlBar extends React.Component {
   }
 
   undo = () => {
-    SCollector.undo()
+    // SCollector.undo()
+    SMap.undo()
   }
 
   redo = () => {
-    SCollector.redo()
+    // SCollector.redo()
+    SMap.redo()
   }
 
   cancel = () => {
-    SCollector.cancel()
+    // SCollector.cancel()
+    SMap.cancel()
   }
 
   submit = () => {
-    SCollector.submit()
+    // SCollector.submit()
+    SMap.submit()
   }
 
   render() {

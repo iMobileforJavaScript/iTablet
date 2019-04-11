@@ -22,10 +22,12 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../utils/Toast'
 import { UserType, Const } from '../../../constants'
 import { scaleSize } from '../../../utils'
+const Customer = 'Customer'
 export default class Mine extends Component {
   props: {
     navigation: Object,
     user: Object,
+    workspace: Object,
     setUser: () => {},
     closeWorkspace: () => {},
     openWorkspace: () => {},
@@ -67,14 +69,17 @@ export default class Mine extends Component {
     }
   }
 
-  openUserWorkspace = () => {
-    this.props.closeWorkspace(async () => {
-      let userPath = await FileTools.appendingHomeDirectory(
-        ConstPath.UserPath +
-          this.props.user.currentUser.userName +
-          '/' +
-          ConstPath.RelativeFilePath.Workspace,
-      )
+  openUserWorkspace = async () => {
+    let userPath = await FileTools.appendingHomeDirectory(
+      ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativeFilePath.Workspace,
+    )
+    // 防止多次打开同一个工作空间
+    if (!this.props.workspace || this.props.workspace.server === userPath)
+      return
+    this.props.closeWorkspace(() => {
       this.props.openWorkspace({ server: userPath })
     })
   }
@@ -144,7 +149,7 @@ export default class Mine extends Component {
             {this._renderLine()}
             {this._renderItem({
               title: Const.IMPORT,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+              leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
               onClick: this.goToMyLocalData,
             })}
 
@@ -182,15 +187,15 @@ export default class Mine extends Component {
               leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
               onClick: () => this.goToMyData(Const.SYMBOL),
             })}
-            {this._renderItem({
+            {/* {this._renderItem({
               title: Const.MINE_COLOR,
               leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
               onClick: () => this.goToMyData(Const.MINE_COLOR),
-            })}
+            })} */}
             {this._renderItem({
-              title: Const.MODULE,
+              title: Const.TEMPLATE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
-              onClick: () => this.goToMyModule(Const.MODULE),
+              onClick: () => this.goToMyModule(Const.TEMPLATE),
             })}
           </ScrollView>
         </View>
@@ -219,7 +224,7 @@ export default class Mine extends Component {
           {this._renderLine()}
           {this._renderItem({
             title: Const.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
@@ -267,9 +272,9 @@ export default class Mine extends Component {
             onClick: () => this.goToMyData(Const.MINE_COLOR),
           })}
           {this._renderItem({
-            title: Const.MODULE,
+            title: Const.TEMPLATE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () => this.goToMyModule(Const.MODULE),
+            onClick: () => this.goToMyModule(Const.TEMPLATE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}
@@ -289,14 +294,20 @@ export default class Mine extends Component {
     let allColor = color.font_color_white
     let headerHeight = scaleSize(120)
     let imageWidth = scaleSize(70)
-    let isPro = this.props.user.currentUser.userType === UserType.PROBATION_USER
+    let isPro =
+      this.props.user.currentUser.userType &&
+      this.props.user.currentUser.userType !== UserType.PROBATION_USER
     let headerImage = isPro
-      ? require('../../../assets/home/system_default_header_image.png')
-      : {
+      ? {
         uri:
             'https://cdn3.supermapol.com/web/cloud/84d9fac0/static/images/myaccount/icon_plane.png',
       }
-    let headerTitle = isPro ? '立即登录' : this.props.user.currentUser.userName
+      : require('../../../assets/home/system_default_header_image.png')
+    let headerTitle = isPro
+      ? this.props.user.currentUser.userName
+        ? this.props.user.currentUser.userName
+        : Customer
+      : '立即登录'
     return (
       <View
         style={{
@@ -448,27 +459,29 @@ export default class Mine extends Component {
   }
 
   render() {
-    if (
-      this.props.user &&
-      this.props.user.currentUser &&
-      (this.props.user.currentUser.userName ||
-        this.props.user.currentUser.userType)
-    ) {
-      return (
-        <Container
-          ref={ref => (this.container = ref)}
-          headerProps={{
-            title: '我的',
-            withoutBack: true,
-            navigation: this.props.navigation,
-          }}
-        >
-          {this._selectionRender()}
-        </Container>
-      )
-    } else {
-      return <View />
-      // return <Login setUser={this.props.setUser} user={this.props.user} />
-    }
+    // if (
+    //   this.props.user &&
+    //   this.props.user.currentUser &&
+    //   (this.props.user.currentUser.userName ||
+    //     this.props.user.currentUser.userType)
+    // ) {
+    return (
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title: '我的',
+          withoutBack: true,
+          navigation: this.props.navigation,
+        }}
+      >
+        {this._selectionRender()}
+      </Container>
+    )
+    // }
+
+    // else {
+    // return <View />
+    // return <Login setUser={this.props.setUser} user={this.props.user} />
+    // }
   }
 }

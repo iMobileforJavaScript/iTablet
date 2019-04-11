@@ -16,6 +16,7 @@ const mapStateToProps = state => ({
   currentUser: state.user.toJS().currentUser,
   device: state.device.toJS().device,
   downList: state.down.toJS().downList,
+  user: state.user.toJS(),
 })
 const mapDispatchToProps = {
   importSceneWorkspace,
