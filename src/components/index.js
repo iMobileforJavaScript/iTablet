@@ -1,4 +1,4 @@
-import CheckBox from './checkBox'
+import CheckBox from './CheckBox'
 import Header from './Header'
 import TextBtn from './TextBtn'
 import Thumbnails from './Thumbnails'
