@@ -10,6 +10,8 @@ import {
   Image,
   TouchableOpacity,
   Animated,
+  NativeModules,
+  NativeEventEmitter, 
 } from 'react-native'
 import {
   GiftedChat,
@@ -35,6 +37,9 @@ let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
   Top = scaleSize(80)
 }
+
+const SMessageServiceiOS = NativeModules.SMessageService;
+const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 
 class Chat extends React.Component {
   props: {
@@ -97,20 +102,26 @@ class Chat extends React.Component {
       }
     })
 
-    this.listener = RCTDeviceEventEmitter.addListener(
-      EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-      this.onReceiveProgress,
-      // eslint-disable-next-line no-unused-vars
-      // value => {
-        // console.log(value)
-        // 接受到 通知后的处理
-      // },
-    )
-
-    this.listener = RCTDeviceEventEmitter.addListener(
-      EventConst.MESSAGE_SERVICE_SEND_FILE,
-      this.onReceiveProgress,
-    )
+    if(Platform.OS === 'iOS'){
+      this.listener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.listener = iOSEventEmitter.addListener(
+        EEventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    }else{
+      this.listener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.listener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    }
+    
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
     //   messages: [
@@ -138,6 +149,16 @@ class Chat extends React.Component {
       }})
     })
     //todo input to redux
+    // this.friend._onReceiveProgress(value)
+    // let reduxMessage =  this.friend.props.chat[this.curUser.userId][value.talkId].history[value.msgId]
+    // reduxMessage.message.message.progress = value.percentage
+    // this.friend.props.editChat &&
+    //   this.friend.props.props.editChat({
+    //     userId: this.curUser.userId,
+    //     talkId: value.talkId,
+    //     msgId: value.msgId,
+    //     editItem: reduxMessage,
+    //   })
   }
 
   componentWillUnmount() {
@@ -459,6 +480,7 @@ class Chat extends React.Component {
     })
   }
   async onLongPress(context, message) {
+    console.log(message)
     if (message.message.type) {
       switch (message.message.type) {
         case 6:
@@ -624,12 +646,35 @@ class Chat extends React.Component {
           left: {
             //对方的气泡
             backgroundColor: 'white',
+            overflow: 'hidden',
+            borderRadius: scaleSize(10),
           },
           right: {
             //我方的气泡
             backgroundColor: 'blue',
+            overflow: 'hidden',
+            borderRadius: scaleSize(10),
           },
         }}
+        //与下一条自己的消息连接处的样式
+        containerToNextStyle={{
+          left:{
+            borderBottomLeftRadius: scaleSize(10)
+          },
+          right:{
+            borderBottomRightRadius: scaleSize(10)
+          }
+        }}
+        //与上一条自己的消息连接处的样式
+        containerToPreviousStyle={{
+          left:{
+            borderTopLeftRadius : scaleSize(10)
+          },
+          right:{
+            borderTopRightRadius: scaleSize(10)
+          }
+        }}
+        //底栏样式
         bottomContainerStyle={{
           right:{
             flexDirection: 'row-reverse',
@@ -649,7 +694,10 @@ class Chat extends React.Component {
       let progress = currentMessage.message.message.progress
       return (
         <View style={styles.tickView}>
-          <Text style={styles.tick}>{progress === 100 ? '✓' : progress}</Text>
+          <Text style={currentMessage.user._id !== this.curUser.userId
+              ? styles.tickLeft
+              : [styles.tickLeft, styles.tickRight]
+            }>{progress === 100 ? '✓' : (progress === 0 ? '' : progress + '%')}</Text>
         </View>
       )
     }
@@ -817,9 +865,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginRight: scaleSize(20),
     marginLeft: scaleSize(20),
+    marginBottom: scaleSize(10)
   },
-  tick: {
+  tickLeft: {
     fontSize: scaleSize(18),
+    color:'gray'
+  },
+  tickRight: {
     color:'white'
   },
 })

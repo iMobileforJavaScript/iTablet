@@ -284,6 +284,17 @@ export default class Friend extends Component {
     })
   }
 
+  _onReceiveProgress = (value) => {
+    let reduxMessage =  this.props.chat[this.props.user.currentUser.userId][value.talkId].history[value.msgId]
+    reduxMessage.message.message.progress = value.percentage
+    this.props.editChat &&
+      this.props.props.editChat({
+        userId: this.props.user.currentUser.userId,
+        talkId: value.talkId,
+        msgId: value.msgId,
+        editItem: reduxMessage,
+      })
+  }
   _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
       SMessageService.receiveFile(
