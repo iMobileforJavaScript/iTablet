@@ -87,7 +87,7 @@ export default class LayerAttributeSearch extends React.Component {
       return
     }
     this.currentPage += 1
-    this.search(this.searchKey, attribute => {
+    this.search(this.searchKey, 'loadMore', attribute => {
       cb && cb()
       if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -98,7 +98,7 @@ export default class LayerAttributeSearch extends React.Component {
     })
   }
 
-  search = (searchKey = '', cb = () => {}) => {
+  search = (searchKey = '', type = 'reset', cb = () => {}) => {
     if (!this.layerPath || searchKey === '') return
     this.searchKey = searchKey
     let result = {},
@@ -112,6 +112,7 @@ export default class LayerAttributeSearch extends React.Component {
             searchKey,
             this.currentPage,
             PAGE_SIZE,
+            type,
           )
         } else {
           result = await LayerUtil.searchLayerAttribute(
@@ -122,6 +123,7 @@ export default class LayerAttributeSearch extends React.Component {
             },
             this.currentPage,
             PAGE_SIZE,
+            type,
           )
         }
 
