@@ -152,13 +152,13 @@ export default class Find extends Component {
               NavigationService.navigate('FriendMap')
             },
           })} */}
-          {this._renderItem({
+          {/* {this._renderItem({
             title: Const.FRIENDMAP,
             leftImagePath: require('../../../assets/Find/icon_contact_map_light.png'),
             onClick: () => {
               NavigationService.navigate('FriendMap')
             },
-          })}
+          })} */}
           {this._renderItem({
             title: Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),

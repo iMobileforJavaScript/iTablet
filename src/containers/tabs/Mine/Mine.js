@@ -187,11 +187,11 @@ export default class Mine extends Component {
               leftImagePath: require('../../../assets/Mine/mine_my_local_symbol.png'),
               onClick: () => this.goToMyData(Const.SYMBOL),
             })}
-            {this._renderItem({
+            {/* {this._renderItem({
               title: Const.MINE_COLOR,
               leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
               onClick: () => this.goToMyData(Const.MINE_COLOR),
-            })}
+            })} */}
             {this._renderItem({
               title: Const.TEMPLATE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
