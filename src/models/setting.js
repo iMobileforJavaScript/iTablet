@@ -12,6 +12,7 @@ export const ROUTE_SETTING_SET = 'ROUTE_SETTING_SET'
 export const TRACKING_SETTING_SET = 'TRACKING_SETTING_SET'
 export const SETTING_DATA = 'SETTING_DATA'
 export const MAP_SETTING = 'MAP_SETTING'
+export const MAP_LEGEND = 'MAP_LEGEND'
 
 // Actions
 // --------------------------------------------------
@@ -63,6 +64,13 @@ export const setMapSetting = (cb = () => {}) => async dispatch => {
   cb && cb()
 }
 
+export const setMapLegend = (params = {}) => async dispatch => {
+  await dispatch({
+    type: MAP_LEGEND,
+    payload: params || false,
+  })
+}
+
 export const getMapSetting = (params = {}, cb = () => {}) => async dispatch => {
   try {
     let isAntialias = true
@@ -110,6 +118,7 @@ const initialState = fromJS({
   },
   settingData: [],
   mapSetting: [],
+  mapLegend: false,
 })
 
 export default handleActions(
@@ -161,6 +170,15 @@ export default handleActions(
         data = []
       }
       return state.setIn(['mapSetting'], fromJS(data))
+    },
+    [`${MAP_LEGEND}`]: (state, { payload }) => {
+      let data = state.toJS().mapLegend
+      if (payload) {
+        data = payload
+      } else {
+        data = false
+      }
+      return state.setIn(['mapLegend'], fromJS(data))
     },
     [REHYDRATE]: (state, { payload }) => {
       return payload && payload.setting ? fromJS(payload.setting) : state

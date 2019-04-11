@@ -29,6 +29,7 @@ import ToolbarBtnType from '../ToolBar/ToolbarBtnType'
 import { Bar } from 'react-native-progress'
 
 const COLLECTION = 'COLLECTION'
+const MAP_PLOTTING = 'MAP_PLOTTING'
 const NETWORK = 'NETWORK'
 const EDIT = 'EDIT'
 const MAP_3D = 'MAP_3D'
@@ -140,6 +141,9 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
+    if (this.props.Label) {
+      this.props.Label()
+    }
     if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show('提示: 请先选择专题图层。')
       NavigationService.navigate('LayerManager')
@@ -761,27 +765,6 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  legend = async () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
-        isFullScreen: false,
-        containerType: 'legend',
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.NEWTHEME_HEIGHT[0]
-            : ConstToolType.NEWTHEME_HEIGHT[1],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-      })
-    }
-  }
-
-  Label = () => {
-    this.props.Label()
-  }
-
   /** 二级事件 **/
   openOneMap = async e => {
     this.showDataLists()
@@ -857,11 +840,6 @@ export default class FunctionToolbar extends React.Component {
             action: this.showTool,
             image: require('../../../../assets/function/icon_function_tool.png'),
           },
-          // {
-          //   title: '撤销',
-          //   action: this.legend,
-          //   image: require('../../../../assets/function/icon_remove.png'),
-          // },
           {
             title: '分享',
             action: () => {
@@ -964,6 +942,38 @@ export default class FunctionToolbar extends React.Component {
             title: '分享',
             size: 'large',
             selectMode: 'flash',
+            action: () => {
+              this.showMore(ConstToolType.MAP_SHARE)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
+      case MAP_PLOTTING:
+        data = [
+          {
+            key: '开始',
+            title: '开始',
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            title: '标绘',
+            action: this.showSymbol,
+            image: require('../../../../assets/function/icon_function_symbol.png'),
+          },
+          {
+            title: '编辑',
+            action: this.showEdit,
+            image: require('../../../../assets/function/icon_edit.png'),
+          },
+          {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            title: '分享',
             action: () => {
               this.showMore(ConstToolType.MAP_SHARE)
             },

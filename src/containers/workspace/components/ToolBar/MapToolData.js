@@ -7,6 +7,7 @@ import { dataUtil } from '../../../../utils'
 // import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
+// import NavigationService from '../../../NavigationService'
 
 let _params = {}
 
@@ -65,6 +66,54 @@ function getMapTool(type, params) {
           size: 'large',
           image: require('../../../../assets/mapTools/icon_full_screen.png'),
         },
+        // {
+        //   key: constants.POINT,
+        //   title: constants.POINT,
+        //   action: point,
+        //   size: 'large',
+        //   image: require('../../../../assets/mapTools/icon_point_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_black.png'),
+        // },
+        // {
+        //   key: constants.WORDS,
+        //   title: constants.WORDS,
+        //   size: 'large',
+        //   action: words,
+        //   image: require('../../../../assets/mapTools/icon_words_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_words_black.png'),
+        // },
+        // {
+        //   key: constants.POINTLINE,
+        //   title: constants.POINTLINE,
+        //   size: 'large',
+        //   action: pointline,
+        //   image: require('../../../../assets/mapTools/icon_point_line_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_line_black.png'),
+        // },
+        // {
+        //   key: constants.FREELINE,
+        //   title: constants.FREELINE,
+        //   size: 'large',
+        //   action: freeline,
+        //   image: require('../../../../assets/mapTools/icon_free_line_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_free_line_black.png'),
+        // },
+        // {
+        //   key: constants.POINTCOVER,
+        //   title: constants.POINTCOVER,
+        //   size: 'large',
+        //   action: pointcover,
+        //   image: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_point_cover_black.png'),
+        // },
+        // {
+        //   key: constants.FREECOVER,
+        //   title: constants.FREECOVER,
+        //   size: 'large',
+        //   action: freecover,
+        //   image: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+        //   selectedImage: require('../../../../assets/mapTools/icon_free_cover_black.png'),
+        // },
         // {
         //   key: 'boxSelect',
         //   title: '框选',
@@ -325,6 +374,45 @@ function clearMeasure(type = GLOBAL.currentToolbarType) {
     }
   }
 }
+
+// function point() {
+//   if (!_params.setToolbarVisible) return
+//   _params.showFullMap && _params.showFullMap(true)
+//   SMap.setAction(Action.CREATEPOINT)
+// }
+//
+// function words() {
+//   (async function() {
+//     let x = await SMap.getGestureDetector()
+//     if (x !== null) {
+//       NavigationService.navigate('InputPage', {
+//         headerTitle: '标注名称',
+//         cb: async value => {
+//           if (value !== '') {
+//             await SMap.addTextRecordset(GLOBAL.value, value, x.x, x.y)
+//           }
+//           NavigationService.goBack()
+//         },
+//       })
+//     }
+//   }.bind(this)())
+// }
+//
+// function pointline() {
+//   return SMap.setAction(Action.CREATEPOLYLINE)
+// }
+//
+// function freeline() {
+//   return SMap.setAction(Action.DRAWLINE)
+// }
+//
+// function pointcover() {
+//   return SMap.setAction(Action.CREATEPOLYGON)
+// }
+//
+// function freecover() {
+//   return SMap.setAction(Action.DRAWPLOYGON)
+// }
 
 /********** 裁剪手势监听 ************/
 // async function addMapCutListener() {

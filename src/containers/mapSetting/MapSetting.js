@@ -19,6 +19,8 @@ export default class MapSetting extends Component {
     closeMap: () => {},
     mapSetting: any,
     device: Object,
+    mapLegend: boolean,
+    setMapLegend: () => {},
   }
 
   constructor(props) {
@@ -43,6 +45,12 @@ export default class MapSetting extends Component {
     ) {
       this.setState({ data: this.props.mapSetting })
     }
+    if (
+      JSON.stringify(prevProps.mapLegend) !==
+      JSON.stringify(this.props.mapLegend)
+    ) {
+      this.getLegendData()
+    }
   }
 
   componentWillUnmount() {
@@ -64,6 +72,15 @@ export default class MapSetting extends Component {
     newData[1].data[0].value = isAntialias
     newData[1].data[1].value = isOverlapDisplayed
     newData[2].data[0].value = isVisibleScalesEnabled
+
+    this.setState({
+      data: newData,
+    })
+  }
+
+  getLegendData = async () => {
+    let newData = getMapSettings()
+    newData[0].data[2].value = this.props.mapLegend
 
     this.setState({
       data: newData,
@@ -138,6 +155,9 @@ export default class MapSetting extends Component {
         break
       case '固定比例尺':
         SMap.setVisibleScalesEnabled(value)
+        break
+      case '专题图图例':
+        this.props.setMapLegend(value)
         break
     }
     this.setState({

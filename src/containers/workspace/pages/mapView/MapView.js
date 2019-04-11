@@ -35,15 +35,17 @@ import {
   SurfaceView,
 } from '../../../../components'
 import { Utils } from '../../util'
-import { Toast, jsonUtil, scaleSize } from '../../../../utils'
+import { Toast, jsonUtil, scaleSize, setSpText } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
 import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
-// import LegendView from '../../components/LegendView/LegendView'
+import LegendView from '../../components/LegendView/LegendView'
+
 const SAVE_TITLE = '是否保存当前地图?'
+export const HEADER_HEIGHT = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
 export default class MapView extends React.Component {
   static propTypes = {
     nav: PropTypes.object,
@@ -55,6 +57,7 @@ export default class MapView extends React.Component {
     navigation: PropTypes.object,
     currentLayer: PropTypes.object,
     template: PropTypes.object,
+    mapLegend: PropTypes.boolean,
 
     bufferSetting: PropTypes.object,
     overlaySetting: PropTypes.object,
@@ -93,6 +96,7 @@ export default class MapView extends React.Component {
     setSharing: PropTypes.func,
     setCurrentSymbols: PropTypes.func,
     clearAttributeHistory: PropTypes.func,
+    setMapLegend: PropTypes.func,
   }
 
   constructor(props) {
@@ -133,7 +137,6 @@ export default class MapView extends React.Component {
       measureResult: 0,
       editLayer: {},
       showMapMenu: false,
-      legend: false,
       // changeLayerBtnBottom: scaleSize(200),
     }
 
@@ -204,6 +207,7 @@ export default class MapView extends React.Component {
       //   currentLayer: this.props.currentLayer,
       // })
     }
+
     // 显示切换图层按钮
     // if (this.props.editLayer.name && this.popList) {
     //   let bottom = this.popList.state.subPopShow
@@ -232,6 +236,7 @@ export default class MapView extends React.Component {
     if (Platform.OS === 'android') {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     }
+    this.props.setMapLegend(false)
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -862,9 +867,6 @@ export default class MapView extends React.Component {
         )
         this._addGeometrySelectedListener()
         this.container.setLoading(false)
-        this.setState({
-          legend: true,
-        })
       } catch (e) {
         this.container.setLoading(false)
       }
@@ -1028,6 +1030,7 @@ export default class MapView extends React.Component {
         removeGeometrySelectedListener={this._removeGeometrySelectedListener}
         device={this.props.device}
         setMapType={this.setMapType}
+        Label={this.showLegend}
         online={this.props.online}
         save={() => {
           //this.saveMapWithNoWorkspace()
@@ -1049,6 +1052,10 @@ export default class MapView extends React.Component {
         }}
       />
     )
+  }
+
+  showLegend = () => {
+    return this.props.setMapLegend(false)
   }
 
   //遮盖层
@@ -1252,17 +1259,48 @@ export default class MapView extends React.Component {
         bottomBar={!this.isExample && this.renderToolBar()}
         bottomProps={{ type: 'fix' }}
       >
-        {/*{this.state.legend&&(<View style={{*/}
-        {/*position: 'absolute',*/}
-        {/*width: scaleSize(100),*/}
-        {/*height: scaleSize(300),*/}
-        {/*left: 0 ,*/}
-        {/*top: 0 ,*/}
-        {/*backgroundColor: 'white',*/}
-        {/*zIndex: 1,*/}
-        {/*}}>*/}
-        {/*<LegendView/>*/}
-        {/*</View>)}*/}
+        {this.props.mapLegend && (
+          <View
+            style={{
+              position: 'absolute',
+              width: scaleSize(300),
+              height: scaleSize(325),
+              borderColor: 'black',
+              borderWidth: scaleSize(3),
+              left: 0,
+              top: HEADER_HEIGHT,
+              backgroundColor: 'white',
+              zIndex: 1,
+            }}
+          >
+            <View
+              style={{
+                width: scaleSize(300),
+                height: scaleSize(50),
+                backgroundColor: 'transparent',
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: setSpText(24),
+                  textAlign: 'center',
+                  backgroundColor: 'transparent',
+                  fontWeight: 'bold',
+                }}
+              >
+                图例
+              </Text>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                backgroundColor: 'transparent',
+              }}
+            >
+              <LegendView device={this.props.device} />
+            </View>
+          </View>
+        )}
 
         {this.state.showMap && (
           <SMMapView
