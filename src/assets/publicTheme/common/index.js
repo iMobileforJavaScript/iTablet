@@ -5,6 +5,10 @@ const icon_check = require('../../publicTheme/common/icon_check.png')
 const icon_uncheck = require('../../publicTheme/common/icon_uncheck.png')
 const icon_check_disable = require('../../publicTheme/common/icon_check_disable.png')
 const icon_uncheck_disable = require('../../publicTheme/common/icon_uncheck_disable.png')
+const icon_radio_selected = require('../../publicTheme/common/icon_radio_selected.png')
+const icon_radio_selected_disable = require('../../publicTheme/common/icon_radio_selected_disable.png')
+const icon_radio_unselected = require('../../publicTheme/common/icon_radio_unselected.png')
+const icon_radio_unselected_disable = require('../../publicTheme/common/icon_radio_unselected_disable.png')
 
 export default {
   icon_undo,
@@ -14,4 +18,8 @@ export default {
   icon_uncheck,
   icon_check_disable,
   icon_uncheck_disable,
+  icon_radio_selected,
+  icon_radio_selected_disable,
+  icon_radio_unselected,
+  icon_radio_unselected_disable,
 }

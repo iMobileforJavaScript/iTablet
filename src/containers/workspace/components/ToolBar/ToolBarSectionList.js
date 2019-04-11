@@ -29,7 +29,7 @@ export default class ToolBarSectionList extends React.Component {
     device: Object,
     layerManager?: boolean,
     initialNumToRender?: number,
-    selectList: Array,
+    selectList: Object,
     listSelectableAction?: () => {}, //多选刷新列表时调用
   }
 
@@ -43,7 +43,7 @@ export default class ToolBarSectionList extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      selectList: props.selectList ? props.selectList : [],
+      selectList: props.selectList ? props.selectList : {},
       sections: props.sections,
       sectionSelected: true,
     }
@@ -75,35 +75,45 @@ export default class ToolBarSectionList extends React.Component {
   select = (section, index, isSelected) => {
     let sections = JSON.parse(JSON.stringify(this.state.sections))
     let selectList = JSON.parse(JSON.stringify(this.state.selectList))
+    let title = this.state.sections[0].title
     for (let i = 0; i < sections.length; i++) {
       if (JSON.stringify(sections[i]) === JSON.stringify(section)) {
         sections[i].data[index].isSelected = !isSelected
         if (!isSelected) {
-          selectList.push(
+          if (!selectList[title]) selectList[title] = []
+          let pushObj = {}
+          let pushName =
             sections[i].data[index].title ||
-              sections[i].data[index].name ||
-              sections[i].data[index].expression ||
-              sections[i].data[index].datasetName,
-          )
-        } else {
-          for (let j = 0; j < selectList.length; j++) {
-            if (
-              selectList[j] === sections[i].data[index].title ||
-              selectList[j] === sections[i].data[index].name ||
-              selectList[j] === sections[i].data[index].expression ||
-              selectList[j] === sections[i].data[index].datasetName
-            ) {
-              selectList.splice(j, 1)
-            }
+            sections[i].data[index].name ||
+            sections[i].data[index].expression ||
+            sections[i].data[index].datasetName
+          pushObj[pushName] = false
+          if (
+            JSON.stringify(selectList[title]).indexOf(pushName) < 0 &&
+            selectList[title][pushName] !== true
+          ) {
+            selectList[title].push(pushObj)
           }
         }
-        break
+      } else {
+        for (let j = 0; j < selectList[title].length; j++) {
+          if (
+            selectList[title][j] === sections[i].data[index].title ||
+            selectList[title][j] === sections[i].data[index].name ||
+            selectList[title][j] === sections[i].data[index].expression ||
+            selectList[title][j] === sections[i].data[index].datasetName
+          ) {
+            selectList[title].splice(j, 1)
+          }
+        }
       }
+      break
     }
     this.setState(
       {
         sections,
         selectList,
+        sectionSelected: !isSelected,
       },
       () => {
         this.props.listSelectableAction &&
@@ -122,7 +132,28 @@ export default class ToolBarSectionList extends React.Component {
   }
 
   getSelectList = () => {
-    return this.state.selectList
+    let title = this.state.sections[0].title
+    let commitArr = []
+    let copySelectList = JSON.parse(JSON.stringify(this.state.selectList))
+    let list = copySelectList[title]
+    for (let i = 0, l = list.length; i < l; i++) {
+      for (let key in list[i]) {
+        if (list[i][key] === false) {
+          copySelectList[title][i][key] = true
+          commitArr.push(key)
+        }
+      }
+    }
+    this.setState(
+      {
+        selectList: copySelectList,
+      },
+      () => {
+        this.props.listSelectableAction &&
+          this.props.listSelectableAction({ selectList: copySelectList })
+      },
+    )
+    return commitArr
   }
 
   scrollToLocation = params => {

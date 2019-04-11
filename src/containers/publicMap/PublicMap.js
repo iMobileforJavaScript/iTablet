@@ -5,14 +5,7 @@
 */
 import React, { Component } from 'react'
 import Container from '../../components/Container'
-import {
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  Dimensions,
-} from 'react-native'
+import { View, Text, FlatList, RefreshControl, Dimensions } from 'react-native'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../utils'
 import styles from './Styles'
@@ -134,7 +127,6 @@ export default class PublicMap extends Component {
     let data = []
     while (currentPage <= totalPage) {
       await this._loadUserData2(currentPage, data)
-      // console.log(data)
       if (data.length >= 1) {
         break
       }
@@ -171,7 +163,6 @@ export default class PublicMap extends Component {
     if (!currentData) {
       currentData = []
     }
-    let timeout = 3000
     try {
       let objUserData = await this.getAllUserZipData(currentPage)
       if (!objUserData) {
@@ -184,9 +175,7 @@ export default class PublicMap extends Component {
       if (!objArrUserDataContent) {
         return
       }
-      // console.log(objArrUserDataContent)
       let contentLength = objArrUserDataContent.length
-      // console.log(dataItemServices)
       for (let i = 0; i < contentLength; i++) {
         let objContent = objArrUserDataContent[i]
         if (objContent && objContent.type === 'WORKSPACE') {
@@ -194,7 +183,7 @@ export default class PublicMap extends Component {
           let dataUrl =
             'https://www.supermapol.com/web/datas/' + dataId + '.json'
           // 'https://www.supermapol.com/web/datas/1916243026.json'
-          let objDataJson = await FetchUtils.getObjJson(dataUrl, timeout)
+          let objDataJson = await FetchUtils.getObjJson(dataUrl)
           if (!objDataJson) {
             continue
           }
@@ -215,7 +204,7 @@ export default class PublicMap extends Component {
             }
             if (restUrl && restUrl !== '') {
               restUrl = restUrl + '/maps.json'
-              let arrMapJson = await FetchUtils.getObjJson(restUrl, timeout)
+              let arrMapJson = await FetchUtils.getObjJson(restUrl, 6000)
               let arrMapInfos = []
               if (!arrMapJson) {
                 continue
@@ -273,11 +262,10 @@ export default class PublicMap extends Component {
 
   getAllUserZipData = currentPage => {
     let time = new Date().getTime()
-    let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&tags=%5B%22%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
-    return FetchUtils.getObjJson(uri, 3000)
+    let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
+    return FetchUtils.getObjJson(uri)
   }
   _onRefresh2 = async () => {
-    // console.log('1`11111')
     try {
       if (!this.state.isRefresh) {
         this.setState({ isRefresh: true })
@@ -304,7 +292,6 @@ export default class PublicMap extends Component {
     }
   }
   _loadData2 = async () => {
-    // console.log('222222')
     try {
       if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })
@@ -338,58 +325,58 @@ export default class PublicMap extends Component {
   }
 
   _footView() {
-    if (
-      this.allUserDataCount >= this.state.data.length &&
-      this.allUserDataCount > this.currentLoadDataCount
-    ) {
-      return (
-        <View
+    // if (
+    //   this.allUserDataCount >= this.state.data.length &&
+    //   this.allUserDataCount > this.currentLoadDataCount
+    // ) {
+    //   return (
+    //     <View
+    //       style={{
+    //         flex: 1,
+    //         height: 50,
+    //         justifyContent: 'center',
+    //         alignItems: 'center',
+    //       }}
+    //     >
+    //       <ActivityIndicator
+    //         style={{
+    //           flex: 1,
+    //           height: 30,
+    //           justifyContent: 'center',
+    //           alignItems: 'center',
+    //         }}
+    //         color={'orange'}
+    //         animating={true}
+    //       />
+    //       <Text
+    //         style={{
+    //           flex: 1,
+    //           lineHeight: 20,
+    //           fontSize: 12,
+    //           textAlign: 'center',
+    //           color: 'orange',
+    //         }}
+    //       >
+    //         加载中...
+    //       </Text>
+    //     </View>
+    //   )
+    // } else {
+    return (
+      <View>
+        <Text
           style={{
             flex: 1,
-            height: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
+            lineHeight: 30,
+            fontSize: 12,
+            textAlign: 'center',
           }}
         >
-          <ActivityIndicator
-            style={{
-              flex: 1,
-              height: 30,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            color={'orange'}
-            animating={true}
-          />
-          <Text
-            style={{
-              flex: 1,
-              lineHeight: 20,
-              fontSize: 12,
-              textAlign: 'center',
-              color: 'orange',
-            }}
-          >
-            加载中...
-          </Text>
-        </View>
-      )
-    } else {
-      return (
-        <View>
-          <Text
-            style={{
-              flex: 1,
-              lineHeight: 30,
-              fontSize: 12,
-              textAlign: 'center',
-            }}
-          >
-            -----这是底线-----
-          </Text>
-        </View>
-      )
-    }
+          -----这是底线-----
+        </Text>
+      </View>
+    )
+    // }
   }
 
   _keyExtractor = (item, index) => {

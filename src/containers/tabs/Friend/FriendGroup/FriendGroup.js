@@ -12,6 +12,7 @@ import {
   FlatList,
   Image,
   TextInput,
+  RefreshControl,
 } from 'react-native'
 
 import NavigationService from '../../../NavigationService'
@@ -43,7 +44,7 @@ class FriendGroup extends Component {
     //this.chat;
     this.state = {
       data: [],
-      bRefesh: true,
+      isRefresh: false,
       hasInformMsg: 0,
       inputText: '',
     }
@@ -81,8 +82,16 @@ class FriendGroup extends Component {
     }
   }
 
+  upload = () => {
+    FriendListFileHandle.upload()
+  }
+  download = () => {
+    FriendListFileHandle.download()
+    this.setState({ isRefresh: false })
+  }
   refresh = () => {
     this.getContacts()
+    this.setState({ isRefresh: false })
   }
 
   getContacts = async () => {
@@ -183,6 +192,17 @@ class FriendGroup extends Component {
           data={this.state.data}
           renderItem={({ item, index }) => this._renderItem(item, index)}
           keyExtractor={(item, index) => index.toString()}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefresh}
+              onRefresh={this.download}
+              colors={['orange', 'red']}
+              tintColor={'orange'}
+              titleColor={'orange'}
+              title={'刷新中...'}
+              enabled={true}
+            />
+          }
         />
         {this.renderDialog()}
         {this.renderInputDialog()}

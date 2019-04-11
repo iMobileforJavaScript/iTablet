@@ -41,6 +41,7 @@ export default class MyModule extends Component {
     }
     this.formChat = params.formChat || false
     this.chatCallBack = params.chatCallBack
+    this.isShowMore = params.formChat ? false : true
   }
 
   componentDidMount() {
@@ -98,6 +99,7 @@ export default class MyModule extends Component {
         saveItemInfo={this.saveItemInfo}
         uploadListOfAdd={this.uploadListOfAdd}
         removeDataFromUpList={this.removeDataFromUpList}
+        isShowMore={this.isShowMore}
       />
     )
   }
@@ -358,6 +360,7 @@ const styles = StyleSheet.create({
     width: scaleSize(30),
     height: scaleSize(30),
     marginLeft: 10,
+    tintColor: color.imageColorWhite,
   },
   sectionText: {
     color: color.fontColorWhite,

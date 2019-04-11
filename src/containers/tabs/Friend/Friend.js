@@ -225,8 +225,6 @@ export default class Friend extends Component {
         time: messageObj.time,
         type: messageObj.type, //消息类型
         system: messageObj.system,
-        fileName: messageObj.fileName,
-        queueName: messageObj.queueName,
         msgId: msgId,
       })
     }
@@ -237,7 +235,7 @@ export default class Friend extends Component {
     let userId = this.props.user.currentUser.userId
     let msgId = 0
     let chatHistory = []
-    if(this.props.chat[userId] && this.props.chat[userId][talkId]){
+    if (this.props.chat[userId] && this.props.chat[userId][talkId]) {
       chatHistory = this.props.chat[userId][talkId].history
     }
     if (chatHistory.length !== 0) {
@@ -265,29 +263,49 @@ export default class Friend extends Component {
       let messageObj = JSON.parse(messageStr)
       let ctime = new Date()
       let time = Date.parse(ctime)
-      let fileinform = {
-        message: '[文件]',
-        type: 4, //文件接收通知
+      let informMsg = {
+        type: messageObj.type,
         user: messageObj.user,
         time: time,
         system: 0,
-        fileName: res.fileName,
-        queueName: res.queueName,
+        message: {
+          type: 6, //文件接收通知
+          message: {
+            message: '[文件]',
+            fileName: res.fileName,
+            fileSize: res.fileSize,
+            queueName: res.queueName,
+            progress: 0,
+          },
+        },
       }
-      this._sendMessage(JSON.stringify(fileinform), talkId, false)
+      this._sendMessage(JSON.stringify(informMsg), talkId, false)
+      Toast.show('分享完成')
     })
   }
 
-  _receiveFile = (fileName, queueName, talkId, msgId) => {
+  _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
-      SMessageService.receiveFile(fileName, queueName, talkId, msgId).then(res => {
+      SMessageService.receiveFile(
+        fileName,
+        queueName,
+        receivePath,
+        talkId,
+        msgId,
+      ).then(res => {
         if (res === true) {
+          Toast.show('接收完成')
+          let message = this.props.chat[this.props.user.currentUser.userId][
+            talkId
+          ].history[msgId]
+          message.msg.message.isReceived = 1
+          message.msg.message.filePath = receivePath + '/' + fileName
           this.props.editChat &&
             this.props.editChat({
               userId: this.props.user.currentUser.userId,
               talkId: talkId,
               msgId: msgId,
-              editItem: { isReceived: 1 },
+              editItem: message,
             })
         }
       })
@@ -365,7 +383,7 @@ export default class Friend extends Component {
 
         // let chatHistory = []
         // let msgId = 0
-        // if (messageObj.type === 2 && this.props.chat[userId] 
+        // if (messageObj.type === 2 && this.props.chat[userId]
         //     && this.props.chat[userId][messageObj.user.groupID]) {
         //     chatHistory = this.props.chat[userId][messageObj.user.groupID]
         //       .history
@@ -376,10 +394,15 @@ export default class Friend extends Component {
         //   msgId = chatHistory[chatHistory.length - 1].msgId + 1
         // }
         let msgId = 0
-        if (messageObj.type === 2){
+        if (messageObj.type === 2) {
           msgId = this._getMsgId(messageObj.user.groupID)
-        }else{
+        } else {
           msgId = this._getMsgId(messageObj.user.id)
+        }
+
+        //文件通知消息
+        if (messageObj.message.type && messageObj.message.type === 6) {
+          messageObj.message.message.isReceived = 0
         }
 
         MessageDataHandle.pushMessage({
@@ -390,8 +413,6 @@ export default class Friend extends Component {
           time: messageObj.time,
           type: messageObj.type, //消息类型
           unReadMsg: bUnReadMsg,
-          fileName: messageObj.fileName,
-          queueName: messageObj.queueName,
           msgId: msgId,
           isReceived: 0,
         })

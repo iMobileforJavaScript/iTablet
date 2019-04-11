@@ -25,6 +25,7 @@ export default class MyLocalData extends Component {
     user: Object,
     navigation: Object,
     importWorkspace: () => {},
+    importSceneWorkspace: () => {},
   }
 
   constructor(props) {
@@ -619,7 +620,7 @@ export default class MyLocalData extends Component {
         <View
           style={{
             flexDirection: 'row',
-            backgroundColor: color.contentColorWhite,
+            // backgroundColor: color.contentColorWhite,
             alignItems: 'center',
             height: itemHeight,
           }}
@@ -632,7 +633,7 @@ export default class MyLocalData extends Component {
               tintColor: imageColor,
             }}
             resizeMode={'contain'}
-            source={require('../../../../assets/Mine/mine_my_online_data.png')}
+            source={require('../../../../assets/Mine/mine_my_import_local_light.png')}
           />
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <Text
@@ -740,11 +741,13 @@ export default class MyLocalData extends Component {
         let filePath = this.itemInfo.item.filePath
         let is3D = await SScene.is3DWorkspace({ server: filePath })
         if (is3D === true) {
-          let result = await SScene.import3DWorkspace({ server: filePath })
+          let result = await this.props.importSceneWorkspace({
+            server: filePath,
+          })
           if (result === true) {
-            Toast.show('导入3D成功')
+            Toast.show('导入成功')
           } else {
-            Toast.show('导入3D失败')
+            Toast.show('导入失败')
           }
         } else {
           let result = await this.props.importWorkspace({ path: filePath })
@@ -757,6 +760,7 @@ export default class MyLocalData extends Component {
         this.setLoading(false)
       }
     } catch (e) {
+      // console.log(e)
       this.setLoading(false)
       Toast.show('导入失败')
       this._closeModal()
@@ -874,7 +878,6 @@ export default class MyLocalData extends Component {
             <SectionList
               style={{
                 flex: 1,
-                backgroundColor: color.contentColorWhite,
               }}
               sections={sectionData}
               initialNumToRender={20}
@@ -883,17 +886,6 @@ export default class MyLocalData extends Component {
               renderItem={this._renderItem}
               // ItemSeparatorComponent={this._renderItemSeparatorComponent}
               // renderSectionFooter={this._renderSectionSeparatorComponent}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.isRefreshing}
-                  onRefresh={this._setSectionDataState3}
-                  colors={['orange', 'red']}
-                  titleColor={'orange'}
-                  tintColor={'orange'}
-                  title={'刷新中...'}
-                  enabled={true}
-                />
-              }
             />
             {this.renderMyOnlineData()}
           </ScrollView>

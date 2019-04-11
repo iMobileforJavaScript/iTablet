@@ -4,8 +4,8 @@ import {
   ConstInfo,
   ConstPath,
   Const,
-  ConstOnline,
   UserType,
+  ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'

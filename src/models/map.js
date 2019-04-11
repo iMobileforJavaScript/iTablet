@@ -349,7 +349,6 @@ export const exportmap3DWorkspace = (params, cb = () => {}) => async (
 //导入三维工作空间
 export const importSceneWorkspace = params => async (dispatch, getState) => {
   let userName = getState().user.toJS().currentUser.userName || 'Customer'
-  // console.log(userName)
   // return
   if (userName !== 'Customer') {
     let path = await FileTools.appendingHomeDirectory(

@@ -20,10 +20,14 @@ import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, MAP_MODULE, ConstPath } from '../../constants'
+import {
+  ConstToolType,
+  ConstPath,
+  getHeaderTitle,
+  ConstOnline,
+} from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
-import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
 import { FileTools } from '../../native'
@@ -47,6 +51,7 @@ export default class MT_layerManager extends React.Component {
 
   constructor(props) {
     super(props)
+    const { params } = props.navigation.state
     this.state = {
       // datasourceList: [],
       mapName: '',
@@ -54,6 +59,7 @@ export default class MT_layerManager extends React.Component {
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
       selectLayer: this.props.currentLayer.caption,
+      type: params && params.type, // 底部Tabbar类型
     }
   }
 
@@ -613,6 +619,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = (data, value) => {
+    let layers = this.state.data[0].data
+    let backMaps = this.state.data[1].data
+    let hasDeal = false
+    let caption = data.caption
+    let curData = this.state.data.concat()
+    for (let i = 0, l = layers.length; i < l; i++) {
+      if (caption === layers[i].caption) {
+        curData[0].data[i].isVisible = value
+        hasDeal = true
+        break
+      }
+    }
+    if (!hasDeal)
+      for (let j = 0, l = backMaps.length; j < l; j++) {
+        if (caption === backMaps[j].caption) {
+          curData[1].data.isVisible = value
+          hasDeal = true
+          break
+        }
+      }
     SMap.setLayerVisible(data.path, value)
   }
 
@@ -899,7 +925,9 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderToolBar = () => {
-    return <MapToolbar navigation={this.props.navigation} initIndex={1} />
+    return (
+      <MapToolbar navigation={this.props.navigation} type={this.state.type} />
+    )
   }
 
   renderList = () => {
@@ -974,29 +1002,11 @@ export default class MT_layerManager extends React.Component {
   }
 
   render() {
-    let title
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
-        break
-      case constants.MAP_PLOTTING:
-        title = MAP_MODULE.MAP_PLOTTING
-        break
-    }
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
+          title: getHeaderTitle(GLOBAL.Type),
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../assets/mapTools/icon_close.png'),

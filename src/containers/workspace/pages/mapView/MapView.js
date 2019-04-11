@@ -38,7 +38,12 @@ import { Utils } from '../../util'
 import { Toast, jsonUtil, scaleSize } from '../../../../utils'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { FileTools } from '../../../../native'
-import { ConstPath, ConstToolType, ConstInfo } from '../../../../constants'
+import {
+  ConstPath,
+  ConstToolType,
+  ConstInfo,
+  getHeaderTitle,
+} from '../../../../constants'
 import NavigationService from '../../../NavigationService'
 import { Platform, BackHandler, View, Text } from 'react-native'
 import styles from './styles'
@@ -100,11 +105,18 @@ export default class MapView extends React.Component {
     const { params } = this.props.navigation.state
     this.type = (params && params.type) || GLOBAL.Type || 'LOCAL'
     this.mapType = (params && params.mapType) || 'DEFAULT'
-    this.operationType =
-      (params && params.operationType) || constants.COLLECTION
+    // this.operationType =
+    //   (params && params.operationType) || constants.COLLECTION
     this.isExample = (params && params.isExample) || false
     this.wsData = params && params.wsData
-    this.mapName = (params && params.mapName) || ''
+    this.showMarker = params && params.showMarker
+    this.mapName = ''
+    if (params && params.mapName) {
+      this.mapName = params.mapName
+    } else if (GLOBAL.Type) {
+      this.mapName = getHeaderTitle(GLOBAL.Type)
+    }
+
     this.path = (params && params.path) || ''
     this.showDialogCaption =
       params && params.path ? !params.path.endsWith('.smwu') : true
@@ -232,6 +244,8 @@ export default class MapView extends React.Component {
     if (Platform.OS === 'android') {
       BackHandler.removeEventListener('hardwareBackPress', this.back)
     }
+
+    this.showMarker && SMap.deleteMarker()
   }
 
   /** 检测MapView在router中是否唯一 **/
@@ -874,6 +888,8 @@ export default class MapView extends React.Component {
       } catch (e) {
         this.container.setLoading(false)
       }
+      this.showMarker &&
+        SMap.showMarker(this.showMarker.longitude, this.showMarker.latitude)
     }.bind(this)())
   }
 
@@ -1011,7 +1027,7 @@ export default class MapView extends React.Component {
       <MapToolbar
         navigation={this.props.navigation}
         initIndex={0}
-        type={this.operationType}
+        type={this.type}
       />
     )
   }
@@ -1022,7 +1038,7 @@ export default class MapView extends React.Component {
       <FunctionToolbar
         ref={ref => (this.functionToolbar = ref)}
         style={styles.functionToolbar}
-        type={this.operationType}
+        type={this.type}
         getToolRef={() => this.toolBox}
         getMenuAlertDialogRef={() => this.MenuAlertDialog}
         showFullMap={this.showFullMap}

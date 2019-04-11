@@ -55,7 +55,7 @@ export default class PopupModal extends PureComponent {
   _publishButton = isPublish => {
     let title
     if (isPublish) {
-      title = '设为共有服务'
+      title = '设为公有服务'
     } else {
       title = '设为私有服务'
     }

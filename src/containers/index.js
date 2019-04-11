@@ -56,8 +56,7 @@ import dataSourcelist from './dataSourcelist'
 import dataSets from './dataSets'
 import ColorPickerPage from './colorPickerPage'
 import UpLoadList from './uploadList'
-// import { Map3D, MapView } from './workspace'
-import { MapTabs, Map3DTabs } from './workspace'
+import { MapTabs, Map3DTabs, MapAnalystTabs } from './workspace'
 import MapToolbarSetting from './workspace/components/MapToolbarSetting'
 import TouchProgress from './workspace/components/TouchProgress'
 import InputPage from './InputPage'
@@ -67,6 +66,7 @@ import PublicMap from './publicMap'
 import FriendMap from './friendMap'
 import LoadServer from './tabs/Mine/MyBaseMap/LoadServer'
 import { MapCut, MapCutDS } from './mapCut/page'
+import { BufferAnalystView } from './analystView/pages'
 
 export default StackNavigator(
   {
@@ -84,6 +84,12 @@ export default StackNavigator(
     },
     MapTabs: {
       screen: MapTabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    MapAnalystTabs: {
+      screen: MapAnalystTabs,
       navigationOptions: {
         header: null,
       },
@@ -468,6 +474,21 @@ export default StackNavigator(
     },
     SuperMapKnown: {
       screen: SuperMapKnown,
+      navigationOptions: {
+        header: null,
+        gesturesEnabled: true,
+      },
+    },
+    /**************************** Analyst ***************************/
+    // AnalystTools: {
+    //   screen: AnalystTools,
+    //   navigationOptions: {
+    //     header: null,
+    //     gesturesEnabled: true,
+    //   },
+    // },
+    BufferAnalystView: {
+      screen: BufferAnalystView,
       navigationOptions: {
         header: null,
         gesturesEnabled: true,

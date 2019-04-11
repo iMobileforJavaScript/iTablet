@@ -435,6 +435,7 @@ export default class LayerSelectionAttribute extends React.Component {
   }
 
   selectRow = ({ data, index = -1 }) => {
+    if (this.state.attributes.data.length === 1) return
     // if (!data || index < 0) return
     // this.currentFieldInfo = data || []
     // this.currentFieldIndex = index >= 0 ? index : -1
@@ -483,15 +484,15 @@ export default class LayerSelectionAttribute extends React.Component {
         relativeIndex: -1,
         currentIndex: -1,
       })
-      if (
-        this.props.selectAction &&
-        typeof this.props.selectAction === 'function'
-      ) {
-        this.props.selectAction({
-          index: -1,
-          data: -1,
-        })
-      }
+      // if (
+      //   this.props.selectAction &&
+      //   typeof this.props.selectAction === 'function'
+      // ) {
+      //   this.props.selectAction({
+      //     index: -1,
+      //     data: -1,
+      //   })
+      // }
     }
   }
 
@@ -557,7 +558,7 @@ export default class LayerSelectionAttribute extends React.Component {
               // index: int,      // 当前对象所在记录集中的位置
               filter: `SmID=${
                 isSingleData
-                  ? this.state.attributes[0][0].value
+                  ? this.state.attributes.data[0][0].value
                   : data.rowData[0].value
               }`, // 过滤条件
               cursorType: 2, // 2: DYNAMIC, 3: STATIC

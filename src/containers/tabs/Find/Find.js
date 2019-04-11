@@ -152,13 +152,13 @@ export default class Find extends Component {
               NavigationService.navigate('FriendMap')
             },
           })} */}
-          {this._renderItem({
+          {/* {this._renderItem({
             title: Const.FRIENDMAP,
             leftImagePath: require('../../../assets/Find/icon_contact_map_light.png'),
             onClick: () => {
               NavigationService.navigate('FriendMap')
             },
-          })}
+          })} */}
           {this._renderItem({
             title: Const.SUPERMAPKNOWN,
             leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
@@ -190,36 +190,6 @@ export default class Find extends Component {
           bounces={true}
         >
           {/* {this._renderLine()} */}
-          {this._renderItem({
-            title: Const.PUBLICMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.SHUTTLCOMMUTER,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.SUPERMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.FORUMOFSUPERMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-            onClick: () => {},
-          })}
-          {/* {this._renderItem({
-            title: Const.SUPERMAPKNOWN,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })} */}
-          {this._renderItem({
-            title: Const.MAPOFAPP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
         </ScrollView>
       </View>
     )
