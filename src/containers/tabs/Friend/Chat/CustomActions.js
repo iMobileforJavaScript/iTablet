@@ -11,6 +11,7 @@ import {
   ViewPropTypes,
   Text,
   Image,
+  Platform,
 } from 'react-native'
 
 import { SOnlineService } from 'imobile_for_reactnative'
@@ -18,9 +19,11 @@ import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { Const } from '../../../../constants'
 
-// eslint-disable-next-line import/no-unresolved
-//import Geolocation from 'Geolocation'
-var Geolocation = require('Geolocation')
+var GeolocationIOS = require('Geolocation')
+
+import { Geolocation } from "react-native-amap-geolocation"
+
+
 
 // eslint-disable-next-line no-unused-vars
 const ICONS = context => [
@@ -81,6 +84,29 @@ export default class CustomActions extends React.Component {
     // this.selectImages = this.selectImages.bind(this)
   }
 
+  componentDidMount() {
+    if(Platform.OS === 'android'){
+      Geolocation.init({
+        ios: "9bd6c82e77583020a73ef1af59d0c759",
+        android: "043b24fe18785f33c491705ffe5b6935",
+      }).then(()=>{
+        Geolocation.setOptions({
+          interval: 8000,
+          distanceFilter: 20,
+        })
+        Geolocation.addLocationListener(location => {
+          GeoLocation.stop()
+          console.log(location)
+        })
+      })
+    }
+  }
+  componentWillUnmount() {
+		if (Platform.OS === 'android') {
+			GeoLocation.removeLocationListener();
+			GeoLocation.stop()
+		}
+	}
   setModalVisible(visible = false) {
     if (visible) {
       this.props.callBack(scaleSize(400))
@@ -151,46 +177,32 @@ export default class CustomActions extends React.Component {
   }
 
   handleLocationClick = () => {
-    Geolocation.getCurrentPosition(
-      location => {
-        // eslint-disable-next-line no-unused-vars
-        // var result =
-        //   '速度：' +
-        //   location.coords.speed +
-        //   '\n经度：' +
-        //   location.coords.longitude +
-        //   '\n纬度：' +
-        //   location.coords.latitude +
-        //   '\n准确度：' +
-        //   location.coords.accuracy +
-        //   '\n行进方向：' +
-        //   location.coords.heading +
-        //   '\n海拔：' +
-        //   location.coords.altitude +
-        //   '\n海拔准确度：' +
-        //   location.coords.altitudeAccuracy +
-        //   '\n时间戳：' +
-        //   location.timestamp
-        //alert(result);
-        SOnlineService.reverseGeocoding(
-          location.coords.longitude,
-          location.coords.latitude,
-          {
-            onResult: result => {
-              this.props.sendCallBack(3, {
-                address: result,
-                longitude: location.coords.longitude,
-                latitude: location.coords.latitude,
-              })
-              // alert(result)
+
+    if(Platform.OS === 'ios'){
+      GeolocationIOS.getCurrentPosition(
+        location => {
+          SOnlineService.reverseGeocoding(
+            location.coords.longitude,
+            location.coords.latitude,
+            {
+              onResult: result => {
+                this.props.sendCallBack(3, {
+                  address: result,
+                  longitude: location.coords.longitude,
+                  latitude: location.coords.latitude,
+                })
+                // alert(result)
+              },
             },
-          },
-        )
-      },
-      error => {
-        alert('获取位置失败：' + error)
-      },
-    )
+          )
+        },
+        error => {
+          alert('获取位置失败：' + error)
+        },
+      )
+    }else{
+      GeoLocation.start()
+    }
   }
 }
 const modalStyles = StyleSheet.create({
