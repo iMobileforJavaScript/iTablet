@@ -72,7 +72,6 @@ class Chat extends React.Component {
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
     this.onReceiveProgress = this.onReceiveProgress.bind(this)
     this.renderTicks = this.renderTicks.bind(this)
-    
   }
 
   componentDidMount() {
@@ -102,8 +101,8 @@ class Chat extends React.Component {
       this.onReceiveProgress,
       // eslint-disable-next-line no-unused-vars
       // value => {
-        // console.log(value)
-        // 接受到 通知后的处理
+      // console.log(value)
+      // 接受到 通知后的处理
       // },
     )
 
@@ -128,14 +127,16 @@ class Chat extends React.Component {
     // })
   }
 
-  onReceiveProgress (value)  {
-    this.setState({ messages: this.state.messages.map(m => {
-      if(m._id === value.msgId){
-        m.message.message.progress = value.percentage
-      }  
-      return {
-        ...m,
-      }})
+  onReceiveProgress(value) {
+    this.setState({
+      messages: this.state.messages.map(m => {
+        if (m._id === value.msgId) {
+          m.message.message.progress = value.percentage
+        }
+        return {
+          ...m,
+        }
+      }),
     })
     //todo input to redux
   }
@@ -631,20 +632,20 @@ class Chat extends React.Component {
           },
         }}
         bottomContainerStyle={{
-          right:{
+          right: {
             flexDirection: 'row-reverse',
             justifyContent: 'space-between',
           },
-          left:{
+          left: {
             justifyContent: 'space-between',
-          }
+          },
         }}
       />
     )
   }
   //渲染标记
-  renderTicks (props) {
-    let currentMessage  = props;
+  renderTicks(props) {
+    let currentMessage = props
     if (currentMessage.message.type && currentMessage.message.type === 6) {
       let progress = currentMessage.message.message.progress
       return (
@@ -820,7 +821,7 @@ const styles = StyleSheet.create({
   },
   tick: {
     fontSize: scaleSize(18),
-    color:'white'
+    color: 'white',
   },
 })
 export default Chat
