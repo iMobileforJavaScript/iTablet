@@ -639,8 +639,7 @@ export default class MyOnlineData extends Component {
         } else {
           let dataPermissionType = { dataPermissionType: 'DOWNLOAD' }
           authorizeSetting.push(dataPermissionType)
-
-          Toast.show('成功设置为共有数据')
+          Toast.show('成功设置为公有数据')
         }
         _arrOnlineData = newData
         this.setState({ data: _arrOnlineData })
@@ -648,7 +647,7 @@ export default class MyOnlineData extends Component {
         if (result === undefined || result === '') {
           result = '设置失败'
         }
-        Toast.show(result)
+        Toast.show('设置失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -691,7 +690,7 @@ export default class MyOnlineData extends Component {
         this.setState({ data: _arrOnlineData })
         Toast.show('数据删除成功')
       } else {
-        Toast.show(result)
+        Toast.show('数据删除失败')
       }
     } catch (e) {
       this._resetIndex()
@@ -732,6 +731,7 @@ export default class MyOnlineData extends Component {
   }
 
   _renderItem = item => {
+    // console.log(item)
     let dataName = item.item.fileName
     if (dataName !== undefined) {
       let length = dataName.length - 4

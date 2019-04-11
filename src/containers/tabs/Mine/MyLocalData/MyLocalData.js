@@ -886,17 +886,6 @@ export default class MyLocalData extends Component {
               renderItem={this._renderItem}
               // ItemSeparatorComponent={this._renderItemSeparatorComponent}
               // renderSectionFooter={this._renderSectionSeparatorComponent}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.isRefreshing}
-                  onRefresh={this._setSectionDataState3}
-                  colors={['orange', 'red']}
-                  titleColor={'orange'}
-                  tintColor={'orange'}
-                  title={'刷新中...'}
-                  enabled={true}
-                />
-              }
             />
             {this.renderMyOnlineData()}
           </ScrollView>
