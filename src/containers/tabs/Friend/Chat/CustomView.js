@@ -86,8 +86,6 @@ export default class CustomView extends React.Component {
             style={{
               width: scaleSize(45),
               height: scaleSize(45),
-              marginTop: scaleSize(10),
-              marginLeft: scaleSize(10),
             }}
           />
           <Text
@@ -109,7 +107,7 @@ export default class CustomView extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
     alignItems: 'flex-end',
   },
   fileContainer: {
