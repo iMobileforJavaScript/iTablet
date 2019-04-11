@@ -39,8 +39,8 @@ export default class CustomView extends React.Component {
         <View
           style={
             this.props.currentMessage.user._id !== this.props.user._id
-              ? styles.container1
-              : [styles.container1, styles.container2]
+              ? styles.fileContainerLeft
+              : [styles.fileContainerLeft, styles.fileContainerRight]
           }
         >
           <Text style={styles.fileName}>
@@ -112,29 +112,29 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
   },
-  container1: {
+  fileContainerLeft: {
     backgroundColor: 'white',
-    width: scaleSize(150),
+    width: scaleSize(240),
     justifyContent: 'flex-start',
     alignItems: 'flex-end',
-    borderTopLeftRadius: scaleSize(12),
-    borderTopRightRadius: scaleSize(12),
+    borderTopLeftRadius: scaleSize(24),
+    // borderTopRightRadius: scaleSize(24),
   },
-  container2: {
+  fileContainerRight: {
     alignItems: 'flex-start',
   },
   fileName: {
     marginTop: scaleSize(10),
     marginLeft: scaleSize(10),
     marginRight: scaleSize(10),
-    fontSize: scaleSize(14),
+    fontSize: scaleSize(24),
     color: 'black',
   },
   fileSize: {
     marginLeft: scaleSize(10),
     marginRight: scaleSize(10),
     marginBottom: scaleSize(10),
-    fontSize: scaleSize(12),
+    fontSize: scaleSize(20),
   },
   // mapView: {
   //   width: 150,
