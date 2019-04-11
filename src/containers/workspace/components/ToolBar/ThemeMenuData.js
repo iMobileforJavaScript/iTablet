@@ -180,62 +180,62 @@ async function createThemeGridRangeMap(params) {
 }
 
 //通过图层->创建栅格单值专题图
-async function createThemeGridUniqueMapByLayer() {
-  let paramsTheme = {}
-  let isSuccess = false
-  let errorInfo = ''
-  paramsTheme = {
-    LayerName: _createThemeByLayer,
-    GridUniqueColorScheme: 'EE_Lake',
-  }
-  await SThemeCartography.createThemeGridUniqueMapByLayer(paramsTheme)
-    .then(msg => {
-      isSuccess = msg.Result
-      errorInfo = msg.Error && msg.Error
-    })
-    .catch(err => {
-      errorInfo = err.message
-    })
-  if (isSuccess) {
-    Toast.show('创建专题图成功')
-    //设置当前图层
-    _toolbarParams.getLayers(-1, layers => {
-      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
-    })
-    _toolbarParams.setToolbarVisible(false)
-  } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
-  }
-}
+// async function createThemeGridUniqueMapByLayer() {
+//   let paramsTheme = {}
+//   let isSuccess = false
+//   let errorInfo = ''
+//   paramsTheme = {
+//     LayerName: _createThemeByLayer,
+//     GridUniqueColorScheme: 'EE_Lake',
+//   }
+//   await SThemeCartography.createThemeGridUniqueMapByLayer(paramsTheme)
+//     .then(msg => {
+//       isSuccess = msg.Result
+//       errorInfo = msg.Error && msg.Error
+//     })
+//     .catch(err => {
+//       errorInfo = err.message
+//     })
+//   if (isSuccess) {
+//     Toast.show('创建专题图成功')
+//     //设置当前图层
+//     _toolbarParams.getLayers(-1, layers => {
+//       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+//     })
+//     _toolbarParams.setToolbarVisible(false)
+//   } else {
+//     Toast.show('创建专题图失败\n' + errorInfo)
+//   }
+// }
 
 //通过图层->创建栅格分段专题图
-async function createThemeGridRangeMapByLayer() {
-  let paramsTheme = {}
-  let isSuccess = false
-  let errorInfo = ''
-  paramsTheme = {
-    LayerName: _createThemeByLayer,
-    GridRangeColorScheme: 'FF_Blues',
-  }
-  await SThemeCartography.createThemeGridRangeMapByLayer(paramsTheme)
-    .then(msg => {
-      isSuccess = msg.Result
-      errorInfo = msg.Error && msg.Error
-    })
-    .catch(err => {
-      errorInfo = err.message
-    })
-  if (isSuccess) {
-    Toast.show('创建专题图成功')
-    //设置当前图层
-    _toolbarParams.getLayers(-1, layers => {
-      _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
-    })
-    _toolbarParams.setToolbarVisible(false)
-  } else {
-    Toast.show('创建专题图失败\n' + errorInfo)
-  }
-}
+// async function createThemeGridRangeMapByLayer() {
+//   let paramsTheme = {}
+//   let isSuccess = false
+//   let errorInfo = ''
+//   paramsTheme = {
+//     LayerName: _createThemeByLayer,
+//     GridRangeColorScheme: 'FF_Blues',
+//   }
+//   await SThemeCartography.createThemeGridRangeMapByLayer(paramsTheme)
+//     .then(msg => {
+//       isSuccess = msg.Result
+//       errorInfo = msg.Error && msg.Error
+//     })
+//     .catch(err => {
+//       errorInfo = err.message
+//     })
+//   if (isSuccess) {
+//     Toast.show('创建专题图成功')
+//     //设置当前图层
+//     _toolbarParams.getLayers(-1, layers => {
+//       _toolbarParams.setCurrentLayer(layers.length > 0 && layers[0])
+//     })
+//     _toolbarParams.setToolbarVisible(false)
+//   } else {
+//     Toast.show('创建专题图失败\n' + errorInfo)
+//   }
+// }
 
 /**
  * 通过图层创建专题图
@@ -302,177 +302,177 @@ function getThemeMapCreateByLayer(type, params) {
       image: getThemeAssets().themeType.theme_create_unify_label,
       selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
-    {
-      //单值标签
-      key: constants.THEME_UNIQUE_LABEL,
-      title: constants.THEME_UNIQUE_LABEL,
-      size: 'large',
-      action: () => showExpressionList('Theme'),
-      image: getThemeAssets().themeType.theme_create_unique_label,
-      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
-    },
-    {
-      //分段标签
-      key: constants.THEME_RANGE_LABEL,
-      title: constants.THEME_RANGE_LABEL,
-      size: 'large',
-      action: () => showExpressionList('Theme'),
-      image: getThemeAssets().themeType.theme_create_range_label,
-      selectedImage: getThemeAssets().themeType.theme_create_range_label,
-    },
-    {
-      //面积图
-      key: constants.THEME_GRAPH_AREA,
-      title: constants.THEME_GRAPH_AREA,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_area,
-      selectedImage: getThemeAssets().themeType.theme_graph_area,
-    },
-    {
-      //阶梯图
-      key: constants.THEME_GRAPH_STEP,
-      title: constants.THEME_GRAPH_STEP,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_step,
-      selectedImage: getThemeAssets().themeType.theme_graph_step,
-    },
-    {
-      //折线图
-      key: constants.THEME_GRAPH_LINE,
-      title: constants.THEME_GRAPH_LINE,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_line,
-      selectedImage: getThemeAssets().themeType.theme_graph_line,
-    },
-    {
-      //点状图
-      key: constants.THEME_GRAPH_POINT,
-      title: constants.THEME_GRAPH_POINT,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_point,
-      selectedImage: getThemeAssets().themeType.theme_graph_point,
-    },
-    {
-      //柱状图
-      key: constants.THEME_GRAPH_BAR,
-      title: constants.THEME_GRAPH_BAR,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar,
-    },
-    {
-      //三维柱状图
-      key: constants.THEME_GRAPH_BAR3D,
-      title: constants.THEME_GRAPH_BAR3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
-    },
-    {
-      //饼图
-      key: constants.THEME_GRAPH_PIE,
-      title: constants.THEME_GRAPH_PIE,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_pie,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie,
-    },
-    {
-      //三维饼图
-      key: constants.THEME_GRAPH_PIE3D,
-      title: constants.THEME_GRAPH_PIE3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_pie3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
-    },
-    {
-      //玫瑰图
-      key: constants.THEME_GRAPH_ROSE,
-      title: constants.THEME_GRAPH_ROSE,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_rose,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose,
-    },
-    {
-      //三维玫瑰图
-      key: constants.THEME_GRAPH_ROSE3D,
-      title: constants.THEME_GRAPH_ROSE3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_rose3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
-    },
-    {
-      //堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR,
-      title: constants.THEME_GRAPH_STACK_BAR,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_stack_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
-    },
-    {
-      //三维堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR3D,
-      title: constants.THEME_GRAPH_STACK_BAR3D,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
-    },
-    {
-      //环状图
-      key: constants.THEME_GRAPH_RING,
-      title: constants.THEME_GRAPH_RING,
-      size: 'large',
-      action: () => showExpressionList('ThemeGraph'),
-      image: getThemeAssets().themeType.theme_graph_ring,
-      selectedImage: getThemeAssets().themeType.theme_graph_ring,
-    },
-    {
-      //点密度专题图
-      key: constants.THEME_DOT_DENSITY,
-      title: constants.THEME_DOT_DENSITY,
-      size: 'large',
-      action: () => showExpressionList('Theme'),
-      image: getThemeAssets().themeType.theme_dot_density,
-      selectedImage: getThemeAssets().themeType.theme_dot_density,
-    },
-    {
-      //等级符号专题图
-      key: constants.THEME_GRADUATED_SYMBOL,
-      title: constants.THEME_GRADUATED_SYMBOL,
-      size: 'large',
-      action: () => showExpressionList('Theme'),
-      image: getThemeAssets().themeType.theme_graduated_symbol,
-      selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
-    },
-    {
-      //栅格单值专题图
-      key: constants.THEME_GRID_UNIQUE,
-      title: constants.THEME_GRID_UNIQUE,
-      size: 'large',
-      action: () => createThemeGridUniqueMapByLayer(),
-      image: getThemeAssets().themeType.theme_grid_unique,
-      selectedImage: getThemeAssets().themeType.theme_grid_unique,
-    },
-    {
-      //栅格分段专题图
-      key: constants.THEME_GRID_RANGE,
-      title: constants.THEME_GRID_RANGE,
-      size: 'large',
-      action: () => createThemeGridRangeMapByLayer(),
-      image: getThemeAssets().themeType.theme_grid_range,
-      selectedImage: getThemeAssets().themeType.theme_grid_range,
-    },
+    // {
+    //   //单值标签
+    //   key: constants.THEME_UNIQUE_LABEL,
+    //   title: constants.THEME_UNIQUE_LABEL,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_create_unique_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_unique_label,
+    // },
+    // {
+    //   //分段标签
+    //   key: constants.THEME_RANGE_LABEL,
+    //   title: constants.THEME_RANGE_LABEL,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_create_range_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_range_label,
+    // },
+    // {
+    //   //面积图
+    //   key: constants.THEME_GRAPH_AREA,
+    //   title: constants.THEME_GRAPH_AREA,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_area,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_area,
+    // },
+    // {
+    //   //阶梯图
+    //   key: constants.THEME_GRAPH_STEP,
+    //   title: constants.THEME_GRAPH_STEP,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_step,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_step,
+    // },
+    // {
+    //   //折线图
+    //   key: constants.THEME_GRAPH_LINE,
+    //   title: constants.THEME_GRAPH_LINE,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_line,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_line,
+    // },
+    // {
+    //   //点状图
+    //   key: constants.THEME_GRAPH_POINT,
+    //   title: constants.THEME_GRAPH_POINT,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_point,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_point,
+    // },
+    // {
+    //   //柱状图
+    //   key: constants.THEME_GRAPH_BAR,
+    //   title: constants.THEME_GRAPH_BAR,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    // },
+    // {
+    //   //三维柱状图
+    //   key: constants.THEME_GRAPH_BAR3D,
+    //   title: constants.THEME_GRAPH_BAR3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    // },
+    // {
+    //   //饼图
+    //   key: constants.THEME_GRAPH_PIE,
+    //   title: constants.THEME_GRAPH_PIE,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_pie,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    // },
+    // {
+    //   //三维饼图
+    //   key: constants.THEME_GRAPH_PIE3D,
+    //   title: constants.THEME_GRAPH_PIE3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_pie3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    // },
+    // {
+    //   //玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE,
+    //   title: constants.THEME_GRAPH_ROSE,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_rose,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    // },
+    // {
+    //   //三维玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE3D,
+    //   title: constants.THEME_GRAPH_ROSE3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_rose3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    // },
+    // {
+    //   //堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR,
+    //   title: constants.THEME_GRAPH_STACK_BAR,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    // },
+    // {
+    //   //三维堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR3D,
+    //   title: constants.THEME_GRAPH_STACK_BAR3D,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    // },
+    // {
+    //   //环状图
+    //   key: constants.THEME_GRAPH_RING,
+    //   title: constants.THEME_GRAPH_RING,
+    //   size: 'large',
+    //   action: () => showExpressionList('ThemeGraph'),
+    //   image: getThemeAssets().themeType.theme_graph_ring,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_ring,
+    // },
+    // {
+    //   //点密度专题图
+    //   key: constants.THEME_DOT_DENSITY,
+    //   title: constants.THEME_DOT_DENSITY,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_dot_density,
+    //   selectedImage: getThemeAssets().themeType.theme_dot_density,
+    // },
+    // {
+    //   //等级符号专题图
+    //   key: constants.THEME_GRADUATED_SYMBOL,
+    //   title: constants.THEME_GRADUATED_SYMBOL,
+    //   size: 'large',
+    //   action: () => showExpressionList('Theme'),
+    //   image: getThemeAssets().themeType.theme_graduated_symbol,
+    //   selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    // },
+    // {
+    //   //栅格单值专题图
+    //   key: constants.THEME_GRID_UNIQUE,
+    //   title: constants.THEME_GRID_UNIQUE,
+    //   size: 'large',
+    //   action: () => createThemeGridUniqueMapByLayer(),
+    //   image: getThemeAssets().themeType.theme_grid_unique,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    // },
+    // {
+    //   //栅格分段专题图
+    //   key: constants.THEME_GRID_RANGE,
+    //   title: constants.THEME_GRID_RANGE,
+    //   size: 'large',
+    //   action: () => createThemeGridRangeMapByLayer(),
+    //   image: getThemeAssets().themeType.theme_grid_range,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_range,
+    // },
   ]
   return { data, buttons }
 }
@@ -542,177 +542,177 @@ function getThemeMapCreate(type, params) {
       image: getThemeAssets().themeType.theme_create_unify_label,
       selectedImage: getThemeAssets().themeType.theme_create_unify_label,
     },
-    {
-      //单值标签
-      key: constants.THEME_UNIQUE_LABEL,
-      title: constants.THEME_UNIQUE_LABEL,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_create_unique_label,
-      selectedImage: getThemeAssets().themeType.theme_create_unique_label,
-    },
-    {
-      //分段标签
-      key: constants.THEME_RANGE_LABEL,
-      title: constants.THEME_RANGE_LABEL,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_create_range_label,
-      selectedImage: getThemeAssets().themeType.theme_create_range_label,
-    },
-    {
-      //面积图
-      key: constants.THEME_GRAPH_AREA,
-      title: constants.THEME_GRAPH_AREA,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_area,
-      selectedImage: getThemeAssets().themeType.theme_graph_area,
-    },
-    {
-      //阶梯图
-      key: constants.THEME_GRAPH_STEP,
-      title: constants.THEME_GRAPH_STEP,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_step,
-      selectedImage: getThemeAssets().themeType.theme_graph_step,
-    },
-    {
-      //折线图
-      key: constants.THEME_GRAPH_LINE,
-      title: constants.THEME_GRAPH_LINE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_line,
-      selectedImage: getThemeAssets().themeType.theme_graph_line,
-    },
-    {
-      //点状图
-      key: constants.THEME_GRAPH_POINT,
-      title: constants.THEME_GRAPH_POINT,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_point,
-      selectedImage: getThemeAssets().themeType.theme_graph_point,
-    },
-    {
-      //柱状图
-      key: constants.THEME_GRAPH_BAR,
-      title: constants.THEME_GRAPH_BAR,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar,
-    },
-    {
-      //三维柱状图
-      key: constants.THEME_GRAPH_BAR3D,
-      title: constants.THEME_GRAPH_BAR3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
-    },
-    {
-      //饼图
-      key: constants.THEME_GRAPH_PIE,
-      title: constants.THEME_GRAPH_PIE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_pie,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie,
-    },
-    {
-      //三维饼图
-      key: constants.THEME_GRAPH_PIE3D,
-      title: constants.THEME_GRAPH_PIE3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_pie3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
-    },
-    {
-      //玫瑰图
-      key: constants.THEME_GRAPH_ROSE,
-      title: constants.THEME_GRAPH_ROSE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_rose,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose,
-    },
-    {
-      //三维玫瑰图
-      key: constants.THEME_GRAPH_ROSE3D,
-      title: constants.THEME_GRAPH_ROSE3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_rose3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
-    },
-    {
-      //堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR,
-      title: constants.THEME_GRAPH_STACK_BAR,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_stack_bar,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
-    },
-    {
-      //三维堆叠柱状图
-      key: constants.THEME_GRAPH_STACK_BAR3D,
-      title: constants.THEME_GRAPH_STACK_BAR3D,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_stack_bar3d,
-      selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
-    },
-    {
-      //环状图
-      key: constants.THEME_GRAPH_RING,
-      title: constants.THEME_GRAPH_RING,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graph_ring,
-      selectedImage: getThemeAssets().themeType.theme_graph_ring,
-    },
-    {
-      //点密度专题图
-      key: constants.THEME_DOT_DENSITY,
-      title: constants.THEME_DOT_DENSITY,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_dot_density,
-      selectedImage: getThemeAssets().themeType.theme_dot_density,
-    },
-    {
-      //等级符号专题图
-      key: constants.THEME_GRADUATED_SYMBOL,
-      title: constants.THEME_GRADUATED_SYMBOL,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_graduated_symbol,
-      selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
-    },
-    {
-      //栅格单值专题图
-      key: constants.THEME_GRID_UNIQUE,
-      title: constants.THEME_GRID_UNIQUE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_grid_unique,
-      selectedImage: getThemeAssets().themeType.theme_grid_unique,
-    },
-    {
-      //栅格分段专题图
-      key: constants.THEME_GRID_RANGE,
-      title: constants.THEME_GRID_RANGE,
-      size: 'large',
-      action: showDatasetsList,
-      image: getThemeAssets().themeType.theme_grid_range,
-      selectedImage: getThemeAssets().themeType.theme_grid_range,
-    },
+    // {
+    //   //单值标签
+    //   key: constants.THEME_UNIQUE_LABEL,
+    //   title: constants.THEME_UNIQUE_LABEL,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_create_unique_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_unique_label,
+    // },
+    // {
+    //   //分段标签
+    //   key: constants.THEME_RANGE_LABEL,
+    //   title: constants.THEME_RANGE_LABEL,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_create_range_label,
+    //   selectedImage: getThemeAssets().themeType.theme_create_range_label,
+    // },
+    // {
+    //   //面积图
+    //   key: constants.THEME_GRAPH_AREA,
+    //   title: constants.THEME_GRAPH_AREA,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_area,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_area,
+    // },
+    // {
+    //   //阶梯图
+    //   key: constants.THEME_GRAPH_STEP,
+    //   title: constants.THEME_GRAPH_STEP,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_step,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_step,
+    // },
+    // {
+    //   //折线图
+    //   key: constants.THEME_GRAPH_LINE,
+    //   title: constants.THEME_GRAPH_LINE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_line,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_line,
+    // },
+    // {
+    //   //点状图
+    //   key: constants.THEME_GRAPH_POINT,
+    //   title: constants.THEME_GRAPH_POINT,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_point,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_point,
+    // },
+    // {
+    //   //柱状图
+    //   key: constants.THEME_GRAPH_BAR,
+    //   title: constants.THEME_GRAPH_BAR,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar,
+    // },
+    // {
+    //   //三维柱状图
+    //   key: constants.THEME_GRAPH_BAR3D,
+    //   title: constants.THEME_GRAPH_BAR3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_bar3d,
+    // },
+    // {
+    //   //饼图
+    //   key: constants.THEME_GRAPH_PIE,
+    //   title: constants.THEME_GRAPH_PIE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_pie,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie,
+    // },
+    // {
+    //   //三维饼图
+    //   key: constants.THEME_GRAPH_PIE3D,
+    //   title: constants.THEME_GRAPH_PIE3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_pie3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_pie3d,
+    // },
+    // {
+    //   //玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE,
+    //   title: constants.THEME_GRAPH_ROSE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_rose,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose,
+    // },
+    // {
+    //   //三维玫瑰图
+    //   key: constants.THEME_GRAPH_ROSE3D,
+    //   title: constants.THEME_GRAPH_ROSE3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_rose3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_rose3d,
+    // },
+    // {
+    //   //堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR,
+    //   title: constants.THEME_GRAPH_STACK_BAR,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar,
+    // },
+    // {
+    //   //三维堆叠柱状图
+    //   key: constants.THEME_GRAPH_STACK_BAR3D,
+    //   title: constants.THEME_GRAPH_STACK_BAR3D,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_stack_bar3d,
+    // },
+    // {
+    //   //环状图
+    //   key: constants.THEME_GRAPH_RING,
+    //   title: constants.THEME_GRAPH_RING,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graph_ring,
+    //   selectedImage: getThemeAssets().themeType.theme_graph_ring,
+    // },
+    // {
+    //   //点密度专题图
+    //   key: constants.THEME_DOT_DENSITY,
+    //   title: constants.THEME_DOT_DENSITY,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_dot_density,
+    //   selectedImage: getThemeAssets().themeType.theme_dot_density,
+    // },
+    // {
+    //   //等级符号专题图
+    //   key: constants.THEME_GRADUATED_SYMBOL,
+    //   title: constants.THEME_GRADUATED_SYMBOL,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_graduated_symbol,
+    //   selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    // },
+    // {
+    //   //栅格单值专题图
+    //   key: constants.THEME_GRID_UNIQUE,
+    //   title: constants.THEME_GRID_UNIQUE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_grid_unique,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    // },
+    // {
+    //   //栅格分段专题图
+    //   key: constants.THEME_GRID_RANGE,
+    //   title: constants.THEME_GRID_RANGE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_grid_range,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_range,
+    // },
   ]
   return { data, buttons }
 }
@@ -901,15 +901,15 @@ function getRangeMode() {
       image: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
       selectedImage: require('../../../../assets/mapTools/range_mode_squareroot_black.png'),
     },
-    {
-      // 标准差分段
-      key: constants.MAP_THEME_PARAM_RANGE_MODE_STDDEVIATION,
-      title: '标准差分段',
-      action: setRangeMode,
-      size: 'large',
-      image: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
-      selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
-    },
+    // {
+    //   // 标准差分段
+    //   key: constants.MAP_THEME_PARAM_RANGE_MODE_STDDEVIATION,
+    //   title: '标准差分段',
+    //   action: setRangeMode,
+    //   size: 'large',
+    //   image: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
+    //   selectedImage: require('../../../../assets/mapTools/range_mode_stddeviation_black.png'),
+    // },
     {
       // 对数分段
       key: constants.MAP_THEME_PARAM_RANGE_MODE_LOGARITHM,

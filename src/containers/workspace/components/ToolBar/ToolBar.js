@@ -1252,8 +1252,8 @@ export default class ToolBar extends React.PureComponent {
       Animated.timing(this.state.boxHeight, {
         toValue:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[0]
-            : ConstToolType.THEME_HEIGHT[2],
+            ? ConstToolType.THEME_HEIGHT[1]
+            : ConstToolType.THEME_HEIGHT[1],
         duration: Const.ANIMATED_DURATION,
       }).start()
       this.isBoxShow = true
@@ -1278,8 +1278,8 @@ export default class ToolBar extends React.PureComponent {
         () => {
           this.height =
             this.props.device.orientation === 'LANDSCAPE'
-              ? ConstToolType.THEME_HEIGHT[0]
-              : ConstToolType.THEME_HEIGHT[2]
+              ? ConstToolType.THEME_HEIGHT[1]
+              : ConstToolType.THEME_HEIGHT[1]
           this.updateOverlayerView()
         },
       )
