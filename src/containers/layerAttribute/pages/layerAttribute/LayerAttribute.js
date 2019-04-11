@@ -158,6 +158,7 @@ export default class LayerAttribute extends React.Component {
         cb,
         resetCurrent,
       )
+      this.currentPage = 0
       return
     }
     let startIndex = this.state.startIndex - PAGE_SIZE
