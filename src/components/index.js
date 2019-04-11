@@ -45,6 +45,7 @@ import { IndicatorLoading } from './Loading'
 import HorizontalTableList from './HorizontalTableList'
 import InfoView from './InfoView'
 import SurfaceView from './SurfaceView'
+import FingerMenu from './FingerMenu'
 
 export {
   Container,
@@ -99,4 +100,5 @@ export {
   HorizontalTableList,
   InfoView,
   SurfaceView,
+  FingerMenu,
 }

@@ -17,6 +17,20 @@ export default StyleSheet.create({
   topView: {
     flexDirection: 'column',
   },
+  checkView: {
+    flexDirection: 'row',
+    height: scaleSize(60),
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginHorizontal: scaleSize(30),
+  },
+  checkTips: {
+    marginLeft: scaleSize(10),
+    fontSize: size.fontSize.fontSizeSm,
+    color: color.fontColorBlack,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
 
   subTitleView: {
     flexDirection: 'row',
@@ -29,6 +43,27 @@ export default StyleSheet.create({
   subTitle: {
     fontSize: size.fontSize.fontSizeMd,
     color: color.fontColorGray,
+    textAlign: 'center',
+    backgroundColor: 'transparent',
+  },
+
+  btnsView: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: scaleSize(50),
+    height: scaleSize(80),
+  },
+  btnView: {
+    flex: 1,
+    flexDirection: 'row',
+    height: scaleSize(80),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  btnText: {
+    fontSize: size.fontSize.fontSizeMd,
+    color: color.fontColorBlack,
     textAlign: 'center',
     backgroundColor: 'transparent',
   },

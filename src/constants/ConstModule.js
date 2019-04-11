@@ -380,45 +380,45 @@ export default [
   //     left: 0,
   //   },
   // },
-  // {
-  //   key: '数据分析',
-  //   title: '数据分析',
-  //   baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
-  //   moduleImage: require('../assets/home/icon_mapanalysis.png'),
-  //   style: {
-  //     width: scaleSize(70),
-  //     height: scaleSize(67),
-  //     position: 'absolute',
-  //     right: 0,
-  //     bottom: 0,
-  //   },
-  //   action: async user => {
-  //     let data = ConstOnline['Google']
-  //     data.layerIndex = 1
-  //     GLOBAL.Type = constants.MAP_ANALYST
-  //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-  //
-  //     let homePath = await FileTools.appendingHomeDirectory()
-  //     let userPath = ConstPath.CustomerPath
-  //     if (user && user.userName) {
-  //       userPath = ConstPath.UserPath + user.userName + '/'
-  //     }
-  //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
-  //
-  //     let wsData = [
-  //       {
-  //         DSParams: { server: wsPath },
-  //         // layerIndex: 0,
-  //         type: 'Workspace',
-  //       },
-  //       data,
-  //     ]
-  //     NavigationService.navigate('AnalystTools', {
-  //       operationType: constants.MAP_ANALYST,
-  //       wsData,
-  //       mapName: MAP_MODULE.MAP_ANALYST,
-  //       isExample: false,
-  //     })
-  //   },
-  // },
+  {
+    key: '数据分析',
+    title: '数据分析',
+    baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
+    moduleImage: require('../assets/home/icon_mapanalysis.png'),
+    style: {
+      width: scaleSize(70),
+      height: scaleSize(67),
+      position: 'absolute',
+      right: 0,
+      bottom: 0,
+    },
+    action: async user => {
+      let data = ConstOnline['Google']
+      data.layerIndex = 1
+      GLOBAL.Type = constants.MAP_ANALYST
+      GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+
+      let homePath = await FileTools.appendingHomeDirectory()
+      let userPath = ConstPath.CustomerPath
+      if (user && user.userName) {
+        userPath = ConstPath.UserPath + user.userName + '/'
+      }
+      let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+
+      let wsData = [
+        {
+          DSParams: { server: wsPath },
+          // layerIndex: 0,
+          type: 'Workspace',
+        },
+        data,
+      ]
+      NavigationService.navigate('AnalystTools', {
+        operationType: constants.MAP_ANALYST,
+        wsData,
+        mapName: MAP_MODULE.MAP_ANALYST,
+        isExample: false,
+      })
+    },
+  },
 ]

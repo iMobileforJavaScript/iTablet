@@ -10,8 +10,7 @@ import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view'
 
-import SingleBufferAnalystView from './SingleBufferAnalystView'
-import MultiBufferAnalystView from './MultiBufferAnalystView'
+import BufferAnalystViewTab from './BufferAnalystViewTab'
 
 export default class BufferAnalystView extends Component {
   props: {
@@ -20,6 +19,7 @@ export default class BufferAnalystView extends Component {
     setSettingData: () => {},
     settingData: any,
     device: Object,
+    currentUser: Object,
   }
 
   constructor(props) {
@@ -71,8 +71,14 @@ export default class BufferAnalystView extends Component {
             marginTop: 10,
           }}
         >
-          <SingleBufferAnalystView tabLabel="缓冲区" />
-          <MultiBufferAnalystView tabLabel="多重缓冲区" />
+          <BufferAnalystViewTab
+            tabLabel="缓冲区"
+            currentUser={this.props.currentUser}
+          />
+          <BufferAnalystViewTab
+            tabLabel="多重缓冲区"
+            currentUser={this.props.currentUser}
+          />
         </ScrollableTabView>
       </Container>
     )

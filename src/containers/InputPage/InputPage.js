@@ -24,6 +24,8 @@ export default class InputPage extends React.Component {
       placeholder: params && params.placeholder ? params.placeholder : '',
       headerTitle: params && params.headerTitle ? params.headerTitle : '',
       btnTitle: params && params.btnTitle ? params.btnTitle : '确定',
+      keyboardType:
+        params && params.keyboardType ? params.keyboardType : 'default',
     }
     this.clickAble = true
   }
@@ -71,6 +73,7 @@ export default class InputPage extends React.Component {
               })
             }}
             returnKeyType={'done'}
+            keyboardType={this.state.keyboardType}
             showClear
           />
         </View>

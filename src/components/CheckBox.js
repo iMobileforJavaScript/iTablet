@@ -16,7 +16,7 @@ export default class CheckBox extends React.Component {
     imgStyle?: Object,
     disable?: boolean,
   }
-
+  
   static defaultProps = {
     disable: false,
   }

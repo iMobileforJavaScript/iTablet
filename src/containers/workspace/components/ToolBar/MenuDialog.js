@@ -258,7 +258,7 @@ export default class MenuDialog extends React.PureComponent {
           <Text
             style={
               index === this.state.currentIndex
-                ? styles.textHightlight
+                ? styles.textHighLight
                 : styles.text
             }
           >
@@ -375,7 +375,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     textAlign: 'center',
   },
-  textHightlight: {
+  textHighLight: {
     color: color.content_white,
     fontWeight: 'bold',
     fontSize: size.fontSize.fontSizeXl,

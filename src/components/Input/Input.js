@@ -29,6 +29,7 @@ export default class InputDialog extends PureComponent {
     keyboardAppearance: string,
     returnKeyType?: string,
     placeholderTextColor?: string,
+    keyboardType?: string,
     onChangeText?: () => {},
   }
 
@@ -37,6 +38,7 @@ export default class InputDialog extends PureComponent {
     value: '',
     keyboardAppearance: 'dark',
     returnKeyType: 'done',
+    keyboardType: 'default',
     placeholder: '',
     placeholderTextColor: color.themePlaceHolder,
     showClear: false,
@@ -93,6 +95,15 @@ export default class InputDialog extends PureComponent {
           placeholderTextColor={this.props.placeholderTextColor}
           value={this.state.value + ''}
           onChangeText={text => {
+            if (
+              this.props.keyboardType === 'number-pad' ||
+              this.props.keyboardType === 'decimal-pad' ||
+              this.props.keyboardType === 'numeric'
+            ) {
+              if (isNaN(text) && text !== '' && text !== '-') {
+                text = this.state.inputValue
+              }
+            }
             this.props.onChangeText && this.props.onChangeText(text)
             this.setState({
               value: text,
@@ -100,6 +111,7 @@ export default class InputDialog extends PureComponent {
           }}
           keyboardAppearance={this.props.keyboardAppearance}
           returnKeyType={this.props.returnKeyType}
+          keyboardType={this.props.keyboardType}
         />
         {this.props.showClear && this.renderClearBtn()}
       </View>

@@ -1,0 +1,296 @@
+import React from 'react'
+import { StyleSheet, View, FlatList } from 'react-native'
+import { scaleSize } from '../../utils/index'
+import { size, color } from '../../styles/index'
+
+import MenuItem from './MenuItem'
+
+const ITEM_HEIGHT = scaleSize(80)
+const VIEW_WIDTH = scaleSize(360)
+
+export default class MenuDialog extends React.Component {
+  props: {
+    data: Array, // 数据
+    initialKey: string, // 初始数据
+    selectKey?: '', // 当前选中的key
+    viewableItems?: number, // 可见范围item的数量，单数
+    autoSelect?: boolean, // 松手自动选择
+    onSelect?: () => {}, // 选中item的回调
+    rowHeight?: number,
+  }
+
+  static defaultProps = {
+    data: [],
+    initialKey: '',
+    viewableItems: 5,
+    rowHeight: ITEM_HEIGHT,
+  }
+
+  constructor(props) {
+    super(props)
+    const data = this.dealData(props.data)
+    let currentIndex =
+      props.data.length > 0 ? Math.floor(this.props.viewableItems / 2) : 0
+    if (props.initialKey !== undefined && props.initialKey !== '') {
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].key !== undefined && data[i].key === props.initialKey) {
+          currentIndex = i
+          break
+        }
+      }
+    }
+
+    this.state = {
+      currentIndex,
+      data,
+    }
+
+    this.timer = null
+    this.contentOffset = null
+  }
+
+  componentDidMount() {
+    if (this.state.data.length > this.state.currentIndex) {
+      // InteractionManager.runAfterInteractions(() => {
+      //
+      // })
+      setTimeout(() => {
+        this.list.scrollToIndex({
+          index: this.state.currentIndex,
+          viewPosition: 0.5,
+          animated: false,
+        })
+      }, 500)
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      JSON.stringify(nextState) !== JSON.stringify(this.state) ||
+      JSON.stringify(nextProps) !== JSON.stringify(this.props)
+    ) {
+      return true
+    }
+    return false
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.data &&
+      this.props.data instanceof Array &&
+      this.props.data.length > 0 &&
+      prevProps.data !== this.props.data
+    ) {
+      this.setState({
+        data: this.dealData(this.props.data),
+      })
+    }
+  }
+
+  /**
+   * 前后增加 Math.floor(viewableItems) 个空对象
+   */
+  dealData = data => {
+    if (
+      !this.props.data ||
+      !(this.props.data instanceof Array) ||
+      this.props.data.length <= 0
+    )
+      return []
+    let newData = JSON.parse(JSON.stringify(data))
+    let zombieNums = Math.floor(this.props.viewableItems / 2)
+    for (let i = 0; i < zombieNums; i++) {
+      newData.unshift({})
+      newData.push({})
+    }
+    return newData
+  }
+
+  getCurrentData = () => {
+    return {
+      data: this.props.data[this.state.currentIndex - 2],
+      index: this.state.currentIndex - Math.floor(this.props.viewableItems / 2),
+    }
+  }
+
+  itemAction = ({ data, index }) => {
+    this.setState({
+      currentIndex: index,
+    })
+    this.props.onSelect && this.props.onSelect(data)
+  }
+
+  _renderItem = ({ item, index }) => {
+    if (item && item.key !== undefined) {
+      return (
+        <MenuItem
+          data={item}
+          index={index}
+          highLight={index === this.state.currentIndex}
+          onPress={itemData => {
+            if (itemData.data && itemData.data.key) {
+              this.list &&
+                this.list.scrollToIndex({
+                  index,
+                  viewPosition: 0.5,
+                })
+              this.itemAction(itemData)
+            }
+          }}
+        />
+      )
+    } else {
+      return (
+        <View
+          key={index + ''}
+          style={[styles.item, { height: this.props.rowHeight }]}
+        />
+      )
+    }
+  }
+
+  renderSelectedView = () => {
+    return (
+      <View
+        key={'selected_view'}
+        style={[
+          styles.selectedView,
+          {
+            top:
+              Math.floor(this.props.viewableItems / 2) * this.props.rowHeight,
+            height: this.props.rowHeight,
+            width: '100%',
+          },
+        ]}
+      />
+    )
+  }
+
+  getItemLayout = (data, index) => {
+    return {
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    }
+  }
+
+  _scrollToIndex = () => {
+    if (!this.list || !this.contentOffset) return
+    let zombieNums = Math.floor(this.props.viewableItems / 2)
+    let currentIndex = parseInt(
+      (this.contentOffset.y / this.props.rowHeight).toFixed(),
+    )
+    if (currentIndex === this.state.currentIndex) return
+    if (currentIndex >= 0) {
+      let index =
+        currentIndex + zombieNums >= this.state.data.length - zombieNums
+          ? this.state.data.length - zombieNums - 1
+          : currentIndex + zombieNums
+
+      this.list.scrollToIndex({
+        index: index,
+        viewPosition: 0.5,
+      })
+    } else {
+      this.list.scrollToIndex({
+        index: zombieNums,
+        viewPosition: 0.5,
+      })
+    }
+    if (this.timer) {
+      clearTimeout(this.timer)
+      this.timer = null
+      this.event = null
+    }
+  }
+
+  render() {
+    return (
+      <View style={[styles.menuContainer, { width: '100%' }]}>
+        {this.renderSelectedView()}
+        <FlatList
+          initialNumToRender={20}
+          ref={ref => (this.list = ref)}
+          style={{
+            width: '100%',
+            height: this.props.viewableItems * this.props.rowHeight,
+            backgroundColor: 'transparent',
+          }}
+          data={this.state.data}
+          renderItem={this._renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          // onMomentumScrollEnd={event => {
+          //   if (this.timer) {
+          //     this.contentOffset = event.nativeEvent.contentOffset
+          //     clearTimeout(this.timer)
+          //     this.timer = null
+          //     this.timer = setTimeout(() => this._scrollToIndex(), 500)
+          //   }
+          // }}
+          // onScrollBeginDrag={() => {
+          //   if (this.timer) {
+          //     clearTimeout(this.timer)
+          //     this.timer = null
+          //   }
+          // }}
+          // onScrollEndDrag={event => {
+          //   if (!this.timer) {
+          //     this.contentOffset = event.nativeEvent.contentOffset
+          //     this.timer = setTimeout(() => this._scrollToIndex(), 500)
+          //   }
+          // }}
+          onScroll={event => {
+            this.contentOffset = event.nativeEvent.contentOffset
+            let zombieNums = Math.floor(this.props.viewableItems / 2)
+            let currentIndex = parseInt(
+              (
+                event.nativeEvent.contentOffset.y / this.props.rowHeight
+              ).toFixed(),
+            )
+            if (currentIndex >= 0 && currentIndex !== this.state.currentIndex) {
+              this.setState({
+                currentIndex: currentIndex + zombieNums,
+              })
+            }
+          }}
+          getItemLayout={this.getItemLayout}
+        />
+      </View>
+    )
+  }
+}
+
+const styles = StyleSheet.create({
+  menuContainer: {
+    flexDirection: 'column',
+    backgroundColor: color.bgW,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  selectedView: {
+    position: 'absolute',
+    height: ITEM_HEIGHT,
+    backgroundColor: '#4680DF',
+    width: VIEW_WIDTH,
+  },
+  item: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: ITEM_HEIGHT,
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  text: {
+    color: color.font_color_white,
+    fontSize: size.fontSize.fontSizeLg,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+  textHighLight: {
+    color: color.content_white,
+    fontWeight: 'bold',
+    fontSize: size.fontSize.fontSizeXl,
+    backgroundColor: 'transparent',
+    textAlign: 'center',
+  },
+})

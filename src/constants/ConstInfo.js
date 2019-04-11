@@ -100,4 +100,6 @@ export default {
   CLIPPING: '地图裁剪中',
   CLIP_SUCCESS: '裁剪成功',
   CLIP_FAILED: '裁剪失败',
+
+  SELECT_DATA_SOURCE_FIRST: '请先选择数据源',
 }
