@@ -70,6 +70,9 @@ class Chat extends React.Component {
     this.renderSystemMessage = this.renderSystemMessage.bind(this)
     this.renderFooter = this.renderFooter.bind(this)
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
+    this.onReceiveProgress = this.onReceiveProgress.bind(this)
+    this.renderTicks = this.renderTicks.bind(this)
+    
   }
 
   componentDidMount() {
@@ -96,20 +99,17 @@ class Chat extends React.Component {
 
     this.listener = RCTDeviceEventEmitter.addListener(
       EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+      this.onReceiveProgress,
       // eslint-disable-next-line no-unused-vars
-      value => {
+      // value => {
         // console.log(value)
         // 接受到 通知后的处理
-      },
+      // },
     )
 
     this.listener = RCTDeviceEventEmitter.addListener(
       EventConst.MESSAGE_SERVICE_SEND_FILE,
-      // eslint-disable-next-line no-unused-vars
-      value => {
-        // console.log(value)
-        // 接受到 通知后的处理
-      },
+      this.onReceiveProgress,
     )
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
@@ -126,6 +126,18 @@ class Chat extends React.Component {
     //     },
     //   ],
     // })
+  }
+
+  onReceiveProgress (value)  {
+    this.setState({ messages: this.state.messages.map(m => {
+      if(m._id === value.msgId){
+        m.message.message.progress = value.percentage
+      }  
+      return {
+        ...m,
+      }})
+    })
+    //todo input to redux
   }
 
   componentWillUnmount() {
@@ -350,6 +362,7 @@ class Chat extends React.Component {
           fileSize: statResult.size,
           queueName: '',
           filePath: filepath,
+          progress: 0,
         },
       },
     }
@@ -455,26 +468,6 @@ class Chat extends React.Component {
             )
             let receivePath = userPath + '/ReceivedFiles'
             if (message.message.message.isReceived === 0) {
-              this.friend._receiveFile(
-                message.message.message.fileName,
-                message.message.message.queueName,
-                receivePath,
-                this.targetUser.id,
-                message._id,
-              )
-              this.setState(previousState => {
-                let length = previousState.messages
-                let i = 0
-                for (; i < length; i++) {
-                  if (previousState.messages[i]._id === message._id) {
-                    break
-                  }
-                }
-                previousState.messages[i].message.message.isReceived = 1
-                return {
-                  messages: previousState.messages,
-                }
-              })
               this.downloadmessage = message
               this.downloadreceivePath = receivePath
               this.download.setDialogVisible(true)
@@ -539,6 +532,7 @@ class Chat extends React.Component {
             onLongPress={this.onLongPress}
             renderActions={this.renderCustomActions}
             renderBubble={this.renderBubble}
+            renderTicks={this.renderTicks}
             renderSystemMessage={this.renderSystemMessage}
             renderCustomView={this.renderCustomView}
             renderFooter={this.renderFooter}
@@ -636,8 +630,29 @@ class Chat extends React.Component {
             backgroundColor: 'blue',
           },
         }}
+        bottomContainerStyle={{
+          right:{
+            flexDirection: 'row-reverse',
+            justifyContent: 'space-between',
+          },
+          left:{
+            justifyContent: 'space-between',
+          }
+        }}
       />
     )
+  }
+  //渲染标记
+  renderTicks (props) {
+    let currentMessage  = props;
+    if (currentMessage.message.type && currentMessage.message.type === 6) {
+      let progress = currentMessage.message.message.progress
+      return (
+        <View style={styles.tickView}>
+          <Text style={styles.tick}>{progress === 100 ? '✓' : progress}</Text>
+        </View>
+      )
+    }
   }
 
   renderSystemMessage(props) {
@@ -748,7 +763,7 @@ class Chat extends React.Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={styles.dialogHeaderImg}
         />
-        <Text style={styles.promptTtile}>{'是否下载数据'}</Text>
+        <Text style={styles.promptTtile}>{'是否接收数据'}</Text>
       </View>
     )
   }
@@ -797,6 +812,15 @@ const styles = StyleSheet.create({
     height: scaleSize(240),
     borderRadius: scaleSize(4),
     backgroundColor: 'white',
+  },
+  tickView: {
+    flexDirection: 'row',
+    marginRight: scaleSize(20),
+    marginLeft: scaleSize(20),
+  },
+  tick: {
+    fontSize: scaleSize(18),
+    color:'white'
   },
 })
 export default Chat
