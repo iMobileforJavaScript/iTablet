@@ -359,7 +359,7 @@ export default class LayerAttributeTable extends React.Component {
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
           onRefresh={this.refresh}
-          onEndReachedThreshold={0.5}
+          onEndReachedThreshold={1}
           onEndReached={this.loadMore}
           initialNumToRender={20}
           getItemLayout={this.getItemLayout}
@@ -367,6 +367,7 @@ export default class LayerAttributeTable extends React.Component {
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
           renderSectionFooter={this.renderFooter}
           onScroll={() => (this.canBeLoadMore = true)}
+          removeClippedSubviews={true}
         />
       </ScrollView>
     )
@@ -428,12 +429,12 @@ export default class LayerAttributeTable extends React.Component {
         enabled
         style={styles.container}
       >
-        <View style={styles.container}>
-          {this.props.type === 'MULTI_DATA' && isMultiData
-            ? this.renderMultiDataTable()
-            : this.renderSingleDataTable()}
-          {/*{this.state.loading && this.renderFooter()}*/}
-        </View>
+        {/*<View style={styles.container}>*/}
+        {this.props.type === 'MULTI_DATA' && isMultiData
+          ? this.renderMultiDataTable()
+          : this.renderSingleDataTable()}
+        {/*{this.state.loading && this.renderFooter()}*/}
+        {/*</View>*/}
       </KeyboardAvoidingView>
     )
   }

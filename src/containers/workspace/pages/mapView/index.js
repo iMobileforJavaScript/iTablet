@@ -31,6 +31,7 @@ import {
   setBufferSetting,
   setOverlaySetting,
   getMapSetting,
+  setMapLegend,
 } from '../../../../models/setting'
 import { setSharing } from '../../../../models/online'
 import { setCurrentSymbols } from '../../../../models/symbol'
@@ -55,6 +56,7 @@ const mapStateToProps = state => ({
   template: state.template.toJS(),
   device: state.device.toJS().device,
   online: state.online.toJS(),
+  mapLegend: state.setting.toJS().mapLegend,
 })
 
 const mapDispatchToProps = {
@@ -85,6 +87,7 @@ const mapDispatchToProps = {
   getMapSetting,
   setSharing,
   setCurrentSymbols,
+  setMapLegend,
 }
 
 export default connect(

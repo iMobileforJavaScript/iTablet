@@ -88,36 +88,34 @@ export default class RenderFindItem extends Component {
         //
         // },
         progress: res => {
-          let value = ((res.bytesWritten / res.contentLength) * 100).toFixed(0)
+          let value = ~~res.progress.toFixed(0)
           // console.warn("value:"+value)
           let progress = '下载:' + value + '%'
           if (this.state.progress !== progress) {
-            this.setState({ progress: progress })
+            this.setState({ progress })
           }
         },
       }
       try {
         const ret = RNFS.downloadFile(downloadOptions)
         ret.promise
-          .then(async result => {
-            if (result.statusCode === 200) {
-              this.setState({ progress: '下载完成', isDownloading: false })
-              let savePath =
-                appHome +
-                ConstPath.UserPath +
-                userName +
-                '/' +
-                ConstPath.RelativePath.ExternalData +
-                fileName
-              let result = await FileTools.unZipFile(
-                filePath,
-                savePath.substring(0, savePath.length - 4),
-              )
-              if (result === false) {
-                Toast.show('网络数据已损坏，无法正常使用')
-              }
-              FileTools.deleteFile(filePath)
+          .then(async () => {
+            this.setState({ progress: '下载完成', isDownloading: false })
+            let savePath =
+              appHome +
+              ConstPath.UserPath +
+              userName +
+              '/' +
+              ConstPath.RelativePath.ExternalData +
+              fileName
+            let result = await FileTools.unZipFile(
+              filePath,
+              savePath.substring(0, savePath.length - 4),
+            )
+            if (result === false) {
+              Toast.show('网络数据已损坏，无法正常使用')
             }
+            FileTools.deleteFile(filePath)
           })
           .catch(() => {
             Toast.show('下载失败')

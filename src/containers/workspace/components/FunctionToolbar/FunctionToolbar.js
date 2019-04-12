@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, Animated } from 'react-native'
+import { View, Animated, FlatList, Platform } from 'react-native'
 import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
@@ -34,6 +34,9 @@ const MAP_EDIT = 'MAP_EDIT'
 export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 
+const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
+const BottomHeight = scaleSize(100)
+
 export default class FunctionToolbar extends React.Component {
   props: {
     style?: any,
@@ -42,6 +45,7 @@ export default class FunctionToolbar extends React.Component {
     separator?: number,
     shareProgress?: number,
     online?: Object,
+    device: Object,
     type: string,
     data?: Array,
     Label: () => {},
@@ -84,24 +88,13 @@ export default class FunctionToolbar extends React.Component {
     if (
       JSON.stringify(this.props.online.share) !==
         JSON.stringify(nextProps.online.share) ||
-      JSON.stringify(this.state) !== JSON.stringify(nextState)
+      JSON.stringify(this.state) !== JSON.stringify(nextState) ||
+      JSON.stringify(this.props.device) !== JSON.stringify(nextProps.device)
     ) {
       return true
     }
     return false
   }
-
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     JSON.stringify(this.props.online.share) !==
-  //     JSON.stringify(prevProps.online.share)
-  //   ) {
-  //     let data = prevProps.data || this.getData(prevProps.type)
-  //     this.setState({
-  //       data,
-  //     })
-  //   }
-  // }
 
   setVisible = visible => {
     if (this.visible === visible) return
@@ -137,6 +130,9 @@ export default class FunctionToolbar extends React.Component {
   }
 
   showMenuAlertDialog = () => {
+    if (this.props.Label) {
+      this.props.Label()
+    }
     if (!GLOBAL.currentLayer || GLOBAL.currentLayer.themeType <= 0) {
       Toast.show('提示: 请先选择专题图层。')
       NavigationService.navigate('LayerManager')
@@ -475,8 +471,8 @@ export default class FunctionToolbar extends React.Component {
         column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
         height:
           this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.THEME_HEIGHT[4]
-            : ConstToolType.THEME_HEIGHT[10],
+            ? ConstToolType.THEME_HEIGHT[1]
+            : ConstToolType.THEME_HEIGHT[1],
       })
     }
   }
@@ -813,27 +809,6 @@ export default class FunctionToolbar extends React.Component {
     }
   }
 
-  legend = async () => {
-    const toolRef = this.props.getToolRef()
-    if (toolRef) {
-      this.props.showFullMap && this.props.showFullMap(true)
-      // TODO 根据符号类型改变ToolBox 编辑内容
-      toolRef.setVisible(true, ConstToolType.MAP_EDIT_TAGGING, {
-        isFullScreen: false,
-        containerType: 'legend',
-        height:
-          this.props.device.orientation === 'LANDSCAPE'
-            ? ConstToolType.NEWTHEME_HEIGHT[0]
-            : ConstToolType.NEWTHEME_HEIGHT[1],
-        column: this.props.device.orientation === 'LANDSCAPE' ? 5 : 4,
-      })
-    }
-  }
-
-  Label = () => {
-    this.props.Label()
-  }
-
   /** 二级事件 **/
   openOneMap = async e => {
     this.showDataLists()
@@ -1048,6 +1023,38 @@ export default class FunctionToolbar extends React.Component {
           {
             key: constants.SHARE,
             title: constants.SHARE,
+            action: () => {
+              this.showMore(ConstToolType.MAP_SHARE)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
+      case constants.MAP_PLOTTING:
+        data = [
+          {
+            key: '开始',
+            title: '开始',
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            title: '标绘',
+            action: this.showSymbol,
+            image: require('../../../../assets/function/icon_function_symbol.png'),
+          },
+          {
+            title: '编辑',
+            action: this.showEdit,
+            image: require('../../../../assets/function/icon_edit.png'),
+          },
+          {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            title: '分享',
             action: () => {
               this.showMore(ConstToolType.MAP_SHARE)
             },
@@ -1272,12 +1279,27 @@ export default class FunctionToolbar extends React.Component {
   _keyExtractor = (item, index) => index + '-' + item.title
 
   renderList = () => {
-    let arr = []
-    if (!this.state.data || this.state.data.length === 0) return null
-    this.state.data.forEach((item, index) => {
-      arr.push(this._renderItem({ item, index }))
-    })
-    return <View style={{ flexDirection: 'column' }}>{arr}</View>
+    // let arr = []
+    // if (!this.state.data || this.state.data.length === 0) return null
+    // this.state.data.forEach((item, index) => {
+    //   arr.push(this._renderItem({ item, index }))
+    // })
+    // return <View style={{ flexDirection: 'column' }}>{arr}</View>
+
+    return (
+      <FlatList
+        style={{
+          maxHeight:
+            this.props.device.height -
+            HeaderHeight -
+            BottomHeight -
+            scaleSize(100),
+        }}
+        data={this.state.data}
+        renderItem={this._renderItem}
+        keyExtractor={this._keyExtractor}
+      />
+    )
   }
 
   render() {
@@ -1292,12 +1314,6 @@ export default class FunctionToolbar extends React.Component {
           { right: this.state.right },
         ]}
       >
-        {/*<FlatList*/}
-        {/*data={this.state.data}*/}
-        {/*renderItem={this._renderItem}*/}
-        {/*// ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
-        {/*keyExtractor={this._keyExtractor}*/}
-        {/*/>*/}
         {this.renderList()}
         {/*<MoreToolbar*/}
         {/*ref={ref => (this.moreToolbar = ref)}*/}

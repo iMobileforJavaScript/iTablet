@@ -78,7 +78,6 @@ class Chat extends React.Component {
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
     this.onReceiveProgress = this.onReceiveProgress.bind(this)
     this.renderTicks = this.renderTicks.bind(this)
-
   }
 
   componentDidMount() {
@@ -103,7 +102,7 @@ class Chat extends React.Component {
       }
     })
 
-    if(Platform.OS === 'iOS'){
+    if (Platform.OS === 'iOS') {
       this.listener = iOSEventEmitter.addListener(
         EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
         this.onReceiveProgress,
@@ -112,7 +111,7 @@ class Chat extends React.Component {
         EventConst.MESSAGE_SERVICE_SEND_FILE,
         this.onReceiveProgress,
       )
-    }else{
+    } else {
       this.listener = RCTDeviceEventEmitter.addListener(
         EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
         this.onReceiveProgress,
@@ -657,29 +656,29 @@ class Chat extends React.Component {
         }}
         //与下一条自己的消息连接处的样式
         containerToNextStyle={{
-          left:{
+          left: {
             borderBottomLeftRadius: scaleSize(10),
           },
-          right:{
+          right: {
             borderBottomRightRadius: scaleSize(10),
           },
         }}
         //与上一条自己的消息连接处的样式
         containerToPreviousStyle={{
-          left:{
-            borderTopLeftRadius : scaleSize(10),
+          left: {
+            borderTopLeftRadius: scaleSize(10),
           },
-          right:{
+          right: {
             borderTopRightRadius: scaleSize(10),
           },
         }}
         //底栏样式
         bottomContainerStyle={{
-          right:{
+          right: {
             flexDirection: 'row-reverse',
             justifyContent: 'space-between',
           },
-          left:{
+          left: {
             justifyContent: 'space-between',
           },
         }}
@@ -868,10 +867,10 @@ const styles = StyleSheet.create({
   },
   tickLeft: {
     fontSize: scaleSize(18),
-    color:'gray',
+    color: 'gray',
   },
   tickRight: {
-    color:'white',
+    color: 'white',
   },
 })
 export default Chat
