@@ -2417,7 +2417,6 @@ export default class ToolBar extends React.PureComponent {
 
   close = (type = this.state.type, actionFirst = false) => {
     (async function() {
-      GLOBAL.currentToolbarType = ''
       let actionType = Action.PAN
 
       if (actionFirst) {
@@ -2506,6 +2505,10 @@ export default class ToolBar extends React.PureComponent {
   }
 
   closeSubAction = async (type, actionType) => {
+    // 当GLOBAL.currentToolbarType为选择对象关联时，不重置GLOBAL.currentToolbarType
+    if (type !== ConstToolType.ATTRIBUTE_SELECTION_RELATE) {
+      GLOBAL.currentToolbarType = ''
+    }
     if (
       typeof type === 'number' ||
       (typeof type === 'string' && type.indexOf('MAP_COLLECTION_') >= 0)

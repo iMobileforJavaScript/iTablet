@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, Animated } from 'react-native'
+import { View, Animated, FlatList, Platform } from 'react-native'
 import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
@@ -34,6 +34,9 @@ const MAP_EDIT = 'MAP_EDIT'
 export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 
+const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
+const BottomHeight = scaleSize(100)
+
 export default class FunctionToolbar extends React.Component {
   props: {
     style?: any,
@@ -42,6 +45,7 @@ export default class FunctionToolbar extends React.Component {
     separator?: number,
     shareProgress?: number,
     online?: Object,
+    device: Object,
     type: string,
     data?: Array,
     Label: () => {},
@@ -84,24 +88,13 @@ export default class FunctionToolbar extends React.Component {
     if (
       JSON.stringify(this.props.online.share) !==
         JSON.stringify(nextProps.online.share) ||
-      JSON.stringify(this.state) !== JSON.stringify(nextState)
+      JSON.stringify(this.state) !== JSON.stringify(nextState) ||
+      JSON.stringify(this.props.device) !== JSON.stringify(nextProps.device)
     ) {
       return true
     }
     return false
   }
-
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     JSON.stringify(this.props.online.share) !==
-  //     JSON.stringify(prevProps.online.share)
-  //   ) {
-  //     let data = prevProps.data || this.getData(prevProps.type)
-  //     this.setState({
-  //       data,
-  //     })
-  //   }
-  // }
 
   setVisible = visible => {
     if (this.visible === visible) return
@@ -1272,12 +1265,27 @@ export default class FunctionToolbar extends React.Component {
   _keyExtractor = (item, index) => index + '-' + item.title
 
   renderList = () => {
-    let arr = []
-    if (!this.state.data || this.state.data.length === 0) return null
-    this.state.data.forEach((item, index) => {
-      arr.push(this._renderItem({ item, index }))
-    })
-    return <View style={{ flexDirection: 'column' }}>{arr}</View>
+    // let arr = []
+    // if (!this.state.data || this.state.data.length === 0) return null
+    // this.state.data.forEach((item, index) => {
+    //   arr.push(this._renderItem({ item, index }))
+    // })
+    // return <View style={{ flexDirection: 'column' }}>{arr}</View>
+
+    return (
+      <FlatList
+        style={{
+          maxHeight:
+            this.props.device.height -
+            HeaderHeight -
+            BottomHeight -
+            scaleSize(100),
+        }}
+        data={this.state.data}
+        renderItem={this._renderItem}
+        keyExtractor={this._keyExtractor}
+      />
+    )
   }
 
   render() {
@@ -1292,12 +1300,6 @@ export default class FunctionToolbar extends React.Component {
           { right: this.state.right },
         ]}
       >
-        {/*<FlatList*/}
-        {/*data={this.state.data}*/}
-        {/*renderItem={this._renderItem}*/}
-        {/*// ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
-        {/*keyExtractor={this._keyExtractor}*/}
-        {/*/>*/}
         {this.renderList()}
         {/*<MoreToolbar*/}
         {/*ref={ref => (this.moreToolbar = ref)}*/}
