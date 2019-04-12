@@ -220,7 +220,7 @@ const layer3dSettingCanSelect = [
 
 const layer3dSettingCanNotSelect = [
   {
-    title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
+    title: '设置为当前图层',
     data: [],
     image: require('../../../../assets/layerToolbar/layer_this.png'),
   },

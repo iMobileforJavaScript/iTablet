@@ -4,7 +4,7 @@
  E-mail: yangshanglong@supermap.com
  */
 import * as React from 'react'
-import { View, Animated } from 'react-native'
+import { View, Animated, FlatList, Platform } from 'react-native'
 import { MTBtn } from '../../../../components'
 import {
   ConstToolType,
@@ -35,6 +35,9 @@ export { COLLECTION, NETWORK, EDIT }
 import NavigationService from '../../../NavigationService'
 import{ getLanguage }from '../../../../language/index'
 
+const HeaderHeight = scaleSize(88) + (Platform.OS === 'ios' ? 20 : 0)
+const BottomHeight = scaleSize(100)
+
 export default class FunctionToolbar extends React.Component {
   props: {
     language:Object,
@@ -44,6 +47,7 @@ export default class FunctionToolbar extends React.Component {
     separator?: number,
     shareProgress?: number,
     online?: Object,
+    device: Object,
     type: string,
     data?: Array,
     Label: () => {},
@@ -86,26 +90,15 @@ export default class FunctionToolbar extends React.Component {
     if (
       JSON.stringify(this.props.online.share) !==
         JSON.stringify(nextProps.online.share) ||
-      JSON.stringify(this.state) !== JSON.stringify(nextState)
+      JSON.stringify(this.state) !== JSON.stringify(nextState) ||
+      JSON.stringify(this.props.device) !== JSON.stringify(nextProps.device)
     ) {
       return true
     }
     return false
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (
-  //     JSON.stringify(this.props.online.share) !==
-  //     JSON.stringify(prevProps.online.share)
-  //   ) {
-  //     let data = prevProps.data || this.getData(prevProps.type)
-  //     this.setState({
-  //       data,
-  //     })
-  //   }
-  // }
-
-  setVisible =visible => {
+  setVisible = visible => {
     if (this.visible === visible) return
     Animated.timing(this.state.right, {
       toValue: visible ? scaleSize(31) : scaleSize(-200),
@@ -474,10 +467,7 @@ export default class FunctionToolbar extends React.Component {
     // let isAnyOpenedDS = true //是否有打开的数据源
     // isAnyOpenedDS = await SThemeCartography.isAnyOpenedDS()
     // if (!isAnyOpenedDS) {
-      // Toast.show(
-      //   getLanguage(this.props.language).Prompt.PLEASE_ADD_DATASOURCE,
-      // //'请先添加数据源'
-      // )
+    //   Toast.show('请先添加数据源')
     //   return
     // }
     const toolRef = this.props.getToolRef()
@@ -1107,6 +1097,39 @@ export default class FunctionToolbar extends React.Component {
         data = [
           {
             key: '开始',
+            title: '开始',
+            action: () => this.start(ConstToolType.MAP_COLLECTION_START),
+            image: require('../../../../assets/function/icon_function_start.png'),
+          },
+          {
+            title: '标绘',
+            action: this.showSymbol,
+            image: require('../../../../assets/function/icon_function_symbol.png'),
+          },
+          {
+            title: '编辑',
+            action: this.showEdit,
+            image: require('../../../../assets/function/icon_edit.png'),
+          },
+          {
+            title: '工具',
+            action: this.showTool,
+            image: require('../../../../assets/function/icon_function_tool.png'),
+          },
+          {
+            title: '分享',
+            action: () => {
+              this.showMore(ConstToolType.MAP_SHARE)
+            },
+            image: require('../../../../assets/function/icon_function_share.png'),
+          },
+        ]
+        break
+      case constants.COLLECTION:
+      default:
+        data = [
+          {
+            key: '开始',
             title: getLanguage(this.props.language).Map_Main_Menu.START,
             // title: '开始',
             action: () => this.start(ConstToolType.MAP_COLLECTION_START),
@@ -1324,12 +1347,27 @@ export default class FunctionToolbar extends React.Component {
   _keyExtractor = (item, index) => index + '-' + item.title
 
   renderList = () => {
-    let arr = []
-    if (!this.state.data || this.state.data.length === 0) return null
-    this.state.data.forEach((item, index) => {
-      arr.push(this._renderItem({ item, index }))
-    })
-    return <View style={{ flexDirection: 'column' }}>{arr}</View>
+    // let arr = []
+    // if (!this.state.data || this.state.data.length === 0) return null
+    // this.state.data.forEach((item, index) => {
+    //   arr.push(this._renderItem({ item, index }))
+    // })
+    // return <View style={{ flexDirection: 'column' }}>{arr}</View>
+
+    return (
+      <FlatList
+        style={{
+          maxHeight:
+            this.props.device.height -
+            HeaderHeight -
+            BottomHeight -
+            scaleSize(100),
+        }}
+        data={this.state.data}
+        renderItem={this._renderItem}
+        keyExtractor={this._keyExtractor}
+      />
+    )
   }
 
   render() {
@@ -1344,12 +1382,6 @@ export default class FunctionToolbar extends React.Component {
           { right: this.state.right },
         ]}
       >
-        {/*<FlatList*/}
-        {/*data={this.state.data}*/}
-        {/*renderItem={this._renderItem}*/}
-        {/*// ItemSeparatorComponent={this._renderItemSeparatorComponent}*/}
-        {/*keyExtractor={this._keyExtractor}*/}
-        {/*/>*/}
         {this.renderList()}
         {/*<MoreToolbar*/}
         {/*ref={ref => (this.moreToolbar = ref)}*/}

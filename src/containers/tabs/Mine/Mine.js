@@ -152,7 +152,7 @@ export default class Mine extends Component {
             {this._renderLine()}
             {this._renderItem({
               title:getLanguage(this.props.language).Profile.IMPORT,
-              leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+              leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
               onClick: this.goToMyLocalData,
             })}
 
@@ -195,10 +195,10 @@ export default class Mine extends Component {
             {/* {this._renderItem({
               title: getLanguage(this.props.language).Profile.COLOR_SCHEME,
               leftImagePath: require('../../../assets/Mine/mine_my_color_light.png'),
-              onClick: () => this.goToMyData(getLanguage(this.props.language).Profile.COLOR_SCHEME),
+              onClick: () =>  this.goToMyData(getLanguage(this.props.language).Profile.COLOR_SCHEME),
             })} */}
             {this._renderItem({
-              title: getLanguage(this.props.language).Profile.TEMPLATE,
+              title:getLanguage(this.props.language).Profile.TEMPLATE,
               leftImagePath: require('../../../assets/function/icon_function_style.png'),
               onClick: () => this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE),
             })}
@@ -228,8 +228,8 @@ export default class Mine extends Component {
         >
           {this._renderLine()}
           {this._renderItem({
-            title: getLanguage(this.props.language).Profile.IMPORT,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
+            title:  getLanguage(this.props.language).Profile.IMPORT,
+            leftImagePath: require('../../../assets/Mine/mine_my_local_import_light.png'),
             onClick: this.goToMyLocalData,
           })}
           {this._renderItem({
@@ -285,8 +285,7 @@ export default class Mine extends Component {
           {this._renderItem({
             title: getLanguage(this.props.language).Profile.TEMPLATE,
             leftImagePath: require('../../../assets/function/icon_function_style.png'),
-            onClick: () => this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE)
-            //Const.MODULE),
+            onClick: () => this.goToMyModule(getLanguage(this.props.language).Profile.TEMPLATE),
           })}
           {/*{this._renderItem({*/}
           {/*title: '我的数据',*/}
@@ -316,10 +315,10 @@ export default class Mine extends Component {
       }
       : require('../../../assets/home/system_default_header_image.png')
     let headerTitle = isPro
-      ? getLanguage(this.props.language).Profile.LOGIN
+      ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
         : Customer
-      : '立即登录'
+      :getLanguage(this.props.language).Profile.TEMPLATE
     return (
       <View
         style={{

@@ -144,6 +144,21 @@ export default class TouchProgress extends Component {
             tips = '分段个数    ' + parseInt(this.ragngeCount)
           }
           break
+        case ThemeType.GRIDRANGE: // 分段栅格专题图
+          {
+            this.ragngeCount =
+              value !== undefined
+                ? value
+                : await SThemeCartography.getGridRangeCount({
+                  LayerName: this.props.currentLayer.name,
+                })
+            this._panBtnStyles.style.left =
+              (this.ragngeCount * progressWidth) / 32 + panBtnDevLeft
+            this._previousLeft = (this.ragngeCount * progressWidth) / 32
+            this._BackLine.style.width = (this.ragngeCount * progressWidth) / 32
+            tips = '分段个数    ' + parseInt(this.ragngeCount)
+          }
+          break
         case ThemeType.DOTDENSITY: //点密度专题图
           {
             if (this.props.selectName === '单点代表值') {

@@ -24,7 +24,7 @@ import ConstPath from '../../../../constants/ConstPath'
 import { FileTools } from '../../../../native'
 import MessageDataHandle from '../MessageDataHandle'
 // eslint-disable-next-line
-//import { ActionPopover } from 'teaset'
+import { ActionPopover } from 'teaset'
 import { dialogStyles, inputStyles } from '../Styles'
 import { Dialog } from '../../../../components/Dialog'
 
@@ -418,15 +418,15 @@ class FriendList extends Component {
           },
         },
       ]
-      // ActionPopover.show(
-      //   {
-      //     x: px,
-      //     y: py,
-      //     width,
-      //     height,
-      //   },
-      //   items,
-      // )
+      ActionPopover.show(
+        {
+          x: px,
+          y: py,
+          width,
+          height,
+        },
+        items,
+      )
     })
   }
 

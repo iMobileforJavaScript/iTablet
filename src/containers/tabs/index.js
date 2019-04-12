@@ -99,17 +99,40 @@ const Tabs =  TabNavigator(
       screen: Home,
       navigationOptions: () => {
         return {
-          tabBarLabel: (data) => {
+          tabBarLabel: data => {
             return (
-              <TabBarLabel
-                data={data}
-                title={'home'}
-                source_focuse={getThemeAssets().tabBar.tab_home_selected}
-                source_unfocuse={getThemeAssets().tabBar.tab_home}
-              />
-              
+              <View style={styles.labelView}>
+                <Image
+                  resizeMode="contain"
+                  source={
+                    data.focused
+                      ? getThemeAssets().tabBar.tab_home_selected
+                      : getThemeAssets().tabBar.tab_home
+                    // ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
+                    // : require('../../assets/tabBar/Frenchgrey/tab_home.png')
+                  }
+                  style={styles.icon}
+                />
+                <Text
+                  // style={data.focused ? styles.selectedTabText : styles.tabText}
+                  style={styles.tabText}
+                >
+                  首页
+                </Text>
+              </View>
             )
           },
+          // tabBarIcon: ({ focused }: any) => (
+          //   <Image
+          //     resizeMode="contain"
+          //     source={
+          //       focused
+          //         ? require('../../assets/tabBar/Frenchgrey/tab_home_selected.png')
+          //         : require('../../assets/tabBar/Frenchgrey/tab_home.png')
+          //     }
+          //     style={styles.icon}
+          //   />
+          // ),
           header: null,
         }
       },

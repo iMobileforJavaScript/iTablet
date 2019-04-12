@@ -142,6 +142,40 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
+      case constants.MAP_ANALYST:
+        list = [
+          {
+            key: 'MapAnalystView',
+            title: '地图',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('MapAnalystView', { type })
+            },
+          },
+          {
+            key: 'AnalystTools',
+            title: '工具箱',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('AnalystTools', { type })
+            },
+          },
+          {
+            key: 'LayerAnalystManager',
+            title: '图层',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAnalystManager', { type })
+            },
+          },
+        ]
+        break
       case constants.MAP_3D:
         list = [
           {
@@ -202,59 +236,59 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
-      // case constants.MAP_THEME:
-      //   list = [
-      //     {
-      //       key: 'MapView',
-      //       title: getLanguage(global.language).Map_Lable.MAP, 
-      //       //'地图',
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation && this.props.navigation.navigate('MapView')
-      //       },
-      //     },
-      //     {
-      //       key: 'LayerManager',
-      //       title: getLanguage(global.language).Map_Lable.LAYER, 
-      //       //'图层',
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('LayerManager', {
-      //             type: constants.MAP_THEME,
-      //           })
-      //       },
-      //     },
-      //     {
-      //       key: 'LayerAttribute',
-      //       title: getLanguage(global.language).Map_Lable.ATTRIBUTE, 
-      //       //'属性',
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('LayerAttribute', {
-      //             type: constants.MAP_THEME,
-      //           })
-      //       },
-      //     },
-      //     {
-      //       key: 'MapSetting',
-      //       title: getLanguage(global.language).Map_Lable.SETTING, 
-      //       //'设置',
-      //       image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
-      //       selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
-      //       btnClick: () => {
-      //         this.props.navigation &&
-      //           this.props.navigation.navigate('MapSetting', {
-      //             type: constants.MAP_THEME,
-      //           })
-      //       },
-      //     },
-      //   ]
-      //   break
+      case constants.MAP_THEME:
+        list = [
+          {
+            key: 'MapView',
+            title: getLanguage(global.language).Map_Lable.MAP, 
+            //'地图',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation && this.props.navigation.navigate('MapView')
+            },
+          },
+          {
+            key: 'LayerManager',
+            title: getLanguage(global.language).Map_Lable.LAYER, 
+            //'图层',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerManager', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+          {
+            key: 'LayerAttribute',
+            title: getLanguage(global.language).Map_Lable.ATTRIBUTE, 
+            //'属性',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAttribute', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+          {
+            key: 'MapSetting',
+            title: getLanguage(global.language).Map_Lable.SETTING, 
+            //'设置',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('MapSetting', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+        ]
+        break
     }
     return list
   }

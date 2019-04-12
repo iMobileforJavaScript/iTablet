@@ -37,12 +37,8 @@ import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactn
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-<<<<<<< HEAD
 import MSGConstans from "./src/containers/tabs/Friend/MsgConstans";
 import { language, getLanguage } from './src/language/index'
-=======
-import MSGConstans from "./src/containers/tabs/Friend/MsgConstans"
->>>>>>> 1ceb3ff3ca3b44c10f3d42673d8ee4a6707013cd
 
 const {persistor, store} = ConfigStore()
 

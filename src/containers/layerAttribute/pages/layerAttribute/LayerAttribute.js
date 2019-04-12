@@ -329,6 +329,7 @@ export default class LayerAttribute extends React.Component {
    */
   locateToBottom = () => {
     if (this.total <= 0) return
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -399,6 +400,7 @@ export default class LayerAttribute extends React.Component {
       currentIndex = data.index
     }
 
+    this.setLoading(true, ConstInfo.LOCATING)
     // if (this.currentPage > 0) {
     //   this.canBeRefresh = true
     // }

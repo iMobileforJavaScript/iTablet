@@ -12,7 +12,7 @@ import {
   Image,
 } from 'react-native'
 // eslint-disable-next-line
-//import { ActionPopover } from 'teaset'
+import { ActionPopover } from 'teaset'
 import NavigationService from '../../../NavigationService'
 import { scaleSize } from '../../../../utils/screen'
 import { Dialog } from '../../../../components'
@@ -247,17 +247,17 @@ class FriendMessage extends Component {
         },
       ]
     }
-    // pressView.measure((ox, oy, width, height, px, py) => {
-    //   ActionPopover.show(
-    //     {
-    //       x: px,
-    //       y: py,
-    //       width,
-    //       height,
-    //     },
-    //     items,
-    //   )
-    // })
+    pressView.measure((ox, oy, width, height, px, py) => {
+      ActionPopover.show(
+        {
+          x: px,
+          y: py,
+          width,
+          height,
+        },
+        items,
+      )
+    })
   }
 
   _renderInformItem() {

@@ -326,10 +326,10 @@ export default class PublicMap extends Component {
   }
 
   _footView() {
-     if (
-       this.allUserDataCount >= this.state.data.length &&
-       this.allUserDataCount > this.currentLoadDataCount
-     ) {
+    // if (
+    //   this.allUserDataCount >= this.state.data.length &&
+    //   this.allUserDataCount > this.currentLoadDataCount
+    // ) {
     //   return (
     //     <View
     //       style={{
@@ -364,7 +364,8 @@ export default class PublicMap extends Component {
     //   )
     // } else {
     return (
-      <View 
+      <View>
+        <Text
           style={{
             flex: 1,
             lineHeight: 30,
@@ -372,46 +373,11 @@ export default class PublicMap extends Component {
             textAlign: 'center',
           }}
         >
-          <ActivityIndicator
-            style={{
-              flex: 1,
-              height: 30,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-            color={'orange'}
-            animating={true}
-          />
-          <Text
-            style={{
-              flex: 1,
-              lineHeight: 20,
-              fontSize: 12,
-              textAlign: 'center',
-              color: 'orange',
-            }}
-          >
-            {getLanguage(global.language).Prompt.LOADING}
-            {/* 加载中... */}
-          </Text>
-        </View>
-      )
-    } else {
-      return (
-        <View>
-          <Text
-            style={{
-              flex: 1,
-              lineHeight: 30,
-              fontSize: 12,
-              textAlign: 'center',
-            }}
-          >
-            -----这是底线-----
-          </Text>
-        </View>
-      )
-    }
+          -----这是底线-----
+        </Text>
+      </View>
+    )
+    // }
   }
 
   _keyExtractor = (item, index) => {

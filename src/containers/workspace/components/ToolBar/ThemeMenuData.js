@@ -460,22 +460,38 @@ function getThemeMapCreateByLayer(type, params) {
     // {
     //   //点密度专题图
     //   key: constants.THEME_DOT_DENSITY,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_DOT_DENSITY_MAP, 
-    //   // constants.THEME_DOT_DENSITY,
+    //   title:  getLanguage(global.language).Map_Main_Menu.THEME_DOT_DENSITY_MAP, 
     //   size: 'large',
-    //   action: () => {},
+    //   action: () => showExpressionList('Theme'),
     //   image: getThemeAssets().themeType.theme_dot_density,
     //   selectedImage: getThemeAssets().themeType.theme_dot_density,
     // },
     // {
     //   //等级符号专题图
     //   key: constants.THEME_GRADUATED_SYMBOL,
-    //   title: getLanguage(global.language).Map_Main_Menu.THEME_GRADUATED_SYMBOLS_MAP, 
-    //   // constants.THEME_GRADUATED_SYMBOL,
+    //   title:  getLanguage(global.language).Map_Main_Menu.THEME_GRADUATED_SYMBOLS_MAP,
     //   size: 'large',
-    //   action: () => {},
+    //   action: () => showExpressionList('Theme'),
     //   image: getThemeAssets().themeType.theme_graduated_symbol,
     //   selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    // },
+    // {
+    //   //栅格单值专题图
+    //   key: constants.THEME_GRID_UNIQUE,
+    //   title: constants.THEME_GRID_UNIQUE,
+    //   size: 'large',
+    //   action: () => createThemeGridUniqueMapByLayer(),
+    //   image: getThemeAssets().themeType.theme_grid_unique,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    // },
+    // {
+    //   //栅格分段专题图
+    //   key: constants.THEME_GRID_RANGE,
+    //   title: constants.THEME_GRID_RANGE,
+    //   size: 'large',
+    //   action: () => createThemeGridRangeMapByLayer(),
+    //   image: getThemeAssets().themeType.theme_grid_range,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_range,
     // },
   ]
   return { data, buttons }
@@ -719,6 +735,24 @@ function getThemeMapCreate(type, params) {
     //   action: showDatasetsList,
     //   image: getThemeAssets().themeType.theme_graduated_symbol,
     //   selectedImage: getThemeAssets().themeType.theme_graduated_symbol,
+    // },
+    // {
+    //   //栅格单值专题图
+    //   key: constants.THEME_GRID_UNIQUE,
+    //   title: constants.THEME_GRID_UNIQUE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_grid_unique,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_unique,
+    // },
+    // {
+    //   //栅格分段专题图
+    //   key: constants.THEME_GRID_RANGE,
+    //   title: constants.THEME_GRID_RANGE,
+    //   size: 'large',
+    //   action: showDatasetsList,
+    //   image: getThemeAssets().themeType.theme_grid_range,
+    //   selectedImage: getThemeAssets().themeType.theme_grid_range,
     // },
   ]
   return { data, buttons }

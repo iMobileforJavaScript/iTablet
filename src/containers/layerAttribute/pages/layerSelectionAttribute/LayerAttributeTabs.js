@@ -398,7 +398,7 @@ export default class LayerAttributeTabs extends React.Component {
     GLOBAL.toolBox &&
       GLOBAL.toolBox.showFullMap &&
       GLOBAL.toolBox.showFullMap(true)
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+    // GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
 
     GLOBAL.toolBox &&
       GLOBAL.toolBox.setVisible(
@@ -555,92 +555,91 @@ export default class LayerAttributeTabs extends React.Component {
 
   render() {
     return (
-
-<Container
-       ref={ref => (this.container = ref)}
-       headerProps={{
-         title: getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
-         navigation: this.props.navigation,
-         backAction: this.back,
-         headerRight: [
-           <MTBtn
-             key={'undo'}
-             image={getPublicAssets().common.icon_undo}
-             imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
-             onPress={this.showUndoView}
-           />,
-           <MTBtn
-             key={'search'}
-             image={getPublicAssets().common.icon_search}
-             imageStyle={styles.headerBtn}
-             onPress={this.goToSearch}
-           />,
-         ],
-       }}
-       style={styles.container}
-     >
-       <LayerTopBar
-         hasTabBtn
-         tabsAction={this.showDrawer}
-         canLocated={this.state.attributes.data.length > 1}
-         canRelated={this.state.currentIndex >= 0}
-         relateAction={this.relateAction}
-         locateAction={this.showLocationView}
-       />
-       {this.state.isShowView && (
-         <View
-           style={{
-             flex: 1,
-             flexDirection: 'column',
-             justifyContent: 'flex-start',
-           }}
-         >
-           {this.props.selection && this.props.selection.length > 0 ? (
-             this.props.selection.length > 1 ? (
-               this.renderTabs()
-             ) : (
-               this.renderTable({
-                 data: this.props.selection[0],
-                 index: 0,
-               })
-             )
-           ) : (
-             <View style={{ flex: 1 }} />
-           )}
-           <LocationView
-            language={this.props.language}
-             ref={ref => (this.locationView = ref)}
-             style={styles.locationView}
-             currentIndex={
-               // this.currentPage * PAGE_SIZE + this.state.currentIndex
-               this.state.currentIndex
-             }
-             locateToTop={this.locateToTop}
-             locateToBottom={this.locateToBottom}
-             locateToPosition={this.locateToPosition}
-           />
-         </View>
-       )}
-       {this.state.isShowDrawer && (
-         <TouchableOpacity
-           activeOpacity={1}
-           style={styles.drawerOverlay}
-           onPress={() => this.showDrawer(false)}
-         />
-       )}
-       <PopModal
-         ref={ref => (this.popModal = ref)}
-         modalVisible={this.state.editControllerVisible}
-       >
-         {this.renderEditControllerView()}
-       </PopModal>
-       <DrawerBar
-         ref={ref => (this.drawer = ref)}
-         data={this.props.selection}
-         index={this.state.currentTabIndex}
-         onChange={this.drawerOnChange}
-       />
-     </Container>
+      <Container
+        ref={ref => (this.container = ref)}
+        headerProps={{
+          title:  getLanguage(this.props.language).Map_Lable.ATTRIBUTE,
+          navigation: this.props.navigation,
+          backAction: this.back,
+          headerRight: [
+            <MTBtn
+              key={'undo'}
+              image={getPublicAssets().common.icon_undo}
+              imageStyle={[styles.headerBtn, { marginRight: scaleSize(15) }]}
+              onPress={this.showUndoView}
+            />,
+            <MTBtn
+              key={'search'}
+              image={getPublicAssets().common.icon_search}
+              imageStyle={styles.headerBtn}
+              onPress={this.goToSearch}
+            />,
+          ],
+        }}
+        style={styles.container}
+      >
+        <LayerTopBar
+          hasTabBtn
+          tabsAction={this.showDrawer}
+          canLocated={this.state.attributes.data.length > 1}
+          canRelated={this.state.currentIndex >= 0}
+          relateAction={this.relateAction}
+          locateAction={this.showLocationView}
+        />
+        {this.state.isShowView && (
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'column',
+              justifyContent: 'flex-start',
+            }}
+          >
+            {this.props.selection && this.props.selection.length > 0 ? (
+              this.props.selection.length > 1 ? (
+                this.renderTabs()
+              ) : (
+                this.renderTable({
+                  data: this.props.selection[0],
+                  index: 0,
+                })
+              )
+            ) : (
+              <View style={{ flex: 1 }} />
+            )}
+            <LocationView
+              language={this.props.language}
+              ref={ref => (this.locationView = ref)}
+              style={styles.locationView}
+              currentIndex={
+                // this.currentPage * PAGE_SIZE + this.state.currentIndex
+                this.state.currentIndex
+              }
+              locateToTop={this.locateToTop}
+              locateToBottom={this.locateToBottom}
+              locateToPosition={this.locateToPosition}
+            />
+          </View>
+        )}
+        {this.state.isShowDrawer && (
+          <TouchableOpacity
+            activeOpacity={1}
+            style={styles.drawerOverlay}
+            onPress={() => this.showDrawer(false)}
+          />
+        )}
+        <PopModal
+          ref={ref => (this.popModal = ref)}
+          modalVisible={this.state.editControllerVisible}
+        >
+          {this.renderEditControllerView()}
+        </PopModal>
+        <DrawerBar
+          ref={ref => (this.drawer = ref)}
+          data={this.props.selection}
+          index={this.state.currentTabIndex}
+          onChange={this.drawerOnChange}
+        />
+      </Container>
     )
   }
 }

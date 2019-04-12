@@ -26,7 +26,7 @@ import { FileTools } from '../../../../native'
 import { dialogStyles, inputStyles } from '../Styles'
 import { Dialog } from '../../../../components/Dialog'
 // eslint-disable-next-line
-//import { ActionPopover } from 'teaset'
+import { ActionPopover } from 'teaset'
 // import { styles } from './../Styles'
 
 class FriendGroup extends Component {
@@ -228,15 +228,15 @@ class FriendGroup extends Component {
           },
         },
       ]
-      // ActionPopover.show(
-      //   {
-      //     x: px,
-      //     y: py,
-      //     width,
-      //     height,
-      //   },
-      //   items,
-      // )
+      ActionPopover.show(
+        {
+          x: px,
+          y: py,
+          width,
+          height,
+        },
+        items,
+      )
     })
   }
 

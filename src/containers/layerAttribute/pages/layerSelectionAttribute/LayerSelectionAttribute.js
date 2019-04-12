@@ -239,6 +239,7 @@ export default class LayerSelectionAttribute extends React.Component {
       Toast.show(ConstInfo.CANNOT_LOCATION)
       return
     }
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -305,6 +306,7 @@ export default class LayerSelectionAttribute extends React.Component {
       Toast.show(ConstInfo.CANNOT_LOCATION)
       return
     }
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -382,6 +384,7 @@ export default class LayerSelectionAttribute extends React.Component {
       currentIndex = data.index
     }
 
+    this.setLoading(true, ConstInfo.LOCATING)
     // if (this.currentPage > 0) {
     //   this.canBeRefresh = true
     // }
