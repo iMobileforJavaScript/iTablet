@@ -25,7 +25,7 @@ import UserType from '../../../constants/UserType'
 import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
-import MSGConstans from './MsgConstans'
+import MSGConstant from './MsgConstant'
 import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
@@ -188,11 +188,11 @@ export default class Friend extends Component {
   _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
-        MSGConstans.MSG_IP,
-        MSGConstans.MSG_Port,
-        MSGConstans.MSG_HostName,
-        MSGConstans.MSG_UserName,
-        MSGConstans.MSG_Password,
+        MSGConstant.MSG_IP,
+        MSGConstant.MSG_Port,
+        MSGConstant.MSG_HostName,
+        MSGConstant.MSG_UserName,
+        MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
         .then(() => {
@@ -246,11 +246,11 @@ export default class Friend extends Component {
 
   _sendFile = (messageStr, filepath, talkId, msgId) => {
     let connectInfo = {
-      serverIP: MSGConstans.MSG_IP,
-      port: MSGConstans.MSG_Port,
-      hostName: MSGConstans.MSG_HostName,
-      userName: MSGConstans.MSG_UserName,
-      passwd: MSGConstans.MSG_Password,
+      serverIP: MSGConstant.MSG_IP,
+      port: MSGConstant.MSG_Port,
+      hostName: MSGConstant.MSG_HostName,
+      userName: MSGConstant.MSG_UserName,
+      passwd: MSGConstant.MSG_Password,
       userID: this.props.user.currentUser.userId,
     }
     SMessageService.sendFile(
@@ -269,7 +269,7 @@ export default class Friend extends Component {
         time: time,
         system: 0,
         message: {
-          type: 6, //文件接收通知
+          type: MSGConstant.MSG_FILE_NOTIFY, //文件接收通知
           message: {
             message: '[文件]',
             fileName: res.fileName,
@@ -284,16 +284,17 @@ export default class Friend extends Component {
     })
   }
 
-  _onReceiveProgress = (value) => {
-    let reduxMessage =  this.props.chat[this.props.user.currentUser.userId][value.talkId].history[value.msgId]
+  _onReceiveProgress = value => {
+    let reduxMessage = this.props.chat[this.props.user.currentUser.userId][
+      value.talkId
+    ].history[value.msgId]
     reduxMessage.message.message.progress = value.percentage
-    this.props.editChat &&
-      this.props.props.editChat({
-        userId: this.props.user.currentUser.userId,
-        talkId: value.talkId,
-        msgId: value.msgId,
-        editItem: reduxMessage,
-      })
+    MessageDataHandle.editMessage({
+      userId: this.props.user.currentUser.userId,
+      talkId: value.talkId,
+      msgId: value.msgId,
+      editItem: reduxMessage,
+    })
   }
   _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
@@ -311,13 +312,12 @@ export default class Friend extends Component {
           ].history[msgId]
           message.msg.message.isReceived = 1
           message.msg.message.filePath = receivePath + '/' + fileName
-          this.props.editChat &&
-            this.props.editChat({
-              userId: this.props.user.currentUser.userId,
-              talkId: talkId,
-              msgId: msgId,
-              editItem: message,
-            })
+          MessageDataHandle.editMessage({
+            userId: this.props.user.currentUser.userId,
+            talkId: talkId,
+            msgId: msgId,
+            editItem: message,
+          })
         }
       })
     }
@@ -412,7 +412,7 @@ export default class Friend extends Component {
         }
 
         //文件通知消息
-        if (messageObj.message.type && messageObj.message.type === 6) {
+        if (messageObj.message.type && messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY) {
           messageObj.message.message.isReceived = 0
         }
 
@@ -467,11 +467,11 @@ export default class Friend extends Component {
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
           SMessageService.connectService(
-            MSGConstans.MSG_IP,
-            MSGConstans.MSG_Port,
-            MSGConstans.MSG_HostName,
-            MSGConstans.MSG_UserName,
-            MSGConstans.MSG_Password,
+            MSGConstant.MSG_IP,
+            MSGConstant.MSG_Port,
+            MSGConstant.MSG_HostName,
+            MSGConstant.MSG_UserName,
+            MSGConstant.MSG_Password,
             this.props.user.currentUser.userId,
           )
             .then(res => {
