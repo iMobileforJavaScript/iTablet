@@ -541,6 +541,7 @@ class Chat extends React.Component {
           <GiftedChat
             placeholder="message..."
             messages={this.state.messages}
+            showAvatarForEveryMessage={false}
             onSend={this.onSend}
             loadEarlier={this.state.loadEarlier}
             onLoadEarlier={this.onLoadEarlier}
@@ -645,12 +646,14 @@ class Chat extends React.Component {
         wrapperStyle={{
           left: {
             //对方的气泡
+            marginTop: scaleSize(1),
             backgroundColor: 'white',
             overflow: 'hidden',
             borderRadius: scaleSize(10),
           },
           right: {
             //我方的气泡
+            marginTop: scaleSize(1),
             backgroundColor: 'blue',
             overflow: 'hidden',
             borderRadius: scaleSize(10),

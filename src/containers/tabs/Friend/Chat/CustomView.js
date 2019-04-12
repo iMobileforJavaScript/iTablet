@@ -43,10 +43,16 @@ export default class CustomView extends React.Component {
               : [styles.fileContainer, styles.fileContainerRight]
           }
         >
-          <Text style={styles.fileName}>
+          <Text style={this.props.position === 'left'
+            ? styles.fileName : [styles.fileName, {color: 'white'}]}
+          >
             {this.props.currentMessage.message.message.fileName}
           </Text>
-          <Text style={styles.fileSize}>{fileSizeText}</Text>
+          <Text style={this.props.position === 'left'
+           ? styles.fileSize : [styles.fileSize, {color: 'white'}]}
+          >
+            {fileSizeText}
+          </Text>
         </View>
       )
     }
