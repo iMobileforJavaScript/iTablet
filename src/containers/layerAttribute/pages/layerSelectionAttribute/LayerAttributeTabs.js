@@ -396,7 +396,7 @@ export default class LayerAttributeTabs extends React.Component {
     GLOBAL.toolBox &&
       GLOBAL.toolBox.showFullMap &&
       GLOBAL.toolBox.showFullMap(true)
-    GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
+    // GLOBAL.currentToolbarType = ConstToolType.MAP_TOOL_SELECT_BY_RECTANGLE
 
     GLOBAL.toolBox &&
       GLOBAL.toolBox.setVisible(

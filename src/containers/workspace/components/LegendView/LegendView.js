@@ -1,38 +1,35 @@
 import * as React from 'react'
-import { View, StyleSheet } from 'react-native'
-// import { SMRLegendView, SMLegendView } from 'imobile_for_reactnative'
-// import { scaleSize } from '../../../../utils'
+import { StyleSheet } from 'react-native'
+import { SMRLegendView } from 'imobile_for_reactnative'
 
 export default class LegendView extends React.Component {
-  constructor(props) {
-    super(props)
+  props: {
+    device: Object,
   }
 
-  componentDidMount() {}
+  constructor(props) {
+    super(props)
+    this.state = {
+      column: props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    if (this.props.device.orientation !== prevProps.device.orientation) {
+      this.setState({
+        column: this.props.device.orientation === 'LANDSCAPE' ? 8 : 4,
+      })
+    }
+  }
 
   render() {
-    return (
-      <View style={styles.container}>
-        {/*<View style={{flex: 1, backgroundColor: 'gray'}}/>*/}
-        {/*<SMRLegendView*/}
-        {/*LegendStyle={{*/}
-        {/*width: scaleSize(200),*/}
-        {/*height: scaleSize(300),*/}
-        {/*TextSize: 30,*/}
-        {/*RowHeight: 200,*/}
-        {/*// TextColor: 0xFFFF0000,*/}
-        {/*}}*/}
-        {/*/>*/}
-        {/*<View style={{flex: 1, backgroundColor: 'blue'}}/>*/}
-        {/*<SMLegendView mapId={'aaa'} />*/}
-      </View>
-    )
+    return <SMRLegendView style={styles.table} />
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  table: {
     flex: 1,
-    // backgroundColor: 'yellow',
+    backgroundColor: 'white',
   },
 })

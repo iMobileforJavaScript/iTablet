@@ -17,6 +17,12 @@ function getMapSettings() {
           isShow: true,
           sectionIndex: 0,
         },
+        // {
+        //   name: '专题图图例',
+        //   value: false,
+        //   isShow: true,
+        //   sectionIndex: 0,
+        // },
       ],
     },
     {
