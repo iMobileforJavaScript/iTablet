@@ -12,6 +12,7 @@ import {
   SectionList,
   Dimensions,
   TouchableOpacity,
+  Image,
 } from 'react-native'
 import { Container } from '../../../../components'
 import RenderServiceItem from './RenderServiceItem'
@@ -21,6 +22,7 @@ import { color, size } from '../../../../styles'
 import PopupModal from './PopupModal'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
+import { language, getLanguage } from '../../../../language/index' 
 
 /**
  * 变量命名规则：私有为_XXX, 若变量为一个对象，则命名为 objXXX,若为一个数组，则命名为 arrXXX,...
@@ -40,8 +42,8 @@ export default class MyService extends Component {
   constructor(props) {
     super(props)
     this.screenWidth = Dimensions.get('window').width
-    this.publishServiceTitle = '共有服务'
-    this.privateServiceTitle = '私有服务'
+    this.publishServiceTitle = getLanguage(global.language).Profile.PRIVATE_SERVICE,
+    this.privateServiceTitle = getLanguage(global.language).Profile.PUBLIC_SERVICE,
     this.state = {
       arrPrivateServiceList: _arrPrivateServiceList,
       arrPublishServiceList: _arrPublishServiceList,
@@ -182,6 +184,9 @@ export default class MyService extends Component {
 
   _renderSectionHeader(section) {
     let title = section.section.title
+    let imageSource = section.section.isShowItem
+      ? require('../../../../assets/Mine/local_data_open.png')
+      : require('../../../../assets/Mine/local_data_close.png')
     if (title !== undefined) {
       let height = scaleSize(80)
       let fontSize = size.fontSize.fontSizeXl
@@ -189,14 +194,25 @@ export default class MyService extends Component {
         <TouchableOpacity
           style={{
             backgroundColor: color.contentColorGray,
-            justifyContent: 'center',
+            // justifyContent: 'center',
+            alignItems: 'center',
             width: '100%',
             height: height,
+            flexDirection: 'row',
           }}
           onPress={() => {
             this._isShowRenderItem(section.section.isShowItem, title)
           }}
         >
+          <Image
+            source={imageSource}
+            style={{
+              tintColor: color.imageColorWhite,
+              marginLeft: 10,
+              width: scaleSize(30),
+              height: scaleSize(30),
+            }}
+          />
           <Text
             style={{
               color: color.fontColorWhite,
@@ -473,7 +489,8 @@ export default class MyService extends Component {
               color: color.font_color_white,
             }}
           >
-            加载中...
+          {getLanguage(global.language).Prompt.LOADING}
+            {/* //加载中... */}
           </Text>
         </View>
       )
@@ -557,7 +574,9 @@ export default class MyService extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '我的服务',
+          title: getLanguage(global.language).Profile.MY_SERVICE,
+            
+          //'我的服务',
           withoutBack: false,
           navigation: this.props.navigation,
         }}

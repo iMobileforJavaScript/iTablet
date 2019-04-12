@@ -11,13 +11,15 @@ import {
   FlatList,
   Image,
 } from 'react-native'
-
+// eslint-disable-next-line
+//import { ActionPopover } from 'teaset'
 import NavigationService from '../../../NavigationService'
 import { scaleSize } from '../../../../utils/screen'
 import { Dialog } from '../../../../components'
 import { styles } from './Styles'
 import { dialogStyles } from './../Styles'
 import FriendListFileHandle from '../FriendListFileHandle'
+import MessageDataHandle from './../MessageDataHandle'
 
 // import Friend from './../Friend'
 
@@ -32,7 +34,7 @@ class FriendMessage extends Component {
     super(props)
     this.screenWidth = Dimensions.get('window').width
     this.inFormData = []
-
+    this.target
     //this.chat;
     this.state = {
       data: [],
@@ -41,13 +43,9 @@ class FriendMessage extends Component {
     }
   }
 
-  // refresh = () =>
-  // {
-  //   if (JSON.stringify(this.chat) !== JSON.stringify(this.props.friend.props.chat)) {
-  //     this.chat = this.props.friend.props.chat;
-  //     this.getContacts(this.props)
-  //   }
-  // }
+  refresh = () => {
+    this.getContacts()
+  }
   componentDidMount() {
     // this.chat = this.props.friend.props.chat
     this.getContacts()
@@ -140,14 +138,14 @@ class FriendMessage extends Component {
         }
       }
     }
-    if (this.inFormData.length > 2) {
+    if (this.inFormData.length > 1) {
       this.inFormData = this.inFormData.sort((obj1, obj2) => {
         let time1 = obj1.time
         let time2 = obj2.time
         return time2 - time1
       })
     }
-    if (srcData.length > 2) {
+    if (srcData.length > 1) {
       srcData = srcData.sort((obj1, obj2) => {
         let msg1 = obj1.message[obj1.message.length - 1]
         let msg2 = obj2.message[obj2.message.length - 1]
@@ -195,21 +193,92 @@ class FriendMessage extends Component {
           keyExtractor={(item, index) => index.toString()}
         />
         {this.renderDialog()}
-        {this.renderDialogConfirm()}
       </View>
     )
   }
 
+  _showPopover = (pressView, item) => {
+    let items = []
+    if (!item) {
+      items = [
+        {
+          title: '清空通知消息',
+          onPress: () => {
+            MessageDataHandle.delMessage({
+              //清除未读信息
+              userId: this.props.user.userId, //当前登录账户的id
+              talkId: 1, //会话ID
+            })
+          },
+        },
+      ]
+    } else {
+      this.target = item
+      // let friendMsgHandle = this
+      let obj = {
+        title: '标记已读',
+        onPress: () => {
+          MessageDataHandle.readMessage({
+            //清除未读信息
+            userId: this.props.user.userId, //当前登录账户的id
+            talkId: this.target.id, //会话ID
+          })
+        },
+      }
+      if (item.unReadMsg === 0) {
+        obj = {
+          title: '标记未读',
+          onPress: () => {
+            MessageDataHandle.unReadMessage({
+              //清除未读信息
+              userId: this.props.user.userId, //当前登录账户的id
+              talkId: this.target.id, //会话ID
+            })
+          },
+        }
+      }
+      items = [
+        obj,
+        {
+          title: '删除',
+          onPress: () => {
+            this.dialog.setDialogVisible(true)
+          },
+        },
+      ]
+    }
+    // pressView.measure((ox, oy, width, height, px, py) => {
+    //   ActionPopover.show(
+    //     {
+    //       x: px,
+    //       y: py,
+    //       width,
+    //       height,
+    //     },
+    //     items,
+    //   )
+    // })
+  }
+
   _renderInformItem() {
+    let iTemView
     return (
       <TouchableOpacity
         style={[
           styles.ItemViewStyle,
           { borderBottomWidth: 1, borderColor: 'rgba(213,213,213,1.0)' },
         ]}
+        ref={ref => (iTemView = ref)}
         activeOpacity={0.75}
+        onLongPress={() => {
+          this._showPopover(iTemView)
+        }}
         onPress={() => {
-          this.props.friend.setReadTalk(this.props.user.userId, 1)
+          MessageDataHandle.readMessage({
+            //清除未读信息
+            userId: this.props.user.userId, //当前登录账户的id
+            talkId: 1, //会话ID
+          })
           NavigationService.navigate('InformMessage', {
             user: this.props.user,
             messageInfo: this.inFormData,
@@ -291,12 +360,17 @@ class FriendMessage extends Component {
         ':' +
         ctime.getMinutes()
 
+      let iTemView
       return (
         <TouchableOpacity
+          ref={ref => (iTemView = ref)}
           style={styles.ItemViewStyle}
           activeOpacity={0.75}
           onPress={() => {
             this._onSectionselect(item, index)
+          }}
+          onLongPress={() => {
+            this._showPopover(iTemView, item)
           }}
         >
           <View style={styles.ITemHeadTextViewStyle}>
@@ -344,7 +418,9 @@ class FriendMessage extends Component {
                 top: scaleSize(10),
               }}
             >
-              {lastMessage.msg}
+              {lastMessage.msg.type
+                ? lastMessage.msg.message.message
+                : lastMessage.msg}
             </Text>
           </View>
           <View
@@ -396,20 +472,6 @@ class FriendMessage extends Component {
     )
   }
 
-  renderDialogConfirm = () => {
-    return (
-      <Dialog
-        ref={ref => (this.dialogConfirm = ref)}
-        type={'modal'}
-        confirmBtnTitle={'确定'}
-        confirmAction={() => this.dialogConfirm.setDialogVisible(false)}
-        opacity={1}
-        opacityStyle={styles.opacityView}
-        style={dialogStyles.dialogBackgroundX}
-      />
-    )
-  }
-
   renderDialogChildren = () => {
     return (
       <View style={dialogStyles.dialogHeaderViewX}>
@@ -417,7 +479,9 @@ class FriendMessage extends Component {
           source={require('../../../../assets/home/Frenchgrey/icon_prompt.png')}
           style={dialogStyles.dialogHeaderImgX}
         />
-        <Text style={dialogStyles.promptTtileX}>同意对方添加请求 ？</Text>
+        <Text style={dialogStyles.promptTtileX}>
+          删除后,将清空该聊天的消息记录
+        </Text>
       </View>
     )
   }
@@ -428,7 +492,14 @@ class FriendMessage extends Component {
         type={'modal'}
         confirmBtnTitle={'确定'}
         cancelBtnTitle={'取消'}
-        confirmAction={this._acceptFriendAdd}
+        confirmAction={() => {
+          MessageDataHandle.delMessage({
+            //清除未读信息
+            userId: this.props.user.userId, //当前登录账户的id
+            talkId: this.target.id, //会话ID
+          })
+          this.dialog.setDialogVisible(false)
+        }}
         opacity={1}
         opacityStyle={styles.opacityView}
         style={dialogStyles.dialogBackgroundX}

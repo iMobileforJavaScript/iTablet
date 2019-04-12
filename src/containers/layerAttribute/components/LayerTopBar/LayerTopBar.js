@@ -9,6 +9,7 @@ import { View, ScrollView } from 'react-native'
 import { ImageButton } from '../../../../components'
 import { getThemeAssets, getPublicAssets } from '../../../../assets'
 import styles from './styles'
+import {language, getLanguage } from '../../../../language/index'
 
 export default class LayerTopBar extends React.Component {
   props: {
@@ -16,6 +17,7 @@ export default class LayerTopBar extends React.Component {
     undoAction: () => {},
     relateAction: () => {},
     tabsAction?: () => {}, // 显示侧滑栏
+    canTabs?: boolean, // 是否可点击切换标签
     canLocated?: boolean, // 是否可点击定位
     canUndo?: boolean, // 是否可点击撤销
     canRelated?: boolean, // 是否可点击关联
@@ -23,6 +25,7 @@ export default class LayerTopBar extends React.Component {
   }
 
   static defaultProps = {
+    canTabs: true,
     canLocated: true,
     canUndo: false,
     canRelated: false,
@@ -104,12 +107,12 @@ export default class LayerTopBar extends React.Component {
       <View style={styles.container}>
         {this.props.hasTabBtn &&
           this.renderTabBtn({
-            icon: this.props.canLocated
+            icon: this.props.canTabs
               ? getThemeAssets().attribute.rightbar_tool_select_layerlist
               : getThemeAssets().attribute.rightbar_tool_select_layerlist,
             key: '标签',
             action: this.tabsAction,
-            enabled: this.props.canLocated,
+            enabled: this.props.canTabs,
             style: styles.tabBtn,
           })}
         <ScrollView horizontal style={styles.rightList}>
@@ -118,7 +121,8 @@ export default class LayerTopBar extends React.Component {
               ? getThemeAssets().attribute.attribute_location
               : getThemeAssets().attribute.attribute_location,
             key: '定位',
-            title: '定位',
+            title:  getLanguage(global.language).Map_Attribute.ATTRIBUTE_LOCATION,
+            //'定位',
             action: this.locateAction,
             enabled: this.props.canLocated,
           })}
@@ -136,7 +140,8 @@ export default class LayerTopBar extends React.Component {
               ? getThemeAssets().attribute.icon_attribute_browse
               : getPublicAssets().attribute.icon_attribute_browse,
             key: '关联',
-            title: '关联',
+            title:  getLanguage(global.language).Map_Attribute.ATTRIBUTE_ASSOCIATION,
+            //'关联',
             action: this.relateAction,
             enabled: this.props.canRelated,
           })}

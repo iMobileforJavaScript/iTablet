@@ -4,8 +4,8 @@ import {
   ConstInfo,
   ConstPath,
   Const,
-  ConstOnline,
   UserType,
+  ConstOnline,
 } from '../../../../constants'
 import { Toast } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
@@ -13,7 +13,7 @@ import constants from '../../constants'
 // import Orientation from 'react-native-orientation'
 let _params = {}
 import { SMap, SScene } from 'imobile_for_reactnative'
-
+import{language, getLanguage }from '../../../../language/index'
 function setParams(params) {
   _params = params
 }
@@ -34,21 +34,24 @@ function getStart(type, params) {
         // },
         {
           key: constants.OPEN,
-          title: constants.OPEN,
+          title:getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP, 
+          //constants.OPEN,
           action: openMap,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
           key: constants.CREATE,
-          title: constants.CREATE,
+          title: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+          //constants.CREATE,
           size: 'large',
           action: () => isNeedToSave(create),
           image: require('../../../../assets/mapTools/icon_create_black.png'),
         },
         {
           key: constants.HISTORY,
-          title: constants.HISTORY,
+          title: getLanguage(global.language).Map_Main_Menu.START_RECENT,
+          //constants.HISTORY,
           size: 'large',
           action: showHistory,
           image: require('../../../../assets/mapTools/icon_history_black.png'),
@@ -76,7 +79,8 @@ function getStart(type, params) {
         // },
         {
           key: constants.SAVE,
-          title: constants.SAVE,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_MAP,
+          //constants.SAVE,
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
@@ -84,7 +88,8 @@ function getStart(type, params) {
         },
         {
           key: constants.SAVE_AS,
-          title: constants.SAVE_AS,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
+          //constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
           image: require('../../../../assets/mapTools/icon_save_as_black.png'),
@@ -113,7 +118,8 @@ function getStart(type, params) {
         // },
         {
           key: constants.OPEN,
-          title: '打开场景',
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_SENCE,
+          //'打开场景',
           action: () => {
             if (!_params.setToolbarVisible) return
             _params.setToolbarVisible(
@@ -150,21 +156,24 @@ function getStart(type, params) {
         // },
         {
           key: constants.OPEN,
-          title: constants.OPEN,
+          title:  getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //constants.OPEN,
           action: openMap,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
           key: constants.CREATE,
-          title: constants.CREATE,
+          title: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+          //constants.CREATE,
           size: 'large',
           action: () => isNeedToSave(openTemplate),
           image: require('../../../../assets/mapTools/icon_create_black.png'),
         },
         {
           key: constants.HISTORY,
-          title: constants.HISTORY,
+          title: getLanguage(global.language).Map_Main_Menu.START_RECENT,
+          //constants.HISTORY,
           size: 'large',
           action: showHistory,
           image: require('../../../../assets/mapTools/icon_history_black.png'),
@@ -185,7 +194,8 @@ function getStart(type, params) {
         // },
         {
           key: constants.SAVE,
-          title: constants.SAVE,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_MAP,
+          //constants.SAVE,
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
@@ -193,7 +203,8 @@ function getStart(type, params) {
         },
         {
           key: constants.SAVE_AS,
-          title: constants.SAVE_AS,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
+          //constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
           image: require('../../../../assets/mapTools/icon_save_as_black.png'),
@@ -211,14 +222,16 @@ function getStart(type, params) {
         // },
         {
           key: constants.OPEN,
-          title: constants.THEME_OPEN,
+          title: getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP,
+          //constants.THEME_OPEN,
           action: openMap,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_open_black.png'),
         },
         {
           key: constants.CREATE,
-          title: constants.THEME_CREATE,
+          title: getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+          //constants.THEME_CREATE,
           size: 'large',
           // action: createThemeMap,
           action: () => isNeedToSave(create),
@@ -226,7 +239,8 @@ function getStart(type, params) {
         },
         {
           key: constants.HISTORY,
-          title: constants.HISTORY,
+          title: getLanguage(global.language).Map_Main_Menu.START_RECENT,
+          //constants.HISTORY,
           size: 'large',
           action: showHistory,
           image: require('../../../../assets/mapTools/icon_history_black.png'),
@@ -248,7 +262,8 @@ function getStart(type, params) {
         // },
         {
           key: constants.SAVE,
-          title: constants.SAVE,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_MAP,
+          //constants.SAVE,
           size: 'large',
           // TODO 保存地图
           action: () => saveMap('TempMap'),
@@ -256,7 +271,8 @@ function getStart(type, params) {
         },
         {
           key: constants.SAVE_AS,
-          title: constants.SAVE_AS,
+          title: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP,
+          //constants.SAVE_AS,
           size: 'large',
           action: saveMapAs,
           image: require('../../../../assets/mapTools/icon_save_as_black.png'),
@@ -402,13 +418,17 @@ function openMap() {
       })
     }
     data.push({
-      title: '我的地图',
+      title: getLanguage(global.language).Map_Main_Menu.OPEN_MAP, 
+      //'我的地图',
       image: require('../../../../assets/mapToolbar/list_type_maps.png'),
       data: userFileList || [],
     })
     _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
       containerType: 'list',
-      height: ConstToolType.HEIGHT[3],
+      height:
+        _params.device.orientation === 'LANDSCAPE'
+          ? ConstToolType.THEME_HEIGHT[4]
+          : ConstToolType.HEIGHT[3],
       data,
     })
   })()
@@ -555,11 +575,13 @@ function openTemplate() {
     }
     let data = [
       {
-        title: Const.CREATE_SYMBOL_COLLECTION,
+        title: getLanguage(global.language).Map_Main_Menu.CREATE_WITH_SYMBOLS, 
+        //Const.CREATE_SYMBOL_COLLECTION,
         data: [],
       },
       {
-        title: Const.CREATE_MODULE,
+        title: getLanguage(global.language).Map_Main_Menu.CREATE_WITH_TEMPLATE, 
+        //Const.CREATE_MODULE,
         data: tpList,
       },
     ]
@@ -633,14 +655,16 @@ function create() {
       )
       let newName = await FileTools.getAvailableMapName(mapPath, 'DefaultMap')
       NavigationService.navigate('InputPage', {
-        headerTitle: '新建地图',
+        headerTitle:  getLanguage(global.language).Map_Main_Menu.START_NEW_MAP,
+        //'新建地图',
         value: newName,
         placeholder: ConstInfo.PLEASE_INPUT_NAME,
         cb: async value => {
           GLOBAL.Loading &&
             GLOBAL.Loading.setLoading(
               true,
-              ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
+              getLanguage(global.language).Prompt.CREATING,
+              // ConstInfo.MAP_SYMBOL_COLLECTION_CREATING,
             )
           await _params.closeMap()
           let userPath =
@@ -709,13 +733,17 @@ function showHistory() {
   })
   let data = [
     {
-      title: Const.HISTORY,
+      title: getLanguage(global.language).Map_Main_Menu.START_RECENT, 
+      //Const.HISTORY,
       data: latestMap,
     },
   ]
   _params.setToolbarVisible(true, ConstToolType.MAP_CHANGE, {
     containerType: 'list',
-    height: ConstToolType.HEIGHT[3],
+    height:
+      _params.device.orientation === 'LANDSCAPE'
+        ? ConstToolType.THEME_HEIGHT[4]
+        : ConstToolType.HEIGHT[3],
     data,
   })
 }
@@ -889,7 +917,8 @@ function saveMapAs() {
     )
     NavigationService.navigate('InputPage', {
       value: newName,
-      headerTitle: '地图另存',
+      headerTitle: getLanguage(global.language).Map_Main_Menu.START_SAVE_AS_MAP, 
+      //'地图另存',
       placeholder: ConstInfo.PLEASE_INPUT_NAME,
       cb: async value => {
         let addition = {}

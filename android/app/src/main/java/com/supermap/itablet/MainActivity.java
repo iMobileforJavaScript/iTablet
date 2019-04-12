@@ -1,36 +1,26 @@
 package com.supermap.itablet;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.facebook.react.ReactActivity;
+import com.supermap.RN.FileTools;
 import com.supermap.RN.appManager;
 import com.supermap.data.Environment;
-import com.supermap.RN.FileTools;
 import com.supermap.data.LicenseStatus;
-import com.supermap.file.FileManager;
 import com.supermap.file.Utils;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
-import com.tencent.mm.opensdk.modelbase.BaseReq;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
-
-import org.devio.rn.splashscreen.SplashScreen;
-
-import java.io.File;
 
 import io.reactivex.functions.Consumer;
+
+import org.devio.rn.splashscreen.SplashScreen;
 
 public class MainActivity extends ReactActivity {
     public final static String SDCARD = android.os.Environment.getExternalStorageDirectory().getAbsolutePath();

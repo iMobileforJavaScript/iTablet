@@ -17,9 +17,13 @@ export default StyleSheet.create({
   },
 
   /** Check按钮 **/
-  selectContainer: {
+  select: {
     flex: 1,
-    width: scaleSize(120),
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+  },
+  selectContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
@@ -57,9 +61,17 @@ export default StyleSheet.create({
   topRightView: {
     flexDirection: 'row',
     height: ROW_HEIGHT,
-    paddingRight: scaleSize(30),
+    // paddingRight: scaleSize(30),
     alignItems: 'center',
     justifyContent: 'flex-end',
+    backgroundColor: 'transparent',
+  },
+  topRightView2: {
+    flexDirection: 'row',
+    height: ROW_HEIGHT,
+    // paddingRight: scaleSize(30),
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: 'transparent',
   },
   topText: {
@@ -142,7 +154,6 @@ export default StyleSheet.create({
   content: {
     fontSize: size.fontSize.fontSizeMd,
     color: color.fontColorBlack,
-    textAlign: 'center',
     backgroundColor: 'transparent',
   },
   downImg: {

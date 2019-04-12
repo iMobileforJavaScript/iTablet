@@ -18,6 +18,7 @@ import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast } from '../../../../utils'
 import ModalBtns from '../MyModule/ModalBtns'
+import { language,getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 export default class MyLabel extends Component {
   props: {
@@ -102,6 +103,7 @@ export default class MyLabel extends Component {
       server: datasourcePath,
       engineType: EngineType.UDB,
       alias: 'labelDatasource',
+      description: 'Label',
     })
     return result
   }
@@ -167,7 +169,7 @@ export default class MyLabel extends Component {
                 },
               )
           } else {
-            SOnlineService.uploadFile(targetPath, fileName, {
+            SOnlineService.uploadFile(targetPath, name, {
               onProgress: progress => {
                 return progress
               },
@@ -190,7 +192,8 @@ export default class MyLabel extends Component {
   _showMyDataPopupModal = () => {
     let data = [
       {
-        title: '分享',
+        title: getLanguage(global.language).Prompt.SHARE,
+        //'分享',
         action: () => {
           this._closeModal()
           this.ModalBtns.setVisible(true)
@@ -198,7 +201,8 @@ export default class MyLabel extends Component {
         },
       },
       {
-        title: '删除数据',
+        title: getLanguage(global.language).Profile.DELETE_DATA,
+        //'删除数据',
         action: () => {
           SMap.removeDatasetByName(this.state.udbPath, this.itemInfo.item.title)
         },
@@ -285,6 +289,7 @@ export default class MyLabel extends Component {
             if (this.uploadList.length > 0) {
               this.dialog.setDialogVisible(true)
               this.ModalBtns.setVisible(false)
+              this.uploadType = 'online'
             } else {
               Toast.show('请选择要分享的数据集')
             }

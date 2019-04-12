@@ -2,8 +2,10 @@ import React, { Component } from 'react'
 import { View, ActivityIndicator, StyleSheet, Modal, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
 export const NORMAL = 'NORMAL'
+import { language,getLanguage } from '../../language/index'
 
-const INFO = '加载中'
+const INFO = getLanguage(global.language).Prompt.LOADING
+//'加载中'
 
 export default class Loading extends Component {
   props: {
@@ -28,7 +30,7 @@ export default class Loading extends Component {
     displayMode: 'NORMAL',
     indicatorMode: 'BLACK_WITH_TITLE', // BLACK_WITH_TITLE   NORMAL
     info: INFO,
-    timeout: 6000,
+    // timeout: 6000,
   }
 
   constructor(props) {

@@ -20,17 +20,23 @@ import { Toast, scaleSize, setSpText } from '../../utils'
 import { MapToolbar, OverlayView } from '../workspace/components'
 import { SMap, ThemeType, DatasetType } from 'imobile_for_reactnative'
 import { LayerManager_item, LayerManager_tolbar } from './components'
-import { ConstToolType, MAP_MODULE, ConstPath } from '../../constants'
+import {
+  ConstToolType,
+  ConstPath,
+  getHeaderTitle,
+  ConstOnline,
+} from '../../constants'
 import { color, size } from '../../styles'
 const LAYER_GROUP = 'layerGroup'
-import ConstOnline from '../../constants/ConstOnline'
 import * as LayerUtils from './LayerUtils'
 import { getThemeAssets } from '../../assets'
 import { FileTools } from '../../native'
+import { getLanguage } from '../../language/index'
 // import NavigationService from '../../containers/NavigationService'
 
 export default class MT_layerManager extends React.Component {
   props: {
+    language:Object,
     navigation: Object,
     editLayer: Object,
     map: Object,
@@ -43,10 +49,12 @@ export default class MT_layerManager extends React.Component {
     clearAttributeHistory: () => {},
     device: Object,
     currentLayer: Object,
+    setMapLegend: () => {},
   }
 
   constructor(props) {
     super(props)
+    const { params } = props.navigation.state
     this.state = {
       // datasourceList: [],
       mapName: '',
@@ -54,6 +62,7 @@ export default class MT_layerManager extends React.Component {
       currentOpenItemName: '', // 记录左滑的图层的名称
       data: [],
       selectLayer: this.props.currentLayer.caption,
+      type: params && params.type, // 底部Tabbar类型
     }
   }
 
@@ -85,17 +94,20 @@ export default class MT_layerManager extends React.Component {
         dataList = await SMap.getUDBName(udbPath)
         newState.data = [
           {
-            title: '我的图层',
+            title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层',
             data: this.props.layers,
             visible: true,
           },
           {
-            title: '我的底图',
+            title: getLanguage(this.props.language).Map_Layer.BASEMAP,
+            //'我的底图',
             data: baseData,
             visible: true,
           },
           {
-            title: '我的标注',
+            title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
             data: dataList,
             visible: true,
           },
@@ -163,13 +175,18 @@ export default class MT_layerManager extends React.Component {
       dataList = await SMap.getUDBName(udbPath)
       this.setState({
         data: [
-          { title: '我的图层', data: layers, visible: true },
+          { title: getLanguage(this.props.language).Map_Layer.LAYERS,
+            //'我的图层', 
+            data: layers, visible: true },
           {
-            title: '我的底图',
+            title:getLanguage(this.props.language).Map_Layer.BASEMAP,
+            // '我的底图',
             data: baseMap,
             visible: true,
           },
-          { title: '我的标注', data: dataList, visible: true },
+          { title: getLanguage(this.props.language).Map_Layer.PLOTS,
+            //'我的标注',
+             data: dataList, visible: true },
         ],
         selectLayer: this.props.currentLayer.caption,
         refreshing: false,
@@ -485,6 +502,12 @@ export default class MT_layerManager extends React.Component {
       case ThemeType.GRAPH:
         curThemeType = constants.THEME_GRAPH_STYLE
         break
+      case ThemeType.GRIDRANGE:
+        curThemeType = constants.THEME_GRID_RANGE
+        break
+      case ThemeType.GRIDUNIQUE:
+        curThemeType = constants.THEME_GRID_UNIQUE
+        break
       default:
         Toast.show('提示:当前图层暂不支持修改')
         break
@@ -506,11 +529,15 @@ export default class MT_layerManager extends React.Component {
       )
       GLOBAL.toolBox && GLOBAL.toolBox.showFullMap()
       this.props.navigation.navigate('MapView')
-      Toast.show('当前图层为:' + data.name)
+      Toast.show(
+        //'当前图层为:'
+        getLanguage(this.props.language).Prompt.THE_CURRENT_LAYER
+         + data.name)
     }
   }
 
   onPressRow = async ({ data }) => {
+    this.props.setMapLegend(false)
     this.props.setCurrentLayer &&
       this.props.setCurrentLayer(data, () => {
         // 切换地图，清除历史记录
@@ -588,14 +615,14 @@ export default class MT_layerManager extends React.Component {
     }
   }
 
-  getChildList = async ({ data }) => {
+  getChildList = async ({ data, section }) => {
     try {
       if (data.type !== 'layerGroup') return
       this.container.setLoading(true)
       let layers = await SMap.getLayersByGroupPath(data.path)
       let child = []
       for (let i = 0; i < layers.length; i++) {
-        child.push(this._renderItem({ item: layers[i] }))
+        child.push(this._renderItem({ item: layers[i], section }))
       }
       this.container.setLoading(false)
       return child
@@ -607,6 +634,26 @@ export default class MT_layerManager extends React.Component {
   }
 
   setLayerVisible = (data, value) => {
+    let layers = this.state.data[0].data
+    let backMaps = this.state.data[1].data
+    let hasDeal = false
+    let caption = data.caption
+    let curData = this.state.data.concat()
+    for (let i = 0, l = layers.length; i < l; i++) {
+      if (caption === layers[i].caption) {
+        curData[0].data[i].isVisible = value
+        hasDeal = true
+        break
+      }
+    }
+    if (!hasDeal)
+      for (let j = 0, l = backMaps.length; j < l; j++) {
+        if (caption === backMaps[j].caption) {
+          curData[1].data.isVisible = value
+          hasDeal = true
+          break
+        }
+      }
     SMap.setLayerVisible(data.path, value)
   }
 
@@ -716,9 +763,10 @@ export default class MT_layerManager extends React.Component {
     if (section.visible) {
       if (item) {
         let action
-        if (section.title === '我的标注') {
+        if (section.title === getLanguage(this.props.language).Map_Layer.PLOTS) {
           return (
             <TouchableOpacity
+              key={item.name}
               style={{
                 height: scaleSize(80),
                 padding: scaleSize(6),
@@ -779,7 +827,7 @@ export default class MT_layerManager extends React.Component {
             </TouchableOpacity>
           )
         } else {
-          if (section.title === '我的图层') {
+          if (section.title === getLanguage(this.props.language).Map_Layer.LAYERS) {
             action = this.onToolPress
             if (
               this.props.layers.length > 0 &&
@@ -799,7 +847,7 @@ export default class MT_layerManager extends React.Component {
           }
           return (
             <LayerManager_item
-              key={item.id}
+              key={item.name}
               // sectionID={sectionID}
               // rowID={item.index}
               ref={ref => {
@@ -828,7 +876,9 @@ export default class MT_layerManager extends React.Component {
               selectLayer={this.state.selectLayer}
               onPress={this.onPressRow}
               onAllPress={this.onAllPressRow}
-              onArrowPress={this.getChildList}
+              onArrowPress={({ data, layer }) =>
+                this.getChildList({ data, layer, section })
+              }
               onToolPress={action}
             />
           )
@@ -890,7 +940,9 @@ export default class MT_layerManager extends React.Component {
   }
 
   renderToolBar = () => {
-    return <MapToolbar navigation={this.props.navigation} initIndex={1} />
+    return (
+      <MapToolbar navigation={this.props.navigation} type={this.state.type} />
+    )
   }
 
   renderList = () => {
@@ -956,6 +1008,7 @@ export default class MT_layerManager extends React.Component {
   renderTool = () => {
     return (
       <LayerManager_tolbar
+        language={this.props.language}
         ref={ref => (this.toolBox = ref)}
         {...this.props}
         onPress={this.onPressRow}
@@ -965,29 +1018,11 @@ export default class MT_layerManager extends React.Component {
   }
 
   render() {
-    let title
-    switch (GLOBAL.Type) {
-      case constants.COLLECTION:
-        title = MAP_MODULE.MAP_COLLECTION
-        break
-      case constants.MAP_EDIT:
-        title = MAP_MODULE.MAP_EDIT
-        break
-      case constants.MAP_3D:
-        title = MAP_MODULE.MAP_3D
-        break
-      case constants.MAP_THEME:
-        title = MAP_MODULE.MAP_THEME
-        break
-      case constants.MAP_PLOTTING:
-        title = MAP_MODULE.MAP_PLOTTING
-        break
-    }
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: title,
+          title: getHeaderTitle(GLOBAL.Type),
           navigation: this.props.navigation,
           // backAction: this.back,
           // backImg: require('../../assets/mapTools/icon_close.png'),

@@ -20,11 +20,15 @@ import UserType from '../../../../constants/UserType'
 import { scaleSize } from '../../../../utils'
 import NavigationService from '../../../NavigationService'
 import MyOnlineData from '../MyOnlineData'
+import{ getLanguage }from '../../../../language/index'
+
 export default class MyLocalData extends Component {
   props: {
+    language:Object,
     user: Object,
     navigation: Object,
     importWorkspace: () => {},
+    importSceneWorkspace: () => {},
   }
 
   constructor(props) {
@@ -248,7 +252,9 @@ export default class MyLocalData extends Component {
       let weixinData = await this._constructTecentOfweixin()
       let newData = userData.concat(customerSectionData, qqData, weixinData)
       let newSectionData = cacheSectionData.concat([
-        { title: '外部数据', data: newData, isShowItem: true },
+        { title: //'外部数据'
+          getLanguage(this.props.language).Profile.ON_DEVICE,
+          data: newData, isShowItem: true },
       ])
       this.setState(
         {
@@ -442,7 +448,8 @@ export default class MyLocalData extends Component {
       newData,
       false,
     )
-    let titleWorkspace = '样例数据'
+    //'样例数据'
+    let titleWorkspace = getLanguage(this.props.language).Profile.SAMPLEDATA
     let sectionData
     if (newData.length === 0) {
       sectionData = []
@@ -464,7 +471,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )
@@ -488,7 +495,7 @@ export default class MyLocalData extends Component {
     let newData = []
     await this._setFilterDatas(
       this.path,
-      { smwu: 'smwu', sxwu: 'sxwu', udb: 'udb' },
+      { smwu: 'smwu', sxwu: 'sxwu' },
       newData,
       false,
     )
@@ -619,7 +626,7 @@ export default class MyLocalData extends Component {
         <View
           style={{
             flexDirection: 'row',
-            backgroundColor: color.contentColorWhite,
+            // backgroundColor: color.contentColorWhite,
             alignItems: 'center',
             height: itemHeight,
           }}
@@ -632,7 +639,7 @@ export default class MyLocalData extends Component {
               tintColor: imageColor,
             }}
             resizeMode={'contain'}
-            source={require('../../../../assets/Mine/mine_my_online_data.png')}
+            source={require('../../../../assets/Mine/mine_my_import_local_light.png')}
           />
           <View style={{ flex: 1, justifyContent: 'center' }}>
             <Text
@@ -694,7 +701,9 @@ export default class MyLocalData extends Component {
   _onDeleteData = async () => {
     try {
       this._closeModal()
-      this.setLoading(true, '删除数据中...')
+      this.setLoading(true, 
+        //'删除数据中...'
+        getLanguage(this.props.language).Prompt.DELETING)
       if (this.itemInfo !== undefined) {
         let directory = this.itemInfo.item.directory
 
@@ -706,13 +715,16 @@ export default class MyLocalData extends Component {
           result = true
         }
         if (result === true) {
-          Toast.show('删除成功')
+          Toast.show(
+            //'删除成功'
+            getLanguage(this.props.language).Prompt.DELETED_SUCCESS)
           let sectionData = [...this.state.sectionData]
           for (let i = 0; i < sectionData.length; i++) {
             let data = sectionData[i]
             if (data.title === this.itemInfo.section.title) {
               data.data.splice(this.itemInfo.index, 1)
-              if (data.title === '外部数据') {
+              //'外部数据'
+              if (data.title === getLanguage(this.props.language).Profile.ON_DEVICE) {
                 AsyncStorage.setItem(
                   'ExternalSectionData',
                   JSON.stringify(data),
@@ -725,7 +737,9 @@ export default class MyLocalData extends Component {
         }
       }
     } catch (e) {
-      Toast.show('删除失败')
+      Toast.show(
+        //'删除失败')
+        getLanguage(this.props.language).Prompt.FAILED_TO_DELETE)
       this._closeModal()
     } finally {
       this.setLoading(false)
@@ -736,29 +750,35 @@ export default class MyLocalData extends Component {
     try {
       this._closeModal()
       if (this.itemInfo !== undefined) {
-        this.setLoading(true, ConstInfo.DATA_IMPORTING)
+        this.setLoading(true, 
+          //ConstInfo.DATA_IMPORTING
+          getLanguage(this.props.language).Prompt.IMPORTING_DATA
+          )
         let filePath = this.itemInfo.item.filePath
         let is3D = await SScene.is3DWorkspace({ server: filePath })
         if (is3D === true) {
-          let result = await SScene.import3DWorkspace({ server: filePath })
+          let result = await this.props.importSceneWorkspace({
+            server: filePath,
+          })
           if (result === true) {
-            Toast.show('导入3D成功')
+            Toast.show( getLanguage(this.props.language).Prompt.IMPORTED_3D_SUCCESS)
           } else {
-            Toast.show('导入3D失败')
+            Toast.show(getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT_3D)
           }
         } else {
           let result = await this.props.importWorkspace({ path: filePath })
           if (result.msg !== undefined) {
-            Toast.show('导入失败')
+            Toast.show( getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
           } else {
-            Toast.show('导入成功')
+            Toast.show( getLanguage(this.props.language).Prompt.IMPORTED_SUCCESS)
           }
         }
         this.setLoading(false)
       }
     } catch (e) {
+      // console.log(e)
       this.setLoading(false)
-      Toast.show('导入失败')
+      Toast.show( getLanguage(this.props.language).Prompt.FAILED_TO_IMPORT)
       this._closeModal()
     }
   }
@@ -767,6 +787,7 @@ export default class MyLocalData extends Component {
     if (!this.state.isFirstLoadingModal) {
       return (
         <LocalDataPopupModal
+          language={this.props.language}
           onDeleteData={this._onDeleteData}
           onImportWorkspace={this._onImportWorkspace}
           onCloseModal={this._closeModal}
@@ -839,7 +860,8 @@ export default class MyLocalData extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '导入',
+          // '导入'
+          title:getLanguage(this.props.language).Profile.IMPORT,
           withoutBack: false,
           navigation: this.props.navigation,
         }}
@@ -858,11 +880,22 @@ export default class MyLocalData extends Component {
           >
             {this.state.textValue}
           </Text>
-          <ScrollView>
+          <ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={this.state.isRefreshing}
+                onRefresh={this._setSectionDataState3}
+                colors={['orange', 'red']}
+                titleColor={'orange'}
+                tintColor={'orange'}
+                title={'刷新中...'}
+                enabled={true}
+              />
+            }
+          >
             <SectionList
               style={{
                 flex: 1,
-                backgroundColor: color.contentColorWhite,
               }}
               sections={sectionData}
               initialNumToRender={20}
@@ -871,17 +904,6 @@ export default class MyLocalData extends Component {
               renderItem={this._renderItem}
               // ItemSeparatorComponent={this._renderItemSeparatorComponent}
               // renderSectionFooter={this._renderSectionSeparatorComponent}
-              refreshControl={
-                <RefreshControl
-                  refreshing={this.state.isRefreshing}
-                  onRefresh={this._setSectionDataState3}
-                  colors={['orange', 'red']}
-                  titleColor={'orange'}
-                  tintColor={'orange'}
-                  title={'刷新中...'}
-                  enabled={true}
-                />
-              }
             />
             {this.renderMyOnlineData()}
           </ScrollView>

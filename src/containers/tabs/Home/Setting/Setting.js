@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import Container from '../../../../components/Container'
 import { color } from '../../../../styles'
 import RenderSettingItem from './RenderSettingItem'
+import {language,getLanguage } from '../../../../language/index'
 export default class Setting extends Component {
   props: {
     navigation: Object,
@@ -14,7 +15,8 @@ export default class Setting extends Component {
     return (
       <Container
         headerProps={{
-          title: '设置',
+          title: getLanguage(global.language).Profile.SETTINGS,
+          //'设置',
           navigation: this.props.navigation,
         }}
       >

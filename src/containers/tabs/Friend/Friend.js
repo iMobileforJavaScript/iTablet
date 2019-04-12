@@ -26,6 +26,8 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstans from './MsgConstans'
+import{ language, getLanguage }from '../../../language/index'
+import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
 let addFriendImg = getThemeAssets().friend.friend_add
@@ -33,10 +35,12 @@ let addFriendImg = getThemeAssets().friend.friend_add
 let g_connectService = false
 export default class Friend extends Component {
   props: {
+    language:Object,
     navigation: Object,
     user: Object,
     chat: Array,
     addChat: () => {},
+    editChat: () => {},
   }
 
   constructor(props) {
@@ -46,6 +50,9 @@ export default class Friend extends Component {
     this.friendList = {}
     this.friendGroup = {}
     this.curChat = undefined
+    MessageDataHandle.setHandle(this.props.addChat)
+    FriendListFileHandle.refreshCallback = this.refreshList
+    FriendListFileHandle.refreshMessageCallback = this.refreshMsg
     this.state = {
       data: [{}],
       bHasUserInfo: false,
@@ -53,6 +60,8 @@ export default class Friend extends Component {
       isLoadingData: false,
       showPop: false,
     }
+
+    this._receiveMessage = this._receiveMessage.bind(this)
   }
 
   componentDidMount() {
@@ -75,6 +84,11 @@ export default class Friend extends Component {
     }
   }
 
+  refreshMsg = () => {
+    if (this.friendMessage && this.friendMessage.refresh)
+      this.friendMessage.refresh()
+  }
+
   refreshList = () => {
     if (this.friendList && this.friendList.refresh) this.friendList.refresh()
     if (this.friendGroup && this.friendGroup.refresh) this.friendGroup.refresh()
@@ -83,20 +97,14 @@ export default class Friend extends Component {
   setCurChat = chat => {
     this.curChat = chat
     if (this.curChat) {
-      this.setReadTalk(
-        this.props.user.currentUser.userId,
-        this.curChat.targetUser.id,
-      )
+      MessageDataHandle.readMessage({
+        //清除未读信息
+        userId: this.props.user.currentUser.userId, //当前登录账户的id
+        talkId: this.curChat.targetUser.id, //会话ID
+      })
     }
   }
-  setReadTalk = (userId, talkId) => {
-    this.props.addChat &&
-      this.props.addChat({
-        //清除未读信息
-        userId: userId, //当前登录账户的id
-        talkId: talkId, //会话ID
-      })
-  }
+
   // componentDidUpdate(prevProps) {
   //   // if (JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user)) {
   //   //  // this
@@ -114,7 +122,8 @@ export default class Friend extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)
+      JSON.stringify(prevState) !== JSON.stringify(this.state)||
+      prevProps.language!==this.props.language
     ) {
       return true
     }
@@ -126,46 +135,42 @@ export default class Friend extends Component {
     let time = Date.parse(ctime)
     // eslint-disable-next-line
 
-    if (members.length < 2) {
-      Toast.show('一人不能发起群聊')
-    } else {
-      let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
-      //服务绑定
-      SMessageService.declareSession(members, groupId)
+    members.push({
+      id: this.props.user.currentUser.userId,
+      name: this.props.user.currentUser.nickname,
+    })
+    let groupId = 'Group_' + time + '_' + this.props.user.currentUser.userId
+    //服务绑定
+    SMessageService.declareSession(members, groupId)
 
-      let msgObj = {
-        user: {
-          name: this.props.user.currentUser.nickname,
-          id: this.props.user.currentUser.userId,
-          groupID: groupId,
-        },
-        members: members,
-        type: 912,
-        time: time,
-        message: this.props.user.currentUser.nickname + '邀请您加入群聊',
-      }
-      let groupName = ''
-      for (let i in members) {
-        if (i > 3) break
-        groupName += members[i].name
-        if (i !== members.length - 2) groupName += '、'
-      }
-      FriendListFileHandle.addToGroupList(
-        {
-          id: groupId,
-          members: members,
-          groupName: groupName,
-          masterID: this.props.user.currentUser.userId,
-        },
-        () => {
-          this.refreshList()
-        },
-      )
-      let msgStr = JSON.stringify(msgObj)
-      for (let i in members) {
-        this._sendMessage(msgStr, members[i].id, false)
-      }
+    let msgObj = {
+      user: {
+        name: this.props.user.currentUser.nickname,
+        id: this.props.user.currentUser.userId,
+        groupID: groupId,
+      },
+      members: members,
+      type: 912,
+      time: time,
+      message: this.props.user.currentUser.nickname + '邀请您加入群聊',
     }
+    let groupName = ''
+    for (let i in members) {
+      if (i > 3) break
+      groupName += members[i].name
+      if (i !== members.length - 2) groupName += '、'
+    }
+    FriendListFileHandle.addToGroupList({
+      id: groupId,
+      members: members,
+      groupName: groupName,
+      masterID: this.props.user.currentUser.userId,
+    })
+    let msgStr = JSON.stringify(msgObj)
+    for (let i in members) {
+      this._sendMessage(msgStr, members[i].id, false)
+    }
+
     // console.warn(members + groupId)
   }
   // eslint-disable-next-line
@@ -214,23 +219,35 @@ export default class Friend extends Component {
       //system:n, 0:非系统消息 1：拒收 2:删除操作
       //}}
       let userId = this.props.user.currentUser.userId
-      this.props.addChat &&
-        this.props.addChat({
-          userId: userId, //当前登录账户的id
-          talkId: talkId,
-          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-          message: messageObj.message,
-          time: messageObj.time,
-          type: messageObj.type, //消息类型
-          system: messageObj.system,
-          fileName: messageObj.fileName,
-          queueName: messageObj.queueName,
-        })
+      let msgId = this._getMsgId(talkId)
+      MessageDataHandle.pushMessage({
+        userId: userId, //当前登录账户的id
+        talkId: talkId,
+        messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+        message: messageObj.message,
+        time: messageObj.time,
+        type: messageObj.type, //消息类型
+        system: messageObj.system,
+        msgId: msgId,
+      })
     }
     // this.refresh()
   }
 
-  _sendFile = (messageStr, filepath, talkId) => {
+  _getMsgId = talkId => {
+    let userId = this.props.user.currentUser.userId
+    let msgId = 0
+    let chatHistory = []
+    if (this.props.chat[userId] && this.props.chat[userId][talkId]) {
+      chatHistory = this.props.chat[userId][talkId].history
+    }
+    if (chatHistory.length !== 0) {
+      msgId = chatHistory[chatHistory.length - 1].msgId + 1
+    }
+    return msgId
+  }
+
+  _sendFile = (messageStr, filepath, talkId, msgId) => {
     let connectInfo = {
       serverIP: MSGConstans.MSG_IP,
       port: MSGConstans.MSG_Port,
@@ -243,26 +260,64 @@ export default class Friend extends Component {
       JSON.stringify(connectInfo),
       messageStr,
       filepath,
+      talkId,
+      msgId,
     ).then(res => {
       let messageObj = JSON.parse(messageStr)
       let ctime = new Date()
       let time = Date.parse(ctime)
-      let fileinform = {
-        message: '[文件]',
-        type: 4, //文件接收通知
+      let informMsg = {
+        type: messageObj.type,
         user: messageObj.user,
         time: time,
         system: 0,
-        fileName: res.fileName,
-        queueName: res.queueName,
+        message: {
+          type: 6, //文件接收通知
+          message: {
+            message: '[文件]',
+            fileName: res.fileName,
+            fileSize: res.fileSize,
+            queueName: res.queueName,
+            progress: 0,
+          },
+        },
       }
-      this._sendMessage(JSON.stringify(fileinform), talkId, false)
+      this._sendMessage(JSON.stringify(informMsg), talkId, false)
+      Toast.show('分享完成')
     })
   }
 
-  _receiveMessage = message => {
+  _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
-      //  DataHandler.dealWithMessage(this.props.user.currentUser.userId,message['message']);
+      SMessageService.receiveFile(
+        fileName,
+        queueName,
+        receivePath,
+        talkId,
+        msgId,
+      ).then(res => {
+        if (res === true) {
+          Toast.show('接收完成')
+          let message = this.props.chat[this.props.user.currentUser.userId][
+            talkId
+          ].history[msgId]
+          message.msg.message.isReceived = 1
+          message.msg.message.filePath = receivePath + '/' + fileName
+          this.props.editChat &&
+            this.props.editChat({
+              userId: this.props.user.currentUser.userId,
+              talkId: talkId,
+              msgId: msgId,
+              editItem: message,
+            })
+        }
+      })
+    }
+  }
+
+  _receiveMessage(message) {
+    if (g_connectService) {
+      //  DataHandler.dealWhgjgithMessage(this.props.user.currentUser.userId,message['message']);
       let messageObj = JSON.parse(message['message'])
 
       let userId = this.props.user.currentUser.userId
@@ -307,6 +362,7 @@ export default class Friend extends Component {
             user: {
               name: this.props.user.currentUser.name,
               id: this.props.user.currentUser.userId,
+              groupID: this.props.user.currentUser.userId,
             },
             time: time,
           }
@@ -328,18 +384,41 @@ export default class Friend extends Component {
           bUnReadMsg = true
         }
 
-        this.props.addChat &&
-          this.props.addChat({
-            userId: userId, //当前登录账户的id
-            talkId: messageObj.user.groupID, //会话ID
-            messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
-            message: messageObj.message,
-            time: messageObj.time,
-            type: messageObj.type, //消息类型
-            unReadMsg: bUnReadMsg,
-            fileName: messageObj.fileName,
-            queueName: messageObj.queueName,
-          })
+        // let chatHistory = []
+        // let msgId = 0
+        // if (messageObj.type === 2 && this.props.chat[userId]
+        //     && this.props.chat[userId][messageObj.user.groupID]) {
+        //     chatHistory = this.props.chat[userId][messageObj.user.groupID]
+        //       .history
+        // } else if ( this.props.chat[userId] && this.props.chat[userId][messageObj.user.id] ) {
+        //     chatHistory = this.props.chat[userId][messageObj.user.id].history
+        // }
+        // if (chatHistory.length !== 0) {
+        //   msgId = chatHistory[chatHistory.length - 1].msgId + 1
+        // }
+        let msgId = 0
+        if (messageObj.type === 2) {
+          msgId = this._getMsgId(messageObj.user.groupID)
+        } else {
+          msgId = this._getMsgId(messageObj.user.id)
+        }
+
+        //文件通知消息
+        if (messageObj.message.type && messageObj.message.type === 6) {
+          messageObj.message.message.isReceived = 0
+        }
+
+        MessageDataHandle.pushMessage({
+          userId: userId, //当前登录账户的id
+          talkId: messageObj.user.groupID, //会话ID
+          messageUsr: messageObj.user, //消息{ name: curUserName, id: uuid },
+          message: messageObj.message,
+          time: messageObj.time,
+          type: messageObj.type, //消息类型
+          unReadMsg: bUnReadMsg,
+          msgId: msgId,
+          isReceived: 0,
+        })
       } else {
         //to do 系统消息，做处理机制
         if (messageObj.type === 912) {
@@ -350,17 +429,12 @@ export default class Friend extends Component {
             groupName += messageObj.members[i].name
             if (i !== messageObj.members.length - 2) groupName += '、'
           }
-          FriendListFileHandle.addToGroupList(
-            {
-              id: messageObj.user.groupID,
-              members: messageObj.members,
-              groupName: groupName,
-              masterID: messageObj.user.id,
-            },
-            () => {
-              this.refreshList()
-            },
-          )
+          FriendListFileHandle.addToGroupList({
+            id: messageObj.user.groupID,
+            members: messageObj.members,
+            groupName: groupName,
+            masterID: messageObj.user.id,
+          })
           return
         }
       }
@@ -435,12 +509,12 @@ export default class Friend extends Component {
       })
     }
   }
-  render() {
+  render() { 
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '好友',
+          title: getLanguage(this.props.language).Navigator_Lable.FRIENDS,
           headerLeft:
             this.state.bHasUserInfo === true ? (
               <TouchableOpacity
@@ -510,20 +584,23 @@ export default class Friend extends Component {
         >
           <FriendMessage
             ref={ref => (this.friendMessage = ref)}
-            tabLabel="消息"
+          tabLabel= {getLanguage(this.props.language).Friends.MESSAGES}
+         //"消息"
             user={this.props.user.currentUser}
             chat={this.props.chat}
             friend={this}
           />
           <FriendList
             ref={ref => (this.friendList = ref)}
-            tabLabel="好友"
+            tabLabel={getLanguage(this.props.language).Friends.FRIENDS}
+            //"好友"
             user={this.props.user.currentUser}
             friend={this}
           />
           <FriendGroup
             ref={ref => (this.friendGroup = ref)}
-            tabLabel="群组"
+            tabLabel={getLanguage(this.props.language).Friends.GROUPS}
+            //"群组"
             user={this.props.user.currentUser}
             friend={this}
           />
@@ -555,7 +632,7 @@ export default class Friend extends Component {
               margin: scaleSize(10),
             }}
           >
-            亲,您还没有好友关系哦
+            {/* 亲,您还没有好友关系哦 */}
           </Text>
         </View>
       </View>

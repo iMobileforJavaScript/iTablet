@@ -5,6 +5,7 @@ import Toast from '../../../../utils/Toast'
 import { color, size } from '../../../../styles'
 import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils'
+import {language, getLanguage  } from '../../../../language'
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -55,7 +56,7 @@ export default class PopupModal extends PureComponent {
   _publishButton = isPublish => {
     let title
     if (isPublish) {
-      title = '设为共有服务'
+      title = '设为公有服务'
     } else {
       title = '设为私有服务'
     }
@@ -99,15 +100,23 @@ export default class PopupModal extends PureComponent {
       <TouchableOpacity
         style={{ backgroundColor: color.content_white }}
         onPress={async () => {
-          this._onClose()
-          let result = await SOnlineService.deleteServiceWithServiceId(
-            this.props.itemId,
-          )
-          if (typeof result === 'boolean' && result) {
-            this.deleteService = true
-            this._onRefresh()
-            Toast.show('删除成功')
-          } else {
+          try {
+            this._onClose()
+            let result = await SOnlineService.deleteServiceWithServiceId(
+              this.props.itemId,
+            )
+            if (typeof result === 'boolean' && result) {
+              this.deleteService = true
+              this._onRefresh()
+              Toast.show('删除成功')
+            } else if (typeof result === 'boolean' && !result) {
+              this.deleteService = true
+              this._onRefresh()
+              Toast.show('删除成功')
+            } else {
+              Toast.show('删除失败')
+            }
+          } catch (error) {
             Toast.show('删除失败')
           }
         }}
@@ -157,7 +166,10 @@ export default class PopupModal extends PureComponent {
           <View style={{ width: '100%', position: 'absolute', bottom: 0 }}>
             {this._renderSeparatorLine()}
             {this._publishButton(!this.props.isPublish)}
-            {this._deleteButton('删除')}
+            {this._deleteButton(
+              getLanguage(global.language).Profile.DELETE
+              //'删除'
+              )}
           </View>
         </TouchableOpacity>
       </Modal>

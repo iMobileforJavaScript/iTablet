@@ -17,8 +17,10 @@ import { setEditLayer } from '../../../../models/layers'
 import TemplateList from './TemplateList'
 import TemplateTab from './TemplateTab'
 import { SMap } from 'imobile_for_reactnative'
+import { getLanguage } from '../../../../language/index'
 
 const mapStateToProps = state => ({
+  language:state.setting.toJS().language,
   symbol: state.symbol.toJS(),
   user: state.user.toJS(),
   map: state.map.toJS(),
@@ -39,6 +41,7 @@ const mapDispatchToProps = {
 
 class SymbolTabs extends React.Component {
   props: {
+    language:Object,
     style: Object,
     symbol: Object,
     template: Object,
@@ -173,21 +176,24 @@ class SymbolTabs extends React.Component {
         }}
       >
         <SymbolTab
-          tabLabel="最近"
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT}
+          //"最近"
           data={this.props.symbol.latestSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
           showToolbar={this.props.showToolbar}
           device={this.props.device}
         />
         <SymbolTab
-          tabLabel="符号"
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL}
+          //"符号"
           data={this.props.symbol.currentSymbols}
           setCurrentSymbol={this.props.setCurrentSymbol}
           showToolbar={this.props.showToolbar}
           device={this.props.device}
         />
         <GroupTab
-          tabLabel="分组"
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP}
+          //"分组"
           goToPage={this.goToPage}
           setCurrentSymbols={this.props.setCurrentSymbols}
         />
@@ -223,7 +229,8 @@ class SymbolTabs extends React.Component {
         }}
       >
         <TemplateTab
-          tabLabel="最近"
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_RECENT}
+          //"最近"
           style={styles.temple}
           user={this.props.user}
           showToolbar={this.props.showToolbar}
@@ -236,7 +243,8 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <TemplateTab
-          tabLabel="符号"
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_SYMBOL}
+          //"符号"
           style={styles.temple}
           user={this.props.user}
           showToolbar={this.props.showToolbar}
@@ -249,7 +257,8 @@ class SymbolTabs extends React.Component {
           device={this.props.device}
         />
         <TemplateList
-          tabLabel="分组"
+          tabLabel={getLanguage(this.props.language).Map_Main_Menu.COLLECTION_GROUP}
+          //"分组"
           style={styles.temple}
           user={this.props.user}
           showToolbar={this.props.showToolbar}

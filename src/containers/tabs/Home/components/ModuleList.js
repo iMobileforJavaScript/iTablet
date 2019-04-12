@@ -21,6 +21,9 @@ import Toast from '../../../../utils/Toast'
 import FetchUtils from '../../../../utils/FetchUtils'
 import { SMap } from 'imobile_for_reactnative'
 
+import {connect} from "react-redux"
+
+
 class RenderModuleItem extends Component {
   props: {
     item: Object,
@@ -120,8 +123,9 @@ class RenderModuleItem extends Component {
   }
 }
 
-export default class ModuleList extends Component {
+export class ModuleList extends Component {
   props: {
+    language:Object,
     device: Object,
     currentUser: Object,
     latestMap: Object,
@@ -136,7 +140,7 @@ export default class ModuleList extends Component {
       isShowProgressView: false,
     }
     this.moduleItems = []
-    this.bytesInfo = 0
+    //this.bytesInfo = 0
   }
 
   _showAlert = (ref, downloadData, currentUserName) => {
@@ -178,9 +182,9 @@ export default class ModuleList extends Component {
       let fileCachePath = fileDirPath + '.zip'
       await FileTools.deleteFile(fileCachePath)
       let downloadOptions = {
-        headers: {
-          Range: `bytes=${this.bytesInfo}-`,
-        },
+        // headers: {
+        //   Range: `bytes=${this.bytesInfo}-`,
+        // },
         fromUrl: dataUrl,
         toFile: fileCachePath,
         background: true,
@@ -190,12 +194,12 @@ export default class ModuleList extends Component {
           // this.bytesInfo = tempVal > this.bytesInfo ? tempVal : this.bytesInfo
           // let value = this.bytesInfo + '%'
           // if(Platform.OS === 'android'){
-          if (this.bytesInfo < res.contentLength)
-            this.bytesInfo = res.bytesWritten + 1
-          // }
-          let valueNum = ((this.bytesInfo / res.contentLength) * 100).toFixed(0)
-          let value = valueNum + '%'
-          if (valueNum >= 100) {
+          // if (this.bytesInfo < res.contentLength)
+          //   this.bytesInfo = res.bytesWritten + 1
+          // // }
+          // let valueNum = ((this.bytesInfo / res.contentLength) * 100).toFixed(0)
+          let value = ~~res.progress.toFixed(0) + '%'
+          if (~~res.progress >= 100) {
             ref.setNewState({
               progress: '导入中...',
               isShowProgressView: true,
@@ -214,19 +218,16 @@ export default class ModuleList extends Component {
       }
       let result = downloadFile(downloadOptions)
       result.promise
-        .then(async result => {
-          if (result.statusCode >= 200 && result.statusCode < 300) {
-            await FileTools.unZipFile(fileCachePath, cachePath)
-            let arrFile = await FileTools.getFilterFiles(fileDirPath)
-            await this.props.importWorkspace(
-              arrFile[0].filePath,
-              downloadData.copyFilePath,
-            )
-            ref.setNewState({ isShowProgressView: false, disabled: false })
-            this.bytesInfo = 0
+        .then(async () => {
+          await FileTools.unZipFile(fileCachePath, cachePath)
+          let arrFile = await FileTools.getFilterFiles(fileDirPath)
+          await this.props.importWorkspace(
+            arrFile[0].filePath,
+            downloadData.copyFilePath,
+          )
+          ref.setNewState({ isShowProgressView: false, disabled: false })
 
-            FileTools.deleteFile(fileDirPath + '.zip')
-          }
+          FileTools.deleteFile(fileDirPath + '.zip')
         })
         .catch(() => {
           Toast.show('下载失败')
@@ -267,7 +268,10 @@ export default class ModuleList extends Component {
       let fileName
       let moduleKey = item.key
       /** 服务器上解压出来的名字就是以下的fileName，不可改动，若需要改，则必须改为解压过后的文件名*/
-      if (moduleKey === '地图制图') {
+      if (moduleKey === MAP_MODULE.MAP_ANALYST) {
+        item.action && item.action(this.props.currentUser)
+        return
+      } else if (moduleKey === '地图制图') {
         fileName = '湖南'
       } else if (moduleKey === '专题制图') {
         fileName = '湖北'
@@ -279,6 +283,8 @@ export default class ModuleList extends Component {
         } else if (Platform.OS === 'ios') {
           fileName = 'OlympicGreen_ios'
         }
+      } else if (moduleKey === '应急标绘') {
+        fileName = '湖南'
       }
       let homePath = await FileTools.appendingHomeDirectory()
       let tmpCurrentUser = this.props.currentUser
@@ -413,7 +419,7 @@ export default class ModuleList extends Component {
         showsHorizontalScrollIndicator={false}
       >
         <FlatList
-          data={ConstModule}
+          data={ConstModule(this.props.language)}
           horizontal={true}
           renderItem={this._renderItem}
           keyboardShouldPersistTaps={'always'}
@@ -431,7 +437,7 @@ export default class ModuleList extends Component {
         ) : (
           <FlatList
             style={styles.flatList}
-            data={ConstModule}
+            data={ConstModule(this.props.language)}
             renderItem={this._renderItem}
             horizontal={false}
             numColumns={2}
@@ -443,6 +449,15 @@ export default class ModuleList extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  language: state.setting.toJS().language
+})
+const mapDispatchToProps = {}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ModuleList)
 
 const styles = StyleSheet.create({
   container: {

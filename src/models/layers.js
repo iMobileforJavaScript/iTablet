@@ -3,6 +3,7 @@ import { handleActions } from 'redux-actions'
 import { SMap, SScene } from 'imobile_for_reactnative'
 import { Toast, dataUtil } from '../utils'
 import { ConstInfo } from '../constants'
+import { language,getLanguage } from '../language/index'
 // Constants
 // --------------------------------------------------
 export const SET_EDIT_LAYER = 'SET_EDIT_LAYER'
@@ -400,25 +401,29 @@ export const refreshLayer3dList = (cb = () => {}) => async dispatch => {
   }
   let data = [
     {
-      title: '我的标注',
+      title: getLanguage(global.language).Map_Layer.PLOTS,
+      //'我的标注',
       data: ablelist,
       visible: true,
       index: 0,
     },
     {
-      title: '我的图层',
+      title: getLanguage(global.language).Map_Layer.LAYERS,
+      //'我的图层',
       data: layerlist,
       visible: true,
       index: 1,
     },
     {
-      title: '我的底图',
+      title: getLanguage(global.language).Map_Layer.BASEMAP,
+      //'我的底图',
       data: basemaplist,
       visible: true,
       index: 2,
     },
     {
-      title: '我的地形',
+      title:  getLanguage(global.language).Map_Layer.MY_TERRAIN,
+      //'我的地形',
       data: terrainList,
       visible: true,
       index: 3,
@@ -612,7 +617,10 @@ export default handleActions(
       let currentLayer3d = state.toJS().currentLayer3d
       if (JSON.stringify(payload) !== '{}') {
         currentLayer3d = payload
-        Toast.show('当前图层为 ' + currentLayer3d.name)
+        Toast.show(
+          //'当前图层为 '
+          getLanguage(global.language).Prompt.THE_CURRENT_LAYER
+          + currentLayer3d.name)
       }
       return state.setIn(['currentLayer3d'], fromJS(currentLayer3d))
     },

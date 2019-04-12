@@ -15,8 +15,11 @@ import { color, size } from '../../../styles'
 import Toast from '../../../utils/Toast'
 import { Const } from '../../../constants'
 import { scaleSize } from '../../../utils'
+import{ getLanguage }from '../../../language/index'
+
 export default class Find extends Component {
   props: {
+    language:Object,
     navigation: Object,
     user: Object,
   }
@@ -139,7 +142,8 @@ export default class Find extends Component {
         >
           {/* {this._renderLine()} */}
           {this._renderItem({
-            title: Const.PUBLICMAP,
+            title: getLanguage(this.props.language).Prompt.PUBLIC_MAP,
+          //  Const.PUBLICMAP,
             leftImagePath: require('../../../assets/Find/find_publicmap.png'),
             onClick: () => {
               NavigationService.navigate('PublicMap')
@@ -152,8 +156,23 @@ export default class Find extends Component {
               NavigationService.navigate('FriendMap')
             },
           })} */}
+          {/* {this._renderItem({
+            title: Const.FRIENDMAP,
+            leftImagePath: require('../../../assets/Find/icon_contact_map_light.png'),
+            onClick: () => {
+              NavigationService.navigate('FriendMap')
+            },
+          })} */}
           {this._renderItem({
-            title: Const.FORUMOFSUPERMAP,
+            title: Const.SUPERMAPKNOWN,
+            leftImagePath: require('../../../assets/Mine/icon_discover_notice_light.png'),
+            onClick: () => {
+              NavigationService.navigate('SuperMapKnown')
+            },
+          })}
+          {this._renderItem({
+            title: getLanguage(this.props.language).Prompt.SUPERMAP_FORUM,
+            //Const.FORUMOFSUPERMAP,
             leftImagePath: require('../../../assets/Find/find_forum.png'),
             onClick: this.goToSuperMapForum,
           })}
@@ -176,36 +195,6 @@ export default class Find extends Component {
           bounces={true}
         >
           {/* {this._renderLine()} */}
-          {this._renderItem({
-            title: Const.PUBLICMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.SHUTTLCOMMUTER,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.SUPERMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_map.png'),
-            onClick: () => {},
-          })}
-          {this._renderItem({
-            title: Const.FORUMOFSUPERMAP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_scene.png'),
-            onClick: () => {},
-          })}
-          {/* {this._renderItem({
-            title: Const.SUPERMAPKNOWN,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })} */}
-          {this._renderItem({
-            title: Const.MAPOFAPP,
-            leftImagePath: require('../../../assets/Mine/mine_my_local_import.png'),
-            onClick: () => {},
-          })}
         </ScrollView>
       </View>
     )
@@ -216,7 +205,7 @@ export default class Find extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '发现',
+          title: getLanguage(this.props.language).Navigator_Lable.EXPLORE,
           withoutBack: true,
           navigation: this.props.navigation,
         }}

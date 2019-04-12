@@ -18,7 +18,9 @@ import MyOnlineData from './MyOnlineData'
 import MyModule from './MyModule'
 // import LoadServer from './MyBaseMap'
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   user: state.user.toJS(),
+  workspace: state.map.toJS().workspace,
 })
 
 const mapDispatchToProps = {

@@ -5,20 +5,17 @@
 */
 import React, { Component } from 'react'
 import Container from '../../components/Container'
-import {
-  View,
-  Text,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  Dimensions,
-} from 'react-native'
+import { View, Text, FlatList, RefreshControl, Dimensions } from 'react-native'
 import RenderFindItem from './RenderFindItem'
 import { Toast } from '../../utils'
 import styles from './Styles'
 import color from '../../styles/color'
 import FetchUtils from '../../utils/FetchUtils'
 import { SOnlineService } from 'imobile_for_reactnative'
+import { language,getLanguage } from '../../language/index'
+import { FileTools } from '../../native'
+import { ConstPath } from '../../constants'
+import RNFS from 'react-native-fs'
 // import { FileTools } from '../../native'
 // import { ConstPath } from '../../constants'
 // import FriendListFileHandle from '../tabs/Friend/FriendListFileHandle'
@@ -50,7 +47,24 @@ export default class PublicMap extends Component {
   }
   componentWillUnmount() {
     this._clearInterval()
+    this.savefriendMap()
   }
+
+  savefriendMap = async () => {
+    if (this.state.length < 1) return
+    let data = JSON.stringify(this.state.data)
+    let path =
+      (await FileTools.getHomeDirectory()) +
+      ConstPath.UserPath +
+      this.props.user.currentUser.userName +
+      '/' +
+      ConstPath.RelativePath.Temp +
+      'publicMap.txt'
+    RNFS.writeFile(path, data, 'utf8')
+      .then(() => {})
+      .catch(() => {})
+  }
+
   _clearInterval = () => {
     if (this.objProgressWidth !== undefined) {
       clearInterval(this.objProgressWidth)
@@ -59,10 +73,51 @@ export default class PublicMap extends Component {
   }
   _loadFirstUserData2 = async (currentPage, totalPage) => {
     try {
-      this._showLoadProgressView()
-      let data = await this.getCurrentLoadData2(currentPage, totalPage)
-      this.setState({ data: data })
-      this._clearInterval()
+      await SOnlineService.syncAndroidCookie()
+      let path =
+        (await FileTools.getHomeDirectory()) +
+        ConstPath.UserPath +
+        this.props.user.currentUser.userName +
+        '/' +
+        ConstPath.RelativePath.Temp +
+        'publicMap.txt'
+      let exist = await FileTools.fileIsExist(path)
+      if (exist) {
+        let result = await RNFS.readFile(path)
+        if (result) {
+          let data = JSON.parse(result)
+          let mapList = []
+
+          if (!data[0].id) {
+            this._showLoadProgressView()
+            let data = await this.getCurrentLoadData2(currentPage, totalPage)
+            this.setState({ data: data })
+            this._clearInterval()
+          } else {
+            for (let index = 0; index < data.length; index++) {
+              const element = data[index]
+              let dataId = element.id
+              let dataUrl =
+                'https://www.supermapol.com/web/datas/' + dataId + '.json'
+              // 'https://www.supermapol.com/web/datas/1916243026.json'
+              let objDataJson = await FetchUtils.getObjJson(dataUrl)
+              if (objDataJson) {
+                if (objDataJson.dataItemServices[0].serviceType === 'RESTMAP') {
+                  mapList.push(element)
+                }
+              }
+            }
+            this.setState({ data: mapList })
+            this._clearInterval()
+          }
+        }
+      } else {
+        this._showLoadProgressView()
+        let data = await this.getCurrentLoadData2(currentPage, totalPage)
+        // let objUserData = await this.getAllUserZipData(12)
+        this.setState({ data: data })
+        this._clearInterval()
+      }
     } catch (e) {
       this._clearInterval()
     }
@@ -73,7 +128,6 @@ export default class PublicMap extends Component {
     let data = []
     while (currentPage <= totalPage) {
       await this._loadUserData2(currentPage, data)
-      // console.log(data)
       if (data.length >= 1) {
         break
       }
@@ -82,7 +136,6 @@ export default class PublicMap extends Component {
     }
     return data
   }
-
   _loadFirstUserData = async () => {
     try {
       this._showLoadProgressView()
@@ -111,7 +164,6 @@ export default class PublicMap extends Component {
     if (!currentData) {
       currentData = []
     }
-    let timeout = 3000
     try {
       let objUserData = await this.getAllUserZipData(currentPage)
       if (!objUserData) {
@@ -124,16 +176,15 @@ export default class PublicMap extends Component {
       if (!objArrUserDataContent) {
         return
       }
-      // console.log(objArrUserDataContent)
       let contentLength = objArrUserDataContent.length
-      // console.log(dataItemServices)
       for (let i = 0; i < contentLength; i++) {
         let objContent = objArrUserDataContent[i]
         if (objContent && objContent.type === 'WORKSPACE') {
           let dataId = objContent.id
           let dataUrl =
             'https://www.supermapol.com/web/datas/' + dataId + '.json'
-          let objDataJson = await FetchUtils.getObjJson(dataUrl, timeout)
+          // 'https://www.supermapol.com/web/datas/1916243026.json'
+          let objDataJson = await FetchUtils.getObjJson(dataUrl)
           if (!objDataJson) {
             continue
           }
@@ -154,7 +205,7 @@ export default class PublicMap extends Component {
             }
             if (restUrl && restUrl !== '') {
               restUrl = restUrl + '/maps.json'
-              let arrMapJson = await FetchUtils.getObjJson(restUrl, timeout)
+              let arrMapJson = await FetchUtils.getObjJson(restUrl, 6000)
               let arrMapInfos = []
               if (!arrMapJson) {
                 continue
@@ -212,19 +263,15 @@ export default class PublicMap extends Component {
 
   getAllUserZipData = currentPage => {
     let time = new Date().getTime()
-    let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&tags=%5B%22%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%22%5D&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
-    return FetchUtils.getObjJson(uri, 3000)
+    let uri = `https://www.supermapol.com/web/datas.json?currentPage=${currentPage}&orderBy=LASTMODIFIEDTIME&orderType=DESC&t=${time}`
+    return FetchUtils.getObjJson(uri)
   }
   _onRefresh2 = async () => {
-    // console.log('1`11111')
     try {
       if (!this.state.isRefresh) {
         this.setState({ isRefresh: true })
         this.currentLoadPage2 = 1
-        let data = await this.getCurrentLoadData2(
-          this.currentLoadPage2,
-          this.allUserDataCount,
-        )
+        let data = await this.getCurrentLoadData2(this.currentLoadPage2, 100)
         this.setState({ isRefresh: false, data: data })
       }
     } catch (e) {
@@ -237,9 +284,7 @@ export default class PublicMap extends Component {
       if (!this.state.isRefresh) {
         this.loadCount = 1
         this.setState({ isRefresh: true })
-        // this.flatListData = await this._loadUserData(1, 20)
         this.flatListData = await this._loadUserData2(1)
-
         this.setState({ isRefresh: false, data: this.flatListData })
       }
     } catch (e) {
@@ -248,7 +293,6 @@ export default class PublicMap extends Component {
     }
   }
   _loadData2 = async () => {
-    // console.log('222222')
     try {
       if (!this.state.isLoadingData) {
         this.setState({ isLoadingData: true })
@@ -282,17 +326,50 @@ export default class PublicMap extends Component {
   }
 
   _footView() {
-    if (
-      this.allUserDataCount >= this.state.data.length &&
-      this.allUserDataCount > this.currentLoadDataCount
-    ) {
-      return (
-        <View
+     if (
+       this.allUserDataCount >= this.state.data.length &&
+       this.allUserDataCount > this.currentLoadDataCount
+     ) {
+    //   return (
+    //     <View
+    //       style={{
+    //         flex: 1,
+    //         height: 50,
+    //         justifyContent: 'center',
+    //         alignItems: 'center',
+    //       }}
+    //     >
+    //       <ActivityIndicator
+    //         style={{
+    //           flex: 1,
+    //           height: 30,
+    //           justifyContent: 'center',
+    //           alignItems: 'center',
+    //         }}
+    //         color={'orange'}
+    //         animating={true}
+    //       />
+    //       <Text
+    //         style={{
+    //           flex: 1,
+    //           lineHeight: 20,
+    //           fontSize: 12,
+    //           textAlign: 'center',
+    //           color: 'orange',
+    //         }}
+    //       >
+    //         加载中...
+    //       </Text>
+    //     </View>
+    //   )
+    // } else {
+    return (
+      <View 
           style={{
             flex: 1,
-            height: 50,
-            justifyContent: 'center',
-            alignItems: 'center',
+            lineHeight: 30,
+            fontSize: 12,
+            textAlign: 'center',
           }}
         >
           <ActivityIndicator
@@ -314,7 +391,8 @@ export default class PublicMap extends Component {
               color: 'orange',
             }}
           >
-            加载中...
+            {getLanguage(global.language).Prompt.LOADING}
+            {/* 加载中... */}
           </Text>
         </View>
       )
@@ -397,7 +475,8 @@ export default class PublicMap extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '公共地图',
+          title: getLanguage(global.language).Prompt.PUBLIC_MAP,
+          //'公共地图',
           navigation: this.props.navigation,
         }}
       >

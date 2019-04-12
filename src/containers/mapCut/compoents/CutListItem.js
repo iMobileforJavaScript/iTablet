@@ -4,7 +4,14 @@
  E-mail: yangshanglong@supermap.com
  */
 import React, { PureComponent } from 'react'
-import { View, Text, TextInput, Image, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  TextInput,
+  Image,
+  TouchableOpacity,
+  Dimensions,
+} from 'react-native'
 import { ImageButton } from '../../../components'
 import { scaleSize } from '../../../utils'
 import { CheckStatus } from '../../../constants'
@@ -117,6 +124,7 @@ export default class CutListItem extends PureComponent {
     }
     return (
       <ImageButton
+        containerStyle={styles.selectContainer}
         iconBtnStyle={styles.selectImgView}
         iconStyle={styles.selectImg}
         icon={icon}
@@ -165,9 +173,17 @@ export default class CutListItem extends PureComponent {
           <TouchableOpacity
             onPress={this.showDatasource}
             activeOpacity={0.8}
-            style={[styles.topRightView, { width: scaleSize(360) }]}
+            style={[
+              styles.topRightView,
+              { paddingRight: scaleSize(30), width: scaleSize(360) },
+            ]}
           >
-            <Text style={[styles.content, { width: scaleSize(140) }]}>
+            <Text
+              style={[
+                styles.content,
+                { width: scaleSize(140), textAlign: 'center' },
+              ]}
+            >
               {this.props.datasourceName}
             </Text>
             <Image
@@ -193,24 +209,30 @@ export default class CutListItem extends PureComponent {
                 source={icon}
               />
             </View>
-            <Text style={styles.content}>
+            <Text
+              numberOfLines={2}
+              style={[
+                styles.content,
+                { width: Dimensions.get('window').width - scaleSize(500) },
+              ]}
+            >
               {this.props.caption || this.props.data.caption}
             </Text>
           </View>
-          <View style={[styles.topRightView, { width: scaleSize(360) }]}>
-            <View style={styles.selectContainer}>
+          <View style={[styles.topRightView2, { width: scaleSize(360) }]}>
+            <View style={styles.select}>
               {this.renderCheckButton({
                 status: this.props.inRangeStatus,
                 action: this.changeRangeCut,
               })}
             </View>
-            <View style={styles.selectContainer}>
+            <View style={styles.select}>
               {this.renderCheckButton({
                 status: this.props.eraseStatus,
                 action: this.changeErase,
               })}
             </View>
-            <View style={styles.selectContainer}>
+            <View style={styles.select}>
               {this.renderCheckButton({
                 status: this.props.exactCutStatus,
                 action: this.changeExactCut,

@@ -6,6 +6,7 @@ import NavigationService from '../../../NavigationService'
 import { SOnlineService } from 'imobile_for_reactnative'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
+import {language,getLanguage  } from '../../../../language/index'
 export default class ToggleAccount extends Component {
   props: {
     navigation: Object,
@@ -129,7 +130,8 @@ export default class ToggleAccount extends Component {
           }}
         >
           <Text style={{ fontSize: fontSize, color: color.fontColorBlack }}>
-            添加账号
+            {getLanguage(global.language).Profile.ADD_ACCOUNT}
+            {/* 添加账号 */}
           </Text>
         </TouchableOpacity>
       </View>
@@ -141,7 +143,8 @@ export default class ToggleAccount extends Component {
       <Container
         ref={ref => (this.containerRef = ref)}
         headerProps={{
-          title: '账号管理',
+          title: getLanguage(global.language).Profile.MANAGE_ACCOUNT,
+          //'账号管理',
           navigation: this.props.navigation,
         }}
       >

@@ -27,6 +27,10 @@ const theme_graphmap = require('./theme_graphmap.png')
 const theme_graphmap_selected = require('./theme_graphmap_selected.png')
 const theme_dot_density_selected = require('./theme_dot_density_selected.png')
 const theme_graduated_symbol_selected = require('./theme_graduated_symbol_selected.png')
+const theme_grid_range = require('./theme_grid_range.png')
+const theme_grid_range_selected = require('./theme_grid_range_selected.png')
+const theme_grid_unique = require('./theme_grid_unique.png')
+const theme_grid_unique_selected = require('./theme_grid_unique_selected.png')
 
 //专题图类型图标
 export default {
@@ -69,4 +73,9 @@ export default {
   //统计专题图类型图标
   theme_graphmap,
   theme_graphmap_selected,
+  //栅格分段和单值专题图
+  theme_grid_range,
+  theme_grid_range_selected,
+  theme_grid_unique,
+  theme_grid_unique_selected,
 }

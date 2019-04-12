@@ -60,7 +60,9 @@ export default {
   NON_SELECTED_OBJ: '没有选择对象',
 
   ADD_SUCCESS: '添加成功',
-  ADD_FAILED: '添加成功',
+  ADD_FAILED: '添加失败',
+
+  ADDING_MAP: '正在添加地图',
 
   READING_DATA: '读取数据中',
   LOADING_DATA: '数据加载中',
@@ -92,4 +94,10 @@ export default {
   RECOVER_UNABLE: '已经不能还原了',
 
   LOCATING: '正在定位',
+  CANNOT_LOCATION: '无法定位',
+  LOCATION_FAILED: '定位失败',
+
+  CLIPPING: '地图裁剪中',
+  CLIP_SUCCESS: '裁剪成功',
+  CLIP_FAILED: '裁剪失败',
 }

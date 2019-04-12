@@ -18,6 +18,7 @@ import { color } from '../../../../styles'
 import Row from './Row'
 
 import styles from './styles'
+import { language, getLanguage } from '../../../../language/index' 
 
 const COL_HEIGHT = scaleSize(80)
 
@@ -85,6 +86,7 @@ export default class LayerAttributeTable extends React.Component {
       refreshing: false,
       loading: false,
     }
+    this.canBeLoadMore = true // 控制是否可以加载更多
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -186,6 +188,7 @@ export default class LayerAttributeTable extends React.Component {
 
   loadMore = () => {
     if (
+      this.canBeLoadMore &&
       this.props.loadMore &&
       typeof this.props.loadMore === 'function' &&
       !this.state.loading
@@ -206,6 +209,7 @@ export default class LayerAttributeTable extends React.Component {
         },
       )
       this.props.loadMore(() => {
+        this.canBeLoadMore = false
         this.setState({
           loading: false,
         })
@@ -288,10 +292,10 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       data.length > 0 &&
-      data[0].name !== '序号'
+      data[0].name !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
       data.unshift({
-        name: '序号',
+        name: getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO,
         value: this.props.startIndex + index,
         fieldInfo: {},
       })
@@ -321,9 +325,9 @@ export default class LayerAttributeTable extends React.Component {
     if (
       this.props.startIndex >= 0 &&
       titles.length > 0 &&
-      titles[0] !== '序号'
+      titles[0] !== getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO
     ) {
-      titles.unshift('序号')
+      titles.unshift(getLanguage(global.language).Map_Attribute.ATTRIBUTE_NO)
     }
     return (
       <Row
@@ -363,6 +367,7 @@ export default class LayerAttributeTable extends React.Component {
           extraData={this.state}
           stickySectionHeadersEnabled={this.props.stickySectionHeadersEnabled}
           renderSectionFooter={this.renderFooter}
+          onScroll={() => (this.canBeLoadMore = true)}
         />
       </ScrollView>
     )
@@ -400,7 +405,10 @@ export default class LayerAttributeTable extends React.Component {
           alignItems: 'center',
         }}
       >
-        <IndicatorLoading title={'加载中'} />
+        <IndicatorLoading 
+        title={getLanguage(global.language).Prompt.LOADING}
+  //{'加载中'}
+         />
       </View>
     )
   }
@@ -410,6 +418,13 @@ export default class LayerAttributeTable extends React.Component {
       this.state.tableData[0].data instanceof Array &&
       this.state.tableData[0].data.length > 1 &&
       this.state.tableData[0].data[0] instanceof Array
+
+    if (
+      !isMultiData &&
+      Object.keys(this.state.tableData[0].data).length === 0
+    ) {
+      return null
+    }
     return (
       <KeyboardAvoidingView
         // behavior={this.state.behavior}

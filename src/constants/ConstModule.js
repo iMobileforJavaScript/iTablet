@@ -6,6 +6,7 @@ import ConstToolType from './ConstToolType'
 import ConstOnline from './ConstOnline'
 import { ConstPath } from '../constants'
 import { scaleSize } from '../utils'
+import {language ,getLanguage} from '../language/index'
 
 const MAP_MODULE = {
   MAP_EDIT: '地图制图',
@@ -13,15 +14,38 @@ const MAP_MODULE = {
   MAP_THEME: '专题制图',
   MAP_COLLECTION: '外业采集',
   MAP_PLOTTING: '应急标绘',
+  MAP_ANALYST: '数据分析',
 }
 
-export { MAP_MODULE }
+function getHeaderTitle(type) {
+  if (!type) return ''
+  switch (type) {
+    case constants.MAP_EDIT:
+      return  getLanguage(global.language).Map_Module.MAP_EDIT
+    case constants.MAP_3D:
+      return getLanguage(global.language).Map_Module.MAP_3D
+    case constants.MAP_THEME:
+      return getLanguage(global.language).Map_Module.MAP_THEME
+    case constants.MAP_COLLECTION:
+      return getLanguage(global.language).Map_Module.MAP_COLLECTION
+    case constants.MAP_PLOTTING:
+      return getLanguage(global.language).Map_Module.MAP_PLOTTING
+    case constants.MAP_ANALYST:
+      return MAP_MODULE.MAP_ANALYST
+  }
+}
 
-export default [
+export { MAP_MODULE, getHeaderTitle }
+
+function SetMap(param){
+ return [
   {
     key: '地图制图',
-    title: '地图制图',
-    baseImage: require('../assets/home/Frenchgrey/left_top_free.png'),
+    title:getLanguage(param).Map_Module.MAP_EDIT,
+    baseImage:
+      param==='CN'?
+      require('../assets/home/Frenchgrey/left_top_free.png')
+      :require('../assets/home/Frenchgrey/free_top_left.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_cartography.png'),
     style: {
       width: scaleSize(60),
@@ -36,7 +60,6 @@ export default [
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
       GLOBAL.showMenu = true
       // GLOBAL.showFlex = true
-
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
       if (user && user.userName) {
@@ -82,15 +105,18 @@ export default [
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_EDIT,
         wsData: wsData,
-        mapName: '地图制图',
+        mapName: getLanguage(param).Map_Module.MAP_EDIT,
         isExample: false,
       })
     },
   },
   {
     key: '三维场景',
-    title: '三维场景',
-    baseImage: require('../assets/home/Frenchgrey/right_bottom_free.png'),
+    title: getLanguage(param).Map_Module.MAP_3D,
+    baseImage: 
+      param==='CN'?
+      require('../assets/home/Frenchgrey/right_bottom_free.png')
+      :require('../assets/home/Frenchgrey/free_bottom_right.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_map3D.png'),
     style: {
       width: scaleSize(60),
@@ -148,7 +174,7 @@ export default [
   // },
   {
     key: '专题制图',
-    title: '专题制图',
+    title: getLanguage(param).Map_Module.MAP_THEME,
     baseImage: require('../assets/home/Frenchgrey/left_top_vip.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_thematicmap.png'),
     style: {
@@ -162,7 +188,6 @@ export default [
       let data = ConstOnline['Google']
       GLOBAL.Type = constants.MAP_THEME
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
       if (user && user.userName) {
@@ -207,14 +232,14 @@ export default [
       NavigationService.navigate('MapView', {
         operationType: constants.MAP_THEME,
         wsData,
-        mapName: '专题制图',
+        mapName: getLanguage(param).Map_Module.MAP_THEME,
         isExample: false,
       })
     },
   },
   {
     key: '外业采集',
-    title: '外业采集',
+    title: getLanguage(param).Map_Module.MAP_COLLECTION,
     baseImage: require('../assets/home/Frenchgrey/right_bottom_vip.png'),
     moduleImage: require('../assets/home/Frenchgrey/icon_collection.png'),
     style: {
@@ -229,7 +254,6 @@ export default [
       data.layerIndex = 1
       GLOBAL.Type = constants.COLLECTION
       GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
-
       let homePath = await FileTools.appendingHomeDirectory()
       let userPath = ConstPath.CustomerPath
       if (user && user.userName) {
@@ -276,7 +300,7 @@ export default [
       NavigationService.navigate('MapView', {
         operationType: constants.COLLECTION,
         wsData,
-        mapName: '外业采集',
+        mapName: getLanguage(param).Map_Module.MAP_COLLECTION,
         isExample: false,
       })
     },
@@ -319,12 +343,11 @@ export default [
   //         ...lastMap,
   //       }
   //     } else {
-  //       let moduleMapName = '国情普查_示范数据'
+  //       let moduleMapName = '湖南'
   //       let moduleMapFullName = moduleMapName + '.xml'
-  //       // 地图相对路径
+  //       // 地图用相对路径
   //       let moduleMapPath =
   //         userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
-  //
   //       if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
   //         data = {
   //           type: 'Map',
@@ -351,6 +374,7 @@ export default [
   //     })
   //   },
   // },
+
   // {
   //   key: '应急标绘',
   //   title: '应急标绘',
@@ -376,5 +400,37 @@ export default [
   //     right: 0,
   //     bottom: 0,
   //   },
+  //   action: async user => {
+  //     let data = ConstOnline['Google']
+  //     data.layerIndex = 1
+  //     GLOBAL.Type = constants.MAP_ANALYST
+  //     GLOBAL.BaseMapSize = data instanceof Array ? data.length : 1
+  //
+  //     let homePath = await FileTools.appendingHomeDirectory()
+  //     let userPath = ConstPath.CustomerPath
+  //     if (user && user.userName) {
+  //       userPath = ConstPath.UserPath + user.userName + '/'
+  //     }
+  //     let wsPath = homePath + userPath + ConstPath.RelativeFilePath.Workspace
+  //
+  //     let wsData = [
+  //       {
+  //         DSParams: { server: wsPath },
+  //         // layerIndex: 0,
+  //         type: 'Workspace',
+  //       },
+  //       data,
+  //     ]
+  //     NavigationService.navigate('AnalystTools', {
+  //       operationType: constants.MAP_ANALYST,
+  //       wsData,
+  //       mapName: MAP_MODULE.MAP_ANALYST,
+  //       isExample: false,
+  //     })
+  //   },
   // },
 ]
+
+}
+
+export default SetMap

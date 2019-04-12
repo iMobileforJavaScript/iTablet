@@ -6,16 +6,16 @@
 
 import * as React from 'react'
 import { View, Text, Platform, BackHandler } from 'react-native'
-import { LayerUtil } from '../../utils'
 import { Container, SearchBar } from '../../../../components'
 import NavigationService from '../../../NavigationService'
-import { Toast } from '../../../../utils'
+import { Toast, LayerUtil } from '../../../../utils'
 import { ConstInfo, MAP_MODULE } from '../../../../constants'
 import { MapToolbar } from '../../../workspace/components'
 import constants from '../../../workspace/constants'
 import { LayerAttributeTable } from '../../components'
 import styles from './styles'
 // import { SMap } from 'imobile_for_reactnative'
+import { language,getLanguage } from '../../../../language/index'
 
 const PAGE_SIZE = 30
 
@@ -88,7 +88,7 @@ export default class LayerAttributeSearch extends React.Component {
       return
     }
     this.currentPage += 1
-    this.search(this.searchKey, attribute => {
+    this.search(this.searchKey, 'loadMore', attribute => {
       cb && cb()
       if (!attribute || attribute.length <= 0) {
         Toast.show(ConstInfo.ALL_DATA_ALREADY_LOADED)
@@ -99,7 +99,7 @@ export default class LayerAttributeSearch extends React.Component {
     })
   }
 
-  search = (searchKey = '', cb = () => {}) => {
+  search = (searchKey = '', type = 'reset', cb = () => {}) => {
     if (!this.layerPath || searchKey === '') return
     this.searchKey = searchKey
     let result = {},
@@ -113,6 +113,7 @@ export default class LayerAttributeSearch extends React.Component {
             searchKey,
             this.currentPage,
             PAGE_SIZE,
+            type,
           )
         } else {
           result = await LayerUtil.searchLayerAttribute(
@@ -123,6 +124,7 @@ export default class LayerAttributeSearch extends React.Component {
             },
             this.currentPage,
             PAGE_SIZE,
+            type,
           )
         }
 
@@ -242,7 +244,12 @@ export default class LayerAttributeSearch extends React.Component {
         tableHead={
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
-            : ['名称', '属性值']
+            : [
+              getLanguage(global.language).Map_Lable.NAME, 
+              getLanguage(global.language).Map_Lable.ATTRIBUTE
+              //'名称'
+              //'属性值'
+            ]
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={
@@ -274,7 +281,8 @@ export default class LayerAttributeSearch extends React.Component {
           this.setLoading(true, ConstInfo.SEARCHING)
           this.search(searchKey)
         }}
-        placeholder={'请输入搜索关键字'}
+        placeholder={getLanguage(global.language).Prompt.ENTER_KEY_WORDS }
+        //{'请输入搜索关键字'}
       />
     )
   }
@@ -320,12 +328,16 @@ export default class LayerAttributeSearch extends React.Component {
               this.renderMapLayerAttribute()
             ) : (
               <View style={styles.infoView}>
-                <Text style={styles.info}>搜索结果</Text>
+                <Text style={styles.info}>
+                {/* 搜索结果 */}
+                </Text>
               </View>
             )
           ) : (
             <View style={styles.infoView}>
-              <Text style={styles.info}>搜索结果</Text>
+              <Text style={styles.info}>
+              {/* 搜索结果 */}
+              </Text>
             </View>
           )}
       </Container>

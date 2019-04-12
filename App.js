@@ -37,7 +37,12 @@ import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactn
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
+<<<<<<< HEAD
 import MSGConstans from "./src/containers/tabs/Friend/MsgConstans";
+import { language, getLanguage } from './src/language/index'
+=======
+import MSGConstans from "./src/containers/tabs/Friend/MsgConstans"
+>>>>>>> 1ceb3ff3ca3b44c10f3d42673d8ee4a6707013cd
 
 const {persistor, store} = ConfigStore()
 
@@ -92,7 +97,9 @@ const styles = StyleSheet.create({
 })
 
 class AppRoot extends Component {
-
+  props:{
+    language:Object,
+  }
   static propTypes = {
     nav: PropTypes.object,
     user: PropTypes.object,
@@ -132,14 +139,11 @@ class AppRoot extends Component {
     PT.initCustomPrototype()
   }
   UNSAFE_componentWillMount(){
-    //再次进行用户数据初始化
-    if(Platform.OS === 'ios'&&this.props.user.currentUser.userName){
-      FileTools.initUserDefaultData(this.props.user.currentUser.userName)
-    }
+    SOnlineService.init()
   }
   componentDidMount () {
 
-    if(GLOBAL.loginTimer != undefined){
+    if(GLOBAL.loginTimer !== undefined){
       clearInterval(GLOBAL.loginTimer)
       GLOBAL.loginTimer = undefined
     }
@@ -167,7 +171,7 @@ class AppRoot extends Component {
           bLogin = await SOnlineService.login(userName, password)
         }
         if (!bLogin) {
-          Toast.show('登陆状态失效')
+         // Toast.show('登陆状态失效')
         }
 
       }
@@ -176,14 +180,27 @@ class AppRoot extends Component {
     AppState.addEventListener('change', this.handleStateChange)
     ;(async function () {
       await this.initDirectories()
+      await FileTools.initUserDefaultData(this.props.user.currentUser.userName || 'Customer')
       SOnlineService.init()
       SOnlineService.removeCookie()
-      let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
-      let path = await FileTools.appendingHomeDirectory(customerPath)
+
+      let wsPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace, path = ''
+      if (
+        this.props.user.currentUser.userType !== UserType.PROBATION_USER ||
+        (this.props.user.currentUser.userName !== '' && this.props.user.currentUser.userName !== 'Customer')
+      ) {
+        let userWsPath = ConstPath.UserPath + this.props.user.currentUser.userName + '/' + ConstPath.RelativeFilePath.Workspace
+        if (await FileTools.fileIsExistInHomeDirectory(userWsPath)) {
+          path = await FileTools.appendingHomeDirectory(userWsPath)
+        } else {
+          path = await FileTools.appendingHomeDirectory(wsPath)
+        }
+      } else {
+        path = await FileTools.appendingHomeDirectory(wsPath)
+      }
+      // let customerPath = ConstPath.CustomerPath + ConstPath.RelativeFilePath.Workspace
+      // path = await FileTools.appendingHomeDirectory(customerPath)
       this.props.openWorkspace({server: path})
-      // await this.initEnvironment()
-      // await this.initSpeechManager()
-      // await this.initCustomerWorkspace()
       await this.inspectEnvironment()
       await this.initOrientation()
       await this.getImportResult()
@@ -416,7 +433,10 @@ class AppRoot extends Component {
     }
     if (GLOBAL.isBackHome) {
       try {
-        this.setSaveMapViewLoading(true, '正在关闭地图')
+        this.setSaveMapViewLoading(true, 
+          getLanguage(this.props.language).Prompt.CLOSING,
+          //'正在关闭地图'
+          )
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setSaveMapViewLoading(false)
@@ -505,6 +525,7 @@ class AppRoot extends Component {
   }
 
   render () {
+    global.language=this.props.language
     return (
       <View style={{flex: 1}}>
         <RootNavigator
@@ -536,6 +557,7 @@ class AppRoot extends Component {
 
 const mapStateToProps = state => {
   return {
+    language: state.setting.toJS().language,
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,

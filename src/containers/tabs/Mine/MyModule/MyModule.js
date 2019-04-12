@@ -15,11 +15,13 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import UserType from '../../../../constants/UserType'
 import { Container } from '../../../../components'
 import MyDataPopupModal from '../MyData/MyDataPopupModal'
+import NavigationService from '../../../NavigationService'
 import ModuleItem from './ModuleItem'
 import { color } from '../../../../styles'
 import { InputDialog } from '../../../../components/Dialog'
 import { Toast, scaleSize, setSpText } from '../../../../utils'
 import ModalBtns from './ModalBtns'
+import { language,getLanguage } from '../../../../language/index'
 const appUtilsModule = NativeModules.AppUtils
 // import {screen} from '../../../../utils'
 export default class MyModule extends Component {
@@ -38,6 +40,9 @@ export default class MyModule extends Component {
       modalIsVisible: false,
       isRefreshing: false,
     }
+    this.formChat = params.formChat || false
+    this.chatCallBack = params.chatCallBack
+    this.isShowMore = params.formChat ? false : true
   }
 
   componentDidMount() {
@@ -75,7 +80,8 @@ export default class MyModule extends Component {
     if (collectionData.length > 0) {
       isShowItem = true
       data.push({
-        title: '采集模板',
+        title: getLanguage(global.language).Profile.COLLECTION_TEMPLATE,
+        //'采集模板',
         data: collectionData,
         isShowItem: isShowItem,
       })
@@ -95,6 +101,7 @@ export default class MyModule extends Component {
         saveItemInfo={this.saveItemInfo}
         uploadListOfAdd={this.uploadListOfAdd}
         removeDataFromUpList={this.removeDataFromUpList}
+        isShowMore={this.isShowMore}
       />
     )
   }
@@ -117,7 +124,8 @@ export default class MyModule extends Component {
     if (this.props.user.currentUser.userType === UserType.PROBATION_USER) {
       data = [
         {
-          title: '删除数据',
+          title:  getLanguage(global.language).Profile.DELETE_DATA,
+          //'删除数据',
           action: async () => {
             try {
               let filePath = this.itemInfo.item.path.substring(
@@ -141,7 +149,8 @@ export default class MyModule extends Component {
     } else {
       data = [
         {
-          title: '分享',
+          title: getLanguage(global.language).Profile.SHARE,
+          //''分享',
           action: async () => {
             this._closeModal()
             this.ModalBtns.setVisible(true)
@@ -172,7 +181,8 @@ export default class MyModule extends Component {
           },
         },
         {
-          title: '删除数据',
+          title: getLanguage(global.language).Profile.DELETE_DATA,
+          //'删除数据',
           action: async () => {
             try {
               let filePath = await FileTools.appendingHomeDirectory(
@@ -246,7 +256,7 @@ export default class MyModule extends Component {
                 FileTools.deleteFile(toPath)
               },
             )
-        } else {
+        } else if (type === 'online') {
           SOnlineService.uploadFile(toPath, fileName, {
             onResult: () => {
               Toast.show('分享成功')
@@ -255,6 +265,10 @@ export default class MyModule extends Component {
               this.ModalBtns.setVisible(false)
             },
           })
+        } else if (this.chatCallBack) {
+          this.container.setLoading(false)
+          this.chatCallBack && this.chatCallBack(toPath)
+          NavigationService.goBack()
         }
       }
     } catch (error) {
@@ -351,6 +365,7 @@ const styles = StyleSheet.create({
     width: scaleSize(30),
     height: scaleSize(30),
     marginLeft: 10,
+    tintColor: color.imageColorWhite,
   },
   sectionText: {
     color: color.fontColorWhite,

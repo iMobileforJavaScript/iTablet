@@ -12,6 +12,8 @@ import {
   KeyboardAvoidingView,
   FlatList,
   TouchableOpacity,
+  Platform,
+  InteractionManager,
 } from 'react-native'
 import {
   Container,
@@ -20,11 +22,12 @@ import {
   Button,
   PopModal,
 } from '../../../../components'
-import { scaleSize } from '../../../../utils'
-import { CheckStatus } from '../../../../constants'
+import { scaleSize, Toast } from '../../../../utils'
+import { CheckStatus, ConstInfo } from '../../../../constants'
 import { color } from '../../../../styles'
 import { getPublicAssets, getThemeAssets } from '../../../../assets'
 import { MapCutSetting, CutListItem, MapCutAddLayer } from '../../compoents'
+import NavigationService from '../../../NavigationService'
 import { DatasetType, SMap } from 'imobile_for_reactnative'
 import styles from '../../styles'
 
@@ -35,12 +38,14 @@ export default class MapCut extends React.Component {
   props: {
     navigation: Object,
     nav: Object,
+    map: Array,
     layers: Array,
     getLayers: () => {},
   }
 
   constructor(props) {
     super(props)
+    const { params } = props.navigation.state
     this.state = {
       headerBtnTitle: EDIT,
       selected: (new Map(): Map<string, boolean>),
@@ -48,24 +53,51 @@ export default class MapCut extends React.Component {
       isSelectAll: false,
       isSaveAs: false,
       saveAsName: '',
-      layers: props.layers,
+      // layers: props.layers,
+      layers: [],
       outLayers: [], // 未选中的图层
       datasources: [],
+      points: (params && params.points) || [],
     }
     this.init = true
     this.changeDSData = null
+    this.isCutting = false // 判断是否正在裁剪
   }
 
   componentDidMount() {
-    (async function() {
-      let layers = await this.props.getLayers()
-      SMap.getDatasources().then(datasources => {
-        this.setState({
-          datasources,
+    InteractionManager.runAfterInteractions(() => {
+      (async function() {
+        let layers = await this.props.getLayers()
+        SMap.getDatasources().then(datasources => {
+          this.setState({
+            datasources,
+          })
         })
-      })
-      this.selectAll(true, layers)
-    }.bind(this)())
+        let _layers = await this.getAllLayers(layers)
+
+        this.selectAll(true, _layers)
+      }.bind(this)())
+    })
+  }
+
+  /**
+   * 获取所有图层，包含图层组中的图层
+   */
+  getAllLayers = async layers => {
+    let _layers = []
+    for (let i = 0; i < layers.length; i++) {
+      let item = layers[i]
+      if (item.type === 'layerGroup') {
+        let groupLayers = await SMap.getLayersByGroupPath(item.path)
+        if (groupLayers.length > 0) {
+          let _layers_2 = await this.getAllLayers(groupLayers)
+          _layers = _layers.concat(_layers_2)
+        }
+      } else {
+        _layers.push(item)
+      }
+    }
+    return _layers
   }
 
   headerBtnAction = () => {
@@ -74,7 +106,72 @@ export default class MapCut extends React.Component {
     })
   }
 
-  cut = () => {}
+  cut = () => {
+    (async function() {
+      try {
+        if (this.isCutting) return
+        this.isCutting = true
+
+        this.mapNameIput && this.mapNameIput.blur()
+        this.container && this.container.setLoading(true, ConstInfo.CLIPPING)
+        setTimeout(async () => {
+          let layersInfo = []
+          this.state.selected.forEach((value, key) => {
+            let layerInfo = {}
+            if (!value) return
+            let info = this.state.extraData.get(key)
+            if (!info) return
+
+            layerInfo.LayerName = key
+            layerInfo.IsClipInRegion =
+              info.inRangeStatus === CheckStatus.CHECKED ||
+              info.inRangeStatus === CheckStatus.CHECKED_DISABLE
+            layerInfo.IsErase =
+              info.eraseStatus === CheckStatus.CHECKED ||
+              info.eraseStatus === CheckStatus.CHECKED_DISABLE
+            if (
+              info.exactCutStatus === CheckStatus.CHECKED ||
+              info.exactCutStatus === CheckStatus.UN_CHECK
+            ) {
+              layerInfo.IsExactClip =
+                info.exactCutStatus === CheckStatus.CHECKED
+            }
+            layerInfo.DatasourceTarget = info.datasourceName
+
+            layersInfo.push(layerInfo)
+          })
+
+          let addition = {}
+          if (this.props.map.currentMap.Template) {
+            addition.Template = this.props.map.currentMap.Template
+          }
+
+          let result = await SMap.clipMap(
+            this.state.points,
+            layersInfo,
+            this.state.saveAsName,
+            '',
+            addition,
+            true,
+          )
+          this.container && this.container.setLoading(false)
+          this.isCutting = false
+          if (result) {
+            GLOBAL.MapSurfaceView && GLOBAL.MapSurfaceView.show(false)
+            GLOBAL.toolBox && GLOBAL.toolBox.setVisible(false)
+            NavigationService.goBack()
+            Toast.show(ConstInfo.CLIP_SUCCESS)
+          } else {
+            Toast.show(ConstInfo.CLIP_FAILED)
+          }
+        }, 0)
+      } catch (e) {
+        this.isCutting = false
+        this.container && this.container.setLoading(false)
+        Toast.show(ConstInfo.CLIP_FAILED)
+      }
+    }.bind(this)())
+  }
 
   _onChangeText = text => {
     this.setState({
@@ -96,7 +193,7 @@ export default class MapCut extends React.Component {
    * 全选/全取消
    * @param isSelectAll
    */
-  selectAll = (isSelectAll, data = this.state.layers) => {
+  selectAll = (isSelectAll, layers = this.state.layers) => {
     if (isSelectAll !== undefined && isSelectAll === this.state.isSelectAll)
       return
     this.setState(state => {
@@ -106,14 +203,15 @@ export default class MapCut extends React.Component {
         selected.clear()
       } else {
         // this.state.layers.forEach(item => {
-        data.forEach(item => {
+        layers.forEach(item => {
           selected.set(item.name, true)
         })
       }
-      // if (JSON.stringify(state.layers) !== JSON.stringify(data)) {
-      //   return { selected, isSelectAll, data }
-      // }
-      return { selected, isSelectAll }
+      if (JSON.stringify(state.layers) !== JSON.stringify(layers)) {
+        return { selected, isSelectAll, layers }
+      } else {
+        return { selected, isSelectAll }
+      }
     })
   }
 
@@ -471,7 +569,10 @@ export default class MapCut extends React.Component {
       )
     } else {
       return (
-        <KeyboardAvoidingView behavior="padding" enabled>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' && 'padding'}
+          enabled
+        >
           <View style={[styles.bottomView, { width: '100%' }]}>
             <View style={styles.bottomLeftView}>
               {this.renderCheckButton({
@@ -482,6 +583,7 @@ export default class MapCut extends React.Component {
               })}
               {this.state.isSaveAs ? (
                 <TextInput
+                  ref={ref => (this.mapNameIput = ref)}
                   value={this.state.text}
                   style={styles.input}
                   placeholder={'请输入地图名字'}
@@ -568,43 +670,42 @@ export default class MapCut extends React.Component {
         ref={ref => (this.settingModal = ref)}
         datasources={this.state.datasources}
         configAction={settings => {
-          const extraData = new Map(this.state.extraData)
-          // 只改变非disable的选项
-          extraData.forEach((value, key) => {
-            let rowSelected = this.state.selected.get(key)
-            if (!rowSelected) return value
+          this.setState(state => {
+            const extraData = new Map(state.extraData)
+            // 只改变非disable的选项
+            extraData.forEach((value, key) => {
+              let rowSelected = this.state.selected.get(key)
+              if (!rowSelected) return value
 
-            if (settings.get('ds').selected) {
-              value.datasourceName = settings.get('ds').dsName
-            }
-            if (settings.get('range').selected) {
-              value.inRangeStatus = settings.get('range').value
-                ? CheckStatus.CHECKED
-                : CheckStatus.UN_CHECK
-            }
-            if (
-              settings.get('erase').selected &&
-              value.eraseStatus !== CheckStatus.UN_CHECK_DISABLE &&
-              value.eraseStatus !== CheckStatus.CHECKED_DISABLE
-            ) {
-              value.eraseStatus = settings.get('erase').value
-                ? CheckStatus.CHECKED
-                : CheckStatus.UN_CHECK
-            }
-            if (
-              settings.get('exactCut').selected &&
-              value.exactCutStatus !== CheckStatus.UN_CHECK_DISABLE &&
-              value.exactCutStatus !== CheckStatus.CHECKED_DISABLE
-            ) {
-              value.exactCutStatus = settings.get('exactCut').value
-                ? CheckStatus.CHECKED
-                : CheckStatus.UN_CHECK
-            }
-            return value
-          })
-
-          this.setState({
-            extraData,
+              if (settings.get('ds').selected) {
+                value.datasourceName = settings.get('ds').dsName
+              }
+              if (settings.get('range').selected) {
+                value.inRangeStatus = settings.get('range').value
+                  ? CheckStatus.CHECKED
+                  : CheckStatus.UN_CHECK
+              }
+              if (
+                settings.get('erase').selected &&
+                value.eraseStatus !== CheckStatus.UN_CHECK_DISABLE &&
+                value.eraseStatus !== CheckStatus.CHECKED_DISABLE
+              ) {
+                value.eraseStatus = settings.get('erase').value
+                  ? CheckStatus.CHECKED
+                  : CheckStatus.UN_CHECK
+              }
+              if (
+                settings.get('exactCut').selected &&
+                value.exactCutStatus !== CheckStatus.UN_CHECK_DISABLE &&
+                value.exactCutStatus !== CheckStatus.CHECKED_DISABLE
+              ) {
+                value.exactCutStatus = settings.get('exactCut').value
+                  ? CheckStatus.CHECKED
+                  : CheckStatus.UN_CHECK
+              }
+              return value
+            })
+            return { extraData }
           })
         }}
       />

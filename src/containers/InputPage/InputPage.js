@@ -7,6 +7,7 @@ import * as React from 'react'
 import { View } from 'react-native'
 import { Container, Input, TextBtn } from '../../components'
 import { color } from '../../styles'
+import { language,getLanguage } from '../../language/index'
 import styles from './styles'
 
 export default class InputPage extends React.Component {
@@ -19,11 +20,13 @@ export default class InputPage extends React.Component {
     super(props)
     const { params } = this.props.navigation.state
     this.cb = params && params.cb
+    this.backcb = params && params.backcb
     this.state = {
       value: params && params.value ? params.value : '',
       placeholder: params && params.placeholder ? params.placeholder : '',
       headerTitle: params && params.headerTitle ? params.headerTitle : '',
-      btnTitle: params && params.btnTitle ? params.btnTitle : '确定',
+      btnTitle: params && params.btnTitle ? params.btnTitle :
+         getLanguage(global.language).Prompt.CONFIRM//'确定',
     }
     this.clickAble = true
   }
@@ -39,6 +42,14 @@ export default class InputPage extends React.Component {
     }
   }
 
+  back = () => {
+    if (this.backcb) {
+      this.backcb()
+    } else {
+      this.props.navigation.goBack()
+    }
+  }
+
   render() {
     return (
       <Container
@@ -46,6 +57,7 @@ export default class InputPage extends React.Component {
         style={styles.container}
         headerProps={{
           title: this.state.headerTitle,
+          backAction: this.back,
           navigation: this.props.navigation,
           headerRight: (
             <TextBtn

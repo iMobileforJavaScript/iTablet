@@ -9,9 +9,10 @@ import CreateGroupChat from './FriendGroup/CreateGroupChat'
 
 import { connect } from 'react-redux'
 import { setUser } from '../../../models/user'
-import { addChat } from '../../../models/chat'
+import { addChat, editChat } from '../../../models/chat'
 
 const mapStateToProps = state => ({
+  language: state.setting.toJS().language,
   user: state.user.toJS(),
   chat: state.chat.toJS(),
 })
@@ -20,6 +21,7 @@ const mapDispatchToProps = {
   setUser,
   addChat,
   //addUnreadMessage,
+  editChat,
 }
 export default connect(
   mapStateToProps,
