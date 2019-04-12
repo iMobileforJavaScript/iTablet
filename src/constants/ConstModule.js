@@ -335,12 +335,11 @@ export default [
   //         ...lastMap,
   //       }
   //     } else {
-  //       let moduleMapName = '国情普查_示范数据'
+  //       let moduleMapName = '湖南'
   //       let moduleMapFullName = moduleMapName + '.xml'
-  //       // 地图相对路径
+  //       // 地图用相对路径
   //       let moduleMapPath =
   //         userPath + ConstPath.RelativeFilePath.Map + moduleMapFullName
-  //
   //       if (await FileTools.fileIsExist(homePath + moduleMapPath)) {
   //         data = {
   //           type: 'Map',
@@ -367,6 +366,7 @@ export default [
   //     })
   //   },
   // },
+
   // {
   //   key: '应急标绘',
   //   title: '应急标绘',
