@@ -26,7 +26,7 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstant from './MsgConstant'
-import{ language, getLanguage }from '../../../language/index'
+import{getLanguage}from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
@@ -520,7 +520,7 @@ export default class Friend extends Component {
       })
     }
   }
-  render() { 
+  render() {
     return (
       <Container
         ref={ref => (this.container = ref)}
@@ -595,8 +595,9 @@ export default class Friend extends Component {
         >
           <FriendMessage
             ref={ref => (this.friendMessage = ref)}
-          tabLabel= {getLanguage(this.props.language).Friends.MESSAGES}
-         //"消息"
+            tabLabel= {getLanguage(this.props.language).Friends.MESSAGES}
+            //"消息"
+            language={this.props.language}
             user={this.props.user.currentUser}
             chat={this.props.chat}
             friend={this}
@@ -605,6 +606,7 @@ export default class Friend extends Component {
             ref={ref => (this.friendList = ref)}
             tabLabel={getLanguage(this.props.language).Friends.FRIENDS}
             //"好友"
+            language={this.props.language}
             user={this.props.user.currentUser}
             friend={this}
           />
@@ -612,6 +614,7 @@ export default class Friend extends Component {
             ref={ref => (this.friendGroup = ref)}
             tabLabel={getLanguage(this.props.language).Friends.GROUPS}
             //"群组"
+            language={this.props.language}
             user={this.props.user.currentUser}
             friend={this}
           />

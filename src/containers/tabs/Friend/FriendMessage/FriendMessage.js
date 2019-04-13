@@ -20,11 +20,13 @@ import { styles } from './Styles'
 import { dialogStyles } from './../Styles'
 import FriendListFileHandle from '../FriendListFileHandle'
 import MessageDataHandle from './../MessageDataHandle'
+import{getLanguage}from '../../../../language/index'
 
 // import Friend from './../Friend'
 
 class FriendMessage extends Component {
   props: {
+    language: String,
     friend: Object,
     user: Object,
     chat: Array,
@@ -55,7 +57,8 @@ class FriendMessage extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language!==this.props.language
     ) {
       return true
     }
@@ -202,7 +205,8 @@ class FriendMessage extends Component {
     if (!item) {
       items = [
         {
-          title: '清空通知消息',
+          title: getLanguage(this.props.language).Friends.CLEAR_NOTIFICATION,
+          // '清空通知消息',
           onPress: () => {
             MessageDataHandle.delMessage({
               //清除未读信息
@@ -216,7 +220,8 @@ class FriendMessage extends Component {
       this.target = item
       // let friendMsgHandle = this
       let obj = {
-        title: '标记已读',
+        title: getLanguage(this.props.language).Friends.MARK_READ,
+        // '标记已读',
         onPress: () => {
           MessageDataHandle.readMessage({
             //清除未读信息
@@ -227,7 +232,8 @@ class FriendMessage extends Component {
       }
       if (item.unReadMsg === 0) {
         obj = {
-          title: '标记未读',
+          title: getLanguage(this.props.language).Friends.MARK_UNREAD,
+          // '标记未读',
           onPress: () => {
             MessageDataHandle.unReadMessage({
               //清除未读信息
@@ -240,7 +246,8 @@ class FriendMessage extends Component {
       items = [
         obj,
         {
-          title: '删除',
+          title: getLanguage(this.props.language).Friends.DEL,
+          // '删除',
           onPress: () => {
             this.dialog.setDialogVisible(true)
           },
@@ -325,7 +332,8 @@ class FriendMessage extends Component {
           </View>
         </View>
         <View style={styles.ITemTextViewStyle}>
-          <Text style={styles.ITemTextStyle}>消息通知</Text>
+          <Text style={styles.ITemTextStyle}>
+            {getLanguage(this.props.language).Friends.NOTIFICATION}</Text>
         </View>
         <View
           style={{
@@ -480,7 +488,8 @@ class FriendMessage extends Component {
           style={dialogStyles.dialogHeaderImgX}
         />
         <Text style={dialogStyles.promptTtileX}>
-          删除后,将清空该聊天的消息记录
+          {getLanguage(this.props.language).Friends.ALERT_DEL_HISTORY}
+          {/* 删除后,将清空该聊天的消息记录 */}
         </Text>
       </View>
     )
@@ -490,8 +499,8 @@ class FriendMessage extends Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Friends.CANCEL}
         confirmAction={() => {
           MessageDataHandle.delMessage({
             //清除未读信息

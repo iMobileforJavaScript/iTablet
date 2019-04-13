@@ -27,9 +27,11 @@ import MessageDataHandle from '../MessageDataHandle'
 import { ActionPopover } from 'teaset'
 import { dialogStyles, inputStyles } from '../Styles'
 import { Dialog } from '../../../../components/Dialog'
+import {getLanguage} from '../../../../language/index'
 
 class FriendList extends Component {
   props: {
+    language: String,
     navigation: Object,
     user: Object,
     friend: Object,
@@ -63,7 +65,8 @@ class FriendList extends Component {
   shouldComponentUpdate(prevProps, prevState) {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)
+      JSON.stringify(prevState) !== JSON.stringify(this.state) ||
+      prevProps.language!==this.props.language
     ) {
       return true
     }
@@ -403,7 +406,8 @@ class FriendList extends Component {
     this.target = item
 
     let obj = {
-      title: '设置备注',
+      title:  getLanguage(this.props.language).Friends.SET_MARK_NAME,
+      // '设置备注',
       onPress: () => {
         this.inputdialog.setDialogVisible(true)
       },
@@ -412,7 +416,8 @@ class FriendList extends Component {
       let items = [
         obj,
         {
-          title: '删除好友',
+          title: getLanguage(this.props.language).Friends.DEL_FRIEND,
+          // '删除好友',
           onPress: () => {
             this.dialog.setDialogVisible(true)
           },
@@ -471,7 +476,8 @@ class FriendList extends Component {
           style={dialogStyles.dialogHeaderImgX}
         />
         <Text style={dialogStyles.promptTtileX}>
-          将该联系人删除,将同时删除与该联系人的聊天记录
+          {getLanguage(this.props.language).Friends.ALERT_DEL_FRIEND}
+          {/* 将该联系人删除,将同时删除与该联系人的聊天记录 */}
         </Text>
       </View>
     )
@@ -481,8 +487,8 @@ class FriendList extends Component {
       <Dialog
         ref={ref => (this.dialog = ref)}
         type={'modal'}
-        confirmBtnTitle={'确定'}
-        cancelBtnTitle={'取消'}
+        confirmBtnTitle={getLanguage(this.props.language).Friends.CONFIRM}
+        cancelBtnTitle={getLanguage(this.props.language).Friends.CANCEL}
         confirmAction={this._deleteFriend}
         opacity={1}
         opacityStyle={styles.opacityView}
@@ -511,19 +517,20 @@ class FriendList extends Component {
           <TextInput
             underlineColorAndroid={'transparent'}
             accessible={true}
-            accessibilityLabel={'文本内容'}
+            accessibilityLabel={getLanguage(this.props.language).Friends.TEXT_CONTENT}
             onChangeText={text => {
               this.setState({
                 inputText: text,
               })
             }}
             value={this.state.inputText}
-            placeholder={'请输入备注名'}
+            placeholder={getLanguage(this.props.language).Friends.INPUT_MARK_NAME}
             style={inputStyles.textInputStyle}
           />
         </View>
         {this.state.placeholder && (
-          <Text style={styles.placeholder}>内容不符合规范请重新输入</Text>
+          <Text style={styles.placeholder}>
+            {getLanguage(this.props.language).Friends.INPUT_INVALID}</Text>
         )}
       </Dialog>
     )
