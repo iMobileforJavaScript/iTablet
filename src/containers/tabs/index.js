@@ -1,10 +1,11 @@
 import { TabNavigator } from 'react-navigation'
-import React from 'react'
+import React ,{PureComponent} from 'react'
 import { Image, StyleSheet, View, Text } from 'react-native'
 import { scaleSize, setSpText } from '../../utils'
 import { getThemeAssets } from '../../assets'
 import { color } from '../../styles'
 import Home, { Setting, AboutITablet } from './Home'
+import {TabItem} from './TabItem'
 import Mine, {
   MyService,
   MyLocalData,
@@ -31,7 +32,68 @@ import Friend, {
 } from './Friend'
 // eslint-disable-next-line no-unused-vars
 import InformSpot from './Friend/InformSpot'
-const Tabs = TabNavigator(
+import{ language,getLanguage }from '../../language/index'
+import { connect } from 'react-redux'
+
+class tabItem extends PureComponent{
+  props:{
+    language:Object,
+    data:Object,
+    title:Object,
+    source_focuse:Object,
+    source_unfocuse:Object
+  }
+  gettitle=()=>{ 
+    //alert(this.props.title)
+      let t=''
+      switch (this.props.title) {
+        case 'home':
+          t=getLanguage(this.props.language).Navigator_Lable.HOME
+          break;
+        case 'friend':
+          t=getLanguage(this.props.language).Navigator_Lable.FRIENDS
+          break;
+        case 'find':
+          t=getLanguage(this.props.language).Navigator_Lable.EXPLORE
+          break;
+        case 'user':
+          t=getLanguage(this.props.language).Navigator_Lable.PROFILE
+          break;
+      }
+      return t
+    }
+  render(){
+   
+
+    return (
+      <View style={styles.labelView}>
+      <Image
+            resizeMode="contain"
+            source={
+                this.props.data.focused
+                ? this.props.source_focuse
+                :this.props.source_unfocuse
+            }
+            style={styles.icon}
+        />
+        <Text style={styles.tabText}>
+          { this.gettitle() }
+        </Text>
+    </View>
+    )
+  }
+}
+
+const mapStateToProps = state => ({
+  language: state.setting.toJS().language
+})
+const mapDispatchToProps = {}
+const TabBarLabel =  connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(tabItem)
+
+const Tabs =  TabNavigator(
   {
     Home: {
       screen: Home,
@@ -106,36 +168,14 @@ const Tabs = TabNavigator(
         return {
           tabBarLabel: data => {
             return (
-              <View style={styles.labelView}>
-                <Image
-                  resizeMode="contain"
-                  source={
-                    data.focused
-                      ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
-                      : require('../../assets/tabBar/Frenchgrey/tab_find.png')
-                  }
-                  style={styles.icon}
-                />
-                <Text
-                  // style={data.focused ? styles.selectedTabText : styles.tabText}
-                  style={styles.tabText}
-                >
-                  发现
-                </Text>
-              </View>
+              <TabBarLabel
+              data={data}
+              title={'find'}
+              source_focuse={require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')}
+              source_unfocuse={require('../../assets/tabBar/Frenchgrey/tab_find.png')}
+              />
             )
           },
-          // tabBarIcon: ({ focused }: any) => (
-          //   <Image
-          //     resizeMode="contain"
-          //     source={
-          //       focused
-          //         ? require('../../assets/tabBar/Frenchgrey/tab_find_selected.png')
-          //         : require('../../assets/tabBar/Frenchgrey/tab_find.png')
-          //     }
-          //     style={styles.icon}
-          //   />
-          // ),
           header: null,
         }
       },
@@ -146,36 +186,14 @@ const Tabs = TabNavigator(
         return {
           tabBarLabel: data => {
             return (
-              <View style={styles.labelView}>
-                <Image
-                  resizeMode="contain"
-                  source={
-                    data.focused
-                      ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
-                      : require('../../assets/tabBar/Frenchgrey/tab_user.png')
-                  }
-                  style={styles.icon}
-                />
-                <Text
-                  // style={data.focused ? styles.selectedTabText : styles.tabText}
-                  style={styles.tabText}
-                >
-                  我的
-                </Text>
-              </View>
+              <TabBarLabel
+              data={data}
+              title={'user'}
+              source_focuse={require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')}
+              source_unfocuse={require('../../assets/tabBar/Frenchgrey/tab_user.png')}
+              />
             )
           },
-          // tabBarIcon: ({ focused }: any) => (
-          // <Image
-          //   resizeMode="contain"
-          //   source={
-          //     focused
-          //       ? require('../../assets/tabBar/Frenchgrey/tab_user_selected.png')
-          //       : require('../../assets/tabBar/Frenchgrey/tab_user.png')
-          //   }
-          //   style={styles.icon}
-          // />
-          // ),
           header: null,
         }
       },
@@ -249,8 +267,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 })
-export default Tabs
+
 export {
+  Tabs,
   /**Mine*/
   MyService,
   MyLocalData,

@@ -7,6 +7,7 @@ import { dataUtil } from '../../../../utils'
 import { getPublicAssets } from '../../../../assets'
 import constants from '../../constants'
 import ToolbarBtnType from './ToolbarBtnType'
+import{language, getLanguage }from '../../../../language/index'
 // import NavigationService from '../../../NavigationService'
 
 let _params = {}
@@ -26,42 +27,50 @@ function getMapTool(type, params) {
       data = [
         {
           key: 'distanceComput',
-          title: '距离量算',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_DISTANCE_MEASUREMENT, 
+          //'距离量算',
           action: measureLength,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_measure_length_black.png'),
         },
         {
           key: 'coverComput',
-          title: '面积量算',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_AREA_MEASUREMENT, 
+          //'面积量算',
           action: measureArea,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_measure_area_black.png'),
         },
         {
           key: 'azimuthComput',
-          title: '方位角量算',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_AZIMUTH_MEASUREMENT, 
+          //'方位角量算',
           action: measureAngle,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_measure_angle_black.png'),
         },
         {
           key: 'pointSelect',
-          title: '点选',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_SELECT, 
+          //'点选',
           action: pointSelect,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_free_point_select_black.png'),
         },
         {
           key: 'selectByRectangle',
-          title: '框选',
+          title: getLanguage(global.language).Map_Main_Menu.TOOLS_RECTANGLE_SELECT, 
+          //'框选',
           action: selectByRectangle,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_select_by_rectangle.png'),
         },
         {
           key: 'pointSelect',
-          title: '全幅',
+          title:getLanguage(global.language).Map_Main_Menu.FULL_SCREEN, 
+          //'全幅', 
+          //getLanguage(global.language).Map_Main_Menu.START_OPEN_MAP, 
+          //'全幅',
           action: viewEntire,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_full_screen.png'),
@@ -219,7 +228,8 @@ function getMapTool(type, params) {
         // },
         {
           key: constants.CANCEL_SELECT,
-          title: constants.CANCEL_SELECT,
+          title: getLanguage(global.language).Prompt.CANCEL, 
+          //constants.CANCEL_SELECT,
           action: cancelSelect,
           size: 'large',
           image: require('../../../../assets/mapTools/icon_cancel_1.png'),

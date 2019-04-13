@@ -7,12 +7,14 @@ import constants from '../../constants'
 import PropTypes from 'prop-types'
 import NavigationService from '../../../../containers/NavigationService'
 import MT_Btn from '../../../../components/mapTools/MT_Btn'
+import {getLanguage} from '../../../../language/index'
 // import { SScene, Utility } from 'imobile_for_reactnative'
 // export const MAP_LOCAL = 'MAP_LOCAL'
 // export const MAP_3D = 'MAP_3D'
 
 export default class MapToolbar extends React.Component {
   static propTypes = {
+    language:Object,
     type: PropTypes.string,
     navigation: PropTypes.object,
     initIndex: PropTypes.number,
@@ -62,7 +64,8 @@ export default class MapToolbar extends React.Component {
         list = [
           {
             key: 'MapView',
-            title: '地图',
+            title: getLanguage(global.language).Map_Lable.MAP, 
+            //'地图',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
             btnClick: () => {
@@ -72,7 +75,8 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerManager',
-            title: '图层',
+            title: getLanguage(global.language).Map_Lable.LAYER, 
+            //'图层',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
@@ -82,7 +86,8 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerAttribute',
-            title: '属性',
+            title: getLanguage(global.language).Map_Lable.ATTRIBUTE, 
+            //'属性',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
@@ -92,7 +97,8 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'MapSetting',
-            title: '设置',
+            title: getLanguage(global.language).Map_Lable.SETTING, 
+            //'设置',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
             btnClick: () => {
@@ -136,11 +142,46 @@ export default class MapToolbar extends React.Component {
           },
         ]
         break
+      case constants.MAP_ANALYST:
+        list = [
+          {
+            key: 'MapAnalystView',
+            title: '地图',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('MapAnalystView', { type })
+            },
+          },
+          {
+            key: 'AnalystTools',
+            title: '工具箱',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('AnalystTools', { type })
+            },
+          },
+          {
+            key: 'LayerAnalystManager',
+            title: '图层',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAnalystManager', { type })
+            },
+          },
+        ]
+        break
       case constants.MAP_3D:
         list = [
           {
             key: 'scene',
-            title: '场景',
+            title: getLanguage(global.language).Map_Lable.SCENE, 
+            //'场景',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_scene.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_scene_selected.png'),
             btnClick: () => {
@@ -152,7 +193,8 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'Layer3DManager',
-            title: '图层',
+            title: getLanguage(global.language).Map_Lable.LAYER, 
+            //'图层',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
             btnClick: () => {
@@ -164,7 +206,8 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'LayerAttribute',
-            title: '属性',
+            title: getLanguage(global.language).Map_Lable.ATTRIBUTE, 
+            //'属性',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
             btnClick: () => {
@@ -176,7 +219,8 @@ export default class MapToolbar extends React.Component {
           },
           {
             key: 'Setting',
-            title: '设置',
+            title: getLanguage(global.language).Map_Lable.SETTING, 
+            //'设置',
             image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
             selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
             btnClick: () => {
@@ -188,6 +232,59 @@ export default class MapToolbar extends React.Component {
               // Utility.unZipFile(toPath,path)
               this.props.navigation &&
                 this.props.navigation.navigate('Map3DSetting', {})
+            },
+          },
+        ]
+        break
+      case constants.MAP_THEME:
+        list = [
+          {
+            key: 'MapView',
+            title: getLanguage(global.language).Map_Lable.MAP, 
+            //'地图',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_map.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_map_selected.png'),
+            btnClick: () => {
+              this.props.navigation && this.props.navigation.navigate('MapView')
+            },
+          },
+          {
+            key: 'LayerManager',
+            title: getLanguage(global.language).Map_Lable.LAYER, 
+            //'图层',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_layer_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerManager', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+          {
+            key: 'LayerAttribute',
+            title: getLanguage(global.language).Map_Lable.ATTRIBUTE, 
+            //'属性',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_attribute_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('LayerAttribute', {
+                  type: constants.MAP_THEME,
+                })
+            },
+          },
+          {
+            key: 'MapSetting',
+            title: getLanguage(global.language).Map_Lable.SETTING, 
+            //'设置',
+            image: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting.png'),
+            selectedImage: require('../../../../assets/mapToolbar/Frenchgrey/icon_setting_selected.png'),
+            btnClick: () => {
+              this.props.navigation &&
+                this.props.navigation.navigate('MapSetting', {
+                  type: constants.MAP_THEME,
+                })
             },
           },
         ]

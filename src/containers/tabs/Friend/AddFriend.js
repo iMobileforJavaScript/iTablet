@@ -19,6 +19,7 @@ import { Container, Dialog } from '../../../components'
 import { dialogStyles } from './Styles'
 //import Friend from './Friend'
 import FriendListFileHandle from './FriendListFileHandle'
+import { language,getLanguage } from '../../../language/index'
 import { Toast } from '../../../utils'
 
 const dismissKeyboard = require('dismissKeyboard')
@@ -228,7 +229,8 @@ class AddFriend extends Component {
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '添加好友',
+          title: getLanguage(global.language).Friends.ADD_FRIENDS,
+          //'添加好友',
           withoutBack: false,
           navigation: this.props.navigation,
         }}

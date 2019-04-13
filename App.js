@@ -37,7 +37,8 @@ import { SOnlineService, SScene, SMap,SMessageService } from 'imobile_for_reactn
 import SplashScreen from 'react-native-splash-screen'
 //import { Dialog } from './src/components'
 import UserType from './src/constants/UserType'
-import MSGConstant from "./src/containers/tabs/Friend/MsgConstant"
+import MSGConstans from "./src/containers/tabs/Friend/MsgConstans";
+import { language, getLanguage } from './src/language/index'
 
 const {persistor, store} = ConfigStore()
 
@@ -92,7 +93,9 @@ const styles = StyleSheet.create({
 })
 
 class AppRoot extends Component {
-
+  props:{
+    language:Object,
+  }
   static propTypes = {
     nav: PropTypes.object,
     user: PropTypes.object,
@@ -426,7 +429,10 @@ class AppRoot extends Component {
     }
     if (GLOBAL.isBackHome) {
       try {
-        this.setSaveMapViewLoading(true, '正在关闭地图')
+        this.setSaveMapViewLoading(true, 
+          getLanguage(this.props.language).Prompt.CLOSING,
+          //'正在关闭地图'
+          )
         await this.props.closeMap()
         GLOBAL.clearMapData()
         this.setSaveMapViewLoading(false)
@@ -515,6 +521,7 @@ class AppRoot extends Component {
   }
 
   render () {
+    global.language=this.props.language
     return (
       <View style={{flex: 1}}>
         <RootNavigator
@@ -546,6 +553,7 @@ class AppRoot extends Component {
 
 const mapStateToProps = state => {
   return {
+    language: state.setting.toJS().language,
     user: state.user.toJS(),
     nav: state.nav.toJS(),
     editLayer: state.layers.toJS().editLayer,

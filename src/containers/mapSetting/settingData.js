@@ -1,18 +1,23 @@
+import { language,getLanguage } from '../../language/index'
+
 function getMapSettings() {
   let data = [
     {
-      title: '基本设置',
+      title: getLanguage(global.language).Map_Setting.BASIC_SETTING,
+      // '基本设置',
       visible: true,
       index: 0,
       data: [
         {
-          name: '手势旋转',
+          name: getLanguage(global.language).Map_Setting.ROTATION_GRSTURE,
+          //'手势旋转',
           value: false,
           isShow: true,
           sectionIndex: 0,
         },
         {
-          name: '手势俯仰',
+          name: getLanguage(global.language).Map_Setting.PITCH_GESTURE,
+          //'手势俯仰',
           value: false,
           isShow: true,
           sectionIndex: 0,
@@ -26,7 +31,8 @@ function getMapSettings() {
       ],
     },
     {
-      title: '效果设置',
+      title: getLanguage(global.language).Map_Setting.EFFRCT_SETTINFS,
+      //'效果设置',
       visible: true,
       index: 0,
       data: [
@@ -79,13 +85,15 @@ function getMapSettings() {
         //   sectionIndex: 1,
         // },
         {
-          name: '反走样地图',
+          name: getLanguage(global.language).Map_Setting.ANTI_ALIASING_MAP,
+          //'反走样地图',
           value: false,
           isShow: true,
           sectionIndex: 1,
         },
         {
-          name: '显示压盖对象',
+          name:  getLanguage(global.language).Map_Setting.SHOW_OVERLAYS,
+          //'显示压盖对象',
           value: false,
           isShow: true,
           sectionIndex: 1,
@@ -93,7 +101,8 @@ function getMapSettings() {
       ],
     },
     {
-      title: '范围设置',
+      title:  getLanguage(global.language).Map_Setting.BOUNDS_SETTING,
+      //'范围设置',
       visible: true,
       index: 1,
       data: [
@@ -122,7 +131,8 @@ function getMapSettings() {
         //   sectionIndex: 2,
         // },
         {
-          name: '固定比例尺',
+          name: getLanguage(global.language).Map_Setting.FIX_SCALE,
+          //'固定比例尺',
           value: false,
           isShow: true,
           sectionIndex: 2,
