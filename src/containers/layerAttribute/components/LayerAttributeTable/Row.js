@@ -5,9 +5,8 @@
  */
 
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import { scaleSize } from '../../../../utils'
-import { ListSeparator } from '../../../../components'
 import { color } from '../../../../styles'
 import Cell from './Cell'
 
@@ -79,11 +78,12 @@ export default class Row extends Component {
     indexCellStyle?: any, // 每一行index所在的列，indexColumn >= 0 则所在列样式
     indexCellTextStyle?: any, // 每一行index所在的列，indexColumn >= 0 则所在列文字样式
     onPress?: () => {},
-    separatorColor?: () => {},
+    separatorColor?: string,
     onChangeEnd?: () => {},
   }
 
   static defaultProps = {
+    separatorColor: color.separateColorGray,
     indexColumn: -1,
     hasInputText: true,
     selected: false,
@@ -130,6 +130,9 @@ export default class Row extends Component {
     if (this.props.renderCell && typeof this.props.renderCell === 'function') {
       return this.props.renderCell({ item, index })
     }
+    let isLastCell = isSingleData
+      ? index === 1
+      : this.props.data.length - 1 === index
     let isSingleData = typeof item !== 'object'
     let value = isSingleData ? item : item.value
     let editable, isRequired, defaultValue
@@ -179,6 +182,10 @@ export default class Row extends Component {
           style={[
             cellStyle,
             width ? { width } : { flex: 1 },
+            !isLastCell && {
+              borderRightWidth: 1,
+              borderColor: this.props.separatorColor,
+            },
             // { width },
           ]}
           onPress={this._action}
@@ -198,6 +205,10 @@ export default class Row extends Component {
             cellStyle,
             this.props.cellStyle,
             width ? { width } : { flex: 1 },
+            !isLastCell && {
+              borderRightWidth: 1,
+              borderColor: this.props.separatorColor,
+            },
             // { width },
           ]}
           textStyle={[
@@ -224,45 +235,21 @@ export default class Row extends Component {
     if (this.props.data instanceof Array) {
       this.props.data.forEach((item, index) => {
         cells.push(this._renderCell(item, index))
-        if (index < this.props.data.length - 1) {
-          cells.push(
-            <ListSeparator
-              color={this.props.separatorColor}
-              key={'separator_' + index}
-              mode={'vertical'}
-            />,
-          )
-        }
       })
     } else if (this.props.data instanceof Object) {
       cells.push(this._renderCell(this.props.data['name'], 0))
-      cells.push(
-        <ListSeparator
-          color={this.props.separatorColor}
-          key={'separator'}
-          mode={'vertical'}
-        />,
-      )
       cells.push(this._renderCell(this.props.data['value'], 1))
-      // let keys = Object.keys(this.props.data)
-      // keys.forEach((key, index) => {
-      //   if (!isNaN(this.props.data[key]) || typeof this.props.data[key] === 'boolean' || typeof this.props.data[key] === 'string') {
-      //     cells.push(this._renderCell(this.props.data[key], index))
-      //     if (index < this.props.data.length - 1) {
-      //       cells.push(<ListSeparator color={this.props.separatorColor} key={'separator_' + index} mode={'vertical'} />)
-      //     }
-      //   }
-      // })
     }
     return cells
   }
 
   render() {
     return (
-      <TouchableOpacity activeOpacity={1}>
-        <View style={[styles.rowContainer, this.props.style]}>
-          {this._renderCells()}
-        </View>
+      <TouchableOpacity
+        activeOpacity={1}
+        style={[styles.rowContainer, this.props.style]}
+      >
+        {this._renderCells()}
       </TouchableOpacity>
     )
   }

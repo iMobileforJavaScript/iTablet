@@ -18,12 +18,14 @@ import { SOnlineService } from 'imobile_for_reactnative'
 import { scaleSize } from '../../../../utils/screen'
 import NavigationService from '../../../NavigationService'
 import { Const } from '../../../../constants'
-
-var GeolocationIOS = require('Geolocation')
-
-import { Geolocation } from "react-native-amap-geolocation"
-
-
+var Geolocation = undefined
+if (Platform.OS === 'ios') {
+  var GeolocationIOS = require('Geolocation')
+} else {
+  import('react-native-amap-geolocation').then(result => {
+    Geolocation = result.default.Geolocation
+  })
+}
 
 // eslint-disable-next-line no-unused-vars
 const ICONS = context => [
@@ -85,28 +87,41 @@ export default class CustomActions extends React.Component {
   }
 
   componentDidMount() {
-    if(Platform.OS === 'android'){
+    if (Platform.OS === 'android') {
       Geolocation.init({
-        ios: "9bd6c82e77583020a73ef1af59d0c759",
-        android: "043b24fe18785f33c491705ffe5b6935",
-      }).then(()=>{
+        ios: '9bd6c82e77583020a73ef1af59d0c759',
+        android: '078057f0e29931c173ad8ec02284a897',
+      }).then(() => {
         Geolocation.setOptions({
           interval: 8000,
           distanceFilter: 20,
         })
         Geolocation.addLocationListener(location => {
-          GeoLocation.stop()
-          console.log(location)
+          Geolocation.stop()
+          SOnlineService.reverseGeocoding(
+            location.longitude,
+            location.latitude,
+            {
+              onResult: result => {
+                this.props.sendCallBack(3, {
+                  address: result,
+                  longitude: location.longitude,
+                  latitude: location.latitude,
+                })
+                // alert(result)
+              },
+            },
+          )
         })
       })
     }
   }
   componentWillUnmount() {
-		if (Platform.OS === 'android') {
-			GeoLocation.removeLocationListener();
-			GeoLocation.stop()
-		}
-	}
+    if (Platform.OS === 'android') {
+      // Geolocation.removeLocationListener();
+      Geolocation.stop()
+    }
+  }
   setModalVisible(visible = false) {
     if (visible) {
       this.props.callBack(scaleSize(400))
@@ -177,8 +192,7 @@ export default class CustomActions extends React.Component {
   }
 
   handleLocationClick = () => {
-
-    if(Platform.OS === 'ios'){
+    if (Platform.OS === 'ios') {
       GeolocationIOS.getCurrentPosition(
         location => {
           SOnlineService.reverseGeocoding(
@@ -200,8 +214,8 @@ export default class CustomActions extends React.Component {
           alert('获取位置失败：' + error)
         },
       )
-    }else{
-      GeoLocation.start()
+    } else {
+      Geolocation.start()
     }
   }
 }

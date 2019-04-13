@@ -8,6 +8,7 @@ import * as React from 'react'
 import { ConstInfo } from '../../../../constants'
 import { Toast, LayerUtil } from '../../../../utils'
 import { LayerAttributeTable } from '../../components'
+import { language,getLanguage } from '../../../../language/index'
 
 const PAGE_SIZE = 30
 
@@ -238,6 +239,7 @@ export default class LayerSelectionAttribute extends React.Component {
       Toast.show(ConstInfo.CANNOT_LOCATION)
       return
     }
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = 0
     if (this.state.startIndex === 0) {
       this.setState(
@@ -304,6 +306,7 @@ export default class LayerSelectionAttribute extends React.Component {
       Toast.show(ConstInfo.CANNOT_LOCATION)
       return
     }
+    this.setLoading(true, ConstInfo.LOCATING)
     this.currentPage = Math.floor(this.total / PAGE_SIZE)
     let remainder = (this.total % PAGE_SIZE) - 1
 
@@ -381,6 +384,7 @@ export default class LayerSelectionAttribute extends React.Component {
       currentIndex = data.index
     }
 
+    this.setLoading(true, ConstInfo.LOCATING)
     // if (this.currentPage > 0) {
     //   this.canBeRefresh = true
     // }
@@ -739,7 +743,12 @@ export default class LayerSelectionAttribute extends React.Component {
         tableHead={
           this.state.attributes.data.length > 1
             ? this.state.attributes.head
-            : ['名称', '属性值']
+            : [
+              getLanguage(global.language).Map_Lable.NAME, 
+              getLanguage(global.language).Map_Lable.ATTRIBUTE
+              //'名称'
+              //'属性值'
+            ]
         }
         widthArr={this.state.attributes.data.length === 1 && [100, 100]}
         type={

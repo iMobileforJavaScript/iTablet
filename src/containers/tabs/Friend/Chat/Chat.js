@@ -10,6 +10,8 @@ import {
   Image,
   TouchableOpacity,
   Animated,
+  NativeModules,
+  NativeEventEmitter,
 } from 'react-native'
 import {
   GiftedChat,
@@ -30,11 +32,15 @@ import { color } from '../../../../styles'
 import { FileTools } from '../../../../native'
 import { Toast } from '../../../../utils/index'
 import { stat } from 'react-native-fs'
+import MSGConstant from '../MsgConstant'
 
 let Top = scaleSize(38)
 if (Platform.OS === 'ios') {
   Top = scaleSize(80)
 }
+
+const SMessageServiceiOS = NativeModules.SMessageService
+const iOSEventEmitter = new NativeEventEmitter(SMessageServiceiOS)
 
 class Chat extends React.Component {
   props: {
@@ -72,7 +78,6 @@ class Chat extends React.Component {
     this.onLoadEarlier = this.onLoadEarlier.bind(this)
     this.onReceiveProgress = this.onReceiveProgress.bind(this)
     this.renderTicks = this.renderTicks.bind(this)
-    
   }
 
   componentDidMount() {
@@ -97,20 +102,26 @@ class Chat extends React.Component {
       }
     })
 
-    this.listener = RCTDeviceEventEmitter.addListener(
-      EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
-      this.onReceiveProgress,
-      // eslint-disable-next-line no-unused-vars
-      // value => {
-        // console.log(value)
-        // 接受到 通知后的处理
-      // },
-    )
+    if (Platform.OS === 'iOS') {
+      this.listener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.listener = iOSEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    } else {
+      this.listener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_RECEIVE_FILE,
+        this.onReceiveProgress,
+      )
+      this.listener = RCTDeviceEventEmitter.addListener(
+        EventConst.MESSAGE_SERVICE_SEND_FILE,
+        this.onReceiveProgress,
+      )
+    }
 
-    this.listener = RCTDeviceEventEmitter.addListener(
-      EventConst.MESSAGE_SERVICE_SEND_FILE,
-      this.onReceiveProgress,
-    )
     // this.setState({
     //   messageInfo:this.props.navigation.getParam('messageInfo'),
     //   messages: [
@@ -132,12 +143,22 @@ class Chat extends React.Component {
     this.setState({ messages: this.state.messages.map(m => {
       if(m._id === value.msgId){
         m.message.message.progress = value.percentage
-      }  
+      }
       return {
         ...m,
-      }})
+      }}),
     })
     //todo input to redux
+    // this.friend._onReceiveProgress(value)
+    // let reduxMessage =  this.friend.props.chat[this.curUser.userId][value.talkId].history[value.msgId]
+    // reduxMessage.message.message.progress = value.percentage
+    // this.friend.props.editChat &&
+    //   this.friend.props.props.editChat({
+    //     userId: this.curUser.userId,
+    //     talkId: value.talkId,
+    //     msgId: value.msgId,
+    //     editItem: reduxMessage,
+    //   })
   }
 
   componentWillUnmount() {
@@ -188,7 +209,7 @@ class Chat extends React.Component {
             type: msg.type,
             message: msg.msg,
           }
-        case 6: //文件
+        case MSGConstant.MSG_FILE_NOTIFY: //文件
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -197,7 +218,7 @@ class Chat extends React.Component {
             type: msg.type,
             message: msg.msg,
           }
-        case 10: //位置
+        case MSGConstant.MSG_LOCATION: //位置
           return {
             _id: msg.msgId,
             text: msg.msg.message.message,
@@ -205,10 +226,6 @@ class Chat extends React.Component {
             user: { _id: msg.id, name: msg.name },
             type: msg.type,
             message: msg.msg,
-            // location: {
-            //   latitude: msg.msg.message.latitude,
-            //   longitude: msg.msg.message.longitude,
-            // },
           }
       }
     }
@@ -268,7 +285,7 @@ class Chat extends React.Component {
     let time = Date.parse(ctime)
     let message = {
       message: {
-        type: 10,
+        type: MSGConstant.MSG_LOCATION,
         message: {
           message: positionStr,
           longitude: value.longitude,
@@ -297,7 +314,7 @@ class Chat extends React.Component {
       //   longitude: value.longitude,
       // },
       message: {
-        type: 10,
+        type: MSGConstant.MSG_LOCATION,
         message: {
           message: positionStr,
           longitude: value.longitude,
@@ -333,7 +350,7 @@ class Chat extends React.Component {
       time: time,
       system: 0,
       message: {
-        type: 3, //文件本体
+        type: MSGConstant.MSG_FILE, //文件本体
         message: {
           data: '',
           index: 0,
@@ -355,7 +372,7 @@ class Chat extends React.Component {
       createdAt: time,
       system: 0,
       message: {
-        type: 6,
+        type: MSGConstant.MSG_FILE_NOTIFY,
         message: {
           message: '[文件]',
           fileName: fileName,
@@ -416,10 +433,10 @@ class Chat extends React.Component {
         type: messageObj.type,
         message: messageObj.message,
       }
-      if (messageObj.message.type === 6) {
+      if (messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY) {
         //文件通知
         msg.message.message.isReceived = 0
-      } else if (messageObj.message.type === 10) {
+      } else if (messageObj.message.type === MSGConstant.MSG_LOCATION) {
         //位置
         msg.location = {
           latitude: messageObj.message.message.latitude,
@@ -461,7 +478,7 @@ class Chat extends React.Component {
   async onLongPress(context, message) {
     if (message.message.type) {
       switch (message.message.type) {
-        case 6:
+        case MSGConstant.MSG_FILE_NOTIFY:
           if (message.user._id !== this.curUser.userId) {
             let userPath = await FileTools.appendingHomeDirectory(
               ConstPath.UserPath + this.curUser.userName,
@@ -519,6 +536,7 @@ class Chat extends React.Component {
           <GiftedChat
             placeholder="message..."
             messages={this.state.messages}
+            showAvatarForEveryMessage={false}
             onSend={this.onSend}
             loadEarlier={this.state.loadEarlier}
             onLoadEarlier={this.onLoadEarlier}
@@ -540,7 +558,7 @@ class Chat extends React.Component {
             renderMessageText={props => {
               if (
                 props.currentMessage.message.type &&
-                props.currentMessage.message.type === 6
+                props.currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY
               ) {
                 return null
               }
@@ -623,33 +641,61 @@ class Chat extends React.Component {
         wrapperStyle={{
           left: {
             //对方的气泡
+            marginTop: scaleSize(1),
             backgroundColor: 'white',
+            overflow: 'hidden',
+            borderRadius: scaleSize(10),
           },
           right: {
             //我方的气泡
+            marginTop: scaleSize(1),
             backgroundColor: 'blue',
+            overflow: 'hidden',
+            borderRadius: scaleSize(10),
           },
         }}
+        //与下一条自己的消息连接处的样式
+        containerToNextStyle={{
+          left: {
+            borderBottomLeftRadius: scaleSize(10),
+          },
+          right: {
+            borderBottomRightRadius: scaleSize(10),
+          },
+        }}
+        //与上一条自己的消息连接处的样式
+        containerToPreviousStyle={{
+          left: {
+            borderTopLeftRadius: scaleSize(10),
+          },
+          right: {
+            borderTopRightRadius: scaleSize(10),
+          },
+        }}
+        //底栏样式
         bottomContainerStyle={{
-          right:{
+          right: {
             flexDirection: 'row-reverse',
             justifyContent: 'space-between',
           },
-          left:{
+          left: {
             justifyContent: 'space-between',
-          }
+          },
         }}
       />
     )
   }
   //渲染标记
   renderTicks (props) {
-    let currentMessage  = props;
-    if (currentMessage.message.type && currentMessage.message.type === 6) {
+    let currentMessage  = props
+    if (currentMessage.message.type && currentMessage.message.type === MSGConstant.MSG_FILE_NOTIFY) {
       let progress = currentMessage.message.message.progress
       return (
         <View style={styles.tickView}>
-          <Text style={styles.tick}>{progress === 100 ? '✓' : progress}</Text>
+          <Text style={currentMessage.user._id !== this.curUser.userId
+            ? styles.tickLeft
+            : [styles.tickLeft, styles.tickRight]
+          }>{progress === 100 ? '✓' : (progress === 0 ? '' : progress + '%')}</Text>
         </View>
       )
     }
@@ -817,10 +863,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginRight: scaleSize(20),
     marginLeft: scaleSize(20),
+    marginBottom: scaleSize(10),
   },
-  tick: {
+  tickLeft: {
     fontSize: scaleSize(18),
-    color:'white'
+    color: 'gray',
+  },
+  tickRight: {
+    color: 'white',
   },
 })
 export default Chat

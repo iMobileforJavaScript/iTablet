@@ -8,7 +8,7 @@ import {
   Platform,
 } from 'react-native'
 import { scaleSize } from '../../../utils/screen'
-
+import { language,getLanguage } from '../../../language/index'
 let Top = scaleSize(88)
 if (Platform.OS === 'ios') {
   Top += 20
@@ -94,7 +94,11 @@ export default class AddMore extends React.Component {
               }}
               style={styles.itemView}
             >
-              <Text style={styles.textStyle}>添加好友</Text>
+              <Text style={styles.textStyle}>
+              {getLanguage(global.language).Friends.ADD_FRIENDS}
+          
+              {/* //添加好友 */}
+              </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -104,7 +108,11 @@ export default class AddMore extends React.Component {
               }}
               style={styles.itemView}
             >
-              <Text style={styles.textStyle}>发起群聊</Text>
+              <Text style={styles.textStyle}>
+              {getLanguage(global.language).Friends.NEW_GROUP_CHAT}
+          
+              {/* // 发起群聊 */}
+              </Text>
             </TouchableOpacity>
           </View>
         </View>

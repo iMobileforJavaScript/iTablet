@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { Container } from '../../../../components'
 import Toast from '../../../../utils/Toast'
+import { language,getLanguage } from '../../../../language/index'
 
 export default class protocol extends Component {
   props: {
@@ -108,7 +109,8 @@ export default class protocol extends Component {
         source = {
           uri: `https://ask.supermap.com/`,
         }
-        title = '超图论坛'
+        title = getLanguage(global.language).Prompt.SUPERMAP_FORUM
+        //'超图论坛'
         break
       case 'supermap':
         source = {

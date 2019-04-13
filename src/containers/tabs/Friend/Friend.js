@@ -10,7 +10,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view'
 
 // eslint-disable-next-line
-import { SOnlineService, SMessageService } from 'imobile_for_reactnative'
+import { SMessageService } from 'imobile_for_reactnative'
 import NavigationService from '../../NavigationService'
 import { scaleSize } from '../../../utils/screen'
 import { Toast } from '../../../utils/index'
@@ -26,6 +26,7 @@ import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
 import MSGConstans from './MsgConstans'
+import{ language, getLanguage }from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 
 let searchImg = getThemeAssets().friend.friend_search
@@ -34,6 +35,7 @@ let addFriendImg = getThemeAssets().friend.friend_add
 let g_connectService = false
 export default class Friend extends Component {
   props: {
+    language:Object,
     navigation: Object,
     user: Object,
     chat: Array,
@@ -120,7 +122,8 @@ export default class Friend extends Component {
     if (
       JSON.stringify(prevProps.user) !== JSON.stringify(this.props.user) ||
       JSON.stringify(prevProps.chat) !== JSON.stringify(this.props.chat) ||
-      JSON.stringify(prevState) !== JSON.stringify(this.state)
+      JSON.stringify(prevState) !== JSON.stringify(this.state)||
+      prevProps.language!==this.props.language
     ) {
       return true
     }
@@ -188,11 +191,11 @@ export default class Friend extends Component {
   _sendMessage = (messageStr, talkId, bInform) => {
     if (!g_connectService) {
       SMessageService.connectService(
-        MSGConstans.MSG_IP,
-        MSGConstans.MSG_Port,
-        MSGConstans.MSG_HostName,
-        MSGConstans.MSG_UserName,
-        MSGConstans.MSG_Password,
+        MSGConstant.MSG_IP,
+        MSGConstant.MSG_Port,
+        MSGConstant.MSG_HostName,
+        MSGConstant.MSG_UserName,
+        MSGConstant.MSG_Password,
         this.props.user.currentUser.userId,
       )
         .then(() => {
@@ -246,11 +249,11 @@ export default class Friend extends Component {
 
   _sendFile = (messageStr, filepath, talkId, msgId) => {
     let connectInfo = {
-      serverIP: MSGConstans.MSG_IP,
-      port: MSGConstans.MSG_Port,
-      hostName: MSGConstans.MSG_HostName,
-      userName: MSGConstans.MSG_UserName,
-      passwd: MSGConstans.MSG_Password,
+      serverIP: MSGConstant.MSG_IP,
+      port: MSGConstant.MSG_Port,
+      hostName: MSGConstant.MSG_HostName,
+      userName: MSGConstant.MSG_UserName,
+      passwd: MSGConstant.MSG_Password,
       userID: this.props.user.currentUser.userId,
     }
     SMessageService.sendFile(
@@ -269,7 +272,7 @@ export default class Friend extends Component {
         time: time,
         system: 0,
         message: {
-          type: 6, //文件接收通知
+          type: MSGConstant.MSG_FILE_NOTIFY, //文件接收通知
           message: {
             message: '[文件]',
             fileName: res.fileName,
@@ -284,6 +287,18 @@ export default class Friend extends Component {
     })
   }
 
+  _onReceiveProgress = value => {
+    let reduxMessage = this.props.chat[this.props.user.currentUser.userId][
+      value.talkId
+    ].history[value.msgId]
+    reduxMessage.message.message.progress = value.percentage
+    MessageDataHandle.editMessage({
+      userId: this.props.user.currentUser.userId,
+      talkId: value.talkId,
+      msgId: value.msgId,
+      editItem: reduxMessage,
+    })
+  }
   _receiveFile = (fileName, queueName, receivePath, talkId, msgId) => {
     if (g_connectService) {
       SMessageService.receiveFile(
@@ -300,13 +315,12 @@ export default class Friend extends Component {
           ].history[msgId]
           message.msg.message.isReceived = 1
           message.msg.message.filePath = receivePath + '/' + fileName
-          this.props.editChat &&
-            this.props.editChat({
-              userId: this.props.user.currentUser.userId,
-              talkId: talkId,
-              msgId: msgId,
-              editItem: message,
-            })
+          MessageDataHandle.editMessage({
+            userId: this.props.user.currentUser.userId,
+            talkId: talkId,
+            msgId: msgId,
+            editItem: message,
+          })
         }
       })
     }
@@ -401,7 +415,7 @@ export default class Friend extends Component {
         }
 
         //文件通知消息
-        if (messageObj.message.type && messageObj.message.type === 6) {
+        if (messageObj.message.type && messageObj.message.type === MSGConstant.MSG_FILE_NOTIFY) {
           messageObj.message.message.isReceived = 0
         }
 
@@ -456,11 +470,11 @@ export default class Friend extends Component {
       if (bHasUserInfo === true) {
         if (g_connectService === false) {
           SMessageService.connectService(
-            MSGConstans.MSG_IP,
-            MSGConstans.MSG_Port,
-            MSGConstans.MSG_HostName,
-            MSGConstans.MSG_UserName,
-            MSGConstans.MSG_Password,
+            MSGConstant.MSG_IP,
+            MSGConstant.MSG_Port,
+            MSGConstant.MSG_HostName,
+            MSGConstant.MSG_UserName,
+            MSGConstant.MSG_Password,
             this.props.user.currentUser.userId,
           )
             .then(res => {
@@ -506,12 +520,12 @@ export default class Friend extends Component {
       })
     }
   }
-  render() {
+  render() { 
     return (
       <Container
         ref={ref => (this.container = ref)}
         headerProps={{
-          title: '好友',
+          title: getLanguage(this.props.language).Navigator_Lable.FRIENDS,
           headerLeft:
             this.state.bHasUserInfo === true ? (
               <TouchableOpacity
@@ -581,20 +595,23 @@ export default class Friend extends Component {
         >
           <FriendMessage
             ref={ref => (this.friendMessage = ref)}
-            tabLabel="消息"
+          tabLabel= {getLanguage(this.props.language).Friends.MESSAGES}
+         //"消息"
             user={this.props.user.currentUser}
             chat={this.props.chat}
             friend={this}
           />
           <FriendList
             ref={ref => (this.friendList = ref)}
-            tabLabel="好友"
+            tabLabel={getLanguage(this.props.language).Friends.FRIENDS}
+            //"好友"
             user={this.props.user.currentUser}
             friend={this}
           />
           <FriendGroup
             ref={ref => (this.friendGroup = ref)}
-            tabLabel="群组"
+            tabLabel={getLanguage(this.props.language).Friends.GROUPS}
+            //"群组"
             user={this.props.user.currentUser}
             friend={this}
           />
@@ -626,7 +643,7 @@ export default class Friend extends Component {
               margin: scaleSize(10),
             }}
           >
-            亲,您还没有好友关系哦
+            {/* 亲,您还没有好友关系哦 */}
           </Text>
         </View>
       </View>

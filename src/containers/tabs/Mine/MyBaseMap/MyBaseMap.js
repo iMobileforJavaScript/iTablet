@@ -9,6 +9,7 @@ import MyDataPopupModal from '../MyData/MyDataPopupModal'
 import BaseMapItem from './BaseMapItem'
 import { color } from '../../../../styles'
 import NavigationService from '../../../NavigationService'
+import { language,getLanguage } from '../../../../language/index'
 // import { InputDialog } from '../../../../components/Dialog'
 // import { Toast } from '../../../../utils'
 import styles from './styles'
@@ -23,7 +24,8 @@ export default class MyBaseMap extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      title: '底图',
+      title: getLanguage(global.language).Profile.BASEMAP,
+      //'底图',
       modalIsVisible: false,
     }
     this.uploadList = []

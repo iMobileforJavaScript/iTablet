@@ -31,4 +31,11 @@ export default class MessageDataHandle {
       MessageDataHandle.addChat(payload)
     }
   }
+
+  static editMessage(payload) {
+    if (MessageDataHandle.addChat) {
+      payload['operate'] = 'edit'
+      MessageDataHandle.addChat(payload)
+    }
+  }
 }

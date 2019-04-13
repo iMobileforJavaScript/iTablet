@@ -3,6 +3,7 @@
 import { NavigationActions } from 'react-navigation'
 
 let _navigator
+let clickAble = true
 
 function setTopLevelNavigator(navigatorRef) {
   _navigator = navigatorRef
@@ -10,13 +11,19 @@ function setTopLevelNavigator(navigatorRef) {
 
 function navigate(routeName, params) {
   (async function() {
-    await _navigator.dispatch(
-      NavigationActions.navigate({
-        type: NavigationActions.NAVIGATE,
-        routeName,
-        params,
-      }),
-    )
+    if (clickAble) {
+      clickAble = false
+      await _navigator.dispatch(
+        NavigationActions.navigate({
+          type: NavigationActions.NAVIGATE,
+          routeName,
+          params,
+        }),
+      )
+      setTimeout(() => {
+        clickAble = true
+      }, 1500)
+    }
   })()
 }
 

@@ -26,8 +26,11 @@ import ConstPath from '../../../../constants/ConstPath'
 import NavigationService from '../../../NavigationService'
 import color from '../../../../styles/color'
 import UserType from '../../../../constants/UserType'
+import{ getLanguage }from '../../../../language/index'
+
 export default class Login extends React.Component {
   props: {
+    language:Object,
     navigation: Object,
     user: Object,
     setUser: () => {},
@@ -93,14 +96,18 @@ export default class Login extends React.Component {
     try {
       if (!isEmail) {
         if (!this.txtEmail) {
-          Toast.show('请输入邮箱或昵称')
+          //请输入邮箱或昵称
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_EMAIL_OR_USERNAME)
           return
         }
         if (!this.txtEmailPassword) {
-          Toast.show('请输入密码')
+          //请输入密码
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
-        this.container.setLoading(true, '登录中...')
+        this.container.setLoading(true, 
+          getLanguage(this.props.language).Prompt.LOG_IN)
+          //'登录中...')
         userName = this.txtEmail
         password = this.txtEmailPassword
         /// debugger
@@ -108,14 +115,17 @@ export default class Login extends React.Component {
         // debugger
       } else {
         if (!this.txtPhoneNumber) {
-          Toast.show('请输入手机号')
+          //请输入手机号
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_MOBILE)
           return
         }
         if (!this.txtPhoneNumberPassword) {
-          Toast.show('请输入密码')
+          //请输入密码
+          Toast.show(getLanguage(this.props.language).Profile.ENTER_PASSWORD)
           return
         }
-        this.container.setLoading(true, '登录中...')
+        this.container.setLoading(true, getLanguage(this.props.language).Prompt.LOG_IN)
+        //'登录中...')
         userName = this.txtPhoneNumber
         password = this.txtPhoneNumberPassword
         //debugger
@@ -253,7 +263,8 @@ export default class Login extends React.Component {
         <TextInput
           clearButtonMode={'while-editing'}
           keyboardType={'email-address'}
-          placeholder={'请输入邮箱或昵称'}
+          // 请输入邮箱或昵称
+          placeholder={getLanguage(this.props.language).Profile.ENTER_EMAIL_OR_USERNAME}
           multiline={false}
           style={styles.textInputStyle}
           onChangeText={text => {
@@ -263,7 +274,8 @@ export default class Login extends React.Component {
         <TextInput
           clearButtonMode={'while-editing'}
           secureTextEntry={true}
-          placeholder={'请输入密码'}
+          // 请输入密码
+          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           multiline={false}
           password={true}
           style={styles.textInputStyle}
@@ -279,7 +291,8 @@ export default class Login extends React.Component {
       <View style={{ width: '70%' }}>
         <TextInput
           clearButtonMode={'while-editing'}
-          placeholder={'请输入手机号'}
+          //请输入手机号
+          placeholder={getLanguage(this.props.language).Profile.ENTER_MOBILE}
           defaultValue={''}
           keyboardType={'number-pad'}
           style={styles.textInputStyle}
@@ -291,7 +304,8 @@ export default class Login extends React.Component {
           secureTextEntry={true}
           multiline={false}
           textContentType={'password'}
-          placeholder={'请输入密码'}
+          //请输入密码
+          placeholder={getLanguage(this.props.language).Profile.ENTER_PASSWORD}
           defaultValue={''}
           style={styles.textInputStyle}
           onChangeText={text => {
@@ -334,7 +348,8 @@ export default class Login extends React.Component {
         ref={ref => (this.container = ref)}
         style={styles.container}
         headerProps={{
-          title: '登录',
+          //登录
+          title: getLanguage(this.props.language).Profile.LOGIN,
           withoutBack: this.state.isFirstLogin,
           navigation: this.props.navigation,
         }}
@@ -388,7 +403,11 @@ export default class Login extends React.Component {
                     },
                   ]}
                 >
-                  <Text style={[styles.titleContainerStyle]}>手机登录</Text>
+                
+                  <Text style={[styles.titleContainerStyle]}>
+                  {/* 手机登录 */}
+                  {getLanguage(this.props.language).Profile.MOBILE_LOGIN}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
@@ -407,7 +426,10 @@ export default class Login extends React.Component {
                     backgroundColor: this.state.titlePhoneBg,
                   }}
                 >
-                  <Text style={[styles.titleContainerStyle]}>邮箱登录</Text>
+                  <Text style={[styles.titleContainerStyle]}>
+                  {/* 邮箱登录 */}
+                  {getLanguage(this.props.language).Profile.EMAIL_LOGIN}
+                  </Text>
                 </TouchableOpacity>
               </View>
               {this._onSelectTitle()}
@@ -424,7 +446,8 @@ export default class Login extends React.Component {
                     NavigationService.navigate('Register')
                   }}
                 >
-                  注册
+                  {/* 注册 */}
+                  {getLanguage(this.props.language).Profile.REGISTER}
                 </Text>
                 {this.state.isFirstLogin ? (
                   <Text
@@ -443,16 +466,21 @@ export default class Login extends React.Component {
                   </Text>
                 ) : null}
               </View>
+              
+              {/* 登录 */}
               <TouchableOpacity
                 accessible={true}
-                accessibilityLabel={'登录'}
+                accessibilityLabel={getLanguage(this.props.language).Profile.LOGIN}
                 style={styles.loginStyle}
                 onPress={() => {
                   Keyboard.dismiss()
                   this._login()
                 }}
               >
-                <Text style={[styles.titleContainerStyle]}>登录</Text>
+                <Text style={[styles.titleContainerStyle]}>
+                {/* 登录 */}
+                {getLanguage(this.props.language).Profile.LOGIN}
+                </Text>
               </TouchableOpacity>
               {/*<View style={{marginTop: 5}}/>*/}
               {/* <TouchableOpacity

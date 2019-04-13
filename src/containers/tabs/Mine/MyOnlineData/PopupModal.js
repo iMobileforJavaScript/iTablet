@@ -4,6 +4,7 @@ import { Modal, TouchableOpacity, View, Text, Platform } from 'react-native'
 import { color, size } from '../../../../styles'
 import Toast from '../../../../utils/Toast'
 import { scaleSize } from '../../../../utils'
+import { language,getLanguage } from '../../../../language';
 const screenWidth = '100%'
 
 export default class PopupModal extends PureComponent {
@@ -269,7 +270,10 @@ export default class PopupModal extends PureComponent {
             {this._publishServiceButton()}
             {this._downloadButton()}
             {this._dataVisibleButton()}
-            {this._deleteButton('删除')}
+            {this._deleteButton(
+              getLanguage(global.language).Profile.DELETE
+              //'删除'
+              )}
           </View>
         </TouchableOpacity>
       </Modal>

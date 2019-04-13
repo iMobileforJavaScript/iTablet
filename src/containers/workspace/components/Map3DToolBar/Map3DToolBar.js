@@ -10,6 +10,8 @@ import {
 } from 'react-native'
 import { SScene } from 'imobile_for_reactnative'
 import { Toast } from '../../../../utils'
+import { language,getLanguage } from '../../../../language/index' 
+
 export default class Map3DToolBar extends React.Component {
   props: {
     type: string,
@@ -368,7 +370,10 @@ export default class Map3DToolBar extends React.Component {
               source={require('../../../../assets/mapToolbar/list_type_maps.png')}
               style={styles.sceneImg}
             />
-            <Text style={styles.sceneTitle}>场景</Text>
+            <Text style={styles.sceneTitle}>
+            {getLanguage(global.language).Map_Lable.SCENE}
+            {/* 场景 */}
+            </Text>
           </View>
           <FlatList
             data={this.state.data}
