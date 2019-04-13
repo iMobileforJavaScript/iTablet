@@ -25,7 +25,7 @@ import UserType from '../../../constants/UserType'
 import FriendListFileHandle from './FriendListFileHandle'
 import InformSpot from './InformSpot'
 import AddMore from './AddMore'
-import MSGConstans from './MsgConstans'
+import MSGConstant from './MsgConstant'
 import{ language, getLanguage }from '../../../language/index'
 import MessageDataHandle from './MessageDataHandle'
 
