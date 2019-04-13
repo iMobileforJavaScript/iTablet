@@ -205,7 +205,7 @@ function layerThemeSetting (param){
   ]
 }
 
-const layer3dSettingCanSelect = [
+const layer3dSettingCanSelect=(param) => [
   {
     title: getLanguage(param).Map_Layer.LAYERS_SET_AS_CURRENT_LAYER,
     data: [],

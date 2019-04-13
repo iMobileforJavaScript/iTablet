@@ -96,7 +96,7 @@ export default class LayerManager_tolbar extends React.Component {
         data = layerThemeSettings(this.props.language)
         break
       case ConstToolType.MAP3D_LAYER3DSELECT:
-        data = layer3dSettingCanSelect
+        data = layer3dSettingCanSelect(this.props.language)
         break
       case ConstToolType.MAP3D_LAYER3DCHANGE:
         data = layereditsetting(global.language)

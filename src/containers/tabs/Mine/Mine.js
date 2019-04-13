@@ -318,7 +318,7 @@ export default class Mine extends Component {
       ? this.props.user.currentUser.userName
         ? this.props.user.currentUser.userName
         : Customer
-      :getLanguage(this.props.language).Profile.TEMPLATE
+      :getLanguage(this.props.language).Profile.LOGIN
     return (
       <View
         style={{
