@@ -4,7 +4,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.supermap.imb.lic.LicConfig;
 import com.facebook.react.ReactApplication;
-import com.airbnb.android.react.maps.MapsPackage;
+//import com.airbnb.android.react.maps.MapsPackage;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.github.yamill.orientation.OrientationPackage;
 import com.rnfs.RNFSPackage;
@@ -30,7 +30,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
         protected List<ReactPackage> getPackages() {
             return Arrays.<ReactPackage>asList(
                     new MainReactPackage(),
-            new MapsPackage(),
+//            new MapsPackage(),
             new OrientationPackage(),
             new RNFSPackage(),
             new SplashScreenReactPackage(),
