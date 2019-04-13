@@ -556,6 +556,13 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
       NSArray *dirArray = [filemanager contentsOfDirectoryAtPath:destinationPath error:nil];
       
       NSString *suffix = @"";
+      BOOL isDirectory = YES;
+      NSString *toPath = destinationPath;
+      NSString *fileDirPath = [destinationPath stringByAppendingString:[dirArray objectAtIndex:0]];
+      if([filemanager fileExistsAtPath:fileDirPath isDirectory:&isDirectory]){
+        dirArray = [filemanager contentsOfDirectoryAtPath:fileDirPath error:nil];
+        toPath = [fileDirPath stringByAppendingString:@"/"];
+      }
       
       for(NSString *str in dirArray){
         NSArray *splitArr = [str componentsSeparatedByString:@"."];
@@ -571,13 +578,13 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
           // workspace add
           NSMutableDictionary *dic = [[NSMutableDictionary alloc]init];
           
-          [dic setValue:[destinationPath stringByAppendingString:str] forKey:@"server"];
+          [dic setValue:[toPath stringByAppendingString:str] forKey:@"server"];
           [dic setValue:[verisonMap valueForKey:suffix] forKey:@"type"];
           
           [workSpaceFile addObject:dic];
         }else{
           //udb add
-          [dataSourceFile addObject:[destinationPath stringByAppendingString:str]];
+          [dataSourceFile addObject:[toPath stringByAppendingString:str]];
         }
       }
       SMap *smap = [SMap singletonInstance];
@@ -588,7 +595,7 @@ RCT_REMAP_METHOD(importData, importData:(RCTPromiseResolveBlock)resolve rejector
         if(importResult){
           hasImportedData = NO;
           isImportSuccess = YES;
-          [FileTools deleteFile:destinationPath];
+          [FileTools deleteFile:toPath];
         }
       }else if([dataSourceFile count]){
         //导入udb文件
